@@ -1,0 +1,35 @@
+/*
+ * Primitive Animation Tokens
+ * Duration, easing, and timing values for anime.js and CSS transitions
+ */
+
+:root {
+  /* Durations */
+  --move-duration-instant: 0ms;
+  --move-duration-fast: 100ms;
+  --move-duration-normal: 200ms;
+  --move-duration-slow: 300ms;
+  --move-duration-slower: 400ms;
+  --move-duration-slowest: 500ms;
+
+  /* Easings - CSS compatible */
+  --move-ease-linear: linear;
+  --move-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --move-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --move-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Easings - Spring-like for anime.js */
+  --move-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --move-ease-bounce: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --move-ease-snap: cubic-bezier(0.5, 0, 0.1, 1);
+
+  /* Easings - Smooth for overlays */
+  --move-ease-overlay-in: cubic-bezier(0.32, 0.72, 0, 1);
+  --move-ease-overlay-out: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* Delays */
+  --move-delay-none: 0ms;
+  --move-delay-short: 75ms;
+  --move-delay-medium: 150ms;
+  --move-delay-long: 300ms;
+}
