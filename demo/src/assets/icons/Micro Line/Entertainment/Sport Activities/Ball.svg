@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Ball--Streamline-Micro">
+  <desc>
+    Ball Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 9.5c2.48528 0 4.5 -2.01472 4.5 -4.5S7.48528 0.5 5 0.5 0.5 2.51472 0.5 5 2.51472 9.5 5 9.5Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 0.5v9" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1.43018 2.26616c0.36359 0.28221 0.66833 0.63495 0.89513 1.03846 0.29098 0.51771 0.44388 1.10159 0.44398 1.69548 -0.0001 0.59388 -0.153 1.17776 -0.44398 1.69547 -0.2268 0.40351 -0.53154 0.75625 -0.89513 1.03846" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.57749 2.26041c-0.36677 0.28324 -0.67401 0.63809 -0.90223 1.04437 -0.29082 0.51771 -0.44357 1.10152 -0.44357 1.69532 0 0.5938 0.15275 1.17761 0.44357 1.69532 0.22822 0.40628 0.53546 0.76113 0.90223 1.04437" stroke-width="1"></path>
+</svg>

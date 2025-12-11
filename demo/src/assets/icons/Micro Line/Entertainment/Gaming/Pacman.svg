@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Pacman--Streamline-Micro">
+  <desc>
+    Pacman Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" d="M5 2.909a0.25 0.25 0 0 1 0 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" d="M5 2.909a0.25 0.25 0 0 0 0 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.166 2.639 5.334 5l3.832 2.361a4.5 4.5 0 1 1 0 -4.723Z" stroke-width="1"></path>
+</svg>

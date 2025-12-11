@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Time-Hour-Glass--Streamline-Micro">
+  <desc>
+    Time Hour Glass Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7.5 2.5a2.5 2.5 0 1 1 -5 0v-2h5v2Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5a2.5 2.5 0 1 0 -5 0v2h5v-2Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1 0.5h8" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1 9.5h8" stroke-width="1"></path>
+</svg>

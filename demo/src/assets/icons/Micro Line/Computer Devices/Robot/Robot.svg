@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Robot--Streamline-Micro">
+  <desc>
+    Robot Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 8.5c0 0.26522 -0.10536 0.51957 -0.29289 0.70711C9.01957 9.39464 8.76522 9.5 8.5 9.5h-7c-0.26522 0 -0.51957 -0.10536 -0.707107 -0.29289C0.605357 9.01957 0.5 8.76522 0.5 8.5V7c0 -1.19347 0.474106 -2.33807 1.31802 -3.18198C2.66193 2.97411 3.80653 2.5 5 2.5c1.19347 0 2.33807 0.47411 3.18198 1.31802C9.02589 4.66193 9.5 5.80653 9.5 7v1.5Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 2.5v-2" stroke-width="1"></path>
+  <path stroke="#000000" d="M3 7.5c-0.27614 0 -0.5 -0.22386 -0.5 -0.5s0.22386 -0.5 0.5 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" d="M3 7.5c0.27614 0 0.5 -0.22386 0.5 -0.5s-0.22386 -0.5 -0.5 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" d="M7 7.5c-0.27614 0 -0.5 -0.22386 -0.5 -0.5s0.22386 -0.5 0.5 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" d="M7 7.5c0.27614 0 0.5 -0.22386 0.5 -0.5s-0.22386 -0.5 -0.5 -0.5" stroke-width="1"></path>
+</svg>

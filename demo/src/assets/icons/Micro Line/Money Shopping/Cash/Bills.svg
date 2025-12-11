@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Bills--Streamline-Micro">
+  <desc>
+    Bills Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.5 1h-5c-0.552285 0 -1 0.44772 -1 1v4c0 0.55228 0.447715 1 1 1h5c0.55228 0 1 -0.44772 1 -1V2c0 -0.55228 -0.44772 -1 -1 -1Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 4v4c0 0.26522 -0.10536 0.51957 -0.29289 0.70711C9.01957 8.89464 8.76522 9 8.5 9h-5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4 4.5c0.27614 0 0.5 -0.22386 0.5 -0.5s-0.22386 -0.5 -0.5 -0.5 -0.5 0.22386 -0.5 0.5 0.22386 0.5 0.5 0.5Z" stroke-width="1"></path>
+</svg>

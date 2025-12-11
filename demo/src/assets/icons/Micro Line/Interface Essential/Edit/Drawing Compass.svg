@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Drawing-Compass--Streamline-Micro">
+  <desc>
+    Drawing Compass Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 6v1.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4 3a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 2V0.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4 3 2 9.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m6 3 2 6.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1.75 6.75h6.5" stroke-width="1"></path>
+</svg>

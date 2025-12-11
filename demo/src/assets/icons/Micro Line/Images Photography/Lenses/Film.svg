@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Film--Streamline-Micro">
+  <desc>
+    Film Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 0.5v9" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 0.5v9" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7 0.5H3c-0.27614 0 -0.5 0.223857 -0.5 0.5v2.46154c0 0.27614 0.22386 0.5 0.5 0.5h4c0.27614 0 0.5 -0.22386 0.5 -0.5V1c0 -0.276142 -0.22386 -0.5 -0.5 -0.5Z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7 6.03845H3c-0.27614 0 -0.5 0.22386 -0.5 0.5v2.46154c0 0.27614 0.22386 0.5 0.5 0.5h4c0.27614 0 0.5 -0.22386 0.5 -0.5V6.53845c0 -0.27614 -0.22386 -0.5 -0.5 -0.5Z" stroke-width="1"></path>
+</svg>

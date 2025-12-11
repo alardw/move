@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10">
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="m1.00248 0.5 7.99504 0" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M4.99998 0.5v3.98626" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.04774 0.5H1.95226v3.65183c0 1.68322 1.36452 3.04774 3.04774 3.04774s3.04774 -1.36452 3.04774 -3.04774z" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1.15391 8.22508c0.08534 0 0.15453 -0.06919 0.15453 -0.15453 0 -0.08535 -0.06919 -0.15453 -0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1.15453 8.22557C1.06919 8.22557 1 8.15638 1 8.07104c0 -0.08535 0.06919 -0.15454 0.15453 -0.15454" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M3.57679 9.49949c0.08535 0 0.15453 -0.06918 0.15453 -0.15453 0 -0.08534 -0.06918 -0.15453 -0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M3.57742 9.49901c-0.08534 0 -0.15453 -0.06919 -0.15453 -0.15454 0 -0.08534 0.06919 -0.15453 0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.42256 9.49949c0.08535 0 0.15453 -0.06918 0.15453 -0.15453 0 -0.08534 -0.06918 -0.15453 -0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.42318 9.49901c-0.08535 0 -0.15453 -0.06919 -0.15453 -0.15454 0 -0.08534 0.06918 -0.15453 0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.84547 8.22508c0.08534 0 0.15453 -0.06919 0.15453 -0.15453 0 -0.08535 -0.06919 -0.15453 -0.15453 -0.15453" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.84608 8.22557c-0.08534 0 -0.15453 -0.06919 -0.15453 -0.15453 0 -0.08535 0.06919 -0.15454 0.15453 -0.15454" stroke-width="1"></path>
+</svg>

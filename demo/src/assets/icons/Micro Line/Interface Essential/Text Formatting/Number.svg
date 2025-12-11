@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Number--Streamline-Micro">
+  <desc>
+    Number Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M2 7v0a1 1 0 0 1 1 -1v0a1 1 0 0 1 1 1v0.204c0 0.347 -0.15 0.677 -0.411 0.906L2 9.5h2" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M2 0.5h1v3" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M2 3.5h2" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.5 2.5h1.125c0.483 0 0.875 0.392 0.875 0.875v0a0.875 0.875 0 0 1 -0.875 0.875H7.25" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7.25 4.25h0.375c0.483 0 0.875 0.392 0.875 0.875v0A0.875 0.875 0 0 1 7.625 6H6.5" stroke-width="1"></path>
+</svg>

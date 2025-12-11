@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Warning-Triangle--Streamline-Micro">
+  <desc>
+    Warning Triangle Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 3.25v2" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 7.576a0.25 0.25 0 0 1 0 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5 7.576a0.25 0.25 0 0 0 0 -0.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M2.01 9.5h5.978a1.51 1.51 0 0 0 1.323 -2.238L5.809 0.979a0.922 0.922 0 0 0 -1.618 0L0.689 7.265A1.508 1.508 0 0 0 2.01 9.5v0Z" stroke-width="1"></path>
+</svg>

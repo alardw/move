@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Pathfinder-Intersect--Streamline-Micro">
+  <desc>
+    Pathfinder Intersect Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.49992 8.80774c0 0.38235 -0.30995 0.69231 -0.6923 0.69231" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.80762 3.26929c0.38235 0 0.6923 0.30995 0.6923 0.6923" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M3.26929 8.80774c0 0.38235 0.30995 0.69231 0.6923 0.69231" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 5.69226v1.38462" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M5.69238 9.5H7.077" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 1.19231C0.5 0.809957 0.809957 0.5 1.19231 0.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6.03857 0.5c0.38236 0 0.69231 0.309957 0.69231 0.69231" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 6.03845c0 0.38235 0.309957 0.69231 0.69231 0.69231" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 4.30771V2.9231" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M2.9231 0.5h1.38461" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M3.96159 3.26929c-0.38235 0 -0.6923 0.30995 -0.6923 0.6923v2.07693c0 0.38235 0.30995 0.69231 0.6923 0.69231h2.07693c0.38235 0 0.69231 -0.30996 0.69231 -0.69231V3.96159c0 -0.38235 -0.30996 -0.6923 -0.69231 -0.6923H3.96159Z" stroke-width="1"></path>
+</svg>

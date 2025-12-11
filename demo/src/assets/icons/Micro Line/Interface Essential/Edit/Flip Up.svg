@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Flip-Up--Streamline-Micro">
+  <desc>
+    Flip Up Streamline Icon: https://streamlinehq.com
+  </desc>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M8.5 0.5c0.26522 0 0.51957 0.105357 0.70711 0.292893C9.39464 0.98043 9.5 1.23478 9.5 1.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M6 0.5H4" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M1.5 0.5C1.23478 0.5 0.98043 0.605357 0.792893 0.792893 0.605357 0.98043 0.5 1.23478 0.5 1.5" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 7v1.5c0 0.26522 -0.10536 0.51957 -0.29289 0.70711C9.01957 9.39464 8.76522 9.5 8.5 9.5h-7c-0.26522 0 -0.51957 -0.10536 -0.707107 -0.29289C0.605357 9.01957 0.5 8.76522 0.5 8.5V7" stroke-width="1"></path>
+  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M9.5 3.5V5h-9V3.5" stroke-width="1"></path>
+</svg>
