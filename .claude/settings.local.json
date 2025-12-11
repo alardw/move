@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(npm install)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm create:*)",
+      "Bash(npm install:*)",
+      "Bash(cat:*)",
+      "Bash(pkill:*)",
+      "WebFetch(domain:animejs.com)",
+      "WebFetch(domain:localhost)",
+      "Bash(grep:*)",
+      "Bash(npm ls:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
