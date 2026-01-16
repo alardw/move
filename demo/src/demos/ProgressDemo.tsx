@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Progress } from 'move';
+import { DocPage, type Example } from '../components/DocPage';
 
-export function ProgressDemo() {
+// =============================================================================
+// Example Components
+// =============================================================================
+
+function DefaultExample() {
   const [progress, setProgress] = useState(13);
 
   useEffect(() => {
@@ -15,19 +20,48 @@ export function ProgressDemo() {
   }, []);
 
   return (
-    <div className="demo-section">
-      <h3>Progress</h3>
-      <div className="demo-box">
-        <Progress.Root className="progress-root" value={progress}>
-          <Progress.Indicator
-            className="progress-indicator"
-            style={{ width: `${Math.min(progress, 100)}%` }}
-          />
-        </Progress.Root>
-        <p style={{ color: '#888', fontSize: 14, marginTop: 12 }}>
-          {Math.round(Math.min(progress, 100))}% complete
-        </p>
-      </div>
+    <div>
+      <Progress.Root className="progress-root" value={progress}>
+        <Progress.Indicator
+          className="progress-indicator"
+          style={{ width: `${Math.min(progress, 100)}%` }}
+        />
+      </Progress.Root>
+      <p style={{ marginTop: 12 }}>
+        {Math.round(Math.min(progress, 100))}% complete
+      </p>
     </div>
+  );
+}
+
+// =============================================================================
+// Examples Config
+// =============================================================================
+
+const examples: Example[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Animated progress bar.',
+    component: <DefaultExample />,
+    code: `<Progress.Root value={progress}>
+  <Progress.Indicator style={{ width: \`\${progress}%\` }} />
+</Progress.Root>`,
+  },
+];
+
+// =============================================================================
+// Demo Component
+// =============================================================================
+
+export function ProgressDemo() {
+  return (
+    <DocPage.Root defaultExample="default">
+      <DocPage.Header
+        title="Progress"
+        description="Displays a progress bar indicating completion status."
+      />
+      <DocPage.Examples examples={examples} />
+    </DocPage.Root>
   );
 }

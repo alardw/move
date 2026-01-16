@@ -1,0 +1,87 @@
+.trigger {
+  /* Base styles for ContextMenu trigger */
+}
+
+.content {
+  /* Base styles for ContextMenu content */
+}
+
+.content[data-state='open'] {
+  /* Animation for opening */
+}
+
+.content[data-state='closed'] {
+  /* Animation for closing */
+}
+
+.arrow {
+  /* Base styles for ContextMenu arrow */
+}
+
+.item {
+  /* Base styles for ContextMenu item */
+}
+
+.item[data-highlighted] {
+  /* Highlighted state */
+}
+
+.item[data-disabled] {
+  /* Disabled state */
+}
+
+.group {
+  /* Base styles for ContextMenu group */
+}
+
+.label {
+  /* Base styles for ContextMenu label */
+}
+
+.checkboxItem {
+  /* Base styles for ContextMenu checkbox item */
+}
+
+.checkboxItem[data-state='checked'] {
+  /* Checked state */
+}
+
+.radioGroup {
+  /* Base styles for ContextMenu radio group */
+}
+
+.radioItem {
+  /* Base styles for ContextMenu radio item */
+}
+
+.radioItem[data-state='checked'] {
+  /* Checked state */
+}
+
+.itemIndicator {
+  /* Base styles for ContextMenu item indicator */
+}
+
+.separator {
+  /* Base styles for ContextMenu separator */
+}
+
+.subTrigger {
+  /* Base styles for ContextMenu sub trigger */
+}
+
+.subTrigger[data-state='open'] {
+  /* Open state */
+}
+
+.subContent {
+  /* Base styles for ContextMenu sub content */
+}
+
+.subContent[data-state='open'] {
+  /* Animation for opening */
+}
+
+.subContent[data-state='closed'] {
+  /* Animation for closing */
+}

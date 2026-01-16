@@ -1,0 +1,315 @@
+/*
+ * Material System
+ *
+ * Materials provide surface appearance that responds to the lighting rig.
+ * Each material has distinct visual characteristics in both light and dark themes.
+ */
+
+.material {
+  position: relative;
+  isolation: isolate;
+
+  /* Gradient border using background-clip technique */
+  /* Light at 315deg (top-right), highlight perpendicular at -90deg */
+  --_border-angle: calc(var(--light-angle, 315deg) - 90deg);
+  border: 1px solid transparent;
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Texture layer */
+.material::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  background-image: var(--mat-texture, none);
+  background-size: var(--mat-texture-size, 200px);
+  opacity: var(--mat-texture-opacity, 0);
+  mix-blend-mode: var(--mat-texture-blend, overlay);
+}
+
+/* Specular + depth layer */
+.material::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 2;
+
+  /* Highlight position follows light direction */
+  --_hx: calc(50% + (var(--light-lx, -0.7071) * 25%));
+  --_hy: calc(50% + (var(--light-ly, -0.7071) * 25%));
+
+  background-image: var(--mat-layers);
+}
+
+/* ============================================
+   PAPER - Matte, warm, fibrous
+   ============================================ */
+.material-paper {
+  --shadow-softness: 1.6;
+  --shadow-opacity: 0.12;
+
+  /* Paper grain texture */
+  --mat-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  --mat-texture-size: 150px;
+  --mat-texture-opacity: 0.04;
+  --mat-texture-blend: multiply;
+
+  /* Very subtle, diffuse highlight */
+  --mat-layers:
+    radial-gradient(
+      80% 80% at var(--_hx) var(--_hy),
+      rgba(255, 255, 255, 0.06) 0%,
+      transparent 70%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.02) 0%,
+      transparent 20%,
+      transparent 80%,
+      rgba(0, 0, 0, 0.04) 100%
+    );
+}
+
+/* Paper - Light theme (default) */
+.material-paper {
+  --_base: var(--mat-base, #faf8f5);
+  --_base-dark: color-mix(in oklch, var(--_base) 85%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 70%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 70%, black);
+  background:
+    linear-gradient(165deg, var(--_base) 0%, var(--_base-dark) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* Paper - Dark theme */
+.material-paper[data-theme="dark"],
+[data-theme="dark"] .material-paper {
+  --_base: var(--mat-base, #2a2825);
+  --_base-dark: color-mix(in oklch, var(--_base) 85%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 60%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 80%, black);
+  background:
+    linear-gradient(165deg, var(--_base) 0%, var(--_base-dark) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+  --mat-texture-blend: soft-light;
+  --mat-texture-opacity: 0.08;
+}
+
+/* ============================================
+   PLASTIC - Smooth, glossy, saturated
+   ============================================ */
+.material-plastic {
+  --shadow-softness: 1.1;
+  --shadow-opacity: 0.18;
+  --mat-texture-opacity: 0;
+
+  /* Glossy highlight with falloff */
+  --mat-layers:
+    /* Primary specular - subtle */
+    radial-gradient(
+      50% 50% at var(--_hx) var(--_hy),
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.05) 30%,
+      transparent 60%
+    ),
+    /* Edge darkening */
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 70%,
+      rgba(0, 0, 0, 0.04) 100%
+    );
+}
+
+/* Plastic - Light theme (default) */
+.material-plastic {
+  --_base: var(--mat-base, #f0f0f0);
+  --_base-dark: color-mix(in oklch, var(--_base) 90%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 60%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 75%, black);
+  background:
+    linear-gradient(175deg, var(--_base) 0%, var(--_base-dark) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* Plastic - Dark theme */
+.material-plastic[data-theme="dark"],
+[data-theme="dark"] .material-plastic {
+  --_base: var(--mat-base, #3a3a3a);
+  --_base-dark: color-mix(in oklch, var(--_base) 80%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 55%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 85%, black);
+  background:
+    linear-gradient(175deg, var(--_base) 0%, var(--_base-dark) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* ============================================
+   METAL - Reflective, brushed, sharp
+   ============================================ */
+.material-metal {
+  --shadow-softness: 0.8;
+  --shadow-opacity: 0.22;
+
+  /* Brushed metal texture */
+  --mat-texture: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 1px,
+    rgba(0, 0, 0, 0.02) 1px,
+    rgba(0, 0, 0, 0.02) 2px
+  );
+  --mat-texture-size: 2px;
+  --mat-texture-opacity: 1;
+  --mat-texture-blend: overlay;
+
+  /* Sharp specular with anisotropic stretch */
+  --mat-layers:
+    /* Point specular - reduced intensity */
+    radial-gradient(
+      35% 35% at var(--_hx) var(--_hy),
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.08) 40%,
+      transparent 70%
+    ),
+    /* Horizontal reflection band */
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 20%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0.03) 80%,
+      transparent 100%
+    );
+}
+
+/* Metal - Light theme (default) */
+.material-metal {
+  --_base: var(--mat-base, #c8ccd0);
+  --_base-light: color-mix(in oklch, var(--_base) 90%, white);
+  --_base-dark: color-mix(in oklch, var(--_base) 85%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 50%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 65%, black);
+  background:
+    linear-gradient(170deg, var(--_base-light) 0%, var(--_base-dark) 50%, var(--_base) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* Metal - Dark theme */
+.material-metal[data-theme="dark"],
+[data-theme="dark"] .material-metal {
+  --_base: var(--mat-base, #42454a);
+  --_base-light: color-mix(in oklch, var(--_base) 85%, white);
+  --_base-dark: color-mix(in oklch, var(--_base) 80%, black);
+  --_border-light: color-mix(in oklch, var(--_base) 45%, white);
+  --_border-dark: color-mix(in oklch, var(--_base) 90%, black);
+  background:
+    linear-gradient(170deg, var(--_base-light) 0%, var(--_base-dark) 50%, var(--_base) 100%) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+  --mat-texture: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 1px,
+    rgba(0, 0, 0, 0.03) 1px,
+    rgba(0, 0, 0, 0.03) 2px
+  );
+}
+
+/* ============================================
+   GLASS - Transparent, refractive, frosted
+   ============================================ */
+.material-glass {
+  --shadow-softness: 1.0;
+  --shadow-opacity: 0.08;
+  --mat-texture-opacity: 0;
+
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+
+  /* Glass layers: edge highlight + subtle refraction */
+  --mat-layers:
+    /* Soft edge highlight (fresnel) */
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 50%
+    ),
+    /* Point specular - subtle */
+    radial-gradient(
+      40% 40% at var(--_hx) var(--_hy),
+      rgba(255, 255, 255, 0.18) 0%,
+      transparent 60%
+    ),
+    /* Inner shadow for depth */
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.03) 0%,
+      transparent 30%
+    );
+}
+
+/* Glass - Light theme (default) */
+.material-glass {
+  --_base: var(--mat-base, white);
+  --_border-light: color-mix(in oklch, var(--_base) 80%, transparent);
+  --_border-dark: color-mix(in oklch, var(--_base) 30%, transparent);
+  background:
+    color-mix(in oklch, var(--_base) 45%, transparent) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* Glass - Dark theme */
+.material-glass[data-theme="dark"],
+[data-theme="dark"] .material-glass {
+  --_base: var(--mat-base, white);
+  --_border-light: color-mix(in oklch, var(--_base) 35%, transparent);
+  --_border-dark: color-mix(in oklch, var(--_base) 8%, transparent);
+  background:
+    color-mix(in oklch, var(--_base) 10%, transparent) padding-box,
+    linear-gradient(
+      var(--_border-angle, 135deg),
+      var(--_border-light) 0%,
+      var(--_border-dark) 100%
+    ) border-box;
+}
+
+/* ============================================
+   UTILITY: Remove glass surface class (now integrated)
+   ============================================ */
+.material-glass-surface {
+  /* Deprecated - glass now has backdrop-filter built-in */
+}

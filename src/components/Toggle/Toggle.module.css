@@ -1,0 +1,15 @@
+.root {
+  /* Base styles for Toggle */
+}
+
+.root[data-state='on'] {
+  /* On state */
+}
+
+.root[data-state='off'] {
+  /* Off state */
+}
+
+.root[data-disabled] {
+  /* Disabled state */
+}

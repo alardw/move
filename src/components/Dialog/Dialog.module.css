@@ -1,0 +1,183 @@
+/*
+ * Dialog Component Tokens
+ * Override these to customize Dialog appearance
+ */
+:root {
+  /* Overlay */
+  --move-dialog-overlay-bg: rgb(0 0 0 / 0.6);
+  --move-dialog-overlay-backdrop-blur: 4px;
+
+  /* Content */
+  --move-dialog-content-bg: var(--move-bg-subtle);
+  --move-dialog-content-border: var(--move-border-base);
+  --move-dialog-content-radius: var(--move-rounded-xl);
+  --move-dialog-content-shadow: var(--move-shadow-overlay);
+  --move-dialog-content-padding: var(--move-spacing-lg);
+  --move-dialog-content-width: 28rem;
+  --move-dialog-content-max-width: 90vw;
+  --move-dialog-content-max-height: 85vh;
+
+  /* Title */
+  --move-dialog-title-font-size: var(--move-size-lg);
+  --move-dialog-title-font-weight: var(--move-weight-semibold);
+  --move-dialog-title-fg: var(--move-fg-base);
+  --move-dialog-title-margin-bottom: var(--move-spacing-sm);
+
+  /* Description */
+  --move-dialog-description-font-size: var(--move-size-sm);
+  --move-dialog-description-fg: var(--move-fg-muted);
+  --move-dialog-description-margin-bottom: var(--move-spacing-lg);
+
+  /* Close button */
+  --move-dialog-close-size: 2rem;
+  --move-dialog-close-icon-size: 1rem;
+  --move-dialog-close-fg: var(--move-fg-muted);
+  --move-dialog-close-fg-hover: var(--move-fg-base);
+  --move-dialog-close-bg-hover: var(--move-bg-muted);
+  --move-dialog-close-radius: var(--move-rounded-sm);
+
+  /* Animation */
+  --move-dialog-transition-duration: var(--move-transition-normal);
+  --move-dialog-transition-easing: var(--move-ease-enter);
+}
+
+.trigger {
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--move-dialog-overlay-bg);
+  backdrop-filter: blur(var(--move-dialog-overlay-backdrop-blur));
+  z-index: var(--move-layer-overlay);
+}
+
+.overlay[data-state='open'] {
+  animation: dialog-overlay-in var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
+}
+
+.overlay[data-state='closed'] {
+  animation: dialog-overlay-out var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
+}
+
+.content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: var(--move-dialog-content-width);
+  max-width: var(--move-dialog-content-max-width);
+  max-height: var(--move-dialog-content-max-height);
+  padding: var(--move-dialog-content-padding);
+  background-color: var(--move-dialog-content-bg);
+  border: 1px solid var(--move-dialog-content-border);
+  border-radius: var(--move-dialog-content-radius);
+  box-shadow: var(--move-dialog-content-shadow);
+  z-index: var(--move-layer-modal);
+  overflow: auto;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.content[data-state='open'] {
+  animation: dialog-content-in var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
+}
+
+.content[data-state='closed'] {
+  animation: dialog-content-out var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
+}
+
+.title {
+  margin: 0;
+  margin-bottom: var(--move-dialog-title-margin-bottom);
+  font-family: var(--move-font-body);
+  font-size: var(--move-dialog-title-font-size);
+  font-weight: var(--move-dialog-title-font-weight);
+  color: var(--move-dialog-title-fg);
+}
+
+.description {
+  margin: 0;
+  margin-bottom: var(--move-dialog-description-margin-bottom);
+  font-family: var(--move-font-body);
+  font-size: var(--move-dialog-description-font-size);
+  color: var(--move-dialog-description-fg);
+  line-height: var(--move-leading-relaxed);
+}
+
+.close {
+  position: absolute;
+  top: var(--move-spacing-sm);
+  right: var(--move-spacing-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--move-dialog-close-size);
+  height: var(--move-dialog-close-size);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--move-dialog-close-radius);
+  color: var(--move-dialog-close-fg);
+  cursor: pointer;
+  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+    color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.close:hover {
+  background-color: var(--move-dialog-close-bg-hover);
+  color: var(--move-dialog-close-fg-hover);
+}
+
+.close:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--move-focus-ring);
+}
+
+.closeIcon {
+  width: var(--move-dialog-close-icon-size);
+  height: var(--move-dialog-close-icon-size);
+}
+
+@keyframes dialog-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialog-overlay-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-content-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes dialog-content-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+}

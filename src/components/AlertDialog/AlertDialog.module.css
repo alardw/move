@@ -1,0 +1,72 @@
+/*
+ * AlertDialog Component Tokens
+ */
+:root {
+  --move-alertdialog-overlay-bg: rgba(0, 0, 0, 0.7);
+  --move-alertdialog-content-bg: var(--move-bg-muted);
+  --move-alertdialog-content-border: var(--move-border-base);
+  --move-alertdialog-content-radius: var(--move-rounded-xl);
+  --move-alertdialog-content-padding: var(--move-spacing-lg);
+  --move-alertdialog-content-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+  --move-alertdialog-content-width: 450px;
+  --move-alertdialog-title-size: var(--move-size-lg);
+  --move-alertdialog-title-weight: var(--move-weight-semibold);
+  --move-alertdialog-title-fg: var(--move-fg-base);
+  --move-alertdialog-description-size: var(--move-size-sm);
+  --move-alertdialog-description-fg: var(--move-fg-muted);
+}
+
+.trigger {
+  /* Use Button component instead */
+}
+
+.overlay {
+  background: var(--move-alertdialog-overlay-bg);
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  will-change: opacity;
+}
+
+.content {
+  background: var(--move-alertdialog-content-bg);
+  border-radius: var(--move-alertdialog-content-radius);
+  border: 1px solid var(--move-alertdialog-content-border);
+  box-shadow: var(--move-alertdialog-content-shadow);
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: 90vw;
+  max-width: var(--move-alertdialog-content-width);
+  max-height: 85vh;
+  height: fit-content;
+  padding: var(--move-alertdialog-content-padding);
+  z-index: 51;
+  will-change: transform, opacity;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.title {
+  margin: 0 0 var(--move-spacing-sm) 0;
+  font-size: var(--move-alertdialog-title-size);
+  font-weight: var(--move-alertdialog-title-weight);
+  color: var(--move-alertdialog-title-fg);
+}
+
+.description {
+  margin: 0 0 var(--move-spacing-lg) 0;
+  font-size: var(--move-alertdialog-description-size);
+  color: var(--move-alertdialog-description-fg);
+  line-height: 1.5;
+}
+
+.cancel {
+  /* Use Button component instead */
+}
+
+.action {
+  /* Use Button component instead */
+}

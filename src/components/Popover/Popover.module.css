@@ -1,0 +1,43 @@
+.trigger {
+  /* Base styles for Popover trigger */
+}
+
+.anchor {
+  /* Base styles for Popover anchor */
+}
+
+.content {
+  /* Base styles for Popover content */
+}
+
+.content[data-state='open'] {
+  /* Animation for opening */
+}
+
+.content[data-state='closed'] {
+  /* Animation for closing */
+}
+
+.content[data-side='top'] {
+  /* Position when above trigger */
+}
+
+.content[data-side='bottom'] {
+  /* Position when below trigger */
+}
+
+.content[data-side='left'] {
+  /* Position when left of trigger */
+}
+
+.content[data-side='right'] {
+  /* Position when right of trigger */
+}
+
+.arrow {
+  /* Base styles for Popover arrow */
+}
+
+.close {
+  /* Base styles for Popover close */
+}

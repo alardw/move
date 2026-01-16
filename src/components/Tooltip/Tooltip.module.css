@@ -1,0 +1,39 @@
+.trigger {
+  /* Base styles for Tooltip trigger */
+}
+
+.content {
+  /* Base styles for Tooltip content */
+}
+
+.content[data-state='delayed-open'] {
+  /* Animation for delayed opening */
+}
+
+.content[data-state='instant-open'] {
+  /* Animation for instant opening */
+}
+
+.content[data-state='closed'] {
+  /* Animation for closing */
+}
+
+.content[data-side='top'] {
+  /* Position when above trigger */
+}
+
+.content[data-side='bottom'] {
+  /* Position when below trigger */
+}
+
+.content[data-side='left'] {
+  /* Position when left of trigger */
+}
+
+.content[data-side='right'] {
+  /* Position when right of trigger */
+}
+
+.arrow {
+  /* Base styles for Tooltip arrow */
+}

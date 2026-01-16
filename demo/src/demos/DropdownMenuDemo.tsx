@@ -1,80 +1,125 @@
 import { useState } from 'react';
-import { DropdownMenu } from 'move';
+import { DropdownMenu, Button, Icon } from 'move';
+import { DocPage, type Example } from '../components/DocPage';
 
-export function DropdownMenuDemo() {
+// =============================================================================
+// Example Components
+// =============================================================================
+
+function DefaultExample() {
   const [bookmarksChecked, setBookmarksChecked] = useState(true);
   const [urlsChecked, setUrlsChecked] = useState(false);
 
   return (
-    <div className="demo-section">
-      <h3>Dropdown Menu</h3>
-      <div className="demo-box">
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <button className="demo-button-outline">
-              Options <ChevronDown />
-            </button>
-          </DropdownMenu.Trigger>
-
-          <DropdownMenu.Portal>
-            <DropdownMenu.Content className="menu-content" sideOffset={5}>
-              <DropdownMenu.Item className="menu-item">
-                New Tab <span style={{ marginLeft: 'auto', color: '#666' }}>Cmd+T</span>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="menu-item">
-                New Window <span style={{ marginLeft: 'auto', color: '#666' }}>Cmd+N</span>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item className="menu-item" disabled>
-                New Private Window
-              </DropdownMenu.Item>
-              <DropdownMenu.Separator className="menu-separator" />
-
-              <DropdownMenu.CheckboxItem
-                className="menu-checkbox-item"
-                checked={bookmarksChecked}
-                onCheckedChange={setBookmarksChecked}
-              >
-                <DropdownMenu.ItemIndicator className="menu-item-indicator">
-                  <Check />
-                </DropdownMenu.ItemIndicator>
-                Show Bookmarks
-              </DropdownMenu.CheckboxItem>
-
-              <DropdownMenu.CheckboxItem
-                className="menu-checkbox-item"
-                checked={urlsChecked}
-                onCheckedChange={setUrlsChecked}
-              >
-                <DropdownMenu.ItemIndicator className="menu-item-indicator">
-                  <Check />
-                </DropdownMenu.ItemIndicator>
-                Show Full URLs
-              </DropdownMenu.CheckboxItem>
-
-              <DropdownMenu.Separator className="menu-separator" />
-              <DropdownMenu.Label className="menu-label">People</DropdownMenu.Label>
-              <DropdownMenu.Item className="menu-item">John Doe</DropdownMenu.Item>
-              <DropdownMenu.Item className="menu-item">Jane Smith</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-      </div>
-    </div>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="secondary" style={{ width: 200, justifyContent: 'space-between' }}>
+          Options <Icon name="chevron-down" />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="menu-content" sideOffset={5}>
+          <DropdownMenu.Item className="menu-item">
+            New Tab <span style={{ marginLeft: 'auto', color: '#9ca3af' }}>Cmd+T</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className="menu-item">
+            New Window <span style={{ marginLeft: 'auto', color: '#9ca3af' }}>Cmd+N</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator className="menu-separator" />
+          <DropdownMenu.Label className="menu-label">Settings</DropdownMenu.Label>
+          <DropdownMenu.CheckboxItem
+            className="menu-item"
+            checked={bookmarksChecked}
+            onCheckedChange={setBookmarksChecked}
+          >
+            Show Bookmarks
+          </DropdownMenu.CheckboxItem>
+          <DropdownMenu.CheckboxItem
+            className="menu-item"
+            checked={urlsChecked}
+            onCheckedChange={setUrlsChecked}
+          >
+            Show Full URLs
+          </DropdownMenu.CheckboxItem>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
 
-function ChevronDown() {
+function LongListExample() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: 4 }}>
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="secondary" style={{ width: 200, justifyContent: 'space-between' }}>
+          Long List <Icon name="chevron-down" />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content className="menu-content" sideOffset={5}>
+          {Array.from({ length: 20 }, (_, i) => (
+            <DropdownMenu.Item key={i} className="menu-item">
+              Item {i + 1}
+            </DropdownMenu.Item>
+          ))}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
   );
 }
 
-function Check() {
+// =============================================================================
+// Examples Config
+// =============================================================================
+
+const examples: Example[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Menu with items, checkboxes, and separators.',
+    component: <DefaultExample />,
+    code: `<DropdownMenu.Root>
+  <DropdownMenu.Trigger asChild>
+    <Button variant="secondary">
+      Options <Icon name="chevron-down" />
+    </Button>
+  </DropdownMenu.Trigger>
+  <DropdownMenu.Portal>
+    <DropdownMenu.Content>
+      <DropdownMenu.Item>New Tab</DropdownMenu.Item>
+      <DropdownMenu.Separator />
+      <DropdownMenu.CheckboxItem checked={checked} onCheckedChange={setChecked}>
+        Show Bookmarks
+      </DropdownMenu.CheckboxItem>
+    </DropdownMenu.Content>
+  </DropdownMenu.Portal>
+</DropdownMenu.Root>`,
+  },
+  {
+    id: 'long',
+    name: 'Long List',
+    description: 'Scrollable menu with many items.',
+    component: <LongListExample />,
+    code: `<DropdownMenu.Content>
+  {items.map((item, i) => (
+    <DropdownMenu.Item key={i}>{item}</DropdownMenu.Item>
+  ))}
+</DropdownMenu.Content>`,
+  },
+];
+
+// =============================================================================
+// Demo Component
+// =============================================================================
+
+export function DropdownMenuDemo() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
+    <DocPage.Root defaultExample="default">
+      <DocPage.Header
+        title="DropdownMenu"
+        description="A menu that appears when triggered by a button."
+      />
+      <DocPage.Examples examples={examples} />
+    </DocPage.Root>
   );
 }

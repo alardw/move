@@ -30,13 +30,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--move-spacing-sm);
-  height: var(--move-control-height-md);
-  padding: 0 var(--move-spacing-md);
-  border-radius: var(--move-rounded-md);
-  font-family: var(--move-font-body);
-  font-size: var(--move-size-sm);
-  font-weight: var(--move-weight-medium);
+  gap: var(--move-spacing-sm, 0.5rem);
+  height: var(--move-control-height-md, 2.375rem);
+  padding: 0 var(--move-spacing-md, 1rem);
+  border-radius: var(--move-rounded-md, 0.5rem);
+  font-family: var(--move-font-body, system-ui, sans-serif);
+  font-size: var(--move-size-sm, 0.875rem);
+  font-weight: var(--move-weight-medium, 500);
   letter-spacing: -0.01em;
   line-height: 1;
   white-space: nowrap;
@@ -45,8 +45,9 @@
   border: 1px solid transparent;
   outline: none;
   transition-property: background-color, border-color, color, box-shadow, opacity;
-  transition-duration: var(--move-duration-slowest);
-  transition-timing-function: var(--move-ease-default);
+  transition-duration: var(--move-duration-slowest, 300ms);
+  transition-timing-function: var(--move-ease-default, ease-out);
+  will-change: transform;
 }
 
 
@@ -132,17 +133,17 @@
 
 /* Size variants */
 .root[data-size='sm'] {
-  height: var(--move-control-height-sm);
-  padding: 0 var(--move-spacing-sm);
-  font-size: var(--move-size-sm);
-  border-radius: var(--move-rounded-sm);
+  height: var(--move-control-height-sm, 2rem);
+  padding: 0 var(--move-spacing-sm, 0.5rem);
+  font-size: var(--move-size-sm, 0.875rem);
+  border-radius: var(--move-rounded-sm, 0.25rem);
 }
 
 .root[data-size='lg'] {
-  height: var(--move-control-height-lg);
-  padding: 0 var(--move-spacing-lg);
-  font-size: var(--move-size-base);
-  border-radius: var(--move-rounded-lg);
+  height: var(--move-control-height-lg, 2.75rem);
+  padding: 0 var(--move-spacing-lg, 1.5rem);
+  font-size: var(--move-size-base, 1rem);
+  border-radius: var(--move-rounded-lg, 0.75rem);
 }
 
 /* Icon styling */
@@ -150,4 +151,17 @@
   width: 1em;
   height: 1em;
   flex-shrink: 0;
+}
+
+/* Material buttons: override variant colors with theme-appropriate text */
+.root:global(.material) {
+  /* Light theme: dark text */
+  color: var(--move-fg-base, #1a1a1a);
+  background-color: transparent; /* Let material provide background */
+}
+
+[data-theme="dark"] .root:global(.material),
+.root:global(.material)[data-theme="dark"] {
+  /* Dark theme: light text */
+  color: var(--move-fg-base, #f5f5f5);
 }

@@ -1,6 +1,47 @@
 // Theme
-export { ThemeProvider } from './ThemeProvider';
-export type { ThemeProviderProps } from './ThemeProvider';
+export { ThemeProvider, useTheme } from './ThemeProvider';
+export type { ThemeProviderProps, ThemeContextValue } from './ThemeProvider';
+export { darkTheme, lightTheme } from '../themes';
+export type { Theme, ThemeTokens, ThemeAnimation } from '../themes';
+
+// Animation
+export {
+  springs,
+  easings,
+  getEase,
+  isSpring,
+  DEFAULT_DURATION,
+  prefersReducedMotion,
+  toAnimeParams,
+  toInstantParams,
+  mergeAnimateConfig,
+  useAnimateConfig,
+  useInteractiveAnimate,
+  Presence,
+  usePresence,
+  useIsPresent,
+  defaultAnimations,
+} from '../animation';
+export type {
+  SpringParams,
+  SpringPreset,
+  Easing,
+  AnimationPreset,
+  UseAnimateConfigOptions,
+  UseAnimateConfigReturn,
+  Animation,
+  AnimateConfig,
+  OverlayAnimate,
+  InteractiveAnimate,
+  ExpandableAnimate,
+  ToggleableAnimate,
+  MenuAnimate,
+  PresenceProps,
+} from '../animation';
+
+// Shadows
+export { shadows, createShadow, createShadowPalette, shadowCSSVariables } from '../shadows';
+export type { ShadowElevation, CreateShadowOptions, CreateShadowPaletteOptions, ShadowLayer, ShadowPresets } from '../shadows';
 
 // Icons
 export { Icon, IconProvider, useIconContext } from './Icon';
@@ -28,7 +69,7 @@ export type {
 
 // Forms
 export { Checkbox } from './Checkbox';
-export type { CheckboxRootProps, CheckboxIndicatorProps } from './Checkbox';
+export type { CheckboxProps } from './Checkbox';
 
 export { Form } from './Form';
 export type {
@@ -48,7 +89,6 @@ export { RadioGroup } from './RadioGroup';
 export type {
   RadioGroupRootProps,
   RadioGroupItemProps,
-  RadioGroupIndicatorProps,
 } from './RadioGroup';
 
 export { Select } from './Select';
@@ -56,19 +96,15 @@ export type {
   SelectRootProps,
   SelectTriggerProps,
   SelectValueProps,
-  SelectIconProps,
   SelectPortalProps,
   SelectContentProps,
   SelectViewportProps,
   SelectItemProps,
   SelectItemTextProps,
   SelectItemIndicatorProps,
-  SelectScrollUpButtonProps,
-  SelectScrollDownButtonProps,
   SelectGroupProps,
   SelectLabelProps,
   SelectSeparatorProps,
-  SelectArrowProps,
 } from './Select';
 
 export { Slider } from './Slider';
@@ -248,6 +284,23 @@ export type {
   CollapsibleTriggerProps,
   CollapsibleContentProps,
 } from './Collapsible';
+
+export { Dock } from './Dock';
+export type {
+  DockRootProps,
+  DockGroupProps,
+  DockItemProps,
+} from './Dock';
+
+export { Sidebar } from './Sidebar';
+export type {
+  SidebarRootProps,
+  SidebarHeaderProps,
+  SidebarContentProps,
+  SidebarItemProps,
+  SidebarToggleProps,
+  SidebarFooterProps,
+} from './Sidebar';
 
 // Data Display
 export { Avatar } from './Avatar';

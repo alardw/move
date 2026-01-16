@@ -15,10 +15,11 @@
 
   /* Trigger */
   --move-accordion-trigger-padding-x: var(--move-spacing-md);
-  --move-accordion-trigger-padding-y: var(--move-spacing-sm);
-  --move-accordion-trigger-bg: transparent;
-  --move-accordion-trigger-bg-hover: var(--move-bg-subtle);
+  --move-accordion-trigger-padding-y: var(--move-spacing-md);
+  --move-accordion-trigger-bg: var(--move-bg-muted);
+  --move-accordion-trigger-bg-hover: var(--move-bg-emphasis);
   --move-accordion-trigger-fg: var(--move-fg-base);
+  --move-accordion-trigger-border: var(--move-border-base);
   --move-accordion-trigger-font-size: var(--move-size-sm);
   --move-accordion-trigger-font-weight: var(--move-weight-medium);
 
@@ -40,15 +41,34 @@
 .root {
   border-radius: var(--move-accordion-radius);
   border: 1px solid var(--move-accordion-border);
-  overflow: hidden;
 }
 
 .item {
   border-bottom: 1px solid var(--move-accordion-item-border);
 }
 
+.item:first-child .trigger {
+  border-radius: var(--move-accordion-radius) var(--move-accordion-radius) 0 0;
+}
+
 .item:last-child {
   border-bottom: none;
+}
+
+.item:last-child .trigger {
+  border-radius: 0 0 var(--move-accordion-radius) var(--move-accordion-radius);
+}
+
+.item:last-child[data-state='open'] .trigger {
+  border-radius: 0;
+}
+
+.item:first-child:last-child .trigger {
+  border-radius: var(--move-accordion-radius);
+}
+
+.item:first-child:last-child[data-state='open'] .trigger {
+  border-radius: var(--move-accordion-radius) var(--move-accordion-radius) 0 0;
 }
 
 .header {
@@ -72,6 +92,7 @@
   cursor: pointer;
   outline: none;
   transition: background-color var(--move-accordion-transition-duration) var(--move-accordion-transition-easing);
+  will-change: transform;
 }
 
 .trigger:hover {
@@ -102,5 +123,4 @@
 
 .contentInner {
   padding: var(--move-accordion-content-padding);
-  padding-top: 0;
 }

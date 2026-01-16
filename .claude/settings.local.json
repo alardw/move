@@ -17,7 +17,22 @@
       "Bash(git remote add:*)",
       "Bash(git checkout:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(npm run build:lib:*)",
+      "Bash(npm run clean:*)",
+      "WebFetch(domain:www.joshwcomeau.com)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "WebFetch(domain:www.radix-ui.com)",
+      "WebFetch(domain:motion.dev)",
+      "mcp__ide__getDiagnostics",
+      "Bash(lsof:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run lint:*)",
+      "Bash(npx eslint src/components/AlertDialog/AlertDialog.tsx)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:gsap.com)",
+      "WebFetch(domain:popmotion.io)"
     ]
   }
 }

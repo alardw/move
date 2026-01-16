@@ -1,0 +1,25 @@
+/*
+ * Lighting System - Base tokens
+ * These provide fallback defaults if no LightProvider is used
+ */
+
+:root {
+  /* Light direction vector (315° = top-left, classic UI lighting) */
+  --light-lx: -0.7071;
+  --light-ly: -0.7071;
+  --light-angle: 315deg;
+
+  /* Light intensities */
+  --light-ambient: 0.35;
+  --light-key: 1;
+
+  /* Derived: shadow direction (opposite of light) */
+  --shadow-x: 0.7071;
+  --shadow-y: 0.7071;
+}
+
+/* When LightProvider is present, it sets these on [data-light-root] */
+[data-light-root] {
+  --shadow-x: calc(var(--light-lx) * -1);
+  --shadow-y: calc(var(--light-ly) * -1);
+}

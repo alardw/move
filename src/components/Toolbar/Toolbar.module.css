@@ -1,0 +1,35 @@
+.root {
+  /* Base styles for Toolbar root */
+}
+
+.button {
+  /* Base styles for Toolbar button */
+}
+
+.button[data-disabled] {
+  /* Disabled state */
+}
+
+.separator {
+  /* Base styles for Toolbar separator */
+}
+
+.link {
+  /* Base styles for Toolbar link */
+}
+
+.toggleGroup {
+  /* Base styles for Toolbar toggle group */
+}
+
+.toggleItem {
+  /* Base styles for Toolbar toggle item */
+}
+
+.toggleItem[data-state='on'] {
+  /* On state */
+}
+
+.toggleItem[data-state='off'] {
+  /* Off state */
+}

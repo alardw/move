@@ -1,0 +1,31 @@
+.root {
+  /* Base styles for Progress root */
+}
+
+.root[data-state='complete'] {
+  /* Complete state */
+}
+
+.root[data-state='indeterminate'] {
+  /* Indeterminate state */
+}
+
+.root[data-state='loading'] {
+  /* Loading state */
+}
+
+.indicator {
+  /* Base styles for Progress indicator */
+}
+
+.indicator[data-state='complete'] {
+  /* Complete state */
+}
+
+.indicator[data-state='indeterminate'] {
+  /* Indeterminate state animation */
+}
+
+.indicator[data-state='loading'] {
+  /* Loading state animation */
+}

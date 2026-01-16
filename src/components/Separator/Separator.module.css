@@ -1,0 +1,11 @@
+.root {
+  /* Base styles for Separator */
+}
+
+.root[data-orientation='horizontal'] {
+  /* Horizontal orientation */
+}
+
+.root[data-orientation='vertical'] {
+  /* Vertical orientation */
+}

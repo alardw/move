@@ -1,0 +1,92 @@
+/*
+ * Dock Component Tokens
+ */
+:root {
+  --move-dock-bg: var(--move-bg-subtle);
+  --move-dock-padding: var(--move-spacing-md);
+  --move-dock-radius: var(--move-rounded-xl);
+  --move-dock-gap: var(--move-spacing-xs);
+  --move-dock-border: var(--move-border-base);
+  --move-dock-item-size: 2.75rem;
+  --move-dock-item-radius: var(--move-rounded-md);
+  --move-dock-item-bg-hover: var(--move-bg-muted);
+  --move-dock-item-fg: var(--move-fg-muted);
+  --move-dock-item-fg-hover: var(--move-fg-base);
+  --move-dock-item-fg-active: var(--move-primary);
+  --move-dock-divider: var(--move-border-base);
+}
+
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-dock-gap);
+  padding: var(--move-dock-padding);
+  background: var(--move-dock-bg);
+  border: 1px solid var(--move-dock-border);
+  border-radius: var(--move-dock-radius);
+  backdrop-filter: blur(8px);
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: var(--move-dock-gap);
+}
+
+.group:not(:last-child)::after {
+  content: '';
+  width: 1px;
+  height: 1.5rem;
+  background: var(--move-dock-divider);
+  margin-left: var(--move-spacing-sm);
+  margin-right: var(--move-spacing-sm);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--move-dock-item-size);
+  height: var(--move-dock-item-size);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--move-dock-item-fg);
+  border-radius: var(--move-dock-item-radius);
+  cursor: pointer;
+  will-change: transform;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  transform: scale(0.77);
+  transform-origin: center center;
+}
+
+.item:hover {
+  background: var(--move-dock-item-bg-hover);
+  color: var(--move-dock-item-fg-hover);
+}
+
+.item:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.item[data-active] {
+  color: var(--move-dock-item-fg-active);
+}
+
+.item[data-active]:hover {
+  color: var(--move-dock-item-fg-active);
+}
+
+.itemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.625rem;
+  height: 1.625rem;
+}
+
+.itemIcon svg {
+  width: 100%;
+  height: 100%;
+}

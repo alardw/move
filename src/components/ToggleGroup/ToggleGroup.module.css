@@ -1,0 +1,19 @@
+.root {
+  /* Base styles for ToggleGroup root */
+}
+
+.item {
+  /* Base styles for ToggleGroup item */
+}
+
+.item[data-state='on'] {
+  /* On state */
+}
+
+.item[data-state='off'] {
+  /* Off state */
+}
+
+.item[data-disabled] {
+  /* Disabled state */
+}

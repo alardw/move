@@ -1,84 +1,84 @@
-import { Select } from 'move';
+import { Select, Icon, Button } from 'move';
+import { DocPage, type Example } from '../components/DocPage';
+
+// =============================================================================
+// Example Components
+// =============================================================================
+
+function DefaultExample() {
+  return (
+    <Select.Root>
+      <Select.Trigger asChild>
+        <Button variant="secondary" style={{ width: 200, justifyContent: 'space-between' }}>
+          <Select.Value placeholder="Select a fruit..." />
+          <Icon name="chevron-down" />
+        </Button>
+      </Select.Trigger>
+      <Select.Portal>
+        <Select.Content className="menu-content" sideOffset={5}>
+          <Select.Group>
+            <Select.Label className="menu-label">Fruits</Select.Label>
+            <Select.Item className="menu-item" value="apple">Apple</Select.Item>
+            <Select.Item className="menu-item" value="banana">Banana</Select.Item>
+            <Select.Item className="menu-item" value="blueberry">Blueberry</Select.Item>
+            <Select.Item className="menu-item" value="grapes">Grapes</Select.Item>
+            <Select.Item className="menu-item" value="pineapple">Pineapple</Select.Item>
+          </Select.Group>
+          <Select.Separator className="menu-separator" />
+          <Select.Group>
+            <Select.Label className="menu-label">Vegetables</Select.Label>
+            <Select.Item className="menu-item" value="carrot">Carrot</Select.Item>
+            <Select.Item className="menu-item" value="potato">Potato</Select.Item>
+            <Select.Item className="menu-item" value="broccoli">Broccoli</Select.Item>
+          </Select.Group>
+        </Select.Content>
+      </Select.Portal>
+    </Select.Root>
+  );
+}
+
+// =============================================================================
+// Examples Config
+// =============================================================================
+
+const examples: Example[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Select with grouped options.',
+    component: <DefaultExample />,
+    code: `<Select.Root>
+  <Select.Trigger asChild>
+    <Button variant="secondary">
+      <Select.Value placeholder="Select a fruit..." />
+      <Icon name="chevron-down" />
+    </Button>
+  </Select.Trigger>
+  <Select.Portal>
+    <Select.Content>
+      <Select.Group>
+        <Select.Label>Fruits</Select.Label>
+        <Select.Item value="apple">Apple</Select.Item>
+        <Select.Item value="banana">Banana</Select.Item>
+      </Select.Group>
+    </Select.Content>
+  </Select.Portal>
+</Select.Root>`,
+  },
+];
+
+// =============================================================================
+// Demo Component
+// =============================================================================
 
 export function SelectDemo() {
   return (
-    <div className="demo-section">
-      <h3>Select</h3>
-      <div className="demo-box">
-        <Select.Root>
-          <Select.Trigger className="select-trigger">
-            <Select.Value placeholder="Select a fruit..." />
-            <Select.Icon>
-              <ChevronDown />
-            </Select.Icon>
-          </Select.Trigger>
-
-          <Select.Portal>
-            <Select.Content className="select-content">
-              <Select.ScrollUpButton className="select-scroll-button">
-                <ChevronUp />
-              </Select.ScrollUpButton>
-              <Select.Viewport className="select-viewport">
-                <Select.Group>
-                  <Select.Label className="select-label">Fruits</Select.Label>
-                  <SelectItem value="apple">Apple</SelectItem>
-                  <SelectItem value="banana">Banana</SelectItem>
-                  <SelectItem value="blueberry">Blueberry</SelectItem>
-                  <SelectItem value="grapes">Grapes</SelectItem>
-                  <SelectItem value="pineapple">Pineapple</SelectItem>
-                </Select.Group>
-
-                <Select.Separator className="select-separator" />
-
-                <Select.Group>
-                  <Select.Label className="select-label">Vegetables</Select.Label>
-                  <SelectItem value="carrot">Carrot</SelectItem>
-                  <SelectItem value="potato">Potato</SelectItem>
-                  <SelectItem value="broccoli">Broccoli</SelectItem>
-                </Select.Group>
-              </Select.Viewport>
-              <Select.ScrollDownButton className="select-scroll-button">
-                <ChevronDown />
-              </Select.ScrollDownButton>
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      </div>
-    </div>
-  );
-}
-
-function SelectItem({ value, children }: { value: string; children: string }) {
-  return (
-    <Select.Item className="select-item" value={value}>
-      <Select.ItemText>{children}</Select.ItemText>
-      <Select.ItemIndicator className="select-item-indicator">
-        <Check />
-      </Select.ItemIndicator>
-    </Select.Item>
-  );
-}
-
-function ChevronDown() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function ChevronUp() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polyline points="18 15 12 9 6 15" />
-    </svg>
-  );
-}
-
-function Check() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
+    <DocPage.Root defaultExample="default">
+      <DocPage.Header
+        title="Select"
+        description="A dropdown for selecting a single option from a list."
+      />
+      <DocPage.Examples examples={examples} />
+    </DocPage.Root>
   );
 }

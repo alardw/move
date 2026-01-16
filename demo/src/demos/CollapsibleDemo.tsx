@@ -1,35 +1,95 @@
-import { useState } from 'react';
-import { Collapsible } from 'move';
+import { Collapsible, Button, Icon } from 'move';
+import { DocPage, type Example } from '../components/DocPage';
 
-export function CollapsibleDemo() {
-  const [open, setOpen] = useState(false);
+// =============================================================================
+// Example Components
+// =============================================================================
 
+function DefaultExample() {
   return (
-    <div className="demo-section">
-      <h3>Collapsible</h3>
-      <div className="demo-box">
-        <Collapsible.Root className="collapsible-root" open={open} onOpenChange={setOpen}>
-          <Collapsible.Trigger className="collapsible-trigger">
-            <span>@peduarte starred 3 repositories</span>
-            <ChevronDown style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }} />
-          </Collapsible.Trigger>
-          <Collapsible.Content className="collapsible-content">
-            <div className="collapsible-content-inner">
-              <div style={{ padding: '8px 0', borderBottom: '1px solid #252525' }}>radix-ui/primitives</div>
-              <div style={{ padding: '8px 0', borderBottom: '1px solid #252525' }}>radix-ui/colors</div>
-              <div style={{ padding: '8px 0' }}>radix-ui/themes</div>
-            </div>
-          </Collapsible.Content>
-        </Collapsible.Root>
-      </div>
-    </div>
+    <Collapsible.Root>
+      <Collapsible.Trigger asChild>
+        <Button variant="secondary">
+          <Icon name="chevron-down" /> @peduarte starred 3 repositories
+        </Button>
+      </Collapsible.Trigger>
+      <Collapsible.Content>
+        <div style={{ padding: '12px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div>radix-ui/primitives</div>
+          <div>radix-ui/colors</div>
+          <div>radix-ui/themes</div>
+        </div>
+      </Collapsible.Content>
+    </Collapsible.Root>
   );
 }
 
-function ChevronDown({ style }: { style?: React.CSSProperties }) {
+function OpenExample() {
   return (
-    <svg style={style} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
+    <Collapsible.Root defaultOpen>
+      <Collapsible.Trigger asChild>
+        <Button variant="secondary">
+          <Icon name="chevron-down" /> Show details
+        </Button>
+      </Collapsible.Trigger>
+      <Collapsible.Content>
+        <p style={{ padding: '12px 0' }}>
+          This content is visible by default. Click to collapse.
+        </p>
+      </Collapsible.Content>
+    </Collapsible.Root>
+  );
+}
+
+// =============================================================================
+// Examples Config
+// =============================================================================
+
+const examples: Example[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Collapsed by default, click to expand.',
+    component: <DefaultExample />,
+    code: `<Collapsible.Root>
+  <Collapsible.Trigger asChild>
+    <Button variant="secondary">
+      <Icon name="chevron-down" /> Show repositories
+    </Button>
+  </Collapsible.Trigger>
+  <Collapsible.Content>
+    <div>radix-ui/primitives</div>
+  </Collapsible.Content>
+</Collapsible.Root>`,
+  },
+  {
+    id: 'open',
+    name: 'Default Open',
+    description: 'Starts expanded.',
+    component: <OpenExample />,
+    code: `<Collapsible.Root defaultOpen>
+  <Collapsible.Trigger asChild>
+    <Button variant="secondary">Show details</Button>
+  </Collapsible.Trigger>
+  <Collapsible.Content>
+    <p>This content is visible by default.</p>
+  </Collapsible.Content>
+</Collapsible.Root>`,
+  },
+];
+
+// =============================================================================
+// Demo Component
+// =============================================================================
+
+export function CollapsibleDemo() {
+  return (
+    <DocPage.Root defaultExample="default">
+      <DocPage.Header
+        title="Collapsible"
+        description="An interactive component that expands and collapses content."
+      />
+      <DocPage.Examples examples={examples} />
+    </DocPage.Root>
   );
 }

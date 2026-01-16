@@ -1,0 +1,95 @@
+.root {
+  /* Base styles for Menubar root */
+}
+
+.trigger {
+  /* Base styles for Menubar trigger */
+}
+
+.trigger[data-state='open'] {
+  /* Open state */
+}
+
+.content {
+  /* Base styles for Menubar content */
+}
+
+.content[data-state='open'] {
+  /* Animation for opening */
+}
+
+.content[data-state='closed'] {
+  /* Animation for closing */
+}
+
+.arrow {
+  /* Base styles for Menubar arrow */
+}
+
+.item {
+  /* Base styles for Menubar item */
+}
+
+.item[data-highlighted] {
+  /* Highlighted state */
+}
+
+.item[data-disabled] {
+  /* Disabled state */
+}
+
+.group {
+  /* Base styles for Menubar group */
+}
+
+.label {
+  /* Base styles for Menubar label */
+}
+
+.checkboxItem {
+  /* Base styles for Menubar checkbox item */
+}
+
+.checkboxItem[data-state='checked'] {
+  /* Checked state */
+}
+
+.radioGroup {
+  /* Base styles for Menubar radio group */
+}
+
+.radioItem {
+  /* Base styles for Menubar radio item */
+}
+
+.radioItem[data-state='checked'] {
+  /* Checked state */
+}
+
+.itemIndicator {
+  /* Base styles for Menubar item indicator */
+}
+
+.separator {
+  /* Base styles for Menubar separator */
+}
+
+.subTrigger {
+  /* Base styles for Menubar sub trigger */
+}
+
+.subTrigger[data-state='open'] {
+  /* Open state */
+}
+
+.subContent {
+  /* Base styles for Menubar sub content */
+}
+
+.subContent[data-state='open'] {
+  /* Animation for opening */
+}
+
+.subContent[data-state='closed'] {
+  /* Animation for closing */
+}

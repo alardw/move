@@ -1,47 +1,73 @@
-import { Checkbox } from 'move';
+import { Checkbox, Label } from 'move';
+import { DocPage, type Example } from '../components/DocPage';
 
-export function CheckboxDemo() {
+// =============================================================================
+// Example Components
+// =============================================================================
+
+function DefaultExample() {
   return (
-    <div className="demo-section">
-      <h3>Checkboxes</h3>
-      <div className="demo-box">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <label className="checkbox-label">
-            <Checkbox.Root className="checkbox-root" defaultChecked>
-              <Checkbox.Indicator className="checkbox-indicator">
-                <Check />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <span>Accept terms and conditions</span>
-          </label>
-
-          <label className="checkbox-label">
-            <Checkbox.Root className="checkbox-root">
-              <Checkbox.Indicator className="checkbox-indicator">
-                <Check />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <span>Subscribe to newsletter</span>
-          </label>
-
-          <label className="checkbox-label">
-            <Checkbox.Root className="checkbox-root" disabled>
-              <Checkbox.Indicator className="checkbox-indicator">
-                <Check />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
-            <span style={{ opacity: 0.5 }}>Disabled option</span>
-          </label>
-        </div>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <Label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+        <Checkbox.Root defaultChecked />
+        <span>Accept terms and conditions</span>
+      </Label>
+      <Label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+        <Checkbox.Root />
+        <span>Subscribe to newsletter</span>
+      </Label>
     </div>
   );
 }
 
-function Check() {
+function DisabledExample() {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
+    <Label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'not-allowed', opacity: 0.5 }}>
+      <Checkbox.Root disabled />
+      <span>Disabled option</span>
+    </Label>
+  );
+}
+
+// =============================================================================
+// Examples Config
+// =============================================================================
+
+const examples: Example[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Basic checkbox with label.',
+    component: <DefaultExample />,
+    code: `<Label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+  <Checkbox.Root defaultChecked />
+  <span>Accept terms and conditions</span>
+</Label>`,
+  },
+  {
+    id: 'disabled',
+    name: 'Disabled',
+    description: 'Checkbox in disabled state.',
+    component: <DisabledExample />,
+    code: `<Label style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+  <Checkbox.Root disabled />
+  <span>Disabled option</span>
+</Label>`,
+  },
+];
+
+// =============================================================================
+// Demo Component
+// =============================================================================
+
+export function CheckboxDemo() {
+  return (
+    <DocPage.Root defaultExample="default">
+      <DocPage.Header
+        title="Checkbox"
+        description="A control that allows the user to toggle between checked and unchecked."
+      />
+      <DocPage.Examples examples={examples} />
+    </DocPage.Root>
   );
 }

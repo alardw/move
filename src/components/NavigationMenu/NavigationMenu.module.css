@@ -1,0 +1,83 @@
+.root {
+  /* Base styles for NavigationMenu root */
+}
+
+.sub {
+  /* Base styles for NavigationMenu sub */
+}
+
+.list {
+  /* Base styles for NavigationMenu list */
+}
+
+.item {
+  /* Base styles for NavigationMenu item */
+}
+
+.trigger {
+  /* Base styles for NavigationMenu trigger */
+}
+
+.trigger[data-state='open'] {
+  /* Open state */
+}
+
+.content {
+  /* Base styles for NavigationMenu content */
+}
+
+.content[data-state='open'] {
+  /* Animation for opening */
+}
+
+.content[data-state='closed'] {
+  /* Animation for closing */
+}
+
+.content[data-motion='from-start'] {
+  /* Animation from start */
+}
+
+.content[data-motion='from-end'] {
+  /* Animation from end */
+}
+
+.content[data-motion='to-start'] {
+  /* Animation to start */
+}
+
+.content[data-motion='to-end'] {
+  /* Animation to end */
+}
+
+.link {
+  /* Base styles for NavigationMenu link */
+}
+
+.link[data-active] {
+  /* Active state */
+}
+
+.indicator {
+  /* Base styles for NavigationMenu indicator */
+}
+
+.indicator[data-state='visible'] {
+  /* Visible state */
+}
+
+.indicator[data-state='hidden'] {
+  /* Hidden state */
+}
+
+.viewport {
+  /* Base styles for NavigationMenu viewport */
+}
+
+.viewport[data-state='open'] {
+  /* Animation for opening */
+}
+
+.viewport[data-state='closed'] {
+  /* Animation for closing */
+}
