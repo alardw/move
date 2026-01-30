@@ -1,0 +1,85 @@
+/* =============================================================================
+   Tabs
+   ============================================================================= */
+
+.root {
+  /* Component tokens */
+  --move-tabs-border: var(--move-border-base);
+  --move-tabs-trigger-fg: var(--move-fg-muted);
+  --move-tabs-trigger-fg-active: var(--move-fg-base);
+  --move-tabs-trigger-bg-hover: var(--move-bg-muted);
+  --move-tabs-indicator: var(--move-primary);
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid var(--move-tabs-border);
+  gap: var(--move-space-1);
+}
+
+/* Trigger */
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--move-space-2) var(--move-space-4);
+  font-size: var(--move-text-sm);
+  font-weight: var(--move-weight-medium);
+  line-height: 1;
+  color: var(--move-tabs-trigger-fg);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 150ms, border-color 150ms;
+  border-radius: 0;
+}
+
+.trigger:hover {
+  color: var(--move-tabs-trigger-fg-active);
+  background-color: var(--move-tabs-trigger-bg-hover);
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--move-focus-ring-color);
+  outline-offset: -2px;
+  border-radius: var(--move-rounded-sm);
+}
+
+.trigger[data-state='active'] {
+  color: var(--move-tabs-trigger-fg-active);
+}
+
+.trigger[data-disabled] {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Content */
+.content {
+  padding: var(--move-space-4) 0;
+  outline: none;
+}
+
+.content:focus-visible {
+  outline: 2px solid var(--move-focus-ring-color);
+  outline-offset: 2px;
+  border-radius: var(--move-rounded-sm);
+}
+
+.content[data-state='inactive'] {
+  display: none;
+}
+
+/* Indicator */
+.indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background-color: var(--move-tabs-indicator);
+  pointer-events: none;
+  will-change: transform, width;
+}

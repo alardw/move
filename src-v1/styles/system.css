@@ -1,0 +1,8 @@
+/*
+ * Move Design System - Core CSS
+ * Import this file to enable lighting, materials, and shadows
+ */
+
+@import '../lighting/lighting.css';
+@import '../materials/materials.css';
+@import '../shadows/shadows.css';

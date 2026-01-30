@@ -1,9 +1,13 @@
-import { useState, createContext, useContext, type ReactNode, useMemo } from 'react';
+import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
 import { Code, ChevronDown, ChevronUp } from 'lucide-react';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-jsx';
-import 'prismjs/components/prism-tsx';
-import 'prismjs/themes/prism-tomorrow.css';
+import { createHighlighter, type Highlighter } from 'shiki';
+
+// Initialize shiki once — loads TextMate grammars for correct JSX parsing
+let highlighter: Highlighter | null = null;
+const highlighterReady = createHighlighter({
+  themes: ['github-dark'],
+  langs: ['tsx'],
+}).then((h) => { highlighter = h; });
 
 // =============================================================================
 // Types
@@ -52,7 +56,7 @@ interface RootProps {
 
 function Root({ children, defaultExample, defaultTab = 'examples' }: RootProps) {
   const [activeExample, setActiveExample] = useState(defaultExample ?? '');
-  const [showCode, setShowCode] = useState(false);
+  const [showCode, setShowCode] = useState(true);
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   return (
@@ -131,20 +135,33 @@ interface CodeBlockProps {
 }
 
 function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
-  const highlighted = useMemo(() => {
-    const grammar = Prism.languages[language] || Prism.languages.javascript;
-    return Prism.highlight(code.trim(), grammar, language);
+  const [html, setHtml] = useState(() => {
+    if (highlighter) {
+      return highlighter.codeToHtml(code.trim(), { lang: language, theme: 'github-dark' });
+    }
+    return '';
+  });
+
+  useEffect(() => {
+    if (highlighter) {
+      setHtml(highlighter.codeToHtml(code.trim(), { lang: language, theme: 'github-dark' }));
+    } else {
+      highlighterReady.then(() => {
+        setHtml(highlighter!.codeToHtml(code.trim(), { lang: language, theme: 'github-dark' }));
+      });
+    }
   }, [code, language]);
 
+  if (!html) {
+    return (
+      <div className="example-code">
+        <pre><code>{code.trim()}</code></pre>
+      </div>
+    );
+  }
+
   return (
-    <div className="example-code">
-      <pre>
-        <code
-          className={`language-${language}`}
-          dangerouslySetInnerHTML={{ __html: highlighted }}
-        />
-      </pre>
-    </div>
+    <div className="example-code" dangerouslySetInnerHTML={{ __html: html }} />
   );
 }
 

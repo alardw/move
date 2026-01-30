@@ -1,0 +1,12 @@
+/*
+ * Primitive Tokens Index
+ * Import all primitive token files
+ */
+
+@import './colors.css';
+@import './spacing.css';
+@import './radii.css';
+@import './typography.css';
+@import './shadows.css';
+@import './animation.css';
+@import './z-index.css';

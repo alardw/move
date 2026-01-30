@@ -3,6 +3,5 @@
  * Import this file to enable lighting, materials, and shadows
  */
 
-@import '../lighting/lighting.css';
-@import '../materials/materials.css';
-@import '../shadows/shadows.css';
+@import './visual/lighting.css';
+@import './visual/shadows.css';

@@ -166,8 +166,8 @@ export type ListItemAnimate = Pick<
 export const defaultAnimations = {
   /** Button, Link, clickable elements */
   interactive: {
-    hover: { scale: { value: [1, 1.05], easing: 'snappy' } },
-    press: { scale: { value: [1, 0.95], easing: 'snappy' } },
+    hover: { scale: 1.05, easing: 'snappy' },
+    press: { scale: 0.95, easing: 'snappy' },
   } satisfies InteractiveAnimate,
 
   /** Dialog, AlertDialog, Popover, Sheet content */
@@ -194,15 +194,16 @@ export const defaultAnimations = {
     open: {
       height: { value: [0, 'auto'], easing: 'outQuart' },
       opacity: { value: [0, 1], easing: 'outQuart' },
+      duration: 400,
     },
     close: {
       height: { value: ['auto', 0], easing: 'outQuart' },
       opacity: { value: [1, 0], easing: 'outQuart' },
-      duration: 200,
+      duration: 300,
     },
   } satisfies ExpandableAnimate,
 
-  /** DropdownMenu, ContextMenu, Select */
+  /** Dropdown, ContextMenu, Select */
   menu: {
     enter: {
       opacity: { value: [0, 1], easing: 'outQuart' },

@@ -32,13 +32,11 @@
     "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@types/prismjs": "^1.26.5",
     "@types/react": "^18.3.0",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^5.1.2",
     "animejs": "^4.0.0",
     "lucide-react": "^0.560.0",
-    "prismjs": "^1.30.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
     "tsup": "^8.3.0",
@@ -47,7 +45,8 @@
     "vite-plugin-dts": "^4.5.4"
   },
   "dependencies": {
-    "radix-ui": "^1.1.0"
+    "radix-ui": "^1.1.0",
+    "shiki": "^3.21.0"
   },
   "keywords": [
     "react",

@@ -1,0 +1,42 @@
+/* =============================================================================
+   Progress
+   ============================================================================= */
+
+.root {
+  /* Component tokens */
+  --move-progress-height: var(--move-space-2);
+  --move-progress-bg: var(--move-bg-muted);
+  --move-progress-indicator-bg: var(--move-primary);
+  --move-progress-radius: var(--move-rounded-full);
+
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: var(--move-progress-height);
+  background-color: var(--move-progress-bg);
+  border-radius: var(--move-progress-radius);
+}
+
+/* Indicator (fill bar) */
+.indicator {
+  height: 100%;
+  width: 100%;
+  background-color: var(--move-progress-indicator-bg);
+  border-radius: inherit;
+  will-change: transform;
+}
+
+/* Indeterminate animation */
+.root[data-state='indeterminate'] .indicator {
+  width: 40%;
+  animation: indeterminate 1.5s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(350%);
+  }
+}

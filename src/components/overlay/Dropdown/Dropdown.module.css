@@ -1,0 +1,242 @@
+/*
+ * Dropdown Component
+ * Component tokens on each slot so they resolve in local scope.
+ * Content lives in a portal, so it declares all tokens it consumes.
+ */
+
+.trigger {
+  cursor: pointer;
+}
+
+.content {
+  /* Component tokens — content */
+  --move-dropdown-content-bg: var(--move-bg-subtle);
+  --move-dropdown-content-border: var(--move-border-base);
+  --move-dropdown-content-radius: var(--move-rounded-lg);
+  --move-dropdown-content-shadow: var(--move-shadow-overlay);
+  --move-dropdown-content-padding: var(--move-spacing-xs);
+  --move-dropdown-content-min-width: 12rem;
+  --move-dropdown-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 50vh), 50vh);
+
+  overflow: hidden;
+  will-change: height, transform;
+  transform-origin: top center;
+  min-width: var(--move-dropdown-content-min-width);
+  background-color: var(--move-dropdown-content-bg);
+  border: 1px solid var(--move-dropdown-content-border);
+  border-radius: var(--move-dropdown-content-radius);
+  box-shadow: var(--move-dropdown-content-shadow);
+  padding: var(--move-dropdown-content-padding);
+  z-index: var(--move-layer-dropdown);
+}
+
+.content:focus {
+  outline: none;
+}
+
+.contentInner {
+  max-height: var(--move-dropdown-content-max-height);
+  overflow-y: auto;
+  padding: inherit;
+}
+
+.arrow {
+  fill: var(--move-bg-subtle);
+}
+
+.item {
+  /* Component tokens — item */
+  --move-dropdown-item-radius: var(--move-rounded-md);
+  --move-dropdown-item-padding-x: var(--move-spacing-sm);
+  --move-dropdown-item-padding-y: var(--move-spacing-xs);
+  --move-dropdown-item-fg: var(--move-fg-base);
+  --move-dropdown-item-fg-disabled: var(--move-fg-subtle);
+  --move-dropdown-item-bg-highlight: var(--move-bg-muted);
+  --move-dropdown-item-font-size: var(--move-size-sm);
+
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-dropdown-item-padding-y) var(--move-dropdown-item-padding-x);
+  border-radius: var(--move-dropdown-item-radius);
+  font-family: var(--move-font-body);
+  font-size: var(--move-dropdown-item-font-size);
+  color: var(--move-dropdown-item-fg);
+  cursor: default;
+  user-select: none;
+  outline: none;
+  will-change: transform;
+}
+
+.item[data-highlighted] {
+  background-color: var(--move-dropdown-item-bg-highlight);
+}
+
+.item[data-disabled] {
+  color: var(--move-dropdown-item-fg-disabled);
+  pointer-events: none;
+}
+
+.group {
+  /* structural only */
+}
+
+.label {
+  /* Component tokens — label */
+  --move-dropdown-label-padding-x: var(--move-spacing-sm);
+  --move-dropdown-label-padding-y: var(--move-spacing-xs);
+  --move-dropdown-label-font-size: var(--move-size-sm);
+  --move-dropdown-label-fg: var(--move-fg-muted);
+  --move-dropdown-label-font-weight: var(--move-weight-semibold);
+
+  padding: var(--move-dropdown-label-padding-y) var(--move-dropdown-label-padding-x);
+  font-family: var(--move-font-body);
+  font-size: var(--move-dropdown-label-font-size);
+  font-weight: var(--move-dropdown-label-font-weight);
+  color: var(--move-dropdown-label-fg);
+  user-select: none;
+}
+
+.checkboxItem {
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  border-radius: var(--move-rounded-md);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  cursor: default;
+  user-select: none;
+  outline: none;
+  will-change: transform;
+}
+
+.checkboxItem[data-highlighted] {
+  background-color: var(--move-bg-muted);
+}
+
+.checkboxItem[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  pointer-events: none;
+}
+
+.checkboxIndicator {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--move-rounded-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--move-bg-muted);
+  border: 1px solid var(--move-border-base);
+  color: var(--move-primary-fg);
+  flex-shrink: 0;
+  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+    border-color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.checkboxItem:hover .checkboxIndicator {
+  background-color: var(--move-bg-emphasis);
+  border-color: var(--move-border-emphasis);
+}
+
+.checkboxItem[data-state='checked'] .checkboxIndicator {
+  background-color: var(--move-primary);
+  border-color: transparent;
+}
+
+.checkboxItem:hover[data-state='checked'] .checkboxIndicator {
+  background-color: var(--move-primary-hover);
+}
+
+.checkboxIndicator svg {
+  width: 14px;
+  height: 14px;
+}
+
+.checkboxLabel {
+  flex: 1;
+}
+
+.radioGroup {
+  /* structural only */
+}
+
+.radioItem {
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  border-radius: var(--move-rounded-md);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  cursor: default;
+  user-select: none;
+  outline: none;
+  will-change: transform;
+}
+
+.radioItem[data-highlighted] {
+  background-color: var(--move-bg-muted);
+}
+
+.radioItem[data-disabled] {
+  color: var(--move-fg-subtle);
+  pointer-events: none;
+}
+
+.itemIndicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.separator {
+  --move-dropdown-separator-color: var(--move-border-base);
+  --move-dropdown-separator-margin: var(--move-spacing-xs);
+
+  height: 1px;
+  background-color: var(--move-dropdown-separator-color);
+  margin: var(--move-dropdown-separator-margin) 0;
+}
+
+.subTrigger {
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  border-radius: var(--move-rounded-md);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  cursor: default;
+  user-select: none;
+  outline: none;
+}
+
+.subTrigger[data-highlighted] {
+  background-color: var(--move-bg-muted);
+}
+
+.subTrigger[data-state='open'] {
+  background-color: var(--move-bg-muted);
+}
+
+.subContent {
+  --move-dropdown-content-bg: var(--move-bg-subtle);
+  --move-dropdown-content-border: var(--move-border-base);
+  --move-dropdown-content-radius: var(--move-rounded-lg);
+  --move-dropdown-content-shadow: var(--move-shadow-overlay);
+  --move-dropdown-content-padding: var(--move-spacing-xs);
+  --move-dropdown-content-min-width: 10rem;
+
+  min-width: var(--move-dropdown-content-min-width);
+  background-color: var(--move-dropdown-content-bg);
+  border: 1px solid var(--move-dropdown-content-border);
+  border-radius: var(--move-dropdown-content-radius);
+  box-shadow: var(--move-dropdown-content-shadow);
+  padding: var(--move-dropdown-content-padding);
+  z-index: var(--move-layer-dropdown);
+}

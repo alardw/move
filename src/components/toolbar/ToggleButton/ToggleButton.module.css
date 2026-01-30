@@ -1,0 +1,23 @@
+/*
+ * ToggleButton Component
+ * Composes the Button base styles and adds on/off state.
+ */
+
+.root {
+  composes: root from '../../core/Button/Button.module.css';
+  padding-left: var(--move-space-3);
+  padding-right: var(--move-space-3);
+}
+
+/* "on" state — primary color */
+.root[data-state='on'] {
+  background-color: var(--move-primary);
+  color: var(--move-primary-fg);
+  border-color: transparent;
+  box-shadow: var(--move-shadow-subtle);
+}
+
+.root[data-state='on']:hover:not(:disabled) {
+  background-color: var(--move-primary-hover);
+  box-shadow: var(--move-shadow-default);
+}

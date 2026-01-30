@@ -1,0 +1,57 @@
+/*
+ * Switch Component
+ * A toggle switch with animated thumb.
+ */
+
+.root {
+  /* Component tokens */
+  --move-switch-width: 3.25rem;
+  --move-switch-height: 1.75rem;
+  --move-switch-bg: var(--move-bg-emphasis);
+  --move-switch-bg-checked: var(--move-primary);
+  --move-switch-radius: var(--move-rounded-full);
+  --move-switch-padding: 3px;
+  --move-switch-transition: var(--move-transition-fast);
+
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  width: var(--move-switch-width);
+  height: var(--move-switch-height);
+  background-color: var(--move-switch-bg);
+  border-radius: var(--move-switch-radius);
+  padding: var(--move-switch-padding);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color var(--move-switch-transition) var(--move-ease-default);
+}
+
+.root[data-state='checked'] {
+  background-color: var(--move-switch-bg-checked);
+}
+
+.root:focus-visible {
+  box-shadow: 0 0 0 2px var(--move-focus-ring-color);
+}
+
+.root[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.thumb {
+  /* Component tokens */
+  --move-switch-thumb-size: calc(var(--move-switch-height) - var(--move-switch-padding) * 2);
+  --move-switch-thumb-bg: var(--move-white, #fff);
+  --move-switch-thumb-shadow: var(--move-shadow-subtle);
+  --move-switch-thumb-translate: calc(var(--move-switch-width) - var(--move-switch-thumb-size) - var(--move-switch-padding) * 2);
+
+  display: block;
+  width: var(--move-switch-thumb-size);
+  height: var(--move-switch-thumb-size);
+  background-color: var(--move-switch-thumb-bg);
+  border-radius: var(--move-rounded-full);
+  box-shadow: var(--move-switch-thumb-shadow);
+  will-change: transform;
+}

@@ -1,0 +1,85 @@
+/*
+ * RadioGroup Component
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-sm);
+}
+
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  cursor: pointer;
+}
+
+.wrapper:has(.item:disabled) {
+  cursor: not-allowed;
+}
+
+.item {
+  /* Component tokens */
+  --move-radio-size: var(--move-space-8);
+  --move-radio-radius: var(--move-rounded-full);
+  --move-radio-bg: var(--move-bg-muted);
+  --move-radio-bg-hover: var(--move-bg-emphasis);
+  --move-radio-bg-checked: var(--move-primary);
+  --move-radio-bg-checked-hover: var(--move-primary-hover);
+  --move-radio-border: var(--move-border-base);
+  --move-radio-border-hover: var(--move-border-emphasis);
+  --move-radio-fg: var(--move-primary-fg);
+  --move-radio-dot-size: 10px;
+
+  width: var(--move-radio-size);
+  height: var(--move-radio-size);
+  border-radius: var(--move-radio-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--move-radio-bg);
+  border: 1px solid var(--move-radio-border);
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.wrapper:hover .item:not(:disabled) {
+  background-color: var(--move-radio-bg-hover);
+  border-color: var(--move-radio-border-hover);
+}
+
+.item[data-state='checked'] {
+  background-color: var(--move-radio-bg-checked);
+  border-color: transparent;
+}
+
+.wrapper:hover .item[data-state='checked']:not(:disabled) {
+  background-color: var(--move-radio-bg-checked-hover);
+}
+
+.item:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.item:disabled {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: var(--move-radio-dot-size);
+  height: var(--move-radio-dot-size);
+  border-radius: var(--move-rounded-full);
+  background-color: var(--move-radio-fg);
+}

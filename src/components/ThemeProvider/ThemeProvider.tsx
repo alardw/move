@@ -1,7 +1,7 @@
 import * as React from 'react';
-import '../../tokens/index.css';
-import type { Theme, ThemeAnimation } from '../../themes/types';
-import { darkTheme } from '../../themes/dark';
+import '../../styles/tokens/index.css';
+import type { Theme, ThemeAnimation } from '../../styles/themes/types';
+import { darkTheme } from '../../styles/themes/dark';
 
 export interface ThemeContextValue {
   theme: Theme;
@@ -64,6 +64,9 @@ export interface ThemeProviderProps {
  */
 export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps>(
   ({ children, theme = darkTheme, className, asWrapper = true }, ref) => {
+    const parentContext = React.useContext(ThemeContext);
+    const isNested = parentContext !== null;
+
     const contextValue = React.useMemo<ThemeContextValue>(
       () => ({
         theme,
@@ -72,14 +75,26 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
       [theme]
     );
 
-    // Apply theme tokens to :root so CSS var() references work everywhere
-    // Use useLayoutEffect to apply before paint
+    // Top-level provider: apply tokens to :root so CSS var() works everywhere.
+    // Nested providers skip :root — they scope tokens via the wrapper div instead.
     React.useLayoutEffect(() => {
+      if (isNested) return;
       const root = document.documentElement;
       for (const [key, value] of Object.entries(theme.tokens)) {
         root.style.setProperty(key, value);
       }
-    }, [theme]);
+    }, [theme, isNested]);
+
+    // For wrapper mode, build inline styles from tokens so CSS custom properties
+    // inherit down this subtree (scoped theming).
+    const tokenStyle = React.useMemo(() => {
+      if (!asWrapper) return undefined;
+      const style: Record<string, string> = {};
+      for (const [key, value] of Object.entries(theme.tokens)) {
+        style[key] = value;
+      }
+      return style;
+    }, [theme, asWrapper]);
 
     if (!asWrapper) {
       return (
@@ -94,6 +109,7 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
         <div
           ref={ref}
           className={className}
+          style={tokenStyle}
           data-move-theme={theme.name}
         >
           {children}

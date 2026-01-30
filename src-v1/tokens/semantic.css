@@ -1,0 +1,164 @@
+/*
+ * Semantic Tokens
+ * Purpose-based tokens that reference primitives
+ * Override these to change the meaning/intent across all components
+ */
+
+@import './primitives/index.css';
+
+:root {
+  /* ============================================
+   * Color - Background
+   * ============================================ */
+  --move-bg-base: var(--move-gray-950);
+  --move-bg-subtle: var(--move-gray-900);
+  --move-bg-muted: var(--move-gray-800);
+  --move-bg-emphasis: var(--move-gray-700);
+  --move-bg-inverse: var(--move-gray-50);
+
+  /* ============================================
+   * Color - Foreground / Text
+   * ============================================ */
+  --move-fg-base: var(--move-gray-50);
+  --move-fg-muted: var(--move-gray-400);
+  --move-fg-subtle: var(--move-gray-500);
+  --move-fg-inverse: var(--move-gray-950);
+
+  /* ============================================
+   * Color - Border
+   * ============================================ */
+  --move-border-base: var(--move-gray-800);
+  --move-border-muted: var(--move-gray-700);
+  --move-border-emphasis: var(--move-gray-600);
+
+  /* ============================================
+   * Color - Primary (brand)
+   * ============================================ */
+  --move-primary: var(--move-violet-600);
+  --move-primary-hover: var(--move-violet-500);
+  --move-primary-active: var(--move-violet-700);
+  --move-primary-subtle: var(--move-violet-950);
+  --move-primary-fg: var(--move-white);
+
+  /* ============================================
+   * Color - Secondary
+   * ============================================ */
+  --move-secondary: var(--move-gray-700);
+  --move-secondary-hover: var(--move-gray-600);
+  --move-secondary-active: var(--move-gray-800);
+  --move-secondary-fg: var(--move-gray-50);
+
+  /* ============================================
+   * Color - Success
+   * ============================================ */
+  --move-success: var(--move-green-600);
+  --move-success-hover: var(--move-green-500);
+  --move-success-subtle: var(--move-green-950);
+  --move-success-fg: var(--move-white);
+
+  /* ============================================
+   * Color - Warning
+   * ============================================ */
+  --move-warning: var(--move-yellow-500);
+  --move-warning-hover: var(--move-yellow-400);
+  --move-warning-subtle: var(--move-yellow-950);
+  --move-warning-fg: var(--move-black);
+
+  /* ============================================
+   * Color - Error / Danger
+   * ============================================ */
+  --move-error: var(--move-red-600);
+  --move-error-hover: var(--move-red-500);
+  --move-error-subtle: var(--move-red-950);
+  --move-error-fg: var(--move-white);
+
+  /* ============================================
+   * Color - Info
+   * ============================================ */
+  --move-info: var(--move-blue-600);
+  --move-info-hover: var(--move-blue-500);
+  --move-info-subtle: var(--move-blue-950);
+  --move-info-fg: var(--move-white);
+
+  /* ============================================
+   * Focus Ring
+   * ============================================ */
+  --move-focus-ring-color: var(--move-violet-500);
+  --move-focus-ring-width: 2px;
+  --move-focus-ring-offset: 2px;
+  --move-focus-ring: var(--move-focus-ring-width) solid var(--move-focus-ring-color);
+
+  /* ============================================
+   * Interactive Element Heights (buttons, inputs, selects)
+   * ============================================ */
+  --move-control-height-sm: 2rem;
+  --move-control-height-md: 2.375rem;
+  --move-control-height-lg: 2.75rem;
+
+  /* ============================================
+   * Disabled State
+   * ============================================ */
+  --move-disabled-opacity: 0.6;
+
+  /* ============================================
+   * Spacing - Semantic
+   * ============================================ */
+  --move-spacing-xs: var(--move-space-1);
+  --move-spacing-sm: var(--move-space-2);
+  --move-spacing-md: var(--move-space-4);
+  --move-spacing-lg: var(--move-space-6);
+  --move-spacing-xl: var(--move-space-8);
+
+  /* ============================================
+   * Border Radius - Semantic
+   * ============================================ */
+  --move-rounded-none: var(--move-radius-0);
+  --move-rounded-sm: var(--move-radius-2);
+  --move-rounded-md: var(--move-radius-4);
+  --move-rounded-lg: var(--move-radius-6);
+  --move-rounded-xl: var(--move-radius-8);
+  --move-rounded-full: var(--move-radius-full);
+
+  /* ============================================
+   * Typography - Semantic
+   * ============================================ */
+  --move-font-body: var(--move-font-sans);
+  --move-font-code: var(--move-font-mono);
+
+  --move-size-xs: var(--move-text-xs);
+  --move-size-sm: var(--move-text-sm);
+  --move-size-base: var(--move-text-base);
+  --move-size-lg: var(--move-text-lg);
+  --move-size-xl: var(--move-text-xl);
+
+  /* ============================================
+   * Shadows - Semantic
+   * ============================================ */
+  --move-shadow-subtle: var(--move-shadow-sm);
+  --move-shadow-default: var(--move-shadow-md);
+  --move-shadow-elevated: var(--move-shadow-lg);
+  --move-shadow-overlay: var(--move-shadow-xl);
+
+  /* ============================================
+   * Animation - Semantic
+   * ============================================ */
+  --move-transition-fast: var(--move-duration-fast);
+  --move-transition-normal: var(--move-duration-normal);
+  --move-transition-slow: var(--move-duration-slow);
+
+  --move-ease-default: var(--move-ease-out);
+  --move-ease-interactive: var(--move-ease-spring);
+  --move-ease-enter: var(--move-ease-overlay-in);
+  --move-ease-exit: var(--move-ease-overlay-out);
+
+  /* ============================================
+   * Z-Index - Semantic
+   * ============================================ */
+  --move-layer-base: var(--move-z-base);
+  --move-layer-dropdown: var(--move-z-dropdown);
+  --move-layer-overlay: var(--move-z-overlay);
+  --move-layer-modal: var(--move-z-modal);
+  --move-layer-popover: var(--move-z-popover);
+  --move-layer-toast: var(--move-z-toast);
+  --move-layer-tooltip: var(--move-z-tooltip);
+}

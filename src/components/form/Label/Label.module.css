@@ -1,0 +1,30 @@
+/*
+ * Label Component
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+.root {
+  /* Component tokens */
+  --move-label-font-size: var(--move-size-sm);
+  --move-label-font-weight: var(--move-weight-medium);
+  --move-label-color: var(--move-fg-base);
+  --move-label-disabled-color: var(--move-fg-muted);
+
+  font-family: var(--move-font-body);
+  font-size: var(--move-label-font-size);
+  font-weight: var(--move-label-font-weight);
+  color: var(--move-label-color);
+  cursor: default;
+  user-select: none;
+}
+
+.root[data-disabled] {
+  color: var(--move-label-disabled-color);
+  opacity: var(--move-disabled-opacity);
+}
+
+.asterisk {
+  color: var(--move-primary);
+  font-size: 1.1em;
+  margin-left: 0.2em;
+}

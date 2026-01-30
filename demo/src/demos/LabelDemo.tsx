@@ -1,44 +1,90 @@
-import { Label } from 'move';
+import { Label, MoveProvider } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
+import { Stack } from '../components';
 
-// =============================================================================
-// Example Components
-// =============================================================================
-
-function DefaultExample() {
+function BasicExample() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <Label htmlFor="email">Email address</Label>
-      <input id="email" className="demo-input" type="email" placeholder="you@example.com" style={{ width: 300 }} />
-    </div>
+    <Label>Email address</Label>
   );
 }
 
-// =============================================================================
-// Examples Config
-// =============================================================================
+function RequiredExample() {
+  return (
+    <Stack direction="column" gap="md">
+      <Label required>Full name</Label>
+      <Label required>Email address</Label>
+      <Label>Phone number</Label>
+    </Stack>
+  );
+}
+
+function DisabledExample() {
+  return (
+    <Stack direction="column" gap="md">
+      <Label disabled>Disabled label</Label>
+      <Label disabled required>Disabled required label</Label>
+    </Stack>
+  );
+}
+
+function CustomStylingExample() {
+  return (
+    <MoveProvider pt={{
+      Label: { root: { style: { '--move-label-font-size': 'var(--move-size-lg)' } as React.CSSProperties } },
+    }}>
+      <Label required>Large label</Label>
+    </MoveProvider>
+  );
+}
 
 const examples: Example[] = [
   {
-    id: 'default',
-    name: 'Default',
-    description: 'Label paired with an input.',
-    component: <DefaultExample />,
-    code: `<Label htmlFor="email">Email address</Label>
-<input id="email" type="email" placeholder="you@example.com" />`,
+    id: 'usage',
+    name: 'Usage',
+    description: 'A basic label',
+    component: <BasicExample />,
+    code: `import { Label } from 'move';
+
+<Label>Email address</Label>`,
+  },
+  {
+    id: 'required',
+    name: 'Required',
+    description: 'Labels with a mandatory asterisk',
+    component: <RequiredExample />,
+    code: `<Label required>Full name</Label>
+<Label required>Email address</Label>
+<Label>Phone number</Label>`,
+  },
+  {
+    id: 'disabled',
+    name: 'Disabled',
+    description: 'Disabled labels appear muted',
+    component: <DisabledExample />,
+    code: `<Label disabled>Disabled label</Label>
+<Label disabled required>Disabled required label</Label>`,
+  },
+  {
+    id: 'custom',
+    name: 'Custom Styling',
+    description: 'Override label tokens via pass-through',
+    component: <CustomStylingExample />,
+    code: `<MoveProvider pt={{
+  Label: {
+    root: { style: { '--move-label-font-size': 'var(--move-size-lg)' } }
+  },
+}}>
+  <Label required>Large label</Label>
+</MoveProvider>`,
   },
 ];
 
-// =============================================================================
-// Demo Component
-// =============================================================================
-
 export function LabelDemo() {
   return (
-    <DocPage.Root defaultExample="default">
+    <DocPage.Root defaultExample="usage">
       <DocPage.Header
         title="Label"
-        description="An accessible label for form controls."
+        description="An accessible label for form controls, with optional required indicator."
       />
       <DocPage.Examples examples={examples} />
     </DocPage.Root>

@@ -16,6 +16,14 @@ export {
 export { useAnimateConfig, useInteractiveAnimate } from './useAnimateConfig';
 export type { UseAnimateConfigOptions, UseAnimateConfigReturn } from './useAnimateConfig';
 
+export { useToggleAnimation, useExpandAnimation } from './hooks';
+export type {
+  UseToggleAnimationOptions,
+  UseToggleAnimationReturn,
+  UseExpandAnimationOptions,
+  UseExpandAnimationReturn,
+} from './hooks';
+
 // Presence system
 export { Presence } from './Presence';
 export type { PresenceProps } from './Presence';

@@ -1,43 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { animate, stagger } from 'animejs';
-import { Sidebar, Tooltip, IconProvider, ThemeProvider, darkTheme, lightTheme, Button } from 'move';
+import { ThemeProvider, IconProvider, darkTheme, lightTheme, Button } from 'move';
 import type { Theme } from 'move';
 import * as LucideIcons from 'lucide-react';
 import {
-  Play, Layers, AlertTriangle, Square, MousePointer,
-  User, CheckSquare, ChevronDown, Menu, MessageSquare,
-  List, Tag, AlignJustify, Navigation,
-  MessageCircle, Loader, Circle, ScrollText, ChevronDownSquare,
-  Minus, Sliders, ToggleLeft, LayoutGrid, Bell, ToggleRight,
-  Grid, Wrench, Info, FileText, Image, PanelBottom, Sun, Moon, Sparkles
+  Tag, MousePointer, CheckSquare, Layers, MessageSquare,
+  Palette, Sun, Moon, Star, CircleUser, ChevronDown, Info, RectangleHorizontal, ToggleRight, Circle, Type, Rows3, ListFilter, PanelTop, TextCursorInput, KeyRound, Loader, LoaderCircle
 } from 'lucide-react';
+import {
+  SidebarLayout, SidebarNav, SidebarNavGroup, SidebarNavItem,
+} from './components';
 import './App.css';
 
-// Import custom Streamline Micro Line SVG icons
-import SlWifiIcon from './assets/icons/Micro Line/Computer Devices/Connection/Wifi.svg?react';
-import SlBluetoothIcon from './assets/icons/Micro Line/Computer Devices/Connection/Bluetooth.svg?react';
-import SlAiSparkIcon from './assets/icons/Micro Line/Artificial Intelligence/AI Sparkle/Ai Spark Starlight.svg?react';
-import SlTargetIcon from './assets/icons/Micro Line/Business/Business Strategy/Target.svg?react';
-import SlBatteryIcon from './assets/icons/Micro Line/Computer Devices/Battery/Battery Full.svg?react';
-import SlChipIcon from './assets/icons/Micro Line/Computer Devices/Chips/Micro Chip 1.svg?react';
-import SlLaptopIcon from './assets/icons/Micro Line/Computer Devices/Computer/Computer Laptop.svg?react';
-import SlMegaphoneIcon from './assets/icons/Micro Line/Business/Business Strategy/Announcement Megaphone.svg?react';
-import SlStartupIcon from './assets/icons/Micro Line/Business/Business Strategy/Startup.svg?react';
-import SlShieldIcon from './assets/icons/Micro Line/Business/Business Strategy/Security Shield.svg?react';
-
-const customIcons: Record<string, React.ComponentType<any>> = {
-  'sl-wifi': SlWifiIcon,
-  'sl-bluetooth': SlBluetoothIcon,
-  'sl-ai-spark': SlAiSparkIcon,
-  'sl-target': SlTargetIcon,
-  'sl-battery': SlBatteryIcon,
-  'sl-chip': SlChipIcon,
-  'sl-laptop': SlLaptopIcon,
-  'sl-megaphone': SlMegaphoneIcon,
-  'sl-startup': SlStartupIcon,
-  'sl-shield': SlShieldIcon,
-};
-
+// Icon resolver
 function toPascalCase(str: string): string {
   return str
     .split('-')
@@ -46,86 +21,103 @@ function toPascalCase(str: string): string {
 }
 
 const iconResolver = (name: string) => {
-  if (customIcons[name]) return customIcons[name];
   const icons = LucideIcons as Record<string, any>;
   return icons[toPascalCase(name)] || icons[name] || null;
 };
 
 // Component demos
-import { AccordionDemo } from './demos/AccordionDemo';
-import { AlertDialogDemo } from './demos/AlertDialogDemo';
-import { ButtonDemo } from './demos/ButtonDemo';
-import { DockDemo } from './demos/DockDemo';
 import { AvatarDemo } from './demos/AvatarDemo';
+import { BadgeDemo } from './demos/BadgeDemo';
+import { ButtonDemo } from './demos/ButtonDemo';
 import { CheckboxDemo } from './demos/CheckboxDemo';
-import { CollapsibleDemo } from './demos/CollapsibleDemo';
-import { ContextMenuDemo } from './demos/ContextMenuDemo';
+import { AccordionDemo } from './demos/AccordionDemo';
 import { DialogDemo } from './demos/DialogDemo';
-import { DropdownMenuDemo } from './demos/DropdownMenuDemo';
-import { HoverCardDemo } from './demos/HoverCardDemo';
+import { DropdownDemo } from './demos/DropdownDemo';
 import { IconDemo } from './demos/IconDemo';
-import { LabelDemo } from './demos/LabelDemo';
-import { MenubarDemo } from './demos/MenubarDemo';
-import { NavigationMenuDemo } from './demos/NavigationMenuDemo';
-import { PopoverDemo } from './demos/PopoverDemo';
-import { ProgressDemo } from './demos/ProgressDemo';
-import { RadioGroupDemo } from './demos/RadioGroupDemo';
-import { ScrollAreaDemo } from './demos/ScrollAreaDemo';
-import { SelectDemo } from './demos/SelectDemo';
-import { SeparatorDemo } from './demos/SeparatorDemo';
-import { SliderDemo } from './demos/SliderDemo';
-import { SwitchDemo } from './demos/SwitchDemo';
-import { TabsDemo } from './demos/TabsDemo';
-import { ToastDemo } from './demos/ToastDemo';
-import { ToggleDemo } from './demos/ToggleDemo';
-import { ToggleGroupDemo } from './demos/ToggleGroupDemo';
-import { ToolbarDemo } from './demos/ToolbarDemo';
 import { TooltipDemo } from './demos/TooltipDemo';
-import { FormDemo } from './demos/FormDemo';
-import { AspectRatioDemo } from './demos/AspectRatioDemo';
-import { AnimationDemo } from './demos/AnimationDemo';
-import { MaterialDemo } from './demos/MaterialDemo';
+import { SwitchDemo } from './demos/SwitchDemo';
+import { RadioGroupDemo } from './demos/RadioGroupDemo';
+import { LabelDemo } from './demos/LabelDemo';
+import { ThemeDemo } from './demos/ThemeDemo';
+import { ToggleDemo } from './demos/ToggleDemo';
+import { FormFieldDemo } from './demos/FormFieldDemo';
+import { SelectDemo } from './demos/SelectDemo';
+import { TabsDemo } from './demos/TabsDemo';
+import { InputTextDemo } from './demos/InputTextDemo';
+import { PasswordDemo } from './demos/PasswordDemo';
+import { ProgressBarDemo } from './demos/ProgressBarDemo';
+import { SpinnerDemo } from './demos/SpinnerDemo';
 
-const components = [
-  { name: 'Animation', component: AnimationDemo, icon: Play },
-  { name: 'Material', component: MaterialDemo, icon: Sparkles },
-  { name: 'Accordion', component: AccordionDemo, icon: Layers },
-  { name: 'AlertDialog', component: AlertDialogDemo, icon: AlertTriangle },
-  { name: 'AspectRatio', component: AspectRatioDemo, icon: Image },
-  { name: 'Button', component: ButtonDemo, icon: MousePointer },
-  { name: 'Avatar', component: AvatarDemo, icon: User },
-  { name: 'Checkbox', component: CheckboxDemo, icon: CheckSquare },
-  { name: 'Collapsible', component: CollapsibleDemo, icon: ChevronDown },
-  { name: 'ContextMenu', component: ContextMenuDemo, icon: Menu },
-  { name: 'Dialog', component: DialogDemo, icon: MessageSquare },
-  { name: 'Dock', component: DockDemo, icon: PanelBottom },
-  { name: 'DropdownMenu', component: DropdownMenuDemo, icon: List },
-  { name: 'Form', component: FormDemo, icon: FileText },
-  { name: 'HoverCard', component: HoverCardDemo, icon: Square },
-  { name: 'Icon', component: IconDemo, icon: Grid },
-  { name: 'Label', component: LabelDemo, icon: Tag },
-  { name: 'Menubar', component: MenubarDemo, icon: AlignJustify },
-  { name: 'NavigationMenu', component: NavigationMenuDemo, icon: Navigation },
-  { name: 'Popover', component: PopoverDemo, icon: MessageCircle },
-  { name: 'Progress', component: ProgressDemo, icon: Loader },
-  { name: 'RadioGroup', component: RadioGroupDemo, icon: Circle },
-  { name: 'ScrollArea', component: ScrollAreaDemo, icon: ScrollText },
-  { name: 'Select', component: SelectDemo, icon: ChevronDownSquare },
-  { name: 'Separator', component: SeparatorDemo, icon: Minus },
-  { name: 'Slider', component: SliderDemo, icon: Sliders },
-  { name: 'Switch', component: SwitchDemo, icon: ToggleLeft },
-  { name: 'Tabs', component: TabsDemo, icon: LayoutGrid },
-  { name: 'Toast', component: ToastDemo, icon: Bell },
-  { name: 'Toggle', component: ToggleDemo, icon: ToggleRight },
-  { name: 'ToggleGroup', component: ToggleGroupDemo, icon: Grid },
-  { name: 'Toolbar', component: ToolbarDemo, icon: Wrench },
-  { name: 'Tooltip', component: TooltipDemo, icon: Info },
+const componentGroups = [
+  {
+    label: 'Core',
+    items: [
+      { name: 'Avatar', component: AvatarDemo, icon: CircleUser },
+      { name: 'Button', component: ButtonDemo, icon: MousePointer },
+      { name: 'Dropdown', component: DropdownDemo, icon: ChevronDown },
+      { name: 'Icon', component: IconDemo, icon: Star },
+      { name: 'Tooltip', component: TooltipDemo, icon: Info },
+    ],
+  },
+  {
+    label: 'Form',
+    items: [
+      { name: 'Checkbox', component: CheckboxDemo, icon: CheckSquare },
+      { name: 'Label', component: LabelDemo, icon: Type },
+      { name: 'RadioGroup', component: RadioGroupDemo, icon: Circle },
+      { name: 'Switch', component: SwitchDemo, icon: ToggleRight },
+      { name: 'FormField', component: FormFieldDemo, icon: Rows3 },
+      { name: 'InputText', component: InputTextDemo, icon: TextCursorInput },
+      { name: 'Password', component: PasswordDemo, icon: KeyRound },
+      { name: 'Select', component: SelectDemo, icon: ListFilter },
+    ],
+  },
+  {
+    label: 'Toolbar',
+    items: [
+      { name: 'ToggleButton', component: ToggleDemo, icon: RectangleHorizontal },
+    ],
+  },
+  {
+    label: 'Panel',
+    items: [
+      { name: 'Accordion', component: AccordionDemo, icon: Layers },
+      { name: 'Tabs', component: TabsDemo, icon: PanelTop },
+    ],
+  },
+  {
+    label: 'Overlay',
+    items: [
+      { name: 'Dialog', component: DialogDemo, icon: MessageSquare },
+    ],
+  },
+  {
+    label: 'Loading',
+    items: [
+      { name: 'ProgressBar', component: ProgressBarDemo, icon: Loader },
+      { name: 'Spinner', component: SpinnerDemo, icon: LoaderCircle },
+    ],
+  },
+  {
+    label: 'Misc',
+    items: [
+      { name: 'Badge', component: BadgeDemo, icon: Tag },
+    ],
+  },
+  {
+    label: 'System',
+    items: [
+      { name: 'Theme', component: ThemeDemo, icon: Palette },
+    ],
+  },
 ];
+
+const allComponents = componentGroups.flatMap(g => g.items);
 
 function getComponentFromHash() {
   const hash = window.location.hash.slice(1);
-  const found = components.find(c => c.name.toLowerCase() === hash.toLowerCase());
-  return found ? found.name : 'Animation';
+  const found = allComponents.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === hash.toLowerCase());
+  return found ? found.name : 'Button';
 }
 
 function AnimatedLogo() {
@@ -137,14 +129,12 @@ function AnimatedLogo() {
     const chars = containerRef.current.querySelectorAll('.char');
 
     const runAnimation = () => {
-      // Animate out (up)
       animate(chars, {
         y: '-100%',
         duration: 400,
         ease: 'in(3)',
         delay: stagger(30),
         onComplete: () => {
-          // Instantly move to bottom, then animate in
           animate(chars, {
             y: ['100%', '0%'],
             duration: 400,
@@ -155,9 +145,7 @@ function AnimatedLogo() {
       });
     };
 
-    // Run every 10 seconds
     const interval = setInterval(runAnimation, 10000);
-
     return () => clearInterval(interval);
   }, []);
 
@@ -180,6 +168,7 @@ function App() {
     return stored === 'light' ? lightTheme : darkTheme;
   });
 
+  // Sync hash → state (browser back/forward only)
   useEffect(() => {
     const handleHashChange = () => {
       setActiveComponent(getComponentFromHash());
@@ -188,9 +177,17 @@ function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
+  // Sync state → hash (replaceState avoids triggering hashchange)
+  useEffect(() => {
+    const slug = activeComponent.toLowerCase().replace(/\s+/g, '-');
+    if (window.location.hash.slice(1) !== slug) {
+      window.history.replaceState(null, '', '#' + slug);
+    }
+  }, [activeComponent]);
+
   const handleComponentChange = (name: string) => {
-    window.location.hash = name.toLowerCase();
     setActiveComponent(name);
+    window.history.pushState(null, '', '#' + name.toLowerCase().replace(/\s+/g, '-'));
   };
 
   const toggleTheme = () => {
@@ -199,44 +196,54 @@ function App() {
     setTheme(newTheme);
   };
 
-  const ActiveDemo = components.find(c => c.name === activeComponent)?.component;
+  const ActiveDemo = allComponents.find(c => c.name === activeComponent)?.component;
 
   return (
     <ThemeProvider theme={theme}>
       <IconProvider resolver={iconResolver}>
-        <Tooltip.Provider>
-          <div className="app">
-            <Sidebar.Root className="sidebar" collapsed={sidebarCollapsed} onCollapsedChange={setSidebarCollapsed}>
-              <Sidebar.Header>
-                <AnimatedLogo />
-                <Sidebar.Toggle />
-              </Sidebar.Header>
-              <Sidebar.Content>
-                {components.map(({ name, icon: Icon }) => (
-                  <Sidebar.Item
-                    key={name}
-                    icon={<Icon />}
-                    active={activeComponent === name}
-                    onClick={() => handleComponentChange(name)}
-                  >
-                    {name}
-                  </Sidebar.Item>
-                ))}
-              </Sidebar.Content>
-              <Sidebar.Footer>
-                <Button variant="ghost" onClick={toggleTheme}>
-                  {theme.name === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                  {theme.name === 'dark' ? 'Light' : 'Dark'}
-                </Button>
-              </Sidebar.Footer>
-            </Sidebar.Root>
-            <main className="main-content" style={{ marginLeft: sidebarCollapsed ? '4rem' : '15rem' }}>
-              <div className="demo-container">
-                {ActiveDemo && <ActiveDemo />}
+        <SidebarLayout
+          collapsed={sidebarCollapsed}
+          sidebar={
+            <>
+              <div className="sidebar-header">
+                {!sidebarCollapsed && <AnimatedLogo />}
+                <button
+                  className="sidebar-toggle"
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                >
+                  {sidebarCollapsed ? '→' : '←'}
+                </button>
               </div>
-            </main>
+              <SidebarNav>
+                {componentGroups.map(group => (
+                  <SidebarNavGroup key={group.label} label={group.label} collapsed={sidebarCollapsed}>
+                    {group.items.map(({ name, icon }) => (
+                      <SidebarNavItem
+                        key={name}
+                        icon={icon}
+                        label={name}
+                        active={activeComponent === name}
+                        collapsed={sidebarCollapsed}
+                        onClick={() => handleComponentChange(name)}
+                      />
+                    ))}
+                  </SidebarNavGroup>
+                ))}
+              </SidebarNav>
+              <div className="sidebar-footer">
+                <Button variant="ghost" onClick={toggleTheme} className="sidebar-theme-toggle">
+                  {theme.name === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+                  {!sidebarCollapsed && (theme.name === 'dark' ? 'Light' : 'Dark')}
+                </Button>
+              </div>
+            </>
+          }
+        >
+          <div className="demo-container">
+            {ActiveDemo && <ActiveDemo />}
           </div>
-        </Tooltip.Provider>
+        </SidebarLayout>
       </IconProvider>
     </ThemeProvider>
   );

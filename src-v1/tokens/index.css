@@ -1,0 +1,6 @@
+/*
+ * Move Design Tokens
+ * Main entry point - imports semantic tokens (which imports primitives)
+ */
+
+@import './semantic.css';
