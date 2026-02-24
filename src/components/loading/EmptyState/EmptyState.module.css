@@ -1,0 +1,91 @@
+/*
+ * EmptyState Component
+ * Centered placeholder for empty views with icon, text, and optional action.
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+.root {
+  /* Component tokens */
+  --move-emptystate-icon-fg: var(--move-fg-subtle);
+  --move-emptystate-title-fg: var(--move-fg-base);
+  --move-emptystate-description-fg: var(--move-fg-muted);
+  --move-emptystate-padding: var(--move-spacing-xl);
+  --move-emptystate-gap: var(--move-spacing-sm);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--move-emptystate-padding);
+  gap: var(--move-emptystate-gap);
+  font-family: var(--move-font-body);
+}
+
+/* Size: sm */
+.root[data-size='sm'] {
+  --move-emptystate-padding: var(--move-spacing-lg);
+  --move-emptystate-gap: var(--move-spacing-xs);
+}
+
+/* Size: md (default) */
+.root[data-size='md'],
+.root:not([data-size]) {
+  --move-emptystate-padding: var(--move-spacing-xl);
+  --move-emptystate-gap: var(--move-spacing-sm);
+}
+
+/* Size: lg */
+.root[data-size='lg'] {
+  --move-emptystate-padding: calc(var(--move-spacing-xl) * 1.5);
+  --move-emptystate-gap: var(--move-spacing-md);
+}
+
+/* Icon */
+.icon {
+  color: var(--move-emptystate-icon-fg);
+  margin-bottom: var(--move-spacing-xs);
+}
+
+/* Title */
+.title {
+  color: var(--move-emptystate-title-fg);
+  font-weight: var(--move-weight-medium);
+  font-size: var(--move-size-base);
+  line-height: 1.4;
+}
+
+.root[data-size='sm'] .title {
+  font-size: var(--move-size-sm);
+}
+
+.root[data-size='lg'] .title {
+  font-size: var(--move-size-lg);
+}
+
+/* Description */
+.description {
+  color: var(--move-emptystate-description-fg);
+  font-size: var(--move-size-sm);
+  line-height: 1.5;
+  max-width: 36ch;
+}
+
+.root[data-size='sm'] .description {
+  font-size: var(--move-size-xs);
+  max-width: 30ch;
+}
+
+.root[data-size='lg'] .description {
+  font-size: var(--move-size-base);
+  max-width: 42ch;
+}
+
+/* Action */
+.action {
+  margin-top: var(--move-spacing-sm);
+}
+
+.root[data-size='lg'] .action {
+  margin-top: var(--move-spacing-md);
+}

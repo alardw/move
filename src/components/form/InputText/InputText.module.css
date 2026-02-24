@@ -12,7 +12,7 @@
   --move-input-radius: var(--move-rounded-md);
   --move-input-padding-x: var(--move-spacing-sm);
   --move-input-padding-y: var(--move-spacing-xs);
-  --move-input-font-size: var(--move-size-sm);
+  --move-input-font-size: inherit;
   --move-input-fg: var(--move-fg-base);
   --move-input-placeholder: var(--move-fg-muted);
   --move-input-height: var(--move-control-height-md);
@@ -40,7 +40,8 @@
 
 .root:focus-within {
   border-color: var(--move-input-border-focus);
-  box-shadow: 0 0 0 2px var(--move-focus-ring-color);
+  outline: var(--move-focus-ring);
+  outline-offset: 0px;
 }
 
 .input {
@@ -117,7 +118,8 @@
 
 .root[data-invalid]:focus-within {
   border-color: var(--move-error);
-  box-shadow: 0 0 0 2px var(--move-error-subtle);
+  outline: var(--move-focus-ring-width) solid var(--move-error);
+  outline-offset: 0px;
 }
 
 /* Read-only */

@@ -2,6 +2,8 @@
  * Tooltip Component
  * Component tokens on each slot so they resolve in local scope.
  * Content lives in a portal, so it declares all tokens it consumes.
+ * Entrance animation is handled by anime.js (spring physics).
+ * Exit animation is CSS (Radix manages unmount lifecycle).
  */
 
 .trigger {
@@ -18,7 +20,6 @@
   --move-tooltip-content-padding-y: var(--move-spacing-sm);
   --move-tooltip-content-font-size: var(--move-size-sm);
   --move-tooltip-content-max-width: 18rem;
-  --move-tooltip-transition-duration: var(--move-transition-fast);
 
   padding: var(--move-tooltip-content-padding-y) var(--move-tooltip-content-padding-x);
   background-color: var(--move-tooltip-content-bg);
@@ -32,54 +33,15 @@
   z-index: var(--move-layer-tooltip);
   user-select: none;
   will-change: transform, opacity;
-  animation-duration: var(--move-tooltip-transition-duration);
-  animation-timing-function: var(--move-ease-enter);
-  animation-fill-mode: forwards;
 }
 
-.content[data-state='delayed-open'],
-.content[data-state='instant-open'] {
-  animation-name: tooltip-in;
-}
-
+/* Exit — CSS handles close since Radix controls unmount */
 .content[data-state='closed'] {
-  animation-name: tooltip-out;
-  animation-timing-function: var(--move-ease-exit);
-}
-
-.content[data-side='top'] {
-  --move-tooltip-slide-y: 6px;
-  --move-tooltip-slide-x: 0px;
-}
-
-.content[data-side='bottom'] {
-  --move-tooltip-slide-y: -6px;
-  --move-tooltip-slide-x: 0px;
-}
-
-.content[data-side='left'] {
-  --move-tooltip-slide-x: 6px;
-  --move-tooltip-slide-y: 0px;
-}
-
-.content[data-side='right'] {
-  --move-tooltip-slide-x: -6px;
-  --move-tooltip-slide-y: 0px;
+  animation: tooltip-out 120ms var(--move-ease-exit) forwards;
 }
 
 .arrow {
   fill: var(--move-tooltip-content-bg, var(--move-fg-base));
-}
-
-@keyframes tooltip-in {
-  from {
-    opacity: 0;
-    transform: translate(var(--move-tooltip-slide-x, 0), var(--move-tooltip-slide-y, 0)) scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
-  }
 }
 
 @keyframes tooltip-out {
@@ -89,6 +51,6 @@
   }
   to {
     opacity: 0;
-    transform: translate(var(--move-tooltip-slide-x, 0), var(--move-tooltip-slide-y, 0)) scale(0.96);
+    transform: scale(0.9);
   }
 }

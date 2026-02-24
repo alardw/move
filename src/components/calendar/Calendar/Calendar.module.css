@@ -1,0 +1,12 @@
+.root {
+  --move-calendar-bg: transparent;
+  --move-calendar-padding: var(--move-spacing-sm);
+  --move-calendar-width: auto;
+
+  display: inline-flex;
+  flex-direction: column;
+  padding: var(--move-calendar-padding);
+  background: var(--move-calendar-bg);
+  width: var(--move-calendar-width);
+  font-family: var(--move-font-body);
+}

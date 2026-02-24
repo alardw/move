@@ -67,7 +67,7 @@
   background-color: var(--move-accordion-trigger-bg-hover);
 }
 
-.trigger:focus-visible {
+.trigger:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }

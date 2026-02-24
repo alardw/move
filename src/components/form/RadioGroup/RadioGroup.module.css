@@ -4,9 +4,26 @@
  */
 
 .root {
+  /* Component tokens */
+  --move-radio-size: 1.5rem;
+  --move-radio-radius: var(--move-rounded-full);
+  --move-radio-bg: var(--move-bg-muted);
+  --move-radio-bg-hover: var(--move-bg-emphasis);
+  --move-radio-bg-checked: var(--move-primary);
+  --move-radio-bg-checked-hover: var(--move-primary-hover);
+  --move-radio-border: var(--move-border-base);
+  --move-radio-border-hover: var(--move-border-emphasis);
+  --move-radio-fg: var(--move-primary-fg);
+  --move-radio-dot-size: 0.5rem;
+
   display: flex;
   flex-direction: column;
   gap: var(--move-spacing-sm);
+}
+
+.root[aria-orientation='horizontal'] {
+  flex-direction: row;
+  gap: var(--move-spacing-lg);
 }
 
 .wrapper {
@@ -21,18 +38,6 @@
 }
 
 .item {
-  /* Component tokens */
-  --move-radio-size: var(--move-space-8);
-  --move-radio-radius: var(--move-rounded-full);
-  --move-radio-bg: var(--move-bg-muted);
-  --move-radio-bg-hover: var(--move-bg-emphasis);
-  --move-radio-bg-checked: var(--move-primary);
-  --move-radio-bg-checked-hover: var(--move-primary-hover);
-  --move-radio-border: var(--move-border-base);
-  --move-radio-border-hover: var(--move-border-emphasis);
-  --move-radio-fg: var(--move-primary-fg);
-  --move-radio-dot-size: 10px;
-
   width: var(--move-radio-size);
   height: var(--move-radio-size);
   border-radius: var(--move-radio-radius);
@@ -57,13 +62,41 @@
   border-color: transparent;
 }
 
+.root[data-invalid] .item[data-state='checked'] {
+  border-color: var(--move-error);
+}
+
 .wrapper:hover .item[data-state='checked']:not(:disabled) {
   background-color: var(--move-radio-bg-checked-hover);
 }
 
-.item:focus-visible {
+.item:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
+}
+
+/* Invalid — set on Root, cascades to items */
+.root[data-invalid] .item {
+  --move-radio-border: var(--move-error);
+}
+
+.root[data-invalid] .wrapper:hover .item:not(:disabled) {
+  border-color: var(--move-error);
+}
+
+.root[data-invalid] .item:focus-visible:not(:active) {
+  outline-color: var(--move-error);
+}
+
+/* Sizes */
+.root[data-size='sm'] .item {
+  --move-radio-size: 1.25rem;
+  --move-radio-dot-size: 0.375rem;
+}
+
+.root[data-size='lg'] .item {
+  --move-radio-size: 1.875rem;
+  --move-radio-dot-size: 0.6875rem;
 }
 
 .item:disabled {
@@ -75,6 +108,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.indicator[data-state='unchecked'] {
+  opacity: 0;
 }
 
 .dot {

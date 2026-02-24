@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Toggle as RadixToggle } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useInteractiveAnimate } from '../../../animation';
-import { defaultAnimations, type InteractiveAnimate } from '../../../animation/types';
+import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
 import type { PassThrough } from '../../../engine/types';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleButton.module.css';
@@ -23,7 +23,7 @@ export interface ToggleButtonProps extends Record<string, unknown> {
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: InteractiveAnimate | false;
+  animate?: ElementAnimate | false;
   pt?: PassThrough<'root'>;
 }
 
@@ -49,8 +49,8 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
       : { ...(animateProp || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractiveAnimate,
-      defaults: defaultAnimations.interactive,
+      animate: animateConfig as ElementAnimate,
+      defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });
 
@@ -61,14 +61,17 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
         const rootPt = ptm('root');
         const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
 
+        const toggleProps: Record<string, unknown> = {};
+        if (props.pressed !== undefined) toggleProps.pressed = props.pressed;
+        if (props.defaultPressed !== undefined) toggleProps.defaultPressed = props.defaultPressed;
+        if (props.onPressedChange !== undefined) toggleProps.onPressedChange = props.onPressedChange;
+
         return (
           <RadixToggle.Root
             {...attrs}
             {...ptRest}
+            {...toggleProps}
             ref={mergedRef}
-            pressed={props.pressed as boolean}
-            defaultPressed={props.defaultPressed as boolean}
-            onPressedChange={props.onPressedChange as (pressed: boolean) => void}
             disabled={props.disabled as boolean}
             className={cx('root', className, ptClass as string | undefined)}
             style={{ ...style, ...(ptStyle as React.CSSProperties) }}

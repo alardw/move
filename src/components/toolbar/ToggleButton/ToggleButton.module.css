@@ -7,17 +7,19 @@
   composes: root from '../../core/Button/Button.module.css';
   padding-left: var(--move-space-3);
   padding-right: var(--move-space-3);
+  font-weight: var(--move-weight-regular, 400);
 }
 
-/* "on" state — primary color */
-.root[data-state='on'] {
+/* "on" state — primary color (extra [data-variant] raises specificity above composed Button variant rules) */
+.root[data-state='on'][data-variant] {
   background-color: var(--move-primary);
   color: var(--move-primary-fg);
   border-color: transparent;
   box-shadow: var(--move-shadow-subtle);
 }
 
-.root[data-state='on']:hover:not(:disabled) {
+.root[data-state='on'][data-variant]:hover:not(:disabled) {
   background-color: var(--move-primary-hover);
+  border-color: transparent;
   box-shadow: var(--move-shadow-default);
 }

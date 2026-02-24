@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useInteractiveAnimate } from '../../../animation';
-import { defaultAnimations, type InteractiveAnimate } from '../../../animation/types';
+import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
 import type { ElevationLevel } from '../../../styles/visual';
 import styles from './Button.module.css';
 
@@ -14,7 +14,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export interface ButtonProps extends Record<string, unknown> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: InteractiveAnimate | false;
+  animate?: ElementAnimate | false;
   elevation?: ElevationLevel;
   asChild?: boolean;
   type?: string;
@@ -35,21 +35,27 @@ export interface ButtonProps extends Record<string, unknown> {
 // Button.Group sub-component
 // ============================================================================
 
-export interface ButtonGroupProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ButtonGroupProps extends Record<string, unknown> {
   children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
-  ({ children, style, ...props }, ref) => (
-    <div
-      ref={ref}
-      role="group"
-      style={{ display: 'inline-flex', gap: '0.5rem', ...style }}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+  (props, ref) => {
+    const { children, className, style, ...rest } = props as ButtonGroupProps & { children?: React.ReactNode; className?: string; style?: React.CSSProperties };
+    return (
+      <div
+        ref={ref}
+        role="group"
+        className={className}
+        style={{ display: 'inline-flex', gap: '0.5rem', ...style }}
+        {...(rest as React.HTMLAttributes<HTMLDivElement>)}
+      >
+        {children}
+      </div>
+    );
+  }
 );
 ButtonGroup.displayName = 'Button.Group';
 
@@ -90,8 +96,8 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
       : { ...(animateProp || {}), ...(!animateProp ? {} : {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractiveAnimate,
-      defaults: defaultAnimations.interactive,
+      animate: animateConfig as ElementAnimate,
+      defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });
 

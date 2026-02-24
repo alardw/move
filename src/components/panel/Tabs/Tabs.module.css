@@ -17,6 +17,7 @@
   position: relative;
   border-bottom: 1px solid var(--move-tabs-border);
   gap: var(--move-space-1);
+  padding-bottom: var(--move-space-2);
 }
 
 /* Trigger */
@@ -24,6 +25,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--move-spacing-sm);
   padding: var(--move-space-2) var(--move-space-4);
   font-size: var(--move-text-sm);
   font-weight: var(--move-weight-medium);
@@ -33,7 +35,7 @@
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: color 150ms, border-color 150ms;
+  transition: color var(--move-transition-normal) var(--move-ease-default), border-color var(--move-transition-normal) var(--move-ease-default);
   border-radius: 0;
 }
 
@@ -42,9 +44,9 @@
   background-color: var(--move-tabs-trigger-bg-hover);
 }
 
-.trigger:focus-visible {
-  outline: 2px solid var(--move-focus-ring-color);
-  outline-offset: -2px;
+.trigger:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: -3px;
   border-radius: var(--move-rounded-sm);
 }
 
@@ -53,7 +55,7 @@
 }
 
 .trigger[data-disabled] {
-  opacity: 0.5;
+  opacity: var(--move-disabled-opacity);
   pointer-events: none;
 }
 
@@ -64,8 +66,8 @@
 }
 
 .content:focus-visible {
-  outline: 2px solid var(--move-focus-ring-color);
-  outline-offset: 2px;
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
   border-radius: var(--move-rounded-sm);
 }
 

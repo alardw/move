@@ -1,0 +1,53 @@
+/*
+ * Skeleton Component
+ * Placeholder shapes for loading states.
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+/* Root — container that provides shared tokens */
+.root {
+  /* Component tokens */
+  --move-skeleton-bg: var(--move-bg-emphasis);
+  --move-skeleton-radius: var(--move-rounded-md);
+  --move-skeleton-line-radius: var(--move-rounded-sm);
+  --move-skeleton-text-spacing: var(--move-spacing-sm);
+  --move-skeleton-text-line-height: 0.75rem;
+
+  display: contents;
+}
+
+/* Shared skeleton appearance */
+.circle,
+.rectangle,
+.rounded,
+.line {
+  background-color: var(--move-skeleton-bg);
+}
+
+/* Circle */
+.circle {
+  border-radius: var(--move-rounded-full);
+  flex-shrink: 0;
+}
+
+/* Rectangle — sharp corners */
+.rectangle {
+  border-radius: 0;
+}
+
+/* Rounded — border-radius set inline via radius prop */
+.rounded {
+  flex-shrink: 0;
+}
+
+/* Text container */
+.text {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Individual text line */
+.line {
+  border-radius: var(--move-skeleton-line-radius);
+}

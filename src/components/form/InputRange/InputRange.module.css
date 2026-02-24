@@ -1,0 +1,132 @@
+/*
+ * InputRange Component
+ * A slider input with animated thumb.
+ */
+
+.wrapper {
+  --move-range-value-color: var(--move-fg-muted);
+  --move-range-value-size: var(--move-font-size-sm);
+  --move-range-value-min-width: 2ch;
+
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  width: 100%;
+}
+
+.wrapper[data-orientation='vertical'] {
+  flex-direction: column;
+  width: auto;
+  height: 100%;
+}
+
+.value {
+  font-family: var(--move-font-mono, var(--move-font-body));
+  font-size: var(--move-range-value-size);
+  color: var(--move-range-value-color);
+  min-width: var(--move-range-value-min-width);
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.root {
+  /* Component tokens */
+  --move-range-track-height: 6px;
+  --move-range-track-bg: var(--move-bg-muted);
+  --move-range-track-radius: var(--move-rounded-full);
+  --move-range-range-bg: var(--move-primary);
+  --move-range-thumb-size: 20px;
+  --move-range-thumb-bg: var(--move-primary-fg);
+  --move-range-thumb-border: 2px solid var(--move-primary);
+  --move-range-thumb-shadow: var(--move-shadow-subtle);
+  --move-range-thumb-focus-ring: 0 0 0 var(--move-focus-ring-width) var(--move-focus-ring-color);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  user-select: none;
+  touch-action: none;
+}
+
+.root[data-orientation='vertical'] {
+  flex-direction: column;
+  width: var(--move-range-track-height);
+  height: 100%;
+}
+
+/* Size: sm */
+.root[data-size='sm'] {
+  --move-range-track-height: 4px;
+  --move-range-thumb-size: 16px;
+}
+
+/* Size: lg */
+.root[data-size='lg'] {
+  --move-range-track-height: 8px;
+  --move-range-thumb-size: 24px;
+}
+
+/* Invalid */
+.root[data-invalid] {
+  --move-range-range-bg: var(--move-error);
+  --move-range-thumb-border: 2px solid var(--move-error);
+}
+
+/* Disabled */
+.root[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.track {
+  position: relative;
+  flex-grow: 1;
+  height: var(--move-range-track-height);
+  background-color: var(--move-range-track-bg);
+  border-radius: var(--move-range-track-radius);
+  overflow: hidden;
+}
+
+.root[data-orientation='vertical'] .track {
+  width: var(--move-range-track-height);
+  height: 100%;
+}
+
+.range {
+  position: absolute;
+  height: 100%;
+  background-color: var(--move-range-range-bg);
+  border-radius: inherit;
+}
+
+.root[data-orientation='vertical'] .range {
+  width: 100%;
+  height: auto;
+}
+
+.thumb {
+  all: unset;
+  display: block;
+  width: var(--move-range-thumb-size);
+  height: var(--move-range-thumb-size);
+  background-color: var(--move-range-thumb-bg);
+  border: var(--move-range-thumb-border);
+  border-radius: var(--move-rounded-full);
+  box-shadow: var(--move-range-thumb-shadow);
+  cursor: pointer;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.thumb:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.root[data-disabled] .thumb {
+  cursor: not-allowed;
+}

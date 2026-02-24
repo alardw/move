@@ -3,7 +3,26 @@
  * A toggle switch with animated thumb.
  */
 
-.root {
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  cursor: pointer;
+}
+
+.wrapper[data-disabled] {
+  cursor: not-allowed;
+}
+
+.label {
+  user-select: none;
+}
+
+.wrapper[data-disabled] .label {
+  opacity: var(--move-disabled-opacity);
+}
+
+.root.root {
   /* Component tokens */
   --move-switch-width: 3.25rem;
   --move-switch-height: 1.75rem;
@@ -27,15 +46,27 @@
   transition: background-color var(--move-switch-transition) var(--move-ease-default);
 }
 
-.root[data-state='checked'] {
+.root.root[data-state='checked'] {
   background-color: var(--move-switch-bg-checked);
 }
 
-.root:focus-visible {
-  box-shadow: 0 0 0 2px var(--move-focus-ring-color);
+.root.root:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
 }
 
-.root[data-disabled] {
+/* Invalid */
+.root.root[data-invalid] {
+  box-shadow: inset 0 0 0 1px var(--move-error);
+}
+
+.root.root[data-invalid]:focus-visible:not(:active) {
+  box-shadow: inset 0 0 0 1px var(--move-error);
+  outline: var(--move-focus-ring-width) solid var(--move-error);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.root.root[data-disabled] {
   opacity: var(--move-disabled-opacity);
   cursor: not-allowed;
 }

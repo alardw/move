@@ -14,11 +14,12 @@ import {
 } from '../../../animation/utils';
 import {
   defaultAnimations,
-  type ExpandableAnimate,
-  type InteractiveAnimate,
+  type ContentAnimate,
+  type ElementAnimate,
   type Animation,
   type StaggerConfig,
 } from '../../../animation/types';
+import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import acStyles from './Accordion.module.css';
 
 // ============================================================================
@@ -35,7 +36,7 @@ interface AccordionContextValue {
   isAnimatingIn: (value: string) => boolean;
   onExitComplete: (value: string) => void;
   onEnterComplete: (value: string) => void;
-  contentAnimate: ExpandableAnimate;
+  contentAnimate: ContentAnimate;
   isItemActive: (value: string) => boolean;
   onHeaderClick: (value: string) => void;
   onHeaderKeyDown: (e: React.KeyboardEvent, value: string) => void;
@@ -69,7 +70,7 @@ function useAccordionItemContext() {
 export interface AccordionAnimateConfig {
   enter?: Animation;
   stagger?: StaggerConfig;
-  content?: ExpandableAnimate;
+  content?: ContentAnimate;
 }
 
 export interface AccordionRootProps extends Record<string, unknown> {
@@ -91,7 +92,7 @@ const defaultRootAnimation: AccordionAnimateConfig = {
     scale: { value: [0.9, 1], easing: 'poppy' },
   },
   stagger: { delay: 80 },
-  content: defaultAnimations.expandable,
+  content: defaultAnimations.content,
 };
 
 const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivElement>({
@@ -132,7 +133,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     const prevValueRef = React.useRef<string | string[] | undefined>(undefined);
 
     const config = animateProp === false
-      ? { enter: undefined, stagger: undefined, content: {} as ExpandableAnimate }
+      ? { enter: undefined, stagger: undefined, content: {} as ContentAnimate }
       : mergeAnimateConfig(defaultRootAnimation, animateProp as AccordionAnimateConfig | undefined);
 
     const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
@@ -190,7 +191,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       isAnimatingIn: (v) => animatingInItems.has(v),
       onExitComplete,
       onEnterComplete,
-      contentAnimate: config.content || defaultAnimations.expandable,
+      contentAnimate: config.content || defaultAnimations.content,
       isItemActive: accordion.isItemActive,
       onHeaderClick: accordion.onHeaderClick,
       onHeaderKeyDown: accordion.onHeaderKeyDown,
@@ -346,11 +347,11 @@ export interface AccordionTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   icon?: React.ReactNode;
-  animate?: Pick<InteractiveAnimate, 'hover'> | false;
+  animate?: Pick<ElementAnimate, 'hover'> | false;
   pt?: PassThrough<'trigger' | 'icon'>;
 }
 
-const defaultTriggerAnimation: Pick<InteractiveAnimate, 'hover'> = {
+const defaultTriggerAnimation: Pick<ElementAnimate, 'hover'> = {
   hover: { scale: 1.005, easing: 'snappy' },
 };
 
@@ -366,6 +367,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
     const { className, style, children, icon, animate: animateProp } = props;
     const context = useAccordionContext();
     const itemContext = useAccordionItemContext();
+    const resolvedChevron = useResolvedIcon('chevron-down', 15);
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
     const iconRef = React.useRef<HTMLSpanElement>(null);
     const iconAnimRef = React.useRef<JSAnimation | null>(null);
@@ -374,7 +376,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
 
     const config = animateProp === false
       ? { hover: false as const }
-      : mergeAnimateConfig(defaultTriggerAnimation, animateProp as Pick<InteractiveAnimate, 'hover'> | undefined);
+      : mergeAnimateConfig(defaultTriggerAnimation, animateProp as Pick<ElementAnimate, 'hover'> | undefined);
 
     const handleMouseEnter = () => {
       if (!triggerRef.current || !config.hover || typeof config.hover === 'boolean') return;
@@ -397,30 +399,48 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
       triggerAnimations.set(triggerRef.current, anim);
     };
 
-    // Icon rotation
+    // Icon rotation — synchronised with content animation
+    const isClosing = context.isAnimatingOut(itemContext.value);
+    const isOpening = context.isAnimatingIn(itemContext.value);
+
+    // Set initial rotation on mount (no animation)
     React.useEffect(() => {
-      const trigger = triggerRef.current;
       const iconEl = iconRef.current;
-      if (!trigger || !iconEl) return;
+      if (!iconEl) return;
+      if (context.isItemActive(itemContext.value)) {
+        iconEl.style.transform = 'rotate(180deg)';
+      }
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-      const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-          if (mutation.attributeName === 'data-state') {
-            const state = trigger.getAttribute('data-state');
-            const targetRotation = state === 'open' ? 180 : 0;
-            if (iconAnimRef.current) iconAnimRef.current.pause();
-            iconAnimRef.current = animate(iconEl, {
-              rotate: targetRotation,
-              ease: 'outQuart',
-              duration: prefersReducedMotion() ? 0 : 300,
-            });
-          }
-        }
+    // Rotate closed together with content collapse
+    React.useEffect(() => {
+      if (!isClosing) return;
+      const iconEl = iconRef.current;
+      if (!iconEl) return;
+      if (iconAnimRef.current) iconAnimRef.current.pause();
+      const closeConfig = context.contentAnimate?.close;
+      const duration = closeConfig ? (closeConfig.duration || 300) : 0;
+      iconAnimRef.current = animate(iconEl, {
+        rotate: 0,
+        ease: 'outQuart',
+        duration: prefersReducedMotion() ? 0 : duration,
       });
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-      observer.observe(trigger, { attributes: true });
-      return () => observer.disconnect();
-    }, []);
+    // Rotate open together with content expand
+    React.useEffect(() => {
+      if (!isOpening) return;
+      const iconEl = iconRef.current;
+      if (!iconEl) return;
+      if (iconAnimRef.current) iconAnimRef.current.pause();
+      const openConfig = context.contentAnimate?.open;
+      const duration = openConfig ? (openConfig.duration || 400) : 0;
+      iconAnimRef.current = animate(iconEl, {
+        rotate: 180,
+        ease: 'outQuart',
+        duration: prefersReducedMotion() ? 0 : duration,
+      });
+    }, [isOpening]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
       render() {
@@ -453,11 +473,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
               className={cx('icon', iconPtClass as string | undefined)}
               style={iconPtStyle as React.CSSProperties}
             >
-              {icon ?? (
-                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3.13523 6.15803C3.3241 5.95657 3.64052 5.94637 3.84197 6.13523L7.5 9.56464L11.158 6.13523C11.3595 5.94637 11.6759 5.95657 11.8648 6.15803C12.0536 6.35949 12.0434 6.67591 11.842 6.86477L7.84197 10.6148C7.64964 10.7951 7.35036 10.7951 7.15803 10.6148L3.15803 6.86477C2.95657 6.67591 2.94637 6.35949 3.13523 6.15803Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"/>
-                </svg>
-              )}
+              {icon ?? resolvedChevron}
             </span>
           </button>
         );

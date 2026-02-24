@@ -22,6 +22,10 @@ export interface RadioGroupRootProps extends Record<string, unknown> {
   disabled?: boolean;
   name?: string;
   required?: boolean;
+  /** Whether the radio group is in an invalid state */
+  invalid?: boolean;
+  /** Size variant */
+  size?: 'sm' | 'md' | 'lg';
   orientation?: 'horizontal' | 'vertical';
   loop?: boolean;
   pt?: PassThrough<'root'>;
@@ -31,7 +35,7 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
   name: 'RadioGroupRoot',
   styles,
   slots: ['root'] as const,
-  moveProps: ['value', 'defaultValue', 'onValueChange', 'disabled', 'name', 'required', 'orientation', 'loop'],
+  moveProps: ['value', 'defaultValue', 'onValueChange', 'disabled', 'invalid', 'size', 'name', 'required', 'orientation', 'loop'],
 
   setup({ props, ref, cx, ptm, attrs }) {
     return {
@@ -51,6 +55,8 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
             required={props.required as boolean}
             orientation={props.orientation as 'horizontal' | 'vertical'}
             loop={props.loop as boolean}
+            {...(props.invalid ? { 'data-invalid': '' } : {})}
+            {...(props.size && props.size !== 'md' ? { 'data-size': props.size } : {})}
             className={cx('root', props.className, ptClass as string | undefined)}
             style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
           >

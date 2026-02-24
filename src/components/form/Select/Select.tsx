@@ -6,6 +6,9 @@ import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
 import type { PassThrough } from '../../../engine/types';
+import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
+import type { PopupAnimate } from '../../../animation/types';
 import styles from './Select.module.css';
 
 const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
@@ -20,6 +23,9 @@ interface SelectContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
+  registerLabel: (value: string, label: React.ReactNode) => void;
+  getLabel: (value: string) => React.ReactNode | undefined;
+  animateConfig: PopupAnimate | null;
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);
@@ -43,8 +49,22 @@ export interface SelectRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  animate?: PopupAnimate | false;
   children?: React.ReactNode;
 }
+
+const defaultSelectAnimation: PopupAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    scale: { value: [0.5, 1], easing: 'outQuart' },
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    scale: { value: [1, 0.95], easing: 'outQuart' },
+    duration: 200,
+  },
+  stagger: { delay: 30 },
+};
 
 const SelectRoot: React.FC<SelectRootProps> = ({
   value: controlledValue,
@@ -53,11 +73,16 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
+  animate: animateProp,
   children,
 }) => {
+  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultSelectAnimation, animateProp);
+
   const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const labelMapRef = React.useRef<Map<string, React.ReactNode>>(new Map());
+  const [, forceUpdate] = React.useState(0);
 
   const isValueControlled = controlledValue !== undefined;
   const value = isValueControlled ? controlledValue : uncontrolledValue;
@@ -90,8 +115,20 @@ const SelectRoot: React.FC<SelectRootProps> = ({
     setIsClosing(true);
   }, []);
 
+  const registerLabel = React.useCallback((itemValue: string, label: React.ReactNode) => {
+    const prev = labelMapRef.current.get(itemValue);
+    if (prev !== label) {
+      labelMapRef.current.set(itemValue, label);
+      forceUpdate((n) => n + 1);
+    }
+  }, []);
+
+  const getLabel = React.useCallback((itemValue: string) => {
+    return labelMapRef.current.get(itemValue);
+  }, []);
+
   return (
-    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, isClosing, onCloseComplete: handleCloseComplete, close }}>
+    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, isClosing, onCloseComplete: handleCloseComplete, close, registerLabel, getLabel, animateConfig }}>
       <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange}>
         {children}
       </RadixDropdownMenu.Root>
@@ -109,6 +146,9 @@ export interface SelectTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   disabled?: boolean;
+  /** Whether the select is in an invalid state */
+  invalid?: boolean;
+  width?: React.CSSProperties['width'];
   pt?: PassThrough<'trigger'>;
 }
 
@@ -116,6 +156,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
   name: 'SelectTrigger',
   styles,
   slots: ['trigger'] as const,
+  moveProps: ['invalid', 'disabled', 'width'],
 
   setup({ props, ref, cx, ptm, attrs }) {
     return {
@@ -129,8 +170,9 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             ref={ref}
             disabled={props.disabled as boolean}
             className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(ptStyle as React.CSSProperties) }}
             {...(props.disabled ? { 'data-disabled': '' } : {})}
+            {...(props.invalid ? { 'data-invalid': '' } : {})}
           >
             {props.children}
           </RadixDropdownMenu.Trigger>
@@ -159,14 +201,15 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
   moveProps: ['placeholder'],
 
   setup({ props, ref, cx, ptm, attrs }) {
-    const { value } = useSelectContext();
+    const { value, getLabel } = useSelectContext();
 
     return {
       render() {
         const valuePt = ptm('value');
         const { className: ptClass, style: ptStyle, ...ptRest } = valuePt as Record<string, unknown>;
         const showPlaceholder = value === undefined || value === '';
-        const displayText = showPlaceholder ? (props.placeholder as string) : (props.children ?? value);
+        const label = value !== undefined ? getLabel(value) : undefined;
+        const displayText = showPlaceholder ? (props.placeholder as string) : (props.children ?? label ?? value);
         return (
           <span
             {...attrs}
@@ -201,6 +244,60 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
   slots: ['icon'] as const,
 
   setup({ props, ref, cx, ptm, attrs }) {
+    const resolvedChevron = useResolvedIcon('chevron-down', 16);
+    const iconRef = React.useRef<HTMLSpanElement>(null);
+    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+    const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
+    const { isClosing, animateConfig } = useSelectContext();
+
+    // Rotate open when trigger data-state changes to 'open'
+    React.useEffect(() => {
+      const iconEl = iconRef.current;
+      if (!iconEl) return;
+      const trigger = iconEl.closest('[data-state]');
+      if (!trigger) return;
+
+      const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.attributeName === 'data-state') {
+            const state = trigger.getAttribute('data-state');
+            if (state === 'open') {
+              if (animateConfig === null) {
+                iconEl.style.transform = 'rotate(180deg)';
+              } else {
+                if (animRef.current) animRef.current.pause();
+                animRef.current = animate(iconEl, {
+                  rotate: 180,
+                  ease: 'outQuart',
+                  duration: prefersReducedMotion() ? 0 : 300,
+                });
+              }
+            }
+          }
+        }
+      });
+
+      observer.observe(trigger, { attributes: true });
+      return () => observer.disconnect();
+    }, [animateConfig]);
+
+    // Rotate closed immediately when isClosing becomes true
+    React.useEffect(() => {
+      if (!isClosing) return;
+      const iconEl = iconRef.current;
+      if (!iconEl) return;
+      if (animateConfig === null) {
+        iconEl.style.transform = 'rotate(0deg)';
+      } else {
+        if (animRef.current) animRef.current.pause();
+        animRef.current = animate(iconEl, {
+          rotate: 0,
+          ease: 'outQuart',
+          duration: prefersReducedMotion() ? 0 : 300,
+        });
+      }
+    }, [isClosing, animateConfig]);
+
     return {
       render() {
         const iconPt = ptm('icon');
@@ -209,16 +306,12 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
           <span
             {...attrs}
             {...ptRest}
-            ref={ref}
+            ref={mergedRef}
             className={cx('icon', props.className, ptClass as string | undefined)}
             style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
             aria-hidden="true"
           >
-            {props.children || (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            )}
+            {props.children || resolvedChevron}
           </span>
         );
       },
@@ -267,7 +360,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
     const innerRef = React.useRef<HTMLDivElement>(null);
     const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
     const itemsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { isClosing, onCloseComplete, close } = useSelectContext();
+    const { isClosing, onCloseComplete, close, animateConfig } = useSelectContext();
     const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
@@ -297,12 +390,38 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
       const inner = innerRef.current;
       if (!content || !inner) return;
 
+      if (animateConfig === null) {
+        // No animation — show immediately
+        content.style.height = 'auto';
+        content.style.opacity = '1';
+
+        // Focus logic still runs
+        content.focus();
+        const selected = content.querySelector('[data-selected]') as HTMLElement | null;
+        if (selected) {
+          selected.focus();
+        } else {
+          content.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            code: 'ArrowDown',
+            bubbles: true,
+          }));
+        }
+        return;
+      }
+
       if (animRef.current) animRef.current.pause();
       if (itemsAnimRef.current) itemsAnimRef.current.pause();
 
       // Measure the natural constrained height (respects inner's max-height)
       content.style.height = 'auto';
       const targetHeight = content.offsetHeight;
+
+      // Pre-scroll to selected item before animating, so it opens in the right position
+      const selectedItem = inner.querySelector('[data-selected]') as HTMLElement | null;
+      if (selectedItem) {
+        inner.scrollTop = Math.max(0, selectedItem.offsetTop - inner.clientHeight / 2 + selectedItem.offsetHeight / 2);
+      }
 
       content.style.height = '0px';
       content.style.opacity = '1';
@@ -317,11 +436,17 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
           if (content) content.style.height = 'auto';
           if (content) {
             content.focus();
-            content.dispatchEvent(new KeyboardEvent('keydown', {
-              key: 'ArrowDown',
-              code: 'ArrowDown',
-              bubbles: true,
-            }));
+            // Focus the selected item so arrow navigation starts from it
+            const selected = content.querySelector('[data-selected]') as HTMLElement | null;
+            if (selected) {
+              selected.focus();
+            } else {
+              content.dispatchEvent(new KeyboardEvent('keydown', {
+                key: 'ArrowDown',
+                code: 'ArrowDown',
+                bubbles: true,
+              }));
+            }
           }
         },
       });
@@ -339,7 +464,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
         ease: spring(springConfig),
         delay: (_el: any, i: number) => i * 30,
       });
-    }, []);
+    }, [animateConfig]);
 
     // When isClosing becomes true, start local animation state
     React.useEffect(() => {
@@ -355,6 +480,12 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
       const content = contentRef.current;
       const inner = innerRef.current;
       if (!content || !inner) return;
+
+      if (animateConfig === null) {
+        // No animation — close immediately
+        onCloseComplete();
+        return;
+      }
 
       if (animRef.current) animRef.current.pause();
       if (itemsAnimRef.current) itemsAnimRef.current.pause();
@@ -388,7 +519,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
         duration: 100,
         delay: 150,
       });
-    }, [isAnimatingOut, onCloseComplete]);
+    }, [isAnimatingOut, onCloseComplete, animateConfig]);
 
     return {
       render() {
@@ -471,41 +602,31 @@ export interface SelectItemProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   value: string;
+  label?: React.ReactNode;
   disabled?: boolean;
   onSelect?: (e: Event) => void;
-  pt?: PassThrough<'item' | 'itemIndicator' | 'itemText'>;
+  pt?: PassThrough<'item'>;
 }
 
-const SelectItem = withMoveComponent<'item' | 'itemIndicator' | 'itemText', SelectItemProps, HTMLDivElement>({
+const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
   name: 'SelectItem',
   styles,
-  slots: ['item', 'itemIndicator', 'itemText'] as const,
-  moveProps: ['value', 'disabled', 'onSelect'],
+  slots: ['item'] as const,
+  moveProps: ['value', 'label', 'disabled', 'onSelect'],
 
   setup({ props, ref, cx, ptm, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const indicatorRef = React.useRef<HTMLSpanElement>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { value, onValueChange, close } = useSelectContext();
+    const { value, onValueChange, close, registerLabel, animateConfig } = useSelectContext();
     const isSelected = value === (props.value as string);
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    // Animate indicator on selection change
+    // Register label so SelectValue can display it
+    const displayLabel = props.label ?? props.children;
     React.useEffect(() => {
-      const el = indicatorRef.current;
-      if (!el) return;
-      if (isSelected) {
-        animate(el, {
-          opacity: [0, 1],
-          scale: [0.5, 1],
-          ease: spring({ mass: 0.8, stiffness: 500, damping: 15 }),
-        });
-      } else {
-        el.style.opacity = '0';
-        el.style.transform = 'scale(0.5)';
-      }
-    }, [isSelected]);
+      registerLabel(props.value as string, displayLabel);
+    }, [props.value, displayLabel, registerLabel]);
 
     const handleSelect = (e: Event) => {
       e.preventDefault();
@@ -515,6 +636,7 @@ const SelectItem = withMoveComponent<'item' | 'itemIndicator' | 'itemText', Sele
     };
 
     const handleMouseEnter = () => {
+      if (animateConfig === null) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -524,6 +646,7 @@ const SelectItem = withMoveComponent<'item' | 'itemIndicator' | 'itemText', Sele
     };
 
     const handleMouseLeave = () => {
+      if (animateConfig === null) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -536,10 +659,6 @@ const SelectItem = withMoveComponent<'item' | 'itemIndicator' | 'itemText', Sele
       render() {
         const itemPt = ptm('item');
         const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
-        const indicatorPt = ptm('itemIndicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
-        const textPt = ptm('itemText');
-        const { className: textPtClass, style: textPtStyle, ...textPtRest } = textPt as Record<string, unknown>;
 
         return (
           <RadixDropdownMenu.Item
@@ -547,30 +666,14 @@ const SelectItem = withMoveComponent<'item' | 'itemIndicator' | 'itemText', Sele
             {...ptRest}
             ref={mergedItemRef}
             disabled={props.disabled as boolean}
-            data-selected={isSelected ? 'true' : undefined}
+            data-selected={isSelected ? '' : undefined}
             onSelect={handleSelect}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
             className={cx('item', props.className, ptClass as string | undefined)}
             style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
           >
-            <span
-              ref={indicatorRef}
-              {...indPtRest}
-              className={cx('itemIndicator', indPtClass as string | undefined)}
-              style={{ opacity: isSelected ? 1 : 0, ...(indPtStyle as React.CSSProperties) }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </span>
-            <span
-              {...textPtRest}
-              className={cx('itemText', textPtClass as string | undefined)}
-              style={textPtStyle as React.CSSProperties}
-            >
-              {props.children}
-            </span>
+            {props.children}
           </RadixDropdownMenu.Item>
         );
       },

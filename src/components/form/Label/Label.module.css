@@ -5,7 +5,7 @@
 
 .root {
   /* Component tokens */
-  --move-label-font-size: var(--move-size-sm);
+  --move-label-font-size: inherit;
   --move-label-font-weight: var(--move-weight-medium);
   --move-label-color: var(--move-fg-base);
   --move-label-disabled-color: var(--move-fg-muted);

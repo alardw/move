@@ -7,7 +7,14 @@
  */
 
 .root {
-  /* Component tokens — resolve in local scope */
+  /*
+   * Layout tokens use fallback pattern so parent overrides cascade in.
+   * Setting --move-button-radius on a wrapper will override the default.
+   * Size variants set the token on the element to override the fallback.
+   *
+   * Color tokens are declared on .root so they resolve semantic tokens
+   * in the element's local scope — scoped ThemeProvider works correctly.
+   */
   --move-button-primary-bg: var(--move-primary);
   --move-button-primary-bg-hover: var(--move-primary-hover);
   --move-button-primary-bg-active: var(--move-primary-active);
@@ -26,13 +33,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: var(--move-spacing-sm, 0.5rem);
-  height: var(--move-control-height-md, 2.375rem);
-  padding: 0 var(--move-spacing-md, 1rem);
-  border-radius: var(--move-rounded-md, 0.5rem);
+  gap: var(--move-button-gap, var(--move-spacing-sm));
+  height: var(--move-button-height, var(--move-control-height-md));
+  padding: 0 var(--move-button-padding-x, var(--move-spacing-md));
+  border-radius: var(--move-button-radius, var(--move-rounded-md));
   font-family: var(--move-font-body, system-ui, sans-serif);
-  font-size: var(--move-size-sm, 0.875rem);
-  font-weight: var(--move-weight-medium, 500);
+  font-size: var(--move-button-font-size, var(--move-size-sm));
+  font-weight: var(--move-button-font-weight, var(--move-weight-medium));
   letter-spacing: -0.01em;
   line-height: 1;
   white-space: nowrap;
@@ -112,12 +119,14 @@
   background-color: var(--move-red-700);
 }
 
-/* Focus and active states */
-.root:focus,
-.root:focus-visible,
-.root:active:not(:disabled) {
+/* Focus state — keyboard only; suppress during :active to avoid flash on click */
+.root:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
+}
+
+.root:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Disabled state */
@@ -129,17 +138,17 @@
 
 /* Size variants */
 .root[data-size='sm'] {
-  height: var(--move-control-height-sm, 2rem);
-  padding: 0 var(--move-spacing-sm, 0.5rem);
-  font-size: var(--move-size-sm, 0.875rem);
-  border-radius: var(--move-rounded-sm, 0.25rem);
+  --move-button-height: var(--move-control-height-sm);
+  --move-button-padding-x: var(--move-spacing-sm);
+  --move-button-font-size: var(--move-size-sm);
+  --move-button-radius: var(--move-rounded-sm);
 }
 
 .root[data-size='lg'] {
-  height: var(--move-control-height-lg, 2.75rem);
-  padding: 0 var(--move-spacing-lg, 1.5rem);
-  font-size: var(--move-size-base, 1rem);
-  border-radius: var(--move-rounded-lg, 0.75rem);
+  --move-button-height: var(--move-control-height-lg);
+  --move-button-padding-x: var(--move-spacing-lg);
+  --move-button-font-size: var(--move-size-base);
+  --move-button-radius: var(--move-rounded-lg);
 }
 
 /* Icon styling */

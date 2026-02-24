@@ -1,0 +1,57 @@
+/*
+ * ImageGroup Component
+ * CSS Grid wrapper for arranging images in a uniform grid.
+ * Uses a container wrapper so @container queries can target the grid.
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+/* Container wrapper — establishes size containment for container queries */
+.wrapper {
+  container-type: inline-size;
+  width: 100%;
+}
+
+/* Grid (root slot) — descendant of the container */
+.root {
+  display: grid;
+  grid-template-columns: repeat(var(--move-imagegroup-columns, 3), 1fr);
+}
+
+/* Gap */
+.root[data-gap='xs'] {
+  gap: var(--move-spacing-xs);
+}
+
+.root[data-gap='sm'] {
+  gap: var(--move-spacing-sm);
+}
+
+.root[data-gap='md'],
+.root:not([data-gap]) {
+  gap: var(--move-spacing-md);
+}
+
+.root[data-gap='lg'] {
+  gap: var(--move-spacing-lg);
+}
+
+.root[data-gap='xl'] {
+  gap: var(--move-spacing-xl);
+}
+
+/* Responsive: reduce to 2 columns when container is narrow (3+ columns only) */
+@container (max-width: 40rem) {
+  .root[data-columns='3'],
+  .root[data-columns='4'],
+  .root[data-columns='5'],
+  .root[data-columns='6'] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Responsive: single column when container is very narrow (2+ columns only) */
+@container (max-width: 24rem) {
+  .root:not([data-columns='1']) {
+    grid-template-columns: 1fr;
+  }
+}

@@ -109,7 +109,12 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
         <div
           ref={ref}
           className={className}
-          style={tokenStyle}
+          style={{
+            ...tokenStyle,
+            fontFamily: 'var(--move-font-body)',
+            fontSize: 'var(--move-size-sm)',
+            color: 'var(--move-fg-base)',
+          }}
           data-move-theme={theme.name}
         >
           {children}

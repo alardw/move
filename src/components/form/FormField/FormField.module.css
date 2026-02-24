@@ -9,7 +9,7 @@
   --move-formfield-label-width: 8rem;
   --move-formfield-label-pt: 0.4375rem; /* baseline-align with typical input */
   --move-formfield-description-color: var(--move-fg-muted);
-  --move-formfield-description-size: var(--move-size-sm);
+  --move-formfield-description-size: inherit;
 
   container-type: inline-size;
   width: 100%;
@@ -32,6 +32,25 @@
 
   .description {
     grid-column: 2;
+  }
+
+  /* Per-control label alignment */
+  .inner:has(.field [role="checkbox"]) .label {
+    padding-top: 0.125rem;
+  }
+
+  .inner:has(.field [role="switch"]) .label {
+    padding-top: 0.1875rem;
+  }
+
+  .inner:has(.field [role="radiogroup"]) .label {
+    padding-top: 0.125rem;
+  }
+
+  .inner:has(.field [role="slider"]) .field {
+    min-height: 2.25rem;
+    display: flex;
+    align-items: center;
   }
 }
 

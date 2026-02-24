@@ -115,10 +115,14 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
 // Content
 // ============================================================================
 
+export type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
+
 export interface DialogContentProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  size?: DialogSize;
+  onOpenAutoFocus?: (event: Event) => void;
   pt?: PassThrough<'content'>;
 }
 
@@ -126,8 +130,34 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
   name: 'DialogContent',
   styles,
   slots: ['content'] as const,
+  moveProps: ['size', 'onOpenAutoFocus'],
+  defaults: { size: 'md' },
 
   setup({ props, ref, cx, ptm, attrs }) {
+    const handleOpenAutoFocus = (event: Event) => {
+      (props.onOpenAutoFocus as ((e: Event) => void) | undefined)?.(event);
+      if (event.defaultPrevented) return;
+
+      const content = event.currentTarget as HTMLElement;
+      const body = content.querySelector(`.${styles.body}`);
+      const footer = content.querySelector(`.${styles.footer}`);
+
+      // Try form fields in the body first
+      const firstField = body?.querySelector<HTMLElement>('input, textarea, select');
+      if (firstField) {
+        event.preventDefault();
+        firstField.focus();
+        return;
+      }
+
+      // Fall back to first button in body or footer
+      const firstButton = (body ?? footer)?.querySelector<HTMLElement>('button');
+      if (firstButton) {
+        event.preventDefault();
+        firstButton.focus();
+      }
+    };
+
     return {
       render() {
         const contentPt = ptm('content');
@@ -137,6 +167,8 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
             {...attrs}
             {...ptRest}
             ref={ref}
+            data-size={props.size}
+            onOpenAutoFocus={handleOpenAutoFocus}
             className={cx('content', props.className, ptClass as string | undefined)}
             style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
           >
@@ -223,6 +255,191 @@ const DialogDescription = withMoveComponent<'description', DialogDescriptionProp
 });
 
 // ============================================================================
+// Header
+// ============================================================================
+
+export interface DialogHeaderProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  pt?: PassThrough<'header'>;
+}
+
+const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivElement>({
+  name: 'DialogHeader',
+  styles,
+  slots: ['header'] as const,
+
+  setup({ props, ref, cx, ptm, attrs }) {
+    return {
+      render() {
+        const headerPt = ptm('header');
+        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...ptRest}
+            ref={ref}
+            className={cx('header', props.className, ptClass as string | undefined)}
+            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// Body
+// ============================================================================
+
+export interface DialogBodyProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  pt?: PassThrough<'body'>;
+}
+
+const DialogBody = withMoveComponent<'body', DialogBodyProps, HTMLDivElement>({
+  name: 'DialogBody',
+  styles,
+  slots: ['body'] as const,
+
+  setup({ props, ref, cx, ptm, attrs }) {
+    return {
+      render() {
+        const bodyPt = ptm('body');
+        const { className: ptClass, style: ptStyle, ...ptRest } = bodyPt as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...ptRest}
+            ref={ref}
+            className={cx('body', props.className, ptClass as string | undefined)}
+            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// Footer
+// ============================================================================
+
+export interface DialogFooterProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  pt?: PassThrough<'footer'>;
+}
+
+const DialogFooter = withMoveComponent<'footer', DialogFooterProps, HTMLDivElement>({
+  name: 'DialogFooter',
+  styles,
+  slots: ['footer'] as const,
+
+  setup({ props, ref, cx, ptm, attrs }) {
+    return {
+      render() {
+        const footerPt = ptm('footer');
+        const { className: ptClass, style: ptStyle, ...ptRest } = footerPt as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...ptRest}
+            ref={ref}
+            className={cx('footer', props.className, ptClass as string | undefined)}
+            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// FooterStart
+// ============================================================================
+
+export interface DialogFooterStartProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  pt?: PassThrough<'footerStart'>;
+}
+
+const DialogFooterStart = withMoveComponent<'footerStart', DialogFooterStartProps, HTMLDivElement>({
+  name: 'DialogFooterStart',
+  styles,
+  slots: ['footerStart'] as const,
+
+  setup({ props, ref, cx, ptm, attrs }) {
+    return {
+      render() {
+        const pt = ptm('footerStart');
+        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...ptRest}
+            ref={ref}
+            className={cx('footerStart', props.className, ptClass as string | undefined)}
+            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// FooterEnd
+// ============================================================================
+
+export interface DialogFooterEndProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  pt?: PassThrough<'footerEnd'>;
+}
+
+const DialogFooterEnd = withMoveComponent<'footerEnd', DialogFooterEndProps, HTMLDivElement>({
+  name: 'DialogFooterEnd',
+  styles,
+  slots: ['footerEnd'] as const,
+
+  setup({ props, ref, cx, ptm, attrs }) {
+    return {
+      render() {
+        const pt = ptm('footerEnd');
+        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...ptRest}
+            ref={ref}
+            className={cx('footerEnd', props.className, ptClass as string | undefined)}
+            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
 // Close
 // ============================================================================
 
@@ -272,6 +489,11 @@ export const Dialog = {
   Portal: DialogPortal,
   Overlay: DialogOverlay,
   Content: DialogContent,
+  Header: DialogHeader,
+  Body: DialogBody,
+  Footer: DialogFooter,
+  FooterStart: DialogFooterStart,
+  FooterEnd: DialogFooterEnd,
   Title: DialogTitle,
   Description: DialogDescription,
   Close: DialogClose,

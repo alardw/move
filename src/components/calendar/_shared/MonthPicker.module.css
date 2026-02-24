@@ -1,0 +1,48 @@
+.monthPicker {
+  --move-calendar-picker-bg: var(--move-bg-subtle);
+  --move-calendar-picker-border: var(--move-border-base);
+  --move-calendar-picker-radius: var(--move-rounded-lg);
+  --move-calendar-picker-shadow: var(--move-shadow-md);
+  --move-calendar-picker-padding: var(--move-spacing-sm);
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--move-spacing-xs);
+  padding: var(--move-calendar-picker-padding);
+  background-color: var(--move-calendar-picker-bg);
+  border: 1px solid var(--move-calendar-picker-border);
+  border-radius: var(--move-calendar-picker-radius);
+  box-shadow: var(--move-calendar-picker-shadow);
+  min-width: 12rem;
+}
+
+.monthOption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  border-radius: var(--move-rounded-md);
+  border: none;
+  background: transparent;
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.monthOption:hover {
+  background-color: var(--move-bg-muted);
+}
+
+.monthOption[data-selected] {
+  background-color: var(--move-primary);
+  color: var(--move-primary-fg);
+  font-weight: var(--move-weight-semibold);
+}
+
+.monthOption:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}

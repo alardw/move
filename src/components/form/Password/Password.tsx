@@ -4,6 +4,7 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
 import type { PassThrough } from '../../../engine/types';
+import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import styles from './Password.module.css';
 
 export type PasswordVariant = 'outlined' | 'filled';

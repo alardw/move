@@ -5,8 +5,8 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { PassThrough } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
 import { useToggleAnimation } from '../../../animation/hooks';
-import type { ToggleableAnimate } from '../../../animation/types';
-import { Icon } from '../../core/Icon/Icon';
+import type { IndicatorAnimate } from '../../../animation/types';
+import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import styles from './Checkbox.module.css';
 
 // =============================================================================
@@ -30,9 +30,13 @@ export interface CheckboxProps extends Record<string, unknown> {
   /** Icon name for the check indicator (requires IconProvider) */
   icon?: string;
   /** Animation configuration */
-  animate?: ToggleableAnimate | false;
+  animate?: IndicatorAnimate | false;
+  /** Size variant */
+  size?: 'sm' | 'md' | 'lg';
   /** Whether the checkbox is disabled */
   disabled?: boolean;
+  /** Whether the checkbox is in an invalid state */
+  invalid?: boolean;
   /** Name for form submission */
   name?: string;
   /** Value for form submission */
@@ -74,7 +78,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
   styles,
   slots: ['root', 'indicator', 'icon'] as const,
   defaults: { icon: 'check', disabled: false },
-  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'disabled', 'name', 'value', 'required'],
+  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'size', 'disabled', 'invalid', 'name', 'value', 'required'],
   subComponents: { Group: CheckboxGroup },
 
   setup({ props, ref, cx, ptm, attrs }) {
@@ -87,7 +91,9 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
       onCheckedChange,
       icon,
       animate: animateProp,
+      size,
       disabled,
+      invalid,
       name,
       value,
       required,
@@ -104,10 +110,13 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
 
     // Toggle animation
     const toggleAnim = useToggleAnimation({
-      animate: animateProp as ToggleableAnimate | false | undefined,
+      animate: animateProp as IndicatorAnimate | false | undefined,
       initialChecked: checkbox.checked,
       disabled,
     });
+
+    const iconSize = size === 'sm' ? 14 : size === 'lg' ? 22 : 17;
+    const resolvedIcon = useResolvedIcon(icon as string, iconSize);
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, toggleAnim.rootRef as React.Ref<HTMLButtonElement>);
 
@@ -148,8 +157,9 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
             : 'unchecked';
 
         return (
-          <div
+          <label
             className={styles.wrapper}
+            {...(disabled ? { 'data-disabled': '' } : {})}
             onMouseDown={toggleAnim.pressHandlers.onMouseDown}
             onMouseUp={toggleAnim.pressHandlers.onMouseUp}
             onMouseLeave={toggleAnim.pressHandlers.onMouseLeave}
@@ -162,6 +172,8 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
               role="checkbox"
               aria-checked={checkbox.indeterminate ? 'mixed' : checkbox.checked}
               data-state={dataState}
+              {...(size && size !== 'md' ? { 'data-size': size } : {})}
+              {...(invalid ? { 'data-invalid': '' } : {})}
               disabled={disabled}
               className={cx('root', className, rootPtClass as string | undefined)}
               style={{ ...style, ...(rootPtStyle as React.CSSProperties) }}
@@ -179,7 +191,11 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
                   className={cx('icon', iconPtClass as string | undefined)}
                   style={iconPtStyle as React.CSSProperties}
                 >
-                  <Icon name={icon as string} size={18} />
+                  {resolvedIcon || (
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  )}
                 </span>
               </span>
             </button>
@@ -192,7 +208,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
               />
             )}
             {children}
-          </div>
+          </label>
         );
       },
     };

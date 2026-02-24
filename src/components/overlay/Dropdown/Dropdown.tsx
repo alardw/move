@@ -6,6 +6,9 @@ import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
 import type { PassThrough } from '../../../engine/types';
+import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { mergeAnimateConfig } from '../../../animation/utils';
+import type { PopupAnimate } from '../../../animation/types';
 import styles from './Dropdown.module.css';
 
 const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
@@ -18,6 +21,7 @@ interface DropdownContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
+  animateConfig: PopupAnimate | null;
 }
 
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
@@ -38,9 +42,23 @@ export interface DropdownRootProps extends Omit<React.ComponentPropsWithoutRef<t
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  animate?: PopupAnimate | false;
 }
 
-const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, ...props }) => {
+const defaultDropdownAnimation: PopupAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    scale: { value: [0.5, 1], easing: 'outQuart' },
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    scale: { value: [1, 0.95], easing: 'outQuart' },
+    duration: 200,
+  },
+  stagger: { delay: 30 },
+};
+
+const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, animate: animateProp, ...props }) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -69,8 +87,10 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defau
     setIsClosing(true);
   }, []);
 
+  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDropdownAnimation, animateProp);
+
   return (
-    <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close }}>
+    <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animateConfig }}>
       <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} {...props} />
     </DropdownContext.Provider>
   );
@@ -158,7 +178,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
     const innerRef = React.useRef<HTMLDivElement>(null);
     const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
     const itemsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { isClosing, onCloseComplete, close } = useDropdownContext();
+    const { isClosing, onCloseComplete, close, animateConfig } = useDropdownContext();
     const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
@@ -187,6 +207,20 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
       const content = contentRef.current;
       const inner = innerRef.current;
       if (!content || !inner) return;
+
+      if (!animateConfig) {
+        // No animation — show immediately
+        content.style.height = 'auto';
+        content.style.opacity = '1';
+        content.style.transform = '';
+        content.focus();
+        content.dispatchEvent(new KeyboardEvent('keydown', {
+          key: 'ArrowDown',
+          code: 'ArrowDown',
+          bubbles: true,
+        }));
+        return;
+      }
 
       if (animRef.current) animRef.current.pause();
       if (itemsAnimRef.current) itemsAnimRef.current.pause();
@@ -230,7 +264,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
         ease: spring(springConfig),
         delay: (_el: any, i: number) => i * 30,
       });
-    }, []);
+    }, [animateConfig]);
 
     // When isClosing becomes true, start local animation state
     React.useEffect(() => {
@@ -246,6 +280,12 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
       const content = contentRef.current;
       const inner = innerRef.current;
       if (!content || !inner) return;
+
+      if (!animateConfig) {
+        // No animation — close immediately
+        onCloseComplete();
+        return;
+      }
 
       if (animRef.current) animRef.current.pause();
       if (itemsAnimRef.current) itemsAnimRef.current.pause();
@@ -279,7 +319,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
         duration: 100,
         delay: 150,
       });
-    }, [isAnimatingOut, onCloseComplete]);
+    }, [isAnimatingOut, onCloseComplete, animateConfig]);
 
     return {
       render() {
@@ -372,7 +412,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
   setup({ props, ref, cx, ptm, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { close } = useDropdownContext();
+    const { close, animateConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -383,6 +423,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
     };
 
     const handleMouseEnter = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -392,6 +433,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
     };
 
     const handleMouseLeave = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -528,6 +570,8 @@ const DropdownCheckboxItem = withMoveComponent<
     const indicatorRef = React.useRef<HTMLSpanElement>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
     const isFirstRender = React.useRef(true);
+    const resolvedCheck = useResolvedIcon('check', 14);
+    const { animateConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -549,6 +593,13 @@ const DropdownCheckboxItem = withMoveComponent<
       const el = indicatorRef.current;
       if (!el) return;
 
+      if (!animateConfig) {
+        // No animation — set directly
+        el.style.opacity = props.checked ? '1' : '0';
+        el.style.transform = props.checked ? 'scale(1)' : 'scale(0.5)';
+        return;
+      }
+
       if (props.checked) {
         animate(el, {
           opacity: [0, 1],
@@ -563,7 +614,7 @@ const DropdownCheckboxItem = withMoveComponent<
           ease: 'outQuad',
         });
       }
-    }, [props.checked]);
+    }, [props.checked, animateConfig]);
 
     const handleSelect = (e: Event) => {
       // Don't prevent default — let the checkbox toggle
@@ -572,6 +623,7 @@ const DropdownCheckboxItem = withMoveComponent<
     };
 
     const handleMouseEnter = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -581,6 +633,7 @@ const DropdownCheckboxItem = withMoveComponent<
     };
 
     const handleMouseLeave = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -618,9 +671,7 @@ const DropdownCheckboxItem = withMoveComponent<
               className={cx('checkboxIndicator', indPtClass as string | undefined)}
               style={indPtStyle as React.CSSProperties}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              {resolvedCheck}
             </span>
             <span
               {...lblPtRest}
@@ -701,7 +752,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
   setup({ props, ref, cx, ptm, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { close } = useDropdownContext();
+    const { close, animateConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -712,6 +763,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
     };
 
     const handleMouseEnter = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {
@@ -721,6 +773,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
     };
 
     const handleMouseLeave = () => {
+      if (!animateConfig) return;
       if (!itemRef.current) return;
       if (animRefLocal.current) animRefLocal.current.pause();
       animRefLocal.current = animate(itemRef.current, {

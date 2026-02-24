@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useIconContext, type IconProps } from './IconProvider';
+import { BUILTIN_ICONS } from './builtinIcons';
 import styles from './Icon.module.css';
 
 export interface IconComponentProps extends IconProps {
@@ -37,22 +38,44 @@ export function Icon({
 }: IconComponentProps) {
   const context = useIconContext();
 
-  if (!context) {
-    console.warn(
-      'Icon: No IconProvider found. Wrap your app in <IconProvider resolver={...}>'
-    );
-    return null;
-  }
+  const resolved = context ? context.resolver(name) : null;
 
-  const { resolver, fallback } = context;
-  const resolved = resolver(name);
-
+  // If resolver didn't find it, try built-in essential icons, then fallback
   if (!resolved) {
-    if (fallback) {
-      return <>{fallback}</>;
+    const Builtin = BUILTIN_ICONS[name];
+    if (!Builtin) {
+      if (context?.fallback) {
+        return <>{context.fallback}</>;
+      }
+      if (!context) {
+        console.warn(
+          'Icon: No IconProvider found. Wrap your app in <IconProvider resolver={...}>'
+        );
+      } else {
+        console.warn(`Icon: Could not resolve icon "${name}"`);
+      }
+      return null;
     }
-    console.warn(`Icon: Could not resolve icon "${name}"`);
-    return null;
+
+    const computedSize = typeof size === 'number' ? `${size}px` : sizeMap[size];
+    const style: React.CSSProperties = {
+      '--icon-size': computedSize,
+      '--icon-color': color || 'currentColor',
+    } as React.CSSProperties;
+
+    const accessibilityProps = ariaLabel
+      ? { 'aria-label': ariaLabel, role: 'img' as const }
+      : { 'aria-hidden': ariaHidden ?? true };
+
+    return (
+      <span
+        className={`${styles.root}${className ? ` ${className}` : ''}`}
+        style={style}
+        {...accessibilityProps}
+      >
+        <Builtin width={computedSize} height={computedSize} />
+      </span>
+    );
   }
 
   const computedSize = typeof size === 'number' ? `${size}px` : sizeMap[size];

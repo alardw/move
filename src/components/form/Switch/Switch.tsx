@@ -32,6 +32,10 @@ export interface SwitchRootProps extends Record<string, unknown> {
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
+  /** Whether the switch is in an invalid state */
+  invalid?: boolean;
+  /** Optional label displayed beside the switch */
+  label?: React.ReactNode;
   required?: boolean;
   name?: string;
   value?: string;
@@ -42,7 +46,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
   name: 'SwitchRoot',
   styles,
   slots: ['root'] as const,
-  moveProps: ['checked', 'defaultChecked', 'onCheckedChange', 'disabled', 'required', 'name', 'value'],
+  moveProps: ['checked', 'defaultChecked', 'onCheckedChange', 'disabled', 'invalid', 'label', 'required', 'name', 'value'],
 
   setup({ props, ref, cx, ptm, attrs }) {
     const thumbRef = React.useRef<HTMLSpanElement | null>(null);
@@ -76,7 +80,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
       render() {
         const rootPt = ptm('root');
         const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        return (
+        const switchEl = (
           <SwitchContext.Provider value={contextValue}>
             <RadixSwitch.Root
               {...attrs}
@@ -89,6 +93,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
               required={props.required as boolean}
               name={props.name as string}
               value={props.value as string}
+              {...(props.invalid ? { 'data-invalid': '' } : {})}
               className={cx('root', props.className, ptClass as string | undefined)}
               style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
               onMouseDown={handleMouseDown}
@@ -99,6 +104,17 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
             </RadixSwitch.Root>
           </SwitchContext.Provider>
         );
+
+        if (props.label != null) {
+          return (
+            <label className={styles.wrapper} {...(props.disabled ? { 'data-disabled': '' } : {})}>
+              {switchEl}
+              <span className={styles.label}>{props.label as React.ReactNode}</span>
+            </label>
+          );
+        }
+
+        return switchEl;
       },
     };
   },

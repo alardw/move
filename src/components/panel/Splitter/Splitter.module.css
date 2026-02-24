@@ -1,0 +1,104 @@
+/*
+ * Splitter Component
+ * Resizable panel layout with draggable gutters.
+ * Slots: root, panel
+ * Internal classes: gutter (styled via component tokens on .root)
+ */
+
+.root {
+  /* Component tokens */
+  --move-splitter-gutter-bg: var(--move-bg-emphasis);
+  --move-splitter-gutter-bg-hover: var(--move-border-emphasis);
+  --move-splitter-gutter-bg-active: var(--move-primary);
+
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.root[data-layout='horizontal'] {
+  flex-direction: row;
+}
+
+.root[data-layout='vertical'] {
+  flex-direction: column;
+}
+
+/* ============================================
+ * Panel
+ * ============================================ */
+
+.panel {
+  overflow: auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.panel[data-layout='horizontal'] {
+  height: 100%;
+}
+
+.panel[data-layout='vertical'] {
+  width: 100%;
+}
+
+/* ============================================
+ * Gutter (separator bar)
+ * ============================================ */
+
+.gutter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--move-splitter-gutter-bg);
+  user-select: none;
+  touch-action: none;
+}
+
+/* Horizontal layout: vertical gutter */
+.root[data-layout='horizontal'] > .gutter {
+  cursor: col-resize;
+  height: 100%;
+}
+
+/* Expanded hit area for horizontal gutter */
+.root[data-layout='horizontal'] > .gutter::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(-1 * var(--move-spacing-sm));
+  right: calc(-1 * var(--move-spacing-sm));
+}
+
+/* Vertical layout: horizontal gutter */
+.root[data-layout='vertical'] > .gutter {
+  cursor: row-resize;
+  width: 100%;
+}
+
+/* Expanded hit area for vertical gutter */
+.root[data-layout='vertical'] > .gutter::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(-1 * var(--move-spacing-sm));
+  bottom: calc(-1 * var(--move-spacing-sm));
+}
+
+.gutter:hover {
+  background: var(--move-splitter-gutter-bg-hover);
+}
+
+.gutter:focus-visible {
+  outline: none;
+  background: var(--move-splitter-gutter-bg-hover);
+}
+
+.gutter[data-dragging='true'] {
+  background: var(--move-splitter-gutter-bg-active);
+}
