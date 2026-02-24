@@ -1,10 +1,8 @@
-import { Icon, IconProvider, MoveProvider } from 'move';
+import { useState, useEffect } from 'react';
+import { Icon, IconProvider, Heading, Spinner } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack, Text } from '../components';
 import * as LucideIcons from 'lucide-react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as faSolid from '@fortawesome/free-solid-svg-icons';
-import * as HeroOutline from '@heroicons/react/24/outline';
 
 // ── Resolvers for each icon library ──
 
@@ -15,18 +13,6 @@ function toPascalCase(name: string) {
 const lucideResolver = (name: string) => {
   const icons = LucideIcons as Record<string, any>;
   return icons[toPascalCase(name)] || null;
-};
-
-const faResolver = (name: string) => {
-  const key = 'fa' + toPascalCase(name);
-  const icon = (faSolid as Record<string, any>)[key];
-  if (!icon) return null;
-  return (props: any) => <FontAwesomeIcon icon={icon} {...props} />;
-};
-
-const heroResolver = (name: string) => {
-  const key = toPascalCase(name) + 'Icon';
-  return (HeroOutline as Record<string, any>)[key] || null;
 };
 
 function UsageExample() {
@@ -76,16 +62,49 @@ function GalleryExample() {
   );
 }
 
-function CustomStylingExample() {
-  return (
-    <Stack gap="lg" align="center">
-      <Icon name="star" size="xl" className="custom-icon" />
-      <Icon name="award" size="xl" color="var(--move-warning)" />
-    </Stack>
-  );
-}
-
 function LibrariesExample() {
+  const [libs, setLibs] = useState<{
+    FontAwesomeIcon: any;
+    faSolid: Record<string, any>;
+    HeroOutline: Record<string, any>;
+  } | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      import('@fortawesome/react-fontawesome'),
+      import('@fortawesome/free-solid-svg-icons'),
+      import('@heroicons/react/24/outline'),
+    ]).then(([faComponent, faIcons, hero]) => {
+      setLibs({
+        FontAwesomeIcon: faComponent.FontAwesomeIcon,
+        faSolid: faIcons as Record<string, any>,
+        HeroOutline: hero as Record<string, any>,
+      });
+    });
+  }, []);
+
+  if (!libs) {
+    return (
+      <Stack direction="column" gap="lg" align="center" style={{ padding: 'var(--move-spacing-xl)' }}>
+        <Spinner size="sm" />
+        <Text variant="muted" size="sm">Loading icon libraries…</Text>
+      </Stack>
+    );
+  }
+
+  const faResolver = (name: string) => {
+    const key = 'fa' + toPascalCase(name);
+    const icon = libs.faSolid[key];
+    if (!icon) return null;
+    const FA = libs.FontAwesomeIcon;
+    return (props: any) => <FA icon={icon} {...props} />;
+  };
+
+  const heroResolver = (name: string) => {
+    const key = toPascalCase(name) + 'Icon';
+    return libs.HeroOutline[key] || null;
+  };
+
   return (
     <Stack direction="column" gap="lg">
       <IconProvider resolver={lucideResolver}>
@@ -211,13 +230,6 @@ const heroResolver = (name: string) => {
     component: <GalleryExample />,
     code: `<Icon name="sun" size="lg" />\n<Icon name="moon" size="lg" />\n<Icon name="cloud" size="lg" />\n<Icon name="zap" size="lg" />\n<Icon name="bell" size="lg" />\n<Icon name="search" size="lg" />\n<Icon name="settings" size="lg" />\n<Icon name="user" size="lg" />\n<Icon name="mail" size="lg" />\n<Icon name="lock" size="lg" />`,
   },
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Add your own classes and colors',
-    component: <CustomStylingExample />,
-    code: `<Icon name="star" size="xl" className="custom-icon" />\n<Icon name="award" size="xl" color="var(--move-warning)" />`,
-  },
 ];
 
 export function IconDemo() {
@@ -228,6 +240,27 @@ export function IconDemo() {
         description="Render any icon by name — bring your own icon library."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Icon"
+        properties={[
+          { name: 'name', type: 'string', description: 'Name of the icon to render, resolved by the IconProvider.' },
+          { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | number", default: "'sm'", description: 'Size of the icon, using em units or a pixel number.' },
+          { name: 'color', type: 'string', default: "'currentColor'", description: 'Color of the icon.' },
+          { name: 'aria-label', type: 'string', description: 'Accessible label; when set, the icon gets role="img".' },
+          { name: 'aria-hidden', type: 'boolean', description: 'Hides the icon from screen readers when it is decorative.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="IconProvider"
+        properties={[
+          { name: 'resolver', type: '(name: string) => ComponentType | ReactNode | null', description: 'Function that resolves an icon name to a component or element.' },
+          { name: 'fallback', type: 'ReactNode', description: 'Fallback to render when an icon name cannot be resolved.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

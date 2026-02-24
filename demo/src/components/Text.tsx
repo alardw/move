@@ -5,6 +5,7 @@ interface TextProps {
   size?: 'xs' | 'sm' | 'base' | 'lg';
   as?: 'p' | 'span' | 'label';
   className?: string;
+  style?: React.CSSProperties;
   children: ReactNode;
 }
 
@@ -13,6 +14,7 @@ export function Text({
   size = 'base',
   as: Tag = 'p',
   className,
+  style,
   children,
 }: TextProps) {
   const classes = [
@@ -24,5 +26,5 @@ export function Text({
     .filter(Boolean)
     .join(' ');
 
-  return <Tag className={classes}>{children}</Tag>;
+  return <Tag className={classes} style={style}>{children}</Tag>;
 }

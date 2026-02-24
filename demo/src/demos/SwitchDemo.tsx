@@ -1,76 +1,65 @@
 import { useState } from 'react';
-import { Switch, MoveProvider } from 'move';
+import { Switch, FormField, Label, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
+import { Stack, DemoSample } from '../components';
 
-function BasicExample() {
+function UsageExample() {
   return (
-    <Switch.Root>
-      <Switch.Thumb />
-    </Switch.Root>
-  );
-}
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <Stack direction="row" gap="lg">
+          <Switch.Root label="Off"><Switch.Thumb /></Switch.Root>
+          <Switch.Root defaultChecked label="On"><Switch.Thumb /></Switch.Root>
+        </Stack>
+      </DemoSample>
 
-function WithLabelExample() {
-  const [airplane, setAirplane] = useState(false);
-  const [wifi, setWifi] = useState(true);
-  const [bluetooth, setBluetooth] = useState(false);
+      <DemoSample label="Error">
+        <Switch.Root invalid label="Enable notifications"><Switch.Thumb /></Switch.Root>
+      </DemoSample>
 
-  return (
-    <Stack direction="column" gap="md">
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-base)', cursor: 'pointer' }}>
-        <Switch.Root checked={airplane} onCheckedChange={setAirplane}>
-          <Switch.Thumb />
-        </Switch.Root>
-        Airplane Mode
-      </label>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-base)', cursor: 'pointer' }}>
-        <Switch.Root checked={wifi} onCheckedChange={setWifi}>
-          <Switch.Thumb />
-        </Switch.Root>
-        Wi-Fi
-      </label>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-base)', cursor: 'pointer' }}>
-        <Switch.Root checked={bluetooth} onCheckedChange={setBluetooth}>
-          <Switch.Thumb />
-        </Switch.Root>
-        Bluetooth
-      </label>
+      <DemoSample label="Disabled">
+        <Stack direction="row" gap="lg">
+          <Switch.Root disabled label="Disabled off"><Switch.Thumb /></Switch.Root>
+          <Switch.Root disabled defaultChecked label="Disabled on"><Switch.Thumb /></Switch.Root>
+        </Stack>
+      </DemoSample>
     </Stack>
   );
 }
 
-function DisabledExample() {
-  return (
-    <Stack direction="row" gap="lg">
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>
-        <Switch.Root disabled>
-          <Switch.Thumb />
-        </Switch.Root>
-        Disabled off
-      </label>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>
-        <Switch.Root disabled defaultChecked>
-          <Switch.Thumb />
-        </Switch.Root>
-        Disabled on
-      </label>
-    </Stack>
-  );
-}
+function FormFieldExample() {
+  const [notifications, setNotifications] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
 
-function CustomStylingExample() {
   return (
-    <MoveProvider pt={{
-      SwitchRoot: { root: { style: { '--move-switch-bg-checked': 'var(--move-success)' } as React.CSSProperties } },
-    }}>
-      <label style={{ display: 'flex', alignItems: 'center', gap: 'var(--move-spacing-sm)', fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-base)', cursor: 'pointer' }}>
-        <Switch.Root defaultChecked>
-          <Switch.Thumb />
-        </Switch.Root>
-        Success color
-      </label>
-    </MoveProvider>
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label>Notifications</Label></FormField.Label>
+          <FormField.Field>
+            <Switch.Root checked={notifications} onCheckedChange={setNotifications} label={notifications ? 'On' : 'Off'}><Switch.Thumb /></Switch.Root>
+          </FormField.Field>
+        </FormField.Root>
+      </DemoSample>
+
+      <DemoSample label="Description">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label>Dark mode</Label></FormField.Label>
+          <FormField.Field>
+            <Switch.Root checked={darkMode} onCheckedChange={setDarkMode} label={darkMode ? 'On' : 'Off'}><Switch.Thumb /></Switch.Root>
+          </FormField.Field>
+          <FormField.Description>Switch between light and dark themes.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
+
+      <DemoSample label="Error">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label required>Notifications</Label></FormField.Label>
+          <FormField.Field><Switch.Root invalid label="Off"><Switch.Thumb /></Switch.Root></FormField.Field>
+          <FormField.Description error>You must enable notifications to continue.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
+    </Stack>
   );
 }
 
@@ -78,61 +67,53 @@ const examples: Example[] = [
   {
     id: 'usage',
     name: 'Usage',
-    description: 'A basic toggle switch',
-    component: <BasicExample />,
+    description: 'A toggle switch for binary on/off choices with an animated thumb.',
+    component: <UsageExample />,
     code: `import { Switch } from 'move';
 
-<Switch.Root>
-  <Switch.Thumb />
-</Switch.Root>`,
-  },
-  {
-    id: 'with-label',
-    name: 'With Labels',
-    description: 'Controlled switches with labels',
-    component: <WithLabelExample />,
-    code: `const [airplane, setAirplane] = useState(false);
-const [wifi, setWifi] = useState(true);
-
-<label>
-  <Switch.Root checked={airplane} onCheckedChange={setAirplane}>
-    <Switch.Thumb />
-  </Switch.Root>
-  Airplane Mode
-</label>
-<label>
-  <Switch.Root checked={wifi} onCheckedChange={setWifi}>
-    <Switch.Thumb />
-  </Switch.Root>
-  Wi-Fi
-</label>`,
-  },
-  {
-    id: 'disabled',
-    name: 'Disabled',
-    description: 'Disabled switches in both states',
-    component: <DisabledExample />,
-    code: `<Switch.Root disabled>
+<Switch.Root label="Off">
   <Switch.Thumb />
 </Switch.Root>
-<Switch.Root disabled defaultChecked>
+
+<Switch.Root defaultChecked label="On">
+  <Switch.Thumb />
+</Switch.Root>
+
+{/* Error */}
+<Switch.Root invalid label="Enable notifications">
+  <Switch.Thumb />
+</Switch.Root>
+
+{/* Disabled */}
+<Switch.Root disabled label="Disabled off">
   <Switch.Thumb />
 </Switch.Root>`,
   },
   {
-    id: 'custom',
-    name: 'Custom Styling',
-    description: 'Override the checked color via pass-through',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  SwitchRoot: {
-    root: { style: { '--move-switch-bg-checked': 'var(--move-success)' } }
-  },
-}}>
-  <Switch.Root defaultChecked>
-    <Switch.Thumb />
-  </Switch.Root>
-</MoveProvider>`,
+    id: 'formfield',
+    name: 'In FormField',
+    description: 'Switch composed with FormField for labels, descriptions, and error messages.',
+    component: <FormFieldExample />,
+    code: `import { FormField, Label, Switch } from 'move';
+
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label>Notifications</Label></FormField.Label>
+  <FormField.Field><Switch.Root><Switch.Thumb /></Switch.Root></FormField.Field>
+</FormField.Root>
+
+{/* With description */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label>Dark mode</Label></FormField.Label>
+  <FormField.Field><Switch.Root><Switch.Thumb /></Switch.Root></FormField.Field>
+  <FormField.Description>Switch between light and dark themes.</FormField.Description>
+</FormField.Root>
+
+{/* With error */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label required>Notifications</Label></FormField.Label>
+  <FormField.Field><Switch.Root invalid><Switch.Thumb /></Switch.Root></FormField.Field>
+  <FormField.Description error>You must enable notifications to continue.</FormField.Description>
+</FormField.Root>`,
   },
 ];
 
@@ -144,6 +125,28 @@ export function SwitchDemo() {
         description="A toggle switch for binary on/off choices with an animated thumb."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Switch.Root"
+        properties={[
+          { name: 'checked', type: 'boolean', description: 'Controlled checked state.' },
+          { name: 'defaultChecked', type: 'boolean', description: 'Default checked state for uncontrolled usage.' },
+          { name: 'onCheckedChange', type: '(checked: boolean) => void', description: 'Called when the checked state changes.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the switch is disabled.' },
+          { name: 'invalid', type: 'boolean', description: 'Whether the switch is in an invalid state.' },
+          { name: 'label', type: 'ReactNode', description: 'Optional label displayed beside the switch.' },
+          { name: 'required', type: 'boolean', description: 'Whether the switch is required for form validation.' },
+          { name: 'name', type: 'string', description: 'Name for form submission.' },
+          { name: 'value', type: 'string', description: 'Value for form submission.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Switch.Thumb"
+        properties={[]}
+      />
     </DocPage.Root>
   );
 }

@@ -1,4 +1,4 @@
-import { Spinner, MoveProvider } from 'move';
+import { Spinner, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack } from '../components';
 
@@ -23,21 +23,6 @@ function StrokeWidthExample() {
       <Spinner strokeWidth={4} />
       <Spinner strokeWidth={6} />
     </Stack>
-  );
-}
-
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      Spinner: {
-        root: { style: { '--move-spinner-stroke': 'var(--move-success)' } as React.CSSProperties },
-      },
-    }}>
-      <Stack gap="lg" align="center">
-        <Spinner />
-        <Spinner pt={{ root: { style: { '--move-spinner-stroke': 'var(--move-danger)' } as React.CSSProperties } }} />
-      </Stack>
-    </MoveProvider>
   );
 }
 
@@ -69,20 +54,6 @@ const examples: Example[] = [
 <Spinner strokeWidth={4} />
 <Spinner strokeWidth={6} />`,
   },
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Change the color globally or per instance',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  Spinner: {
-    root: { style: { '--move-spinner-stroke': 'var(--move-success)' } },
-  },
-}}>
-  <Spinner />
-  <Spinner pt={{ root: { style: { '--move-spinner-stroke': 'var(--move-danger)' } } }} />
-</MoveProvider>`,
-  },
 ];
 
 export function SpinnerDemo() {
@@ -93,6 +64,16 @@ export function SpinnerDemo() {
         description="A spinning indicator for loading states."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Spinner"
+        properties={[
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the spinner.' },
+          { name: 'strokeWidth', type: 'number', default: '3', description: 'Thickness of the spinner stroke.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

@@ -1,4 +1,5 @@
-import type { ReactNode, ComponentType } from 'react';
+import { type ReactNode, type ComponentType, useState, useEffect, useCallback } from 'react';
+import { Tooltip } from 'move';
 
 /* ── SidebarLayout ── */
 
@@ -6,12 +7,54 @@ interface SidebarLayoutProps {
   collapsed: boolean;
   sidebar: ReactNode;
   children: ReactNode;
+  mobileHeader?: ReactNode;
 }
 
-export function SidebarLayout({ collapsed, sidebar, children }: SidebarLayoutProps) {
+export function SidebarLayout({ collapsed, sidebar, children, mobileHeader }: SidebarLayoutProps) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' && window.innerWidth < 768
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    const onChange = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+      if (!e.matches) setMobileOpen(false);
+    };
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  const toggleMobileOpen = useCallback(() => setMobileOpen(v => !v), []);
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
+
   return (
     <div className="app">
-      <aside className={`sidebar ${collapsed ? 'sidebar-collapsed' : 'sidebar-expanded'}`}>
+      {isMobile && (
+        <div className="mobile-header">
+          <button className="mobile-menu-btn" onClick={toggleMobileOpen} aria-label="Toggle menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+          {mobileHeader}
+        </div>
+      )}
+      {isMobile && mobileOpen && (
+        <div className="mobile-overlay" onClick={closeMobile} />
+      )}
+      <aside
+        className={`sidebar ${collapsed ? 'sidebar-collapsed' : 'sidebar-expanded'} ${isMobile ? (mobileOpen ? 'sidebar-mobile-open' : 'sidebar-mobile-closed') : ''}`}
+        onClick={(e) => {
+          // Close mobile sidebar when a nav item is clicked
+          if (isMobile && (e.target as HTMLElement).closest('.sidebar-item')) {
+            closeMobile();
+          }
+        }}
+      >
         {sidebar}
       </aside>
       <main className={`main-content ${collapsed ? 'main-content-collapsed' : ''}`}>
@@ -59,7 +102,7 @@ interface SidebarNavItemProps {
 }
 
 export function SidebarNavItem({ icon: Icon, label, active, collapsed, onClick }: SidebarNavItemProps) {
-  return (
+  const button = (
     <button
       className={`sidebar-item ${active ? 'sidebar-item-active' : ''}`}
       onClick={onClick}
@@ -68,4 +111,14 @@ export function SidebarNavItem({ icon: Icon, label, active, collapsed, onClick }
       {!collapsed && <span>{label}</span>}
     </button>
   );
+
+  if (collapsed) {
+    return (
+      <Tooltip label={label} side="right" sideOffset={8}>
+        {button}
+      </Tooltip>
+    );
+  }
+
+  return button;
 }

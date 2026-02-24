@@ -1,66 +1,106 @@
-import { useState } from 'react';
-import { RadioGroup, MoveProvider } from 'move';
+import { RadioGroup, FormField, Label, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
+import { Stack, DemoSample } from '../components';
 
-function BasicExample() {
+function UsageExample() {
   return (
-    <RadioGroup.Root defaultValue="option-1">
-      <RadioGroup.Item value="option-1">Option 1</RadioGroup.Item>
-      <RadioGroup.Item value="option-2">Option 2</RadioGroup.Item>
-      <RadioGroup.Item value="option-3">Option 3</RadioGroup.Item>
-    </RadioGroup.Root>
-  );
-}
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <RadioGroup.Root defaultValue="option-1">
+          <RadioGroup.Item value="option-1">Option 1</RadioGroup.Item>
+          <RadioGroup.Item value="option-2">Option 2</RadioGroup.Item>
+          <RadioGroup.Item value="option-3">Option 3</RadioGroup.Item>
+        </RadioGroup.Root>
+      </DemoSample>
 
-function ControlledExample() {
-  const [value, setValue] = useState('comfortable');
+      <DemoSample label="Horizontal">
+        <RadioGroup.Root defaultValue="left" orientation="horizontal">
+          <RadioGroup.Item value="left">Left</RadioGroup.Item>
+          <RadioGroup.Item value="center">Center</RadioGroup.Item>
+          <RadioGroup.Item value="right">Right</RadioGroup.Item>
+        </RadioGroup.Root>
+      </DemoSample>
 
-  return (
-    <Stack direction="column" gap="md">
-      <span style={{ fontFamily: 'var(--move-font-body)', fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>
-        Selected: {value}
-      </span>
-      <RadioGroup.Root value={value} onValueChange={setValue}>
-        <RadioGroup.Item value="default">Default</RadioGroup.Item>
-        <RadioGroup.Item value="comfortable">Comfortable</RadioGroup.Item>
-        <RadioGroup.Item value="compact">Compact</RadioGroup.Item>
-      </RadioGroup.Root>
+      <DemoSample label="Sizes">
+        <Stack gap="xl">
+          <RadioGroup.Root defaultValue="a" size="sm">
+            <RadioGroup.Item value="a">Small</RadioGroup.Item>
+            <RadioGroup.Item value="b">Option</RadioGroup.Item>
+          </RadioGroup.Root>
+          <RadioGroup.Root defaultValue="a">
+            <RadioGroup.Item value="a">Medium</RadioGroup.Item>
+            <RadioGroup.Item value="b">Option</RadioGroup.Item>
+          </RadioGroup.Root>
+          <RadioGroup.Root defaultValue="a" size="lg">
+            <RadioGroup.Item value="a">Large</RadioGroup.Item>
+            <RadioGroup.Item value="b">Option</RadioGroup.Item>
+          </RadioGroup.Root>
+        </Stack>
+      </DemoSample>
+
+      <DemoSample label="Error">
+        <RadioGroup.Root invalid>
+          <RadioGroup.Item value="option-1">Option 1</RadioGroup.Item>
+          <RadioGroup.Item value="option-2">Option 2</RadioGroup.Item>
+          <RadioGroup.Item value="option-3">Option 3</RadioGroup.Item>
+        </RadioGroup.Root>
+      </DemoSample>
+
+      <DemoSample label="Disabled item">
+        <RadioGroup.Root defaultValue="option-1">
+          <RadioGroup.Item value="option-1">Selected</RadioGroup.Item>
+          <RadioGroup.Item value="option-2" disabled>Disabled</RadioGroup.Item>
+          <RadioGroup.Item value="option-3">Available</RadioGroup.Item>
+        </RadioGroup.Root>
+      </DemoSample>
     </Stack>
   );
 }
 
-function HorizontalExample() {
+function FormFieldExample() {
   return (
-    <RadioGroup.Root defaultValue="left" orientation="horizontal" style={{ flexDirection: 'row' }}>
-      <RadioGroup.Item value="left">Left</RadioGroup.Item>
-      <RadioGroup.Item value="center">Center</RadioGroup.Item>
-      <RadioGroup.Item value="right">Right</RadioGroup.Item>
-    </RadioGroup.Root>
-  );
-}
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label>Size</Label></FormField.Label>
+          <FormField.Field>
+            <RadioGroup.Root defaultValue="medium">
+              <RadioGroup.Item value="small">Small</RadioGroup.Item>
+              <RadioGroup.Item value="medium">Medium</RadioGroup.Item>
+              <RadioGroup.Item value="large">Large</RadioGroup.Item>
+            </RadioGroup.Root>
+          </FormField.Field>
+        </FormField.Root>
+      </DemoSample>
 
-function DisabledExample() {
-  return (
-    <RadioGroup.Root defaultValue="option-1">
-      <RadioGroup.Item value="option-1">Selected</RadioGroup.Item>
-      <RadioGroup.Item value="option-2" disabled>Disabled</RadioGroup.Item>
-      <RadioGroup.Item value="option-3">Available</RadioGroup.Item>
-    </RadioGroup.Root>
-  );
-}
+      <DemoSample label="Description">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label>Plan</Label></FormField.Label>
+          <FormField.Field>
+            <RadioGroup.Root defaultValue="free">
+              <RadioGroup.Item value="free">Free</RadioGroup.Item>
+              <RadioGroup.Item value="pro">Pro</RadioGroup.Item>
+              <RadioGroup.Item value="enterprise">Enterprise</RadioGroup.Item>
+            </RadioGroup.Root>
+          </FormField.Field>
+          <FormField.Description>Choose the plan that fits your needs.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
 
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      RadioGroupItem: { item: { style: { '--move-radio-bg-checked': 'var(--move-success)' } as React.CSSProperties } },
-    }}>
-      <RadioGroup.Root defaultValue="yes">
-        <RadioGroup.Item value="yes">Yes</RadioGroup.Item>
-        <RadioGroup.Item value="no">No</RadioGroup.Item>
-        <RadioGroup.Item value="maybe">Maybe</RadioGroup.Item>
-      </RadioGroup.Root>
-    </MoveProvider>
+      <DemoSample label="Error">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label required>Size</Label></FormField.Label>
+          <FormField.Field>
+            <RadioGroup.Root invalid>
+              <RadioGroup.Item value="small">Small</RadioGroup.Item>
+              <RadioGroup.Item value="medium">Medium</RadioGroup.Item>
+              <RadioGroup.Item value="large">Large</RadioGroup.Item>
+            </RadioGroup.Root>
+          </FormField.Field>
+          <FormField.Description error>Please select a size.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
+    </Stack>
   );
 }
 
@@ -68,66 +108,80 @@ const examples: Example[] = [
   {
     id: 'usage',
     name: 'Usage',
-    description: 'A basic radio group with three options',
-    component: <BasicExample />,
+    description: 'A set of radio buttons for selecting a single value from a list.',
+    component: <UsageExample />,
     code: `import { RadioGroup } from 'move';
 
 <RadioGroup.Root defaultValue="option-1">
   <RadioGroup.Item value="option-1">Option 1</RadioGroup.Item>
   <RadioGroup.Item value="option-2">Option 2</RadioGroup.Item>
   <RadioGroup.Item value="option-3">Option 3</RadioGroup.Item>
-</RadioGroup.Root>`,
-  },
-  {
-    id: 'controlled',
-    name: 'Controlled',
-    description: 'Controlled value with state management',
-    component: <ControlledExample />,
-    code: `const [value, setValue] = useState('comfortable');
+</RadioGroup.Root>
 
-<RadioGroup.Root value={value} onValueChange={setValue}>
-  <RadioGroup.Item value="default">Default</RadioGroup.Item>
-  <RadioGroup.Item value="comfortable">Comfortable</RadioGroup.Item>
-  <RadioGroup.Item value="compact">Compact</RadioGroup.Item>
-</RadioGroup.Root>`,
-  },
-  {
-    id: 'horizontal',
-    name: 'Horizontal',
-    description: 'Horizontal layout with flex-direction override',
-    component: <HorizontalExample />,
-    code: `<RadioGroup.Root defaultValue="left" orientation="horizontal" style={{ flexDirection: 'row' }}>
+{/* Horizontal */}
+<RadioGroup.Root orientation="horizontal">
   <RadioGroup.Item value="left">Left</RadioGroup.Item>
-  <RadioGroup.Item value="center">Center</RadioGroup.Item>
-  <RadioGroup.Item value="right">Right</RadioGroup.Item>
-</RadioGroup.Root>`,
+</RadioGroup.Root>
+
+{/* Sizes */}
+<RadioGroup.Root size="sm">
+  <RadioGroup.Item value="a">Small</RadioGroup.Item>
+</RadioGroup.Root>
+<RadioGroup.Root size="lg">
+  <RadioGroup.Item value="a">Large</RadioGroup.Item>
+</RadioGroup.Root>
+
+{/* Error */}
+<RadioGroup.Root invalid>
+  <RadioGroup.Item value="option-1">Option 1</RadioGroup.Item>
+</RadioGroup.Root>
+
+{/* Disabled item */}
+<RadioGroup.Item value="x" disabled>Disabled</RadioGroup.Item>`,
   },
   {
-    id: 'disabled',
-    name: 'Disabled',
-    description: 'Individual items can be disabled',
-    component: <DisabledExample />,
-    code: `<RadioGroup.Root defaultValue="option-1">
-  <RadioGroup.Item value="option-1">Selected</RadioGroup.Item>
-  <RadioGroup.Item value="option-2" disabled>Disabled</RadioGroup.Item>
-  <RadioGroup.Item value="option-3">Available</RadioGroup.Item>
-</RadioGroup.Root>`,
-  },
-  {
-    id: 'custom',
-    name: 'Custom Styling',
-    description: 'Override the checked color via pass-through',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  RadioGroupItem: {
-    item: { style: { '--move-radio-bg-checked': 'var(--move-success)' } }
-  },
-}}>
-  <RadioGroup.Root defaultValue="yes">
-    <RadioGroup.Item value="yes">Yes</RadioGroup.Item>
-    <RadioGroup.Item value="no">No</RadioGroup.Item>
-  </RadioGroup.Root>
-</MoveProvider>`,
+    id: 'formfield',
+    name: 'In FormField',
+    description: 'RadioGroup composed with FormField for labels, descriptions, and error messages.',
+    component: <FormFieldExample />,
+    code: `import { FormField, Label, RadioGroup } from 'move';
+
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label>Size</Label></FormField.Label>
+  <FormField.Field>
+    <RadioGroup.Root defaultValue="medium">
+      <RadioGroup.Item value="small">Small</RadioGroup.Item>
+      <RadioGroup.Item value="medium">Medium</RadioGroup.Item>
+      <RadioGroup.Item value="large">Large</RadioGroup.Item>
+    </RadioGroup.Root>
+  </FormField.Field>
+</FormField.Root>
+
+{/* With description */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label>Plan</Label></FormField.Label>
+  <FormField.Field>
+    <RadioGroup.Root defaultValue="free">
+      <RadioGroup.Item value="free">Free</RadioGroup.Item>
+      <RadioGroup.Item value="pro">Pro</RadioGroup.Item>
+      <RadioGroup.Item value="enterprise">Enterprise</RadioGroup.Item>
+    </RadioGroup.Root>
+  </FormField.Field>
+  <FormField.Description>Choose the plan that fits your needs.</FormField.Description>
+</FormField.Root>
+
+{/* With error */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label required>Size</Label></FormField.Label>
+  <FormField.Field>
+    <RadioGroup.Root invalid>
+      <RadioGroup.Item value="small">Small</RadioGroup.Item>
+      <RadioGroup.Item value="medium">Medium</RadioGroup.Item>
+      <RadioGroup.Item value="large">Large</RadioGroup.Item>
+    </RadioGroup.Root>
+  </FormField.Field>
+  <FormField.Description error>Please select a size.</FormField.Description>
+</FormField.Root>`,
   },
 ];
 
@@ -139,6 +193,32 @@ export function RadioGroupDemo() {
         description="A set of radio buttons for selecting a single value from a list, with spring-animated indicators."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="RadioGroup.Root"
+        properties={[
+          { name: 'value', type: 'string', description: 'Controlled selected value.' },
+          { name: 'defaultValue', type: 'string', description: 'Default selected value for uncontrolled usage.' },
+          { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the selected value changes.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the entire radio group is disabled.' },
+          { name: 'name', type: 'string', description: 'Name for form submission.' },
+          { name: 'required', type: 'boolean', description: 'Whether a selection is required for form validation.' },
+          { name: 'invalid', type: 'boolean', description: 'Whether the radio group is in an invalid state.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size variant.' },
+          { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", description: 'Layout orientation of the radio items.' },
+          { name: 'loop', type: 'boolean', description: 'Whether keyboard navigation loops from last to first item.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="RadioGroup.Item"
+        properties={[
+          { name: 'value', type: 'string', description: 'The unique value of this radio item.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether this individual radio item is disabled.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

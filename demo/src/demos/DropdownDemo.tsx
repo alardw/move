@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { Dropdown, Button, MoveProvider } from 'move';
+import { Dropdown, Button, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
 import { ChevronRight, User, Settings, LogOut, Copy, Scissors, Clipboard, Mail, MessageSquare, PlusCircle } from 'lucide-react';
 
 function BasicExample() {
@@ -144,30 +143,6 @@ function ManyItemsExample() {
   );
 }
 
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      DropdownContent: { content: { style: { borderColor: 'var(--move-primary)', minWidth: '14rem' } } },
-      DropdownLabel: { label: { style: { color: 'var(--move-primary)' } } },
-    }}>
-      <Dropdown.Root>
-        <Dropdown.Trigger asChild>
-          <Button>Styled Menu</Button>
-        </Dropdown.Trigger>
-        <Dropdown.Portal>
-          <Dropdown.Content sideOffset={5}>
-            <Dropdown.Label>Customized</Dropdown.Label>
-            <Dropdown.Separator />
-            <Dropdown.Item>Option A</Dropdown.Item>
-            <Dropdown.Item>Option B</Dropdown.Item>
-            <Dropdown.Item>Option C</Dropdown.Item>
-          </Dropdown.Content>
-        </Dropdown.Portal>
-      </Dropdown.Root>
-    </MoveProvider>
-  );
-}
-
 const examples: Example[] = [
   {
     id: 'usage',
@@ -297,34 +272,6 @@ const [showSidebar, setShowSidebar] = useState(false);
   </Dropdown.Portal>
 </Dropdown.Root>`,
   },
-  {
-    id: 'custom',
-    name: 'Custom Styling',
-    description: 'Override styles via MoveProvider pass-through.',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  DropdownContent: {
-    content: { style: { borderColor: 'var(--move-primary)', minWidth: '14rem' } }
-  },
-  DropdownLabel: {
-    label: { style: { color: 'var(--move-primary)' } }
-  },
-}}>
-  <Dropdown.Root>
-    <Dropdown.Trigger asChild>
-      <Button>Styled Menu</Button>
-    </Dropdown.Trigger>
-    <Dropdown.Portal>
-      <Dropdown.Content sideOffset={5}>
-        <Dropdown.Label>Customized</Dropdown.Label>
-        <Dropdown.Separator />
-        <Dropdown.Item>Option A</Dropdown.Item>
-        <Dropdown.Item>Option B</Dropdown.Item>
-      </Dropdown.Content>
-    </Dropdown.Portal>
-  </Dropdown.Root>
-</MoveProvider>`,
-  },
 ];
 
 export function DropdownDemo() {
@@ -335,6 +282,94 @@ export function DropdownDemo() {
         description="An animated dropdown with items, checkboxes, radio groups, and submenus."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Dropdown.Root"
+        properties={[
+          { name: 'open', type: 'boolean', description: 'Controlled open state.' },
+          { name: 'defaultOpen', type: 'boolean', description: 'Whether the dropdown is open by default.' },
+          { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the open state changes.' },
+          { name: 'animate', type: 'PopupAnimate | false', description: 'Animates Dropdown.Content (popup enter/exit), Dropdown.Item (staggered entrance, hover scale), Dropdown.CheckboxItem (indicator, hover scale), Dropdown.RadioItem (hover scale), and Dropdown.SubContent (enter/exit).' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.Trigger"
+        properties={[
+          { name: 'asChild', type: 'boolean', description: 'Render as the child element instead of a button.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.Content"
+        properties={[
+          { name: 'sideOffset', type: 'number', description: 'Distance in pixels from the trigger.' },
+          { name: 'align', type: "'start' | 'center' | 'end'", description: 'Horizontal alignment relative to the trigger.' },
+          { name: 'onPointerDownOutside', type: '(e: Event) => void', description: 'Called when a pointer down event occurs outside the content.' },
+          { name: 'onEscapeKeyDown', type: '(e: KeyboardEvent) => void', description: 'Called when the escape key is pressed.' },
+          { name: 'onInteractOutside', type: '(e: Event) => void', description: 'Called when an interaction occurs outside the content.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.Item"
+        properties={[
+          { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
+          { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.CheckboxItem"
+        properties={[
+          { name: 'checked', type: 'boolean', description: 'Controlled checked state.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
+          { name: 'onCheckedChange', type: '(checked: boolean) => void', description: 'Called when the checked state changes.' },
+          { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.RadioGroup"
+        properties={[
+          { name: 'value', type: 'string', description: 'Controlled value of the selected radio item.' },
+          { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the selected value changes.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.RadioItem"
+        properties={[
+          { name: 'value', type: 'string', description: 'The unique value for this radio item.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
+          { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.Sub"
+        properties={[
+          { name: 'open', type: 'boolean', description: 'Controlled open state of the submenu.' },
+          { name: 'defaultOpen', type: 'boolean', description: 'Whether the submenu is open by default.' },
+          { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the submenu open state changes.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.SubTrigger"
+        properties={[
+          { name: 'disabled', type: 'boolean', description: 'Whether the sub-trigger is disabled.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Dropdown.SubContent"
+        properties={[
+          { name: 'sideOffset', type: 'number', description: 'Distance in pixels from the sub-trigger.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

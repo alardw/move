@@ -1,6 +1,6 @@
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
-interface StackProps {
+export interface StackProps {
   direction?: 'row' | 'column';
   gap?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   align?: 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -8,6 +8,7 @@ interface StackProps {
   wrap?: boolean;
   flex?: number;
   className?: string;
+  style?: React.CSSProperties;
   children: ReactNode;
 }
 
@@ -19,6 +20,7 @@ export function Stack({
   wrap,
   flex,
   className,
+  style,
   children,
 }: StackProps) {
   const classes = [
@@ -34,5 +36,5 @@ export function Stack({
     .filter(Boolean)
     .join(' ');
 
-  return <div className={classes}>{children}</div>;
+  return <div className={classes} style={style}>{children}</div>;
 }

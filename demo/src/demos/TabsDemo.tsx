@@ -1,6 +1,6 @@
-import { Tabs, Icon, MoveProvider } from 'move';
+import { Tabs, Icon, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
+
 
 function UsageExample() {
   return (
@@ -49,22 +49,13 @@ function WithIconsExample() {
     <Tabs.Root defaultValue="music">
       <Tabs.List>
         <Tabs.Trigger value="music">
-          <Stack gap="xs" align="center">
-            <Icon name="music" size="sm" />
-            Music
-          </Stack>
+          <Icon name="music" size="sm" /> Music
         </Tabs.Trigger>
         <Tabs.Trigger value="photos">
-          <Stack gap="xs" align="center">
-            <Icon name="image" size="sm" />
-            Photos
-          </Stack>
+          <Icon name="image" size="sm" /> Photos
         </Tabs.Trigger>
         <Tabs.Trigger value="videos">
-          <Stack gap="xs" align="center">
-            <Icon name="video" size="sm" />
-            Videos
-          </Stack>
+          <Icon name="video" size="sm" /> Videos
         </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="music">
@@ -98,32 +89,6 @@ function DisabledExample() {
         Archived items are shown here.
       </Tabs.Content>
     </Tabs.Root>
-  );
-}
-
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      TabsList: { list: { style: { borderBottom: '2px solid var(--move-primary-subtle)', gap: '0.5rem' } } },
-      TabsTrigger: { trigger: { style: { borderRadius: '6px 6px 0 0', padding: '0.5rem 1rem' } } },
-    }}>
-      <Tabs.Root defaultValue="design">
-        <Tabs.List>
-          <Tabs.Trigger value="design">Design</Tabs.Trigger>
-          <Tabs.Trigger value="code">Code</Tabs.Trigger>
-          <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Content value="design">
-          Visual design tools and assets.
-        </Tabs.Content>
-        <Tabs.Content value="code">
-          Source code and implementation.
-        </Tabs.Content>
-        <Tabs.Content value="preview">
-          Live preview of your work.
-        </Tabs.Content>
-      </Tabs.Root>
-    </MoveProvider>
   );
 }
 
@@ -221,33 +186,6 @@ const examples: Example[] = [
   </Tabs.Content>
 </Tabs.Root>`,
   },
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Restyle tabs globally or per instance',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  TabsList: { list: { style: { borderBottom: '2px solid var(--move-primary-subtle)', gap: '0.5rem' } } },
-  TabsTrigger: { trigger: { style: { borderRadius: '6px 6px 0 0', padding: '0.5rem 1rem' } } },
-}}>
-  <Tabs.Root defaultValue="design">
-    <Tabs.List>
-      <Tabs.Trigger value="design">Design</Tabs.Trigger>
-      <Tabs.Trigger value="code">Code</Tabs.Trigger>
-      <Tabs.Trigger value="preview">Preview</Tabs.Trigger>
-    </Tabs.List>
-    <Tabs.Content value="design">
-      Visual design tools and assets.
-    </Tabs.Content>
-    <Tabs.Content value="code">
-      Source code and implementation.
-    </Tabs.Content>
-    <Tabs.Content value="preview">
-      Live preview of your work.
-    </Tabs.Content>
-  </Tabs.Root>
-</MoveProvider>`,
-  },
 ];
 
 export function TabsDemo() {
@@ -258,6 +196,44 @@ export function TabsDemo() {
         description="Organize content into switchable sections."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Tabs.Root"
+        properties={[
+          { name: 'defaultValue', type: 'string', description: 'The value of the tab to select by default.' },
+          { name: 'value', type: 'string', description: 'Controlled active tab value.' },
+          { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the active tab changes.' },
+          { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", description: 'Orientation of the tab list.' },
+          { name: 'dir', type: "'ltr' | 'rtl'", description: 'Reading direction for keyboard navigation.' },
+          { name: 'activationMode', type: "'automatic' | 'manual'", default: "'automatic'", description: 'Whether tabs activate on focus or require a click.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Tabs.List"
+        properties={[
+          { name: 'loop', type: 'boolean', description: 'Whether keyboard navigation loops from last to first trigger.' },
+          { name: 'animate', type: 'Animation | false', description: 'Animates the active tab indicator (translateX and width spring).' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Tabs.Trigger"
+        properties={[
+          { name: 'value', type: 'string', description: 'Value that associates the trigger with a content panel.' },
+          { name: 'disabled', type: 'boolean', description: 'Prevents the tab from being activated.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Tabs.Content"
+        properties={[
+          { name: 'value', type: 'string', description: 'Value that associates the content with a trigger.' },
+          { name: 'forceMount', type: 'true', description: 'Force mount the content even when the tab is inactive.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

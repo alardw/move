@@ -1,6 +1,5 @@
-import { Avatar, MoveProvider } from 'move';
+import { Avatar, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
 
 function UsageExample() {
   return (
@@ -83,28 +82,6 @@ function GroupExample() {
   );
 }
 
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      AvatarRoot: { root: { style: { borderRadius: '8px' } } },
-      AvatarFallback: { fallback: { style: { background: 'var(--move-primary)', color: 'var(--move-primary-fg)' } } },
-    }}>
-      <Stack gap="md" align="center">
-        <Avatar.Root>
-          <Avatar.Fallback>AB</Avatar.Fallback>
-        </Avatar.Root>
-        <Avatar.Root pt={{ root: { style: { border: '2px solid var(--move-primary)' } } }}>
-          <Avatar.Image
-            src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=128&h=128&fit=crop"
-            alt="Styled"
-          />
-          <Avatar.Fallback>CD</Avatar.Fallback>
-        </Avatar.Root>
-      </Stack>
-    </MoveProvider>
-  );
-}
-
 const examples: Example[] = [
   {
     id: 'usage',
@@ -178,24 +155,6 @@ const examples: Example[] = [
   </Avatar.Root>
 </Avatar.Group>`,
   },
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Restyle avatars globally or per instance',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  AvatarRoot: { root: { style: { borderRadius: '8px' } } },
-  AvatarFallback: { fallback: { style: { background: 'var(--move-primary)', color: 'var(--move-primary-fg)' } } },
-}}>
-  <Avatar.Root>
-    <Avatar.Fallback>AB</Avatar.Fallback>
-  </Avatar.Root>
-  <Avatar.Root pt={{ root: { style: { border: '2px solid var(--move-primary)' } } }}>
-    <Avatar.Image src="https://example.com/photo.jpg" alt="Styled" />
-    <Avatar.Fallback>CD</Avatar.Fallback>
-  </Avatar.Root>
-</MoveProvider>`,
-  },
 ];
 
 export function AvatarDemo() {
@@ -206,6 +165,39 @@ export function AvatarDemo() {
         description="A face for every user — image with graceful fallback."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Avatar.Root"
+        properties={[
+          { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Size of the avatar.' },
+          { name: 'animate', type: 'false', description: 'Set to false to disable the entrance animation.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Avatar.Image"
+        properties={[
+          { name: 'src', type: 'string', description: 'URL of the avatar image.' },
+          { name: 'alt', type: 'string', description: 'Accessible alt text for the image.' },
+          { name: 'onLoadingStatusChange', type: "(status: 'idle' | 'loading' | 'loaded' | 'error') => void", description: 'Called when the image loading status changes.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Avatar.Fallback"
+        properties={[
+          { name: 'delayMs', type: 'number', description: 'Milliseconds to wait before showing the fallback, giving the image time to load.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Avatar.Group"
+        properties={[
+          { name: 'staggerDelay', type: 'number', default: '50', description: 'Delay in milliseconds between each avatar entrance animation.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

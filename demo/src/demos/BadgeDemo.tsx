@@ -1,4 +1,4 @@
-import { Badge, MoveProvider } from 'move';
+import { Badge, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack } from '../components';
 
@@ -26,18 +26,6 @@ function SizesExample() {
       <Badge size="md">Medium</Badge>
       <Badge size="lg">Large</Badge>
     </Stack>
-  );
-}
-
-function PassThroughExample() {
-  return (
-    <MoveProvider pt={{ Badge: { root: { style: { fontWeight: 'bold', letterSpacing: '0.05em' } } } }}>
-      <Stack gap="md" wrap align="center">
-        <Badge variant="primary">Global Style</Badge>
-        <Badge variant="success" pt={{ root: { style: { borderRadius: '4px' } } }}>Instance Style</Badge>
-        <Badge variant="outline" pt={{ root: { className: 'custom-badge' } }}>Custom Class</Badge>
-      </Stack>
-    </MoveProvider>
   );
 }
 
@@ -70,23 +58,6 @@ const examples: Example[] = [
 <Badge size="md">Medium</Badge>
 <Badge size="lg">Large</Badge>`,
   },
-  {
-    id: 'passthrough',
-    name: 'Custom Styling',
-    description: 'Tweak styles globally or per badge',
-    component: <PassThroughExample />,
-    code: `<MoveProvider pt={{
-  Badge: { root: { style: { fontWeight: 'bold', letterSpacing: '0.05em' } } }
-}}>
-  <Badge variant="primary">Global Style</Badge>
-  <Badge variant="success" pt={{ root: { style: { borderRadius: '4px' } } }}>
-    Instance Style
-  </Badge>
-  <Badge variant="outline" pt={{ root: { className: 'custom-badge' } }}>
-    Custom Class
-  </Badge>
-</MoveProvider>`,
-  },
 ];
 
 export function BadgeDemo() {
@@ -97,6 +68,16 @@ export function BadgeDemo() {
         description="Tiny labels for status, tags, and counts."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Badge"
+        properties={[
+          { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger'", default: "'primary'", description: 'Visual style of the badge.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the badge.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

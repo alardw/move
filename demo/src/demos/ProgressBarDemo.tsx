@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ProgressBar, MoveProvider } from 'move';
+import { ProgressBar, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 
 function UsageExample() {
@@ -24,19 +24,6 @@ function AnimatedExample() {
 
 function IndeterminateExample() {
   return <ProgressBar />;
-}
-
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      ProgressBar: {
-        root: { style: { height: '8px', borderRadius: '4px' } },
-        indicator: { style: { background: 'linear-gradient(90deg, var(--move-success), var(--move-primary))' } },
-      },
-    }}>
-      <ProgressBar value={65} />
-    </MoveProvider>
-  );
 }
 
 const examples: Example[] = [
@@ -75,20 +62,6 @@ useEffect(() => {
     component: <IndeterminateExample />,
     code: `<ProgressBar />`,
   },
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Restyle the track and fill globally or per instance',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  ProgressBar: {
-    root: { style: { height: '8px', borderRadius: '4px' } },
-    indicator: { style: { background: 'linear-gradient(90deg, var(--move-success), var(--move-primary))' } },
-  },
-}}>
-  <ProgressBar value={65} />
-</MoveProvider>`,
-  },
 ];
 
 export function ProgressBarDemo() {
@@ -99,6 +72,17 @@ export function ProgressBarDemo() {
         description="Show how far along a task is."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="ProgressBar"
+        properties={[
+          { name: 'value', type: 'number | null', description: 'Current progress value. Omit or pass null for indeterminate state.' },
+          { name: 'max', type: 'number', default: '100', description: 'Maximum value of the progress bar.' },
+          { name: 'getValueLabel', type: '(value: number, max: number) => string', description: 'Custom accessible label for the current value.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

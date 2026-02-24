@@ -1,39 +1,22 @@
-import { Label, MoveProvider } from 'move';
+import { Label, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
+import { Stack, DemoSample } from '../components';
 
-function BasicExample() {
+function UsageExample() {
   return (
-    <Label>Email address</Label>
-  );
-}
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <Label>Email address</Label>
+      </DemoSample>
 
-function RequiredExample() {
-  return (
-    <Stack direction="column" gap="md">
-      <Label required>Full name</Label>
-      <Label required>Email address</Label>
-      <Label>Phone number</Label>
+      <DemoSample label="Required">
+        <Label required>Full name</Label>
+      </DemoSample>
+
+      <DemoSample label="Disabled">
+        <Label disabled>Disabled label</Label>
+      </DemoSample>
     </Stack>
-  );
-}
-
-function DisabledExample() {
-  return (
-    <Stack direction="column" gap="md">
-      <Label disabled>Disabled label</Label>
-      <Label disabled required>Disabled required label</Label>
-    </Stack>
-  );
-}
-
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      Label: { root: { style: { '--move-label-font-size': 'var(--move-size-lg)' } as React.CSSProperties } },
-    }}>
-      <Label required>Large label</Label>
-    </MoveProvider>
   );
 }
 
@@ -41,41 +24,17 @@ const examples: Example[] = [
   {
     id: 'usage',
     name: 'Usage',
-    description: 'A basic label',
-    component: <BasicExample />,
+    description: 'An accessible label for form controls, with optional required indicator.',
+    component: <UsageExample />,
     code: `import { Label } from 'move';
 
-<Label>Email address</Label>`,
-  },
-  {
-    id: 'required',
-    name: 'Required',
-    description: 'Labels with a mandatory asterisk',
-    component: <RequiredExample />,
-    code: `<Label required>Full name</Label>
-<Label required>Email address</Label>
-<Label>Phone number</Label>`,
-  },
-  {
-    id: 'disabled',
-    name: 'Disabled',
-    description: 'Disabled labels appear muted',
-    component: <DisabledExample />,
-    code: `<Label disabled>Disabled label</Label>
-<Label disabled required>Disabled required label</Label>`,
-  },
-  {
-    id: 'custom',
-    name: 'Custom Styling',
-    description: 'Override label tokens via pass-through',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  Label: {
-    root: { style: { '--move-label-font-size': 'var(--move-size-lg)' } }
-  },
-}}>
-  <Label required>Large label</Label>
-</MoveProvider>`,
+<Label>Email address</Label>
+
+{/* Required */}
+<Label required>Full name</Label>
+
+{/* Disabled */}
+<Label disabled>Disabled label</Label>`,
   },
 ];
 
@@ -87,6 +46,17 @@ export function LabelDemo() {
         description="An accessible label for form controls, with optional required indicator."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Label"
+        properties={[
+          { name: 'htmlFor', type: 'string', description: 'The id of the form element this label is associated with.' },
+          { name: 'required', type: 'boolean', description: 'Whether to show a required asterisk indicator.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the label appears in a disabled state.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

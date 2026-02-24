@@ -1,4 +1,4 @@
-import { Accordion, MoveProvider } from 'move';
+import { Accordion, Heading } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 
 function SingleExample() {
@@ -83,33 +83,6 @@ function MultipleExample() {
   );
 }
 
-function PassThroughExample() {
-  return (
-    <MoveProvider pt={{ AccordionTrigger: { root: { style: { fontStyle: 'italic' } } } }}>
-      <Accordion type="single" collapsible>
-        <Accordion.Item value="item-1">
-          <Accordion.Header>
-            <Accordion.Trigger>Trigger with global custom style</Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Content>
-            The trigger text is italic via a global style override on the AccordionTrigger root slot.
-          </Accordion.Content>
-        </Accordion.Item>
-        <Accordion.Item value="item-2">
-          <Accordion.Header>
-            <Accordion.Trigger pt={{ icon: { style: { color: 'var(--move-primary)' } } }}>
-              Trigger with custom icon style
-            </Accordion.Trigger>
-          </Accordion.Header>
-          <Accordion.Content>
-            The chevron icon is colored via a custom style on the icon slot.
-          </Accordion.Content>
-        </Accordion.Item>
-      </Accordion>
-    </MoveProvider>
-  );
-}
-
 const examples: Example[] = [
   {
     id: 'usage',
@@ -180,34 +153,6 @@ const examples: Example[] = [
   </Accordion.Item>
 </Accordion>`,
   },
-  {
-    id: 'passthrough',
-    name: 'Custom Styling',
-    description: 'Fine-tune any part with style overrides',
-    component: <PassThroughExample />,
-    code: `<MoveProvider pt={{ AccordionTrigger: { root: { style: { fontStyle: 'italic' } } } }}>
-  <Accordion type="single" collapsible>
-    <Accordion.Item value="item-1">
-      <Accordion.Header>
-        <Accordion.Trigger>Trigger with global custom style</Accordion.Trigger>
-      </Accordion.Header>
-      <Accordion.Content>
-        The trigger text is italic via a global style override on the AccordionTrigger root slot.
-      </Accordion.Content>
-    </Accordion.Item>
-    <Accordion.Item value="item-2">
-      <Accordion.Header>
-        <Accordion.Trigger pt={{ icon: { style: { color: 'var(--move-primary)' } } }}>
-          Trigger with custom icon style
-        </Accordion.Trigger>
-      </Accordion.Header>
-      <Accordion.Content>
-        The chevron icon is colored via a custom style on the icon slot.
-      </Accordion.Content>
-    </Accordion.Item>
-  </Accordion>
-</MoveProvider>`,
-  },
 ];
 
 export function AccordionDemo() {
@@ -218,6 +163,35 @@ export function AccordionDemo() {
         description="Expandable sections that reveal content with smooth animations."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Accordion.Root"
+        properties={[
+          { name: 'type', type: "'single' | 'multiple'", default: "'single'", description: 'Whether one or multiple items can be open at once.' },
+          { name: 'value', type: 'string | string[]', description: 'Controlled open item(s).' },
+          { name: 'defaultValue', type: 'string | string[]', description: 'Uncontrolled initial open item(s).' },
+          { name: 'onValueChange', type: '(value: string | string[]) => void', description: 'Called when the open item(s) change.' },
+          { name: 'collapsible', type: 'boolean', default: 'true', description: 'Allow closing all items in single mode.' },
+          { name: 'animate', type: 'AccordionAnimateConfig | false', description: 'Animates Accordion.Item (staggered entrance), Accordion.Content (height expand/collapse), and Accordion.Trigger icon (rotation).' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Accordion.Item"
+        properties={[
+          { name: 'value', type: 'string', description: 'Unique identifier for the item.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Accordion.Trigger"
+        properties={[
+          { name: 'icon', type: 'ReactNode', description: 'Custom icon to replace the default chevron.' },
+          { name: 'animate', type: "Pick<ElementAnimate, 'hover'> | false", description: 'Hover animation for the trigger, or false to disable.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

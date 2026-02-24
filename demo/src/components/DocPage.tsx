@@ -1,13 +1,21 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
-import { Code, ChevronDown, ChevronUp } from 'lucide-react';
+import { Code } from 'lucide-react';
+import { Tabs as MoveTabs, ToggleButton, Collapsible, Heading, Text } from 'move';
 import { createHighlighter, type Highlighter } from 'shiki';
 
-// Initialize shiki once — loads TextMate grammars for correct JSX parsing
+// Lazy-load shiki — only starts when the first CodeBlock mounts
 let highlighter: Highlighter | null = null;
-const highlighterReady = createHighlighter({
-  themes: ['github-dark'],
-  langs: ['tsx'],
-}).then((h) => { highlighter = h; });
+let highlighterReady: Promise<void> | null = null;
+
+function ensureHighlighter(): Promise<void> {
+  if (!highlighterReady) {
+    highlighterReady = createHighlighter({
+      themes: ['github-dark'],
+      langs: ['tsx'],
+    }).then((h) => { highlighter = h; });
+  }
+  return highlighterReady;
+}
 
 // =============================================================================
 // Types
@@ -19,6 +27,7 @@ interface Example {
   description: string;
   component: ReactNode;
   code: string;
+  fullWidth?: boolean;
 }
 
 interface DocPageContextValue {
@@ -56,7 +65,7 @@ interface RootProps {
 
 function Root({ children, defaultExample, defaultTab = 'examples' }: RootProps) {
   const [activeExample, setActiveExample] = useState(defaultExample ?? '');
-  const [showCode, setShowCode] = useState(true);
+  const [showCode, setShowCode] = useState(false);
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   return (
@@ -87,23 +96,20 @@ function Tabs({ tabs }: TabsProps) {
   const current = tabs.find(t => t.id === activeTab) ?? tabs[0];
 
   return (
-    <div className="docs-tabs">
-      <div className="docs-tabs-list">
+    <MoveTabs.Root value={current?.id} onValueChange={setActiveTab}>
+      <MoveTabs.List>
         {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            className="docs-tab"
-            data-active={current?.id === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-          >
+          <MoveTabs.Trigger key={tab.id} value={tab.id}>
             {tab.label}
-          </button>
+          </MoveTabs.Trigger>
         ))}
-      </div>
-      <div className="docs-tabs-content">
-        {current?.content}
-      </div>
-    </div>
+      </MoveTabs.List>
+      {tabs.map((tab) => (
+        <MoveTabs.Content key={tab.id} value={tab.id}>
+          {tab.content}
+        </MoveTabs.Content>
+      ))}
+    </MoveTabs.Root>
   );
 }
 
@@ -119,8 +125,8 @@ interface HeaderProps {
 function Header({ title, description }: HeaderProps) {
   return (
     <div className="docs-header">
-      <h3 className="docs-title">{title}</h3>
-      <p className="docs-description">{description}</p>
+      <Heading level={2}>{title}</Heading>
+      <Text color="muted">{description}</Text>
     </div>
   );
 }
@@ -146,7 +152,7 @@ function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
     if (highlighter) {
       setHtml(highlighter.codeToHtml(code.trim(), { lang: language, theme: 'github-dark' }));
     } else {
-      highlighterReady.then(() => {
+      ensureHighlighter().then(() => {
         setHtml(highlighter!.codeToHtml(code.trim(), { lang: language, theme: 'github-dark' }));
       });
     }
@@ -176,56 +182,57 @@ interface ExamplesProps {
 function Examples({ examples }: ExamplesProps) {
   const { activeExample, setActiveExample, showCode, setShowCode } = useDocPage();
 
-  // Set default if not set
   const currentId = activeExample || examples[0]?.id;
-  const current = examples.find(e => e.id === currentId) ?? examples[0];
 
-  if (!current) return null;
+  if (!examples.length) return null;
 
   return (
-    <>
-      {/* Tabs */}
-      <div className="example-selector">
+    <MoveTabs.Root value={currentId} onValueChange={setActiveExample}>
+      <MoveTabs.List>
         {examples.map((example) => (
-          <button
-            key={example.id}
-            className="example-tab"
-            data-active={currentId === example.id}
-            onClick={() => setActiveExample(example.id)}
-          >
+          <MoveTabs.Trigger key={example.id} value={example.id}>
             {example.name}
-          </button>
+          </MoveTabs.Trigger>
         ))}
-      </div>
+      </MoveTabs.List>
 
-      {/* Panel */}
-      <div className="example-panel">
-        <div className="example-preview">
-          {current.component}
-        </div>
-
-        {current.code && (
-          <div className="example-meta">
-            <div className="example-info">
-              <h4 className="example-name">{current.name}</h4>
-              <p className="example-note">{current.description}</p>
+      {examples.map((example) => (
+        <MoveTabs.Content key={example.id} value={example.id}>
+          <div className="example-panel">
+            <div className={`example-preview${example.fullWidth ? ' example-preview-full' : ''}`}>
+              {example.component}
             </div>
 
-            <button
-              className="code-toggle"
-              data-open={showCode}
-              onClick={() => setShowCode(!showCode)}
-            >
-              <Code />
-              {showCode ? 'Hide Code' : 'View Code'}
-              {showCode ? <ChevronUp /> : <ChevronDown />}
-            </button>
-          </div>
-        )}
+            {example.code && (
+              <Collapsible.Root open={showCode} onOpenChange={setShowCode}>
+                <div className="example-meta">
+                  <div className="example-info">
+                    <Text weight="semibold" size="sm">{example.name}</Text>
+                    <Text as="span" size="sm" color="muted">{example.description}</Text>
+                  </div>
 
-        {showCode && current.code && <CodeBlock code={current.code} />}
-      </div>
-    </>
+                  <Collapsible.Trigger asChild>
+                    <ToggleButton
+                      size="sm"
+                      pressed={showCode}
+                      onPressedChange={setShowCode}
+                      aria-label={showCode ? 'Hide code' : 'Show code'}
+                    >
+                      <Code size={14} />
+                      {showCode ? 'Hide Code' : 'View Code'}
+                    </ToggleButton>
+                  </Collapsible.Trigger>
+                </div>
+
+                <Collapsible.Content>
+                  <CodeBlock code={example.code} />
+                </Collapsible.Content>
+              </Collapsible.Root>
+            )}
+          </div>
+        </MoveTabs.Content>
+      ))}
+    </MoveTabs.Root>
   );
 }
 
@@ -236,7 +243,7 @@ function Examples({ examples }: ExamplesProps) {
 interface ApiProp {
   name: string;
   type: string;
-  description: string;
+  description: ReactNode;
   default?: string;
 }
 
@@ -245,10 +252,20 @@ interface ApiSectionProps {
   properties: ApiProp[];
 }
 
+function renderType(type: string) {
+  const parts = type.split('|').map(s => s.trim());
+  if (parts.length <= 1) return type;
+  return (
+    <ul className="type-list">
+      {parts.map((part, i) => <li key={i}>{part}</li>)}
+    </ul>
+  );
+}
+
 function ApiSection({ title = 'API Reference', properties }: ApiSectionProps) {
   return (
     <div className="api-section">
-      <h4 className="api-title">{title}</h4>
+      <Heading level={4} weight="medium">{title}</Heading>
       <table className="api-table">
         <thead>
           <tr>
@@ -262,9 +279,76 @@ function ApiSection({ title = 'API Reference', properties }: ApiSectionProps) {
           {properties.map((prop) => (
             <tr key={prop.name}>
               <td><code>{prop.name}</code></td>
-              <td className="type-cell">{prop.type}</td>
+              <td className="type-cell">{renderType(prop.type)}</td>
               <td>{prop.default ? <code>{prop.default}</code> : '—'}</td>
               <td>{prop.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// =============================================================================
+// Color Swatch
+// =============================================================================
+
+function ColorSwatch({ color }: { color: string }) {
+  return (
+    <span
+      className="color-swatch"
+      style={{ backgroundColor: color }}
+      aria-hidden="true"
+    />
+  );
+}
+
+// =============================================================================
+// Token Reference Section
+// =============================================================================
+
+interface TokenProp {
+  name: string;
+  default: string;
+  description: ReactNode;
+  /** Show a color swatch preview. Defaults to true. Set to false for non-color tokens. */
+  color?: boolean;
+}
+
+interface TokenSectionProps {
+  title?: string;
+  tokens: TokenProp[];
+}
+
+function TokenSection({ title = 'Style Tokens', tokens }: TokenSectionProps) {
+  return (
+    <div className="api-section">
+      <Heading level={4} weight="medium">{title}</Heading>
+      <table className="api-table token-table">
+        <colgroup>
+          <col className="col-token" />
+          <col className="col-default" />
+          <col className="col-desc" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Default</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tokens.map((token) => (
+            <tr key={token.name}>
+              <td><code>{token.name}</code></td>
+              <td>
+                <span className="token-default">
+                  {token.color !== false && <ColorSwatch color={token.default} />}
+                  <code>{token.default}</code>
+                </span>
+              </td>
+              <td>{token.description}</td>
             </tr>
           ))}
         </tbody>
@@ -283,6 +367,7 @@ export const DocPage = {
   Tabs,
   Examples,
   ApiSection,
+  TokenSection,
 };
 
-export type { Example, ApiProp, Tab };
+export type { Example, ApiProp, TokenProp, Tab };

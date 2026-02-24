@@ -1,81 +1,74 @@
-import { useState } from 'react';
-import { Password, MoveProvider } from 'move';
+import { Password, FormField, Label, Heading } from 'move';
 import { Lock } from 'lucide-react';
 import { DocPage, type Example } from '../components/DocPage';
-import { Stack } from '../components';
+import { Stack, DemoSample } from '../components';
 
 function UsageExample() {
-  return <Password placeholder="Enter password" />;
-}
-
-function WithIconExample() {
   return (
-    <Stack direction="column">
-      <Password iconLeft={<Lock size={16} />} placeholder="Password" />
-      <Password iconLeft={<Lock size={16} />} placeholder="Confirm password" />
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <Password placeholder="Enter password" />
+      </DemoSample>
+
+      <DemoSample label="With icon">
+        <Stack direction="column">
+          <Password iconLeft={<Lock size={16} />} placeholder="Password" />
+          <Password iconLeft={<Lock size={16} />} placeholder="Confirm password" />
+        </Stack>
+      </DemoSample>
+
+      <DemoSample label="Variants">
+        <Stack direction="column">
+          <Password variant="outlined" placeholder="Outlined (default)" />
+          <Password variant="filled" placeholder="Filled" />
+        </Stack>
+      </DemoSample>
+
+      <DemoSample label="Width">
+        <Stack direction="column">
+          <Password placeholder="Short PIN" width="10rem" />
+          <Password placeholder="Medium" width="20rem" iconLeft={<Lock size={16} />} />
+          <Password placeholder="Full width (default)" />
+        </Stack>
+      </DemoSample>
+
+      <DemoSample label="Invalid">
+        <Password placeholder="Invalid password" defaultValue="abc" invalid />
+      </DemoSample>
+
+      <DemoSample label="Disabled">
+        <Password placeholder="Disabled" disabled />
+      </DemoSample>
     </Stack>
   );
 }
 
-function ControlledExample() {
-  const [visible, setVisible] = useState(false);
-
+function FormFieldExample() {
   return (
-    <Stack direction="column">
-      <Password
-        placeholder="Controlled visibility"
-        visible={visible}
-        onVisibleChange={setVisible}
-        iconLeft={<Lock size={16} />}
-      />
-      <p style={{ color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-sm)', margin: 0 }}>
-        Password is {visible ? 'visible' : 'hidden'}
-      </p>
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Basic">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label htmlFor="ff-pw">Password</Label></FormField.Label>
+          <FormField.Field><Password id="ff-pw" placeholder="Enter password" iconLeft={<Lock size={16} />} /></FormField.Field>
+        </FormField.Root>
+      </DemoSample>
+
+      <DemoSample label="Description">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label htmlFor="ff-pw-desc" required>Password</Label></FormField.Label>
+          <FormField.Field><Password id="ff-pw-desc" placeholder="Enter password" iconLeft={<Lock size={16} />} /></FormField.Field>
+          <FormField.Description>Must be at least 8 characters.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
+
+      <DemoSample label="Error">
+        <FormField.Root labelWidth="8rem">
+          <FormField.Label><Label htmlFor="ff-pw-err" required>Password</Label></FormField.Label>
+          <FormField.Field><Password id="ff-pw-err" defaultValue="abc" invalid iconLeft={<Lock size={16} />} /></FormField.Field>
+          <FormField.Description error>Password must be at least 8 characters.</FormField.Description>
+        </FormField.Root>
+      </DemoSample>
     </Stack>
-  );
-}
-
-function VariantsExample() {
-  return (
-    <Stack direction="column">
-      <Password variant="outlined" placeholder="Outlined (default)" />
-      <Password variant="filled" placeholder="Filled" />
-    </Stack>
-  );
-}
-
-function WidthExample() {
-  return (
-    <Stack direction="column">
-      <Password placeholder="Short PIN" width="10rem" />
-      <Password placeholder="Medium" width="20rem" iconLeft={<Lock size={16} />} />
-      <Password placeholder="Full width (default)" />
-    </Stack>
-  );
-}
-
-function StatesExample() {
-  return (
-    <Stack direction="column">
-      <Password placeholder="Invalid password" defaultValue="abc" invalid />
-      <Password placeholder="Disabled" disabled />
-    </Stack>
-  );
-}
-
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{
-      Password: { root: { style: { borderColor: 'var(--move-primary)', background: 'transparent' } } },
-    }}>
-      <Stack direction="column">
-        <Password placeholder="Global style applied" />
-        <Password
-          placeholder="Pill shape"
-          pt={{ root: { style: { borderRadius: 'var(--move-rounded-full)' } } }}
-        />
-      </Stack>
-    </MoveProvider>
   );
 }
 
@@ -86,72 +79,52 @@ const examples: Example[] = [
     description: 'A password field with a built-in show/hide toggle.',
     component: <UsageExample />,
     code: `import { Password } from 'move';
+import { Lock } from 'lucide-react';
 
-<Password placeholder="Enter password" />`,
-  },
-  {
-    id: 'icon',
-    name: 'With Icon',
-    description: 'Add a leading icon for context.',
-    component: <WithIconExample />,
-    code: `import { Lock } from 'lucide-react';
+<Password placeholder="Enter password" />
 
+{/* With icon */}
 <Password iconLeft={<Lock size={16} />} placeholder="Password" />
-<Password iconLeft={<Lock size={16} />} placeholder="Confirm password" />`,
-  },
-  {
-    id: 'controlled',
-    name: 'Controlled',
-    description: 'Control visibility from the outside.',
-    component: <ControlledExample />,
-    code: `const [visible, setVisible] = useState(false);
 
-<Password
-  placeholder="Controlled visibility"
-  visible={visible}
-  onVisibleChange={setVisible}
-  iconLeft={<Lock size={16} />}
-/>`,
+{/* Variants */}
+<Password variant="outlined" placeholder="Outlined" />
+<Password variant="filled" placeholder="Filled" />
+
+{/* Width */}
+<Password placeholder="PIN" width="10rem" />
+
+{/* Invalid */}
+<Password invalid defaultValue="abc" />
+
+{/* Disabled */}
+<Password disabled />`,
   },
   {
-    id: 'variants',
-    name: 'Variants',
-    description: 'Outlined for clarity, filled for emphasis.',
-    component: <VariantsExample />,
-    code: `<Password variant="outlined" placeholder="Outlined (default)" />
-<Password variant="filled" placeholder="Filled" />`,
-  },
-  {
-    id: 'width',
-    name: 'Width',
-    description: 'Size the field to match its content.',
-    component: <WidthExample />,
-    code: `<Password placeholder="Short PIN" width="10rem" />
-<Password placeholder="Medium" width="20rem" iconLeft={<Lock size={16} />} />
-<Password placeholder="Full width (default)" />`,
-  },
-  {
-    id: 'states',
-    name: 'States',
-    description: 'Invalid highlights errors, disabled locks the field.',
-    component: <StatesExample />,
-    code: `<Password placeholder="Invalid password" defaultValue="abc" invalid />
-<Password placeholder="Disabled" disabled />`,
-  },
-  {
-    id: 'custom',
-    name: 'Custom Styling',
-    description: 'Tweak styles globally or per instance.',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{
-  Password: { root: { style: { borderColor: 'var(--move-primary)', background: 'transparent' } } },
-}}>
-  <Password placeholder="Global style applied" />
-  <Password
-    placeholder="Pill shape"
-    pt={{ root: { style: { borderRadius: 'var(--move-rounded-full)' } } }}
-  />
-</MoveProvider>`,
+    id: 'formfield',
+    name: 'In FormField',
+    description: 'Password composed with FormField for labels, descriptions, and error messages.',
+    component: <FormFieldExample />,
+    code: `import { FormField, Label, Password } from 'move';
+import { Lock } from 'lucide-react';
+
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label htmlFor="pw">Password</Label></FormField.Label>
+  <FormField.Field><Password id="pw" placeholder="Enter password" iconLeft={<Lock size={16} />} /></FormField.Field>
+</FormField.Root>
+
+{/* With description */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label htmlFor="pw-desc" required>Password</Label></FormField.Label>
+  <FormField.Field><Password id="pw-desc" placeholder="Enter password" iconLeft={<Lock size={16} />} /></FormField.Field>
+  <FormField.Description>Must be at least 8 characters.</FormField.Description>
+</FormField.Root>
+
+{/* With error */}
+<FormField.Root labelWidth="8rem">
+  <FormField.Label><Label htmlFor="pw-err" required>Password</Label></FormField.Label>
+  <FormField.Field><Password id="pw-err" defaultValue="abc" invalid iconLeft={<Lock size={16} />} /></FormField.Field>
+  <FormField.Description error>Password must be at least 8 characters.</FormField.Description>
+</FormField.Root>`,
   },
 ];
 
@@ -163,6 +136,32 @@ export function PasswordDemo() {
         description="A password field with a visibility toggle, variants, sizes, and validation support."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Password"
+        properties={[
+          { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", description: 'Visual style variant.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size variant.' },
+          { name: 'invalid', type: 'boolean', description: 'Whether the input is in an invalid state.' },
+          { name: 'iconLeft', type: 'ReactNode', description: 'Icon displayed on the left side of the input.' },
+          { name: 'showIcon', type: 'ReactNode', description: 'Custom icon for the show-password toggle button.' },
+          { name: 'hideIcon', type: 'ReactNode', description: 'Custom icon for the hide-password toggle button.' },
+          { name: 'width', type: 'CSSProperties[\'width\']', description: 'Custom width for the input container.' },
+          { name: 'visible', type: 'boolean', description: 'Controlled visibility state of the password.' },
+          { name: 'defaultVisible', type: 'boolean', default: 'false', description: 'Default visibility state for uncontrolled usage.' },
+          { name: 'onVisibleChange', type: '(visible: boolean) => void', description: 'Called when the visibility state changes.' },
+          { name: 'disabled', type: 'boolean', description: 'Whether the input is disabled.' },
+          { name: 'readOnly', type: 'boolean', description: 'Whether the input is read-only.' },
+          { name: 'placeholder', type: 'string', description: 'Placeholder text displayed when the input is empty.' },
+          { name: 'value', type: 'string', description: 'Controlled input value.' },
+          { name: 'defaultValue', type: 'string', description: 'Default value for uncontrolled usage.' },
+          { name: 'name', type: 'string', description: 'Name for form submission.' },
+          { name: 'required', type: 'boolean', description: 'Whether the input is required for form validation.' },
+          { name: 'onChange', type: 'ChangeEventHandler<HTMLInputElement>', description: 'Called when the input value changes.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }
