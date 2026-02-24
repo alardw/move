@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef } from 'react';
 import { PresenceContext, type PresenceContextValue } from './PresenceContext';
 
 interface PresenceChildProps {
@@ -14,41 +14,18 @@ export function PresenceChild({
   onExitComplete,
   initial,
 }: PresenceChildProps) {
-  const presenceRef = useRef<PresenceContextValue>({
-    isPresent,
-    safeToRemove: () => {},
-    initial,
-  });
-
   const safeToRemoveRef = useRef(onExitComplete);
   safeToRemoveRef.current = onExitComplete;
 
-  // Update isPresent on the ref so children can read it
-  useEffect(() => {
-    presenceRef.current.isPresent = isPresent;
-  }, [isPresent]);
-
-  // When not present and using manual control, wait for safeToRemove call
-  useEffect(() => {
-    if (!isPresent) {
-      // Set up safeToRemove callback
-      presenceRef.current.safeToRemove = () => {
-        safeToRemoveRef.current();
-      };
-    }
-  }, [isPresent]);
-
   const context = useMemo<PresenceContextValue>(
     () => ({
-      get isPresent() {
-        return presenceRef.current.isPresent;
-      },
+      isPresent,
       safeToRemove: () => {
-        presenceRef.current.safeToRemove();
+        safeToRemoveRef.current();
       },
       initial,
     }),
-    [initial]
+    [isPresent, initial]
   );
 
   return (

@@ -6,7 +6,7 @@ import {
   prefersReducedMotion,
   mergeAnimateConfig,
 } from './utils';
-import { defaultAnimations, type ToggleableAnimate, type ExpandableAnimate, type Animation } from './types';
+import { defaultAnimations, type IndicatorAnimate, type ContentAnimate, type Animation } from './types';
 
 // =============================================================================
 // Shared: animateWithCancel
@@ -28,7 +28,7 @@ function animateWithCancel(el: HTMLElement, props: Parameters<typeof animate>[1]
 
 export interface UseToggleAnimationOptions {
   /** Animation configuration (false to disable) */
-  animate?: ToggleableAnimate | false;
+  animate?: IndicatorAnimate | false;
   /** Initial checked state (for setting initial styles without animation) */
   initialChecked?: boolean;
   /** Whether the element is disabled */
@@ -63,11 +63,11 @@ export function useToggleAnimation(
   const hasInitialized = useRef(false);
 
   // Resolve config
-  const configRef = useRef<ToggleableAnimate>(defaultAnimations.toggleable);
+  const configRef = useRef<IndicatorAnimate>(defaultAnimations.indicator);
   configRef.current =
     animateProp === false
       ? { press: false, checked: undefined, unchecked: undefined }
-      : mergeAnimateConfig(defaultAnimations.toggleable, animateProp);
+      : mergeAnimateConfig(defaultAnimations.indicator, animateProp);
 
   // Set initial indicator state (no animation on mount)
   useEffect(() => {
@@ -146,7 +146,7 @@ export function useToggleAnimation(
 
 export interface UseExpandAnimationOptions {
   /** Animation configuration */
-  animate?: ExpandableAnimate;
+  animate?: ContentAnimate;
   /** Whether this content is entering (opening) */
   isEntering?: boolean;
   /** Whether this content is exiting (closing) */
@@ -171,7 +171,7 @@ export function useExpandAnimation(
   options: UseExpandAnimationOptions = {}
 ): UseExpandAnimationReturn {
   const {
-    animate: config = defaultAnimations.expandable,
+    animate: config = defaultAnimations.content,
     isEntering = false,
     isExiting = false,
     onEnterComplete,

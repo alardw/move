@@ -1,0 +1,54 @@
+/* Scrollbar theming */
+
+[data-move-theme] {
+  scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
+}
+
+[data-move-theme] *::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-move-theme] *::-webkit-scrollbar-track {
+  background: var(--move-scrollbar-track);
+}
+
+[data-move-theme] *::-webkit-scrollbar-thumb {
+  background: var(--move-scrollbar-thumb);
+  border-radius: 4px;
+}
+
+/* Layout utility classes */
+
+.move-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-md);
+}
+
+.move-stack-xs { gap: var(--move-spacing-xs); }
+.move-stack-sm { gap: var(--move-spacing-sm); }
+.move-stack-lg { gap: var(--move-spacing-lg); }
+.move-stack-xl { gap: var(--move-spacing-xl); }
+
+.move-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--move-spacing-md);
+}
+
+.move-row-xs { gap: var(--move-spacing-xs); }
+.move-row-sm { gap: var(--move-spacing-sm); }
+.move-row-lg { gap: var(--move-spacing-lg); }
+.move-row-xl { gap: var(--move-spacing-xl); }
+
+.move-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.move-wrap {
+  flex-wrap: wrap;
+}

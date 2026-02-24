@@ -98,50 +98,68 @@ export interface AnimateConfig {
 /**
  * Animation config for interactive elements (Button, Link, etc)
  */
-export type InteractiveAnimate = Pick<
+export type ElementAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit' | 'hover' | 'press'
 >;
 
+/** @deprecated Use ElementAnimate instead */
+export type InteractiveAnimate = ElementAnimate;
+
 /**
  * Animation config for expandable content (Accordion, Collapsible, etc)
  */
-export type ExpandableAnimate = Pick<
+export type ContentAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit' | 'open' | 'close' | 'stagger'
 >;
 
+/** @deprecated Use ContentAnimate instead */
+export type ExpandableAnimate = ContentAnimate;
+
 /**
  * Animation config for toggleable elements (Checkbox, Switch, Radio)
  */
-export type ToggleableAnimate = Pick<
+export type IndicatorAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit' | 'press' | 'checked' | 'unchecked'
 >;
 
+/** @deprecated Use IndicatorAnimate instead */
+export type ToggleableAnimate = IndicatorAnimate;
+
 /**
  * Animation config for overlay/modal content (Dialog, AlertDialog, Popover)
  */
-export type OverlayAnimate = Pick<
+export type LayerAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit'
 >;
 
+/** @deprecated Use LayerAnimate instead */
+export type OverlayAnimate = LayerAnimate;
+
 /**
- * Animation config for menu/dropdown content
+ * Animation config for popup content (Dropdown, Select, DatePicker)
  */
-export type MenuAnimate = Pick<
+export type PopupAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit' | 'stagger'
 >;
 
+/** @deprecated Use PopupAnimate instead */
+export type MenuAnimate = PopupAnimate;
+
 /**
- * Animation config for menu items
+ * Animation config for popup items
  */
-export type MenuItemAnimate = Pick<
+export type PopupItemAnimate = Pick<
   AnimateConfig,
   'enter' | 'exit' | 'hover'
 >;
+
+/** @deprecated Use PopupItemAnimate instead */
+export type MenuItemAnimate = PopupItemAnimate;
 
 /**
  * Animation config for list containers
@@ -165,13 +183,13 @@ export type ListItemAnimate = Pick<
 
 export const defaultAnimations = {
   /** Button, Link, clickable elements */
-  interactive: {
+  element: {
     hover: { scale: 1.05, easing: 'snappy' },
     press: { scale: 0.95, easing: 'snappy' },
-  } satisfies InteractiveAnimate,
+  } satisfies ElementAnimate,
 
   /** Dialog, AlertDialog, Popover, Sheet content */
-  overlay: {
+  layer: {
     enter: {
       opacity: { value: [0, 1], easing: 'outQuart' },
       scale: { value: [0.9, 1], easing: 'snappy' },
@@ -181,16 +199,16 @@ export const defaultAnimations = {
       scale: { value: [1, 0.95], easing: 'outQuart' },
       duration: 150,
     },
-  } satisfies OverlayAnimate,
+  } satisfies LayerAnimate,
 
   /** Dialog, AlertDialog backdrop */
-  overlayBackdrop: {
+  layerBackdrop: {
     enter: { opacity: { value: [0, 1], easing: 'outQuart' }, duration: 200 },
     exit: { opacity: { value: [1, 0], easing: 'outQuart' }, duration: 150 },
-  } satisfies OverlayAnimate,
+  } satisfies LayerAnimate,
 
   /** Accordion, Collapsible */
-  expandable: {
+  content: {
     open: {
       height: { value: [0, 'auto'], easing: 'outQuart' },
       opacity: { value: [0, 1], easing: 'outQuart' },
@@ -201,10 +219,10 @@ export const defaultAnimations = {
       opacity: { value: [1, 0], easing: 'outQuart' },
       duration: 300,
     },
-  } satisfies ExpandableAnimate,
+  } satisfies ContentAnimate,
 
   /** Dropdown, ContextMenu, Select */
-  menu: {
+  popup: {
     enter: {
       opacity: { value: [0, 1], easing: 'outQuart' },
       scale: { value: [0.95, 1], easing: 'poppy' },
@@ -215,16 +233,16 @@ export const defaultAnimations = {
       duration: 150,
     },
     stagger: { delay: 30 },
-  } satisfies MenuAnimate,
+  } satisfies PopupAnimate,
 
-  /** Menu items */
-  menuItem: {
+  /** Popup items */
+  popupItem: {
     enter: { opacity: { value: [0, 1], easing: 'outQuart' } },
     hover: { scale: 1.02, easing: 'snappy' },
-  } satisfies MenuItemAnimate,
+  } satisfies PopupItemAnimate,
 
   /** Checkbox, Switch, Radio */
-  toggleable: {
+  indicator: {
     press: { scale: 0.9, easing: 'snappy' },
     checked: {
       opacity: { value: [0, 1], easing: 'outQuart' },
@@ -235,5 +253,5 @@ export const defaultAnimations = {
       scale: { value: [1, 0.5], easing: 'outQuart' },
       duration: 150,
     },
-  } satisfies ToggleableAnimate,
+  } satisfies IndicatorAnimate,
 } as const;

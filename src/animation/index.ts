@@ -38,15 +38,22 @@ export type {
   AnimationProperties,
   AnimateConfig,
   StaggerConfig,
-  // Component-specific types
+  // Component-specific types (new names)
+  ElementAnimate,
+  ContentAnimate,
+  IndicatorAnimate,
+  LayerAnimate,
+  PopupAnimate,
+  PopupItemAnimate,
+  ListAnimate,
+  ListItemAnimate,
+  // Deprecated aliases
   InteractiveAnimate,
   ExpandableAnimate,
   ToggleableAnimate,
   OverlayAnimate,
   MenuAnimate,
   MenuItemAnimate,
-  ListAnimate,
-  ListItemAnimate,
 } from './types';
 
 export { defaultAnimations } from './types';

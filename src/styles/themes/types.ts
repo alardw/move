@@ -60,6 +60,10 @@ export interface ThemeTokens {
   // Overlay
   '--move-overlay': string;
 
+  // Scrollbar
+  '--move-scrollbar-thumb': string;
+  '--move-scrollbar-track': string;
+
   // Shadows
   '--move-shadow-color': string;
   '--move-shadow-sm': string;

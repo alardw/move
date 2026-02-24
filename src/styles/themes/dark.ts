@@ -15,65 +15,69 @@ export const darkTheme: Theme = {
   name: 'dark',
   tokens: {
     // Background
-    '--move-bg-base': '#0a0a0b',
-    '--move-bg-subtle': '#141417',
-    '--move-bg-muted': '#1f1f23',
-    '--move-bg-emphasis': '#2e2e33',
-    '--move-bg-inverse': '#fafafa',
+    '--move-bg-base': 'var(--move-gray-950)',
+    '--move-bg-subtle': 'var(--move-gray-900)',
+    '--move-bg-muted': 'var(--move-gray-800)',
+    '--move-bg-emphasis': 'var(--move-gray-700)',
+    '--move-bg-inverse': 'var(--move-gray-50)',
 
     // Foreground
-    '--move-fg-base': '#fafafa',
-    '--move-fg-muted': '#a1a1aa',
-    '--move-fg-subtle': '#71717a',
-    '--move-fg-inverse': '#0a0a0b',
+    '--move-fg-base': 'var(--move-gray-50)',
+    '--move-fg-muted': 'var(--move-gray-400)',
+    '--move-fg-subtle': 'var(--move-gray-500)',
+    '--move-fg-inverse': 'var(--move-gray-950)',
 
     // Border
-    '--move-border-base': '#27272a',
-    '--move-border-muted': '#3f3f46',
-    '--move-border-emphasis': '#52525b',
+    '--move-border-base': 'var(--move-gray-700)',
+    '--move-border-muted': 'var(--move-gray-600)',
+    '--move-border-emphasis': 'var(--move-gray-500)',
 
     // Primary (violet)
-    '--move-primary': '#7c3aed',
-    '--move-primary-hover': '#8b5cf6',
-    '--move-primary-active': '#6d28d9',
-    '--move-primary-subtle': '#2e1065',
-    '--move-primary-fg': '#ffffff',
+    '--move-primary': 'var(--move-violet-600)',
+    '--move-primary-hover': 'var(--move-violet-500)',
+    '--move-primary-active': 'var(--move-violet-700)',
+    '--move-primary-subtle': 'var(--move-violet-950)',
+    '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
-    '--move-secondary': '#3f3f46',
-    '--move-secondary-hover': '#52525b',
-    '--move-secondary-active': '#27272a',
-    '--move-secondary-fg': '#fafafa',
+    '--move-secondary': 'var(--move-gray-700)',
+    '--move-secondary-hover': 'var(--move-gray-600)',
+    '--move-secondary-active': 'var(--move-gray-800)',
+    '--move-secondary-fg': 'var(--move-gray-50)',
 
     // Success
-    '--move-success': '#16a34a',
-    '--move-success-hover': '#22c55e',
-    '--move-success-subtle': '#052e16',
-    '--move-success-fg': '#ffffff',
+    '--move-success': 'var(--move-green-600)',
+    '--move-success-hover': 'var(--move-green-500)',
+    '--move-success-subtle': 'var(--move-green-950)',
+    '--move-success-fg': 'var(--move-white)',
 
     // Warning
-    '--move-warning': '#eab308',
-    '--move-warning-hover': '#facc15',
-    '--move-warning-subtle': '#422006',
-    '--move-warning-fg': '#000000',
+    '--move-warning': 'var(--move-yellow-500)',
+    '--move-warning-hover': 'var(--move-yellow-400)',
+    '--move-warning-subtle': 'var(--move-yellow-950)',
+    '--move-warning-fg': 'var(--move-black)',
 
     // Error
-    '--move-error': '#dc2626',
-    '--move-error-hover': '#ef4444',
-    '--move-error-subtle': '#450a0a',
-    '--move-error-fg': '#ffffff',
+    '--move-error': 'var(--move-red-400)',
+    '--move-error-hover': 'var(--move-red-300)',
+    '--move-error-subtle': 'var(--move-red-950)',
+    '--move-error-fg': 'var(--move-black)',
 
     // Info
-    '--move-info': '#2563eb',
-    '--move-info-hover': '#3b82f6',
-    '--move-info-subtle': '#172554',
-    '--move-info-fg': '#ffffff',
+    '--move-info': 'var(--move-blue-600)',
+    '--move-info-hover': 'var(--move-blue-500)',
+    '--move-info-subtle': 'var(--move-blue-950)',
+    '--move-info-fg': 'var(--move-white)',
 
     // Focus
-    '--move-focus-ring-color': '#8b5cf6',
+    '--move-focus-ring-color': 'var(--move-violet-500)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.5)',
+
+    // Scrollbar
+    '--move-scrollbar-thumb': 'var(--move-gray-700)',
+    '--move-scrollbar-track': 'transparent',
 
     // Shadows - subtle light glow for dark theme visibility
     '--move-shadow-color': '220deg 10% 80%',

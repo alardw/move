@@ -131,6 +131,21 @@
   --move-size-lg: var(--move-text-lg);
   --move-size-xl: var(--move-text-xl);
 
+
+  /* ============================================
+   * Scrollbar
+   * ============================================ */
+  --move-scrollbar-thumb: var(--move-gray-700);
+  --move-scrollbar-track: transparent;
+
+  /* ============================================
+   * Overlay Backdrop
+   * ============================================ */
+  --move-overlay-light: color-mix(in srgb, var(--move-black) 30%, transparent);
+  --move-overlay: color-mix(in srgb, var(--move-black) 50%, transparent);
+  --move-overlay-heavy: color-mix(in srgb, var(--move-black) 70%, transparent);
+  --move-overlay-blur: 4px;
+
   /* ============================================
    * Shadows - Semantic
    * ============================================ */
