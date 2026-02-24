@@ -1,0 +1,38 @@
+{
+  "changes": [
+    {
+      "component": "CalendarView",
+      "type": "prop-added",
+      "summary": "New `showAllDay` and `onAllDayClick` props on CalendarView, DayView, and WeekView",
+      "details": "When `showAllDay` is true, the all-day section is always visible in day/week views even with no all-day events. Empty slots are clickable via `onAllDayClick`.",
+      "migration": "No action needed."
+    },
+    {
+      "component": "Icon",
+      "type": "enhancement",
+      "summary": "Added `eye` and `eye-off` built-in icons",
+      "migration": "No action needed."
+    },
+    {
+      "component": "Icon",
+      "type": "fix",
+      "summary": "useResolvedIcon now correctly distinguishes forwardRef/memo components from rendered JSX elements",
+      "migration": "No action needed."
+    },
+    {
+      "component": "Switch",
+      "type": "fix",
+      "summary": "Switch track styles are now protected from parent CSS overrides via doubled specificity",
+      "migration": "No action needed. If you override Switch styles via CSS, selectors now need specificity >= (0,2,0) to win."
+    },
+    {
+      "component": "Card",
+      "type": "fix",
+      "summary": "Card body now includes vertical padding",
+      "details": "Body padding changed from `0 var(--move-card-padding)` to `var(--move-spacing-md) var(--move-card-padding)`.",
+      "migration": "No action needed. If you relied on zero vertical padding, override via `pt={{ body: { style: { paddingBlock: 0 } } }}`."
+    }
+  ],
+  "version": "0.1.21",
+  "date": "2026-02-23"
+}

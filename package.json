@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.0",
+  "version": "0.1.25",
   "description": "Animated UI component library built on Radix UI primitives",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -15,7 +15,8 @@
     "./styles/*": "./dist/styles/*"
   },
   "files": [
-    "dist"
+    "dist",
+    "migrations"
   ],
   "scripts": {
     "build": "vite build",
@@ -23,7 +24,8 @@
     "dev:demo": "npm run dev & cd demo && npm run dev",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "pack": "npm version patch --no-git-tag-version && npm run build && node scripts/check-migrations.js && mkdir -p release && npm pack --pack-destination release"
   },
   "peerDependencies": {
     "animejs": "^4.0.0",

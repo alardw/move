@@ -1,0 +1,12 @@
+{
+  "changes": [
+    {
+      "component": "Popover",
+      "type": "prop-added",
+      "summary": "New `closeOnScroll` prop on Popover.Root closes the popover when an ancestor scrolls",
+      "migration": "No action needed."
+    }
+  ],
+  "version": "0.1.20",
+  "date": "2026-02-23"
+}
