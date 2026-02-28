@@ -63,6 +63,16 @@ function FormFieldExample() {
   );
 }
 
+function SizesExample() {
+  return (
+    <Stack gap="lg" align="center">
+      <Switch.Root size="sm" label="Small"><Switch.Thumb /></Switch.Root>
+      <Switch.Root size="md" label="Medium"><Switch.Thumb /></Switch.Root>
+      <Switch.Root size="lg" label="Large"><Switch.Thumb /></Switch.Root>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -115,6 +125,15 @@ const examples: Example[] = [
   <FormField.Description error>You must enable notifications to continue.</FormField.Description>
 </FormField.Root>`,
   },
+  {
+    id: 'sizes',
+    name: 'Sizes',
+    description: 'Small, medium, or large switch',
+    component: <SizesExample />,
+    code: `<Switch.Root size="sm" label="Small"><Switch.Thumb /></Switch.Root>
+<Switch.Root size="md" label="Medium"><Switch.Thumb /></Switch.Root>
+<Switch.Root size="lg" label="Large"><Switch.Thumb /></Switch.Root>`,
+  },
 ];
 
 export function SwitchDemo() {
@@ -140,12 +159,16 @@ export function SwitchDemo() {
           { name: 'required', type: 'boolean', description: 'Whether the switch is required for form validation.' },
           { name: 'name', type: 'string', description: 'Name for form submission.' },
           { name: 'value', type: 'string', description: 'Value for form submission.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the switch track and thumb.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
       <DocPage.ApiSection
         title="Switch.Thumb"
-        properties={[]}
+        properties={[
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the thumb element.' },
+        ]}
       />
     </DocPage.Root>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect, createContext, useContext, type ReactNode } from 'react';
-import { Code } from 'lucide-react';
-import { Tabs as MoveTabs, ToggleButton, Collapsible, Heading, Text } from 'move';
+import { Code, Copy, Check } from 'lucide-react';
+import { Tabs as MoveTabs, ToggleButton, Collapsible, Heading, Text, Button } from 'move';
 import { createHighlighter, type Highlighter } from 'shiki';
 
 // Lazy-load shiki — only starts when the first CodeBlock mounts
@@ -11,7 +11,7 @@ function ensureHighlighter(): Promise<void> {
   if (!highlighterReady) {
     highlighterReady = createHighlighter({
       themes: ['github-dark'],
-      langs: ['tsx'],
+      langs: ['tsx', 'bash', 'css'],
     }).then((h) => { highlighter = h; });
   }
   return highlighterReady;
@@ -21,12 +21,18 @@ function ensureHighlighter(): Promise<void> {
 // Types
 // =============================================================================
 
+interface CodeTab {
+  label: string;
+  code: string;
+  language?: string;
+}
+
 interface Example {
   id: string;
   name: string;
   description: string;
   component: ReactNode;
-  code: string;
+  code: string | CodeTab[];
   fullWidth?: boolean;
 }
 
@@ -140,6 +146,28 @@ interface CodeBlockProps {
   language?: string;
 }
 
+function CopyButton({ code }: { code: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code.trim());
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="code-copy-btn"
+      onClick={handleCopy}
+      aria-label="Copy code"
+    >
+      {copied ? <><Check size={14} /> Copied</> : <><Copy size={14} /> Copy</>}
+    </Button>
+  );
+}
+
 function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
   const [html, setHtml] = useState(() => {
     if (highlighter) {
@@ -162,14 +190,23 @@ function CodeBlock({ code, language = 'tsx' }: CodeBlockProps) {
     return (
       <div className="example-code">
         <pre><code>{code.trim()}</code></pre>
+        <CopyButton code={code} />
       </div>
     );
   }
 
   return (
-    <div className="example-code" dangerouslySetInnerHTML={{ __html: html }} />
+    <div className="example-code">
+      <div dangerouslySetInnerHTML={{ __html: html }} />
+      <CopyButton code={code} />
+    </div>
   );
 }
+
+// =============================================================================
+// Code Tabs — multi-tab code examples
+// =============================================================================
+
 
 // =============================================================================
 // Examples - Container with tabs and panel
@@ -179,8 +216,86 @@ interface ExamplesProps {
   examples: Example[];
 }
 
+function ExamplePanel({ example }: { example: Example }) {
+  const { showCode, setShowCode } = useDocPage();
+  const tabs = typeof example.code === 'object' ? example.code : null;
+
+  const codeSection = tabs ? (
+    <MoveTabs.Root defaultValue={tabs[0]?.label ?? ''}>
+      <Collapsible.Root open={showCode} onOpenChange={setShowCode}>
+        <div className="example-meta">
+          <div className="example-info">
+            <Text weight="semibold" size="sm">{example.name}</Text>
+            <Text as="span" size="sm" color="muted">{example.description}</Text>
+          </div>
+          <Collapsible.Trigger asChild>
+            <ToggleButton
+              size="sm"
+              pressed={showCode}
+              onPressedChange={setShowCode}
+              aria-label={showCode ? 'Hide code' : 'Show code'}
+            >
+              <Code size={14} />
+              {showCode ? 'Hide Code' : 'View Code'}
+            </ToggleButton>
+          </Collapsible.Trigger>
+        </div>
+
+        <Collapsible.Content>
+          <div className="code-tabs-bar">
+            <MoveTabs.List size="sm">
+              {tabs.map((tab) => (
+                <MoveTabs.Trigger key={tab.label} value={tab.label}>
+                  {tab.label}
+                </MoveTabs.Trigger>
+              ))}
+            </MoveTabs.List>
+          </div>
+          {tabs.map((tab) => (
+            <MoveTabs.Content key={tab.label} value={tab.label} style={{ padding: 0 }}>
+              <CodeBlock code={tab.code} language={tab.language} />
+            </MoveTabs.Content>
+          ))}
+        </Collapsible.Content>
+      </Collapsible.Root>
+    </MoveTabs.Root>
+  ) : example.code ? (
+    <Collapsible.Root open={showCode} onOpenChange={setShowCode}>
+      <div className="example-meta">
+        <div className="example-info">
+          <Text weight="semibold" size="sm">{example.name}</Text>
+          <Text as="span" size="sm" color="muted">{example.description}</Text>
+        </div>
+        <Collapsible.Trigger asChild>
+          <ToggleButton
+            size="sm"
+            pressed={showCode}
+            onPressedChange={setShowCode}
+            aria-label={showCode ? 'Hide code' : 'Show code'}
+          >
+            <Code size={14} />
+            {showCode ? 'Hide Code' : 'View Code'}
+          </ToggleButton>
+        </Collapsible.Trigger>
+      </div>
+      <Collapsible.Content>
+        <CodeBlock code={example.code as string} />
+      </Collapsible.Content>
+    </Collapsible.Root>
+  ) : null;
+
+  return (
+    <div className="example-panel">
+      <div className={`example-preview${example.fullWidth ? ' example-preview-full' : ''}`}>
+        {example.component}
+      </div>
+      {codeSection}
+    </div>
+  );
+}
+
 function Examples({ examples }: ExamplesProps) {
-  const { activeExample, setActiveExample, showCode, setShowCode } = useDocPage();
+  const { activeExample, setActiveExample } = useDocPage();
 
   const currentId = activeExample || examples[0]?.id;
 
@@ -198,38 +313,7 @@ function Examples({ examples }: ExamplesProps) {
 
       {examples.map((example) => (
         <MoveTabs.Content key={example.id} value={example.id}>
-          <div className="example-panel">
-            <div className={`example-preview${example.fullWidth ? ' example-preview-full' : ''}`}>
-              {example.component}
-            </div>
-
-            {example.code && (
-              <Collapsible.Root open={showCode} onOpenChange={setShowCode}>
-                <div className="example-meta">
-                  <div className="example-info">
-                    <Text weight="semibold" size="sm">{example.name}</Text>
-                    <Text as="span" size="sm" color="muted">{example.description}</Text>
-                  </div>
-
-                  <Collapsible.Trigger asChild>
-                    <ToggleButton
-                      size="sm"
-                      pressed={showCode}
-                      onPressedChange={setShowCode}
-                      aria-label={showCode ? 'Hide code' : 'Show code'}
-                    >
-                      <Code size={14} />
-                      {showCode ? 'Hide Code' : 'View Code'}
-                    </ToggleButton>
-                  </Collapsible.Trigger>
-                </div>
-
-                <Collapsible.Content>
-                  <CodeBlock code={example.code} />
-                </Collapsible.Content>
-              </Collapsible.Root>
-            )}
-          </div>
+          <ExamplePanel example={example} />
         </MoveTabs.Content>
       ))}
     </MoveTabs.Root>
@@ -370,4 +454,4 @@ export const DocPage = {
   TokenSection,
 };
 
-export type { Example, ApiProp, TokenProp, Tab };
+export type { Example, CodeTab, ApiProp, TokenProp, Tab };

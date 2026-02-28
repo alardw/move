@@ -58,11 +58,6 @@
   color: var(--move-input-placeholder);
 }
 
-.input::selection {
-  background: var(--move-primary);
-  color: var(--move-primary-fg);
-}
-
 .iconLeft,
 .iconRight {
   display: flex;

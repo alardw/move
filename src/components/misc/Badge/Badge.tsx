@@ -21,19 +21,19 @@ export const Badge = withMoveComponent<'root', BadgeProps, HTMLSpanElement>({
   defaults: { variant: 'primary', size: 'md' },
   moveProps: ['variant', 'size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <span
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
           >

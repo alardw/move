@@ -26,6 +26,25 @@ function StrokeWidthExample() {
   );
 }
 
+function VariantsExample() {
+  return (
+    <Stack gap="lg" align="center">
+      <div style={{ textAlign: 'center' }}>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>default</p>
+        <Spinner variant="default" />
+      </div>
+      <div style={{ textAlign: 'center' }}>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>secondary</p>
+        <Spinner variant="secondary" />
+      </div>
+      <div style={{ textAlign: 'center', color: 'var(--move-success)' }}>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>current</p>
+        <Spinner variant="current" />
+      </div>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -54,6 +73,17 @@ const examples: Example[] = [
 <Spinner strokeWidth={4} />
 <Spinner strokeWidth={6} />`,
   },
+  {
+    id: 'variants',
+    name: 'Variants',
+    description: 'Color variants for different contexts',
+    component: <VariantsExample />,
+    code: `<Spinner variant="default" />
+<Spinner variant="secondary" />
+<div style={{ color: 'var(--move-success)' }}>
+  <Spinner variant="current" />
+</div>`,
+  },
 ];
 
 export function SpinnerDemo() {
@@ -72,6 +102,8 @@ export function SpinnerDemo() {
         properties={[
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the spinner.' },
           { name: 'strokeWidth', type: 'number', default: '3', description: 'Thickness of the spinner stroke.' },
+          { name: 'variant', type: "'default' | 'secondary' | 'current'", default: "'default'", description: 'Color variant of the spinner stroke.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, svg, circle.' },
         ]}
       />
     </DocPage.Root>

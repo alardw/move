@@ -1,7 +1,7 @@
 import type { CSSProperties, Ref } from 'react';
 
 // =============================================================================
-// Slot Props & PassThrough
+// Slot Props
 // =============================================================================
 
 /** Props that can be applied to any slot element */
@@ -11,13 +11,13 @@ export interface SlotProps {
   [key: string]: unknown;
 }
 
-/** Global or instance-level pass-through overrides keyed by slot name */
-export type PassThrough<TSlots extends string = string> = Partial<
+/** Instance-level slot-props overrides keyed by slot name */
+export type SlotPropsMap<TSlots extends string = string> = Partial<
   Record<TSlots, SlotProps>
 >;
 
-/** Global PT keyed by component name, then slot name */
-export type GlobalPassThrough = Record<string, PassThrough>;
+/** Global slot-props keyed by component name, then slot name */
+export type GlobalSlotProps = Record<string, SlotPropsMap>;
 
 // =============================================================================
 // Factory Utility Types
@@ -29,8 +29,8 @@ export type CxFn<TSlots extends string> = (
   ...extra: (string | false | null | undefined)[]
 ) => string;
 
-/** Merges global PT + instance PT + local props for a slot */
-export type PtmFn<TSlots extends string> = (
+/** Merges global + instance slot-props + local props for a slot */
+export type SpFn<TSlots extends string> = (
   slot: TSlots,
   localProps?: SlotProps
 ) => SlotProps;
@@ -49,8 +49,8 @@ export interface SetupContext<
   internalRef: React.RefObject<TRef | null>;
   /** CSS Module class resolver */
   cx: CxFn<TSlots>;
-  /** Pass-through merge function */
-  ptm: PtmFn<TSlots>;
+  /** Slot-props merge function */
+  sp: SpFn<TSlots>;
   /** HTML attributes (user props minus Move-specific keys) */
   attrs: Record<string, unknown>;
 }

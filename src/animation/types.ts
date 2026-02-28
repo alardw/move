@@ -177,6 +177,15 @@ export type ListItemAnimate = Pick<
   'enter' | 'exit' | 'hover' | 'press'
 >;
 
+/**
+ * Animation config for carousel slide transitions.
+ * `enter` easing drives the scroll-axis transition.
+ */
+export type CarouselAnimate = Pick<
+  AnimateConfig,
+  'enter'
+>;
+
 // =============================================================================
 // Default animations (shared across components of same category)
 // =============================================================================
@@ -234,6 +243,13 @@ export const defaultAnimations = {
     },
     stagger: { delay: 30 },
   } satisfies PopupAnimate,
+
+  /** Carousel slide transition */
+  carousel: {
+    enter: {
+      easing: 'outQuart',
+    },
+  } satisfies CarouselAnimate,
 
   /** Popup items */
   popupItem: {

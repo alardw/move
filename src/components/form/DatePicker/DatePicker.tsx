@@ -15,7 +15,7 @@ import type {
   RenderEvent,
 } from '../../calendar/_shared/types';
 import { formatDate, parseDate, isDateDisabled, getLocaleDatePattern, isBefore, startOfDay } from '../../calendar/_shared/dateUtils';
-import { mergeAnimateConfig } from '../../../animation/utils';
+import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
 import type { PopupAnimate } from '../../../animation/types';
 import { InputText } from '../InputText';
 import { TimeField } from '../TimeField';
@@ -900,8 +900,8 @@ const DatePickerContent: React.FC<DatePickerContentProps> = ({
     const el = contentRef.current;
     if (!el) return;
 
-    // If animations are disabled, just show content directly
-    if (!animateConfig) {
+    // If animations are disabled or reduced motion preferred, just show content directly
+    if (!animateConfig || prefersReducedMotion()) {
       el.style.opacity = '1';
       el.style.transform = 'scale(1)';
       return;
@@ -954,8 +954,8 @@ const DatePickerContent: React.FC<DatePickerContentProps> = ({
     const el = contentRef.current;
     if (!el) return;
 
-    // If animations are disabled, close immediately
-    if (!animateConfig) {
+    // If animations are disabled or reduced motion preferred, close immediately
+    if (!animateConfig || prefersReducedMotion()) {
       dpCtx?.onCloseComplete();
       return;
     }
@@ -992,13 +992,11 @@ const DatePickerContent: React.FC<DatePickerContentProps> = ({
       e.preventDefault();
       return;
     }
-    e.preventDefault();
-    dpCtx?.close();
+    if (!e.defaultPrevented) dpCtx?.close();
   };
 
   const handleEscapeKeyDown = (e: KeyboardEvent) => {
-    e.preventDefault();
-    dpCtx?.close();
+    if (!e.defaultPrevented) dpCtx?.close();
   };
 
   return (

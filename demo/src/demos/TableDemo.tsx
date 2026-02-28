@@ -294,7 +294,7 @@ function CustomStylingExample() {
       bordered
       hoverable
       size="lg"
-      pt={{
+      sp={{
         root: { style: { borderRadius: 'var(--move-rounded-xl)' } },
         header: { style: { backgroundColor: 'var(--move-bg-emphasis)' } },
       }}
@@ -452,14 +452,14 @@ const examples: Example[] = [
   {
     id: 'custom-styling',
     name: 'Custom Styling',
-    description: 'Override styles via pt (passthrough) props',
+    description: 'Override styles via sp (slot props)',
     component: <CustomStylingExample />,
     code: `<Table
   variant="striped"
   bordered
   hoverable
   size="lg"
-  pt={{
+  sp={{
     root: { style: { borderRadius: 'var(--move-rounded-xl)' } },
     header: { style: { backgroundColor: 'var(--move-bg-emphasis)' } },
   }}
@@ -489,6 +489,7 @@ export function TableDemo() {
           { name: 'hoverable', type: 'boolean', default: 'false', description: 'Highlight rows on hover.' },
           { name: 'stickyHeader', type: 'boolean', default: 'false', description: 'Stick the header to the top when scrolling.' },
           { name: 'animate', type: 'ListAnimate | false', default: '(enter + stagger)', description: 'Animation config for row entrance.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
       <DocPage.ApiSection
@@ -496,6 +497,7 @@ export function TableDemo() {
         properties={[
           { name: 'selected', type: 'boolean', default: 'false', description: 'Highlight the row as selected.' },
           { name: 'animate', type: 'ListItemAnimate | false', default: '{}', description: 'Per-row animation overrides.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the row element.' },
         ]}
       />
       <DocPage.ApiSection
@@ -504,6 +506,7 @@ export function TableDemo() {
           { name: 'sortable', type: 'boolean', default: 'false', description: 'Enable sort indicator and click handler.' },
           { name: 'sorted', type: "'asc' | 'desc' | false", default: 'false', description: 'Current sort direction.' },
           { name: 'onSort', type: '() => void', description: 'Callback when sort is triggered.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the head element.' },
         ]}
       />
     </DocPage.Root>

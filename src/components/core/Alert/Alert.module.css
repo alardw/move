@@ -53,6 +53,25 @@
   --move-alert-accent: var(--move-error);
 }
 
+/* Sizes */
+.root[data-size='sm'] {
+  --move-alert-padding-x: var(--move-spacing-sm);
+  --move-alert-padding-y: var(--move-spacing-xs);
+  font-size: var(--move-size-xs);
+  gap: var(--move-spacing-xs);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  /* default */
+}
+
+.root[data-size='lg'] {
+  --move-alert-padding-x: var(--move-spacing-lg);
+  --move-alert-padding-y: var(--move-spacing-md);
+  font-size: var(--move-size-base);
+}
+
 /* Icon */
 .icon {
   flex-shrink: 0;

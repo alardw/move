@@ -1,5 +1,6 @@
+'use client';
+
 import * as React from 'react';
-import '../../styles/tokens/index.css';
 import type { Theme, ThemeAnimation } from '../../styles/themes/types';
 import { darkTheme } from '../../styles/themes/dark';
 

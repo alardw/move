@@ -135,6 +135,7 @@ export function HeadingDemo() {
           { name: 'tracking', type: "'tight' | 'normal'", default: "'tight'", description: 'Letter spacing.' },
           { name: 'align', type: "'left' | 'center' | 'right'", description: 'Horizontal text alignment.' },
           { name: 'truncate', type: 'boolean', description: 'Truncate overflowing text with an ellipsis.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

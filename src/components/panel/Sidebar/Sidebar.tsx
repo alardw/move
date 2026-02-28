@@ -9,7 +9,7 @@ import { useMergedRef } from '../../../engine/useMergedRef';
 import { prefersReducedMotion } from '../../../animation';
 import type { LayerAnimate } from '../../../animation/types';
 import { Tooltip } from '../../core/Tooltip';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useSidebar } from './useSidebar';
 import type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
 import styles from './Sidebar.module.css';
@@ -76,7 +76,7 @@ SidebarProvider.displayName = 'Sidebar.Provider';
 export interface SidebarOverlayProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'overlay'>;
+  sp?: SlotPropsMap<'overlay'>;
 }
 
 const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDivElement>({
@@ -84,7 +84,7 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
   styles,
   slots: ['overlay'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { setMobileOpen } = useSidebarContext();
     const animateConfig = React.useContext(SidebarAnimateContext);
     const overlayRef = React.useRef<HTMLDivElement>(null);
@@ -115,15 +115,15 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
 
     return {
       render() {
-        const pt = ptm('overlay');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const overlaySp = sp('overlay');
+        const { className: spClass, style: spStyle, ...spRest } = overlaySp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('overlay', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('overlay', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />
@@ -142,7 +142,7 @@ export interface SidebarRootProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   side?: 'left' | 'right';
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
@@ -152,7 +152,7 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
   moveProps: ['side'],
   defaults: { side: 'left' },
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, mobileOpen, isMobile } = useSidebarContext();
     const animateConfig = React.useContext(SidebarAnimateContext);
     const side = (props.side as string) || 'left';
@@ -210,19 +210,19 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const aside = (
           <aside
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             data-collapsed={collapsed}
             data-side={side}
             data-mobile={isMobile || undefined}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </aside>
@@ -257,7 +257,7 @@ export interface SidebarHeaderProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Content shown when sidebar is collapsed. Falls back to children if not provided. */
   collapsedChildren?: React.ReactNode;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const SidebarHeader = withMoveComponent<'header', SidebarHeaderProps, HTMLDivElement>({
@@ -266,21 +266,21 @@ const SidebarHeader = withMoveComponent<'header', SidebarHeaderProps, HTMLDivEle
   slots: ['header'] as const,
   moveProps: ['collapsedChildren'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, isMobile } = useSidebarContext();
     const showCollapsed = collapsed && !isMobile;
 
     return {
       render() {
-        const pt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {showCollapsed && props.collapsedChildren !== undefined
               ? props.collapsedChildren
@@ -300,7 +300,7 @@ export interface SidebarContentProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'content'>;
+  sp?: SlotPropsMap<'content'>;
 }
 
 const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDivElement>({
@@ -308,7 +308,7 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
   styles,
   slots: ['content'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const animateConfig = React.useContext(SidebarAnimateContext);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
@@ -347,15 +347,15 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
 
     return {
       render() {
-        const pt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -373,7 +373,7 @@ export interface SidebarFooterProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footer'>;
+  sp?: SlotPropsMap<'footer'>;
 }
 
 const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivElement>({
@@ -381,18 +381,18 @@ const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivEle
   styles,
   slots: ['footer'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('footer');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const footerSp = sp('footer');
+        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footer', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footer', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -410,7 +410,7 @@ export interface SidebarGroupProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'group'>;
+  sp?: SlotPropsMap<'group'>;
 }
 
 const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElement>({
@@ -418,19 +418,19 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
   styles,
   slots: ['group'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('group');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const groupSp = sp('group');
+        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             role="group"
-            className={cx('group', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('group', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -448,7 +448,7 @@ export interface SidebarGroupLabelProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'groupLabel'>;
+  sp?: SlotPropsMap<'groupLabel'>;
 }
 
 const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps, HTMLDivElement>({
@@ -456,18 +456,18 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
   styles,
   slots: ['groupLabel'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('groupLabel');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const groupLabelSp = sp('groupLabel');
+        const { className: spClass, style: spStyle, ...spRest } = groupLabelSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('groupLabel', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('groupLabel', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -491,7 +491,7 @@ export interface SidebarItemProps extends Record<string, unknown> {
   disabled?: boolean;
   asChild?: boolean;
   tooltip?: React.ReactNode;
-  pt?: PassThrough<'item' | 'itemIcon' | 'itemLabel' | 'itemBadge'>;
+  sp?: SlotPropsMap<'item' | 'itemIcon' | 'itemLabel' | 'itemBadge'>;
 }
 
 const SidebarItem = withMoveComponent<
@@ -504,47 +504,47 @@ const SidebarItem = withMoveComponent<
   slots: ['item', 'itemIcon', 'itemLabel', 'itemBadge'] as const,
   moveProps: ['icon', 'badge', 'active', 'disabled', 'asChild', 'tooltip'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, isMobile } = useSidebarContext();
     const showTooltip = collapsed && !isMobile && !!props.tooltip;
 
     return {
       render() {
-        const itemPt = ptm('item');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
 
-        const iconPt = ptm('itemIcon');
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const iconSp = sp('itemIcon');
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
-        const labelPt = ptm('itemLabel');
-        const { className: labelPtClass, style: labelPtStyle, ...labelPtRest } = labelPt as Record<string, unknown>;
+        const labelSp = sp('itemLabel');
+        const { className: labelSpClass, style: labelSpStyle, ...labelSpRest } = labelSp as Record<string, unknown>;
 
-        const badgePt = ptm('itemBadge');
-        const { className: badgePtClass, style: badgePtStyle, ...badgePtRest } = badgePt as Record<string, unknown>;
+        const badgeSp = sp('itemBadge');
+        const { className: badgeSpClass, style: badgeSpStyle, ...badgeSpRest } = badgeSp as Record<string, unknown>;
 
         const innerContent = (child?: React.ReactNode) => (
           <>
             {props.icon && (
               <span
-                {...iconPtRest}
-                className={cx('itemIcon', iconPtClass as string | undefined)}
-                style={iconPtStyle as React.CSSProperties}
+                {...iconSpRest}
+                className={cx('itemIcon', iconSpClass as string | undefined)}
+                style={iconSpStyle as React.CSSProperties}
               >
                 {props.icon as React.ReactNode}
               </span>
             )}
             <span
-              {...labelPtRest}
-              className={cx('itemLabel', labelPtClass as string | undefined)}
-              style={labelPtStyle as React.CSSProperties}
+              {...labelSpRest}
+              className={cx('itemLabel', labelSpClass as string | undefined)}
+              style={labelSpStyle as React.CSSProperties}
             >
               {child}
             </span>
             {props.badge && (
               <span
-                {...badgePtRest}
-                className={cx('itemBadge', badgePtClass as string | undefined)}
-                style={badgePtStyle as React.CSSProperties}
+                {...badgeSpRest}
+                className={cx('itemBadge', badgeSpClass as string | undefined)}
+                style={badgeSpStyle as React.CSSProperties}
               >
                 {props.badge as React.ReactNode}
               </span>
@@ -561,12 +561,12 @@ const SidebarItem = withMoveComponent<
             child,
             {
               ...attrs,
-              ...ptRest,
+              ...spRest,
               ref,
               'data-active': props.active || undefined,
               'data-disabled': props.disabled || undefined,
-              className: cx('item', props.className, child.props.className, ptClass as string | undefined),
-              style: { ...child.props.style, ...props.style, ...(ptStyle as React.CSSProperties) },
+              className: cx('item', props.className, child.props.className, spClass as string | undefined),
+              style: { ...child.props.style, ...props.style, ...(spStyle as React.CSSProperties) },
             },
             innerContent(child.props.children),
           );
@@ -574,12 +574,12 @@ const SidebarItem = withMoveComponent<
           element = (
             <button
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref as any}
               data-active={props.active || undefined}
               data-disabled={props.disabled || undefined}
-              className={cx('item', props.className, ptClass as string | undefined)}
-              style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('item', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
               {innerContent(props.children)}
             </button>
@@ -609,7 +609,7 @@ export interface SidebarTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const SidebarTrigger = withMoveComponent<'trigger', SidebarTriggerProps, HTMLButtonElement>({
@@ -618,7 +618,7 @@ const SidebarTrigger = withMoveComponent<'trigger', SidebarTriggerProps, HTMLBut
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { toggleCollapsed, toggleMobileOpen, isMobile } = useSidebarContext();
 
     const handleClick = React.useCallback(
@@ -636,16 +636,16 @@ const SidebarTrigger = withMoveComponent<'trigger', SidebarTriggerProps, HTMLBut
 
     return {
       render() {
-        const pt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         const Comp = props.asChild ? Slot.Root : 'button';
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref as any}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
           >
             {props.children}
@@ -663,7 +663,7 @@ const SidebarTrigger = withMoveComponent<'trigger', SidebarTriggerProps, HTMLBut
 export interface SidebarRailProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'rail'>;
+  sp?: SlotPropsMap<'rail'>;
 }
 
 const SidebarRail = withMoveComponent<'rail', SidebarRailProps, HTMLDivElement>({
@@ -671,20 +671,20 @@ const SidebarRail = withMoveComponent<'rail', SidebarRailProps, HTMLDivElement>(
   styles,
   slots: ['rail'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { toggleCollapsed } = useSidebarContext();
 
     return {
       render() {
-        const pt = ptm('rail');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const railSp = sp('rail');
+        const { className: spClass, style: spStyle, ...spRest } = railSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('rail', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('rail', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={() => toggleCollapsed()}
             aria-hidden="true"
           />

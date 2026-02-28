@@ -71,7 +71,7 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
   moveProps: ['variant', 'size', 'animate', 'elevation', 'asChild'],
   subComponents: { Group: ButtonGroup },
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       variant,
       size,
@@ -106,8 +106,8 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
     return {
       render() {
         const Comp = asChild ? Slot.Root : 'button';
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         // Build class list
         const extraClasses: string[] = [];
@@ -118,16 +118,16 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
         const combinedStyle: React.CSSProperties = {
           ...style,
           ...(elevation !== undefined && ({ '--elevation': elevation * 4 } as React.CSSProperties)),
-          ...(ptStyle as React.CSSProperties),
+          ...(spStyle as React.CSSProperties),
         };
 
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type={asChild ? undefined : (type as 'button' | 'submit' | 'reset')}
-            className={cx('root', ...extraClasses, className, ptClass as string | undefined)}
+            className={cx('root', ...extraClasses, className, spClass as string | undefined)}
             style={combinedStyle}
             data-variant={variant}
             data-size={size}

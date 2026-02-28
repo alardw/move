@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import styles from './Password.module.css';
 
@@ -38,7 +38,7 @@ export interface PasswordProps extends Record<string, unknown> {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-  pt?: PassThrough<PasswordSlots>;
+  sp?: SlotPropsMap<PasswordSlots>;
 }
 
 export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInputElement>({
@@ -48,7 +48,7 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
   defaults: { variant: 'outlined', size: 'md' },
   moveProps: ['variant', 'size', 'invalid', 'iconLeft', 'showIcon', 'hideIcon', 'width', 'visible', 'defaultVisible', 'onVisibleChange'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
 
@@ -72,16 +72,16 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const inputPt = ptm('input');
-        const { className: inPtClass, style: inPtStyle, ...inPtRest } = inputPt as Record<string, unknown>;
-        const leftPt = ptm('iconLeft');
-        const { className: leftPtClass, style: leftPtStyle, ...leftPtRest } = leftPt as Record<string, unknown>;
-        const togglePt = ptm('toggle');
-        const { className: togglePtClass, style: togglePtStyle, ...togglePtRest } = togglePt as Record<string, unknown>;
-        const toggleIconPt = ptm('toggleIcon');
-        const { className: tiPtClass, style: tiPtStyle, ...tiPtRest } = toggleIconPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const inputSp = sp('input');
+        const { className: inSpClass, style: inSpStyle, ...inSpRest } = inputSp as Record<string, unknown>;
+        const leftSp = sp('iconLeft');
+        const { className: leftSpClass, style: leftSpStyle, ...leftSpRest } = leftSp as Record<string, unknown>;
+        const toggleSp = sp('toggle');
+        const { className: toggleSpClass, style: toggleSpStyle, ...toggleSpRest } = toggleSp as Record<string, unknown>;
+        const toggleIconSp = sp('toggleIcon');
+        const { className: tiSpClass, style: tiSpStyle, ...tiSpRest } = toggleIconSp as Record<string, unknown>;
 
         const defaultShowIcon = (
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -103,9 +103,9 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
 
         return (
           <div
-            {...ptRest}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(ptStyle as React.CSSProperties) }}
+            {...spRest}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
@@ -115,9 +115,9 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
           >
             {props.iconLeft && (
               <span
-                {...leftPtRest}
-                className={cx('iconLeft', leftPtClass as string | undefined)}
-                style={leftPtStyle as React.CSSProperties}
+                {...leftSpRest}
+                className={cx('iconLeft', leftSpClass as string | undefined)}
+                style={leftSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 {props.iconLeft as React.ReactNode}
@@ -125,27 +125,27 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
             )}
             <input
               {...attrs}
-              {...inPtRest}
+              {...inSpRest}
               ref={mergedRef}
               type={shown ? 'text' : 'password'}
-              className={cx('input', inPtClass as string | undefined)}
-              style={inPtStyle as React.CSSProperties}
+              className={cx('input', inSpClass as string | undefined)}
+              style={inSpStyle as React.CSSProperties}
               disabled={props.disabled as boolean}
             />
             <button
-              {...togglePtRest}
+              {...toggleSpRest}
               type="button"
-              className={cx('toggle', togglePtClass as string | undefined)}
-              style={togglePtStyle as React.CSSProperties}
+              className={cx('toggle', toggleSpClass as string | undefined)}
+              style={toggleSpStyle as React.CSSProperties}
               onClick={handleToggle}
               disabled={props.disabled as boolean}
               tabIndex={-1}
               aria-label={shown ? 'Hide password' : 'Show password'}
             >
               <span
-                {...tiPtRest}
-                className={cx('toggleIcon', tiPtClass as string | undefined)}
-                style={tiPtStyle as React.CSSProperties}
+                {...tiSpRest}
+                className={cx('toggleIcon', tiSpClass as string | undefined)}
+                style={tiSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 {shown ? hideIconNode : showIconNode}

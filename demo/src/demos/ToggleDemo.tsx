@@ -95,6 +95,7 @@ export function ToggleDemo() {
           { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", description: 'Visual style variant.' },
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Button size.' },
           { name: 'animate', type: 'ElementAnimate | false', description: 'Animates ToggleButton (hover scale, press scale).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

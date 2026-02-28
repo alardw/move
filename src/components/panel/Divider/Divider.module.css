@@ -20,6 +20,20 @@
   clear: both;
 }
 
+/* Sizes */
+.root[data-size='sm'],
+.root:not([data-size]) {
+  --move-divider-size: 1px;
+}
+
+.root[data-size='md'] {
+  --move-divider-size: 2px;
+}
+
+.root[data-size='lg'] {
+  --move-divider-size: 4px;
+}
+
 /* Horizontal (default) */
 .root[data-orientation='horizontal'],
 .root:not([data-orientation]) {

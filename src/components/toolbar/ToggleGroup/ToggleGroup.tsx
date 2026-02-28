@@ -4,9 +4,10 @@ import * as React from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractiveAnimate, prefersReducedMotion } from '../../../animation';
+import { useInteractiveAnimate, useSlidingIndicator } from '../../../animation';
+import { prefersReducedMotion } from '../../../animation/utils';
 import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleGroup.module.css';
 
@@ -40,7 +41,7 @@ export interface ToggleGroupRootProps extends Record<string, unknown> {
   loop?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootProps, HTMLDivElement>({
@@ -50,7 +51,7 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
   defaults: { variant: 'secondary', size: 'md' },
   moveProps: ['value', 'defaultValue', 'onValueChange', 'orientation', 'disabled', 'loop', 'size', 'variant'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const ctxValue = React.useMemo(
       () => ({ size: props.size as ButtonSize, variant: props.variant as ButtonVariant }),
       [props.size, props.variant],
@@ -73,24 +74,27 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
       [props.onValueChange, isControlled],
     );
 
-    // --- Sliding indicator ---
-    const indicatorRef = React.useRef<HTMLDivElement | null>(null);
-    const isFirstRun = React.useRef(true);
-    const isVertical = (props.orientation as string) === 'vertical';
+    // --- Sliding indicator (shared hook) ---
+    const { indicatorRef } = useSlidingIndicator({
+      containerRef: internalRef,
+      activeSelector: '[data-state="on"]',
+    });
+
+    // --- Press animation on indicator ---
     const pressAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
     const isPressing = React.useRef(false);
     const pressSpring = { mass: 0.6, stiffness: 500, damping: 12 };
 
     const handlePressDown = React.useCallback(() => {
       const el = indicatorRef.current;
-      if (!el || props.disabled) return;
+      if (!el || props.disabled || prefersReducedMotion()) return;
       isPressing.current = true;
       if (pressAnimRef.current) pressAnimRef.current.pause();
       pressAnimRef.current = animate(el, {
         scale: 0.92,
         ease: spring(pressSpring),
       });
-    }, [props.disabled]);
+    }, [props.disabled, indicatorRef]);
 
     const handlePressUp = React.useCallback(() => {
       const el = indicatorRef.current;
@@ -101,71 +105,20 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
         scale: 1,
         ease: spring(pressSpring),
       });
-    }, []);
-
-    const updateIndicator = React.useCallback(() => {
-      const root = internalRef.current;
-      const indicator = indicatorRef.current;
-      if (!root || !indicator) return;
-
-      const active = root.querySelector<HTMLElement>('[data-state="on"]');
-      if (!active) {
-        indicator.style.opacity = '0';
-        return;
-      }
-
-      const left = active.offsetLeft - 3;
-      const top = active.offsetTop - 3;
-      const width = active.offsetWidth;
-      const height = active.offsetHeight;
-
-      indicator.style.opacity = '1';
-      indicator.style.width = `${width}px`;
-      indicator.style.height = `${height}px`;
-
-      if (isFirstRun.current || prefersReducedMotion()) {
-        isFirstRun.current = false;
-        animate(indicator, { translateX: left, translateY: top, duration: 0 });
-        return;
-      }
-
-      animate(indicator, {
-        translateX: left,
-        translateY: top,
-        width,
-        height,
-        ease: spring({ mass: 1, stiffness: 500, damping: 30, velocity: 0 }),
-      });
-    }, [internalRef]);
-
-    React.useEffect(() => {
-      const root = internalRef.current;
-      if (!root) return;
-
-      updateIndicator();
-
-      const observer = new MutationObserver(updateIndicator);
-      observer.observe(root, {
-        attributes: true,
-        attributeFilter: ['data-state'],
-        subtree: true,
-      });
-
-      return () => observer.disconnect();
-    }, [internalRef, updateIndicator]);
+    }, [indicatorRef]);
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const indicatorPt = ptm('indicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const indicatorSp = sp('indicator');
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
 
         return (
           <ToggleGroupContext.Provider value={ctxValue}>
             <RadixToggleGroup.Root
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
               type="single"
               value={currentValue}
@@ -173,8 +126,8 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
               orientation={props.orientation as 'horizontal' | 'vertical'}
               disabled={props.disabled as boolean}
               loop={props.loop as boolean}
-              className={cx('root', props.className, ptClass as string | undefined)}
-              style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-orientation={props.orientation || 'horizontal'}
               data-size={props.size}
               onMouseDown={handlePressDown}
@@ -183,11 +136,11 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
             >
               {props.children}
               <div
-                {...indPtRest}
+                {...indSpRest}
                 ref={indicatorRef}
                 aria-hidden="true"
-                className={cx('indicator', indPtClass as string | undefined)}
-                style={indPtStyle as React.CSSProperties}
+                className={cx('indicator', indSpClass as string | undefined)}
+                style={indSpStyle as React.CSSProperties}
               />
             </RadixToggleGroup.Root>
           </ToggleGroupContext.Provider>
@@ -208,7 +161,7 @@ export interface ToggleGroupItemProps extends Record<string, unknown> {
   value: string;
   disabled?: boolean;
   animate?: ElementAnimate | false;
-  pt?: PassThrough<'item'>;
+  sp?: SlotPropsMap<'item'>;
 }
 
 const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButtonElement>({
@@ -217,7 +170,7 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
   slots: ['item'] as const,
   moveProps: ['value', 'disabled', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { size, variant } = React.useContext(ToggleGroupContext);
 
     // Disable hover/press scale by default — scaling breaks connected borders.
@@ -236,18 +189,18 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
 
     return {
       render() {
-        const itemPt = ptm('item');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
 
         return (
           <RadixToggleGroup.Item
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             value={props.value as string}
             disabled={props.disabled as boolean}
-            className={cx('item', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('item', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
             onMouseEnter={handlers.onMouseEnter}

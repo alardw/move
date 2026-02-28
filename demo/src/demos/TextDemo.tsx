@@ -134,6 +134,7 @@ export function TextDemo() {
           { name: 'align', type: "'left' | 'center' | 'right'", description: 'Horizontal text alignment.' },
           { name: 'as', type: "'p' | 'span' | 'div' | 'em' | 'strong' | 'small' | 'del'", default: "'p'", description: 'HTML element to render.' },
           { name: 'truncate', type: 'boolean', description: 'Truncate overflowing text with an ellipsis.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

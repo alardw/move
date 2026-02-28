@@ -100,11 +100,6 @@ body {
   border-color: var(--move-primary);
 }
 
-.demo-input-styled::selection {
-  background: var(--move-primary);
-  color: var(--move-primary-fg);
-}
-
 /* ── DemoButton ── */
 .demo-button-styled {
   padding: 0.375rem 0.75rem;
@@ -498,6 +493,7 @@ input.demo-input:focus {
 
 /* Code Block */
 .example-code {
+  position: relative;
   border-top: 1px solid var(--move-border-base);
   background: #2d2d2d;
   overflow: hidden;
@@ -516,6 +512,17 @@ input.demo-input:focus {
 .example-code code {
   background: none;
   padding: 0;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: var(--move-spacing-sm);
+  right: var(--move-spacing-sm);
+}
+
+.code-tabs-bar {
+  padding: var(--move-spacing-sm) var(--move-spacing-lg);
+  background: var(--move-bg-muted);
 }
 
 /* API Reference Section */

@@ -19,7 +19,6 @@
   position: fixed;
   display: flex;
   flex-direction: column;
-  gap: var(--move-spacing-sm);
   z-index: var(--move-toast-viewport-z);
   pointer-events: none;
   padding: var(--move-toast-viewport-spacing);
@@ -73,6 +72,8 @@
 
 .itemWrapper {
   will-change: height;
+  overflow: hidden;
+  padding-bottom: var(--move-spacing-sm);
 }
 
 /* =============================================================================

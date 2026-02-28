@@ -18,6 +18,13 @@
   border-radius: 4px;
 }
 
+/* Text selection */
+
+[data-move-theme] ::selection {
+  background: var(--move-selection-bg);
+  color: var(--move-selection-fg);
+}
+
 /* Layout utility classes */
 
 .move-stack {

@@ -13,7 +13,7 @@
   border-bottom: 1px solid var(--move-border-base);
   position: sticky;
   top: 0;
-  background-color: var(--move-bg-base);
+  background-color: transparent;
   z-index: 1;
 }
 

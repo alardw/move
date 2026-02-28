@@ -92,7 +92,7 @@ function SiblingsExample() {
 function CustomStylingExample() {
   return (
     <MoveProvider
-      pt={{
+      slotProps={{
         PaginationRoot: {
           root: { style: { gap: '0.5rem' } },
         },
@@ -107,7 +107,7 @@ function CustomStylingExample() {
         <Pagination.Root
           total={10}
           defaultPage={5}
-          pt={{ root: { style: { gap: '1rem' } } }}
+          sp={{ root: { style: { gap: '1rem' } } }}
         >
           <Pagination.PrevTrigger />
           <Pagination.Items />
@@ -219,13 +219,13 @@ const examples: Example[] = [
     description: 'Tweak styles globally or per instance',
     fullWidth: true,
     component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{ PaginationRoot: { root: { style: { gap: '0.5rem' } } } }}>
+    code: `<MoveProvider slotProps={{ PaginationRoot: { root: { style: { gap: '0.5rem' } } } }}>
   <Pagination.Root total={10} defaultPage={3}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
   </Pagination.Root>
-  <Pagination.Root total={10} defaultPage={5} pt={{ root: { style: { gap: '1rem' } } }}>
+  <Pagination.Root total={10} defaultPage={5} sp={{ root: { style: { gap: '1rem' } } }}>
     <Pagination.PrevTrigger />
     <Pagination.Items />
     <Pagination.NextTrigger />
@@ -256,6 +256,7 @@ export function PaginationDemo() {
           { name: 'boundaries', type: 'number', default: '1', description: 'Pages always visible at the start and end.' },
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of pagination controls.' },
           { name: 'variant', type: "'default' | 'outline'", default: "'default'", description: 'Visual style of the active page.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -263,6 +264,7 @@ export function PaginationDemo() {
         title="Pagination.PrevTrigger"
         properties={[
           { name: 'children', type: 'ReactNode', description: 'Custom content. Defaults to a chevron icon.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the prev element.' },
         ]}
       />
 
@@ -270,6 +272,7 @@ export function PaginationDemo() {
         title="Pagination.NextTrigger"
         properties={[
           { name: 'children', type: 'ReactNode', description: 'Custom content. Defaults to a chevron icon.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the next element.' },
         ]}
       />
     </DocPage.Root>

@@ -8,17 +8,17 @@ import { Button } from '../../core/Button';
 import { Icon } from '../../core/Icon';
 import styles from './CalendarNav.module.css';
 
-export interface CalendarNavPt {
+export interface CalendarNavSp {
   prevButton?: React.HTMLAttributes<HTMLButtonElement> & { children?: React.ReactNode };
   nextButton?: React.HTMLAttributes<HTMLButtonElement> & { children?: React.ReactNode };
 }
 
 export interface CalendarNavProps {
   className?: string;
-  pt?: CalendarNavPt;
+  sp?: CalendarNavSp;
 }
 
-export function CalendarNav({ className, pt }: CalendarNavProps) {
+export function CalendarNav({ className, sp }: CalendarNavProps) {
   const ctx = useCalendarContext();
   const { displayMonth, setDisplayMonth, locale, yearRange, labels } = ctx;
 
@@ -85,9 +85,9 @@ export function CalendarNav({ className, pt }: CalendarNavProps) {
         onClick={goToPrevMonth}
         aria-label={labels.previousMonth}
         className={styles.navButton}
-        {...(pt?.prevButton ?? {})}
+        {...(sp?.prevButton ?? {})}
       >
-        {pt?.prevButton?.children ?? <Icon name="chevron-left" size="sm" />}
+        {sp?.prevButton?.children ?? <Icon name="chevron-left" size="sm" />}
       </Button>
 
       <div className={styles.navLabels}>
@@ -137,9 +137,9 @@ export function CalendarNav({ className, pt }: CalendarNavProps) {
         onClick={goToNextMonth}
         aria-label={labels.nextMonth}
         className={styles.navButton}
-        {...(pt?.nextButton ?? {})}
+        {...(sp?.nextButton ?? {})}
       >
-        {pt?.nextButton?.children ?? <Icon name="chevron-right" size="sm" />}
+        {sp?.nextButton?.children ?? <Icon name="chevron-right" size="sm" />}
       </Button>
     </div>
   );

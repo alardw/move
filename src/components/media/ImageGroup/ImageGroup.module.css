@@ -39,6 +39,27 @@
   gap: var(--move-spacing-xl);
 }
 
+/* Radius — applied to child Image roots */
+.root[data-radius='none'] > * {
+  border-radius: var(--move-rounded-none);
+}
+
+.root[data-radius='sm'] > * {
+  border-radius: var(--move-rounded-sm);
+}
+
+.root[data-radius='md'] > * {
+  border-radius: var(--move-rounded-md);
+}
+
+.root[data-radius='lg'] > * {
+  border-radius: var(--move-rounded-lg);
+}
+
+.root[data-radius='full'] > * {
+  border-radius: var(--move-rounded-full);
+}
+
 /* Responsive: reduce to 2 columns when container is narrow (3+ columns only) */
 @container (max-width: 40rem) {
   .root[data-columns='3'],

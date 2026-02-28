@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Textarea.module.css';
 
 // =============================================================================
@@ -40,7 +40,7 @@ export interface TextareaProps extends Record<string, unknown> {
   onFocus?: React.FocusEventHandler<HTMLTextAreaElement>;
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>;
-  pt?: PassThrough<TextareaSlots>;
+  sp?: SlotPropsMap<TextareaSlots>;
 }
 
 export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLTextAreaElement>({
@@ -50,7 +50,7 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
   defaults: { variant: 'outlined', size: 'md', rows: 3, resize: 'vertical' },
   moveProps: ['variant', 'size', 'invalid', 'autoSize', 'minRows', 'maxRows', 'rows', 'resize', 'width'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const mergedRef = useMergedRef<HTMLTextAreaElement>(ref, textareaRef);
 
@@ -96,18 +96,18 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const textareaPt = ptm('textarea');
-        const { className: taPtClass, style: taPtStyle, ...taPtRest } = textareaPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const textareaSp = sp('textarea');
+        const { className: taSpClass, style: taSpStyle, ...taSpRest } = textareaSp as Record<string, unknown>;
 
         const resizeValue = props.autoSize ? 'none' : props.resize as string;
 
         return (
           <div
-            {...ptRest}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(ptStyle as React.CSSProperties) }}
+            {...spRest}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
@@ -117,10 +117,10 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
           >
             <textarea
               {...attrs}
-              {...taPtRest}
+              {...taSpRest}
               ref={mergedRef}
-              className={cx('textarea', taPtClass as string | undefined)}
-              style={{ resize: resizeValue as React.CSSProperties['resize'], ...(taPtStyle as React.CSSProperties) }}
+              className={cx('textarea', taSpClass as string | undefined)}
+              style={{ resize: resizeValue as React.CSSProperties['resize'], ...(taSpStyle as React.CSSProperties) }}
               rows={props.autoSize ? (props.minRows as number | undefined) ?? (props.rows as number) : (props.rows as number)}
               disabled={props.disabled as boolean}
               onInput={handleInput}

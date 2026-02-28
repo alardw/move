@@ -1,0 +1,80 @@
+/* Text */
+.text { margin: 0; }
+.text-base  { color: var(--move-fg-base); }
+.text-muted { color: var(--move-fg-muted); }
+.text-subtle { color: var(--move-fg-subtle); }
+.text-xs        { font-size: var(--move-size-xs); }
+.text-sm        { font-size: var(--move-size-sm); }
+.text-base-size { font-size: var(--move-size-base); }
+.text-lg        { font-size: var(--move-size-lg); }
+
+/* Stack */
+.stack { display: flex; width: 100%; }
+.stack-row    { flex-direction: row; }
+.stack-column { flex-direction: column; }
+.stack-gap-xs { gap: 0.25rem; }
+.stack-gap-sm { gap: 0.5rem; }
+.stack-gap-md { gap: 0.75rem; }
+.stack-gap-lg { gap: 1.5rem; }
+.stack-gap-xl { gap: 2rem; }
+.stack-align-start    { align-items: flex-start; }
+.stack-align-center   { align-items: center; }
+.stack-align-end      { align-items: flex-end; }
+.stack-align-stretch  { align-items: stretch; }
+.stack-align-baseline { align-items: baseline; }
+.stack-justify-start   { justify-content: flex-start; }
+.stack-justify-center  { justify-content: center; }
+.stack-justify-end     { justify-content: flex-end; }
+.stack-justify-between { justify-content: space-between; }
+.stack-wrap   { flex-wrap: wrap; }
+.stack-flex-1 { flex: 1; }
+
+/* DemoLabel */
+.demo-label-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  color: var(--move-fg-base);
+  font-size: var(--move-size-sm);
+}
+.demo-label-disabled { cursor: not-allowed; color: var(--move-fg-muted); }
+.demo-label-column { flex-direction: column; align-items: stretch; gap: 0.25rem; }
+
+/* DemoInput */
+.demo-input-styled {
+  padding: 0.5rem 0.75rem;
+  background: var(--move-bg-muted);
+  border: 1px solid var(--move-border-base);
+  border-radius: var(--move-rounded-md);
+  color: var(--move-fg-base);
+  font-size: var(--move-size-sm);
+  outline: none;
+}
+.demo-input-styled:focus { border-color: var(--move-primary); }
+
+/* DemoButton */
+.demo-button-styled {
+  padding: 0.375rem 0.75rem;
+  background: var(--move-bg-muted);
+  border: 1px solid var(--move-border-base);
+  border-radius: var(--move-rounded-sm);
+  color: var(--move-fg-base);
+  font-size: var(--move-size-sm);
+  cursor: pointer;
+}
+.demo-button-styled:hover {
+  border-color: var(--move-fg-subtle);
+  background: var(--move-bg-emphasis);
+}
+
+/* ThemeZone */
+.theme-zone {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-md);
+  padding: 1rem;
+  border-radius: var(--move-rounded-lg);
+  background: var(--move-bg-subtle);
+  border: 1px solid var(--move-border-base);
+}

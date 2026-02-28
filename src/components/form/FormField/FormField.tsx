@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './FormField.module.css';
 
 // ============================================================================
@@ -20,7 +20,7 @@ export interface FormFieldRootProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   labelWidth?: string;
-  pt?: PassThrough<FormFieldSlots>;
+  sp?: SlotPropsMap<FormFieldSlots>;
 }
 
 const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivElement>({
@@ -29,11 +29,11 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
   slots: ['root'] as const,
   moveProps: ['labelWidth'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const inlineStyle: Record<string, unknown> = { ...props.style };
         if (props.labelWidth) {
           inlineStyle['--move-formfield-label-width'] = props.labelWidth;
@@ -41,10 +41,10 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...inlineStyle, ...(ptStyle as React.CSSProperties) } as React.CSSProperties}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...inlineStyle, ...(spStyle as React.CSSProperties) } as React.CSSProperties}
           >
             <div className={styles.inner}>
               {props.children}
@@ -64,7 +64,7 @@ export interface FormFieldLabelProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'label'>;
+  sp?: SlotPropsMap<'label'>;
 }
 
 const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLDivElement>({
@@ -72,18 +72,18 @@ const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLDivEl
   styles,
   slots: ['label'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const labelPt = ptm('label');
-        const { className: ptClass, style: ptStyle, ...ptRest } = labelPt as Record<string, unknown>;
+        const labelSp = sp('label');
+        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('label', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('label', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -101,7 +101,7 @@ export interface FormFieldFieldProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'field'>;
+  sp?: SlotPropsMap<'field'>;
 }
 
 const FormFieldField = withMoveComponent<'field', FormFieldFieldProps, HTMLDivElement>({
@@ -109,18 +109,18 @@ const FormFieldField = withMoveComponent<'field', FormFieldFieldProps, HTMLDivEl
   styles,
   slots: ['field'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const fieldPt = ptm('field');
-        const { className: ptClass, style: ptStyle, ...ptRest } = fieldPt as Record<string, unknown>;
+        const fieldSp = sp('field');
+        const { className: spClass, style: spStyle, ...spRest } = fieldSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('field', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('field', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -139,7 +139,7 @@ export interface FormFieldDescriptionProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   error?: boolean;
-  pt?: PassThrough<'description'>;
+  sp?: SlotPropsMap<'description'>;
 }
 
 const FormFieldDescription = withMoveComponent<'description', FormFieldDescriptionProps, HTMLDivElement>({
@@ -148,18 +148,18 @@ const FormFieldDescription = withMoveComponent<'description', FormFieldDescripti
   slots: ['description'] as const,
   moveProps: ['error'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const descPt = ptm('description');
-        const { className: ptClass, style: ptStyle, ...ptRest } = descPt as Record<string, unknown>;
+        const descSp = sp('description');
+        const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('description', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('description', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             {...(props.error ? { 'data-error': '' } : {})}
           >
             {props.children}

@@ -4,6 +4,7 @@ import * as React from 'react';
 import { animate, spring } from 'animejs';
 import { getMonthGrid, getWeekDayNames, getWeekNumber, addMonths } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
+import { prefersReducedMotion } from '../../../animation/utils';
 import { DayCell } from './DayCell';
 import styles from './MonthGrid.module.css';
 
@@ -55,7 +56,7 @@ export function MonthGrid({ className }: MonthGridProps) {
     }
 
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || prefersReducedMotion()) return;
 
     if (cellsAnimRef.current) cellsAnimRef.current.pause();
 

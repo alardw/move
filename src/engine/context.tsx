@@ -1,15 +1,15 @@
 import { createContext, useContext, useMemo, type ReactNode } from 'react';
-import type { GlobalPassThrough, PassThrough } from './types';
+import type { GlobalSlotProps, SlotPropsMap } from './types';
 
 // =============================================================================
 // Context
 // =============================================================================
 
 interface MoveContextValue {
-  pt: GlobalPassThrough;
+  slotProps: GlobalSlotProps;
 }
 
-const MoveContext = createContext<MoveContextValue>({ pt: {} });
+const MoveContext = createContext<MoveContextValue>({ slotProps: {} });
 
 // =============================================================================
 // Provider
@@ -17,16 +17,16 @@ const MoveContext = createContext<MoveContextValue>({ pt: {} });
 
 export interface MoveProviderProps {
   children: ReactNode;
-  /** Global pass-through overrides keyed by component name */
-  pt?: GlobalPassThrough;
+  /** Global slot-props overrides keyed by component name */
+  slotProps?: GlobalSlotProps;
 }
 
 /**
- * MoveProvider — supplies global PT overrides to all Move components.
+ * MoveProvider — supplies global slot-props overrides to all Move components.
  *
  * @example
  * ```tsx
- * <MoveProvider pt={{
+ * <MoveProvider slotProps={{
  *   Button: { root: { className: 'my-button' } },
  *   Badge: { root: { style: { fontWeight: 'bold' } } },
  * }}>
@@ -34,8 +34,8 @@ export interface MoveProviderProps {
  * </MoveProvider>
  * ```
  */
-export function MoveProvider({ children, pt = {} }: MoveProviderProps) {
-  const value = useMemo(() => ({ pt }), [pt]);
+export function MoveProvider({ children, slotProps = {} }: MoveProviderProps) {
+  const value = useMemo(() => ({ slotProps }), [slotProps]);
   return (
     <MoveContext.Provider value={value}>
       {children}
@@ -50,13 +50,13 @@ MoveProvider.displayName = 'MoveProvider';
 // =============================================================================
 
 /**
- * Get global PT overrides for a specific component
+ * Get global slot-props overrides for a specific component
  */
 export function useMoveContext<TSlots extends string>(
   componentName: string
-): { globalPT: PassThrough<TSlots> } {
-  const { pt } = useContext(MoveContext);
+): { globalSP: SlotPropsMap<TSlots> } {
+  const { slotProps } = useContext(MoveContext);
   return {
-    globalPT: (pt[componentName] ?? {}) as PassThrough<TSlots>,
+    globalSP: (slotProps[componentName] ?? {}) as SlotPropsMap<TSlots>,
   };
 }

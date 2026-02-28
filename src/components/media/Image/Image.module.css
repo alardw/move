@@ -6,6 +6,7 @@
 
 .root {
   /* Component tokens */
+  --move-image-bg: var(--move-gray-800);
   --move-image-fallback-bg: var(--move-bg-subtle);
   --move-image-fallback-fg: var(--move-fg-subtle);
   --move-image-fallback-min-height: var(--move-space-20);
@@ -15,6 +16,7 @@
   position: relative;
   display: inline-flex;
   overflow: hidden;
+  background-color: var(--move-image-bg);
 }
 
 /* Radius */
@@ -66,6 +68,17 @@
 .root[data-fit='scale-down'] .img {
   object-fit: scale-down;
 }
+
+/* Position */
+.root[data-position='center'] .img { object-position: center; }
+.root[data-position='top'] .img { object-position: top; }
+.root[data-position='bottom'] .img { object-position: bottom; }
+.root[data-position='left'] .img { object-position: left; }
+.root[data-position='right'] .img { object-position: right; }
+.root[data-position='top left'] .img { object-position: top left; }
+.root[data-position='top right'] .img { object-position: top right; }
+.root[data-position='bottom left'] .img { object-position: bottom left; }
+.root[data-position='bottom right'] .img { object-position: bottom right; }
 
 /* Action overlay */
 .action {

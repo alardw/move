@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useAccordion } from './useAccordion';
 import {
   toAnimeParams,
@@ -67,6 +67,9 @@ function useAccordionItemContext() {
 // Root
 // ============================================================================
 
+export type AccordionSize = 'sm' | 'md' | 'lg';
+export type AccordionVariant = 'default' | 'contained' | 'ghost';
+
 export interface AccordionAnimateConfig {
   enter?: Animation;
   stagger?: StaggerConfig;
@@ -82,8 +85,10 @@ export interface AccordionRootProps extends Record<string, unknown> {
   defaultValue?: string | string[];
   onValueChange?: (value: string | string[]) => void;
   collapsible?: boolean;
+  size?: AccordionSize;
+  variant?: AccordionVariant;
   animate?: AccordionAnimateConfig | false;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const defaultRootAnimation: AccordionAnimateConfig = {
@@ -99,10 +104,10 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
   name: 'Accordion',
   styles: acStyles,
   slots: ['root'] as const,
-  defaults: { type: 'single', collapsible: true },
-  moveProps: ['type', 'value', 'defaultValue', 'onValueChange', 'collapsible', 'animate'],
+  defaults: { type: 'single', collapsible: true, size: 'md', variant: 'default' },
+  moveProps: ['type', 'value', 'defaultValue', 'onValueChange', 'collapsible', 'size', 'variant', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       className,
       style,
@@ -122,6 +127,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       value: controlledValue as string | string[] | undefined,
       defaultValue: defaultValue as string | string[] | undefined,
       multiple,
+      collapsible: props.collapsible as boolean | undefined,
       onValueChange: onValueChange as ((value: string | string[]) => void) | undefined,
     });
 
@@ -199,16 +205,18 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <AccordionContext.Provider value={contextValue}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
-              className={cx('root', className, ptClass as string | undefined)}
-              style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+              data-size={props.size}
+              data-variant={props.variant}
+              className={cx('root', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-move-accordion-root=""
             >
               {children}
@@ -229,7 +237,7 @@ export interface AccordionItemProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   value: string;
-  pt?: PassThrough<'item'>;
+  sp?: SlotPropsMap<'item'>;
 }
 
 const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivElement>({
@@ -238,7 +246,7 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
   slots: ['item'] as const,
   moveProps: ['value'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, value } = props;
     const context = useAccordionContext();
     const indexRef = React.useRef<number | null>(null);
@@ -280,16 +288,16 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
 
     return {
       render() {
-        const itemPt = ptm('item');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
         return (
           <AccordionItemContext.Provider value={{ value: value as string, isActive }}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={mergedRef}
-              className={cx('item', className, ptClass as string | undefined)}
-              style={{ ...initialStyles, ...style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('item', className, spClass as string | undefined)}
+              style={{ ...initialStyles, ...style, ...(spStyle as React.CSSProperties) }}
               data-state={isActive ? 'open' : 'closed'}
             >
               {children}
@@ -309,7 +317,7 @@ export interface AccordionHeaderProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const AccordionHeader = withMoveComponent<'header', AccordionHeaderProps, HTMLDivElement>({
@@ -317,18 +325,18 @@ const AccordionHeader = withMoveComponent<'header', AccordionHeaderProps, HTMLDi
   styles: acStyles,
   slots: ['header'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const headerPt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -348,7 +356,7 @@ export interface AccordionTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   icon?: React.ReactNode;
   animate?: Pick<ElementAnimate, 'hover'> | false;
-  pt?: PassThrough<'trigger' | 'icon'>;
+  sp?: SlotPropsMap<'trigger' | 'icon'>;
 }
 
 const defaultTriggerAnimation: Pick<ElementAnimate, 'hover'> = {
@@ -363,7 +371,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
   slots: ['trigger', 'icon'] as const,
   moveProps: ['icon', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, icon, animate: animateProp } = props;
     const context = useAccordionContext();
     const itemContext = useAccordionItemContext();
@@ -444,19 +452,19 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
 
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const iconPt = ptm('icon');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const iconSp = sp('icon');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
         return (
           <button
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type="button"
-            className={cx('trigger', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-state={itemContext.isActive ? 'open' : 'closed'}
             data-value={itemContext.value}
             data-move-accordion-trigger=""
@@ -468,10 +476,10 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
           >
             {children}
             <span
-              {...iconPtRest}
+              {...iconSpRest}
               ref={iconRef}
-              className={cx('icon', iconPtClass as string | undefined)}
-              style={iconPtStyle as React.CSSProperties}
+              className={cx('icon', iconSpClass as string | undefined)}
+              style={iconSpStyle as React.CSSProperties}
             >
               {icon ?? resolvedChevron}
             </span>
@@ -490,7 +498,7 @@ export interface AccordionContentProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'content' | 'contentInner'>;
+  sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
 // Track content animations
@@ -501,7 +509,7 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
   styles: acStyles,
   slots: ['content', 'contentInner'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children } = props;
     const context = useAccordionContext();
     const itemContext = useAccordionItemContext();
@@ -650,29 +658,29 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
 
     return {
       render() {
-        const contentPt = ptm('content');
-        const innerPt = ptm('contentInner');
+        const contentSp = sp('content');
+        const innerSp = sp('contentInner');
 
         if (!shouldRender) return null;
 
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
-        const { className: innerPtClass, style: innerPtStyle, ...innerPtRest } = innerPt as Record<string, unknown>;
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('content', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-state={itemContext.isActive ? 'open' : 'closed'}
             role="region"
           >
             <div
-              {...innerPtRest}
+              {...innerSpRest}
               ref={innerRef}
-              className={cx('contentInner', innerPtClass as string | undefined)}
-              style={innerPtStyle as React.CSSProperties}
+              className={cx('contentInner', innerSpClass as string | undefined)}
+              style={innerSpStyle as React.CSSProperties}
             >
               {children}
             </div>

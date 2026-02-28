@@ -13,9 +13,6 @@
   /* Component tokens — overlay */
   --move-dialog-overlay-bg: var(--move-overlay-heavy);
   --move-dialog-overlay-backdrop-blur: var(--move-overlay-blur);
-  --move-dialog-transition-duration: var(--move-transition-normal);
-  --move-dialog-transition-easing: var(--move-ease-enter);
-
   position: fixed;
   inset: 0;
   background-color: var(--move-dialog-overlay-bg);
@@ -23,13 +20,7 @@
   z-index: var(--move-layer-overlay);
 }
 
-.overlay[data-state='open'] {
-  animation: dialog-overlay-in var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
-}
-
-.overlay[data-state='closed'] {
-  animation: dialog-overlay-out var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
-}
+/* Animation handled by useLayerAnimation hook */
 
 .content {
   /* Component tokens — content, title, description, close (children inherit) */
@@ -54,13 +45,10 @@
   --move-dialog-close-fg-hover: var(--move-fg-base);
   --move-dialog-close-bg-hover: var(--move-bg-muted);
   --move-dialog-close-radius: var(--move-rounded-sm);
-  --move-dialog-transition-duration: 350ms;
-  --move-dialog-transition-easing: cubic-bezier(0.34, 1.56, 0.64, 1);
-
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  translate: -50% -50%;
   width: var(--move-dialog-content-width);
   max-width: var(--move-dialog-content-max-width);
   max-height: var(--move-dialog-content-max-height);
@@ -83,13 +71,7 @@
   outline: none;
 }
 
-.content[data-state='open'] {
-  animation: dialog-content-in var(--move-dialog-transition-duration) var(--move-dialog-transition-easing);
-}
-
-.content[data-state='closed'] {
-  animation: dialog-content-out 200ms var(--move-ease-exit, ease-in);
-}
+/* Animation handled by useLayerAnimation hook */
 
 .title {
   margin: 0;
@@ -180,46 +162,3 @@
   height: var(--move-dialog-close-icon-size);
 }
 
-@keyframes dialog-overlay-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes dialog-overlay-out {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes dialog-content-in {
-  0% {
-    opacity: 0;
-    transform: translate(-50%, -46%) scale(0.85);
-  }
-  60% {
-    opacity: 1;
-    transform: translate(-50%, -50.5%) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-@keyframes dialog-content-out {
-  from {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: translate(-50%, -48%) scale(0.95);
-  }
-}

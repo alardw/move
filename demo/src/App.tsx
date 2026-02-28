@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { animate, stagger } from 'animejs';
-import { ThemeProvider, IconProvider, darkTheme, lightTheme, Tooltip, Toast, Sidebar, Spinner, useSidebarContext } from 'move';
+import { ThemeProvider, IconProvider, darkTheme, lightTheme, Tooltip, Toast, Sidebar, Loader, useSidebarContext } from 'move';
 import type { Theme } from 'move';
 import * as LucideIcons from 'lucide-react';
 import {
   Tag, MousePointer, CheckSquare, Layers, MessageSquare, ShieldAlert,
-  Palette, Sun, Moon, Star, CircleUser, ChevronDown, Info, RectangleHorizontal, ToggleRight, Circle, Type, Rows3, ListFilter, PanelTop, TextCursorInput, KeyRound, Loader, LoaderCircle, AlignLeft, PanelLeftClose, PanelLeftOpen, Bell, SlidersHorizontal, SeparatorHorizontal,
+  Palette, Sun, Moon, Star, CircleUser, ChevronDown, Info, RectangleHorizontal, ToggleRight, Circle, Type, Rows3, ListFilter, PanelTop, TextCursorInput, KeyRound, Loader as LoaderIcon, LoaderCircle, AlignLeft, PanelLeftClose, PanelLeftOpen, Bell, SlidersHorizontal, SeparatorHorizontal,
   CaseSensitive, Heading as HeadingIcon, ExternalLink, Braces, FileText,
   PanelLeft, SquareStack, Columns, ScrollText,
   CalendarDays, CalendarRange, CalendarClock,
@@ -21,7 +21,19 @@ import {
   Table2,
   Navigation,
   ArrowLeftRight,
-  BoxSelect
+  BoxSelect,
+  Upload,
+  Film,
+  Music,
+  Search,
+  AlignHorizontalDistributeCenter,
+  Grid3X3,
+  Rows4,
+  Hash,
+  PenLine,
+  ListChecks,
+  GitBranch,
+  RectangleEllipsis,
 } from 'lucide-react';
 import './App.css';
 
@@ -50,6 +62,9 @@ function lazyNamed<T extends Record<string, any>>(
 const AvatarDemo = lazyNamed(() => import('./demos/AvatarDemo'), 'AvatarDemo');
 const BadgeDemo = lazyNamed(() => import('./demos/BadgeDemo'), 'BadgeDemo');
 const ButtonDemo = lazyNamed(() => import('./demos/ButtonDemo'), 'ButtonDemo');
+const ChatBubbleDemo = lazyNamed(() => import('./demos/ChatBubbleDemo'), 'ChatBubbleDemo');
+const ColorPickerDemo = lazyNamed(() => import('./demos/ColorPickerDemo'), 'ColorPickerDemo');
+const ColorInputDemo = lazyNamed(() => import('./demos/ColorInputDemo'), 'ColorInputDemo');
 const CheckboxDemo = lazyNamed(() => import('./demos/CheckboxDemo'), 'CheckboxDemo');
 const AccordionDemo = lazyNamed(() => import('./demos/AccordionDemo'), 'AccordionDemo');
 const DialogDemo = lazyNamed(() => import('./demos/DialogDemo'), 'DialogDemo');
@@ -69,10 +84,11 @@ const SelectDemo = lazyNamed(() => import('./demos/SelectDemo'), 'SelectDemo');
 const TabsDemo = lazyNamed(() => import('./demos/TabsDemo'), 'TabsDemo');
 const InputTextDemo = lazyNamed(() => import('./demos/InputTextDemo'), 'InputTextDemo');
 const PasswordDemo = lazyNamed(() => import('./demos/PasswordDemo'), 'PasswordDemo');
+const PinInputDemo = lazyNamed(() => import('./demos/PinInputDemo'), 'PinInputDemo');
 const TextareaDemo = lazyNamed(() => import('./demos/TextareaDemo'), 'TextareaDemo');
 const ProgressBarDemo = lazyNamed(() => import('./demos/ProgressBarDemo'), 'ProgressBarDemo');
 const SkeletonDemo = lazyNamed(() => import('./demos/SkeletonDemo'), 'SkeletonDemo');
-const SpinnerDemo = lazyNamed(() => import('./demos/SpinnerDemo'), 'SpinnerDemo');
+const LoaderDemo = lazyNamed(() => import('./demos/LoaderDemo'), 'LoaderDemo');
 const ToastDemo = lazyNamed(() => import('./demos/ToastDemo'), 'ToastDemo');
 const InputRangeDemo = lazyNamed(() => import('./demos/InputRangeDemo'), 'InputRangeDemo');
 const DividerDemo = lazyNamed(() => import('./demos/DividerDemo'), 'DividerDemo');
@@ -99,8 +115,20 @@ const EmptyStateDemo = lazyNamed(() => import('./demos/EmptyStateDemo'), 'EmptyS
 const ImageDemo = lazyNamed(() => import('./demos/ImageDemo'), 'ImageDemo');
 const ImageGroupDemo = lazyNamed(() => import('./demos/ImageGroupDemo'), 'ImageGroupDemo');
 const TableDemo = lazyNamed(() => import('./demos/TableDemo'), 'TableDemo');
+const TimelineDemo = lazyNamed(() => import('./demos/TimelineDemo'), 'TimelineDemo');
 const BreadcrumbDemo = lazyNamed(() => import('./demos/BreadcrumbDemo'), 'BreadcrumbDemo');
 const PaginationDemo = lazyNamed(() => import('./demos/PaginationDemo'), 'PaginationDemo');
+const StepperDemo = lazyNamed(() => import('./demos/StepperDemo'), 'StepperDemo');
+const FileUploadDemo = lazyNamed(() => import('./demos/FileUploadDemo'), 'FileUploadDemo');
+const VideoPlayerDemo = lazyNamed(() => import('./demos/VideoPlayerDemo'), 'VideoPlayerDemo');
+const AudioPlayerDemo = lazyNamed(() => import('./demos/AudioPlayerDemo'), 'AudioPlayerDemo');
+const CarouselDemo = lazyNamed(() => import('./demos/CarouselDemo'), 'CarouselDemo');
+const AutocompleteDemo = lazyNamed(() => import('./demos/AutocompleteDemo'), 'AutocompleteDemo');
+const StackDemo = lazyNamed(() => import('./demos/StackDemo'), 'StackDemo');
+const GridDemo = lazyNamed(() => import('./demos/GridDemo'), 'GridDemo');
+const AlignDemo = lazyNamed(() => import('./demos/AlignDemo'), 'AlignDemo');
+const NumberInputDemo = lazyNamed(() => import('./demos/NumberInputDemo'), 'NumberInputDemo');
+const RichTextEditorDemo = lazyNamed(() => import('./demos/RichTextEditorDemo'), 'RichTextEditorDemo');
 
 interface GroupItem {
   name: string;
@@ -142,37 +170,49 @@ const componentGroups: ComponentGroup[] = [
     label: 'Core',
     items: [
       { name: 'Alert', component: AlertDemo, icon: ShieldAlert },
+      { name: 'Align', component: AlignDemo, icon: AlignHorizontalDistributeCenter },
       { name: 'Avatar', component: AvatarDemo, icon: CircleUser },
+      { name: 'Badge', component: BadgeDemo, icon: Tag },
       { name: 'Button', component: ButtonDemo, icon: MousePointer },
+      { name: 'ChatBubble', component: ChatBubbleDemo, icon: MessageSquare },
       { name: 'Dropdown', component: DropdownDemo, icon: ChevronDown },
+      { name: 'Grid', component: GridDemo, icon: Grid3X3 },
       { name: 'Icon', component: IconDemo, icon: Star },
+      { name: 'Stack', component: StackDemo, icon: Rows4 },
       { name: 'Tooltip', component: TooltipDemo, icon: Info },
     ],
   },
   {
     label: 'Typography',
     items: [
-      { name: 'Text', component: TextDemo, icon: CaseSensitive },
+      { name: 'Code', component: CodeDemo, icon: Braces },
       { name: 'Heading', component: HeadingDemo, icon: HeadingIcon },
       { name: 'Link', component: LinkDemo, icon: ExternalLink },
-      { name: 'Code', component: CodeDemo, icon: Braces },
       { name: 'Prose', component: ProseDemo, icon: FileText },
+      { name: 'Text', component: TextDemo, icon: CaseSensitive },
     ],
   },
   {
     label: 'Form',
     items: [
+      { name: 'Autocomplete', component: AutocompleteDemo, icon: Search },
       { name: 'Checkbox', component: CheckboxDemo, icon: CheckSquare },
-      { name: 'Label', component: LabelDemo, icon: Type },
-      { name: 'RadioGroup', component: RadioGroupDemo, icon: Circle },
-      { name: 'Switch', component: SwitchDemo, icon: ToggleRight },
+      { name: 'ColorInput', component: ColorInputDemo, icon: Palette },
+      { name: 'ColorPicker', component: ColorPickerDemo, icon: Palette },
+      { name: 'DatePicker', component: DatePickerDemo, icon: CalendarRange },
+      { name: 'FileUpload', component: FileUploadDemo, icon: Upload },
       { name: 'FormField', component: FormFieldDemo, icon: Rows3 },
       { name: 'InputRange', component: InputRangeDemo, icon: SlidersHorizontal },
       { name: 'InputText', component: InputTextDemo, icon: TextCursorInput },
+      { name: 'Label', component: LabelDemo, icon: Type },
+      { name: 'NumberInput', component: NumberInputDemo, icon: Hash },
       { name: 'Password', component: PasswordDemo, icon: KeyRound },
-      { name: 'Textarea', component: TextareaDemo, icon: AlignLeft },
+      { name: 'PinInput', component: PinInputDemo, icon: RectangleEllipsis },
+      { name: 'RadioGroup', component: RadioGroupDemo, icon: Circle },
+      { name: 'RichTextEditor', component: RichTextEditorDemo, icon: PenLine },
       { name: 'Select', component: SelectDemo, icon: ListFilter },
-      { name: 'DatePicker', component: DatePickerDemo, icon: CalendarRange },
+      { name: 'Switch', component: SwitchDemo, icon: ToggleRight },
+      { name: 'Textarea', component: TextareaDemo, icon: AlignLeft },
       { name: 'TimeField', component: TimeFieldDemo, icon: Clock },
     ],
   },
@@ -188,14 +228,15 @@ const componentGroups: ComponentGroup[] = [
     items: [
       { name: 'Breadcrumb', component: BreadcrumbDemo, icon: Navigation },
       { name: 'Pagination', component: PaginationDemo, icon: ArrowLeftRight },
+      { name: 'Stepper', component: StepperDemo, icon: ListChecks },
     ],
   },
   {
     label: 'Panel',
     items: [
       { name: 'Accordion', component: AccordionDemo, icon: Layers },
-      { name: 'Collapsible', component: CollapsibleDemo, icon: ChevronsUpDown },
       { name: 'Card', component: CardDemo, icon: SquareStack },
+      { name: 'Collapsible', component: CollapsibleDemo, icon: ChevronsUpDown },
       { name: 'Divider', component: DividerDemo, icon: SeparatorHorizontal },
       { name: 'ScrollArea', component: ScrollAreaDemo, icon: ScrollText },
       { name: 'Sidebar', component: SidebarDemo, icon: PanelLeft },
@@ -221,29 +262,27 @@ const componentGroups: ComponentGroup[] = [
   {
     label: 'Media',
     items: [
+      { name: 'AudioPlayer', component: AudioPlayerDemo, icon: Music },
+      { name: 'Carousel', component: CarouselDemo, icon: ArrowLeftRight },
       { name: 'Image', component: ImageDemo, icon: ImageIcon },
       { name: 'ImageGroup', component: ImageGroupDemo, icon: LayoutGrid },
+      { name: 'VideoPlayer', component: VideoPlayerDemo, icon: Film },
     ],
   },
   {
     label: 'Data',
     items: [
       { name: 'Table', component: TableDemo, icon: Table2 },
+      { name: 'Timeline', component: TimelineDemo, icon: GitBranch },
     ],
   },
   {
     label: 'Loading',
     items: [
       { name: 'EmptyState', component: EmptyStateDemo, icon: Ghost },
-      { name: 'ProgressBar', component: ProgressBarDemo, icon: Loader },
+      { name: 'Loader', component: LoaderDemo, icon: LoaderCircle },
+      { name: 'ProgressBar', component: ProgressBarDemo, icon: LoaderIcon },
       { name: 'Skeleton', component: SkeletonDemo, icon: BoxSelect },
-      { name: 'Spinner', component: SpinnerDemo, icon: LoaderCircle },
-    ],
-  },
-  {
-    label: 'Misc',
-    items: [
-      { name: 'Badge', component: BadgeDemo, icon: Tag },
     ],
   },
 ];
@@ -314,6 +353,7 @@ function AppContent({ activeComponent, onComponentChange, theme, onToggleTheme }
   };
 
   return (
+    <Tooltip.Provider delayDuration={0}>
     <div className="app">
       {isMobile && (
         <div className="mobile-header">
@@ -326,7 +366,6 @@ function AppContent({ activeComponent, onComponentChange, theme, onToggleTheme }
         </div>
       )}
 
-      <Tooltip.Provider delayDuration={0}>
         <Sidebar.Root style={{ position: 'sticky', top: 0, height: '100vh' }}>
           <Sidebar.Header collapsedChildren={null}>
             <AnimatedLogo />
@@ -383,16 +422,16 @@ function AppContent({ activeComponent, onComponentChange, theme, onToggleTheme }
 
           <Sidebar.Rail />
         </Sidebar.Root>
-      </Tooltip.Provider>
 
       <main className="main-content">
         <div className="demo-container">
-          <Suspense fallback={<div className="demo-loading"><Spinner size="sm" /></div>}>
+          <Suspense fallback={<div className="demo-loading"><Loader size="sm" /> Loading...</div>}>
             {ActiveDemo && <ActiveDemo />}
           </Suspense>
         </div>
       </main>
     </div>
+    </Tooltip.Provider>
   );
 }
 

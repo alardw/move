@@ -1,0 +1,119 @@
+/*
+ * PlayerSettingsMenu
+ * YouTube-style two-level settings popover for media players.
+ * Portaled — component tokens from .root are NOT available. Use direct values.
+ */
+
+.menu {
+  background: rgba(0, 0, 0, 0.92) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  padding: 4px 0 !important;
+  min-width: 180px !important;
+  max-width: none !important;
+  color: #fff !important;
+  overflow: hidden;
+}
+
+/* Category row (main view) */
+.categoryRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.categoryRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.categoryLabel {
+  flex: 1;
+}
+
+.categoryValue {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+}
+
+.categoryChevron {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* Non-clickable indicator row (single option) */
+.indicatorRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: default;
+  gap: 8px;
+}
+
+/* Sub-view header (back button) */
+.backRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 4px;
+}
+
+.backRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.backChevron {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.backLabel {
+  font-weight: 500;
+}
+
+/* Option row (sub-view) */
+.optionRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px 12px;
+  border: none;
+  background: none;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.optionRow:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.optionRow[data-active='true'] {
+  background: var(--move-primary, #3b82f6);
+  color: #fff;
+}

@@ -20,19 +20,19 @@ export const Prose = withMoveComponent<'root', ProseProps, HTMLDivElement>({
   defaults: { size: 'base' },
   moveProps: ['size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-size={props.size}
           >
             {props.children}

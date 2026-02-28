@@ -209,6 +209,7 @@ export function RadioGroupDemo() {
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size variant.' },
           { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", description: 'Layout orientation of the radio items.' },
           { name: 'loop', type: 'boolean', description: 'Whether keyboard navigation loops from last to first item.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -217,6 +218,7 @@ export function RadioGroupDemo() {
         properties={[
           { name: 'value', type: 'string', description: 'The unique value of this radio item.' },
           { name: 'disabled', type: 'boolean', description: 'Whether this individual radio item is disabled.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: item, indicator, dot.' },
         ]}
       />
     </DocPage.Root>

@@ -222,6 +222,13 @@ export function CalendarDemo() {
         ]}
       />
 
+      <DocPage.ApiSection
+        title="Calendar.Nav"
+        properties={[
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: prevButton, nextButton.' },
+        ]}
+      />
+
     </DocPage.Root>
   );
 }

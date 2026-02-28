@@ -142,6 +142,7 @@ export function TooltipDemo() {
         title="Tooltip.Trigger"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Merge props onto the child element instead of rendering a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
 
@@ -153,6 +154,7 @@ export function TooltipDemo() {
           { name: 'align', type: "'start' | 'center' | 'end'", description: 'Alignment along the side.' },
           { name: 'alignOffset', type: 'number', description: 'Offset in pixels from the aligned edge.' },
           { name: 'animate', type: 'LayerAnimate | false', description: 'Animates Tooltip.Content (directional slide, scale, and opacity on enter).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the content element.' },
         ]}
       />
 
@@ -170,6 +172,7 @@ export function TooltipDemo() {
         properties={[
           { name: 'width', type: 'number', description: 'Width of the arrow in pixels.' },
           { name: 'height', type: 'number', description: 'Height of the arrow in pixels.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the arrow element.' },
         ]}
       />
     </DocPage.Root>

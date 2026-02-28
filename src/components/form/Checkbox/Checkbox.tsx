@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
 import { useToggleAnimation } from '../../../animation/hooks';
 import type { IndicatorAnimate } from '../../../animation/types';
@@ -44,7 +44,7 @@ export interface CheckboxProps extends Record<string, unknown> {
   /** Required for form validation */
   required?: boolean;
   /** Pass-through slot props */
-  pt?: PassThrough<CheckboxSlots>;
+  sp?: SlotPropsMap<CheckboxSlots>;
 }
 
 // =============================================================================
@@ -81,7 +81,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
   moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'size', 'disabled', 'invalid', 'name', 'value', 'required'],
   subComponents: { Group: CheckboxGroup },
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       className,
       style,
@@ -142,13 +142,13 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const indicatorPt = ptm('indicator');
-        const iconPt = ptm('icon');
+        const rootSp = sp('root');
+        const indicatorSp = sp('indicator');
+        const iconSp = sp('icon');
 
-        const { className: rootPtClass, style: rootPtStyle, ...rootPtRest } = rootPt as Record<string, unknown>;
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
         const dataState = checkbox.indeterminate
           ? 'indeterminate'
@@ -166,7 +166,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
           >
             <button
               {...attrs}
-              {...rootPtRest}
+              {...rootSpRest}
               ref={mergedRef}
               type="button"
               role="checkbox"
@@ -175,21 +175,21 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
               {...(size && size !== 'md' ? { 'data-size': size } : {})}
               {...(invalid ? { 'data-invalid': '' } : {})}
               disabled={disabled}
-              className={cx('root', className, rootPtClass as string | undefined)}
-              style={{ ...style, ...(rootPtStyle as React.CSSProperties) }}
+              className={cx('root', className, rootSpClass as string | undefined)}
+              style={{ ...style, ...(rootSpStyle as React.CSSProperties) }}
               onClick={handleClick}
               onKeyDown={handleKeyDown}
             >
               <span
-                {...indPtRest}
+                {...indSpRest}
                 ref={toggleAnim.indicatorRef as React.RefObject<HTMLSpanElement>}
-                className={cx('indicator', indPtClass as string | undefined)}
-                style={indPtStyle as React.CSSProperties}
+                className={cx('indicator', indSpClass as string | undefined)}
+                style={indSpStyle as React.CSSProperties}
               >
                 <span
-                  {...iconPtRest}
-                  className={cx('icon', iconPtClass as string | undefined)}
-                  style={iconPtStyle as React.CSSProperties}
+                  {...iconSpRest}
+                  className={cx('icon', iconSpClass as string | undefined)}
+                  style={iconSpStyle as React.CSSProperties}
                 >
                   {resolvedIcon || (
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">

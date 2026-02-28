@@ -11,4 +11,6 @@ export type {
   SelectGroupProps,
   SelectLabelProps,
   SelectSeparatorProps,
+  SelectTriggerSize,
+  SelectTriggerVariant,
 } from './Select';

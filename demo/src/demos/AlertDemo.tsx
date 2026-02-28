@@ -95,6 +95,22 @@ function CustomIconExample() {
   );
 }
 
+function SizesExample() {
+  return (
+    <Stack gap="md" style={{ width: '100%' }}>
+      <Alert size="sm" variant="info" title="Small alert">
+        Compact size for less prominent messages.
+      </Alert>
+      <Alert size="md" variant="info" title="Medium alert">
+        Default size for most use cases.
+      </Alert>
+      <Alert size="lg" variant="info" title="Large alert">
+        Spacious size for important messages.
+      </Alert>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -165,6 +181,21 @@ const examples: Example[] = [
   You can hide the icon entirely.
 </Alert>`,
   },
+  {
+    id: 'sizes',
+    name: 'Sizes',
+    description: 'Control the alert density',
+    component: <SizesExample />,
+    code: `<Alert size="sm" variant="info" title="Small alert">
+  Compact size for less prominent messages.
+</Alert>
+<Alert size="md" variant="info" title="Medium alert">
+  Default size for most use cases.
+</Alert>
+<Alert size="lg" variant="info" title="Large alert">
+  Spacious size for important messages.
+</Alert>`,
+  },
 ];
 
 export function AlertDemo() {
@@ -189,7 +220,8 @@ export function AlertDemo() {
           { name: 'onClose', type: '() => void', description: 'Called when the close button is clicked.' },
           { name: 'className', type: 'string', description: 'Additional CSS class.' },
           { name: 'style', type: 'CSSProperties', description: 'Inline styles.' },
-          { name: 'pt', type: 'PassThrough', description: 'Pass-through props for inner slots: root, icon, content, title, description, close.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, icon, content, title, description, close.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Padding and font size density.' },
         ]}
       />
     </DocPage.Root>

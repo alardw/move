@@ -156,6 +156,7 @@ export function ButtonDemo() {
           { name: 'elevation', type: 'ElevationLevel', description: 'Applies a shadow to the button.' },
           { name: 'asChild', type: 'boolean', default: 'false', description: 'Merge props onto the child element instead of rendering a button.' },
           { name: 'type', type: 'string', default: "'button'", description: 'HTML button type attribute.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 

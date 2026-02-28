@@ -83,6 +83,35 @@ function ActionsExample() {
 }
 
 // ============================================================================
+// Sizes
+// ============================================================================
+
+function SizesExample() {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--move-spacing-lg)' }}>
+      <Card.Root size="sm" style={{ maxWidth: 400 }}>
+        <Card.Header>
+          <Card.Title>Small</Card.Title>
+          <Card.Description>Compact padding for dense layouts.</Card.Description>
+        </Card.Header>
+      </Card.Root>
+      <Card.Root size="md" style={{ maxWidth: 400 }}>
+        <Card.Header>
+          <Card.Title>Medium</Card.Title>
+          <Card.Description>Default padding for most use cases.</Card.Description>
+        </Card.Header>
+      </Card.Root>
+      <Card.Root size="lg" style={{ maxWidth: 400 }}>
+        <Card.Header>
+          <Card.Title>Large</Card.Title>
+          <Card.Description>Spacious padding for prominent content.</Card.Description>
+        </Card.Header>
+      </Card.Root>
+    </div>
+  );
+}
+
+// ============================================================================
 // Examples
 // ============================================================================
 
@@ -159,6 +188,21 @@ const examples: Example[] = [
   </Card.Footer>
 </Card.Root>`,
   },
+  {
+    id: 'sizes',
+    name: 'Sizes',
+    description: 'Control the padding density',
+    component: <SizesExample />,
+    code: `<Card.Root size="sm">
+  <Card.Header>
+    <Card.Title>Small</Card.Title>
+    <Card.Description>Compact padding.</Card.Description>
+  </Card.Header>
+</Card.Root>
+
+<Card.Root size="md">...</Card.Root>
+<Card.Root size="lg">...</Card.Root>`,
+  },
 ];
 
 export function CardDemo() {
@@ -176,6 +220,8 @@ export function CardDemo() {
         title="Card.Root"
         properties={[
           { name: 'variant', type: "'default' | 'elevated' | 'ghost'", default: "'default'", description: 'Visual style of the card.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Padding density of the card.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

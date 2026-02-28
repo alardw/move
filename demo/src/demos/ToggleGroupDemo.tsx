@@ -268,6 +268,7 @@ export function ToggleGroupDemo() {
           { name: 'loop', type: 'boolean', description: 'Whether keyboard navigation loops from last to first item.' },
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of all items in the group.' },
           { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", description: 'Visual style variant for all items.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, indicator.' },
         ]}
       />
 
@@ -277,6 +278,7 @@ export function ToggleGroupDemo() {
           { name: 'value', type: 'string', description: 'The unique value for this item.' },
           { name: 'disabled', type: 'boolean', description: 'Whether this item is disabled.' },
           { name: 'animate', type: 'ElementAnimate | false', description: 'Animates ToggleGroup.Item (hover scale, press scale).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the item element.' },
         ]}
       />
     </DocPage.Root>

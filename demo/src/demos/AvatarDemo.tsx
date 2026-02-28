@@ -173,6 +173,7 @@ export function AvatarDemo() {
         properties={[
           { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Size of the avatar.' },
           { name: 'animate', type: 'false', description: 'Set to false to disable the entrance animation.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -182,6 +183,7 @@ export function AvatarDemo() {
           { name: 'src', type: 'string', description: 'URL of the avatar image.' },
           { name: 'alt', type: 'string', description: 'Accessible alt text for the image.' },
           { name: 'onLoadingStatusChange', type: "(status: 'idle' | 'loading' | 'loaded' | 'error') => void", description: 'Called when the image loading status changes.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the image element.' },
         ]}
       />
 
@@ -189,6 +191,7 @@ export function AvatarDemo() {
         title="Avatar.Fallback"
         properties={[
           { name: 'delayMs', type: 'number', description: 'Milliseconds to wait before showing the fallback, giving the image time to load.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the fallback element.' },
         ]}
       />
 
@@ -196,6 +199,7 @@ export function AvatarDemo() {
         title="Avatar.Group"
         properties={[
           { name: 'staggerDelay', type: 'number', default: '50', description: 'Delay in milliseconds between each avatar entrance animation.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the group element.' },
         ]}
       />
     </DocPage.Root>

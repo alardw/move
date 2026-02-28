@@ -20,6 +20,71 @@
   padding-bottom: var(--move-space-2);
 }
 
+/* Sizes */
+.list[data-size='sm'] .trigger {
+  padding: var(--move-space-1) var(--move-space-3);
+  font-size: var(--move-text-xs);
+}
+
+.list[data-size='md'] .trigger,
+.list:not([data-size]) .trigger {
+  /* default */
+}
+
+.list[data-size='lg'] .trigger {
+  padding: var(--move-space-3) var(--move-space-5);
+  font-size: var(--move-text-base);
+}
+
+/* Variants — underline (default) */
+.list[data-variant='underline'],
+.list:not([data-variant]) {
+  /* default — border-bottom line with indicator */
+}
+
+/* Variants — pills */
+.list[data-variant='pills'] {
+  border-bottom: none;
+  gap: var(--move-space-1);
+  padding-bottom: 0;
+}
+
+.list[data-variant='pills'] .trigger {
+  border-radius: var(--move-rounded-md);
+}
+
+.list[data-variant='pills'] .trigger[data-state='active'] {
+  background-color: var(--move-primary);
+  color: var(--move-primary-fg);
+}
+
+/* Variants — outline */
+.list[data-variant='outline'] {
+  border-bottom: none;
+  gap: 0;
+  padding-bottom: 0;
+}
+
+.list[data-variant='outline'] .trigger {
+  border: 1px solid var(--move-tabs-border);
+  margin-left: -1px;
+}
+
+.list[data-variant='outline'] .trigger:first-child {
+  margin-left: 0;
+  border-radius: var(--move-rounded-md) 0 0 var(--move-rounded-md);
+}
+
+.list[data-variant='outline'] .trigger:last-of-type {
+  border-radius: 0 var(--move-rounded-md) var(--move-rounded-md) 0;
+}
+
+.list[data-variant='outline'] .trigger[data-state='active'] {
+  background-color: var(--move-bg-muted);
+  border-color: var(--move-primary);
+  z-index: 1;
+}
+
 /* Trigger */
 .trigger {
   display: inline-flex;

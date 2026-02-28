@@ -64,38 +64,12 @@ function VariantIcon({ variant }: { variant: string }) {
 // Animation configs per position (using Move Animation types + spring presets)
 // =============================================================================
 
-function getEnterSlide(position: ToastPosition): Animation {
-  switch (position) {
-    case 'top-right':
-    case 'bottom-right':
-      return { x: [400, 0], opacity: [0, 1], scale: [0.92, 1], easing: 'snappy' };
-    case 'top-left':
-    case 'bottom-left':
-      return { x: [-400, 0], opacity: [0, 1], scale: [0.92, 1], easing: 'snappy' };
-    case 'top-center':
-      return { y: [-80, 0], opacity: [0, 1], scale: [0.92, 1], easing: 'snappy' };
-    case 'bottom-center':
-      return { y: [80, 0], opacity: [0, 1], scale: [0.92, 1], easing: 'snappy' };
-    default:
-      return { x: [400, 0], opacity: [0, 1], scale: [0.92, 1], easing: 'snappy' };
-  }
+function getEnterSlide(_position: ToastPosition): Animation {
+  return { y: [24, 0], opacity: [0, 1], scale: [0.95, 1], easing: 'quick' };
 }
 
-function getExitSlide(position: ToastPosition): Animation {
-  switch (position) {
-    case 'top-right':
-    case 'bottom-right':
-      return { x: [0, 400], opacity: [1, 0], easing: 'outQuart', duration: 400 };
-    case 'top-left':
-    case 'bottom-left':
-      return { x: [0, -400], opacity: [1, 0], easing: 'outQuart', duration: 400 };
-    case 'top-center':
-      return { y: [0, -80], opacity: [1, 0], easing: 'outQuart', duration: 400 };
-    case 'bottom-center':
-      return { y: [0, 80], opacity: [1, 0], easing: 'outQuart', duration: 400 };
-    default:
-      return { x: [0, 400], opacity: [1, 0], easing: 'outQuart', duration: 400 };
-  }
+function getExitSlide(_position: ToastPosition): Animation {
+  return { y: [0, 24], opacity: [1, 0], scale: [1, 0.95], easing: 'outQuart', duration: 300 };
 }
 
 const heightExpand: Animation = { easing: 'stiff' };
@@ -161,7 +135,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Exit: slide out → collapse height → safeToRemove
+  // Exit: fade out + collapse height in parallel → safeToRemove
   React.useEffect(() => {
     if (isPresent || hasAnimatedExit.current) return;
     hasAnimatedExit.current = true;
@@ -175,16 +149,18 @@ function ToastItem({ toast }: { toast: ToastState }) {
     }
 
     const exitAnim = animateConfig?.exit;
+    const currentHeight = wrapper.offsetHeight;
 
-    // Slide out
-    runAnimation(item, exitAnim ?? getExitSlide(toast.position)).then(() => {
-      // Collapse wrapper height, then remove
-      const currentHeight = wrapper.offsetHeight;
-      runAnimation(wrapper, {
-        height: [currentHeight, 0],
-        easing: 'stiff',
-      }).then(() => safeToRemove());
+    // Run item fade/slide and wrapper collapse in parallel
+    const itemDone = runAnimation(item, exitAnim ?? getExitSlide(toast.position));
+    const wrapperDone = runAnimation(wrapper, {
+      height: [currentHeight, 0],
+      paddingBottom: [getComputedStyle(wrapper).paddingBottom, 0],
+      easing: 'outQuart',
+      duration: 300,
     });
+
+    Promise.all([itemDone, wrapperDone]).then(() => safeToRemove());
   }, [isPresent, safeToRemove, toast.position, animateConfig]);
 
   // Auto-dismiss: countdown on progress bar, pause on hover
@@ -287,7 +263,7 @@ const ToastViewport = withMoveComponent<
   styles,
   slots: ['viewport'] as const,
   moveProps: ['position', 'animate', 'closeLabel'] as const,
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const allToasts = useToastStore();
 
     // Resolve animate prop:
@@ -311,18 +287,18 @@ const ToastViewport = withMoveComponent<
 
     return {
       render() {
-        const viewportPt = ptm('viewport');
-        const { className: ptClass, style: ptStyle, ...ptRest } = viewportPt as Record<string, unknown>;
+        const viewportSp = sp('viewport');
+        const { className: spClass, style: spStyle, ...spRest } = viewportSp as Record<string, unknown>;
 
         return createPortal(
           <ToastCloseLabelContext.Provider value={(props.closeLabel as string) ?? 'Close notification'}>
           <ToastAnimateContext.Provider value={animateConfig}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
-              className={cx('viewport', props.className as string | undefined, ptClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(ptStyle as React.CSSProperties) }}
+              className={cx('viewport', props.className as string | undefined, spClass as string | undefined)}
+              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
             >
               {POSITIONS.map((pos) => (
                 <div

@@ -27,7 +27,7 @@ function FullExample() {
       view={view}
       onViewChange={setView}
       events={sampleEvents}
-      onEventClick={(event, e) => alert(`Clicked: ${event.title}`)}
+      onEventClick={(event) => alert(`Clicked: ${event.title}`)}
     >
       <CalendarView.Header>
         <CalendarView.Nav />

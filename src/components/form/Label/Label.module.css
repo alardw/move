@@ -23,6 +23,20 @@
   opacity: var(--move-disabled-opacity);
 }
 
+/* Sizes */
+.root[data-size='sm'] {
+  --move-label-font-size: var(--move-size-xs);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  --move-label-font-size: var(--move-size-sm);
+}
+
+.root[data-size='lg'] {
+  --move-label-font-size: var(--move-size-base);
+}
+
 .asterisk {
   color: var(--move-primary);
   font-size: 1.1em;

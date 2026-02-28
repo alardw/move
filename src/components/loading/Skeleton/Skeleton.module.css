@@ -24,6 +24,22 @@
   background-color: var(--move-skeleton-bg);
 }
 
+/* Wave shimmer — --move-skeleton-wave-x is animated on .root by anime.js
+   and inherited by all descendant shapes via CSS custom property inheritance. */
+.root[data-animation='wave'] .circle,
+.root[data-animation='wave'] .rectangle,
+.root[data-animation='wave'] .rounded,
+.root[data-animation='wave'] .line {
+  background: linear-gradient(
+    110deg,
+    var(--move-skeleton-bg) 30%,
+    var(--move-skeleton-wave-highlight, var(--move-bg-subtle)) 50%,
+    var(--move-skeleton-bg) 70%
+  );
+  background-size: 400% 100%;
+  background-position-x: var(--move-skeleton-wave-x, 100%);
+}
+
 /* Circle */
 .circle {
   border-radius: var(--move-rounded-full);

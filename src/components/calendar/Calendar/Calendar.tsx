@@ -102,11 +102,11 @@ CalendarRoot.displayName = 'Calendar.Root';
 
 export interface CalendarNavProps {
   className?: string;
-  pt?: import('../_shared/CalendarNav').CalendarNavPt;
+  sp?: import('../_shared/CalendarNav').CalendarNavSp;
 }
 
-const CalendarNavComponent: React.FC<CalendarNavProps> = ({ className, pt }) => {
-  return <CalendarNav className={className} pt={pt} />;
+const CalendarNavComponent: React.FC<CalendarNavProps> = ({ className, sp }) => {
+  return <CalendarNav className={className} sp={sp} />;
 };
 CalendarNavComponent.displayName = 'Calendar.Nav';
 

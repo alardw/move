@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import {
   toAnimeParams,
   prefersReducedMotion,
@@ -51,7 +51,7 @@ export interface TableRootProps extends Record<string, unknown> {
   hoverable?: boolean;
   stickyHeader?: boolean;
   animate?: ListAnimate | false;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const defaultRootAnimation: ListAnimate = {
@@ -69,7 +69,7 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
   defaults: { variant: 'default', size: 'md' },
   moveProps: ['variant', 'size', 'bordered', 'hoverable', 'stickyHeader', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       className,
       style,
@@ -100,16 +100,16 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <TableContext.Provider value={contextValue}>
             <table
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
-              className={cx('root', className, ptClass as string | undefined)}
-              style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-variant={variant}
               data-size={size}
               data-bordered={bordered ? '' : undefined}
@@ -133,7 +133,7 @@ export interface TableHeaderProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const TableHeader = withMoveComponent<'header', TableHeaderProps, HTMLTableSectionElement>({
@@ -141,18 +141,18 @@ const TableHeader = withMoveComponent<'header', TableHeaderProps, HTMLTableSecti
   styles,
   slots: ['header'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const headerPt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <thead
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </thead>
@@ -170,7 +170,7 @@ export interface TableBodyProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'body'>;
+  sp?: SlotPropsMap<'body'>;
 }
 
 const TableBody = withMoveComponent<'body', TableBodyProps, HTMLTableSectionElement>({
@@ -178,18 +178,18 @@ const TableBody = withMoveComponent<'body', TableBodyProps, HTMLTableSectionElem
   styles,
   slots: ['body'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const bodyPt = ptm('body');
-        const { className: ptClass, style: ptStyle, ...ptRest } = bodyPt as Record<string, unknown>;
+        const bodySp = sp('body');
+        const { className: spClass, style: spStyle, ...spRest } = bodySp as Record<string, unknown>;
         return (
           <tbody
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('body', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('body', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </tbody>
@@ -207,7 +207,7 @@ export interface TableFooterProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footer'>;
+  sp?: SlotPropsMap<'footer'>;
 }
 
 const TableFooter = withMoveComponent<'footer', TableFooterProps, HTMLTableSectionElement>({
@@ -215,18 +215,18 @@ const TableFooter = withMoveComponent<'footer', TableFooterProps, HTMLTableSecti
   styles,
   slots: ['footer'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const footerPt = ptm('footer');
-        const { className: ptClass, style: ptStyle, ...ptRest } = footerPt as Record<string, unknown>;
+        const footerSp = sp('footer');
+        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
         return (
           <tfoot
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footer', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footer', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </tfoot>
@@ -246,7 +246,7 @@ export interface TableRowProps extends Record<string, unknown> {
   children?: React.ReactNode;
   selected?: boolean;
   animate?: ListItemAnimate | false;
-  pt?: PassThrough<'row'>;
+  sp?: SlotPropsMap<'row'>;
 }
 
 const defaultRowAnimation: ListItemAnimate = {};
@@ -259,7 +259,7 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
   slots: ['row'] as const,
   moveProps: ['selected', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, selected, animate: animateProp } = props;
     const tableContext = useTableContext();
     const indexRef = React.useRef<number | null>(null);
@@ -330,15 +330,15 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
 
     return {
       render() {
-        const rowPt = ptm('row');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rowPt as Record<string, unknown>;
+        const rowSp = sp('row');
+        const { className: spClass, style: spStyle, ...spRest } = rowSp as Record<string, unknown>;
         return (
           <tr
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('row', className, ptClass as string | undefined)}
-            style={{ ...initialStyles, ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('row', className, spClass as string | undefined)}
+            style={{ ...initialStyles, ...style, ...(spStyle as React.CSSProperties) }}
             data-state={selected ? 'selected' : undefined}
             onMouseEnter={config.hover ? handleMouseEnter : undefined}
             onMouseLeave={config.hover ? handleMouseLeave : undefined}
@@ -362,7 +362,7 @@ export interface TableHeadProps extends Record<string, unknown> {
   sortable?: boolean;
   sorted?: 'asc' | 'desc' | false;
   onSort?: () => void;
-  pt?: PassThrough<'head'>;
+  sp?: SlotPropsMap<'head'>;
 }
 
 const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement>({
@@ -371,7 +371,7 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
   slots: ['head'] as const,
   moveProps: ['sortable', 'sorted', 'onSort'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, sortable, sorted, onSort } = props;
 
     const handleClick = () => {
@@ -387,15 +387,15 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
 
     return {
       render() {
-        const headPt = ptm('head');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headPt as Record<string, unknown>;
+        const headSp = sp('head');
+        const { className: spClass, style: spStyle, ...spRest } = headSp as Record<string, unknown>;
         return (
           <th
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('head', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('head', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-sortable={sortable ? '' : undefined}
             data-sorted={sorted || undefined}
             aria-sort={sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined}
@@ -427,7 +427,7 @@ export interface TableCellProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'cell'>;
+  sp?: SlotPropsMap<'cell'>;
 }
 
 const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement>({
@@ -435,18 +435,18 @@ const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement
   styles,
   slots: ['cell'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const cellPt = ptm('cell');
-        const { className: ptClass, style: ptStyle, ...ptRest } = cellPt as Record<string, unknown>;
+        const cellSp = sp('cell');
+        const { className: spClass, style: spStyle, ...spRest } = cellSp as Record<string, unknown>;
         return (
           <td
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('cell', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('cell', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </td>
@@ -464,7 +464,7 @@ export interface TableCaptionProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'caption'>;
+  sp?: SlotPropsMap<'caption'>;
 }
 
 const TableCaption = withMoveComponent<'caption', TableCaptionProps, HTMLTableCaptionElement>({
@@ -472,18 +472,18 @@ const TableCaption = withMoveComponent<'caption', TableCaptionProps, HTMLTableCa
   styles,
   slots: ['caption'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const captionPt = ptm('caption');
-        const { className: ptClass, style: ptStyle, ...ptRest } = captionPt as Record<string, unknown>;
+        const captionSp = sp('caption');
+        const { className: spClass, style: spStyle, ...spRest } = captionSp as Record<string, unknown>;
         return (
           <caption
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('caption', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('caption', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </caption>

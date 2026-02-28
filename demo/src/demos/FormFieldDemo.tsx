@@ -202,6 +202,7 @@ export function FormFieldDemo() {
         title="FormField.Root"
         properties={[
           { name: 'labelWidth', type: 'string', description: 'Width of the label column (e.g. "8rem").' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -209,6 +210,7 @@ export function FormFieldDemo() {
         title="FormField.Description"
         properties={[
           { name: 'error', type: 'boolean', description: 'Whether the description displays as an error message.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the description element.' },
         ]}
       />
     </DocPage.Root>

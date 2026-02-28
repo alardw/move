@@ -80,7 +80,7 @@ function VariousIconsExample() {
 
 function CustomStylingExample() {
   return (
-    <MoveProvider pt={{ EmptyState: { root: { style: { backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
+    <MoveProvider slotProps={{ EmptyState: { root: { style: { backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
       <Stack gap="md" direction="column">
         <EmptyState
           icon="package"
@@ -91,7 +91,7 @@ function CustomStylingExample() {
           icon="folder-open"
           title="Folder is empty"
           description="Drop files here or create new ones."
-          pt={{ root: { style: { backgroundColor: 'var(--move-primary-subtle)' } } }}
+          sp={{ root: { style: { backgroundColor: 'var(--move-primary-subtle)' } } }}
         />
       </Stack>
     </MoveProvider>
@@ -161,13 +161,13 @@ const examples: Example[] = [
     name: 'Custom Styling',
     description: 'Tweak styles globally or per instance',
     component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{ EmptyState: { root: { style: { backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
+    code: `<MoveProvider slotProps={{ EmptyState: { root: { style: { backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
   <EmptyState icon="package" title="No orders" description="Your order history will show up here." />
   <EmptyState
     icon="folder-open"
     title="Folder is empty"
     description="Drop files here or create new ones."
-    pt={{ root: { style: { backgroundColor: 'var(--move-primary-subtle)' } } }}
+    sp={{ root: { style: { backgroundColor: 'var(--move-primary-subtle)' } } }}
   />
 </MoveProvider>`,
   },

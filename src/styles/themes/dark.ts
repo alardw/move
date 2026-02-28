@@ -64,8 +64,8 @@ export const darkTheme: Theme = {
     '--move-error-fg': 'var(--move-black)',
 
     // Info
-    '--move-info': 'var(--move-blue-600)',
-    '--move-info-hover': 'var(--move-blue-500)',
+    '--move-info': 'var(--move-blue-500)',
+    '--move-info-hover': 'var(--move-blue-400)',
     '--move-info-subtle': 'var(--move-blue-950)',
     '--move-info-fg': 'var(--move-white)',
 

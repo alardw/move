@@ -147,13 +147,8 @@ function DatePickerTimeExample() {
 function CustomStylingExample() {
   return (
     <Stack direction="column" gap="xl">
-      <DemoSample label="Pass-through">
-        <TimeField
-          defaultValue="10:30"
-          pt={{
-            root: { style: { borderColor: 'var(--move-primary)', borderWidth: 2 } },
-          } as any}
-        />
+      <DemoSample label="Slot props">
+        <TimeField defaultValue="10:30" />
       </DemoSample>
       <DemoSample label="Invalid">
         <TimeField defaultValue="10:30" invalid />
@@ -243,10 +238,10 @@ const examples: Example[] = [
   {
     id: 'custom-styling',
     name: 'Custom Styling',
-    description: 'Pass-through props, invalid state, and disabled state.',
+    description: 'Slot props, invalid state, and disabled state.',
     component: <CustomStylingExample />,
-    code: `{/* Pass-through */}
-<TimeField defaultValue="10:30" pt={{ root: { style: { borderColor: 'var(--move-primary)' } } }} />
+    code: `{/* Slot props */}
+<TimeField defaultValue="10:30" sp={{ root: { style: { borderColor: 'var(--move-primary)' } } }} />
 
 {/* Invalid */}
 <TimeField defaultValue="10:30" invalid />
@@ -289,6 +284,7 @@ export function TimeFieldDemo() {
         title="TimeField.Segment"
         properties={[
           { name: 'segment', type: "'hour' | 'minute' | 'second'", description: 'Which segment this renders.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the segment element.' },
         ]}
       />
 
@@ -296,6 +292,7 @@ export function TimeFieldDemo() {
         title="TimeField.DropdownColumn"
         properties={[
           { name: 'segment', type: "'hour' | 'minute' | 'second' | 'period'", description: 'Which column this controls.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the dropdownColumn element.' },
         ]}
       />
     </DocPage.Root>

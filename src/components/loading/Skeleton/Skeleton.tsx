@@ -1,51 +1,121 @@
 'use client';
 
 import * as React from 'react';
+import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import { prefersReducedMotion } from '../../../animation';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Skeleton.module.css';
 
 // ============================================================================
-// Context (reserved for future animation config)
+// Types
 // ============================================================================
 
-interface SkeletonContextValue {}
+export type SkeletonAnimation = 'pulse' | 'wave' | false;
 
-const SkeletonContext = React.createContext<SkeletonContextValue | null>(null);
+// ============================================================================
+// Context
+// ============================================================================
+
+interface SkeletonContextValue {
+  animation: SkeletonAnimation;
+}
+
+const SkeletonContext = React.createContext<SkeletonContextValue>({ animation: 'pulse' });
+
+// ============================================================================
+// useSkeletonAnimation — attaches looping animation to a shape element
+// ============================================================================
+
+function useSkeletonPulse(ref: React.RefObject<HTMLElement | null>) {
+  const { animation } = React.useContext(SkeletonContext);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || animation !== 'pulse' || prefersReducedMotion()) return;
+
+    const anim = animate(el, {
+      opacity: [1, 0.4, 1],
+      duration: 1500,
+      ease: 'inOutQuad',
+      loop: true,
+    });
+    return () => { anim.pause(); };
+  }, [ref, animation]);
+}
 
 // ============================================================================
 // Root
 // ============================================================================
 
-export interface SkeletonRootProps {
+export interface SkeletonRootProps extends Record<string, unknown> {
   children?: React.ReactNode;
   loading?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
+  animation?: SkeletonAnimation;
+  sp?: SlotPropsMap<'root'>;
 }
 
-const SkeletonRoot: React.FC<SkeletonRootProps> = ({
-  children,
-  loading = true,
-  className,
-  style,
-}) => {
-  if (!loading) return null;
+const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement>({
+  name: 'SkeletonRoot',
+  styles,
+  slots: ['root'] as const,
+  defaults: { loading: true, animation: 'pulse' as SkeletonAnimation },
+  moveProps: ['loading', 'animation'],
 
-  return (
-    <SkeletonContext.Provider value={{}}>
-      <div
-        className={[styles.root, className].filter(Boolean).join(' ')}
-        style={style}
-        aria-busy
-        aria-live="polite"
-      >
-        {children}
-      </div>
-    </SkeletonContext.Provider>
-  );
-};
-SkeletonRoot.displayName = 'Skeleton.Root';
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const animation = props.animation as SkeletonAnimation;
+    const ctxValue = React.useMemo(() => ({ animation }), [animation]);
+
+    // Wave: animate a CSS custom property on the root, inherited by all shape descendants.
+    // background-position-x goes from 100% → 0%, sweeping the highlight left-to-right.
+    // The gradient is 400% wide so the highlight is fully off-screen at both endpoints.
+    React.useEffect(() => {
+      const el = internalRef.current;
+      if (!el || animation !== 'wave' || prefersReducedMotion()) return;
+
+      const proxy = { v: 100 };
+      const anim = animate(proxy, {
+        v: [100, 0],
+        duration: 1800,
+        ease: 'inOutSine',
+        loop: true,
+        onRender: () => {
+          el.style.setProperty('--move-skeleton-wave-x', `${proxy.v}%`);
+        },
+      });
+      return () => { anim.pause(); };
+    }, [animation, internalRef]);
+
+    return {
+      render() {
+        if (!props.loading) return null;
+
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+
+        return (
+          <SkeletonContext.Provider value={ctxValue}>
+            <div
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              className={cx('root', spClass as string | undefined)}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
+              aria-busy
+              aria-live="polite"
+              data-animation={animation || undefined}
+            >
+              {props.children}
+            </div>
+          </SkeletonContext.Provider>
+        );
+      },
+    };
+  },
+});
 
 // ============================================================================
 // Circle
@@ -55,7 +125,7 @@ export interface SkeletonCircleProps extends Record<string, unknown> {
   size?: number | string;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'circle'>;
+  sp?: SlotPropsMap<'circle'>;
 }
 
 const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivElement>({
@@ -65,25 +135,27 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
   defaults: { size: 40 },
   moveProps: ['size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    useSkeletonPulse(internalRef);
+
     return {
       render() {
-        const circlePt = ptm('circle');
-        const { className: ptClass, style: ptStyle, ...ptRest } = circlePt as Record<string, unknown>;
+        const circleSp = sp('circle');
+        const { className: spClass, style: spStyle, ...spRest } = circleSp as Record<string, unknown>;
 
         const s = typeof props.size === 'number' ? `${props.size}px` : props.size;
 
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('circle', props.className, ptClass as string | undefined)}
+            className={cx('circle', props.className, spClass as string | undefined)}
             style={{
               width: s,
               height: s,
               ...props.style,
-              ...(ptStyle as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
             }}
           />
         );
@@ -101,7 +173,7 @@ export interface SkeletonRectangleProps extends Record<string, unknown> {
   height?: number | string;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'rectangle'>;
+  sp?: SlotPropsMap<'rectangle'>;
 }
 
 const SkeletonRectangle = withMoveComponent<'rectangle', SkeletonRectangleProps, HTMLDivElement>({
@@ -111,11 +183,13 @@ const SkeletonRectangle = withMoveComponent<'rectangle', SkeletonRectangleProps,
   defaults: { width: '100%', height: '1rem' },
   moveProps: ['width', 'height'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    useSkeletonPulse(internalRef);
+
     return {
       render() {
-        const rectPt = ptm('rectangle');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rectPt as Record<string, unknown>;
+        const rectSp = sp('rectangle');
+        const { className: spClass, style: spStyle, ...spRest } = rectSp as Record<string, unknown>;
 
         const w = typeof props.width === 'number' ? `${props.width}px` : props.width;
         const h = typeof props.height === 'number' ? `${props.height}px` : props.height;
@@ -123,14 +197,14 @@ const SkeletonRectangle = withMoveComponent<'rectangle', SkeletonRectangleProps,
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('rectangle', props.className, ptClass as string | undefined)}
+            className={cx('rectangle', props.className, spClass as string | undefined)}
             style={{
               width: w,
               height: h,
               ...props.style,
-              ...(ptStyle as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
             }}
           />
         );
@@ -149,7 +223,7 @@ export interface SkeletonRoundedProps extends Record<string, unknown> {
   radius?: string;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'rounded'>;
+  sp?: SlotPropsMap<'rounded'>;
 }
 
 const SkeletonRounded = withMoveComponent<'rounded', SkeletonRoundedProps, HTMLDivElement>({
@@ -159,11 +233,13 @@ const SkeletonRounded = withMoveComponent<'rounded', SkeletonRoundedProps, HTMLD
   defaults: { width: '100%', height: '1rem', radius: 'var(--move-skeleton-radius)' },
   moveProps: ['width', 'height', 'radius'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    useSkeletonPulse(internalRef);
+
     return {
       render() {
-        const roundedPt = ptm('rounded');
-        const { className: ptClass, style: ptStyle, ...ptRest } = roundedPt as Record<string, unknown>;
+        const roundedSp = sp('rounded');
+        const { className: spClass, style: spStyle, ...spRest } = roundedSp as Record<string, unknown>;
 
         const w = typeof props.width === 'number' ? `${props.width}px` : props.width;
         const h = typeof props.height === 'number' ? `${props.height}px` : props.height;
@@ -171,15 +247,15 @@ const SkeletonRounded = withMoveComponent<'rounded', SkeletonRoundedProps, HTMLD
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('rounded', props.className, ptClass as string | undefined)}
+            className={cx('rounded', props.className, spClass as string | undefined)}
             style={{
               width: w,
               height: h,
               borderRadius: props.radius as string,
               ...props.style,
-              ...(ptStyle as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
             }}
           />
         );
@@ -199,7 +275,7 @@ export interface SkeletonTextProps extends Record<string, unknown> {
   lastLineWidth?: string;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'text' | 'line'>;
+  sp?: SlotPropsMap<'text' | 'line'>;
 }
 
 const SkeletonText = withMoveComponent<'text' | 'line', SkeletonTextProps, HTMLDivElement>({
@@ -214,13 +290,15 @@ const SkeletonText = withMoveComponent<'text' | 'line', SkeletonTextProps, HTMLD
   },
   moveProps: ['lines', 'spacing', 'lineHeight', 'lastLineWidth'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    useSkeletonPulse(internalRef);
+
     return {
       render() {
-        const textPt = ptm('text');
-        const { className: ptClass, style: ptStyle, ...ptRest } = textPt as Record<string, unknown>;
-        const linePt = ptm('line');
-        const { className: linePtClass, style: linePtStyle, ...linePtRest } = linePt as Record<string, unknown>;
+        const textSp = sp('text');
+        const { className: spClass, style: spStyle, ...spRest } = textSp as Record<string, unknown>;
+        const lineSp = sp('line');
+        const { className: lineSpClass, style: lineSpStyle, ...lineSpRest } = lineSp as Record<string, unknown>;
 
         const count = props.lines as number;
         const lineElements = Array.from({ length: count }, (_, i) => {
@@ -228,12 +306,12 @@ const SkeletonText = withMoveComponent<'text' | 'line', SkeletonTextProps, HTMLD
           return (
             <div
               key={i}
-              {...linePtRest}
-              className={cx('line', linePtClass as string | undefined)}
+              {...lineSpRest}
+              className={cx('line', lineSpClass as string | undefined)}
               style={{
                 width: isLast ? (props.lastLineWidth as string) : '100%',
                 height: props.lineHeight as string,
-                ...(linePtStyle as React.CSSProperties),
+                ...(lineSpStyle as React.CSSProperties),
               }}
             />
           );
@@ -242,13 +320,13 @@ const SkeletonText = withMoveComponent<'text' | 'line', SkeletonTextProps, HTMLD
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('text', props.className, ptClass as string | undefined)}
+            className={cx('text', props.className, spClass as string | undefined)}
             style={{
               gap: props.spacing as string,
               ...props.style,
-              ...(ptStyle as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
             }}
           >
             {lineElements}

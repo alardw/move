@@ -60,7 +60,7 @@ export function toAnimeParams(
 ): Parameters<typeof animeAnimate>[1] {
   const { easing: animationEasing, duration, delay, ...properties } = animation;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+   
   const result: Record<string, any> = {};
   let hasPerPropertyEasings = false;
 
@@ -196,11 +196,13 @@ export function getInitialStyles(animation: Animation): React.CSSProperties {
   if ('opacity' in styles) {
     cssStyles.opacity = styles.opacity as number;
   }
-  if ('scale' in styles || 'x' in styles || 'y' in styles || 'rotate' in styles) {
+  if ('scale' in styles || 'x' in styles || 'y' in styles || 'rotate' in styles || 'translateX' in styles || 'translateY' in styles) {
     const transforms: string[] = [];
     if ('scale' in styles) transforms.push(`scale(${styles.scale})`);
     if ('x' in styles) transforms.push(`translateX(${styles.x}px)`);
     if ('y' in styles) transforms.push(`translateY(${styles.y}px)`);
+    if ('translateX' in styles) transforms.push(`translateX(${styles.translateX}px)`);
+    if ('translateY' in styles) transforms.push(`translateY(${styles.translateY}px)`);
     if ('rotate' in styles) transforms.push(`rotate(${styles.rotate}deg)`);
     cssStyles.transform = transforms.join(' ');
   }

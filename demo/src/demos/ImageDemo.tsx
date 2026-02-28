@@ -1,4 +1,4 @@
-import { Image, Button, MoveProvider } from 'move';
+import { Image, Button, Heading, MoveProvider } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack } from '../components';
 
@@ -40,11 +40,11 @@ function FitExample() {
       </div>
       <div>
         <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>contain</p>
-        <Image src={SAMPLE_PORTRAIT} alt="Contain" width={160} height={120} fit="contain" radius="md" style={{ backgroundColor: 'var(--move-bg-subtle)' }} />
+        <Image src={SAMPLE_PORTRAIT} alt="Contain" width={160} height={120} fit="contain" radius="md" />
       </div>
       <div>
         <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>scale-down</p>
-        <Image src={SAMPLE_PORTRAIT} alt="Scale down" width={160} height={120} fit="scale-down" radius="md" style={{ backgroundColor: 'var(--move-bg-subtle)' }} />
+        <Image src={SAMPLE_PORTRAIT} alt="Scale down" width={160} height={120} fit="scale-down" radius="md" />
       </div>
     </Stack>
   );
@@ -117,9 +117,52 @@ function ActionExample() {
   );
 }
 
+function PositionExample() {
+  return (
+    <Stack gap="md" wrap>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>center (default)</p>
+        <Image src={SAMPLE_PORTRAIT} alt="Center" width={160} height={120} fit="cover" radius="md" position="center" />
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>top</p>
+        <Image src={SAMPLE_PORTRAIT} alt="Top" width={160} height={120} fit="cover" radius="md" position="top" />
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>bottom</p>
+        <Image src={SAMPLE_PORTRAIT} alt="Bottom" width={160} height={120} fit="cover" radius="md" position="bottom" />
+      </div>
+    </Stack>
+  );
+}
+
+function ResponsiveSourcesExample() {
+  return (
+    <Stack gap="md">
+      <p style={{ color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>
+        Drag the resize handle to see different sources load. Check DevTools Network tab.
+      </p>
+      <div style={{ width: '100%', maxWidth: 800, resize: 'horizontal', overflow: 'auto', border: '1px dashed var(--move-border-base)', padding: 8 }}>
+        <Image
+          src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&fit=crop"
+          sources={[
+            { src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400&fit=crop', width: 400 },
+            { src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&fit=crop', width: 800 },
+            { src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1200&fit=crop', width: 1200 },
+          ]}
+          alt="Responsive mountain landscape"
+          width="100%"
+          aspectRatio="16/9"
+          radius="md"
+        />
+      </div>
+    </Stack>
+  );
+}
+
 function CustomStylingExample() {
   return (
-    <MoveProvider pt={{ Image: { root: { style: { border: '2px solid var(--move-border-base)' } } } }}>
+    <MoveProvider slotProps={{ Image: { root: { style: { border: '2px solid var(--move-border-base)' } } } }}>
       <Stack gap="md">
         <Image src={SAMPLE} alt="Global styled" width={200} height={140} radius="md" />
         <Image
@@ -128,7 +171,7 @@ function CustomStylingExample() {
           width={200}
           height={140}
           radius="md"
-          pt={{ root: { style: { border: '2px solid var(--move-primary)', boxShadow: 'var(--move-shadow-elevated)' } } }}
+          sp={{ root: { style: { border: '2px solid var(--move-primary)', boxShadow: 'var(--move-shadow-elevated)' } } }}
         />
       </Stack>
     </MoveProvider>
@@ -192,6 +235,33 @@ const examples: Example[] = [
 </Image>`,
   },
   {
+    id: 'position',
+    name: 'Position',
+    description: 'Control the focal point when the image is cropped',
+    component: <PositionExample />,
+    code: `<Image src="..." alt="Center" width={160} height={120} fit="cover" position="center" />
+<Image src="..." alt="Top" width={160} height={120} fit="cover" position="top" />
+<Image src="..." alt="Bottom" width={160} height={120} fit="cover" position="bottom" />`,
+  },
+  {
+    id: 'responsive-sources',
+    name: 'Responsive Sources',
+    description: 'Container-aware image source selection based on available width',
+    component: <ResponsiveSourcesExample />,
+    code: `<Image
+  src="/photo-sm.jpg"
+  sources={[
+    { src: '/photo-sm.jpg', width: 400 },
+    { src: '/photo-md.jpg', width: 800 },
+    { src: '/photo-lg.jpg', width: 1200 },
+  ]}
+  alt="Responsive photo"
+  width="100%"
+  aspectRatio="16/9"
+  radius="md"
+/>`,
+  },
+  {
     id: 'action',
     name: 'Action Overlay',
     description: 'Hover to reveal a link or button',
@@ -222,7 +292,7 @@ const examples: Example[] = [
     name: 'Custom Styling',
     description: 'Tweak styles globally or per instance',
     component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{ Image: { root: { style: { border: '2px solid var(--move-border-base)' } } } }}>
+    code: `<MoveProvider slotProps={{ Image: { root: { style: { border: '2px solid var(--move-border-base)' } } } }}>
   <Image src="..." alt="Global styled" width={200} height={140} radius="md" />
   <Image
     src="..."
@@ -230,7 +300,7 @@ const examples: Example[] = [
     width={200}
     height={140}
     radius="md"
-    pt={{ root: { style: { border: '2px solid var(--move-primary)' } } }}
+    sp={{ root: { style: { border: '2px solid var(--move-primary)' } } }}
   />
 </MoveProvider>`,
   },
@@ -244,6 +314,29 @@ export function ImageDemo() {
         description="A smarter image with fit, radius, and built-in fallback."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Image"
+        properties={[
+          { name: 'src', type: 'string', description: 'Image source URL. Used as SSR fallback when sources is provided.' },
+          { name: 'sources', type: 'ImageSource[]', description: 'Responsive image variants. The component picks the best source based on container width and device pixel ratio.' },
+          { name: 'alt', type: 'string', description: 'Alternative text for accessibility.' },
+          { name: 'fallbackSrc', type: 'string', description: 'Fallback image URL shown when the primary source fails to load.' },
+          { name: 'fit', type: "'cover' | 'contain' | 'fill' | 'none' | 'scale-down'", default: "'cover'", description: 'How the image fills its container (object-fit).' },
+          { name: 'position', type: "'center' | 'top' | 'bottom' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right'", default: "'center'", description: 'Focal point when the image is cropped (object-position).' },
+          { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", default: "'none'", description: 'Border radius of the image container.' },
+          { name: 'aspectRatio', type: 'string', description: 'CSS aspect ratio (e.g. "16/9", "1/1").' },
+          { name: 'width', type: 'string | number', description: 'Width of the image container.' },
+          { name: 'height', type: 'string | number', description: 'Height of the image container.' },
+          { name: 'loading', type: "'lazy' | 'eager'", description: 'Browser loading strategy.' },
+          { name: 'action', type: 'ReactNode', description: 'Overlay content shown on hover.' },
+          { name: 'onLoad', type: 'ReactEventHandler', description: 'Called when the image loads successfully.' },
+          { name: 'onError', type: 'ReactEventHandler', description: 'Called when the image fails to load.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for root, img, fallback, and action elements.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

@@ -254,6 +254,7 @@ export function BreadcrumbDemo() {
           { name: 'itemsBeforeCollapse', type: 'number', default: '1', description: 'Number of items to show before the ellipsis.' },
           { name: 'itemsAfterCollapse', type: 'number', default: '1', description: 'Number of items to show after the ellipsis.' },
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size variant affecting font size and spacing.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, list.' },
         ]}
       />
 
@@ -261,6 +262,7 @@ export function BreadcrumbDemo() {
         title="Breadcrumb.Link"
         properties={[
           { name: 'asChild', type: 'boolean', default: 'false', description: 'Merge link styles onto the child element for router link composition.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the link element.' },
         ]}
       />
     </DocPage.Root>

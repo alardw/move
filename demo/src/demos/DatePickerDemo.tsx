@@ -317,7 +317,7 @@ export function DatePickerDemo() {
       <DocPage.ApiSection
         title="Calendar.Nav"
         properties={[
-          { name: 'pt', type: '{ prevButton, nextButton }', description: 'Passthrough props for the prev/next buttons. Use children to replace the icons.' },
+          { name: 'sp', type: '{ prevButton, nextButton }', description: 'Slot props for the prev/next buttons. Use children to replace the icons.' },
           { name: 'className', type: 'string', description: 'Additional CSS class.' },
         ]}
       />

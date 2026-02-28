@@ -316,6 +316,7 @@ export function SidebarDemo() {
           title="Sidebar.Root"
           properties={[
             { name: 'side', type: "'left' | 'right'", default: "'left'", description: 'Which side of the layout the sidebar appears on.' },
+            { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
           ]}
         />
 
@@ -323,6 +324,7 @@ export function SidebarDemo() {
           title="Sidebar.Header"
           properties={[
             { name: 'collapsedChildren', type: 'ReactNode', description: 'Content shown when the sidebar is collapsed.' },
+            { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the header element.' },
           ]}
         />
 
@@ -335,6 +337,7 @@ export function SidebarDemo() {
             { name: 'disabled', type: 'boolean', description: 'Prevents interaction with the item.' },
             { name: 'asChild', type: 'boolean', description: 'Merge props onto the child element instead of rendering a button.' },
             { name: 'tooltip', type: 'ReactNode', description: 'Tooltip shown when the sidebar is collapsed.' },
+            { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: item, itemIcon, itemLabel, itemBadge.' },
           ]}
         />
 
@@ -342,6 +345,7 @@ export function SidebarDemo() {
           title="Sidebar.Trigger"
           properties={[
             { name: 'asChild', type: 'boolean', description: 'Merge props onto the child element instead of rendering a button.' },
+            { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
           ]}
         />
       </DocPage.Root>

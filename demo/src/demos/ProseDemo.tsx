@@ -7,6 +7,7 @@ function UsageExample() {
     <Stack direction="column" gap="xl">
       <DemoSample label="Rich text">
         <Prose>
+          <h1>Move UI Library</h1>
           <h2>Getting Started</h2>
           <p>
             Move is an animated UI component library built with React. It provides a{' '}
@@ -111,6 +112,7 @@ const examples: Example[] = [
     code: `import { Prose } from 'move';
 
 <Prose>
+  <h1>Move UI Library</h1>
   <h2>Getting Started</h2>
   <p>
     Move is an animated UI component library built with React.
@@ -171,6 +173,7 @@ export function ProseDemo() {
         title="Prose"
         properties={[
           { name: 'size', type: "'sm' | 'base' | 'lg'", default: "'base'", description: 'Base font size for the prose content.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { Icon } from '../../core/Icon';
 import styles from './Breadcrumb.module.css';
 
@@ -38,7 +38,7 @@ export interface BreadcrumbRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'root' | 'list'>;
+  sp?: SlotPropsMap<'root' | 'list'>;
 }
 
 const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, HTMLElement>({
@@ -48,7 +48,7 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
   defaults: { size: 'md', itemsBeforeCollapse: 1, itemsAfterCollapse: 1 },
   moveProps: ['separator', 'maxItems', 'itemsBeforeCollapse', 'itemsAfterCollapse', 'size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       className,
       style,
@@ -66,10 +66,10 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const listPt = ptm('list');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const { className: listPtClass, style: listPtStyle, ...listPtRest } = listPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const listSp = sp('list');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const { className: listSpClass, style: listSpStyle, ...listSpRest } = listSp as Record<string, unknown>;
 
         // Collect Item children for separator injection & collapsing
         const items = React.Children.toArray(children);
@@ -103,17 +103,17 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
           <BreadcrumbContext.Provider value={contextValue}>
             <nav
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
               aria-label="Breadcrumb"
-              className={cx('root', className, ptClass as string | undefined)}
-              style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-size={size}
             >
               <ol
-                {...listPtRest}
-                className={cx('list', listPtClass as string | undefined)}
-                style={listPtStyle as React.CSSProperties}
+                {...listSpRest}
+                className={cx('list', listSpClass as string | undefined)}
+                style={listSpStyle as React.CSSProperties}
               >
                 {withSeparators}
               </ol>
@@ -133,7 +133,7 @@ export interface BreadcrumbItemProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'item'>;
+  sp?: SlotPropsMap<'item'>;
 }
 
 const BreadcrumbItem = withMoveComponent<'item', BreadcrumbItemProps, HTMLLIElement>({
@@ -141,18 +141,18 @@ const BreadcrumbItem = withMoveComponent<'item', BreadcrumbItemProps, HTMLLIElem
   styles,
   slots: ['item'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const itemPt = ptm('item');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
         return (
           <li
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('item', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('item', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </li>
@@ -171,7 +171,7 @@ export interface BreadcrumbLinkProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'link'>;
+  sp?: SlotPropsMap<'link'>;
 }
 
 const BreadcrumbLink = withMoveComponent<'link', BreadcrumbLinkProps, HTMLAnchorElement>({
@@ -181,21 +181,21 @@ const BreadcrumbLink = withMoveComponent<'link', BreadcrumbLinkProps, HTMLAnchor
   defaults: { asChild: false },
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const linkPt = ptm('link');
-        const { className: ptClass, style: ptStyle, ...ptRest } = linkPt as Record<string, unknown>;
+        const linkSp = sp('link');
+        const { className: spClass, style: spStyle, ...spRest } = linkSp as Record<string, unknown>;
 
         const Comp = props.asChild ? Slot.Root : 'a';
 
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('link', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('link', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </Comp>
@@ -213,7 +213,7 @@ export interface BreadcrumbPageProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'page'>;
+  sp?: SlotPropsMap<'page'>;
 }
 
 const BreadcrumbPage = withMoveComponent<'page', BreadcrumbPageProps, HTMLSpanElement>({
@@ -221,21 +221,21 @@ const BreadcrumbPage = withMoveComponent<'page', BreadcrumbPageProps, HTMLSpanEl
   styles,
   slots: ['page'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pagePt = ptm('page');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pagePt as Record<string, unknown>;
+        const pageSp = sp('page');
+        const { className: spClass, style: spStyle, ...spRest } = pageSp as Record<string, unknown>;
         return (
           <span
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             role="link"
             aria-current="page"
             aria-disabled="true"
-            className={cx('page', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('page', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </span>
@@ -253,7 +253,7 @@ export interface BreadcrumbSeparatorProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'separator'>;
+  sp?: SlotPropsMap<'separator'>;
 }
 
 const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorProps, HTMLLIElement>({
@@ -261,22 +261,22 @@ const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorPr
   styles,
   slots: ['separator'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const context = useBreadcrumbContext();
 
     return {
       render() {
-        const sepPt = ptm('separator');
-        const { className: ptClass, style: ptStyle, ...ptRest } = sepPt as Record<string, unknown>;
+        const sepSp = sp('separator');
+        const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
         return (
           <li
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             role="presentation"
             aria-hidden="true"
-            className={cx('separator', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('separator', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children ?? context.separator}
           </li>
@@ -294,7 +294,7 @@ export interface BreadcrumbEllipsisProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'ellipsis'>;
+  sp?: SlotPropsMap<'ellipsis'>;
 }
 
 const BreadcrumbEllipsis = withMoveComponent<'ellipsis', BreadcrumbEllipsisProps, HTMLLIElement>({
@@ -302,19 +302,19 @@ const BreadcrumbEllipsis = withMoveComponent<'ellipsis', BreadcrumbEllipsisProps
   styles,
   slots: ['ellipsis'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const ellipsisPt = ptm('ellipsis');
-        const { className: ptClass, style: ptStyle, ...ptRest } = ellipsisPt as Record<string, unknown>;
+        const ellipsisSp = sp('ellipsis');
+        const { className: spClass, style: spStyle, ...spRest } = ellipsisSp as Record<string, unknown>;
         return (
           <li
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             role="presentation"
-            className={cx('ellipsis', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('ellipsis', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children ?? '\u2026'}
           </li>

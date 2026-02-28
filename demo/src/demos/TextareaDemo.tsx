@@ -165,6 +165,7 @@ export function TextareaDemo() {
           { name: 'name', type: 'string', description: 'Name for form submission.' },
           { name: 'required', type: 'boolean', description: 'Whether the textarea is required for form validation.' },
           { name: 'onChange', type: 'ChangeEventHandler<HTMLTextAreaElement>', description: 'Called when the textarea value changes.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, textarea.' },
         ]}
       />
     </DocPage.Root>

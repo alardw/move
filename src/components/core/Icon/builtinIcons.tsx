@@ -51,6 +51,10 @@ function ChevronRight({ width, height }: { width: number | string; height: numbe
   return <Svg width={width} height={height}><path d="m9 18 6-6-6-6" /></Svg>;
 }
 
+function ChevronUp({ width, height }: { width: number | string; height: number | string }) {
+  return <Svg width={width} height={height}><path d="m18 15-6-6-6 6" /></Svg>;
+}
+
 function ChevronDown({ width, height }: { width: number | string; height: number | string }) {
   return <Svg width={width} height={height}><path d="m6 9 6 6 6-6" /></Svg>;
 }
@@ -151,6 +155,117 @@ function CircleX({ width, height }: { width: number | string; height: number | s
   );
 }
 
+function FileIcon({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+      <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+    </Svg>
+  );
+}
+
+function Upload({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="17 8 12 3 7 8" />
+      <line x1="12" x2="12" y1="3" y2="15" />
+    </Svg>
+  );
+}
+
+function Play({ width, height }: { width: number | string; height: number | string }) {
+  return <Svg width={width} height={height}><polygon points="6 3 20 12 6 21 6 3" /></Svg>;
+}
+
+function Pause({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <rect x="14" y="4" width="4" height="16" rx="1" />
+      <rect x="6" y="4" width="4" height="16" rx="1" />
+    </Svg>
+  );
+}
+
+function Volume2({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+      <path d="M16 9a5 5 0 0 1 0 6" />
+      <path d="M19.364 18.364a9 9 0 0 0 0-12.728" />
+    </Svg>
+  );
+}
+
+function VolumeX({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" />
+      <line x1="22" x2="16" y1="9" y2="15" />
+      <line x1="16" x2="22" y1="9" y2="15" />
+    </Svg>
+  );
+}
+
+function Captions({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <rect width="18" height="14" x="3" y="5" rx="2" ry="2" />
+      <path d="M7 15h4M15 15h2M7 11h2M13 11h4" />
+    </Svg>
+  );
+}
+
+function Maximize({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M8 3H5a2 2 0 0 0-2 2v3" />
+      <path d="M21 8V5a2 2 0 0 0-2-2h-3" />
+      <path d="M3 16v3a2 2 0 0 0 2 2h3" />
+      <path d="M16 21h3a2 2 0 0 0 2-2v-3" />
+    </Svg>
+  );
+}
+
+function Minimize({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M8 3v3a2 2 0 0 1-2 2H3" />
+      <path d="M21 8h-3a2 2 0 0 1-2-2V3" />
+      <path d="M3 16h3a2 2 0 0 1 2 2v3" />
+      <path d="M16 21v-3a2 2 0 0 1 2-2h3" />
+    </Svg>
+  );
+}
+
+function Search({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </Svg>
+  );
+}
+
+function Settings({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </Svg>
+  );
+}
+
+function Pipette({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="m2 22 1-1h3l9-9" />
+      <path d="M3 21v-3l9-9" />
+      <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3L15 6" />
+    </Svg>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
@@ -160,6 +275,7 @@ type BuiltinIconComponent = React.ComponentType<{ width: number | string; height
 export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'chevron-left': ChevronLeft,
   'chevron-right': ChevronRight,
+  'chevron-up': ChevronUp,
   'chevron-down': ChevronDown,
   'x': X,
   'check': Check,
@@ -171,4 +287,16 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'circle-x': CircleX,
   'eye': Eye,
   'eye-off': EyeOff,
+  'file': FileIcon,
+  'upload': Upload,
+  'play': Play,
+  'pause': Pause,
+  'volume-2': Volume2,
+  'volume-x': VolumeX,
+  'captions': Captions,
+  'maximize': Maximize,
+  'minimize': Minimize,
+  'search': Search,
+  'settings': Settings,
+  'pipette': Pipette,
 };

@@ -302,7 +302,7 @@ export function parseDate(text: string, locale: string): Date | null {
   const trimmed = text.trim();
   if (!trimmed) return null;
 
-  const nums = trimmed.split(/[\/\-\.\s]+/).map(Number);
+  const nums = trimmed.split(/[/\-.\s]+/).map(Number);
   if (nums.length !== 3 || nums.some(isNaN)) return null;
 
   const { order } = detectLocaleOrder(locale);

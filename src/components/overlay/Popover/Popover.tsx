@@ -2,11 +2,11 @@
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
-import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
+import type { SlotPropsMap } from '../../../engine/types';
+import { mergeAnimateConfig } from '../../../animation/utils';
+import { usePopupAnimation } from '../../../animation/hooks';
 import type { PopupAnimate } from '../../../animation/types';
 import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import styles from './Popover.module.css';
@@ -114,7 +114,7 @@ export interface PopoverTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const PopoverTrigger = withMoveComponent<'trigger', PopoverTriggerProps, HTMLButtonElement>({
@@ -123,19 +123,19 @@ const PopoverTrigger = withMoveComponent<'trigger', PopoverTriggerProps, HTMLBut
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         return (
           <RadixPopover.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixPopover.Trigger>
@@ -154,7 +154,7 @@ export interface PopoverAnchorProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'anchor'>;
+  sp?: SlotPropsMap<'anchor'>;
 }
 
 const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivElement>({
@@ -163,19 +163,19 @@ const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivEle
   slots: ['anchor'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const anchorPt = ptm('anchor');
-        const { className: ptClass, style: ptStyle, ...ptRest } = anchorPt as Record<string, unknown>;
+        const anchorSp = sp('anchor');
+        const { className: spClass, style: spStyle, ...spRest } = anchorSp as Record<string, unknown>;
         return (
           <RadixPopover.Anchor
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('anchor', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('anchor', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixPopover.Anchor>
@@ -216,7 +216,7 @@ export interface PopoverContentProps extends Record<string, unknown> {
   onInteractOutside?: (e: Event) => void;
   onOpenAutoFocus?: (e: Event) => void;
   onCloseAutoFocus?: (e: Event) => void;
-  pt?: PassThrough<'content'>;
+  sp?: SlotPropsMap<'content'>;
 }
 
 const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDivElement>({
@@ -225,11 +225,15 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
   slots: ['content'] as const,
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
-    const contentRef = React.useRef<HTMLDivElement | null>(null);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animateConfig, closeOnScroll } = usePopoverContext();
-    const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
+
+    const { contentRef } = usePopupAnimation({
+      animate: animateConfig,
+      isClosing,
+      onCloseComplete,
+      animateHeight: false,
+    });
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
@@ -244,103 +248,42 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
       // Listen on all scrollable ancestors (capture on window catches them all)
       window.addEventListener('scroll', handler, true);
       return () => window.removeEventListener('scroll', handler, true);
-    }, [closeOnScroll, close]);
+    }, [closeOnScroll, close, contentRef]);
 
-    // Intercept close events to trigger animation
+    // Intercept close events to trigger animation.
+    // No preventDefault on pointer/interact — allows native events to reach
+    // other triggers (e.g. clicking another Popover while this one is open).
+    // Radix can't close us because Root ignores onOpenChange(false).
     const handlePointerDownOutside = (e: Event) => {
-      e.preventDefault();
       (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
-      close();
+      if (!e.defaultPrevented) close();
     };
 
     const handleEscapeKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault();
       (props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
-      close();
+      if (!e.defaultPrevented) close();
     };
 
     const handleInteractOutside = (e: Event) => {
-      e.preventDefault();
       (props.onInteractOutside as ((e: Event) => void) | undefined)?.(e);
-      close();
     };
-
-    // Animate open on mount
-    React.useLayoutEffect(() => {
-      const el = contentRef.current;
-      if (!el) return;
-
-      if (!animateConfig || prefersReducedMotion()) {
-        el.style.opacity = '1';
-        el.style.transform = 'scale(1)';
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-
-      el.style.opacity = '0';
-      el.style.transform = 'scale(0.5)';
-
-      animRef.current = animate(el, {
-        opacity: 1,
-        scale: 1,
-        ease: 'outQuart',
-        duration: 250,
-        onComplete: () => {
-          if (el) {
-            el.style.removeProperty('opacity');
-            el.style.removeProperty('transform');
-          }
-        },
-      });
-    }, [animateConfig]);
-
-    // When isClosing becomes true, start local animation state
-    React.useEffect(() => {
-      if (isClosing && !isAnimatingOut) {
-        setIsAnimatingOut(true);
-      }
-    }, [isClosing, isAnimatingOut]);
-
-    // Animate close
-    React.useEffect(() => {
-      if (!isAnimatingOut) return;
-
-      const el = contentRef.current;
-      if (!el) return;
-
-      if (!animateConfig || prefersReducedMotion()) {
-        onCloseComplete();
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-
-      animRef.current = animate(el, {
-        opacity: 0,
-        scale: 0.95,
-        ease: 'outQuart',
-        duration: 200,
-        onComplete: () => onCloseComplete(),
-      });
-    }, [isAnimatingOut, onCloseComplete, animateConfig]);
 
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
 
         return (
           <RadixPopover.Content
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedContentRef}
             side={props.side as 'top' | 'right' | 'bottom' | 'left'}
             sideOffset={props.sideOffset as number}
             align={props.align as 'start' | 'center' | 'end'}
             alignOffset={props.alignOffset as number}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
@@ -364,7 +307,7 @@ export interface PopoverArrowProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   width?: number;
   height?: number;
-  pt?: PassThrough<'arrow'>;
+  sp?: SlotPropsMap<'arrow'>;
 }
 
 const PopoverArrow = withMoveComponent<'arrow', PopoverArrowProps, HTMLElement>({
@@ -373,20 +316,20 @@ const PopoverArrow = withMoveComponent<'arrow', PopoverArrowProps, HTMLElement>(
   slots: ['arrow'] as const,
   moveProps: ['width', 'height'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const arrowPt = ptm('arrow');
-        const { className: ptClass, style: ptStyle, ...ptRest } = arrowPt as Record<string, unknown>;
+        const arrowSp = sp('arrow');
+        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
         return (
           <RadixPopover.Arrow
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref as any}
             width={props.width as number}
             height={props.height as number}
-            className={cx('arrow', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('arrow', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -404,7 +347,7 @@ export interface PopoverCloseProps extends Record<string, unknown> {
   children?: React.ReactNode;
   asChild?: boolean;
   closeLabel?: string;
-  pt?: PassThrough<'close'>;
+  sp?: SlotPropsMap<'close'>;
 }
 
 const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonElement>({
@@ -413,7 +356,7 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
   slots: ['close'] as const,
   moveProps: ['asChild', 'closeLabel'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { close } = usePopoverContext();
     const resolvedCloseIcon = useResolvedIcon('x', 14);
 
@@ -424,14 +367,14 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
 
     return {
       render() {
-        const closePt = ptm('close');
-        const { className: ptClass, style: ptStyle, ...ptRest } = closePt as Record<string, unknown>;
+        const closeSp = sp('close');
+        const { className: spClass, style: spStyle, ...spRest } = closeSp as Record<string, unknown>;
 
         if (props.asChild) {
           return (
             <RadixPopover.Close
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
               asChild
               onClick={handleClick}
@@ -444,11 +387,11 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
         return (
           <button
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             type="button"
-            className={cx('close', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('close', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
             aria-label={props.closeLabel ?? 'Close'}
           >

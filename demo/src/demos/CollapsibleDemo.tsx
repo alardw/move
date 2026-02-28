@@ -296,6 +296,7 @@ export function CollapsibleDemo() {
           { name: 'onOpenChange', type: '(open: boolean) => void', description: 'Called when the open state changes.' },
           { name: 'disabled', type: 'boolean', default: 'false', description: 'Prevents the collapsible from being toggled.' },
           { name: 'animate', type: 'ContentAnimate | false', description: 'Animates Collapsible.Content (height expand/collapse) and Collapsible.Icon (rotation).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -303,6 +304,7 @@ export function CollapsibleDemo() {
         title="Collapsible.Trigger"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Merge props onto the child element instead of rendering a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
     </DocPage.Root>

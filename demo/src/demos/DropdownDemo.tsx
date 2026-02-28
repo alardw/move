@@ -299,6 +299,7 @@ export function DropdownDemo() {
         title="Dropdown.Trigger"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Render as the child element instead of a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
 
@@ -310,6 +311,7 @@ export function DropdownDemo() {
           { name: 'onPointerDownOutside', type: '(e: Event) => void', description: 'Called when a pointer down event occurs outside the content.' },
           { name: 'onEscapeKeyDown', type: '(e: KeyboardEvent) => void', description: 'Called when the escape key is pressed.' },
           { name: 'onInteractOutside', type: '(e: Event) => void', description: 'Called when an interaction occurs outside the content.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: content, contentInner.' },
         ]}
       />
 
@@ -318,6 +320,7 @@ export function DropdownDemo() {
         properties={[
           { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
           { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the item element.' },
         ]}
       />
 
@@ -328,6 +331,7 @@ export function DropdownDemo() {
           { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
           { name: 'onCheckedChange', type: '(checked: boolean) => void', description: 'Called when the checked state changes.' },
           { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: checkboxItem, checkboxIndicator, checkboxLabel.' },
         ]}
       />
 
@@ -336,6 +340,7 @@ export function DropdownDemo() {
         properties={[
           { name: 'value', type: 'string', description: 'Controlled value of the selected radio item.' },
           { name: 'onValueChange', type: '(value: string) => void', description: 'Called when the selected value changes.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the radioGroup element.' },
         ]}
       />
 
@@ -345,6 +350,7 @@ export function DropdownDemo() {
           { name: 'value', type: 'string', description: 'The unique value for this radio item.' },
           { name: 'disabled', type: 'boolean', description: 'Whether the item is disabled.' },
           { name: 'onSelect', type: '(e: Event) => void', description: 'Called when the item is selected.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the radioItem element.' },
         ]}
       />
 
@@ -361,6 +367,7 @@ export function DropdownDemo() {
         title="Dropdown.SubTrigger"
         properties={[
           { name: 'disabled', type: 'boolean', description: 'Whether the sub-trigger is disabled.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the subTrigger element.' },
         ]}
       />
 
@@ -368,6 +375,7 @@ export function DropdownDemo() {
         title="Dropdown.SubContent"
         properties={[
           { name: 'sideOffset', type: 'number', description: 'Distance in pixels from the sub-trigger.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the subContent element.' },
         ]}
       />
     </DocPage.Root>

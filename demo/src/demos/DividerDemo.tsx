@@ -58,6 +58,25 @@ function UsageExample() {
   );
 }
 
+function SizesExample() {
+  return (
+    <Stack gap="lg" style={{ width: '100%' }}>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>sm (1px)</p>
+        <Divider size="sm" />
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>md (2px)</p>
+        <Divider size="md" />
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>lg (4px)</p>
+        <Divider size="lg" />
+      </div>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -95,6 +114,15 @@ const examples: Example[] = [
   <span>Right</span>
 </div>`,
   },
+  {
+    id: 'sizes',
+    name: 'Sizes',
+    description: 'Control the line thickness',
+    component: <SizesExample />,
+    code: `<Divider size="sm" />
+<Divider size="md" />
+<Divider size="lg" />`,
+  },
 ];
 
 export function DividerDemo() {
@@ -114,6 +142,8 @@ export function DividerDemo() {
           { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", description: 'Direction of the divider line.' },
           { name: 'type', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", description: 'Border style of the divider.' },
           { name: 'align', type: "'left' | 'center' | 'right' | 'top' | 'bottom'", default: "'center'", description: 'Alignment of the label content within the divider.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'sm'", description: 'Thickness of the divider line.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, content.' },
         ]}
       />
     </DocPage.Root>

@@ -123,6 +123,7 @@ export function LinkDemo() {
           { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'", description: 'Font size of the link.' },
           { name: 'external', type: 'boolean', description: 'Opens the link in a new tab with rel="noopener noreferrer".' },
           { name: 'asChild', type: 'boolean', default: 'false', description: 'Merge link styles onto the child element instead of rendering an anchor.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

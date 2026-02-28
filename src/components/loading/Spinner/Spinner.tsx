@@ -8,9 +8,11 @@ import styles from './Spinner.module.css';
 // =============================================================================
 
 export type SpinnerSize = 'sm' | 'md' | 'lg';
+export type SpinnerVariant = 'default' | 'secondary' | 'current';
 
 export interface SpinnerProps extends Record<string, unknown> {
   size?: SpinnerSize;
+  variant?: SpinnerVariant;
   strokeWidth?: number;
   className?: string;
   style?: React.CSSProperties;
@@ -20,40 +22,41 @@ export const Spinner = withMoveComponent<'root' | 'svg' | 'circle', SpinnerProps
   name: 'Spinner',
   styles,
   slots: ['root', 'svg', 'circle'] as const,
-  defaults: { size: 'md', strokeWidth: 3 },
-  moveProps: ['size', 'strokeWidth'],
+  defaults: { size: 'md', strokeWidth: 3, variant: 'default' },
+  moveProps: ['size', 'strokeWidth', 'variant'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const svgPt = ptm('svg');
-        const { className: svgPtClass, style: svgPtStyle, ...svgPtRest } = svgPt as Record<string, unknown>;
-        const circlePt = ptm('circle');
-        const { className: circlePtClass, style: circlePtStyle, ...circlePtRest } = circlePt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const svgSp = sp('svg');
+        const { className: svgSpClass, style: svgSpStyle, ...svgSpRest } = svgSp as Record<string, unknown>;
+        const circleSp = sp('circle');
+        const { className: circleSpClass, style: circleSpStyle, ...circleSpRest } = circleSp as Record<string, unknown>;
 
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             role="progressbar"
             aria-busy
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-size={props.size}
+            data-variant={props.variant}
           >
             <svg
-              {...(svgPtRest as React.SVGAttributes<SVGSVGElement>)}
-              className={cx('svg', svgPtClass as string | undefined)}
-              style={svgPtStyle as React.CSSProperties}
+              {...(svgSpRest as React.SVGAttributes<SVGSVGElement>)}
+              className={cx('svg', svgSpClass as string | undefined)}
+              style={svgSpStyle as React.CSSProperties}
               viewBox="25 25 50 50"
             >
               <circle
-                {...(circlePtRest as React.SVGAttributes<SVGCircleElement>)}
-                className={cx('circle', circlePtClass as string | undefined)}
-                style={circlePtStyle as React.CSSProperties}
+                {...(circleSpRest as React.SVGAttributes<SVGCircleElement>)}
+                className={cx('circle', circleSpClass as string | undefined)}
+                style={circleSpStyle as React.CSSProperties}
                 cx="50"
                 cy="50"
                 r="20"

@@ -159,6 +159,7 @@ export function ToastDemo() {
         title="Toast.Viewport"
         properties={[
           { name: 'animate', type: 'LayerAnimate | false', description: 'Animates each toast notification (position-dependent slide, opacity, and scale on enter/exit).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the viewport element.' },
         ]}
       />
     </DocPage.Root>

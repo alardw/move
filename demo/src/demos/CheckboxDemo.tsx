@@ -142,6 +142,7 @@ export function CheckboxDemo() {
           { name: 'name', type: 'string', description: 'Name for form submission.' },
           { name: 'value', type: 'string', description: 'Value for form submission.' },
           { name: 'required', type: 'boolean', description: 'Whether the checkbox is required for form validation.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, indicator, icon.' },
         ]}
       />
     </DocPage.Root>

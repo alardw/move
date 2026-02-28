@@ -1,4 +1,4 @@
-import type { SlotProps, PassThrough, CxFn, PtmFn } from './types';
+import type { SlotProps, SlotPropsMap, CxFn, SpFn } from './types';
 
 /**
  * Merge class names (filters falsy values)
@@ -64,16 +64,16 @@ export function createCx<TSlots extends string>(
 }
 
 /**
- * Create a ptm() function that merges global PT + instance PT + local props for a slot
+ * Create an sp() function that merges global + instance slot-props + local props for a slot
  */
-export function createPtm<TSlots extends string>(
-  globalPT?: PassThrough<TSlots>,
-  instancePT?: PassThrough<TSlots>
-): PtmFn<TSlots> {
+export function createSp<TSlots extends string>(
+  globalSP?: SlotPropsMap<TSlots>,
+  instanceSP?: SlotPropsMap<TSlots>
+): SpFn<TSlots> {
   return (slot, localProps?) => {
     return mergeSlotProps(
-      globalPT?.[slot],
-      instancePT?.[slot],
+      globalSP?.[slot],
+      instanceSP?.[slot],
       localProps
     );
   };

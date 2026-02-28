@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Splitter.module.css';
 
 // ============================================================================
@@ -45,7 +45,7 @@ export interface SplitterRootProps extends Record<string, unknown> {
   collapseBelow?: number;
   /** Callback when panel sizes change */
   onResizeEnd?: (sizes: number[]) => void;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement>({
@@ -55,7 +55,7 @@ const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement
   defaults: { layout: 'horizontal', gutterSize: 4 },
   moveProps: ['layout', 'gutterSize', 'collapseBelow', 'onResizeEnd'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const layout = props.layout as 'horizontal' | 'vertical';
     const gutterSize = props.gutterSize as number;
     const collapseBelow = props.collapseBelow as number | undefined;
@@ -122,8 +122,8 @@ const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         // Inject gutters between panels
         const children = React.Children.toArray(props.children);
@@ -146,12 +146,12 @@ const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement
           <SplitterContext.Provider value={contextValue}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={mergedRef}
               data-layout={effectiveLayout}
               data-collapsed={isCollapsed || undefined}
-              className={cx('root', props.className, ptClass as string | undefined)}
-              style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
               {elements}
             </div>
@@ -302,7 +302,7 @@ export interface SplitterPanelProps extends Record<string, unknown> {
   size?: number;
   /** Minimum size as percentage. Default: 5 */
   minSize?: number;
-  pt?: PassThrough<'panel'>;
+  sp?: SlotPropsMap<'panel'>;
 }
 
 const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElement>({
@@ -312,7 +312,7 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
   defaults: { minSize: 5 },
   moveProps: ['size', 'minSize'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { effectiveLayout: layout, isCollapsed, panelSizes, registerPanel } = useSplitterContext();
     const indexRef = React.useRef<number>(-1);
     const panelRef = React.useRef<HTMLDivElement>(null);
@@ -342,8 +342,8 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
 
     return {
       render() {
-        const panelPt = ptm('panel');
-        const { className: ptClass, style: ptStyle, ...ptRest } = panelPt as Record<string, unknown>;
+        const panelSp = sp('panel');
+        const { className: spClass, style: spStyle, ...spRest } = panelSp as Record<string, unknown>;
 
         // When collapsed, panels stack with auto height; otherwise use percentage sizes
         const sizeStyle = isCollapsed
@@ -355,14 +355,14 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             data-layout={layout}
-            className={cx('panel', props.className, ptClass as string | undefined)}
+            className={cx('panel', props.className, spClass as string | undefined)}
             style={{
               ...sizeStyle,
               ...props.style,
-              ...(ptStyle as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
             }}
           >
             {props.children}

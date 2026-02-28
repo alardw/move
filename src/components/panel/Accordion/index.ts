@@ -6,6 +6,8 @@ export type {
   AccordionTriggerProps,
   AccordionContentProps,
   AccordionAnimateConfig,
+  AccordionSize,
+  AccordionVariant,
 } from './Accordion';
 
 export { useAccordion } from './useAccordion';

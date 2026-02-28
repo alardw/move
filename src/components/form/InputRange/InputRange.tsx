@@ -5,7 +5,7 @@ import { Slider } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
 import { useInteractiveAnimate } from '../../../animation';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import type { ElementAnimate } from '../../../animation';
 import { useInputRange } from './useInputRange';
 import type { InputRangeValue } from './useInputRange';
@@ -36,7 +36,7 @@ export interface InputRangeProps extends Record<string, unknown> {
   animate?: ElementAnimate | false;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<InputRangeSlots>;
+  sp?: SlotPropsMap<InputRangeSlots>;
 }
 
 // ============================================================================
@@ -61,7 +61,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
     orientation: 'horizontal',
   },
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { values, setValues } = useInputRange({
       value: props.value as InputRangeValue | undefined,
       defaultValue: props.defaultValue as InputRangeValue | undefined,
@@ -77,20 +77,20 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: rootPtClass, style: rootPtStyle, ...rootPtRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
 
-        const trackPt = ptm('track');
-        const { className: trackPtClass, style: trackPtStyle, ...trackPtRest } = trackPt as Record<string, unknown>;
+        const trackSp = sp('track');
+        const { className: trackSpClass, style: trackSpStyle, ...trackSpRest } = trackSp as Record<string, unknown>;
 
-        const rangePt = ptm('range');
-        const { className: rangePtClass, style: rangePtStyle, ...rangePtRest } = rangePt as Record<string, unknown>;
+        const rangeSp = sp('range');
+        const { className: rangeSpClass, style: rangeSpStyle, ...rangeSpRest } = rangeSp as Record<string, unknown>;
 
-        const thumbPt = ptm('thumb');
-        const { className: thumbPtClass, style: thumbPtStyle, ...thumbPtRest } = thumbPt as Record<string, unknown>;
+        const thumbSp = sp('thumb');
+        const { className: thumbSpClass, style: thumbSpStyle, ...thumbSpRest } = thumbSp as Record<string, unknown>;
 
-        const valuePt = ptm('value');
-        const { className: valuePtClass, style: valuePtStyle, ...valuePtRest } = valuePt as Record<string, unknown>;
+        const valueSp = sp('value');
+        const { className: valueSpClass, style: valueSpStyle, ...valueSpRest } = valueSp as Record<string, unknown>;
 
         const showValue = props.showValue as boolean | undefined;
         const format = (props.formatValue as ((v: number) => string) | undefined) ?? defaultFormatValue;
@@ -100,7 +100,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
         const rootStyle: React.CSSProperties = {
           ...(showValue ? {} : props.style),
           ...(showValue ? {} : props.width ? { width: props.width as React.CSSProperties['width'] } : {}),
-          ...(rootPtStyle as React.CSSProperties),
+          ...(rootSpStyle as React.CSSProperties),
         };
 
         const wrapperStyle: React.CSSProperties | undefined = showValue
@@ -110,13 +110,13 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
             }
           : undefined;
 
-        const valueClassName = cx('value', valuePtClass as string | undefined);
-        const valueStyle = valuePtStyle as React.CSSProperties | undefined;
+        const valueClassName = cx('value', valueSpClass as string | undefined);
+        const valueStyle = valueSpStyle as React.CSSProperties | undefined;
 
         const slider = (
           <Slider.Root
             {...attrs}
-            {...rootPtRest}
+            {...rootSpRest}
             ref={ref}
             value={values}
             onValueChange={setValues}
@@ -128,27 +128,27 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
             name={props.name as string}
             data-size={props.size as string}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
-            className={cx('root', showValue ? undefined : props.className, rootPtClass as string | undefined)}
+            className={cx('root', showValue ? undefined : props.className, rootSpClass as string | undefined)}
             style={rootStyle}
           >
             <Slider.Track
-              {...trackPtRest}
-              className={cx('track', trackPtClass as string | undefined)}
-              style={trackPtStyle as React.CSSProperties}
+              {...trackSpRest}
+              className={cx('track', trackSpClass as string | undefined)}
+              style={trackSpStyle as React.CSSProperties}
             >
               <Slider.Range
-                {...rangePtRest}
-                className={cx('range', rangePtClass as string | undefined)}
-                style={rangePtStyle as React.CSSProperties}
+                {...rangeSpRest}
+                className={cx('range', rangeSpClass as string | undefined)}
+                style={rangeSpStyle as React.CSSProperties}
               />
             </Slider.Track>
             {values.map((_, i) => (
               <Slider.Thumb
                 key={i}
-                {...thumbPtRest}
+                {...thumbSpRest}
                 {...(i === 0 ? { ref: mergedThumbRef } : {})}
-                className={cx('thumb', thumbPtClass as string | undefined)}
-                style={thumbPtStyle as React.CSSProperties}
+                className={cx('thumb', thumbSpClass as string | undefined)}
+                style={thumbSpStyle as React.CSSProperties}
                 {...handlers}
               />
             ))}
@@ -164,12 +164,12 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
             data-orientation={orientation}
           >
             {isRange && (
-              <span {...valuePtRest} className={valueClassName} style={valueStyle}>
+              <span {...valueSpRest} className={valueClassName} style={valueStyle}>
                 {format(values[0])}
               </span>
             )}
             {slider}
-            <span {...valuePtRest} className={valueClassName} style={valueStyle}>
+            <span {...valueSpRest} className={valueClassName} style={valueStyle}>
               {format(values[values.length - 1])}
             </span>
           </div>

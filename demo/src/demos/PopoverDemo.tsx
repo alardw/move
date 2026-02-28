@@ -233,7 +233,7 @@ export function PopoverDemo() {
           { name: 'sideOffset', type: 'number', default: '0', description: 'Distance in pixels from the trigger.' },
           { name: 'align', type: "'start' | 'center' | 'end'", default: "'center'", description: 'Alignment along the trigger edge.' },
           { name: 'alignOffset', type: 'number', default: '0', description: 'Offset along the alignment axis.' },
-          { name: 'pt', type: 'PassThrough', description: 'Style overrides for the content slot.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the content element.' },
         ]}
       />
 
@@ -241,6 +241,7 @@ export function PopoverDemo() {
         title="Popover.Trigger"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Merge props onto the child element instead of rendering a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
 
@@ -249,6 +250,7 @@ export function PopoverDemo() {
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Merge close behavior onto the child element.' },
           { name: 'children', type: 'ReactNode', description: 'Custom close button content. Defaults to an X icon.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the close element.' },
         ]}
       />
     </DocPage.Root>

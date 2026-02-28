@@ -208,6 +208,7 @@ export function InputRangeDemo() {
           { name: 'showValue', type: 'boolean', description: 'Whether to display the current value beside the slider.' },
           { name: 'formatValue', type: '(value: number) => string', description: 'Custom formatter for the displayed value.' },
           { name: 'animate', type: 'ElementAnimate | false', description: 'Animates InputRange thumb (hover scale, press scale).' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, track, range, thumb, value.' },
         ]}
       />
     </DocPage.Root>

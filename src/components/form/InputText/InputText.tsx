@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './InputText.module.css';
 
 export type InputTextVariant = 'outlined' | 'filled';
@@ -34,7 +34,7 @@ export interface InputTextProps extends Record<string, unknown> {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-  pt?: PassThrough<InputTextSlots>;
+  sp?: SlotPropsMap<InputTextSlots>;
 }
 
 export const InputText = withMoveComponent<InputTextSlots, InputTextProps, HTMLInputElement>({
@@ -44,7 +44,7 @@ export const InputText = withMoveComponent<InputTextSlots, InputTextProps, HTMLI
   defaults: { variant: 'outlined', size: 'md', type: 'text' },
   moveProps: ['variant', 'size', 'invalid', 'iconLeft', 'iconRight', 'width'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
 
@@ -55,20 +55,20 @@ export const InputText = withMoveComponent<InputTextSlots, InputTextProps, HTMLI
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const inputPt = ptm('input');
-        const { className: inPtClass, style: inPtStyle, ...inPtRest } = inputPt as Record<string, unknown>;
-        const leftPt = ptm('iconLeft');
-        const { className: leftPtClass, style: leftPtStyle, ...leftPtRest } = leftPt as Record<string, unknown>;
-        const rightPt = ptm('iconRight');
-        const { className: rightPtClass, style: rightPtStyle, ...rightPtRest } = rightPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const inputSp = sp('input');
+        const { className: inSpClass, style: inSpStyle, ...inSpRest } = inputSp as Record<string, unknown>;
+        const leftSp = sp('iconLeft');
+        const { className: leftSpClass, style: leftSpStyle, ...leftSpRest } = leftSp as Record<string, unknown>;
+        const rightSp = sp('iconRight');
+        const { className: rightSpClass, style: rightSpStyle, ...rightSpRest } = rightSp as Record<string, unknown>;
 
         return (
           <div
-            {...ptRest}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(ptStyle as React.CSSProperties) }}
+            {...spRest}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
@@ -78,9 +78,9 @@ export const InputText = withMoveComponent<InputTextSlots, InputTextProps, HTMLI
           >
             {props.iconLeft && (
               <span
-                {...leftPtRest}
-                className={cx('iconLeft', leftPtClass as string | undefined)}
-                style={leftPtStyle as React.CSSProperties}
+                {...leftSpRest}
+                className={cx('iconLeft', leftSpClass as string | undefined)}
+                style={leftSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 {props.iconLeft as React.ReactNode}
@@ -88,17 +88,17 @@ export const InputText = withMoveComponent<InputTextSlots, InputTextProps, HTMLI
             )}
             <input
               {...attrs}
-              {...inPtRest}
+              {...inSpRest}
               ref={mergedRef}
-              className={cx('input', inPtClass as string | undefined)}
-              style={inPtStyle as React.CSSProperties}
+              className={cx('input', inSpClass as string | undefined)}
+              style={inSpStyle as React.CSSProperties}
               disabled={props.disabled as boolean}
             />
             {props.iconRight && (
               <span
-                {...rightPtRest}
-                className={cx('iconRight', rightPtClass as string | undefined)}
-                style={rightPtStyle as React.CSSProperties}
+                {...rightSpRest}
+                className={cx('iconRight', rightSpClass as string | undefined)}
+                style={rightSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 {props.iconRight as React.ReactNode}

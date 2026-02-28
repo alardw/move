@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { Icon } from '../../core/Icon';
 import styles from './EmptyState.module.css';
 
@@ -26,7 +26,7 @@ export interface EmptyStateProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<EmptyStateSlots>;
+  sp?: SlotPropsMap<EmptyStateSlots>;
 }
 
 export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HTMLDivElement>({
@@ -36,23 +36,23 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
   defaults: { size: 'md' },
   moveProps: ['icon', 'title', 'description', 'action', 'size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: rootPtClass, style: rootPtStyle, ...rootPtRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
 
-        const iconPt = ptm('icon');
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const iconSp = sp('icon');
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
-        const titlePt = ptm('title');
-        const { className: titlePtClass, style: titlePtStyle, ...titlePtRest } = titlePt as Record<string, unknown>;
+        const titleSp = sp('title');
+        const { className: titleSpClass, style: titleSpStyle, ...titleSpRest } = titleSp as Record<string, unknown>;
 
-        const descriptionPt = ptm('description');
-        const { className: descPtClass, style: descPtStyle, ...descPtRest } = descriptionPt as Record<string, unknown>;
+        const descriptionSp = sp('description');
+        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descriptionSp as Record<string, unknown>;
 
-        const actionPt = ptm('action');
-        const { className: actionPtClass, style: actionPtStyle, ...actionPtRest } = actionPt as Record<string, unknown>;
+        const actionSp = sp('action');
+        const { className: actionSpClass, style: actionSpStyle, ...actionSpRest } = actionSp as Record<string, unknown>;
 
         const iconName = props.icon as string | undefined;
         const iconSize = props.size === 'sm' ? 32 : props.size === 'lg' ? 56 : 44;
@@ -60,17 +60,17 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
         return (
           <div
             {...attrs}
-            {...rootPtRest}
+            {...rootSpRest}
             ref={ref}
             data-size={props.size}
-            className={cx('root', props.className, rootPtClass as string | undefined)}
-            style={{ ...props.style, ...(rootPtStyle as React.CSSProperties) }}
+            className={cx('root', props.className, rootSpClass as string | undefined)}
+            style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
           >
             {iconName && (
               <span
-                {...iconPtRest}
-                className={cx('icon', iconPtClass as string | undefined)}
-                style={iconPtStyle as React.CSSProperties}
+                {...iconSpRest}
+                className={cx('icon', iconSpClass as string | undefined)}
+                style={iconSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 <Icon name={iconName} size={iconSize} />
@@ -79,9 +79,9 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
 
             {props.title && (
               <div
-                {...titlePtRest}
-                className={cx('title', titlePtClass as string | undefined)}
-                style={titlePtStyle as React.CSSProperties}
+                {...titleSpRest}
+                className={cx('title', titleSpClass as string | undefined)}
+                style={titleSpStyle as React.CSSProperties}
               >
                 {props.title as React.ReactNode}
               </div>
@@ -89,9 +89,9 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
 
             {props.description && (
               <div
-                {...descPtRest}
-                className={cx('description', descPtClass as string | undefined)}
-                style={descPtStyle as React.CSSProperties}
+                {...descSpRest}
+                className={cx('description', descSpClass as string | undefined)}
+                style={descSpStyle as React.CSSProperties}
               >
                 {props.description as React.ReactNode}
               </div>
@@ -99,9 +99,9 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
 
             {props.action && (
               <div
-                {...actionPtRest}
-                className={cx('action', actionPtClass as string | undefined)}
-                style={actionPtStyle as React.CSSProperties}
+                {...actionSpRest}
+                className={cx('action', actionSpClass as string | undefined)}
+                style={actionSpStyle as React.CSSProperties}
               >
                 {props.action as React.ReactNode}
               </div>

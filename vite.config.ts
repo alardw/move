@@ -1,7 +1,36 @@
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import { resolve } from 'path';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
+
+function combineCssPlugin(): Plugin {
+  return {
+    name: 'move-combine-css',
+    apply: 'build',
+    generateBundle(_outputOptions, bundle) {
+      const decoder = new TextDecoder();
+      const combined = Object.values(bundle)
+        .filter((chunk): chunk is { type: 'asset'; fileName: string; source: string | Uint8Array } =>
+          chunk.type === 'asset' && chunk.fileName.endsWith('.css') && chunk.fileName !== 'styles.css',
+        )
+        .map((asset) => {
+          if (typeof asset.source === 'string') return asset.source;
+          return decoder.decode(asset.source);
+        })
+        .join('\n');
+
+      this.emitFile({
+        type: 'asset',
+        fileName: 'styles.css',
+        source: combined,
+      });
+    },
+  };
+}
 
 export default defineConfig({
   plugins: [
@@ -9,35 +38,31 @@ export default defineConfig({
     dts({
       include: ['src'],
       outDir: 'dist',
-      rollupTypes: true,
+      rollupTypes: false
     }),
+    combineCssPlugin(),
   ],
   css: {
     modules: {
       localsConvention: 'camelCase',
-      generateScopedName: 'move-[local]-[hash:base64:5]',
-    },
+      generateScopedName: 'move-[local]-[hash:base64:5]'
+    }
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'Move',
-      formats: ['es', 'cjs'],
-      fileName: (format) => `index.${format === 'es' ? 'mjs' : 'js'}`,
+      entry: resolve(dirname, 'src/index.ts'),
+      formats: ['es']
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime', 'animejs'],
       output: {
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM',
-          'react/jsx-runtime': 'jsxRuntime',
-          animejs: 'anime',
-        },
-        assetFileNames: 'index.[ext]',
-      },
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].mjs',
+        assetFileNames: '[name].[ext]'
+      }
     },
     sourcemap: true,
-    cssCodeSplit: false,
+    cssCodeSplit: true
   },
 });

@@ -2,11 +2,9 @@
 
 import * as React from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
-import { prefersReducedMotion } from '../../../animation';
-import type { Animation } from '../../../animation/types';
+import type { SlotPropsMap } from '../../../engine/types';
+import { useSlidingIndicator } from '../../../animation/hooks';
 import styles from './Tabs.module.css';
 
 // =============================================================================
@@ -23,7 +21,7 @@ export interface TabsRootProps extends Record<string, unknown> {
   orientation?: 'horizontal' | 'vertical';
   dir?: 'ltr' | 'rtl';
   activationMode?: 'automatic' | 'manual';
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
@@ -32,16 +30,16 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
   slots: ['root'] as const,
   moveProps: ['defaultValue', 'value', 'onValueChange', 'orientation', 'dir', 'activationMode'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <RadixTabs.Root
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             defaultValue={props.defaultValue as string | undefined}
             value={props.value as string | undefined}
@@ -49,8 +47,8 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
             orientation={props.orientation as 'horizontal' | 'vertical' | undefined}
             dir={props.dir as 'ltr' | 'rtl' | undefined}
             activationMode={props.activationMode as 'automatic' | 'manual' | undefined}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixTabs.Root>
@@ -64,105 +62,65 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
 // List
 // =============================================================================
 
+export type TabsSize = 'sm' | 'md' | 'lg';
+export type TabsVariant = 'underline' | 'pills' | 'outline';
+
 export interface TabsListProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   loop?: boolean;
-  animate?: Animation | false;
-  pt?: PassThrough<'list'>;
+  size?: TabsSize;
+  variant?: TabsVariant;
+  animate?: false;
+  sp?: SlotPropsMap<'list'>;
 }
 
 const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivElement>({
   name: 'TabsList',
   styles,
   slots: ['list', 'indicator'] as const,
-  moveProps: ['loop', 'animate'],
+  defaults: { size: 'md', variant: 'underline' },
+  moveProps: ['loop', 'size', 'variant', 'animate'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
-    const indicatorRef = React.useRef<HTMLDivElement | null>(null);
-    const isFirstRun = React.useRef(true);
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const variant = props.variant as TabsVariant;
+    const showIndicator = variant === 'underline';
 
-    const updateIndicator = React.useCallback(() => {
-      const list = internalRef.current;
-      const indicator = indicatorRef.current;
-      if (!list || !indicator) return;
-
-      const active = list.querySelector<HTMLElement>('[data-state="active"]');
-      if (!active) {
-        indicator.style.opacity = '0';
-        return;
-      }
-
-      const listRect = list.getBoundingClientRect();
-      const activeRect = active.getBoundingClientRect();
-      const left = activeRect.left - listRect.left + list.scrollLeft;
-      const width = activeRect.width;
-
-      if (isFirstRun.current || prefersReducedMotion()) {
-        isFirstRun.current = false;
-        indicator.style.opacity = '1';
-        indicator.style.transform = `translateX(${left}px)`;
-        indicator.style.width = `${width}px`;
-        return;
-      }
-
-      indicator.style.opacity = '1';
-
-      if (props.animate === false) {
-        indicator.style.transform = `translateX(${left}px)`;
-        indicator.style.width = `${width}px`;
-        return;
-      }
-
-      animate(indicator, {
-        translateX: left,
-        width: width,
-        ease: spring({ mass: 1, stiffness: 500, damping: 30, velocity: 0 }),
-      });
-    }, [internalRef]);
-
-    React.useEffect(() => {
-      const list = internalRef.current;
-      if (!list) return;
-
-      // Initial position
-      updateIndicator();
-
-      // Watch for data-state changes on triggers
-      const observer = new MutationObserver(updateIndicator);
-      observer.observe(list, {
-        attributes: true,
-        attributeFilter: ['data-state'],
-        subtree: true,
-      });
-
-      return () => observer.disconnect();
-    }, [internalRef, updateIndicator]);
+    const { indicatorRef } = useSlidingIndicator({
+      containerRef: internalRef,
+      activeSelector: '[data-state="active"]',
+      track: 'width',
+      disabled: props.animate === false || !showIndicator,
+    });
 
     return {
       render() {
-        const listPt = ptm('list');
-        const { className: ptClass, style: ptStyle, ...ptRest } = listPt as Record<string, unknown>;
-        const indicatorPt = ptm('indicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
+        const listSp = sp('list');
+        const { className: spClass, style: spStyle, ...spRest } = listSp as Record<string, unknown>;
+        const indicatorSp = sp('indicator');
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
 
         return (
           <RadixTabs.List
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             loop={props.loop as boolean | undefined}
-            className={cx('list', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            data-size={props.size}
+            data-variant={variant}
+            className={cx('list', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-            <div
-              {...indPtRest}
-              ref={indicatorRef}
-              className={cx('indicator', indPtClass as string | undefined)}
-              style={indPtStyle as React.CSSProperties}
-            />
+            {showIndicator && (
+              <div
+                {...indSpRest}
+                ref={indicatorRef}
+                className={cx('indicator', indSpClass as string | undefined)}
+                style={indSpStyle as React.CSSProperties}
+              />
+            )}
           </RadixTabs.List>
         );
       },
@@ -180,7 +138,7 @@ export interface TabsTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value: string;
   disabled?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const TabsTrigger = withMoveComponent<'trigger', TabsTriggerProps, HTMLButtonElement>({
@@ -189,21 +147,21 @@ const TabsTrigger = withMoveComponent<'trigger', TabsTriggerProps, HTMLButtonEle
   slots: ['trigger'] as const,
   moveProps: ['value'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
 
         return (
           <RadixTabs.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             value={props.value as string}
             disabled={props.disabled as boolean | undefined}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixTabs.Trigger>
@@ -223,7 +181,7 @@ export interface TabsContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value: string;
   forceMount?: true;
-  pt?: PassThrough<'content'>;
+  sp?: SlotPropsMap<'content'>;
 }
 
 const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElement>({
@@ -232,22 +190,22 @@ const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElemen
   slots: ['content'] as const,
   moveProps: ['value', 'forceMount'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
 
         return (
           <RadixTabs.Content
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             value={props.value as string}
             forceMount={props.forceMount as true | undefined}
             tabIndex={-1}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixTabs.Content>

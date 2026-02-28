@@ -1,0 +1,194 @@
+/*
+ * NumberInput Component
+ * Mirrors InputText token pattern with --move-numberinput-* namespace.
+ */
+
+.root {
+  /* Component tokens */
+  --move-numberinput-bg: var(--move-bg-subtle);
+  --move-numberinput-border: var(--move-border-base);
+  --move-numberinput-border-hover: var(--move-border-emphasis);
+  --move-numberinput-border-focus: var(--move-primary);
+  --move-numberinput-radius: var(--move-rounded-md);
+  --move-numberinput-padding-x: var(--move-spacing-sm);
+  --move-numberinput-padding-y: var(--move-spacing-xs);
+  --move-numberinput-font-size: inherit;
+  --move-numberinput-fg: var(--move-fg-base);
+  --move-numberinput-placeholder: var(--move-fg-muted);
+  --move-numberinput-height: var(--move-control-height-md);
+  --move-numberinput-icon-color: var(--move-fg-muted);
+  --move-numberinput-icon-gap: var(--move-spacing-sm);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-numberinput-icon-gap);
+  width: 100%;
+  height: var(--move-numberinput-height);
+  padding: var(--move-numberinput-padding-y) var(--move-numberinput-padding-x);
+  background-color: var(--move-numberinput-bg);
+  border: 1px solid var(--move-numberinput-border);
+  border-radius: var(--move-numberinput-radius);
+  cursor: text;
+  transition:
+    border-color var(--move-transition-fast) var(--move-ease-default),
+    box-shadow var(--move-transition-fast) var(--move-ease-default);
+}
+
+.root:hover:not([data-disabled]):not([data-invalid]) {
+  border-color: var(--move-numberinput-border-hover);
+}
+
+.root:focus-within {
+  border-color: var(--move-numberinput-border-focus);
+  outline: var(--move-focus-ring);
+  outline-offset: 0px;
+}
+
+/* Input */
+.input {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--move-font-body);
+  font-size: var(--move-numberinput-font-size);
+  color: var(--move-numberinput-fg);
+}
+
+.input::placeholder {
+  color: var(--move-numberinput-placeholder);
+}
+
+/* Left icon */
+.iconLeft {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--move-numberinput-icon-color);
+  pointer-events: none;
+}
+
+/* Controls (stepper buttons) */
+.controls {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-self: stretch;
+  margin: calc(-1 * var(--move-numberinput-padding-y)) calc(-1 * var(--move-numberinput-padding-x)) calc(-1 * var(--move-numberinput-padding-y)) 0;
+  border-left: 1px solid var(--move-numberinput-border);
+  border-radius: 0 calc(var(--move-numberinput-radius) - 1px) calc(var(--move-numberinput-radius) - 1px) 0;
+  overflow: hidden;
+}
+
+.increment,
+.decrement {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0 var(--move-spacing-xs);
+  cursor: pointer;
+  color: var(--move-numberinput-icon-color);
+  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+              color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.increment:hover,
+.decrement:hover {
+  background-color: var(--move-bg-muted);
+  color: var(--move-numberinput-fg);
+}
+
+.increment {
+  border-bottom: 1px solid var(--move-numberinput-border);
+}
+
+.increment:disabled,
+.decrement:disabled {
+  cursor: not-allowed;
+  color: var(--move-numberinput-icon-color);
+}
+
+.increment:disabled:hover,
+.decrement:disabled:hover {
+  background-color: transparent;
+}
+
+/* Sizes */
+.root[data-size='sm'] {
+  --move-numberinput-height: var(--move-control-height-sm);
+  --move-numberinput-font-size: var(--move-size-xs);
+  --move-numberinput-padding-x: var(--move-spacing-xs);
+  --move-numberinput-icon-gap: var(--move-spacing-xs);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  /* defaults above */
+}
+
+.root[data-size='lg'] {
+  --move-numberinput-height: var(--move-control-height-lg);
+  --move-numberinput-font-size: var(--move-size-base);
+  --move-numberinput-padding-x: var(--move-spacing-md);
+}
+
+/* Variants */
+.root[data-variant='outlined'],
+.root:not([data-variant]) {
+  /* default — outlined, styles above */
+}
+
+.root[data-variant='filled'] {
+  --move-numberinput-bg: var(--move-bg-muted);
+  --move-numberinput-border: transparent;
+}
+
+.root[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
+  --move-numberinput-border: var(--move-border-base);
+}
+
+.root[data-variant='filled']:focus-within {
+  --move-numberinput-border: var(--move-numberinput-border-focus);
+}
+
+/* Invalid */
+.root[data-invalid] {
+  --move-numberinput-border: var(--move-error);
+}
+
+.root[data-invalid]:focus-within {
+  border-color: var(--move-error);
+  outline: var(--move-focus-ring-width) solid var(--move-error);
+  outline-offset: 0px;
+}
+
+/* Read-only */
+.root[data-readonly] {
+  cursor: default;
+}
+
+.root[data-readonly]:hover:not([data-invalid]) {
+  border-color: var(--move-numberinput-border);
+}
+
+.root[data-readonly] .input {
+  cursor: default;
+}
+
+.root[data-readonly] .controls {
+  display: none;
+}
+
+/* Disabled */
+.root[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.root[data-disabled] .input {
+  cursor: not-allowed;
+}

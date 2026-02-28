@@ -76,6 +76,7 @@ export function BadgeDemo() {
         properties={[
           { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger'", default: "'primary'", description: 'Visual style of the badge.' },
           { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the badge.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

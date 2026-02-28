@@ -53,11 +53,6 @@
   color: var(--move-textarea-placeholder);
 }
 
-.textarea::selection {
-  background: var(--move-primary);
-  color: var(--move-primary-fg);
-}
-
 /* Sizes */
 .root[data-size='sm'] {
   --move-textarea-font-size: var(--move-size-xs);

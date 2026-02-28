@@ -27,11 +27,11 @@ export const Link = withMoveComponent<'root', LinkProps, HTMLAnchorElement>({
   defaults: { variant: 'default', underline: 'hover', asChild: false },
   moveProps: ['variant', 'underline', 'size', 'external', 'asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const Comp = props.asChild ? Slot.Root : 'a';
         const externalProps = props.external
@@ -42,10 +42,10 @@ export const Link = withMoveComponent<'root', LinkProps, HTMLAnchorElement>({
           <Comp
             {...attrs}
             {...externalProps}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-underline={props.underline}
             {...(props.size ? { 'data-size': props.size } : {})}

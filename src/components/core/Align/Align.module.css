@@ -1,0 +1,38 @@
+/*
+ * Align Component
+ * Horizontal bar with left/center/right distribution.
+ * Uses CSS grid 1fr-auto-1fr trick for true centering.
+ */
+
+.root {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  width: 100%;
+}
+
+.start {
+  grid-column: 1;
+  display: flex;
+  align-items: inherit;
+  justify-self: start;
+  gap: inherit;
+  min-width: 0;
+}
+
+.center {
+  grid-column: 2;
+  display: flex;
+  align-items: inherit;
+  justify-self: center;
+  gap: inherit;
+  min-width: 0;
+}
+
+.end {
+  grid-column: 3;
+  display: flex;
+  align-items: inherit;
+  justify-self: end;
+  gap: inherit;
+  min-width: 0;
+}

@@ -2,25 +2,101 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
+import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
+import { mergeAnimateConfig, prefersReducedMotion, toAnimeParams } from '../../../animation/utils';
+import type { LayerAnimate } from '../../../animation/types';
 import styles from './Dialog.module.css';
 
 // ============================================================================
-// Root (stateless wrapper — no factory needed)
+// Context (animation coordination)
 // ============================================================================
+
+interface DialogContextValue {
+  isClosing: boolean;
+  close: () => void;
+  onCloseComplete: () => void;
+  animateConfig: LayerAnimate | null;
+}
+
+const DialogContext = React.createContext<DialogContextValue | null>(null);
+
+function useDialogContext() {
+  const context = React.useContext(DialogContext);
+  if (!context) {
+    throw new Error('Dialog components must be used within Dialog.Root');
+  }
+  return context;
+}
+
+// ============================================================================
+// Root (stateful — manages open/close state + animation context)
+// ============================================================================
+
+const defaultDialogAnimation: LayerAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    scale: { value: [0.85, 1], easing: 'snappy' },
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    scale: { value: [1, 0.95], easing: 'outQuart' },
+    duration: 200,
+  },
+};
 
 export interface DialogRootProps {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  animate?: LayerAnimate | false;
   modal?: boolean;
 }
 
-const DialogRoot: React.FC<DialogRootProps> = (props) => (
-  <RadixDialog.Root {...props} />
-);
+const DialogRoot: React.FC<DialogRootProps> = ({
+  children,
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  animate: animateProp,
+  modal,
+}) => {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
+  const [isClosing, setIsClosing] = React.useState(false);
+
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const handleOpenChange = React.useCallback((newOpen: boolean) => {
+    if (newOpen) {
+      if (!isControlled) setUncontrolledOpen(true);
+      onOpenChange?.(true);
+    }
+    // Ignore close requests from Radix — we handle closing via close()
+  }, [isControlled, onOpenChange]);
+
+  const handleCloseComplete = React.useCallback(() => {
+    setIsClosing(false);
+    if (!isControlled) setUncontrolledOpen(false);
+    onOpenChange?.(false);
+  }, [isControlled, onOpenChange]);
+
+  const close = React.useCallback(() => {
+    setIsClosing(true);
+  }, []);
+
+  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDialogAnimation, animateProp);
+
+  return (
+    <DialogContext.Provider value={{ isClosing, close, onCloseComplete: handleCloseComplete, animateConfig }}>
+      <RadixDialog.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
+        {children}
+      </RadixDialog.Root>
+    </DialogContext.Provider>
+  );
+};
 DialogRoot.displayName = 'Dialog.Root';
 
 // ============================================================================
@@ -32,7 +108,7 @@ export interface DialogTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButtonElement>({
@@ -41,19 +117,19 @@ const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButto
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         return (
           <RadixDialog.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Trigger>
@@ -84,7 +160,7 @@ DialogPortal.displayName = 'Dialog.Portal';
 export interface DialogOverlayProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'overlay'>;
+  sp?: SlotPropsMap<'overlay'>;
 }
 
 const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivElement>({
@@ -92,18 +168,48 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
   styles,
   slots: ['overlay'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const { isClosing, animateConfig } = useDialogContext();
+    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+
+    // Enter: fade in
+    React.useLayoutEffect(() => {
+      const el = internalRef.current;
+      if (!el || !animateConfig || prefersReducedMotion()) return;
+
+      el.style.opacity = '0';
+      animRef.current = animate(el, {
+        opacity: [0, 1],
+        ease: 'outQuart',
+        duration: 250,
+      });
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Exit: fade out (fire-and-forget, Content drives onCloseComplete)
+    React.useEffect(() => {
+      if (!isClosing) return;
+      const el = internalRef.current;
+      if (!el || !animateConfig || prefersReducedMotion()) return;
+
+      if (animRef.current) animRef.current.pause();
+      animRef.current = animate(el, {
+        opacity: [1, 0],
+        ease: 'outQuart',
+        duration: 200,
+      });
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
     return {
       render() {
-        const overlayPt = ptm('overlay');
-        const { className: ptClass, style: ptStyle, ...ptRest } = overlayPt as Record<string, unknown>;
+        const overlaySp = sp('overlay');
+        const { className: spClass, style: spStyle, ...spRest } = overlaySp as Record<string, unknown>;
         return (
           <RadixDialog.Overlay
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('overlay', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('overlay', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -123,17 +229,72 @@ export interface DialogContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   size?: DialogSize;
   onOpenAutoFocus?: (event: Event) => void;
-  pt?: PassThrough<'content'>;
+  onPointerDownOutside?: (event: Event) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  onInteractOutside?: (event: Event) => void;
+  sp?: SlotPropsMap<'content'>;
 }
+
+const dialogSpring = { mass: 0.6, stiffness: 350, damping: 16, velocity: 0 };
 
 const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivElement>({
   name: 'DialogContent',
   styles,
   slots: ['content'] as const,
-  moveProps: ['size', 'onOpenAutoFocus'],
+  moveProps: ['size', 'onOpenAutoFocus', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
   defaults: { size: 'md' },
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const { isClosing, close, onCloseComplete, animateConfig } = useDialogContext();
+    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+    const isAnimatingOutRef = React.useRef(false);
+
+    // Enter: scale with bounce + opacity
+    React.useLayoutEffect(() => {
+      const el = internalRef.current;
+      if (!el) return;
+
+      if (!animateConfig || prefersReducedMotion()) {
+        el.style.opacity = '1';
+        return;
+      }
+
+      el.style.opacity = '0';
+      el.style.transform = 'scale(0.85)';
+
+      animRef.current = animate(el, {
+        opacity: [0, 1],
+        scale: [0.85, 1],
+        ease: spring(dialogSpring),
+      });
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Exit: scale down + opacity out
+    React.useEffect(() => {
+      if (!isClosing || isAnimatingOutRef.current) return;
+      isAnimatingOutRef.current = true;
+
+      const el = internalRef.current;
+      if (!el || !animateConfig || prefersReducedMotion()) {
+        isAnimatingOutRef.current = false;
+        onCloseComplete();
+        return;
+      }
+
+      if (animRef.current) animRef.current.pause();
+
+      animRef.current = animate(el, {
+        opacity: [1, 0],
+        scale: [1, 0.95],
+        ease: 'outQuart',
+        duration: 200,
+        onComplete: () => {
+          isAnimatingOutRef.current = false;
+          onCloseComplete();
+        },
+      });
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleOpenAutoFocus = (event: Event) => {
       (props.onOpenAutoFocus as ((e: Event) => void) | undefined)?.(event);
       if (event.defaultPrevented) return;
@@ -158,19 +319,38 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
       }
     };
 
+    // Intercept close events to trigger animation.
+    // No preventDefault on pointer/interact — allows native events to propagate.
+    const handlePointerDownOutside = (e: Event) => {
+      (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
+      if (!e.defaultPrevented) close();
+    };
+
+    const handleEscapeKeyDown = (e: KeyboardEvent) => {
+      (props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
+      if (!e.defaultPrevented) close();
+    };
+
+    const handleInteractOutside = (e: Event) => {
+      (props.onInteractOutside as ((e: Event) => void) | undefined)?.(e);
+    };
+
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
           <RadixDialog.Content
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             data-size={props.size}
             onOpenAutoFocus={handleOpenAutoFocus}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            onPointerDownOutside={handlePointerDownOutside}
+            onEscapeKeyDown={handleEscapeKeyDown}
+            onInteractOutside={handleInteractOutside}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Content>
@@ -188,7 +368,7 @@ export interface DialogTitleProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'title'>;
+  sp?: SlotPropsMap<'title'>;
 }
 
 const DialogTitle = withMoveComponent<'title', DialogTitleProps, HTMLHeadingElement>({
@@ -196,18 +376,18 @@ const DialogTitle = withMoveComponent<'title', DialogTitleProps, HTMLHeadingElem
   styles,
   slots: ['title'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const titlePt = ptm('title');
-        const { className: ptClass, style: ptStyle, ...ptRest } = titlePt as Record<string, unknown>;
+        const titleSp = sp('title');
+        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
         return (
           <RadixDialog.Title
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('title', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('title', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Title>
@@ -225,7 +405,7 @@ export interface DialogDescriptionProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'description'>;
+  sp?: SlotPropsMap<'description'>;
 }
 
 const DialogDescription = withMoveComponent<'description', DialogDescriptionProps, HTMLParagraphElement>({
@@ -233,18 +413,18 @@ const DialogDescription = withMoveComponent<'description', DialogDescriptionProp
   styles,
   slots: ['description'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const descPt = ptm('description');
-        const { className: ptClass, style: ptStyle, ...ptRest } = descPt as Record<string, unknown>;
+        const descSp = sp('description');
+        const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
         return (
           <RadixDialog.Description
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('description', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('description', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Description>
@@ -262,7 +442,7 @@ export interface DialogHeaderProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivElement>({
@@ -270,18 +450,18 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
   styles,
   slots: ['header'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const headerPt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -299,7 +479,7 @@ export interface DialogBodyProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'body'>;
+  sp?: SlotPropsMap<'body'>;
 }
 
 const DialogBody = withMoveComponent<'body', DialogBodyProps, HTMLDivElement>({
@@ -307,18 +487,18 @@ const DialogBody = withMoveComponent<'body', DialogBodyProps, HTMLDivElement>({
   styles,
   slots: ['body'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const bodyPt = ptm('body');
-        const { className: ptClass, style: ptStyle, ...ptRest } = bodyPt as Record<string, unknown>;
+        const bodySp = sp('body');
+        const { className: spClass, style: spStyle, ...spRest } = bodySp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('body', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('body', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -336,7 +516,7 @@ export interface DialogFooterProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footer'>;
+  sp?: SlotPropsMap<'footer'>;
 }
 
 const DialogFooter = withMoveComponent<'footer', DialogFooterProps, HTMLDivElement>({
@@ -344,18 +524,18 @@ const DialogFooter = withMoveComponent<'footer', DialogFooterProps, HTMLDivEleme
   styles,
   slots: ['footer'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const footerPt = ptm('footer');
-        const { className: ptClass, style: ptStyle, ...ptRest } = footerPt as Record<string, unknown>;
+        const footerSp = sp('footer');
+        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footer', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footer', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -373,7 +553,7 @@ export interface DialogFooterStartProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footerStart'>;
+  sp?: SlotPropsMap<'footerStart'>;
 }
 
 const DialogFooterStart = withMoveComponent<'footerStart', DialogFooterStartProps, HTMLDivElement>({
@@ -381,18 +561,18 @@ const DialogFooterStart = withMoveComponent<'footerStart', DialogFooterStartProp
   styles,
   slots: ['footerStart'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('footerStart');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const footerStartSp = sp('footerStart');
+        const { className: spClass, style: spStyle, ...spRest } = footerStartSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footerStart', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footerStart', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -410,7 +590,7 @@ export interface DialogFooterEndProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footerEnd'>;
+  sp?: SlotPropsMap<'footerEnd'>;
 }
 
 const DialogFooterEnd = withMoveComponent<'footerEnd', DialogFooterEndProps, HTMLDivElement>({
@@ -418,18 +598,18 @@ const DialogFooterEnd = withMoveComponent<'footerEnd', DialogFooterEndProps, HTM
   styles,
   slots: ['footerEnd'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('footerEnd');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const footerEndSp = sp('footerEnd');
+        const { className: spClass, style: spStyle, ...spRest } = footerEndSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footerEnd', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footerEnd', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -448,7 +628,7 @@ export interface DialogCloseProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'close'>;
+  sp?: SlotPropsMap<'close'>;
 }
 
 const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonElement>({
@@ -457,19 +637,27 @@ const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonEleme
   slots: ['close'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
+    const { close } = useDialogContext();
+
+    const handleClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      close();
+    };
+
     return {
       render() {
-        const closePt = ptm('close');
-        const { className: ptClass, style: ptStyle, ...ptRest } = closePt as Record<string, unknown>;
+        const closeSp = sp('close');
+        const { className: spClass, style: spStyle, ...spRest } = closeSp as Record<string, unknown>;
         return (
           <RadixDialog.Close
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={props.asChild ? props.className : cx('close', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            onClick={handleClick}
+            className={props.asChild ? props.className : cx('close', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Close>

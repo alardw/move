@@ -3,8 +3,10 @@
 import * as React from 'react';
 import { animate } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { prefersReducedMotion } from '../../../animation';
+import { toAnimeParams, mergeAnimateConfig } from '../../../animation/utils';
+import type { LayerAnimate } from '../../../animation/types';
 import { Icon } from '../../core/Icon';
 import styles from './Alert.module.css';
 
@@ -13,6 +15,7 @@ import styles from './Alert.module.css';
 // =============================================================================
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
+export type AlertSize = 'sm' | 'md' | 'lg';
 type AlertSlots = 'root' | 'icon' | 'content' | 'title' | 'description' | 'close';
 
 // =============================================================================
@@ -21,16 +24,32 @@ type AlertSlots = 'root' | 'icon' | 'content' | 'title' | 'description' | 'close
 
 export interface AlertProps extends Record<string, unknown> {
   variant?: AlertVariant;
+  size?: AlertSize;
   icon?: string | boolean;
   title?: React.ReactNode;
   closable?: boolean;
   onClose?: () => void;
   closeLabel?: string;
+  /** Animation configuration. Pass `false` to disable animations. */
+  animate?: LayerAnimate | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<AlertSlots>;
+  sp?: SlotPropsMap<AlertSlots>;
 }
+
+const defaultAlertAnimation: LayerAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    y: { value: [-8, 0], easing: 'outQuart' },
+    duration: 300,
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    y: { value: [0, -8], easing: 'outQuart' },
+    duration: 200,
+  },
+};
 
 const defaultIcons: Record<AlertVariant, string> = {
   info: 'info',
@@ -44,31 +63,33 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
   styles,
   slots: ['root', 'icon', 'content', 'title', 'description', 'close'] as const,
   defaults: { variant: 'info' },
-  moveProps: ['variant', 'icon', 'title', 'closable', 'onClose', 'closeLabel'],
+  moveProps: ['variant', 'size', 'icon', 'title', 'closable', 'onClose', 'closeLabel', 'animate'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const [visible, setVisible] = React.useState(true);
     const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+
+    const animateProp = props.animate as LayerAnimate | false | undefined;
+    const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultAlertAnimation, animateProp);
 
     // Entrance animation
     React.useLayoutEffect(() => {
       const el = internalRef.current;
-      if (!el || prefersReducedMotion()) return;
+      if (!el || !animateConfig?.enter || prefersReducedMotion()) return;
 
+      const enterParams = toAnimeParams(animateConfig.enter);
       el.style.opacity = '0';
-      el.style.transform = 'translateY(-8px)';
 
       animRef.current = animate(el, {
-        opacity: 1,
-        translateY: 0,
-        ease: 'outQuart',
-        duration: 300,
+        ...enterParams,
         onComplete: () => {
-          el.style.removeProperty('opacity');
-          el.style.removeProperty('transform');
+          if (el) {
+            el.style.removeProperty('opacity');
+            el.style.removeProperty('transform');
+          }
         },
       });
-    }, [internalRef]);
+    }, [internalRef, animateConfig]);
 
     const handleClose = React.useCallback(() => {
       const el = internalRef.current;
@@ -78,7 +99,7 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
         return;
       }
 
-      if (prefersReducedMotion()) {
+      if (!animateConfig?.exit || prefersReducedMotion()) {
         setVisible(false);
         (props.onClose as (() => void) | undefined)?.();
         return;
@@ -86,17 +107,15 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
 
       if (animRef.current) animRef.current.pause();
 
+      const exitParams = toAnimeParams(animateConfig.exit);
       animate(el, {
-        opacity: 0,
-        translateY: -8,
-        ease: 'outQuart',
-        duration: 200,
+        ...exitParams,
         onComplete: () => {
           setVisible(false);
           (props.onClose as (() => void) | undefined)?.();
         },
       });
-    }, [internalRef, props.onClose]);
+    }, [internalRef, props.onClose, animateConfig]);
 
     return {
       render() {
@@ -104,23 +123,23 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
 
         const variant = props.variant as AlertVariant;
 
-        const rootPt = ptm('root');
-        const { className: rootPtClass, style: rootPtStyle, ...rootPtRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
 
-        const iconPt = ptm('icon');
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const iconSp = sp('icon');
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
-        const contentPt = ptm('content');
-        const { className: contentPtClass, style: contentPtStyle, ...contentPtRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: contentSpClass, style: contentSpStyle, ...contentSpRest } = contentSp as Record<string, unknown>;
 
-        const titlePt = ptm('title');
-        const { className: titlePtClass, style: titlePtStyle, ...titlePtRest } = titlePt as Record<string, unknown>;
+        const titleSp = sp('title');
+        const { className: titleSpClass, style: titleSpStyle, ...titleSpRest } = titleSp as Record<string, unknown>;
 
-        const descriptionPt = ptm('description');
-        const { className: descPtClass, style: descPtStyle, ...descPtRest } = descriptionPt as Record<string, unknown>;
+        const descriptionSp = sp('description');
+        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descriptionSp as Record<string, unknown>;
 
-        const closePt = ptm('close');
-        const { className: closePtClass, style: closePtStyle, ...closePtRest } = closePt as Record<string, unknown>;
+        const closeSp = sp('close');
+        const { className: closeSpClass, style: closeSpStyle, ...closeSpRest } = closeSp as Record<string, unknown>;
 
         // Resolve icon
         const iconProp = props.icon;
@@ -136,18 +155,19 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
         return (
           <div
             {...attrs}
-            {...rootPtRest}
+            {...rootSpRest}
             ref={ref}
             role="alert"
             data-variant={variant}
-            className={cx('root', props.className, rootPtClass as string | undefined)}
-            style={{ ...props.style, ...(rootPtStyle as React.CSSProperties) }}
+            data-size={props.size}
+            className={cx('root', props.className, rootSpClass as string | undefined)}
+            style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
           >
             {iconName && (
               <span
-                {...iconPtRest}
-                className={cx('icon', iconPtClass as string | undefined)}
-                style={iconPtStyle as React.CSSProperties}
+                {...iconSpRest}
+                className={cx('icon', iconSpClass as string | undefined)}
+                style={iconSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
                 <Icon name={iconName} size={18} />
@@ -155,24 +175,24 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
             )}
 
             <div
-              {...contentPtRest}
-              className={cx('content', contentPtClass as string | undefined)}
-              style={contentPtStyle as React.CSSProperties}
+              {...contentSpRest}
+              className={cx('content', contentSpClass as string | undefined)}
+              style={contentSpStyle as React.CSSProperties}
             >
               {props.title && (
                 <div
-                  {...titlePtRest}
-                  className={cx('title', titlePtClass as string | undefined)}
-                  style={titlePtStyle as React.CSSProperties}
+                  {...titleSpRest}
+                  className={cx('title', titleSpClass as string | undefined)}
+                  style={titleSpStyle as React.CSSProperties}
                 >
                   {props.title as React.ReactNode}
                 </div>
               )}
               {props.children && (
                 <div
-                  {...descPtRest}
-                  className={cx('description', descPtClass as string | undefined)}
-                  style={descPtStyle as React.CSSProperties}
+                  {...descSpRest}
+                  className={cx('description', descSpClass as string | undefined)}
+                  style={descSpStyle as React.CSSProperties}
                 >
                   {props.children}
                 </div>
@@ -181,10 +201,10 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
 
             {props.closable && (
               <button
-                {...closePtRest}
+                {...closeSpRest}
                 type="button"
-                className={cx('close', closePtClass as string | undefined)}
-                style={closePtStyle as React.CSSProperties}
+                className={cx('close', closeSpClass as string | undefined)}
+                style={closeSpStyle as React.CSSProperties}
                 onClick={handleClose}
                 aria-label={props.closeLabel ?? 'Close alert'}
               >

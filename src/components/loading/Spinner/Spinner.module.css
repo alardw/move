@@ -28,6 +28,20 @@
   --move-spinner-size: 72px;
 }
 
+/* Variants */
+.root[data-variant='default'],
+.root:not([data-variant]) {
+  --move-spinner-stroke: var(--move-primary);
+}
+
+.root[data-variant='secondary'] {
+  --move-spinner-stroke: var(--move-fg-muted);
+}
+
+.root[data-variant='current'] {
+  --move-spinner-stroke: currentColor;
+}
+
 /* SVG — rotation */
 .svg {
   width: 100%;
@@ -64,5 +78,14 @@
   100% {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -124px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg {
+    animation: none;
+  }
+  .circle {
+    animation: none;
   }
 }

@@ -9,7 +9,6 @@
   grid-template-columns: var(--move-calendar-timegrid-label-width) 1fr;
   position: relative;
   overflow-y: auto;
-  border-top: 1px solid var(--move-calendar-timegrid-border);
   flex: 1;
   min-height: 0;
 }
@@ -21,7 +20,11 @@
   border-bottom: 1px solid var(--move-calendar-timegrid-border);
 }
 
-/* border-top for the grid is on the container to keep slot measurement consistent */
+.timeSlot[data-first] {
+  border-top: 1px solid var(--move-calendar-timegrid-border);
+}
+
+/* border-top is on the first timeSlot via [data-first] */
 
 .timeSlot[data-half-hour] {
   border-bottom-style: dashed;

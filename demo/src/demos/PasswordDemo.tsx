@@ -160,6 +160,7 @@ export function PasswordDemo() {
           { name: 'name', type: 'string', description: 'Name for form submission.' },
           { name: 'required', type: 'boolean', description: 'Whether the input is required for form validation.' },
           { name: 'onChange', type: 'ChangeEventHandler<HTMLInputElement>', description: 'Called when the input value changes.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, input, iconLeft, toggle, toggleIcon.' },
         ]}
       />
     </DocPage.Root>

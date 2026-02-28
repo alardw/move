@@ -5,9 +5,10 @@ import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import { mergeAnimateConfig } from '../../../animation/utils';
+import { usePopupAnimation } from '../../../animation/hooks';
 import type { PopupAnimate } from '../../../animation/types';
 import styles from './Dropdown.module.css';
 
@@ -106,7 +107,7 @@ export interface DropdownTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLButtonElement>({
@@ -115,19 +116,19 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.Trigger>
@@ -164,7 +165,7 @@ export interface DropdownContentProps extends Record<string, unknown> {
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   onInteractOutside?: (e: Event) => void;
-  pt?: PassThrough<'content' | 'contentInner'>;
+  sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
 const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownContentProps, HTMLDivElement>({
@@ -173,179 +174,71 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
   slots: ['content', 'contentInner'] as const,
   moveProps: ['sideOffset', 'align', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
-    const contentRef = React.useRef<HTMLDivElement | null>(null);
-    const innerRef = React.useRef<HTMLDivElement>(null);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const itemsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animateConfig } = useDropdownContext();
-    const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
+
+    const { contentRef, innerRef } = usePopupAnimation({
+      animate: animateConfig,
+      isClosing,
+      onCloseComplete,
+      itemSelector: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+      animateHeight: true,
+      onOpenComplete: () => {
+        const content = contentRef.current;
+        if (content) {
+          content.focus();
+          content.dispatchEvent(new KeyboardEvent('keydown', {
+            key: 'ArrowDown',
+            code: 'ArrowDown',
+            bubbles: true,
+          }));
+        }
+      },
+    });
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Intercept close events to trigger animation
+    // Intercept close events to trigger animation.
+    // No preventDefault on pointer/interact — allows native events to propagate.
     const handlePointerDownOutside = (e: Event) => {
-      e.preventDefault();
       (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
-      close();
+      if (!e.defaultPrevented) close();
     };
 
     const handleEscapeKeyDown = (e: KeyboardEvent) => {
-      e.preventDefault();
       (props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
-      close();
+      if (!e.defaultPrevented) close();
     };
 
     const handleInteractOutside = (e: Event) => {
-      e.preventDefault();
       (props.onInteractOutside as ((e: Event) => void) | undefined)?.(e);
-      close();
     };
-
-    // Animate open on mount
-    React.useLayoutEffect(() => {
-      const content = contentRef.current;
-      const inner = innerRef.current;
-      if (!content || !inner) return;
-
-      if (!animateConfig) {
-        // No animation — show immediately
-        content.style.height = 'auto';
-        content.style.opacity = '1';
-        content.style.transform = '';
-        content.focus();
-        content.dispatchEvent(new KeyboardEvent('keydown', {
-          key: 'ArrowDown',
-          code: 'ArrowDown',
-          bubbles: true,
-        }));
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-      if (itemsAnimRef.current) itemsAnimRef.current.pause();
-
-      // Measure the natural constrained height (respects inner's max-height)
-      content.style.height = 'auto';
-      const targetHeight = content.offsetHeight;
-
-      content.style.height = '0px';
-      content.style.opacity = '1';
-      content.style.transform = 'scale(0.5)';
-
-      animRef.current = animate(content, {
-        height: targetHeight,
-        scale: 1,
-        ease: 'outQuart',
-        duration: 250,
-        onComplete: () => {
-          if (content) content.style.height = 'auto';
-          if (content) {
-            content.focus();
-            content.dispatchEvent(new KeyboardEvent('keydown', {
-              key: 'ArrowDown',
-              code: 'ArrowDown',
-              bubbles: true,
-            }));
-          }
-        },
-      });
-
-      const items = inner.querySelectorAll('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
-      items.forEach((item) => {
-        const el = item as HTMLElement;
-        el.style.opacity = '0';
-        el.style.transform = 'scale(0.8)';
-      });
-
-      itemsAnimRef.current = animate(items, {
-        opacity: 1,
-        scale: 1,
-        ease: spring(springConfig),
-        delay: (_el: any, i: number) => i * 30,
-      });
-    }, [animateConfig]);
-
-    // When isClosing becomes true, start local animation state
-    React.useEffect(() => {
-      if (isClosing && !isAnimatingOut) {
-        setIsAnimatingOut(true);
-      }
-    }, [isClosing, isAnimatingOut]);
-
-    // Animate close
-    React.useEffect(() => {
-      if (!isAnimatingOut) return;
-
-      const content = contentRef.current;
-      const inner = innerRef.current;
-      if (!content || !inner) return;
-
-      if (!animateConfig) {
-        // No animation — close immediately
-        onCloseComplete();
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-      if (itemsAnimRef.current) itemsAnimRef.current.pause();
-
-      content.style.height = `${content.offsetHeight}px`;
-
-      const items = inner.querySelectorAll('[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]');
-      const itemCount = items.length;
-
-      itemsAnimRef.current = animate(items, {
-        opacity: 0,
-        scale: 0.8,
-        ease: 'outQuart',
-        duration: 150,
-        delay: (_el: any, i: number) => (itemCount - 1 - i) * 20,
-      });
-
-      animRef.current = animate(content, {
-        height: 0,
-        paddingTop: 0,
-        paddingBottom: 0,
-        ease: 'outQuart',
-        duration: 200,
-        delay: 50,
-        onComplete: () => onCloseComplete(),
-      });
-
-      animate(content, {
-        opacity: 0,
-        ease: 'outQuart',
-        duration: 100,
-        delay: 150,
-      });
-    }, [isAnimatingOut, onCloseComplete, animateConfig]);
 
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
-        const innerPt = ptm('contentInner');
-        const { className: innerPtClass, style: innerPtStyle, ...innerPtRest } = innerPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const innerSp = sp('contentInner');
+        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
           <RadixDropdownMenu.Content
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedContentRef}
             sideOffset={props.sideOffset as number}
             align={props.align as 'start' | 'center' | 'end'}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
           >
             <div
               ref={innerRef}
-              {...innerPtRest}
-              className={cx('contentInner', innerPtClass as string | undefined)}
-              style={innerPtStyle as React.CSSProperties}
+              {...innerSpRest}
+              className={cx('contentInner', innerSpClass as string | undefined)}
+              style={innerSpStyle as React.CSSProperties}
             >
               {props.children}
             </div>
@@ -363,7 +256,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
 export interface DropdownArrowProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'arrow'>;
+  sp?: SlotPropsMap<'arrow'>;
 }
 
 const DropdownArrow = withMoveComponent<'arrow', DropdownArrowProps, HTMLElement>({
@@ -371,18 +264,18 @@ const DropdownArrow = withMoveComponent<'arrow', DropdownArrowProps, HTMLElement
   styles,
   slots: ['arrow'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const arrowPt = ptm('arrow');
-        const { className: ptClass, style: ptStyle, ...ptRest } = arrowPt as Record<string, unknown>;
+        const arrowSp = sp('arrow');
+        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Arrow
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref as any}
-            className={cx('arrow', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('arrow', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -400,7 +293,7 @@ export interface DropdownItemProps extends Record<string, unknown> {
   children?: React.ReactNode;
   disabled?: boolean;
   onSelect?: (e: Event) => void;
-  pt?: PassThrough<'item'>;
+  sp?: SlotPropsMap<'item'>;
 }
 
 const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement>({
@@ -409,7 +302,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
   slots: ['item'] as const,
   moveProps: ['disabled', 'onSelect'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
     const { close, animateConfig } = useDropdownContext();
@@ -444,19 +337,19 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
 
     return {
       render() {
-        const itemPt = ptm('item');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Item
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedItemRef}
             disabled={props.disabled as boolean}
             onSelect={handleSelect}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={cx('item', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('item', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.Item>
@@ -474,7 +367,7 @@ export interface DropdownGroupProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'group'>;
+  sp?: SlotPropsMap<'group'>;
 }
 
 const DropdownGroup = withMoveComponent<'group', DropdownGroupProps, HTMLDivElement>({
@@ -482,18 +375,18 @@ const DropdownGroup = withMoveComponent<'group', DropdownGroupProps, HTMLDivElem
   styles,
   slots: ['group'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const groupPt = ptm('group');
-        const { className: ptClass, style: ptStyle, ...ptRest } = groupPt as Record<string, unknown>;
+        const groupSp = sp('group');
+        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Group
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('group', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('group', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.Group>
@@ -511,7 +404,7 @@ export interface DropdownLabelProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'label'>;
+  sp?: SlotPropsMap<'label'>;
 }
 
 const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElement>({
@@ -519,18 +412,18 @@ const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElem
   styles,
   slots: ['label'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const labelPt = ptm('label');
-        const { className: ptClass, style: ptStyle, ...ptRest } = labelPt as Record<string, unknown>;
+        const labelSp = sp('label');
+        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Label
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('label', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('label', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.Label>
@@ -552,7 +445,7 @@ export interface DropdownCheckboxItemProps extends Record<string, unknown> {
   disabled?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   onSelect?: (e: Event) => void;
-  pt?: PassThrough<'checkboxItem' | 'checkboxIndicator' | 'checkboxLabel'>;
+  sp?: SlotPropsMap<'checkboxItem' | 'checkboxIndicator' | 'checkboxLabel'>;
 }
 
 const DropdownCheckboxItem = withMoveComponent<
@@ -565,7 +458,7 @@ const DropdownCheckboxItem = withMoveComponent<
   slots: ['checkboxItem', 'checkboxIndicator', 'checkboxLabel'] as const,
   moveProps: ['checked', 'disabled', 'onCheckedChange', 'onSelect'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const indicatorRef = React.useRef<HTMLSpanElement>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
@@ -644,17 +537,17 @@ const DropdownCheckboxItem = withMoveComponent<
 
     return {
       render() {
-        const checkboxPt = ptm('checkboxItem');
-        const { className: ptClass, style: ptStyle, ...ptRest } = checkboxPt as Record<string, unknown>;
-        const indicatorPt = ptm('checkboxIndicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
-        const labelPt = ptm('checkboxLabel');
-        const { className: lblPtClass, style: lblPtStyle, ...lblPtRest } = labelPt as Record<string, unknown>;
+        const checkboxSp = sp('checkboxItem');
+        const { className: spClass, style: spStyle, ...spRest } = checkboxSp as Record<string, unknown>;
+        const indicatorSp = sp('checkboxIndicator');
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const labelSp = sp('checkboxLabel');
+        const { className: lblSpClass, style: lblSpStyle, ...lblSpRest } = labelSp as Record<string, unknown>;
 
         return (
           <RadixDropdownMenu.CheckboxItem
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedItemRef}
             checked={props.checked as boolean}
             disabled={props.disabled as boolean}
@@ -662,21 +555,21 @@ const DropdownCheckboxItem = withMoveComponent<
             onSelect={handleSelect}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={cx('checkboxItem', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('checkboxItem', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             <span
               ref={indicatorRef}
-              {...indPtRest}
-              className={cx('checkboxIndicator', indPtClass as string | undefined)}
-              style={indPtStyle as React.CSSProperties}
+              {...indSpRest}
+              className={cx('checkboxIndicator', indSpClass as string | undefined)}
+              style={indSpStyle as React.CSSProperties}
             >
               {resolvedCheck}
             </span>
             <span
-              {...lblPtRest}
-              className={cx('checkboxLabel', lblPtClass as string | undefined)}
-              style={lblPtStyle as React.CSSProperties}
+              {...lblSpRest}
+              className={cx('checkboxLabel', lblSpClass as string | undefined)}
+              style={lblSpStyle as React.CSSProperties}
             >
               {props.children}
             </span>
@@ -697,7 +590,7 @@ export interface DropdownRadioGroupProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value?: string;
   onValueChange?: (value: string) => void;
-  pt?: PassThrough<'radioGroup'>;
+  sp?: SlotPropsMap<'radioGroup'>;
 }
 
 const DropdownRadioGroup = withMoveComponent<'radioGroup', DropdownRadioGroupProps, HTMLDivElement>({
@@ -706,20 +599,20 @@ const DropdownRadioGroup = withMoveComponent<'radioGroup', DropdownRadioGroupPro
   slots: ['radioGroup'] as const,
   moveProps: ['value', 'onValueChange'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const groupPt = ptm('radioGroup');
-        const { className: ptClass, style: ptStyle, ...ptRest } = groupPt as Record<string, unknown>;
+        const groupSp = sp('radioGroup');
+        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.RadioGroup
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             value={props.value as string}
             onValueChange={props.onValueChange as (value: string) => void}
-            className={cx('radioGroup', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('radioGroup', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.RadioGroup>
@@ -740,7 +633,7 @@ export interface DropdownRadioItemProps extends Record<string, unknown> {
   value: string;
   disabled?: boolean;
   onSelect?: (e: Event) => void;
-  pt?: PassThrough<'radioItem'>;
+  sp?: SlotPropsMap<'radioItem'>;
 }
 
 const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps, HTMLDivElement>({
@@ -749,7 +642,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
   slots: ['radioItem'] as const,
   moveProps: ['value', 'disabled', 'onSelect'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
     const { close, animateConfig } = useDropdownContext();
@@ -784,20 +677,20 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
 
     return {
       render() {
-        const itemPt = ptm('radioItem');
-        const { className: ptClass, style: ptStyle, ...ptRest } = itemPt as Record<string, unknown>;
+        const itemSp = sp('radioItem');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.RadioItem
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedItemRef}
             value={props.value as string}
             disabled={props.disabled as boolean}
             onSelect={handleSelect}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className={cx('radioItem', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('radioItem', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.RadioItem>
@@ -815,7 +708,7 @@ export interface DropdownItemIndicatorProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'itemIndicator'>;
+  sp?: SlotPropsMap<'itemIndicator'>;
 }
 
 const DropdownItemIndicator = withMoveComponent<'itemIndicator', DropdownItemIndicatorProps, HTMLSpanElement>({
@@ -823,18 +716,18 @@ const DropdownItemIndicator = withMoveComponent<'itemIndicator', DropdownItemInd
   styles,
   slots: ['itemIndicator'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const indPt = ptm('itemIndicator');
-        const { className: ptClass, style: ptStyle, ...ptRest } = indPt as Record<string, unknown>;
+        const indSp = sp('itemIndicator');
+        const { className: spClass, style: spStyle, ...spRest } = indSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.ItemIndicator
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('itemIndicator', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('itemIndicator', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.ItemIndicator>
@@ -851,7 +744,7 @@ const DropdownItemIndicator = withMoveComponent<'itemIndicator', DropdownItemInd
 export interface DropdownSeparatorProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'separator'>;
+  sp?: SlotPropsMap<'separator'>;
 }
 
 const DropdownSeparator = withMoveComponent<'separator', DropdownSeparatorProps, HTMLDivElement>({
@@ -859,18 +752,18 @@ const DropdownSeparator = withMoveComponent<'separator', DropdownSeparatorProps,
   styles,
   slots: ['separator'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const sepPt = ptm('separator');
-        const { className: ptClass, style: ptStyle, ...ptRest } = sepPt as Record<string, unknown>;
+        const sepSp = sp('separator');
+        const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Separator
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('separator', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('separator', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -903,7 +796,7 @@ export interface DropdownSubTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   disabled?: boolean;
-  pt?: PassThrough<'subTrigger'>;
+  sp?: SlotPropsMap<'subTrigger'>;
 }
 
 const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerProps, HTMLDivElement>({
@@ -912,19 +805,19 @@ const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerPro
   slots: ['subTrigger'] as const,
   moveProps: ['disabled'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const subPt = ptm('subTrigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = subPt as Record<string, unknown>;
+        const subSp = sp('subTrigger');
+        const { className: spClass, style: spStyle, ...spRest } = subSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.SubTrigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             disabled={props.disabled as boolean}
-            className={cx('subTrigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('subTrigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.SubTrigger>
@@ -943,7 +836,7 @@ export interface DropdownSubContentProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sideOffset?: number;
-  pt?: PassThrough<'subContent'>;
+  sp?: SlotPropsMap<'subContent'>;
 }
 
 const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentProps, HTMLDivElement>({
@@ -952,19 +845,19 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
   slots: ['subContent'] as const,
   moveProps: ['sideOffset'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const subPt = ptm('subContent');
-        const { className: ptClass, style: ptStyle, ...ptRest } = subPt as Record<string, unknown>;
+        const subSp = sp('subContent');
+        const { className: spClass, style: spStyle, ...spRest } = subSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.SubContent
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             sideOffset={props.sideOffset as number}
-            className={cx('subContent', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('subContent', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.SubContent>

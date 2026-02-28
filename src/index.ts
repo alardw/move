@@ -6,13 +6,13 @@ import './styles/system.css';
 
 // Core factory
 export { withMoveComponent, MoveProvider, useMoveContext } from './engine';
-export { mergeSlotProps, createCx, createPtm } from './engine';
+export { mergeSlotProps, createCx, createSp } from './engine';
 export type {
   SlotProps,
-  PassThrough,
-  GlobalPassThrough,
+  SlotPropsMap,
+  GlobalSlotProps,
   CxFn,
-  PtmFn,
+  SpFn,
   SetupContext,
   SetupReturn,
   MoveComponentOptions,
@@ -44,6 +44,19 @@ export type {
   UseInputRangeOptions,
   UseInputRangeReturn,
 } from './components/form/InputRange/useInputRange';
+
+export { useNumberInput } from './components/form/NumberInput/useNumberInput';
+export type {
+  UseNumberInputOptions,
+  UseNumberInputReturn,
+} from './components/form/NumberInput/useNumberInput';
+
+export { useColorPicker } from './components/form/ColorPicker/useColorPicker';
+export type {
+  UseColorPickerOptions,
+  UseColorPickerReturn,
+} from './components/form/ColorPicker/useColorPicker';
+export type { ColorFormat, HsvColor } from './components/form/ColorPicker/colorUtils';
 
 // Animation system
 export {
@@ -125,6 +138,18 @@ export type { IconComponentProps, IconProps, IconResolver, IconProviderProps } f
 export { Badge } from './components/misc/Badge';
 export type { BadgeProps, BadgeVariant, BadgeSize } from './components/misc/Badge';
 
+export { ChatBubble } from './components/misc/ChatBubble';
+export type {
+  ChatBubbleRootProps,
+  ChatBubbleAvatarProps,
+  ChatBubbleAvatarSize,
+  ChatBubbleContainerProps,
+  ChatBubbleVariant,
+  ChatBubbleHeaderProps,
+  ChatBubbleContentProps,
+  ChatBubbleFooterProps,
+} from './components/misc/ChatBubble';
+
 export { EmptyState } from './components/loading/EmptyState';
 export type { EmptyStateProps, EmptyStateSize } from './components/loading/EmptyState';
 
@@ -151,6 +176,8 @@ export type {
   AccordionTriggerProps,
   AccordionContentProps,
   AccordionAnimateConfig,
+  AccordionSize,
+  AccordionVariant,
 } from './components/panel/Accordion';
 
 export { Collapsible } from './components/panel/Collapsible';
@@ -173,14 +200,17 @@ export type {
   TabsListProps,
   TabsTriggerProps,
   TabsContentProps,
+  TabsSize,
+  TabsVariant,
 } from './components/panel/Tabs';
 
 export { Divider } from './components/panel/Divider';
-export type { DividerProps, DividerType, DividerAlign } from './components/panel/Divider';
+export type { DividerProps, DividerType, DividerAlign, DividerSize } from './components/panel/Divider';
 
 export { Card } from './components/panel/Card';
 export type {
   CardVariant,
+  CardSize,
   CardRootProps,
   CardHeaderProps,
   CardTitleProps,
@@ -213,7 +243,7 @@ export { Splitter } from './components/panel/Splitter';
 export type { SplitterRootProps, SplitterPanelProps } from './components/panel/Splitter';
 
 export { Alert } from './components/core/Alert';
-export type { AlertProps, AlertVariant } from './components/core/Alert';
+export type { AlertProps, AlertVariant, AlertSize } from './components/core/Alert';
 
 export { Dialog } from './components/overlay/Dialog';
 export type {
@@ -281,8 +311,8 @@ export type {
 export { Link } from './components/core/Link';
 export type { LinkProps, LinkVariant, LinkUnderline, LinkSize } from './components/core/Link';
 
-export { Code } from './components/core/Code';
-export type { CodeProps, CodeVariant, CodeSize } from './components/core/Code';
+export { Code, CodeHighlighterProvider, useCodeHighlighter } from './components/core/Code';
+export type { CodeProps, CodeVariant, CodeSize, CodeHighlighterFn, CodeHighlighterProviderProps, HighlightResult } from './components/core/Code';
 
 export { Prose } from './components/core/Prose';
 export type { ProseProps, ProseSize } from './components/core/Prose';
@@ -298,8 +328,26 @@ export type {
   TooltipArrowProps,
 } from './components/core/Tooltip';
 
+export { Stack } from './components/core/Stack';
+export type { StackProps, StackDirection, StackGap, StackAlign, StackJustify } from './components/core/Stack';
+
+export { Grid } from './components/core/Grid';
+export type { GridProps, GridCellProps, GridGap } from './components/core/Grid';
+
+export { Align } from './components/core/Align';
+export type { AlignProps, AlignSectionProps, AlignGap, AlignVertical } from './components/core/Align';
+
 export { InputRange } from './components/form/InputRange';
 export type { InputRangeProps, InputRangeSize } from './components/form/InputRange';
+
+export { NumberInput } from './components/form/NumberInput';
+export type { NumberInputProps, NumberInputVariant, NumberInputSize, NumberInputSlots } from './components/form/NumberInput';
+
+export { ColorPicker } from './components/form/ColorPicker';
+export type { ColorPickerProps, ColorPickerSize, ColorPickerSlots } from './components/form/ColorPicker';
+
+export { ColorInput } from './components/form/ColorInput';
+export type { ColorInputProps, ColorInputVariant, ColorInputSize, ColorInputSlots } from './components/form/ColorInput';
 
 export { ToggleButton } from './components/toolbar/ToggleButton';
 export type { ToggleButtonProps } from './components/toolbar/ToggleButton';
@@ -308,13 +356,13 @@ export { ToggleGroup } from './components/toolbar/ToggleGroup';
 export type { ToggleGroupRootProps, ToggleGroupItemProps } from './components/toolbar/ToggleGroup';
 
 export { Switch } from './components/form/Switch';
-export type { SwitchRootProps, SwitchThumbProps } from './components/form/Switch';
+export type { SwitchRootProps, SwitchThumbProps, SwitchSize } from './components/form/Switch';
 
 export { RadioGroup } from './components/form/RadioGroup';
 export type { RadioGroupRootProps, RadioGroupItemProps } from './components/form/RadioGroup';
 
 export { Label } from './components/form/Label';
-export type { LabelProps } from './components/form/Label';
+export type { LabelProps, LabelSize } from './components/form/Label';
 
 export { FormField } from './components/form/FormField';
 export type {
@@ -337,13 +385,48 @@ export type {
   SelectGroupProps,
   SelectLabelProps,
   SelectSeparatorProps,
+  SelectTriggerSize,
+  SelectTriggerVariant,
 } from './components/form/Select';
+
+export { Autocomplete } from './components/form/Autocomplete';
+export type {
+  AutocompleteRootProps,
+  AutocompleteTriggerProps,
+  AutocompleteTriggerSize,
+  AutocompleteTriggerVariant,
+  AutocompleteInputProps,
+  AutocompleteTagListProps,
+  AutocompleteTagProps,
+  AutocompleteIconProps,
+  AutocompleteClearTriggerProps,
+  AutocompletePortalProps,
+  AutocompleteContentProps,
+  AutocompleteItemProps,
+  AutocompleteItemIndicatorProps,
+  AutocompleteGroupProps,
+  AutocompleteGroupLabelProps,
+  AutocompleteEmptyProps,
+  AutocompleteLoadingProps,
+  AutocompleteSeparatorProps,
+} from './components/form/Autocomplete';
+
+export { useAutocomplete } from './components/form/Autocomplete';
+export type {
+  UseAutocompleteOptions,
+  UseAutocompleteReturn,
+} from './components/form/Autocomplete';
 
 export { InputText } from './components/form/InputText';
 export type { InputTextProps, InputTextVariant, InputTextSize } from './components/form/InputText';
 
 export { Password } from './components/form/Password';
 export type { PasswordProps, PasswordVariant, PasswordSize } from './components/form/Password';
+
+export { PinInput } from './components/form/PinInput';
+export type { PinInputProps, PinInputSize } from './components/form/PinInput';
+export { usePinInput } from './components/form/PinInput/usePinInput';
+export type { UsePinInputOptions, UsePinInputReturn } from './components/form/PinInput/usePinInput';
 
 export { Textarea } from './components/form/Textarea';
 export type { TextareaProps, TextareaVariant, TextareaSize } from './components/form/Textarea';
@@ -367,11 +450,64 @@ export type {
   TimeFieldGranularity,
 } from './components/form/TimeField';
 
+export { FileUpload } from './components/form/FileUpload';
+export type {
+  FileUploadRootProps,
+  FileUploadDropzoneProps,
+  FileUploadTriggerProps,
+  FileUploadItemGroupProps,
+  FileUploadItemProps,
+  FileUploadItemPreviewProps,
+  FileUploadItemNameProps,
+  FileUploadItemSizeProps,
+  FileUploadItemDeleteProps,
+  FileUploadClearTriggerProps,
+
+  FileUploadItemProgressProps,
+  FileUploadTotalProgressProps,
+  FileUploadUploadTriggerProps,
+  FileUploadSize,
+  FileUploadVariant,
+} from './components/form/FileUpload';
+
+export { useFileUpload, formatFileSize } from './components/form/FileUpload';
+export type {
+  UseFileUploadOptions,
+  UseFileUploadReturn,
+  FileRejection,
+  FileError,
+} from './components/form/FileUpload';
+
+export { httpAdapter, createAdapter } from './components/form/FileUpload';
+export type {
+  FileUploadAdapter,
+  FileUploadAdapterOptions,
+  FileUploadAdapterResult,
+  FileUploadEntry,
+  FileUploadStatus,
+  UploadProgress,
+  UploadAggregateState,
+  HttpAdapterOptions,
+} from './components/form/FileUpload';
+
+export { RichTextEditor } from './components/form/RichTextEditor';
+export type {
+  RichTextEditorVariant,
+  RichTextEditorSize,
+  RichTextEditorRootProps,
+  RichTextEditorToolbarProps,
+  RichTextEditorControlGroupProps,
+  RichTextEditorControlProps,
+  RichTextEditorSeparatorProps,
+  RichTextEditorContentProps,
+} from './components/form/RichTextEditor';
+
 export { ProgressBar } from './components/loading/ProgressBar';
-export type { ProgressBarProps } from './components/loading/ProgressBar';
+export type { ProgressBarProps, ProgressBarSize, ProgressBarVariant } from './components/loading/ProgressBar';
 
 export { Skeleton } from './components/loading/Skeleton';
 export type {
+  SkeletonAnimation,
   SkeletonRootProps,
   SkeletonCircleProps,
   SkeletonRectangleProps,
@@ -380,7 +516,10 @@ export type {
 } from './components/loading/Skeleton';
 
 export { Spinner } from './components/loading/Spinner';
-export type { SpinnerProps, SpinnerSize } from './components/loading/Spinner';
+export type { SpinnerProps, SpinnerSize, SpinnerVariant } from './components/loading/Spinner';
+
+export { Loader } from './components/loading/Loader';
+export type { LoaderProps, LoaderVariant, LoaderColor, LoaderSize } from './components/loading/Loader';
 
 export { Toast, toast } from './components/overlay/Toast';
 export type {
@@ -446,12 +585,52 @@ export type {
   UseDatePickerReturn,
 } from './components/form/DatePicker';
 
+// Carousel
+export { Carousel } from './components/media/Carousel';
+export type {
+  CarouselRootProps,
+  CarouselViewportProps,
+  CarouselSlideProps,
+  CarouselPrevTriggerProps,
+  CarouselNextTriggerProps,
+  CarouselIndicatorGroupProps,
+  CarouselIndicatorProps,
+} from './components/media/Carousel';
+
+export { useCarousel } from './components/media/Carousel';
+export type {
+  UseCarouselOptions,
+  UseCarouselReturn,
+  CarouselOrientation,
+  CarouselAlign,
+} from './components/media/Carousel';
+
 // Image
 export { Image } from './components/media/Image';
-export type { ImageProps, ImageFit, ImageRadius } from './components/media/Image';
+export type { ImageProps, ImageSource, ImageFit, ImageRadius, ImagePosition } from './components/media/Image';
 
 export { ImageGroup } from './components/media/ImageGroup';
-export type { ImageGroupProps, ImageGroupGap } from './components/media/ImageGroup';
+export type { ImageGroupProps, ImageGroupGap, ImageGroupRadius } from './components/media/ImageGroup';
+
+// Media shared types
+export type { SubtitleTrack, QualityOption, AudioTrack } from './components/media/_shared/types';
+
+// VideoPlayer
+export { VideoPlayer } from './components/media/VideoPlayer';
+export type { VideoPlayerProps, VideoPlayerProvider, VideoPlayerRadius } from './components/media/VideoPlayer';
+
+export { useVideoPlayer } from './components/media/VideoPlayer';
+export type { UseVideoPlayerOptions, UseVideoPlayerReturn } from './components/media/VideoPlayer';
+
+export { parseVTT } from './components/media/VideoPlayer';
+export type { VTTCue } from './components/media/VideoPlayer';
+
+// AudioPlayer
+export { AudioPlayer } from './components/media/AudioPlayer';
+export type { AudioPlayerProps, AudioPlayerRadius, AudioPlayerSize } from './components/media/AudioPlayer';
+
+export { useAudioPlayer } from './components/media/AudioPlayer';
+export type { UseAudioPlayerOptions, UseAudioPlayerReturn } from './components/media/AudioPlayer';
 
 // Breadcrumb
 export { Breadcrumb } from './components/nav/Breadcrumb';
@@ -479,6 +658,18 @@ export type {
   TableCellProps,
   TableCaptionProps,
 } from './components/data/Table';
+
+// Timeline
+export { Timeline } from './components/data/Timeline';
+export type {
+  TimelineRootProps,
+  TimelineItemProps,
+  TimelineItemSlots,
+  TimelineSize,
+  TimelineAlign,
+  TimelineColor,
+  TimelineLineVariant,
+} from './components/data/Timeline';
 
 // CalendarView
 export { CalendarView } from './components/calendar/CalendarView';
@@ -514,3 +705,24 @@ export type {
   UsePaginationOptions,
   UsePaginationReturn,
 } from './components/navigation/Pagination';
+
+// Stepper
+export { Stepper } from './components/navigation/Stepper';
+export type {
+  StepperRootProps,
+  StepperStepProps,
+  StepperIndicatorProps,
+  StepperTitleProps,
+  StepperDescriptionProps,
+  StepperSeparatorProps,
+  StepperCompletedProps,
+  StepperSize,
+  StepperOrientation,
+  StepStatus,
+} from './components/navigation/Stepper';
+
+export { useStepper } from './components/navigation/Stepper';
+export type {
+  UseStepperOptions,
+  UseStepperReturn,
+} from './components/navigation/Stepper';

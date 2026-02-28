@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useCollapsible } from './useCollapsible';
 import {
   toAnimeParams,
@@ -54,7 +54,7 @@ export interface CollapsibleRootProps extends Record<string, unknown> {
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
   animate?: ContentAnimate | false;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivElement>({
@@ -64,7 +64,7 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
   defaults: { disabled: false },
   moveProps: ['open', 'defaultOpen', 'onOpenChange', 'disabled', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, disabled, animate: animateProp } = props;
 
     const collapsible = useCollapsible({
@@ -118,16 +118,16 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <CollapsibleContext.Provider value={contextValue}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
-              className={cx('root', className, ptClass as string | undefined)}
-              style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-state={collapsible.open ? 'open' : 'closed'}
               data-disabled={disabled || undefined}
             >
@@ -149,7 +149,7 @@ export interface CollapsibleTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps, HTMLButtonElement>({
@@ -158,24 +158,24 @@ const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps,
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, asChild } = props;
     const context = useCollapsibleContext();
 
     return {
       render() {
         const Comp = asChild ? Slot.Root : 'button';
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
 
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             type={asChild ? undefined : 'button'}
-            className={cx('trigger', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-state={context.open ? 'open' : 'closed'}
             data-disabled={context.disabled || undefined}
             disabled={context.disabled || undefined}
@@ -198,7 +198,7 @@ export interface CollapsibleIconProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'icon'>;
+  sp?: SlotPropsMap<'icon'>;
 }
 
 const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpanElement>({
@@ -206,7 +206,7 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
   styles,
   slots: ['icon'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children } = props;
     const context = useCollapsibleContext();
     const resolvedChevron = useResolvedIcon('chevron-down', 15);
@@ -256,16 +256,16 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
 
     return {
       render() {
-        const iconPt = ptm('icon');
-        const { className: ptClass, style: ptStyle, ...ptRest } = iconPt as Record<string, unknown>;
+        const iconSp = sp('icon');
+        const { className: spClass, style: spStyle, ...spRest } = iconSp as Record<string, unknown>;
 
         return (
           <span
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('icon', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('icon', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             aria-hidden="true"
           >
             {children ?? resolvedChevron}
@@ -284,7 +284,7 @@ export interface CollapsibleContentProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'content' | 'contentInner'>;
+  sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
 const contentAnimTracker = new WeakMap<HTMLElement, { height?: JSAnimation; opacity?: JSAnimation }>();
@@ -294,7 +294,7 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
   styles,
   slots: ['content', 'contentInner'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children } = props;
     const context = useCollapsibleContext();
 
@@ -447,26 +447,26 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
       render() {
         if (!shouldRender) return null;
 
-        const contentPt = ptm('content');
-        const innerPt = ptm('contentInner');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
-        const { className: innerPtClass, style: innerPtStyle, ...innerPtRest } = innerPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const innerSp = sp('contentInner');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('content', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-state={context.open ? 'open' : 'closed'}
             role="region"
           >
             <div
-              {...innerPtRest}
+              {...innerSpRest}
               ref={innerRef}
-              className={cx('contentInner', innerPtClass as string | undefined)}
-              style={innerPtStyle as React.CSSProperties}
+              className={cx('contentInner', innerSpClass as string | undefined)}
+              style={innerSpStyle as React.CSSProperties}
             >
               {children}
             </div>

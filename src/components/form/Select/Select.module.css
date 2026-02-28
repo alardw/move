@@ -35,6 +35,39 @@
   user-select: none;
 }
 
+/* Sizes */
+.trigger[data-size='sm'] {
+  --move-select-trigger-height: var(--move-control-height-sm);
+  --move-select-trigger-font-size: var(--move-size-xs);
+  --move-select-trigger-padding-x: var(--move-spacing-xs);
+}
+
+.trigger[data-size='md'],
+.trigger:not([data-size]) {
+  /* default */
+}
+
+.trigger[data-size='lg'] {
+  --move-select-trigger-height: var(--move-control-height-lg);
+  --move-select-trigger-font-size: var(--move-size-base);
+  --move-select-trigger-padding-x: var(--move-spacing-md);
+}
+
+/* Variants */
+.trigger[data-variant='outlined'],
+.trigger:not([data-variant]) {
+  /* default — outlined, styles above */
+}
+
+.trigger[data-variant='filled'] {
+  --move-select-trigger-bg: var(--move-bg-muted);
+  --move-select-trigger-border: transparent;
+}
+
+.trigger[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
+  --move-select-trigger-border: var(--move-border-base);
+}
+
 .trigger:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);

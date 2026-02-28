@@ -14,6 +14,8 @@ export interface UseAccordionOptions {
   multiple?: boolean;
   /** Called when value changes */
   onValueChange?: (value: string | string[]) => void;
+  /** Allow closing all items in single mode (default true) */
+  collapsible?: boolean;
   /** Whether to select the item on focus (during keyboard nav) */
   selectOnFocus?: boolean;
 }
@@ -43,6 +45,7 @@ export interface UseAccordionReturn {
 export function useAccordion(options: UseAccordionOptions = {}): UseAccordionReturn {
   const {
     multiple = false,
+    collapsible = true,
     selectOnFocus = false,
   } = options;
 
@@ -77,8 +80,12 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
           setValue([...currentValues, itemValue]);
         }
       } else {
-        // Single mode: toggle (collapsible)
-        setValue(value === itemValue ? '' : itemValue);
+        // Single mode: toggle only if collapsible, otherwise just switch
+        if (value === itemValue) {
+          if (collapsible) setValue('');
+        } else {
+          setValue(itemValue);
+        }
       }
     },
     [value, multiple, setValue]

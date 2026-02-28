@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
-import { useInteractiveAnimate, prefersReducedMotion } from '../../../animation';
+import type { SlotPropsMap } from '../../../engine/types';
+import { useInteractiveAnimate, prefersReducedMotion, useSlidingIndicator } from '../../../animation';
 import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
@@ -63,7 +63,7 @@ export interface PaginationRootProps extends Record<string, unknown> {
   size?: PaginationSize;
   /** Visual variant */
   variant?: PaginationVariant;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElement>({
@@ -73,7 +73,7 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
   defaults: { size: 'md', variant: 'default', siblings: 1, boundaries: 1 },
   moveProps: ['total', 'page', 'defaultPage', 'onChange', 'siblings', 'boundaries', 'size', 'variant'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const pagination = usePagination({
       total: props.total as number,
       page: props.page as number | undefined,
@@ -94,18 +94,18 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <PaginationContext.Provider value={contextValue}>
             <nav
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
               aria-label="Pagination"
-              className={cx('root', props.className, ptClass as string | undefined)}
-              style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-size={props.size}
               data-variant={props.variant}
             >
@@ -133,7 +133,7 @@ export interface PaginationPrevTriggerProps extends Record<string, unknown> {
   onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
   onKeyUp?: React.KeyboardEventHandler<HTMLButtonElement>;
-  pt?: PassThrough<'prev'>;
+  sp?: SlotPropsMap<'prev'>;
 }
 
 const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerProps, HTMLButtonElement>({
@@ -142,7 +142,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
   slots: ['prev'] as const,
   moveProps: ['animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { previous, canPrevious } = usePaginationContext();
 
     const animateConfig = (props.animate as ElementAnimate | false | undefined) === false
@@ -159,19 +159,19 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
 
     return {
       render() {
-        const prevPt = ptm('prev');
-        const { className: ptClass, style: ptStyle, ...ptRest } = prevPt as Record<string, unknown>;
+        const prevSp = sp('prev');
+        const { className: spClass, style: spStyle, ...spRest } = prevSp as Record<string, unknown>;
 
         return (
           <button
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type="button"
             aria-label="Go to previous page"
             disabled={!canPrevious}
-            className={cx('prev', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('prev', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={previous}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseEnter();
@@ -225,7 +225,7 @@ export interface PaginationNextTriggerProps extends Record<string, unknown> {
   onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLButtonElement>;
   onKeyUp?: React.KeyboardEventHandler<HTMLButtonElement>;
-  pt?: PassThrough<'next'>;
+  sp?: SlotPropsMap<'next'>;
 }
 
 const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerProps, HTMLButtonElement>({
@@ -234,7 +234,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
   slots: ['next'] as const,
   moveProps: ['animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { next, canNext } = usePaginationContext();
 
     const animateConfig = (props.animate as ElementAnimate | false | undefined) === false
@@ -251,19 +251,19 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
 
     return {
       render() {
-        const nextPt = ptm('next');
-        const { className: ptClass, style: ptStyle, ...ptRest } = nextPt as Record<string, unknown>;
+        const nextSp = sp('next');
+        const { className: spClass, style: spStyle, ...spRest } = nextSp as Record<string, unknown>;
 
         return (
           <button
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type="button"
             aria-label="Go to next page"
             disabled={!canNext}
-            className={cx('next', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('next', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={next}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseEnter();
@@ -309,7 +309,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
 export interface PaginationItemsProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'items'>;
+  sp?: SlotPropsMap<'items'>;
 }
 
 const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indicator', PaginationItemsProps, HTMLUListElement>({
@@ -317,72 +317,19 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
   styles,
   slots: ['items', 'item', 'ellipsis', 'indicator'] as const,
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { range, page, setPage } = usePaginationContext();
     const staggerAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
     const slideAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const indicatorRef = React.useRef<HTMLDivElement | null>(null);
-    const isFirstIndicatorRun = React.useRef(true);
-    const suppressIndicator = React.useRef(false);
     const hasMounted = React.useRef(false);
     const prevNumbersRef = React.useRef<Set<number>>(new Set());
     const prevPageRef = React.useRef(page);
 
-    // --- Sliding indicator logic (like Tabs) ---
-    const updateIndicator = React.useCallback(() => {
-      if (suppressIndicator.current) return;
-
-      const ul = internalRef.current;
-      const indicator = indicatorRef.current;
-      if (!ul || !indicator) return;
-
-      const active = ul.querySelector<HTMLElement>('[data-state="active"]');
-      if (!active) {
-        indicator.style.opacity = '0';
-        return;
-      }
-
-      const ulRect = ul.getBoundingClientRect();
-      const activeRect = active.getBoundingClientRect();
-      const left = activeRect.left - ulRect.left + ul.scrollLeft;
-      const width = activeRect.width;
-      const height = activeRect.height;
-
-      if (isFirstIndicatorRun.current || prefersReducedMotion()) {
-        isFirstIndicatorRun.current = false;
-        indicator.style.opacity = '1';
-        indicator.style.transform = `translateX(${left}px)`;
-        indicator.style.width = `${width}px`;
-        indicator.style.height = `${height}px`;
-        return;
-      }
-
-      indicator.style.opacity = '1';
-
-      animate(indicator, {
-        translateX: left,
-        width,
-        height,
-        ease: spring({ mass: 1, stiffness: 500, damping: 30, velocity: 0 }),
-      });
-    }, [internalRef]);
-
-    // Observe data-state changes to update indicator position
-    React.useEffect(() => {
-      const ul = internalRef.current;
-      if (!ul) return;
-
-      updateIndicator();
-
-      const observer = new MutationObserver(updateIndicator);
-      observer.observe(ul, {
-        attributes: true,
-        attributeFilter: ['data-state'],
-        subtree: true,
-      });
-
-      return () => observer.disconnect();
-    }, [internalRef, updateIndicator]);
+    // --- Sliding indicator (shared hook) ---
+    const { indicatorRef, update: updateIndicator } = useSlidingIndicator({
+      containerRef: internalRef,
+      activeSelector: '[data-state="active"]',
+    });
 
     // Mark mounted after initial render cycle (runs after layout effects)
     React.useEffect(() => {
@@ -402,9 +349,8 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
       if (items.length === 0) return;
 
       // Hide indicator during stagger entrance
-      suppressIndicator.current = true;
       if (indicatorRef.current) {
-        indicatorRef.current.style.opacity = '0';
+        indicatorRef.current.style.visibility = 'hidden';
       }
 
       // Set initial state
@@ -423,7 +369,9 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
       // Show indicator once items are visually at full size
       const totalStaggerDelay = items.length * 30;
       setTimeout(() => {
-        suppressIndicator.current = false;
+        if (indicatorRef.current) {
+          indicatorRef.current.style.visibility = '';
+        }
         updateIndicator();
       }, totalStaggerDelay + 100);
 
@@ -434,7 +382,9 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
             item.style.opacity = '1';
             item.style.transform = 'scale(1)';
           });
-          suppressIndicator.current = false;
+          if (indicatorRef.current) {
+            indicatorRef.current.style.visibility = '';
+          }
         }
       };
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -494,24 +444,24 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 
     return {
       render() {
-        const itemsPt = ptm('items');
-        const { className: itemsPtClass, style: itemsPtStyle, ...itemsPtRest } = itemsPt as Record<string, unknown>;
-        const itemPt = ptm('item');
-        const { className: itemPtClass, style: itemPtStyle, ...itemPtRest } = itemPt as Record<string, unknown>;
-        const ellipsisPt = ptm('ellipsis');
-        const { className: ellipsisPtClass, style: ellipsisPtStyle, ...ellipsisPtRest } = ellipsisPt as Record<string, unknown>;
-        const indicatorPt = ptm('indicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
+        const itemsSp = sp('items');
+        const { className: itemsSpClass, style: itemsSpStyle, ...itemsSpRest } = itemsSp as Record<string, unknown>;
+        const itemSp = sp('item');
+        const { className: itemSpClass, style: itemSpStyle, ...itemSpRest } = itemSp as Record<string, unknown>;
+        const ellipsisSp = sp('ellipsis');
+        const { className: ellipsisSpClass, style: ellipsisSpStyle, ...ellipsisSpRest } = ellipsisSp as Record<string, unknown>;
+        const indicatorSp = sp('indicator');
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
 
         let dotsIndex = 0;
 
         return (
           <ul
             {...attrs}
-            {...itemsPtRest}
+            {...itemsSpRest}
             ref={ref}
-            className={cx('items', props.className, itemsPtClass as string | undefined)}
-            style={{ ...props.style, ...(itemsPtStyle as React.CSSProperties) }}
+            className={cx('items', props.className, itemsSpClass as string | undefined)}
+            style={{ ...props.style, ...(itemsSpStyle as React.CSSProperties) }}
           >
             {range.map((item) => {
               if (item === 'dots') {
@@ -519,9 +469,9 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
                 return (
                   <li key={key} aria-hidden="true">
                     <span
-                      {...ellipsisPtRest}
-                      className={cx('ellipsis', ellipsisPtClass as string | undefined)}
-                      style={ellipsisPtStyle as React.CSSProperties}
+                      {...ellipsisSpRest}
+                      className={cx('ellipsis', ellipsisSpClass as string | undefined)}
+                      style={ellipsisSpStyle as React.CSSProperties}
                     >
                       &hellip;
                     </span>
@@ -533,9 +483,9 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
               return (
                 <li key={item}>
                   <PageButton
-                    itemPtRest={itemPtRest}
-                    itemPtClass={itemPtClass as string | undefined}
-                    itemPtStyle={itemPtStyle as React.CSSProperties | undefined}
+                    itemSpRest={itemSpRest}
+                    itemSpClass={itemSpClass as string | undefined}
+                    itemSpStyle={itemSpStyle as React.CSSProperties | undefined}
                     cx={cx}
                     isActive={isActive}
                     pageNumber={item}
@@ -545,11 +495,11 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
               );
             })}
             <div
-              {...indPtRest}
+              {...indSpRest}
               ref={indicatorRef}
               aria-hidden="true"
-              className={cx('indicator', indPtClass as string | undefined)}
-              style={indPtStyle as React.CSSProperties}
+              className={cx('indicator', indSpClass as string | undefined)}
+              style={indSpStyle as React.CSSProperties}
             />
           </ul>
         );
@@ -563,16 +513,16 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 // =============================================================================
 
 interface PageButtonProps {
-  itemPtRest: Record<string, unknown>;
-  itemPtClass: string | undefined;
-  itemPtStyle: React.CSSProperties | undefined;
+  itemSpRest: Record<string, unknown>;
+  itemSpClass: string | undefined;
+  itemSpStyle: React.CSSProperties | undefined;
   cx: (...args: any[]) => string;
   isActive: boolean;
   pageNumber: number;
   onSelect: (page: number) => void;
 }
 
-function PageButton({ itemPtRest, itemPtClass, itemPtStyle, cx, isActive, pageNumber, onSelect }: PageButtonProps) {
+function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNumber, onSelect }: PageButtonProps) {
   const { ref: animRef, handlers } = useInteractiveAnimate({
     animate: {} as ElementAnimate,
     defaults: defaultAnimations.element,
@@ -581,14 +531,14 @@ function PageButton({ itemPtRest, itemPtClass, itemPtStyle, cx, isActive, pageNu
 
   return (
     <button
-      {...itemPtRest}
+      {...itemSpRest}
       ref={animRef as React.Ref<HTMLButtonElement>}
       type="button"
       aria-label={`Go to page ${pageNumber}`}
       aria-current={isActive ? 'page' : undefined}
       data-state={isActive ? 'active' : undefined}
-      className={cx('item', itemPtClass)}
-      style={itemPtStyle}
+      className={cx('item', itemSpClass)}
+      style={itemSpStyle}
       onClick={() => onSelect(pageNumber)}
       onMouseEnter={handlers.onMouseEnter}
       onMouseLeave={handlers.onMouseLeave}

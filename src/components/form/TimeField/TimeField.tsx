@@ -2,17 +2,15 @@
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { mergeAnimateConfig } from '../../../animation/utils';
+import { usePopupAnimation } from '../../../animation/hooks';
 import type { PopupAnimate } from '../../../animation/types';
 import { useTimeField } from './useTimeField';
 import type { UseTimeFieldReturn, SegmentType, TimeFieldGranularity } from './useTimeField';
 import styles from './TimeField.module.css';
-
-const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
 
 // ============================================================================
 // Context
@@ -258,7 +256,7 @@ export interface TimeFieldSegmentProps extends Record<string, unknown> {
   segment: SegmentType;
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'segment'>;
+  sp?: SlotPropsMap<'segment'>;
 }
 
 const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTMLInputElement>({
@@ -267,7 +265,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
   slots: ['segment'] as const,
   moveProps: ['segment'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { tf, segmentRefs, focusNext, focusPrev, disabled, withDropdown, openDropdown, isOpen } = useTimeFieldContext();
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
@@ -323,12 +321,12 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
 
     return {
       render() {
-        const segPt = ptm('segment');
-        const { className: ptClass, style: ptStyle, ...ptRest } = segPt as Record<string, unknown>;
+        const segSp = sp('segment');
+        const { className: spClass, style: spStyle, ...spRest } = segSp as Record<string, unknown>;
         return (
           <input
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type="text"
             inputMode="numeric"
@@ -338,8 +336,8 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
             value={segInfo?.value ?? ''}
             readOnly
             disabled={disabled}
-            className={cx('segment', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('segment', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}
             data-segment={segType}
@@ -358,7 +356,7 @@ export interface TimeFieldSeparatorProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'separator'>;
+  sp?: SlotPropsMap<'separator'>;
 }
 
 const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProps, HTMLSpanElement>({
@@ -366,18 +364,18 @@ const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProp
   styles,
   slots: ['separator'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const sepPt = ptm('separator');
-        const { className: ptClass, style: ptStyle, ...ptRest } = sepPt as Record<string, unknown>;
+        const sepSp = sp('separator');
+        const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
         return (
           <span
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('separator', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('separator', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             aria-hidden="true"
           >
             {props.children ?? ':'}
@@ -395,7 +393,7 @@ const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProp
 export interface TimeFieldPeriodProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'period'>;
+  sp?: SlotPropsMap<'period'>;
 }
 
 const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLButtonElement>({
@@ -403,7 +401,7 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
   styles,
   slots: ['period'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown } = useTimeFieldContext();
     const btnRef = React.useRef<HTMLButtonElement>(null);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef);
@@ -434,12 +432,12 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
 
     return {
       render() {
-        const periodPt = ptm('period');
-        const { className: ptClass, style: ptStyle, ...ptRest } = periodPt as Record<string, unknown>;
+        const periodSp = sp('period');
+        const { className: spClass, style: spStyle, ...spRest } = periodSp as Record<string, unknown>;
         return (
           <button
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type="button"
             role="spinbutton"
@@ -447,8 +445,8 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
             aria-valuenow={tf.period === 'AM' ? 0 : 1}
             disabled={disabled}
             tabIndex={0}
-            className={cx('period', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('period', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onKeyDown={handleKeyDown}
             data-segment="period"
           >
@@ -475,116 +473,22 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
   className,
   style,
 }) => {
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-  const itemsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
   const ctx = useTimeFieldContext();
-  const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
 
-  // Animate open — matches Select/Dropdown pattern
-  React.useLayoutEffect(() => {
-    const el = contentRef.current;
-    if (!el || !ctx.isOpen) return;
-    if (!ctx.animateConfig) {
-      el.style.height = 'auto';
-      el.style.opacity = '1';
-      return;
-    }
-    if (animRef.current) animRef.current.pause();
-    if (itemsAnimRef.current) itemsAnimRef.current.pause();
-
-    // Measure natural height
-    el.style.height = 'auto';
-    const targetHeight = el.offsetHeight;
-
-    el.style.height = '0px';
-    el.style.opacity = '1';
-    el.style.transform = 'scale(0.5)';
-
-    animRef.current = animate(el, {
-      height: targetHeight,
-      scale: 1,
-      ease: 'outQuart',
-      duration: 250,
-      onComplete: () => {
-        if (el) el.style.height = 'auto';
-      },
-    });
-
-    // Stagger items in with spring
-    const items = el.querySelectorAll('button');
-    items.forEach((item) => {
-      (item as HTMLElement).style.opacity = '0';
-      (item as HTMLElement).style.transform = 'scale(0.8)';
-    });
-    itemsAnimRef.current = animate(items, {
-      opacity: 1,
-      scale: 1,
-      ease: spring(springConfig),
-      delay: (_el: any, i: number) => i * 30,
-    });
-  }, [ctx.isOpen, ctx.animateConfig]);
-
-  // isClosing → animate out
-  React.useEffect(() => {
-    if (ctx.isClosing && !isAnimatingOut) {
-      setIsAnimatingOut(true);
-    }
-  }, [ctx.isClosing, isAnimatingOut]);
-
-  React.useEffect(() => {
-    if (!isAnimatingOut) return;
-    const el = contentRef.current;
-    if (!el) return;
-    if (!ctx.animateConfig) {
-      setIsAnimatingOut(false);
-      ctx.onCloseComplete();
-      return;
-    }
-    if (animRef.current) animRef.current.pause();
-    if (itemsAnimRef.current) itemsAnimRef.current.pause();
-
-    el.style.height = `${el.offsetHeight}px`;
-
-    const items = el.querySelectorAll('button');
-    const itemCount = items.length;
-    itemsAnimRef.current = animate(items, {
-      opacity: 0,
-      scale: 0.8,
-      ease: 'outQuart',
-      duration: 150,
-      delay: (_el: any, i: number) => (itemCount - 1 - i) * 20,
-    });
-
-    animRef.current = animate(el, {
-      height: 0,
-      paddingTop: 0,
-      paddingBottom: 0,
-      ease: 'outQuart',
-      duration: 200,
-      delay: 50,
-      onComplete: () => {
-        setIsAnimatingOut(false);
-        ctx.onCloseComplete();
-      },
-    });
-
-    animate(el, {
-      opacity: 0,
-      ease: 'outQuart',
-      duration: 100,
-      delay: 150,
-    });
-  }, [isAnimatingOut, ctx]);
+  const { contentRef } = usePopupAnimation({
+    animate: ctx.animateConfig,
+    isClosing: ctx.isClosing,
+    onCloseComplete: ctx.onCloseComplete,
+    itemSelector: 'button',
+    animateHeight: true,
+  });
 
   const handlePointerDownOutside = (e: Event) => {
-    e.preventDefault();
-    ctx.close();
+    if (!e.defaultPrevented) ctx.close();
   };
 
   const handleEscapeKeyDown = (e: KeyboardEvent) => {
-    e.preventDefault();
-    ctx.close();
+    if (!e.defaultPrevented) ctx.close();
   };
 
   return (
@@ -615,7 +519,7 @@ export interface TimeFieldDropdownColumnProps extends Record<string, unknown> {
   segment: SegmentType | 'period';
   className?: string;
   style?: React.CSSProperties;
-  pt?: PassThrough<'dropdownColumn'>;
+  sp?: SlotPropsMap<'dropdownColumn'>;
 }
 
 const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDropdownColumnProps, HTMLDivElement>({
@@ -624,7 +528,7 @@ const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDro
   slots: ['dropdownColumn'] as const,
   moveProps: ['segment'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { tf, close, isOpen } = useTimeFieldContext();
     const colRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, colRef);
@@ -684,15 +588,15 @@ const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDro
 
     return {
       render() {
-        const colPt = ptm('dropdownColumn');
-        const { className: ptClass, style: ptStyle, ...ptRest } = colPt as Record<string, unknown>;
+        const colSp = sp('dropdownColumn');
+        const { className: spClass, style: spStyle, ...spRest } = colSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
-            className={cx('dropdownColumn', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('dropdownColumn', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-segment={segType}
           >
             {items.map((item) => (

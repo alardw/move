@@ -9,4 +9,5 @@ export type {
   CardFooterProps,
   CardFooterStartProps,
   CardFooterEndProps,
+  CardSize,
 } from './Card';

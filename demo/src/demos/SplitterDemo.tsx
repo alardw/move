@@ -224,6 +224,7 @@ export function SplitterDemo() {
           { name: 'gutterSize', type: 'number', default: '4', description: 'Size of the draggable gutter in pixels.' },
           { name: 'collapseBelow', type: 'number', description: 'Container width in pixels below which horizontal layout collapses to vertical.' },
           { name: 'onResizeEnd', type: '(sizes: number[]) => void', description: 'Called with panel size percentages after a resize completes.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
 
@@ -232,6 +233,7 @@ export function SplitterDemo() {
         properties={[
           { name: 'size', type: 'number', description: 'Initial size as a percentage of the container.' },
           { name: 'minSize', type: 'number', default: '5', description: 'Minimum size as a percentage.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the panel element.' },
         ]}
       />
     </DocPage.Root>

@@ -46,6 +46,24 @@
   transition: background-color var(--move-switch-transition) var(--move-ease-default);
 }
 
+/* Sizes */
+.root.root[data-size='sm'] {
+  --move-switch-width: 2.5rem;
+  --move-switch-height: 1.25rem;
+  --move-switch-padding: 2px;
+}
+
+.root.root[data-size='md'],
+.root.root:not([data-size]) {
+  /* default */
+}
+
+.root.root[data-size='lg'] {
+  --move-switch-width: 4rem;
+  --move-switch-height: 2.25rem;
+  --move-switch-padding: 4px;
+}
+
 .root.root[data-state='checked'] {
   background-color: var(--move-switch-bg-checked);
 }

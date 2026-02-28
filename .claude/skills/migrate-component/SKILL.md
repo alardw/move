@@ -80,7 +80,7 @@ import { withMoveComponent } from '../../../engine';
 withMoveComponent<TSlots, TProps, TRef, TSubs>({
   name: string;              // Component display name (e.g. 'Button')
   styles?: Record<string, string>;  // CSS Module import
-  slots?: readonly TSlots[]; // Slot names — must match ptm() and cx() calls
+  slots?: readonly TSlots[]; // Slot names — must match sp() and cx() calls
   defaults?: Partial<TProps>;       // Default prop values (merged into props)
   moveProps?: readonly string[];    // Move-specific prop keys stripped from attrs
   subComponents?: TSubs;            // Sub-components attached as static properties
@@ -96,13 +96,13 @@ withMoveComponent<TSlots, TProps, TRef, TSubs>({
 | `ref`         | `Ref<TRef>`                       | Merged ref (forwarded + internal). Attach to root DOM element. |
 | `internalRef` | `RefObject<TRef \| null>`         | Direct ref for imperative DOM access inside setup. |
 | `cx`          | `(slot, ...extra) => string`      | Resolves CSS Module class for a slot, plus extra classNames. |
-| `ptm`         | `(slot, localProps?) => SlotProps` | Merges global PT → instance PT → local props for a slot. |
+| `sp`          | `(slot, localProps?) => SlotProps` | Merges global slotProps → instance sp → local props for a slot. |
 | `attrs`       | `Record<string, unknown>`         | HTML-safe props: user props minus all Move-specific keys. Spread on root element. |
 
 ### How `defaults` and `moveProps` interact with `stripKeys`
 
 The factory builds a `stripKeys` set from:
-1. Internal keys: `['pt']`
+1. Internal keys: `['sp']`
 2. Everything in `moveProps`
 3. Every key in `defaults`
 
@@ -115,20 +115,20 @@ Any prop key in `stripKeys` is **excluded from `attrs`** so it won't leak to the
 ```ts
 const cx = createCx(styles); // styles = CSS Module import
 
-cx('root', props.className, ptClass)
-// → "Badge_root_abc123 my-custom-class pt-override-class"
+cx('root', props.className, spClass)
+// → "Badge_root_abc123 my-custom-class sp-override-class"
 ```
 
 - First arg is the slot name → looks up `styles[slot]` for the CSS Module class
 - Remaining args are extra classNames (falsy values filtered out)
 
-### How `ptm()` merges pass-through props
+### How `sp()` merges slot props
 
 ```ts
-const ptm = createPtm(globalPT, instancePT);
+const sp = createSp(globalSP, instanceSP);
 
-const rootPt = ptm('root');
-// Merges: globalPT.root → instancePT.root → localProps
+const rootSp = sp('root');
+// Merges: globalSP.root → instanceSP.root → localProps
 // className: concatenated
 // style: shallow-merged (later wins)
 // everything else: spread (later wins)
@@ -137,15 +137,15 @@ const rootPt = ptm('root');
 Usage pattern in `render()`:
 
 ```tsx
-const rootPt = ptm('root');
-const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+const rootSp = sp('root');
+const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
 <div
   {...attrs}          // HTML-safe user props
-  {...ptRest}         // PT overrides (except className/style which are merged manually)
+  {...spRest}         // Slot props overrides (except className/style which are merged manually)
   ref={ref}
-  className={cx('root', props.className, ptClass as string | undefined)}
-  style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+  className={cx('root', props.className, spClass as string | undefined)}
+  style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
   data-variant={props.variant}
 >
 ```
@@ -183,19 +183,19 @@ export const Badge = withMoveComponent<'root', BadgeProps, HTMLSpanElement>({
   defaults: { variant: 'primary', size: 'md' },
   moveProps: ['variant', 'size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <span
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
           >
@@ -245,7 +245,7 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useInteractiveAnimate } from '../../../animation';
-import { defaultAnimations, type InteractiveAnimate } from '../../../animation/types';
+import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
 import styles from './Button.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -254,7 +254,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export interface ButtonProps extends Record<string, unknown> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: InteractiveAnimate | false;
+  animate?: ElementAnimate | false;
   asChild?: boolean;
   type?: string;
   className?: string;
@@ -277,7 +277,7 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement>(
   defaults: { variant: 'primary', size: 'md', asChild: false, type: 'button' },
   moveProps: ['variant', 'size', 'animate', 'asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const {
       variant, size, animate: animateProp, asChild, type,
       className, style, children,
@@ -290,8 +290,8 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement>(
       : { ...(animateProp || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractiveAnimate,
-      defaults: defaultAnimations.interactive,
+      animate: animateConfig as ElementAnimate,
+      defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });
 
@@ -300,17 +300,17 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement>(
     return {
       render() {
         const Comp = asChild ? Slot.Root : 'button';
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             type={asChild ? undefined : (type as 'button' | 'submit' | 'reset')}
-            className={cx('root', className, ptClass as string | undefined)}
-            style={{ ...style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
@@ -362,10 +362,10 @@ Multiple slots, headless hook (`useCheckbox`), toggle animation, form integratio
 
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
 import { useToggleAnimation } from '../../../animation/hooks';
-import type { ToggleableAnimate } from '../../../animation/types';
+import type { IndicatorAnimate } from '../../../animation/types';
 import { Icon } from '../../Icon/Icon';
 import styles from './Checkbox.module.css';
 
@@ -380,12 +380,12 @@ export interface CheckboxProps extends Record<string, unknown> {
   indeterminate?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   icon?: string;
-  animate?: ToggleableAnimate | false;
+  animate?: IndicatorAnimate | false;
   disabled?: boolean;
   name?: string;
   value?: string;
   required?: boolean;
-  pt?: PassThrough<CheckboxSlots>;
+  sp?: SlotPropsMap<CheckboxSlots>;
 }
 
 const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonElement>({
@@ -396,7 +396,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
   moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange',
               'icon', 'animate', 'disabled', 'name', 'value', 'required'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     // Headless state
     const checkbox = useCheckbox({
       checked: props.checked as boolean | undefined,
@@ -407,7 +407,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
 
     // Toggle animation
     const toggleAnim = useToggleAnimation({
-      animate: props.animate as ToggleableAnimate | false | undefined,
+      animate: props.animate as IndicatorAnimate | false | undefined,
       initialChecked: checkbox.checked,
       disabled: props.disabled as boolean,
     });
@@ -426,13 +426,13 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const indicatorPt = ptm('indicator');
-        const iconPt = ptm('icon');
+        const rootSp = sp('root');
+        const indicatorSp = sp('indicator');
+        const iconSp = sp('icon');
 
-        const { className: rootPtClass, style: rootPtStyle, ...rootPtRest } = rootPt as Record<string, unknown>;
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
-        const { className: iconPtClass, style: iconPtStyle, ...iconPtRest } = iconPt as Record<string, unknown>;
+        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
 
         const dataState = checkbox.indeterminate
           ? 'indeterminate'
@@ -442,27 +442,27 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
           <div className={styles.wrapper}>
             <button
               {...attrs}
-              {...rootPtRest}
+              {...rootSpRest}
               ref={mergedRef}
               type="button"
               role="checkbox"
               aria-checked={checkbox.indeterminate ? 'mixed' : checkbox.checked}
               data-state={dataState}
               disabled={props.disabled as boolean}
-              className={cx('root', props.className, rootPtClass as string | undefined)}
-              style={{ ...props.style, ...(rootPtStyle as React.CSSProperties) }}
+              className={cx('root', props.className, rootSpClass as string | undefined)}
+              style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
               onClick={handleClick}
               onMouseDown={toggleAnim.pressHandlers.onMouseDown}
               onMouseUp={toggleAnim.pressHandlers.onMouseUp}
               onMouseLeave={toggleAnim.pressHandlers.onMouseLeave}
             >
               <span
-                {...indPtRest}
+                {...indSpRest}
                 ref={toggleAnim.indicatorRef as React.RefObject<HTMLSpanElement>}
-                className={cx('indicator', indPtClass as string | undefined)}
-                style={indPtStyle as React.CSSProperties}
+                className={cx('indicator', indSpClass as string | undefined)}
+                style={indSpStyle as React.CSSProperties}
               >
-                <span {...iconPtRest}>
+                <span {...iconSpRest}>
                   <Icon name={props.icon as string} size={18} />
                 </span>
               </span>
@@ -518,7 +518,7 @@ export function useCheckbox(options: UseCheckboxOptions = {}): UseCheckboxReturn
 ```
 
 Key points:
-- Multiple slots (`root`, `indicator`, `icon`) — each gets its own `ptm()` and `cx()` call
+- Multiple slots (`root`, `indicator`, `icon`) — each gets its own `sp()` and `cx()` call
 - Headless hook lives next to the component as `use{Component}.ts`
 - Hook uses `useControlledState` from `engine/` for controlled/uncontrolled pattern
 - Hidden `<input>` for form submission when `name` is provided
@@ -534,7 +534,7 @@ Multiple sub-components, shared context, `Object.assign` export. Some sub-compon
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Dialog.module.css';
 
 // --- Root (stateless — no factory needed) ---
@@ -557,7 +557,7 @@ export interface DialogTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButtonElement>({
@@ -566,19 +566,19 @@ const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButto
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         return (
           <RadixDialog.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDialog.Trigger>
@@ -589,7 +589,7 @@ const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButto
 });
 
 // --- Content, Overlay, Title, Description, Close (similar pattern) ---
-// Each sub-component follows the same ptm/cx/attrs/ref pattern.
+// Each sub-component follows the same sp/cx/attrs/ref pattern.
 
 // --- Export ---
 export const Dialog = {
@@ -709,28 +709,29 @@ Determine which category the component belongs to using the decision rules in Se
 
 ### Step 2: Identify slots
 
-List every DOM element the user might want to style via pass-through. Each becomes a slot name:
-- `root` — always present (the outermost element receiving `ref`, `attrs`, `ptRest`)
+List every DOM element the user might want to style via slot props. Each becomes a slot name:
+- `root` — always present (the outermost element receiving `ref`, `attrs`, `spRest`)
 - Additional slots for inner elements (e.g. `indicator`, `icon`, `content`, `title`)
 
-### Step 3: Identify Move-specific props vs HTML pass-through
+### Step 3: Identify Move-specific props vs HTML-safe attrs
 
 - **Move-specific**: `variant`, `size`, `animate`, `asChild`, `checked`, `onCheckedChange`, etc.
-- **HTML pass-through**: `className`, `style`, `children`, `onClick`, `disabled`, `aria-*`, `data-*`, etc.
-- Move-specific props go in `moveProps` array (or `defaults` object). Everything else passes through as `attrs`.
+- **HTML-safe attrs**: `className`, `style`, `children`, `disabled`, `type`, `name`, `value`, `required`, `onClick`, `onChange`, `onFocus`, `onBlur`, `onKey*`, `onMouse*`, `aria-*`, `data-*`, `role`, `tabIndex`, `id`, `title`, `placeholder`, `autoFocus`, `form`, `sp`.
+- Move-specific props go in `moveProps` array (or `defaults` object). Everything else ends up in `attrs`.
 
 ### Step 4: Choose animation type
 
 | Component type | Animation hook | Config type |
 |----------------|---------------|-------------|
-| Clickable element | `useInteractiveAnimate` | `InteractiveAnimate` |
-| Toggle control | `useToggleAnimation` | `ToggleableAnimate` |
-| Expandable panel | `useExpandAnimation` | `ExpandableAnimate` |
-| Overlay/modal | `Presence` + `useAnimateConfig` | `OverlayAnimate` |
-| Menu/dropdown | `Presence` + stagger | `MenuAnimate` |
+| Clickable element | `useInteractiveAnimate` | `ElementAnimate` |
+| Toggle control | `useToggleAnimation` | `IndicatorAnimate` |
+| Expandable panel | `useExpandAnimation` | `ContentAnimate` |
+| Overlay/modal (Dialog, Sidebar) | `useLayerAnimation` + `Presence` | `LayerAnimate` |
+| Popup (Dropdown, Select, Popover) | `usePopupAnimation` + `Presence` | `PopupAnimate` |
+| Sliding indicator (Tabs, Pagination) | `useSlidingIndicator` | — |
 | No animation | (skip) | — |
 
-**IMPORTANT — No CSS animations:** Never use CSS `@keyframes`, `animation`, `transition` for entrance, exit, or state animations. All motion goes through the anime.js-based animation system (`useAnimateConfig`, `useInteractiveAnimate`, `useToggleAnimation`, `useExpandAnimation`, `Presence` + `usePresence`, or `toAnimeParams` + `animate` from animejs). CSS `transition` is only acceptable for simple hover color/background changes on non-animated elements (e.g. close buttons).
+**IMPORTANT — No CSS animations:** Never use CSS `@keyframes`, `animation`, `transition` for entrance, exit, or state animations. All motion goes through the anime.js-based animation system (`useAnimateConfig`, `useInteractiveAnimate`, `useToggleAnimation`, `useExpandAnimation`, `usePopupAnimation`, `useLayerAnimation`, `useSlidingIndicator`, `Presence` + `usePresence`, or `toAnimeParams` + `animate` from animejs). CSS `transition` is only acceptable for simple hover color/background changes on non-animated elements (e.g. close buttons).
 
 ### Step 5: Determine if headless hook is needed
 
@@ -763,7 +764,7 @@ Create `src/components/{category}/{ComponentName}/{ComponentName}.tsx`:
 4. Props interface `extends Record<string, unknown>`
 5. `withMoveComponent` call with all required options
 6. `setup()` with hooks, handlers, and `render()` return
-7. In `render()`: `ptm()` → destructure → spread `attrs` + `ptRest` → `cx()` → `data-*` attributes
+7. In `render()`: `sp()` → destructure → spread `attrs` + `spRest` → `cx()` → `data-*` attributes
 
 ### Step 8: Generate the CSS module file
 
@@ -820,12 +821,12 @@ Every migrated component MUST include a demo page in `demo/src/demos/`.
 1. **Header** — title + short snappy description (no technical jargon)
 2. **Usage block** — first example is always "Usage", showing the import and minimal usage code
 3. **Feature examples** — each demonstrates one capability (variants, sizes, animation, etc.) with a short, appealing description
-4. **Custom Styling** — last example, shows global and instance style overrides via `pt`
+4. **Parameters** — `<Heading level={3}>Parameters</Heading>` followed by `<DocPage.ApiSection>` blocks documenting the component's public props. Each sub-component with user-facing props gets its own ApiSection.
 
 ### Rules for demo descriptions
 
 - Short and snappy, not technical
-- No internal implementation details (no "factory", "hook", "PT", "slot", "pass-through")
+- No internal implementation details (no "factory", "hook", "slot props", "slot", "render", "props interface")
 - Describe what the user sees/gets, not how it works
 - Examples: "A color for every occasion", "From compact to spacious", "Hover and press come to life"
 
@@ -849,19 +850,6 @@ function VariantsExample() {
   );
 }
 
-function CustomStylingExample() {
-  return (
-    <MoveProvider pt={{ ComponentName: { root: { style: { /* override */ } } } }}>
-      <Stack gap="md">
-        <ComponentName>Global Style Applied</ComponentName>
-        <ComponentName pt={{ root: { style: { /* instance override */ } } }}>
-          Instance Style
-        </ComponentName>
-      </Stack>
-    </MoveProvider>
-  );
-}
-
 const examples: Example[] = [
   {
     id: 'usage',
@@ -878,13 +866,6 @@ const examples: Example[] = [
     code: `<ComponentName variant="primary">Primary</ComponentName>\n<ComponentName variant="secondary">Secondary</ComponentName>`,
   },
   // ...more feature examples...
-  {
-    id: 'custom-styling',
-    name: 'Custom Styling',
-    description: 'Tweak styles globally or per instance',
-    component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{ ComponentName: { root: { style: { /* ... */ } } } }}>\n  <ComponentName>Global Style Applied</ComponentName>\n  <ComponentName pt={{ root: { style: { /* ... */ } } }}>Instance Style</ComponentName>\n</MoveProvider>`,
-  },
 ];
 
 export function ComponentNameDemo() {
@@ -895,10 +876,22 @@ export function ComponentNameDemo() {
         description="Short, snappy one-liner."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="ComponentName"
+        properties={[
+          { name: 'variant', type: "'primary' | 'secondary'", default: "'primary'", description: 'Visual style.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the component.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }
 ```
+
+For compound components, add a separate `<DocPage.ApiSection>` for each sub-component that has user-facing props (e.g. `Root`, `Trigger`, `Content`, `Item`).
 
 ### Code snippet rules
 
@@ -927,6 +920,8 @@ import { ComponentNameDemo } from './demos/ComponentNameDemo';
 { name: 'ComponentName', component: ComponentNameDemo, icon: NewIcon },
 ```
 
+**Alphabetical order:** Items within each `componentGroups` group must be sorted alphabetically by `name`. Insert the new entry at the correct alphabetical position, not at the end.
+
 ### Routing
 
 The demo app uses hash-based routing. The `name` in `componentGroups` is the **canonical key** — it's used to:
@@ -942,43 +937,68 @@ The routing uses `history.pushState` for navigation (avoids hashchange race cond
 
 ## 7. Strict Validation Checklist
 
-Before considering the migration complete, verify every item:
+Before considering the migration complete, verify every item. Rule IDs match the check-component skill for easy cross-referencing.
 
-### Component file
-- [ ] 1. `'use client'` directive present at line 1
-- [ ] 2. Props interface `extends Record<string, unknown>`
-- [ ] 3. All Move-specific props listed in `moveProps` (or `defaults`)
-- [ ] 4. All default values listed in `defaults`
-- [ ] 5. `slots` array matches all `ptm()` and `cx()` calls
-- [ ] 6. `cx()` used for every `className` on slotted elements
-- [ ] 7. `ptm()` called for every slot, destructured correctly (`className`, `style`, `...rest`)
-- [ ] 8. `{...attrs}` and `{...ptRest}` spread on root element
-- [ ] 9. `ref` forwarded to the root DOM element
-- [ ] 10. `data-variant` / `data-size` / `data-state` attributes used (where applicable)
+### A. Component File (`{ComponentName}.tsx`)
 
-### CSS Module
-- [ ] 11. Matching class for every slot in the factory
-- [ ] 12. Uses design token variables, not hard-coded values
-- [ ] 13. Component tokens on `.root` (not `:root`)
-- [ ] 14. No CSS `@keyframes`, `animation`, or `transition` for state/entrance/exit. CSS `transition` only for hover color/background changes.
+- [ ] A1. `'use client'` directive at line 1
+- [ ] A2. Props interface `extends Record<string, unknown>` (for every sub-component used with `withMoveComponent`). Exception: plain FC Root wrappers around Radix primitives don't need this.
+- [ ] A3. All Move-specific props in `moveProps` or `defaults`. Cross-reference against the props interface — every prop that isn't a valid HTML-safe attr must be listed. HTML-safe attrs: `className`, `style`, `children`, `disabled`, `type`, `name`, `value`, `required`, `onClick`, `onChange`, `onFocus`, `onBlur`, `onKey*`, `onMouse*`, `aria-*`, `data-*`, `role`, `tabIndex`, `id`, `title`, `placeholder`, `autoFocus`, `form`, `sp`.
+- [ ] A4. All default values in `defaults` object — no inline defaults in destructuring (e.g. `= 'primary'`)
+- [ ] A5. `slots` array matches all `sp()` and `cx()` calls — every slot used, every used slot listed
+- [ ] A6. `cx()` used for every `className` on slotted elements — no raw `className={styles.foo}` on slots
+- [ ] A7. `sp()` called for every slot, destructured as `{ className: spClass, style: spStyle, ...spRest }`
+- [ ] A8. `{...attrs}` and `{...spRest}` spread on root element. Exception: plain FC Root wrappers don't need this.
+- [ ] A9. `ref` forwarded to root DOM element (`ref={ref}` or `ref={mergedRef}`). Exception: plain FC Root context providers without a DOM element.
+- [ ] A10. `data-variant` / `data-size` / `data-state` attributes used where applicable
+- [ ] A11. Import paths use `engine/` — no imports from `../core` or `../../../core`
+- [ ] A12. No Move-internal props leak to HTML — all Move-specific props in `moveProps`/`defaults`, no manual spreading of Move props onto DOM elements
 
-### Exports
-- [ ] 15. `index.ts` barrel exports component + all types
-- [ ] 16. Component and types added to `src/index.ts`
+### B. CSS Module (`{ComponentName}.module.css`)
 
-### Safety
-- [ ] 17. No Move-internal props leak to HTML (checked via `moveProps` + `defaults`)
+- [ ] B1. Matching `.{slotName}` class for every slot in the factory
+- [ ] B2. Design token variables — no raw hex colors (`#xxx`), no raw pixel values for spacing/radius. Use `var(--move-*)`. Raw pixels for `width`, `height`, `border-width`, `font-size` in component-specific contexts are acceptable.
+- [ ] B3. Component tokens on `.root` not `:root` — `--move-{component}-*` declarations inside `.root { }`, not `:root { }`
+- [ ] B4. Variant/size/state use data-attribute selectors — `.root[data-variant='...']`, `.root[data-size='...']`, `[data-state='...']` instead of class-based selectors
+- [ ] B5. CSS variable naming follows `--move-{component}-{property}` convention
+- [ ] B6. No CSS `@keyframes`, `animation`, or `transition` for state/entrance/exit. CSS `transition` only for simple hover color/background changes. All other motion uses the anime.js system.
 
-### Paths
-- [ ] 18. Import paths use `engine/` (not `core/`)
+### C. Exports
 
-### Placement consistency
-- [ ] 19. Component lives in `src/components/{category}/{ComponentName}/` where `{category}` is a valid category
-- [ ] 20. `src/index.ts` import path matches actual directory location
-- [ ] 21. Demo registered under the correct `componentGroups` label matching the src category
+- [ ] C1. `index.ts` barrel exports component + all public type interfaces
+- [ ] C2. Component and types added to `src/index.ts`
+- [ ] C3. Headless hook exported (if `use{Component}.ts` exists) — both `index.ts` and `src/index.ts` export the hook and its types
 
-### Demo
-- [ ] 22. Demo page exists in `demo/src/demos/`
-- [ ] 23. Usage as first example, Custom Styling as last
-- [ ] 24. All demo `code` snippets are complete (no `...` placeholders)
-- [ ] 25. Demo descriptions are short and non-technical
+### D. Demo Page
+
+- [ ] D1. Demo file exists in `demo/src/demos/{ComponentName}Demo.tsx`
+- [ ] D2. First example is "Usage" (`id: 'usage'`, `name: 'Usage'`) with import + minimal code
+- [ ] D4. All demo `code` snippets are complete — no `...` or `// ...` placeholders
+- [ ] D5. Demo descriptions are short and non-technical — no words like "factory", "hook", "slot props", "slot", "render", "props interface"
+- [ ] D6. Registered in `demo/src/App.tsx` — lazy import + `componentGroups` entry under the correct category group
+- [ ] D7. Parameters section with `<Heading level={3}>Parameters</Heading>` followed by `<DocPage.ApiSection>` blocks documenting public props for each sub-component
+- [ ] D8. Items within each `componentGroups` group are sorted alphabetically by `name`
+
+### E. Accessibility & i18n
+
+- [ ] E1. No hardcoded user-visible strings — any `aria-label`, `aria-labelledby`, placeholder text, or status text must be overridable via props with fallback defaults
+- [ ] E2. Built-in icons use `useResolvedIcon` — any icon rendered internally must use `useResolvedIcon(name, size)` from `../../core/Icon/useResolvedIcon`. No direct icon library imports (e.g. `lucide-react`).
+- [ ] E3. Essential icons have built-in fallbacks — icons must exist in `src/components/core/Icon/builtinIcons.tsx`'s `BUILTIN_ICONS` registry
+- [ ] E4. Fallback children for icon slots — sub-components that typically contain an icon render a `useResolvedIcon` fallback when `props.children` is not provided. Pattern: `{props.children || fallbackIcon}`
+
+### F. Placement Consistency
+
+- [ ] F1. Component in valid category folder — `src/components/{category}/{ComponentName}/` where `{category}` is one of: `core`, `form`, `panel`, `overlay`, `navigation`, `data`, `media`, `calendar`, `file`, `toolbar`, `loading`, `misc`
+- [ ] F2. `src/index.ts` import path matches actual directory location on disk
+- [ ] F3. Demo `componentGroups` entry uses the label matching the src category (see Section 1 mapping table)
+- [ ] F4. Lucide icon used in `componentGroups` entry is imported in the icon import block at the top of `demo/src/App.tsx`
+- [ ] F5. `name` value in `componentGroups` is unique across all groups and matches the exact PascalCase component name
+
+### Important Notes
+
+- Only flag actual violations, not style preferences
+- For compound components, validate the main file which contains all sub-components
+- The `sp` prop is automatically handled by the factory — it doesn't need to be in `moveProps`
+- `className`, `style`, and `children` are standard React props and don't need to be in `moveProps`
+- Sub-component prop interfaces (e.g. `AccordionItemProps`) also need `extends Record<string, unknown>`
+- Wrapper elements that aren't slots (like Checkbox's `.wrapper` div) are allowed to use `styles.wrapper` directly

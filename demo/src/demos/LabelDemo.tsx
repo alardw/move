@@ -20,6 +20,16 @@ function UsageExample() {
   );
 }
 
+function SizesExample() {
+  return (
+    <Stack gap="md">
+      <Label size="sm">Small label</Label>
+      <Label size="md">Medium label</Label>
+      <Label size="lg">Large label</Label>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -35,6 +45,15 @@ const examples: Example[] = [
 
 {/* Disabled */}
 <Label disabled>Disabled label</Label>`,
+  },
+  {
+    id: 'sizes',
+    name: 'Sizes',
+    description: 'Match the label size to your form fields',
+    component: <SizesExample />,
+    code: `<Label size="sm">Small label</Label>
+<Label size="md">Medium label</Label>
+<Label size="lg">Large label</Label>`,
   },
 ];
 
@@ -55,6 +74,8 @@ export function LabelDemo() {
           { name: 'htmlFor', type: 'string', description: 'The id of the form element this label is associated with.' },
           { name: 'required', type: 'boolean', description: 'Whether to show a required asterisk indicator.' },
           { name: 'disabled', type: 'boolean', description: 'Whether the label appears in a disabled state.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Font size of the label.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: root, asterisk.' },
         ]}
       />
     </DocPage.Root>

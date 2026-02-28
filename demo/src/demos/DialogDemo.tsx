@@ -279,6 +279,7 @@ export function DialogDemo() {
         title="Dialog.Trigger"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Render as the child element instead of a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
 
@@ -294,6 +295,7 @@ export function DialogDemo() {
         properties={[
           { name: 'size', type: "'sm' | 'md' | 'lg' | 'xl' | 'full'", default: "'md'", description: 'Width preset for the dialog.' },
           { name: 'onOpenAutoFocus', type: '(event: Event) => void', description: 'Called when focus moves into the content after opening.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the content element.' },
         ]}
       />
 
@@ -301,6 +303,7 @@ export function DialogDemo() {
         title="Dialog.Close"
         properties={[
           { name: 'asChild', type: 'boolean', description: 'Render as the child element instead of a button.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the close element.' },
         ]}
       />
     </DocPage.Root>

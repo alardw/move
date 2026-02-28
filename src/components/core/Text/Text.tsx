@@ -29,21 +29,21 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
   defaults: { as: 'p', size: 'base', weight: 'normal', color: 'base' },
   moveProps: ['as', 'size', 'weight', 'color', 'align', 'truncate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const Comp = (props.as || 'p') as React.ElementType;
 
         return (
           <Comp
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-size={props.size}
             data-weight={props.weight}
             data-color={props.color}

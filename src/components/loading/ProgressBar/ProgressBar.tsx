@@ -2,36 +2,40 @@
 
 import * as React from 'react';
 import { Progress as RadixProgress } from 'radix-ui';
-import { animate, spring } from 'animejs';
+// animejs removed — CSS transition handles smooth progress
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
-import { prefersReducedMotion } from '../../../animation';
+import type { SlotPropsMap } from '../../../engine/types';
+
 import styles from './ProgressBar.module.css';
 
 // =============================================================================
 // ProgressBar
 // =============================================================================
 
+export type ProgressBarSize = 'sm' | 'md' | 'lg';
+export type ProgressBarVariant = 'default' | 'success' | 'warning' | 'error';
+
 export interface ProgressBarProps extends Record<string, unknown> {
   value?: number | null;
   max?: number;
+  size?: ProgressBarSize;
+  variant?: ProgressBarVariant;
   getValueLabel?: (value: number, max: number) => string;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'root' | 'indicator'>;
+  sp?: SlotPropsMap<'root' | 'indicator'>;
 }
 
 export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarProps, HTMLDivElement>({
   name: 'ProgressBar',
   styles,
   slots: ['root', 'indicator'] as const,
-  defaults: { max: 100 },
-  moveProps: ['value', 'max', 'getValueLabel'],
+  defaults: { max: 100, size: 'md', variant: 'default' },
+  moveProps: ['value', 'max', 'getValueLabel', 'size', 'variant'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const indicatorRef = React.useRef<HTMLDivElement | null>(null);
-    const prevValueRef = React.useRef<number | null | undefined>(undefined);
 
     React.useEffect(() => {
       const indicator = indicatorRef.current;
@@ -43,56 +47,38 @@ export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarPr
       // Indeterminate — CSS animation handles this
       if (value == null) {
         indicator.style.transform = '';
-        prevValueRef.current = value;
         return;
       }
 
       const percentage = Math.min(100, Math.max(0, (value / max) * 100));
-
-      // First render or reduced motion — set instantly
-      if (prevValueRef.current === undefined || prefersReducedMotion()) {
-        indicator.style.transform = `translateX(-${100 - percentage}%)`;
-        prevValueRef.current = value;
-        return;
-      }
-
-      // Animate the transition
-      const prevVal = prevValueRef.current;
-      const prevPercentage = prevVal != null
-        ? Math.min(100, Math.max(0, (prevVal / max) * 100))
-        : 0;
-
-      animate(indicator, {
-        translateX: [`-${100 - prevPercentage}%`, `-${100 - percentage}%`],
-        ease: spring({ mass: 1, stiffness: 260, damping: 16, velocity: 0 }),
-      });
-
-      prevValueRef.current = value;
+      indicator.style.transform = `translateX(-${100 - percentage}%)`;
     }, [props.value, props.max]);
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
-        const indicatorPt = ptm('indicator');
-        const { className: indPtClass, style: indPtStyle, ...indPtRest } = indicatorPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const indicatorSp = sp('indicator');
+        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
 
         return (
           <RadixProgress.Root
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             value={props.value as number | null | undefined}
             max={props.max as number}
             getValueLabel={props.getValueLabel as ((value: number, max: number) => string) | undefined}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            data-size={props.size}
+            data-variant={props.variant}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             <RadixProgress.Indicator
-              {...indPtRest}
+              {...indSpRest}
               ref={indicatorRef}
-              className={cx('indicator', indPtClass as string | undefined)}
-              style={indPtStyle as React.CSSProperties}
+              className={cx('indicator', indSpClass as string | undefined)}
+              style={indSpStyle as React.CSSProperties}
             />
           </RadixProgress.Root>
         );

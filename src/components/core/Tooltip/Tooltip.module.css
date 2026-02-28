@@ -54,3 +54,9 @@
     transform: scale(0.9);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .content[data-state='closed'] {
+    animation: none;
+  }
+}

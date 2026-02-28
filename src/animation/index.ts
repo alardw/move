@@ -16,12 +16,20 @@ export {
 export { useAnimateConfig, useInteractiveAnimate } from './useAnimateConfig';
 export type { UseAnimateConfigOptions, UseAnimateConfigReturn } from './useAnimateConfig';
 
-export { useToggleAnimation, useExpandAnimation } from './hooks';
+export { useToggleAnimation, useExpandAnimation, useSlidingIndicator, useCarouselAnimation, usePopupAnimation, useLayerAnimation } from './hooks';
 export type {
   UseToggleAnimationOptions,
   UseToggleAnimationReturn,
   UseExpandAnimationOptions,
   UseExpandAnimationReturn,
+  UseSlidingIndicatorOptions,
+  UseSlidingIndicatorReturn,
+  UseCarouselAnimationOptions,
+  UseCarouselAnimationReturn,
+  UsePopupAnimationOptions,
+  UsePopupAnimationReturn,
+  UseLayerAnimationOptions,
+  UseLayerAnimationReturn,
 } from './hooks';
 
 // Presence system
@@ -47,6 +55,7 @@ export type {
   PopupItemAnimate,
   ListAnimate,
   ListItemAnimate,
+  CarouselAnimate,
   // Deprecated aliases
   InteractiveAnimate,
   ExpandableAnimate,

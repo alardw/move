@@ -1,7 +1,7 @@
 'use client';
 
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './ScrollArea.module.css';
 
 // ============================================================================
@@ -12,7 +12,7 @@ export interface ScrollAreaRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const ScrollAreaRoot = withMoveComponent<'root', ScrollAreaRootProps, HTMLDivElement>({
@@ -20,18 +20,18 @@ const ScrollAreaRoot = withMoveComponent<'root', ScrollAreaRootProps, HTMLDivEle
   styles,
   slots: ['root'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -51,7 +51,7 @@ export interface ScrollAreaHeaderProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Whether to apply padding. Default: true */
   padded?: boolean;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const ScrollAreaHeader = withMoveComponent<'header', ScrollAreaHeaderProps, HTMLDivElement>({
@@ -61,19 +61,19 @@ const ScrollAreaHeader = withMoveComponent<'header', ScrollAreaHeaderProps, HTML
   defaults: { padded: true },
   moveProps: ['padded'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const headerPt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             data-padded={props.padded}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -93,7 +93,7 @@ export interface ScrollAreaContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Whether to apply padding. Default: false */
   padded?: boolean;
-  pt?: PassThrough<'content'>;
+  sp?: SlotPropsMap<'content'>;
 }
 
 const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, HTMLDivElement>({
@@ -103,19 +103,19 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
   defaults: { padded: false },
   moveProps: ['padded'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             data-padded={props.padded}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -135,7 +135,7 @@ export interface ScrollAreaFooterProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Whether to apply padding. Default: true */
   padded?: boolean;
-  pt?: PassThrough<'footer'>;
+  sp?: SlotPropsMap<'footer'>;
 }
 
 const ScrollAreaFooter = withMoveComponent<'footer', ScrollAreaFooterProps, HTMLDivElement>({
@@ -145,19 +145,19 @@ const ScrollAreaFooter = withMoveComponent<'footer', ScrollAreaFooterProps, HTML
   defaults: { padded: true },
   moveProps: ['padded'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const footerPt = ptm('footer');
-        const { className: ptClass, style: ptStyle, ...ptRest } = footerPt as Record<string, unknown>;
+        const footerSp = sp('footer');
+        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             data-padded={props.padded}
-            className={cx('footer', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footer', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import type {
   MoveComponentOptions,
-  PassThrough,
+  SlotPropsMap,
   SetupContext,
   SetupReturn,
 } from './types';
-import { createCx, createPtm } from './mergeProps';
+import { createCx, createSp } from './mergeProps';
 import { useMoveContext } from './context';
 import { useMergedRef } from './useMergedRef';
 
@@ -13,7 +13,7 @@ import { useMergedRef } from './useMergedRef';
 // Move-specific prop keys to always strip from attrs
 // =============================================================================
 
-const MOVE_INTERNAL_KEYS = new Set(['pt']);
+const MOVE_INTERNAL_KEYS = new Set(['sp']);
 
 // =============================================================================
 // withMoveComponent
@@ -23,9 +23,9 @@ const MOVE_INTERNAL_KEYS = new Set(['pt']);
  * Factory function that creates a Move component with:
  * - React.forwardRef
  * - Default props merging
- * - Global PT + instance PT support
+ * - Global + instance slot-props support
  * - CSS Module class resolution via cx()
- * - Pass-through merging via ptm()
+ * - Slot-props merging via sp()
  * - Ref merging (forwarded + internal)
  * - setup() → render() contract
  * - Sub-component attachment
@@ -38,7 +38,7 @@ export function withMoveComponent<
 >(
   options: MoveComponentOptions<TSlots, TProps, TRef, TSubs>
 ): React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<TProps & { pt?: PassThrough<TSlots> }> &
+  React.PropsWithoutRef<TProps & { sp?: SlotPropsMap<TSlots> }> &
     React.RefAttributes<TRef>
 > &
   TSubs {
@@ -58,26 +58,26 @@ export function withMoveComponent<
     ...(defaults ? Object.keys(defaults) : []),
   ]);
 
-  const Component = React.forwardRef<TRef, TProps & { pt?: PassThrough<TSlots> }>(
+  const Component = React.forwardRef<TRef, TProps & { sp?: SlotPropsMap<TSlots> }>(
     (incomingProps, forwardedRef) => {
       // 1. Merge defaults into props
       const props = { ...defaults, ...incomingProps } as TProps & {
-        pt?: PassThrough<TSlots>;
+        sp?: SlotPropsMap<TSlots>;
       };
 
-      // 2. Extract instance PT
-      const instancePT = props.pt;
+      // 2. Extract instance slot-props
+      const instanceSP = props.sp;
 
-      // 3. Get global PT
-      const { globalPT } = useMoveContext<TSlots>(name);
+      // 3. Get global slot-props
+      const { globalSP } = useMoveContext<TSlots>(name);
 
       // 4. Internal ref
       const internalRef = React.useRef<TRef | null>(null);
       const mergedRef = useMergedRef<TRef>(forwardedRef, internalRef);
 
-      // 5. Build cx() and ptm()
+      // 5. Build cx() and sp()
       const cx = createCx<TSlots>(styles);
-      const ptm = createPtm<TSlots>(globalPT, instancePT);
+      const sp = createSp<TSlots>(globalSP, instanceSP);
 
       // 6. Separate attrs from Move-specific props
       const attrs: Record<string, unknown> = {};
@@ -93,7 +93,7 @@ export function withMoveComponent<
         ref: mergedRef,
         internalRef: internalRef as React.RefObject<TRef | null>,
         cx,
-        ptm,
+        sp,
         attrs,
       };
 

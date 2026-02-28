@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import { prefersReducedMotion } from '../../../animation';
 import styles from './Avatar.module.css';
 
@@ -28,7 +28,7 @@ export interface AvatarGroupProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   staggerDelay?: number;
-  pt?: PassThrough<'group'>;
+  sp?: SlotPropsMap<'group'>;
 }
 
 const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>({
@@ -38,7 +38,7 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
   defaults: { staggerDelay: 50 },
   moveProps: ['staggerDelay'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const indexRef = React.useRef(0);
 
     const registerAvatar = React.useCallback(() => {
@@ -52,17 +52,17 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
 
     return {
       render() {
-        const groupPt = ptm('group');
-        const { className: ptClass, style: ptStyle, ...ptRest } = groupPt as Record<string, unknown>;
+        const groupSp = sp('group');
+        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
 
         return (
           <AvatarGroupContext.Provider value={contextValue}>
             <div
               {...attrs}
-              {...ptRest}
+              {...spRest}
               ref={ref}
-              className={cx('group', props.className, ptClass as string | undefined)}
-              style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+              className={cx('group', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
               {props.children}
             </div>
@@ -85,7 +85,7 @@ export interface AvatarRootProps extends Record<string, unknown> {
   children?: React.ReactNode;
   size?: AvatarSize;
   animate?: false;
-  pt?: PassThrough<'root'>;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
@@ -95,10 +95,11 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
   defaults: { size: 'md' },
   moveProps: ['size', 'animate'],
 
-  setup({ props, ref, internalRef, cx, ptm, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { size, animate: animateProp } = props;
     const groupCtx = React.useContext(AvatarGroupContext);
     const indexRef = React.useRef<number | null>(null);
+    const skipAnimation = animateProp === false || prefersReducedMotion();
 
     if (indexRef.current === null && groupCtx) {
       indexRef.current = groupCtx.registerAvatar();
@@ -106,7 +107,12 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 
     React.useEffect(() => {
       const el = internalRef.current;
-      if (!el || animateProp === false || prefersReducedMotion()) return;
+      if (!el) return;
+
+      if (skipAnimation) {
+        el.style.transform = 'scale(1)';
+        return;
+      }
 
       const delay = groupCtx ? (indexRef.current ?? 0) * groupCtx.staggerDelay : 0;
 
@@ -119,16 +125,16 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
           <RadixAvatar.Root
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-size={size}
           >
             {props.children}
@@ -149,7 +155,7 @@ export interface AvatarImageProps extends Record<string, unknown> {
   src?: string;
   alt?: string;
   onLoadingStatusChange?: (status: 'idle' | 'loading' | 'loaded' | 'error') => void;
-  pt?: PassThrough<'image'>;
+  sp?: SlotPropsMap<'image'>;
 }
 
 const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElement>({
@@ -158,22 +164,22 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
   slots: ['image'] as const,
   moveProps: ['onLoadingStatusChange'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const imagePt = ptm('image');
-        const { className: ptClass, style: ptStyle, ...ptRest } = imagePt as Record<string, unknown>;
+        const imageSp = sp('image');
+        const { className: spClass, style: spStyle, ...spRest } = imageSp as Record<string, unknown>;
 
         return (
           <RadixAvatar.Image
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             src={props.src as string}
             alt={props.alt as string}
             onLoadingStatusChange={props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange']}
-            className={cx('image', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('image', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -190,7 +196,7 @@ export interface AvatarFallbackProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   delayMs?: number;
-  pt?: PassThrough<'fallback'>;
+  sp?: SlotPropsMap<'fallback'>;
 }
 
 const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSpanElement>({
@@ -199,20 +205,20 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
   slots: ['fallback'] as const,
   moveProps: ['delayMs'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const fallbackPt = ptm('fallback');
-        const { className: ptClass, style: ptStyle, ...ptRest } = fallbackPt as Record<string, unknown>;
+        const fallbackSp = sp('fallback');
+        const { className: spClass, style: spStyle, ...spRest } = fallbackSp as Record<string, unknown>;
 
         return (
           <RadixAvatar.Fallback
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             delayMs={props.delayMs as number | undefined}
-            className={cx('fallback', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('fallback', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixAvatar.Fallback>

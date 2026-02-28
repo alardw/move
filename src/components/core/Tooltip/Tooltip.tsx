@@ -5,7 +5,8 @@ import { Tooltip as RadixTooltip } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine/useMergedRef';
-import type { PassThrough } from '../../../engine/types';
+import { prefersReducedMotion } from '../../../animation/utils';
+import type { SlotPropsMap } from '../../../engine/types';
 import type { LayerAnimate } from '../../../animation/types';
 import styles from './Tooltip.module.css';
 
@@ -52,7 +53,7 @@ export interface TooltipTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  pt?: PassThrough<'trigger'>;
+  sp?: SlotPropsMap<'trigger'>;
 }
 
 const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLButtonElement>({
@@ -61,19 +62,19 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
   slots: ['trigger'] as const,
   moveProps: ['asChild'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const triggerPt = ptm('trigger');
-        const { className: ptClass, style: ptStyle, ...ptRest } = triggerPt as Record<string, unknown>;
+        const triggerSp = sp('trigger');
+        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
         return (
           <RadixTooltip.Trigger
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            className={cx('trigger', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('trigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixTooltip.Trigger>
@@ -110,7 +111,7 @@ export interface TooltipContentProps extends Record<string, unknown> {
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
   animate?: LayerAnimate | false;
-  pt?: PassThrough<'content'>;
+  sp?: SlotPropsMap<'content'>;
 }
 
 const tooltipSpring = { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 };
@@ -131,7 +132,7 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
   slots: ['content'] as const,
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'animate'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
     const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
@@ -139,7 +140,7 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
 
     // Animate entrance with anime.js spring — direction-aware
     React.useLayoutEffect(() => {
-      if (animateProp === false) return;
+      if (animateProp === false || prefersReducedMotion()) return;
 
       const el = contentRef.current;
       if (!el) return;
@@ -174,19 +175,19 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
 
     return {
       render() {
-        const contentPt = ptm('content');
-        const { className: ptClass, style: ptStyle, ...ptRest } = contentPt as Record<string, unknown>;
+        const contentSp = sp('content');
+        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
           <RadixTooltip.Content
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={mergedRef}
             side={props.side as 'top' | 'right' | 'bottom' | 'left'}
             sideOffset={props.sideOffset as number}
             align={props.align as 'start' | 'center' | 'end'}
             alignOffset={props.alignOffset as number}
-            className={cx('content', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('content', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixTooltip.Content>
@@ -205,7 +206,7 @@ export interface TooltipArrowProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   width?: number;
   height?: number;
-  pt?: PassThrough<'arrow'>;
+  sp?: SlotPropsMap<'arrow'>;
 }
 
 const TooltipArrow = withMoveComponent<'arrow', TooltipArrowProps, HTMLElement>({
@@ -214,20 +215,20 @@ const TooltipArrow = withMoveComponent<'arrow', TooltipArrowProps, HTMLElement>(
   slots: ['arrow'] as const,
   moveProps: ['width', 'height'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const arrowPt = ptm('arrow');
-        const { className: ptClass, style: ptStyle, ...ptRest } = arrowPt as Record<string, unknown>;
+        const arrowSp = sp('arrow');
+        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
         return (
           <RadixTooltip.Arrow
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref as any}
             width={props.width as number}
             height={props.height as number}
-            className={cx('arrow', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('arrow', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />
         );
       },

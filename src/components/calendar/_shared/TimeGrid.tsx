@@ -187,6 +187,7 @@ export function TimeGrid({
                 display: 'grid',
                 gridTemplateColumns: `repeat(${dates.length}, 1fr)`,
               }}
+              {...(si === 0 ? { 'data-first': '' } : {})}
               {...(isHalfHourBorder ? { 'data-half-hour': '' } : {})}
             >
               {dates.map((date, di) => {

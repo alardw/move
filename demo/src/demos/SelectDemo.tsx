@@ -281,6 +281,81 @@ function FormFieldExample() {
   );
 }
 
+function SizesVariantsExample() {
+  return (
+    <Stack direction="column" gap="xl">
+      <DemoSample label="Sizes">
+        <Stack gap="lg" align="center">
+          <Select.Root>
+            <Select.Trigger size="sm">
+              <Select.Value placeholder="Small" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content sideOffset={4}>
+                <Select.Item value="a">Option A</Select.Item>
+                <Select.Item value="b">Option B</Select.Item>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+          <Select.Root>
+            <Select.Trigger size="md">
+              <Select.Value placeholder="Medium" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content sideOffset={4}>
+                <Select.Item value="a">Option A</Select.Item>
+                <Select.Item value="b">Option B</Select.Item>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+          <Select.Root>
+            <Select.Trigger size="lg">
+              <Select.Value placeholder="Large" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content sideOffset={4}>
+                <Select.Item value="a">Option A</Select.Item>
+                <Select.Item value="b">Option B</Select.Item>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+        </Stack>
+      </DemoSample>
+      <DemoSample label="Variants">
+        <Stack gap="lg">
+          <Select.Root>
+            <Select.Trigger variant="outlined">
+              <Select.Value placeholder="Outlined" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content sideOffset={4}>
+                <Select.Item value="a">Option A</Select.Item>
+                <Select.Item value="b">Option B</Select.Item>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+          <Select.Root>
+            <Select.Trigger variant="filled">
+              <Select.Value placeholder="Filled" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content sideOffset={4}>
+                <Select.Item value="a">Option A</Select.Item>
+                <Select.Item value="b">Option B</Select.Item>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+        </Stack>
+      </DemoSample>
+    </Stack>
+  );
+}
+
 const examples: Example[] = [
   {
     id: 'usage',
@@ -397,6 +472,20 @@ const examples: Example[] = [
   <FormField.Description error>Please select a category.</FormField.Description>
 </FormField.Root>`,
   },
+  {
+    id: 'sizes-variants',
+    name: 'Sizes & Variants',
+    description: 'Trigger sizes and visual variants matching InputText.',
+    component: <SizesVariantsExample />,
+    code: `{/* Sizes */}
+<Select.Trigger size="sm">...</Select.Trigger>
+<Select.Trigger size="md">...</Select.Trigger>
+<Select.Trigger size="lg">...</Select.Trigger>
+
+{/* Variants */}
+<Select.Trigger variant="outlined">...</Select.Trigger>
+<Select.Trigger variant="filled">...</Select.Trigger>`,
+  },
 ];
 
 export function SelectDemo() {
@@ -428,7 +517,10 @@ export function SelectDemo() {
         properties={[
           { name: 'disabled', type: 'boolean', description: 'Whether the trigger is disabled.' },
           { name: 'invalid', type: 'boolean', description: 'Whether the trigger is in an invalid state.' },
+          { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", description: 'Size of the trigger matching InputText.' },
+          { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", description: 'Visual variant matching InputText.' },
           { name: 'width', type: 'CSSProperties[\'width\']', description: 'Custom width for the trigger.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the trigger element.' },
         ]}
       />
 
@@ -436,6 +528,7 @@ export function SelectDemo() {
         title="Select.Value"
         properties={[
           { name: 'placeholder', type: 'string', description: 'Placeholder text shown when no value is selected.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the value element.' },
         ]}
       />
 
@@ -444,6 +537,7 @@ export function SelectDemo() {
         properties={[
           { name: 'sideOffset', type: 'number', default: '4', description: 'Distance in pixels from the trigger.' },
           { name: 'align', type: "'start' | 'center' | 'end'", description: 'Horizontal alignment relative to the trigger.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for inner elements: content, contentInner.' },
         ]}
       />
 
@@ -454,6 +548,7 @@ export function SelectDemo() {
           { name: 'label', type: 'ReactNode', description: 'Label displayed in the trigger when this item is selected.' },
           { name: 'disabled', type: 'boolean', description: 'Whether this item is disabled.' },
           { name: 'onSelect', type: '(e: Event) => void', description: 'Called when this item is selected.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the item element.' },
         ]}
       />
     </DocPage.Root>

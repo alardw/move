@@ -108,6 +108,7 @@ export function CodeDemo() {
           { name: 'variant', type: "'subtle' | 'outline' | 'ghost'", default: "'subtle'", description: 'Visual style variant.' },
           { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg'", default: "'sm'", description: 'Font size of the code.' },
           { name: 'block', type: 'boolean', description: 'Render as a block-level code block wrapped in a <pre> element.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the root element.' },
         ]}
       />
     </DocPage.Root>

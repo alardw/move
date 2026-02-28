@@ -1,4 +1,4 @@
-import { Image, ImageGroup, MoveProvider } from 'move';
+import { Image, ImageGroup, Heading, MoveProvider } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack } from '../components';
 
@@ -86,13 +86,44 @@ function ResponsiveExample() {
 
 function CustomStylingExample() {
   return (
-    <MoveProvider pt={{ ImageGroup: { root: { style: { padding: 'var(--move-spacing-md)', backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
+    <MoveProvider slotProps={{ ImageGroup: { root: { style: { padding: 'var(--move-spacing-md)', backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
       <ImageGroup columns={3} gap="md">
         {PHOTOS.slice(0, 3).map((src, i) => (
           <Image key={i} src={src} alt={`Photo ${i + 1}`} aspectRatio="4/3" width="100%" radius="md" />
         ))}
       </ImageGroup>
     </MoveProvider>
+  );
+}
+
+function RadiusExample() {
+  return (
+    <Stack gap="lg" style={{ width: '100%' }}>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>none</p>
+        <ImageGroup columns={3} radius="none">
+          <Image src={PHOTOS[0]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[1]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[2]} alt="Sample" aspectRatio="1/1" width="100%" />
+        </ImageGroup>
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>md</p>
+        <ImageGroup columns={3} radius="md">
+          <Image src={PHOTOS[0]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[1]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[2]} alt="Sample" aspectRatio="1/1" width="100%" />
+        </ImageGroup>
+      </div>
+      <div>
+        <p style={{ marginBottom: 'var(--move-spacing-xs)', color: 'var(--move-fg-muted)', fontSize: 'var(--move-size-xs)' }}>full</p>
+        <ImageGroup columns={3} radius="full">
+          <Image src={PHOTOS[0]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[1]} alt="Sample" aspectRatio="1/1" width="100%" />
+          <Image src={PHOTOS[2]} alt="Sample" aspectRatio="1/1" width="100%" />
+        </ImageGroup>
+      </div>
+    </Stack>
   );
 }
 
@@ -162,13 +193,22 @@ const examples: Example[] = [
     name: 'Custom Styling',
     description: 'Tweak styles globally or per instance',
     component: <CustomStylingExample />,
-    code: `<MoveProvider pt={{ ImageGroup: { root: { style: { padding: 'var(--move-spacing-md)', backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
+    code: `<MoveProvider slotProps={{ ImageGroup: { root: { style: { padding: 'var(--move-spacing-md)', backgroundColor: 'var(--move-bg-subtle)', borderRadius: 'var(--move-rounded-lg)' } } } }}>
   <ImageGroup columns={3} gap="md">
     <Image src="..." alt="Photo 1" aspectRatio="4/3" width="100%" radius="md" />
     <Image src="..." alt="Photo 2" aspectRatio="4/3" width="100%" radius="md" />
     <Image src="..." alt="Photo 3" aspectRatio="4/3" width="100%" radius="md" />
   </ImageGroup>
 </MoveProvider>`,
+  },
+  {
+    id: 'radius',
+    name: 'Radius',
+    description: 'Uniform border radius on all child images',
+    component: <RadiusExample />,
+    code: `<ImageGroup columns={3} radius="none">...</ImageGroup>
+<ImageGroup columns={3} radius="md">...</ImageGroup>
+<ImageGroup columns={3} radius="full">...</ImageGroup>`,
   },
 ];
 
@@ -180,6 +220,18 @@ export function ImageGroupDemo() {
         description="A simple grid to arrange multiple images side by side."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="ImageGroup"
+        properties={[
+          { name: 'columns', type: 'number', default: '3', description: 'Number of grid columns. Automatically reduces on smaller containers.' },
+          { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", description: 'Spacing between images.' },
+          { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", description: 'Border radius applied to all child images.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the root element.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

@@ -4,4 +4,6 @@ export type {
   TabsListProps,
   TabsTriggerProps,
   TabsContentProps,
+  TabsSize,
+  TabsVariant,
 } from './Tabs';

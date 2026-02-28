@@ -44,6 +44,22 @@
   border-color: transparent;
 }
 
+/* Sizes */
+.root[data-size='sm'] {
+  --move-card-padding: var(--move-spacing-sm);
+  --move-card-title-size: var(--move-size-base);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  /* default */
+}
+
+.root[data-size='lg'] {
+  --move-card-padding: var(--move-spacing-xl);
+  --move-card-title-size: var(--move-size-xl);
+}
+
 /* ============================================
  * Header
  * ============================================ */

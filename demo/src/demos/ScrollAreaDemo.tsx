@@ -231,6 +231,7 @@ export function ScrollAreaDemo() {
         title="ScrollArea.Header"
         properties={[
           { name: 'padded', type: 'boolean', default: 'true', description: 'Whether to apply default padding.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the header element.' },
         ]}
       />
 
@@ -238,6 +239,7 @@ export function ScrollAreaDemo() {
         title="ScrollArea.Content"
         properties={[
           { name: 'padded', type: 'boolean', default: 'false', description: 'Whether to apply default padding.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the content element.' },
         ]}
       />
 
@@ -245,6 +247,7 @@ export function ScrollAreaDemo() {
         title="ScrollArea.Footer"
         properties={[
           { name: 'padded', type: 'boolean', default: 'true', description: 'Whether to apply default padding.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props to override the footer element.' },
         ]}
       />
     </DocPage.Root>

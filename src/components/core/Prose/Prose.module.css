@@ -8,6 +8,7 @@
   --move-prose-border: var(--move-border-base);
   --move-prose-bg-code: var(--move-bg-muted);
   --move-prose-bg-blockquote: var(--move-bg-subtle);
+  --move-prose-heading-gap: 1em;
 
   font-family: var(--move-font-body, system-ui, sans-serif);
   color: var(--move-prose-fg);
@@ -41,11 +42,11 @@
   font-weight: var(--move-weight-bold);
   letter-spacing: var(--move-tracking-tight);
   line-height: var(--move-leading-tight);
-  margin-top: 1.5em;
+  margin-top: var(--move-prose-heading-gap);
   margin-bottom: 0.5em;
 }
 
-.root h1 { font-size: var(--move-text-4xl); }
+.root h1 { font-size: var(--move-text-4xl); margin-top: 0; }
 .root h2 { font-size: var(--move-text-3xl); }
 .root h3 { font-size: var(--move-text-2xl); }
 .root h4 { font-size: var(--move-text-xl); }

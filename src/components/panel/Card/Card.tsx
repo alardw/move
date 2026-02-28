@@ -1,7 +1,7 @@
 'use client';
 
 import { withMoveComponent } from '../../../engine';
-import type { PassThrough } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Card.module.css';
 
 // ============================================================================
@@ -9,35 +9,38 @@ import styles from './Card.module.css';
 // ============================================================================
 
 export type CardVariant = 'default' | 'elevated' | 'ghost';
+export type CardSize = 'sm' | 'md' | 'lg';
 
 export interface CardRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   variant?: CardVariant;
-  pt?: PassThrough<'root'>;
+  size?: CardSize;
+  sp?: SlotPropsMap<'root'>;
 }
 
 const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
   name: 'CardRoot',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'default' },
-  moveProps: ['variant'],
+  defaults: { variant: 'default', size: 'md' },
+  moveProps: ['variant', 'size'],
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const rootPt = ptm('root');
-        const { className: ptClass, style: ptStyle, ...ptRest } = rootPt as Record<string, unknown>;
+        const rootSp = sp('root');
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
+            data-size={props.size}
             data-variant={props.variant}
-            className={cx('root', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -55,7 +58,7 @@ export interface CardHeaderProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'header'>;
+  sp?: SlotPropsMap<'header'>;
 }
 
 const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>({
@@ -63,18 +66,18 @@ const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>(
   styles,
   slots: ['header'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const headerPt = ptm('header');
-        const { className: ptClass, style: ptStyle, ...ptRest } = headerPt as Record<string, unknown>;
+        const headerSp = sp('header');
+        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('header', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('header', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -92,7 +95,7 @@ export interface CardTitleProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'title'>;
+  sp?: SlotPropsMap<'title'>;
 }
 
 const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>({
@@ -100,18 +103,18 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
   styles,
   slots: ['title'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const titlePt = ptm('title');
-        const { className: ptClass, style: ptStyle, ...ptRest } = titlePt as Record<string, unknown>;
+        const titleSp = sp('title');
+        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
         return (
           <h3
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('title', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('title', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </h3>
@@ -129,7 +132,7 @@ export interface CardDescriptionProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'description'>;
+  sp?: SlotPropsMap<'description'>;
 }
 
 const CardDescription = withMoveComponent<'description', CardDescriptionProps, HTMLParagraphElement>({
@@ -137,18 +140,18 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
   styles,
   slots: ['description'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const descPt = ptm('description');
-        const { className: ptClass, style: ptStyle, ...ptRest } = descPt as Record<string, unknown>;
+        const descSp = sp('description');
+        const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
         return (
           <p
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('description', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('description', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </p>
@@ -166,7 +169,7 @@ export interface CardBodyProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'body'>;
+  sp?: SlotPropsMap<'body'>;
 }
 
 const CardBody = withMoveComponent<'body', CardBodyProps, HTMLDivElement>({
@@ -174,18 +177,18 @@ const CardBody = withMoveComponent<'body', CardBodyProps, HTMLDivElement>({
   styles,
   slots: ['body'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const bodyPt = ptm('body');
-        const { className: ptClass, style: ptStyle, ...ptRest } = bodyPt as Record<string, unknown>;
+        const bodySp = sp('body');
+        const { className: spClass, style: spStyle, ...spRest } = bodySp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('body', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('body', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -203,7 +206,7 @@ export interface CardFooterProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footer'>;
+  sp?: SlotPropsMap<'footer'>;
 }
 
 const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>({
@@ -211,18 +214,18 @@ const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>(
   styles,
   slots: ['footer'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const footerPt = ptm('footer');
-        const { className: ptClass, style: ptStyle, ...ptRest } = footerPt as Record<string, unknown>;
+        const footerSp = sp('footer');
+        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footer', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footer', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -240,7 +243,7 @@ export interface CardFooterStartProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footerStart'>;
+  sp?: SlotPropsMap<'footerStart'>;
 }
 
 const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, HTMLDivElement>({
@@ -248,18 +251,18 @@ const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, H
   styles,
   slots: ['footerStart'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('footerStart');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const footerStartSp = sp('footerStart');
+        const { className: spClass, style: spStyle, ...spRest } = footerStartSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footerStart', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footerStart', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -277,7 +280,7 @@ export interface CardFooterEndProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  pt?: PassThrough<'footerEnd'>;
+  sp?: SlotPropsMap<'footerEnd'>;
 }
 
 const CardFooterEnd = withMoveComponent<'footerEnd', CardFooterEndProps, HTMLDivElement>({
@@ -285,18 +288,18 @@ const CardFooterEnd = withMoveComponent<'footerEnd', CardFooterEndProps, HTMLDiv
   styles,
   slots: ['footerEnd'] as const,
 
-  setup({ props, ref, cx, ptm, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
-        const pt = ptm('footerEnd');
-        const { className: ptClass, style: ptStyle, ...ptRest } = pt as Record<string, unknown>;
+        const footerEndSp = sp('footerEnd');
+        const { className: spClass, style: spStyle, ...spRest } = footerEndSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
-            {...ptRest}
+            {...spRest}
             ref={ref}
-            className={cx('footerEnd', props.className, ptClass as string | undefined)}
-            style={{ ...props.style, ...(ptStyle as React.CSSProperties) }}
+            className={cx('footerEnd', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>

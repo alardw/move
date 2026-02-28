@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Skeleton, Button, MoveProvider } from 'move';
+import { Skeleton, Button, Heading, MoveProvider } from 'move';
 import { DocPage, type Example } from '../components/DocPage';
 import { Stack } from '../components';
 
@@ -78,6 +78,40 @@ function CardSkeletonExample() {
   );
 }
 
+function AnimationExample() {
+  return (
+    <Stack direction="column" gap="xl">
+      <Stack direction="column" gap="sm">
+        <div style={{ fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>Pulse (default)</div>
+        <Skeleton.Root animation="pulse">
+          <Stack gap="md" align="center">
+            <Skeleton.Circle size={36} />
+            <Skeleton.Text lines={2} />
+          </Stack>
+        </Skeleton.Root>
+      </Stack>
+      <Stack direction="column" gap="sm">
+        <div style={{ fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>Wave</div>
+        <Skeleton.Root animation="wave">
+          <Stack gap="md" align="center">
+            <Skeleton.Circle size={36} />
+            <Skeleton.Text lines={2} />
+          </Stack>
+        </Skeleton.Root>
+      </Stack>
+      <Stack direction="column" gap="sm">
+        <div style={{ fontSize: 'var(--move-size-sm)', color: 'var(--move-fg-muted)' }}>Static</div>
+        <Skeleton.Root animation={false}>
+          <Stack gap="md" align="center">
+            <Skeleton.Circle size={36} />
+            <Skeleton.Text lines={2} />
+          </Stack>
+        </Skeleton.Root>
+      </Stack>
+    </Stack>
+  );
+}
+
 function LoadingToggleExample() {
   const [loading, setLoading] = useState(true);
 
@@ -125,7 +159,7 @@ function LoadingToggleExample() {
 function CustomStylingExample() {
   return (
     <MoveProvider
-      pt={{
+      slotProps={{
         SkeletonCircle: {
           circle: {
             style: { backgroundColor: 'var(--move-primary)', opacity: 0.2 },
@@ -207,6 +241,26 @@ const examples: Example[] = [
 </Skeleton.Root>`,
   },
   {
+    id: 'animation',
+    name: 'Animation',
+    description: 'Pulse fades gently, wave sweeps a highlight, or turn it off entirely.',
+    component: <AnimationExample />,
+    code: `<Skeleton.Root animation="pulse">
+  <Skeleton.Circle size={36} />
+  <Skeleton.Text lines={2} />
+</Skeleton.Root>
+
+<Skeleton.Root animation="wave">
+  <Skeleton.Circle size={36} />
+  <Skeleton.Text lines={2} />
+</Skeleton.Root>
+
+<Skeleton.Root animation={false}>
+  <Skeleton.Circle size={36} />
+  <Skeleton.Text lines={2} />
+</Skeleton.Root>`,
+  },
+  {
     id: 'loading-toggle',
     name: 'Loading Toggle',
     description: 'Switch between the skeleton and real content.',
@@ -233,7 +287,7 @@ const [loading, setLoading] = useState(true);
     code: `import { MoveProvider, Skeleton } from 'move';
 
 <MoveProvider
-  pt={{
+  slotProps={{
     SkeletonCircle: {
       circle: {
         style: { backgroundColor: 'var(--move-primary)', opacity: 0.2 },
@@ -262,6 +316,55 @@ export function SkeletonDemo() {
         description="Placeholder shapes that hint at upcoming content while it loads."
       />
       <DocPage.Examples examples={examples} />
+
+      <Heading level={3}>Parameters</Heading>
+
+      <DocPage.ApiSection
+        title="Skeleton.Root"
+        properties={[
+          { name: 'loading', type: 'boolean', default: 'true', description: 'Whether to show the skeleton. When false, renders nothing.' },
+          { name: 'animation', type: "'pulse' | 'wave' | false", default: "'pulse'", description: 'Animation style. Pulse fades in and out, wave sweeps a highlight, or disable animation entirely.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the root container.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Skeleton.Circle"
+        properties={[
+          { name: 'size', type: 'number | string', default: '40', description: 'Diameter of the circle in pixels or CSS value.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the circle element.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Skeleton.Rectangle"
+        properties={[
+          { name: 'width', type: 'number | string', default: "'100%'", description: 'Width of the rectangle.' },
+          { name: 'height', type: 'number | string', default: "'1rem'", description: 'Height of the rectangle.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the rectangle element.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Skeleton.Rounded"
+        properties={[
+          { name: 'width', type: 'number | string', default: "'100%'", description: 'Width of the rounded block.' },
+          { name: 'height', type: 'number | string', default: "'1rem'", description: 'Height of the rounded block.' },
+          { name: 'radius', type: 'string', default: 'var(--move-skeleton-radius)', description: 'Border radius of the block.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the rounded element.' },
+        ]}
+      />
+
+      <DocPage.ApiSection
+        title="Skeleton.Text"
+        properties={[
+          { name: 'lines', type: 'number', default: '3', description: 'Number of text lines to display.' },
+          { name: 'spacing', type: 'string', default: 'var(--move-skeleton-text-spacing)', description: 'Gap between lines.' },
+          { name: 'lineHeight', type: 'string', default: 'var(--move-skeleton-text-line-height)', description: 'Height of each line.' },
+          { name: 'lastLineWidth', type: 'string', default: "'60%'", description: 'Width of the last line, creating a natural text ending.' },
+          { name: 'sp', type: 'SlotPropsMap', description: 'Slot props for the text container and line elements.' },
+        ]}
+      />
     </DocPage.Root>
   );
 }

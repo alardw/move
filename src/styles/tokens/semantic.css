@@ -81,6 +81,12 @@
   --move-info-fg: var(--move-white);
 
   /* ============================================
+   * Selection
+   * ============================================ */
+  --move-selection-bg: var(--move-primary);
+  --move-selection-fg: var(--move-primary-fg);
+
+  /* ============================================
    * Focus Ring
    * ============================================ */
   --move-focus-ring-color: var(--move-violet-500);
