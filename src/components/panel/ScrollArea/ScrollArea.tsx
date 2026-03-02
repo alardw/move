@@ -1,7 +1,7 @@
 'use client';
 
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import styles from './ScrollArea.module.css';
 
 // ============================================================================

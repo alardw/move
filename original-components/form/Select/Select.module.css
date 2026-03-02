@@ -1,0 +1,230 @@
+/*
+ * Select Component
+ * A dropdown select built on Dropdown primitives with value semantics.
+ * Content lives in a portal, so it declares all tokens it consumes.
+ */
+
+.trigger {
+  /* Component tokens — trigger */
+  --move-select-trigger-bg: var(--move-bg-subtle);
+  --move-select-trigger-border: var(--move-border-base);
+  --move-select-trigger-radius: var(--move-rounded-md);
+  --move-select-trigger-padding-x: var(--move-spacing-sm);
+  --move-select-trigger-padding-y: var(--move-spacing-xs);
+  --move-select-trigger-font-size: var(--move-size-sm);
+  --move-select-trigger-fg: var(--move-fg-base);
+  --move-select-trigger-height: var(--move-control-height-md);
+  --move-select-trigger-min-width: 8rem;
+
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--move-spacing-sm);
+  height: var(--move-select-trigger-height);
+  min-width: var(--move-select-trigger-min-width);
+  padding: var(--move-select-trigger-padding-y) var(--move-select-trigger-padding-x);
+  background-color: var(--move-select-trigger-bg);
+  border: 1px solid var(--move-select-trigger-border);
+  border-radius: var(--move-select-trigger-radius);
+  font-family: var(--move-font-body);
+  font-size: var(--move-select-trigger-font-size);
+  color: var(--move-select-trigger-fg);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Sizes */
+.trigger[data-size='sm'] {
+  --move-select-trigger-height: var(--move-control-height-sm);
+  --move-select-trigger-font-size: var(--move-size-xs);
+  --move-select-trigger-padding-x: var(--move-spacing-xs);
+}
+
+.trigger[data-size='md'],
+.trigger:not([data-size]) {
+  /* default */
+}
+
+.trigger[data-size='lg'] {
+  --move-select-trigger-height: var(--move-control-height-lg);
+  --move-select-trigger-font-size: var(--move-size-base);
+  --move-select-trigger-padding-x: var(--move-spacing-md);
+}
+
+/* Variants */
+.trigger[data-variant='outlined'],
+.trigger:not([data-variant]) {
+  /* default — outlined, styles above */
+}
+
+.trigger[data-variant='filled'] {
+  --move-select-trigger-bg: var(--move-bg-muted);
+  --move-select-trigger-border: transparent;
+}
+
+.trigger[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
+  --move-select-trigger-border: var(--move-border-base);
+}
+
+.trigger:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+/* Invalid */
+.trigger[data-invalid] {
+  --move-select-trigger-border: var(--move-error);
+}
+
+.trigger[data-invalid]:focus-visible:not(:active) {
+  border-color: var(--move-error);
+  outline: var(--move-focus-ring-width) solid var(--move-error);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.trigger[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.value {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.value[data-placeholder] {
+  color: var(--move-fg-muted);
+}
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--move-fg-muted);
+}
+
+.content {
+  /* Component tokens — content */
+  --move-select-content-bg: var(--move-bg-subtle);
+  --move-select-content-border: var(--move-border-base);
+  --move-select-content-radius: var(--move-rounded-lg);
+  --move-select-content-shadow: var(--move-shadow-overlay);
+  --move-select-content-padding: var(--move-spacing-xs);
+  --move-select-content-min-width: 10rem;
+  --move-select-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 20rem), 20rem);
+
+  overflow: hidden;
+  will-change: height, transform;
+  transform-origin: top center;
+  min-width: var(--move-select-content-min-width);
+  background-color: var(--move-select-content-bg);
+  border: 1px solid var(--move-select-content-border);
+  border-radius: var(--move-select-content-radius);
+  box-shadow: var(--move-select-content-shadow);
+  padding: var(--move-select-content-padding);
+  z-index: var(--move-layer-dropdown);
+}
+
+.content:focus {
+  outline: none;
+}
+
+.contentInner {
+  max-height: var(--move-select-content-max-height);
+  overflow-y: auto;
+  padding: inherit;
+  scrollbar-width: thin;
+  scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
+}
+
+.contentInner::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contentInner::-webkit-scrollbar-track {
+  background: var(--move-scrollbar-track);
+}
+
+.contentInner::-webkit-scrollbar-thumb {
+  background-color: var(--move-scrollbar-thumb);
+  border-radius: var(--move-rounded-full);
+}
+
+.viewport {
+  /* structural only */
+}
+
+.item {
+  /* Component tokens — item */
+  --move-select-item-radius: var(--move-rounded-md);
+  --move-select-item-padding-x: var(--move-spacing-sm);
+  --move-select-item-padding-y: var(--move-spacing-xs);
+  --move-select-item-fg: var(--move-fg-base);
+  --move-select-item-fg-disabled: var(--move-fg-subtle);
+  --move-select-item-bg-highlight: var(--move-bg-muted);
+  --move-select-item-font-size: var(--move-size-sm);
+
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-select-item-padding-y) var(--move-select-item-padding-x);
+  border-radius: var(--move-select-item-radius);
+  font-family: var(--move-font-body);
+  font-size: var(--move-select-item-font-size);
+  color: var(--move-select-item-fg);
+  cursor: default;
+  user-select: none;
+  outline: none;
+  will-change: transform;
+}
+
+.item[data-selected] {
+  background-color: var(--move-primary);
+  color: var(--move-primary-fg);
+}
+
+.item[data-highlighted] {
+  background-color: var(--move-select-item-bg-highlight);
+}
+
+.item[data-selected][data-highlighted] {
+  background-color: var(--move-primary-hover);
+  color: var(--move-primary-fg);
+}
+
+.item[data-disabled] {
+  color: var(--move-select-item-fg-disabled);
+  pointer-events: none;
+}
+
+.group {
+  /* structural only */
+}
+
+.label {
+  --move-select-label-padding-x: var(--move-spacing-sm);
+  --move-select-label-padding-y: var(--move-spacing-xs);
+  --move-select-label-font-size: var(--move-size-sm);
+  --move-select-label-fg: var(--move-fg-muted);
+  --move-select-label-font-weight: var(--move-weight-semibold);
+
+  padding: var(--move-select-label-padding-y) var(--move-select-label-padding-x);
+  font-family: var(--move-font-body);
+  font-size: var(--move-select-label-font-size);
+  font-weight: var(--move-select-label-font-weight);
+  color: var(--move-select-label-fg);
+  user-select: none;
+}
+
+.separator {
+  --move-select-separator-color: var(--move-border-base);
+  --move-select-separator-margin: var(--move-spacing-xs);
+
+  height: 1px;
+  background-color: var(--move-select-separator-color);
+  margin: var(--move-select-separator-margin) 0;
+}

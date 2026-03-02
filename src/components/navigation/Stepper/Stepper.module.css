@@ -1,6 +1,4 @@
-/* =============================================================================
-   Stepper
-   ============================================================================= */
+/* Stepper.module.css -- Generated from original-components/navigation/Stepper */
 
 .root {
   /* Component tokens */
@@ -65,7 +63,7 @@
   --move-stepper-separator-thickness: 2px;
 }
 
-/* ─── Step ─── */
+/* -- Step -- */
 
 .step {
   display: flex;
@@ -103,7 +101,7 @@
   border-radius: var(--move-rounded-sm);
 }
 
-/* ─── Indicator ─── */
+/* -- Indicator -- */
 
 .indicator {
   display: flex;
@@ -140,7 +138,7 @@
   border-color: var(--move-stepper-indicator-bg-error);
 }
 
-/* ─── Title ─── */
+/* -- Title -- */
 
 .title {
   font-size: var(--move-stepper-title-font-size);
@@ -154,7 +152,7 @@
   color: var(--move-stepper-title-fg-muted);
 }
 
-/* ─── Description ─── */
+/* -- Description -- */
 
 .description {
   font-size: var(--move-stepper-description-font-size);
@@ -192,7 +190,7 @@
   margin-top: 2px;
 }
 
-/* ─── Separator ─── */
+/* -- Separator -- */
 
 .separator {
   background-color: var(--move-stepper-separator-color);
@@ -273,7 +271,7 @@
   flex-direction: column;
 }
 
-/* ─── Content wrapper for labels ─── */
+/* -- Content wrapper for labels -- */
 
 .labels {
   display: flex;

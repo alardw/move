@@ -1,25 +1,23 @@
 'use client';
-
+// Generated from Popover.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
-import { mergeAnimateConfig } from '../../../animation/utils';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine';
+import { mergeAnimateConfig, useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Popover.module.css';
 
 // =============================================================================
-// Context (animation coordination — same pattern as Dropdown)
+// Context (animation coordination -- same pattern as Dropdown)
 // =============================================================================
 
 interface PopoverContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
-  animateConfig: PopupAnimate | null;
+  animateConfig: LifecycleAnimate | null;
   closeOnScroll: boolean;
 }
 
@@ -34,7 +32,7 @@ function usePopoverContext() {
 }
 
 // =============================================================================
-// Root (stateful FC — manages open/close state + animation context)
+// Root (stateful FC -- manages open/close state + animation context)
 // =============================================================================
 
 export interface PopoverRootProps {
@@ -42,13 +40,13 @@ export interface PopoverRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: PopupAnimate | false;
+  animate?: LifecycleAnimate | false;
   /** Close the popover when an ancestor element scrolls */
   closeOnScroll?: boolean;
   modal?: boolean;
 }
 
-const defaultPopoverAnimation: PopupAnimate = {
+const defaultPopoverAnimation: LifecycleAnimate = {
   enter: {
     opacity: { value: [0, 1], easing: 'outQuart' },
     scale: { value: [0.5, 1], easing: 'outQuart' },
@@ -80,7 +78,7 @@ const PopoverRoot: React.FC<PopoverRootProps> = ({
       if (!isControlled) setUncontrolledOpen(true);
       onOpenChange?.(true);
     }
-    // Ignore close requests from Radix — we handle closing via close()
+    // Ignore close requests from Radix -- we handle closing via close()
   }, [isControlled, onOpenChange]);
 
   const handleCloseComplete = React.useCallback(() => {
@@ -186,7 +184,7 @@ const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivEle
 });
 
 // =============================================================================
-// Portal (stateless — no factory needed)
+// Portal (stateless -- no factory needed)
 // =============================================================================
 
 export interface PopoverPortalProps {
@@ -225,10 +223,10 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
   slots: ['content'] as const,
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
 
-  setup({ props, ref, internalRef, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animateConfig, closeOnScroll } = usePopoverContext();
 
-    const { contentRef } = usePopupAnimation({
+    const { contentRef } = useLifecycleAnimate({
       animate: animateConfig,
       isClosing,
       onCloseComplete,
@@ -251,7 +249,7 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
     }, [closeOnScroll, close, contentRef]);
 
     // Intercept close events to trigger animation.
-    // No preventDefault on pointer/interact — allows native events to reach
+    // No preventDefault on pointer/interact -- allows native events to reach
     // other triggers (e.g. clicking another Popover while this one is open).
     // Radix can't close us because Root ignores onOpenChange(false).
     const handlePointerDownOutside = (e: Event) => {

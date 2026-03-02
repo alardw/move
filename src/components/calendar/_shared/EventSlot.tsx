@@ -1,4 +1,6 @@
 'use client';
+// Generated from Calendar.spec.ts — shared EventSlot
+// Provenance: original-components/calendar/_shared/EventSlot.tsx
 
 import * as React from 'react';
 import type { CalendarEvent, RenderEvent } from './types';

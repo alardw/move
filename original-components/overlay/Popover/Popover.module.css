@@ -1,0 +1,82 @@
+/*
+ * Popover Component
+ * Component tokens on each slot so they resolve in local scope.
+ * Content lives in a portal, so it declares all tokens it consumes.
+ */
+
+.trigger {
+  cursor: pointer;
+}
+
+.anchor {
+  display: inline-block;
+}
+
+.content {
+  /* Component tokens — content */
+  --move-popover-content-bg: var(--move-bg-subtle);
+  --move-popover-content-border: var(--move-border-base);
+  --move-popover-content-radius: var(--move-rounded-lg);
+  --move-popover-content-shadow: var(--move-shadow-overlay);
+  --move-popover-content-padding: var(--move-spacing-md);
+  --move-popover-content-min-width: 12rem;
+  --move-popover-content-max-width: 24rem;
+
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: var(--radix-popover-content-transform-origin);
+  min-width: var(--move-popover-content-min-width);
+  max-width: var(--move-popover-content-max-width);
+  background-color: var(--move-popover-content-bg);
+  border: 1px solid var(--move-popover-content-border);
+  border-radius: var(--move-popover-content-radius);
+  box-shadow: var(--move-popover-content-shadow);
+  padding: var(--move-popover-content-padding);
+  z-index: var(--move-layer-dropdown);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  line-height: 1.5;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.arrow {
+  fill: var(--move-popover-content-bg);
+}
+
+.close {
+  /* Component tokens — close */
+  --move-popover-close-size: 24px;
+  --move-popover-close-radius: var(--move-rounded-sm);
+  --move-popover-close-fg: var(--move-fg-muted);
+  --move-popover-close-fg-hover: var(--move-fg-base);
+  --move-popover-close-bg-hover: var(--move-bg-muted);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: var(--move-popover-close-size);
+  height: var(--move-popover-close-size);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--move-popover-close-radius);
+  color: var(--move-popover-close-fg);
+  cursor: pointer;
+  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+    color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.close:hover {
+  background-color: var(--move-popover-close-bg-hover);
+  color: var(--move-popover-close-fg-hover);
+}
+
+.close:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}

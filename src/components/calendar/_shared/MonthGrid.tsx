@@ -1,14 +1,13 @@
 'use client';
+// Generated from Calendar.spec.ts — shared MonthGrid
+// Provenance: original-components/calendar/_shared/MonthGrid.tsx
 
 import * as React from 'react';
-import { animate, spring } from 'animejs';
 import { getMonthGrid, getWeekDayNames, getWeekNumber, addMonths } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
-import { prefersReducedMotion } from '../../../animation/utils';
+import { prefersReducedMotion } from '../../../animation';
 import { DayCell } from './DayCell';
 import styles from './MonthGrid.module.css';
-
-const springConfig = { mass: 0.8, stiffness: 350, damping: 12, velocity: 0 }; // "poppy" preset
 
 export interface MonthGridProps {
   className?: string;
@@ -41,47 +40,7 @@ export function MonthGrid({ className }: MonthGridProps) {
         grid: getMonthGrid(month.getFullYear(), month.getMonth(), weekStartsOn, fixedWeeks),
       };
     });
-  }, [displayMonth, numberOfMonths, weekStartsOn]);
-
-  // Stagger day cells on month transition
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const cellsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-  const isInitialRender = React.useRef(true);
-
-  React.useLayoutEffect(() => {
-    // Skip the initial render — only animate on month changes
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
-
-    const el = containerRef.current;
-    if (!el || prefersReducedMotion()) return;
-
-    if (cellsAnimRef.current) cellsAnimRef.current.pause();
-
-    const cells = el.querySelectorAll('[role="gridcell"]');
-    if (cells.length) {
-      cells.forEach((cell) => {
-        const el = cell as HTMLElement;
-        el.style.opacity = '0';
-        el.style.transform = 'scale(0.5)';
-      });
-      cellsAnimRef.current = animate(cells, {
-        opacity: 1,
-        scale: 1,
-        ease: spring(springConfig),
-        delay: (_el: any, i: number) => i * 8,
-        onComplete: () => {
-          cells.forEach((cell) => {
-            const el = cell as HTMLElement;
-            el.style.removeProperty('opacity');
-            el.style.removeProperty('transform');
-          });
-        },
-      });
-    }
-  }, [displayMonth]);
+  }, [displayMonth, numberOfMonths, weekStartsOn, fixedWeeks]);
 
   const handleGridKeyDown = (e: React.KeyboardEvent) => {
     if (!focusedDate) return;
@@ -144,10 +103,9 @@ export function MonthGrid({ className }: MonthGridProps) {
 
   return (
     <div
-      ref={containerRef}
       className={`${numberOfMonths > 1 ? styles.monthsContainer : ''} ${className ?? ''}`}
     >
-      {months.map((m, mi) => (
+      {months.map((m) => (
         <div
           key={`${m.date.getFullYear()}-${m.date.getMonth()}`}
           role="grid"

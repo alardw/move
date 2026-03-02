@@ -1,18 +1,100 @@
-/*
- * Stack Component
- * Flex container for vertical or horizontal layout.
- */
+/* Generated from Stack.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 .root {
+  /* Component tokens — resolve in local scope */
+  --move-stack-gap-none: 0;
+  --move-stack-gap-xs: var(--move-spacing-xs);
+  --move-stack-gap-sm: var(--move-spacing-sm);
+  --move-stack-gap-md: var(--move-spacing-md);
+  --move-stack-gap-lg: var(--move-spacing-lg);
+  --move-stack-gap-xl: var(--move-spacing-xl);
+
   display: flex;
 }
 
-.root[data-direction='column'] {
+/* Direction */
+.root[data-direction='column'],
+.root:not([data-direction]) {
   flex-direction: column;
 }
 
 .root[data-direction='row'] {
   flex-direction: row;
+}
+
+/* Gap */
+.root[data-gap='none'] {
+  gap: var(--move-stack-gap-none);
+}
+
+.root[data-gap='xs'] {
+  gap: var(--move-stack-gap-xs);
+}
+
+.root[data-gap='sm'] {
+  gap: var(--move-stack-gap-sm);
+}
+
+.root[data-gap='md'],
+.root:not([data-gap]) {
+  gap: var(--move-stack-gap-md);
+}
+
+.root[data-gap='lg'] {
+  gap: var(--move-stack-gap-lg);
+}
+
+.root[data-gap='xl'] {
+  gap: var(--move-stack-gap-xl);
+}
+
+/* Align (cross-axis) */
+.root[data-align='start'] {
+  align-items: flex-start;
+}
+
+.root[data-align='center'] {
+  align-items: center;
+}
+
+.root[data-align='end'] {
+  align-items: flex-end;
+}
+
+.root[data-align='stretch'],
+.root:not([data-align]) {
+  align-items: stretch;
+}
+
+.root[data-align='baseline'] {
+  align-items: baseline;
+}
+
+/* Justify (main-axis) */
+.root[data-justify='start'],
+.root:not([data-justify]) {
+  justify-content: flex-start;
+}
+
+.root[data-justify='center'] {
+  justify-content: center;
+}
+
+.root[data-justify='end'] {
+  justify-content: flex-end;
+}
+
+.root[data-justify='between'] {
+  justify-content: space-between;
+}
+
+.root[data-justify='evenly'] {
+  justify-content: space-evenly;
+}
+
+/* Wrap */
+.root[data-wrap] {
+  flex-wrap: wrap;
 }
 
 /* Collapse: overrides direction to column on narrow containers */

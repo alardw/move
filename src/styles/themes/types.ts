@@ -64,12 +64,29 @@ export interface ThemeTokens {
   '--move-scrollbar-thumb': string;
   '--move-scrollbar-track': string;
 
-  // Shadows
-  '--move-shadow-color': string;
-  '--move-shadow-sm': string;
-  '--move-shadow-md': string;
-  '--move-shadow-lg': string;
-  '--move-shadow-xl': string;
+  // Shadows — config
+  '--move-shadow-angle': string;
+  // Shadows — per surface (5 × 4 = 20)
+  '--move-shadow-base-sm': string;
+  '--move-shadow-base-md': string;
+  '--move-shadow-base-lg': string;
+  '--move-shadow-base-xl': string;
+  '--move-shadow-subtle-sm': string;
+  '--move-shadow-subtle-md': string;
+  '--move-shadow-subtle-lg': string;
+  '--move-shadow-subtle-xl': string;
+  '--move-shadow-muted-sm': string;
+  '--move-shadow-muted-md': string;
+  '--move-shadow-muted-lg': string;
+  '--move-shadow-muted-xl': string;
+  '--move-shadow-emphasis-sm': string;
+  '--move-shadow-emphasis-md': string;
+  '--move-shadow-emphasis-lg': string;
+  '--move-shadow-emphasis-xl': string;
+  '--move-shadow-inverse-sm': string;
+  '--move-shadow-inverse-md': string;
+  '--move-shadow-inverse-lg': string;
+  '--move-shadow-inverse-xl': string;
 }
 
 export interface ThemeAnimation {

@@ -1,5 +1,5 @@
 'use client';
-
+// Generated from Code.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useCodeHighlighter } from './CodeHighlighter';
@@ -23,8 +23,8 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
   name: 'Code',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'subtle', size: 'sm' },
-  moveProps: ['variant', 'size', 'block', 'language'],
+  defaults: { variant: 'subtle' as CodeVariant, size: 'sm' as CodeSize },
+  moveProps: ['block', 'language'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const ctx = useCodeHighlighter();
@@ -43,8 +43,12 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
 
       if (result instanceof Promise) {
         let cancelled = false;
-        result.then((r) => { if (!cancelled) setHighlighted(r); });
-        return () => { cancelled = true; };
+        result.then((r) => {
+          if (!cancelled) setHighlighted(r);
+        });
+        return () => {
+          cancelled = true;
+        };
       }
 
       setHighlighted(result);
@@ -56,23 +60,23 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const isBlock = !!props.block;
-
-        if (isBlock) {
-          const content = highlighted != null
+        const content =
+          highlighted != null
             ? typeof highlighted === 'string'
               ? <code dangerouslySetInnerHTML={{ __html: highlighted }} />
               : <code>{highlighted}</code>
             : <code>{props.children}</code>;
 
+        if (isBlock) {
           return (
             <pre
               {...attrs}
               {...spRest}
               ref={ref as React.Ref<HTMLPreElement>}
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-              data-variant={props.variant}
-              data-size={props.size}
+              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              data-variant={props.variant as string}
+              data-size={props.size as string}
               data-block=""
               data-language={language}
             >
@@ -87,11 +91,14 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
             {...spRest}
             ref={ref}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-variant={props.variant}
-            data-size={props.size}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            data-variant={props.variant as string}
+            data-size={props.size as string}
+            data-language={language}
           >
-            {props.children}
+            {highlighted != null
+              ? highlighted
+              : props.children}
           </code>
         );
       },

@@ -1,12 +1,12 @@
 'use client';
+// Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Slider } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import { useInteractiveAnimate } from '../../../animation';
-import type { SlotPropsMap } from '../../../engine/types';
-import type { ElementAnimate } from '../../../animation';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useInteractionAnimate } from '../../../animation';
+import type { InteractionAnimate } from '../../../animation';
+import type { SlotPropsMap } from '../../../engine';
 import { useInputRange } from './useInputRange';
 import type { InputRangeValue } from './useInputRange';
 import styles from './InputRange.module.css';
@@ -33,7 +33,7 @@ export interface InputRangeProps extends Record<string, unknown> {
   name?: string;
   showValue?: boolean;
   formatValue?: (value: number) => string;
-  animate?: ElementAnimate | false;
+  animate?: InteractionAnimate | false;
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<InputRangeSlots>;
@@ -68,8 +68,8 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
       onValueChange: props.onValueChange as ((value: number[]) => void) | undefined,
     });
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: props.animate === false ? undefined : (props.animate as ElementAnimate | undefined),
+    const { ref: animRef, handlers } = useInteractionAnimate({
+      animate: props.animate === false ? undefined : (props.animate as InteractionAnimate | undefined),
       disabled: props.animate === false || props.disabled as boolean,
     });
 

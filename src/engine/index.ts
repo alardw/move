@@ -6,7 +6,7 @@ export { MoveProvider, useMoveContext } from './context';
 export type { MoveProviderProps } from './context';
 
 // Merge utilities
-export { mergeSlotProps, createCx, createSp } from './mergeProps';
+export { mergeSlotProps, createCx, createSp } from './slotUtils';
 
 // Ref utilities
 export { useMergedRef } from './useMergedRef';

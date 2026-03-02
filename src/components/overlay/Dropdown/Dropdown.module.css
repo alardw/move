@@ -18,6 +18,7 @@
   --move-dropdown-content-min-width: 12rem;
   --move-dropdown-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 50vh), 50vh);
 
+  font-family: var(--move-font-body);
   overflow: hidden;
   will-change: height, transform;
   transform-origin: top center;
@@ -260,6 +261,7 @@
   --move-dropdown-content-padding: var(--move-spacing-xs);
   --move-dropdown-content-min-width: 10rem;
 
+  font-family: var(--move-font-body);
   min-width: var(--move-dropdown-content-min-width);
   background-color: var(--move-dropdown-content-bg);
   border: 1px solid var(--move-dropdown-content-border);

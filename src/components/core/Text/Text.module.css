@@ -13,7 +13,7 @@
   line-height: var(--move-leading-normal);
 }
 
-/* ── Size ── */
+/* -- Size -- */
 
 .root[data-size='xs'] {
   font-size: var(--move-text-xs);
@@ -41,7 +41,7 @@
   line-height: var(--move-leading-relaxed);
 }
 
-/* ── Weight ── */
+/* -- Weight -- */
 
 .root[data-weight='normal'],
 .root:not([data-weight]) {
@@ -60,7 +60,7 @@
   font-weight: var(--move-weight-bold);
 }
 
-/* ── Color ── */
+/* -- Color -- */
 
 .root[data-color='base'],
 .root:not([data-color]) {
@@ -91,7 +91,7 @@
   color: var(--move-text-color-error);
 }
 
-/* ── Align ── */
+/* -- Align -- */
 
 .root[data-align='left'] {
   text-align: left;
@@ -105,7 +105,7 @@
   text-align: right;
 }
 
-/* ── Truncate ── */
+/* -- Truncate -- */
 
 .root[data-truncate] {
   overflow: hidden;

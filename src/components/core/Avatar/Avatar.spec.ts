@@ -1,0 +1,141 @@
+// Avatar.spec.ts — Component specification
+// specHash: aeb52a7f
+
+export const spec = {
+  schemaVersion: 5 as const,
+  name: 'Avatar',
+  componentClass: 'display' as const,
+  category: 'core',
+  description: 'User avatar with image, fallback, size options, and spring entrance animation',
+
+  compound: true,
+  rootElement: 'span',
+  slots: [
+    { name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root (Radix Avatar.Root)' },
+  ],
+
+  subComponents: [
+    {
+      name: 'Group',
+      slots: [
+        { name: 'group', element: 'div', description: 'Inline-flex container for stacked avatars' },
+      ],
+      props: [
+        { name: 'staggerDelay', type: 'number', default: '50', moveSpecific: true, description: 'Delay between each avatar entrance animation' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Root children' },
+      ],
+      usesFactory: true,
+      description: 'Container for overlapping avatar group with staggered entrance',
+    },
+    {
+      name: 'Root',
+      slots: [
+        { name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root element' },
+      ],
+      props: [
+        { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", moveSpecific: true, description: 'Avatar size' },
+        { name: 'animate', type: 'LifecycleAnimate | false', moveSpecific: true, description: 'Animation config override or false to disable entrance animation' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Image and Avatar.Fallback' },
+      ],
+      usesFactory: true,
+      radixPrimitive: 'Avatar.Root',
+      description: 'Individual avatar container with spring entrance animation',
+    },
+    {
+      name: 'Image',
+      slots: [
+        { name: 'image', element: 'RadixAvatar.Image', description: 'Avatar image element' },
+      ],
+      props: [
+        { name: 'src', type: 'string', moveSpecific: false, description: 'Image source URL' },
+        { name: 'alt', type: 'string', moveSpecific: false, description: 'Image alt text' },
+        { name: 'onLoadingStatusChange', type: "(status: 'idle' | 'loading' | 'loaded' | 'error') => void", moveSpecific: true, description: 'Loading status callback' },
+      ],
+      usesFactory: true,
+      radixPrimitive: 'Avatar.Image',
+      description: 'Avatar image with loading state management',
+    },
+    {
+      name: 'Fallback',
+      slots: [
+        { name: 'fallback', element: 'RadixAvatar.Fallback', description: 'Fallback content when image fails or loads' },
+      ],
+      props: [
+        { name: 'delayMs', type: 'number', moveSpecific: true, description: 'Delay before showing fallback' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Fallback content (initials, icon)' },
+      ],
+      usesFactory: true,
+      radixPrimitive: 'Avatar.Fallback',
+      description: 'Fallback content shown when image is unavailable',
+    },
+  ],
+
+  props: [],
+
+  anatomy: {
+    slot: 'root',
+    dataAttributes: ['data-size'],
+    children: [
+      { slot: 'image' },
+      { slot: 'fallback' },
+    ],
+  },
+
+  controlled: null,
+  keyboard: null,
+  focus: null,
+  formType: null,
+  asChild: false,
+
+  animations: [
+    {
+      slot: 'root',
+      hook: 'useLifecycleAnimate',
+      configType: 'LifecycleAnimate',
+      defaultConfig: "{ enter: { scale: { value: [0, 1], easing: 'poppy' } } }",
+    },
+  ],
+
+  tokens: [
+    { name: '--move-avatar-size', value: 'var(--move-space-10)', description: 'Avatar size (width and height)' },
+    { name: '--move-avatar-radius', value: 'var(--move-rounded-full)', description: 'Border radius' },
+    { name: '--move-avatar-bg', value: 'var(--move-bg-muted)', description: 'Fallback background color' },
+    { name: '--move-avatar-fg', value: 'var(--move-fg-base)', description: 'Fallback text color' },
+    { name: '--move-avatar-border', value: 'var(--move-border-base)', description: 'Border color in group' },
+  ],
+
+  variants: {},
+  sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
+
+  labels: [],
+
+  radixPrimitive: 'Avatar',
+  hasHook: false,
+  engineImports: ['withMoveComponent'],
+  animationImports: ['useLifecycleAnimate'],
+  componentDeps: [],
+
+  testing: {
+    behaviors: [
+      'Avatar.Root renders Radix Avatar.Root',
+      'Avatar.Image renders img element',
+      'Avatar.Fallback renders when image is unavailable',
+      'Applies size via data-size attribute',
+      'Defaults to size=md',
+      'Avatar.Group renders inline-flex container',
+      'Group avatars overlap with negative margin',
+      'Forwards ref to root element',
+    ],
+    animation: [
+      'Spring entrance animation on mount',
+      'Staggered entrance in group',
+      'animate=false disables entrance animation',
+    ],
+  },
+
+  defaultReview: {
+    status: 'approved' as const,
+    decisionSource: 'accept-all' as const,
+    overrides: {},
+  },
+};

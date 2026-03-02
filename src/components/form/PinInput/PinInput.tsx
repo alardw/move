@@ -1,52 +1,44 @@
 'use client';
+// Generated from PinInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { usePinInput } from './usePinInput';
 import styles from './PinInput.module.css';
 
-export type PinInputSize = 'sm' | 'md' | 'lg';
+// ============================================================================
+// Types
+// ============================================================================
 
+export type PinInputSize = 'sm' | 'md' | 'lg';
 type PinInputSlots = 'root' | 'slot';
 
 export interface PinInputProps extends Record<string, unknown> {
-  /** Number of input slots */
   length?: number;
-  /** Controlled value */
   value?: string;
-  /** Default value for uncontrolled mode */
   defaultValue?: string;
-  /** Called when the value changes */
   onChange?: (value: string) => void;
-  /** Called when all slots are filled */
   onComplete?: (value: string) => void;
-  /** Character validation: 'number', 'alphanumeric', or a RegExp */
   type?: 'number' | 'alphanumeric' | RegExp;
-  /** Mask input like a password field */
   mask?: boolean;
-  /** Placeholder character per slot */
   placeholder?: string;
-  /** Enable autocomplete="one-time-code" for SMS autofill */
   oneTimeCode?: boolean;
-  /** Grouping pattern, e.g. [3,3] splits 6 into two visual groups */
   grouping?: number[];
-  /** Invalid state */
   invalid?: boolean;
-  /** Size variant */
   size?: PinInputSize;
-  /** Accessible label for the hidden input */
   ariaLabel?: string;
-  /** Disabled state */
   disabled?: boolean;
-  /** Hidden input name for form submission */
   name?: string;
-  /** Auto focus the input on mount */
   autoFocus?: boolean;
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<PinInputSlots>;
 }
+
+// ============================================================================
+// Component
+// ============================================================================
 
 export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivElement>({
   name: 'PinInput',
@@ -74,7 +66,6 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
       grouping: props.grouping as number[] | undefined,
     });
 
-    // Auto-focus on mount
     React.useEffect(() => {
       if (props.autoFocus) {
         pin.focus();
@@ -95,7 +86,6 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
         const slotSp = sp('slot');
         const { className: slotSpClass, style: slotSpStyle, ...slotSpRest } = slotSp as Record<string, unknown>;
 
-        // Build slot elements grouped by the grouping pattern
         let slotIndex = 0;
         const groupElements: React.ReactNode[] = [];
 
@@ -135,7 +125,6 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
             </div>
           );
 
-          // Add separator between groups (not after last)
           if (g < pin.groups.length - 1) {
             groupElements.push(
               <div key={`sep-${g}`} className={styles.separator} aria-hidden="true">
@@ -161,6 +150,7 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
               ref={pin.inputRef as React.Ref<HTMLInputElement>}
               className={styles.hiddenInput}
               {...pin.inputProps}
+              name={props.name as string}
               aria-label={props.ariaLabel as string || 'PIN input'}
               tabIndex={0}
               style={{ pointerEvents: 'auto' }}

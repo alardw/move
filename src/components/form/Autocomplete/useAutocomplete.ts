@@ -1,7 +1,8 @@
+// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 'use client';
 
 import { useState, useCallback, useRef, useId, useMemo, useEffect } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 // =============================================================================
 // Types
@@ -156,7 +157,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
         setInputValue(label.textContent);
       }
     }
-  }, [setIsOpen, multiple, selectedValues, allowCustomValue, setInputValue]);  
+  }, [setIsOpen, multiple, selectedValues, allowCustomValue, setInputValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // -------------------------------------------------------------------------
   // Item registry

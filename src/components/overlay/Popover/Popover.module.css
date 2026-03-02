@@ -13,7 +13,7 @@
 }
 
 .content {
-  /* Component tokens — content */
+  /* Component tokens -- content */
   --move-popover-content-bg: var(--move-bg-subtle);
   --move-popover-content-border: var(--move-border-base);
   --move-popover-content-radius: var(--move-rounded-lg);
@@ -48,7 +48,7 @@
 }
 
 .close {
-  /* Component tokens — close */
+  /* Component tokens -- close */
   --move-popover-close-size: 24px;
   --move-popover-close-radius: var(--move-rounded-sm);
   --move-popover-close-fg: var(--move-fg-muted);

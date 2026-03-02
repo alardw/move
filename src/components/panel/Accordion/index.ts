@@ -1,3 +1,4 @@
+// Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Accordion } from './Accordion';
 export type {
   AccordionRootProps,
@@ -5,10 +6,13 @@ export type {
   AccordionHeaderProps,
   AccordionTriggerProps,
   AccordionContentProps,
-  AccordionAnimateConfig,
   AccordionSize,
   AccordionVariant,
+  AccordionAnimateConfig,
 } from './Accordion';
 
 export { useAccordion } from './useAccordion';
-export type { UseAccordionOptions, UseAccordionReturn } from './useAccordion';
+export type {
+  UseAccordionOptions,
+  UseAccordionReturn,
+} from './useAccordion';

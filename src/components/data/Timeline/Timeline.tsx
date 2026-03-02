@@ -3,19 +3,26 @@
 import * as React from 'react';
 import { animate } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import {
   toAnimeParams,
   prefersReducedMotion,
   mergeAnimateConfig,
   getInitialStyles,
-} from '../../../animation/utils';
+} from '../../../animation';
 import type {
-  ListAnimate,
+  LifecycleAnimate,
+  StaggerModifier,
   Animation,
   StaggerConfig,
-} from '../../../animation/types';
+} from '../../../animation';
 import styles from './Timeline.module.css';
+
+// ============================================================================
+// Local type alias (spec refers to this as ListAnimate)
+// ============================================================================
+
+type ListAnimate = LifecycleAnimate & StaggerModifier;
 
 // ============================================================================
 // Types

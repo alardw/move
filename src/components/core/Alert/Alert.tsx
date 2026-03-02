@@ -1,44 +1,31 @@
 'use client';
-
+// Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9)
 import * as React from 'react';
-import { animate } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { prefersReducedMotion } from '../../../animation';
-import { toAnimeParams, mergeAnimateConfig } from '../../../animation/utils';
-import type { LayerAnimate } from '../../../animation/types';
-import { Icon } from '../../core/Icon';
+import { useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Alert.module.css';
-
-// =============================================================================
-// Types
-// =============================================================================
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
 export type AlertSize = 'sm' | 'md' | 'lg';
-type AlertSlots = 'root' | 'icon' | 'content' | 'title' | 'description' | 'close';
 
-// =============================================================================
-// Alert
-// =============================================================================
-
-export interface AlertProps extends Record<string, unknown> {
-  variant?: AlertVariant;
-  size?: AlertSize;
-  icon?: string | boolean;
-  title?: React.ReactNode;
-  closable?: boolean;
-  onClose?: () => void;
-  closeLabel?: string;
-  /** Animation configuration. Pass `false` to disable animations. */
-  animate?: LayerAnimate | false;
-  className?: string;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
-  sp?: SlotPropsMap<AlertSlots>;
+export interface AlertLabels {
+  close: string;
 }
 
-const defaultAlertAnimation: LayerAnimate = {
+const DEFAULT_LABELS: AlertLabels = {
+  close: 'Close alert',
+};
+
+const VARIANT_ICONS: Record<AlertVariant, string> = {
+  info: 'info',
+  success: 'circle-check',
+  warning: 'triangle-alert',
+  danger: 'circle-x',
+};
+
+const DEFAULT_LIFECYCLE: LifecycleAnimate = {
   enter: {
     opacity: { value: [0, 1], easing: 'outQuart' },
     y: { value: [-8, 0], easing: 'outQuart' },
@@ -51,80 +38,70 @@ const defaultAlertAnimation: LayerAnimate = {
   },
 };
 
-const defaultIcons: Record<AlertVariant, string> = {
-  info: 'info',
-  success: 'circle-check',
-  warning: 'triangle-alert',
-  danger: 'circle-x',
-};
+export interface AlertProps extends Record<string, unknown> {
+  variant?: AlertVariant;
+  size?: AlertSize;
+  icon?: string | boolean;
+  title?: React.ReactNode;
+  closable?: boolean;
+  onClose?: () => void;
+  animate?: LifecycleAnimate | false;
+  labels?: Partial<AlertLabels>;
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+}
 
-export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
+export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | 'description' | 'close', AlertProps, HTMLDivElement>({
   name: 'Alert',
   styles,
   slots: ['root', 'icon', 'content', 'title', 'description', 'close'] as const,
-  defaults: { variant: 'info' },
-  moveProps: ['variant', 'size', 'icon', 'title', 'closable', 'onClose', 'closeLabel', 'animate'],
+  defaults: { variant: 'info' as AlertVariant, size: 'md' as AlertSize, icon: true, closable: false },
+  moveProps: ['title', 'onClose', 'animate', 'labels'],
 
-  setup({ props, ref, internalRef, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const [visible, setVisible] = React.useState(true);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+    const [isClosing, setIsClosing] = React.useState(false);
+    const variant = props.variant as AlertVariant;
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<AlertLabels>) };
 
-    const animateProp = props.animate as LayerAnimate | false | undefined;
-    const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultAlertAnimation, animateProp);
+    const onCloseComplete = React.useCallback(() => {
+      setVisible(false);
+      setIsClosing(false);
+      (props.onClose as (() => void) | undefined)?.();
+    }, [props.onClose]);
 
-    // Entrance animation
-    React.useLayoutEffect(() => {
-      const el = internalRef.current;
-      if (!el || !animateConfig?.enter || prefersReducedMotion()) return;
+    const { contentRef } = useLifecycleAnimate({
+      animate: props.animate === false
+        ? false
+        : (props.animate as LifecycleAnimate | undefined) ?? DEFAULT_LIFECYCLE,
+      isClosing,
+      onCloseComplete,
+    });
+    const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
 
-      const enterParams = toAnimeParams(animateConfig.enter);
-      el.style.opacity = '0';
-
-      animRef.current = animate(el, {
-        ...enterParams,
-        onComplete: () => {
-          if (el) {
-            el.style.removeProperty('opacity');
-            el.style.removeProperty('transform');
-          }
-        },
-      });
-    }, [internalRef, animateConfig]);
+    // Determine icon
+    const iconProp = props.icon;
+    const iconName = iconProp === false ? null : typeof iconProp === 'string' ? iconProp : VARIANT_ICONS[variant];
+    const resolvedIcon = useResolvedIcon(iconName || '', 18);
+    const closeIcon = useResolvedIcon('x', 14);
 
     const handleClose = React.useCallback(() => {
-      const el = internalRef.current;
-      if (!el) {
+      if (isClosing) return;
+      if (props.animate === false) {
         setVisible(false);
         (props.onClose as (() => void) | undefined)?.();
         return;
       }
-
-      if (!animateConfig?.exit || prefersReducedMotion()) {
-        setVisible(false);
-        (props.onClose as (() => void) | undefined)?.();
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-
-      const exitParams = toAnimeParams(animateConfig.exit);
-      animate(el, {
-        ...exitParams,
-        onComplete: () => {
-          setVisible(false);
-          (props.onClose as (() => void) | undefined)?.();
-        },
-      });
-    }, [internalRef, props.onClose, animateConfig]);
+      setIsClosing(true);
+    }, [isClosing, props.animate, props.onClose]);
 
     return {
       render() {
         if (!visible) return null;
 
-        const variant = props.variant as AlertVariant;
-
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const iconSp = sp('icon');
         const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
@@ -135,33 +112,23 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
         const titleSp = sp('title');
         const { className: titleSpClass, style: titleSpStyle, ...titleSpRest } = titleSp as Record<string, unknown>;
 
-        const descriptionSp = sp('description');
-        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descriptionSp as Record<string, unknown>;
+        const descSp = sp('description');
+        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descSp as Record<string, unknown>;
 
         const closeSp = sp('close');
         const { className: closeSpClass, style: closeSpStyle, ...closeSpRest } = closeSp as Record<string, unknown>;
 
-        // Resolve icon
-        const iconProp = props.icon;
-        let iconName: string | null = null;
-        if (iconProp === false) {
-          iconName = null;
-        } else if (typeof iconProp === 'string') {
-          iconName = iconProp;
-        } else {
-          iconName = defaultIcons[variant];
-        }
-
         return (
           <div
             {...attrs}
-            {...rootSpRest}
-            ref={ref}
+            {...spRest}
+            ref={mergedRef}
             role="alert"
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
-            data-size={props.size}
-            className={cx('root', props.className, rootSpClass as string | undefined)}
-            style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
+            data-size={props.size as string}
+            data-surface="subtle"
           >
             {iconName && (
               <span
@@ -170,10 +137,9 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
                 style={iconSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
-                <Icon name={iconName} size={18} />
+                {resolvedIcon}
               </span>
             )}
-
             <div
               {...contentSpRest}
               className={cx('content', contentSpClass as string | undefined)}
@@ -198,17 +164,16 @@ export const Alert = withMoveComponent<AlertSlots, AlertProps, HTMLDivElement>({
                 </div>
               )}
             </div>
-
             {props.closable && (
               <button
                 {...closeSpRest}
-                type="button"
                 className={cx('close', closeSpClass as string | undefined)}
                 style={closeSpStyle as React.CSSProperties}
+                type="button"
+                aria-label={labels.close}
                 onClick={handleClose}
-                aria-label={props.closeLabel ?? 'Close alert'}
               >
-                <Icon name="x" size={14} />
+                {closeIcon}
               </button>
             )}
           </div>

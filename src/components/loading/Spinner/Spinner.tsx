@@ -1,14 +1,18 @@
 'use client';
-
+// Generated from Spinner.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Spinner.module.css';
 
 // =============================================================================
-// Spinner
+// Types
 // =============================================================================
 
 export type SpinnerSize = 'sm' | 'md' | 'lg';
 export type SpinnerVariant = 'default' | 'secondary' | 'current';
+
+type SpinnerSlots = 'root' | 'svg' | 'circle';
 
 export interface SpinnerProps extends Record<string, unknown> {
   size?: SpinnerSize;
@@ -16,13 +20,19 @@ export interface SpinnerProps extends Record<string, unknown> {
   strokeWidth?: number;
   className?: string;
   style?: React.CSSProperties;
+  children?: React.ReactNode;
+  sp?: SlotPropsMap<SpinnerSlots>;
 }
 
-export const Spinner = withMoveComponent<'root' | 'svg' | 'circle', SpinnerProps, HTMLDivElement>({
+// =============================================================================
+// Spinner
+// =============================================================================
+
+export const Spinner = withMoveComponent<SpinnerSlots, SpinnerProps, HTMLDivElement>({
   name: 'Spinner',
   styles,
   slots: ['root', 'svg', 'circle'] as const,
-  defaults: { size: 'md', strokeWidth: 3, variant: 'default' },
+  defaults: { size: 'md' as SpinnerSize, strokeWidth: 3, variant: 'default' as SpinnerVariant },
   moveProps: ['size', 'strokeWidth', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -30,8 +40,10 @@ export const Spinner = withMoveComponent<'root' | 'svg' | 'circle', SpinnerProps
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+
         const svgSp = sp('svg');
         const { className: svgSpClass, style: svgSpStyle, ...svgSpRest } = svgSp as Record<string, unknown>;
+
         const circleSp = sp('circle');
         const { className: circleSpClass, style: circleSpStyle, ...circleSpRest } = circleSp as Record<string, unknown>;
 
@@ -44,8 +56,8 @@ export const Spinner = withMoveComponent<'root' | 'svg' | 'circle', SpinnerProps
             aria-busy
             className={cx('root', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-size={props.size}
-            data-variant={props.variant}
+            data-size={props.size as string}
+            data-variant={props.variant as string}
           >
             <svg
               {...(svgSpRest as React.SVGAttributes<SVGSVGElement>)}

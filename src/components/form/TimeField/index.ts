@@ -1,3 +1,4 @@
+// Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { TimeField } from './TimeField';
 export type {
   TimeFieldRootProps,
@@ -6,7 +7,10 @@ export type {
   TimeFieldPeriodProps,
   TimeFieldDropdownProps,
   TimeFieldDropdownColumnProps,
+  TimeFieldSize,
+  TimeFieldAnimate,
 } from './TimeField';
+
 export { useTimeField } from './useTimeField';
 export type {
   UseTimeFieldOptions,

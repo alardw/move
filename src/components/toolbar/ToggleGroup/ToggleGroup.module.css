@@ -1,5 +1,5 @@
 /*
- * ToggleGroup Component
+ * ToggleGroup Component — Generated from ToggleGroup.spec.ts
  * Root carries the "unselected" surface (background + border + radius).
  * Items are transparent — only text color changes.
  * The sliding indicator provides the active-item background.

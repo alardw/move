@@ -1,16 +1,24 @@
 'use client';
+// Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
-import { mergeAnimateConfig } from '../../../animation/utils';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
+import { useMergedRef } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine';
+import { mergeAnimateConfig } from '../../../animation';
+import { useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
 import { useTimeField } from './useTimeField';
 import type { UseTimeFieldReturn, SegmentType, TimeFieldGranularity } from './useTimeField';
 import styles from './TimeField.module.css';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export type TimeFieldSize = 'sm' | 'md' | 'lg';
+export type TimeFieldAnimate = LifecycleAnimate & StaggerModifier;
 
 // ============================================================================
 // Context
@@ -22,7 +30,7 @@ interface TimeFieldContextValue {
   focusSegment: (segment: string) => void;
   focusNext: (current: string) => void;
   focusPrev: (current: string) => void;
-  size: 'sm' | 'md' | 'lg';
+  size: TimeFieldSize;
   disabled: boolean;
   invalid: boolean;
   // Dropdown state
@@ -31,7 +39,7 @@ interface TimeFieldContextValue {
   openDropdown: () => void;
   close: () => void;
   onCloseComplete: () => void;
-  animateConfig: PopupAnimate | null;
+  animateConfig: TimeFieldAnimate | null;
   withDropdown: boolean;
 }
 
@@ -61,8 +69,8 @@ export interface TimeFieldRootProps {
   granularity?: TimeFieldGranularity;
   hourCycle?: 12 | 24;
   withDropdown?: boolean;
-  animate?: PopupAnimate | false;
-  size?: 'sm' | 'md' | 'lg';
+  animate?: TimeFieldAnimate | false;
+  size?: TimeFieldSize;
   disabled?: boolean;
   invalid?: boolean;
   min?: string;
@@ -70,7 +78,7 @@ export interface TimeFieldRootProps {
   step?: number;
 }
 
-const defaultTimeFieldAnimation: PopupAnimate = {
+const DEFAULT_ANIMATE: TimeFieldAnimate = {
   enter: {
     opacity: { value: [0, 1], easing: 'outQuart' },
     scale: { value: [0.5, 1], easing: 'outQuart' },
@@ -101,7 +109,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   max,
   step,
 }) => {
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultTimeFieldAnimation, animateProp);
+  const animateConfig = animateProp === false ? null : mergeAnimateConfig(DEFAULT_ANIMATE, animateProp);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const segmentRefs = React.useRef<Map<string, HTMLElement | null>>(new Map());
@@ -475,11 +483,14 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
 }) => {
   const ctx = useTimeFieldContext();
 
-  const { contentRef } = usePopupAnimation({
+  const { contentRef } = useLifecycleAnimate({
     animate: ctx.animateConfig,
     isClosing: ctx.isClosing,
     onCloseComplete: ctx.onCloseComplete,
-    itemSelector: 'button',
+    stagger: ctx.animateConfig ? {
+      selector: 'button',
+      config: ctx.animateConfig,
+    } : undefined,
     animateHeight: true,
   });
 

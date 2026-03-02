@@ -1,3 +1,5 @@
+/* DayCell.module.css — provenance: original-components/calendar/_shared/DayCell.module.css */
+
 .dayCell {
   --move-calendar-cell-size: 2.25rem;
   --move-calendar-cell-radius: var(--move-rounded-md);

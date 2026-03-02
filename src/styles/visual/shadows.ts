@@ -22,11 +22,19 @@ function angleToOffset(angle: number): { x: number; y: number } {
 }
 
 /**
- * Generate layered shadow configuration for a given elevation
- * Based on Josh Comeau's shadow design principles:
- * - Multiple layers for realistic light scattering
- * - Offset, blur, and opacity scale together with elevation
- * - Configurable oomph (spread), crispy (sharpness), and layer count
+ * Generate layered shadow configuration for a given elevation.
+ *
+ * Follows Josh Comeau's shadow design approach:
+ *
+ *   small:  1 layer,  higher per-layer opacity  → tight contact shadow
+ *   medium: 3 layers, moderate per-layer opacity → geometric progression
+ *   large:  5 layers, lower per-layer opacity    → geometric doubling
+ *
+ * Key insight: more layers = lower per-layer opacity so total shadow
+ * strength stays roughly the same while visual quality improves.
+ * The offset/blur follow a geometric progression (1→2→4→8→16).
+ *
+ * @see https://www.joshwcomeau.com/css/designing-shadows/
  */
 function generateShadowLayers(
   elevation: number,
@@ -34,52 +42,47 @@ function generateShadowLayers(
     opacity?: number;
     oomph?: number;
     crispy?: number;
-    resolution?: number;
   } = {}
 ): ShadowLayer[] {
   const {
-    opacity: baseOpacity = 0.07,
-    oomph = 0,
-    crispy = 0,
-    resolution = 0.31,
+    opacity: totalOpacity = 0.35,
+    oomph = 0.5,
+    crispy = 0.5,
   } = options;
 
-  // Resolution determines layers per elevation (like Josh's generator)
-  // elevation 1 (sm) -> 2 layers, elevation 2 (md) -> 3 layers, etc.
-  const baseLayers = Math.round(1 + elevation * resolution * 3);
-  const layerCount = Math.max(2, Math.min(8, baseLayers));
+  // Layer count scales with elevation:
+  // sm (1) → 1 layer, md (2) → 3, lg (3) → 4, xl (5) → 5
+  const layerCount = elevation === 1
+    ? 1
+    : Math.max(3, Math.min(7, 1 + elevation));
 
-  const result: ShadowLayer[] = [];
-
-  // Clamp values to valid ranges
   const clampedOomph = Math.max(0, Math.min(1, oomph));
   const clampedCrispy = Math.max(0, Math.min(1, crispy));
 
-  // Oomph affects overall shadow spread (0.5-2x multiplier)
-  const oomphMultiplier = 0.5 + clampedOomph * 1.5;
+  // Oomph scales how far the outermost layers reach (0.6× – 1.4×)
+  const reach = 0.6 + clampedOomph * 0.8;
 
-  // Crispy affects blur-to-offset ratio
-  // Low crispy = more blur relative to offset (softer)
-  // High crispy = less blur relative to offset (sharper)
-  const blurRatio = 2 - clampedCrispy * 1.5; // 2.0 to 0.5
+  // Crispy controls blur-to-offset ratio:
+  //   0 → blur = 1.2× offset (soft, diffuse)
+  //   1 → blur = 0.6× offset (sharp, crisp)
+  const blurRatio = 1.2 - clampedCrispy * 0.6;
 
-  // As elevation increases, opacity per layer decreases
-  // This creates the effect of shadows becoming more diffuse at higher elevations
-  const opacityMultiplier = 1 - (elevation - 1) * 0.1;
+  // Per-layer opacity: total budget split across layers
+  // Matches Josh's pattern: 1 layer → 0.7, 3 layers → 0.333, 5 layers → 0.2
+  const perLayerOpacity = totalOpacity / layerCount;
+
+  const result: ShadowLayer[] = [];
 
   for (let i = 0; i < layerCount; i++) {
-    // Each layer progressively increases in size
-    const progress = i / (layerCount - 1 || 1);
-    const layerMultiplier = 1 + progress * (elevation * 2);
-
-    const baseOffset = elevation * oomphMultiplier * layerMultiplier;
+    // Geometric progression: 1, 2, 4, 8, 16, 32 …
+    const size = Math.pow(2, i) * reach;
 
     result.push({
-      offsetX: baseOffset,
-      offsetY: baseOffset,
-      blur: baseOffset * blurRatio,
+      offsetX: size * 0.5,  // X offset is half of Y (light from above)
+      offsetY: size,
+      blur: size * blurRatio,
       spread: 0,
-      opacity: baseOpacity * opacityMultiplier * (1 - progress * 0.3),
+      opacity: perLayerOpacity,
     });
   }
 
@@ -123,13 +126,12 @@ function layersToCSS(
  *   angle: 120
  * })
  *
- * // Full customization (Josh Comeau style)
+ * // Full customization
  * createShadow({
  *   elevation: 3,
- *   oomph: 0.7,    // more spread
+ *   oomph: 0.7,    // far-reaching
  *   crispy: 0.3,   // softer blur
- *   layers: 5,     // more layers
- *   opacity: 0.1,  // stronger shadows
+ *   opacity: 0.4,  // stronger shadows
  * })
  * ```
  */
@@ -141,14 +143,12 @@ export function createShadow(options: CreateShadowOptions): string {
     opacity,
     oomph,
     crispy,
-    resolution,
   } = options;
 
   const shadowLayers = generateShadowLayers(elevation, {
     opacity,
     oomph,
     crispy,
-    resolution,
   });
   return layersToCSS(shadowLayers, color, angle);
 }
@@ -184,45 +184,35 @@ export interface CreateShadowPaletteOptions {
   color?: string;
   /** Light source angle in degrees */
   angle?: number;
-  /** Base opacity for shadow layers (0-1) */
+  /** Total shadow opacity budget, split across layers (0-1) */
   opacity?: number;
-  /** Shadow intensity/spread (0-1) */
+  /** Shadow reach (0-1) */
   oomph?: number;
   /** Shadow sharpness (0-1) */
   crispy?: number;
-  /** Resolution - controls layer count per elevation (0-1), default 0.31 */
-  resolution?: number;
 }
 
 /**
  * Generate a complete shadow palette for all elevations
- * Useful for creating theme-specific shadow sets
  *
  * @example
  * ```ts
- * // Basic usage with color
  * const blueShadows = createShadowPalette({
- *   color: '220deg 60% 50%',
- * });
- *
- * // Full customization
- * const customShadows = createShadowPalette({
- *   color: '220deg 40% 2%',
+ *   color: '220 60% 50%',
  *   oomph: 0.6,
  *   crispy: 0.4,
- *   layers: 4,
- *   opacity: 0.12,
+ *   opacity: 0.4,
  * });
  * ```
  */
 export function createShadowPalette(options?: CreateShadowPaletteOptions): ShadowPresets {
-  const { color, angle, opacity, oomph, crispy, resolution } = options ?? {};
+  const { color, angle, opacity, oomph, crispy } = options ?? {};
 
   return {
-    sm: createShadow({ elevation: 1, color, angle, opacity, oomph, crispy, resolution }),
-    md: createShadow({ elevation: 2, color, angle, opacity, oomph, crispy, resolution }),
-    lg: createShadow({ elevation: 3, color, angle, opacity, oomph, crispy, resolution }),
-    xl: createShadow({ elevation: 5, color, angle, opacity, oomph, crispy, resolution }),
+    sm: createShadow({ elevation: 1, color, angle, opacity, oomph, crispy }),
+    md: createShadow({ elevation: 2, color, angle, opacity, oomph, crispy }),
+    lg: createShadow({ elevation: 3, color, angle, opacity, oomph, crispy }),
+    xl: createShadow({ elevation: 5, color, angle, opacity, oomph, crispy }),
   };
 }
 
@@ -236,3 +226,71 @@ export const shadowCSSVariables = {
   '--move-shadow-lg': shadows.lg,
   '--move-shadow-xl': shadows.xl,
 } as const;
+
+// =============================================================================
+// Surface-aware shadow system
+// =============================================================================
+
+export type SurfaceLevel = 'base' | 'subtle' | 'muted' | 'emphasis' | 'inverse';
+
+export interface SurfaceShadowConfig {
+  /** Shadow strength/opacity for this surface (0-1) */
+  strength: number;
+  /** Override shadow color for this surface (HSL without deg, e.g. '220 3% 15%') */
+  color?: string;
+}
+
+export interface ThemeShadowConfig {
+  /** Light source angle in degrees (default: 135 = top-left) */
+  angle?: number;
+  /** Default shadow color (HSL, e.g. '220 3% 15%') */
+  color: string;
+  /** Per-surface configuration */
+  surfaces: Record<SurfaceLevel, SurfaceShadowConfig>;
+  /** Shadow oomph — spread intensity (0-1, default: 0.12) */
+  oomph?: number;
+  /** Shadow crispiness (0-1, default: 0.14) */
+  crispy?: number;
+}
+
+type ShadowSize = 'sm' | 'md' | 'lg' | 'xl';
+
+export type ThemeShadowTokens = {
+  '--move-shadow-angle': string;
+} & {
+  [K in `--move-shadow-${SurfaceLevel}-${ShadowSize}`]: string;
+};
+
+/**
+ * Generate per-surface shadow tokens for a theme.
+ * Iterates surfaces, calls createShadowPalette() for each with the surface's
+ * color/strength, and prefixes tokens with surface name.
+ */
+export function createThemeShadows(config: ThemeShadowConfig): ThemeShadowTokens {
+  const { angle = 135, color, surfaces, oomph = 0.12, crispy = 0.14 } = config;
+
+  const tokens: Record<string, string> = {
+    '--move-shadow-angle': `${angle}`,
+  };
+
+  const surfaceNames: SurfaceLevel[] = ['base', 'subtle', 'muted', 'emphasis', 'inverse'];
+
+  for (const surface of surfaceNames) {
+    const surfaceConfig = surfaces[surface];
+    const shadowColor = surfaceConfig.color ?? color;
+    const palette = createShadowPalette({
+      color: shadowColor,
+      angle,
+      opacity: surfaceConfig.strength,
+      oomph,
+      crispy,
+    });
+
+    tokens[`--move-shadow-${surface}-sm`] = palette.sm;
+    tokens[`--move-shadow-${surface}-md`] = palette.md;
+    tokens[`--move-shadow-${surface}-lg`] = palette.lg;
+    tokens[`--move-shadow-${surface}-xl`] = palette.xl;
+  }
+
+  return tokens as ThemeShadowTokens;
+}

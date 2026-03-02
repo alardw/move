@@ -1,3 +1,4 @@
+// Generated from Tooltip.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Tooltip } from './Tooltip';
 export type {
   TooltipSimpleProps,
@@ -7,4 +8,5 @@ export type {
   TooltipPortalProps,
   TooltipContentProps,
   TooltipArrowProps,
+  LayerAnimate,
 } from './Tooltip';

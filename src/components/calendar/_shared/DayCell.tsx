@@ -1,10 +1,12 @@
 'use client';
+// Generated from Calendar.spec.ts — shared DayCell
+// Provenance: original-components/calendar/_shared/DayCell.tsx
 
 import * as React from 'react';
 import { isSameDay, isToday, isSameMonth, isDateDisabled, isWithinRange, isBefore } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
-import { useInteractiveAnimate } from '../../../animation/useAnimateConfig';
-import type { DayState, DayCellData, CalendarEvent, DateRange } from './types';
+import { useInteractiveAnimate } from '../../../animation';
+import type { DayState, DayCellData, DateRange } from './types';
 import styles from './DayCell.module.css';
 
 export interface DayCellProps {
@@ -55,7 +57,6 @@ export const DayCell = React.memo(function DayCell({
     value,
     onSelect,
     constraints,
-    events,
     getEventsForDate,
     renderDayCell,
     focusedDate,
@@ -98,7 +99,7 @@ export const DayCell = React.memo(function DayCell({
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
     animHandlers.onMouseDown();
   };
 

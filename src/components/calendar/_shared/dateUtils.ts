@@ -1,3 +1,6 @@
+// Generated from Calendar.spec.ts & CalendarView.spec.ts — date utilities
+// Provenance: original-components/calendar/_shared/dateUtils.ts
+
 import type { CalendarConstraints } from './types';
 
 // ============================================================================
@@ -323,7 +326,7 @@ export function parseDate(text: string, locale: string): Date | null {
   if (month < 1 || month > 12 || day < 1 || day > 31) return null;
 
   const date = new Date(year, month - 1, day);
-  // Verify the date didn't overflow (e.g. Feb 30 → Mar 2)
+  // Verify the date didn't overflow (e.g. Feb 30 -> Mar 2)
   if (
     date.getFullYear() !== year ||
     date.getMonth() !== month - 1 ||

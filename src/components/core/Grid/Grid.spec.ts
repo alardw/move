@@ -1,0 +1,137 @@
+// Grid.spec.ts — Component specification
+// specHash: PLACEHOLDER
+
+export const spec = {
+  schemaVersion: 6 as const,
+  name: 'Grid',
+  componentClass: 'presentational' as const,
+  category: 'core',
+  description: 'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
+
+  compound: true,
+  rootElement: 'div',
+  slots: [
+    { name: 'root', element: 'div', description: 'Grid container with CSS grid display' },
+    { name: 'cell', element: 'div', description: 'Grid cell with span/offset/order control' },
+  ],
+
+  subComponents: [
+    {
+      name: 'Cell',
+      slots: [{ name: 'cell', element: 'div', description: 'Grid cell' }],
+      props: [
+        { name: 'span', type: 'number', moveSpecific: true, description: 'Column span' },
+        { name: 'rowSpan', type: 'number', moveSpecific: true, description: 'Row span' },
+        { name: 'offset', type: 'number', moveSpecific: true, description: 'Columns to skip before this cell' },
+        { name: 'order', type: 'number', moveSpecific: true, description: 'Visual order' },
+        { name: 'align', type: "'start' | 'center' | 'end' | 'stretch'", moveSpecific: true, description: 'Self-alignment within the grid cell' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Cell content' },
+      ],
+      usesFactory: true,
+      description: 'Grid cell with column span, row span, offset, and order control',
+    },
+  ],
+
+  props: [
+    { name: 'cols', type: 'number', moveSpecific: true, description: 'Equal-width columns (shorthand for repeat(N, 1fr))' },
+    { name: 'rows', type: 'number', moveSpecific: true, description: 'Equal-height rows (shorthand for repeat(N, 1fr))' },
+    { name: 'columns', type: 'number', moveSpecific: true, description: 'Total columns for span-based mode (default 12)' },
+    { name: 'minChildWidth', type: 'string', moveSpecific: true, description: 'Auto-fit: minimum child width before wrapping (e.g. "200px")' },
+    { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
+    { name: 'rowGap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", moveSpecific: true, description: 'Row gap override' },
+    { name: 'columnGap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", moveSpecific: true, description: 'Column gap override' },
+    { name: 'collapseBelow', type: 'string', moveSpecific: true, description: 'Container width (px) below which grid collapses to 1 column' },
+    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Grid.Cell children' },
+  ],
+
+  anatomy: {
+    slot: 'root',
+    dataAttributes: [],
+    children: [
+      { slot: 'cell' },
+    ],
+  },
+
+  controlled: null,
+  keyboard: null,
+  focus: null,
+  formType: null,
+  asChild: false,
+
+  animations: [],
+
+  tokens: [],
+
+  variants: {},
+  sizes: [],
+
+  labels: [],
+  childrenKind: 'composition' as const,
+
+  renderContracts: [
+    {
+      id: 'inline-style-layout',
+      description: 'Grid uses inline styles (not data-attributes) for layout: --_grid-template, --_grid-rows, gap, rowGap, columnGap are set via inline style. GAP_MAP resolves named gaps (xs/sm/md/lg/xl/none) to spacing token CSS custom properties.',
+    },
+    {
+      id: 'cell-inline-style-placement',
+      description: 'Cell uses inline styles for gridColumn, gridRow, order, and alignSelf. span+offset combines to gridColumn: "offset+1 / span N".',
+    },
+    {
+      id: 'grid-template-resolution',
+      description: 'Grid template resolves in priority order: minChildWidth -> repeat(auto-fill, minmax(W, 1fr)), cols -> repeat(N, 1fr), columns -> repeat(N, 1fr), fallback -> repeat(12, 1fr)',
+    },
+    {
+      id: 'collapse-below-resize-observer',
+      description: 'When collapseBelow is set, a ResizeObserver watches the root element and sets/removes data-collapsed attribute when width crosses the threshold',
+    },
+  ],
+
+  hasHook: false,
+  engineImports: ['withMoveComponent'],
+  animationImports: [],
+  componentDeps: [],
+
+  testing: {
+    behaviors: [
+      'Renders as div with CSS grid display',
+      'Defaults to 12-column grid when no cols/columns/minChildWidth provided',
+      'Sets --_grid-template via inline style for cols mode',
+      'Sets --_grid-template via inline style for minChildWidth auto-fit mode',
+      'Sets --_grid-rows via inline style when rows is provided',
+      'Resolves gap values through GAP_MAP to spacing tokens',
+      'Defaults to gap=md',
+      'Supports rowGap and columnGap overrides',
+      'Forwards className and style on root',
+      'Forwards ref to root element',
+      'Spreads HTML attributes',
+    ],
+    cell: [
+      'Cell renders as div',
+      'Cell sets gridColumn for span',
+      'Cell combines offset and span into gridColumn: "offset+1 / span N"',
+      'Cell sets gridRow for rowSpan',
+      'Cell sets order via inline style',
+      'Cell sets alignSelf for align prop',
+      'Cell forwards className and style',
+      'Cell forwards ref',
+    ],
+    collapse: [
+      'Sets data-collapsed attribute when container width falls below collapseBelow threshold',
+      'Removes data-collapsed attribute when container width exceeds threshold',
+      'CSS overrides grid-template-columns to 1fr when data-collapsed is set',
+    ],
+  },
+
+  notes: [
+    'Layout props (gap, cols, rows, etc.) are applied via inline styles rather than data-attributes — this is a deliberate design choice for CSS grid flexibility',
+    'The GAP_MAP maps named sizes to semantic spacing tokens: xs->--move-spacing-xs, sm->--move-spacing-sm, md->--move-spacing-md, lg->--move-spacing-lg, xl->--move-spacing-xl, none->0',
+    'No component-specific CSS custom property tokens — all styling is structural CSS grid',
+  ],
+
+  defaultReview: {
+    status: 'approved' as const,
+    decisionSource: 'rule-based' as const,
+    overrides: {},
+  },
+};

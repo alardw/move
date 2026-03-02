@@ -1,16 +1,16 @@
 'use client';
-
+// Generated from ImageGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import {
   toAnimeParams,
   prefersReducedMotion,
   mergeAnimateConfig,
   getInitialStyles,
-} from '../../../animation/utils';
-import type { ListAnimate } from '../../../animation/types';
+} from '../../../animation';
+import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
 import styles from './ImageGroup.module.css';
 
 // =============================================================================
@@ -20,6 +20,9 @@ import styles from './ImageGroup.module.css';
 export type ImageGroupGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ImageGroupRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 type ImageGroupSlots = 'root';
+
+/** List animation config with stagger */
+export type ListAnimate = LifecycleAnimate & StaggerModifier;
 
 // =============================================================================
 // Default animation

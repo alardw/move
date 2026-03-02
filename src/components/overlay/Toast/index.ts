@@ -1,9 +1,4 @@
+// Generated from Toast.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Toast } from './Toast';
-export type { ToastViewportProps } from './Toast';
-export { toast } from './store';
-export type {
-  ToastVariant,
-  ToastPosition,
-  ToastState,
-  ToastOptions,
-} from './store';
+export type { ToastViewportProps, ToastState, ToastPosition, ToastVariant, ToastOptions } from './Toast';
+export { toast } from './Toast';

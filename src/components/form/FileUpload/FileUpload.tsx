@@ -1,10 +1,11 @@
 'use client';
+// Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { animate } from 'animejs';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useFileUpload, formatFileSize } from './useFileUpload';
 import type { UseFileUploadOptions, UseFileUploadReturn } from './useFileUpload';
 import { useUploadManager } from './useUploadManager';
@@ -15,14 +16,14 @@ import type {
   UploadAggregateState,
   UseUploadManagerOptions,
 } from './types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { ProgressBar } from '../../loading/ProgressBar/ProgressBar';
 import {
   toAnimeParams,
   prefersReducedMotion,
   getInitialStyles,
-} from '../../../animation/utils';
-import type { Animation, StaggerConfig } from '../../../animation/types';
+} from '../../../animation';
+import type { Animation, StaggerConfig } from '../../../animation';
 import styles from './FileUpload.module.css';
 
 // =============================================================================
@@ -789,7 +790,7 @@ const FileUploadClearTrigger = withMoveComponent<'clearTrigger', FileUploadClear
 });
 
 // =============================================================================
-// ItemStatus
+// ItemProgress
 // =============================================================================
 
 const FileUploadItemProgress = withMoveComponent<'itemProgress', FileUploadItemProgressProps, HTMLDivElement>({

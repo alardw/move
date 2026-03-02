@@ -1,11 +1,12 @@
 'use client';
-
+// Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useInteractiveAnimate, prefersReducedMotion, useSlidingIndicator } from '../../../animation';
-import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
+import { defaultAnimations } from '../../../animation';
+import type { InteractionAnimate } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
 import styles from './Pagination.module.css';
@@ -126,7 +127,7 @@ export interface PaginationPrevTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  animate?: ElementAnimate | false;
+  animate?: InteractionAnimate | false;
   onMouseDown?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseUp?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -145,12 +146,12 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
   setup({ props, ref, cx, sp, attrs }) {
     const { previous, canPrevious } = usePaginationContext();
 
-    const animateConfig = (props.animate as ElementAnimate | false | undefined) === false
+    const animateConfig = (props.animate as InteractionAnimate | false | undefined) === false
       ? { hover: false as const, press: false as const }
-      : { ...((props.animate as ElementAnimate | undefined) || {}) };
+      : { ...((props.animate as InteractionAnimate | undefined) || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as ElementAnimate,
+      animate: animateConfig as InteractionAnimate,
       defaults: defaultAnimations.element,
       disabled: !canPrevious,
     });
@@ -218,7 +219,7 @@ export interface PaginationNextTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  animate?: ElementAnimate | false;
+  animate?: InteractionAnimate | false;
   onMouseDown?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseUp?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -237,12 +238,12 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
   setup({ props, ref, cx, sp, attrs }) {
     const { next, canNext } = usePaginationContext();
 
-    const animateConfig = (props.animate as ElementAnimate | false | undefined) === false
+    const animateConfig = (props.animate as InteractionAnimate | false | undefined) === false
       ? { hover: false as const, press: false as const }
-      : { ...((props.animate as ElementAnimate | undefined) || {}) };
+      : { ...((props.animate as InteractionAnimate | undefined) || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as ElementAnimate,
+      animate: animateConfig as InteractionAnimate,
       defaults: defaultAnimations.element,
       disabled: !canNext,
     });
@@ -509,7 +510,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 });
 
 // =============================================================================
-// PageButton — internal component with interactive animation per item
+// PageButton -- internal component with interactive animation per item
 // =============================================================================
 
 interface PageButtonProps {
@@ -524,7 +525,7 @@ interface PageButtonProps {
 
 function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNumber, onSelect }: PageButtonProps) {
   const { ref: animRef, handlers } = useInteractiveAnimate({
-    animate: {} as ElementAnimate,
+    animate: {} as InteractionAnimate,
     defaults: defaultAnimations.element,
     disabled: false,
   });

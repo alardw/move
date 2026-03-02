@@ -1,9 +1,11 @@
 /*
  * Tooltip Component
+ * Generated from Tooltip.spec.ts
+ *
  * Component tokens on each slot so they resolve in local scope.
- * Content lives in a portal, so it declares all tokens it consumes.
- * Entrance animation is handled by anime.js (spring physics).
- * Exit animation is CSS (Radix manages unmount lifecycle).
+ * Content lives in a portal — must declare font-family explicitly.
+ * Entrance animation via useLifecycleAnimate (anime.js spring physics).
+ * Exit animation via CSS @keyframes (Radix manages unmount lifecycle).
  */
 
 .trigger {
@@ -35,7 +37,7 @@
   will-change: transform, opacity;
 }
 
-/* Exit — CSS handles close since Radix controls unmount */
+/* Exit — CSS handles close since Radix controls unmount lifecycle */
 .content[data-state='closed'] {
   animation: tooltip-out 120ms var(--move-ease-exit) forwards;
 }

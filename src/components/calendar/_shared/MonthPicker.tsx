@@ -1,4 +1,6 @@
 'use client';
+// Generated from Calendar.spec.ts — shared MonthPicker
+// Provenance: original-components/calendar/_shared/MonthPicker.tsx
 
 import * as React from 'react';
 import { getMonthNames } from './dateUtils';

@@ -4,13 +4,19 @@
 export type ShadowElevation = 'sm' | 'md' | 'lg' | 'xl';
 
 /**
- * Options for creating custom shadows
- * Based on Josh Comeau's shadow palette generator principles
+ * Options for creating custom shadows.
+ * Based on Josh Comeau's layered shadow approach.
+ *
+ * @see https://www.joshwcomeau.com/css/designing-shadows/
  */
 export interface CreateShadowOptions {
   /**
-   * Elevation level from 1-5
-   * Higher = more pronounced shadow (element appears further from surface)
+   * Elevation level from 1-5.
+   * Controls layer count:
+   *   1 (sm) → 1 layer (tight contact shadow)
+   *   2 (md) → 3 layers
+   *   3 (lg) → 4 layers
+   *   5 (xl) → 5+ layers
    */
   elevation: 1 | 2 | 3 | 4 | 5;
 
@@ -29,31 +35,25 @@ export interface CreateShadowOptions {
   angle?: number;
 
   /**
-   * Base opacity for the shadow layers (0-1)
-   * Default: 0.07
+   * Total shadow opacity budget (0-1), split across layers.
+   * More layers → lower per-layer opacity, same total strength.
+   * Default: 0.35
    */
   opacity?: number;
 
   /**
-   * Shadow intensity/depth - how far shadows spread (0-1)
-   * 0 = minimal spread, 1 = maximum spread
+   * Shadow reach — how far the outermost layer extends (0-1)
+   * 0 = compact shadow, 1 = far-reaching shadow
    * Default: 0.5
    */
   oomph?: number;
 
   /**
-   * Shadow sharpness/crispness - blur-to-offset ratio (0-1)
-   * 0 = very blurry/soft, 1 = sharp/crisp
+   * Shadow sharpness — blur-to-offset ratio (0-1)
+   * 0 = soft/diffuse (blur > offset), 1 = sharp/crisp (blur < offset)
    * Default: 0.5
    */
   crispy?: number;
-
-  /**
-   * Resolution - controls layer count per elevation (0-1)
-   * Higher = more layers for smoother shadows
-   * Default: 0.31
-   */
-  resolution?: number;
 }
 
 /**

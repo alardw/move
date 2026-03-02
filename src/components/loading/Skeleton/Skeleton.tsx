@@ -1,5 +1,5 @@
 'use client';
-
+// Generated from Skeleton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';
@@ -24,7 +24,7 @@ interface SkeletonContextValue {
 const SkeletonContext = React.createContext<SkeletonContextValue>({ animation: 'pulse' });
 
 // ============================================================================
-// useSkeletonAnimation — attaches looping animation to a shape element
+// useSkeletonPulse — attaches looping pulse animation to a shape element
 // ============================================================================
 
 function useSkeletonPulse(ref: React.RefObject<HTMLElement | null>) {
@@ -67,7 +67,7 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
     const ctxValue = React.useMemo(() => ({ animation }), [animation]);
 
     // Wave: animate a CSS custom property on the root, inherited by all shape descendants.
-    // background-position-x goes from 100% → 0%, sweeping the highlight left-to-right.
+    // background-position-x goes from 100% -> 0%, sweeping the highlight left-to-right.
     // The gradient is 400% wide so the highlight is fully off-screen at both endpoints.
     React.useEffect(() => {
       const el = internalRef.current;
@@ -99,7 +99,7 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
               {...attrs}
               {...spRest}
               ref={ref}
-              className={cx('root', spClass as string | undefined)}
+              className={cx('root', props.className as string | undefined, spClass as string | undefined)}
               style={{
                 ...(props.style as React.CSSProperties),
                 ...(spStyle as React.CSSProperties),

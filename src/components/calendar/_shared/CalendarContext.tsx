@@ -1,4 +1,6 @@
 'use client';
+// Generated from Calendar.spec.ts — shared CalendarContext
+// Provenance: original-components/calendar/_shared/CalendarContext.tsx
 
 import * as React from 'react';
 import type {

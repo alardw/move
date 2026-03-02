@@ -1,0 +1,111 @@
+/* Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01) */
+
+/* Root — flex row, placement controls direction */
+.root {
+  --move-chatbubble-gap: var(--move-spacing-sm);
+  --move-chatbubble-max-width: 80%;
+
+  display: flex;
+  align-items: flex-end;
+  gap: var(--move-chatbubble-gap);
+  max-width: 100%;
+}
+
+.root[data-placement='start'],
+.root:not([data-placement]) {
+  flex-direction: row;
+  justify-content: flex-start;
+  transform-origin: bottom left;
+}
+
+.root[data-placement='end'] {
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  transform-origin: bottom right;
+}
+
+/* Avatar */
+.avatar {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+
+/* Container — the bubble shape */
+.container {
+  --move-chatbubble-bg: var(--move-bg-muted);
+  --move-chatbubble-fg: var(--move-fg-base);
+  --move-chatbubble-radius: var(--move-rounded-xl);
+  --move-chatbubble-padding-x: var(--move-spacing-md);
+  --move-chatbubble-padding-y: var(--move-spacing-sm);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: var(--move-chatbubble-max-width);
+  padding: var(--move-chatbubble-padding-y) var(--move-chatbubble-padding-x);
+  background-color: var(--move-chatbubble-bg);
+  color: var(--move-chatbubble-fg);
+  border-radius: var(--move-chatbubble-radius);
+  font-family: var(--move-font-body);
+  word-break: break-word;
+}
+
+/* Variants */
+.container[data-variant='neutral'],
+.container:not([data-variant]) {
+  /* default — neutral */
+}
+
+.container[data-variant='primary'] {
+  --move-chatbubble-bg: var(--move-primary);
+  --move-chatbubble-fg: var(--move-primary-fg);
+}
+
+.container[data-variant='success'] {
+  --move-chatbubble-bg: var(--move-success);
+  --move-chatbubble-fg: var(--move-success-fg);
+}
+
+.container[data-variant='warning'] {
+  --move-chatbubble-bg: var(--move-warning);
+  --move-chatbubble-fg: var(--move-warning-fg);
+}
+
+.container[data-variant='error'] {
+  --move-chatbubble-bg: var(--move-error);
+  --move-chatbubble-fg: var(--move-error-fg);
+}
+
+/* Tail — square off the corner closest to the avatar */
+.container[data-tail][data-placement='start'],
+.container[data-tail]:not([data-placement]) {
+  border-bottom-left-radius: 0;
+}
+
+.container[data-tail][data-placement='end'] {
+  border-bottom-right-radius: 0;
+}
+
+/* Header — sender name / metadata */
+.header {
+  font-size: var(--move-size-xs);
+  font-weight: var(--move-weight-semibold);
+  color: inherit;
+  opacity: 0.8;
+  padding-bottom: var(--move-spacing-xs);
+}
+
+/* Content — message body */
+.content {
+  font-size: var(--move-size-sm);
+  line-height: var(--move-leading-relaxed);
+  color: inherit;
+}
+
+/* Footer — status text / timestamp */
+.footer {
+  font-size: var(--move-size-xs);
+  color: inherit;
+  opacity: 0.6;
+  padding-top: var(--move-spacing-xs);
+}

@@ -1,5 +1,6 @@
 /*
- * Dialog Component
+ * Dialog Component — Move UI
+ * Provenance: adapted from original-components/overlay/Dialog/Dialog.module.css
  * Component tokens on each slot so they resolve in local scope.
  * Overlay and Content live in separate portal DOM trees, so each
  * declares the tokens it consumes.
@@ -20,7 +21,7 @@
   z-index: var(--move-layer-overlay);
 }
 
-/* Animation handled by useLayerAnimation hook */
+/* Animation handled by useLifecycleAnimate hook */
 
 .content {
   /* Component tokens — content, title, description, close (children inherit) */
@@ -54,6 +55,7 @@
   max-height: var(--move-dialog-content-max-height);
   display: flex;
   flex-direction: column;
+  font-family: var(--move-font-body);
   background-color: var(--move-dialog-content-bg);
   border: 1px solid var(--move-dialog-content-border);
   border-radius: var(--move-dialog-content-radius);
@@ -71,7 +73,7 @@
   outline: none;
 }
 
-/* Animation handled by useLayerAnimation hook */
+/* Animation handled by useLifecycleAnimate hook */
 
 .title {
   margin: 0;
@@ -161,4 +163,3 @@
   width: var(--move-dialog-close-icon-size);
   height: var(--move-dialog-close-icon-size);
 }
-

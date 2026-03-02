@@ -1,15 +1,20 @@
 'use client';
-
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
 import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
-import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { prefersReducedMotion } from '../../../animation';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
 import styles from './Avatar.module.css';
 
 // =============================================================================
-// Group context
+// Types
+// =============================================================================
+
+export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+// =============================================================================
+// Group context — staggered entrance coordination
 // =============================================================================
 
 interface AvatarGroupContextValue {
@@ -20,15 +25,22 @@ interface AvatarGroupContextValue {
 const AvatarGroupContext = React.createContext<AvatarGroupContextValue | null>(null);
 
 // =============================================================================
+// Default animation
+// =============================================================================
+
+const DEFAULT_LIFECYCLE: LifecycleAnimate = {
+  enter: { scale: { value: [0, 1], easing: 'poppy' } },
+};
+
+// =============================================================================
 // Group
 // =============================================================================
 
 export interface AvatarGroupProps extends Record<string, unknown> {
+  staggerDelay?: number;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  staggerDelay?: number;
-  sp?: SlotPropsMap<'group'>;
 }
 
 const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>({
@@ -62,7 +74,7 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
               {...spRest}
               ref={ref}
               className={cx('group', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
             >
               {props.children}
             </div>
@@ -77,51 +89,48 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
 // Root
 // =============================================================================
 
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-
 export interface AvatarRootProps extends Record<string, unknown> {
+  size?: AvatarSize;
+  animate?: LifecycleAnimate | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  size?: AvatarSize;
-  animate?: false;
-  sp?: SlotPropsMap<'root'>;
 }
 
 const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
-  name: 'AvatarRoot',
+  name: 'Avatar',
   styles,
   slots: ['root'] as const,
-  defaults: { size: 'md' },
+  defaults: { size: 'md' as AvatarSize },
   moveProps: ['size', 'animate'],
 
-  setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { size, animate: animateProp } = props;
+  setup({ props, ref, cx, sp, attrs }) {
     const groupCtx = React.useContext(AvatarGroupContext);
     const indexRef = React.useRef<number | null>(null);
-    const skipAnimation = animateProp === false || prefersReducedMotion();
 
+    // Register with group for stagger ordering
     if (indexRef.current === null && groupCtx) {
       indexRef.current = groupCtx.registerAvatar();
     }
 
-    React.useEffect(() => {
-      const el = internalRef.current;
-      if (!el) return;
+    // Build per-avatar stagger delay
+    const staggerDelay = groupCtx ? (indexRef.current ?? 0) * groupCtx.staggerDelay : 0;
 
-      if (skipAnimation) {
-        el.style.transform = 'scale(1)';
-        return;
-      }
+    // Merge stagger delay into default lifecycle config
+    const resolvedAnimate: LifecycleAnimate | false =
+      props.animate === false
+        ? false
+        : (props.animate as LifecycleAnimate | undefined) ?? {
+            enter: {
+              ...DEFAULT_LIFECYCLE.enter,
+              delay: staggerDelay || undefined,
+            },
+          };
 
-      const delay = groupCtx ? (indexRef.current ?? 0) * groupCtx.staggerDelay : 0;
-
-      animate(el, {
-        scale: [0, 1],
-        ease: spring({ mass: 1, stiffness: 400, damping: 15, velocity: 0 }),
-        delay,
-      });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const { contentRef } = useLifecycleAnimate({
+      animate: resolvedAnimate,
+    });
+    const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLSpanElement>);
 
     return {
       render() {
@@ -132,10 +141,10 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
           <RadixAvatar.Root
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-size={size}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            data-size={props.size as string}
           >
             {props.children}
           </RadixAvatar.Root>
@@ -150,12 +159,11 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 // =============================================================================
 
 export interface AvatarImageProps extends Record<string, unknown> {
-  className?: string;
-  style?: React.CSSProperties;
   src?: string;
   alt?: string;
   onLoadingStatusChange?: (status: 'idle' | 'loading' | 'loaded' | 'error') => void;
-  sp?: SlotPropsMap<'image'>;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElement>({
@@ -175,11 +183,11 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
             {...attrs}
             {...spRest}
             ref={ref}
-            src={props.src as string}
-            alt={props.alt as string}
+            src={props.src as string | undefined}
+            alt={props.alt as string | undefined}
             onLoadingStatusChange={props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange']}
             className={cx('image', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           />
         );
       },
@@ -192,11 +200,10 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
 // =============================================================================
 
 export interface AvatarFallbackProps extends Record<string, unknown> {
+  delayMs?: number;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  delayMs?: number;
-  sp?: SlotPropsMap<'fallback'>;
 }
 
 const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSpanElement>({
@@ -218,7 +225,7 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
             ref={ref}
             delayMs={props.delayMs as number | undefined}
             className={cx('fallback', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixAvatar.Fallback>
@@ -229,7 +236,7 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
 });
 
 // =============================================================================
-// Export
+// Export — compound component as plain object
 // =============================================================================
 
 export const Avatar = {

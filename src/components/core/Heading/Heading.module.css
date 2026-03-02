@@ -1,3 +1,5 @@
+/* Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+
 .root {
   /* Component tokens */
   --move-heading-color-base: var(--move-fg-base);
@@ -50,14 +52,14 @@
 .root[data-size='3xl'],
 .root:not([data-size]) {
   font-size: var(--move-text-3xl);
-  margin-top: var(--move-spacing-2xl);
+  margin-top: var(--move-spacing-xl);
   margin-bottom: var(--move-spacing-md);
 }
 
 .root[data-size='4xl'] {
   font-size: var(--move-text-4xl);
   line-height: var(--move-leading-none);
-  margin-top: var(--move-spacing-2xl);
+  margin-top: var(--move-spacing-xl);
   margin-bottom: var(--move-spacing-lg);
 }
 

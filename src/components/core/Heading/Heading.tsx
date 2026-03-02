@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+// Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import styles from './Heading.module.css';
 
@@ -37,8 +36,8 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
   name: 'Heading',
   styles,
   slots: ['root'] as const,
-  defaults: { level: 2, weight: 'bold', color: 'base', tracking: 'tight' },
-  moveProps: ['level', 'size', 'weight', 'color', 'tracking', 'align', 'truncate'],
+  defaults: { level: 2 as HeadingLevel, weight: 'bold' as HeadingWeight, color: 'base' as HeadingColor, tracking: 'tight' as HeadingTracking },
+  moveProps: ['size', 'align', 'truncate'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {

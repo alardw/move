@@ -1,0 +1,93 @@
+/*
+ * ScrollArea Component
+ * Component tokens on .root so children inherit.
+ * 4 slot classes: root, header, content, footer
+ *
+ * No animations — ScrollArea is a static layout container.
+ */
+
+.root {
+  /* Component tokens */
+  --move-scrollarea-bg: transparent;
+  --move-scrollarea-header-bg: var(--move-bg-subtle);
+  --move-scrollarea-footer-bg: var(--move-bg-subtle);
+  --move-scrollarea-padding: var(--move-spacing-md);
+  --move-scrollarea-scrollbar-size: 8px;
+  --move-scrollarea-scrollbar-thumb: var(--move-scrollbar-thumb);
+  --move-scrollarea-scrollbar-track: var(--move-scrollbar-track);
+  --move-scrollarea-scrollbar-radius: var(--move-rounded-full);
+
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background-color: var(--move-scrollarea-bg);
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ============================================
+ * Header
+ * ============================================ */
+
+.header {
+  flex-shrink: 0;
+  background-color: var(--move-scrollarea-header-bg);
+  border-bottom: 1px solid var(--move-border-base);
+}
+
+.header[data-padded='true'] {
+  padding: var(--move-scrollarea-padding);
+}
+
+/* ============================================
+ * Content
+ * ============================================ */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
+
+  /* Custom scrollbar styling */
+  scrollbar-width: thin;
+  scrollbar-color: var(--move-scrollarea-scrollbar-thumb) var(--move-scrollarea-scrollbar-track);
+}
+
+.content[data-padded='true'] {
+  padding: var(--move-scrollarea-padding);
+}
+
+/* Webkit scrollbar styling */
+.content::-webkit-scrollbar {
+  width: var(--move-scrollarea-scrollbar-size);
+}
+
+.content::-webkit-scrollbar-track {
+  background: var(--move-scrollarea-scrollbar-track);
+  border-radius: var(--move-scrollarea-scrollbar-radius);
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--move-scrollarea-scrollbar-thumb);
+  border-radius: var(--move-scrollarea-scrollbar-radius);
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--move-border-emphasis);
+}
+
+/* ============================================
+ * Footer
+ * ============================================ */
+
+.footer {
+  flex-shrink: 0;
+  background-color: var(--move-scrollarea-footer-bg);
+  border-top: 1px solid var(--move-border-base);
+}
+
+.footer[data-padded='true'] {
+  padding: var(--move-scrollarea-padding);
+}

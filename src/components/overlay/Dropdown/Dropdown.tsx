@@ -3,13 +3,11 @@
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
-import { mergeAnimateConfig } from '../../../animation/utils';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
+import type { SlotPropsMap } from '../../../engine';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { mergeAnimateConfig, useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
 import styles from './Dropdown.module.css';
 
 const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
@@ -22,7 +20,7 @@ interface DropdownContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
-  animateConfig: PopupAnimate | null;
+  animateConfig: (LifecycleAnimate & StaggerModifier) | null;
 }
 
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
@@ -43,10 +41,10 @@ export interface DropdownRootProps extends Omit<React.ComponentPropsWithoutRef<t
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: PopupAnimate | false;
+  animate?: LifecycleAnimate | false;
 }
 
-const defaultDropdownAnimation: PopupAnimate = {
+const defaultDropdownAnimation: LifecycleAnimate & StaggerModifier = {
   enter: {
     opacity: { value: [0, 1], easing: 'outQuart' },
     scale: { value: [0.5, 1], easing: 'outQuart' },
@@ -88,7 +86,7 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defau
     setIsClosing(true);
   }, []);
 
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDropdownAnimation, animateProp);
+  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDropdownAnimation, animateProp) as (LifecycleAnimate & StaggerModifier);
 
   return (
     <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animateConfig }}>
@@ -174,14 +172,17 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
   slots: ['content', 'contentInner'] as const,
   moveProps: ['sideOffset', 'align', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
-  setup({ props, ref, internalRef, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animateConfig } = useDropdownContext();
 
-    const { contentRef, innerRef } = usePopupAnimation({
+    const { contentRef, innerRef } = useLifecycleAnimate({
       animate: animateConfig,
       isClosing,
       onCloseComplete,
-      itemSelector: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+      stagger: animateConfig?.stagger ? {
+        selector: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+        config: { stagger: animateConfig.stagger },
+      } : undefined,
       animateHeight: true,
       onOpenComplete: () => {
         const content = contentRef.current;

@@ -1,4 +1,6 @@
 'use client';
+// Generated from CalendarView.spec.ts — WeekView sub-component
+// Provenance: original-components/calendar/CalendarView/WeekView.tsx
 
 import * as React from 'react';
 import { getWeekRange, addDays, isSameDay, isToday as checkIsToday } from '../_shared/dateUtils';
@@ -55,7 +57,7 @@ export function WeekView({
   const showAllDaySection = showAllDay || allDayEvents.length > 0;
 
   return (
-    <div className={styles.weekView}>
+    <div className={styles.weekView} data-testid="week-view">
       {/* Day headers */}
       <div className={styles.dayHeaders}>
         <div />

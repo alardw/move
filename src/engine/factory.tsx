@@ -5,7 +5,7 @@ import type {
   SetupContext,
   SetupReturn,
 } from './types';
-import { createCx, createSp } from './mergeProps';
+import { createCx, createSp } from './slotUtils';
 import { useMoveContext } from './context';
 import { useMergedRef } from './useMergedRef';
 
@@ -33,7 +33,7 @@ const MOVE_INTERNAL_KEYS = new Set(['sp']);
 export function withMoveComponent<
   TSlots extends string,
   TProps extends Record<string, unknown>,
-  TRef extends HTMLElement = HTMLElement,
+  TRef extends Element = HTMLElement,
   TSubs extends Record<string, React.ComponentType<any>> = Record<string, never>,
 >(
   options: MoveComponentOptions<TSlots, TProps, TRef, TSubs>
@@ -60,8 +60,14 @@ export function withMoveComponent<
 
   const Component = React.forwardRef<TRef, TProps & { sp?: SlotPropsMap<TSlots> }>(
     (incomingProps, forwardedRef) => {
-      // 1. Merge defaults into props
-      const props = { ...defaults, ...incomingProps } as TProps & {
+      // 1. Merge defaults into props (strip undefined so defaults aren't overridden)
+      const defined: Record<string, unknown> = {};
+      for (const key of Object.keys(incomingProps as Record<string, unknown>)) {
+        if ((incomingProps as Record<string, unknown>)[key] !== undefined) {
+          defined[key] = (incomingProps as Record<string, unknown>)[key];
+        }
+      }
+      const props = { ...defaults, ...defined } as TProps & {
         sp?: SlotPropsMap<TSlots>;
       };
 

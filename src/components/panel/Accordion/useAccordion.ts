@@ -1,5 +1,6 @@
+// Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { useCallback, useRef } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 // =============================================================================
 // Types
@@ -37,11 +38,6 @@ export interface UseAccordionReturn {
 // Hook
 // =============================================================================
 
-/**
- * Headless accordion hook.
- * Handles value management (single/multiple), keyboard navigation
- * (Arrow Up/Down, Home/End, Enter/Space), focus management.
- */
 export function useAccordion(options: UseAccordionOptions = {}): UseAccordionReturn {
   const {
     multiple = false,
@@ -57,7 +53,6 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
     onChange: options.onValueChange,
   });
 
-  // Ref to the root element for DOM queries
   const rootRef = useRef<HTMLElement | null>(null);
 
   const isItemActive = useCallback(
@@ -80,7 +75,6 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
           setValue([...currentValues, itemValue]);
         }
       } else {
-        // Single mode: toggle only if collapsible, otherwise just switch
         if (value === itemValue) {
           if (collapsible) setValue('');
         } else {
@@ -88,7 +82,7 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
         }
       }
     },
-    [value, multiple, setValue]
+    [value, multiple, collapsible, setValue]
   );
 
   const onHeaderClick = useCallback(
@@ -99,7 +93,6 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
   );
 
   const getTriggers = (currentTarget: EventTarget): HTMLElement[] => {
-    // Walk up to find the accordion root, then find all triggers
     const target = currentTarget as HTMLElement;
     const root = target.closest('[data-move-accordion-root]');
     if (!root) return [];

@@ -1,3 +1,4 @@
+/* Breadcrumb.module.css — Generated from original-components/nav/Breadcrumb */
 .root {
   /* Component tokens */
   --move-breadcrumb-gap: var(--move-spacing-xs);
@@ -64,7 +65,7 @@
   letter-spacing: 0.1em;
 }
 
-/* ── Size variants ── */
+/* -- Size variants -- */
 
 .root[data-size='sm'] .list {
   font-size: var(--move-size-xs);

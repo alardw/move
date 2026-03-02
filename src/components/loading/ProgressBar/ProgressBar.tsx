@@ -2,14 +2,13 @@
 
 import * as React from 'react';
 import { Progress as RadixProgress } from 'radix-ui';
-// animejs removed — CSS transition handles smooth progress
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 
 import styles from './ProgressBar.module.css';
 
 // =============================================================================
-// ProgressBar
+// Types
 // =============================================================================
 
 export type ProgressBarSize = 'sm' | 'md' | 'lg';
@@ -26,6 +25,10 @@ export interface ProgressBarProps extends Record<string, unknown> {
   children?: React.ReactNode;
   sp?: SlotPropsMap<'root' | 'indicator'>;
 }
+
+// =============================================================================
+// ProgressBar
+// =============================================================================
 
 export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarProps, HTMLDivElement>({
   name: 'ProgressBar',

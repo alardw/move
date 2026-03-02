@@ -1,9 +1,9 @@
 'use client';
-
+// Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useNumberInput } from './useNumberInput';
 import type { UseNumberInputOptions } from './useNumberInput';
 import styles from './NumberInput.module.css';
@@ -88,10 +88,9 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     'formatValue', 'parseValue',
   ],
 
-  setup({ props, ref, internalRef, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
 
-    // Hold-to-repeat refs
     const holdTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const holdIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -122,7 +121,6 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     const chevronUpIcon = useResolvedIcon('chevron-up', iconSize);
     const chevronDownIcon = useResolvedIcon('chevron-down', iconSize);
 
-    // Hold-to-repeat logic
     const startHold = React.useCallback((action: () => void) => {
       action();
       holdTimerRef.current = setTimeout(() => {
@@ -141,7 +139,6 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
       }
     }, []);
 
-    // Cleanup on unmount
     React.useEffect(() => stopHold, [stopHold]);
 
     const handleRootClick = React.useCallback(() => {
@@ -176,20 +173,19 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
 
         return (
           <div
-            {...attrs}
             {...rootSpRest}
             ref={ref}
-            className={cx('root', rootSpClass as string | undefined)}
+            className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{
-              width,
-              ...(props.style as React.CSSProperties),
+              ...(width != null ? { width } : {}),
+              ...props.style,
               ...(rootSpStyle as React.CSSProperties),
             }}
             data-variant={variant}
             data-size={sizeVal}
-            data-invalid={invalid || undefined}
-            data-disabled={disabled || undefined}
-            data-readonly={readOnly || undefined}
+            {...(invalid ? { 'data-invalid': '' } : {})}
+            {...(disabled ? { 'data-disabled': '' } : {})}
+            {...(readOnly ? { 'data-readonly': '' } : {})}
             onClick={handleRootClick}
           >
             {iconLeft && (
@@ -204,6 +200,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
             )}
 
             <input
+              {...attrs}
               {...inputSpRest}
               ref={inputRef}
               className={cx('input', inputSpClass as string | undefined)}

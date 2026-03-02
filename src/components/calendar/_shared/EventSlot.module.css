@@ -1,3 +1,5 @@
+/* EventSlot.module.css — provenance: original-components/calendar/_shared/EventSlot.module.css */
+
 .eventSlot {
   --move-calendar-event-radius: var(--move-rounded-sm);
   --move-calendar-event-font-size: var(--move-size-xs);

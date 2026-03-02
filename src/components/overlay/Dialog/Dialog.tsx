@@ -4,9 +4,9 @@ import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { mergeAnimateConfig, prefersReducedMotion, toAnimeParams } from '../../../animation/utils';
-import type { LayerAnimate } from '../../../animation/types';
+import type { SlotPropsMap } from '../../../engine';
+import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
 import styles from './Dialog.module.css';
 
 // ============================================================================
@@ -17,7 +17,7 @@ interface DialogContextValue {
   isClosing: boolean;
   close: () => void;
   onCloseComplete: () => void;
-  animateConfig: LayerAnimate | null;
+  animateConfig: LifecycleAnimate | null;
 }
 
 const DialogContext = React.createContext<DialogContextValue | null>(null);
@@ -34,7 +34,7 @@ function useDialogContext() {
 // Root (stateful — manages open/close state + animation context)
 // ============================================================================
 
-const defaultDialogAnimation: LayerAnimate = {
+const defaultDialogAnimation: LifecycleAnimate = {
   enter: {
     opacity: { value: [0, 1], easing: 'outQuart' },
     scale: { value: [0.85, 1], easing: 'snappy' },
@@ -51,7 +51,7 @@ export interface DialogRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: LayerAnimate | false;
+  animate?: LifecycleAnimate | false;
   modal?: boolean;
 }
 

@@ -1,8 +1,9 @@
 'use client';
+// Generated from ColorPicker.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useColorPicker } from './useColorPicker';
 import type { UseColorPickerOptions } from './useColorPicker';
 import type { ColorFormat, BaseColorFormat } from './colorUtils';
@@ -305,7 +306,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
             {...attrs}
             {...rootSpRest}
             ref={ref}
-            className={cx('root', rootSpClass as string | undefined)}
+            className={cx('root', props.className as string | undefined, rootSpClass as string | undefined)}
             style={{
               ...(props.style as React.CSSProperties),
               ...(rootSpStyle as React.CSSProperties),

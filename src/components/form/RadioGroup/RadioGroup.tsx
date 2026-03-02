@@ -1,13 +1,18 @@
 'use client';
-
+// Generated from RadioGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
+import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useToggleAnimation } from '../../../animation/hooks';
-import type { IndicatorAnimate } from '../../../animation/types';
+import { useToggleAnimate } from '../../../animation';
+import type { ToggleAnimate, InteractionAnimate } from '../../../animation';
 import styles from './RadioGroup.module.css';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+export type RadioGroupSize = 'sm' | 'md' | 'lg';
 
 // ============================================================================
 // Root
@@ -26,7 +31,7 @@ export interface RadioGroupRootProps extends Record<string, unknown> {
   /** Whether the radio group is in an invalid state */
   invalid?: boolean;
   /** Size variant */
-  size?: 'sm' | 'md' | 'lg';
+  size?: RadioGroupSize;
   orientation?: 'horizontal' | 'vertical';
   loop?: boolean;
   sp?: SlotPropsMap<'root'>;
@@ -36,7 +41,7 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
   name: 'RadioGroupRoot',
   styles,
   slots: ['root'] as const,
-  moveProps: ['value', 'defaultValue', 'onValueChange', 'disabled', 'invalid', 'size', 'name', 'required', 'orientation', 'loop'],
+  moveProps: ['invalid', 'size'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -79,8 +84,8 @@ export interface RadioGroupItemProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value: string;
   disabled?: boolean;
-  /** Animation configuration */
-  animate?: IndicatorAnimate | false;
+  /** Toggle animation config or false to disable */
+  animate?: (ToggleAnimate & InteractionAnimate) | false;
   sp?: SlotPropsMap<'item' | 'indicator' | 'dot'>;
 }
 
@@ -88,14 +93,16 @@ const RadioGroupItem = withMoveComponent<'item' | 'indicator' | 'dot', RadioGrou
   name: 'RadioGroupItem',
   styles,
   slots: ['item', 'indicator', 'dot'] as const,
-  moveProps: ['value', 'disabled', 'animate'],
+  moveProps: ['value', 'animate'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const toggleAnim = useToggleAnimation({
-      animate: props.animate as IndicatorAnimate | false | undefined,
+    const toggleAnim = useToggleAnimate({
+      animate: props.animate === false
+        ? { checked: false as const, unchecked: false as const }
+        : (props.animate as (ToggleAnimate & InteractionAnimate) | undefined) || {},
       initialChecked: false,
       disabled: !!props.disabled,
-      // watchRef defaults to rootRef — watches data-state on the button
+      watchRef: true,
     });
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, toggleAnim.rootRef as React.Ref<HTMLButtonElement>);
@@ -118,10 +125,10 @@ const RadioGroupItem = withMoveComponent<'item' | 'indicator' | 'dot', RadioGrou
         return (
           <span
             className={styles.wrapper}
+            onClick={handleWrapperClick}
             onMouseDown={toggleAnim.pressHandlers.onMouseDown}
             onMouseUp={toggleAnim.pressHandlers.onMouseUp}
             onMouseLeave={toggleAnim.pressHandlers.onMouseLeave}
-            onClick={handleWrapperClick}
           >
             <RadixRadioGroup.Item
               {...attrs}

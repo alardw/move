@@ -1,490 +1,663 @@
-import { useState, useEffect, useRef, lazy, Suspense } from 'react';
-import { animate, stagger } from 'animejs';
-import { ThemeProvider, IconProvider, darkTheme, lightTheme, Tooltip, Toast, Sidebar, Loader, useSidebarContext } from 'move';
+import { useMemo, useState, useCallback, useEffect } from 'react';
+import { ThemeProvider, IconProvider, darkTheme, lightTheme } from 'move';
 import type { Theme } from 'move';
 import * as LucideIcons from 'lucide-react';
-import {
-  Tag, MousePointer, CheckSquare, Layers, MessageSquare, ShieldAlert,
-  Palette, Sun, Moon, Star, CircleUser, ChevronDown, Info, RectangleHorizontal, ToggleRight, Circle, Type, Rows3, ListFilter, PanelTop, TextCursorInput, KeyRound, Loader as LoaderIcon, LoaderCircle, AlignLeft, PanelLeftClose, PanelLeftOpen, Bell, SlidersHorizontal, SeparatorHorizontal,
-  CaseSensitive, Heading as HeadingIcon, ExternalLink, Braces, FileText,
-  PanelLeft, SquareStack, Columns, ScrollText,
-  CalendarDays, CalendarRange, CalendarClock,
-  Clock,
-  ToggleLeft,
-  ChevronsUpDown,
-  Menu,
-  PanelTopOpen,
-  Play,
-  Ghost,
-  ImageIcon,
-  LayoutGrid,
-  Table2,
-  Navigation,
-  ArrowLeftRight,
-  BoxSelect,
-  Upload,
-  Film,
-  Music,
-  Search,
-  AlignHorizontalDistributeCenter,
-  Grid3X3,
-  Rows4,
-  Hash,
-  PenLine,
-  ListChecks,
-  GitBranch,
-  RectangleEllipsis,
-} from 'lucide-react';
+import { codeToHtml } from 'shiki';
+import type { Control, DemoDefinition, DemoSection, DemoSubComponent } from './demos/types';
+import { demos as generatedDemos } from './demos/generated';
+import { recipes } from './recipes';
+import type { Recipe } from './recipes/types';
 import './App.css';
 
-// Icon resolver
-function toPascalCase(str: string): string {
-  return str
+type ScopedControl = {
+  propKey: string;
+  control: Control;
+};
+
+type ScopedControlGroup = {
+  name: string;
+  controls: ScopedControl[];
+};
+
+function toPascalCase(value: string): string {
+  return value
     .split('-')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .map((chunk) => chunk.charAt(0).toUpperCase() + chunk.slice(1))
     .join('');
 }
 
 const iconResolver = (name: string) => {
   const icons = LucideIcons as Record<string, any>;
-  return icons[toPascalCase(name)] || icons[name] || null;
+  return (icons[toPascalCase(name)] || icons[name] || null) as any;
 };
 
-// Lazy-load helper for named exports
-function lazyNamed<T extends Record<string, any>>(
-  factory: () => Promise<T>,
-  exportName: keyof T,
-): React.LazyExoticComponent<React.ComponentType<any>> {
-  return lazy(() => factory().then(mod => ({ default: mod[exportName] as React.ComponentType<any> })));
+const demoSources = import.meta.glob('./demos/generated/*Demo.tsx', {
+  query: '?raw',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
+
+// ---------------------------------------------------------------------------
+// Build initial nested props from subComponents tree
+// ---------------------------------------------------------------------------
+
+function buildInitialProps(demo: DemoDefinition): Record<string, unknown> {
+  const base = { ...demo.initialProps };
+  if (demo.subComponents) {
+    for (const sub of demo.subComponents) {
+      base[sub.name] = buildSubProps(sub);
+    }
+  }
+  return base;
 }
 
-// Component demos — lazy-loaded so only the active page is fetched
-const AvatarDemo = lazyNamed(() => import('./demos/AvatarDemo'), 'AvatarDemo');
-const BadgeDemo = lazyNamed(() => import('./demos/BadgeDemo'), 'BadgeDemo');
-const ButtonDemo = lazyNamed(() => import('./demos/ButtonDemo'), 'ButtonDemo');
-const ChatBubbleDemo = lazyNamed(() => import('./demos/ChatBubbleDemo'), 'ChatBubbleDemo');
-const ColorPickerDemo = lazyNamed(() => import('./demos/ColorPickerDemo'), 'ColorPickerDemo');
-const ColorInputDemo = lazyNamed(() => import('./demos/ColorInputDemo'), 'ColorInputDemo');
-const CheckboxDemo = lazyNamed(() => import('./demos/CheckboxDemo'), 'CheckboxDemo');
-const AccordionDemo = lazyNamed(() => import('./demos/AccordionDemo'), 'AccordionDemo');
-const DialogDemo = lazyNamed(() => import('./demos/DialogDemo'), 'DialogDemo');
-const DropdownDemo = lazyNamed(() => import('./demos/DropdownDemo'), 'DropdownDemo');
-const IconDemo = lazyNamed(() => import('./demos/IconDemo'), 'IconDemo');
-const TooltipDemo = lazyNamed(() => import('./demos/TooltipDemo'), 'TooltipDemo');
-const SwitchDemo = lazyNamed(() => import('./demos/SwitchDemo'), 'SwitchDemo');
-const RadioGroupDemo = lazyNamed(() => import('./demos/RadioGroupDemo'), 'RadioGroupDemo');
-const LabelDemo = lazyNamed(() => import('./demos/LabelDemo'), 'LabelDemo');
-const ToggleDemo = lazyNamed(() => import('./demos/ToggleDemo'), 'ToggleDemo');
-const ThemingDemo = lazyNamed(() => import('./demos/ThemingDemo'), 'ThemingDemo');
-const DesignTokensDemo = lazyNamed(() => import('./demos/DesignTokensDemo'), 'DesignTokensDemo');
-const ComponentTokensDemo = lazyNamed(() => import('./demos/ComponentTokensDemo'), 'ComponentTokensDemo');
-const ToggleGroupDemo = lazyNamed(() => import('./demos/ToggleGroupDemo'), 'ToggleGroupDemo');
-const FormFieldDemo = lazyNamed(() => import('./demos/FormFieldDemo'), 'FormFieldDemo');
-const SelectDemo = lazyNamed(() => import('./demos/SelectDemo'), 'SelectDemo');
-const TabsDemo = lazyNamed(() => import('./demos/TabsDemo'), 'TabsDemo');
-const InputTextDemo = lazyNamed(() => import('./demos/InputTextDemo'), 'InputTextDemo');
-const PasswordDemo = lazyNamed(() => import('./demos/PasswordDemo'), 'PasswordDemo');
-const PinInputDemo = lazyNamed(() => import('./demos/PinInputDemo'), 'PinInputDemo');
-const TextareaDemo = lazyNamed(() => import('./demos/TextareaDemo'), 'TextareaDemo');
-const ProgressBarDemo = lazyNamed(() => import('./demos/ProgressBarDemo'), 'ProgressBarDemo');
-const SkeletonDemo = lazyNamed(() => import('./demos/SkeletonDemo'), 'SkeletonDemo');
-const LoaderDemo = lazyNamed(() => import('./demos/LoaderDemo'), 'LoaderDemo');
-const ToastDemo = lazyNamed(() => import('./demos/ToastDemo'), 'ToastDemo');
-const InputRangeDemo = lazyNamed(() => import('./demos/InputRangeDemo'), 'InputRangeDemo');
-const DividerDemo = lazyNamed(() => import('./demos/DividerDemo'), 'DividerDemo');
-const AnimationDemo = lazyNamed(() => import('./demos/AnimationDemo'), 'AnimationDemo');
-const AnimationIntroDemo = lazyNamed(() => import('./demos/AnimationIntroDemo'), 'AnimationIntroDemo');
-const AnimationMapDemo = lazyNamed(() => import('./demos/AnimationMapDemo'), 'AnimationMapDemo');
-const TextDemo = lazyNamed(() => import('./demos/TextDemo'), 'TextDemo');
-const HeadingDemo = lazyNamed(() => import('./demos/HeadingDemo'), 'HeadingDemo');
-const LinkDemo = lazyNamed(() => import('./demos/LinkDemo'), 'LinkDemo');
-const CodeDemo = lazyNamed(() => import('./demos/CodeDemo'), 'CodeDemo');
-const ProseDemo = lazyNamed(() => import('./demos/ProseDemo'), 'ProseDemo');
-const SidebarDemo = lazyNamed(() => import('./demos/SidebarDemo'), 'SidebarDemo');
-const CardDemo = lazyNamed(() => import('./demos/CardDemo'), 'CardDemo');
-const SplitterDemo = lazyNamed(() => import('./demos/SplitterDemo'), 'SplitterDemo');
-const ScrollAreaDemo = lazyNamed(() => import('./demos/ScrollAreaDemo'), 'ScrollAreaDemo');
-const CalendarDemo = lazyNamed(() => import('./demos/CalendarDemo'), 'CalendarDemo');
-const DatePickerDemo = lazyNamed(() => import('./demos/DatePickerDemo'), 'DatePickerDemo');
-const TimeFieldDemo = lazyNamed(() => import('./demos/TimeFieldDemo'), 'TimeFieldDemo');
-const CalendarViewDemo = lazyNamed(() => import('./demos/CalendarViewDemo'), 'CalendarViewDemo');
-const CollapsibleDemo = lazyNamed(() => import('./demos/CollapsibleDemo'), 'CollapsibleDemo');
-const AlertDemo = lazyNamed(() => import('./demos/AlertDemo'), 'AlertDemo');
-const PopoverDemo = lazyNamed(() => import('./demos/PopoverDemo'), 'PopoverDemo');
-const EmptyStateDemo = lazyNamed(() => import('./demos/EmptyStateDemo'), 'EmptyStateDemo');
-const ImageDemo = lazyNamed(() => import('./demos/ImageDemo'), 'ImageDemo');
-const ImageGroupDemo = lazyNamed(() => import('./demos/ImageGroupDemo'), 'ImageGroupDemo');
-const TableDemo = lazyNamed(() => import('./demos/TableDemo'), 'TableDemo');
-const TimelineDemo = lazyNamed(() => import('./demos/TimelineDemo'), 'TimelineDemo');
-const BreadcrumbDemo = lazyNamed(() => import('./demos/BreadcrumbDemo'), 'BreadcrumbDemo');
-const PaginationDemo = lazyNamed(() => import('./demos/PaginationDemo'), 'PaginationDemo');
-const StepperDemo = lazyNamed(() => import('./demos/StepperDemo'), 'StepperDemo');
-const FileUploadDemo = lazyNamed(() => import('./demos/FileUploadDemo'), 'FileUploadDemo');
-const VideoPlayerDemo = lazyNamed(() => import('./demos/VideoPlayerDemo'), 'VideoPlayerDemo');
-const AudioPlayerDemo = lazyNamed(() => import('./demos/AudioPlayerDemo'), 'AudioPlayerDemo');
-const CarouselDemo = lazyNamed(() => import('./demos/CarouselDemo'), 'CarouselDemo');
-const AutocompleteDemo = lazyNamed(() => import('./demos/AutocompleteDemo'), 'AutocompleteDemo');
-const StackDemo = lazyNamed(() => import('./demos/StackDemo'), 'StackDemo');
-const GridDemo = lazyNamed(() => import('./demos/GridDemo'), 'GridDemo');
-const AlignDemo = lazyNamed(() => import('./demos/AlignDemo'), 'AlignDemo');
-const NumberInputDemo = lazyNamed(() => import('./demos/NumberInputDemo'), 'NumberInputDemo');
-const RichTextEditorDemo = lazyNamed(() => import('./demos/RichTextEditorDemo'), 'RichTextEditorDemo');
-
-interface GroupItem {
-  name: string;
-  component: React.ComponentType;
-  icon: React.ComponentType<{ size: number }>;
-  children?: { name: string; component: React.ComponentType }[];
+function buildSubProps(sub: DemoSubComponent): Record<string, unknown> {
+  const props: Record<string, unknown> = { ...sub.initialProps };
+  props._enabled = sub.optional ? (sub.defaultEnabled ?? true) : true;
+  if (sub.children) {
+    for (const child of sub.children) {
+      props[child.name] = buildSubProps(child);
+    }
+  }
+  return props;
 }
 
-interface ComponentGroup {
-  label: string;
-  items: GroupItem[];
+// ---------------------------------------------------------------------------
+// Deep-set helper for nested props
+// ---------------------------------------------------------------------------
+
+function deepSet(obj: Record<string, unknown>, path: string[], value: unknown): Record<string, unknown> {
+  if (path.length === 0) return obj;
+  if (path.length === 1) {
+    return { ...obj, [path[0]]: value };
+  }
+  const [head, ...rest] = path;
+  const child = (obj[head] as Record<string, unknown>) ?? {};
+  return { ...obj, [head]: deepSet(child, rest, value) };
 }
 
-const componentGroups: ComponentGroup[] = [
-  {
-    label: 'Theming',
-    items: [
-      {
-        name: 'Overview',
-        component: ThemingDemo,
-        icon: Palette,
-        children: [
-          { name: 'Design Tokens', component: DesignTokensDemo },
-          { name: 'Component Tokens', component: ComponentTokensDemo },
-        ],
-      },
-      {
-        name: 'Animation',
-        component: AnimationIntroDemo,
-        icon: Play,
-        children: [
-          { name: 'Easing', component: AnimationDemo },
-          { name: 'Component Map', component: AnimationMapDemo },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'Core',
-    items: [
-      { name: 'Alert', component: AlertDemo, icon: ShieldAlert },
-      { name: 'Align', component: AlignDemo, icon: AlignHorizontalDistributeCenter },
-      { name: 'Avatar', component: AvatarDemo, icon: CircleUser },
-      { name: 'Badge', component: BadgeDemo, icon: Tag },
-      { name: 'Button', component: ButtonDemo, icon: MousePointer },
-      { name: 'ChatBubble', component: ChatBubbleDemo, icon: MessageSquare },
-      { name: 'Dropdown', component: DropdownDemo, icon: ChevronDown },
-      { name: 'Grid', component: GridDemo, icon: Grid3X3 },
-      { name: 'Icon', component: IconDemo, icon: Star },
-      { name: 'Stack', component: StackDemo, icon: Rows4 },
-      { name: 'Tooltip', component: TooltipDemo, icon: Info },
-    ],
-  },
-  {
-    label: 'Typography',
-    items: [
-      { name: 'Code', component: CodeDemo, icon: Braces },
-      { name: 'Heading', component: HeadingDemo, icon: HeadingIcon },
-      { name: 'Link', component: LinkDemo, icon: ExternalLink },
-      { name: 'Prose', component: ProseDemo, icon: FileText },
-      { name: 'Text', component: TextDemo, icon: CaseSensitive },
-    ],
-  },
-  {
-    label: 'Form',
-    items: [
-      { name: 'Autocomplete', component: AutocompleteDemo, icon: Search },
-      { name: 'Checkbox', component: CheckboxDemo, icon: CheckSquare },
-      { name: 'ColorInput', component: ColorInputDemo, icon: Palette },
-      { name: 'ColorPicker', component: ColorPickerDemo, icon: Palette },
-      { name: 'DatePicker', component: DatePickerDemo, icon: CalendarRange },
-      { name: 'FileUpload', component: FileUploadDemo, icon: Upload },
-      { name: 'FormField', component: FormFieldDemo, icon: Rows3 },
-      { name: 'InputRange', component: InputRangeDemo, icon: SlidersHorizontal },
-      { name: 'InputText', component: InputTextDemo, icon: TextCursorInput },
-      { name: 'Label', component: LabelDemo, icon: Type },
-      { name: 'NumberInput', component: NumberInputDemo, icon: Hash },
-      { name: 'Password', component: PasswordDemo, icon: KeyRound },
-      { name: 'PinInput', component: PinInputDemo, icon: RectangleEllipsis },
-      { name: 'RadioGroup', component: RadioGroupDemo, icon: Circle },
-      { name: 'RichTextEditor', component: RichTextEditorDemo, icon: PenLine },
-      { name: 'Select', component: SelectDemo, icon: ListFilter },
-      { name: 'Switch', component: SwitchDemo, icon: ToggleRight },
-      { name: 'Textarea', component: TextareaDemo, icon: AlignLeft },
-      { name: 'TimeField', component: TimeFieldDemo, icon: Clock },
-    ],
-  },
-  {
-    label: 'Toolbar',
-    items: [
-      { name: 'ToggleButton', component: ToggleDemo, icon: RectangleHorizontal },
-      { name: 'ToggleGroup', component: ToggleGroupDemo, icon: ToggleLeft },
-    ],
-  },
-  {
-    label: 'Navigation',
-    items: [
-      { name: 'Breadcrumb', component: BreadcrumbDemo, icon: Navigation },
-      { name: 'Pagination', component: PaginationDemo, icon: ArrowLeftRight },
-      { name: 'Stepper', component: StepperDemo, icon: ListChecks },
-    ],
-  },
-  {
-    label: 'Panel',
-    items: [
-      { name: 'Accordion', component: AccordionDemo, icon: Layers },
-      { name: 'Card', component: CardDemo, icon: SquareStack },
-      { name: 'Collapsible', component: CollapsibleDemo, icon: ChevronsUpDown },
-      { name: 'Divider', component: DividerDemo, icon: SeparatorHorizontal },
-      { name: 'ScrollArea', component: ScrollAreaDemo, icon: ScrollText },
-      { name: 'Sidebar', component: SidebarDemo, icon: PanelLeft },
-      { name: 'Splitter', component: SplitterDemo, icon: Columns },
-      { name: 'Tabs', component: TabsDemo, icon: PanelTop },
-    ],
-  },
-  {
-    label: 'Calendar',
-    items: [
-      { name: 'Calendar', component: CalendarDemo, icon: CalendarDays },
-      { name: 'CalendarView', component: CalendarViewDemo, icon: CalendarClock },
-    ],
-  },
-  {
-    label: 'Overlay',
-    items: [
-      { name: 'Dialog', component: DialogDemo, icon: MessageSquare },
-      { name: 'Popover', component: PopoverDemo, icon: PanelTopOpen },
-      { name: 'Toast', component: ToastDemo, icon: Bell },
-    ],
-  },
-  {
-    label: 'Media',
-    items: [
-      { name: 'AudioPlayer', component: AudioPlayerDemo, icon: Music },
-      { name: 'Carousel', component: CarouselDemo, icon: ArrowLeftRight },
-      { name: 'Image', component: ImageDemo, icon: ImageIcon },
-      { name: 'ImageGroup', component: ImageGroupDemo, icon: LayoutGrid },
-      { name: 'VideoPlayer', component: VideoPlayerDemo, icon: Film },
-    ],
-  },
-  {
-    label: 'Data',
-    items: [
-      { name: 'Table', component: TableDemo, icon: Table2 },
-      { name: 'Timeline', component: TimelineDemo, icon: GitBranch },
-    ],
-  },
-  {
-    label: 'Loading',
-    items: [
-      { name: 'EmptyState', component: EmptyStateDemo, icon: Ghost },
-      { name: 'Loader', component: LoaderDemo, icon: LoaderCircle },
-      { name: 'ProgressBar', component: ProgressBarDemo, icon: LoaderIcon },
-      { name: 'Skeleton', component: SkeletonDemo, icon: BoxSelect },
-    ],
-  },
-];
+// ---------------------------------------------------------------------------
+// Control renderer (single control input)
+// ---------------------------------------------------------------------------
 
-const allComponents = componentGroups.flatMap(g =>
-  g.items.flatMap(item => [item, ...(item.children ?? [])])
-);
+function ControlInput({
+  control,
+  value,
+  onChange,
+}: {
+  control: Control;
+  value: unknown;
+  onChange: (v: unknown) => void;
+}) {
+  const nameLabel = (
+    <span>
+      {control.name}
+      {control.required && <span className="required">*</span>}
+    </span>
+  );
 
-function getComponentFromHash() {
-  const hash = window.location.hash.slice(1);
-  const found = allComponents.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === hash.toLowerCase());
-  return found ? found.name : 'Button';
-}
+  if (control.kind === 'select') {
+    return (
+      <label className="control">
+        {nameLabel}
+        <select value={String(value ?? '')} onChange={(e) => onChange(e.target.value)}>
+          {control.options?.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+      </label>
+    );
+  }
 
-function AnimatedLogo() {
-  const containerRef = useRef<HTMLHeadingElement>(null);
+  if (control.kind === 'boolean') {
+    return (
+      <label className="control row">
+        {nameLabel}
+        <input type="checkbox" checked={Boolean(value)} onChange={(e) => onChange(e.target.checked)} />
+      </label>
+    );
+  }
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const chars = containerRef.current.querySelectorAll('.char');
-
-    const runAnimation = () => {
-      animate(chars, {
-        y: '-100%',
-        duration: 400,
-        ease: 'in(3)',
-        delay: stagger(30),
-        onComplete: () => {
-          animate(chars, {
-            y: ['100%', '0%'],
-            duration: 400,
-            ease: 'out(3)',
-            delay: stagger(30),
-          });
-        }
-      });
-    };
-
-    const interval = setInterval(runAnimation, 10000);
-    return () => clearInterval(interval);
-  }, []);
+  if (control.kind === 'number') {
+    return (
+      <label className="control">
+        {nameLabel}
+        <input type="number" value={Number(value ?? 0)} onChange={(e) => onChange(Number(e.target.value))} />
+      </label>
+    );
+  }
 
   return (
-    <h1 ref={containerRef} className="sidebar-title">
-      {'Move'.split('').map((char, i) => (
-        <span key={i} className="char-wrap">
-          <span className="char">{char}</span>
-        </span>
-      ))}
-    </h1>
+    <label className="control">
+      {nameLabel}
+      <input type="text" value={String(value ?? '')} onChange={(e) => onChange(e.target.value)} />
+    </label>
   );
 }
 
-function AppContent({ activeComponent, onComponentChange, theme, onToggleTheme }: {
-  activeComponent: string;
-  onComponentChange: (name: string) => void;
-  theme: Theme;
-  onToggleTheme: () => void;
+// ---------------------------------------------------------------------------
+// Recursive sub-component controls tree
+// ---------------------------------------------------------------------------
+
+function SubComponentControls({
+  sub,
+  path,
+  propsState,
+  onPropChange,
+}: {
+  sub: DemoSubComponent;
+  path: string[];
+  propsState: Record<string, unknown>;
+  onPropChange: (path: string[], value: unknown) => void;
 }) {
-  const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
-
-  const ActiveDemo = allComponents.find(c => c.name === activeComponent)?.component;
-
-  const handleItemClick = (name: string) => {
-    onComponentChange(name);
-    if (isMobile) setMobileOpen(false);
-  };
+  const subPath = [...path, sub.name];
+  const subProps = resolveNested(propsState, subPath);
+  const enabled = subProps._enabled !== false;
 
   return (
-    <Tooltip.Provider delayDuration={0}>
-    <div className="app">
-      {isMobile && (
-        <div className="mobile-header">
-          <Sidebar.Trigger asChild>
-            <button className="mobile-menu-btn" aria-label="Toggle menu">
-              <Menu size={20} />
-            </button>
-          </Sidebar.Trigger>
-          <span className="sidebar-title" style={{ fontSize: 'var(--move-size-lg)' }}>Move</span>
+    <div className="sub-component">
+      <div className="sub-header">
+        <span className="sub-name">{sub.name}</span>
+        {sub.optional && (
+          <input
+            type="checkbox"
+            checked={enabled}
+            onChange={(e) => onPropChange([...subPath, '_enabled'], e.target.checked)}
+          />
+        )}
+      </div>
+      {enabled && (
+        <div className="sub-controls">
+          {sub.controls.map((control) => (
+            <ControlInput
+              key={control.name}
+              control={control}
+              value={subProps[control.name]}
+              onChange={(v) => onPropChange([...subPath, control.name], v)}
+            />
+          ))}
+          {sub.children?.map((child) => (
+            <SubComponentControls
+              key={child.name}
+              sub={child}
+              path={subPath}
+              propsState={propsState}
+              onPropChange={onPropChange}
+            />
+          ))}
         </div>
       )}
-
-        <Sidebar.Root style={{ position: 'sticky', top: 0, height: '100vh' }}>
-          <Sidebar.Header collapsedChildren={null}>
-            <AnimatedLogo />
-          </Sidebar.Header>
-
-          <Sidebar.Content>
-            {componentGroups.map(group => (
-              <Sidebar.Group key={group.label}>
-                <Sidebar.GroupLabel>{group.label}</Sidebar.GroupLabel>
-                {group.items.map(({ name, icon: Icon, children }) => (
-                  <div key={name}>
-                    <Sidebar.Item
-                      icon={<Icon size={18} />}
-                      active={activeComponent === name}
-                      tooltip={name}
-                      onClick={() => handleItemClick(name)}
-                    >
-                      {name}
-                    </Sidebar.Item>
-                    {children && !collapsed && children.map(child => (
-                      <Sidebar.Item
-                        key={child.name}
-                        active={activeComponent === child.name}
-                        tooltip={child.name}
-                        onClick={() => handleItemClick(child.name)}
-                        className="sidebar-sub-item"
-                      >
-                        {child.name}
-                      </Sidebar.Item>
-                    ))}
-                  </div>
-                ))}
-              </Sidebar.Group>
-            ))}
-          </Sidebar.Content>
-
-          <Sidebar.Footer>
-            <Sidebar.Item
-              icon={theme.name === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-              tooltip={theme.name === 'dark' ? 'Light' : 'Dark'}
-              onClick={onToggleTheme}
-            >
-              {theme.name === 'dark' ? 'Light' : 'Dark'}
-            </Sidebar.Item>
-            <Sidebar.Trigger asChild>
-              <Sidebar.Item
-                icon={collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
-                tooltip={collapsed ? 'Expand' : 'Collapse'}
-              >
-                {collapsed ? 'Expand' : 'Collapse'}
-              </Sidebar.Item>
-            </Sidebar.Trigger>
-          </Sidebar.Footer>
-
-          <Sidebar.Rail />
-        </Sidebar.Root>
-
-      <main className="main-content">
-        <div className="demo-container">
-          <Suspense fallback={<div className="demo-loading"><Loader size="sm" /> Loading...</div>}>
-            {ActiveDemo && <ActiveDemo />}
-          </Suspense>
-        </div>
-      </main>
     </div>
-    </Tooltip.Provider>
   );
 }
 
-function App() {
-  const [activeComponent, setActiveComponent] = useState(getComponentFromHash);
-  const [theme, setTheme] = useState<Theme>(() => {
-    const stored = localStorage.getItem('move-theme');
-    return stored === 'light' ? lightTheme : darkTheme;
-  });
+function resolveNested(obj: Record<string, unknown>, path: string[]): Record<string, unknown> {
+  let current: unknown = obj;
+  for (const key of path) {
+    if (current && typeof current === 'object') {
+      current = (current as Record<string, unknown>)[key];
+    } else {
+      return {};
+    }
+  }
+  return (current as Record<string, unknown>) ?? {};
+}
 
-  // Sync hash → state (browser back/forward only)
-  useEffect(() => {
-    const handleHashChange = () => {
-      setActiveComponent(getComponentFromHash());
+function splitControls(controls: Control[]): { root: Control[]; groups: ScopedControlGroup[] } {
+  const root: Control[] = [];
+  const grouped = new Map<string, ScopedControl[]>();
+
+  for (const control of controls) {
+    const parts = control.name.split('.');
+    if (parts.length <= 1) {
+      root.push(control);
+      continue;
+    }
+
+    const [scope, ...rest] = parts;
+    const scopedControl: ScopedControl = {
+      propKey: control.name,
+      control: { ...control, name: rest.join('.') },
     };
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    const list = grouped.get(scope) ?? [];
+    list.push(scopedControl);
+    grouped.set(scope, list);
+  }
+
+  const groups = [...grouped.entries()]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([name, scopedControls]) => ({ name, controls: scopedControls }));
+
+  return { root, groups };
+}
+
+// ---------------------------------------------------------------------------
+// RecipeCard
+// ---------------------------------------------------------------------------
+
+function RecipeCard({ recipe, isActive, onSelect }: {
+  recipe: Recipe;
+  isActive: boolean;
+  onSelect: () => void;
+}) {
+  const Component = recipe.render;
+  return (
+    <div className={`recipe-card ${isActive ? 'active' : ''}`} onClick={onSelect}>
+      <div className="recipe-header">
+        <h3 className="recipe-title">{recipe.title}</h3>
+        {recipe.description && <p className="recipe-description">{recipe.description}</p>}
+        {recipe.tags && (
+          <div className="recipe-tags">
+            {recipe.tags.map(t => <span key={t} className="recipe-tag">{t}</span>)}
+          </div>
+        )}
+      </div>
+      <div className="recipe-preview">
+        <Component />
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// App
+// ---------------------------------------------------------------------------
+
+function App() {
+  const demos = generatedDemos;
+  const [theme, setTheme] = useState<Theme>(lightTheme);
+  const [activeName, setActiveName] = useState(demos[0]?.name ?? '');
+  const [viewMode, setViewMode] = useState<'recipes' | 'playground'>('recipes');
+  const [activeRecipeId, setActiveRecipeId] = useState<string>('');
+  const [showCode, setShowCode] = useState(false);
+  const [codeHtml, setCodeHtml] = useState('');
+  const [codeLoading, setCodeLoading] = useState(false);
+
+  const active = demos.find((d) => d.name === activeName) ?? demos[0];
+  const [propsState, setPropsState] = useState<Record<string, unknown>>(() =>
+    active ? buildInitialProps(active) : {},
+  );
+
+  // Auto-match recipes by component name
+  const componentRecipes = useMemo(
+    () => recipes.filter(r => r.component === active?.name),
+    [active?.name]
+  );
+
+  // Legacy sections support
+  const sections = active?.sections ?? [];
+  const hasLegacySections = sections.length > 0;
+
+  // Determine what tabs to show
+  const hasRecipes = componentRecipes.length > 0;
+  const hasControls = active ? (active.controls.length > 0 || (active.subComponents && active.subComponents.length > 0)) : false;
+  const showViewTabs = hasRecipes && hasControls && !hasLegacySections;
+
+  // When switching components, reset view mode intelligently
+  useEffect(() => {
+    if (hasLegacySections) {
+      // Legacy: don't interfere
+    } else if (hasRecipes) {
+      setViewMode('recipes');
+      setActiveRecipeId(componentRecipes[0]?.id ?? '');
+    } else {
+      setViewMode('playground');
+    }
+  }, [active?.name]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const grouped = useMemo(() => {
+    const map = new Map<string, DemoDefinition[]>();
+    for (const d of demos) {
+      const list = map.get(d.category) ?? [];
+      list.push(d);
+      map.set(d.category, list);
+    }
+
+    return [...map.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([category, items]) => ({
+        category,
+        items: items.sort((a, b) => a.name.localeCompare(b.name)),
+      }));
+  }, [demos]);
+
+  const onPickDemo = useCallback(
+    (name: string) => {
+      const next = demos.find((d) => d.name === name);
+      if (!next) return;
+      setActiveName(name);
+      setPropsState(buildInitialProps(next));
+    },
+    [demos],
+  );
+
+  const onFlatPropChange = useCallback((name: string, value: unknown) => {
+    setPropsState((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // Sync state → hash (replaceState avoids triggering hashchange)
+  const onNestedPropChange = useCallback((path: string[], value: unknown) => {
+    setPropsState((prev) => deepSet(prev, path, value));
+  }, []);
+
+  if (!active) {
+    return (
+      <div className="empty">
+        No generated demos found. Generate them via <code>/generate-demo {'{Name}'}</code>.
+      </div>
+    );
+  }
+
+  // --- Legacy sections path ---
+  const activeSectionForLegacy = sections[0] ?? null;
+
+  // --- Playground controls ---
+  const scopedControls = splitControls(active.controls);
+  const hasSubComponents = active.subComponents && active.subComponents.length > 0;
+
+  // Show props panel only in playground mode (or legacy non-consumer sections)
+  const isPlaygroundActive = hasLegacySections ? false : viewMode === 'playground';
+  const showPropsPanel = isPlaygroundActive &&
+    (scopedControls.root.length > 0 || scopedControls.groups.length > 0 || hasSubComponents);
+
+  // Active recipe for code viewer
+  const activeRecipe = componentRecipes.find(r => r.id === activeRecipeId);
+
+  // Code highlighting
   useEffect(() => {
-    const slug = activeComponent.toLowerCase().replace(/\s+/g, '-');
-    if (window.location.hash.slice(1) !== slug) {
-      window.history.replaceState(null, '', '#' + slug);
+    if (!active || !showCode) return;
+
+    let source: string;
+    if (viewMode === 'recipes' && activeRecipe && !hasLegacySections) {
+      // Recipe mode: show recipe's static code
+      source = activeRecipe.code;
+    } else if (hasLegacySections && activeSectionForLegacy) {
+      // Legacy sections
+      const sectionCode = activeSectionForLegacy.code;
+      source = typeof sectionCode === 'function'
+        ? sectionCode(propsState)
+        : sectionCode ?? '// Source unavailable';
+    } else {
+      // Playground mode: show demo source
+      const sourcePath = `./demos/generated/${active.name}Demo.tsx`;
+      source = demoSources[sourcePath] ?? '// Source unavailable';
     }
-  }, [activeComponent]);
 
-  const handleComponentChange = (name: string) => {
-    setActiveComponent(name);
-    window.history.pushState(null, '', '#' + name.toLowerCase().replace(/\s+/g, '-'));
-  };
+    let cancelled = false;
+    setCodeLoading(true);
+    codeToHtml(source, {
+      lang: 'tsx',
+      theme: theme.name === 'dark' ? 'github-dark' : 'github-light',
+    })
+      .then((html) => {
+        if (!cancelled) setCodeHtml(html);
+      })
+      .catch(() => {
+        if (!cancelled) setCodeHtml('<pre><code>Failed to render code sample.</code></pre>');
+      })
+      .finally(() => {
+        if (!cancelled) setCodeLoading(false);
+      });
 
-  const toggleTheme = () => {
-    const newTheme = theme.name === 'dark' ? lightTheme : darkTheme;
-    localStorage.setItem('move-theme', newTheme.name);
-    setTheme(newTheme);
-  };
+    return () => {
+      cancelled = true;
+    };
+  }, [active, viewMode, activeRecipe, activeSectionForLegacy, propsState, showCode, theme.name, hasLegacySections]);
 
   return (
     <ThemeProvider theme={theme}>
       <IconProvider resolver={iconResolver}>
-        <Sidebar.Provider>
-          <AppContent
-            activeComponent={activeComponent}
-            onComponentChange={handleComponentChange}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-          />
-        </Sidebar.Provider>
-        <Toast.Viewport />
+        <div className={`lab ${showPropsPanel ? '' : 'no-props'}`.trim()}>
+          <aside className="panel list-panel">
+            <div className="panel-title">Components</div>
+            {grouped.map((group) => (
+              <div key={group.category} className="group">
+                <div className="group-title">{group.category}</div>
+                <div className="list">
+                  {group.items.map((item) => (
+                    <button
+                      key={item.id}
+                      className={`list-item ${item.name === active.name ? 'active' : ''}`}
+                      onClick={() => onPickDemo(item.name)}
+                    >
+                      {item.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </aside>
+
+          <main className="panel preview-panel">
+            <div className="toolbar">
+              <div>
+                <h1>{active.name}</h1>
+                <p>{active.description || 'Demo preview'}</p>
+              </div>
+              <button
+                className="theme-btn"
+                onClick={() => setTheme(theme.name === 'dark' ? lightTheme : darkTheme)}
+              >
+                Theme: {theme.name}
+              </button>
+              <button className="theme-btn" onClick={() => setShowCode((prev) => !prev)}>
+                {showCode ? 'Hide Code' : 'Show Code'}
+              </button>
+            </div>
+
+            {/* View mode tabs: Recipes / Playground */}
+            {showViewTabs && (
+              <div className="view-tabs">
+                <button
+                  className={`view-tab ${viewMode === 'recipes' ? 'active' : ''}`}
+                  onClick={() => setViewMode('recipes')}
+                >
+                  Recipes
+                </button>
+                <button
+                  className={`view-tab ${viewMode === 'playground' ? 'active' : ''}`}
+                  onClick={() => setViewMode('playground')}
+                >
+                  Playground
+                </button>
+              </div>
+            )}
+
+            {/* Legacy section tabs (backward compat) */}
+            {hasLegacySections && (
+              <LegacySectionTabs
+                sections={sections}
+                propsState={propsState}
+                active={active}
+                controls={active.controls}
+                onFlatPropChange={onFlatPropChange}
+              />
+            )}
+
+            {/* Recipe cards view */}
+            {!hasLegacySections && viewMode === 'recipes' && hasRecipes && (
+              <div className="recipe-list">
+                {componentRecipes.map(recipe => (
+                  <RecipeCard
+                    key={recipe.id}
+                    recipe={recipe}
+                    isActive={recipe.id === activeRecipeId}
+                    onSelect={() => setActiveRecipeId(recipe.id)}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Playground view */}
+            {!hasLegacySections && viewMode === 'playground' && (
+              <div className="preview-canvas">
+                {active.render(propsState)}
+              </div>
+            )}
+
+            {/* Recipes-only (no controls) — skip tabs, show recipes directly */}
+            {!hasLegacySections && !showViewTabs && hasRecipes && viewMode === 'recipes' ? null : null}
+
+            {/* Playground-only (no recipes) — show playground directly */}
+            {!hasLegacySections && !hasRecipes && (
+              <div className="preview-canvas">
+                {active.render(propsState)}
+              </div>
+            )}
+
+            {showCode && (
+              <div className="code-panel">
+                {codeLoading ? (
+                  <div className="code-loading">Rendering highlighted code…</div>
+                ) : (
+                  <div className="code-html" dangerouslySetInnerHTML={{ __html: codeHtml }} />
+                )}
+              </div>
+            )}
+          </main>
+
+          {showPropsPanel && (
+            <aside className="panel controls-panel">
+              <div className="panel-title">Props</div>
+              <div className="controls">
+                {scopedControls.root.map((control) => (
+                  <ControlInput
+                    key={control.name}
+                    control={control}
+                    value={propsState[control.name]}
+                    onChange={(v) => onFlatPropChange(control.name, v)}
+                  />
+                ))}
+
+                {scopedControls.groups.map((group) => (
+                  <div key={group.name} className="sub-component">
+                    <div className="sub-header">
+                      <span className="sub-name">{group.name}</span>
+                    </div>
+                    <div className="sub-controls">
+                      {group.controls.map((scoped) => (
+                        <ControlInput
+                          key={scoped.propKey}
+                          control={scoped.control}
+                          value={propsState[scoped.propKey]}
+                          onChange={(v) => onFlatPropChange(scoped.propKey, v)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                ))}
+
+                {hasSubComponents &&
+                  active.subComponents!.map((sub) => (
+                    <SubComponentControls
+                      key={sub.name}
+                      sub={sub}
+                      path={[]}
+                      propsState={propsState}
+                      onPropChange={onNestedPropChange}
+                    />
+                  ))}
+              </div>
+            </aside>
+          )}
+        </div>
       </IconProvider>
     </ThemeProvider>
   );
+}
+
+// ---------------------------------------------------------------------------
+// Legacy section tabs (backward compat for demos with sections)
+// ---------------------------------------------------------------------------
+
+function LegacySectionTabs({
+  sections,
+  propsState,
+  active,
+  controls,
+  onFlatPropChange,
+}: {
+  sections: DemoSection[];
+  propsState: Record<string, unknown>;
+  active: DemoDefinition;
+  controls: Control[];
+  onFlatPropChange: (name: string, value: unknown) => void;
+}) {
+  const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? '');
+  const activeSection = sections.find((s) => s.id === activeSectionId) ?? sections[0] ?? null;
+
+  useEffect(() => {
+    setActiveSectionId(sections[0]?.id ?? '');
+  }, [active.name]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const visibleControls = filterControlsForSection(controls, activeSection);
+  const scopedControls = splitControls(visibleControls);
+  const showControls = activeSection?.id !== 'consumer' &&
+    (scopedControls.root.length > 0 || scopedControls.groups.length > 0);
+
+  return (
+    <>
+      {sections.length > 1 && (
+        <div className="section-tabs">
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              className={`section-tab ${activeSection?.id === section.id ? 'active' : ''}`}
+              onClick={() => setActiveSectionId(section.id)}
+            >
+              {section.label}
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="preview-canvas">
+        {activeSection ? activeSection.render(propsState) : active.render(propsState)}
+      </div>
+      {showControls && (
+        <div className="legacy-controls">
+          {scopedControls.root.map((control) => (
+            <ControlInput
+              key={control.name}
+              control={control}
+              value={propsState[control.name]}
+              onChange={(v) => onFlatPropChange(control.name, v)}
+            />
+          ))}
+          {scopedControls.groups.map((group) => (
+            <div key={group.name} className="sub-component">
+              <div className="sub-header">
+                <span className="sub-name">{group.name}</span>
+              </div>
+              <div className="sub-controls">
+                {group.controls.map((scoped) => (
+                  <ControlInput
+                    key={scoped.propKey}
+                    control={scoped.control}
+                    value={propsState[scoped.propKey]}
+                    onChange={(v) => onFlatPropChange(scoped.propKey, v)}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
+function filterControlsForSection(controls: Control[], section: DemoSection | null): Control[] {
+  if (!section) return controls;
+  if (section.id === 'consumer') {
+    return [];
+  }
+  if (section.id === 'playground') {
+    return controls.filter(
+      (control) => !control.name.includes('.') || control.name.startsWith('playground.'),
+    );
+  }
+  return controls;
 }
 
 export default App;

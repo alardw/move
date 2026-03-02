@@ -1,9 +1,9 @@
 'use client';
-
+// Generated from Stepper.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import type { SlotPropsMap } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Stepper.module.css';
 
 // ============================================================================

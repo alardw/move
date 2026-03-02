@@ -1,6 +1,0 @@
-/* Storybook iframe body — match theme background */
-body {
-  background-color: var(--move-bg-base) !important;
-  color: var(--move-fg-base);
-  margin: 0;
-}

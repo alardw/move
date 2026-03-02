@@ -1,13 +1,10 @@
-/*
- * FormField Component
- * Responsive form layout — label beside or above field based on container width.
- */
+/* Generated from FormField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 .root {
   /* Component tokens */
   --move-formfield-gap: var(--move-spacing-sm);
   --move-formfield-label-width: 8rem;
-  --move-formfield-label-pt: 0.4375rem; /* baseline-align with typical input */
+  --move-formfield-label-pt: 0.4375rem;
   --move-formfield-description-color: var(--move-fg-muted);
   --move-formfield-description-size: inherit;
 

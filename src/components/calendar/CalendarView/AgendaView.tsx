@@ -1,4 +1,6 @@
 'use client';
+// Generated from CalendarView.spec.ts — AgendaView sub-component
+// Provenance: original-components/calendar/CalendarView/AgendaView.tsx
 
 import * as React from 'react';
 import { addDays, isSameDay, isToday as checkIsToday } from '../_shared/dateUtils';
@@ -50,7 +52,7 @@ export function AgendaView({
 
   if (dayGroups.length === 0) {
     return (
-      <div className={styles.agendaView}>
+      <div className={styles.agendaView} data-testid="agenda-view">
         <div className={styles.emptyMessage}>{noEventsLabel}</div>
       </div>
     );
@@ -63,7 +65,7 @@ export function AgendaView({
   });
 
   return (
-    <div className={styles.agendaView}>
+    <div className={styles.agendaView} data-testid="agenda-view">
       {dayGroups.map(({ date, events: dayEvts }) => {
         const today = checkIsToday(date);
         return (

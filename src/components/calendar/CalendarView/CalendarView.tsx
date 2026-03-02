@@ -1,4 +1,6 @@
 'use client';
+// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Provenance: original-components/calendar/CalendarView/CalendarView.tsx
 
 import * as React from 'react';
 import { useCalendarView } from './useCalendarView';
@@ -10,7 +12,7 @@ import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
 import { AgendaView } from './AgendaView';
 import { Button } from '../../core/Button';
-import { Icon } from '../../core/Icon';
+import { Icon } from '../../../infrastructure/Icon';
 import { ToggleGroup } from '../../toolbar/ToggleGroup';
 import styles from './CalendarView.module.css';
 

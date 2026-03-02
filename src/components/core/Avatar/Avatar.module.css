@@ -1,3 +1,5 @@
+/* Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f) */
+
 /* =============================================================================
    Avatar
    ============================================================================= */
@@ -19,7 +21,7 @@
   overflow: hidden;
   flex-shrink: 0;
   vertical-align: middle;
-  transform: scale(0);
+  user-select: none;
 }
 
 /* Sizes */

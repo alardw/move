@@ -1,3 +1,5 @@
+/* Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+
 /*
  * Card Component
  * Component tokens on .root so children inherit.
@@ -28,33 +30,37 @@
   overflow: hidden;
 }
 
-/* Variants */
+/* Variant: default */
 .root[data-variant='default'],
 .root:not([data-variant]) {
   /* defaults above */
 }
 
+/* Variant: elevated — shadow replaces border */
 .root[data-variant='elevated'] {
   --move-card-shadow: var(--move-shadow-md);
   border-color: transparent;
 }
 
+/* Variant: ghost — transparent background and border */
 .root[data-variant='ghost'] {
   --move-card-bg: transparent;
   border-color: transparent;
 }
 
-/* Sizes */
+/* Size: sm */
 .root[data-size='sm'] {
   --move-card-padding: var(--move-spacing-sm);
   --move-card-title-size: var(--move-size-base);
 }
 
+/* Size: md (default) */
 .root[data-size='md'],
 .root:not([data-size]) {
   /* default */
 }
 
+/* Size: lg */
 .root[data-size='lg'] {
   --move-card-padding: var(--move-spacing-xl);
   --move-card-title-size: var(--move-size-xl);

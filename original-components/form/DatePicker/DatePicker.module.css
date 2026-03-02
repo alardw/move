@@ -1,0 +1,108 @@
+.root {
+  display: inline-flex;
+  position: relative;
+}
+
+.trigger {
+  display: inline-flex;
+  cursor: default;
+}
+
+.trigger input {
+  cursor: text;
+}
+
+.trigger input[data-typing] {
+  cursor: text;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--move-fg-muted);
+  flex-shrink: 0;
+}
+
+.calendarButton {
+  flex-shrink: 0;
+  padding: 0 !important;
+  aspect-ratio: 1;
+}
+
+/* Single — input + icon side by side */
+.singleWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+}
+
+.singleWrapper input {
+  width: 7rem;
+}
+
+/* Range — two separate fields with separator */
+.rangeWrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+}
+
+.rangeWrapper input {
+  width: 5rem;
+}
+
+.rangeSeparator {
+  color: var(--move-fg-muted);
+  flex-shrink: 0;
+  user-select: none;
+  pointer-events: none;
+  line-height: 1;
+}
+
+/* Range instruction label inside popover */
+.rangeInstruction {
+  font-size: var(--move-text-xs);
+  color: var(--move-fg-muted);
+  text-align: center;
+  padding: var(--move-spacing-xs) 0;
+  user-select: none;
+}
+
+/* Content (popover) */
+.content {
+  --move-datepicker-content-bg: var(--move-bg-subtle);
+  --move-datepicker-content-border: var(--move-border-base);
+  --move-datepicker-content-radius: var(--move-rounded-lg);
+  --move-datepicker-content-shadow: var(--move-shadow-lg);
+  --move-datepicker-content-padding: var(--move-spacing-sm);
+
+  background-color: var(--move-datepicker-content-bg);
+  border: 1px solid var(--move-datepicker-content-border);
+  border-radius: var(--move-datepicker-content-radius);
+  box-shadow: var(--move-datepicker-content-shadow);
+  padding: var(--move-datepicker-content-padding);
+  z-index: var(--move-layer-dropdown);
+  outline: none;
+  overflow: hidden;
+  will-change: transform, opacity;
+  transform-origin: top center;
+}
+
+/* Time section (showTime integration) */
+.datePickerTime {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--move-spacing-sm);
+  padding-top: var(--move-spacing-sm);
+  margin-top: var(--move-spacing-sm);
+  border-top: 1px solid var(--move-border-muted);
+}
+
+.datePickerTimeLabel {
+  font-size: var(--move-text-xs);
+  color: var(--move-fg-muted);
+  user-select: none;
+  flex-shrink: 0;
+}

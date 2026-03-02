@@ -56,11 +56,11 @@ export const Divider = withMoveComponent<DividerSlots, DividerProps, HTMLDivElem
             {...attrs}
             {...rootSpRest}
             ref={ref}
-            data-size={props.size}
             role="separator"
             aria-orientation={props.orientation}
             data-orientation={props.orientation as string}
             data-type={props.type as string}
+            data-size={props.size}
             {...(hasContent ? { 'data-has-content': '', 'data-align': props.align as string } : {})}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}

@@ -1,5 +1,6 @@
 /*
- * Timeline Component
+ * Timeline Component — Move UI
+ * Provenance: original-components/data/Timeline/Timeline.module.css
  * Vertical timeline with progress tracking, custom bullets, and alignment.
  * 6 slot classes: root (on Root), item, bullet, line, content, title (on Item)
  * 1 structural class: separator

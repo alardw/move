@@ -1,5 +1,6 @@
 /*
- * Table Component
+ * Table Component — Move UI
+ * Provenance: original-components/data/Table/Table.module.css
  * Component tokens on .root so children inherit.
  * 8 slot classes: root, header, body, footer, row, head, cell, caption
  */

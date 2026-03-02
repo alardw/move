@@ -1,24 +1,26 @@
-import { META_SCHEMA_VERSION } from "@/meta-schema";
-import type { ComponentMeta } from "@/meta-schema";
+// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
 
-export const datePickerMeta = {
-  schemaVersion: META_SCHEMA_VERSION,
-
-  name: "DatePicker",
-
-  kind: "compound",
-
-  anatomy: ["Root", "Trigger", "Input", "Icon", "Portal", "Content"],
-
-  slots: [],
-
-  controlled: {
-    pattern: "open",
+export const meta = {
+  name: 'DatePicker',
+  kind: 'compound' as const,
+  category: 'form',
+  description: 'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
+  anatomy: ['Root', 'Trigger', 'Input', 'Icon', 'Portal', 'Content'],
+  controlled: { pattern: 'open' as const },
+  props: {
+    Root: ['animate', 'open', 'defaultOpen', 'onOpenChange', 'closeOnSelect', 'mode', 'value', 'defaultValue', 'onValueChange', 'events', 'locale', 'weekStartsOn', 'constraints', 'numberOfMonths', 'showWeekNumbers', 'yearRange', 'fixedWeeks', 'renderDayCell', 'renderEvent', 'placeholder', 'rangeLabels', 'labels', 'showTime', 'children', 'className', 'style'],
+    Trigger: ['children', 'className', 'style'],
+    Input: ['placeholder', 'size', 'className', 'style'],
+    Icon: ['children', 'className'],
+    Portal: ['children', 'container'],
+    Content: ['sideOffset', 'align', 'children', 'className', 'style'],
   },
-
-  variants: {},
-
-  constraints: {
-    supportsAnimation: true,
-  },
-} satisfies ComponentMeta;
+  tokens: [
+    '--move-datepicker-content-bg',
+    '--move-datepicker-content-border',
+    '--move-datepicker-content-radius',
+    '--move-datepicker-content-shadow',
+    '--move-datepicker-content-padding',
+  ],
+  dependencies: ['InputText', 'TimeField', 'Button', 'Icon', 'Calendar'],
+};

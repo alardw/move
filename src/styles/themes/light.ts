@@ -1,13 +1,18 @@
 import type { Theme } from './types';
-import { createShadowPalette } from '../visual/shadows';
+import { createThemeShadows } from '../visual/shadows';
 
-const lightShadows = createShadowPalette({
-  color: '220deg 3% 15%',
-  angle: 135, // Light from top-left
-  opacity: 0.1,
-  oomph: 0.12,
-  crispy: 0.14,
-  resolution: 0,
+const lightShadows = createThemeShadows({
+  angle: 135,
+  color: '220 3% 15%',
+  oomph: 0.5,
+  crispy: 0.5,
+  surfaces: {
+    base:     { strength: 0.30 },
+    subtle:   { strength: 0.35 },
+    muted:    { strength: 0.40 },
+    emphasis: { strength: 0.45 },
+    inverse:  { color: '220 3% 90%', strength: 0.50 },
+  },
 });
 
 export const lightTheme: Theme = {
@@ -31,11 +36,11 @@ export const lightTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-300)',
     '--move-border-emphasis': 'var(--move-gray-400)',
 
-    // Primary (violet)
-    '--move-primary': 'var(--move-violet-600)',
-    '--move-primary-hover': 'var(--move-violet-700)',
-    '--move-primary-active': 'var(--move-violet-800)',
-    '--move-primary-subtle': 'var(--move-violet-100)',
+    // Primary (sage)
+    '--move-primary': 'var(--move-sage-600)',
+    '--move-primary-hover': 'var(--move-sage-700)',
+    '--move-primary-active': 'var(--move-sage-800)',
+    '--move-primary-subtle': 'var(--move-sage-100)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -69,7 +74,7 @@ export const lightTheme: Theme = {
     '--move-info-fg': 'var(--move-white)',
 
     // Focus
-    '--move-focus-ring-color': 'var(--move-violet-600)',
+    '--move-focus-ring-color': 'var(--move-sage-600)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.4)',
@@ -78,12 +83,8 @@ export const lightTheme: Theme = {
     '--move-scrollbar-thumb': 'var(--move-gray-200)',
     '--move-scrollbar-track': 'transparent',
 
-    // Shadows - softer for light theme
-    '--move-shadow-color': '220deg 3% 15%',
-    '--move-shadow-sm': lightShadows.sm,
-    '--move-shadow-md': lightShadows.md,
-    '--move-shadow-lg': lightShadows.lg,
-    '--move-shadow-xl': lightShadows.xl,
+    // Shadows — per-surface
+    ...lightShadows,
   },
   animation: {
     spring: {

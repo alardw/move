@@ -1,9 +1,9 @@
 'use client';
-
+// Generated from Image.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { Icon } from '../../core/Icon';
+import type { SlotPropsMap } from '../../../engine';
+import { Icon } from '../../../infrastructure/Icon';
 import styles from './Image.module.css';
 
 // =============================================================================

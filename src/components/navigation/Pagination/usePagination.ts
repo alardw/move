@@ -1,5 +1,6 @@
+// Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { useCallback, useMemo } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 export interface UsePaginationOptions {
   /** Total number of pages */

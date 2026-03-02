@@ -1,12 +1,12 @@
 'use client';
-
+// Generated from Checkbox.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
-import { useToggleAnimation } from '../../../animation/hooks';
-import type { IndicatorAnimate } from '../../../animation/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { useToggleAnimate, defaultAnimations } from '../../../animation';
+import type { ToggleAnimate, InteractionAnimate } from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Checkbox.module.css';
 
 // =============================================================================
@@ -15,29 +15,31 @@ import styles from './Checkbox.module.css';
 
 type CheckboxSlots = 'root' | 'indicator' | 'icon';
 
+export type CheckboxSize = 'sm' | 'md' | 'lg';
+
 export interface CheckboxProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   /** Controlled checked state */
   checked?: boolean;
-  /** Default checked state */
+  /** Default checked state for uncontrolled mode */
   defaultChecked?: boolean;
-  /** Indeterminate state */
+  /** Indeterminate (mixed) state */
   indeterminate?: boolean;
   /** Called when checked state changes */
   onCheckedChange?: (checked: boolean) => void;
-  /** Icon name for the check indicator (requires IconProvider) */
+  /** Icon name for the check indicator (resolved via useResolvedIcon) */
   icon?: string;
-  /** Animation configuration */
-  animate?: IndicatorAnimate | false;
-  /** Size variant */
-  size?: 'sm' | 'md' | 'lg';
+  /** Toggle animation config or false to disable */
+  animate?: (ToggleAnimate & InteractionAnimate) | false;
+  /** Size of the checkbox */
+  size?: CheckboxSize;
   /** Whether the checkbox is disabled */
   disabled?: boolean;
   /** Whether the checkbox is in an invalid state */
   invalid?: boolean;
-  /** Name for form submission */
+  /** Name for form submission (renders hidden input) */
   name?: string;
   /** Value for form submission */
   value?: string;
@@ -78,7 +80,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
   styles,
   slots: ['root', 'indicator', 'icon'] as const,
   defaults: { icon: 'check', disabled: false },
-  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'size', 'disabled', 'invalid', 'name', 'value', 'required'],
+  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'size', 'invalid', 'name', 'value', 'required'],
   subComponents: { Group: CheckboxGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -109,10 +111,12 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
     });
 
     // Toggle animation
-    const toggleAnim = useToggleAnimation({
-      animate: animateProp as IndicatorAnimate | false | undefined,
+    const toggleAnim = useToggleAnimate({
+      animate: animateProp === false
+        ? { checked: false as const, unchecked: false as const }
+        : (animateProp as (ToggleAnimate & InteractionAnimate) | undefined) || {},
       initialChecked: checkbox.checked,
-      disabled,
+      disabled: !!disabled,
     });
 
     const iconSize = size === 'sm' ? 14 : size === 'lg' ? 22 : 17;
@@ -174,7 +178,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
               data-state={dataState}
               {...(size && size !== 'md' ? { 'data-size': size } : {})}
               {...(invalid ? { 'data-invalid': '' } : {})}
-              disabled={disabled}
+              disabled={disabled as boolean}
               className={cx('root', className, rootSpClass as string | undefined)}
               style={{ ...style, ...(rootSpStyle as React.CSSProperties) }}
               onClick={handleClick}
@@ -199,7 +203,6 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
                 </span>
               </span>
             </button>
-            {/* Hidden input for form submission */}
             {name && (
               <input
                 type="hidden"

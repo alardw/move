@@ -1,22 +1,26 @@
 'use client';
-
+// Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Card.module.css';
 
-// ============================================================================
-// Root
-// ============================================================================
+// =============================================================================
+// Types
+// =============================================================================
 
 export type CardVariant = 'default' | 'elevated' | 'ghost';
 export type CardSize = 'sm' | 'md' | 'lg';
 
+// =============================================================================
+// Root
+// =============================================================================
+
 export interface CardRootProps extends Record<string, unknown> {
+  variant?: CardVariant;
+  size?: CardSize;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  variant?: CardVariant;
-  size?: CardSize;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -24,7 +28,7 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
   name: 'CardRoot',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'default', size: 'md' },
+  defaults: { variant: 'default' as CardVariant, size: 'md' as CardSize },
   moveProps: ['variant', 'size'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -32,15 +36,17 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
-            data-size={props.size}
-            data-variant={props.variant}
+            data-variant={props.variant as string}
+            data-size={props.size as string}
+            data-surface="subtle"
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -50,9 +56,9 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Header
-// ============================================================================
+// =============================================================================
 
 export interface CardHeaderProps extends Record<string, unknown> {
   className?: string;
@@ -71,13 +77,14 @@ const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>(
       render() {
         const headerSp = sp('header');
         const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('header', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -87,9 +94,9 @@ const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>(
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Title
-// ============================================================================
+// =============================================================================
 
 export interface CardTitleProps extends Record<string, unknown> {
   className?: string;
@@ -108,13 +115,14 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
       render() {
         const titleSp = sp('title');
         const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
+
         return (
           <h3
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('title', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </h3>
@@ -124,9 +132,9 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Description
-// ============================================================================
+// =============================================================================
 
 export interface CardDescriptionProps extends Record<string, unknown> {
   className?: string;
@@ -145,13 +153,14 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
       render() {
         const descSp = sp('description');
         const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
+
         return (
           <p
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('description', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </p>
@@ -161,9 +170,9 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Body
-// ============================================================================
+// =============================================================================
 
 export interface CardBodyProps extends Record<string, unknown> {
   className?: string;
@@ -182,13 +191,14 @@ const CardBody = withMoveComponent<'body', CardBodyProps, HTMLDivElement>({
       render() {
         const bodySp = sp('body');
         const { className: spClass, style: spStyle, ...spRest } = bodySp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('body', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -198,9 +208,9 @@ const CardBody = withMoveComponent<'body', CardBodyProps, HTMLDivElement>({
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Footer
-// ============================================================================
+// =============================================================================
 
 export interface CardFooterProps extends Record<string, unknown> {
   className?: string;
@@ -219,13 +229,14 @@ const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>(
       render() {
         const footerSp = sp('footer');
         const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('footer', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -235,9 +246,9 @@ const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>(
   },
 });
 
-// ============================================================================
+// =============================================================================
 // FooterStart
-// ============================================================================
+// =============================================================================
 
 export interface CardFooterStartProps extends Record<string, unknown> {
   className?: string;
@@ -256,13 +267,14 @@ const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, H
       render() {
         const footerStartSp = sp('footerStart');
         const { className: spClass, style: spStyle, ...spRest } = footerStartSp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('footerStart', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -272,9 +284,9 @@ const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, H
   },
 });
 
-// ============================================================================
+// =============================================================================
 // FooterEnd
-// ============================================================================
+// =============================================================================
 
 export interface CardFooterEndProps extends Record<string, unknown> {
   className?: string;
@@ -293,13 +305,14 @@ const CardFooterEnd = withMoveComponent<'footerEnd', CardFooterEndProps, HTMLDiv
       render() {
         const footerEndSp = sp('footerEnd');
         const { className: spClass, style: spStyle, ...spRest } = footerEndSp as Record<string, unknown>;
+
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('footerEnd', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -309,9 +322,9 @@ const CardFooterEnd = withMoveComponent<'footerEnd', CardFooterEndProps, HTMLDiv
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Export
-// ============================================================================
+// =============================================================================
 
 export const Card = {
   Root: CardRoot,

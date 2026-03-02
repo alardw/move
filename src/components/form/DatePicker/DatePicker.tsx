@@ -1,8 +1,8 @@
 'use client';
+// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { CalendarContext } from '../../calendar/_shared/CalendarContext';
 import { useCalendar } from '../../calendar/Calendar/useCalendar';
 import type { UseCalendarOptions } from '../../calendar/Calendar/useCalendar';
@@ -14,22 +14,30 @@ import type {
   RenderDayCell,
   RenderEvent,
 } from '../../calendar/_shared/types';
-import { formatDate, parseDate, isDateDisabled, getLocaleDatePattern, isBefore, startOfDay } from '../../calendar/_shared/dateUtils';
-import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
-import type { PopupAnimate } from '../../../animation/types';
+import {
+  formatDate,
+  parseDate,
+  isDateDisabled,
+  getLocaleDatePattern,
+  isBefore,
+  startOfDay,
+} from '../../calendar/_shared/dateUtils';
+import { useLifecycleAnimate, mergeAnimateConfig } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
+import { useMergedRef } from '../../../engine';
 import { InputText } from '../InputText';
 import { TimeField } from '../TimeField';
 import { Button } from '../../core/Button';
-import { Icon } from '../../core/Icon';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './DatePicker.module.css';
 
-const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
+// =============================================================================
+// Types
+// =============================================================================
 
-// ============================================================================
-// Context (animation coordination + focus model)
-// ============================================================================
+export type DatePickerSize = 'sm' | 'md' | 'lg';
 
-interface DatePickerRangeLabels {
+export interface DatePickerRangeLabels {
   from: string;
   to: string;
 }
@@ -44,7 +52,7 @@ export interface DatePickerLabels {
   selectEndDate?: string;
 }
 
-const DEFAULT_DATEPICKER_LABELS: Required<DatePickerLabels> = {
+const DEFAULT_LABELS: Required<DatePickerLabels> = {
   selectDate: 'Select date',
   datesSelected: (count: number) => `${count} dates selected`,
   openCalendar: 'Open calendar',
@@ -53,6 +61,26 @@ const DEFAULT_DATEPICKER_LABELS: Required<DatePickerLabels> = {
   selectStartDate: 'Select start date',
   selectEndDate: 'Select end date',
 };
+
+// =============================================================================
+// Animation defaults
+// =============================================================================
+
+const DEFAULT_ANIMATE: LifecycleAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    scale: { value: [0.5, 1], easing: 'outQuart' },
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    scale: { value: [1, 0.95], easing: 'outQuart' },
+    duration: 200,
+  },
+};
+
+// =============================================================================
+// Context
+// =============================================================================
 
 interface DatePickerContextValue {
   isClosing: boolean;
@@ -72,7 +100,7 @@ interface DatePickerContextValue {
   rangeLabels: DatePickerRangeLabels;
   labels: Required<DatePickerLabels>;
   isOpen: boolean;
-  animateConfig: PopupAnimate | null;
+  animateConfig: LifecycleAnimate | null;
   showTime: boolean;
   timePlacement: 'inline' | 'popup';
   timeHourCycle: 12 | 24;
@@ -82,66 +110,68 @@ interface DatePickerContextValue {
 
 const DatePickerContext = React.createContext<DatePickerContextValue | null>(null);
 
-// ============================================================================
+// =============================================================================
 // Root
-// ============================================================================
+// =============================================================================
 
 export interface DatePickerRootProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 
-  // Animation
-  animate?: PopupAnimate | false;
+  /** Animation config for open/close transitions */
+  animate?: LifecycleAnimate | false;
 
-  // Popover
+  /** Controlled open state */
   open?: boolean;
+  /** Default open state (uncontrolled) */
   defaultOpen?: boolean;
+  /** Open state change handler */
   onOpenChange?: (open: boolean) => void;
+  /** Close popover after date selection */
   closeOnSelect?: boolean;
 
-  // Selection
+  /** Date selection mode */
   mode?: SelectionMode;
+  /** Controlled selected value */
   value?: Date | DateRange | Date[] | null;
+  /** Default selected value (uncontrolled) */
   defaultValue?: Date | DateRange | Date[] | null;
+  /** Value change handler */
   onValueChange?: (value: any) => void;
 
-  // Events
+  /** Calendar events to display */
   events?: CalendarEvent[];
-
-  // Config
+  /** Locale for date formatting (BCP 47) */
   locale?: string;
+  /** First day of week (0=Sun, 1=Mon, etc.) */
   weekStartsOn?: number;
+  /** Date constraints (min, max, disabled dates) */
   constraints?: CalendarConstraints;
+  /** Number of months to display simultaneously */
   numberOfMonths?: number;
+  /** Show ISO week numbers */
   showWeekNumbers?: boolean;
+  /** Year range for year picker navigation */
   yearRange?: number;
+  /** Always show 6 weeks per month */
   fixedWeeks?: boolean;
 
-  // Renderers
+  /** Custom day cell renderer */
   renderDayCell?: RenderDayCell;
+  /** Custom event renderer */
   renderEvent?: RenderEvent;
 
+  /** Input placeholder text */
   placeholder?: string;
+  /** Custom labels for range from/to fields */
   rangeLabels?: DatePickerRangeLabels;
+  /** Custom UI labels for accessibility and display */
   labels?: DatePickerLabels;
 
-  /** Show a time picker. Pass true for inline 24h, or an object with placement and hourCycle options. */
+  /** Show time picker integration */
   showTime?: boolean | { hourCycle?: 12 | 24; placement?: 'inline' | 'popup' };
 }
-
-const defaultDatePickerAnimation: PopupAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
-  },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
-  },
-  stagger: { delay: 15 },
-};
 
 const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   children,
@@ -172,14 +202,23 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
 }) => {
   // showTime resolution
   const showTime = !!showTimeProp;
-  const timePlacement = (typeof showTimeProp === 'object' ? showTimeProp.placement : undefined) ?? 'inline';
-  const timeHourCycle = (typeof showTimeProp === 'object' ? showTimeProp.hourCycle : undefined) ?? 24;
+  const timePlacement =
+    (typeof showTimeProp === 'object' ? showTimeProp.placement : undefined) ?? 'inline';
+  const timeHourCycle =
+    (typeof showTimeProp === 'object' ? showTimeProp.hourCycle : undefined) ?? 24;
+
   const labels = React.useMemo(
-    () => ({ ...DEFAULT_DATEPICKER_LABELS, ...labelsProp }),
-    [labelsProp]
+    () => ({ ...DEFAULT_LABELS, ...labelsProp }),
+    [labelsProp],
   );
-  const rangeLabels = rangeLabelsOverride ?? { from: labels.selectStartDate, to: labels.selectEndDate };
-  const animateConfig = animate === false ? null : mergeAnimateConfig(defaultDatePickerAnimation, animate);
+  const rangeLabels = rangeLabelsOverride ?? {
+    from: labels.selectStartDate,
+    to: labels.selectEndDate,
+  };
+
+  const animateConfig =
+    animate === false ? null : mergeAnimateConfig(DEFAULT_ANIMATE, animate);
+
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
   const [activeField, setActiveField] = React.useState<'from' | 'to' | null>(null);
@@ -201,18 +240,20 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     return extractTimeFromDate(initial instanceof Date ? initial : null);
   });
 
-  // dateRef tracks the latest calendar date for the time-change callback
   const dateRef = React.useRef<Date | null>(null);
 
-  const onTimeChange = React.useCallback((newTimeValue: string) => {
-    setTimeValue(newTimeValue);
-    if (mode === 'single' && onValueChange && dateRef.current) {
-      const [hh, mm] = newTimeValue.split(':').map(Number);
-      const combined = new Date(dateRef.current);
-      combined.setHours(hh ?? 0, mm ?? 0, 0, 0);
-      onValueChange(combined);
-    }
-  }, [mode, onValueChange]);
+  const onTimeChange = React.useCallback(
+    (newTimeValue: string) => {
+      setTimeValue(newTimeValue);
+      if (mode === 'single' && onValueChange && dateRef.current) {
+        const [hh, mm] = newTimeValue.split(':').map(Number);
+        const combined = new Date(dateRef.current);
+        combined.setHours(hh ?? 0, mm ?? 0, 0, 0);
+        onValueChange(combined);
+      }
+    },
+    [mode, onValueChange],
+  );
 
   const isControlled = controlledOpen !== undefined;
   const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
@@ -267,7 +308,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     if (target) {
       calendar.setDisplayMonth(new Date(target.getFullYear(), target.getMonth(), 1));
     }
-  }, [activeField]);
+  }, [activeField]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Wrap onSelect for close-on-select + field-aware range
   const originalOnSelect = calendar.onSelect;
@@ -277,7 +318,6 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
       if (mode === 'range' && activeField !== null && calendarSetRangeValue) {
         const currentRange = calendar.value as DateRange | null;
         if (activeField === 'from') {
-          // Set from, keep existing to
           const existingTo = currentRange?.to;
           if (existingTo && isBefore(existingTo, date)) {
             calendarSetRangeValue({ from: startOfDay(date), to: undefined as any });
@@ -319,21 +359,24 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
         }
       }
     },
-    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue]
+    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue],
   );
 
   const calendarCtx = React.useMemo(
     () => ({ ...calendar, onSelect: wrappedOnSelect }),
-    [calendar, wrappedOnSelect]
+    [calendar, wrappedOnSelect],
   );
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-    // Ignore Radix close — we handle via animation
-  }, [isControlled, onOpenChange]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      if (newOpen) {
+        if (!isControlled) setUncontrolledOpen(true);
+        onOpenChange?.(true);
+      }
+      // Ignore Radix close — we handle via animation
+    },
+    [isControlled, onOpenChange],
+  );
 
   const handleCloseComplete = React.useCallback(() => {
     if (mode === 'range') {
@@ -368,14 +411,33 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   }, []);
 
   return (
-    <DatePickerContext.Provider value={{
-      isClosing, close, onCloseComplete: handleCloseComplete, openPopover, focusCalendar,
-      mode, anchorRef, activeField, setActiveField,
-      shouldFocusCalendar, clearFocusRequest,
-      inputRef, fromInputRef, toInputRef, rangeLabels, labels, isOpen: !!isOpen,
-      animateConfig,
-      showTime, timePlacement, timeHourCycle, timeValue, onTimeChange,
-    }}>
+    <DatePickerContext.Provider
+      value={{
+        isClosing,
+        close,
+        onCloseComplete: handleCloseComplete,
+        openPopover,
+        focusCalendar,
+        mode,
+        anchorRef,
+        activeField,
+        setActiveField,
+        shouldFocusCalendar,
+        clearFocusRequest,
+        inputRef,
+        fromInputRef,
+        toInputRef,
+        rangeLabels,
+        labels,
+        isOpen: !!isOpen,
+        animateConfig,
+        showTime,
+        timePlacement,
+        timeHourCycle,
+        timeValue,
+        onTimeChange,
+      }}
+    >
       <CalendarContext.Provider value={calendarCtx}>
         <RadixPopover.Root open={isOpen || isClosing} onOpenChange={handleOpenChange}>
           <div className={`${styles.root} ${className ?? ''}`} style={style}>
@@ -388,9 +450,9 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
 };
 DatePickerRoot.displayName = 'DatePicker.Root';
 
-// ============================================================================
+// =============================================================================
 // Trigger (div, not button — a button containing inputs is invalid HTML)
-// ============================================================================
+// =============================================================================
 
 export interface DatePickerTriggerProps {
   children?: React.ReactNode;
@@ -415,15 +477,15 @@ const DatePickerTrigger: React.FC<DatePickerTriggerProps> = ({ children, classNa
 };
 DatePickerTrigger.displayName = 'DatePicker.Trigger';
 
-// ============================================================================
+// =============================================================================
 // Input
-// ============================================================================
+// =============================================================================
 
 export interface DatePickerInputProps {
   placeholder?: string;
   className?: string;
   style?: React.CSSProperties;
-  size?: 'sm' | 'md' | 'lg';
+  size?: DatePickerSize;
 }
 
 const DatePickerInput: React.FC<DatePickerInputProps> = ({
@@ -468,9 +530,9 @@ const DatePickerInput: React.FC<DatePickerInputProps> = ({
 };
 DatePickerInput.displayName = 'DatePicker.Input';
 
-// ============================================================================
+// =============================================================================
 // SingleInput (single + multiple modes)
-// ============================================================================
+// =============================================================================
 
 interface SingleInputInternalProps {
   locale: string;
@@ -479,7 +541,7 @@ interface SingleInputInternalProps {
   calendarCtx: any;
   dpCtx: DatePickerContextValue | null;
   placeholder?: string;
-  size: 'sm' | 'md' | 'lg';
+  size: DatePickerSize;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -496,6 +558,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
   style,
 }) => {
   const isSingleMode = mode === 'single';
+  const calendarIcon = useResolvedIcon('calendar', 16);
 
   const formattedValue = React.useMemo(() => {
     if (!value) return '';
@@ -538,7 +601,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
         calendarCtx.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
       }
     },
-    [isSingleMode, locale, calendarCtx]
+    [isSingleMode, locale, calendarCtx],
   );
 
   const handleKeyDown = React.useCallback(
@@ -559,28 +622,28 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
         dpCtx?.close();
       }
     },
-    [isSingleMode, commitOrRevert, dpCtx]
+    [isSingleMode, commitOrRevert, dpCtx],
   );
 
-  const handleBlur = React.useCallback(
-    (e: React.FocusEvent<HTMLInputElement>) => {
-      if (!isSingleMode) return;
-      setTimeout(() => {
-        commitOrRevert();
-      }, 150);
+  const handleBlur = React.useCallback(() => {
+    if (!isSingleMode) return;
+    setTimeout(() => {
+      commitOrRevert();
+    }, 150);
+  }, [isSingleMode, commitOrRevert]);
+
+  const handleIconClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (dpCtx?.isOpen) {
+        dpCtx.close();
+      } else {
+        dpCtx?.focusCalendar();
+      }
     },
-    [isSingleMode, commitOrRevert]
+    [dpCtx],
   );
-
-  const handleIconClick = React.useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dpCtx?.isOpen) {
-      dpCtx.close();
-    } else {
-      dpCtx?.focusCalendar();
-    }
-  }, [dpCtx]);
 
   const resolvedPlaceholder = isSingleMode
     ? getLocaleDatePattern(locale)
@@ -606,7 +669,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
         onClick={handleIconClick}
         aria-label={dpCtx?.labels.openCalendar ?? 'Open calendar'}
       >
-        <Icon name="calendar" size="sm" />
+        <span aria-hidden="true">{calendarIcon}</span>
       </Button>
       {dpCtx?.showTime && dpCtx.timePlacement === 'inline' && (
         <TimeField
@@ -621,16 +684,16 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
   );
 };
 
-// ============================================================================
+// =============================================================================
 // RangeInput (two typeable inputs sharing one wrapper)
-// ============================================================================
+// =============================================================================
 
 interface RangeInputInternalProps {
   locale: string;
   value: DateRange | null;
   calendarCtx: any;
   dpCtx: DatePickerContextValue | null;
-  size: 'sm' | 'md' | 'lg';
+  size: DatePickerSize;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -645,18 +708,22 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
   style,
 }) => {
   const pattern = getLocaleDatePattern(locale);
+  const calendarIcon = useResolvedIcon('calendar', 16);
 
-  // Formatted values from calendar state
-  const fromFormatted = React.useMemo(() => (value?.from ? formatDate(value.from, locale) : ''), [value?.from, locale]);
-  const toFormatted = React.useMemo(() => (value?.to ? formatDate(value.to, locale) : ''), [value?.to, locale]);
+  const fromFormatted = React.useMemo(
+    () => (value?.from ? formatDate(value.from, locale) : ''),
+    [value?.from, locale],
+  );
+  const toFormatted = React.useMemo(
+    () => (value?.to ? formatDate(value.to, locale) : ''),
+    [value?.to, locale],
+  );
 
-  // Typing state
   const [fromText, setFromText] = React.useState(fromFormatted);
   const [toText, setToText] = React.useState(toFormatted);
   const fromCommittedRef = React.useRef(fromFormatted);
   const toCommittedRef = React.useRef(toFormatted);
 
-  // Sync when calendar value changes externally
   React.useEffect(() => {
     setFromText(fromFormatted);
     fromCommittedRef.current = fromFormatted;
@@ -674,7 +741,6 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     if (parsed && !isDateDisabled(parsed, calendarCtx.constraints)) {
       const currentTo = value?.to;
       if (currentTo && isBefore(currentTo, parsed)) {
-        // Auto-swap
         calendarCtx.setRangeValue({ from: startOfDay(currentTo), to: startOfDay(parsed) });
       } else {
         calendarCtx.setRangeValue({ from: startOfDay(parsed), to: currentTo as any });
@@ -691,7 +757,6 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     if (parsed && !isDateDisabled(parsed, calendarCtx.constraints)) {
       const currentFrom = value?.from;
       if (currentFrom && isBefore(parsed, currentFrom)) {
-        // Auto-swap
         calendarCtx.setRangeValue({ from: startOfDay(parsed), to: startOfDay(currentFrom) });
       } else {
         calendarCtx.setRangeValue({ from: currentFrom as any, to: startOfDay(parsed) });
@@ -701,33 +766,37 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     }
   }, [toText, locale, calendarCtx, value?.from]);
 
-  // From input handlers
-  const handleFromChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const text = e.target.value;
-    setFromText(text);
-    const parsed = parseDate(text, locale);
-    if (parsed && calendarCtx) {
-      calendarCtx.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
-    }
-  }, [locale, calendarCtx]);
+  const handleFromChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const text = e.target.value;
+      setFromText(text);
+      const parsed = parseDate(text, locale);
+      if (parsed && calendarCtx) {
+        calendarCtx.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
+      }
+    },
+    [locale, calendarCtx],
+  );
 
-  const handleFromKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      dpCtx?.focusCalendar();
-      return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      commitFrom();
-      // Advance to "to" input
-      dpCtx?.toInputRef.current?.focus();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setFromText(fromCommittedRef.current);
-      dpCtx?.close();
-    }
-  }, [commitFrom, dpCtx]);
+  const handleFromKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        dpCtx?.focusCalendar();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitFrom();
+        dpCtx?.toInputRef.current?.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        setFromText(fromCommittedRef.current);
+        dpCtx?.close();
+      }
+    },
+    [commitFrom, dpCtx],
+  );
 
   const handleFromFocus = React.useCallback(() => {
     dpCtx?.setActiveField('from');
@@ -737,32 +806,37 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     setTimeout(() => commitFrom(), 150);
   }, [commitFrom]);
 
-  // To input handlers
-  const handleToChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const text = e.target.value;
-    setToText(text);
-    const parsed = parseDate(text, locale);
-    if (parsed && calendarCtx) {
-      calendarCtx.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
-    }
-  }, [locale, calendarCtx]);
+  const handleToChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const text = e.target.value;
+      setToText(text);
+      const parsed = parseDate(text, locale);
+      if (parsed && calendarCtx) {
+        calendarCtx.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
+      }
+    },
+    [locale, calendarCtx],
+  );
 
-  const handleToKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      dpCtx?.focusCalendar();
-      return;
-    }
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      commitTo();
-      dpCtx?.close();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      setToText(toCommittedRef.current);
-      dpCtx?.close();
-    }
-  }, [commitTo, dpCtx]);
+  const handleToKeyDown = React.useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        dpCtx?.focusCalendar();
+        return;
+      }
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitTo();
+        dpCtx?.close();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        setToText(toCommittedRef.current);
+        dpCtx?.close();
+      }
+    },
+    [commitTo, dpCtx],
+  );
 
   const handleToFocus = React.useCallback(() => {
     dpCtx?.setActiveField('to');
@@ -772,17 +846,19 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     setTimeout(() => commitTo(), 150);
   }, [commitTo]);
 
-  // Calendar icon click — always restart from→to flow
-  const handleIconClick = React.useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dpCtx?.isOpen) {
-      dpCtx.close();
-    } else {
-      dpCtx?.setActiveField('from');
-      dpCtx?.focusCalendar();
-    }
-  }, [dpCtx]);
+  const handleIconClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (dpCtx?.isOpen) {
+        dpCtx.close();
+      } else {
+        dpCtx?.setActiveField('from');
+        dpCtx?.focusCalendar();
+      }
+    },
+    [dpCtx],
+  );
 
   return (
     <div
@@ -802,7 +878,9 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         aria-label={dpCtx?.labels.startDate ?? 'Start date'}
         data-typing=""
       />
-      <span className={styles.rangeSeparator} aria-hidden="true">{'\u2014'}</span>
+      <span className={styles.rangeSeparator} aria-hidden="true">
+        {'\u2014'}
+      </span>
       <InputText
         ref={dpCtx?.toInputRef as React.RefObject<HTMLInputElement>}
         value={toText}
@@ -822,15 +900,15 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         onClick={handleIconClick}
         aria-label={dpCtx?.labels.openCalendar ?? 'Open calendar'}
       >
-        <Icon name="calendar" size="sm" />
+        <span aria-hidden="true">{calendarIcon}</span>
       </Button>
     </div>
   );
 };
 
-// ============================================================================
-// Icon (kept for backwards compat / custom icon slot)
-// ============================================================================
+// =============================================================================
+// Icon (custom icon slot override)
+// =============================================================================
 
 export interface DatePickerIconProps {
   className?: string;
@@ -838,17 +916,19 @@ export interface DatePickerIconProps {
 }
 
 const DatePickerIcon: React.FC<DatePickerIconProps> = ({ className, children }) => {
+  const calendarIcon = useResolvedIcon('calendar', 16);
+
   return (
     <span className={`${styles.icon} ${className ?? ''}`}>
-      {children ?? <Icon name="calendar" size="sm" />}
+      {children ?? calendarIcon}
     </span>
   );
 };
 DatePickerIcon.displayName = 'DatePicker.Icon';
 
-// ============================================================================
+// =============================================================================
 // Portal
-// ============================================================================
+// =============================================================================
 
 export interface DatePickerPortalProps {
   children?: React.ReactNode;
@@ -860,183 +940,99 @@ const DatePickerPortal: React.FC<DatePickerPortalProps> = (props) => (
 );
 DatePickerPortal.displayName = 'DatePicker.Portal';
 
-// ============================================================================
+// =============================================================================
 // Content
-// ============================================================================
+// =============================================================================
 
 export interface DatePickerContentProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  /** Offset from trigger */
   sideOffset?: number;
+  /** Alignment relative to trigger */
   align?: 'start' | 'center' | 'end';
+  [key: string]: unknown;
 }
 
-const DatePickerContent: React.FC<DatePickerContentProps> = ({
-  children,
-  className,
-  style,
-  sideOffset = 4,
-  align = 'start',
-}) => {
-  const contentRef = React.useRef<HTMLDivElement>(null);
-  const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-  const cellsAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-  const dpCtx = React.useContext(DatePickerContext);
-  const [isAnimatingOut, setIsAnimatingOut] = React.useState(false);
+const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
+  ({ children, className, style, sideOffset = 4, align = 'start', ...rest }, forwardedRef) => {
+    const dpCtx = React.useContext(DatePickerContext);
+    const animateConfig = dpCtx?.animateConfig ?? null;
 
-  // Focus calendar content when requested
-  React.useEffect(() => {
-    if (dpCtx?.shouldFocusCalendar && contentRef.current) {
-      contentRef.current.focus();
-      dpCtx.clearFocusRequest();
-    }
-  }, [dpCtx?.shouldFocusCalendar]);
-
-  const animateConfig = dpCtx?.animateConfig ?? null;
-
-  // Animate open
-  React.useLayoutEffect(() => {
-    const el = contentRef.current;
-    if (!el) return;
-
-    // If animations are disabled or reduced motion preferred, just show content directly
-    if (!animateConfig || prefersReducedMotion()) {
-      el.style.opacity = '1';
-      el.style.transform = 'scale(1)';
-      return;
-    }
-
-    if (animRef.current) animRef.current.pause();
-    if (cellsAnimRef.current) cellsAnimRef.current.pause();
-
-    // Container: scale + opacity
-    el.style.opacity = '0';
-    el.style.transform = 'scale(0.5)';
-
-    animRef.current = animate(el, {
-      opacity: 1,
-      scale: 1,
-      ease: 'outQuart',
-      duration: 250,
+    const { contentRef, innerRef } = useLifecycleAnimate({
+      animate: animateConfig || undefined,
+      isClosing: dpCtx?.isClosing,
+      onCloseComplete: dpCtx?.onCloseComplete,
+      stagger: {
+        selector: '[role="gridcell"]',
+        config: { stagger: { delay: 15 } },
+      },
     });
 
-    // Stagger day cells (opacity only — avoid inline transform on interactive elements)
-    const cells = el.querySelectorAll('[role="gridcell"]');
-    if (cells.length) {
-      cells.forEach((cell) => {
-        (cell as HTMLElement).style.opacity = '0';
-      });
-      cellsAnimRef.current = animate(cells, {
-        opacity: 1,
-        ease: spring(springConfig),
-        delay: (_el: any, i: number) => i * 15,
-        onComplete: () => {
-          // Clean up inline styles so React can manage them
-          cells.forEach((cell) => {
-            (cell as HTMLElement).style.removeProperty('opacity');
-          });
-        },
-      });
-    }
-  }, [animateConfig]);
+    const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
-  // When isClosing becomes true
-  React.useEffect(() => {
-    if (dpCtx?.isClosing && !isAnimatingOut) {
-      setIsAnimatingOut(true);
-    }
-  }, [dpCtx?.isClosing, isAnimatingOut]);
+    // Focus calendar content when requested
+    React.useEffect(() => {
+      if (dpCtx?.shouldFocusCalendar && contentRef.current) {
+        contentRef.current.focus();
+        dpCtx.clearFocusRequest();
+      }
+    }, [dpCtx?.shouldFocusCalendar]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Animate close
-  React.useEffect(() => {
-    if (!isAnimatingOut) return;
-    const el = contentRef.current;
-    if (!el) return;
+    const handlePointerDownOutside = (e: Event) => {
+      const target = e.target as Node;
+      if (dpCtx?.anchorRef.current?.contains(target)) {
+        e.preventDefault();
+        return;
+      }
+      if (!e.defaultPrevented) dpCtx?.close();
+    };
 
-    // If animations are disabled or reduced motion preferred, close immediately
-    if (!animateConfig || prefersReducedMotion()) {
-      dpCtx?.onCloseComplete();
-      return;
-    }
+    const handleEscapeKeyDown = (e: KeyboardEvent) => {
+      if (!e.defaultPrevented) dpCtx?.close();
+    };
 
-    if (animRef.current) animRef.current.pause();
-    if (cellsAnimRef.current) cellsAnimRef.current.pause();
-
-    // Stagger cells out in reverse
-    const cells = el.querySelectorAll('[role="gridcell"]');
-    const cellCount = cells.length;
-    if (cellCount) {
-      cellsAnimRef.current = animate(cells, {
-        opacity: 0,
-        ease: 'outQuart',
-        duration: 150,
-        delay: (_el: any, i: number) => (cellCount - 1 - i) * 10,
-      });
-    }
-
-    animRef.current = animate(el, {
-      opacity: 0,
-      scale: 0.95,
-      ease: 'outQuart',
-      duration: 200,
-      delay: 50,
-      onComplete: () => dpCtx?.onCloseComplete(),
-    });
-  }, [isAnimatingOut, dpCtx, animateConfig]);
-
-  const handlePointerDownOutside = (e: Event) => {
-    // Ignore clicks on the anchor/trigger (input area)
-    const target = e.target as Node;
-    if (dpCtx?.anchorRef.current?.contains(target)) {
-      e.preventDefault();
-      return;
-    }
-    if (!e.defaultPrevented) dpCtx?.close();
-  };
-
-  const handleEscapeKeyDown = (e: KeyboardEvent) => {
-    if (!e.defaultPrevented) dpCtx?.close();
-  };
-
-  return (
-    <RadixPopover.Content
-      ref={contentRef}
-      sideOffset={sideOffset}
-      align={align}
-      className={`${styles.content} ${className ?? ''}`}
-      style={style}
-      onPointerDownOutside={handlePointerDownOutside}
-      onEscapeKeyDown={handleEscapeKeyDown}
-      onOpenAutoFocus={(e) => e.preventDefault()}
-      onCloseAutoFocus={(e) => e.preventDefault()}
-    >
-      {dpCtx?.mode === 'range' && dpCtx.activeField && (
-        <div className={styles.rangeInstruction}>
-          {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
-        </div>
-      )}
-      {children}
-      {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
-        <div className={styles.datePickerTime}>
-          <span className={styles.datePickerTimeLabel}>Time</span>
-          <TimeField
-            value={dpCtx.timeValue}
-            onValueChange={dpCtx.onTimeChange}
-            granularity="minute"
-            hourCycle={dpCtx.timeHourCycle}
-            size="sm"
-          />
-        </div>
-      )}
-    </RadixPopover.Content>
-  );
-};
+    return (
+      <RadixPopover.Content
+        {...rest}
+        ref={mergedRef}
+        sideOffset={sideOffset}
+        align={align}
+        className={`${styles.content} ${className ?? ''}`}
+        style={style}
+        onPointerDownOutside={handlePointerDownOutside}
+        onEscapeKeyDown={handleEscapeKeyDown}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        {dpCtx?.mode === 'range' && dpCtx.activeField && (
+          <div className={styles.rangeInstruction}>
+            {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
+          </div>
+        )}
+        <div ref={innerRef}>{children}</div>
+        {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
+          <div className={styles.datePickerTime}>
+            <span className={styles.datePickerTimeLabel}>Time</span>
+            <TimeField
+              value={dpCtx.timeValue}
+              onValueChange={dpCtx.onTimeChange}
+              granularity="minute"
+              hourCycle={dpCtx.timeHourCycle}
+              size="sm"
+            />
+          </div>
+        )}
+      </RadixPopover.Content>
+    );
+  },
+);
 DatePickerContent.displayName = 'DatePicker.Content';
 
-// ============================================================================
+// =============================================================================
 // Export
-// ============================================================================
+// =============================================================================
 
 export const DatePicker = {
   Root: DatePickerRoot,

@@ -1,7 +1,7 @@
-import type { AnimationPreset } from './springs';
+import type { AnimationPreset } from './easings';
 
 // Re-export for convenience
-export type { AnimationPreset } from './springs';
+export type { AnimationPreset } from './easings';
 
 /**
  * A property value with optional per-property easing
@@ -59,132 +59,73 @@ export interface StaggerConfig {
 }
 
 /**
- * Full animation configuration supporting all possible states
+ * Full animation configuration — union of all triggers and modifiers.
+ * Used internally. Components should intersect specific triggers instead.
  */
-export interface AnimateConfig {
-  // Lifecycle
-  /** Animation when element enters/mounts */
+export type AnimateConfig = LifecycleAnimate &
+  InteractionAnimate &
+  ToggleAnimate &
+  ExpandAnimate &
+  ValueAnimate &
+  LoopAnimate &
+  StaggerModifier &
+  DelayModifier;
+
+// =============================================================================
+// Core trigger types — atomic, composable
+//
+// Each trigger type maps 1:1 to an animation hook.
+// Components intersect triggers on the `animate` prop:
+//   animate?: LifecycleAnimate & InteractionAnimate
+// =============================================================================
+
+/** Mount/unmount animation */
+export interface LifecycleAnimate {
   enter?: Animation;
-  /** Animation when element exits/unmounts */
   exit?: Animation;
+}
 
-  // Interaction
-  /** Animation on mouse enter (false to disable) */
+/** User hover/press animation */
+export interface InteractionAnimate {
   hover?: Animation | false;
-  /** Animation on mouse down / active (false to disable) */
   press?: Animation | false;
+}
 
-  // Expandable content
-  /** Animation when content opens/expands */
-  open?: Animation;
-  /** Animation when content closes/collapses */
-  close?: Animation;
-
-  // Toggle state
-  /** Animation when toggled on/checked */
+/** Binary state animation (checkbox, switch) */
+export interface ToggleAnimate {
   checked?: Animation;
-  /** Animation when toggled off/unchecked */
   unchecked?: Animation;
+}
 
-  // Children
-  /** Stagger configuration for direct children */
-  stagger?: StaggerConfig;
+/** Content reveal/hide animation (accordion, collapsible) */
+export interface ExpandAnimate {
+  open?: Animation;
+  close?: Animation;
+}
+
+/** Continuous value change animation (progress bar) */
+export interface ValueAnimate {
+  value?: Animation;
+}
+
+/** Continuous ambient animation (spinner, skeleton) */
+export interface LoopAnimate {
+  loop?: Animation;
 }
 
 // =============================================================================
-// Component-specific animation types
+// Modifiers — mix into any trigger type
 // =============================================================================
 
-/**
- * Animation config for interactive elements (Button, Link, etc)
- */
-export type ElementAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'hover' | 'press'
->;
+/** Sequenced children modifier */
+export interface StaggerModifier {
+  stagger?: StaggerConfig;
+}
 
-/** @deprecated Use ElementAnimate instead */
-export type InteractiveAnimate = ElementAnimate;
-
-/**
- * Animation config for expandable content (Accordion, Collapsible, etc)
- */
-export type ContentAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'open' | 'close' | 'stagger'
->;
-
-/** @deprecated Use ContentAnimate instead */
-export type ExpandableAnimate = ContentAnimate;
-
-/**
- * Animation config for toggleable elements (Checkbox, Switch, Radio)
- */
-export type IndicatorAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'press' | 'checked' | 'unchecked'
->;
-
-/** @deprecated Use IndicatorAnimate instead */
-export type ToggleableAnimate = IndicatorAnimate;
-
-/**
- * Animation config for overlay/modal content (Dialog, AlertDialog, Popover)
- */
-export type LayerAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit'
->;
-
-/** @deprecated Use LayerAnimate instead */
-export type OverlayAnimate = LayerAnimate;
-
-/**
- * Animation config for popup content (Dropdown, Select, DatePicker)
- */
-export type PopupAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'stagger'
->;
-
-/** @deprecated Use PopupAnimate instead */
-export type MenuAnimate = PopupAnimate;
-
-/**
- * Animation config for popup items
- */
-export type PopupItemAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'hover'
->;
-
-/** @deprecated Use PopupItemAnimate instead */
-export type MenuItemAnimate = PopupItemAnimate;
-
-/**
- * Animation config for list containers
- */
-export type ListAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'stagger'
->;
-
-/**
- * Animation config for list items
- */
-export type ListItemAnimate = Pick<
-  AnimateConfig,
-  'enter' | 'exit' | 'hover' | 'press'
->;
-
-/**
- * Animation config for carousel slide transitions.
- * `enter` easing drives the scroll-axis transition.
- */
-export type CarouselAnimate = Pick<
-  AnimateConfig,
-  'enter'
->;
+/** Animation delay modifier */
+export interface DelayModifier {
+  delay?: number;
+}
 
 // =============================================================================
 // Default animations (shared across components of same category)
@@ -195,7 +136,20 @@ export const defaultAnimations = {
   element: {
     hover: { scale: 1.05, easing: 'snappy' },
     press: { scale: 0.95, easing: 'snappy' },
-  } satisfies ElementAnimate,
+  } satisfies InteractionAnimate,
+
+  /** Inline dismissible elements (Alert, Toast) */
+  presence: {
+    enter: {
+      opacity: { value: [0, 1], easing: 'outQuart' },
+      scale: { value: [0.95, 1], easing: 'snappy' },
+    },
+    exit: {
+      opacity: { value: [1, 0], easing: 'outQuart' },
+      scale: { value: [1, 0.95], easing: 'outQuart' },
+      duration: 150,
+    },
+  } satisfies LifecycleAnimate,
 
   /** Dialog, AlertDialog, Popover, Sheet content */
   layer: {
@@ -208,13 +162,13 @@ export const defaultAnimations = {
       scale: { value: [1, 0.95], easing: 'outQuart' },
       duration: 150,
     },
-  } satisfies LayerAnimate,
+  } satisfies LifecycleAnimate,
 
   /** Dialog, AlertDialog backdrop */
   layerBackdrop: {
     enter: { opacity: { value: [0, 1], easing: 'outQuart' }, duration: 200 },
     exit: { opacity: { value: [1, 0], easing: 'outQuart' }, duration: 150 },
-  } satisfies LayerAnimate,
+  } satisfies LifecycleAnimate,
 
   /** Accordion, Collapsible */
   content: {
@@ -228,7 +182,7 @@ export const defaultAnimations = {
       opacity: { value: [1, 0], easing: 'outQuart' },
       duration: 300,
     },
-  } satisfies ContentAnimate,
+  } satisfies ExpandAnimate,
 
   /** Dropdown, ContextMenu, Select */
   popup: {
@@ -241,23 +195,27 @@ export const defaultAnimations = {
       scale: { value: [1, 0.95], easing: 'outQuart' },
       duration: 150,
     },
+  } satisfies LifecycleAnimate,
+
+  /** Stagger defaults for popup children */
+  popupStagger: {
     stagger: { delay: 30 },
-  } satisfies PopupAnimate,
+  } satisfies StaggerModifier,
 
   /** Carousel slide transition */
   carousel: {
     enter: {
       easing: 'outQuart',
     },
-  } satisfies CarouselAnimate,
+  } satisfies LifecycleAnimate,
 
-  /** Popup items */
+  /** Popup items — lifecycle + interaction */
   popupItem: {
     enter: { opacity: { value: [0, 1], easing: 'outQuart' } },
     hover: { scale: 1.02, easing: 'snappy' },
-  } satisfies PopupItemAnimate,
+  } satisfies LifecycleAnimate & InteractionAnimate,
 
-  /** Checkbox, Switch, Radio */
+  /** Checkbox, Switch, Radio — toggle + interaction */
   indicator: {
     press: { scale: 0.9, easing: 'snappy' },
     checked: {
@@ -269,5 +227,5 @@ export const defaultAnimations = {
       scale: { value: [1, 0.5], easing: 'outQuart' },
       duration: 150,
     },
-  } satisfies IndicatorAnimate,
+  } satisfies ToggleAnimate & InteractionAnimate,
 } as const;

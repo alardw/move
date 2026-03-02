@@ -1,15 +1,8 @@
 'use client';
-
+// Generated from FormField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
 import styles from './FormField.module.css';
-
-// ============================================================================
-// Slots
-// ============================================================================
-
-type FormFieldSlots = 'root' | 'label' | 'field' | 'description';
 
 // ============================================================================
 // Root
@@ -20,7 +13,6 @@ export interface FormFieldRootProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   labelWidth?: string;
-  sp?: SlotPropsMap<FormFieldSlots>;
 }
 
 const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivElement>({
@@ -64,7 +56,6 @@ export interface FormFieldLabelProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  sp?: SlotPropsMap<'label'>;
 }
 
 const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLDivElement>({
@@ -101,7 +92,6 @@ export interface FormFieldFieldProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  sp?: SlotPropsMap<'field'>;
 }
 
 const FormFieldField = withMoveComponent<'field', FormFieldFieldProps, HTMLDivElement>({
@@ -139,7 +129,6 @@ export interface FormFieldDescriptionProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   error?: boolean;
-  sp?: SlotPropsMap<'description'>;
 }
 
 const FormFieldDescription = withMoveComponent<'description', FormFieldDescriptionProps, HTMLDivElement>({

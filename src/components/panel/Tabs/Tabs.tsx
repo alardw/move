@@ -1,10 +1,11 @@
 'use client';
+// Generated from Tabs.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useSlidingIndicator } from '../../../animation/hooks';
+import type { SlotPropsMap } from '../../../engine';
+import { useSlidingIndicator } from '../../../animation';
 import styles from './Tabs.module.css';
 
 // =============================================================================

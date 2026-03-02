@@ -1,11 +1,13 @@
 'use client';
+// Generated from Calendar.spec.ts — shared CalendarNav
+// Provenance: original-components/calendar/_shared/CalendarNav.tsx
 
 import * as React from 'react';
 import { addMonths, formatMonth, getMonthNames } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
 import { Select } from '../../form/Select';
 import { Button } from '../../core/Button';
-import { Icon } from '../../core/Icon';
+import { Icon } from '../../../infrastructure/Icon';
 import styles from './CalendarNav.module.css';
 
 export interface CalendarNavSp {

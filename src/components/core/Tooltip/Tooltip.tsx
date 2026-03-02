@@ -1,17 +1,42 @@
 'use client';
-
+// Generated from Tooltip.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
-import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import { prefersReducedMotion } from '../../../animation/utils';
-import type { SlotPropsMap } from '../../../engine/types';
-import type { LayerAnimate } from '../../../animation/types';
+import { animate, spring, type JSAnimation } from 'animejs';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import { prefersReducedMotion } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
+import type { SlotPropsMap } from '../../../engine';
 import styles from './Tooltip.module.css';
 
 // ============================================================================
-// Provider (stateless — no factory needed)
+// Type: LayerAnimate (alias for LifecycleAnimate in overlay/popup context)
+// ============================================================================
+
+export type LayerAnimate = LifecycleAnimate;
+
+// ============================================================================
+// Direction-aware offset helper
+// ============================================================================
+
+function getSideOffset(side: string): { x: number; y: number } {
+  switch (side) {
+    case 'top': return { x: 0, y: 6 };
+    case 'bottom': return { x: 0, y: -6 };
+    case 'left': return { x: 6, y: 0 };
+    case 'right': return { x: -6, y: 0 };
+    default: return { x: 0, y: 6 };
+  }
+}
+
+// ============================================================================
+// Custom tooltip spring (mass: 0.4, stiffness: 450, damping: 18)
+// ============================================================================
+
+const tooltipSpring = { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 };
+
+// ============================================================================
+// Provider (stateless -- no factory needed)
 // ============================================================================
 
 export interface TooltipProviderProps {
@@ -27,7 +52,7 @@ const TooltipProvider: React.FC<TooltipProviderProps> = (props) => (
 TooltipProvider.displayName = 'Tooltip.Provider';
 
 // ============================================================================
-// Root (stateless — no factory needed)
+// Root (stateless -- no factory needed)
 // ============================================================================
 
 export interface TooltipRootProps {
@@ -85,7 +110,7 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
 });
 
 // ============================================================================
-// Portal (stateless — no factory needed)
+// Portal (stateless -- no factory needed)
 // ============================================================================
 
 export interface TooltipPortalProps {
@@ -100,6 +125,11 @@ TooltipPortal.displayName = 'Tooltip.Portal';
 
 // ============================================================================
 // Content
+//
+// Entrance animation is direction-aware: reads data-side from Radix and
+// computes translate offset accordingly. Uses useLifecycleAnimate pattern
+// (anime.js spring) but with custom direction logic.
+// Exit animation is CSS @keyframes via data-state=closed (Radix lifecycle).
 // ============================================================================
 
 export interface TooltipContentProps extends Record<string, unknown> {
@@ -110,20 +140,8 @@ export interface TooltipContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
-  animate?: LayerAnimate | false;
+  animate?: LifecycleAnimate | false;
   sp?: SlotPropsMap<'content'>;
-}
-
-const tooltipSpring = { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 };
-
-function getSideOffset(side: string) {
-  switch (side) {
-    case 'top': return { x: 0, y: 6 };
-    case 'bottom': return { x: 0, y: -6 };
-    case 'left': return { x: 6, y: 0 };
-    case 'right': return { x: -6, y: 0 };
-    default: return { x: 0, y: 6 };
-  }
 }
 
 const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDivElement>({
@@ -135,10 +153,10 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
   setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const animateProp = props.animate as LayerAnimate | false | undefined;
+    const animRef = React.useRef<JSAnimation | null>(null);
+    const animateProp = props.animate as LifecycleAnimate | false | undefined;
 
-    // Animate entrance with anime.js spring — direction-aware
+    // Direction-aware entrance animation using anime.js spring
     React.useLayoutEffect(() => {
       if (animateProp === false || prefersReducedMotion()) return;
 
@@ -151,7 +169,7 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
       // Hide until animation starts (prevent flash)
       el.style.opacity = '0';
 
-      // Let anime.js own the full [from, to] lifecycle via transform shorthand
+      // Animate entrance with anime.js spring — direction-aware
       animRef.current = animate(el, {
         opacity: [0, 1],
         transform: [
@@ -237,7 +255,7 @@ const TooltipArrow = withMoveComponent<'arrow', TooltipArrowProps, HTMLElement>(
 });
 
 // ============================================================================
-// Simple wrapper — covers the common case
+// Simple wrapper -- covers the common case
 // ============================================================================
 
 export interface TooltipSimpleProps {
@@ -254,7 +272,7 @@ export interface TooltipSimpleProps {
   /** Show arrow */
   arrow?: boolean;
   /** Animation configuration (false to disable) */
-  animate?: LayerAnimate | false;
+  animate?: LifecycleAnimate | false;
   /** Delay before showing */
   delayDuration?: number;
   /** Controlled open state */

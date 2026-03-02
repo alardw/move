@@ -1,3 +1,4 @@
+// Generated from Table.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Table } from './Table';
 export type {
   TableVariant,

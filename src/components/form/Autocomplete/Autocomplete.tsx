@@ -1,24 +1,42 @@
 'use client';
+// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
-import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { mergeAnimateConfig, prefersReducedMotion, useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
-import type { UseAutocompleteReturn, RegisteredItem } from './useAutocomplete';
+import type { UseAutocompleteReturn } from './useAutocomplete';
 import styles from './Autocomplete.module.css';
+
+// =============================================================================
+// Animation types
+// =============================================================================
+
+export type PopupAnimate = LifecycleAnimate & StaggerModifier;
 
 const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
 
-// ============================================================================
+const defaultAutocompleteAnimation: PopupAnimate = {
+  enter: {
+    opacity: { value: [0, 1], easing: 'outQuart' },
+    scale: { value: [0.5, 1], easing: 'outQuart' },
+  },
+  exit: {
+    opacity: { value: [1, 0], easing: 'outQuart' },
+    scale: { value: [1, 0.95], easing: 'outQuart' },
+    duration: 200,
+  },
+  stagger: { delay: 30 },
+};
+
+// =============================================================================
 // Context
-// ============================================================================
+// =============================================================================
 
 interface AutocompleteContextValue extends UseAutocompleteReturn {
   isClosing: boolean;
@@ -39,9 +57,9 @@ function useAutocompleteContext() {
 // Item-level context so ItemIndicator can read the parent Item's value
 const AutocompleteItemContext = React.createContext<{ value: string } | null>(null);
 
-// ============================================================================
+// =============================================================================
 // Root
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteRootProps {
   value?: string | string[];
@@ -62,19 +80,6 @@ export interface AutocompleteRootProps {
   filterFn?: (inputValue: string, itemValue: string, itemLabel: string) => boolean;
   children?: React.ReactNode;
 }
-
-const defaultAutocompleteAnimation: PopupAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
-  },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
-  },
-  stagger: { delay: 30 },
-};
 
 const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   animate: animateProp,
@@ -124,9 +129,9 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
 };
 AutocompleteRoot.displayName = 'Autocomplete.Root';
 
-// ============================================================================
+// =============================================================================
 // Trigger
-// ============================================================================
+// =============================================================================
 
 export type AutocompleteTriggerSize = 'sm' | 'md' | 'lg';
 export type AutocompleteTriggerVariant = 'outlined' | 'filled';
@@ -149,7 +154,7 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
   name: 'AutocompleteTrigger',
   styles,
   slots: ['trigger', 'triggerContent', 'triggerActions'] as const,
-  defaults: { size: 'md', variant: 'outlined' },
+  defaults: { size: 'md' as AutocompleteTriggerSize, variant: 'outlined' as AutocompleteTriggerVariant },
   moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -204,9 +209,9 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Input
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteInputProps extends Record<string, unknown> {
   className?: string;
@@ -247,7 +252,6 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
             ac.open();
             ac.setHighlightedIndex(0);
           } else {
-            // Skip disabled items
             let next = ac.highlightedIndex + 1;
             while (next < visibleCount && visibleItems[next]?.disabled) next++;
             if (next >= visibleCount) next = 0;
@@ -360,9 +364,9 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
   },
 });
 
-// ============================================================================
+// =============================================================================
 // TagList
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteTagListProps extends Record<string, unknown> {
   className?: string;
@@ -407,16 +411,15 @@ const AutocompleteTagList = withMoveComponent<'tagList', AutocompleteTagListProp
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Tag
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteTagProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   value: string;
-  /** Accessible label for the remove button. Default: `Remove ${value}` */
   removeLabel?: string;
   sp?: SlotPropsMap<'tag' | 'tagRemove'>;
 }
@@ -471,9 +474,9 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Icon
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteIconProps extends Record<string, unknown> {
   className?: string;
@@ -551,15 +554,14 @@ const AutocompleteIcon = withMoveComponent<'icon', AutocompleteIconProps, HTMLSp
   },
 });
 
-// ============================================================================
+// =============================================================================
 // ClearTrigger
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteClearTriggerProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  /** Accessible label for the clear button. Default: "Clear all" */
   clearLabel?: string;
   sp?: SlotPropsMap<'clearTrigger'>;
 }
@@ -605,9 +607,9 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Portal
-// ============================================================================
+// =============================================================================
 
 export interface AutocompletePortalProps {
   children?: React.ReactNode;
@@ -619,9 +621,9 @@ const AutocompletePortal: React.FC<AutocompletePortalProps> = (props) => (
 );
 AutocompletePortal.displayName = 'Autocomplete.Portal';
 
-// ============================================================================
+// =============================================================================
 // Content
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteContentProps extends Record<string, unknown> {
   className?: string;
@@ -641,11 +643,14 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
 
-    const { contentRef, innerRef } = usePopupAnimation({
+    const { contentRef, innerRef } = useLifecycleAnimate({
       animate: ac.animateConfig,
       isClosing: ac.isClosing,
       onCloseComplete: ac.onCloseComplete,
-      itemSelector: '[role="option"]',
+      stagger: ac.animateConfig ? {
+        selector: '[role="option"]',
+        config: ac.animateConfig,
+      } : undefined,
       animateHeight: true,
     });
 
@@ -653,7 +658,6 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
 
     // Intercept close events from outside clicks
     const handlePointerDownOutside = (e: Event) => {
-      // Don't close if clicking the trigger
       const target = e.target as Node;
       const trigger = (contentRef.current as HTMLElement | null)
         ?.closest('[data-radix-popper-content-wrapper]')
@@ -719,9 +723,9 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Item
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteItemProps extends Record<string, unknown> {
   className?: string;
@@ -768,7 +772,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
 
     // Scroll into view when highlighted
     React.useEffect(() => {
-      if (isHighlighted && itemRef.current) {
+      if (isHighlighted && itemRef.current && typeof itemRef.current.scrollIntoView === 'function') {
         itemRef.current.scrollIntoView({ block: 'nearest' });
       }
     }, [isHighlighted]);
@@ -845,9 +849,9 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
   },
 });
 
-// ============================================================================
+// =============================================================================
 // ItemIndicator
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteItemIndicatorProps extends Record<string, unknown> {
   className?: string;
@@ -894,9 +898,9 @@ const AutocompleteItemIndicator = withMoveComponent<'itemIndicator', Autocomplet
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Group
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteGroupProps extends Record<string, unknown> {
   className?: string;
@@ -932,9 +936,9 @@ const AutocompleteGroup = withMoveComponent<'group', AutocompleteGroupProps, HTM
   },
 });
 
-// ============================================================================
+// =============================================================================
 // GroupLabel
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteGroupLabelProps extends Record<string, unknown> {
   className?: string;
@@ -969,9 +973,9 @@ const AutocompleteGroupLabel = withMoveComponent<'groupLabel', AutocompleteGroup
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Empty
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteEmptyProps extends Record<string, unknown> {
   className?: string;
@@ -990,7 +994,6 @@ const AutocompleteEmpty = withMoveComponent<'empty', AutocompleteEmptyProps, HTM
 
     return {
       render() {
-        // Only show when not loading and no items visible
         if (ac.loading) return null;
         const visible = ac.getVisibleItems();
         if (visible.length > 0) return null;
@@ -1015,9 +1018,9 @@ const AutocompleteEmpty = withMoveComponent<'empty', AutocompleteEmptyProps, HTM
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Loading
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteLoadingProps extends Record<string, unknown> {
   className?: string;
@@ -1059,9 +1062,9 @@ const AutocompleteLoading = withMoveComponent<'loading', AutocompleteLoadingProp
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Separator
-// ============================================================================
+// =============================================================================
 
 export interface AutocompleteSeparatorProps extends Record<string, unknown> {
   className?: string;
@@ -1094,9 +1097,9 @@ const AutocompleteSeparator = withMoveComponent<'separator', AutocompleteSeparat
   },
 });
 
-// ============================================================================
+// =============================================================================
 // Helpers
-// ============================================================================
+// =============================================================================
 
 function extractTextContent(children: React.ReactNode): string {
   if (typeof children === 'string') return children;
@@ -1108,9 +1111,9 @@ function extractTextContent(children: React.ReactNode): string {
   return '';
 }
 
-// ============================================================================
+// =============================================================================
 // Export
-// ============================================================================
+// =============================================================================
 
 export const Autocomplete = {
   Root: AutocompleteRoot,

@@ -1,5 +1,6 @@
+// Generated from Collapsible.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { useCallback } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 // =============================================================================
 // Types

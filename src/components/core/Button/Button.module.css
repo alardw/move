@@ -1,20 +1,7 @@
-/*
- * Button Component
- * Component tokens are declared on .root (not :root) so they resolve
- * semantic tokens in the element's local scope — scoped ThemeProvider works.
- * Users can still override e.g. --move-button-primary-bg on a wrapper
- * to restyle buttons without affecting other primary-colored elements.
- */
+/* Generated from Button.spec.ts (schemaVersion: 6, specHash: 2082df0a) */
 
 .root {
-  /*
-   * Layout tokens use fallback pattern so parent overrides cascade in.
-   * Setting --move-button-radius on a wrapper will override the default.
-   * Size variants set the token on the element to override the fallback.
-   *
-   * Color tokens are declared on .root so they resolve semantic tokens
-   * in the element's local scope — scoped ThemeProvider works correctly.
-   */
+  /* Component tokens — resolve in local scope */
   --move-button-primary-bg: var(--move-primary);
   --move-button-primary-bg-hover: var(--move-primary-hover);
   --move-button-primary-bg-active: var(--move-primary-active);
@@ -29,6 +16,7 @@
   --move-button-danger-bg: var(--move-error);
   --move-button-danger-bg-hover: var(--move-error-hover);
   --move-button-danger-fg: var(--move-error-fg);
+
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -52,7 +40,6 @@
   transition-timing-function: var(--move-ease-default, ease-out);
   will-change: transform;
 }
-
 
 /* Primary variant (default) */
 .root[data-variant='primary'],
@@ -136,7 +123,7 @@
   box-shadow: none;
 }
 
-/* Size variants */
+/* Size: sm */
 .root[data-size='sm'] {
   --move-button-height: var(--move-control-height-sm);
   --move-button-padding-x: var(--move-spacing-sm);
@@ -144,6 +131,7 @@
   --move-button-radius: var(--move-rounded-sm);
 }
 
+/* Size: lg */
 .root[data-size='lg'] {
   --move-button-height: var(--move-control-height-lg);
   --move-button-padding-x: var(--move-spacing-lg);

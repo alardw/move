@@ -1,7 +1,4 @@
-/*
- * PinInput Component
- * Component tokens on .root so they resolve in local scope.
- */
+/* Generated from PinInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 .root {
   /* Component tokens */
@@ -86,7 +83,6 @@
   50% { opacity: 0; }
 }
 
-/* Separator dot between groups */
 .separator {
   display: flex;
   align-items: center;

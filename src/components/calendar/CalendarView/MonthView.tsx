@@ -1,7 +1,8 @@
 'use client';
+// Generated from CalendarView.spec.ts — MonthView sub-component
+// Provenance: original-components/calendar/CalendarView/MonthView.tsx
 
 import * as React from 'react';
-import { Popover as RadixPopover } from 'radix-ui';
 import {
   getMonthGrid,
   getWeekDayNames,
@@ -53,7 +54,7 @@ export function MonthView({
   );
 
   return (
-    <div className={styles.monthView}>
+    <div className={styles.monthView} data-testid="month-view">
       <div className={styles.weekHeader}>
         {weekDayNames.map((name, i) => (
           <div key={i} className={styles.weekHeaderCell}>
@@ -98,39 +99,12 @@ export function MonthView({
                     />
                   ))}
                   {overflowCount > 0 && (
-                    <RadixPopover.Root>
-                      <RadixPopover.Trigger asChild>
-                        <button
-                          className={styles.moreButton}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {moreLabel(overflowCount)}
-                        </button>
-                      </RadixPopover.Trigger>
-                      <RadixPopover.Portal>
-                        <RadixPopover.Content sideOffset={4} align="start">
-                          <div className={styles.morePopover}>
-                            <div className={styles.morePopoverTitle}>
-                              {formatDate(day, locale, {
-                                weekday: 'long',
-                                month: 'long',
-                                day: 'numeric',
-                              })}
-                            </div>
-                            {dayEvts.map((evt) => (
-                              <EventSlot
-                                key={evt.id}
-                                event={evt}
-                                locale={locale}
-                                view="month"
-                                renderEvent={renderEvent}
-                                onClick={onEventClick}
-                              />
-                            ))}
-                          </div>
-                        </RadixPopover.Content>
-                      </RadixPopover.Portal>
-                    </RadixPopover.Root>
+                    <button
+                      className={styles.moreButton}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {moreLabel(overflowCount)}
+                    </button>
                   )}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 // Core utilities
-export { springs, easings, getEase, isSpring, DEFAULT_DURATION } from './springs';
-export type { SpringParams, SpringPreset, Easing, AnimationPreset } from './springs';
+export { springs, easings, getEase, isSpring, DEFAULT_DURATION } from './easings';
+export type { SpringParams, SpringPreset, Easing, AnimationPreset } from './easings';
 
 // Animation utilities
 export {
@@ -12,32 +12,60 @@ export {
   getInitialStyles,
 } from './utils';
 
-// Hooks
-export { useAnimateConfig, useInteractiveAnimate } from './useAnimateConfig';
-export type { UseAnimateConfigOptions, UseAnimateConfigReturn } from './useAnimateConfig';
+// Base hook (internal)
+export { useAnimateConfig } from './utils';
+export type { UseAnimateConfigOptions, UseAnimateConfigReturn } from './utils';
 
-export { useToggleAnimation, useExpandAnimation, useSlidingIndicator, useCarouselAnimation, usePopupAnimation, useLayerAnimation } from './hooks';
+// 1:1 trigger hooks
+export {
+  useLifecycleAnimate,
+  useInteractionAnimate,
+  useToggleAnimate,
+  useExpandAnimate,
+  useValueAnimate,
+  useLoopAnimate,
+} from './triggers';
+export type {
+  UseLifecycleAnimateOptions,
+  UseLifecycleAnimateReturn,
+  UseToggleAnimateOptions,
+  UseToggleAnimateReturn,
+  UseExpandAnimateOptions,
+  UseExpandAnimateReturn,
+  UseValueAnimateOptions,
+  UseValueAnimateReturn,
+  UseLoopAnimateOptions,
+  UseLoopAnimateReturn,
+} from './triggers';
+
+// Utility hooks (not triggers)
+export { usePositionTracker, useSlidingIndicator } from './utils';
+export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingIndicatorOptions, UseSlidingIndicatorReturn } from './utils';
+
+// Legacy hook names (original-components compatibility)
+export { useInteractiveAnimate, useInteractionAnimate as useInteractionAnimate_ } from './utils';
+export {
+  useToggleAnimation,
+  useExpandAnimation,
+} from './triggers';
 export type {
   UseToggleAnimationOptions,
   UseToggleAnimationReturn,
   UseExpandAnimationOptions,
   UseExpandAnimationReturn,
-  UseSlidingIndicatorOptions,
-  UseSlidingIndicatorReturn,
-  UseCarouselAnimationOptions,
-  UseCarouselAnimationReturn,
-  UsePopupAnimationOptions,
-  UsePopupAnimationReturn,
-  UseLayerAnimationOptions,
-  UseLayerAnimationReturn,
-} from './hooks';
+} from './triggers';
+
+// Legacy popup/layer — now useLifecycleAnimate, but kept for original-components
+// Original-components that import these will need migration
+export { useLifecycleAnimate as usePopupAnimation } from './triggers';
+export { useLifecycleAnimate as useLayerAnimation } from './triggers';
 
 // Presence system
-export { Presence } from './Presence';
-export type { PresenceProps } from './Presence';
+export { Presence } from './presence/Presence';
+export type { PresenceProps } from './presence/Presence';
 
-export { usePresence, useIsPresent } from './PresenceContext';
-export type { PresenceContextValue } from './PresenceContext';
+export { usePresence, useIsPresent } from './presence/PresenceContext';
+export type { PresenceContextValue } from './presence/PresenceContext';
 
 // Animation config types
 export type {
@@ -46,23 +74,16 @@ export type {
   AnimationProperties,
   AnimateConfig,
   StaggerConfig,
-  // Component-specific types (new names)
-  ElementAnimate,
-  ContentAnimate,
-  IndicatorAnimate,
-  LayerAnimate,
-  PopupAnimate,
-  PopupItemAnimate,
-  ListAnimate,
-  ListItemAnimate,
-  CarouselAnimate,
-  // Deprecated aliases
-  InteractiveAnimate,
-  ExpandableAnimate,
-  ToggleableAnimate,
-  OverlayAnimate,
-  MenuAnimate,
-  MenuItemAnimate,
+  // Core trigger types
+  LifecycleAnimate,
+  InteractionAnimate,
+  ToggleAnimate,
+  ExpandAnimate,
+  ValueAnimate,
+  LoopAnimate,
+  // Modifiers
+  StaggerModifier,
+  DelayModifier,
 } from './types';
 
 export { defaultAnimations } from './types';

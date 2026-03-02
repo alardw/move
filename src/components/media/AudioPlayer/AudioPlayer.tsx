@@ -1,10 +1,10 @@
 'use client';
-
+// Generated from AudioPlayer.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../core/Button';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
 import { useAudioPlayer } from './useAudioPlayer';

@@ -100,10 +100,6 @@ export const Loader = withMoveComponent<
       for (let i = 0; i < 3; i++) {
         const dot = dots[i];
 
-        // Single progress value 0→1 with custom mapping:
-        // - Squish resolves quickly in the first 30% of the animation
-        // - Vertical bounce spans the full duration
-        // - out(2) easing = fast off the ground, slow at the top (natural gravity)
         const dp = { t: 0 };
         anims.push(animate(dp, {
           t: [0, 1],

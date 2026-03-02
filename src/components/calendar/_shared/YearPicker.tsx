@@ -1,4 +1,6 @@
 'use client';
+// Generated from Calendar.spec.ts — shared YearPicker
+// Provenance: original-components/calendar/_shared/YearPicker.tsx
 
 import * as React from 'react';
 import styles from './YearPicker.module.css';

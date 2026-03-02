@@ -1,7 +1,4 @@
-/*
- * NumberInput Component
- * Mirrors InputText token pattern with --move-numberinput-* namespace.
- */
+/* Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 .root {
   /* Component tokens */
@@ -45,7 +42,6 @@
   outline-offset: 0px;
 }
 
-/* Input */
 .input {
   all: unset;
   flex: 1;
@@ -60,7 +56,6 @@
   color: var(--move-numberinput-placeholder);
 }
 
-/* Left icon */
 .iconLeft {
   display: flex;
   align-items: center;
@@ -70,7 +65,6 @@
   pointer-events: none;
 }
 
-/* Controls (stepper buttons) */
 .controls {
   display: flex;
   flex-direction: column;

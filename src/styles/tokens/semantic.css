@@ -34,10 +34,10 @@
   /* ============================================
    * Color - Primary (brand)
    * ============================================ */
-  --move-primary: var(--move-violet-600);
-  --move-primary-hover: var(--move-violet-500);
-  --move-primary-active: var(--move-violet-700);
-  --move-primary-subtle: var(--move-violet-950);
+  --move-primary: var(--move-sage-600);
+  --move-primary-hover: var(--move-sage-500);
+  --move-primary-active: var(--move-sage-700);
+  --move-primary-subtle: var(--move-sage-950);
   --move-primary-fg: var(--move-white);
 
   /* ============================================
@@ -89,7 +89,7 @@
   /* ============================================
    * Focus Ring
    * ============================================ */
-  --move-focus-ring-color: var(--move-violet-500);
+  --move-focus-ring-color: var(--move-sage-500);
   --move-focus-ring-width: 2px;
   --move-focus-ring-offset: 2px;
   --move-focus-ring: var(--move-focus-ring-width) solid var(--move-focus-ring-color);

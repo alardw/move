@@ -1,12 +1,13 @@
 'use client';
+// Generated from ColorInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
+import type { SlotPropsMap } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useLifecycleAnimate } from '../../../animation';
+import type { LifecycleAnimate } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
 import { parseColor, formatColor, isValidColor } from '../ColorPicker/colorUtils';
@@ -59,8 +60,8 @@ export interface ColorInputProps extends Record<string, unknown> {
 
 const ICON_SIZE_MAP: Record<string, number> = { sm: 14, md: 16, lg: 18 };
 
-// Stable reference for popup animation config (avoids re-triggering effects)
-const POPUP_ANIMATION: PopupAnimate = {};
+// Stable reference for lifecycle animation config
+const POPUP_ANIMATION: LifecycleAnimate = {};
 
 // ============================================================================
 // EyeDropper type
@@ -101,7 +102,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     const [inputText, setInputText] = React.useState('');
     const [isInputFocused, setIsInputFocused] = React.useState(false);
 
-    // Close with exit animation (same pattern as Dropdown)
+    // Close with exit animation
     const close = React.useCallback(() => {
       setIsClosing(true);
     }, []);
@@ -115,11 +116,10 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       if (newOpen) {
         setOpen(true);
       }
-      // Ignore close from Radix — we coordinate via close()
     }, []);
 
-    // Popup animation (same hook as Dropdown/Select)
-    const { contentRef, innerRef } = usePopupAnimation({
+    // Lifecycle animation for popup content
+    const { contentRef, innerRef } = useLifecycleAnimate({
       animate: (open || isClosing) ? POPUP_ANIMATION : null,
       isClosing,
       onCloseComplete: handleCloseComplete,
@@ -180,7 +180,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       }
     }, [open]);
 
-    // Swatch click toggles popover (close triggers exit animation)
+    // Swatch click toggles popover
     const handleSwatchClick = React.useCallback(() => {
       if (props.disabled || props.readOnly) return;
       if (open && !isClosing) {
@@ -190,9 +190,8 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       }
     }, [props.disabled, props.readOnly, open, isClosing, close]);
 
-    // Dismiss handlers — intercept to trigger exit animation
+    // Dismiss handlers
     const handlePointerDownOutside = React.useCallback((e: any) => {
-      // If click was inside the root (swatch/input area), let handleSwatchClick deal with it
       const target = e.detail?.originalEvent?.target;
       if (target && internalRef.current?.contains(target as Node)) {
         e.preventDefault();
@@ -266,7 +265,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                 {...attrs}
                 {...rootSpRest}
                 ref={ref}
-                className={cx('root', rootSpClass as string | undefined)}
+                className={cx('root', props.className as string | undefined, rootSpClass as string | undefined)}
                 style={{
                   width,
                   ...(props.style as React.CSSProperties),

@@ -1,5 +1,5 @@
 'use client';
-
+// Generated from Code.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 
 export type HighlightResult = React.ReactNode | string;
@@ -39,7 +39,7 @@ export function useCodeHighlighter() {
 /**
  * Provider that supplies a syntax highlighter to all Code components in the tree.
  *
- * The highlighter is a simple function you write — move doesn't know or care
+ * The highlighter is a simple function you write -- move doesn't know or care
  * which syntax highlighting library you use.
  *
  * @example

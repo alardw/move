@@ -1,9 +1,8 @@
 /*
  * Move Design System - Core CSS
- * Import this file to enable tokens, lighting, materials, and shadows
+ * Import this file to enable tokens, surfaces, and shadows
  */
 
 @import './tokens/index.css';
-@import './visual/lighting.css';
-@import './visual/shadows.css';
+@import './visual/surface.css';
 @import './utilities.css';

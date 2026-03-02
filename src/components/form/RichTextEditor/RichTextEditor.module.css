@@ -1,8 +1,4 @@
-/*
- * RichTextEditor Component
- * Engine-agnostic rich text editor chrome.
- * 5 slot classes: toolbar, controlGroup, control, separator, content
- */
+/* Generated from RichTextEditor.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 /* =========================================================================
  * Root — wrapper with tokens, variant, size

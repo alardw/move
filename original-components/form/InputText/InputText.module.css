@@ -1,0 +1,141 @@
+/*
+ * InputText Component
+ * Component tokens on .root so they resolve in local scope.
+ */
+
+.root {
+  /* Component tokens */
+  --move-input-bg: var(--move-bg-subtle);
+  --move-input-border: var(--move-border-base);
+  --move-input-border-hover: var(--move-border-emphasis);
+  --move-input-border-focus: var(--move-primary);
+  --move-input-radius: var(--move-rounded-md);
+  --move-input-padding-x: var(--move-spacing-sm);
+  --move-input-padding-y: var(--move-spacing-xs);
+  --move-input-font-size: inherit;
+  --move-input-fg: var(--move-fg-base);
+  --move-input-placeholder: var(--move-fg-muted);
+  --move-input-height: var(--move-control-height-md);
+  --move-input-icon-color: var(--move-fg-muted);
+  --move-input-icon-gap: var(--move-spacing-sm);
+
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-input-icon-gap);
+  width: 100%;
+  height: var(--move-input-height);
+  padding: var(--move-input-padding-y) var(--move-input-padding-x);
+  background-color: var(--move-input-bg);
+  border: 1px solid var(--move-input-border);
+  border-radius: var(--move-input-radius);
+  transition:
+    border-color var(--move-transition-fast) var(--move-ease-default),
+    box-shadow var(--move-transition-fast) var(--move-ease-default);
+}
+
+.root:hover:not([data-disabled]):not([data-invalid]) {
+  border-color: var(--move-input-border-hover);
+}
+
+.root:focus-within {
+  border-color: var(--move-input-border-focus);
+  outline: var(--move-focus-ring);
+  outline-offset: 0px;
+}
+
+.input {
+  all: unset;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  font-family: var(--move-font-body);
+  font-size: var(--move-input-font-size);
+  color: var(--move-input-fg);
+}
+
+.input::placeholder {
+  color: var(--move-input-placeholder);
+}
+
+.iconLeft,
+.iconRight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--move-input-icon-color);
+  pointer-events: none;
+}
+
+/* Sizes */
+.root[data-size='sm'] {
+  --move-input-height: var(--move-control-height-sm);
+  --move-input-font-size: var(--move-size-xs);
+  --move-input-padding-x: var(--move-spacing-xs);
+  --move-input-icon-gap: var(--move-spacing-xs);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  /* defaults above */
+}
+
+.root[data-size='lg'] {
+  --move-input-height: var(--move-control-height-lg);
+  --move-input-font-size: var(--move-size-base);
+  --move-input-padding-x: var(--move-spacing-md);
+}
+
+/* Variants */
+.root[data-variant='outlined'],
+.root:not([data-variant]) {
+  /* default — outlined, styles above */
+}
+
+.root[data-variant='filled'] {
+  --move-input-bg: var(--move-bg-muted);
+  --move-input-border: transparent;
+}
+
+.root[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
+  --move-input-border: var(--move-border-base);
+}
+
+.root[data-variant='filled']:focus-within {
+  --move-input-border: var(--move-input-border-focus);
+}
+
+/* Invalid */
+.root[data-invalid] {
+  --move-input-border: var(--move-error);
+}
+
+.root[data-invalid]:focus-within {
+  border-color: var(--move-error);
+  outline: var(--move-focus-ring-width) solid var(--move-error);
+  outline-offset: 0px;
+}
+
+/* Read-only */
+.root[data-readonly] {
+  cursor: default;
+}
+
+.root[data-readonly]:hover:not([data-invalid]) {
+  border-color: var(--move-input-border);
+}
+
+.root[data-readonly] .input {
+  cursor: default;
+}
+
+/* Disabled */
+.root[data-disabled] {
+  opacity: var(--move-disabled-opacity);
+  cursor: not-allowed;
+}
+
+.root[data-disabled] .input {
+  cursor: not-allowed;
+}

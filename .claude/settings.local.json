@@ -131,7 +131,14 @@
       "WebFetch(domain:viclafouch.github.io)",
       "Bash(npx storybook:*)",
       "Bash(npx eslint:*)",
-      "Bash(npm info:*)"
+      "Bash(npm info:*)",
+      "Bash(npm run:*)",
+      "Bash(mv hooks:*)",
+      "Bash(npx tsx:*)",
+      "Bash(npx vitest:*)",
+      "Bash(npm view:*)",
+      "Bash(mkdir:*)",
+      "Bash(do echo:*)"
     ]
   }
 }

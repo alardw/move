@@ -1,9 +1,10 @@
 'use client';
+// Generated from RichTextEditor.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import { useControlledState } from '../../../engine/useControlledState';
-import type { SlotPropsMap } from '../../../engine/types';
+import { useControlledState } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine';
 import { Prose } from '../../core/Prose/Prose';
 import styles from './RichTextEditor.module.css';
 

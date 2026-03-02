@@ -1,8 +1,4 @@
-/*
- * Autocomplete Component
- * A searchable dropdown with single/multi-value support.
- * Trigger mirrors InputText, content mirrors Select.
- */
+/* Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 /* =========================================================================
  * Trigger — mirrors InputText
@@ -16,7 +12,6 @@
   --move-autocomplete-trigger-radius: var(--move-rounded-md);
   --move-autocomplete-trigger-padding-x: var(--move-spacing-sm);
   --move-autocomplete-trigger-padding-y: var(--move-spacing-xs);
-  --move-autocomplete-trigger-font-size: inherit;
   --move-autocomplete-trigger-fg: var(--move-fg-base);
   --move-autocomplete-trigger-height: var(--move-control-height-md);
   --move-autocomplete-trigger-min-height: var(--move-autocomplete-trigger-height);
@@ -32,7 +27,7 @@
   border: 1px solid var(--move-autocomplete-trigger-border);
   border-radius: var(--move-autocomplete-trigger-radius);
   font-family: var(--move-font-body);
-  font-size: var(--move-autocomplete-trigger-font-size);
+  font-size: var(--move-autocomplete-trigger-font-size, inherit);
   color: var(--move-autocomplete-trigger-fg);
   cursor: text;
   transition:
@@ -141,7 +136,7 @@
   min-width: 4rem;
   padding: var(--move-spacing-2xs) 0;
   font-family: var(--move-font-body);
-  font-size: var(--move-autocomplete-trigger-font-size);
+  font-size: var(--move-autocomplete-trigger-font-size, inherit);
   color: var(--move-autocomplete-trigger-fg);
 }
 
@@ -263,6 +258,7 @@
   box-shadow: var(--move-autocomplete-content-shadow);
   padding: var(--move-autocomplete-content-padding);
   z-index: var(--move-layer-dropdown);
+  font-family: var(--move-font-body);
 }
 
 .content:focus {

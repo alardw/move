@@ -1,9 +1,9 @@
 'use client';
-
+// Generated from EmptyState.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { Icon } from '../../core/Icon';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './EmptyState.module.css';
 
 // =============================================================================
@@ -12,10 +12,6 @@ import styles from './EmptyState.module.css';
 
 export type EmptyStateSize = 'sm' | 'md' | 'lg';
 type EmptyStateSlots = 'root' | 'icon' | 'title' | 'description' | 'action';
-
-// =============================================================================
-// EmptyState
-// =============================================================================
 
 export interface EmptyStateProps extends Record<string, unknown> {
   icon?: string;
@@ -29,14 +25,33 @@ export interface EmptyStateProps extends Record<string, unknown> {
   sp?: SlotPropsMap<EmptyStateSlots>;
 }
 
+// =============================================================================
+// Icon size mapping
+// =============================================================================
+
+const ICON_SIZE_MAP: Record<EmptyStateSize, number> = {
+  sm: 32,
+  md: 44,
+  lg: 56,
+};
+
+// =============================================================================
+// EmptyState
+// =============================================================================
+
 export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HTMLDivElement>({
   name: 'EmptyState',
   styles,
   slots: ['root', 'icon', 'title', 'description', 'action'] as const,
-  defaults: { size: 'md' },
+  defaults: { size: 'md' as EmptyStateSize },
   moveProps: ['icon', 'title', 'description', 'action', 'size'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const size = props.size as EmptyStateSize;
+    const iconName = props.icon as string | undefined;
+    const iconSize = ICON_SIZE_MAP[size];
+    const resolvedIcon = useResolvedIcon(iconName || '', iconSize);
+
     return {
       render() {
         const rootSp = sp('root');
@@ -54,15 +69,12 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
         const actionSp = sp('action');
         const { className: actionSpClass, style: actionSpStyle, ...actionSpRest } = actionSp as Record<string, unknown>;
 
-        const iconName = props.icon as string | undefined;
-        const iconSize = props.size === 'sm' ? 32 : props.size === 'lg' ? 56 : 44;
-
         return (
           <div
             {...attrs}
             {...rootSpRest}
             ref={ref}
-            data-size={props.size}
+            data-size={size}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
           >
@@ -73,7 +85,7 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
                 style={iconSpStyle as React.CSSProperties}
                 aria-hidden="true"
               >
-                <Icon name={iconName} size={iconSize} />
+                {resolvedIcon}
               </span>
             )}
 

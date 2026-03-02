@@ -5,9 +5,8 @@ import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
 import { animate as animeAnimate } from 'animejs';
 import { Presence, usePresence, toAnimeParams, toInstantParams, prefersReducedMotion } from '../../../animation';
-import type { Animation } from '../../../animation';
-import type { LayerAnimate } from '../../../animation/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import type { Animation, LifecycleAnimate } from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon/useResolvedIcon';
 import {
   useToastStore,
   removeToast,
@@ -22,9 +21,12 @@ import styles from './Toast.module.css';
 
 export interface ToastViewportProps extends Record<string, unknown> {
   position?: ToastPosition;
-  animate?: LayerAnimate | false;
+  animate?: LifecycleAnimate | false;
   closeLabel?: string;
 }
+
+export type { ToastState, ToastPosition, ToastVariant, ToastOptions } from './store';
+export { toast } from './store';
 
 // =============================================================================
 // Animation context — passed from Viewport to ToastItem
@@ -32,7 +34,7 @@ export interface ToastViewportProps extends Record<string, unknown> {
 
 // undefined = use defaults (normal behavior)
 // null = animations disabled (animate={false})
-const ToastAnimateContext = React.createContext<LayerAnimate | null | undefined>(undefined);
+const ToastAnimateContext = React.createContext<LifecycleAnimate | null | undefined>(undefined);
 const ToastCloseLabelContext = React.createContext('Close notification');
 
 // =============================================================================
@@ -97,7 +99,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
   const closeLabel = React.useContext(ToastCloseLabelContext);
   const closeIcon = useResolvedIcon('x', 14);
 
-  // Enter: expand height → slide in
+  // Enter: expand height -> slide in
   React.useEffect(() => {
     const wrapper = wrapperRef.current;
     const item = itemRef.current;
@@ -135,7 +137,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
     });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Exit: fade out + collapse height in parallel → safeToRemove
+  // Exit: fade out + collapse height in parallel -> safeToRemove
   React.useEffect(() => {
     if (isPresent || hasAnimatedExit.current) return;
     hasAnimatedExit.current = true;
@@ -267,12 +269,12 @@ const ToastViewport = withMoveComponent<
     const allToasts = useToastStore();
 
     // Resolve animate prop:
-    // - false → null (animations disabled)
-    // - LayerAnimate → use custom config
-    // - undefined → use defaults
+    // - false -> null (animations disabled)
+    // - LifecycleAnimate -> use custom config
+    // - undefined -> use defaults
     const animateConfig = props.animate === false
       ? null
-      : (props.animate as LayerAnimate | undefined) ?? undefined;
+      : (props.animate as LifecycleAnimate | undefined) ?? undefined;
 
     // Group toasts by position (max enforced by the store on add)
     const grouped = React.useMemo(() => {

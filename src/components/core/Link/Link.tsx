@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+// Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import styles from './Link.module.css';
@@ -24,8 +23,8 @@ export const Link = withMoveComponent<'root', LinkProps, HTMLAnchorElement>({
   name: 'Link',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'default', underline: 'hover', asChild: false },
-  moveProps: ['variant', 'underline', 'size', 'external', 'asChild'],
+  defaults: { variant: 'default' as LinkVariant, underline: 'hover' as LinkUnderline, asChild: false },
+  moveProps: ['size', 'external'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {

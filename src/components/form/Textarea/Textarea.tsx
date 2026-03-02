@@ -1,19 +1,11 @@
 'use client';
-
+// Generated from Textarea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
+import { withMoveComponent, useMergedRef } from '../../../engine';
 import styles from './Textarea.module.css';
-
-// =============================================================================
-// Textarea
-// =============================================================================
 
 export type TextareaVariant = 'outlined' | 'filled';
 export type TextareaSize = 'sm' | 'md' | 'lg';
-
-type TextareaSlots = 'root' | 'textarea';
 
 export interface TextareaProps extends Record<string, unknown> {
   variant?: TextareaVariant;
@@ -25,8 +17,6 @@ export interface TextareaProps extends Record<string, unknown> {
   rows?: number;
   resize?: 'none' | 'vertical' | 'horizontal' | 'both';
   width?: React.CSSProperties['width'];
-  className?: string;
-  style?: React.CSSProperties;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
@@ -36,18 +26,19 @@ export interface TextareaProps extends Record<string, unknown> {
   id?: string;
   required?: boolean;
   autoFocus?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
   onChange?: React.ChangeEventHandler<HTMLTextAreaElement>;
   onFocus?: React.FocusEventHandler<HTMLTextAreaElement>;
   onBlur?: React.FocusEventHandler<HTMLTextAreaElement>;
   onKeyDown?: React.KeyboardEventHandler<HTMLTextAreaElement>;
-  sp?: SlotPropsMap<TextareaSlots>;
 }
 
-export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLTextAreaElement>({
+export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HTMLTextAreaElement>({
   name: 'Textarea',
   styles,
   slots: ['root', 'textarea'] as const,
-  defaults: { variant: 'outlined', size: 'md', rows: 3, resize: 'vertical' },
+  defaults: { variant: 'outlined' as TextareaVariant, size: 'md' as TextareaSize, rows: 3, resize: 'vertical' },
   moveProps: ['variant', 'size', 'invalid', 'autoSize', 'minRows', 'maxRows', 'rows', 'resize', 'width'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -58,7 +49,6 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
       const el = textareaRef.current;
       if (!el || !props.autoSize) return;
 
-      // Reset to get accurate scrollHeight
       el.style.height = 'auto';
 
       const computed = getComputedStyle(el);
@@ -80,7 +70,6 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
       el.style.height = `${height}px`;
     }, [props.autoSize, props.minRows, props.maxRows, props.rows]);
 
-    // Adjust on mount and value changes
     React.useEffect(() => {
       adjustHeight();
     }, [adjustHeight, props.value]);
@@ -89,7 +78,6 @@ export const Textarea = withMoveComponent<TextareaSlots, TextareaProps, HTMLText
       adjustHeight();
     }, [adjustHeight]);
 
-    // Click on wrapper focuses the textarea
     const handleRootClick = () => {
       textareaRef.current?.focus();
     };

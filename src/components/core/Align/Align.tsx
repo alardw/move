@@ -1,13 +1,7 @@
 'use client';
-
-import * as React from 'react';
+// Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Align.module.css';
-
-// ============================================================================
-// Types
-// ============================================================================
 
 export type AlignGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
 export type AlignVertical = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
@@ -15,45 +9,23 @@ export type AlignVertical = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export interface AlignProps extends Record<string, unknown> {
   gap?: AlignGap;
   align?: AlignVertical;
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
-  sp?: SlotPropsMap<'root'>;
 }
 
 export interface AlignSectionProps extends Record<string, unknown> {
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
 }
-
-// ============================================================================
-// Helpers
-// ============================================================================
-
-const GAP_MAP: Record<string, string> = {
-  none: '0',
-  xs: 'var(--move-spacing-xs)',
-  sm: 'var(--move-spacing-sm)',
-  md: 'var(--move-spacing-md)',
-  lg: 'var(--move-spacing-lg)',
-  xl: 'var(--move-spacing-xl)',
-};
-
-const ALIGN_MAP: Record<string, string> = {
-  start: 'start',
-  center: 'center',
-  end: 'end',
-  stretch: 'stretch',
-  baseline: 'baseline',
-};
-
-// ============================================================================
-// Align (Root)
-// ============================================================================
 
 const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
   name: 'Align',
   styles,
   slots: ['root'] as const,
   defaults: { gap: 'md' as AlignGap, align: 'center' as AlignVertical },
-  moveProps: ['gap', 'align'],
+  moveProps: [],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -61,21 +33,15 @@ const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        const gap = props.gap as string;
-        const align = props.align as string;
-
         return (
           <div
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('root', spClass as string | undefined)}
-            style={{
-              gap: GAP_MAP[gap] || gap,
-              alignItems: ALIGN_MAP[align] || align,
-              ...(props.style as React.CSSProperties),
-              ...(spStyle as React.CSSProperties),
-            }}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            data-gap={props.gap as string}
+            data-align={props.align as string}
           >
             {props.children}
           </div>
@@ -84,10 +50,6 @@ const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
     };
   },
 });
-
-// ============================================================================
-// Align.Start
-// ============================================================================
 
 const AlignStart = withMoveComponent<'start', AlignSectionProps, HTMLDivElement>({
   name: 'AlignStart',
@@ -106,11 +68,8 @@ const AlignStart = withMoveComponent<'start', AlignSectionProps, HTMLDivElement>
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('start', spClass as string | undefined)}
-            style={{
-              ...(props.style as React.CSSProperties),
-              ...(spStyle as React.CSSProperties),
-            }}
+            className={cx('start', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -119,10 +78,6 @@ const AlignStart = withMoveComponent<'start', AlignSectionProps, HTMLDivElement>
     };
   },
 });
-
-// ============================================================================
-// Align.Center
-// ============================================================================
 
 const AlignCenter = withMoveComponent<'center', AlignSectionProps, HTMLDivElement>({
   name: 'AlignCenter',
@@ -141,11 +96,8 @@ const AlignCenter = withMoveComponent<'center', AlignSectionProps, HTMLDivElemen
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('center', spClass as string | undefined)}
-            style={{
-              ...(props.style as React.CSSProperties),
-              ...(spStyle as React.CSSProperties),
-            }}
+            className={cx('center', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -154,10 +106,6 @@ const AlignCenter = withMoveComponent<'center', AlignSectionProps, HTMLDivElemen
     };
   },
 });
-
-// ============================================================================
-// Align.End
-// ============================================================================
 
 const AlignEnd = withMoveComponent<'end', AlignSectionProps, HTMLDivElement>({
   name: 'AlignEnd',
@@ -176,11 +124,8 @@ const AlignEnd = withMoveComponent<'end', AlignSectionProps, HTMLDivElement>({
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('end', spClass as string | undefined)}
-            style={{
-              ...(props.style as React.CSSProperties),
-              ...(spStyle as React.CSSProperties),
-            }}
+            className={cx('end', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </div>
@@ -189,10 +134,6 @@ const AlignEnd = withMoveComponent<'end', AlignSectionProps, HTMLDivElement>({
     };
   },
 });
-
-// ============================================================================
-// Export
-// ============================================================================
 
 export const Align = Object.assign(AlignRoot, {
   Start: AlignStart,

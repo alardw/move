@@ -1,5 +1,5 @@
 'use client';
-
+// Generated from Grid.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -12,19 +12,24 @@ import styles from './Grid.module.css';
 export type GridGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
 
 export interface GridProps extends Record<string, unknown> {
-  /** Equal-width columns */
+  /** Equal-width columns (shorthand for repeat(N, 1fr)) */
   cols?: number;
-  /** Equal-height rows */
+  /** Equal-height rows (shorthand for repeat(N, 1fr)) */
   rows?: number;
   /** Total columns for span-based mode (default 12) */
   columns?: number;
-  /** Auto-fit: minimum child width before wrapping */
+  /** Auto-fit: minimum child width before wrapping (e.g. "200px") */
   minChildWidth?: string;
+  /** Gap between grid items */
   gap?: GridGap;
+  /** Row gap override */
   rowGap?: GridGap;
+  /** Column gap override */
   columnGap?: GridGap;
-  /** Container width below which grid collapses to 1 column */
+  /** Container width (px) below which grid collapses to 1 column */
   collapseBelow?: string;
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'root'>;
 }
@@ -38,8 +43,10 @@ export interface GridCellProps extends Record<string, unknown> {
   offset?: number;
   /** Visual order */
   order?: number;
-  /** Self-alignment */
+  /** Self-alignment within the grid cell */
   align?: 'start' | 'center' | 'end' | 'stretch';
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'cell'>;
 }
@@ -87,7 +94,7 @@ function getGridTemplate(props: GridProps): string {
 }
 
 // ============================================================================
-// Grid
+// Grid (Root)
 // ============================================================================
 
 const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
@@ -95,7 +102,7 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
   styles,
   slots: ['root'] as const,
   defaults: { gap: 'md' as GridGap },
-  moveProps: ['cols', 'rows', 'columns', 'minChildWidth', 'gap', 'rowGap', 'columnGap', 'collapseBelow'],
+  moveProps: ['cols', 'rows', 'columns', 'minChildWidth', 'rowGap', 'columnGap', 'collapseBelow'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
@@ -134,7 +141,7 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('root', spClass as string | undefined)}
+            className={cx('root', props.className, spClass as string | undefined)}
             style={{
               '--_grid-template': getGridTemplate(props as GridProps),
               '--_grid-rows': rows ? `repeat(${rows}, 1fr)` : undefined,
@@ -180,7 +187,7 @@ const GridCell = withMoveComponent<'cell', GridCellProps, HTMLDivElement>({
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('cell', spClass as string | undefined)}
+            className={cx('cell', props.className, spClass as string | undefined)}
             style={{
               gridColumn: span
                 ? offset

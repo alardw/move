@@ -1,0 +1,114 @@
+.root {
+  /* Component tokens */
+  --move-text-color-base: var(--move-fg-base);
+  --move-text-color-muted: var(--move-fg-muted);
+  --move-text-color-subtle: var(--move-fg-subtle);
+  --move-text-color-primary: var(--move-primary);
+  --move-text-color-success: var(--move-success);
+  --move-text-color-warning: var(--move-warning);
+  --move-text-color-error: var(--move-error);
+
+  margin: 0;
+  font-family: var(--move-font-body, system-ui, sans-serif);
+  line-height: var(--move-leading-normal);
+}
+
+/* ── Size ── */
+
+.root[data-size='xs'] {
+  font-size: var(--move-text-xs);
+  line-height: var(--move-leading-normal);
+}
+
+.root[data-size='sm'] {
+  font-size: var(--move-text-sm);
+  line-height: var(--move-leading-normal);
+}
+
+.root[data-size='base'],
+.root:not([data-size]) {
+  font-size: var(--move-text-base);
+  line-height: var(--move-leading-normal);
+}
+
+.root[data-size='lg'] {
+  font-size: var(--move-text-lg);
+  line-height: var(--move-leading-relaxed);
+}
+
+.root[data-size='xl'] {
+  font-size: var(--move-text-xl);
+  line-height: var(--move-leading-relaxed);
+}
+
+/* ── Weight ── */
+
+.root[data-weight='normal'],
+.root:not([data-weight]) {
+  font-weight: var(--move-weight-normal);
+}
+
+.root[data-weight='medium'] {
+  font-weight: var(--move-weight-medium);
+}
+
+.root[data-weight='semibold'] {
+  font-weight: var(--move-weight-semibold);
+}
+
+.root[data-weight='bold'] {
+  font-weight: var(--move-weight-bold);
+}
+
+/* ── Color ── */
+
+.root[data-color='base'],
+.root:not([data-color]) {
+  color: var(--move-text-color-base);
+}
+
+.root[data-color='muted'] {
+  color: var(--move-text-color-muted);
+}
+
+.root[data-color='subtle'] {
+  color: var(--move-text-color-subtle);
+}
+
+.root[data-color='primary'] {
+  color: var(--move-text-color-primary);
+}
+
+.root[data-color='success'] {
+  color: var(--move-text-color-success);
+}
+
+.root[data-color='warning'] {
+  color: var(--move-text-color-warning);
+}
+
+.root[data-color='error'] {
+  color: var(--move-text-color-error);
+}
+
+/* ── Align ── */
+
+.root[data-align='left'] {
+  text-align: left;
+}
+
+.root[data-align='center'] {
+  text-align: center;
+}
+
+.root[data-align='right'] {
+  text-align: right;
+}
+
+/* ── Truncate ── */
+
+.root[data-truncate] {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

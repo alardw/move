@@ -1,5 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Provenance: original-components/calendar/CalendarView/useCalendarView.ts
+
+import React, { useCallback, useMemo } from 'react';
+import { useControlledState } from '../../../engine';
 import type { CalendarEvent, CalendarViewMode, RenderEvent } from '../_shared/types';
 import {
   addDays,

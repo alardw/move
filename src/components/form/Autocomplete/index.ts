@@ -1,3 +1,4 @@
+// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Autocomplete } from './Autocomplete';
 export type {
   AutocompleteRootProps,
@@ -18,11 +19,7 @@ export type {
   AutocompleteEmptyProps,
   AutocompleteLoadingProps,
   AutocompleteSeparatorProps,
+  PopupAnimate as AutocompletePopupAnimate,
 } from './Autocomplete';
-
 export { useAutocomplete } from './useAutocomplete';
-export type {
-  UseAutocompleteOptions,
-  UseAutocompleteReturn,
-  RegisteredItem,
-} from './useAutocomplete';
+export type { UseAutocompleteOptions, UseAutocompleteReturn, RegisteredItem } from './useAutocomplete';

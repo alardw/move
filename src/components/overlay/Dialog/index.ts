@@ -1,11 +1,12 @@
+// Generated from Dialog.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Dialog } from './Dialog';
 export type {
-  DialogSize,
   DialogRootProps,
   DialogTriggerProps,
   DialogPortalProps,
   DialogOverlayProps,
   DialogContentProps,
+  DialogSize,
   DialogHeaderProps,
   DialogBodyProps,
   DialogFooterProps,

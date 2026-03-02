@@ -1,9 +1,9 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
-import { useCarouselAnimation } from '../../../animation/hooks';
-import type { CarouselAnimate } from '../../../animation/types';
+import { useControlledState } from '../../../engine';
+import { useCarouselAnimation } from './useCarouselAnimation';
+import type { LifecycleAnimate } from '../../../animation';
 
 // =============================================================================
 // Types
@@ -11,6 +11,9 @@ import type { CarouselAnimate } from '../../../animation/types';
 
 export type CarouselOrientation = 'horizontal' | 'vertical';
 export type CarouselAlign = 'start' | 'center' | 'end';
+
+/** CarouselAnimate is an alias for LifecycleAnimate (enter/exit) */
+export type CarouselAnimate = LifecycleAnimate;
 
 export interface UseCarouselOptions {
   /** Controlled active page (0-indexed). */
@@ -181,8 +184,6 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
 
       const maxStartIndex = Math.max(0, slideElements.length - slidesPerView);
 
-      // Map logical pages to valid slide start indexes so the last page can still
-      // align to the last full viewport (e.g. 5 slides, 2 per view => start at 3).
       let detectedPage = 0;
       let closestPageDist = Infinity;
       for (let p = 0; p < pageCount; p++) {

@@ -1,8 +1,3 @@
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
 export { Avatar } from './Avatar';
-export type {
-  AvatarGroupProps,
-  AvatarRootProps,
-  AvatarImageProps,
-  AvatarFallbackProps,
-  AvatarSize,
-} from './Avatar';
+export type { AvatarRootProps, AvatarImageProps, AvatarFallbackProps, AvatarGroupProps, AvatarSize } from './Avatar';

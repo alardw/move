@@ -1,16 +1,17 @@
 'use client';
+// Generated from Select.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
-import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation/utils';
-import { usePopupAnimation } from '../../../animation/hooks';
-import type { PopupAnimate } from '../../../animation/types';
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import type { SlotPropsMap } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useLifecycleAnimate, mergeAnimateConfig, prefersReducedMotion } from '../../../animation';
+import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
 import styles from './Select.module.css';
+
+type PopupAnimate = LifecycleAnimate & StaggerModifier;
 
 const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
 
@@ -40,7 +41,7 @@ function useSelectContext() {
 }
 
 // ============================================================================
-// Root (stateful FC — manages value + open/close + animation context)
+// Root
 // ============================================================================
 
 export interface SelectRootProps {
@@ -103,7 +104,6 @@ const SelectRoot: React.FC<SelectRootProps> = ({
       if (!isOpenControlled) setUncontrolledOpen(true);
       onOpenChange?.(true);
     }
-    // Ignore close from Radix — we coordinate via close()
   }, [isOpenControlled, onOpenChange]);
 
   const handleCloseComplete = React.useCallback(() => {
@@ -150,7 +150,6 @@ export interface SelectTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   disabled?: boolean;
-  /** Whether the select is in an invalid state */
   invalid?: boolean;
   size?: SelectTriggerSize;
   variant?: SelectTriggerVariant;
@@ -255,11 +254,10 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
   setup({ props, ref, cx, sp, attrs }) {
     const resolvedChevron = useResolvedIcon('chevron-down', 16);
     const iconRef = React.useRef<HTMLSpanElement>(null);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+    const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
     const { isClosing, animateConfig } = useSelectContext();
 
-    // Rotate open when trigger data-state changes to 'open'
     React.useEffect(() => {
       const iconEl = iconRef.current;
       if (!iconEl) return;
@@ -274,8 +272,8 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
               if (animateConfig === null) {
                 iconEl.style.transform = 'rotate(180deg)';
               } else {
-                if (animRef.current) animRef.current.pause();
-                animRef.current = animate(iconEl, {
+                if (animRefLocal.current) animRefLocal.current.pause();
+                animRefLocal.current = animate(iconEl, {
                   rotate: 180,
                   ease: 'outQuart',
                   duration: prefersReducedMotion() ? 0 : 300,
@@ -290,7 +288,6 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
       return () => observer.disconnect();
     }, [animateConfig]);
 
-    // Rotate closed immediately when isClosing becomes true
     React.useEffect(() => {
       if (!isClosing) return;
       const iconEl = iconRef.current;
@@ -298,8 +295,8 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
       if (animateConfig === null) {
         iconEl.style.transform = 'rotate(0deg)';
       } else {
-        if (animRef.current) animRef.current.pause();
-        animRef.current = animate(iconEl, {
+        if (animRefLocal.current) animRefLocal.current.pause();
+        animRefLocal.current = animate(iconEl, {
           rotate: 0,
           ease: 'outQuart',
           duration: prefersReducedMotion() ? 0 : 300,
@@ -329,7 +326,7 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
 });
 
 // ============================================================================
-// Portal (stateless — no factory needed)
+// Portal
 // ============================================================================
 
 export interface SelectPortalProps {
@@ -367,14 +364,16 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animateConfig } = useSelectContext();
 
-    const { contentRef, innerRef } = usePopupAnimation({
-      animate: animateConfig,
+    const { contentRef, innerRef } = useLifecycleAnimate({
+      animate: animateConfig || undefined,
       isClosing,
       onCloseComplete,
-      itemSelector: '[role="menuitem"]',
+      stagger: animateConfig ? {
+        selector: '[role="menuitem"]',
+        config: animateConfig,
+      } : undefined,
       animateHeight: true,
-      onBeforeEnter: (_content, inner) => {
-        // Pre-scroll to selected item before animating
+      onBeforeEnter: (_content: HTMLElement | null, inner: HTMLElement | null) => {
         if (inner) {
           const selectedItem = inner.querySelector('[data-selected]') as HTMLElement | null;
           if (selectedItem) {
@@ -402,8 +401,6 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Intercept close events to trigger animation.
-    // No preventDefault on pointer/interact — allows native events to propagate.
     const handlePointerDownOutside = (e: Event) => {
       (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
       if (!e.defaultPrevented) close();
@@ -437,6 +434,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
+            data-surface="subtle"
           >
             <div
               ref={innerRef}
@@ -519,7 +517,6 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    // Register label so SelectValue can display it
     const displayLabel = props.label ?? props.children;
     React.useEffect(() => {
       registerLabel(props.value as string, displayLabel);

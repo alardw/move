@@ -1,9 +1,10 @@
 'use client';
+// Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useAccordion } from './useAccordion';
 import {
   toAnimeParams,
@@ -11,15 +12,17 @@ import {
   prefersReducedMotion,
   mergeAnimateConfig,
   getInitialStyles,
-} from '../../../animation/utils';
+} from '../../../animation';
 import {
   defaultAnimations,
-  type ContentAnimate,
-  type ElementAnimate,
-  type Animation,
-  type StaggerConfig,
-} from '../../../animation/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+} from '../../../animation';
+import type {
+  ExpandAnimate,
+  InteractionAnimate,
+  Animation,
+  StaggerConfig,
+} from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import acStyles from './Accordion.module.css';
 
 // ============================================================================
@@ -36,7 +39,7 @@ interface AccordionContextValue {
   isAnimatingIn: (value: string) => boolean;
   onExitComplete: (value: string) => void;
   onEnterComplete: (value: string) => void;
-  contentAnimate: ContentAnimate;
+  contentAnimate: ExpandAnimate;
   isItemActive: (value: string) => boolean;
   onHeaderClick: (value: string) => void;
   onHeaderKeyDown: (e: React.KeyboardEvent, value: string) => void;
@@ -73,7 +76,7 @@ export type AccordionVariant = 'default' | 'contained' | 'ghost';
 export interface AccordionAnimateConfig {
   enter?: Animation;
   stagger?: StaggerConfig;
-  content?: ContentAnimate;
+  content?: ExpandAnimate;
 }
 
 export interface AccordionRootProps extends Record<string, unknown> {
@@ -122,7 +125,6 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     const multiple = type === 'multiple';
     const itemIndexRef = React.useRef(0);
 
-    // Headless accordion state
     const accordion = useAccordion({
       value: controlledValue as string | string[] | undefined,
       defaultValue: defaultValue as string | string[] | undefined,
@@ -131,22 +133,19 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       onValueChange: onValueChange as ((value: string | string[]) => void) | undefined,
     });
 
-    // Animation coordination — computed synchronously during render
-    // to avoid a frame where content unmounts before animatingOut is set
     const animatingOutRef = React.useRef<Set<string>>(new Set());
     const animatingInRef = React.useRef<Set<string>>(new Set());
     const [, forceRender] = React.useState(0);
     const prevValueRef = React.useRef<string | string[] | undefined>(undefined);
 
     const config = animateProp === false
-      ? { enter: undefined, stagger: undefined, content: {} as ContentAnimate }
+      ? { enter: undefined, stagger: undefined, content: {} as ExpandAnimate }
       : mergeAnimateConfig(defaultRootAnimation, animateProp as AccordionAnimateConfig | undefined);
 
     const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
 
     React.useEffect(() => { itemIndexRef.current = 0; });
 
-    // Detect opening/closing items synchronously during render
     const prev = prevValueRef.current;
     const current = accordion.value;
     if (prev !== undefined && prev !== current) {
@@ -261,7 +260,6 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
 
     const mergedRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    // Stagger enter animation
     const initialStyles = React.useMemo(() => {
       if (!context.enterAnimation) return {};
       return getInitialStyles(context.enterAnimation);
@@ -355,11 +353,11 @@ export interface AccordionTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   icon?: React.ReactNode;
-  animate?: Pick<ElementAnimate, 'hover'> | false;
+  animate?: Pick<InteractionAnimate, 'hover'> | false;
   sp?: SlotPropsMap<'trigger' | 'icon'>;
 }
 
-const defaultTriggerAnimation: Pick<ElementAnimate, 'hover'> = {
+const defaultTriggerAnimation: Pick<InteractionAnimate, 'hover'> = {
   hover: { scale: 1.005, easing: 'snappy' },
 };
 
@@ -384,7 +382,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
 
     const config = animateProp === false
       ? { hover: false as const }
-      : mergeAnimateConfig(defaultTriggerAnimation, animateProp as Pick<ElementAnimate, 'hover'> | undefined);
+      : mergeAnimateConfig(defaultTriggerAnimation, animateProp as Pick<InteractionAnimate, 'hover'> | undefined);
 
     const handleMouseEnter = () => {
       if (!triggerRef.current || !config.hover || typeof config.hover === 'boolean') return;
@@ -407,11 +405,9 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
       triggerAnimations.set(triggerRef.current, anim);
     };
 
-    // Icon rotation — synchronised with content animation
     const isClosing = context.isAnimatingOut(itemContext.value);
     const isOpening = context.isAnimatingIn(itemContext.value);
 
-    // Set initial rotation on mount (no animation)
     React.useEffect(() => {
       const iconEl = iconRef.current;
       if (!iconEl) return;
@@ -420,7 +416,6 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Rotate closed together with content collapse
     React.useEffect(() => {
       if (!isClosing) return;
       const iconEl = iconRef.current;
@@ -435,7 +430,6 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
       });
     }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Rotate open together with content expand
     React.useEffect(() => {
       if (!isOpening) return;
       const iconEl = iconRef.current;
@@ -501,7 +495,6 @@ export interface AccordionContentProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-// Track content animations
 const contentAnimTracker = new WeakMap<HTMLElement, { height?: JSAnimation; opacity?: JSAnimation }>();
 
 const AccordionContent = withMoveComponent<'content' | 'contentInner', AccordionContentProps, HTMLDivElement>({
@@ -653,7 +646,6 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Render only when active or animating out
     const shouldRender = itemContext.isActive || isAnimatingOut;
 
     return {
@@ -696,6 +688,7 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
 // ============================================================================
 
 export const Accordion = Object.assign(AccordionRoot, {
+  Root: AccordionRoot,
   Item: AccordionItem,
   Header: AccordionHeader,
   Trigger: AccordionTrigger,

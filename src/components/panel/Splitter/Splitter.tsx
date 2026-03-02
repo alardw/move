@@ -1,8 +1,8 @@
 'use client';
-
+// Generated from Splitter.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import styles from './Splitter.module.css';
 
 // ============================================================================

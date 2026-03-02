@@ -1,5 +1,8 @@
 /* =============================================================================
    Spinner
+   SVG-based spinning indicator with CSS keyframe animations.
+   Exception to animation prohibition: continuous rotation is CSS-only (not
+   entrance/exit), so @keyframes is acceptable here.
    ============================================================================= */
 
 .root {

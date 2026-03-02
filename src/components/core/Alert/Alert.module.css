@@ -1,11 +1,7 @@
-/*
- * Alert Component
- * Matches Toast layout for icon, title, and description.
- * Component tokens on .root so they resolve in local scope.
- */
+/* Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9) */
 
 .root {
-  /* Component tokens */
+  /* Component tokens — resolve in local scope */
   --move-alert-bg: var(--move-bg-subtle);
   --move-alert-fg: var(--move-fg-base);
   --move-alert-border: var(--move-border-base);
@@ -13,7 +9,7 @@
   --move-alert-radius: var(--move-rounded-lg);
   --move-alert-padding-x: var(--move-spacing-md);
   --move-alert-padding-y: var(--move-spacing-sm);
-  --move-alert-close-size: 20px;
+  --move-alert-close-size: var(--move-space-5);
   --move-alert-close-radius: var(--move-rounded-sm);
   --move-alert-close-fg: var(--move-fg-muted);
   --move-alert-close-fg-hover: var(--move-fg-base);
@@ -53,7 +49,7 @@
   --move-alert-accent: var(--move-error);
 }
 
-/* Sizes */
+/* Size: sm */
 .root[data-size='sm'] {
   --move-alert-padding-x: var(--move-spacing-sm);
   --move-alert-padding-y: var(--move-spacing-xs);
@@ -61,36 +57,38 @@
   gap: var(--move-spacing-xs);
 }
 
+/* Size: md (default) */
 .root[data-size='md'],
 .root:not([data-size]) {
-  /* default */
+  /* default — uses root tokens */
 }
 
+/* Size: lg */
 .root[data-size='lg'] {
   --move-alert-padding-x: var(--move-spacing-lg);
   --move-alert-padding-y: var(--move-spacing-md);
   font-size: var(--move-size-base);
 }
 
-/* Icon */
+/* Icon slot */
 .icon {
   flex-shrink: 0;
   margin-top: 2px;
   color: var(--move-alert-accent);
 }
 
-/* Content */
+/* Content slot */
 .content {
   flex: 1;
   min-width: 0;
 }
 
-/* Title (matches Toast .message) */
+/* Title slot */
 .title {
   font-weight: var(--move-weight-medium);
 }
 
-/* Description (matches Toast .description) */
+/* Description slot */
 .description {
   color: var(--move-fg-muted);
   font-size: var(--move-size-xs);
@@ -102,7 +100,7 @@
   padding-top: 0;
 }
 
-/* Close button (matches Toast .closeButton) */
+/* Close button */
 .close {
   display: flex;
   align-items: center;

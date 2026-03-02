@@ -95,4 +95,3 @@
 .dot:nth-child(1) { left: 0; }
 .dot:nth-child(2) { left: calc(50% - var(--move-loader-dot-size) / 2); }
 .dot:nth-child(3) { right: 0; }
-

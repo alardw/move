@@ -1,3 +1,5 @@
+/* Generated from Tabs.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+
 /* =============================================================================
    Tabs
    ============================================================================= */
@@ -100,7 +102,6 @@
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: color var(--move-transition-normal) var(--move-ease-default), border-color var(--move-transition-normal) var(--move-ease-default);
   border-radius: 0;
 }
 

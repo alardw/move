@@ -1,0 +1,186 @@
+/* =============================================================================
+   Pagination
+   ============================================================================= */
+
+.root {
+  /* Component tokens */
+  --move-pagination-item-bg: transparent;
+  --move-pagination-item-bg-hover: var(--move-bg-muted);
+  --move-pagination-item-bg-active: var(--move-primary);
+  --move-pagination-item-fg: var(--move-fg-muted);
+  --move-pagination-item-fg-hover: var(--move-fg-base);
+  --move-pagination-item-fg-active: var(--move-primary-fg);
+  --move-pagination-item-border: var(--move-border-base);
+  --move-pagination-item-radius: var(--move-rounded-md);
+  --move-pagination-gap: var(--move-spacing-xs);
+
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-pagination-gap);
+}
+
+/* =============================================================================
+   Variant: outline
+   ============================================================================= */
+
+.root[data-variant='outline'] {
+  --move-pagination-item-bg-active: transparent;
+  --move-pagination-item-fg-active: var(--move-primary);
+}
+
+/* =============================================================================
+   Size
+   ============================================================================= */
+
+.root[data-size='sm'] {
+  --move-pagination-item-size: var(--move-control-height-sm);
+  --move-pagination-font-size: var(--move-size-xs);
+}
+
+.root[data-size='md'],
+.root:not([data-size]) {
+  --move-pagination-item-size: var(--move-control-height-md);
+  --move-pagination-font-size: var(--move-size-sm);
+}
+
+.root[data-size='lg'] {
+  --move-pagination-item-size: var(--move-control-height-lg);
+  --move-pagination-font-size: var(--move-size-base);
+}
+
+/* =============================================================================
+   Items (ul)
+   ============================================================================= */
+
+.items {
+  display: flex;
+  align-items: center;
+  gap: var(--move-pagination-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+.items li {
+  position: relative;
+  z-index: 1;
+}
+
+/* =============================================================================
+   Indicator (sliding active background)
+   ============================================================================= */
+
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: var(--move-pagination-item-bg-active);
+  border-radius: var(--move-pagination-item-radius);
+  pointer-events: none;
+  will-change: transform, width;
+  z-index: 0;
+}
+
+.root[data-variant='outline'] .indicator {
+  background-color: transparent;
+  border: 1px solid var(--move-primary);
+}
+
+/* =============================================================================
+   Item (page button)
+   ============================================================================= */
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--move-pagination-item-size);
+  height: var(--move-pagination-item-size);
+  padding: 0 var(--move-spacing-sm);
+  font-family: var(--move-font-body);
+  font-size: var(--move-pagination-font-size);
+  font-weight: var(--move-weight-medium);
+  line-height: 1;
+  color: var(--move-pagination-item-fg);
+  background-color: var(--move-pagination-item-bg);
+  border: 1px solid transparent;
+  border-radius: var(--move-pagination-item-radius);
+  cursor: pointer;
+  user-select: none;
+  transition: color 150ms, background-color 150ms;
+}
+
+.item:hover {
+  color: var(--move-pagination-item-fg-hover);
+  background-color: var(--move-pagination-item-bg-hover);
+}
+
+.item:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.item[data-state='active'] {
+  color: var(--move-pagination-item-fg-active);
+  background-color: transparent;
+  cursor: default;
+}
+
+/* =============================================================================
+   Ellipsis
+   ============================================================================= */
+
+.ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--move-pagination-item-size);
+  height: var(--move-pagination-item-size);
+  font-size: var(--move-pagination-font-size);
+  color: var(--move-fg-subtle);
+  user-select: none;
+  letter-spacing: 0.1em;
+}
+
+/* =============================================================================
+   Prev / Next triggers
+   ============================================================================= */
+
+.prev,
+.next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--move-pagination-item-size);
+  height: var(--move-pagination-item-size);
+  padding: 0 var(--move-spacing-sm);
+  font-family: var(--move-font-body);
+  font-size: var(--move-pagination-font-size);
+  color: var(--move-pagination-item-fg);
+  background-color: var(--move-pagination-item-bg);
+  border: 1px solid transparent;
+  border-radius: var(--move-pagination-item-radius);
+  cursor: pointer;
+  user-select: none;
+  transition: color 150ms, background-color 150ms;
+}
+
+.prev:hover:not(:disabled),
+.next:hover:not(:disabled) {
+  color: var(--move-pagination-item-fg-hover);
+  background-color: var(--move-pagination-item-bg-hover);
+}
+
+.prev:focus-visible,
+.next:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.prev:disabled,
+.next:disabled {
+  opacity: var(--move-disabled-opacity);
+  pointer-events: none;
+}

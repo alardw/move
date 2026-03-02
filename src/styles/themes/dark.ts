@@ -1,14 +1,18 @@
 import type { Theme } from './types';
-import { createShadowPalette } from '../visual/shadows';
+import { createThemeShadows } from '../visual/shadows';
 
-// Dark theme uses subtle light glow for elevation visibility
-const darkShadows = createShadowPalette({
-  color: '220deg 10% 80%',
-  angle: 135, // Light from top-left
-  opacity: 0.08,
-  oomph: 0.12,
-  crispy: 0.14,
-  resolution: 0,
+const darkShadows = createThemeShadows({
+  angle: 135,
+  color: '220 40% 2%',
+  oomph: 0.5,
+  crispy: 0.5,
+  surfaces: {
+    base:     { strength: 0.55 },
+    subtle:   { strength: 0.60 },
+    muted:    { strength: 0.65 },
+    emphasis: { strength: 0.70 },
+    inverse:  { color: '220 3% 90%', strength: 0.25 },
+  },
 });
 
 export const darkTheme: Theme = {
@@ -32,11 +36,11 @@ export const darkTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-600)',
     '--move-border-emphasis': 'var(--move-gray-500)',
 
-    // Primary (violet)
-    '--move-primary': 'var(--move-violet-600)',
-    '--move-primary-hover': 'var(--move-violet-500)',
-    '--move-primary-active': 'var(--move-violet-700)',
-    '--move-primary-subtle': 'var(--move-violet-950)',
+    // Primary (sage)
+    '--move-primary': 'var(--move-sage-600)',
+    '--move-primary-hover': 'var(--move-sage-500)',
+    '--move-primary-active': 'var(--move-sage-700)',
+    '--move-primary-subtle': 'var(--move-sage-950)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -70,7 +74,7 @@ export const darkTheme: Theme = {
     '--move-info-fg': 'var(--move-white)',
 
     // Focus
-    '--move-focus-ring-color': 'var(--move-violet-500)',
+    '--move-focus-ring-color': 'var(--move-sage-500)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.5)',
@@ -79,12 +83,8 @@ export const darkTheme: Theme = {
     '--move-scrollbar-thumb': 'var(--move-gray-700)',
     '--move-scrollbar-track': 'transparent',
 
-    // Shadows - subtle light glow for dark theme visibility
-    '--move-shadow-color': '220deg 10% 80%',
-    '--move-shadow-sm': darkShadows.sm,
-    '--move-shadow-md': darkShadows.md,
-    '--move-shadow-lg': darkShadows.lg,
-    '--move-shadow-xl': darkShadows.xl,
+    // Shadows — per-surface
+    ...darkShadows,
   },
   animation: {
     spring: {

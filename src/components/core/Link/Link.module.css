@@ -1,5 +1,7 @@
+/* Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+
 .root {
-  /* Component tokens */
+  /* Component tokens — resolve in local scope */
   --move-link-color-default: var(--move-primary);
   --move-link-color-default-hover: var(--move-primary-hover);
   --move-link-color-muted: var(--move-fg-muted);
@@ -13,7 +15,14 @@
   text-decoration: none;
 }
 
-/* ── Variant ── */
+/* -- Focus -- */
+
+.root:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+/* -- Variant -- */
 
 .root[data-variant='default'],
 .root:not([data-variant]) {
@@ -41,7 +50,7 @@
   color: var(--move-link-color-subtle-hover);
 }
 
-/* ── Underline ── */
+/* -- Underline -- */
 
 .root[data-underline='always'] {
   text-decoration: underline;
@@ -67,7 +76,7 @@
   text-decoration: none;
 }
 
-/* ── Size (optional) ── */
+/* -- Size (optional — only rendered when prop is provided) -- */
 
 .root[data-size='xs'] {
   font-size: var(--move-text-xs);

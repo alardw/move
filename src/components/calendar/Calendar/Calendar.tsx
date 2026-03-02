@@ -1,4 +1,6 @@
 'use client';
+// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Provenance: original-components/calendar/Calendar/Calendar.tsx
 
 import * as React from 'react';
 import { CalendarContext } from '../_shared/CalendarContext';
@@ -15,6 +17,7 @@ import type {
   RenderEvent,
 } from '../_shared/types';
 import type { CalendarLabels } from '../_shared/CalendarContext';
+import type { CalendarNavSp } from '../_shared/CalendarNav';
 import styles from './Calendar.module.css';
 
 // ============================================================================
@@ -102,7 +105,7 @@ CalendarRoot.displayName = 'Calendar.Root';
 
 export interface CalendarNavProps {
   className?: string;
-  sp?: import('../_shared/CalendarNav').CalendarNavSp;
+  sp?: CalendarNavSp;
 }
 
 const CalendarNavComponent: React.FC<CalendarNavProps> = ({ className, sp }) => {

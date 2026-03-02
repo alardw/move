@@ -1,3 +1,6 @@
+// Generated from ColorPicker.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Pure color conversion utilities — no framework dependencies
+
 // ============================================================================
 // Types
 // ============================================================================

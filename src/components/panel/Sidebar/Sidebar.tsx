@@ -4,12 +4,11 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { Slot } from 'radix-ui';
 import { animate, spring } from 'animejs';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
+import { withMoveComponent, useMergedRef } from '../../../engine';
 import { prefersReducedMotion } from '../../../animation';
-import type { LayerAnimate } from '../../../animation/types';
+import type { LifecycleAnimate } from '../../../animation';
 import { Tooltip } from '../../core/Tooltip';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useSidebar } from './useSidebar';
 import type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
 import styles from './Sidebar.module.css';
@@ -32,7 +31,7 @@ const SidebarContext = React.createContext<UseSidebarReturn | null>(null);
  * - `undefined` = use default animations
  * - `null`      = all animations disabled (animate={false})
  */
-const SidebarAnimateContext = React.createContext<LayerAnimate | null | undefined>(undefined);
+const SidebarAnimateContext = React.createContext<LifecycleAnimate | null | undefined>(undefined);
 
 export function useSidebarContext() {
   const ctx = React.useContext(SidebarContext);
@@ -49,7 +48,7 @@ export function useSidebarContext() {
 export interface SidebarProviderProps extends UseSidebarOptions {
   children?: React.ReactNode;
   /** Animation configuration. Pass `false` to disable all sidebar animations. */
-  animate?: LayerAnimate | false;
+  animate?: LifecycleAnimate | false;
 }
 
 const SidebarProvider: React.FC<SidebarProviderProps> = ({

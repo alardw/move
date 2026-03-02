@@ -1,7 +1,4 @@
-/*
- * TimeField Component
- * Component tokens on .root so they resolve in local scope.
- */
+/* Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
 
 .root {
   /* Component tokens */
@@ -64,11 +61,7 @@
 }
 
 /* ============================================
- * Width constraints — derived from base:
- *   HH:MM 24h md = 5rem
- *   +seconds = +1.5rem, +12h period = +2rem
- *   hour-only = −1.5rem
- *   sm = −0.5rem, lg = +1rem
+ * Width constraints
  * ============================================ */
 
 /* — md (default) — */
@@ -250,6 +243,7 @@
   overflow: hidden;
   will-change: height, transform;
   transform-origin: top center;
+  font-family: var(--move-font-body);
 }
 
 .dropdown:focus {

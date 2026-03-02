@@ -1,3 +1,4 @@
+// Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Pagination } from './Pagination';
 export type {
   PaginationSize,

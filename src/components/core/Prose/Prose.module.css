@@ -15,7 +15,7 @@
   line-height: var(--move-leading-relaxed);
 }
 
-/* ── Size ── */
+/* -- Size -- */
 
 .root[data-size='sm'] {
   font-size: var(--move-text-xs);
@@ -30,7 +30,7 @@
   font-size: var(--move-text-base);
 }
 
-/* ── Headings ── */
+/* -- Headings -- */
 
 .root h1,
 .root h2,
@@ -62,14 +62,14 @@
   margin-top: 0;
 }
 
-/* ── Paragraphs ── */
+/* -- Paragraphs -- */
 
 .root p {
   margin-top: 0;
   margin-bottom: 1em;
 }
 
-/* ── Links ── */
+/* -- Links -- */
 
 .root a {
   color: var(--move-prose-link);
@@ -83,7 +83,7 @@
   text-underline-offset: 0.2em;
 }
 
-/* ── Lists ── */
+/* -- Lists -- */
 
 .root ul,
 .root ol {
@@ -110,7 +110,7 @@
   margin-bottom: 0;
 }
 
-/* ── Blockquote ── */
+/* -- Blockquote -- */
 
 .root blockquote {
   margin: 0 0 1em;
@@ -125,7 +125,7 @@
   margin-bottom: 0;
 }
 
-/* ── Code (inline) ── */
+/* -- Code (inline) -- */
 
 .root code {
   font-family: var(--move-font-code, ui-monospace, monospace);
@@ -135,7 +135,7 @@
   border-radius: var(--move-rounded-md);
 }
 
-/* ── Code (block) ── */
+/* -- Code (block) -- */
 
 .root pre {
   margin: 0 0 1em;
@@ -152,7 +152,7 @@
   border-radius: 0;
 }
 
-/* ── Horizontal rule ── */
+/* -- Horizontal rule -- */
 
 .root hr {
   border: none;
@@ -160,7 +160,7 @@
   margin: 1.5em 0;
 }
 
-/* ── Table ── */
+/* -- Table -- */
 
 .root table {
   width: 100%;
@@ -181,13 +181,13 @@
   border-bottom: 1px solid var(--move-prose-border);
 }
 
-/* ── Strong / Em ── */
+/* -- Strong / Em -- */
 
 .root strong {
   font-weight: var(--move-weight-semibold);
 }
 
-/* ── Images ── */
+/* -- Images -- */
 
 .root img {
   max-width: 100%;

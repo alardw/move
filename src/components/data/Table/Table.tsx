@@ -3,20 +3,28 @@
 import * as React from 'react';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import {
   toAnimeParams,
   prefersReducedMotion,
   mergeAnimateConfig,
   getInitialStyles,
-} from '../../../animation/utils';
+} from '../../../animation';
 import type {
-  ListAnimate,
-  ListItemAnimate,
+  LifecycleAnimate,
+  InteractionAnimate,
+  StaggerModifier,
   Animation,
   StaggerConfig,
-} from '../../../animation/types';
+} from '../../../animation';
 import styles from './Table.module.css';
+
+// ============================================================================
+// Local type aliases (spec refers to these as ListAnimate / ListItemAnimate)
+// ============================================================================
+
+type ListAnimate = LifecycleAnimate & StaggerModifier;
+type ListItemAnimate = InteractionAnimate;
 
 // ============================================================================
 // Context

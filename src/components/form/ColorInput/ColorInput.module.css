@@ -1,7 +1,9 @@
+/* Generated from ColorInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+
 /*
  * ColorInput Component
  * Form input with color preview swatch that opens a ColorPicker popover.
- * 4 slot classes: root, swatch, input, content
+ * Slots: root, swatch, input, content, contentInner
  */
 
 /* =========================================================================
@@ -215,6 +217,7 @@
   border: 1px solid var(--move-border-base);
   border-radius: var(--move-rounded-lg);
   box-shadow: var(--move-shadow-lg);
+  font-family: var(--move-font-body);
 }
 
 /* Position-aware transform origin for scale animation */

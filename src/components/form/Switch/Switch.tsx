@@ -1,11 +1,10 @@
 'use client';
-
+// Generated from Switch.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Switch as RadixSwitch } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useToggleAnimation, type UseToggleAnimationReturn } from '../../../animation/hooks';
-import type { IndicatorAnimate } from '../../../animation/types';
+import { useToggleAnimation } from '../../../animation';
+import type { ToggleAnimate, UseToggleAnimationReturn } from '../../../animation';
 import styles from './Switch.module.css';
 
 // ============================================================================
@@ -32,18 +31,13 @@ export interface SwitchRootProps extends Record<string, unknown> {
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
   disabled?: boolean;
-  /** Whether the switch is in an invalid state */
   invalid?: boolean;
-  /** Optional label displayed beside the switch */
   label?: React.ReactNode;
-  /** Size of the switch */
   size?: SwitchSize;
-  /** Animation configuration */
-  animate?: IndicatorAnimate | false;
+  animate?: ToggleAnimate | false;
   required?: boolean;
   name?: string;
   value?: string;
-  sp?: SlotPropsMap<'root'>;
 }
 
 const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>({
@@ -54,7 +48,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
 
   setup({ props, ref, cx, sp, attrs }) {
     const toggleAnim = useToggleAnimation({
-      animate: props.animate as IndicatorAnimate | false | undefined,
+      animate: props.animate as ToggleAnimate | false | undefined,
       disabled: !!props.disabled,
       initialChecked: false,
       onSetup: (el) => {
@@ -127,7 +121,6 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
 export interface SwitchThumbProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
-  sp?: SlotPropsMap<'thumb'>;
 }
 
 const SwitchThumb = withMoveComponent<'thumb', SwitchThumbProps, HTMLSpanElement>({
@@ -139,7 +132,6 @@ const SwitchThumb = withMoveComponent<'thumb', SwitchThumbProps, HTMLSpanElement
     const ctx = React.useContext(SwitchContext);
     const toggleAnim = ctx?.toggleAnim;
 
-    // Merge forwarded ref with both rootRef (press target) and indicatorRef (toggle target)
     const thumbCallback = React.useCallback(
       (node: HTMLSpanElement | null) => {
         if (toggleAnim) {

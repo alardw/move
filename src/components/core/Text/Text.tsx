@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+// Generated from Text.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import styles from './Text.module.css';
 
@@ -26,7 +25,12 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
   name: 'Text',
   styles,
   slots: ['root'] as const,
-  defaults: { as: 'p', size: 'base', weight: 'normal', color: 'base' },
+  defaults: {
+    as: 'p' as TextAs,
+    size: 'base' as TextSize,
+    weight: 'normal' as TextWeight,
+    color: 'base' as TextColor,
+  },
   moveProps: ['as', 'size', 'weight', 'color', 'align', 'truncate'],
 
   setup({ props, ref, cx, sp, attrs }) {

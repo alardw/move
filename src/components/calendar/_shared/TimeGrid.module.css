@@ -1,3 +1,5 @@
+/* TimeGrid.module.css — provenance: original-components/calendar/_shared/TimeGrid.module.css */
+
 .timeGrid {
   --move-calendar-timegrid-border: var(--move-border-base);
   --move-calendar-timegrid-slot-height: 3rem;
@@ -23,8 +25,6 @@
 .timeSlot[data-first] {
   border-top: 1px solid var(--move-calendar-timegrid-border);
 }
-
-/* border-top is on the first timeSlot via [data-first] */
 
 .timeSlot[data-half-hour] {
   border-bottom-style: dashed;

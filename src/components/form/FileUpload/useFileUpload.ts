@@ -1,5 +1,6 @@
+// Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { useCallback, useRef, useState } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 // =============================================================================
 // Types
@@ -234,7 +235,6 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
   }, [setFiles]);
 
   const openFileDialog = useCallback(() => {
-    console.log('[FileUpload] openFileDialog called, disabled:', disabled, 'inputRef.current:', inputRef.current);
     if (disabled) return;
     inputRef.current?.click();
   }, [disabled]);

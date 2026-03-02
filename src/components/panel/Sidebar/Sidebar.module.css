@@ -1,5 +1,6 @@
 /*
  * Sidebar Component
+ * Provenance: original-components/panel/Sidebar/Sidebar.module.css
  * Component tokens on .root so children inherit.
  * 13 slot classes: root, header, content, footer, group, groupLabel,
  * item, itemIcon, itemLabel, itemBadge, trigger, rail, overlay

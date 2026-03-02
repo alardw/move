@@ -1,0 +1,48 @@
+.nav {
+  --move-calendar-nav-padding: var(--move-spacing-sm) var(--move-spacing-xs);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-calendar-nav-padding);
+}
+
+.navLabels {
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-xs);
+  flex: 1;
+  justify-content: center;
+}
+
+.navButton {
+  --move-calendar-nav-btn-size: 1.75rem;
+  --move-calendar-nav-btn-radius: var(--move-rounded-md);
+  --move-calendar-nav-btn-fg: var(--move-fg-muted);
+  --move-calendar-nav-btn-bg-hover: var(--move-bg-muted);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--move-calendar-nav-btn-size);
+  height: var(--move-calendar-nav-btn-size);
+  border-radius: var(--move-calendar-nav-btn-radius);
+  border: none;
+  background: transparent;
+  color: var(--move-calendar-nav-btn-fg);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.navButton:hover {
+  background-color: var(--move-calendar-nav-btn-bg-hover);
+  color: var(--move-fg-base);
+}
+
+.navButton:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}

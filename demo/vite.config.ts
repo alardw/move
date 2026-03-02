@@ -16,6 +16,9 @@ export default defineConfig({
       },
     }),
   ],
+  server: {
+    port: 6042,
+  },
   resolve: {
     dedupe: ['react', 'react-dom'],
     alias: [

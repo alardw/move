@@ -1,6 +1,8 @@
+// Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Card } from './Card';
 export type {
   CardVariant,
+  CardSize,
   CardRootProps,
   CardHeaderProps,
   CardTitleProps,
@@ -9,5 +11,4 @@ export type {
   CardFooterProps,
   CardFooterStartProps,
   CardFooterEndProps,
-  CardSize,
 } from './Card';

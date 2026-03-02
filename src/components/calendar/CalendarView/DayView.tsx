@@ -1,4 +1,6 @@
 'use client';
+// Generated from CalendarView.spec.ts — DayView sub-component
+// Provenance: original-components/calendar/CalendarView/DayView.tsx
 
 import * as React from 'react';
 import { isSameDay } from '../_shared/dateUtils';
@@ -45,7 +47,7 @@ export function DayView({
   const showAllDaySection = showAllDay || allDayEvents.length > 0;
 
   return (
-    <div className={styles.dayView}>
+    <div className={styles.dayView} data-testid="day-view">
       {showAllDaySection && (
         <div className={styles.allDaySection}>
           <span className={styles.allDayLabel}>{allDayLabel}</span>

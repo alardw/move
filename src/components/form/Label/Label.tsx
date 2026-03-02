@@ -1,40 +1,35 @@
 'use client';
-
+// Generated from Label.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Label as RadixLabel } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Label.module.css';
-
-// ============================================================================
-// Label
-// ============================================================================
 
 export type LabelSize = 'sm' | 'md' | 'lg';
 
 export interface LabelProps extends Record<string, unknown> {
-  className?: string;
-  style?: React.CSSProperties;
-  children?: React.ReactNode;
   htmlFor?: string;
   required?: boolean;
   disabled?: boolean;
   size?: LabelSize;
-  sp?: SlotPropsMap<'root' | 'asterisk'>;
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-const LabelRoot = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabelElement>({
+export const Label = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabelElement>({
   name: 'Label',
   styles,
   slots: ['root', 'asterisk'] as const,
-  moveProps: ['htmlFor', 'required', 'disabled', 'size'],
+  defaults: { size: 'md' as LabelSize },
+  moveProps: ['htmlFor', 'required', 'disabled'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
         const rootSp = sp('root');
-        const asteriskSp = sp('asterisk');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const asteriskSp = sp('asterisk');
         const { className: astSpClass, style: astSpStyle, ...astSpRest } = asteriskSp as Record<string, unknown>;
 
         return (
@@ -65,5 +60,3 @@ const LabelRoot = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabelEl
     };
   },
 });
-
-export const Label = LabelRoot;

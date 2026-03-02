@@ -1,13 +1,12 @@
 'use client';
-
+// Generated from ToggleGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractiveAnimate, useSlidingIndicator } from '../../../animation';
-import { prefersReducedMotion } from '../../../animation/utils';
-import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
+import { useInteractiveAnimate, useSlidingIndicator, prefersReducedMotion, defaultAnimations } from '../../../animation';
+import type { InteractionAnimate } from '../../../animation';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleGroup.module.css';
 
@@ -160,7 +159,7 @@ export interface ToggleGroupItemProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value: string;
   disabled?: boolean;
-  animate?: ElementAnimate | false;
+  animate?: InteractionAnimate | false;
   sp?: SlotPropsMap<'item'>;
 }
 
@@ -177,10 +176,10 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
     // Users can opt back in via the animate prop.
     const animateConfig = props.animate === false
       ? { hover: false as const, press: false as const }
-      : { hover: false as const, press: false as const, ...(props.animate as ElementAnimate || {}) };
+      : { hover: false as const, press: false as const, ...(props.animate as InteractionAnimate || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as ElementAnimate,
+      animate: animateConfig as InteractionAnimate,
       defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });

@@ -1,4 +1,6 @@
 'use client';
+// Generated from CalendarView.spec.ts — shared TimeGrid
+// Provenance: original-components/calendar/_shared/TimeGrid.tsx
 
 import * as React from 'react';
 import { getTimeSlots, formatTime, isSameDay, isToday as checkIsToday } from './dateUtils';
@@ -118,8 +120,6 @@ export function TimeGrid({
   }, [dates, events]);
 
   // Measure actual rendered row-to-row distance for accurate event positioning.
-  // We measure two adjacent slots and compute the delta — this accounts for
-  // borders, box-sizing, and any sub-pixel rounding the browser applies.
   const slotRef0 = React.useRef<HTMLDivElement>(null);
   const slotRef1 = React.useRef<HTMLDivElement>(null);
   const [slotHeight, setSlotHeight] = React.useState(48);
@@ -167,9 +167,7 @@ export function TimeGrid({
 
       {/* Time slots */}
       {slots.map((slot, si) => {
-        // Label: hide when slot starts at a non-zero minute (e.g. :30)
         const isHalfHourLabel = slot.getMinutes() !== 0;
-        // Border: the bottom border sits at (start + interval). Dashed when that's a half-hour mark.
         const isHalfHourBorder = (slot.getMinutes() + slotInterval) % 60 !== 0;
         return (
           <React.Fragment key={si}>

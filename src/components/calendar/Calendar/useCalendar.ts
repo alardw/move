@@ -1,5 +1,8 @@
+// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Provenance: original-components/calendar/Calendar/useCalendar.ts
+
 import { useCallback, useMemo } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 import type {
   CalendarEvent,
   CalendarConstraints,

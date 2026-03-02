@@ -1,16 +1,28 @@
 'use client';
-
+// Generated from Password.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
-import { useMergedRef } from '../../../engine/useMergedRef';
+import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
 import styles from './Password.module.css';
+
+// =============================================================================
+// Types
+// =============================================================================
 
 export type PasswordVariant = 'outlined' | 'filled';
 export type PasswordSize = 'sm' | 'md' | 'lg';
 
 type PasswordSlots = 'root' | 'input' | 'iconLeft' | 'toggle' | 'toggleIcon';
+
+export interface PasswordLabels {
+  showPassword: string;
+  hidePassword: string;
+}
+
+const DEFAULT_LABELS: PasswordLabels = {
+  showPassword: 'Show password',
+  hidePassword: 'Hide password',
+};
 
 export interface PasswordProps extends Record<string, unknown> {
   variant?: PasswordVariant;
@@ -23,6 +35,7 @@ export interface PasswordProps extends Record<string, unknown> {
   visible?: boolean;
   defaultVisible?: boolean;
   onVisibleChange?: (visible: boolean) => void;
+  labels?: Partial<PasswordLabels>;
   className?: string;
   style?: React.CSSProperties;
   disabled?: boolean;
@@ -41,16 +54,22 @@ export interface PasswordProps extends Record<string, unknown> {
   sp?: SlotPropsMap<PasswordSlots>;
 }
 
+// =============================================================================
+// Component
+// =============================================================================
+
 export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInputElement>({
   name: 'Password',
   styles,
   slots: ['root', 'input', 'iconLeft', 'toggle', 'toggleIcon'] as const,
-  defaults: { variant: 'outlined', size: 'md' },
-  moveProps: ['variant', 'size', 'invalid', 'iconLeft', 'showIcon', 'hideIcon', 'width', 'visible', 'defaultVisible', 'onVisibleChange'],
+  defaults: { variant: 'outlined', size: 'md', defaultVisible: false },
+  moveProps: ['variant', 'size', 'invalid', 'iconLeft', 'showIcon', 'hideIcon', 'width', 'visible', 'defaultVisible', 'onVisibleChange', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
+
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PasswordLabels>) };
 
     const isControlled = props.visible !== undefined;
     const [internalVisible, setInternalVisible] = React.useState(
@@ -105,7 +124,7 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
           <div
             {...spRest}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(props.width != null ? { width: props.width as React.CSSProperties['width'] } : {}), ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
@@ -140,7 +159,7 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
               onClick={handleToggle}
               disabled={props.disabled as boolean}
               tabIndex={-1}
-              aria-label={shown ? 'Hide password' : 'Show password'}
+              aria-label={shown ? labels.hidePassword : labels.showPassword}
             >
               <span
                 {...tiSpRest}

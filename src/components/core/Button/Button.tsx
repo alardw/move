@@ -1,11 +1,10 @@
 'use client';
-
+// Generated from Button.spec.ts (schemaVersion: 6, specHash: 2082df0a)
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractiveAnimate } from '../../../animation';
-import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
-import type { ElevationLevel } from '../../../styles/visual';
+import { useInteractiveAnimate, defaultAnimations } from '../../../animation';
+import type { InteractionAnimate } from '../../../animation';
 import styles from './Button.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -14,14 +13,14 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export interface ButtonProps extends Record<string, unknown> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: ElementAnimate | false;
-  elevation?: ElevationLevel;
+  animate?: InteractionAnimate | false;
+  elevation?: number;
   asChild?: boolean;
   type?: string;
+  disabled?: boolean;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseDown?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseUp?: React.MouseEventHandler<HTMLButtonElement>;
@@ -31,10 +30,6 @@ export interface ButtonProps extends Record<string, unknown> {
   onKeyUp?: React.KeyboardEventHandler<HTMLButtonElement>;
 }
 
-// ============================================================================
-// Button.Group sub-component
-// ============================================================================
-
 export interface ButtonGroupProps extends Record<string, unknown> {
   children?: React.ReactNode;
   className?: string;
@@ -43,13 +38,13 @@ export interface ButtonGroupProps extends Record<string, unknown> {
 
 const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
   (props, ref) => {
-    const { children, className, style, ...rest } = props as ButtonGroupProps & { children?: React.ReactNode; className?: string; style?: React.CSSProperties };
+    const { children, className, style, ...rest } = props as ButtonGroupProps & Record<string, unknown>;
     return (
       <div
         ref={ref}
         role="group"
         className={className}
-        style={{ display: 'inline-flex', gap: '0.5rem', ...style }}
+        style={{ display: 'inline-flex', gap: 'var(--move-spacing-sm)', ...style }}
         {...(rest as React.HTMLAttributes<HTMLDivElement>)}
       >
         {children}
@@ -59,16 +54,12 @@ const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
 );
 ButtonGroup.displayName = 'Button.Group';
 
-// ============================================================================
-// Button component
-// ============================================================================
-
-export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { Group: typeof ButtonGroup }>({
+const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { Group: typeof ButtonGroup }>({
   name: 'Button',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'primary', size: 'md', asChild: false, type: 'button' },
-  moveProps: ['variant', 'size', 'animate', 'elevation', 'asChild'],
+  defaults: { variant: 'primary' as ButtonVariant, size: 'md' as ButtonSize, asChild: false, type: 'button' },
+  moveProps: ['animate', 'elevation', 'asChild'],
   subComponents: { Group: ButtonGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -90,13 +81,12 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
       onKeyUp,
     } = props;
 
-    // Wire up interactive animation via the existing hook
     const animateConfig = animateProp === false
       ? { hover: false as const, press: false as const }
-      : { ...(animateProp || {}), ...(!animateProp ? {} : {}) };
+      : (animateProp as InteractionAnimate) || {};
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as ElementAnimate,
+      animate: animateConfig as InteractionAnimate,
       defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });
@@ -109,15 +99,14 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        // Build class list
         const extraClasses: string[] = [];
         if (elevation !== undefined) {
           extraClasses.push('cast-shadow');
         }
 
         const combinedStyle: React.CSSProperties = {
-          ...style,
-          ...(elevation !== undefined && ({ '--elevation': elevation * 4 } as React.CSSProperties)),
+          ...(style as React.CSSProperties),
+          ...(elevation !== undefined && ({ '--elevation': (elevation as number) * 4 } as React.CSSProperties)),
           ...(spStyle as React.CSSProperties),
         };
 
@@ -129,31 +118,31 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
             type={asChild ? undefined : (type as 'button' | 'submit' | 'reset')}
             className={cx('root', ...extraClasses, className, spClass as string | undefined)}
             style={combinedStyle}
-            data-variant={variant}
-            data-size={size}
+            data-variant={variant as string}
+            data-size={size as string}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseEnter();
-              onMouseEnter?.(e);
+              (onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseLeave();
-              onMouseLeave?.(e);
+              (onMouseLeave as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseDown={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseDown();
-              onMouseDown?.(e);
+              (onMouseDown as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseUp={(e: React.MouseEvent<HTMLButtonElement>) => {
               handlers.onMouseUp();
-              onMouseUp?.(e);
+              (onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               handlers.onKeyDown(e);
-              onKeyDown?.(e);
+              (onKeyDown as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onKeyUp={(e: React.KeyboardEvent<HTMLButtonElement>) => {
               handlers.onKeyUp(e);
-              onKeyUp?.(e);
+              (onKeyUp as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >
             {children}
@@ -162,4 +151,8 @@ export const Button = withMoveComponent<'root', ButtonProps, HTMLButtonElement, 
       },
     };
   },
+});
+
+export const Button = Object.assign(ButtonRoot, {
+  Group: ButtonGroup,
 });

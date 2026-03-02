@@ -1,0 +1,74 @@
+.root {
+  /* Component tokens */
+  --move-code-bg-subtle: var(--move-bg-muted);
+  --move-code-fg: var(--move-fg-base);
+  --move-code-border: var(--move-border-base);
+  --move-code-radius: var(--move-rounded-md);
+
+  font-family: var(--move-font-code, ui-monospace, monospace);
+  color: var(--move-code-fg);
+  line-height: var(--move-leading-normal);
+}
+
+/* ── Inline (no data-block) ── */
+
+.root:not([data-block]) {
+  display: inline;
+  padding: 0.15em 0.4em;
+  border-radius: var(--move-code-radius);
+  vertical-align: baseline;
+}
+
+/* ── Block ── */
+
+.root[data-block] {
+  display: block;
+  padding: var(--move-space-4);
+  border-radius: var(--move-code-radius);
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+}
+
+.root[data-block] code {
+  font-family: inherit;
+  font-size: inherit;
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+/* ── Size ── */
+
+.root[data-size='xs'] {
+  font-size: var(--move-text-xs);
+}
+
+.root[data-size='sm'],
+.root:not([data-size]) {
+  font-size: var(--move-text-sm);
+}
+
+.root[data-size='base'] {
+  font-size: var(--move-text-base);
+}
+
+.root[data-size='lg'] {
+  font-size: var(--move-text-lg);
+}
+
+/* ── Variant ── */
+
+.root[data-variant='subtle'],
+.root:not([data-variant]) {
+  background-color: var(--move-code-bg-subtle);
+}
+
+.root[data-variant='outline'] {
+  background-color: transparent;
+  border: 1px solid var(--move-code-border);
+}
+
+.root[data-variant='ghost'] {
+  background-color: transparent;
+}

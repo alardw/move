@@ -1,11 +1,22 @@
-import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
+
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useCalendar } from '../../calendar/Calendar/useCalendar';
 import type { UseCalendarOptions } from '../../calendar/Calendar/useCalendar';
 import type { DateRange, SelectionMode } from '../../calendar/_shared/types';
-import { formatDate, parseDate, isDateDisabled, getLocaleDatePattern, isBefore, startOfDay } from '../../calendar/_shared/dateUtils';
+import {
+  formatDate,
+  parseDate,
+  isDateDisabled,
+  getLocaleDatePattern,
+  isBefore,
+  startOfDay,
+} from '../../calendar/_shared/dateUtils';
 
 export type UseDatePickerOptions = UseCalendarOptions & {
+  /** Close popover after date selection */
   closeOnSelect?: boolean;
+  /** Input placeholder text */
   placeholder?: string;
   /** Show time picker. Pass true for 24h or object with hourCycle and placement options. */
   showTime?: boolean | { hourCycle?: 12 | 24; placement?: 'inline' | 'popup' };
@@ -53,7 +64,9 @@ export interface UseDatePickerReturn {
   timeHourCycle: 12 | 24;
 }
 
-export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePickerOptions): UseDatePickerReturn {
+export function useDatePicker(
+  options: UseDatePickerOptions = {} as UseDatePickerOptions,
+): UseDatePickerReturn {
   const {
     closeOnSelect = true,
     placeholder = 'Select date',
@@ -62,7 +75,8 @@ export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePicke
   } = options;
 
   const showTime = !!showTimeProp;
-  const timeHourCycle = (typeof showTimeProp === 'object' ? showTimeProp.hourCycle : undefined) ?? 24;
+  const timeHourCycle =
+    (typeof showTimeProp === 'object' ? showTimeProp.hourCycle : undefined) ?? 24;
 
   const calendar = useCalendar(calendarOptions as UseCalendarOptions);
   const [isOpen, setIsOpen] = useState(false);
@@ -125,17 +139,17 @@ export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePicke
         }
       }
     },
-    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue]
+    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue],
   );
 
   const calendarProps = useMemo(
     () => ({ ...calendar, onSelect: wrappedOnSelect }),
-    [calendar, wrappedOnSelect]
+    [calendar, wrappedOnSelect],
   );
 
   const openPopover = useCallback(() => {
     if (!isOpen) setIsOpen(true);
-  }, [isOpen, setIsOpen]);
+  }, [isOpen]);
 
   // Format display value
   const displayValue = useMemo(() => {
@@ -194,7 +208,7 @@ export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePicke
         calendar.setDisplayMonth(new Date(parsed.getFullYear(), parsed.getMonth(), 1));
       }
     },
-    [locale, calendar]
+    [locale, calendar],
   );
 
   const onInputKeyDown = useCallback(
@@ -214,7 +228,7 @@ export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePicke
         setIsOpen(false);
       }
     },
-    [commitOrRevert, setIsOpen, openPopover]
+    [commitOrRevert, openPopover],
   );
 
   const onInputBlur = useCallback(() => {
@@ -223,8 +237,14 @@ export function useDatePicker(options: UseDatePickerOptions = {} as UseDatePicke
 
   // Range typing state
   const rangeValue = calendar.value as DateRange | null;
-  const fromFormatted = useMemo(() => (rangeValue?.from ? formatDate(rangeValue.from, locale) : ''), [rangeValue?.from, locale]);
-  const toFormatted = useMemo(() => (rangeValue?.to ? formatDate(rangeValue.to, locale) : ''), [rangeValue?.to, locale]);
+  const fromFormatted = useMemo(
+    () => (rangeValue?.from ? formatDate(rangeValue.from, locale) : ''),
+    [rangeValue?.from, locale],
+  );
+  const toFormatted = useMemo(
+    () => (rangeValue?.to ? formatDate(rangeValue.to, locale) : ''),
+    [rangeValue?.to, locale],
+  );
 
   const [fromText, setFromText] = useState(fromFormatted);
   const [toText, setToText] = useState(toFormatted);

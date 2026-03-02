@@ -1,21 +1,22 @@
 'use client';
+// Generated from Collapsible.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
 import { useCollapsible } from './useCollapsible';
 import {
   toAnimeParams,
   prefersReducedMotion,
   mergeAnimateConfig,
-} from '../../../animation/utils';
+} from '../../../animation';
 import {
   defaultAnimations,
-  type ContentAnimate,
-} from '../../../animation/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+} from '../../../animation';
+import type { ExpandAnimate } from '../../../animation';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Collapsible.module.css';
 
 // ============================================================================
@@ -28,7 +29,7 @@ interface CollapsibleContextValue {
   isOpening: boolean;
   toggle: () => void;
   disabled: boolean;
-  contentAnimate: ContentAnimate;
+  contentAnimate: ExpandAnimate;
   onOpenComplete: () => void;
   onCloseComplete: () => void;
 }
@@ -42,6 +43,12 @@ function useCollapsibleContext() {
 }
 
 // ============================================================================
+// Types
+// ============================================================================
+
+export type { ExpandAnimate as CollapsibleAnimate };
+
+// ============================================================================
 // Root
 // ============================================================================
 
@@ -53,7 +60,7 @@ export interface CollapsibleRootProps extends Record<string, unknown> {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
-  animate?: ContentAnimate | false;
+  animate?: ExpandAnimate | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -75,8 +82,8 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
 
     // Animation config
     const config = animateProp === false
-      ? {} as ContentAnimate
-      : mergeAnimateConfig(defaultAnimations.content, animateProp as ContentAnimate | undefined);
+      ? {} as ExpandAnimate
+      : mergeAnimateConfig(defaultAnimations.content, animateProp as ExpandAnimate | undefined);
 
     // Track open/close transitions synchronously during render
     const isClosingRef = React.useRef(false);

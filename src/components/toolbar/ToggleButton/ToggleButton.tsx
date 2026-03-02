@@ -1,11 +1,11 @@
 'use client';
-
+// Generated from ToggleButton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Toggle as RadixToggle } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractiveAnimate } from '../../../animation';
-import { defaultAnimations, type ElementAnimate } from '../../../animation/types';
-import type { SlotPropsMap } from '../../../engine/types';
+import type { SlotPropsMap } from '../../../engine';
+import { useInteractiveAnimate, defaultAnimations } from '../../../animation';
+import type { InteractionAnimate } from '../../../animation';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleButton.module.css';
 
@@ -23,7 +23,7 @@ export interface ToggleButtonProps extends Record<string, unknown> {
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: ElementAnimate | false;
+  animate?: InteractionAnimate | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -49,7 +49,7 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
       : { ...(animateProp || {}) };
 
     const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as ElementAnimate,
+      animate: animateConfig as InteractionAnimate,
       defaults: defaultAnimations.element,
       disabled: !!props.disabled,
     });

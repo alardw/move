@@ -1,7 +1,8 @@
+// Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 'use client';
 
 import { useCallback, useRef } from 'react';
-import { useControlledState } from '../../../engine/useControlledState';
+import { useControlledState } from '../../../engine';
 
 // ============================================================================
 // Types
@@ -47,16 +48,6 @@ function clamp(v: number, min?: number, max?: number): number {
   if (min !== undefined && result < min) result = min;
   if (max !== undefined && result > max) result = max;
   return result;
-}
-
-function roundToStep(value: number, step: number, min?: number): number {
-  // Round to nearest step from min (or 0)
-  const base = min ?? 0;
-  const diff = value - base;
-  const rounded = Math.round(diff / step) * step + base;
-  // Fix floating point
-  const decimals = String(step).split('.')[1]?.length ?? 0;
-  return Number(rounded.toFixed(decimals));
 }
 
 function applyDecimalScale(value: number, scale: number | undefined): number {
@@ -109,7 +100,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
 
   const effectiveShiftStep = shiftStep ?? step * 10;
 
-  // Strip prefix/suffix from raw input string
   function stripAffixes(s: string): string {
     let result = s;
     if (prefix && result.startsWith(prefix)) result = result.slice(prefix.length);
@@ -117,20 +107,18 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     return result;
   }
 
-  // Convert incoming value to number
   function toNumber(v: number | string | undefined): number | undefined {
     if (v === undefined || v === '') return undefined;
     if (typeof v === 'number') return v;
     return parseNumber(v, parseValueFn);
   }
 
-  // Controlled state stores the display string
-  const [displayValue, setDisplayValue, isControlled] = useControlledState<string>({
+  const [displayValue, setDisplayValue] = useControlledState<string>({
     value: options.value !== undefined ? formatNumber(toNumber(options.value), decimalScale, formatValueFn) : undefined,
     defaultValue: options.defaultValue !== undefined
       ? formatNumber(toNumber(options.defaultValue), decimalScale, formatValueFn)
       : '',
-    onChange: undefined, // We fire onValueChange manually with both values
+    onChange: undefined,
   });
 
   const onValueChangeRef = useRef(options.onValueChange);
@@ -143,7 +131,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     onValueChangeRef.current?.(num, display);
   }, [setDisplayValue]);
 
-  // Set value programmatically
   const setValue = useCallback((v: number | undefined) => {
     if (v === undefined) {
       fireChange(undefined, '');
@@ -154,7 +141,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     fireChange(clamped, display);
   }, [min, max, decimalScale, formatValueFn, fireChange]);
 
-  // Increment / decrement
   const adjust = useCallback((delta: number) => {
     if (disabled || readOnly) return;
     const current = numericValue ?? min ?? 0;
@@ -173,15 +159,11 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     adjust(shift ? -effectiveShiftStep : -step);
   }, [adjust, step, effectiveShiftStep]);
 
-  // Filter input for valid number characters
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     if (disabled || readOnly) return;
     let raw = e.target.value;
-
-    // Strip affixes if user is editing
     raw = stripAffixes(raw);
 
-    // Filter: allow digits, one minus at start, one decimal point
     let filtered = '';
     let hasDecimal = false;
     for (let i = 0; i < raw.length; i++) {
@@ -209,9 +191,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
       }
     }
 
-    // When filtered matches current state, React won't re-render and
-    // the rejected character stays in the DOM. Use rAF to force-reset
-    // after React's reconciliation completes.
     if (filtered === displayValue) {
       const input = e.target;
       const resetValue = filtered !== ''
@@ -223,19 +202,16 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
       return;
     }
 
-    // Store raw string to allow partial input (e.g. "1." or "-")
     fireChange(num, filtered);
   }, [disabled, readOnly, allowNegative, allowDecimal, clampBehavior, min, max, decimalScale, formatValueFn, parseValueFn, fireChange, prefix, suffix, displayValue]);
 
-  // Clamp and format on blur
-  const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = useCallback((_e: React.FocusEvent<HTMLInputElement>) => {
     if (clampBehavior === 'none') return;
 
     const raw = stripAffixes(displayValue);
     let num = parseNumber(raw, parseValueFn);
 
     if (num === undefined) {
-      // If empty, keep empty
       if (raw === '' || raw === '-') {
         fireChange(undefined, '');
         return;
@@ -250,7 +226,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     }
   }, [clampBehavior, displayValue, min, max, decimalScale, formatValueFn, parseValueFn, fireChange, prefix, suffix]);
 
-  // Keyboard: ArrowUp/Down
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (disabled || readOnly) return;
 
@@ -263,7 +238,6 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
     }
   }, [disabled, readOnly, increment, decrement]);
 
-  // Add prefix/suffix for display
   let finalDisplay = displayValue;
   if (finalDisplay !== '' && prefix) finalDisplay = prefix + finalDisplay;
   if (finalDisplay !== '' && suffix) finalDisplay = finalDisplay + suffix;

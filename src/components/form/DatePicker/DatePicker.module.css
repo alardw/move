@@ -1,3 +1,5 @@
+/* Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de) */
+
 .root {
   display: inline-flex;
   position: relative;
@@ -87,6 +89,7 @@
   overflow: hidden;
   will-change: transform, opacity;
   transform-origin: top center;
+  font-family: var(--move-font-body);
 }
 
 /* Time section (showTime integration) */

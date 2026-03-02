@@ -2,11 +2,10 @@
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../core/Icon/useResolvedIcon';
+import type { SlotPropsMap } from '../../../engine';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useCarousel } from './useCarousel';
-import type { UseCarouselOptions, CarouselOrientation, CarouselAlign } from './useCarousel';
-import type { CarouselAnimate } from '../../../animation/types';
+import type { UseCarouselOptions, CarouselOrientation, CarouselAlign, CarouselAnimate } from './useCarousel';
 import styles from './Carousel.module.css';
 
 // =============================================================================

@@ -1,3 +1,6 @@
+// Generated from Calendar.spec.ts & CalendarView.spec.ts — shared types
+// Provenance: original-components/calendar/_shared/types.ts
+
 export interface CalendarEvent {
   id: string;
   title: string;
