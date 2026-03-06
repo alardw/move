@@ -1,0 +1,23 @@
+{
+  "name": "create-move-app",
+  "version": "0.1.0",
+  "description": "Scaffold a new Move UI application",
+  "bin": {
+    "create-move-app": "./src/index.mjs"
+  },
+  "files": [
+    "src",
+    "templates"
+  ],
+  "keywords": [
+    "move",
+    "react",
+    "create",
+    "scaffold",
+    "cli"
+  ],
+  "dependencies": {
+    "prompts": "^2.4.2"
+  },
+  "license": "MIT"
+}
