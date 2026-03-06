@@ -5,7 +5,8 @@
 import * as React from 'react';
 import { isSameDay, isToday, isSameMonth, isDateDisabled, isWithinRange, isBefore } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
-import { useInteractiveAnimate } from '../../../animation';
+import { useAnimations, scaleDown } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { DayState, DayCellData, DateRange } from './types';
 import styles from './DayCell.module.css';
 
@@ -71,14 +72,13 @@ export const DayCell = React.memo(function DayCell({
   const dayEvents = getEventsForDate(date);
   const isFocused = focusedDate ? isSameDay(date, focusedDate) : false;
 
-  const { ref: animRef, handlers: animHandlers } = useInteractiveAnimate({
-    defaults: {
-      press: { scale: 0.85, easing: 'snappy' },
-    },
-    disabled,
-  });
+  const cellRef = React.useRef<HTMLButtonElement | null>(null);
 
-  const cellRef = animRef as React.RefObject<HTMLButtonElement>;
+  const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+    { trigger: 'Root.press', sequence: [{ animation: scaleDown }] },
+  ];
+  const refs = React.useMemo(() => ({ Root: cellRef as React.RefObject<HTMLElement | null> }), []);
+  const { handlers } = useAnimations(DEFAULT_ANIMATIONS, refs);
 
   React.useEffect(() => {
     if (isFocused && cellRef.current) {
@@ -97,18 +97,6 @@ export const DayCell = React.memo(function DayCell({
       e.preventDefault();
       onSelect(date);
     }
-  };
-
-  const handleMouseDown = () => {
-    animHandlers.onMouseDown();
-  };
-
-  const handleMouseUp = () => {
-    animHandlers.onMouseUp();
-  };
-
-  const handleMouseLeave = () => {
-    animHandlers.onMouseLeave();
   };
 
   const cellData: DayCellData = {
@@ -137,9 +125,9 @@ export const DayCell = React.memo(function DayCell({
         className={`${styles.dayCell} ${className ?? ''}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
+        onMouseDown={() => { if (!disabled) handlers.Root?.onMouseDown?.(); }}
+        onMouseUp={() => { if (!disabled) handlers.Root?.onMouseUp?.(); }}
+        onMouseLeave={() => { if (!disabled) handlers.Root?.onMouseLeave?.(); }}
         onFocus={() => setFocusedDate(date)}
       >
         {renderDayCell(date, cellData)}
@@ -163,9 +151,9 @@ export const DayCell = React.memo(function DayCell({
       className={`${styles.dayCell} ${className ?? ''}`}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
+      onMouseDown={() => { if (!disabled) handlers.Root?.onMouseDown?.(); }}
+      onMouseUp={() => { if (!disabled) handlers.Root?.onMouseUp?.(); }}
+      onMouseLeave={() => { if (!disabled) handlers.Root?.onMouseLeave?.(); }}
       onFocus={() => setFocusedDate(date)}
     >
       <span className={styles.dayNumber}>{date.getDate()}</span>

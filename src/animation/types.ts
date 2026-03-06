@@ -1,52 +1,22 @@
-import type { AnimationPreset } from './easings';
-
 // Re-export for convenience
 export type { AnimationPreset } from './easings';
 
 /**
- * A property value with optional per-property easing
+ * Animation config — passes straight to anime.js v4 animate().
+ * Every animated property carries its own ease and duration as a per-property object:
+ *   { from, to, ease, duration }
+ *
+ * Example:
+ *   { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+ *     scale: { from: 0.95, to: 1, ease: poppy } }
  */
-export type AnimatableValue<T> = T | { value: T; easing?: AnimationPreset };
-
-/**
- * Properties that can be animated
- * Each property can be a simple value or an object with { value, easing }
- */
-export interface AnimationProperties {
-  // Transform
-  scale?: AnimatableValue<number | [number, number]>;
-  scaleX?: AnimatableValue<number | [number, number]>;
-  scaleY?: AnimatableValue<number | [number, number]>;
-  x?: AnimatableValue<number | [number, number]>;
-  y?: AnimatableValue<number | [number, number]>;
-  rotate?: AnimatableValue<number | [number, number]>;
-  rotateX?: AnimatableValue<number | [number, number]>;
-  rotateY?: AnimatableValue<number | [number, number]>;
-  skewX?: AnimatableValue<number | [number, number]>;
-  skewY?: AnimatableValue<number | [number, number]>;
-
-  // Appearance
-  opacity?: AnimatableValue<number | [number, number]>;
-
-  // Dimensions
-  width?: AnimatableValue<number | string | [number | string, number | string]>;
-  height?: AnimatableValue<number | string | [number | string, number | string]>;
-
-  // Other
-  [key: string]: unknown;
-}
-
-/**
- * A single animation definition with properties and timing
- */
-export interface Animation extends AnimationProperties {
-  /** Easing preset for this animation (overrides config-level easing) */
-  easing?: AnimationPreset;
-  /** Duration in ms (ignored for spring easings) */
-  duration?: number;
-  /** Delay before animation starts in ms */
+export type Animation = Record<string, unknown> & {
   delay?: number;
-}
+  /** Loop count (true = infinite) */
+  loop?: boolean | number;
+  /** Alternate direction each loop iteration */
+  alternate?: boolean;
+};
 
 /**
  * Stagger configuration for animating children
@@ -58,174 +28,71 @@ export interface StaggerConfig {
   from?: 'first' | 'last' | 'center';
 }
 
+// =============================================================================
+// Trigger → Sequence types
+// =============================================================================
+
 /**
- * Full animation configuration — union of all triggers and modifiers.
- * Used internally. Components should intersect specific triggers instead.
+ * Declares a named state derived from a DOM attribute.
+ * The runtime observes `source` on the `slot` element and fires
+ * the matching trigger when `value` matches.
  */
-export type AnimateConfig = LifecycleAnimate &
-  InteractionAnimate &
-  ToggleAnimate &
-  ExpandAnimate &
-  ValueAnimate &
-  LoopAnimate &
-  StaggerModifier &
-  DelayModifier;
-
-// =============================================================================
-// Core trigger types — atomic, composable
-//
-// Each trigger type maps 1:1 to an animation hook.
-// Components intersect triggers on the `animate` prop:
-//   animate?: LifecycleAnimate & InteractionAnimate
-// =============================================================================
-
-/** Mount/unmount animation */
-export interface LifecycleAnimate {
-  enter?: Animation;
-  exit?: Animation;
+export interface AnimationState {
+  /** Trigger name — matches `AnimationTrigger.trigger` */
+  name: string;
+  /** Which slot element to observe */
+  slot: string;
+  /** DOM attribute to watch (e.g. 'data-state') */
+  source: string;
+  /** Attribute value that activates this state */
+  value: string;
+  /** CSS selector — observe `refs[slot].current.closest(selector)` instead of the slot element itself */
+  closest?: string;
+  /** Whether to fire on initial attribute match (default true). Set false to skip mount-time fire. */
+  initial?: boolean;
 }
 
-/** User hover/press animation */
-export interface InteractionAnimate {
-  hover?: Animation | false;
-  press?: Animation | false;
+/**
+ * A single step in an animation sequence.
+ */
+export interface AnimationStep {
+  /** Target slot to animate (defaults to trigger's slot if omitted) */
+  target?: string;
+  /** Inline animation config */
+  animation?: Animation;
+  /** Named preset from PRESET_REGISTRY */
+  preset?: string;
+  /** Runtime function: 'animateDimension' | 'animatePosition' (default: moveAnimate) */
+  fn?: 'animateDimension' | 'animatePosition';
+  /** CSS selector for stagger targets (implies staggerAnimate) */
+  children?: string;
+  /** Stagger timing config */
+  stagger?: { delay?: number; from?: 'first' | 'last' | 'center' };
+  /** Callback fired after this step's animation completes */
+  onComplete?: () => void;
 }
 
-/** Binary state animation (checkbox, switch) */
-export interface ToggleAnimate {
-  checked?: Animation;
-  unchecked?: Animation;
+/**
+ * A sequence item — either a single step or parallel steps (nested array).
+ */
+export type SequenceItem = AnimationStep | AnimationStep[];
+
+/**
+ * A trigger-sequence pair: when the trigger fires, execute the sequence.
+ */
+export interface AnimationTrigger {
+  /** Trigger name — 'Slot.event' for events, bare name for states */
+  trigger: string;
+  /** Steps to execute (false to disable) */
+  sequence: SequenceItem[] | false;
+  /** Variable definitions for expression resolution. Function form receives the target element. */
+  vars?: Record<string, unknown> | ((el: HTMLElement) => Record<string, unknown>);
+  /** CSS selector for event delegation — attach listener on slot, animate matching child */
+  delegate?: string;
+  /** Callback fired after the entire sequence completes */
+  onComplete?: () => void;
+  /** Dependency values — when any dep changes (shallow compare), re-execute the sequence */
+  deps?: unknown[];
+  /** Direction for deps-triggered sequences (default: 'enter'). Controls animateDimension behavior. */
+  direction?: 'enter' | 'exit';
 }
-
-/** Content reveal/hide animation (accordion, collapsible) */
-export interface ExpandAnimate {
-  open?: Animation;
-  close?: Animation;
-}
-
-/** Continuous value change animation (progress bar) */
-export interface ValueAnimate {
-  value?: Animation;
-}
-
-/** Continuous ambient animation (spinner, skeleton) */
-export interface LoopAnimate {
-  loop?: Animation;
-}
-
-// =============================================================================
-// Modifiers — mix into any trigger type
-// =============================================================================
-
-/** Sequenced children modifier */
-export interface StaggerModifier {
-  stagger?: StaggerConfig;
-}
-
-/** Animation delay modifier */
-export interface DelayModifier {
-  delay?: number;
-}
-
-// =============================================================================
-// Default animations (shared across components of same category)
-// =============================================================================
-
-export const defaultAnimations = {
-  /** Button, Link, clickable elements */
-  element: {
-    hover: { scale: 1.05, easing: 'snappy' },
-    press: { scale: 0.95, easing: 'snappy' },
-  } satisfies InteractionAnimate,
-
-  /** Inline dismissible elements (Alert, Toast) */
-  presence: {
-    enter: {
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      scale: { value: [0.95, 1], easing: 'snappy' },
-    },
-    exit: {
-      opacity: { value: [1, 0], easing: 'outQuart' },
-      scale: { value: [1, 0.95], easing: 'outQuart' },
-      duration: 150,
-    },
-  } satisfies LifecycleAnimate,
-
-  /** Dialog, AlertDialog, Popover, Sheet content */
-  layer: {
-    enter: {
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      scale: { value: [0.9, 1], easing: 'snappy' },
-    },
-    exit: {
-      opacity: { value: [1, 0], easing: 'outQuart' },
-      scale: { value: [1, 0.95], easing: 'outQuart' },
-      duration: 150,
-    },
-  } satisfies LifecycleAnimate,
-
-  /** Dialog, AlertDialog backdrop */
-  layerBackdrop: {
-    enter: { opacity: { value: [0, 1], easing: 'outQuart' }, duration: 200 },
-    exit: { opacity: { value: [1, 0], easing: 'outQuart' }, duration: 150 },
-  } satisfies LifecycleAnimate,
-
-  /** Accordion, Collapsible */
-  content: {
-    open: {
-      height: { value: [0, 'auto'], easing: 'outQuart' },
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      duration: 400,
-    },
-    close: {
-      height: { value: ['auto', 0], easing: 'outQuart' },
-      opacity: { value: [1, 0], easing: 'outQuart' },
-      duration: 300,
-    },
-  } satisfies ExpandAnimate,
-
-  /** Dropdown, ContextMenu, Select */
-  popup: {
-    enter: {
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      scale: { value: [0.95, 1], easing: 'poppy' },
-    },
-    exit: {
-      opacity: { value: [1, 0], easing: 'outQuart' },
-      scale: { value: [1, 0.95], easing: 'outQuart' },
-      duration: 150,
-    },
-  } satisfies LifecycleAnimate,
-
-  /** Stagger defaults for popup children */
-  popupStagger: {
-    stagger: { delay: 30 },
-  } satisfies StaggerModifier,
-
-  /** Carousel slide transition */
-  carousel: {
-    enter: {
-      easing: 'outQuart',
-    },
-  } satisfies LifecycleAnimate,
-
-  /** Popup items — lifecycle + interaction */
-  popupItem: {
-    enter: { opacity: { value: [0, 1], easing: 'outQuart' } },
-    hover: { scale: 1.02, easing: 'snappy' },
-  } satisfies LifecycleAnimate & InteractionAnimate,
-
-  /** Checkbox, Switch, Radio — toggle + interaction */
-  indicator: {
-    press: { scale: 0.9, easing: 'snappy' },
-    checked: {
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      scale: { value: [0.5, 1], easing: 'poppy' },
-    },
-    unchecked: {
-      opacity: { value: [1, 0], easing: 'outQuart' },
-      scale: { value: [1, 0.5], easing: 'outQuart' },
-      duration: 150,
-    },
-  } satisfies ToggleAnimate & InteractionAnimate,
-} as const;

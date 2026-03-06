@@ -2,7 +2,7 @@
 // specHash: 7dc1c820
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Calendar',
   componentClass: 'display' as const,
   category: 'calendar',
@@ -21,7 +21,7 @@ export const spec = {
 
   props: {
     Root: [
-      'animate',
+      'animations',
       'mode',
       'value',
       'defaultValue',
@@ -56,7 +56,7 @@ export const spec = {
   },
 
   moveProps: [
-    'animate',
+    'animations',
     'mode',
     'value',
     'defaultValue',
@@ -90,51 +90,18 @@ export const spec = {
 
   renderContracts: [
     'Root provides CalendarContext consumed by Nav and Grid',
-    'Root forwards animate config into Grid for month-transition stagger',
+    'Root forwards animations config into Grid for month-transition stagger',
     'Nav reads displayMonth, locale, yearRange, labels from CalendarContext',
     'Grid reads displayMonth, locale, weekStartsOn, numberOfMonths, showWeekNumbers, fixedWeeks, focusedDate from CalendarContext',
     'DayCell (internal) reads mode, value, onSelect, constraints, events, focusedDate, renderDayCell from CalendarContext',
   ] as string[],
 
-  // === Animation ===
-  // Grid-level stagger for day cells on mount / month transition (key-based remount).
-  // Original used raw anime.js spring { mass: 0.8, stiffness: 350, damping: 12 } with 8ms per-cell delay.
-  // Standardized to useLifecycleAnimate with stagger.
   animations: [
-    {
-      hook: 'useLifecycleAnimate' as const,
-      configType: 'LifecycleAnimate',
-      target: 'grid',
-      defaultConfig:
-        '{ enter: { opacity: { value: [0, 1], easing: "outQuart" }, scale: { value: [0.5, 1], easing: "poppy" } } }',
-      stagger: {
-        selector: '[role="gridcell"]',
-        config: { stagger: { delay: 8 } },
-      },
-      notes:
-        'Grid cells stagger in on mount and month transitions via key-based remount. Original used raw anime.js with spring { mass: 0.8, stiffness: 350, damping: 12 } and 8ms per-cell delay.',
-    },
+    { trigger: 'Grid.enter', sequence: [{ children: ':scope > *', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } }, stagger: { delay: 15 } }] },
+    { trigger: 'DayCell.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
-  // Internal animation on DayCell — not exposed on Calendar root animate prop.
-  // DayCell uses useInteractionAnimate internally for press feedback.
-  internalAnimations: [
-    {
-      hook: 'useInteractionAnimate' as const,
-      configType: 'InteractionAnimate',
-      target: 'dayCell',
-      defaultConfig: '{ press: { scale: 0.85, easing: "snappy" } }',
-      notes:
-        'DayCell press feedback. Internal to DayCell component, not exposed on Calendar root animate prop.',
-    },
-  ],
 
-  animationImports: [
-    'useLifecycleAnimate',
-    'useInteractionAnimate',
-    'defaultAnimations',
-    'useMergedRef',
-  ] as string[],
 
   labels: {
     previousMonth: 'Previous month',

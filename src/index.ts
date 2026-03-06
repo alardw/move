@@ -34,61 +34,62 @@ export {
   isSpring,
   DEFAULT_DURATION,
   prefersReducedMotion,
-  resolveEasing,
-  toAnimeParams,
-  toInstantParams,
   mergeAnimateConfig,
-  getInitialStyles,
-  // 1:1 trigger hooks
-  useLifecycleAnimate,
-  useInteractionAnimate,
-  useToggleAnimate,
-  useExpandAnimate,
-  useValueAnimate,
-  useLoopAnimate,
+  toEndValues,
+  getFromStyles,
+  // Pre-computed spring constants
+  snappy,
+  quick,
+  poppy,
+  gentle,
+  slow,
+  lazy,
+  jelly,
+  stiff,
+  // Core animation functions
+  moveAnimate,
+  animateDimension,
+  animatePosition,
+  staggerAnimate,
+  // Orchestration
+  useAnimations,
+  resolveAnimationsConfig,
+  // Presets
+  fadeIn,
+  fadeOut,
+  popIn,
+  popOut,
+  scaleUp,
+  scaleDown,
+  scaleIn,
+  interactive,
+  revealHeight,
+  staggerItems,
+  toggleIndicator,
+  expandContent,
+  PRESET_REGISTRY,
+  // Position tracking
   usePositionTracker,
   useSlidingIndicator,
-  // Legacy hook names (original-components compat)
-  useAnimateConfig,
-  useInteractiveAnimate,
-  useToggleAnimation,
-  useExpandAnimation,
-  usePopupAnimation,
-  useLayerAnimation,
   // Presence system
   Presence,
   usePresence,
   useIsPresent,
-  defaultAnimations,
 } from './animation';
 export type {
   SpringParams,
   SpringPreset,
   Easing,
   AnimationPreset,
-  UseAnimateConfigOptions,
-  UseAnimateConfigReturn,
-  UseToggleAnimationOptions,
-  UseToggleAnimationReturn,
-  UseExpandAnimationOptions,
-  UseExpandAnimationReturn,
   PresenceProps,
   PresenceContextValue,
-  AnimatableValue,
   Animation,
-  AnimationProperties,
-  AnimateConfig,
   StaggerConfig,
-  // Core trigger types
-  LifecycleAnimate,
-  InteractionAnimate,
-  ToggleAnimate,
-  ExpandAnimate,
-  ValueAnimate,
-  LoopAnimate,
-  // Modifiers
-  StaggerModifier,
-  DelayModifier,
+  // Trigger-sequence types
+  AnimationState,
+  AnimationStep,
+  SequenceItem,
+  AnimationTrigger,
 } from './animation';
 
 // Themes
@@ -98,6 +99,10 @@ export type { Theme, ThemeTokens, ThemeAnimation } from './styles/themes';
 // ThemeProvider
 export { ThemeProvider, useTheme } from './infrastructure/Theme';
 export type { ThemeProviderProps, ThemeContextValue } from './infrastructure/Theme';
+
+// MoveRoot
+export { MoveRoot } from './infrastructure/MoveRoot';
+export type { MoveRootProps } from './infrastructure/MoveRoot/MoveRoot';
 
 // Visual systems (shadows, surfaces)
 export { shadows, createShadow, createShadowPalette, shadowCSSVariables, createThemeShadows } from './styles/visual';
@@ -258,7 +263,7 @@ export { RichTextEditor } from './components/form/RichTextEditor';
 export type { RichTextEditorVariant, RichTextEditorSize, RichTextEditorRootProps, RichTextEditorToolbarProps, RichTextEditorControlGroupProps, RichTextEditorControlProps, RichTextEditorSeparatorProps, RichTextEditorContentProps } from './components/form/RichTextEditor';
 
 export { TimeField } from './components/form/TimeField';
-export type { TimeFieldRootProps, TimeFieldSegmentProps, TimeFieldSeparatorProps, TimeFieldPeriodProps, TimeFieldDropdownProps, TimeFieldDropdownColumnProps, TimeFieldSize, TimeFieldAnimate } from './components/form/TimeField';
+export type { TimeFieldRootProps, TimeFieldSegmentProps, TimeFieldSeparatorProps, TimeFieldPeriodProps, TimeFieldDropdownProps, TimeFieldDropdownColumnProps, TimeFieldSize } from './components/form/TimeField';
 export { useTimeField } from './components/form/TimeField';
 export type { UseTimeFieldOptions, UseTimeFieldReturn, SegmentType, SegmentInfo, TimeFieldGranularity } from './components/form/TimeField';
 

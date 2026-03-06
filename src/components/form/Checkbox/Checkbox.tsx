@@ -1,11 +1,12 @@
 'use client';
 // Generated from Checkbox.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
+import { useRef, useCallback } from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
-import { useToggleAnimate, defaultAnimations } from '../../../animation';
-import type { ToggleAnimate, InteractionAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, scaleIn, snappy } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Checkbox.module.css';
 
@@ -32,7 +33,7 @@ export interface CheckboxProps extends Record<string, unknown> {
   /** Icon name for the check indicator (resolved via useResolvedIcon) */
   icon?: string;
   /** Toggle animation config or false to disable */
-  animate?: (ToggleAnimate & InteractionAnimate) | false;
+  animations?: AnimationTrigger[] | false;
   /** Size of the checkbox */
   size?: CheckboxSize;
   /** Whether the checkbox is disabled */
@@ -80,7 +81,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
   styles,
   slots: ['root', 'indicator', 'icon'] as const,
   defaults: { icon: 'check', disabled: false },
-  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animate', 'size', 'invalid', 'name', 'value', 'required'],
+  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animations', 'size', 'invalid', 'name', 'value', 'required'],
   subComponents: { Group: CheckboxGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -92,7 +93,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
       indeterminate,
       onCheckedChange,
       icon,
-      animate: animateProp,
+      animations: animationsProp,
       size,
       disabled,
       invalid,
@@ -110,31 +111,56 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
       onChange: onCheckedChange as ((checked: boolean) => void) | undefined,
     });
 
-    // Toggle animation
-    const toggleAnim = useToggleAnimate({
-      animate: animateProp === false
-        ? { checked: false as const, unchecked: false as const }
-        : (animateProp as (ToggleAnimate & InteractionAnimate) | undefined) || {},
-      initialChecked: checkbox.checked,
-      disabled: !!disabled,
-    });
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      {
+        trigger: 'checked',
+        sequence: [{ target: 'indicator', animation: { ...scaleIn, opacity: { from: 0, to: 1, duration: 150 } } }],
+      },
+      {
+        trigger: 'unchecked',
+        sequence: [{ target: 'indicator', animation: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } } }],
+      },
+      {
+        trigger: 'Root.press',
+        sequence: [{ animation: { scale: { to: 0.9, ease: snappy } } }],
+      },
+    ];
+
+    const STATES: AnimationState[] = [
+      { name: 'checked', slot: 'Root', source: 'data-state', value: 'checked' },
+      { name: 'unchecked', slot: 'Root', source: 'data-state', value: 'unchecked' },
+    ];
+
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp as AnimationTrigger[] | false | undefined);
+
+    const indicatorRef = useRef<HTMLSpanElement>(null);
+    const rootRef = useRef<HTMLButtonElement>(null);
+
+    const refs = React.useMemo(() => ({
+      Root: rootRef as React.RefObject<HTMLElement | null>,
+      indicator: indicatorRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    const { handlers } = useAnimations(animConfig, refs, STATES);
+
+    // Press handlers on root
+    const handlePressDown = useCallback(() => {
+      if (disabled) return;
+      handlers.Root?.onMouseDown?.();
+    }, [disabled, handlers]);
+
+    const handlePressUp = useCallback(() => {
+      handlers.Root?.onMouseUp?.();
+    }, [handlers]);
 
     const iconSize = size === 'sm' ? 14 : size === 'lg' ? 22 : 17;
     const resolvedIcon = useResolvedIcon(icon as string, iconSize);
 
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, toggleAnim.rootRef as React.Ref<HTMLButtonElement>);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, rootRef);
 
     const handleClick = () => {
       if (disabled) return;
-
-      const newChecked = !checkbox.checked;
       checkbox.toggle();
-
-      if (newChecked) {
-        toggleAnim.animateChecked();
-      } else {
-        toggleAnim.animateUnchecked();
-      }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -164,9 +190,9 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
           <label
             className={styles.wrapper}
             {...(disabled ? { 'data-disabled': '' } : {})}
-            onMouseDown={toggleAnim.pressHandlers.onMouseDown}
-            onMouseUp={toggleAnim.pressHandlers.onMouseUp}
-            onMouseLeave={toggleAnim.pressHandlers.onMouseLeave}
+            onMouseDown={handlePressDown}
+            onMouseUp={handlePressUp}
+            onMouseLeave={handlePressUp}
           >
             <button
               {...attrs}
@@ -186,9 +212,13 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
             >
               <span
                 {...indSpRest}
-                ref={toggleAnim.indicatorRef as React.RefObject<HTMLSpanElement>}
+                ref={indicatorRef}
                 className={cx('indicator', indSpClass as string | undefined)}
-                style={indSpStyle as React.CSSProperties}
+                style={{
+                  opacity: checkbox.checked ? 1 : 0,
+                  transform: checkbox.checked ? 'scale(1)' : 'scale(0.5)',
+                  ...(indSpStyle as React.CSSProperties),
+                }}
               >
                 <span
                   {...iconSpRest}

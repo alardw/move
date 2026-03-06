@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Skeleton',
   componentClass: 'presentational' as const,
   category: 'loading',
@@ -146,7 +146,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'],
-  animationImports: ['prefersReducedMotion'],
+
   componentDeps: [],
 
   testing: {

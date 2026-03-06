@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ToggleButton',
   componentClass: 'interactive' as const,
   category: 'toolbar',
@@ -22,7 +22,7 @@ export const spec = {
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
     { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", moveSpecific: true, description: 'Visual style variant (inherits Button variants)' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Button size' },
-    { name: 'animate', type: 'InteractionAnimate | false', moveSpecific: true, description: 'Animation config for hover/press interactions, or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions, or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content' },
   ],
 
@@ -44,20 +44,15 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-      defaultPreset: 'element',
-    },
+    { trigger: 'Root.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   renderContracts: [
     { id: 'composes-button-styles', description: 'Root slot composes Button.module.css root class for shared sizing, typography, border-radius, and variant styling' },
     { id: 'radix-toggle-controlled', description: 'Forwards pressed, defaultPressed, onPressedChange to Radix Toggle.Root only when defined (avoids uncontrolled->controlled warnings)' },
     { id: 'on-state-primary', description: 'When data-state="on", background overrides to --move-primary with --move-primary-fg text, regardless of variant' },
-    { id: 'animate-false-disables', description: 'When animate=false, passes { hover: false, press: false } to useInteractionAnimate to fully disable animation' },
+    { id: 'animations-false-disables', description: 'When animations={false}, all animation triggers are disabled' },
   ],
 
   tokens: [
@@ -80,7 +75,6 @@ export const spec = {
   radixPrimitive: 'Toggle',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useInteractionAnimate', 'defaultAnimations'] as string[],
   componentDeps: ['Button'] as string[],
 
   childrenKind: 'text' as const,
@@ -113,8 +107,8 @@ export const spec = {
       'aria-disabled set when disabled',
     ],
     animation: [
-      'Wires useInteractionAnimate with defaultAnimations.element',
-      'Disables animation when animate=false',
+      'Uses Root.hover and Root.press event triggers for interactive animation',
+      'Disables animation when animations={false}',
       'Disables animation when disabled',
     ],
   },

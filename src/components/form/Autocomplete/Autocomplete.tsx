@@ -3,36 +3,46 @@
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { mergeAnimateConfig, prefersReducedMotion, useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, extractSteps, revealHeight, staggerItems, quick, poppy } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
 import styles from './Autocomplete.module.css';
 
 // =============================================================================
-// Animation types
+// Animation defaults
 // =============================================================================
 
-export type PopupAnimate = LifecycleAnimate & StaggerModifier;
+// Fixed pixel inset for scale animation — ensures consistent feel regardless of control width
+const SCALE_INSET_PX = 16;
+const SCALE_HOVER_PX = 8;
 
-const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
+const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'open',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
+      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+    ]],
+  },
+  {
+    trigger: 'closed',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
+      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+    ]],
+  },
+  {
+    trigger: 'Item.hover',
+    sequence: [{ animation: { scale: { to: '$scaleHover', ease: quick } } }],
+  },
+];
 
-const defaultAutocompleteAnimation: PopupAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
-  },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
-  },
-  stagger: { delay: 30 },
-};
 
 // =============================================================================
 // Context
@@ -41,7 +51,9 @@ const defaultAutocompleteAnimation: PopupAnimate = {
 interface AutocompleteContextValue extends UseAutocompleteReturn {
   isClosing: boolean;
   onCloseComplete: () => void;
-  animateConfig: PopupAnimate | null;
+  animConfig: AnimationTrigger[] | null;
+  triggerWidth: number;
+  setTriggerWidth: (w: number) => void;
 }
 
 const AutocompleteContext = React.createContext<AutocompleteContextValue | null>(null);
@@ -73,7 +85,7 @@ export interface AutocompleteRootProps {
   defaultInputValue?: string;
   onInputValueChange?: (value: string) => void;
   loading?: boolean;
-  animate?: PopupAnimate | false;
+  animations?: AnimationTrigger[] | false;
   closeOnSelect?: boolean;
   openOnFocus?: boolean;
   allowCustomValue?: boolean;
@@ -82,26 +94,27 @@ export interface AutocompleteRootProps {
 }
 
 const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
-  animate: animateProp,
+  animations: animationsProp,
   children,
   ...hookOptions
 }) => {
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultAutocompleteAnimation, animateProp);
+  const animConfig = resolveAnimationsConfig(DEFAULT_AUTOCOMPLETE_ANIMATIONS, animationsProp);
 
   const ac = useAutocomplete(hookOptions);
 
   // Animation closing state — decoupled from open state for exit animation
   const [isClosing, setIsClosing] = React.useState(false);
+  const [triggerWidth, setTriggerWidth] = React.useState(200);
 
   // Wrap the close to trigger animation
   const originalClose = ac.close;
   const animatedClose = React.useCallback(() => {
-    if (animateConfig) {
+    if (animConfig) {
       setIsClosing(true);
     } else {
       originalClose();
     }
-  }, [animateConfig, originalClose]);
+  }, [animConfig, originalClose]);
 
   const onCloseComplete = React.useCallback(() => {
     setIsClosing(false);
@@ -118,7 +131,9 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
         close: animatedClose,
         isClosing,
         onCloseComplete,
-        animateConfig,
+        animConfig,
+        triggerWidth,
+        setTriggerWidth,
       }}
     >
       <RadixPopover.Root open={radixOpen} onOpenChange={() => { /* Controlled externally */ }}>
@@ -158,7 +173,19 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
   moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { inputRef } = useAutocompleteContext();
+    const { inputRef, isOpen, isClosing, setTriggerWidth } = useAutocompleteContext();
+    const moveState = isOpen && !isClosing ? 'open' : 'closed';
+    const triggerRef = React.useRef<HTMLDivElement>(null);
+    const mergedTriggerRef = useMergedRef<HTMLDivElement>(ref, triggerRef);
+
+    React.useEffect(() => {
+      const el = triggerRef.current;
+      if (!el) return;
+      setTriggerWidth(el.offsetWidth);
+      const ro = new ResizeObserver(() => setTriggerWidth(el.offsetWidth));
+      ro.observe(el);
+      return () => ro.disconnect();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleClick = () => {
       inputRef.current?.focus();
@@ -188,9 +215,10 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
             <div
               {...attrs}
               {...spRest}
-              ref={ref}
+              ref={mergedTriggerRef}
               data-size={props.size}
               data-variant={props.variant}
+              data-move-state={moveState}
               className={cx('trigger', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
               {...(props.disabled ? { 'data-disabled': '' } : {})}
@@ -388,7 +416,7 @@ const AutocompleteTagList = withMoveComponent<'tagList', AutocompleteTagListProp
         const tagListSp = sp('tagList');
         const { className: spClass, style: spStyle, ...spRest } = tagListSp as Record<string, unknown>;
 
-        if (ac.selectedValues.length === 0) return null;
+        if (!ac.multiple || ac.selectedValues.length === 0) return null;
 
         return (
           <div
@@ -493,45 +521,31 @@ const AutocompleteIcon = withMoveComponent<'icon', AutocompleteIconProps, HTMLSp
   setup({ props, ref, cx, sp, attrs }) {
     const resolvedChevron = useResolvedIcon('chevron-down', 16);
     const iconRef = React.useRef<HTMLSpanElement>(null);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
-    const { isOpen, isClosing, animateConfig } = useAutocompleteContext();
+    const { animConfig } = useAutocompleteContext();
 
-    // Animate chevron open
-    React.useEffect(() => {
-      const el = iconRef.current;
-      if (!el) return;
-      if (isOpen && !isClosing) {
-        if (animateConfig === null) {
-          el.style.transform = 'rotate(180deg)';
-        } else {
-          if (animRef.current) animRef.current.pause();
-          animRef.current = animate(el, {
-            rotate: 180,
-            ease: 'outQuart',
-            duration: prefersReducedMotion() ? 0 : 300,
-          });
-        }
-      }
-    }, [isOpen, isClosing, animateConfig]);
+    // Icon rotation — extract Icon steps from open/closed triggers, run via state triggers
+    // Trigger always sets data-move-state="open"|"closed" reflecting true state (incl. during exit)
+    const iconStates: AnimationState[] = React.useMemo(() => [
+      { name: 'open', slot: 'Icon', source: 'data-move-state', value: 'open', closest: '[data-move-state]', initial: false },
+      { name: 'closed', slot: 'Icon', source: 'data-move-state', value: 'closed', closest: '[data-move-state]', initial: false },
+    ], []);
 
-    // Animate chevron close
-    React.useEffect(() => {
-      if (!isClosing && !isOpen) {
-        const el = iconRef.current;
-        if (!el) return;
-        if (animateConfig === null) {
-          el.style.transform = 'rotate(0deg)';
-        } else {
-          if (animRef.current) animRef.current.pause();
-          animRef.current = animate(el, {
-            rotate: 0,
-            ease: 'outQuart',
-            duration: prefersReducedMotion() ? 0 : 300,
-          });
-        }
-      }
-    }, [isClosing, isOpen, animateConfig]);
+    const iconConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!animConfig) return null;
+      const openSteps = extractSteps(animConfig.find(t => t.trigger === 'open'), ['Icon']);
+      const closedSteps = extractSteps(animConfig.find(t => t.trigger === 'closed'), ['Icon']);
+      const result: AnimationTrigger[] = [];
+      if (openSteps) result.push({ trigger: 'open', sequence: openSteps });
+      if (closedSteps) result.push({ trigger: 'closed', sequence: closedSteps });
+      return result.length > 0 ? result : null;
+    }, [animConfig]);
+
+    const iconRefs = React.useMemo(() => ({
+      Icon: iconRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(iconConfig, iconRefs, iconStates);
 
     return {
       render() {
@@ -643,16 +657,35 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
 
-    const { contentRef, innerRef } = useLifecycleAnimate({
-      animate: ac.animateConfig,
-      isClosing: ac.isClosing,
-      onCloseComplete: ac.onCloseComplete,
-      stagger: ac.animateConfig ? {
-        selector: '[role="option"]',
-        config: ac.animateConfig,
-      } : undefined,
-      animateHeight: true,
-    });
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const innerRef = React.useRef<HTMLDivElement>(null);
+
+    // Width-relative scale from trigger width (known before popup opens)
+    const scaleFrom = (ac.triggerWidth - SCALE_INSET_PX) / ac.triggerWidth;
+
+    const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!ac.animConfig) return null;
+      const openSteps = extractSteps(ac.animConfig.find(t => t.trigger === 'open'), ['Content', 'ContentInner']);
+      const closedSteps = extractSteps(ac.animConfig.find(t => t.trigger === 'closed'), ['Content', 'ContentInner']);
+      const result: AnimationTrigger[] = [];
+      if (openSteps) result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
+      if (closedSteps) result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
+      return result.length > 0 ? result : null;
+    }, [ac.animConfig, scaleFrom]);
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    // Enter/exit via useAnimations orchestrator
+    const { runExit } = useAnimations(contentConfig, contentRefs);
+
+    // Exit animation
+    React.useEffect(() => {
+      if (!ac.isClosing) return;
+      if (!contentConfig) { ac.onCloseComplete?.(); return; }
+      runExit().then(() => ac.onCloseComplete?.());
+    }, [ac.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
@@ -746,7 +779,6 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
     const resolvedCheck = useResolvedIcon('check', 14);
     const itemValue = props.value as string;
@@ -777,6 +809,20 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
       }
     }, [isHighlighted]);
 
+    // Item hover animation via useAnimations
+    const scaleHover = (ac.triggerWidth + SCALE_HOVER_PX) / ac.triggerWidth;
+    const itemConfig = React.useMemo(() => {
+      if (!ac.animConfig) return null;
+      const hover = ac.animConfig.find((t) => t.trigger === 'Item.hover');
+      return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
+    }, [ac.animConfig, scaleHover]);
+
+    const itemRefs = React.useMemo(() => ({
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    const { handlers } = useAnimations(itemConfig, itemRefs);
+
     const handleClick = () => {
       if (isDisabled) return;
       ac.onSelect(itemValue);
@@ -786,23 +832,11 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     const handleMouseEnter = () => {
       if (isDisabled) return;
       ac.setHighlightedIndex(myVisibleIndex);
-      if (ac.animateConfig === null) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1.02,
-        ease: spring(springConfig),
-      });
+      handlers.Item?.onMouseEnter?.();
     };
 
     const handleMouseLeave = () => {
-      if (ac.animateConfig === null) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1,
-        ease: spring(springConfig),
-      });
+      handlers.Item?.onMouseLeave?.();
     };
 
     return {

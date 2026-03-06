@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Heading',
   componentClass: 'presentational' as const,
   category: 'core',
@@ -78,7 +78,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'],
-  animationImports: [],
+
   componentDeps: [],
 
   testing: {

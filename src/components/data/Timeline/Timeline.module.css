@@ -74,6 +74,7 @@
   flex-direction: column;
   align-items: center;
   flex-shrink: 0;
+  width: var(--move-timeline-bullet-content-size);
 }
 
 /* =========================================================================
@@ -90,15 +91,16 @@
   border-radius: 50%;
   border: var(--move-timeline-line-width) solid var(--move-timeline-bullet-border);
   background-color: var(--move-timeline-bullet-bg);
-  margin-top: 5px;
   position: relative;
   z-index: 1;
+  margin-top: 5px;
 }
 
 .bullet[data-has-content] {
   width: var(--move-timeline-bullet-content-size);
   height: var(--move-timeline-bullet-content-size);
   color: var(--move-fg-muted);
+  margin-top: 0;
 }
 
 /* =========================================================================
@@ -224,7 +226,8 @@
   border-color: var(--move-timeline-active-color);
   background-color: var(--move-timeline-active-color);
   color: white;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--move-timeline-active-color) 20%, transparent);
+  box-shadow: 0 0 0 3px var(--move-timeline-bullet-bg),
+    0 0 0 6px color-mix(in srgb, var(--move-timeline-active-color) 20%, transparent);
 }
 
 /* =========================================================================

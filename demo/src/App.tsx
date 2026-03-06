@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useEffect } from 'react';
-import { ThemeProvider, IconProvider, darkTheme, lightTheme } from 'move';
+import { MoveRoot, darkTheme, lightTheme } from 'move';
 import type { Theme } from 'move';
 import * as LucideIcons from 'lucide-react';
 import { codeToHtml } from 'shiki';
@@ -30,12 +30,6 @@ const iconResolver = (name: string) => {
   const icons = LucideIcons as Record<string, any>;
   return (icons[toPascalCase(name)] || icons[name] || null) as any;
 };
-
-const demoSources = import.meta.glob('./demos/generated/*Demo.tsx', {
-  query: '?raw',
-  import: 'default',
-  eager: true,
-}) as Record<string, string>;
 
 // ---------------------------------------------------------------------------
 // Build initial nested props from subComponents tree
@@ -237,10 +231,48 @@ function splitControls(controls: Control[]): { root: Control[]; groups: ScopedCo
 // RecipeCard
 // ---------------------------------------------------------------------------
 
-function RecipeCard({ recipe, isActive, onSelect }: {
+function RecipeCodeBlock({ code, themeName }: { code: string; themeName: string }) {
+  const [html, setHtml] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    codeToHtml(code, {
+      lang: 'tsx',
+      theme: themeName === 'dark' ? 'github-dark' : 'github-light',
+    }).then((result) => {
+      if (!cancelled) setHtml(result);
+    });
+    return () => { cancelled = true; };
+  }, [code, themeName]);
+
+  const onCopy = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [code]);
+
+  return (
+    <div className="recipe-code">
+      <button className="recipe-copy-btn" onClick={onCopy}>
+        {copied ? 'Copied!' : 'Copy'}
+      </button>
+      {html ? (
+        <div className="recipe-code-html" dangerouslySetInnerHTML={{ __html: html }} />
+      ) : (
+        <pre className="recipe-code-fallback"><code>{code}</code></pre>
+      )}
+    </div>
+  );
+}
+
+function RecipeCard({ recipe, isActive, onSelect, themeName }: {
   recipe: Recipe;
   isActive: boolean;
   onSelect: () => void;
+  themeName: string;
 }) {
   const Component = recipe.render;
   return (
@@ -248,15 +280,11 @@ function RecipeCard({ recipe, isActive, onSelect }: {
       <div className="recipe-header">
         <h3 className="recipe-title">{recipe.title}</h3>
         {recipe.description && <p className="recipe-description">{recipe.description}</p>}
-        {recipe.tags && (
-          <div className="recipe-tags">
-            {recipe.tags.map(t => <span key={t} className="recipe-tag">{t}</span>)}
-          </div>
-        )}
       </div>
       <div className="recipe-preview">
         <Component />
       </div>
+      <RecipeCodeBlock code={recipe.code} themeName={themeName} />
     </div>
   );
 }
@@ -265,15 +293,18 @@ function RecipeCard({ recipe, isActive, onSelect }: {
 // App
 // ---------------------------------------------------------------------------
 
+function getInitialComponent(demos: DemoDefinition[]): string {
+  const hash = window.location.hash.replace('#/', '').replace('#', '');
+  if (hash && demos.some(d => d.name === hash)) return hash;
+  return demos[0]?.name ?? '';
+}
+
 function App() {
   const demos = generatedDemos;
   const [theme, setTheme] = useState<Theme>(lightTheme);
-  const [activeName, setActiveName] = useState(demos[0]?.name ?? '');
+  const [activeName, setActiveName] = useState(() => getInitialComponent(demos));
   const [viewMode, setViewMode] = useState<'recipes' | 'playground'>('recipes');
   const [activeRecipeId, setActiveRecipeId] = useState<string>('');
-  const [showCode, setShowCode] = useState(false);
-  const [codeHtml, setCodeHtml] = useState('');
-  const [codeLoading, setCodeLoading] = useState(false);
 
   const active = demos.find((d) => d.name === activeName) ?? demos[0];
   const [propsState, setPropsState] = useState<Record<string, unknown>>(() =>
@@ -329,9 +360,24 @@ function App() {
       if (!next) return;
       setActiveName(name);
       setPropsState(buildInitialProps(next));
+      window.history.pushState(null, '', `#/${name}`);
     },
     [demos],
   );
+
+  // Sync with browser back/forward
+  useEffect(() => {
+    const onHashChange = () => {
+      const hash = window.location.hash.replace('#/', '').replace('#', '');
+      if (hash && demos.some(d => d.name === hash)) {
+        setActiveName(hash);
+        const next = demos.find(d => d.name === hash);
+        if (next) setPropsState(buildInitialProps(next));
+      }
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, [demos]);
 
   const onFlatPropChange = useCallback((name: string, value: unknown) => {
     setPropsState((prev) => ({ ...prev, [name]: value }));
@@ -349,9 +395,6 @@ function App() {
     );
   }
 
-  // --- Legacy sections path ---
-  const activeSectionForLegacy = sections[0] ?? null;
-
   // --- Playground controls ---
   const scopedControls = splitControls(active.controls);
   const hasSubComponents = active.subComponents && active.subComponents.length > 0;
@@ -361,53 +404,8 @@ function App() {
   const showPropsPanel = isPlaygroundActive &&
     (scopedControls.root.length > 0 || scopedControls.groups.length > 0 || hasSubComponents);
 
-  // Active recipe for code viewer
-  const activeRecipe = componentRecipes.find(r => r.id === activeRecipeId);
-
-  // Code highlighting
-  useEffect(() => {
-    if (!active || !showCode) return;
-
-    let source: string;
-    if (viewMode === 'recipes' && activeRecipe && !hasLegacySections) {
-      // Recipe mode: show recipe's static code
-      source = activeRecipe.code;
-    } else if (hasLegacySections && activeSectionForLegacy) {
-      // Legacy sections
-      const sectionCode = activeSectionForLegacy.code;
-      source = typeof sectionCode === 'function'
-        ? sectionCode(propsState)
-        : sectionCode ?? '// Source unavailable';
-    } else {
-      // Playground mode: show demo source
-      const sourcePath = `./demos/generated/${active.name}Demo.tsx`;
-      source = demoSources[sourcePath] ?? '// Source unavailable';
-    }
-
-    let cancelled = false;
-    setCodeLoading(true);
-    codeToHtml(source, {
-      lang: 'tsx',
-      theme: theme.name === 'dark' ? 'github-dark' : 'github-light',
-    })
-      .then((html) => {
-        if (!cancelled) setCodeHtml(html);
-      })
-      .catch(() => {
-        if (!cancelled) setCodeHtml('<pre><code>Failed to render code sample.</code></pre>');
-      })
-      .finally(() => {
-        if (!cancelled) setCodeLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [active, viewMode, activeRecipe, activeSectionForLegacy, propsState, showCode, theme.name, hasLegacySections]);
-
   return (
-    <ThemeProvider theme={theme}>
-      <IconProvider resolver={iconResolver}>
+    <MoveRoot theme={theme} iconResolver={iconResolver}>
         <div className={`lab ${showPropsPanel ? '' : 'no-props'}`.trim()}>
           <aside className="panel list-panel">
             <div className="panel-title">Components</div>
@@ -440,9 +438,6 @@ function App() {
                 onClick={() => setTheme(theme.name === 'dark' ? lightTheme : darkTheme)}
               >
                 Theme: {theme.name}
-              </button>
-              <button className="theme-btn" onClick={() => setShowCode((prev) => !prev)}>
-                {showCode ? 'Hide Code' : 'Show Code'}
               </button>
             </div>
 
@@ -484,37 +479,19 @@ function App() {
                     recipe={recipe}
                     isActive={recipe.id === activeRecipeId}
                     onSelect={() => setActiveRecipeId(recipe.id)}
+                    themeName={theme.name}
                   />
                 ))}
               </div>
             )}
 
-            {/* Playground view */}
-            {!hasLegacySections && viewMode === 'playground' && (
+            {/* Playground view (shown when in playground mode, or when no recipes exist) */}
+            {!hasLegacySections && (viewMode === 'playground' || !hasRecipes) && (
               <div className="preview-canvas">
                 {active.render(propsState)}
               </div>
             )}
 
-            {/* Recipes-only (no controls) — skip tabs, show recipes directly */}
-            {!hasLegacySections && !showViewTabs && hasRecipes && viewMode === 'recipes' ? null : null}
-
-            {/* Playground-only (no recipes) — show playground directly */}
-            {!hasLegacySections && !hasRecipes && (
-              <div className="preview-canvas">
-                {active.render(propsState)}
-              </div>
-            )}
-
-            {showCode && (
-              <div className="code-panel">
-                {codeLoading ? (
-                  <div className="code-loading">Rendering highlighted code…</div>
-                ) : (
-                  <div className="code-html" dangerouslySetInnerHTML={{ __html: codeHtml }} />
-                )}
-              </div>
-            )}
           </main>
 
           {showPropsPanel && (
@@ -562,8 +539,7 @@ function App() {
             </aside>
           )}
         </div>
-      </IconProvider>
-    </ThemeProvider>
+    </MoveRoot>
   );
 }
 
@@ -611,7 +587,7 @@ function LegacySectionTabs({
           ))}
         </div>
       )}
-      <div className="preview-canvas">
+      <div className="preview-canvas" key={activeSection?.id ?? 'default'}>
         {activeSection ? activeSection.render(propsState) : active.render(propsState)}
       </div>
       {showControls && (

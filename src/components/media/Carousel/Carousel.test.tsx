@@ -461,11 +461,11 @@ describe('Carousel', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('animate={false} disables scroll animation (instant scroll)', () => {
-      // When animate={false}, scrolling should still work (just instant)
+    it('animations={false} disables scroll animation (instant scroll)', () => {
+      // When animations={false}, scrolling should still work (just instant)
       const onChange = vi.fn();
       render(
-        <Carousel.Root animate={false} defaultPage={0} onPageChange={onChange}>
+        <Carousel.Root animations={false} defaultPage={0} onPageChange={onChange}>
           <Carousel.Viewport>
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>

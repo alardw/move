@@ -32,12 +32,12 @@
   --move-border-emphasis: var(--move-gray-600);
 
   /* ============================================
-   * Color - Primary (brand)
+   * Color - Primary (indigo-violet brand)
    * ============================================ */
-  --move-primary: var(--move-sage-600);
-  --move-primary-hover: var(--move-sage-500);
-  --move-primary-active: var(--move-sage-700);
-  --move-primary-subtle: var(--move-sage-950);
+  --move-primary: var(--move-primary-300);
+  --move-primary-hover: var(--move-primary-200);
+  --move-primary-active: var(--move-primary-400);
+  --move-primary-subtle: var(--move-primary-500);
   --move-primary-fg: var(--move-white);
 
   /* ============================================
@@ -89,7 +89,7 @@
   /* ============================================
    * Focus Ring
    * ============================================ */
-  --move-focus-ring-color: var(--move-sage-500);
+  --move-focus-ring-color: var(--move-primary-200);
   --move-focus-ring-width: 2px;
   --move-focus-ring-offset: 2px;
   --move-focus-ring: var(--move-focus-ring-width) solid var(--move-focus-ring-color);

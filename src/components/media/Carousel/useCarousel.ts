@@ -3,7 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 import { useCarouselAnimation } from './useCarouselAnimation';
-import type { LifecycleAnimate } from '../../../animation';
+import type { Animation } from '../../../animation';
 
 // =============================================================================
 // Types
@@ -12,8 +12,7 @@ import type { LifecycleAnimate } from '../../../animation';
 export type CarouselOrientation = 'horizontal' | 'vertical';
 export type CarouselAlign = 'start' | 'center' | 'end';
 
-/** CarouselAnimate is an alias for LifecycleAnimate (enter/exit) */
-export type CarouselAnimate = LifecycleAnimate;
+export type CarouselAnimate = { enter?: Animation } | false;
 
 export interface UseCarouselOptions {
   /** Controlled active page (0-indexed). */
@@ -35,7 +34,7 @@ export interface UseCarouselOptions {
   /** Allow drag/swipe navigation. */
   draggable?: boolean;
   /** Slide transition animation. */
-  animate?: CarouselAnimate | false;
+  animations?: CarouselAnimate | false;
 }
 
 export interface UseCarouselReturn {
@@ -83,7 +82,7 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
     loop = false,
     autoplay = 0,
     draggable = true,
-    animate: animateConfig,
+    animations: animationsConfig,
   } = options;
 
   const [page, setPage] = useControlledState<number>({
@@ -96,7 +95,7 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const isScrollingRef = useRef(false);
   const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { animateScroll, cancel } = useCarouselAnimation({ animate: animateConfig });
+  const { animateScroll, cancel } = useCarouselAnimation({ animations: animationsConfig });
 
   // Page count based on slides and slidesPerView
   const pageCount = useMemo(() => {

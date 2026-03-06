@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Accordion',
   componentClass: 'disclosure' as const,
   category: 'panel',
@@ -32,7 +32,7 @@ export const spec = {
         { name: 'collapsible', type: 'boolean', default: 'true', moveSpecific: true, description: 'Allow closing all items in single mode' },
         { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
         { name: 'variant', type: "'default' | 'contained' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
-        { name: 'animate', type: 'AccordionAnimateConfig | false', moveSpecific: true, description: 'Animation config for enter stagger and content expand/collapse, or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for enter stagger and content expand/collapse, or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Accordion items' },
       ],
       usesFactory: true,
@@ -65,7 +65,7 @@ export const spec = {
       ],
       props: [
         { name: 'icon', type: 'React.ReactNode', moveSpecific: true, description: 'Custom icon replacing the default chevron' },
-        { name: 'animate', type: "Pick<ElementAnimate, 'hover'> | false", moveSpecific: true, description: 'Hover animation config for the trigger or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Hover animation config for the trigger or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger label text' },
       ],
       usesFactory: true,
@@ -93,7 +93,7 @@ export const spec = {
     { name: 'collapsible', type: 'boolean', default: 'true', moveSpecific: true, description: 'Allow closing all items in single mode' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
     { name: 'variant', type: "'default' | 'contained' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'animate', type: 'AccordionAnimateConfig | false', moveSpecific: true, description: 'Animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Accordion items' },
   ],
 
@@ -142,13 +142,20 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  states: [
+    { name: 'open', slot: 'Item', source: 'data-state', value: 'open' },
+    { name: 'close', slot: 'Item', source: 'data-state', value: 'closed' },
+  ],
+
   animations: [
-    {
-      slot: 'content',
-      hook: 'useExpandAnimate',
-      configType: 'ExpandAnimate',
-      defaultProfile: 'contentExpand',
-    },
+    { trigger: 'open', sequence: [[
+      { target: 'icon', animation: { rotate: { to: 180, ease: 'snappy' } } },
+      { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+    ]] },
+    { trigger: 'close', sequence: [[
+      { target: 'icon', animation: { rotate: { to: 0, ease: 'snappy' } } },
+      { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+    ]] },
   ],
 
   renderContracts: [
@@ -198,7 +205,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useExpandAnimate', 'defaultAnimations'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -251,7 +258,7 @@ export const spec = {
       'Icon rotates to 180deg when item opens',
       'Icon rotates to 0deg when item closes',
       'Trigger scales on hover',
-      'animate=false disables all animations',
+      'animations={false} disables all animations',
       'Reduced motion preference skips all animations',
     ] as string[],
   },

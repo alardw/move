@@ -4,6 +4,8 @@
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { CalendarContext } from '../../calendar/_shared/CalendarContext';
+import { CalendarNav } from '../../calendar/_shared/CalendarNav';
+import { MonthGrid } from '../../calendar/_shared/MonthGrid';
 import { useCalendar } from '../../calendar/Calendar/useCalendar';
 import type { UseCalendarOptions } from '../../calendar/Calendar/useCalendar';
 import type {
@@ -22,8 +24,8 @@ import {
   isBefore,
   startOfDay,
 } from '../../calendar/_shared/dateUtils';
-import { useLifecycleAnimate, mergeAnimateConfig } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useMergedRef } from '../../../engine';
 import { InputText } from '../InputText';
 import { TimeField } from '../TimeField';
@@ -66,17 +68,22 @@ const DEFAULT_LABELS: Required<DatePickerLabels> = {
 // Animation defaults
 // =============================================================================
 
-const DEFAULT_ANIMATE: LifecycleAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
+const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.enter },
+    ]],
   },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
+  {
+    trigger: 'Content.exit',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.exit },
+    ]],
   },
-};
+];
 
 // =============================================================================
 // Context
@@ -100,7 +107,7 @@ interface DatePickerContextValue {
   rangeLabels: DatePickerRangeLabels;
   labels: Required<DatePickerLabels>;
   isOpen: boolean;
-  animateConfig: LifecycleAnimate | null;
+  animConfig: AnimationTrigger[] | null;
   showTime: boolean;
   timePlacement: 'inline' | 'popup';
   timeHourCycle: 12 | 24;
@@ -120,7 +127,7 @@ export interface DatePickerRootProps {
   style?: React.CSSProperties;
 
   /** Animation config for open/close transitions */
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
 
   /** Controlled open state */
   open?: boolean;
@@ -177,7 +184,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   children,
   className,
   style,
-  animate,
+  animations: animationsProp,
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
@@ -216,8 +223,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     to: labels.selectEndDate,
   };
 
-  const animateConfig =
-    animate === false ? null : mergeAnimateConfig(DEFAULT_ANIMATE, animate);
+  const animConfig = resolveAnimationsConfig(DEFAULT_DATEPICKER_ANIMATIONS, animationsProp);
 
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -430,7 +436,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
         rangeLabels,
         labels,
         isOpen: !!isOpen,
-        animateConfig,
+        animConfig,
         showTime,
         timePlacement,
         timeHourCycle,
@@ -958,17 +964,29 @@ export interface DatePickerContentProps {
 const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
   ({ children, className, style, sideOffset = 4, align = 'start', ...rest }, forwardedRef) => {
     const dpCtx = React.useContext(DatePickerContext);
-    const animateConfig = dpCtx?.animateConfig ?? null;
+    const animConfig = dpCtx?.animConfig ?? null;
 
-    const { contentRef, innerRef } = useLifecycleAnimate({
-      animate: animateConfig || undefined,
-      isClosing: dpCtx?.isClosing,
-      onCloseComplete: dpCtx?.onCloseComplete,
-      stagger: {
-        selector: '[role="gridcell"]',
-        config: { stagger: { delay: 15 } },
-      },
-    });
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const innerRef = React.useRef<HTMLDivElement>(null);
+
+    // Filter content triggers for useAnimations
+    const contentConfig = React.useMemo(() =>
+      animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
+      [animConfig]);
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    // Enter/exit via useAnimations orchestrator
+    const { runExit } = useAnimations(contentConfig, contentRefs);
+
+    // Exit animation
+    React.useEffect(() => {
+      if (!dpCtx?.isClosing) return;
+      if (!contentConfig) { dpCtx?.onCloseComplete?.(); return; }
+      runExit().then(() => dpCtx?.onCloseComplete?.());
+    }, [dpCtx?.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
@@ -997,10 +1015,10 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
       <RadixPopover.Content
         {...rest}
         ref={mergedRef}
-        sideOffset={sideOffset}
-        align={align}
+        sideOffset={sideOffset as number}
+        align={align as 'start' | 'center' | 'end'}
         className={`${styles.content} ${className ?? ''}`}
-        style={style}
+        style={style as React.CSSProperties}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
         onOpenAutoFocus={(e) => e.preventDefault()}
@@ -1011,7 +1029,14 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
             {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
           </div>
         )}
-        <div ref={innerRef}>{children}</div>
+        <div ref={innerRef}>
+          {(children ?? (
+            <>
+              <CalendarNav />
+              <MonthGrid />
+            </>
+          )) as React.ReactNode}
+        </div>
         {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
           <div className={styles.datePickerTime}>
             <span className={styles.datePickerTimeLabel}>Time</span>

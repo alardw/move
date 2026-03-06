@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'AudioPlayer',
   componentClass: 'interactive' as const,
   category: 'media',
@@ -128,7 +128,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useControlledState'] as string[],
-  animationImports: [] as string[],
+
   componentDeps: ['Button', 'PlayerSettingsMenu'] as string[],
 
   testing: {

@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ColorPicker',
   componentClass: 'display' as const,
   category: 'form',
@@ -146,7 +146,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: [] as string[],
+
   radixPrimitive: undefined,
   componentDeps: [] as string[],
 

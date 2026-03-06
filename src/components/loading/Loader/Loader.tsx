@@ -43,7 +43,8 @@ export const Loader = withMoveComponent<
     const circleRef = React.useRef<SVGCircleElement | null>(null);
     const dotsRef = React.useRef<(HTMLSpanElement | null)[]>([]);
 
-    // Spinner: anime.js rotation + stroke-dash animation
+    // Spinner: anime.js SVG rotation + stroke-dash (proxy animation)
+    // Uses raw animate() — proxy objects are outside useAnimations' scope
     React.useEffect(() => {
       if (props.variant !== 'spinner') return;
 

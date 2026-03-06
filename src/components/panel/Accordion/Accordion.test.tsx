@@ -120,7 +120,7 @@ describe('Accordion', () => {
 
     it('toggles item on click', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false });
+      renderAccordion({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Item 1' });
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await user.click(trigger);
@@ -130,7 +130,7 @@ describe('Accordion', () => {
     it('fires onValueChange on click', async () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
-      renderAccordion({ onValueChange: onChange, animate: false });
+      renderAccordion({ onValueChange: onChange, animations: false });
       await user.click(screen.getByRole('button', { name: 'Item 1' }));
       expect(onChange).toHaveBeenCalledWith('item-1');
     });
@@ -140,7 +140,7 @@ describe('Accordion', () => {
   describe('single mode', () => {
     it('only one item open at a time', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false });
+      renderAccordion({ animations: false });
       const trigger1 = screen.getByRole('button', { name: 'Item 1' });
       const trigger2 = screen.getByRole('button', { name: 'Item 2' });
 
@@ -154,7 +154,7 @@ describe('Accordion', () => {
 
     it('collapses open item when collapsible=true', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false, collapsible: true });
+      renderAccordion({ animations: false, collapsible: true });
       const trigger1 = screen.getByRole('button', { name: 'Item 1' });
 
       await user.click(trigger1);
@@ -166,7 +166,7 @@ describe('Accordion', () => {
 
     it('does not collapse last item when collapsible=false', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false, collapsible: false, defaultValue: 'item-1' });
+      renderAccordion({ animations: false, collapsible: false, defaultValue: 'item-1' });
       const trigger1 = screen.getByRole('button', { name: 'Item 1' });
 
       expect(trigger1).toHaveAttribute('aria-expanded', 'true');
@@ -179,7 +179,7 @@ describe('Accordion', () => {
   describe('multiple mode', () => {
     it('allows multiple items open simultaneously', async () => {
       const user = userEvent.setup();
-      renderAccordion({ type: 'multiple', animate: false });
+      renderAccordion({ type: 'multiple', animations: false });
       const trigger1 = screen.getByRole('button', { name: 'Item 1' });
       const trigger2 = screen.getByRole('button', { name: 'Item 2' });
 
@@ -194,13 +194,13 @@ describe('Accordion', () => {
   // === Content ===
   describe('Content', () => {
     it('renders with role=region when open', () => {
-      renderAccordion({ defaultValue: 'item-1', animate: false });
+      renderAccordion({ defaultValue: 'item-1', animations: false });
       const region = screen.getByRole('region');
       expect(region).toBeInTheDocument();
     });
 
     it('does not render when closed', () => {
-      renderAccordion({ animate: false });
+      renderAccordion({ animations: false });
       const regions = screen.queryAllByRole('region');
       expect(regions).toHaveLength(0);
     });
@@ -209,7 +209,7 @@ describe('Accordion', () => {
   // === Controlled ===
   describe('controlled value', () => {
     it('opens item matching controlled value', () => {
-      renderAccordion({ value: 'item-2', onValueChange: () => {}, animate: false });
+      renderAccordion({ value: 'item-2', onValueChange: () => {}, animations: false });
       const trigger = screen.getByRole('button', { name: 'Item 2' });
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
@@ -219,7 +219,7 @@ describe('Accordion', () => {
   describe('keyboard', () => {
     it('Enter toggles the focused item', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false });
+      renderAccordion({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Item 1' });
       trigger.focus();
       await user.keyboard('{Enter}');
@@ -228,7 +228,7 @@ describe('Accordion', () => {
 
     it('Space toggles the focused item', async () => {
       const user = userEvent.setup();
-      renderAccordion({ animate: false });
+      renderAccordion({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Item 1' });
       trigger.focus();
       await user.keyboard(' ');

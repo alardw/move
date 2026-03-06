@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'TimeField',
   componentClass: 'input_plain' as const,
   category: 'form',
@@ -33,7 +33,7 @@ export const spec = {
         { name: 'granularity', type: "'hour' | 'minute' | 'second'", default: "'minute'", moveSpecific: true, description: 'Which segments to show' },
         { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: '12 or 24 hour display cycle' },
         { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show dropdown column picker on ArrowDown' },
-        { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config for dropdown enter/exit' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for dropdown enter/exit' },
         { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
         { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
         { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
@@ -107,7 +107,7 @@ export const spec = {
     { name: 'granularity', type: "'hour' | 'minute' | 'second'", default: "'minute'", moveSpecific: true, description: 'Visible segments' },
     { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: 'Hour display cycle' },
     { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable dropdown picker' },
-    { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Dropdown animation config' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Dropdown animation config' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
     { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
@@ -163,12 +163,14 @@ export const spec = {
   ],
 
   animations: [
-    {
-      slot: 'dropdown',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'outQuart' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 }, stagger: { delay: 30 } }",
-    },
+    { trigger: 'Content.enter', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      { children: '[role="option"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+    ]] },
+    { trigger: 'Content.exit', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      { children: '[role="option"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+    ]] },
   ],
 
   tokens: [
@@ -203,7 +205,7 @@ export const spec = {
     granularity: 'behavior' as const,
     hourCycle: 'behavior' as const,
     withDropdown: 'behavior' as const,
-    animate: 'behavior' as const,
+    animations: 'behavior' as const,
     disabled: 'behavior' as const,
     invalid: 'behavior' as const,
     min: 'behavior' as const,
@@ -214,7 +216,6 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate', 'mergeAnimateConfig'] as string[],
   radixPrimitive: 'Popover',
   componentDeps: [] as string[],
 
@@ -269,11 +270,11 @@ export const spec = {
       'Separator has aria-hidden="true"',
     ],
     animation: [
-      'Dropdown uses usePopupAnimation with enter/exit config',
+      'Dropdown uses animateDimension with stagger for enter/exit',
       'Enter: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Exit: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',
       'Stagger: items via button selector with 30ms delay',
-      'animate=false disables dropdown animation',
+      'animations={false} disables dropdown animation',
     ],
   },
 

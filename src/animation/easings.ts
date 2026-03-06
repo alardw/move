@@ -12,11 +12,13 @@ export const springs = {
   // === Quick & Responsive - for small UI elements, buttons ===
   snappy: { mass: 1, stiffness: 500, damping: 30, velocity: 0 },
   quick: { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 },
+  tooltip: { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 },
 
   // === Bouncy & Playful - for scale animations, popovers ===
   poppy: { mass: 0.8, stiffness: 350, damping: 12, velocity: 0 },
 
   // === Smooth & Professional - for modals, overlays ===
+  sidebar: { mass: 1, stiffness: 300, damping: 25, velocity: 0 },
   gentle: { mass: 1, stiffness: 80, damping: 12, velocity: 0 },
 
   // === Slow & Elegant - for page transitions, large elements ===
@@ -28,6 +30,9 @@ export const springs = {
 
   // === Stiff & Controlled - minimal overshoot ===
   stiff: { mass: 1, stiffness: 400, damping: 35, velocity: 0 },
+
+  // === Pagination — moderate overshoot for slide-in items ===
+  pagination: { mass: 1, stiffness: 400, damping: 26, velocity: 0 },
 } as const satisfies Record<string, SpringParams>;
 
 export type SpringPreset = keyof typeof springs;
@@ -64,3 +69,16 @@ export const getEase = (preset: Exclude<AnimationPreset, 'none'>) => {
 
 // Default duration for non-spring easings
 export const DEFAULT_DURATION = 200;
+
+// Pre-computed spring constants — use directly as `ease` in anime.js per-property params
+export const snappy = spring(springs.snappy);
+export const quick = spring(springs.quick);
+export const poppy = spring(springs.poppy);
+export const gentle = spring(springs.gentle);
+export const slow = spring(springs.slow);
+export const lazy = spring(springs.lazy);
+export const jelly = spring(springs.jelly);
+export const stiff = spring(springs.stiff);
+export const tooltip = spring(springs.tooltip);
+export const sidebar = spring(springs.sidebar);
+export const pagination = spring(springs.pagination);

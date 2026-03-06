@@ -2,7 +2,7 @@
 // specHash: e263843a
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Button',
   componentClass: 'interactive' as const,
   category: 'core',
@@ -29,7 +29,7 @@ export const spec = {
   props: [
     { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Visual style variant' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Button size' },
-    { name: 'animate', type: 'InteractionAnimate | false', moveSpecific: true, description: 'Animation config for hover/press interactions' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions' },
     { name: 'elevation', type: 'ElevationLevel', default: 'null', moveSpecific: true, description: 'Shadow elevation level' },
     { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as child element via Radix Slot' },
     { name: 'type', type: 'string', default: "'button'", moveSpecific: false, description: 'HTML button type attribute' },
@@ -49,13 +49,8 @@ export const spec = {
   asChild: true,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-      defaultPreset: 'element',
-    },
+    { trigger: 'Root.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   tokens: [
@@ -124,7 +119,6 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  animationImports: ['useInteractiveAnimate', 'defaultAnimations'],
   componentDeps: [],
 
   testing: {
@@ -143,8 +137,8 @@ export const spec = {
       'Renders as child via asChild',
     ],
     animation: [
-      'Wires useInteractionAnimate with defaultAnimations.element',
-      'Disables animation when animate=false',
+      'Uses Root.hover and Root.press event triggers for interactive animation',
+      'Disables animation when animations={false}',
       'Disables animation when disabled',
     ],
   },

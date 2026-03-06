@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Dialog',
   componentClass: 'overlay_layer' as const,
   category: 'overlay',
@@ -33,7 +33,7 @@ export const spec = {
         { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
         { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Initial open state (uncontrolled)' },
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animate', type: 'LayerAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
         { name: 'modal', type: 'boolean', moveSpecific: false, description: 'Whether to render as modal with backdrop' },
       ],
       usesFactory: false,
@@ -235,23 +235,14 @@ export const spec = {
   },
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultProfile: 'layerPresence',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.85, 1], easing: 'snappy' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 } }",
-    },
-    {
-      slot: 'overlay',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, duration: 250 }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, duration: 200 } }",
-    },
+    { trigger: 'Overlay.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 200 } } }] },
+    { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 150 } } }] },
+    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.95, to: 1, ease: 'poppy' } } }] },
+    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { to: 0 }, scale: { to: 0.95, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
-    { id: 'animation-context', description: 'Root provides DialogContext with isClosing, close(), onCloseComplete, and animateConfig to all sub-components' },
+    { id: 'animation-context', description: 'Root provides DialogContext with isClosing, close(), onCloseComplete, and animation config to all sub-components' },
     { id: 'close-after-exit', description: 'Close button triggers isClosing state; Content exit animation calls onCloseComplete which actually unmounts the dialog' },
     { id: 'radix-open-override', description: 'Root keeps Radix open during exit animation (open={open || isClosing}) and ignores Radix close requests' },
     { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) to ensure correct typography outside the tree' },
@@ -294,7 +285,7 @@ export const spec = {
   radixPrimitive: 'Dialog',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -336,7 +327,7 @@ export const spec = {
       'Overlay entrance fades in with outQuart in 250ms',
       'Overlay exit fades out with outQuart in 200ms',
       'Content exit animation calls onCloseComplete to unmount dialog',
-      'animate=false disables all animations and immediately unmounts on close',
+      'animations={false} disables all animations and immediately unmounts on close',
       'Reduced motion preference skips animations',
     ],
   },

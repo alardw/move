@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Tabs',
   componentClass: 'disclosure' as const,
   category: 'panel',
@@ -13,7 +13,7 @@ export const spec = {
   slots: [
     { name: 'root', element: 'RadixTabs.Root', description: 'Root container managing tab state via Radix Tabs.Root' },
     { name: 'list', element: 'RadixTabs.List', description: 'Tab trigger list container with variant and size styling' },
-    { name: 'indicator', element: 'div', description: 'Sliding underline indicator positioned via usePositionTracker' },
+    { name: 'indicator', element: 'div', description: 'Sliding underline indicator positioned via animatePosition state trigger' },
     { name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button that activates its panel' },
     { name: 'content', element: 'RadixTabs.Content', description: 'Tab panel content associated with a trigger value' },
   ],
@@ -50,7 +50,7 @@ export const spec = {
         { name: 'loop', type: 'boolean', moveSpecific: true, description: 'Whether keyboard navigation loops around' },
         { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Tab size affecting padding and font size' },
         { name: 'variant', type: "'underline' | 'pills' | 'outline'", default: "'underline'", moveSpecific: true, description: 'Visual style variant' },
-        { name: 'animate', type: 'false', moveSpecific: true, description: 'Pass false to disable sliding indicator animation' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Pass false to disable sliding indicator animation' },
       ],
       usesFactory: true,
       radixPrimitive: 'Tabs.List',
@@ -120,18 +120,17 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  states: [
+    { name: 'activeChange', slot: 'List', source: 'data-state', value: 'active' },
+  ],
+
   animations: [
-    {
-      slot: 'indicator',
-      hook: 'usePositionTracker',
-      configType: 'PositionTracker',
-      defaultProfile: 'slidingIndicator',
-    },
+    { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, width: { to: '$Active.width' } } }] },
   ],
 
   renderContracts: [
     { id: 'indicator-underline-only', description: 'Sliding indicator is only rendered when variant is underline (default). Pills and outline variants do not render the indicator element.' },
-    { id: 'indicator-tracks-width', description: 'usePositionTracker/useSlidingIndicator tracks width only (track: "width"), matching the horizontal underline position to the active trigger.' },
+    { id: 'indicator-tracks-width', description: 'animatePosition tracks translateX and width only, matching the horizontal underline position to the active trigger via $Active.x and $Active.width expressions.' },
     { id: 'content-tabindex-minus-one', description: 'Content panel sets tabIndex={-1} to prevent it from being a tab stop while allowing programmatic focus.' },
     { id: 'size-via-data-attr', description: 'Size is set as data-size on List, and triggers inherit sizing via CSS descendant selectors (.list[data-size] .trigger).' },
     { id: 'variant-via-data-attr', description: 'Variant is set as data-variant on List, and triggers inherit variant styling via CSS descendant selectors.' },
@@ -157,7 +156,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: ['useSlidingIndicator'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -199,7 +198,7 @@ export const spec = {
     ],
     animation: [
       'Sliding indicator animates position on tab change',
-      'animate=false disables sliding indicator',
+      'animations={false} disables sliding indicator',
       'Indicator snaps on first render without animation',
     ],
   },

@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Dropdown',
   componentClass: 'overlay_popup' as const,
   category: 'overlay',
@@ -38,7 +38,7 @@ export const spec = {
         { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
         { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Initial open state (uncontrolled)' },
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
       ],
       usesFactory: false,
       description: 'Stateful root that manages open/close state, animation context, and close-after-exit coordination',
@@ -307,21 +307,22 @@ export const spec = {
   },
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate & StaggerModifier',
-      defaultProfile: 'popupPresence',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'outQuart' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 }, stagger: { delay: 30 } }",
-    },
+    { trigger: 'Content.enter', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      { children: '[role="menuitem"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+    ]] },
+    { trigger: 'Content.exit', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      { children: '[role="menuitem"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+    ]] },
   ],
 
   renderContracts: [
-    { id: 'animation-context', description: 'Root provides DropdownContext with isClosing, close(), onCloseComplete, and animateConfig to all sub-components' },
+    { id: 'animation-context', description: 'Root provides DropdownContext with isClosing, close(), onCloseComplete, and animation config to all sub-components' },
     { id: 'close-after-exit', description: 'Item select and close events trigger isClosing state; Content exit animation calls onCloseComplete which unmounts' },
     { id: 'radix-open-override', description: 'Root keeps Radix open during exit animation (open={open || isClosing}) and ignores Radix close requests' },
     { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) for portal font isolation' },
-    { id: 'animated-height-reveal', description: 'Content uses animateHeight: true for popup height animation from 0 on open' },
+    { id: 'animated-height-reveal', description: 'Content uses animateDimension for height reveal from 0 on open' },
     { id: 'staggered-items', description: 'Menu items (menuitem, menuitemcheckbox, menuitemradio roles) enter with staggered delay of 30ms' },
     { id: 'item-hover-scale', description: 'Items animate scale to 1.02 on mouse enter and back to 1 on mouse leave using spring config' },
     { id: 'checkbox-indicator-animation', description: 'CheckboxItem indicator animates scale+opacity on checked/unchecked state changes' },
@@ -363,7 +364,6 @@ export const spec = {
   radixPrimitive: 'DropdownMenu',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -409,7 +409,7 @@ export const spec = {
       'Content exit uses scale 1->0.95 + opacity 1->0 in 200ms',
       'Content items stagger with 30ms delay',
       'Item hover animates scale to 1.02 with spring',
-      'animate=false disables all animations',
+      'animations={false} disables all animations',
       'Reduced motion preference disables animations',
     ],
   },

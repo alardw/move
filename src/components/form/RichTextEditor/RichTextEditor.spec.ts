@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'RichTextEditor',
   componentClass: 'interactive' as const,
   category: 'form',
@@ -207,7 +207,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: [] as string[],
+
   componentDeps: ['Prose'] as string[],
 
   testing: {

@@ -5,7 +5,8 @@ import * as React from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useSlidingIndicator } from '../../../animation';
+import { useAnimations } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
 import styles from './Tabs.module.css';
 
 // =============================================================================
@@ -73,7 +74,7 @@ export interface TabsListProps extends Record<string, unknown> {
   loop?: boolean;
   size?: TabsSize;
   variant?: TabsVariant;
-  animate?: false;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'list'>;
 }
 
@@ -82,18 +83,42 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
   styles,
   slots: ['list', 'indicator'] as const,
   defaults: { size: 'md', variant: 'underline' },
-  moveProps: ['loop', 'size', 'variant', 'animate'],
+  moveProps: ['loop', 'size', 'variant', 'animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const variant = props.variant as TabsVariant;
     const showIndicator = variant === 'underline';
 
-    const { indicatorRef } = useSlidingIndicator({
-      containerRef: internalRef,
-      activeSelector: '[data-state="active"]',
-      track: 'width',
-      disabled: props.animate === false || !showIndicator,
-    });
+    // --- Sliding indicator via animatePosition ---
+    const indicatorRef = React.useRef<HTMLElement | null>(null);
+
+    const activeRef = React.useMemo(() => {
+      const ref = { current: null as HTMLElement | null };
+      Object.defineProperty(ref, 'current', {
+        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="active"]') ?? null; },
+        set() { /* no-op — always queries live DOM */ },
+      });
+      return ref;
+    }, [internalRef]);
+
+    const STATES: AnimationState[] = [
+      { name: 'activeChange', slot: 'List', source: 'data-state', value: 'active' },
+    ];
+
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
+        translateX: { to: '$Active.x' },
+        width: { to: '$Active.width' },
+      } }] },
+    ];
+
+    const disabled = props.animations === false || !showIndicator;
+    const animRefs = React.useMemo(() => ({
+      List: internalRef as React.RefObject<HTMLElement | null>,
+      Indicator: indicatorRef,
+      Active: activeRef,
+    }), [internalRef]);
+    useAnimations(disabled ? null : DEFAULT_ANIMATIONS, animRefs, STATES);
 
     return {
       render() {
@@ -117,7 +142,7 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
             {showIndicator && (
               <div
                 {...indSpRest}
-                ref={indicatorRef}
+                ref={indicatorRef as React.Ref<HTMLDivElement>}
                 className={cx('indicator', indSpClass as string | undefined)}
                 style={indSpStyle as React.CSSProperties}
               />

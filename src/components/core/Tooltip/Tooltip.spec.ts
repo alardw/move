@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Tooltip',
   componentClass: 'overlay_popup' as const,
   category: 'core',
@@ -76,7 +76,7 @@ export const spec = {
         { name: 'sideOffset', type: 'number', moveSpecific: false, description: 'Distance from trigger in px' },
         { name: 'align', type: "'start' | 'center' | 'end'", default: "'center'", moveSpecific: false, description: 'Alignment along the side axis' },
         { name: 'alignOffset', type: 'number', moveSpecific: false, description: 'Alignment offset in px' },
-        { name: 'animate', type: 'LayerAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
       ],
       usesFactory: true,
       description: 'Positioned tooltip popup with spring entrance animation and CSS exit animation',
@@ -102,7 +102,7 @@ export const spec = {
     { name: 'sideOffset', type: 'number', default: '6', moveSpecific: false, description: 'Distance from trigger in px' },
     { name: 'align', type: "'start' | 'center' | 'end'", moveSpecific: false, description: 'Alignment along the side axis' },
     { name: 'arrow', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show arrow pointing to trigger' },
-    { name: 'animate', type: 'LayerAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
     { name: 'delayDuration', type: 'number', moveSpecific: false, description: 'Delay before tooltip opens (ms)' },
     { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
     { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
@@ -128,13 +128,8 @@ export const spec = {
   surface: null,
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LayerAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1] }, y: { value: [-6, 0] }, scale: { value: [0.88, 1] }, easing: 'spring', spring: { mass: 0.4, stiffness: 450, damping: 18 } }, exit: { opacity: { value: [1, 0] }, scale: { value: [1, 0.9] }, duration: 120 } }",
-      notes: 'Entrance is direction-aware: y offset is computed from data-side attribute (top=-6, bottom=6, left/right use x). Exit uses CSS @keyframes tooltip-out on data-state=closed.',
-    },
+    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 150 }, y: { from: 4, to: 0, ease: 'snappy' } } }] },
+    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { to: 0, duration: 100 } } }] },
   ],
 
   tokens: [
@@ -165,7 +160,6 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  animationImports: ['useLifecycleAnimate'],
   componentDeps: [],
 
   testing: {
@@ -196,7 +190,7 @@ export const spec = {
       'Entrance spring animation plays on Content mount',
       'Entrance animation is direction-aware based on side prop',
       'Exit CSS animation plays on Content unmount via data-state=closed',
-      'animate=false disables entrance animation',
+      'animations={false} disables entrance animation',
       'Reduced motion preference disables animation',
     ],
   },

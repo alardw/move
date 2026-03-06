@@ -2,7 +2,7 @@
 // specHash: b9fbaaa9
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Alert',
   componentClass: 'display' as const,
   category: 'core',
@@ -26,7 +26,7 @@ export const spec = {
     { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Alert title' },
     { name: 'closable', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show close button' },
     { name: 'onClose', type: '() => void', moveSpecific: true, description: 'Called when close button is clicked' },
-    { name: 'animate', type: 'LifecycleAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Alert description content' },
   ],
 
@@ -56,12 +56,8 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, y: { value: [-8, 0], easing: 'outQuart' }, duration: 300 }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, y: { value: [0, -8], easing: 'outQuart' }, duration: 200 } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -8, to: 0 } } }] },
+    { trigger: 'Root.exit', sequence: [{ animation: { opacity: { to: 0 }, y: { to: -8 } } }] },
   ],
 
   tokens: [
@@ -96,7 +92,6 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  animationImports: ['useLifecycleAnimate'],
   componentDeps: [],
 
   testing: {
@@ -120,7 +115,7 @@ export const spec = {
     animation: [
       'Entrance animation plays on mount',
       'Exit animation plays on close',
-      'animate=false disables all animation',
+      'animations={false} disables all animation',
     ],
   },
 

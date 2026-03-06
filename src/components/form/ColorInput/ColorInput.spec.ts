@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ColorInput',
   componentClass: 'input_popup' as const,
   category: 'form',
@@ -98,7 +98,7 @@ export const spec = {
     { id: 'input-blur-validates', description: 'On blur, input validates text via isValidColor, parses, formats in active format, and calls handleValueChange+handleChangeEnd' },
     { id: 'input-arrowdown-opens', description: 'ArrowDown on input opens popover when closed' },
     { id: 'input-enter-blurs', description: 'Enter key on input triggers blur to commit value' },
-    { id: 'content-height-animation', description: 'Content uses usePopupAnimation with animateHeight=true' },
+    { id: 'content-height-animation', description: 'Content uses animateDimension for height reveal on open/close' },
     { id: 'content-embeds-colorpicker', description: 'Content inner renders ColorPicker component with forwarded picker props (format, swatches, withPicker, size)' },
     { id: 'content-prevents-autofocus', description: 'Content prevents auto-focus on open to keep focus on input' },
     { id: 'dismiss-outside-root', description: 'Pointer down outside root triggers animated close; inside root is ignored (swatch handles toggle)' },
@@ -108,12 +108,8 @@ export const spec = {
   ],
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultProfile: 'popupPresence',
-    },
+    { trigger: 'Content.enter', sequence: [{ fn: 'animateDimension', animation: { height: { ease: 'poppy' } } }] },
+    { trigger: 'Content.exit', sequence: [{ fn: 'animateDimension', animation: { height: { ease: 'snappy' } } }] },
   ],
 
   tokens: [
@@ -160,7 +156,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: ['useLifecycleAnimate'] as string[],
+
   radixPrimitive: 'Popover',
   componentDeps: ['ColorPicker'] as string[],
 
@@ -213,7 +209,7 @@ export const spec = {
       'Required attribute passes through to input',
     ],
     animation: [
-      'Content uses usePopupAnimation with animateHeight',
+      'Content uses animateDimension for height reveal',
       'Content enter/exit animation via popupPresence profile',
       'Exit animation coordinates with isClosing state before unmount',
       'Position-aware transform-origin set via data-side and data-align',

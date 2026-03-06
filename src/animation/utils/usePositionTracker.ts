@@ -97,5 +97,5 @@ export function usePositionTracker(
 
 // Legacy alias
 export { usePositionTracker as useSlidingIndicator };
-export type { UsePositionTrackerOptions as UsePositionTrackerOptions };
-export type { UsePositionTrackerReturn as UsePositionTrackerReturn };
+export type { UsePositionTrackerOptions as UseSlidingIndicatorOptions };
+export type { UsePositionTrackerReturn as UseSlidingIndicatorReturn };

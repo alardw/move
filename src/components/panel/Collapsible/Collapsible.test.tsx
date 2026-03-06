@@ -71,7 +71,7 @@ describe('Collapsible', () => {
 
     it('toggles on click', async () => {
       const user = userEvent.setup();
-      renderCollapsible({ animate: false });
+      renderCollapsible({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await user.click(trigger);
@@ -81,14 +81,14 @@ describe('Collapsible', () => {
     it('fires onOpenChange on click', async () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
-      renderCollapsible({ onOpenChange: onChange, animate: false });
+      renderCollapsible({ onOpenChange: onChange, animations: false });
       await user.click(screen.getByRole('button', { name: 'Toggle' }));
       expect(onChange).toHaveBeenCalledWith(true);
     });
 
     it('does not toggle when disabled', async () => {
       const user = userEvent.setup();
-      renderCollapsible({ disabled: true, animate: false });
+      renderCollapsible({ disabled: true, animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       expect(trigger).toBeDisabled();
     });
@@ -123,19 +123,19 @@ describe('Collapsible', () => {
   // === Content ===
   describe('Content', () => {
     it('renders with role=region when open', () => {
-      renderCollapsible({ defaultOpen: true, animate: false });
+      renderCollapsible({ defaultOpen: true, animations: false });
       const region = screen.getByRole('region');
       expect(region).toBeInTheDocument();
     });
 
     it('does not render when closed', () => {
-      renderCollapsible({ animate: false });
+      renderCollapsible({ animations: false });
       const regions = screen.queryAllByRole('region');
       expect(regions).toHaveLength(0);
     });
 
     it('renders content text when open', () => {
-      renderCollapsible({ defaultOpen: true, animate: false });
+      renderCollapsible({ defaultOpen: true, animations: false });
       expect(screen.getByText('Content here')).toBeInTheDocument();
     });
   });
@@ -143,7 +143,7 @@ describe('Collapsible', () => {
   // === Controlled ===
   describe('controlled', () => {
     it('opens when controlled open=true', () => {
-      renderCollapsible({ open: true, onOpenChange: () => {}, animate: false });
+      renderCollapsible({ open: true, onOpenChange: () => {}, animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
     });
@@ -153,7 +153,7 @@ describe('Collapsible', () => {
   describe('keyboard', () => {
     it('Enter toggles the trigger', async () => {
       const user = userEvent.setup();
-      renderCollapsible({ animate: false });
+      renderCollapsible({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       trigger.focus();
       await user.keyboard('{Enter}');
@@ -162,7 +162,7 @@ describe('Collapsible', () => {
 
     it('Space toggles the trigger', async () => {
       const user = userEvent.setup();
-      renderCollapsible({ animate: false });
+      renderCollapsible({ animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       trigger.focus();
       await user.keyboard(' ');

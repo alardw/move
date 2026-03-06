@@ -4,8 +4,8 @@
 import * as React from 'react';
 import { Slider } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractionAnimate } from '../../../animation';
-import type { InteractionAnimate } from '../../../animation';
+import { scaleUp, scaleDown, useAnimations, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine';
 import { useInputRange } from './useInputRange';
 import type { InputRangeValue } from './useInputRange';
@@ -33,7 +33,7 @@ export interface InputRangeProps extends Record<string, unknown> {
   name?: string;
   showValue?: boolean;
   formatValue?: (value: number) => string;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<InputRangeSlots>;
@@ -51,7 +51,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
   slots: ['root', 'track', 'range', 'thumb', 'value'] as const,
   moveProps: [
     'min', 'max', 'step', 'value', 'defaultValue', 'onValueChange',
-    'size', 'invalid', 'orientation', 'width', 'showValue', 'formatValue', 'animate',
+    'size', 'invalid', 'orientation', 'width', 'showValue', 'formatValue', 'animations',
   ],
   defaults: {
     min: 0,
@@ -68,12 +68,20 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
       onValueChange: props.onValueChange as ((value: number[]) => void) | undefined,
     });
 
-    const { ref: animRef, handlers } = useInteractionAnimate({
-      animate: props.animate === false ? undefined : (props.animate as InteractionAnimate | undefined),
-      disabled: props.animate === false || props.disabled as boolean,
-    });
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Thumb.hover', sequence: [{ animation: scaleUp }] },
+      { trigger: 'Thumb.press', sequence: [{ animation: scaleDown }] },
+    ];
+    const animConfig = (props.animations as AnimationTrigger[] | false | undefined) === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | undefined);
 
-    const mergedThumbRef = useMergedRef<HTMLSpanElement>(animRef as React.Ref<HTMLSpanElement>);
+    const thumbElRef = React.useRef<HTMLElement | null>(null);
+    const thumbRefs = React.useMemo(() => ({ Thumb: thumbElRef }), []);
+    const { handlers } = useAnimations(animConfig, thumbRefs);
+    const isDisabled = !!props.disabled;
+
+    const mergedThumbRef = useMergedRef<HTMLSpanElement>(thumbElRef as React.Ref<HTMLSpanElement>);
 
     return {
       render() {
@@ -149,7 +157,10 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
                 {...(i === 0 ? { ref: mergedThumbRef } : {})}
                 className={cx('thumb', thumbSpClass as string | undefined)}
                 style={thumbSpStyle as React.CSSProperties}
-                {...handlers}
+                onMouseEnter={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseEnter?.(); }}
+                onMouseLeave={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseLeave?.(); }}
+                onMouseDown={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseDown?.(); }}
+                onMouseUp={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseUp?.(); }}
               />
             ))}
           </Slider.Root>

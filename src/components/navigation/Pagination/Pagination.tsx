@@ -1,12 +1,10 @@
 'use client';
 // Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
-import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useInteractiveAnimate, prefersReducedMotion, useSlidingIndicator } from '../../../animation';
-import { defaultAnimations } from '../../../animation';
-import type { InteractionAnimate } from '../../../animation';
+import { scaleUp, scaleDown, popIn, poppy, pagination as paginationEase, useAnimations, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
 import styles from './Pagination.module.css';
@@ -31,7 +29,7 @@ function usePaginationContext() {
 // Spring config for stagger entrance
 // =============================================================================
 
-const springConfig = { mass: 1, stiffness: 400, damping: 26, velocity: 0 };
+// Spring config now from barrel as 'pagination' preset
 
 // =============================================================================
 // Types
@@ -127,7 +125,7 @@ export interface PaginationPrevTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   onMouseDown?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseUp?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -141,22 +139,26 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
   name: 'PaginationPrevTrigger',
   styles,
   slots: ['prev'] as const,
-  moveProps: ['animate'],
+  moveProps: ['animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { previous, canPrevious } = usePaginationContext();
 
-    const animateConfig = (props.animate as InteractionAnimate | false | undefined) === false
-      ? { hover: false as const, press: false as const }
-      : { ...((props.animate as InteractionAnimate | undefined) || {}) };
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Prev.hover', sequence: [{ animation: scaleUp }] },
+      { trigger: 'Prev.press', sequence: [{ animation: scaleDown }] },
+    ];
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractionAnimate,
-      defaults: defaultAnimations.element,
-      disabled: !canPrevious,
-    });
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
+    const animConfig = animationsProp === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, animRef as React.Ref<HTMLButtonElement>);
+    const btnRef = React.useRef<HTMLElement | null>(null);
+    const btnRefs = React.useMemo(() => ({ Prev: btnRef }), []);
+    const { handlers } = useAnimations(animConfig, btnRefs);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
+    const isDisabled = !canPrevious;
 
     return {
       render() {
@@ -175,28 +177,20 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={previous}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseEnter();
+              if (!isDisabled) handlers.Prev?.onMouseEnter?.();
               (props.onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseLeave();
+              if (!isDisabled) handlers.Prev?.onMouseLeave?.();
               (props.onMouseLeave as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseDown={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseDown();
+              if (!isDisabled) handlers.Prev?.onMouseDown?.();
               (props.onMouseDown as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseUp={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseUp();
+              if (!isDisabled) handlers.Prev?.onMouseUp?.();
               (props.onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyDown(e);
-              (props.onKeyDown as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
-            onKeyUp={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyUp(e);
-              (props.onKeyUp as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >
             {props.children ?? (
@@ -219,7 +213,7 @@ export interface PaginationNextTriggerProps extends Record<string, unknown> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   onMouseDown?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseUp?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -233,22 +227,26 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
   name: 'PaginationNextTrigger',
   styles,
   slots: ['next'] as const,
-  moveProps: ['animate'],
+  moveProps: ['animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { next, canNext } = usePaginationContext();
 
-    const animateConfig = (props.animate as InteractionAnimate | false | undefined) === false
-      ? { hover: false as const, press: false as const }
-      : { ...((props.animate as InteractionAnimate | undefined) || {}) };
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Next.hover', sequence: [{ animation: scaleUp }] },
+      { trigger: 'Next.press', sequence: [{ animation: scaleDown }] },
+    ];
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractionAnimate,
-      defaults: defaultAnimations.element,
-      disabled: !canNext,
-    });
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
+    const animConfig = animationsProp === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, animRef as React.Ref<HTMLButtonElement>);
+    const btnRef = React.useRef<HTMLElement | null>(null);
+    const btnRefs = React.useMemo(() => ({ Next: btnRef }), []);
+    const { handlers } = useAnimations(animConfig, btnRefs);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
+    const isDisabled = !canNext;
 
     return {
       render() {
@@ -267,28 +265,20 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={next}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseEnter();
+              if (!isDisabled) handlers.Next?.onMouseEnter?.();
               (props.onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseLeave();
+              if (!isDisabled) handlers.Next?.onMouseLeave?.();
               (props.onMouseLeave as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseDown={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseDown();
+              if (!isDisabled) handlers.Next?.onMouseDown?.();
               (props.onMouseDown as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseUp={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseUp();
+              if (!isDisabled) handlers.Next?.onMouseUp?.();
               (props.onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
-            onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyDown(e);
-              (props.onKeyDown as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
-            onKeyUp={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyUp(e);
-              (props.onKeyUp as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >
             {props.children ?? (
@@ -320,128 +310,104 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { range, page, setPage } = usePaginationContext();
-    const staggerAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const slideAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const hasMounted = React.useRef(false);
     const prevNumbersRef = React.useRef<Set<number>>(new Set());
     const prevPageRef = React.useRef(page);
 
-    // --- Sliding indicator (shared hook) ---
-    const { indicatorRef, update: updateIndicator } = useSlidingIndicator({
-      containerRef: internalRef,
-      activeSelector: '[data-state="active"]',
-    });
+    // --- Sliding indicator via animatePosition ---
+    const indicatorRef = React.useRef<HTMLElement | null>(null);
 
-    // Mark mounted after initial render cycle (runs after layout effects)
-    React.useEffect(() => {
-      prevNumbersRef.current = new Set(
-        range.filter((item): item is number => typeof item === 'number')
-      );
-      prevPageRef.current = page;
-      hasMounted.current = true;
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Staggered scale entrance animation on mount (left to right)
-    React.useLayoutEffect(() => {
-      const ul = internalRef.current;
-      if (!ul || prefersReducedMotion()) return;
-
-      const items = ul.querySelectorAll<HTMLElement>('li');
-      if (items.length === 0) return;
-
-      // Hide indicator during stagger entrance
-      if (indicatorRef.current) {
-        indicatorRef.current.style.visibility = 'hidden';
-      }
-
-      // Set initial state
-      items.forEach((item) => {
-        item.style.opacity = '0';
-        item.style.transform = 'scale(0.8)';
+    const activeRef = React.useMemo(() => {
+      const ref = { current: null as HTMLElement | null };
+      Object.defineProperty(ref, 'current', {
+        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="active"]') ?? null; },
+        set() { /* no-op — always queries live DOM */ },
       });
+      return ref;
+    }, [internalRef]);
 
-      staggerAnimRef.current = animate(items, {
-        opacity: 1,
-        scale: 1,
-        ease: spring(springConfig),
-        delay: (_el: any, i: number) => i * 30,
-      });
+    const STATES: AnimationState[] = [
+      { name: 'activeChange', slot: 'Items', source: 'data-state', value: 'active' },
+    ];
 
-      // Show indicator once items are visually at full size
-      const totalStaggerDelay = items.length * 30;
-      setTimeout(() => {
-        if (indicatorRef.current) {
-          indicatorRef.current.style.visibility = '';
-        }
-        updateIndicator();
-      }, totalStaggerDelay + 100);
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Items.enter', sequence: [{ children: 'li', animation: popIn, stagger: { delay: 30 } }] },
+      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
+        translateX: { to: '$Active.x' },
+        translateY: { to: '$Active.y' },
+        width: { to: '$Active.width' },
+        height: { to: '$Active.height' },
+      } }] },
+    ];
 
-      return () => {
-        if (staggerAnimRef.current) {
-          staggerAnimRef.current.pause();
-          items.forEach((item) => {
-            item.style.opacity = '1';
-            item.style.transform = 'scale(1)';
-          });
-          if (indicatorRef.current) {
-            indicatorRef.current.style.visibility = '';
-          }
-        }
-      };
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const animRefs = React.useMemo(() => ({
+      Items: internalRef as React.RefObject<HTMLElement | null>,
+      Indicator: indicatorRef,
+      Active: activeRef,
+    }), [internalRef]);
+    const { handlers } = useAnimations(DEFAULT_ANIMATIONS, animRefs, STATES);
 
-    // Horizontal slide animation for newly appearing page numbers
+    // Horizontal slide animation for newly appearing page numbers via deps trigger
     const rangeKey = JSON.stringify(range);
-    React.useLayoutEffect(() => {
-      if (!hasMounted.current) return;
 
-      const ul = internalRef.current;
-      if (!ul || prefersReducedMotion()) return;
+    const slideConfig: AnimationTrigger[] = React.useMemo(() => [{
+      trigger: 'Items.slide',
+      deps: [rangeKey],
+      sequence: [{
+        target: 'Items',
+        children: '[data-entering]',
+        stagger: { delay: 20 },
+        animation: {
+          opacity: { to: 1, ease: paginationEase },
+          translateX: { to: 0, ease: paginationEase },
+          scale: { to: 1, ease: paginationEase },
+        },
+      }],
+      vars: (el: HTMLElement) => {
+        const currentNumbers = new Set(
+          range.filter((item): item is number => typeof item === 'number')
+        );
+        const prevNumbers = prevNumbersRef.current;
+        const direction = page >= prevPageRef.current ? 1 : -1;
 
-      const currentNumbers = new Set(
-        range.filter((item): item is number => typeof item === 'number')
-      );
-      const prevNumbers = prevNumbersRef.current;
-      const direction = page >= prevPageRef.current ? 1 : -1;
+        const newNumbers = new Set<number>();
+        currentNumbers.forEach((n) => {
+          if (!prevNumbers.has(n)) newNumbers.add(n);
+        });
 
-      const newNumbers = new Set<number>();
-      currentNumbers.forEach((n) => {
-        if (!prevNumbers.has(n)) newNumbers.add(n);
-      });
+        prevNumbersRef.current = currentNumbers;
+        prevPageRef.current = page;
 
-      prevNumbersRef.current = currentNumbers;
-      prevPageRef.current = page;
+        // Clear previous data-entering attrs
+        el.querySelectorAll('[data-entering]').forEach((child) => {
+          (child as HTMLElement).removeAttribute('data-entering');
+        });
 
-      if (newNumbers.size === 0) return;
+        if (newNumbers.size === 0) return {};
 
-      const liElements = ul.querySelectorAll<HTMLElement>('li');
-      const newLis: HTMLElement[] = [];
-      range.forEach((item, i) => {
-        if (typeof item === 'number' && newNumbers.has(item) && liElements[i]) {
-          newLis.push(liElements[i]);
+        const liElements = el.querySelectorAll<HTMLElement>('li');
+        const offset = direction * 16;
+        range.forEach((item, i) => {
+          if (typeof item === 'number' && newNumbers.has(item) && liElements[i]) {
+            const li = liElements[i];
+            li.setAttribute('data-entering', '');
+            li.style.opacity = '0';
+            li.style.transform = `translateX(${offset}px) scale(0.9)`;
+          }
+        });
+
+        return {};
+      },
+      onComplete: () => {
+        const ul = internalRef.current;
+        if (ul) {
+          ul.querySelectorAll('[data-entering]').forEach((child) => {
+            (child as HTMLElement).removeAttribute('data-entering');
+          });
         }
-      });
+      },
+    }], [rangeKey, range, page]); // eslint-disable-line react-hooks/exhaustive-deps
 
-      if (newLis.length === 0) return;
-
-      if (slideAnimRef.current) {
-        slideAnimRef.current.pause();
-      }
-
-      const offset = direction * 16;
-      newLis.forEach((el) => {
-        el.style.opacity = '0';
-        el.style.transform = `translateX(${offset}px) scale(0.9)`;
-      });
-
-      slideAnimRef.current = animate(newLis, {
-        opacity: 1,
-        translateX: 0,
-        scale: 1,
-        ease: spring(springConfig),
-        delay: (_el: any, i: number) => i * 20,
-      });
-    }, [rangeKey]); // eslint-disable-line react-hooks/exhaustive-deps
+    useAnimations(slideConfig, animRefs);
 
     return {
       render() {
@@ -497,7 +463,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
             })}
             <div
               {...indSpRest}
-              ref={indicatorRef}
+              ref={indicatorRef as React.Ref<HTMLDivElement>}
               aria-hidden="true"
               className={cx('indicator', indSpClass as string | undefined)}
               style={indSpStyle as React.CSSProperties}
@@ -513,6 +479,11 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 // PageButton -- internal component with interactive animation per item
 // =============================================================================
 
+const PAGE_BUTTON_ANIMATIONS: AnimationTrigger[] = [
+  { trigger: 'Btn.hover', sequence: [{ animation: scaleUp }] },
+  { trigger: 'Btn.press', sequence: [{ animation: scaleDown }] },
+];
+
 interface PageButtonProps {
   itemSpRest: Record<string, unknown>;
   itemSpClass: string | undefined;
@@ -524,16 +495,14 @@ interface PageButtonProps {
 }
 
 function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNumber, onSelect }: PageButtonProps) {
-  const { ref: animRef, handlers } = useInteractiveAnimate({
-    animate: {} as InteractionAnimate,
-    defaults: defaultAnimations.element,
-    disabled: false,
-  });
+  const btnRef = React.useRef<HTMLElement | null>(null);
+  const btnRefs = React.useMemo(() => ({ Btn: btnRef }), []);
+  const { handlers } = useAnimations(PAGE_BUTTON_ANIMATIONS, btnRefs);
 
   return (
     <button
       {...itemSpRest}
-      ref={animRef as React.Ref<HTMLButtonElement>}
+      ref={btnRef as React.Ref<HTMLButtonElement>}
       type="button"
       aria-label={`Go to page ${pageNumber}`}
       aria-current={isActive ? 'page' : undefined}
@@ -541,12 +510,10 @@ function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNu
       className={cx('item', itemSpClass)}
       style={itemSpStyle}
       onClick={() => onSelect(pageNumber)}
-      onMouseEnter={handlers.onMouseEnter}
-      onMouseLeave={handlers.onMouseLeave}
-      onMouseDown={handlers.onMouseDown}
-      onMouseUp={handlers.onMouseUp}
-      onKeyDown={handlers.onKeyDown}
-      onKeyUp={handlers.onKeyUp}
+      onMouseEnter={() => handlers.Btn?.onMouseEnter?.()}
+      onMouseLeave={() => handlers.Btn?.onMouseLeave?.()}
+      onMouseDown={() => handlers.Btn?.onMouseDown?.()}
+      onMouseUp={() => handlers.Btn?.onMouseUp?.()}
     >
       {pageNumber}
     </button>

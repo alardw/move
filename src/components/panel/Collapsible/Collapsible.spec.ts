@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Collapsible',
   componentClass: 'disclosure' as const,
   category: 'panel',
@@ -27,7 +27,7 @@ export const spec = {
         { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Default open state for uncontrolled mode' },
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: true, description: 'Called when open state changes' },
         { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disable the collapsible (prevents toggling)' },
-        { name: 'animate', type: 'ContentAnimate | false', moveSpecific: true, description: 'Content animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Content animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger, icon, and content elements' },
       ],
       usesFactory: true,
@@ -72,7 +72,7 @@ export const spec = {
     { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Default open state for uncontrolled mode' },
     { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: true, description: 'Called when open state changes' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disable the collapsible' },
-    { name: 'animate', type: 'ContentAnimate | false', moveSpecific: true, description: 'Content animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Content animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger, icon, and content' },
   ],
 
@@ -108,13 +108,14 @@ export const spec = {
   formType: null,
   asChild: true,
 
+  states: [
+    { name: 'open', slot: 'Root', source: 'data-state', value: 'open' },
+    { name: 'close', slot: 'Root', source: 'data-state', value: 'closed' },
+  ],
+
   animations: [
-    {
-      slot: 'content',
-      hook: 'useExpandAnimate',
-      configType: 'ExpandAnimate',
-      defaultProfile: 'contentExpand',
-    },
+    { trigger: 'open', sequence: [{ target: 'content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } }] },
+    { trigger: 'close', sequence: [{ target: 'content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
@@ -142,7 +143,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useExpandAnimate', 'defaultAnimations'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -190,7 +191,7 @@ export const spec = {
       'Icon rotates to 180deg when opening',
       'Icon rotates to 0deg when closing',
       'Icon rotation duration matches content animation duration',
-      'animate=false disables content animation',
+      'animations={false} disables content animation',
       'Reduced motion preference skips all animations',
       'Initial mount state sets correct height/opacity without animation',
     ] as string[],

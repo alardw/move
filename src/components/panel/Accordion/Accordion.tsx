@@ -2,25 +2,20 @@
 // Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
-import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAccordion } from './useAccordion';
 import {
-  toAnimeParams,
-  toInstantParams,
-  prefersReducedMotion,
-  mergeAnimateConfig,
-  getInitialStyles,
-} from '../../../animation';
-import {
-  defaultAnimations,
+  resolveAnimationsConfig,
+  expandContent,
+  poppy,
+  snappy,
+  useAnimations,
 } from '../../../animation';
 import type {
-  ExpandAnimate,
-  InteractionAnimate,
   Animation,
   StaggerConfig,
+  AnimationTrigger,
 } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import acStyles from './Accordion.module.css';
@@ -39,7 +34,7 @@ interface AccordionContextValue {
   isAnimatingIn: (value: string) => boolean;
   onExitComplete: (value: string) => void;
   onEnterComplete: (value: string) => void;
-  contentAnimate: ExpandAnimate;
+  contentAnimate: { open?: Animation; close?: Animation };
   isItemActive: (value: string) => boolean;
   onHeaderClick: (value: string) => void;
   onHeaderKeyDown: (e: React.KeyboardEvent, value: string) => void;
@@ -76,7 +71,7 @@ export type AccordionVariant = 'default' | 'contained' | 'ghost';
 export interface AccordionAnimateConfig {
   enter?: Animation;
   stagger?: StaggerConfig;
-  content?: ExpandAnimate;
+  content?: { open?: Animation; close?: Animation };
 }
 
 export interface AccordionRootProps extends Record<string, unknown> {
@@ -90,17 +85,17 @@ export interface AccordionRootProps extends Record<string, unknown> {
   collapsible?: boolean;
   size?: AccordionSize;
   variant?: AccordionVariant;
-  animate?: AccordionAnimateConfig | false;
+  animations?: AccordionAnimateConfig | false;
   sp?: SlotPropsMap<'root'>;
 }
 
 const defaultRootAnimation: AccordionAnimateConfig = {
   enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.9, 1], easing: 'poppy' },
+    opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+    scale: { from: 0.9, to: 1, ease: poppy },
   },
   stagger: { delay: 80 },
-  content: defaultAnimations.content,
+  content: expandContent,
 };
 
 const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivElement>({
@@ -108,7 +103,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
   styles: acStyles,
   slots: ['root'] as const,
   defaults: { type: 'single', collapsible: true, size: 'md', variant: 'default' },
-  moveProps: ['type', 'value', 'defaultValue', 'onValueChange', 'collapsible', 'size', 'variant', 'animate'],
+  moveProps: ['type', 'value', 'defaultValue', 'onValueChange', 'collapsible', 'size', 'variant', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const {
@@ -119,7 +114,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       value: controlledValue,
       defaultValue,
       onValueChange,
-      animate: animateProp,
+      animations: animationsProp,
     } = props;
 
     const multiple = type === 'multiple';
@@ -138,9 +133,9 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     const [, forceRender] = React.useState(0);
     const prevValueRef = React.useRef<string | string[] | undefined>(undefined);
 
-    const config = animateProp === false
-      ? { enter: undefined, stagger: undefined, content: {} as ExpandAnimate }
-      : mergeAnimateConfig(defaultRootAnimation, animateProp as AccordionAnimateConfig | undefined);
+    const config = animationsProp === false
+      ? { enter: undefined, stagger: undefined, content: {} as { open?: Animation; close?: Animation } }
+      : (animationsProp as AccordionAnimateConfig | undefined) ?? defaultRootAnimation;
 
     const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
 
@@ -196,7 +191,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       isAnimatingIn: (v) => animatingInItems.has(v),
       onExitComplete,
       onEnterComplete,
-      contentAnimate: config.content || defaultAnimations.content,
+      contentAnimate: config.content || expandContent,
       isItemActive: accordion.isItemActive,
       onHeaderClick: accordion.onHeaderClick,
       onHeaderKeyDown: accordion.onHeaderKeyDown,
@@ -250,7 +245,6 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
     const context = useAccordionContext();
     const indexRef = React.useRef<number | null>(null);
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const hasAnimated = React.useRef(false);
 
     if (indexRef.current === null) {
       indexRef.current = context.getItemIndex();
@@ -260,29 +254,13 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
 
     const mergedRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    const initialStyles = React.useMemo(() => {
-      if (!context.enterAnimation) return {};
-      return getInitialStyles(context.enterAnimation);
-    }, [context.enterAnimation]);
-
-    React.useEffect(() => {
-      const el = itemRef.current;
-      if (!el || !context.enterAnimation || hasAnimated.current) return;
-
-      hasAnimated.current = true;
-      const reducedMotion = prefersReducedMotion();
-      const index = indexRef.current ?? 0;
-      const delay = (context.stagger?.delay ?? 0) * index;
-
-      if (reducedMotion) {
-        el.style.opacity = '1';
-        el.style.transform = '';
-        return;
-      }
-
-      const params = toAnimeParams(context.enterAnimation);
-      animate(el, { ...params, delay });
-    }, [context.enterAnimation, context.stagger]);
+    // Item enter animation with stagger delay from context
+    const delay = (context.stagger?.delay ?? 0) * (indexRef.current ?? 0);
+    const itemEnterConfig: AnimationTrigger[] | null = context.enterAnimation
+      ? [{ trigger: 'Item.enter', sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }] }]
+      : null;
+    const itemRefs = React.useMemo(() => ({ Item: itemRef as React.RefObject<HTMLElement | null> }), []);
+    useAnimations(itemEnterConfig, itemRefs);
 
     return {
       render() {
@@ -295,7 +273,7 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
               {...spRest}
               ref={mergedRef}
               className={cx('item', className, spClass as string | undefined)}
-              style={{ ...initialStyles, ...style, ...(spStyle as React.CSSProperties) }}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-state={isActive ? 'open' : 'closed'}
             >
               {children}
@@ -353,61 +331,62 @@ export interface AccordionTriggerProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   icon?: React.ReactNode;
-  animate?: Pick<InteractionAnimate, 'hover'> | false;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'trigger' | 'icon'>;
 }
 
-const defaultTriggerAnimation: Pick<InteractionAnimate, 'hover'> = {
-  hover: { scale: 1.005, easing: 'snappy' },
-};
-
-const triggerAnimations = new WeakMap<HTMLElement, JSAnimation>();
+const DEFAULT_TRIGGER_ANIMATIONS: AnimationTrigger[] = [
+  { trigger: 'Trigger.hover', sequence: [{ animation: { scale: { to: 1.005, ease: snappy } } }] },
+];
 
 const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerProps, HTMLButtonElement>({
   name: 'AccordionTrigger',
   styles: acStyles,
   slots: ['trigger', 'icon'] as const,
-  moveProps: ['icon', 'animate'],
+  moveProps: ['icon', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { className, style, children, icon, animate: animateProp } = props;
+    const { className, style, children, icon, animations: animationsProp } = props;
     const context = useAccordionContext();
     const itemContext = useAccordionItemContext();
     const resolvedChevron = useResolvedIcon('chevron-down', 15);
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
     const iconRef = React.useRef<HTMLSpanElement>(null);
-    const iconAnimRef = React.useRef<JSAnimation | null>(null);
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
 
-    const config = animateProp === false
-      ? { hover: false as const }
-      : mergeAnimateConfig(defaultTriggerAnimation, animateProp as Pick<InteractionAnimate, 'hover'> | undefined);
-
-    const handleMouseEnter = () => {
-      if (!triggerRef.current || !config.hover || typeof config.hover === 'boolean') return;
-      const existing = triggerAnimations.get(triggerRef.current);
-      if (existing) existing.pause();
-      const params = prefersReducedMotion() ? toInstantParams(config.hover) : toAnimeParams(config.hover);
-      const anim = animate(triggerRef.current, params);
-      triggerAnimations.set(triggerRef.current, anim);
-    };
-
-    const handleMouseLeave = () => {
-      if (!triggerRef.current || !config.hover) return;
-      const existing = triggerAnimations.get(triggerRef.current);
-      if (existing) existing.pause();
-      const anim = animate(triggerRef.current, {
-        scale: 1,
-        duration: prefersReducedMotion() ? 0 : 150,
-        ease: 'outQuad',
-      });
-      triggerAnimations.set(triggerRef.current, anim);
-    };
+    const animConfig = (animationsProp as AnimationTrigger[] | false | undefined) === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_TRIGGER_ANIMATIONS, animationsProp as AnimationTrigger[] | undefined);
 
     const isClosing = context.isAnimatingOut(itemContext.value);
     const isOpening = context.isAnimatingIn(itemContext.value);
 
+    // Icon rotation durations synced to content animation
+    const closeDuration = context.contentAnimate?.close ? ((context.contentAnimate.close.height as any)?.duration || 300) : 0;
+    const openDuration = context.contentAnimate?.open ? ((context.contentAnimate.open.height as any)?.duration || 400) : 0;
+
+    // Combined trigger + icon animation config
+    const iconConfig: AnimationTrigger[] = React.useMemo(() => [
+      { trigger: 'icon-open', deps: [isOpening], sequence: isOpening ? [{ target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } } }] : false },
+      { trigger: 'icon-close', deps: [isClosing], sequence: isClosing ? [{ target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } } }] : false },
+    ], [isOpening, isClosing, openDuration, closeDuration]);
+
+    const triggerRefs = React.useMemo(() => ({
+      Trigger: triggerRef as React.RefObject<HTMLElement | null>,
+      Icon: iconRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    // Merge trigger hover config with icon rotation config
+    const mergedConfig = React.useMemo(() => {
+      const all: AnimationTrigger[] = [...iconConfig];
+      if (animConfig) all.push(...animConfig);
+      return all;
+    }, [animConfig, iconConfig]);
+
+    const { handlers } = useAnimations(mergedConfig, triggerRefs);
+
+    // Set initial icon rotation on mount (no animation)
     React.useEffect(() => {
       const iconEl = iconRef.current;
       if (!iconEl) return;
@@ -415,34 +394,6 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
         iconEl.style.transform = 'rotate(180deg)';
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    React.useEffect(() => {
-      if (!isClosing) return;
-      const iconEl = iconRef.current;
-      if (!iconEl) return;
-      if (iconAnimRef.current) iconAnimRef.current.pause();
-      const closeConfig = context.contentAnimate?.close;
-      const duration = closeConfig ? (closeConfig.duration || 300) : 0;
-      iconAnimRef.current = animate(iconEl, {
-        rotate: 0,
-        ease: 'outQuart',
-        duration: prefersReducedMotion() ? 0 : duration,
-      });
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    React.useEffect(() => {
-      if (!isOpening) return;
-      const iconEl = iconRef.current;
-      if (!iconEl) return;
-      if (iconAnimRef.current) iconAnimRef.current.pause();
-      const openConfig = context.contentAnimate?.open;
-      const duration = openConfig ? (openConfig.duration || 400) : 0;
-      iconAnimRef.current = animate(iconEl, {
-        rotate: 180,
-        ease: 'outQuart',
-        duration: prefersReducedMotion() ? 0 : duration,
-      });
-    }, [isOpening]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
       render() {
@@ -463,8 +414,8 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
             data-value={itemContext.value}
             data-move-accordion-trigger=""
             aria-expanded={itemContext.isActive}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => handlers.Trigger?.onMouseEnter?.()}
+            onMouseLeave={() => handlers.Trigger?.onMouseLeave?.()}
             onClick={() => context.onHeaderClick(itemContext.value)}
             onKeyDown={(e) => context.onHeaderKeyDown(e, itemContext.value)}
           >
@@ -495,8 +446,6 @@ export interface AccordionContentProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const contentAnimTracker = new WeakMap<HTMLElement, { height?: JSAnimation; opacity?: JSAnimation }>();
-
 const AccordionContent = withMoveComponent<'content' | 'contentInner', AccordionContentProps, HTMLDivElement>({
   name: 'AccordionContent',
   styles: acStyles,
@@ -516,123 +465,68 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
     const isAnimatingIn = context.isAnimatingIn(itemContext.value);
     const isAnimatingOut = context.isAnimatingOut(itemContext.value);
 
-    // Enter animation
+    // Compute opacity timing from height animation config
+    const enterHeightDuration = config.open ? ((config.open.height as any)?.duration || 400) : 400;
+    const exitHeightDuration = config.close ? ((config.close.height as any)?.duration || 300) : 300;
+
+    // No-animation fallback — immediately set styles when no config
     React.useEffect(() => {
       const content = contentRef.current;
       const inner = innerRef.current;
-      if (!content || !inner || !isAnimatingIn) return;
-
-      if (!config.open) {
+      if (!content || !inner) return;
+      if (isAnimatingIn && !config.open) {
         content.style.height = 'auto';
         inner.style.opacity = '1';
         context.onEnterComplete(itemContext.value);
-        return;
       }
-
-      const reducedMotion = prefersReducedMotion();
-      const anims = contentAnimTracker.get(content) || {};
-      if (anims.height) anims.height.pause();
-      if (anims.opacity) anims.opacity.pause();
-
-      if (reducedMotion) {
-        content.style.height = 'auto';
-        inner.style.opacity = '1';
-        context.onEnterComplete(itemContext.value);
-        return;
-      }
-
-      content.style.height = '0px';
-      inner.style.opacity = '0';
-      content.style.height = 'auto';
-      const targetHeight = content.scrollHeight;
-      content.style.height = '0px';
-
-      const heightParams = toAnimeParams({
-        height: config.open.height,
-        easing: config.open.easing,
-        duration: config.open.duration,
-      });
-
-      let heightDone = false;
-      let opacityDone = false;
-      const checkComplete = () => {
-        if (heightDone && opacityDone) {
-          content.style.height = 'auto';
-          context.onEnterComplete(itemContext.value);
-        }
-      };
-
-      const enterDuration = (heightParams.duration as number) || 400;
-
-      anims.height = animate(content, {
-        height: [0, targetHeight],
-        ease: heightParams.ease || 'outQuart',
-        duration: enterDuration,
-        onComplete: () => { heightDone = true; checkComplete(); },
-      });
-
-      const currentOpacity = parseFloat(getComputedStyle(inner).opacity) || 0;
-      anims.opacity = animate(inner, {
-        opacity: [currentOpacity, 1],
-        delay: currentOpacity > 0 ? 0 : 150,
-        duration: currentOpacity > 0 ? (enterDuration * (1 - currentOpacity)) : (enterDuration - 150),
-        ease: 'linear',
-        onComplete: () => { opacityDone = true; checkComplete(); },
-      });
-
-      contentAnimTracker.set(content, anims);
     }, [isAnimatingIn]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Exit animation
     React.useEffect(() => {
       const content = contentRef.current;
       const inner = innerRef.current;
-      if (!content || !inner || !isAnimatingOut) return;
-
-      if (!config.close) {
-        context.onExitComplete(itemContext.value);
-        return;
-      }
-
-      const reducedMotion = prefersReducedMotion();
-      const anims = contentAnimTracker.get(content) || {};
-      if (anims.height) anims.height.pause();
-      if (anims.opacity) anims.opacity.pause();
-
-      if (reducedMotion) {
+      if (!content || !inner) return;
+      if (isAnimatingOut && !config.close) {
         content.style.height = '0px';
         inner.style.opacity = '0';
         context.onExitComplete(itemContext.value);
-        return;
       }
-
-      const currentHeight = content.scrollHeight;
-      content.style.height = `${currentHeight}px`;
-
-      const heightParams = toAnimeParams({
-        height: config.close.height,
-        easing: config.close.easing,
-        duration: config.close.duration,
-      });
-
-      const exitDuration = (heightParams.duration as number) || 300;
-
-      const currentOpacity = parseFloat(getComputedStyle(inner).opacity) || 1;
-      anims.opacity = animate(inner, {
-        opacity: [currentOpacity, 0],
-        duration: exitDuration * 0.4 * currentOpacity,
-        ease: 'linear',
-      });
-
-      anims.height = animate(content, {
-        height: [currentHeight, 0],
-        ease: heightParams.ease || 'outQuart',
-        duration: exitDuration,
-        onComplete: () => context.onExitComplete(itemContext.value),
-      });
-
-      contentAnimTracker.set(content, anims);
     }, [isAnimatingOut]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Animated content via useAnimations with deps (only when animation configs exist)
+    const hasAnimConfig = !!config.open || !!config.close;
+
+    const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!hasAnimConfig) return null;
+      return [
+        {
+          trigger: 'content-open',
+          deps: [isAnimatingIn],
+          sequence: isAnimatingIn && config.open ? [[
+            { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
+            { target: 'ContentInner', animation: { opacity: { from: 0, to: 1, ease: 'linear', duration: enterHeightDuration - 150 }, delay: 150 } },
+          ]] : false,
+          onComplete: () => context.onEnterComplete(itemContext.value),
+          direction: 'enter' as const,
+        },
+        {
+          trigger: 'content-close',
+          deps: [isAnimatingOut],
+          sequence: isAnimatingOut && config.close ? [[
+            { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
+            { target: 'ContentInner', animation: { opacity: { from: 1, to: 0, ease: 'linear', duration: Math.round(exitHeightDuration * 0.4) } } },
+          ]] : false,
+          onComplete: () => context.onExitComplete(itemContext.value),
+          direction: 'exit' as const,
+        },
+      ];
+    }, [isAnimatingIn, isAnimatingOut, config.open, config.close, hasAnimConfig, enterHeightDuration, exitHeightDuration, itemContext.value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(contentConfig, contentRefs);
 
     // Set initial state on mount
     React.useEffect(() => {

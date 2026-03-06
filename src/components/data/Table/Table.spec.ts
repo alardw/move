@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Table',
   componentClass: 'display' as const,
   category: 'data',
@@ -31,7 +31,7 @@ export const spec = {
         { name: 'bordered', type: 'boolean', moveSpecific: true, description: 'Add borders to all cells' },
         { name: 'hoverable', type: 'boolean', moveSpecific: true, description: 'Highlight rows on hover' },
         { name: 'stickyHeader', type: 'boolean', moveSpecific: true, description: 'Make header sticky on scroll' },
-        { name: 'animate', type: 'ListAnimate | false', moveSpecific: true, description: 'Staggered row entrance animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered row entrance animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Table sections (Header, Body, Footer)' },
       ],
       usesFactory: true,
@@ -69,7 +69,7 @@ export const spec = {
       slots: [{ name: 'row', element: 'tr', description: 'Table row' }],
       props: [
         { name: 'selected', type: 'boolean', moveSpecific: true, description: 'Mark row as selected' },
-        { name: 'animate', type: 'ListItemAnimate | false', moveSpecific: true, description: 'Row-level hover animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Row-level hover animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Row cells' },
       ],
       usesFactory: true,
@@ -113,7 +113,7 @@ export const spec = {
     { name: 'bordered', type: 'boolean', moveSpecific: true, description: 'Add borders to all cells' },
     { name: 'hoverable', type: 'boolean', moveSpecific: true, description: 'Highlight rows on hover' },
     { name: 'stickyHeader', type: 'boolean', moveSpecific: true, description: 'Make header sticky on scroll' },
-    { name: 'animate', type: 'ListAnimate | false', moveSpecific: true, description: 'Staggered row entrance animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered row entrance animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Table sections' },
   ],
 
@@ -166,12 +166,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'row',
-      hook: 'useLifecycleAnimate',
-      configType: 'ListAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, translateY: { value: [8, 0], easing: 'outQuart' } }, stagger: { delay: 40 } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ children: 'tbody > tr', animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0 } }, stagger: { delay: 30 } }] },
   ],
 
   tokens: [
@@ -213,7 +208,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['toAnimeParams', 'prefersReducedMotion', 'mergeAnimateConfig', 'getInitialStyles'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -255,7 +250,7 @@ export const spec = {
     animation: [
       'Rows animate in with staggered opacity and translateY on mount',
       'Stagger delay is computed from row index and stagger config',
-      'animate=false on Root disables all row entrance animations',
+      'animations={false} on Root disables all row entrance animations',
       'Row hover animation triggers on mouseenter when ListItemAnimate.hover is provided',
       'Reduced motion preference skips animations',
     ],

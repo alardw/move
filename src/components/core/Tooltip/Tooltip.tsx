@@ -2,18 +2,11 @@
 // Generated from Tooltip.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
-import { animate, spring, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { prefersReducedMotion } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, tooltip as tooltipSpring } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine';
 import styles from './Tooltip.module.css';
-
-// ============================================================================
-// Type: LayerAnimate (alias for LifecycleAnimate in overlay/popup context)
-// ============================================================================
-
-export type LayerAnimate = LifecycleAnimate;
 
 // ============================================================================
 // Direction-aware offset helper
@@ -30,10 +23,27 @@ function getSideOffset(side: string): { x: number; y: number } {
 }
 
 // ============================================================================
-// Custom tooltip spring (mass: 0.4, stiffness: 450, damping: 18)
+// Default animations (direction offsets are added at runtime based on data-side)
 // ============================================================================
 
-const tooltipSpring = { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 };
+const DEFAULT_TOOLTIP_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    vars: (el: HTMLElement) => {
+      const side = el.getAttribute('data-side') || 'top';
+      const offset = getSideOffset(side);
+      return { offsetX: offset.x, offsetY: offset.y };
+    },
+    sequence: [{
+      animation: {
+        opacity: { from: 0, to: 1, ease: tooltipSpring },
+        scale: { from: 0.88, to: 1, ease: tooltipSpring },
+        translateX: { from: '$offsetX', to: 0, ease: tooltipSpring },
+        translateY: { from: '$offsetY', to: 0, ease: tooltipSpring },
+      },
+    }],
+  },
+];
 
 // ============================================================================
 // Provider (stateless -- no factory needed)
@@ -126,9 +136,8 @@ TooltipPortal.displayName = 'Tooltip.Portal';
 // ============================================================================
 // Content
 //
-// Entrance animation is direction-aware: reads data-side from Radix and
-// computes translate offset accordingly. Uses useLifecycleAnimate pattern
-// (anime.js spring) but with custom direction logic.
+// Entrance animation is direction-aware: reads data-side from Radix via
+// dynamic vars and computes translate offset accordingly.
 // Exit animation is CSS @keyframes via data-state=closed (Radix lifecycle).
 // ============================================================================
 
@@ -140,7 +149,7 @@ export interface TooltipContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'content'>;
 }
 
@@ -148,48 +157,31 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
   name: 'TooltipContent',
   styles,
   slots: ['content'] as const,
-  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'animate'],
+  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-    const animRef = React.useRef<JSAnimation | null>(null);
-    const animateProp = props.animate as LifecycleAnimate | false | undefined;
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
 
-    // Direction-aware entrance animation using anime.js spring
-    React.useLayoutEffect(() => {
-      if (animateProp === false || prefersReducedMotion()) return;
+    const animConfig = React.useMemo(
+      () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animationsProp || undefined),
+      [animationsProp],
+    );
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+    }), []);
 
-      const el = contentRef.current;
-      if (!el) return;
-
-      const side = el.getAttribute('data-side') || 'top';
-      const offset = getSideOffset(side);
-
-      // Hide until animation starts (prevent flash)
-      el.style.opacity = '0';
-
-      // Animate entrance with anime.js spring — direction-aware
-      animRef.current = animate(el, {
-        opacity: [0, 1],
-        transform: [
-          `translate(${offset.x}px, ${offset.y}px) scale(0.88)`,
-          'translate(0px, 0px) scale(1)',
-        ],
-        ease: spring(tooltipSpring),
-        onComplete: () => {
-          // Clear inline styles so CSS exit animation can take over
-          if (el) {
-            el.style.opacity = '';
-            el.style.transform = '';
-          }
-        },
-      });
-
-      return () => {
-        if (animRef.current) animRef.current.pause();
-      };
-    }, [animateProp]);
+    useAnimations(animConfig, contentRefs, undefined, {
+      onEnterComplete: () => {
+        // Clear inline styles so CSS exit animation can take over
+        const el = contentRef.current;
+        if (el) {
+          el.style.opacity = '';
+          el.style.transform = '';
+        }
+      },
+    });
 
     return {
       render() {
@@ -272,7 +264,7 @@ export interface TooltipSimpleProps {
   /** Show arrow */
   arrow?: boolean;
   /** Animation configuration (false to disable) */
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   /** Delay before showing */
   delayDuration?: number;
   /** Controlled open state */
@@ -288,20 +280,22 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   sideOffset = 6,
   align,
   arrow = true,
-  animate: animateProp,
+  animations: animationsProp,
   delayDuration,
   open,
   onOpenChange,
 }) => (
-  <TooltipRoot delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}>
-    <TooltipTrigger asChild>{children}</TooltipTrigger>
-    <TooltipPortal>
-      <TooltipContent side={side} sideOffset={sideOffset} align={align} animate={animateProp}>
-        {arrow && <TooltipArrow />}
-        {label}
-      </TooltipContent>
-    </TooltipPortal>
-  </TooltipRoot>
+  <TooltipProvider delayDuration={delayDuration ?? 400}>
+    <TooltipRoot delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipPortal>
+        <TooltipContent side={side} sideOffset={sideOffset} align={align} animations={animationsProp}>
+          {arrow && <TooltipArrow />}
+          {label}
+        </TooltipContent>
+      </TooltipPortal>
+    </TooltipRoot>
+  </TooltipProvider>
 );
 TooltipSimple.displayName = 'Tooltip';
 

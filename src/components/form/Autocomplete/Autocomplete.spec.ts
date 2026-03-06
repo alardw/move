@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Autocomplete',
   componentClass: 'input_popup' as const,
   category: 'form',
@@ -47,7 +47,7 @@ export const spec = {
         { name: 'defaultInputValue', type: 'string', default: "''", moveSpecific: true, description: 'Default input text (uncontrolled)' },
         { name: 'onInputValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when input text changes' },
         { name: 'loading', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show loading state in content' },
-        { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config for popup enter/exit' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for popup enter/exit' },
         { name: 'closeOnSelect', type: 'boolean', moveSpecific: true, description: 'Close popup after selection (defaults to true for single, false for multiple)' },
         { name: 'openOnFocus', type: 'boolean', default: 'true', moveSpecific: true, description: 'Open popup when input receives focus' },
         { name: 'allowCustomValue', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow input value that does not match any item' },
@@ -260,7 +260,7 @@ export const spec = {
     { name: 'inputValue', type: 'string', moveSpecific: true, description: 'Controlled input text value' },
     { name: 'onInputValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when input text changes' },
     { name: 'loading', type: 'boolean', default: 'false', moveSpecific: true, description: 'Loading state' },
-    { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config for popup' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for popup' },
     { name: 'closeOnSelect', type: 'boolean', moveSpecific: true, description: 'Close after selection' },
     { name: 'openOnFocus', type: 'boolean', default: 'true', moveSpecific: true, description: 'Open on input focus' },
     { name: 'allowCustomValue', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow custom input values' },
@@ -326,13 +326,14 @@ export const spec = {
     { id: 'trigger-splits-children', description: 'Trigger splits children into content area (TagList, Input) and actions area (Icon, ClearTrigger) based on displayName' },
     { id: 'trigger-renders-anchor', description: 'Trigger renders as Radix Popover.Anchor with asChild' },
     { id: 'input-combobox-role', description: 'Input has role="combobox" with aria-expanded, aria-controls, aria-activedescendant, aria-autocomplete="list", aria-haspopup="listbox"' },
-    { id: 'content-height-animation', description: 'Content uses usePopupAnimation with animateHeight=true and itemSelector=[role="option"]' },
+    { id: 'content-height-animation', description: 'Content uses animateDimension for height reveal with staggered item animation' },
     { id: 'content-width-matches-trigger', description: 'Content width is set to var(--radix-popover-trigger-width) to match trigger width' },
     { id: 'content-focus-prevention', description: 'Content prevents auto-focus on open and close to keep focus on input' },
     { id: 'item-registers-with-hook', description: 'Item registers/unregisters with useAutocomplete item registry for filtering and keyboard navigation' },
     { id: 'item-hover-scale-animation', description: 'Item animates scale to 1.02 on mouse enter using anime.js spring, reverts on leave' },
     { id: 'item-multi-indicator', description: 'In multi mode, Item renders a built-in check indicator; in single mode, selected item gets filled background via CSS' },
-    { id: 'icon-rotation-animation', description: 'Icon chevron animates rotation 0deg to 180deg on open, reverses on close, using anime.js' },
+    { id: 'trigger-move-state', description: 'Trigger sets data-move-state="open"|"closed" reflecting true animation state (closed during exit, unlike Radix open state)' },
+    { id: 'icon-rotation-animation', description: 'Icon observes data-move-state on Trigger ancestor via MutationObserver and animates rotation to 180deg on open, 0deg on close' },
     { id: 'close-on-select-default', description: 'closeOnSelect defaults to true for single mode, false for multiple mode' },
     { id: 'single-restore-input', description: 'In single mode on close, input text restores to the selected item label (unless allowCustomValue)' },
     { id: 'backspace-removes-last-tag', description: 'In multi mode, Backspace on empty input removes the last selected tag' },
@@ -341,12 +342,16 @@ export const spec = {
   ],
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'outQuart' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 }, stagger: { delay: 30 } }",
-    },
+    { trigger: 'open', sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+    ]] },
+    { trigger: 'closed', sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+    ]] },
   ],
 
   tokens: [
@@ -402,7 +407,7 @@ export const spec = {
     multiple: 'behavior' as const,
     inputValue: 'behavior' as const,
     loading: 'behavior' as const,
-    animate: 'behavior' as const,
+    animations: 'behavior' as const,
     closeOnSelect: 'behavior' as const,
     openOnFocus: 'behavior' as const,
     allowCustomValue: 'behavior' as const,
@@ -412,7 +417,6 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate', 'mergeAnimateConfig'] as string[],
   radixPrimitive: 'Popover',
   componentDeps: [] as string[],
 
@@ -478,13 +482,13 @@ export const spec = {
       'Icon has aria-hidden="true"',
     ],
     animation: [
-      'Content uses usePopupAnimation with enter/exit config',
+      'Content uses animateDimension with stagger for enter/exit',
       'Enter: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Exit: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',
       'Stagger: items via [role="option"] selector with 30ms delay',
       'Item hover: spring scale to 1.02 on enter, back to 1 on leave',
       'Icon: chevron rotates 180deg on open, 0deg on close with outQuart easing',
-      'animate=false disables all animations including icon rotation',
+      'animations={false} disables all animations including icon rotation',
       'Reduced motion preference disables animation',
     ],
   },

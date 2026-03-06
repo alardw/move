@@ -2,88 +2,95 @@
 export { springs, easings, getEase, isSpring, DEFAULT_DURATION } from './easings';
 export type { SpringParams, SpringPreset, Easing, AnimationPreset } from './easings';
 
+// Re-export anime.js JSAnimation type so components don't import animejs directly
+export type { JSAnimation } from 'animejs';
+
+// Pre-computed spring constants — use directly as `ease` in per-property params
+export { snappy, quick, poppy, gentle, slow, lazy, jelly, stiff, tooltip, sidebar, pagination } from './easings';
+
 // Animation utilities
 export {
   prefersReducedMotion,
-  resolveEasing,
-  toAnimeParams,
-  toInstantParams,
   mergeAnimateConfig,
-  getInitialStyles,
-} from './utils';
+  toEndValues,
+  getFromStyles,
+} from './utils/helpers';
 
-// Base hook (internal)
-export { useAnimateConfig } from './utils';
-export type { UseAnimateConfigOptions, UseAnimateConfigReturn } from './utils';
+// =============================================================================
+// Core animation functions
+// =============================================================================
 
-// 1:1 trigger hooks
+/** Core apply function — every animation flows through this */
+export { moveAnimate } from './moveAnimate';
+
+/** Dimension reveal/collapse with cleanup */
+export { animateDimension } from './animateDimension';
+
+/** Position animation with slot/var expression resolution */
+export { animatePosition } from './animatePosition';
+
+/** Animate children with staggered delay */
+export { staggerAnimate } from './staggerAnimate';
+
+// =============================================================================
+// Trigger-sequence orchestrator
+// =============================================================================
+
+/** Core orchestrator — trigger-sequence config → event handlers */
+export { useAnimations } from './useAnimations';
+
+/** Merge user animation overrides with component defaults */
+export { resolveAnimationsConfig, extractSteps } from './resolveAnimationsConfig';
+
+// =============================================================================
+// Presets — animation atoms + event bundles + registry
+// =============================================================================
+
 export {
-  useLifecycleAnimate,
-  useInteractionAnimate,
-  useToggleAnimate,
-  useExpandAnimate,
-  useValueAnimate,
-  useLoopAnimate,
-} from './triggers';
-export type {
-  UseLifecycleAnimateOptions,
-  UseLifecycleAnimateReturn,
-  UseToggleAnimateOptions,
-  UseToggleAnimateReturn,
-  UseExpandAnimateOptions,
-  UseExpandAnimateReturn,
-  UseValueAnimateOptions,
-  UseValueAnimateReturn,
-  UseLoopAnimateOptions,
-  UseLoopAnimateReturn,
-} from './triggers';
+  // Atoms
+  fadeIn,
+  fadeOut,
+  popIn,
+  popOut,
+  scaleUp,
+  scaleDown,
+  scaleIn,
+  // Event bundles
+  interactive,
+  revealHeight,
+  staggerItems,
+  toggleIndicator,
+  expandContent,
+  // Registry
+  PRESET_REGISTRY,
+} from './presets';
 
-// Utility hooks (not triggers)
-export { usePositionTracker, useSlidingIndicator } from './utils';
-export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingIndicatorOptions, UseSlidingIndicatorReturn } from './utils';
+// =============================================================================
+// Position tracking
+// =============================================================================
 
-// Legacy hook names (original-components compatibility)
-export { useInteractiveAnimate, useInteractionAnimate as useInteractionAnimate_ } from './utils';
-export {
-  useToggleAnimation,
-  useExpandAnimation,
-} from './triggers';
-export type {
-  UseToggleAnimationOptions,
-  UseToggleAnimationReturn,
-  UseExpandAnimationOptions,
-  UseExpandAnimationReturn,
-} from './triggers';
+export { usePositionTracker, useSlidingIndicator } from './utils/usePositionTracker';
+export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingIndicatorOptions, UseSlidingIndicatorReturn } from './utils/usePositionTracker';
 
-// Legacy popup/layer — now useLifecycleAnimate, but kept for original-components
-// Original-components that import these will need migration
-export { useLifecycleAnimate as usePopupAnimation } from './triggers';
-export { useLifecycleAnimate as useLayerAnimation } from './triggers';
-
+// =============================================================================
 // Presence system
+// =============================================================================
+
 export { Presence } from './presence/Presence';
 export type { PresenceProps } from './presence/Presence';
 
 export { usePresence, useIsPresent } from './presence/PresenceContext';
 export type { PresenceContextValue } from './presence/PresenceContext';
 
+// =============================================================================
 // Animation config types
-export type {
-  AnimatableValue,
-  Animation,
-  AnimationProperties,
-  AnimateConfig,
-  StaggerConfig,
-  // Core trigger types
-  LifecycleAnimate,
-  InteractionAnimate,
-  ToggleAnimate,
-  ExpandAnimate,
-  ValueAnimate,
-  LoopAnimate,
-  // Modifiers
-  StaggerModifier,
-  DelayModifier,
-} from './types';
+// =============================================================================
 
-export { defaultAnimations } from './types';
+export type {
+  Animation,
+  StaggerConfig,
+  AnimationState,
+  AnimationStep,
+  SequenceItem,
+  AnimationTrigger,
+} from './types';

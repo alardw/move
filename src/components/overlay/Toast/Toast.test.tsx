@@ -35,17 +35,10 @@ vi.mock('../../../animation', async () => {
     usePresence,
     useIsPresent,
     prefersReducedMotion: vi.fn(() => true), // Skip animations in tests
-    toAnimeParams: vi.fn((anim: unknown) => anim),
-    toInstantParams: vi.fn((anim: unknown) => anim),
-    springs: {},
-    easings: {},
-    getEase: vi.fn(),
-    isSpring: vi.fn(() => false),
-    DEFAULT_DURATION: 300,
-    resolveEasing: vi.fn(),
-    mergeAnimateConfig: vi.fn(),
-    getInitialStyles: vi.fn(),
-    defaultAnimations: {},
+    useAnimations: vi.fn(() => ({ handlers: {}, runExit: () => Promise.resolve(), pauseAll: vi.fn(), resumeAll: vi.fn() })),
+    resolveAnimationsConfig: vi.fn((defaults: unknown) => defaults),
+    quick: [1, 0.5, 0, 1],
+    stiff: [1, 0.8, 0, 1],
   };
 });
 

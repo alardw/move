@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Toggle as RadixToggle } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useInteractiveAnimate, defaultAnimations } from '../../../animation';
-import type { InteractionAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, scaleUp, scaleDown } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleButton.module.css';
 
@@ -23,7 +23,7 @@ export interface ToggleButtonProps extends Record<string, unknown> {
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -32,29 +32,29 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'secondary', size: 'md' },
-  moveProps: ['pressed', 'defaultPressed', 'onPressedChange', 'disabled', 'variant', 'size', 'animate'],
+  moveProps: ['pressed', 'defaultPressed', 'onPressedChange', 'disabled', 'variant', 'size', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const {
       variant,
       size,
-      animate: animateProp,
+      animations: animationsProp,
       className,
       style,
       children,
     } = props;
 
-    const animateConfig = animateProp === false
-      ? { hover: false as const, press: false as const }
-      : { ...(animateProp || {}) };
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Root.hover', sequence: [{ animation: scaleUp }] },
+      { trigger: 'Root.press', sequence: [{ animation: scaleDown }] },
+    ];
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
+    const btnRef = React.useRef<HTMLElement | null>(null);
+    const isDisabled = !!props.disabled;
+    const refs = React.useMemo(() => ({ Root: btnRef as React.RefObject<HTMLElement | null> }), []);
+    const { handlers } = useAnimations(animConfig, refs);
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractionAnimate,
-      defaults: defaultAnimations.element,
-      disabled: !!props.disabled,
-    });
-
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, animRef as React.Ref<HTMLButtonElement>);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
 
     return {
       render() {
@@ -77,12 +77,12 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
-            onMouseEnter={handlers.onMouseEnter}
-            onMouseLeave={handlers.onMouseLeave}
-            onMouseDown={handlers.onMouseDown}
-            onMouseUp={handlers.onMouseUp}
-            onKeyDown={handlers.onKeyDown as any}
-            onKeyUp={handlers.onKeyUp as any}
+            onMouseEnter={() => { if (!isDisabled) handlers.Root?.onMouseEnter?.(); }}
+            onMouseLeave={() => { if (!isDisabled) handlers.Root?.onMouseLeave?.(); }}
+            onMouseDown={() => { if (!isDisabled) handlers.Root?.onMouseDown?.(); }}
+            onMouseUp={() => { if (!isDisabled) handlers.Root?.onMouseUp?.(); }}
+            onKeyDown={(e: React.KeyboardEvent) => { if (!isDisabled) handlers.Root?.onKeyDown?.(e); }}
+            onKeyUp={(e: React.KeyboardEvent) => { if (!isDisabled) handlers.Root?.onKeyUp?.(e); }}
           >
             {children}
           </RadixToggle.Root>

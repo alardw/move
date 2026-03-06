@@ -13,7 +13,7 @@ function renderDialog(props: {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  animate?: false;
+  animations?: false;
   contentProps?: Record<string, unknown>;
   overlayProps?: Record<string, unknown>;
   triggerProps?: Record<string, unknown>;
@@ -29,7 +29,7 @@ function renderDialog(props: {
     defaultOpen,
     onOpenChange,
     size,
-    animate = false, // disable animations in tests by default
+    animations = false, // disable animations in tests by default
     contentProps = {},
     overlayProps = {},
     triggerProps = {},
@@ -46,7 +46,7 @@ function renderDialog(props: {
       open={open}
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
-      animate={animate}
+      animations={animations}
     >
       <Dialog.Trigger data-testid="trigger" {...triggerProps}>
         Open Dialog
@@ -106,7 +106,7 @@ describe('Dialog', () => {
   describe('open/close', () => {
     it('opens on trigger click', async () => {
       const user = userEvent.setup();
-      renderDialog({ animate: false });
+      renderDialog({ animations: false });
 
       // Initially the dialog should not be visible
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -122,7 +122,7 @@ describe('Dialog', () => {
     it('closes on close button click', async () => {
       const user = userEvent.setup();
       const onOpenChange = vi.fn();
-      renderDialog({ open: true, onOpenChange, animate: false });
+      renderDialog({ open: true, onOpenChange, animations: false });
 
       await waitFor(() => {
         expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe('Dialog', () => {
 
       await user.click(screen.getByTestId('close'));
 
-      // With animate=false, onCloseComplete fires synchronously
+      // With animations=false, onCloseComplete fires synchronously
       await waitFor(() => {
         expect(onOpenChange).toHaveBeenCalledWith(false);
       });
@@ -139,7 +139,7 @@ describe('Dialog', () => {
     it('supports controlled open/onOpenChange', async () => {
       const onOpenChange = vi.fn();
       const { rerender } = render(
-        <Dialog.Root open={false} onOpenChange={onOpenChange} animate={false}>
+        <Dialog.Root open={false} onOpenChange={onOpenChange} animations={false}>
           <Dialog.Trigger data-testid="trigger">Open</Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay />
@@ -155,7 +155,7 @@ describe('Dialog', () => {
 
       // Re-render with open=true
       rerender(
-        <Dialog.Root open={true} onOpenChange={onOpenChange} animate={false}>
+        <Dialog.Root open={true} onOpenChange={onOpenChange} animations={false}>
           <Dialog.Trigger data-testid="trigger">Open</Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay />

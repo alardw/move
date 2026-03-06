@@ -8,7 +8,6 @@ export type {
   TimeFieldDropdownProps,
   TimeFieldDropdownColumnProps,
   TimeFieldSize,
-  TimeFieldAnimate,
 } from './TimeField';
 
 export { useTimeField } from './useTimeField';

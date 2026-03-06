@@ -8,6 +8,7 @@ import { useCalendarContext } from './CalendarContext';
 import { Select } from '../../form/Select';
 import { Button } from '../../core/Button';
 import { Icon } from '../../../infrastructure/Icon';
+import { snappy } from '../../../animation';
 import styles from './CalendarNav.module.css';
 
 export interface CalendarNavSp {
@@ -83,7 +84,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
       <Button
         variant="ghost"
         size="sm"
-        animate={{ press: { scale: 0.85, easing: 'snappy' } }}
+        animations={[{ trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }] }]}
         onClick={goToPrevMonth}
         aria-label={labels.previousMonth}
         className={styles.navButton}
@@ -135,7 +136,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
       <Button
         variant="ghost"
         size="sm"
-        animate={{ press: { scale: 0.85, easing: 'snappy' } }}
+        animations={[{ trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }] }]}
         onClick={goToNextMonth}
         aria-label={labels.nextMonth}
         className={styles.navButton}

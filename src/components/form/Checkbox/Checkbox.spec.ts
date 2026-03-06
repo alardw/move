@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Checkbox',
   componentClass: 'input_toggle' as const,
   category: 'form',
@@ -34,7 +34,7 @@ export const spec = {
     { name: 'indeterminate', type: 'boolean', moveSpecific: true, description: 'Indeterminate (mixed) state' },
     { name: 'onCheckedChange', type: '(checked: boolean) => void', moveSpecific: true, description: 'Called when checked state changes' },
     { name: 'icon', type: 'string', default: "'check'", moveSpecific: true, description: 'Icon name for the check indicator (resolved via useResolvedIcon)' },
-    { name: 'animate', type: 'IndicatorAnimate | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the checkbox' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Whether the checkbox is disabled' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the checkbox is in an invalid state' },
@@ -69,13 +69,15 @@ export const spec = {
   formType: 'hidden-input' as const,
   asChild: false,
 
+  states: [
+    { name: 'checked', slot: 'Root', source: 'data-state', value: 'checked' },
+    { name: 'unchecked', slot: 'Root', source: 'data-state', value: 'unchecked' },
+  ],
+
   animations: [
-    {
-      slot: 'indicator',
-      hook: 'useToggleAnimate',
-      configType: 'ToggleAnimate & InteractionAnimate',
-      defaultProfile: 'toggleIndicator',
-    },
+    { trigger: 'checked', sequence: [{ target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } }] },
+    { trigger: 'unchecked', sequence: [{ target: 'indicator', animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } } }] },
+    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   tokens: [
@@ -99,20 +101,19 @@ export const spec = {
 
   renderContracts: [
     { id: 'wrapper-label', description: 'Root button is wrapped in a <label> element that includes the checkbox and children text' },
-    { id: 'press-handlers-on-wrapper', description: 'Toggle animation pressHandlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the wrapper label' },
+    { id: 'press-handlers-on-wrapper', description: 'Press animation handlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the wrapper label via useAnimations' },
     { id: 'hidden-input-form', description: 'When name prop is provided, a hidden input is rendered for form submission with value "on" when checked' },
     { id: 'data-state-tristate', description: 'data-state is one of "checked", "unchecked", or "indeterminate"' },
     { id: 'aria-checked-mixed', description: 'aria-checked is "mixed" when indeterminate, otherwise boolean checked value' },
     { id: 'size-data-attr-skip-md', description: 'data-size is only rendered for sm and lg; md is the default and omitted' },
     { id: 'useCheckbox-hook', description: 'Uses useCheckbox headless hook for controlled/uncontrolled checked state management' },
-    { id: 'toggle-animation-wiring', description: 'useToggleAnimate rootRef merged with forwarded ref; indicatorRef attached to indicator slot; animateChecked/animateUnchecked called on toggle' },
+    { id: 'toggle-animation-wiring', description: 'useAnimations observes data-state on Root; fires checked/unchecked state triggers to animate indicator slot' },
     { id: 'icon-resolution', description: 'icon prop is resolved via useResolvedIcon; falls back to built-in SVG checkmark when icon provider is not available' },
     { id: 'keyboard-toggle', description: 'Space and Enter keys trigger toggle via handleKeyDown' },
   ],
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useToggleAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -153,10 +154,10 @@ export const spec = {
       'Hidden input value reflects checked state',
     ],
     animation: [
-      'Toggle animation plays animateChecked on check',
-      'Toggle animation plays animateUnchecked on uncheck',
-      'Press animation on wrapper via pressHandlers',
-      'animate=false disables toggle animation',
+      'State trigger fires checked animation on indicator',
+      'State trigger fires unchecked animation on indicator',
+      'Press animation on wrapper via Root.press trigger',
+      'animations={false} disables toggle animation',
     ],
   },
 

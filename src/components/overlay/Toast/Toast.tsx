@@ -3,9 +3,8 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
-import { animate as animeAnimate } from 'animejs';
-import { Presence, usePresence, toAnimeParams, toInstantParams, prefersReducedMotion } from '../../../animation';
-import type { Animation, LifecycleAnimate } from '../../../animation';
+import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick, stiff } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon/useResolvedIcon';
 import {
   useToastStore,
@@ -21,7 +20,7 @@ import styles from './Toast.module.css';
 
 export interface ToastViewportProps extends Record<string, unknown> {
   position?: ToastPosition;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   closeLabel?: string;
 }
 
@@ -32,9 +31,8 @@ export { toast } from './store';
 // Animation context — passed from Viewport to ToastItem
 // =============================================================================
 
-// undefined = use defaults (normal behavior)
-// null = animations disabled (animate={false})
-const ToastAnimateContext = React.createContext<LifecycleAnimate | null | undefined>(undefined);
+// null = animations disabled (animations={false})
+const ToastAnimateContext = React.createContext<AnimationTrigger[] | false | null>(null);
 const ToastCloseLabelContext = React.createContext('Close notification');
 
 // =============================================================================
@@ -63,25 +61,34 @@ function VariantIcon({ variant }: { variant: string }) {
 }
 
 // =============================================================================
-// Animation configs per position (using Move Animation types + spring presets)
+// Default animation config (target-based)
 // =============================================================================
 
-function getEnterSlide(_position: ToastPosition): Animation {
-  return { y: [24, 0], opacity: [0, 1], scale: [0.95, 1], easing: 'quick' };
-}
-
-function getExitSlide(_position: ToastPosition): Animation {
-  return { y: [0, 24], opacity: [1, 0], scale: [1, 0.95], easing: 'outQuart', duration: 300 };
-}
-
-const heightExpand: Animation = { easing: 'stiff' };
-
-function runAnimation(el: HTMLElement, animation: Animation) {
-  const params = prefersReducedMotion()
-    ? toInstantParams(animation)
-    : toAnimeParams(animation);
-  return animeAnimate(el, params);
-}
+const DEFAULT_TOAST_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Wrapper.enter',
+    sequence: [
+      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: stiff } } },
+      { target: 'Item', animation: {
+        y: { from: 24, to: 0, ease: quick, duration: 200 },
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        scale: { from: 0.95, to: 1, ease: quick },
+        delay: 60,
+      } },
+    ],
+  },
+  {
+    trigger: 'Wrapper.exit',
+    sequence: [
+      { target: 'Item', animation: {
+        y: { from: 0, to: 24, ease: 'outQuart', duration: 300 },
+        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 300 },
+        scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 300 },
+      } },
+      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: 'outQuart', duration: 300 } } },
+    ],
+  },
+];
 
 // =============================================================================
 // ToastItem (internal) — each toast is independent with its own timer
@@ -91,101 +98,56 @@ function ToastItem({ toast }: { toast: ToastState }) {
   const wrapperRef = React.useRef<HTMLDivElement>(null);
   const itemRef = React.useRef<HTMLDivElement>(null);
   const progressRef = React.useRef<HTMLDivElement>(null);
-  const hasAnimatedEnter = React.useRef(false);
-  const hasAnimatedExit = React.useRef(false);
 
   const [isPresent, safeToRemove] = usePresence();
-  const animateConfig = React.useContext(ToastAnimateContext);
+  const animConfig = React.useContext(ToastAnimateContext);
   const closeLabel = React.useContext(ToastCloseLabelContext);
   const closeIcon = useResolvedIcon('x', 14);
 
-  // Enter: expand height -> slide in
+  const isClosing = !isPresent;
+
+  const refs = React.useMemo(() => ({
+    Wrapper: wrapperRef as React.RefObject<HTMLElement | null>,
+    Item: itemRef as React.RefObject<HTMLElement | null>,
+  }), []);
+  const { runExit } = useAnimations(animConfig, refs);
+
+  // Exit — run exit sequences then signal safe to remove
   React.useEffect(() => {
-    const wrapper = wrapperRef.current;
-    const item = itemRef.current;
-    if (!wrapper || !item || hasAnimatedEnter.current) return;
-    hasAnimatedEnter.current = true;
+    if (!isClosing) return;
+    if (!animConfig) { safeToRemove?.(); return; }
+    runExit().then(() => safeToRemove?.());
+  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    if (animateConfig === null || prefersReducedMotion()) {
-      return;
-    }
+  // Auto-dismiss: countdown on progress bar via useAnimations, pause on hover
+  const toastId = toast.id;
+  const toastDuration = toast.duration;
 
-    const naturalHeight = wrapper.offsetHeight;
-
-    wrapper.style.height = '0px';
-    item.style.opacity = '0';
-
-    const enterAnim = animateConfig?.enter;
-
-    const heightAnim = runAnimation(wrapper, {
-      ...heightExpand,
-      height: [0, naturalHeight],
-    });
-
-    heightAnim.then(() => {
-      wrapper.style.height = '';
-    });
-
-    runAnimation(item, {
-      ...(enterAnim ?? getEnterSlide(toast.position)),
-      ...(enterAnim ? {} : { delay: 60 }),
-    }).then(() => {
-      if (item) {
-        item.style.opacity = '';
-        item.style.transform = '';
-      }
-    });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Exit: fade out + collapse height in parallel -> safeToRemove
-  React.useEffect(() => {
-    if (isPresent || hasAnimatedExit.current) return;
-    hasAnimatedExit.current = true;
-
-    const wrapper = wrapperRef.current;
-    const item = itemRef.current;
-
-    if (!wrapper || !item || animateConfig === null || prefersReducedMotion()) {
-      safeToRemove();
-      return;
-    }
-
-    const exitAnim = animateConfig?.exit;
-    const currentHeight = wrapper.offsetHeight;
-
-    // Run item fade/slide and wrapper collapse in parallel
-    const itemDone = runAnimation(item, exitAnim ?? getExitSlide(toast.position));
-    const wrapperDone = runAnimation(wrapper, {
-      height: [currentHeight, 0],
-      paddingBottom: [getComputedStyle(wrapper).paddingBottom, 0],
-      easing: 'outQuart',
-      duration: 300,
-    });
-
-    Promise.all([itemDone, wrapperDone]).then(() => safeToRemove());
-  }, [isPresent, safeToRemove, toast.position, animateConfig]);
-
-  // Auto-dismiss: countdown on progress bar, pause on hover
-  React.useEffect(() => {
-    const bar = progressRef.current;
-    const el = itemRef.current;
-    if (!bar || !el || !isPresent || toast.duration <= 0) return;
-
-    const toastId = toast.id;
-
-    const countdown: Animation = {
-      scaleX: [1, 0],
-      easing: 'linear',
-      duration: toast.duration,
-    };
-
-    const anim = animeAnimate(bar, {
-      ...toAnimeParams(countdown),
+  const progressConfig: AnimationTrigger[] | null = React.useMemo(() => {
+    if (!isPresent || toastDuration <= 0) return null;
+    return [{
+      trigger: 'Progress.enter',
+      sequence: [{
+        target: 'Progress',
+        animation: { scaleX: { from: 1, to: 0, ease: 'linear', duration: toastDuration } },
+      }],
       onComplete: () => removeToast(toastId),
-    });
+    }];
+  }, [isPresent, toastId, toastDuration]);
 
-    const pause = () => anim.pause();
-    const resume = () => anim.play();
+  const progressRefs = React.useMemo(() => ({
+    Progress: progressRef as React.RefObject<HTMLElement | null>,
+  }), []);
+
+  const { pauseAll: pauseProgress, resumeAll: resumeProgress } = useAnimations(progressConfig, progressRefs);
+
+  // Pause/resume progress on hover/focus
+  React.useEffect(() => {
+    const el = itemRef.current;
+    if (!el || !isPresent || toastDuration <= 0) return;
+
+    const pause = () => pauseProgress();
+    const resume = () => resumeProgress();
 
     el.addEventListener('mouseenter', pause);
     el.addEventListener('mouseleave', resume);
@@ -193,13 +155,12 @@ function ToastItem({ toast }: { toast: ToastState }) {
     el.addEventListener('focusout', resume);
 
     return () => {
-      anim.pause();
       el.removeEventListener('mouseenter', pause);
       el.removeEventListener('mouseleave', resume);
       el.removeEventListener('focusin', pause);
       el.removeEventListener('focusout', resume);
     };
-  }, [isPresent, toast.id, toast.duration]);
+  }, [isPresent, toastDuration, pauseProgress, resumeProgress]);
 
   const hasIcon = toast.variant !== 'default';
 
@@ -264,17 +225,15 @@ const ToastViewport = withMoveComponent<
   name: 'ToastViewport',
   styles,
   slots: ['viewport'] as const,
-  moveProps: ['position', 'animate', 'closeLabel'] as const,
+  moveProps: ['position', 'animations', 'closeLabel'] as const,
   setup({ props, ref, cx, sp, attrs }) {
     const allToasts = useToastStore();
 
-    // Resolve animate prop:
-    // - false -> null (animations disabled)
-    // - LifecycleAnimate -> use custom config
-    // - undefined -> use defaults
-    const animateConfig = props.animate === false
-      ? null
-      : (props.animate as LifecycleAnimate | undefined) ?? undefined;
+    // Resolve animations prop
+    const animConfig = resolveAnimationsConfig(
+      DEFAULT_TOAST_ANIMATIONS,
+      props.animations as AnimationTrigger[] | false | undefined,
+    );
 
     // Group toasts by position (max enforced by the store on add)
     const grouped = React.useMemo(() => {
@@ -294,7 +253,7 @@ const ToastViewport = withMoveComponent<
 
         return createPortal(
           <ToastCloseLabelContext.Provider value={(props.closeLabel as string) ?? 'Close notification'}>
-          <ToastAnimateContext.Provider value={animateConfig}>
+          <ToastAnimateContext.Provider value={animConfig}>
             <div
               {...attrs}
               {...spRest}

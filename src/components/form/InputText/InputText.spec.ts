@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'InputText',
   componentClass: 'input_plain' as const,
   category: 'form',
@@ -95,7 +95,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: [] as string[],
+
   componentDeps: [] as string[],
 
   testing: {

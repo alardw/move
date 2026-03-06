@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Select',
   componentClass: 'input_popup' as const,
   category: 'form',
@@ -34,7 +34,7 @@ export const spec = {
         { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
         { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Default open state (uncontrolled)' },
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Select sub-components' },
       ],
       usesFactory: false,
@@ -182,7 +182,7 @@ export const spec = {
     { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
     { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Default open state (uncontrolled)' },
     { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-    { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Select sub-components' },
   ],
 
@@ -213,21 +213,26 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate & StaggerModifier',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'outQuart' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 }, stagger: { delay: 30 } }",
-    },
+    { trigger: 'open', sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+    ]] },
+    { trigger: 'closed', sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+    ]] },
   ],
 
   renderContracts: [
     { id: 'root-manages-animation-close', description: 'Root intercepts close from Radix and coordinates via isClosing state to allow exit animation before unmount' },
     { id: 'root-label-registry', description: 'Root maintains a label map (value -> ReactNode) via registerLabel/getLabel so SelectValue can display the label for the current value' },
-    { id: 'content-height-animation', description: 'Content uses animateHeight option in usePopupAnimation to animate from 0 height on open' },
-    { id: 'content-scroll-to-selected', description: 'Content scrolls to selected item (data-selected) before enter animation via onBeforeEnter callback' },
+    { id: 'content-height-animation', description: 'Content uses animateDimension for height reveal from 0 on open' },
+    { id: 'content-scroll-to-selected', description: 'Content scrolls to selected item (data-selected) before enter animation' },
     { id: 'content-focus-selected-on-open', description: 'Content focuses the selected item on open complete, or dispatches ArrowDown if none selected' },
-    { id: 'icon-rotation-animation', description: 'Icon observes data-state via MutationObserver and animates rotation to 180deg on open, 0deg on close' },
+    { id: 'trigger-move-state', description: 'Trigger sets data-move-state="open"|"closed" reflecting true animation state (closed during exit, unlike Radix data-state which stays open)' },
+    { id: 'icon-rotation-animation', description: 'Icon observes data-move-state on Trigger ancestor via MutationObserver and animates rotation to 180deg on open, 0deg on close' },
     { id: 'item-spring-hover', description: 'Item uses spring animation to scale to 1.02 on mouse enter and back to 1 on mouse leave' },
     { id: 'item-registers-label', description: 'Item registers its label (or children) in the SelectContext label map on mount/update' },
     { id: 'item-select-closes', description: 'Item selection calls onValueChange, fires onSelect callback, and triggers animated close' },
@@ -285,7 +290,6 @@ export const spec = {
   radixPrimitive: 'DropdownMenu',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate', 'mergeAnimateConfig', 'prefersReducedMotion'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -347,10 +351,10 @@ export const spec = {
       'Content enter animation: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Content exit animation: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',
       'Content stagger: items enter with 30ms stagger delay',
-      'Content uses animateHeight for height transition from 0',
+      'Content uses animateDimension for height reveal from 0',
       'Icon rotation animation uses outQuart easing over 300ms',
       'Item hover uses spring animation (mass:0.6, stiffness:400, damping:20)',
-      'animate=false disables all animations including icon rotation',
+      'animations={false} disables all animations including icon rotation',
       'Reduced motion preference disables animation durations',
     ] as string[],
   },

@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ImageGroup',
   componentClass: 'display' as const,
   category: 'media',
@@ -18,7 +18,7 @@ export const spec = {
     { name: 'columns', type: 'number', default: '3', moveSpecific: true, description: 'Number of grid columns' },
     { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
     { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", moveSpecific: true, description: 'Border radius applied to child Image elements via CSS' },
-    { name: 'animate', type: 'ListAnimate | false', moveSpecific: true, description: 'Stagger enter animation config for children, or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Stagger enter animation config for children, or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Image components or other content placed in the grid' },
   ],
 
@@ -34,12 +34,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useLifecycleAnimate',
-      configType: 'ListAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'snappy' } }, stagger: { delay: 60 } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } }, stagger: { delay: 30 } }] },
   ],
 
   tokens: [] as { name: string; value: string; description: string }[],
@@ -59,12 +54,12 @@ export const spec = {
     { id: 'responsive-collapse', description: 'At container width <= 40rem, 3+ column grids collapse to 2 columns; at <= 24rem, all grids collapse to 1 column' },
     { id: 'radius-child-inheritance', description: 'Radius is applied to direct children of root via .root[data-radius] > * CSS selectors, not on root itself' },
     { id: 'stagger-mount-animation', description: 'On mount, children animate in with staggered delay using anime.js; respects prefersReducedMotion' },
-    { id: 'animate-false-disables', description: 'animate={false} disables the stagger enter animation entirely' },
+    { id: 'animate-false-disables', description: 'animations={false} disables the stagger enter animation entirely' },
   ],
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['toAnimeParams', 'prefersReducedMotion', 'mergeAnimateConfig', 'getInitialStyles'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -86,7 +81,7 @@ export const spec = {
     animation: [
       'Stagger enter animation plays on mount for child elements',
       'Children animate from opacity 0 + scale 0.5 to opacity 1 + scale 1 with stagger delay',
-      'animate={false} disables stagger animation',
+      'animations={false} disables stagger animation',
       'Reduced motion preference disables animation and sets final state immediately',
     ],
   },

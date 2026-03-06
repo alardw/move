@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Timeline',
   componentClass: 'display' as const,
   category: 'data',
@@ -30,7 +30,7 @@ export const spec = {
         { name: 'color', type: "'primary' | 'gray' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Default color for active/completed items' },
         { name: 'lineVariant', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", moveSpecific: true, description: 'Line style for connectors' },
         { name: 'reverseActive', type: 'boolean', default: 'false', moveSpecific: true, description: 'Reverse active direction (items after active index are completed)' },
-        { name: 'animate', type: 'ListAnimate | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Timeline.Item children' },
       ],
       usesFactory: true,
@@ -64,7 +64,7 @@ export const spec = {
     { name: 'color', type: "'primary' | 'gray' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Default color for active/completed items' },
     { name: 'lineVariant', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", moveSpecific: true, description: 'Line style for connectors' },
     { name: 'reverseActive', type: 'boolean', default: 'false', moveSpecific: true, description: 'Reverse active direction' },
-    { name: 'animate', type: 'ListAnimate | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Timeline.Item children' },
   ],
 
@@ -99,12 +99,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'item',
-      hook: 'useLifecycleAnimate',
-      configType: 'ListAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, translateY: { value: [12, 0], easing: 'outQuart' }, scale: { value: [0.95, 1], easing: 'quick' } }, stagger: { delay: 80 } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0, ease: 'poppy' } }, stagger: { delay: 50 } }] },
   ],
 
   tokens: [
@@ -145,7 +140,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['toAnimeParams', 'prefersReducedMotion', 'mergeAnimateConfig', 'getInitialStyles'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -174,7 +169,7 @@ export const spec = {
     animation: [
       'Items animate in with staggered opacity, translateY, and scale on mount',
       'Stagger delay of 80ms per item index',
-      'animate=false on Root disables all item entrance animations',
+      'animations={false} on Root disables all item entrance animations',
       'Reduced motion preference sets opacity to 1 and clears transform immediately',
     ],
   },

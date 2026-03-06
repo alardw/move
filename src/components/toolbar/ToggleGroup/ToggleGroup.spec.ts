@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ToggleGroup',
   componentClass: 'interactive' as const,
   category: 'toolbar',
@@ -28,7 +28,7 @@ export const spec = {
       'loop',
       'size',
       'variant',
-      'animate',
+      'animations',
       'children',
       'className',
       'style',
@@ -36,7 +36,7 @@ export const spec = {
     Item: [
       'value',
       'disabled',
-      'animate',
+      'animations',
       'children',
       'className',
       'style',
@@ -59,7 +59,7 @@ export const spec = {
     'loop',
     'size',
     'variant',
-    'animate',
+    'animations',
   ] as string[],
 
   controlled: { pattern: 'value' as const },
@@ -79,37 +79,14 @@ export const spec = {
   dismissBehavior: null,
 
   animations: [
-    {
-      slot: 'indicator',
-      hook: 'usePositionTracker' as const,
-      configType: 'PositionTracker',
-      notes:
-        'Sliding indicator tracks active item via useSlidingIndicator (aliased usePositionTracker). containerRef is root internalRef, activeSelector is [data-state="on"]. First render snaps instantly, subsequent changes animate with spring.',
-    },
-    {
-      slot: 'indicator',
-      hook: 'custom' as const,
-      configType: 'InteractionAnimate',
-      defaultConfig:
-        '{ press: { scale: 0.92, easing: "spring", spring: { mass: 0.6, stiffness: 500, damping: 12 } } }',
-      notes:
-        'Indicator press animation: mouseDown on root scales indicator to 0.92 via spring, mouseUp/mouseLeave restores to 1. Raw anime.js animate() call, not via a standard hook.',
-    },
-    {
-      slot: 'item',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-      defaultPreset: 'element',
-      notes:
-        'Item interaction animations are disabled by default (hover: false, press: false) because scaling breaks connected borders. Users can opt back in via the animate prop on Item.',
-    },
+    { trigger: 'Item.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'Item.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   renderContracts: [
     { id: 'context-provides-size-variant', description: 'Root provides ToggleGroupContext with size and variant; Item reads from context to set data-variant and data-size' },
     { id: 'single-mode-no-deselect', description: 'Root is always type="single" and blocks deselection by ignoring empty-string onValueChange from Radix' },
-    { id: 'indicator-absolutely-positioned', description: 'Indicator element is position:absolute inside Root, positioned by useSlidingIndicator to track [data-state="on"] item' },
+    { id: 'indicator-absolutely-positioned', description: 'Indicator element is position:absolute inside Root, positioned by animatePosition state trigger tracking [data-state="on"] item via dynamic Active ref' },
     { id: 'indicator-aria-hidden', description: 'Indicator is decorative and carries aria-hidden="true"' },
     { id: 'item-composes-button', description: 'Item slot composes Button.module.css root class for shared sizing and typography' },
     { id: 'item-transparent-bg', description: 'Items have transparent background; the sliding indicator provides the active-item background' },
@@ -143,11 +120,7 @@ export const spec = {
   radixPrimitive: 'ToggleGroup',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: [
-    'useInteractionAnimate',
-    'useSlidingIndicator',
-    'defaultAnimations',
-  ] as string[],
+
   componentDeps: ['Button'] as string[],
 
   childrenKind: 'composition' as const,
@@ -165,7 +138,7 @@ export const spec = {
       'Root blocks deselection (ignores empty value)',
       'Root provides size and variant to Items via context',
       'Indicator renders with aria-hidden="true"',
-      'Indicator is positioned by useSlidingIndicator',
+      'Indicator is positioned by animatePosition state trigger',
       'Indicator receives press animation on mouseDown',
       'Item renders as Radix ToggleGroup.Item',
       'Item receives data-variant and data-size from context',
@@ -174,7 +147,7 @@ export const spec = {
       'Item has data-state="off" when not selected',
       'Item text color changes: --move-fg-muted when off, --move-primary-fg when on',
       'Item hover/press animations are disabled by default',
-      'Item animations can be re-enabled via animate prop',
+      'Item animations can be re-enabled via animations prop',
       'Controlled value prop selects the matching item',
       'onValueChange fires when selection changes',
       'Uncontrolled defaultValue sets initial selection',

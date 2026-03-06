@@ -2,7 +2,7 @@
 // specHash: 891de3de
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'DatePicker',
   componentClass: 'input_popup' as const,
   category: 'form',
@@ -82,7 +82,7 @@ export const spec = {
 
   props: [
     // Animation
-    { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config for open/close transitions' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for open/close transitions' },
     // Controlled open
     { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state' },
     { name: 'defaultOpen', type: 'boolean', default: 'false', moveSpecific: true, description: 'Default open state (uncontrolled)' },
@@ -155,8 +155,8 @@ export const spec = {
   renderContracts: [
     'Root provides DatePickerContext to all children with animation config, open state, refs, labels, time state',
     'Root provides CalendarContext (via useCalendar) with wrapped onSelect for close-on-select and field-aware range behavior',
-    'Content reads animateConfig from DatePickerContext and wires useLifecycleAnimate hook',
-    'Content passes stagger selector "[role=gridcell]" to useLifecycleAnimate for day cell stagger',
+    'Content reads animation config from DatePickerContext for enter/exit animations',
+    'Content uses stagger selector "[role=gridcell]" for day cell stagger animation',
     'Input reads mode from CalendarContext to dispatch to SingleInput or RangeInput',
     'animate prop on Root is forwarded to Content via DatePickerContext (not a direct prop)',
     'SingleInput uses InputText + Button + optional TimeField from Move component library',
@@ -166,26 +166,14 @@ export const spec = {
   ],
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: {
-        enter: {
-          opacity: { value: [0, 1], easing: 'outQuart' },
-          scale: { value: [0.5, 1], easing: 'outQuart' },
-        },
-        exit: {
-          opacity: { value: [1, 0], easing: 'outQuart' },
-          scale: { value: [1, 0.95], easing: 'outQuart' },
-          duration: 200,
-        },
-      },
-      stagger: {
-        selector: '[role="gridcell"]',
-        delay: 15,
-      },
-    },
+    { trigger: 'Content.enter', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      { children: ':scope > *', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+    ]] },
+    { trigger: 'Content.exit', sequence: [[
+      { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      { children: ':scope > *', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+    ]] },
   ],
 
   tokens: [
@@ -215,7 +203,7 @@ export const spec = {
     value: 'behavior',
     defaultValue: 'behavior',
     closeOnSelect: 'behavior',
-    animate: 'behavior',
+    animations: 'behavior',
     showTime: 'behavior',
     labels: 'i18n',
     locale: 'i18n',
@@ -253,7 +241,6 @@ export const spec = {
 
   hasHook: true,
   engineImports: [] as string[],
-  animationImports: ['useLifecycleAnimate', 'mergeAnimateConfig'],
   radixPrimitive: 'Popover',
   componentDeps: ['InputText', 'TimeField', 'Button', 'Icon', 'Calendar'],
 
@@ -266,7 +253,7 @@ export const spec = {
       'Input dispatches to SingleInput for single/multiple modes',
       'Input dispatches to RangeInput for range mode',
       'Content renders inside Radix Popover.Content',
-      'Content wires useLifecycleAnimate with enter/exit config',
+      'Content runs enter/exit animation on mount/unmount',
       'Content passes stagger config for day cell animation',
       'Close on select in single mode',
       'Close on select after to-field in range mode',
@@ -292,11 +279,11 @@ export const spec = {
       'Range to-input has aria-label "End date"',
     ],
     animation: [
-      'Wires useLifecycleAnimate with custom enter/exit config',
+      'Supports custom enter/exit animation config',
       'Enter: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Exit: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',
       'Stagger: day cells via selector "[role=gridcell]" with 15ms delay',
-      'Disables animation when animate=false',
+      'Disables animation when animations={false}',
     ],
   },
 

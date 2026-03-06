@@ -11,7 +11,7 @@ function renderDropdown(
 ) {
   return render(
     ui ?? (
-      <Dropdown.Root open={open} animate={false}>
+      <Dropdown.Root open={open} animations={false}>
         <Dropdown.Trigger>
           <button data-testid="trigger">Open</button>
         </Dropdown.Trigger>
@@ -37,7 +37,7 @@ describe('Dropdown', () => {
 
     it('supports controlled open state', async () => {
       renderDropdown(
-        <Dropdown.Root open={true} animate={false}>
+        <Dropdown.Root open={true} animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -55,7 +55,7 @@ describe('Dropdown', () => {
 
     it('supports uncontrolled open state with defaultOpen', async () => {
       renderDropdown(
-        <Dropdown.Root defaultOpen animate={false}>
+        <Dropdown.Root defaultOpen animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -75,7 +75,7 @@ describe('Dropdown', () => {
       const onOpenChange = vi.fn();
       const user = userEvent.setup();
       render(
-        <Dropdown.Root onOpenChange={onOpenChange} animate={false}>
+        <Dropdown.Root onOpenChange={onOpenChange} animations={false}>
           <Dropdown.Trigger data-testid="trigger">
             <button>Open</button>
           </Dropdown.Trigger>
@@ -102,7 +102,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style', () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger className="custom-trigger" style={{ marginLeft: '12px' }}>
             <span>Open</span>
           </Dropdown.Trigger>
@@ -141,7 +141,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on Content', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -180,7 +180,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -202,7 +202,7 @@ describe('Dropdown', () => {
 
     it('disabled items have data-disabled attribute', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -224,7 +224,7 @@ describe('Dropdown', () => {
   describe('Group', () => {
     it('renders group with role=group', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -244,7 +244,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on Group', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -269,7 +269,7 @@ describe('Dropdown', () => {
   describe('Label', () => {
     it('renders label text', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -288,7 +288,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on Label', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -314,7 +314,7 @@ describe('Dropdown', () => {
   describe('CheckboxItem', () => {
     it('renders with role=menuitemcheckbox', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -334,7 +334,7 @@ describe('Dropdown', () => {
 
     it('has aria-checked from Radix', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -357,7 +357,7 @@ describe('Dropdown', () => {
       const onCheckedChange = vi.fn();
       const user = userEvent.setup();
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -379,7 +379,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -409,7 +409,7 @@ describe('Dropdown', () => {
   describe('RadioGroup', () => {
     it('renders RadioGroup and RadioItem with correct roles', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -432,7 +432,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on RadioGroup', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -459,7 +459,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on RadioItem', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -490,7 +490,7 @@ describe('Dropdown', () => {
   describe('Separator', () => {
     it('renders separator element', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -510,7 +510,7 @@ describe('Dropdown', () => {
 
     it('forwards className and style on Separator', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -549,7 +549,7 @@ describe('Dropdown', () => {
 
     it('Trigger has aria-expanded from Radix', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
@@ -567,7 +567,7 @@ describe('Dropdown', () => {
 
     it('Trigger has aria-haspopup from Radix', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
@@ -584,7 +584,7 @@ describe('Dropdown', () => {
 
     it('CheckboxItem has role=menuitemcheckbox with aria-checked from Radix', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -605,7 +605,7 @@ describe('Dropdown', () => {
 
     it('RadioItem has role=menuitemradio from Radix', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -625,7 +625,7 @@ describe('Dropdown', () => {
 
     it('Disabled items have data-disabled attribute', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -645,9 +645,9 @@ describe('Dropdown', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('animate=false disables animations (dropdown still renders)', async () => {
+    it('animations=false disables animations (dropdown still renders)', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -668,7 +668,7 @@ describe('Dropdown', () => {
   describe('compound API', () => {
     it('renders full compound structure with groups, labels, and separators', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger asChild>
             <button data-testid="trigger">Actions</button>
           </Dropdown.Trigger>
@@ -698,7 +698,7 @@ describe('Dropdown', () => {
 
     it('renders checkbox items within compound structure', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
@@ -724,7 +724,7 @@ describe('Dropdown', () => {
 
     it('renders radio items within compound structure', async () => {
       render(
-        <Dropdown.Root open animate={false}>
+        <Dropdown.Root open animations={false}>
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>

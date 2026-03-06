@@ -6,9 +6,8 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { mergeAnimateConfig } from '../../../animation';
-import { useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
 import type { UseTimeFieldReturn, SegmentType, TimeFieldGranularity } from './useTimeField';
 import styles from './TimeField.module.css';
@@ -18,7 +17,6 @@ import styles from './TimeField.module.css';
 // ============================================================================
 
 export type TimeFieldSize = 'sm' | 'md' | 'lg';
-export type TimeFieldAnimate = LifecycleAnimate & StaggerModifier;
 
 // ============================================================================
 // Context
@@ -39,7 +37,7 @@ interface TimeFieldContextValue {
   openDropdown: () => void;
   close: () => void;
   onCloseComplete: () => void;
-  animateConfig: TimeFieldAnimate | null;
+  animConfig: AnimationTrigger[] | null;
   withDropdown: boolean;
 }
 
@@ -69,7 +67,7 @@ export interface TimeFieldRootProps {
   granularity?: TimeFieldGranularity;
   hourCycle?: 12 | 24;
   withDropdown?: boolean;
-  animate?: TimeFieldAnimate | false;
+  animations?: AnimationTrigger[] | false;
   size?: TimeFieldSize;
   disabled?: boolean;
   invalid?: boolean;
@@ -78,18 +76,22 @@ export interface TimeFieldRootProps {
   step?: number;
 }
 
-const DEFAULT_ANIMATE: TimeFieldAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
+const DEFAULT_TIMEFIELD_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.enter },
+    ]],
   },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
+  {
+    trigger: 'Content.exit',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.exit },
+    ]],
   },
-  stagger: { delay: 30 },
-};
+];
 
 const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   children,
@@ -101,7 +103,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   granularity = 'minute',
   hourCycle = 24,
   withDropdown = false,
-  animate: animateProp,
+  animations: animationsProp,
   size = 'md',
   disabled = false,
   invalid = false,
@@ -109,7 +111,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   max,
   step,
 }) => {
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(DEFAULT_ANIMATE, animateProp);
+  const animConfig = resolveAnimationsConfig(DEFAULT_TIMEFIELD_ANIMATIONS, animationsProp);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const segmentRefs = React.useRef<Map<string, HTMLElement | null>>(new Map());
@@ -191,7 +193,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     openDropdown,
     close,
     onCloseComplete,
-    animateConfig,
+    animConfig,
     withDropdown,
   };
 
@@ -483,16 +485,25 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
 }) => {
   const ctx = useTimeFieldContext();
 
-  const { contentRef } = useLifecycleAnimate({
-    animate: ctx.animateConfig,
-    isClosing: ctx.isClosing,
-    onCloseComplete: ctx.onCloseComplete,
-    stagger: ctx.animateConfig ? {
-      selector: 'button',
-      config: ctx.animateConfig,
-    } : undefined,
-    animateHeight: true,
-  });
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // Filter content triggers for useAnimations
+  const contentConfig = React.useMemo(() =>
+    ctx.animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
+    [ctx.animConfig]);
+  const contentRefs = React.useMemo(() => ({
+    Content: contentRef as React.RefObject<HTMLElement | null>,
+  }), []);
+
+  // Enter/exit via useAnimations orchestrator
+  const { runExit } = useAnimations(contentConfig, contentRefs);
+
+  // Exit animation
+  React.useEffect(() => {
+    if (!ctx.isClosing) return;
+    if (!contentConfig) { ctx.onCloseComplete?.(); return; }
+    runExit().then(() => ctx.onCloseComplete?.());
+  }, [ctx.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handlePointerDownOutside = (e: Event) => {
     if (!e.defaultPrevented) ctx.close();

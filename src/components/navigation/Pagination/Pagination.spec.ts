@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Pagination',
   componentClass: 'interactive' as const,
   category: 'navigation',
@@ -42,7 +42,7 @@ export const spec = {
       name: 'PrevTrigger',
       slots: [{ name: 'prev', element: 'button', description: 'Previous page button' }],
       props: [
-        { name: 'animate', type: 'ElementAnimate | false', moveSpecific: true, description: 'Interactive animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Interactive animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content (defaults to left chevron SVG)' },
       ],
       usesFactory: true,
@@ -52,7 +52,7 @@ export const spec = {
       name: 'NextTrigger',
       slots: [{ name: 'next', element: 'button', description: 'Next page button' }],
       props: [
-        { name: 'animate', type: 'ElementAnimate | false', moveSpecific: true, description: 'Interactive animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Interactive animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content (defaults to right chevron SVG)' },
       ],
       usesFactory: true,
@@ -127,30 +127,12 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'prev',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-    },
-    {
-      slot: 'next',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-    },
-    {
-      slot: 'item',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-    },
-    {
-      slot: 'indicator',
-      hook: 'usePositionTracker',
-      configType: 'PositionTracker',
-      defaultConfig: "{ activeSelector: '[data-state=\"active\"]' }",
-    },
+    { trigger: 'PrevTrigger.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'PrevTrigger.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'NextTrigger.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'NextTrigger.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'PageButton.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'PageButton.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   tokens: [
@@ -180,7 +162,7 @@ export const spec = {
   renderContracts: [
     { id: 'use-pagination-hook', description: 'Root uses the usePagination hook to compute page range, navigation functions, and controlled/uncontrolled state' },
     { id: 'range-with-dots', description: 'Items renders page buttons and ellipsis based on the range array from usePagination (numbers and "dots" entries)' },
-    { id: 'sliding-indicator', description: 'Items uses useSlidingIndicator hook to position an absolute indicator div behind the active page button' },
+    { id: 'sliding-indicator', description: 'Items uses animatePosition state trigger with dynamic Active ref to position an absolute indicator div behind the active page button' },
     { id: 'stagger-entrance', description: 'Items renders a staggered spring scale entrance animation on mount (left to right, 30ms per item)' },
     { id: 'slide-transition', description: 'When range changes, newly appearing page numbers slide in from the navigation direction with spring animation' },
     { id: 'indicator-hidden-during-stagger', description: 'Sliding indicator is hidden during stagger entrance and revealed after items reach full size' },
@@ -189,12 +171,11 @@ export const spec = {
     { id: 'prev-disabled-at-first', description: 'PrevTrigger is disabled when on first page' },
     { id: 'next-disabled-at-last', description: 'NextTrigger is disabled when on last page' },
     { id: 'outline-variant-indicator', description: 'In outline variant, indicator shows a border instead of filled background' },
-    { id: 'page-button-interactive', description: 'Each page button uses useInteractiveAnimate for hover/press effects' },
+    { id: 'page-button-interactive', description: 'Each page button uses useAnimations with hover/press event triggers for interactive effects' },
   ],
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef', 'useControlledState'] as string[],
-  animationImports: ['useInteractionAnimate', 'useSlidingIndicator', 'prefersReducedMotion'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -242,7 +223,7 @@ export const spec = {
       'Newly appearing page numbers slide in with spring from navigation direction',
       'PrevTrigger and NextTrigger have interactive hover/press animations',
       'Page buttons have interactive hover/press animations',
-      'animate=false on triggers disables interactive animations',
+      'animations={false} on triggers disables interactive animations',
       'Reduced motion preference disables all animations',
     ],
   },

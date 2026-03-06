@@ -30,6 +30,15 @@
   --move-sage-900: #243828;
   --move-sage-950: #121f15;
 
+  /* Primary — indigo-violet brand color, built around #3241ff */
+  --move-primary-50:  #ebecff;
+  --move-primary-75:  #abb1ff;
+  --move-primary-100: #8891ff;
+  --move-primary-200: #5561ff;
+  --move-primary-300: #3241ff;
+  --move-primary-400: #232eb3;
+  --move-primary-500: #1f289c;
+
   /* Blue */
   --move-blue-50: #eff6ff;
   --move-blue-100: #dbeafe;

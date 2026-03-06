@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'FileUpload',
   componentClass: 'interactive' as const,
   category: 'form',
@@ -266,12 +266,8 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'item',
-      hook: 'useInteractionAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, translateY: { value: [8, 0], easing: 'outQuart' } } }",
-    },
+    { trigger: 'Dropzone.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'Dropzone.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   tokens: [
@@ -341,7 +337,6 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['toAnimeParams', 'prefersReducedMotion', 'getInitialStyles'] as string[],
   componentDeps: ['ProgressBar'] as string[],
 
   testing: {

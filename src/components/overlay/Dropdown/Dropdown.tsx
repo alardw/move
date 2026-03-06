@@ -2,15 +2,37 @@
 
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import type { SlotPropsMap } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { mergeAnimateConfig, useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems, quick, poppy } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Dropdown.module.css';
 
-const springConfig = { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 };
+// ============================================================================
+// Animation defaults
+// ============================================================================
+
+const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.enter },
+    ]],
+  },
+  {
+    trigger: 'Content.exit',
+    sequence: [[
+      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.exit },
+    ]],
+  },
+  {
+    trigger: 'Item.hover',
+    sequence: [{ animation: { scale: { to: 1.02, ease: quick } } }],
+  },
+];
 
 // ============================================================================
 // Context (animation coordination — same pattern as v1)
@@ -20,7 +42,7 @@ interface DropdownContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
-  animateConfig: (LifecycleAnimate & StaggerModifier) | null;
+  animConfig: AnimationTrigger[] | null;
 }
 
 const DropdownContext = React.createContext<DropdownContextValue | null>(null);
@@ -41,23 +63,12 @@ export interface DropdownRootProps extends Omit<React.ComponentPropsWithoutRef<t
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
 }
 
-const defaultDropdownAnimation: LifecycleAnimate & StaggerModifier = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
-  },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
-  },
-  stagger: { delay: 30 },
-};
+const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, animations: animationsProp, ...props }) => {
+  const animConfig = resolveAnimationsConfig(DEFAULT_DROPDOWN_ANIMATIONS, animationsProp);
 
-const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, animate: animateProp, ...props }) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
 
@@ -86,10 +97,8 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defau
     setIsClosing(true);
   }, []);
 
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDropdownAnimation, animateProp) as (LifecycleAnimate & StaggerModifier);
-
   return (
-    <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animateConfig }}>
+    <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animConfig }}>
       <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} {...props} />
     </DropdownContext.Provider>
   );
@@ -173,18 +182,23 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
   moveProps: ['sideOffset', 'align', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { isClosing, onCloseComplete, close, animateConfig } = useDropdownContext();
+    const { isClosing, onCloseComplete, close, animConfig } = useDropdownContext();
 
-    const { contentRef, innerRef } = useLifecycleAnimate({
-      animate: animateConfig,
-      isClosing,
-      onCloseComplete,
-      stagger: animateConfig?.stagger ? {
-        selector: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
-        config: { stagger: animateConfig.stagger },
-      } : undefined,
-      animateHeight: true,
-      onOpenComplete: () => {
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const innerRef = React.useRef<HTMLDivElement>(null);
+
+    // Filter content triggers for useAnimations
+    const contentConfig = React.useMemo(() =>
+      animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
+      [animConfig]);
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    // Enter/exit via useAnimations orchestrator
+    const { runExit } = useAnimations(contentConfig, contentRefs, undefined, {
+      onEnterComplete: () => {
         const content = contentRef.current;
         if (content) {
           content.focus();
@@ -196,6 +210,13 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
         }
       },
     });
+
+    // Exit animation
+    React.useEffect(() => {
+      if (!isClosing) return;
+      if (!contentConfig) { onCloseComplete?.(); return; }
+      runExit().then(() => onCloseComplete?.());
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
@@ -305,8 +326,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { close, animateConfig } = useDropdownContext();
+    const { close, animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -316,25 +336,18 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
       close();
     };
 
-    const handleMouseEnter = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1.02,
-        ease: spring(springConfig),
-      });
-    };
+    // Item hover animation via useAnimations
+    const itemConfig = React.useMemo(() => {
+      if (!animConfig) return null;
+      const hover = animConfig.find((t) => t.trigger === 'Item.hover');
+      return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
+    }, [animConfig]);
 
-    const handleMouseLeave = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1,
-        ease: spring(springConfig),
-      });
-    };
+    const itemRefs = React.useMemo(() => ({
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    const { handlers } = useAnimations(itemConfig, itemRefs);
 
     return {
       render() {
@@ -347,8 +360,8 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
             ref={mergedItemRef}
             disabled={props.disabled as boolean}
             onSelect={handleSelect}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
+            onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -462,53 +475,40 @@ const DropdownCheckboxItem = withMoveComponent<
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const indicatorRef = React.useRef<HTMLSpanElement>(null);
-    const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const isFirstRender = React.useRef(true);
     const resolvedCheck = useResolvedIcon('check', 14);
-    const { animateConfig } = useDropdownContext();
+    const { animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
+
+    const checked = !!props.checked;
 
     // Set initial indicator state
     React.useEffect(() => {
       const el = indicatorRef.current;
       if (!el) return;
+      el.style.opacity = checked ? '1' : '0';
+      el.style.transform = checked ? 'scale(1)' : 'scale(0.5)';
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-        el.style.opacity = props.checked ? '1' : '0';
-        el.style.transform = props.checked ? 'scale(1)' : 'scale(0.5)';
-      }
-    }, []);
+    // Animate indicator on checked change via useAnimations deps
+    const indicatorConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!animConfig) return null;
+      return [
+        {
+          trigger: 'indicator-check',
+          deps: [checked],
+          sequence: checked
+            ? [{ target: 'Indicator', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.5, to: 1, ease: poppy } } }]
+            : [{ target: 'Indicator', animation: { opacity: { from: 1, to: 0, duration: 150, ease: 'outQuad' }, scale: { from: 1, to: 0.5, duration: 150, ease: 'outQuad' } } }],
+        },
+      ];
+    }, [checked, animConfig]);
 
-    // Animate indicator on checked change
-    React.useEffect(() => {
-      if (isFirstRender.current) return;
-      const el = indicatorRef.current;
-      if (!el) return;
+    const indicatorRefs = React.useMemo(() => ({
+      Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
+    }), []);
 
-      if (!animateConfig) {
-        // No animation — set directly
-        el.style.opacity = props.checked ? '1' : '0';
-        el.style.transform = props.checked ? 'scale(1)' : 'scale(0.5)';
-        return;
-      }
-
-      if (props.checked) {
-        animate(el, {
-          opacity: [0, 1],
-          scale: [0.5, 1],
-          ease: spring({ mass: 0.8, stiffness: 500, damping: 15 }),
-        });
-      } else {
-        animate(el, {
-          opacity: [1, 0],
-          scale: [1, 0.5],
-          duration: 150,
-          ease: 'outQuad',
-        });
-      }
-    }, [props.checked, animateConfig]);
+    useAnimations(indicatorConfig, indicatorRefs);
 
     const handleSelect = (e: Event) => {
       // Don't prevent default — let the checkbox toggle
@@ -516,25 +516,18 @@ const DropdownCheckboxItem = withMoveComponent<
       // Don't close the menu for checkbox items
     };
 
-    const handleMouseEnter = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1.02,
-        ease: spring(springConfig),
-      });
-    };
+    // Item hover animation via useAnimations
+    const itemConfig = React.useMemo(() => {
+      if (!animConfig) return null;
+      const hover = animConfig.find((t) => t.trigger === 'Item.hover');
+      return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
+    }, [animConfig]);
 
-    const handleMouseLeave = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1,
-        ease: spring(springConfig),
-      });
-    };
+    const itemRefs = React.useMemo(() => ({
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    const { handlers } = useAnimations(itemConfig, itemRefs);
 
     return {
       render() {
@@ -554,8 +547,8 @@ const DropdownCheckboxItem = withMoveComponent<
             disabled={props.disabled as boolean}
             onCheckedChange={props.onCheckedChange as (checked: boolean) => void}
             onSelect={handleSelect}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
+            onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('checkboxItem', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -645,8 +638,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const animRefLocal = React.useRef<ReturnType<typeof animate> | null>(null);
-    const { close, animateConfig } = useDropdownContext();
+    const { close, animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -656,25 +648,18 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
       close();
     };
 
-    const handleMouseEnter = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1.02,
-        ease: spring(springConfig),
-      });
-    };
+    // Item hover animation via useAnimations
+    const itemConfig = React.useMemo(() => {
+      if (!animConfig) return null;
+      const hover = animConfig.find((t) => t.trigger === 'Item.hover');
+      return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
+    }, [animConfig]);
 
-    const handleMouseLeave = () => {
-      if (!animateConfig) return;
-      if (!itemRef.current) return;
-      if (animRefLocal.current) animRefLocal.current.pause();
-      animRefLocal.current = animate(itemRef.current, {
-        scale: 1,
-        ease: spring(springConfig),
-      });
-    };
+    const itemRefs = React.useMemo(() => ({
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    const { handlers } = useAnimations(itemConfig, itemRefs);
 
     return {
       render() {
@@ -688,8 +673,8 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
             value={props.value as string}
             disabled={props.disabled as boolean}
             onSelect={handleSelect}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
+            onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('radioItem', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >

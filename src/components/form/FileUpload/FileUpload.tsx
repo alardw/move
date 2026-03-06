@@ -2,7 +2,6 @@
 // Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import * as React from 'react';
-import { animate } from 'animejs';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
@@ -19,16 +18,35 @@ import type {
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { ProgressBar } from '../../loading/ProgressBar/ProgressBar';
 import {
-  toAnimeParams,
   prefersReducedMotion,
-  getInitialStyles,
+  useAnimations,
+  resolveAnimationsConfig,
 } from '../../../animation';
-import type { Animation, StaggerConfig } from '../../../animation';
+import type { Animation, AnimationTrigger, StaggerConfig } from '../../../animation';
 import styles from './FileUpload.module.css';
 
 // =============================================================================
 // Context
 // =============================================================================
+
+// =============================================================================
+// Default animations
+// =============================================================================
+
+const DEFAULT_FILEUPLOAD_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'ItemGroup.enter',
+    sequence: [{
+      target: 'ItemGroup',
+      children: 'li',
+      stagger: { delay: 50 },
+      animation: {
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+      },
+    }],
+  },
+];
 
 interface FileUploadContextValue {
   files: File[];
@@ -52,9 +70,7 @@ interface FileUploadContextValue {
   abortAll?: () => void;
   getEntryByFile?: (file: File) => FileUploadEntry | undefined;
   // Animation
-  enterAnimation?: Animation;
-  stagger?: StaggerConfig;
-  getItemIndex: () => number;
+  animConfig: AnimationTrigger[] | false | null;
   removeOnComplete?: number;
 }
 
@@ -279,16 +295,11 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       upload.clearFiles();
     }, [upload.clearFiles]);
 
-    // Stagger animation for items
-    const itemIndexRef = React.useRef(0);
-    const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
-    React.useEffect(() => { itemIndexRef.current = 0; });
-
-    const enterAnimation: Animation = {
-      opacity: { value: [0, 1], easing: 'outQuart' },
-      translateY: { value: [8, 0], easing: 'outQuart' },
-    };
-    const stagger: StaggerConfig = { delay: 50 };
+    // Animation config
+    const animConfig = resolveAnimationsConfig(
+      DEFAULT_FILEUPLOAD_ANIMATIONS,
+      undefined, // Could add animations prop to Root if needed
+    );
 
     // Auto-remove delay (resolved once, passed to Items via context)
     const removeOnCompleteProp = props.removeOnComplete as boolean | number | undefined;
@@ -316,9 +327,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       abortAll: hasAdapter ? uploadManager.abortAll : undefined,
       getEntryByFile: hasAdapter ? uploadManager.getEntryByFile : undefined,
       // Animation
-      enterAnimation,
-      stagger,
-      getItemIndex,
+      animConfig,
       removeOnComplete: removeDelay || undefined,
     };
 
@@ -454,6 +463,16 @@ const FileUploadItemGroup = withMoveComponent<'itemGroup', FileUploadItemGroupPr
   slots: ['itemGroup'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
+    const context = useFileUploadContext();
+    const groupRef = React.useRef<HTMLUListElement>(null);
+    const mergedRef = useMergedRef<HTMLUListElement>(ref, groupRef);
+
+    const groupRefs = React.useMemo(() => ({
+      ItemGroup: groupRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(context.animConfig ?? null, groupRefs);
+
     return {
       render() {
         const groupSp = sp('itemGroup');
@@ -462,7 +481,7 @@ const FileUploadItemGroup = withMoveComponent<'itemGroup', FileUploadItemGroupPr
           <ul
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             role="list"
             className={cx('itemGroup', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -490,37 +509,8 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
     const context = useFileUploadContext();
     const entry = context.getEntryByFile?.(file);
     const itemRef = React.useRef<HTMLLIElement | null>(null);
-    const hasAnimated = React.useRef(false);
-    const indexRef = React.useRef<number | null>(null);
-
-    if (indexRef.current === null) {
-      indexRef.current = context.getItemIndex();
-    }
 
     const mergedRef = useMergedRef<HTMLLIElement>(ref, itemRef);
-
-    // Stagger enter animation
-    const initialStyles = React.useMemo(() => {
-      if (!context.enterAnimation) return {};
-      return getInitialStyles(context.enterAnimation);
-    }, [context.enterAnimation]);
-
-    React.useEffect(() => {
-      const el = itemRef.current;
-      if (!el || !context.enterAnimation || hasAnimated.current) return;
-
-      hasAnimated.current = true;
-      if (prefersReducedMotion()) {
-        el.style.opacity = '1';
-        el.style.transform = '';
-        return;
-      }
-
-      const index = indexRef.current ?? 0;
-      const delay = (context.stagger?.delay ?? 0) * index;
-      const params = toAnimeParams(context.enterAnimation);
-      animate(el, { ...params, delay });
-    }, [context.enterAnimation, context.stagger]);
 
     // Exit animation + auto-remove on complete
     const removeFileRef = React.useRef(context.removeFile);
@@ -528,28 +518,38 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
 
     const entryStatus = entry?.status;
     const removeDelay = context.removeOnComplete;
+    const [exitReady, setExitReady] = React.useState(false);
 
+    // Delay before starting exit animation
     React.useEffect(() => {
       if (entryStatus !== 'complete' || !removeDelay) return;
-
-      const el = itemRef.current;
-
-      const timer = setTimeout(() => {
-        if (!el || prefersReducedMotion()) {
-          removeFileRef.current(file);
-          return;
-        }
-        animate(el, {
-          opacity: [1, 0],
-          scale: [1, 0.97],
-          duration: 600,
-          easing: 'easeInOutCubic',
-          onComplete: () => removeFileRef.current(file),
-        });
-      }, removeDelay);
-
+      if (prefersReducedMotion()) {
+        removeFileRef.current(file);
+        return;
+      }
+      const timer = setTimeout(() => setExitReady(true), removeDelay);
       return () => clearTimeout(timer);
     }, [entryStatus, removeDelay, file]);
+
+    // Exit animation via useAnimations with deps
+    const exitConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!exitReady) return null;
+      return [{
+        trigger: 'item-exit',
+        deps: [exitReady],
+        sequence: [{
+          target: 'Item',
+          animation: { opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' }, scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' } },
+        }],
+        onComplete: () => removeFileRef.current(file),
+      }];
+    }, [exitReady, file]);
+
+    const exitRefs = React.useMemo(() => ({
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(exitConfig, exitRefs);
 
     return {
       render() {
@@ -563,7 +563,7 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
               ref={mergedRef}
               data-upload-status={entry?.status}
               className={cx('item', props.className, spClass as string | undefined)}
-              style={{ ...initialStyles, ...props.style, ...(spStyle as React.CSSProperties) }}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
               {props.children}
             </li>
@@ -887,6 +887,7 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
     const mergedRef = useMergedRef<HTMLDivElement>(ref, elRef);
     const wasVisibleRef = React.useRef(false);
     const [visible, setVisible] = React.useState(false);
+    const [fading, setFading] = React.useState(false);
 
     const isActive = !!(context.aggregate && (context.aggregate.isUploading || context.aggregate.isComplete));
 
@@ -894,27 +895,41 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
       if (isActive) {
         wasVisibleRef.current = true;
         setVisible(true);
+        setFading(false);
         return;
       }
 
-      // Was visible, now inactive → fade out
+      // Was visible, now inactive → start fade out
       if (!wasVisibleRef.current) return;
       wasVisibleRef.current = false;
 
-      const el = elRef.current;
-      if (!el || prefersReducedMotion()) {
+      if (prefersReducedMotion()) {
         setVisible(false);
         return;
       }
 
-      animate(el, {
-        opacity: [1, 0],
-        scale: [1, 0.97],
-        duration: 600,
-        easing: 'easeInOutCubic',
-        onComplete: () => setVisible(false),
-      });
+      setFading(true);
     }, [isActive]);
+
+    // Fade-out animation via useAnimations with deps
+    const fadeConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!fading) return null;
+      return [{
+        trigger: 'fade-out',
+        deps: [fading],
+        sequence: [{
+          target: 'TotalProgress',
+          animation: { opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' }, scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' } },
+        }],
+        onComplete: () => setVisible(false),
+      }];
+    }, [fading]);
+
+    const fadeRefs = React.useMemo(() => ({
+      TotalProgress: elRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(fadeConfig, fadeRefs);
 
     return {
       render() {

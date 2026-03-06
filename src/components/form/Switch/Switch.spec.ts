@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Switch',
   componentClass: 'input_toggle' as const,
   category: 'form',
@@ -12,7 +12,7 @@ export const spec = {
   rootElement: 'button',
   slots: [
     { name: 'root', element: 'button', description: 'Radix Switch.Root button element that manages checked state and ARIA' },
-    { name: 'thumb', element: 'span', description: 'Radix Switch.Thumb sliding indicator element, animated via useToggleAnimate' },
+    { name: 'thumb', element: 'span', description: 'Radix Switch.Thumb sliding indicator element, animated via useAnimations state triggers' },
   ],
 
   subComponents: [
@@ -30,7 +30,7 @@ export const spec = {
         { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the switch is in an invalid state' },
         { name: 'label', type: 'React.ReactNode', moveSpecific: true, description: 'Optional label text rendered beside the switch' },
         { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the switch' },
-        { name: 'animate', type: 'IndicatorAnimate | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
         { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required for form validation' },
         { name: 'name', type: 'string', moveSpecific: false, description: 'Form submission name' },
         { name: 'value', type: 'string', moveSpecific: false, description: 'Form submission value' },
@@ -60,7 +60,7 @@ export const spec = {
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the switch is in an invalid state' },
     { name: 'label', type: 'React.ReactNode', moveSpecific: true, description: 'Optional label displayed beside the switch' },
     { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the switch' },
-    { name: 'animate', type: 'IndicatorAnimate | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
     { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required for form validation' },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form submission name' },
     { name: 'value', type: 'string', moveSpecific: false, description: 'Form submission value' },
@@ -86,13 +86,15 @@ export const spec = {
   formType: 'hidden-input' as const,
   asChild: false,
 
+  states: [
+    { name: 'checked', slot: 'Root', source: 'data-state', value: 'checked' },
+    { name: 'unchecked', slot: 'Root', source: 'data-state', value: 'unchecked' },
+  ],
+
   animations: [
-    {
-      slot: 'thumb',
-      hook: 'useToggleAnimate',
-      configType: 'ToggleAnimate & InteractionAnimate',
-      defaultProfile: 'toggleIndicator',
-    },
+    { trigger: 'checked', sequence: [{ target: 'thumb', animation: { x: { to: 'calc($track.width - $thumb.width)', ease: 'poppy' } } }] },
+    { trigger: 'unchecked', sequence: [{ target: 'thumb', animation: { x: { to: 0, ease: 'snappy' } } }] },
+    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   tokens: [
@@ -118,18 +120,17 @@ export const spec = {
   renderContracts: [
     { id: 'radix-switch-root', description: 'Root renders as Radix Switch.Root which provides built-in role="switch", aria-checked, and keyboard toggle' },
     { id: 'radix-switch-thumb', description: 'Thumb renders as Radix Switch.Thumb with data-state="checked"/"unchecked" from Radix' },
-    { id: 'context-shares-animation', description: 'SwitchContext shares useToggleAnimate return between Root and Thumb sub-components' },
+    { id: 'context-shares-animation', description: 'SwitchContext shares animation state between Root and Thumb sub-components' },
     { id: 'thumb-dual-ref', description: 'Thumb merges forwarded ref with both rootRef and indicatorRef from toggle animation for press and translate animation' },
-    { id: 'onsetup-dynamic-translate', description: 'useToggleAnimate onSetup computes thumb translateX distance dynamically based on measured track/thumb widths' },
+    { id: 'onsetup-dynamic-translate', description: 'Thumb translateX distance computed dynamically based on measured track/thumb widths' },
     { id: 'label-wrapper', description: 'When label prop is provided, Root is wrapped in a <label> element with the label text beside the switch' },
-    { id: 'press-handlers-on-root', description: 'Toggle animation pressHandlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the Radix Switch.Root' },
+    { id: 'press-handlers-on-root', description: 'Press animation handlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the Radix Switch.Root via Root.press trigger' },
     { id: 'invalid-inset-shadow', description: 'Invalid state uses inset box-shadow with --move-error instead of border to avoid layout shift' },
     { id: 'radix-handles-form', description: 'Radix Switch handles hidden input for form submission internally via name/value props' },
   ],
 
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: ['useToggleAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -171,8 +172,8 @@ export const spec = {
     animation: [
       'Toggle animation translates thumb on checked/unchecked state change',
       'onSetup dynamically computes translateX distance from measured widths',
-      'Press animation on root via pressHandlers',
-      'animate=false disables toggle animation',
+      'Press animation on root via Root.press trigger',
+      'animations={false} disables toggle animation',
     ],
   },
 

@@ -2,7 +2,7 @@
 // specHash: aeb52a7f
 
 export const spec = {
-  schemaVersion: 5 as const,
+  schemaVersion: 7 as const,
   name: 'Avatar',
   componentClass: 'display' as const,
   category: 'core',
@@ -34,7 +34,7 @@ export const spec = {
       ],
       props: [
         { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", moveSpecific: true, description: 'Avatar size' },
-        { name: 'animate', type: 'LifecycleAnimate | false', moveSpecific: true, description: 'Animation config override or false to disable entrance animation' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config override or false to disable entrance animation' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Image and Avatar.Fallback' },
       ],
       usesFactory: true,
@@ -88,12 +88,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { scale: { value: [0, 1], easing: 'poppy' } } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } } }] },
   ],
 
   tokens: [
@@ -112,7 +107,6 @@ export const spec = {
   radixPrimitive: 'Avatar',
   hasHook: false,
   engineImports: ['withMoveComponent'],
-  animationImports: ['useLifecycleAnimate'],
   componentDeps: [],
 
   testing: {
@@ -129,7 +123,7 @@ export const spec = {
     animation: [
       'Spring entrance animation on mount',
       'Staggered entrance in group',
-      'animate=false disables entrance animation',
+      'animations={false} disables entrance animation',
     ],
   },
 

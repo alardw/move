@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useInteractiveAnimate, defaultAnimations } from '../../../animation';
-import type { InteractionAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, scaleUp, scaleDown } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Button.module.css';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -13,7 +13,7 @@ export type ButtonSize = 'sm' | 'md' | 'lg';
 export interface ButtonProps extends Record<string, unknown> {
   variant?: ButtonVariant;
   size?: ButtonSize;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   elevation?: number;
   asChild?: boolean;
   type?: string;
@@ -59,14 +59,14 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'primary' as ButtonVariant, size: 'md' as ButtonSize, asChild: false, type: 'button' },
-  moveProps: ['animate', 'elevation', 'asChild'],
+  moveProps: ['animations', 'elevation', 'asChild'],
   subComponents: { Group: ButtonGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
     const {
       variant,
       size,
-      animate: animateProp,
+      animations: animationsProp,
       elevation,
       asChild,
       type,
@@ -81,17 +81,18 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
       onKeyUp,
     } = props;
 
-    const animateConfig = animateProp === false
-      ? { hover: false as const, press: false as const }
-      : (animateProp as InteractionAnimate) || {};
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Root.hover', sequence: [{ animation: scaleUp }] },
+      { trigger: 'Root.press', sequence: [{ animation: scaleDown }] },
+    ];
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractionAnimate,
-      defaults: defaultAnimations.element,
-      disabled: !!props.disabled,
-    });
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
+    const btnRef = React.useRef<HTMLElement | null>(null);
+    const refs = React.useMemo(() => ({ Root: btnRef }), []);
+    const { handlers } = useAnimations(animConfig, refs);
+    const isDisabled = !!props.disabled;
 
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, animRef as React.Ref<HTMLButtonElement>);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
 
     return {
       render() {
@@ -121,27 +122,27 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
             data-variant={variant as string}
             data-size={size as string}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseEnter();
+              if (!isDisabled) handlers.Root?.onMouseEnter?.();
               (onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseLeave={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseLeave();
+              if (!isDisabled) handlers.Root?.onMouseLeave?.();
               (onMouseLeave as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseDown={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseDown();
+              if (!isDisabled) handlers.Root?.onMouseDown?.();
               (onMouseDown as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onMouseUp={(e: React.MouseEvent<HTMLButtonElement>) => {
-              handlers.onMouseUp();
+              if (!isDisabled) handlers.Root?.onMouseUp?.();
               (onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyDown(e);
+              if (!isDisabled) handlers.Root?.onKeyDown?.(e);
               (onKeyDown as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
             onKeyUp={(e: React.KeyboardEvent<HTMLButtonElement>) => {
-              handlers.onKeyUp(e);
+              if (!isDisabled) handlers.Root?.onKeyUp?.(e);
               (onKeyUp as React.KeyboardEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >

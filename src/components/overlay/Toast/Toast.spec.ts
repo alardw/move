@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Toast',
   componentClass: 'overlay_popup' as const,
   category: 'overlay',
@@ -31,7 +31,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'position', type: 'ToastPosition', moveSpecific: true, description: 'Default position for toasts (overridden per-toast by store)' },
-        { name: 'animate', type: 'LayerAnimate | false', moveSpecific: true, description: 'Animation config or false to disable all toast animations' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable all toast animations' },
         { name: 'closeLabel', type: 'string', default: "'Close notification'", moveSpecific: true, description: 'Accessible label for close buttons' },
       ],
       usesFactory: true,
@@ -86,19 +86,8 @@ export const spec = {
   surface: null,
 
   animations: [
-    {
-      slot: 'item',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { y: [24, 0], opacity: [0, 1], scale: [0.95, 1], easing: 'quick' }, exit: { y: [0, 24], opacity: [1, 0], scale: [1, 0.95], easing: 'outQuart', duration: 300 } }",
-    },
-    {
-      slot: 'itemWrapper',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { height: [0, 'natural'], easing: 'stiff' }, exit: { height: ['current', 0], paddingBottom: ['current', 0], easing: 'outQuart', duration: 300 } }",
-      notes: 'itemWrapper handles height expand/collapse for smooth stacking; item handles slide/fade. Both run in parallel.',
-    },
+    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -20, to: 0, ease: 'poppy' } } }] },
+    { trigger: 'Root.exit', sequence: [{ animation: { opacity: { to: 0 }, y: { to: -20, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
@@ -141,7 +130,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: ['Presence', 'usePresence', 'toAnimeParams', 'toInstantParams', 'prefersReducedMotion'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -180,7 +169,7 @@ export const spec = {
       'Exit: item slides down 24px with opacity 1->0 and scale 1->0.95 in 300ms',
       'Exit: itemWrapper collapses height and paddingBottom to 0 in 300ms',
       'Exit animations run in parallel; safeToRemove called after both complete',
-      'animate=false disables all toast animations',
+      'animations={false} disables all toast animations',
       'Reduced motion preference skips animations and hides progress bar',
     ],
   },

@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Stepper',
   componentClass: 'display' as const,
   category: 'navigation',
@@ -179,7 +179,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: [] as string[],
+
   componentDeps: [] as string[],
 
   testing: {

@@ -19,7 +19,6 @@ export type {
   AutocompleteEmptyProps,
   AutocompleteLoadingProps,
   AutocompleteSeparatorProps,
-  PopupAnimate as AutocompletePopupAnimate,
 } from './Autocomplete';
 export { useAutocomplete } from './useAutocomplete';
 export type { UseAutocompleteOptions, UseAutocompleteReturn, RegisteredItem } from './useAutocomplete';

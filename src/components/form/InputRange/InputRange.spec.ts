@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'InputRange',
   componentClass: 'input_plain' as const,
   category: 'form',
@@ -35,7 +35,7 @@ export const spec = {
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name' },
     { name: 'showValue', type: 'boolean', moveSpecific: true, description: 'Show value label(s) alongside slider' },
     { name: 'formatValue', type: '(value: number) => string', moveSpecific: true, description: 'Custom value formatter for display labels' },
-    { name: 'animate', type: 'ElementAnimate | false', moveSpecific: true, description: 'Thumb interaction animation config or false to disable' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Thumb interaction animation config or false to disable' },
     { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
     { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
   ],
@@ -66,13 +66,8 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'thumb',
-      hook: 'useInteractionAnimate',
-      configType: 'InteractionAnimate',
-      defaultProfile: 'elementInteractive',
-      defaultPreset: 'element',
-    },
+    { trigger: 'Thumb.hover', sequence: [{ preset: 'scaleUp' }] },
+    { trigger: 'Thumb.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   renderContracts: [
@@ -111,7 +106,6 @@ export const spec = {
   radixPrimitive: 'Slider',
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useInteractionAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -157,9 +151,9 @@ export const spec = {
       'Radix Slider renders hidden input with name prop for form submission',
     ] as string[],
     animation: [
-      'Wires useInteractionAnimate on first thumb with defaultAnimations.element',
+      'Uses Thumb.hover and Thumb.press event triggers for interactive animation',
       'Interaction animation handlers spread to all thumbs',
-      'animate=false disables thumb interaction animation',
+      'animations={false} disables thumb interaction animation',
       'Animation disabled when component is disabled',
     ] as string[],
   },

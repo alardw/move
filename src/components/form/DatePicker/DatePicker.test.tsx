@@ -186,9 +186,9 @@ describe('DatePicker', () => {
 
   // === Animation ===
   describe('Animation', () => {
-    it('renders without animation when animate=false', () => {
+    it('renders without animation when animations=false', () => {
       render(
-        <DatePicker.Root defaultOpen animate={false}>
+        <DatePicker.Root defaultOpen animations={false}>
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>

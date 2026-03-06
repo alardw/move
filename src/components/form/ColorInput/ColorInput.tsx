@@ -6,8 +6,8 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, revealHeight } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
 import { parseColor, formatColor, isValidColor } from '../ColorPicker/colorUtils';
@@ -60,8 +60,6 @@ export interface ColorInputProps extends Record<string, unknown> {
 
 const ICON_SIZE_MAP: Record<string, number> = { sm: 14, md: 16, lg: 18 };
 
-// Stable reference for lifecycle animation config
-const POPUP_ANIMATION: LifecycleAnimate = {};
 
 // ============================================================================
 // EyeDropper type
@@ -119,12 +117,21 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     }, []);
 
     // Lifecycle animation for popup content
-    const { contentRef, innerRef } = useLifecycleAnimate({
-      animate: (open || isClosing) ? POPUP_ANIMATION : null,
-      isClosing,
-      onCloseComplete: handleCloseComplete,
-      animateHeight: true,
-    });
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const innerRef = React.useRef<HTMLDivElement>(null);
+
+    const CONTENT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Content.enter', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.enter }] },
+      { trigger: 'Content.exit', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.exit }] },
+    ];
+    const contentRefs = React.useMemo(() => ({ Content: contentRef as React.RefObject<HTMLElement | null> }), []);
+    const { runExit } = useAnimations(CONTENT_ANIMATIONS, contentRefs);
+
+    // Exit animation
+    React.useEffect(() => {
+      if (!isClosing) return;
+      runExit().then(() => handleCloseComplete());
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const format = props.format as ColorFormat;
 

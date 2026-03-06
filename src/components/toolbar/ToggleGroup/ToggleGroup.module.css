@@ -72,9 +72,10 @@
   border-color: transparent !important;
 }
 
-/* Selected state — text color only, indicator provides background */
+/* Selected state — text color only, indicator provides background.
+   !important needed to override composed Button variant color at same specificity. */
 .item[data-state='on'] {
-  color: var(--move-primary-fg);
+  color: var(--move-primary-fg) !important;
   z-index: 1;
   transition-duration: 120ms;
   transition-delay: 80ms;

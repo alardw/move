@@ -3,10 +3,12 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { Slot } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { prefersReducedMotion } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import {
+  useAnimations,
+  sidebar as sidebarEase,
+} from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../core/Tooltip';
 import type { SlotPropsMap } from '../../../engine';
 import { useSidebar } from './useSidebar';
@@ -17,8 +19,31 @@ import styles from './Sidebar.module.css';
 // Animation config
 // ============================================================================
 
-const sidebarSpring = { mass: 1, stiffness: 300, damping: 25, velocity: 0 };
-const itemStaggerDelay = 30;
+const SIDEBAR_STAGGER_DELAY = 30;
+
+const DEFAULT_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Overlay.enter',
+    sequence: [{
+      animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
+    }],
+  },
+];
+
+const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [{
+      target: 'Content',
+      children: `.${styles.item}`,
+      stagger: { delay: SIDEBAR_STAGGER_DELAY },
+      animation: {
+        opacity: { from: 0, to: 1, ease: sidebarEase },
+        translateX: { from: -8, to: 0, ease: sidebarEase },
+      },
+    }],
+  },
+];
 
 // ============================================================================
 // Context
@@ -28,10 +53,10 @@ const SidebarContext = React.createContext<UseSidebarReturn | null>(null);
 
 /**
  * Animation context for Sidebar sub-components.
- * - `undefined` = use default animations
- * - `null`      = all animations disabled (animate={false})
+ * - `false` = all animations disabled
+ * - `undefined` = use defaults
  */
-const SidebarAnimateContext = React.createContext<LifecycleAnimate | null | undefined>(undefined);
+const SidebarAnimateContext = React.createContext<false | undefined>(undefined);
 
 export function useSidebarContext() {
   const ctx = React.useContext(SidebarContext);
@@ -47,20 +72,19 @@ export function useSidebarContext() {
 
 export interface SidebarProviderProps extends UseSidebarOptions {
   children?: React.ReactNode;
-  /** Animation configuration. Pass `false` to disable all sidebar animations. */
-  animate?: LifecycleAnimate | false;
+  /** Pass `false` to disable all sidebar animations. */
+  animations?: false;
 }
 
 const SidebarProvider: React.FC<SidebarProviderProps> = ({
   children,
-  animate,
+  animations,
   ...options
 }) => {
   const sidebar = useSidebar(options);
-  const animateConfig = animate === false ? null : undefined;
   return (
     <SidebarContext.Provider value={sidebar}>
-      <SidebarAnimateContext.Provider value={animateConfig}>
+      <SidebarAnimateContext.Provider value={animations}>
         {children}
       </SidebarAnimateContext.Provider>
     </SidebarContext.Provider>
@@ -85,32 +109,20 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
 
   setup({ props, ref, cx, sp, attrs }) {
     const { setMobileOpen } = useSidebarContext();
-    const animateConfig = React.useContext(SidebarAnimateContext);
+    const animDisabled = React.useContext(SidebarAnimateContext);
     const overlayRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, overlayRef);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
 
-    // Animate entrance with anime.js
-    React.useLayoutEffect(() => {
-      const el = overlayRef.current;
-      if (!el) return;
+    const overlayRefs = React.useMemo(() => ({
+      Overlay: overlayRef as React.RefObject<HTMLElement | null>,
+    }), []);
 
-      if (animateConfig === null || prefersReducedMotion()) return;
-
-      el.style.opacity = '0';
-      animRef.current = animate(el, {
-        opacity: [0, 1],
-        ease: 'outQuart',
-        duration: 200,
-        onComplete: () => {
-          if (el) el.style.opacity = '';
-        },
-      });
-
-      return () => {
-        if (animRef.current) animRef.current.pause();
-      };
-    }, [animateConfig]);
+    useAnimations(animDisabled === false ? false : DEFAULT_OVERLAY_ANIMATIONS, overlayRefs, undefined, {
+      onEnterComplete: () => {
+        const el = overlayRef.current;
+        if (el) el.style.opacity = '';
+      },
+    });
 
     return {
       render() {
@@ -153,59 +165,44 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
 
   setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, mobileOpen, isMobile } = useSidebarContext();
-    const animateConfig = React.useContext(SidebarAnimateContext);
+    const animDisabled = React.useContext(SidebarAnimateContext);
     const side = (props.side as string) || 'left';
 
     const asideRef = React.useRef<HTMLElement>(null);
     const mergedRef = useMergedRef<HTMLElement>(ref, asideRef);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const isFirstRender = React.useRef(true);
 
-    // Animate width on collapse/expand (desktop only).
-    // Must be useLayoutEffect so we can snap back to the old width
-    // before the browser paints (CSS applies the new width instantly
-    // via data-collapsed, so we override it with inline style first).
-    React.useLayoutEffect(() => {
-      // Skip animation on first render — CSS handles initial state
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-        return;
-      }
-
-      const el = asideRef.current;
-      if (!el || isMobile) return;
-
-      if (animRef.current) animRef.current.pause();
-
-      // Read CSS variable values for the two widths
-      const rootStyles = getComputedStyle(el);
-      const expandedWidth = rootStyles.getPropertyValue('--move-sidebar-width').trim() || '15rem';
-      const collapsedWidth = rootStyles.getPropertyValue('--move-sidebar-width-collapsed').trim() || '4rem';
-
-      const fromWidth = collapsed ? expandedWidth : collapsedWidth;
-      const targetWidth = collapsed ? collapsedWidth : expandedWidth;
-
-      if (animateConfig === null || prefersReducedMotion()) {
-        el.style.width = targetWidth;
-        return;
-      }
-
-      // Snap to old width before paint (overrides the CSS rule)
-      el.style.width = fromWidth;
-
-      animRef.current = animate(el, {
-        width: targetWidth,
-        ease: spring(sidebarSpring),
+    // Width animation via useAnimations with deps + dynamic vars
+    const widthConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (animDisabled === false || isMobile) return null;
+      return [{
+        trigger: 'width-change',
+        deps: [collapsed],
+        sequence: [{
+          target: 'Root',
+          animation: { width: { to: '$targetWidth', ease: sidebarEase } },
+        }],
+        vars: (el: HTMLElement) => {
+          const rootStyles = getComputedStyle(el);
+          const expandedWidth = rootStyles.getPropertyValue('--move-sidebar-width').trim() || '15rem';
+          const collapsedWidth = rootStyles.getPropertyValue('--move-sidebar-width-collapsed').trim() || '4rem';
+          const fromWidth = collapsed ? expandedWidth : collapsedWidth;
+          const targetWidth = collapsed ? collapsedWidth : expandedWidth;
+          // Snap to old width before animation
+          el.style.width = fromWidth;
+          return { targetWidth };
+        },
         onComplete: () => {
-          // Clear inline style so CSS takes over
+          const el = asideRef.current;
           if (el) el.style.width = '';
         },
-      });
+      }];
+    }, [collapsed, isMobile, animDisabled]);
 
-      return () => {
-        if (animRef.current) animRef.current.pause();
-      };
-    }, [collapsed, isMobile, animateConfig]);
+    const widthRefs = React.useMemo(() => ({
+      Root: asideRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(widthConfig, widthRefs);
 
     return {
       render() {
@@ -308,41 +305,15 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
   slots: ['content'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const animateConfig = React.useContext(SidebarAnimateContext);
+    const animDisabled = React.useContext(SidebarAnimateContext);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
 
-    // Stagger entrance animation on items
-    React.useLayoutEffect(() => {
-      const el = contentRef.current;
-      if (!el || animateConfig === null || prefersReducedMotion()) return;
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+    }), []);
 
-      const items = el.querySelectorAll<HTMLElement>(`.${styles.item}`);
-      if (!items.length) return;
-
-      items.forEach((item) => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateX(-8px)';
-      });
-
-      animRef.current = animate(items, {
-        opacity: [0, 1],
-        translateX: [-8, 0],
-        ease: spring(sidebarSpring),
-        delay: (_el: any, i: number) => i * itemStaggerDelay,
-        onComplete: () => {
-          items.forEach((item) => {
-            item.style.opacity = '';
-            item.style.transform = '';
-          });
-        },
-      });
-
-      return () => {
-        if (animRef.current) animRef.current.pause();
-      };
-    }, [animateConfig]);
+    useAnimations(animDisabled === false ? false : DEFAULT_CONTENT_ANIMATIONS, contentRefs);
 
     return {
       render() {

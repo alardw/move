@@ -16,7 +16,7 @@ body {
 .lab {
   display: grid;
   grid-template-columns: 240px 1fr 320px;
-  min-height: 100vh;
+  height: 100vh;
   gap: 0;
 }
 
@@ -27,12 +27,12 @@ body {
 .panel {
   border-right: 1px solid var(--move-border-base);
   background: var(--move-bg-base);
+  overflow-y: auto;
 }
 
 .list-panel,
 .controls-panel {
   padding: 16px;
-  overflow: auto;
 }
 
 .preview-panel {
@@ -313,25 +313,50 @@ body {
   line-height: 1.4;
 }
 
-.recipe-tags {
-  display: flex;
-  gap: 6px;
-  margin-top: 8px;
-  flex-wrap: wrap;
-}
-
-.recipe-tag {
-  font-size: 10px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  background: var(--move-bg-base);
-  color: var(--move-fg-subtle);
-  border: 1px solid var(--move-border-base);
-}
-
 .recipe-preview {
   padding: 16px;
   border-top: 1px solid var(--move-border-base);
+  background: var(--move-bg-base);
+}
+
+.recipe-code {
+  position: relative;
+  border-top: 1px solid var(--move-border-base);
+}
+
+.recipe-code-html pre,
+.recipe-code-fallback {
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-x: auto;
+  max-height: 240px;
+  border-radius: 0 0 12px 12px;
+}
+
+.recipe-code-fallback {
+  background: var(--move-bg-base);
+  color: var(--move-fg-muted);
+}
+
+.recipe-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 1;
+  border: 1px solid var(--move-border-base);
+  background: var(--move-bg-subtle);
+  color: var(--move-fg-muted);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.recipe-copy-btn:hover {
+  color: var(--move-fg-base);
   background: var(--move-bg-base);
 }
 

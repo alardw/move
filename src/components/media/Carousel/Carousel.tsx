@@ -58,7 +58,7 @@ export interface CarouselRootProps {
   /** Allow drag/swipe navigation. */
   draggable?: boolean;
   /** Slide transition animation. */
-  animate?: CarouselAnimate | false;
+  animations?: CarouselAnimate | false;
   /** Controlled active page. */
   page?: number;
   /** Initial page when uncontrolled. */
@@ -101,7 +101,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   loop = false,
   autoplay = 0,
   draggable = true,
-  animate,
+  animations,
   page,
   defaultPage,
   onPageChange,
@@ -128,7 +128,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
     loop,
     autoplay,
     draggable,
-    animate,
+    animations,
   } as UseCarouselOptions);
 
   const ctx = React.useMemo<CarouselContextValue>(

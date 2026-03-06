@@ -9,11 +9,18 @@ function renderTooltip(ui: React.ReactElement) {
   return render(<Tooltip.Provider delayDuration={0}>{ui}</Tooltip.Provider>);
 }
 
-// Helper to find tooltip content — Radix may render multiple role="tooltip" elements in jsdom
+// Helper to find tooltip content div — Radix v2 puts role="tooltip" on a hidden child span,
+// but the actual content div with data-side/data-state/classes is its parent.
 // See generation-issues.md for details
 function findTooltip() {
   const tooltips = screen.getAllByRole('tooltip');
-  return tooltips[tooltips.length - 1];
+  const el = tooltips[tooltips.length - 1];
+  // If the element has data-side, it's the content div itself; otherwise walk up to the content div
+  if (el.hasAttribute('data-side')) return el;
+  // The role="tooltip" span is a child of the Radix Content div
+  const parent = el.parentElement;
+  if (parent && parent.hasAttribute('data-side')) return parent;
+  return el;
 }
 
 describe('Tooltip', () => {
@@ -120,9 +127,9 @@ describe('Tooltip', () => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
     });
 
-    it('forwards animate prop into Content', async () => {
+    it('forwards animations prop into Content', async () => {
       renderTooltip(
-        <Tooltip label="No anim" animate={false} open>
+        <Tooltip label="No anim" animations={false} open>
           <button>Hover</button>
         </Tooltip>
       );
@@ -243,7 +250,7 @@ describe('Tooltip', () => {
       );
       const triggerBtn = screen.getByTestId('trigger-btn');
       expect(triggerBtn).toHaveClass('custom-trigger');
-      expect(triggerBtn).toHaveStyle({ color: 'red' });
+      expect(triggerBtn).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
   });
 
@@ -300,9 +307,9 @@ describe('Tooltip', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('animate=false disables entrance animation', async () => {
+    it('animations=false disables entrance animation', async () => {
       renderTooltip(
-        <Tooltip label="No anim" animate={false} open>
+        <Tooltip label="No anim" animations={false} open>
           <button>Hover</button>
         </Tooltip>
       );

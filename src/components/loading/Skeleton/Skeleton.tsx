@@ -3,7 +3,8 @@
 import * as React from 'react';
 import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';
-import { prefersReducedMotion } from '../../../animation';
+import { useAnimations, prefersReducedMotion } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine/types';
 import styles from './Skeleton.module.css';
 
@@ -30,18 +31,26 @@ const SkeletonContext = React.createContext<SkeletonContextValue>({ animation: '
 function useSkeletonPulse(ref: React.RefObject<HTMLElement | null>) {
   const { animation } = React.useContext(SkeletonContext);
 
-  React.useEffect(() => {
-    const el = ref.current;
-    if (!el || animation !== 'pulse' || prefersReducedMotion()) return;
+  const pulseConfig: AnimationTrigger[] | null = React.useMemo(() => {
+    if (animation !== 'pulse') return null;
+    return [{
+      trigger: 'Pulse.enter',
+      sequence: [{
+        target: 'Pulse',
+        animation: {
+          opacity: { from: 1, to: 0.4, duration: 750, ease: 'inOutQuad' },
+          loop: true,
+          alternate: true,
+        },
+      }],
+    }];
+  }, [animation]);
 
-    const anim = animate(el, {
-      opacity: [1, 0.4, 1],
-      duration: 1500,
-      ease: 'inOutQuad',
-      loop: true,
-    });
-    return () => { anim.pause(); };
-  }, [ref, animation]);
+  const pulseRefs = React.useMemo(() => ({
+    Pulse: ref as React.RefObject<HTMLElement | null>,
+  }), [ref]);
+
+  useAnimations(pulseConfig, pulseRefs);
 }
 
 // ============================================================================

@@ -189,20 +189,20 @@ describe('Avatar', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('accepts animate=false to disable entrance animation', () => {
+    it('accepts animations=false to disable entrance animation', () => {
       // Should render without crashing when animation is disabled
       render(
-        <Avatar.Root animate={false} data-testid="avatar">
+        <Avatar.Root animations={false} data-testid="avatar">
           <Avatar.Fallback>AB</Avatar.Fallback>
         </Avatar.Root>,
       );
       expect(screen.getByTestId('avatar')).toBeInTheDocument();
     });
 
-    it('accepts custom animate config', () => {
+    it('accepts custom animations config', () => {
       render(
         <Avatar.Root
-          animate={{ enter: { opacity: { value: [0, 1], easing: 'outQuart' } } }}
+          animations={[{ trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, ease: 'outQuart' } } }] }]}
           data-testid="avatar"
         >
           <Avatar.Fallback>AB</Avatar.Fallback>

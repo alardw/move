@@ -1,10 +1,9 @@
 'use client';
 // Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01)
 import * as React from 'react';
-import { animate } from 'animejs';
-import { withMoveComponent, useMergedRef } from '../../../engine';
-import { prefersReducedMotion, toAnimeParams, mergeAnimateConfig } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { withMoveComponent } from '../../../engine';
+import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { Avatar as MoveAvatar } from '../Avatar';
 import styles from './ChatBubble.module.css';
 
@@ -20,12 +19,9 @@ export type ChatBubbleAvatarSize = 'sm' | 'md' | 'lg';
 // Animation defaults
 // =============================================================================
 
-const DEFAULT_LIFECYCLE: LifecycleAnimate = {
-  enter: {
-    scale: { value: [0.6, 1] },
-    opacity: { value: [0, 1] },
-    easing: 'quick',
-  },
+const DEFAULT_ENTER_ANIMATION = {
+  scale: { from: 0.6, to: 1, ease: quick },
+  opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
 };
 
 const STAGGER_DELAY = 60;
@@ -42,7 +38,7 @@ const ChatBubbleContext = React.createContext<ChatBubblePlacement>('start');
 
 export interface ChatBubbleRootProps extends Record<string, unknown> {
   placement?: ChatBubblePlacement;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -53,37 +49,39 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
   styles,
   slots: ['root'] as const,
   defaults: { placement: 'start' as ChatBubblePlacement },
-  moveProps: ['animate'],
+  moveProps: ['animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const animateProp = props.animate as LifecycleAnimate | false | undefined;
-    const animateConfig = animateProp === false ? null : mergeAnimateConfig(DEFAULT_LIFECYCLE, animateProp as LifecycleAnimate | undefined);
-
+    // Compute sibling-index stagger delay
+    const staggerIndex = React.useRef<number>(0);
     React.useLayoutEffect(() => {
       const el = internalRef.current;
-      if (!el || !animateConfig?.enter || prefersReducedMotion()) return;
-
+      if (!el) return;
       const parent = el.parentElement;
-      let index = 0;
       if (parent) {
-        const siblings = Array.from(parent.children);
-        index = siblings.indexOf(el);
+        staggerIndex.current = Array.from(parent.children).indexOf(el);
       }
+    }, [internalRef]);
 
-      const enterParams = toAnimeParams(animateConfig.enter);
-      el.style.opacity = '0';
+    const delay = staggerIndex.current * STAGGER_DELAY;
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Root.enter', sequence: [{ animation: { ...DEFAULT_ENTER_ANIMATION, delay: delay || undefined } }] },
+    ];
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
 
-      animate(el, {
-        ...enterParams,
-        delay: index * STAGGER_DELAY,
-        onComplete: () => {
-          if (el) {
-            el.style.removeProperty('opacity');
-            el.style.removeProperty('transform');
-          }
-        },
-      });
-    }, [internalRef, animateConfig]);
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const refs = React.useMemo(() => ({ Root: rootRef as React.RefObject<HTMLElement | null> }), []);
+    useAnimations(animConfig, refs);
+
+    // Merge refs
+    const mergedRef = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        if (typeof ref === 'function') (ref as (el: HTMLDivElement | null) => void)(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+      },
+      [ref],
+    );
 
     return {
       render() {
@@ -95,7 +93,7 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
             <div
               {...attrs}
               {...spRest}
-              ref={ref}
+              ref={mergedRef}
               data-placement={props.placement as string}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
@@ -145,7 +143,7 @@ const ChatBubbleAvatar = withMoveComponent<'avatar', ChatBubbleAvatarProps, HTML
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children ?? (
-              <MoveAvatar.Root size={avatarSize} animate={false}>
+              <MoveAvatar.Root size={avatarSize} animations={false}>
                 <MoveAvatar.Image src={props.src as string | undefined} alt="" />
                 <MoveAvatar.Fallback>{props.fallback as React.ReactNode}</MoveAvatar.Fallback>
               </MoveAvatar.Root>

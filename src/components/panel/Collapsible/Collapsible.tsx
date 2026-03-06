@@ -3,19 +3,14 @@
 
 import * as React from 'react';
 import { Slot } from 'radix-ui';
-import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useCollapsible } from './useCollapsible';
 import {
-  toAnimeParams,
-  prefersReducedMotion,
-  mergeAnimateConfig,
+  expandContent,
+  useAnimations,
 } from '../../../animation';
-import {
-  defaultAnimations,
-} from '../../../animation';
-import type { ExpandAnimate } from '../../../animation';
+import type { Animation, AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Collapsible.module.css';
 
@@ -29,7 +24,7 @@ interface CollapsibleContextValue {
   isOpening: boolean;
   toggle: () => void;
   disabled: boolean;
-  contentAnimate: ExpandAnimate;
+  contentAnimate: { open?: Animation; close?: Animation };
   onOpenComplete: () => void;
   onCloseComplete: () => void;
 }
@@ -46,7 +41,7 @@ function useCollapsibleContext() {
 // Types
 // ============================================================================
 
-export type { ExpandAnimate as CollapsibleAnimate };
+export type CollapsibleAnimate = { open?: Animation; close?: Animation };
 
 // ============================================================================
 // Root
@@ -60,7 +55,7 @@ export interface CollapsibleRootProps extends Record<string, unknown> {
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   disabled?: boolean;
-  animate?: ExpandAnimate | false;
+  animations?: { open?: Animation; close?: Animation } | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -69,10 +64,10 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
   styles,
   slots: ['root'] as const,
   defaults: { disabled: false },
-  moveProps: ['open', 'defaultOpen', 'onOpenChange', 'disabled', 'animate'],
+  moveProps: ['open', 'defaultOpen', 'onOpenChange', 'disabled', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { className, style, children, disabled, animate: animateProp } = props;
+    const { className, style, children, disabled, animations: animationsProp } = props;
 
     const collapsible = useCollapsible({
       open: props.open as boolean | undefined,
@@ -80,10 +75,11 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
       onOpenChange: props.onOpenChange as ((open: boolean) => void) | undefined,
     });
 
-    // Animation config
-    const config = animateProp === false
-      ? {} as ExpandAnimate
-      : mergeAnimateConfig(defaultAnimations.content, animateProp as ExpandAnimate | undefined);
+    // Animation config — uses expandContent preset as default
+    const userAnims = animationsProp as { open?: Animation; close?: Animation } | false | undefined;
+    const config: { open?: Animation; close?: Animation } = userAnims === false
+      ? {}
+      : { open: userAnims?.open ?? expandContent.open, close: userAnims?.close ?? expandContent.close };
 
     // Track open/close transitions synchronously during render
     const isClosingRef = React.useRef(false);
@@ -218,9 +214,20 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
     const context = useCollapsibleContext();
     const resolvedChevron = useResolvedIcon('chevron-down', 15);
     const iconRef = React.useRef<HTMLSpanElement | null>(null);
-    const iconAnimRef = React.useRef<JSAnimation | null>(null);
 
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
+
+    // Icon rotation durations synced to content animation
+    const closeDuration = context.contentAnimate?.close ? ((context.contentAnimate.close.height as any)?.duration || 300) : 0;
+    const openDuration = context.contentAnimate?.open ? ((context.contentAnimate.open.height as any)?.duration || 400) : 0;
+
+    const iconConfig: AnimationTrigger[] = React.useMemo(() => [
+      { trigger: 'icon-open', deps: [context.isOpening], sequence: context.isOpening ? [{ target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } } }] : false },
+      { trigger: 'icon-close', deps: [context.isClosing], sequence: context.isClosing ? [{ target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } } }] : false },
+    ], [context.isOpening, context.isClosing, openDuration, closeDuration]);
+
+    const iconRefs = React.useMemo(() => ({ Icon: iconRef as React.RefObject<HTMLElement | null> }), []);
+    useAnimations(iconConfig, iconRefs);
 
     // Set initial rotation on mount (no animation)
     React.useEffect(() => {
@@ -230,36 +237,6 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
         iconEl.style.transform = 'rotate(180deg)';
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Rotate closed together with content collapse
-    React.useEffect(() => {
-      if (!context.isClosing) return;
-      const iconEl = iconRef.current;
-      if (!iconEl) return;
-      if (iconAnimRef.current) iconAnimRef.current.pause();
-      const closeConfig = context.contentAnimate?.close;
-      const duration = closeConfig ? (closeConfig.duration || 300) : 0;
-      iconAnimRef.current = animate(iconEl, {
-        rotate: 0,
-        ease: 'outQuart',
-        duration: prefersReducedMotion() ? 0 : duration,
-      });
-    }, [context.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Rotate open together with content expand
-    React.useEffect(() => {
-      if (!context.isOpening) return;
-      const iconEl = iconRef.current;
-      if (!iconEl) return;
-      if (iconAnimRef.current) iconAnimRef.current.pause();
-      const openConfig = context.contentAnimate?.open;
-      const duration = openConfig ? (openConfig.duration || 400) : 0;
-      iconAnimRef.current = animate(iconEl, {
-        rotate: 180,
-        ease: 'outQuart',
-        duration: prefersReducedMotion() ? 0 : duration,
-      });
-    }, [context.isOpening]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
       render() {
@@ -294,8 +271,6 @@ export interface CollapsibleContentProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const contentAnimTracker = new WeakMap<HTMLElement, { height?: JSAnimation; opacity?: JSAnimation }>();
-
 const CollapsibleContent = withMoveComponent<'content' | 'contentInner', CollapsibleContentProps, HTMLDivElement>({
   name: 'CollapsibleContent',
   styles,
@@ -312,6 +287,69 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
 
     const config = context.contentAnimate;
 
+    // Compute opacity timing from height animation config
+    const enterHeightDuration = config.open ? ((config.open.height as any)?.duration || 400) : 400;
+    const exitHeightDuration = config.close ? ((config.close.height as any)?.duration || 300) : 300;
+
+    // No-animation fallback — immediately set styles when no config
+    React.useEffect(() => {
+      const content = contentRef.current;
+      const inner = innerRef.current;
+      if (!content || !inner) return;
+      if (context.isOpening && !config.open) {
+        content.style.height = 'auto';
+        inner.style.opacity = '1';
+        context.onOpenComplete();
+      }
+    }, [context.isOpening]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    React.useEffect(() => {
+      const content = contentRef.current;
+      const inner = innerRef.current;
+      if (!content || !inner) return;
+      if (context.isClosing && !config.close) {
+        content.style.height = '0px';
+        inner.style.opacity = '0';
+        context.onCloseComplete();
+      }
+    }, [context.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Animated content via useAnimations with deps
+    const hasAnimConfig = !!config.open || !!config.close;
+
+    const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!hasAnimConfig) return null;
+      return [
+        {
+          trigger: 'content-open',
+          deps: [context.isOpening],
+          sequence: context.isOpening && config.open ? [[
+            { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
+            { target: 'ContentInner', animation: { opacity: { from: 0, to: 1, ease: 'linear', duration: enterHeightDuration - 150 }, delay: 150 } },
+          ]] : false,
+          onComplete: () => context.onOpenComplete(),
+          direction: 'enter' as const,
+        },
+        {
+          trigger: 'content-close',
+          deps: [context.isClosing],
+          sequence: context.isClosing && config.close ? [[
+            { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
+            { target: 'ContentInner', animation: { opacity: { from: 1, to: 0, ease: 'linear', duration: Math.round(exitHeightDuration * 0.4) } } },
+          ]] : false,
+          onComplete: () => context.onCloseComplete(),
+          direction: 'exit' as const,
+        },
+      ];
+    }, [context.isOpening, context.isClosing, config.open, config.close, hasAnimConfig, enterHeightDuration, exitHeightDuration]); // eslint-disable-line react-hooks/exhaustive-deps
+
+    const contentRefs = React.useMemo(() => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+    }), []);
+
+    useAnimations(contentConfig, contentRefs);
+
     // Set initial state on mount (no animation)
     React.useEffect(() => {
       const content = contentRef.current;
@@ -326,126 +364,6 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
         inner.style.opacity = '0';
       }
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Open animation
-    React.useEffect(() => {
-      const content = contentRef.current;
-      const inner = innerRef.current;
-      if (!content || !inner || !context.isOpening) return;
-
-      if (!config.open) {
-        content.style.height = 'auto';
-        inner.style.opacity = '1';
-        context.onOpenComplete();
-        return;
-      }
-
-      const reducedMotion = prefersReducedMotion();
-      const anims = contentAnimTracker.get(content) || {};
-      if (anims.height) anims.height.pause();
-      if (anims.opacity) anims.opacity.pause();
-
-      if (reducedMotion) {
-        content.style.height = 'auto';
-        inner.style.opacity = '1';
-        context.onOpenComplete();
-        return;
-      }
-
-      content.style.height = '0px';
-      inner.style.opacity = '0';
-      content.style.height = 'auto';
-      const targetHeight = content.scrollHeight;
-      content.style.height = '0px';
-
-      const heightParams = toAnimeParams({
-        height: config.open.height,
-        easing: config.open.easing,
-        duration: config.open.duration,
-      });
-
-      const enterDuration = (heightParams.duration as number) || 400;
-
-      let heightDone = false;
-      let opacityDone = false;
-      const checkComplete = () => {
-        if (heightDone && opacityDone) {
-          content.style.height = 'auto';
-          context.onOpenComplete();
-        }
-      };
-
-      anims.height = animate(content, {
-        height: [0, targetHeight],
-        ease: heightParams.ease || 'outQuart',
-        duration: enterDuration,
-        onComplete: () => { heightDone = true; checkComplete(); },
-      });
-
-      const currentOpacity = parseFloat(getComputedStyle(inner).opacity) || 0;
-      anims.opacity = animate(inner, {
-        opacity: [currentOpacity, 1],
-        delay: currentOpacity > 0 ? 0 : 150,
-        duration: currentOpacity > 0 ? (enterDuration * (1 - currentOpacity)) : (enterDuration - 150),
-        ease: 'linear',
-        onComplete: () => { opacityDone = true; checkComplete(); },
-      });
-
-      contentAnimTracker.set(content, anims);
-    }, [context.isOpening]); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Close animation
-    React.useEffect(() => {
-      const content = contentRef.current;
-      const inner = innerRef.current;
-      if (!content || !inner || !context.isClosing) return;
-
-      if (!config.close) {
-        content.style.height = '0px';
-        inner.style.opacity = '0';
-        context.onCloseComplete();
-        return;
-      }
-
-      const reducedMotion = prefersReducedMotion();
-      const anims = contentAnimTracker.get(content) || {};
-      if (anims.height) anims.height.pause();
-      if (anims.opacity) anims.opacity.pause();
-
-      if (reducedMotion) {
-        content.style.height = '0px';
-        inner.style.opacity = '0';
-        context.onCloseComplete();
-        return;
-      }
-
-      const currentHeight = content.scrollHeight;
-      content.style.height = `${currentHeight}px`;
-
-      const heightParams = toAnimeParams({
-        height: config.close.height,
-        easing: config.close.easing,
-        duration: config.close.duration,
-      });
-
-      const exitDuration = (heightParams.duration as number) || 300;
-
-      const currentOpacity = parseFloat(getComputedStyle(inner).opacity) || 1;
-      anims.opacity = animate(inner, {
-        opacity: [currentOpacity, 0],
-        duration: exitDuration * 0.4 * currentOpacity,
-        ease: 'linear',
-      });
-
-      anims.height = animate(content, {
-        height: [currentHeight, 0],
-        ease: heightParams.ease || 'outQuart',
-        duration: exitDuration,
-        onComplete: () => context.onCloseComplete(),
-      });
-
-      contentAnimTracker.set(content, anims);
-    }, [context.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Render only when open or close-animating
     const shouldRender = context.open || context.isClosing;

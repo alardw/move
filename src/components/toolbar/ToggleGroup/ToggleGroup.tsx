@@ -2,11 +2,10 @@
 // Generated from ToggleGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useInteractiveAnimate, useSlidingIndicator, prefersReducedMotion, defaultAnimations } from '../../../animation';
-import type { InteractionAnimate } from '../../../animation';
+import { poppy, useAnimations, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
 import type { ButtonVariant, ButtonSize } from '../../core/Button';
 import styles from './ToggleGroup.module.css';
 
@@ -40,6 +39,7 @@ export interface ToggleGroupRootProps extends Record<string, unknown> {
   loop?: boolean;
   size?: ButtonSize;
   variant?: ButtonVariant;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -48,7 +48,7 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
   styles,
   slots: ['root', 'indicator'] as const,
   defaults: { variant: 'secondary', size: 'md' },
-  moveProps: ['value', 'defaultValue', 'onValueChange', 'orientation', 'disabled', 'loop', 'size', 'variant'],
+  moveProps: ['value', 'defaultValue', 'onValueChange', 'orientation', 'disabled', 'loop', 'size', 'variant', 'animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const ctxValue = React.useMemo(
@@ -73,38 +73,45 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
       [props.onValueChange, isControlled],
     );
 
-    // --- Sliding indicator (shared hook) ---
-    const { indicatorRef } = useSlidingIndicator({
-      containerRef: internalRef,
-      activeSelector: '[data-state="on"]',
-    });
+    // --- Sliding indicator via animatePosition ---
+    const indicatorRef = React.useRef<HTMLElement | null>(null);
 
-    // --- Press animation on indicator ---
-    const pressAnimRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const isPressing = React.useRef(false);
-    const pressSpring = { mass: 0.6, stiffness: 500, damping: 12 };
-
-    const handlePressDown = React.useCallback(() => {
-      const el = indicatorRef.current;
-      if (!el || props.disabled || prefersReducedMotion()) return;
-      isPressing.current = true;
-      if (pressAnimRef.current) pressAnimRef.current.pause();
-      pressAnimRef.current = animate(el, {
-        scale: 0.92,
-        ease: spring(pressSpring),
+    // Dynamic ref that queries for the active element on access —
+    // avoids race conditions between multiple MutationObservers.
+    const activeRef = React.useMemo(() => {
+      const ref = { current: null as HTMLElement | null };
+      Object.defineProperty(ref, 'current', {
+        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="on"]') ?? null; },
+        set() { /* no-op — always queries live DOM */ },
       });
-    }, [props.disabled, indicatorRef]);
+      return ref;
+    }, [internalRef]);
 
-    const handlePressUp = React.useCallback(() => {
-      const el = indicatorRef.current;
-      if (!el || !isPressing.current) return;
-      isPressing.current = false;
-      if (pressAnimRef.current) pressAnimRef.current.pause();
-      pressAnimRef.current = animate(el, {
-        scale: 1,
-        ease: spring(pressSpring),
-      });
-    }, [indicatorRef]);
+    const STATES: AnimationState[] = [
+      { name: 'activeChange', slot: 'Root', source: 'data-state', value: 'on' },
+    ];
+
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Root.press', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92, ease: poppy } } }] },
+      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
+        translateX: { to: '$Active.x' },
+        translateY: { to: '$Active.y' },
+        width: { to: '$Active.width' },
+        height: { to: '$Active.height' },
+      } }] },
+    ];
+
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
+    const animConfig = animationsProp === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
+
+    const animRefs = React.useMemo(() => ({
+      Root: internalRef as React.RefObject<HTMLElement | null>,
+      Indicator: indicatorRef,
+      Active: activeRef,
+    }), [internalRef]);
+    const { handlers } = useAnimations(animConfig, animRefs, STATES);
 
     return {
       render() {
@@ -129,14 +136,14 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-orientation={props.orientation || 'horizontal'}
               data-size={props.size}
-              onMouseDown={handlePressDown}
-              onMouseUp={handlePressUp}
-              onMouseLeave={handlePressUp}
+              onMouseDown={() => { if (!props.disabled) handlers.Root?.onMouseDown?.(); }}
+              onMouseUp={() => { if (!props.disabled) handlers.Root?.onMouseUp?.(); }}
+              onMouseLeave={() => { if (!props.disabled) handlers.Root?.onMouseLeave?.(); }}
             >
               {props.children}
               <div
                 {...indSpRest}
-                ref={indicatorRef}
+                ref={indicatorRef as React.Ref<HTMLDivElement>}
                 aria-hidden="true"
                 className={cx('indicator', indSpClass as string | undefined)}
                 style={indSpStyle as React.CSSProperties}
@@ -159,7 +166,7 @@ export interface ToggleGroupItemProps extends Record<string, unknown> {
   children?: React.ReactNode;
   value: string;
   disabled?: boolean;
-  animate?: InteractionAnimate | false;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'item'>;
 }
 
@@ -167,24 +174,25 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
   name: 'ToggleGroupItem',
   styles,
   slots: ['item'] as const,
-  moveProps: ['value', 'disabled', 'animate'],
+  moveProps: ['value', 'disabled', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { size, variant } = React.useContext(ToggleGroupContext);
 
-    // Disable hover/press scale by default — scaling breaks connected borders.
-    // Users can opt back in via the animate prop.
-    const animateConfig = props.animate === false
-      ? { hover: false as const, press: false as const }
-      : { hover: false as const, press: false as const, ...(props.animate as InteractionAnimate || {}) };
+    // Animations disabled by default — scaling breaks connected borders.
+    // Users can opt in via animations prop with standard AnimationTrigger[] format.
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [];
 
-    const { ref: animRef, handlers } = useInteractiveAnimate({
-      animate: animateConfig as InteractionAnimate,
-      defaults: defaultAnimations.element,
-      disabled: !!props.disabled,
-    });
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
+    const animConfig = animationsProp === false
+      ? null
+      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, animRef as React.Ref<HTMLButtonElement>);
+    const itemRef = React.useRef<HTMLElement | null>(null);
+    const itemRefs = React.useMemo(() => ({ Item: itemRef }), []);
+    const { handlers } = useAnimations(animConfig, itemRefs);
+    const mergedRef = useMergedRef<HTMLButtonElement>(ref, itemRef as React.Ref<HTMLButtonElement>);
+    const isDisabled = !!props.disabled;
 
     return {
       render() {
@@ -202,12 +210,10 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
-            onMouseEnter={handlers.onMouseEnter}
-            onMouseLeave={handlers.onMouseLeave}
-            onMouseDown={handlers.onMouseDown}
-            onMouseUp={handlers.onMouseUp}
-            onKeyDown={handlers.onKeyDown as any}
-            onKeyUp={handlers.onKeyUp as any}
+            onMouseEnter={() => { if (!isDisabled) handlers.Item?.onMouseEnter?.(); }}
+            onMouseLeave={() => { if (!isDisabled) handlers.Item?.onMouseLeave?.(); }}
+            onMouseDown={() => { if (!isDisabled) handlers.Item?.onMouseDown?.(); }}
+            onMouseUp={() => { if (!isDisabled) handlers.Item?.onMouseUp?.(); }}
           >
             {props.children}
           </RadixToggleGroup.Item>

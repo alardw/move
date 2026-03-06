@@ -1,16 +1,14 @@
 'use client';
 // Generated from ImageGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import * as React from 'react';
-import { animate, type JSAnimation } from 'animejs';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
-  toAnimeParams,
-  prefersReducedMotion,
-  mergeAnimateConfig,
-  getInitialStyles,
+  useAnimations,
+  resolveAnimationsConfig,
+  snappy,
 } from '../../../animation';
-import type { LifecycleAnimate, StaggerModifier } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './ImageGroup.module.css';
 
 // =============================================================================
@@ -21,20 +19,24 @@ export type ImageGroupGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 export type ImageGroupRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
 type ImageGroupSlots = 'root';
 
-/** List animation config with stagger */
-export type ListAnimate = LifecycleAnimate & StaggerModifier;
-
 // =============================================================================
 // Default animation
 // =============================================================================
 
-const defaultAnimation: ListAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'snappy' },
+const DEFAULT_IMAGEGROUP_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Root.enter',
+    sequence: [{
+      target: 'Root',
+      children: ':scope > *',
+      stagger: { delay: 60 },
+      animation: {
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        scale: { from: 0.5, to: 1, ease: snappy },
+      },
+    }],
   },
-  stagger: { delay: 60 },
-};
+];
 
 // =============================================================================
 // ImageGroup
@@ -44,7 +46,7 @@ export interface ImageGroupProps extends Record<string, unknown> {
   columns?: number;
   gap?: ImageGroupGap;
   radius?: ImageGroupRadius;
-  animate?: ListAnimate | false;
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -56,52 +58,22 @@ export const ImageGroup = withMoveComponent<ImageGroupSlots, ImageGroupProps, HT
   styles,
   slots: ['root'] as const,
   defaults: { columns: 3, gap: 'md' },
-  moveProps: ['columns', 'gap', 'radius', 'animate'],
+  moveProps: ['columns', 'gap', 'radius', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const rootRef = React.useRef<HTMLDivElement | null>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, rootRef);
-    const animRef = React.useRef<JSAnimation | null>(null);
-    const hasAnimated = React.useRef(false);
 
-    const config = props.animate === false
-      ? null
-      : mergeAnimateConfig(defaultAnimation, props.animate as ListAnimate | undefined);
+    const animConfig = resolveAnimationsConfig(
+      DEFAULT_IMAGEGROUP_ANIMATIONS,
+      props.animations as AnimationTrigger[] | false | undefined,
+    );
 
-    // Stagger enter animation on mount
-    React.useEffect(() => {
-      const root = rootRef.current;
-      if (!root || !config?.enter || hasAnimated.current) return;
-      hasAnimated.current = true;
+    const rootRefs = React.useMemo(() => ({
+      Root: rootRef as React.RefObject<HTMLElement | null>,
+    }), []);
 
-      const children = Array.from(root.children) as HTMLElement[];
-      if (children.length === 0) return;
-
-      if (prefersReducedMotion()) {
-        children.forEach((child) => {
-          child.style.opacity = '1';
-          child.style.transform = '';
-        });
-        return;
-      }
-
-      // Set initial styles
-      const initial = getInitialStyles(config.enter!);
-      children.forEach((child) => {
-        if (initial.opacity !== undefined) child.style.opacity = String(initial.opacity);
-        if (initial.transform) child.style.transform = initial.transform;
-      });
-
-      // Animate with stagger
-      const staggerDelay = config.stagger?.delay ?? 60;
-      const params = toAnimeParams(config.enter!);
-
-      if (animRef.current) animRef.current.pause();
-      animRef.current = animate(children, {
-        ...params,
-        delay: (_el: any, i: number) => i * staggerDelay,
-      });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    useAnimations(animConfig, rootRefs);
 
     return {
       render() {

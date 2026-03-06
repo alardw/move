@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'CalendarView',
   componentClass: 'display' as const,
   category: 'calendar',
@@ -139,7 +139,7 @@ export const spec = {
   // ToggleGroup (ViewSwitcher) provides its own sliding indicator animation.
   animations: [],
 
-  animationImports: [] as string[],
+
 
   labels: {
     today: 'Today',

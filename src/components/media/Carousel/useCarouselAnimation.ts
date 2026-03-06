@@ -1,13 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { animate, type JSAnimation } from 'animejs';
-import { isSpring } from '../../../animation';
-import {
-  toAnimeParams,
-  toInstantParams,
-  prefersReducedMotion,
-  mergeAnimateConfig,
-} from '../../../animation';
-import { defaultAnimations, type LifecycleAnimate, type Animation } from '../../../animation';
+import { moveAnimate, prefersReducedMotion } from '../../../animation';
+import type { Animation, JSAnimation } from '../../../animation';
 
 // =============================================================================
 // useCarouselAnimate — for Carousel slide transitions
@@ -15,7 +8,7 @@ import { defaultAnimations, type LifecycleAnimate, type Animation } from '../../
 
 export interface UseCarouselAnimateOptions {
   /** Slide transition config (false = disabled) */
-  animate?: LifecycleAnimate | false;
+  animations?: { enter?: Animation } | false;
 }
 
 export interface UseCarouselAnimateReturn {
@@ -31,16 +24,20 @@ export interface UseCarouselAnimateReturn {
   cancel: () => void;
 }
 
+const defaultConfig = {
+  enter: { ease: 'outQuart' } as Animation,
+};
+
 export function useCarouselAnimate(
   options: UseCarouselAnimateOptions = {}
 ): UseCarouselAnimateReturn {
-  const { animate: animateProp } = options;
+  const { animations: animationsProp } = options;
   const animRef = useRef<JSAnimation | null>(null);
 
-  const configRef = useRef<LifecycleAnimate>(defaultAnimations.carousel);
-  configRef.current = animateProp === false
-    ? {} as LifecycleAnimate
-    : mergeAnimateConfig(defaultAnimations.carousel, animateProp);
+  const configRef = useRef<typeof defaultConfig>(defaultConfig);
+  configRef.current = animationsProp === false
+    ? {} as typeof defaultConfig
+    : { ...defaultConfig, ...animationsProp };
 
   const cancel = useCallback(() => {
     if (animRef.current) {
@@ -63,7 +60,7 @@ export function useCarouselAnimate(
     onComplete?: () => void;
   }) => {
     const enter = configRef.current.enter;
-    if (!enter) {
+    if (!enter || prefersReducedMotion()) {
       viewport[axis] = to;
       onComplete?.();
       return;
@@ -71,41 +68,26 @@ export function useCarouselAnimate(
 
     cancel();
 
-    const resolvedEasing = enter.easing ?? 'outQuart';
-    const useDynamicDuration = (
-      enter.duration === undefined &&
-      resolvedEasing !== 'none' &&
-      !isSpring(resolvedEasing)
-    );
+    const ease = ((enter as Record<string, unknown>).ease ?? 'outQuart') as string;
 
-    let dynamicDuration: number | undefined;
-    if (useDynamicDuration) {
+    // Dynamic duration based on scroll distance if not specified
+    let duration = (enter as Record<string, unknown>).duration as number | undefined;
+    if (duration === undefined) {
       const distance = Math.abs(to - from);
       const span = axis === 'scrollLeft' ? viewport.clientWidth : viewport.clientHeight;
       const ratio = span > 0 ? distance / span : 1;
-      dynamicDuration = Math.round(Math.max(150, Math.min(300, 150 + ratio * 110)));
+      duration = Math.round(Math.max(150, Math.min(300, 150 + ratio * 110)));
     }
 
-    const transition: Animation = {
-      ...enter,
-      duration: enter.duration ?? dynamicDuration,
-      [axis]: {
-        value: [from, to],
-        easing: resolvedEasing,
-      },
-    };
-
-    const params = prefersReducedMotion()
-      ? toInstantParams(transition)
-      : toAnimeParams(transition);
-
-    animRef.current = animate(viewport, {
-      ...params,
+    moveAnimate(viewport, {
+      [axis]: [from, to],
+      ease,
+      duration,
       onComplete: () => {
         animRef.current = null;
         onComplete?.();
       },
-    });
+    }, animRef);
   }, [cancel]);
 
   useEffect(() => cancel, [cancel]);

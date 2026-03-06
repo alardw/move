@@ -61,7 +61,7 @@ describe('Table', () => {
     });
 
     it('forwards style', () => {
-      render(<Table data-testid="table" animate={false} style={{ marginTop: '10px' }}><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(<Table data-testid="table" animations={false} style={{ marginTop: '10px' }}><tbody><tr><td>Cell</td></tr></tbody></Table>);
       expect(screen.getByTestId('table')).toHaveStyle({ marginTop: '10px' });
     });
 
@@ -387,7 +387,7 @@ describe('Table', () => {
   describe('composition', () => {
     it('renders full table composition', () => {
       render(
-        <Table data-testid="table" animate={false}>
+        <Table data-testid="table" animations={false}>
           <Table.Caption data-testid="caption">Users</Table.Caption>
           <Table.Header data-testid="header">
             <Table.Row>
@@ -423,9 +423,9 @@ describe('Table', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('accepts animate=false on Root to disable animation', () => {
+    it('accepts animations=false on Root to disable animation', () => {
       render(
-        <Table data-testid="table" animate={false}>
+        <Table data-testid="table" animations={false}>
           <Table.Body>
             <Table.Row data-testid="row"><Table.Cell>Cell</Table.Cell></Table.Row>
           </Table.Body>
@@ -449,7 +449,7 @@ describe('Table', () => {
 
     it('merges sp style on root', () => {
       render(
-        <Table data-testid="table" animate={false} sp={{ root: { style: { marginTop: '5px' } } }}>
+        <Table data-testid="table" animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>
           <tbody><tr><td>Cell</td></tr></tbody>
         </Table>
       );

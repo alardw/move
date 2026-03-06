@@ -38,7 +38,7 @@ export const demo: DemoDefinition = {
     children: 'Hello! How can I help you today?',
   },
   render: (props) => (
-    <ChatBubble.Root placement={props.placement as string} animate={false}>
+    <ChatBubble.Root placement={props.placement as string} animations={false}>
       <ChatBubble.Avatar fallback="AI" />
       <ChatBubble.Container variant={props.variant as string} tail={props.tail as boolean}>
         <ChatBubble.Content>{props.children as string}</ChatBubble.Content>

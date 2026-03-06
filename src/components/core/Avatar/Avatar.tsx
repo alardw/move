@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, poppy } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Avatar.module.css';
 
 // =============================================================================
@@ -28,8 +28,8 @@ const AvatarGroupContext = React.createContext<AvatarGroupContextValue | null>(n
 // Default animation
 // =============================================================================
 
-const DEFAULT_LIFECYCLE: LifecycleAnimate = {
-  enter: { scale: { value: [0, 1], easing: 'poppy' } },
+const DEFAULT_ENTER_ANIMATION = {
+  scale: { from: 0, to: 1, ease: poppy },
 };
 
 // =============================================================================
@@ -91,7 +91,7 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
 
 export interface AvatarRootProps extends Record<string, unknown> {
   size?: AvatarSize;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -102,7 +102,7 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
   styles,
   slots: ['root'] as const,
   defaults: { size: 'md' as AvatarSize },
-  moveProps: ['size', 'animate'],
+  moveProps: ['size', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const groupCtx = React.useContext(AvatarGroupContext);
@@ -116,21 +116,16 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
     // Build per-avatar stagger delay
     const staggerDelay = groupCtx ? (indexRef.current ?? 0) * groupCtx.staggerDelay : 0;
 
-    // Merge stagger delay into default lifecycle config
-    const resolvedAnimate: LifecycleAnimate | false =
-      props.animate === false
-        ? false
-        : (props.animate as LifecycleAnimate | undefined) ?? {
-            enter: {
-              ...DEFAULT_LIFECYCLE.enter,
-              delay: staggerDelay || undefined,
-            },
-          };
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Root.enter', sequence: [{ animation: { ...DEFAULT_ENTER_ANIMATION, delay: staggerDelay || undefined } }] },
+    ];
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
 
-    const { contentRef } = useLifecycleAnimate({
-      animate: resolvedAnimate,
-    });
-    const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLSpanElement>);
+    const contentRef = React.useRef<HTMLSpanElement>(null);
+    const refs = React.useMemo(() => ({ Root: contentRef as React.RefObject<HTMLElement | null> }), []);
+    useAnimations(animConfig, refs);
+
+    const mergedRef = useMergedRef(ref, contentRef);
 
     return {
       render() {

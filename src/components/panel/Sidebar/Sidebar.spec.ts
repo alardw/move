@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Sidebar',
   componentClass: 'disclosure' as const,
   category: 'panel',
@@ -39,7 +39,7 @@ export const spec = {
         { name: 'defaultMobileOpen', type: 'boolean', default: 'false', moveSpecific: false, description: 'Initial mobile open state (uncontrolled)' },
         { name: 'onMobileOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when mobile open state changes' },
         { name: 'breakpoint', type: 'number', default: '768', moveSpecific: false, description: 'Viewport width breakpoint for mobile mode' },
-        { name: 'animate', type: 'LayerAnimate | false', moveSpecific: true, description: 'Animation config or false to disable all sidebar animations' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable all sidebar animations' },
       ],
       usesFactory: false,
       description: 'Context provider wrapping useSidebar hook, shares collapsed/mobile state and animation config',
@@ -219,24 +219,10 @@ export const spec = {
   asChild: true,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ width: targetWidth, ease: spring({ mass: 1, stiffness: 300, damping: 25, velocity: 0 }) }",
-    },
-    {
-      slot: 'overlay',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ opacity: [0, 1], ease: 'outQuart', duration: 200 }",
-    },
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate & StaggerModifier',
-      defaultConfig: "{ opacity: [0, 1], translateX: [-8, 0], ease: spring({ mass: 1, stiffness: 300, damping: 25 }), stagger: { delay: 30 } }",
-    },
+    { trigger: 'Overlay.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 200 } } }] },
+    { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 150 } } }] },
+    { trigger: 'Content.enter', sequence: [{ animation: { x: { from: '-100%', to: 0, ease: 'poppy' } } }] },
+    { trigger: 'Content.exit', sequence: [{ animation: { x: { to: '-100%', ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
@@ -254,7 +240,7 @@ export const spec = {
     { id: 'content-stagger-items', description: 'Content entrance animation staggers .item elements with translateX(-8) to 0 and opacity 0 to 1.' },
     { id: 'group-role', description: 'Group renders with role="group" for accessibility grouping.' },
     { id: 'provider-context', description: 'Provider wraps useSidebar hook and exposes state via SidebarContext. All sub-components consume context via useSidebarContext().' },
-    { id: 'animate-false-disables-all', description: 'When Provider receives animate={false}, all anime.js animations are disabled across Root, Overlay, and Content.' },
+    { id: 'animate-false-disables-all', description: 'When Provider receives animations={false}, all animations are disabled across Root, Overlay, and Content.' },
   ],
 
   tokens: [
@@ -285,7 +271,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef', 'useControlledState'] as string[],
-  animationImports: ['prefersReducedMotion'] as string[],
+
   componentDeps: ['Tooltip'] as string[],
 
   testing: {
@@ -340,11 +326,11 @@ export const spec = {
     animation: [
       'Root width animates with spring on collapse/expand',
       'Root width animation skips first render',
-      'Root width animation disabled when animate=false',
+      'Root width animation disabled when animations=false',
       'Overlay opacity entrance animation plays on mobile open',
-      'Overlay animation disabled when animate=false',
+      'Overlay animation disabled when animations=false',
       'Content staggers item entrance with translateX and opacity',
-      'Content stagger animation disabled when animate=false',
+      'Content stagger animation disabled when animations=false',
       'All animations respect prefersReducedMotion',
     ],
   },

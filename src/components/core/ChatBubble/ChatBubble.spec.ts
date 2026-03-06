@@ -2,7 +2,7 @@
 // specHash: af768c01
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'ChatBubble',
   componentClass: 'display' as const,
   category: 'core',
@@ -25,7 +25,7 @@ export const spec = {
       slots: [{ name: 'root', element: 'div', description: 'Flex row container' }],
       props: [
         { name: 'placement', type: "'start' | 'end'", default: "'start'", moveSpecific: true, description: 'Bubble alignment (start=left, end=right)' },
-        { name: 'animate', type: 'LifecycleAnimate | false', moveSpecific: true, description: 'Enter animation config' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Enter animation config' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'ChatBubble children' },
       ],
       usesFactory: true,
@@ -85,7 +85,7 @@ export const spec = {
 
   props: [
     { name: 'placement', type: "'start' | 'end'", default: "'start'", moveSpecific: true, description: 'Bubble alignment direction' },
-    { name: 'animate', type: 'LifecycleAnimate | false', moveSpecific: true, description: 'Enter animation config' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Enter animation config' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'ChatBubble sub-components' },
   ],
 
@@ -113,12 +113,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'root',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultConfig: "{ enter: { scale: { value: [0.6, 1] }, opacity: { value: [0, 1] }, easing: 'quick' } }",
-    },
+    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0, ease: 'poppy' } } }] },
   ],
 
   renderContracts: [
@@ -146,7 +141,6 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  animationImports: ['useLifecycleAnimate', 'defaultAnimations', 'toAnimeParams', 'mergeAnimateConfig', 'prefersReducedMotion'],
   componentDeps: ['Avatar'],
 
   testing: {
@@ -166,7 +160,7 @@ export const spec = {
     ],
     animation: [
       'Root animates on mount with scale+opacity enter',
-      'Root respects animate=false to disable animation',
+      'Root respects animations={false} to disable animation',
     ],
   },
 

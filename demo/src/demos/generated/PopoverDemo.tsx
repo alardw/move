@@ -118,7 +118,7 @@ export const demo: DemoDefinition = {
     {
       id: 'no-animation',
       label: 'No Animation',
-      code: `<Popover.Root animate={false}>
+      code: `<Popover.Root animations={false}>
   <Popover.Trigger asChild><Button>No Animation</Button></Popover.Trigger>
   <Popover.Portal>
     <Popover.Content>
@@ -129,7 +129,7 @@ export const demo: DemoDefinition = {
 </Popover.Root>`,
       render: () => (
         <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
-          <Popover.Root animate={false}>
+          <Popover.Root animations={false}>
             <Popover.Trigger asChild>
               <Button variant="secondary">No Animation</Button>
             </Popover.Trigger>

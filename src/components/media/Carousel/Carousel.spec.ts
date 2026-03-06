@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Carousel',
   componentClass: 'interactive' as const,
   category: 'media',
@@ -31,7 +31,7 @@ export const spec = {
         { name: 'loop', type: 'boolean', default: 'false', moveSpecific: true, description: 'Loop back to start after last slide' },
         { name: 'autoplay', type: 'number', default: '0', moveSpecific: true, description: 'Auto-advance interval in ms (0 = off)' },
         { name: 'draggable', type: 'boolean', default: 'true', moveSpecific: true, description: 'Allow drag/swipe navigation' },
-        { name: 'animate', type: 'CarouselAnimate | false', moveSpecific: true, description: 'Slide transition animation config' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Slide transition animation config' },
         { name: 'page', type: 'number', moveSpecific: true, description: 'Controlled active page (0-indexed)' },
         { name: 'defaultPage', type: 'number', moveSpecific: true, description: 'Initial page when uncontrolled' },
         { name: 'onPageChange', type: '(page: number) => void', moveSpecific: true, description: 'Called when active page changes' },
@@ -135,7 +135,7 @@ export const spec = {
     { name: 'loop', type: 'boolean', default: 'false', moveSpecific: true, description: 'Loop back to start' },
     { name: 'autoplay', type: 'number', default: '0', moveSpecific: true, description: 'Auto-advance interval in ms' },
     { name: 'draggable', type: 'boolean', default: 'true', moveSpecific: true, description: 'Enable drag/swipe' },
-    { name: 'animate', type: 'CarouselAnimate | false', moveSpecific: true, description: 'Scroll animation config' },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Scroll animation config' },
     { name: 'page', type: 'number', moveSpecific: true, description: 'Controlled active page' },
     { name: 'defaultPage', type: 'number', moveSpecific: true, description: 'Initial page (uncontrolled)' },
     { name: 'onPageChange', type: '(page: number) => void', moveSpecific: true, description: 'Page change callback' },
@@ -179,12 +179,7 @@ export const spec = {
   asChild: false,
 
   animations: [
-    {
-      slot: 'viewport',
-      hook: 'useCarouselAnimation',
-      configType: 'CarouselAnimate',
-      defaultProfile: 'carousel' as const,
-    },
+    { trigger: 'Viewport.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 } } }] },
   ],
 
   tokens: [
@@ -242,7 +237,7 @@ export const spec = {
 
   hasHook: true,
   engineImports: ['withMoveComponent', 'useControlledState'] as string[],
-  animationImports: ['useCarouselAnimation'] as string[],
+
   componentDeps: [] as string[],
 
   testing: {
@@ -293,7 +288,7 @@ export const spec = {
     ],
     animation: [
       'Programmatic page changes animate the scroll position',
-      'animate={false} disables scroll animation',
+      'animations={false} disables scroll animation',
     ],
   },
 

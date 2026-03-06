@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'RadioGroup',
   componentClass: 'input_toggle' as const,
   category: 'form',
@@ -53,7 +53,7 @@ export const spec = {
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label content rendered next to radio' },
         { name: 'value', type: 'string', moveSpecific: true, description: 'Value of this radio option' },
         { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
-        { name: 'animate', type: 'IndicatorAnimate | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
       ],
       usesFactory: true,
       radixPrimitive: 'RadioGroup.Item',
@@ -107,21 +107,22 @@ export const spec = {
   formType: 'hidden-input' as const,
   asChild: false,
 
+  states: [
+    { name: 'checked', slot: 'Root', source: 'data-state', value: 'checked' },
+    { name: 'unchecked', slot: 'Root', source: 'data-state', value: 'unchecked' },
+  ],
+
   animations: [
-    {
-      slot: 'indicator',
-      hook: 'useToggleAnimate',
-      configType: 'ToggleAnimate & InteractionAnimate',
-      defaultProfile: 'toggleIndicator',
-      defaultPreset: 'indicator',
-    },
+    { trigger: 'checked', sequence: [{ target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } }] },
+    { trigger: 'unchecked', sequence: [{ target: 'indicator', animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } } }] },
+    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
   renderContracts: [
     { id: 'item-wrapper-click', description: 'Item is wrapped in a span.wrapper that forwards click to the hidden Radix RadioGroup.Item button (pointer-events:none on item)' },
     { id: 'indicator-force-mount', description: 'RadioGroup.Indicator is force-mounted to enable exit animation when unchecked' },
     { id: 'indicator-opacity-zero-unchecked', description: 'Indicator has opacity:0 when data-state=unchecked via CSS' },
-    { id: 'press-handlers-on-wrapper', description: 'Toggle animation pressHandlers (onMouseDown/Up/Leave) are attached to wrapper span, not the item button' },
+    { id: 'press-handlers-on-wrapper', description: 'Press animation handlers (onMouseDown/Up/Leave) are attached to wrapper span via Root.press trigger' },
     { id: 'size-cascades-from-root', description: 'Size is set as data-size on Root and cascades to items via CSS descendant selectors' },
     { id: 'invalid-cascades-from-root', description: 'Invalid is set as data-invalid on Root and cascades border/outline color changes to items' },
   ],
@@ -147,7 +148,6 @@ export const spec = {
   radixPrimitive: 'RadioGroup',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useToggleAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -189,11 +189,11 @@ export const spec = {
       'Required attribute is forwarded to Radix',
     ] as string[],
     animation: [
-      'Wires useToggleAnimate with defaultAnimations.indicator',
-      'Toggle animation fires animateChecked on data-state=checked',
-      'Toggle animation fires animateUnchecked on data-state=unchecked',
+      'Uses state triggers for checked/unchecked indicator animation',
+      'State trigger fires checked animation on indicator',
+      'State trigger fires unchecked animation on indicator',
       'Press animation handlers fire on wrapper mouseDown/mouseUp/mouseLeave',
-      'animate=false disables toggle animation',
+      'animations={false} disables toggle animation',
       'Animation disabled when item is disabled',
     ] as string[],
   },

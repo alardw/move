@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Popover',
   componentClass: 'overlay_popup' as const,
   category: 'overlay',
@@ -27,7 +27,7 @@ export const spec = {
         { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
         { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Initial open state (uncontrolled)' },
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animate', type: 'PopupAnimate | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
         { name: 'closeOnScroll', type: 'boolean', default: 'false', moveSpecific: true, description: 'Close the popover when an ancestor element scrolls' },
         { name: 'modal', type: 'boolean', moveSpecific: false, description: 'Whether to render as modal' },
       ],
@@ -150,17 +150,12 @@ export const spec = {
   },
 
   animations: [
-    {
-      slot: 'content',
-      hook: 'useLifecycleAnimate',
-      configType: 'LifecycleAnimate',
-      defaultProfile: 'popupPresence',
-      defaultConfig: "{ enter: { opacity: { value: [0, 1], easing: 'outQuart' }, scale: { value: [0.5, 1], easing: 'outQuart' } }, exit: { opacity: { value: [1, 0], easing: 'outQuart' }, scale: { value: [1, 0.95], easing: 'outQuart' }, duration: 200 } }",
-    },
+    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.95, to: 1, ease: 'poppy' } } }] },
+    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { to: 0 }, scale: { to: 0.95, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
-    { id: 'animation-context', description: 'Root provides PopoverContext with isClosing, close(), onCloseComplete, animateConfig, and closeOnScroll to all sub-components' },
+    { id: 'animation-context', description: 'Root provides PopoverContext with isClosing, close(), onCloseComplete, animation config, and closeOnScroll to all sub-components' },
     { id: 'close-after-exit', description: 'Close triggers isClosing state; Content exit animation calls onCloseComplete which unmounts the popover' },
     { id: 'radix-open-override', description: 'Root keeps Radix open during exit animation (open={open || isClosing}) and ignores Radix close requests' },
     { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) for portal font isolation' },
@@ -197,7 +192,6 @@ export const spec = {
   radixPrimitive: 'Popover',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  animationImports: ['useLifecycleAnimate'] as string[],
   componentDeps: [] as string[],
 
   testing: {
@@ -234,7 +228,7 @@ export const spec = {
       'Content entrance uses scale 0.5->1 + opacity 0->1 with outQuart',
       'Content exit uses scale 1->0.95 + opacity 1->0 in 200ms',
       'Content exit animation calls onCloseComplete to unmount',
-      'animate=false disables all animations',
+      'animations={false} disables all animations',
       'Reduced motion preference disables animations',
     ],
   },

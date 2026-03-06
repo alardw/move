@@ -2,7 +2,7 @@
 // specHash: PLACEHOLDER
 
 export const spec = {
-  schemaVersion: 6 as const,
+  schemaVersion: 7 as const,
   name: 'Breadcrumb',
   componentClass: 'display' as const,
   category: 'nav',
@@ -162,7 +162,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
-  animationImports: [] as string[],
+
   componentDeps: ['Icon'] as string[],
 
   testing: {

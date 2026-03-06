@@ -2,11 +2,10 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { animate, spring } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { mergeAnimateConfig, prefersReducedMotion } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, snappy } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Dialog.module.css';
 
 // ============================================================================
@@ -17,7 +16,7 @@ interface DialogContextValue {
   isClosing: boolean;
   close: () => void;
   onCloseComplete: () => void;
-  animateConfig: LifecycleAnimate | null;
+  animConfig: AnimationTrigger[] | null;
 }
 
 const DialogContext = React.createContext<DialogContextValue | null>(null);
@@ -34,24 +33,45 @@ function useDialogContext() {
 // Root (stateful — manages open/close state + animation context)
 // ============================================================================
 
-const defaultDialogAnimation: LifecycleAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.85, 1], easing: 'snappy' },
+const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [{
+      animation: {
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        scale: { from: 0.85, to: 1, ease: snappy },
+      },
+    }],
   },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
+  {
+    trigger: 'Content.exit',
+    sequence: [{
+      animation: {
+        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
+        scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 200 },
+      },
+    }],
   },
-};
+  {
+    trigger: 'Overlay.enter',
+    sequence: [{
+      animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 250 } },
+    }],
+  },
+  {
+    trigger: 'Overlay.exit',
+    sequence: [{
+      animation: { opacity: { from: 1, to: 0, ease: 'outQuart', duration: 200 } },
+    }],
+  },
+];
 
 export interface DialogRootProps {
   children?: React.ReactNode;
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   modal?: boolean;
 }
 
@@ -60,7 +80,7 @@ const DialogRoot: React.FC<DialogRootProps> = ({
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
-  animate: animateProp,
+  animations: animationsProp,
   modal,
 }) => {
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
@@ -87,10 +107,10 @@ const DialogRoot: React.FC<DialogRootProps> = ({
     setIsClosing(true);
   }, []);
 
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultDialogAnimation, animateProp);
+  const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
   return (
-    <DialogContext.Provider value={{ isClosing, close, onCloseComplete: handleCloseComplete, animateConfig }}>
+    <DialogContext.Provider value={{ isClosing, close, onCloseComplete: handleCloseComplete, animConfig }}>
       <RadixDialog.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
@@ -169,34 +189,24 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
   slots: ['overlay'] as const,
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, animateConfig } = useDialogContext();
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
+    const { isClosing, animConfig } = useDialogContext();
 
-    // Enter: fade in
-    React.useLayoutEffect(() => {
-      const el = internalRef.current;
-      if (!el || !animateConfig || prefersReducedMotion()) return;
+    // Filter triggers for this slot
+    const overlayConfig = React.useMemo(() => {
+      if (!animConfig) return null;
+      return animConfig.filter((t) => t.trigger.startsWith('Overlay.'));
+    }, [animConfig]);
 
-      el.style.opacity = '0';
-      animRef.current = animate(el, {
-        opacity: [0, 1],
-        ease: 'outQuart',
-        duration: 250,
-      });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    const overlayRefs = React.useMemo(() => ({
+      Overlay: internalRef as React.RefObject<HTMLElement | null>,
+    }), [internalRef]);
 
-    // Exit: fade out (fire-and-forget, Content drives onCloseComplete)
+    const { runExit } = useAnimations(overlayConfig, overlayRefs);
+
+    // Exit (no onCloseComplete — Content drives close completion)
     React.useEffect(() => {
       if (!isClosing) return;
-      const el = internalRef.current;
-      if (!el || !animateConfig || prefersReducedMotion()) return;
-
-      if (animRef.current) animRef.current.pause();
-      animRef.current = animate(el, {
-        opacity: [1, 0],
-        ease: 'outQuart',
-        duration: 200,
-      });
+      runExit();
     }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
@@ -235,8 +245,6 @@ export interface DialogContentProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'content'>;
 }
 
-const dialogSpring = { mass: 0.6, stiffness: 350, damping: 16, velocity: 0 };
-
 const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivElement>({
   name: 'DialogContent',
   styles,
@@ -245,54 +253,25 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
   defaults: { size: 'md' },
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, close, onCloseComplete, animateConfig } = useDialogContext();
-    const animRef = React.useRef<ReturnType<typeof animate> | null>(null);
-    const isAnimatingOutRef = React.useRef(false);
+    const { isClosing, close, onCloseComplete, animConfig } = useDialogContext();
 
-    // Enter: scale with bounce + opacity
-    React.useLayoutEffect(() => {
-      const el = internalRef.current;
-      if (!el) return;
+    // Filter triggers for this slot
+    const contentConfig = React.useMemo(() => {
+      if (!animConfig) return null;
+      return animConfig.filter((t) => t.trigger.startsWith('Content.'));
+    }, [animConfig]);
 
-      if (!animateConfig || prefersReducedMotion()) {
-        el.style.opacity = '1';
-        return;
-      }
+    const contentRefs = React.useMemo(() => ({
+      Content: internalRef as React.RefObject<HTMLElement | null>,
+    }), [internalRef]);
 
-      el.style.opacity = '0';
-      el.style.transform = 'scale(0.85)';
+    const { runExit } = useAnimations(contentConfig, contentRefs);
 
-      animRef.current = animate(el, {
-        opacity: [0, 1],
-        scale: [0.85, 1],
-        ease: spring(dialogSpring),
-      });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Exit: scale down + opacity out
+    // Exit
     React.useEffect(() => {
-      if (!isClosing || isAnimatingOutRef.current) return;
-      isAnimatingOutRef.current = true;
-
-      const el = internalRef.current;
-      if (!el || !animateConfig || prefersReducedMotion()) {
-        isAnimatingOutRef.current = false;
-        onCloseComplete();
-        return;
-      }
-
-      if (animRef.current) animRef.current.pause();
-
-      animRef.current = animate(el, {
-        opacity: [1, 0],
-        scale: [1, 0.95],
-        ease: 'outQuart',
-        duration: 200,
-        onComplete: () => {
-          isAnimatingOutRef.current = false;
-          onCloseComplete();
-        },
-      });
+      if (!isClosing) return;
+      if (!animConfig) { onCloseComplete?.(); return; }
+      runExit().then(() => onCloseComplete?.());
     }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleOpenAutoFocus = (event: Event) => {

@@ -9,7 +9,6 @@ export type Recipe = {
   type: RecipeType;
   component: string;
   relatedComponents?: string[];
-  tags?: string[];
   dependencies?: string[];
   assets?: string[];
   render: React.FC;

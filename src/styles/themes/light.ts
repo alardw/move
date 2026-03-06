@@ -36,11 +36,11 @@ export const lightTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-300)',
     '--move-border-emphasis': 'var(--move-gray-400)',
 
-    // Primary (sage)
-    '--move-primary': 'var(--move-sage-600)',
-    '--move-primary-hover': 'var(--move-sage-700)',
-    '--move-primary-active': 'var(--move-sage-800)',
-    '--move-primary-subtle': 'var(--move-sage-100)',
+    // Primary (indigo-violet)
+    '--move-primary': 'var(--move-primary-300)',
+    '--move-primary-hover': 'var(--move-primary-200)',
+    '--move-primary-active': 'var(--move-primary-400)',
+    '--move-primary-subtle': 'var(--move-primary-50)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -74,7 +74,7 @@ export const lightTheme: Theme = {
     '--move-info-fg': 'var(--move-white)',
 
     // Focus
-    '--move-focus-ring-color': 'var(--move-sage-600)',
+    '--move-focus-ring-color': 'var(--move-primary-300)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.4)',

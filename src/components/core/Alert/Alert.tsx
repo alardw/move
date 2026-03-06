@@ -2,8 +2,8 @@
 // Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9)
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Alert.module.css';
 
@@ -25,18 +25,26 @@ const VARIANT_ICONS: Record<AlertVariant, string> = {
   danger: 'circle-x',
 };
 
-const DEFAULT_LIFECYCLE: LifecycleAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    y: { value: [-8, 0], easing: 'outQuart' },
-    duration: 300,
+const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Root.enter',
+    sequence: [{
+      animation: {
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        y: { from: -8, to: 0, ease: 'outQuart', duration: 200 },
+      },
+    }],
   },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    y: { value: [0, -8], easing: 'outQuart' },
-    duration: 200,
+  {
+    trigger: 'Root.exit',
+    sequence: [{
+      animation: {
+        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
+        y: { from: 0, to: -8, ease: 'outQuart', duration: 150 },
+      },
+    }],
   },
-};
+];
 
 export interface AlertProps extends Record<string, unknown> {
   variant?: AlertVariant;
@@ -45,7 +53,7 @@ export interface AlertProps extends Record<string, unknown> {
   title?: React.ReactNode;
   closable?: boolean;
   onClose?: () => void;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   labels?: Partial<AlertLabels>;
   className?: string;
   style?: React.CSSProperties;
@@ -57,7 +65,7 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
   styles,
   slots: ['root', 'icon', 'content', 'title', 'description', 'close'] as const,
   defaults: { variant: 'info' as AlertVariant, size: 'md' as AlertSize, icon: true, closable: false },
-  moveProps: ['title', 'onClose', 'animate', 'labels'],
+  moveProps: ['title', 'onClose', 'animations', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const [visible, setVisible] = React.useState(true);
@@ -71,13 +79,19 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
       (props.onClose as (() => void) | undefined)?.();
     }, [props.onClose]);
 
-    const { contentRef } = useLifecycleAnimate({
-      animate: props.animate === false
-        ? false
-        : (props.animate as LifecycleAnimate | undefined) ?? DEFAULT_LIFECYCLE,
-      isClosing,
-      onCloseComplete,
-    });
+    const contentRef = React.useRef<HTMLDivElement>(null);
+
+    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
+    const refs = React.useMemo(() => ({ Root: contentRef as React.RefObject<HTMLElement | null> }), []);
+    const { runExit } = useAnimations(animConfig, refs);
+
+    // Exit
+    React.useEffect(() => {
+      if (!isClosing) return;
+      if (!animConfig) { onCloseComplete?.(); return; }
+      runExit().then(() => onCloseComplete?.());
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
     const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
 
     // Determine icon
@@ -88,13 +102,13 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
 
     const handleClose = React.useCallback(() => {
       if (isClosing) return;
-      if (props.animate === false) {
+      if (props.animations === false) {
         setVisible(false);
         (props.onClose as (() => void) | undefined)?.();
         return;
       }
       setIsClosing(true);
-    }, [isClosing, props.animate, props.onClose]);
+    }, [isClosing, props.animations, props.onClose]);
 
     return {
       render() {

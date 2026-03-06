@@ -58,7 +58,7 @@ describe('Timeline', () => {
 
     it('forwards style', () => {
       render(
-        <Timeline data-testid="timeline" animate={false} style={{ marginTop: '10px' }}>
+        <Timeline data-testid="timeline" animations={false} style={{ marginTop: '10px' }}>
           <Timeline.Item>Step 1</Timeline.Item>
         </Timeline>
       );
@@ -79,7 +79,7 @@ describe('Timeline', () => {
   describe('Timeline.Item state derivation', () => {
     it('derives state=completed when index < active', () => {
       render(
-        <Timeline active={2} animate={false}>
+        <Timeline active={2} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
@@ -91,7 +91,7 @@ describe('Timeline', () => {
 
     it('derives state=active when index === active', () => {
       render(
-        <Timeline active={1} animate={false}>
+        <Timeline active={1} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
@@ -102,7 +102,7 @@ describe('Timeline', () => {
 
     it('derives state=inactive when index > active', () => {
       render(
-        <Timeline active={0} animate={false}>
+        <Timeline active={0} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
         </Timeline>
@@ -112,7 +112,7 @@ describe('Timeline', () => {
 
     it('all items inactive when active=-1', () => {
       render(
-        <Timeline active={-1} animate={false}>
+        <Timeline active={-1} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
         </Timeline>
@@ -123,7 +123,7 @@ describe('Timeline', () => {
 
     it('respects reverseActive flag', () => {
       render(
-        <Timeline active={1} reverseActive animate={false}>
+        <Timeline active={1} reverseActive animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
@@ -139,7 +139,7 @@ describe('Timeline', () => {
   describe('Timeline.Item attributes', () => {
     it('renders data-state, data-color, data-line-variant', () => {
       render(
-        <Timeline active={0} animate={false}>
+        <Timeline active={0} animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -151,7 +151,7 @@ describe('Timeline', () => {
 
     it('inherits color from Root context', () => {
       render(
-        <Timeline active={0} color="success" animate={false}>
+        <Timeline active={0} color="success" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -160,7 +160,7 @@ describe('Timeline', () => {
 
     it('can override color with its own color prop', () => {
       render(
-        <Timeline active={0} color="primary" animate={false}>
+        <Timeline active={0} color="primary" animations={false}>
           <Timeline.Item data-testid="item" color="danger">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -169,7 +169,7 @@ describe('Timeline', () => {
 
     it('inherits lineVariant from Root context', () => {
       render(
-        <Timeline active={0} lineVariant="dashed" animate={false}>
+        <Timeline active={0} lineVariant="dashed" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -178,7 +178,7 @@ describe('Timeline', () => {
 
     it('can override lineVariant with its own lineVariant prop', () => {
       render(
-        <Timeline active={0} lineVariant="solid" animate={false}>
+        <Timeline active={0} lineVariant="solid" animations={false}>
           <Timeline.Item data-testid="item" lineVariant="dotted">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -190,7 +190,7 @@ describe('Timeline', () => {
   describe('Timeline.Item bullet', () => {
     it('renders custom bullet content via bullet prop', () => {
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item data-testid="item" bullet={<span data-testid="custom-bullet">!</span>}>Step</Timeline.Item>
         </Timeline>
       );
@@ -199,7 +199,7 @@ describe('Timeline', () => {
 
     it('renders data-has-content on bullet when custom content is present', () => {
       const { container } = render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item bullet={<span>!</span>}>Step</Timeline.Item>
         </Timeline>
       );
@@ -209,7 +209,7 @@ describe('Timeline', () => {
 
     it('does not render data-has-content when no bullet prop', () => {
       const { container } = render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item>Step</Timeline.Item>
         </Timeline>
       );
@@ -222,7 +222,7 @@ describe('Timeline', () => {
   describe('Timeline.Item title', () => {
     it('renders title via title prop when provided', () => {
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item title="Step Title">Step content</Timeline.Item>
         </Timeline>
       );
@@ -231,7 +231,7 @@ describe('Timeline', () => {
 
     it('does not render title element when title prop is not provided', () => {
       const { container } = render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item data-testid="item">Step content</Timeline.Item>
         </Timeline>
       );
@@ -246,7 +246,7 @@ describe('Timeline', () => {
   describe('alternate layout', () => {
     it('renders items with alternating content-side', () => {
       render(
-        <Timeline align="alternate" animate={false}>
+        <Timeline align="alternate" animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
@@ -259,7 +259,7 @@ describe('Timeline', () => {
 
     it('does not set data-content-side when align is left', () => {
       render(
-        <Timeline align="left" animate={false}>
+        <Timeline align="left" animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -272,7 +272,7 @@ describe('Timeline', () => {
     it('forwards ref', () => {
       const ref = createRef<HTMLDivElement>();
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item ref={ref}>Step 1</Timeline.Item>
         </Timeline>
       );
@@ -281,7 +281,7 @@ describe('Timeline', () => {
 
     it('forwards className', () => {
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item data-testid="item" className="custom">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -290,7 +290,7 @@ describe('Timeline', () => {
 
     it('forwards style', () => {
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item data-testid="item" style={{ marginTop: '10px' }}>Step 1</Timeline.Item>
         </Timeline>
       );
@@ -299,7 +299,7 @@ describe('Timeline', () => {
 
     it('spreads HTML attributes', () => {
       render(
-        <Timeline animate={false}>
+        <Timeline animations={false}>
           <Timeline.Item data-testid="item" aria-label="Step">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -309,9 +309,9 @@ describe('Timeline', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('accepts animate=false on Root to disable all item entrance animations', () => {
+    it('accepts animations=false on Root to disable all item entrance animations', () => {
       render(
-        <Timeline data-testid="timeline" animate={false}>
+        <Timeline data-testid="timeline" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
         </Timeline>
       );
@@ -324,7 +324,7 @@ describe('Timeline', () => {
   describe('composition', () => {
     it('renders full timeline composition', () => {
       render(
-        <Timeline data-testid="timeline" active={1} animate={false}>
+        <Timeline data-testid="timeline" active={1} animations={false}>
           <Timeline.Item data-testid="item-0" title="Completed">Done</Timeline.Item>
           <Timeline.Item data-testid="item-1" title="Current" bullet={<span>2</span>}>In progress</Timeline.Item>
           <Timeline.Item data-testid="item-2" title="Upcoming">Not started</Timeline.Item>
@@ -357,7 +357,7 @@ describe('Timeline', () => {
 
     it('merges sp style on root', () => {
       render(
-        <Timeline data-testid="timeline" animate={false} sp={{ root: { style: { marginTop: '5px' } } }}>
+        <Timeline data-testid="timeline" animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>
           <Timeline.Item>Step 1</Timeline.Item>
         </Timeline>
       );

@@ -36,11 +36,11 @@ export const darkTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-600)',
     '--move-border-emphasis': 'var(--move-gray-500)',
 
-    // Primary (sage)
-    '--move-primary': 'var(--move-sage-600)',
-    '--move-primary-hover': 'var(--move-sage-500)',
-    '--move-primary-active': 'var(--move-sage-700)',
-    '--move-primary-subtle': 'var(--move-sage-950)',
+    // Primary (indigo-violet)
+    '--move-primary': 'var(--move-primary-200)',
+    '--move-primary-hover': 'var(--move-primary-100)',
+    '--move-primary-active': 'var(--move-primary-300)',
+    '--move-primary-subtle': 'var(--move-primary-500)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -74,7 +74,7 @@ export const darkTheme: Theme = {
     '--move-info-fg': 'var(--move-white)',
 
     // Focus
-    '--move-focus-ring-color': 'var(--move-sage-500)',
+    '--move-focus-ring-color': 'var(--move-primary-200)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.5)',

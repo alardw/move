@@ -4,8 +4,8 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { mergeAnimateConfig, useLifecycleAnimate } from '../../../animation';
-import type { LifecycleAnimate } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, poppy } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Popover.module.css';
 
@@ -17,7 +17,7 @@ interface PopoverContextValue {
   isClosing: boolean;
   onCloseComplete: () => void;
   close: () => void;
-  animateConfig: LifecycleAnimate | null;
+  animConfig: AnimationTrigger[] | false | null;
   closeOnScroll: boolean;
 }
 
@@ -40,30 +40,39 @@ export interface PopoverRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  animate?: LifecycleAnimate | false;
+  animations?: AnimationTrigger[] | false;
   /** Close the popover when an ancestor element scrolls */
   closeOnScroll?: boolean;
   modal?: boolean;
 }
 
-const defaultPopoverAnimation: LifecycleAnimate = {
-  enter: {
-    opacity: { value: [0, 1], easing: 'outQuart' },
-    scale: { value: [0.5, 1], easing: 'outQuart' },
+const DEFAULT_POPOVER_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Content.enter',
+    sequence: [{
+      animation: {
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+        scale: { from: 0.5, to: 1, ease: poppy },
+      },
+    }],
   },
-  exit: {
-    opacity: { value: [1, 0], easing: 'outQuart' },
-    scale: { value: [1, 0.95], easing: 'outQuart' },
-    duration: 200,
+  {
+    trigger: 'Content.exit',
+    sequence: [{
+      animation: {
+        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
+        scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 200 },
+      },
+    }],
   },
-};
+];
 
 const PopoverRoot: React.FC<PopoverRootProps> = ({
   children,
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
-  animate: animateProp,
+  animations: animationsProp,
   closeOnScroll = false,
   modal,
 }) => {
@@ -91,10 +100,10 @@ const PopoverRoot: React.FC<PopoverRootProps> = ({
     setIsClosing(true);
   }, []);
 
-  const animateConfig = animateProp === false ? null : mergeAnimateConfig(defaultPopoverAnimation, animateProp);
+  const animConfig = resolveAnimationsConfig(DEFAULT_POPOVER_ANIMATIONS, animationsProp);
 
   return (
-    <PopoverContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animateConfig, closeOnScroll }}>
+    <PopoverContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animConfig, closeOnScroll }}>
       <RadixPopover.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixPopover.Root>
@@ -224,14 +233,18 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { isClosing, onCloseComplete, close, animateConfig, closeOnScroll } = usePopoverContext();
+    const { isClosing, onCloseComplete, close, animConfig, closeOnScroll } = usePopoverContext();
 
-    const { contentRef } = useLifecycleAnimate({
-      animate: animateConfig,
-      isClosing,
-      onCloseComplete,
-      animateHeight: false,
-    });
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const refs = React.useMemo(() => ({ Content: contentRef as React.RefObject<HTMLElement | null> }), []);
+    const { runExit } = useAnimations(animConfig, refs);
+
+    // Exit
+    React.useEffect(() => {
+      if (!isClosing) return;
+      if (!animConfig) { onCloseComplete?.(); return; }
+      runExit().then(() => onCloseComplete?.());
+    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 

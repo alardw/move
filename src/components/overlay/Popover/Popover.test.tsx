@@ -231,8 +231,8 @@ describe('Popover', () => {
 
   // === Animation ===
   describe('animation', () => {
-    it('animate=false disables animations and still renders content', async () => {
-      renderPopover({ open: true, animate: false });
+    it('animations=false disables animations and still renders content', async () => {
+      renderPopover({ open: true, animations: false });
       await waitFor(() => {
         expect(screen.getByText('Popover body')).toBeInTheDocument();
       });
