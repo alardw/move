@@ -73,7 +73,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
                       </Stack>
                       <List.Description>{msg.subject}</List.Description>
                     </List.Content>
-                    <List.Meta>{msg.time}</List.Meta>
+                    <List.Trailing>{msg.time}</List.Trailing>
                   </List.Item>
                 ))}
               </List>

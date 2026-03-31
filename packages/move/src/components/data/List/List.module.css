@@ -252,13 +252,3 @@
   gap: var(--move-spacing-sm);
 }
 
-/* =========================================================================
- * Meta (convenience — renders leading + content internally)
- * ========================================================================= */
-
-.meta {
-  display: flex;
-  align-items: center;
-  gap: var(--move-list-gap);
-  flex-shrink: 0;
-}

@@ -426,69 +426,6 @@ const ListTrailing = withMoveComponent<'trailing', ListTrailingProps, HTMLDivEle
 });
 
 // ============================================================================
-// Meta (convenience shorthand)
-// ============================================================================
-
-export interface ListMetaProps extends Record<string, unknown> {
-  className?: string;
-  style?: React.CSSProperties;
-  avatar?: React.ReactNode;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
-  lines?: ListDescriptionLines;
-  sp?: SlotPropsMap<'meta'>;
-}
-
-const ListMeta = withMoveComponent<'meta', ListMetaProps, HTMLDivElement>({
-  name: 'ListMeta',
-  styles,
-  slots: ['meta'] as const,
-  defaults: { lines: 1 as unknown as undefined },
-  moveProps: ['avatar', 'title', 'description', 'lines'],
-
-  setup({ props, ref, cx, sp, attrs }) {
-    return {
-      render() {
-        const metaSp = sp('meta');
-        const { className: spClass, style: spStyle, ...spRest } = metaSp as Record<string, unknown>;
-
-        const avatar = props.avatar as React.ReactNode;
-        const title = props.title as React.ReactNode;
-        const description = props.description as React.ReactNode;
-        const lines = props.lines as ListDescriptionLines;
-
-        return (
-          <div
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            className={cx('meta', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-          >
-            {avatar != null && (
-              <div className={styles.leading}>
-                {avatar}
-              </div>
-            )}
-            <div className={styles.content}>
-              {title != null && (
-                <p className={styles.title}>{title}</p>
-              )}
-              {description != null && (
-                <p className={styles.description} data-lines={String(lines)}>
-                  {description}
-                </p>
-              )}
-              {props.children}
-            </div>
-          </div>
-        );
-      },
-    };
-  },
-});
-
-// ============================================================================
 // Export
 // ============================================================================
 
@@ -500,5 +437,4 @@ export const List = Object.assign(ListRoot, {
   Title: ListTitle,
   Description: ListDescription,
   Trailing: ListTrailing,
-  Meta: ListMeta,
 });

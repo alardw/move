@@ -145,7 +145,12 @@ export default function OverviewBasic({ labels }: { labels?: Partial<Labels> }) 
                     <List.Title>{p.name}</List.Title>
                     <List.Description>{p.role}</List.Description>
                   </List.Content>
-                  <List.Meta title={p.metric} description={p.metricLabel} />
+                  <List.Trailing>
+                    <Stack gap="none" align="end">
+                      <Text weight="medium">{p.metric}</Text>
+                      <Text size="xs" color="muted">{p.metricLabel}</Text>
+                    </Stack>
+                  </List.Trailing>
                 </List.Item>
               ))}
             </List>

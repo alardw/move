@@ -14,7 +14,7 @@ export const demo: DemoDefinition = {
   id: 'data:List',
   name: 'List',
   category: 'data',
-  description: 'Stacked list with three-zone item layout, responsive collapse, line clamping, and Meta shorthand',
+  description: 'Stacked list with three-zone item layout, responsive collapse, line clamping, and explicit sub-components',
   controls: [
     {
       name: 'size',
@@ -44,11 +44,6 @@ export const demo: DemoDefinition = {
       defaultValue: true,
     },
     {
-      name: 'useMeta',
-      kind: 'boolean',
-      defaultValue: false,
-    },
-    {
       name: 'interactive',
       kind: 'boolean',
       defaultValue: true,
@@ -60,7 +55,6 @@ export const demo: DemoDefinition = {
     dividers: true,
     hover: true,
     separator: true,
-    useMeta: false,
     interactive: true,
   },
   render: (props) => (
@@ -77,23 +71,13 @@ export const demo: DemoDefinition = {
           href={props.interactive ? '#' : undefined}
           active={i === 2}
         >
-          {props.useMeta ? (
-            <List.Meta
-              avatar={<Avatar.Root size="sm" color={person.color as string}><Avatar.Fallback>{person.initials}</Avatar.Fallback></Avatar.Root>}
-              title={person.name}
-              description={person.email}
-            />
-          ) : (
-            <>
-              <List.Leading>
-                <Avatar.Root size="sm" color={person.color as string}><Avatar.Fallback>{person.initials}</Avatar.Fallback></Avatar.Root>
-              </List.Leading>
-              <List.Content>
-                <List.Title>{person.name}</List.Title>
-                <List.Description>{person.email}</List.Description>
-              </List.Content>
-            </>
-          )}
+          <List.Leading>
+            <Avatar.Root size="sm" color={person.color as string}><Avatar.Fallback>{person.initials}</Avatar.Fallback></Avatar.Root>
+          </List.Leading>
+          <List.Content>
+            <List.Title>{person.name}</List.Title>
+            <List.Description>{person.email}</List.Description>
+          </List.Content>
           <List.Trailing>
             <Badge
               variant="soft"

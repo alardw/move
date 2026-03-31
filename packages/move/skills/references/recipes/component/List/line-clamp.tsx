@@ -12,12 +12,13 @@ export default function ListLineClamp() {
           </p>
           <List>
             <List.Item>
-              <List.Meta
-                avatar={<Avatar.Root color="teal"><Avatar.Fallback>LA</Avatar.Fallback></Avatar.Root>}
-                title="Leslie Alexander"
-                description={longDescription}
-                lines={lines}
-              />
+              <List.Leading>
+                <Avatar.Root color="teal"><Avatar.Fallback>LA</Avatar.Fallback></Avatar.Root>
+              </List.Leading>
+              <List.Content>
+                <List.Title>Leslie Alexander</List.Title>
+                <List.Description lines={lines}>{longDescription}</List.Description>
+              </List.Content>
             </List.Item>
           </List>
         </div>

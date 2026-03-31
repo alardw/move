@@ -12,5 +12,4 @@ export type {
   ListTitleProps,
   ListDescriptionProps,
   ListTrailingProps,
-  ListMetaProps,
 } from './List';

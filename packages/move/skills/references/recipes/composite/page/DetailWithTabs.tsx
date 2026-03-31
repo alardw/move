@@ -91,7 +91,9 @@ export default function DetailWithTabs({ labels }: { labels?: Partial<Labels> })
                     <List.Content>
                       <List.Title>{row.label}</List.Title>
                     </List.Content>
-                    <List.Meta title={row.value} />
+                    <List.Trailing>
+                      {row.value}
+                    </List.Trailing>
                   </List.Item>
                 ))}
               </List>

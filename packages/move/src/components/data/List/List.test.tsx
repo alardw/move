@@ -344,71 +344,6 @@ describe('List', () => {
     });
   });
 
-  // === Meta ===
-  describe('List.Meta', () => {
-    it('renders avatar in Leading slot when provided', () => {
-      const { container } = render(
-        <List animations={false}>
-          <List.Item>
-            <List.Meta avatar={<img alt="avatar" src="test.jpg" />} title="Jane" description="Email" />
-          </List.Item>
-        </List>
-      );
-      expect(screen.getByAltText('avatar')).toBeInTheDocument();
-      // Avatar is inside a leading-classed div
-      const leadingEl = container.querySelector('[class*="leading"]');
-      expect(leadingEl).toBeInTheDocument();
-    });
-
-    it('renders title as Title', () => {
-      render(
-        <List animations={false}>
-          <List.Item>
-            <List.Meta title="Jane Cooper" />
-          </List.Item>
-        </List>
-      );
-      expect(screen.getByText('Jane Cooper')).toBeInTheDocument();
-    });
-
-    it('renders description as Description', () => {
-      render(
-        <List animations={false}>
-          <List.Item>
-            <List.Meta description="jane@example.com" />
-          </List.Item>
-        </List>
-      );
-      expect(screen.getByText('jane@example.com')).toBeInTheDocument();
-    });
-
-    it('forwards lines prop to Description', () => {
-      const { container } = render(
-        <List animations={false}>
-          <List.Item>
-            <List.Meta description="Long text" lines={2} />
-          </List.Item>
-        </List>
-      );
-      const desc = container.querySelector('[class*="description"]');
-      expect(desc).toHaveAttribute('data-lines', '2');
-    });
-
-    it('omits Leading when avatar is not provided', () => {
-      const { container } = render(
-        <List animations={false}>
-          <List.Item>
-            <List.Meta title="Jane" description="Email" />
-          </List.Item>
-        </List>
-      );
-      // Meta should not contain a leading-classed div
-      const meta = container.querySelector('[class*="meta"]');
-      const leadingInMeta = meta?.querySelector('[class*="leading"]');
-      expect(leadingInMeta).not.toBeInTheDocument();
-    });
-  });
-
   // === Separator ===
   describe('List separator', () => {
     it('renders Divider components between items when separator=true', () => {
@@ -461,11 +396,11 @@ describe('List', () => {
             <List.Trailing><span>Active</span></List.Trailing>
           </List.Item>
           <List.Item data-testid="item-1">
-            <List.Meta
-              avatar={<span>B</span>}
-              title="John Doe"
-              description="john@example.com"
-            />
+            <List.Leading><span>B</span></List.Leading>
+            <List.Content>
+              <List.Title>John Doe</List.Title>
+              <List.Description>john@example.com</List.Description>
+            </List.Content>
           </List.Item>
         </List>
       );

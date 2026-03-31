@@ -320,7 +320,7 @@ export { Timeline } from './components/data/Timeline';
 export type { TimelineSize, TimelineAlign, TimelineColor, TimelineLineVariant, TimelineRootProps, TimelineItemSlots, TimelineItemProps } from './components/data/Timeline';
 
 export { List } from './components/data/List';
-export type { ListSize, ListDensity, ListDescriptionLines, ListItemElement, ListRootProps, ListItemProps, ListLeadingProps, ListContentProps, ListTitleProps, ListDescriptionProps, ListTrailingProps, ListMetaProps } from './components/data/List';
+export type { ListSize, ListDensity, ListDescriptionLines, ListItemElement, ListRootProps, ListItemProps, ListLeadingProps, ListContentProps, ListTitleProps, ListDescriptionProps, ListTrailingProps } from './components/data/List';
 
 export { ToggleButton } from './components/toolbar/ToggleButton';
 export type { ToggleButtonProps } from './components/toolbar/ToggleButton';

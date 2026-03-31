@@ -110,7 +110,9 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                     <List.Content>
                       <List.Title>{row.label}</List.Title>
                     </List.Content>
-                    <List.Meta title={row.value} />
+                    <List.Trailing>
+                      {row.value}
+                    </List.Trailing>
                   </List.Item>
                 ))}
               </List>
@@ -157,11 +159,11 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                         <List.Title>{m.name}</List.Title>
                         <List.Description>{m.role}</List.Description>
                       </List.Content>
-                      <List.Meta>
+                      <List.Trailing>
                         <Badge variant="soft" size="sm" color={ACCESS_COLOR[m.access]}>
                           {m.access}
                         </Badge>
-                      </List.Meta>
+                      </List.Trailing>
                     </List.Item>
                   ))}
                 </List>
@@ -189,7 +191,7 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                         <List.Title>{integration.name}</List.Title>
                         <List.Description>{integration.description}</List.Description>
                       </List.Content>
-                      <List.Meta>
+                      <List.Trailing>
                         <Badge
                           variant="dot"
                           size="sm"
@@ -197,7 +199,7 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                         >
                           {integration.status}
                         </Badge>
-                      </List.Meta>
+                      </List.Trailing>
                     </List.Item>
                   ))}
                 </List>

@@ -17,11 +17,13 @@ export default function ListDensity() {
           <List density={density}>
             {people.map((person) => (
               <List.Item key={person.email}>
-                <List.Meta
-                  avatar={<Avatar.Root size="sm" color="indigo"><Avatar.Fallback>{person.initials}</Avatar.Fallback></Avatar.Root>}
-                  title={person.name}
-                  description={person.email}
-                />
+                <List.Leading>
+                  <Avatar.Root size="sm" color="indigo"><Avatar.Fallback>{person.initials}</Avatar.Fallback></Avatar.Root>
+                </List.Leading>
+                <List.Content>
+                  <List.Title>{person.name}</List.Title>
+                  <List.Description>{person.email}</List.Description>
+                </List.Content>
               </List.Item>
             ))}
           </List>
