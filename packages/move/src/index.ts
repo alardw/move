@@ -104,6 +104,13 @@ export type { ThemeProviderProps, ThemeContextValue } from './infrastructure/The
 export { MoveRoot } from './infrastructure/MoveRoot';
 export type { MoveRootProps } from './infrastructure/MoveRoot/MoveRoot';
 
+// Surface context (background alternation)
+export { useSurface, useSurfaceFlip, SurfaceProvider } from './infrastructure/Surface';
+export type { SurfaceTone } from './infrastructure/Surface';
+
+// Layer context (z-index awareness for portaled components inside overlays)
+export { useLayer, LayerProvider } from './infrastructure/Layer';
+
 // Visual systems (shadows, surfaces)
 export { shadows, createShadow, createShadowPalette, shadowCSSVariables, createThemeShadows } from './styles/visual';
 export type { ShadowElevation, CreateShadowOptions, SurfaceLevel, ThemeShadowConfig, ThemeShadowTokens } from './styles/visual';
@@ -292,6 +299,9 @@ export { useSidebar, useSidebarContext } from './components/panel/Sidebar';
 export type { UseSidebarOptions, UseSidebarReturn } from './components/panel/Sidebar';
 
 export { Dialog } from './components/overlay/Dialog';
+
+export { Drawer } from './components/overlay/Drawer';
+export type { DrawerRootProps, DrawerTriggerProps, DrawerPortalProps, DrawerOverlayProps, DrawerContentProps, DrawerPosition, DrawerSize, DrawerHeaderProps, DrawerBodyProps, DrawerFooterProps, DrawerTitleProps, DrawerDescriptionProps, DrawerCloseProps, DrawerHandleProps } from './components/overlay/Drawer';
 export type { DialogRootProps, DialogTriggerProps, DialogPortalProps, DialogOverlayProps, DialogContentProps, DialogSize, DialogHeaderProps, DialogBodyProps, DialogFooterProps, DialogFooterStartProps, DialogFooterEndProps, DialogTitleProps, DialogDescriptionProps, DialogCloseProps } from './components/overlay/Dialog';
 
 export { Dropdown } from './components/overlay/Dropdown';
@@ -308,6 +318,9 @@ export type { TableVariant, TableSize, TableRootProps, TableHeaderProps, TableBo
 
 export { Timeline } from './components/data/Timeline';
 export type { TimelineSize, TimelineAlign, TimelineColor, TimelineLineVariant, TimelineRootProps, TimelineItemSlots, TimelineItemProps } from './components/data/Timeline';
+
+export { List } from './components/data/List';
+export type { ListSize, ListDensity, ListDescriptionLines, ListItemElement, ListRootProps, ListItemProps, ListLeadingProps, ListContentProps, ListTitleProps, ListDescriptionProps, ListTrailingProps, ListMetaProps } from './components/data/List';
 
 export { ToggleButton } from './components/toolbar/ToggleButton';
 export type { ToggleButtonProps } from './components/toolbar/ToggleButton';
