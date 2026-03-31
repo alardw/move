@@ -1,13 +1,24 @@
 /*
- * Surface-Aware Shadow Resolution
+ * Surface-Aware Token Resolution
  *
- * Maps active shadow tokens (--move-shadow-sm/md/lg/xl) to per-surface
- * variants based on [data-surface] attribute. Components use the active tokens;
- * the CSS cascade resolves them from the nearest surface context.
+ * Two systems resolved via [data-surface] attribute on container components:
  *
- * Surface is set on background elements (e.g. Card root, Dialog content).
- * Children inherit the active shadow tokens via cascade, so a child's
- * box-shadow correctly reflects the surface it's rendered ON.
+ * 1. Shadows — Maps --move-shadow-sm/md/lg/xl to per-surface variants.
+ * 2. Backgrounds — Provides relative bg tokens that alternate with depth.
+ *
+ * Surface is set on background elements (e.g. Card root, Drawer content).
+ * Children inherit tokens via cascade, so nested components automatically
+ * get correct shadows and contrasting backgrounds.
+ *
+ * Background alternation: base ↔ subtle. Any component that takes on a
+ * background uses --move-surface-alt and sets data-surface to flip context.
+ *
+ *   --move-surface-bg         Current surface's own background
+ *   --move-surface-hover      Hover state bg on the current surface
+ *   --move-surface-inset      Inset/recessed areas (input fields, code blocks)
+ *   --move-surface-alt        Contrasting bg for child containers (flips per level)
+ *   --move-surface-alt-hover  Hover/header bg on the alt surface (one step deeper than alt)
+ *   --move-surface-border     Container border — visible on base, transparent on subtle (bg contrast suffices)
  */
 
 /* Default surface is base */
@@ -16,6 +27,13 @@
   --move-shadow-md: var(--move-shadow-base-md);
   --move-shadow-lg: var(--move-shadow-base-lg);
   --move-shadow-xl: var(--move-shadow-base-xl);
+
+  --move-surface-bg: var(--move-bg-base);
+  --move-surface-hover: var(--move-bg-subtle);
+  --move-surface-inset: var(--move-bg-muted);
+  --move-surface-alt: var(--move-bg-subtle);
+  --move-surface-alt-hover: var(--move-bg-muted);
+  --move-surface-border: var(--move-border-base);
 }
 
 [data-surface="base"] {
@@ -23,6 +41,13 @@
   --move-shadow-md: var(--move-shadow-base-md);
   --move-shadow-lg: var(--move-shadow-base-lg);
   --move-shadow-xl: var(--move-shadow-base-xl);
+
+  --move-surface-bg: var(--move-bg-base);
+  --move-surface-hover: var(--move-bg-subtle);
+  --move-surface-inset: var(--move-bg-muted);
+  --move-surface-alt: var(--move-bg-subtle);
+  --move-surface-alt-hover: var(--move-bg-muted);
+  --move-surface-border: transparent;
 }
 
 [data-surface="subtle"] {
@@ -30,6 +55,13 @@
   --move-shadow-md: var(--move-shadow-subtle-md);
   --move-shadow-lg: var(--move-shadow-subtle-lg);
   --move-shadow-xl: var(--move-shadow-subtle-xl);
+
+  --move-surface-bg: var(--move-bg-subtle);
+  --move-surface-hover: var(--move-bg-muted);
+  --move-surface-inset: var(--move-bg-base);
+  --move-surface-alt: var(--move-bg-base);
+  --move-surface-alt-hover: var(--move-bg-muted);
+  --move-surface-border: transparent;
 }
 
 [data-surface="muted"] {
@@ -37,6 +69,12 @@
   --move-shadow-md: var(--move-shadow-muted-md);
   --move-shadow-lg: var(--move-shadow-muted-lg);
   --move-shadow-xl: var(--move-shadow-muted-xl);
+
+  --move-surface-bg: var(--move-bg-muted);
+  --move-surface-hover: var(--move-bg-emphasis);
+  --move-surface-inset: var(--move-bg-subtle);
+  --move-surface-alt: var(--move-bg-subtle);
+  --move-surface-alt-hover: var(--move-bg-muted);
 }
 
 [data-surface="emphasis"] {
@@ -44,6 +82,12 @@
   --move-shadow-md: var(--move-shadow-emphasis-md);
   --move-shadow-lg: var(--move-shadow-emphasis-lg);
   --move-shadow-xl: var(--move-shadow-emphasis-xl);
+
+  --move-surface-bg: var(--move-bg-emphasis);
+  --move-surface-hover: var(--move-bg-muted);
+  --move-surface-inset: var(--move-bg-muted);
+  --move-surface-alt: var(--move-bg-muted);
+  --move-surface-alt-hover: var(--move-bg-emphasis);
 }
 
 [data-surface="inverse"] {
@@ -51,4 +95,10 @@
   --move-shadow-md: var(--move-shadow-inverse-md);
   --move-shadow-lg: var(--move-shadow-inverse-lg);
   --move-shadow-xl: var(--move-shadow-inverse-xl);
+
+  --move-surface-bg: var(--move-bg-inverse);
+  --move-surface-hover: var(--move-bg-base);
+  --move-surface-inset: var(--move-bg-base);
+  --move-surface-alt: var(--move-bg-base);
+  --move-surface-alt-hover: var(--move-bg-subtle);
 }

@@ -36,11 +36,11 @@ export const lightTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-300)',
     '--move-border-emphasis': 'var(--move-gray-400)',
 
-    // Primary (indigo-violet)
-    '--move-primary': 'var(--move-primary-300)',
-    '--move-primary-hover': 'var(--move-primary-200)',
-    '--move-primary-active': 'var(--move-primary-400)',
-    '--move-primary-subtle': 'var(--move-primary-50)',
+    // Primary (indigo)
+    '--move-primary': 'var(--move-indigo-700)',
+    '--move-primary-hover': 'var(--move-indigo-800)',
+    '--move-primary-active': 'var(--move-indigo-600)',
+    '--move-primary-subtle': 'var(--move-indigo-50)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -73,8 +73,23 @@ export const lightTheme: Theme = {
     '--move-info-subtle': 'var(--move-blue-100)',
     '--move-info-fg': 'var(--move-white)',
 
+    // Palette — light theme overrides (darker text, lighter soft bg)
+    '--move-gray-text': 'var(--move-gray-700)',       '--move-gray-soft-bg': 'var(--move-gray-100)',
+    '--move-red-text': 'var(--move-red-900)',         '--move-red-soft-bg': 'var(--move-red-50)',
+    '--move-pink-text': 'var(--move-pink-800)',       '--move-pink-soft-bg': 'var(--move-pink-50)',
+    '--move-grape-text': 'var(--move-grape-800)',     '--move-grape-soft-bg': 'var(--move-grape-50)',
+    '--move-violet-text': 'var(--move-violet-700)',   '--move-violet-soft-bg': 'var(--move-violet-50)',
+    '--move-indigo-text': 'var(--move-indigo-800)',   '--move-indigo-soft-bg': 'var(--move-indigo-50)',
+    '--move-blue-text': 'var(--move-blue-800)',       '--move-blue-soft-bg': 'var(--move-blue-50)',
+    '--move-cyan-text': 'var(--move-cyan-900)',       '--move-cyan-soft-bg': 'var(--move-cyan-50)',
+    '--move-teal-text': 'var(--move-teal-900)',       '--move-teal-soft-bg': 'var(--move-teal-50)',
+    '--move-green-text': 'var(--move-green-950)',     '--move-green-soft-bg': 'var(--move-green-50)',
+    '--move-lime-text': 'var(--move-lime-950)',       '--move-lime-soft-bg': 'var(--move-lime-50)',
+    '--move-yellow-text': 'var(--move-yellow-950)',   '--move-yellow-soft-bg': 'var(--move-yellow-50)',
+    '--move-orange-text': 'var(--move-orange-950)',   '--move-orange-soft-bg': 'var(--move-orange-50)',
+
     // Focus
-    '--move-focus-ring-color': 'var(--move-primary-300)',
+    '--move-focus-ring-color': 'var(--move-indigo-500)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.4)',

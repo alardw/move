@@ -36,11 +36,11 @@ export const darkTheme: Theme = {
     '--move-border-muted': 'var(--move-gray-600)',
     '--move-border-emphasis': 'var(--move-gray-500)',
 
-    // Primary (indigo-violet)
-    '--move-primary': 'var(--move-primary-200)',
-    '--move-primary-hover': 'var(--move-primary-100)',
-    '--move-primary-active': 'var(--move-primary-300)',
-    '--move-primary-subtle': 'var(--move-primary-500)',
+    // Primary (indigo)
+    '--move-primary': 'var(--move-indigo-600)',
+    '--move-primary-hover': 'var(--move-indigo-500)',
+    '--move-primary-active': 'var(--move-indigo-700)',
+    '--move-primary-subtle': 'var(--move-indigo-950)',
     '--move-primary-fg': 'var(--move-white)',
 
     // Secondary
@@ -62,10 +62,10 @@ export const darkTheme: Theme = {
     '--move-warning-fg': 'var(--move-black)',
 
     // Error
-    '--move-error': 'var(--move-red-400)',
-    '--move-error-hover': 'var(--move-red-300)',
+    '--move-error': 'var(--move-red-600)',
+    '--move-error-hover': 'var(--move-red-500)',
     '--move-error-subtle': 'var(--move-red-950)',
-    '--move-error-fg': 'var(--move-black)',
+    '--move-error-fg': 'var(--move-white)',
 
     // Info
     '--move-info': 'var(--move-blue-500)',
@@ -73,8 +73,23 @@ export const darkTheme: Theme = {
     '--move-info-subtle': 'var(--move-blue-950)',
     '--move-info-fg': 'var(--move-white)',
 
+    // Palette — dark theme overrides (lighter text, darker soft bg)
+    '--move-gray-text': 'var(--move-gray-300)',       '--move-gray-soft-bg': 'var(--move-gray-950)',
+    '--move-red-text': 'var(--move-red-300)',         '--move-red-soft-bg': 'var(--move-red-950)',
+    '--move-pink-text': 'var(--move-pink-300)',       '--move-pink-soft-bg': 'var(--move-pink-950)',
+    '--move-grape-text': 'var(--move-grape-300)',     '--move-grape-soft-bg': 'var(--move-grape-950)',
+    '--move-violet-text': 'var(--move-violet-300)',   '--move-violet-soft-bg': 'var(--move-violet-950)',
+    '--move-indigo-text': 'var(--move-indigo-300)',   '--move-indigo-soft-bg': 'var(--move-indigo-950)',
+    '--move-blue-text': 'var(--move-blue-300)',       '--move-blue-soft-bg': 'var(--move-blue-950)',
+    '--move-cyan-text': 'var(--move-cyan-300)',       '--move-cyan-soft-bg': 'var(--move-cyan-950)',
+    '--move-teal-text': 'var(--move-teal-300)',       '--move-teal-soft-bg': 'var(--move-teal-950)',
+    '--move-green-text': 'var(--move-green-300)',     '--move-green-soft-bg': 'var(--move-green-950)',
+    '--move-lime-text': 'var(--move-lime-300)',       '--move-lime-soft-bg': 'var(--move-lime-950)',
+    '--move-yellow-text': 'var(--move-yellow-300)',   '--move-yellow-soft-bg': 'var(--move-yellow-950)',
+    '--move-orange-text': 'var(--move-orange-300)',   '--move-orange-soft-bg': 'var(--move-orange-950)',
+
     // Focus
-    '--move-focus-ring-color': 'var(--move-primary-200)',
+    '--move-focus-ring-color': 'var(--move-indigo-400)',
 
     // Overlay
     '--move-overlay': 'rgba(0, 0, 0, 0.5)',

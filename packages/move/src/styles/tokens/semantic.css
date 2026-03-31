@@ -32,12 +32,12 @@
   --move-border-emphasis: var(--move-gray-600);
 
   /* ============================================
-   * Color - Primary (indigo-violet brand)
+   * Color - Primary (indigo brand)
    * ============================================ */
-  --move-primary: var(--move-primary-300);
-  --move-primary-hover: var(--move-primary-200);
-  --move-primary-active: var(--move-primary-400);
-  --move-primary-subtle: var(--move-primary-500);
+  --move-primary: var(--move-indigo-600);
+  --move-primary-hover: var(--move-indigo-500);
+  --move-primary-active: var(--move-indigo-700);
+  --move-primary-subtle: var(--move-indigo-950);
   --move-primary-fg: var(--move-white);
 
   /* ============================================
@@ -51,45 +51,71 @@
   /* ============================================
    * Color - Success
    * ============================================ */
-  --move-success: var(--move-green-600);
-  --move-success-hover: var(--move-green-500);
+  --move-success: var(--move-green-700);
+  --move-success-hover: var(--move-green-600);
   --move-success-subtle: var(--move-green-950);
   --move-success-fg: var(--move-white);
 
   /* ============================================
    * Color - Warning
    * ============================================ */
-  --move-warning: var(--move-yellow-500);
-  --move-warning-hover: var(--move-yellow-400);
+  --move-warning: var(--move-yellow-600);
+  --move-warning-hover: var(--move-yellow-500);
   --move-warning-subtle: var(--move-yellow-950);
   --move-warning-fg: var(--move-black);
 
   /* ============================================
    * Color - Error / Danger
    * ============================================ */
-  --move-error: var(--move-red-600);
-  --move-error-hover: var(--move-red-500);
+  --move-error: var(--move-red-700);
+  --move-error-hover: var(--move-red-600);
   --move-error-subtle: var(--move-red-950);
   --move-error-fg: var(--move-white);
 
   /* ============================================
    * Color - Info
    * ============================================ */
-  --move-info: var(--move-blue-600);
-  --move-info-hover: var(--move-blue-500);
+  --move-info: var(--move-blue-700);
+  --move-info-hover: var(--move-blue-600);
   --move-info-subtle: var(--move-blue-950);
   --move-info-fg: var(--move-white);
 
   /* ============================================
-   * Selection
+   * Palette — theme-aware color tokens
+   * -text:    colored text readable on page background
+   * -soft-bg: subtle tinted background
+   * Defaults are dark-theme values; light theme overrides.
+   * ============================================ */
+  --move-gray-text: var(--move-gray-300);       --move-gray-soft-bg: var(--move-gray-800);
+  --move-red-text: var(--move-red-400);         --move-red-soft-bg: var(--move-red-950);
+  --move-pink-text: var(--move-pink-300);       --move-pink-soft-bg: var(--move-pink-950);
+  --move-grape-text: var(--move-grape-300);     --move-grape-soft-bg: var(--move-grape-950);
+  --move-violet-text: var(--move-violet-200);   --move-violet-soft-bg: var(--move-violet-950);
+  --move-indigo-text: var(--move-indigo-300);   --move-indigo-soft-bg: var(--move-indigo-950);
+  --move-blue-text: var(--move-blue-300);       --move-blue-soft-bg: var(--move-blue-950);
+  --move-cyan-text: var(--move-cyan-400);       --move-cyan-soft-bg: var(--move-cyan-950);
+  --move-teal-text: var(--move-teal-400);       --move-teal-soft-bg: var(--move-teal-950);
+  --move-green-text: var(--move-green-400);     --move-green-soft-bg: var(--move-green-950);
+  --move-lime-text: var(--move-lime-400);       --move-lime-soft-bg: var(--move-lime-950);
+  --move-yellow-text: var(--move-yellow-400);   --move-yellow-soft-bg: var(--move-yellow-950);
+  --move-orange-text: var(--move-orange-300);   --move-orange-soft-bg: var(--move-orange-950);
+
+  /* ============================================
+   * Selection (browser text selection)
    * ============================================ */
   --move-selection-bg: var(--move-primary);
   --move-selection-fg: var(--move-primary-fg);
 
   /* ============================================
+   * Selected (UI item selection — rows, list items)
+   * ============================================ */
+  --move-selected-bg: var(--move-primary-subtle);
+  --move-selected-fg: var(--move-fg-base);
+
+  /* ============================================
    * Focus Ring
    * ============================================ */
-  --move-focus-ring-color: var(--move-primary-200);
+  --move-focus-ring-color: var(--move-indigo-400);
   --move-focus-ring-width: 2px;
   --move-focus-ring-offset: 2px;
   --move-focus-ring: var(--move-focus-ring-width) solid var(--move-focus-ring-color);

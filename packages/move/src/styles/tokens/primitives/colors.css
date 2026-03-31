@@ -1,10 +1,15 @@
 /*
  * Primitive Color Tokens
- * Raw color values - the foundation of the color system
+ * Raw color values — Open Color (MIT) + Move gray scale
+ * Each chromatic palette includes a pre-paired foreground for WCAG AA legibility:
+ *   --move-{color}-fg-solid:  text color on shades 5–9 (solid fills)
+ *   --move-{color}-fg-subtle: text color on shade 950 (dark tinted bg)
  */
 
 :root {
-  /* Gray scale */
+  /* ==========================================
+   * Gray — neutral base (Move custom scale)
+   * ========================================== */
   --move-gray-50: #fafafa;
   --move-gray-100: #f4f4f5;
   --move-gray-200: #e4e4e7;
@@ -16,95 +21,228 @@
   --move-gray-800: #27272a;
   --move-gray-900: #18181b;
   --move-gray-950: #09090b;
+  --move-gray-fg-solid: var(--move-white);
+  --move-gray-fg-subtle: var(--move-white);
 
-  /* Sage */
-  --move-sage-50: #f2f7f3;
-  --move-sage-100: #dfeae1;
-  --move-sage-200: #bfd6c4;
-  --move-sage-300: #94b89d;
-  --move-sage-400: #6c9a76;
-  --move-sage-500: #507f59;
-  --move-sage-600: #3d6647;
-  --move-sage-700: #325339;
-  --move-sage-800: #2a4330;
-  --move-sage-900: #243828;
-  --move-sage-950: #121f15;
+  /* ==========================================
+   * Red — errors, danger, destructive
+   * Open Color red
+   * ========================================== */
+  --move-red-50: #fff5f5;
+  --move-red-100: #ffe3e3;
+  --move-red-200: #ffc9c9;
+  --move-red-300: #ffa8a8;
+  --move-red-400: #ff8787;
+  --move-red-500: #ff6b6b;
+  --move-red-600: #fa5252;
+  --move-red-700: #f03e3e;
+  --move-red-800: #e03131;
+  --move-red-900: #c92a2a;
+  --move-red-950: #7a1a1a;
+  --move-red-fg-solid: var(--move-white);
+  --move-red-fg-subtle: #ffe3e3;
 
-  /* Primary — indigo-violet brand color, built around #3241ff */
-  --move-primary-50:  #ebecff;
-  --move-primary-75:  #abb1ff;
-  --move-primary-100: #8891ff;
-  --move-primary-200: #5561ff;
-  --move-primary-300: #3241ff;
-  --move-primary-400: #232eb3;
-  --move-primary-500: #1f289c;
+  /* ==========================================
+   * Pink — highlights, playful accents
+   * Open Color pink
+   * ========================================== */
+  --move-pink-50: #fff0f6;
+  --move-pink-100: #ffdeeb;
+  --move-pink-200: #fcc2d7;
+  --move-pink-300: #faa2c1;
+  --move-pink-400: #f783ac;
+  --move-pink-500: #f06595;
+  --move-pink-600: #e64980;
+  --move-pink-700: #d6336c;
+  --move-pink-800: #c2255c;
+  --move-pink-900: #a61e4d;
+  --move-pink-950: #6b1434;
+  --move-pink-fg-solid: var(--move-white);
+  --move-pink-fg-subtle: #fcc2d7;
 
-  /* Blue */
-  --move-blue-50: #eff6ff;
-  --move-blue-100: #dbeafe;
-  --move-blue-200: #bfdbfe;
-  --move-blue-300: #93c5fd;
-  --move-blue-400: #60a5fa;
-  --move-blue-500: #3b82f6;
-  --move-blue-600: #2563eb;
-  --move-blue-700: #1d4ed8;
-  --move-blue-800: #1e40af;
-  --move-blue-900: #1e3a8a;
-  --move-blue-950: #172554;
+  /* ==========================================
+   * Grape — warm purple, tags, categories
+   * Open Color grape
+   * ========================================== */
+  --move-grape-50: #f8f0fc;
+  --move-grape-100: #f3d9fa;
+  --move-grape-200: #eebefa;
+  --move-grape-300: #e599f7;
+  --move-grape-400: #da77f2;
+  --move-grape-500: #cc5de8;
+  --move-grape-600: #be4bdb;
+  --move-grape-700: #ae3ec9;
+  --move-grape-800: #9c36b5;
+  --move-grape-900: #862e9c;
+  --move-grape-950: #5a1e6a;
+  --move-grape-fg-solid: var(--move-white);
+  --move-grape-fg-subtle: #eebefa;
 
-  /* Green */
-  --move-green-50: #f0fdf4;
-  --move-green-100: #dcfce7;
-  --move-green-200: #bbf7d0;
-  --move-green-300: #86efac;
-  --move-green-400: #4ade80;
-  --move-green-500: #22c55e;
-  --move-green-600: #16a34a;
-  --move-green-700: #15803d;
-  --move-green-800: #166534;
-  --move-green-900: #14532d;
-  --move-green-950: #052e16;
+  /* ==========================================
+   * Violet — cool purple, avatars, badges
+   * Open Color violet
+   * ========================================== */
+  --move-violet-50: #f3f0ff;
+  --move-violet-100: #e5dbff;
+  --move-violet-200: #d0bfff;
+  --move-violet-300: #b197fc;
+  --move-violet-400: #9775fa;
+  --move-violet-500: #845ef7;
+  --move-violet-600: #7950f2;
+  --move-violet-700: #7048e8;
+  --move-violet-800: #6741d9;
+  --move-violet-900: #5f3dc4;
+  --move-violet-950: #3d2880;
+  --move-violet-fg-solid: var(--move-white);
+  --move-violet-fg-subtle: #d0bfff;
 
-  /* Red */
-  --move-red-50: #fef2f2;
-  --move-red-100: #fee2e2;
-  --move-red-200: #fecaca;
-  --move-red-300: #fca5a5;
-  --move-red-400: #f87171;
-  --move-red-500: #ef4444;
-  --move-red-600: #dc2626;
-  --move-red-700: #b91c1c;
-  --move-red-800: #991b1b;
-  --move-red-900: #7f1d1d;
-  --move-red-950: #450a0a;
+  /* ==========================================
+   * Indigo — brand primary, links, focus
+   * Open Color indigo
+   * ========================================== */
+  --move-indigo-50: #edf2ff;
+  --move-indigo-100: #dbe4ff;
+  --move-indigo-200: #bac8ff;
+  --move-indigo-300: #91a7ff;
+  --move-indigo-400: #748ffc;
+  --move-indigo-500: #5c7cfa;
+  --move-indigo-600: #4c6ef5;
+  --move-indigo-700: #4263eb;
+  --move-indigo-800: #3b5bdb;
+  --move-indigo-900: #364fc7;
+  --move-indigo-950: #233080;
+  --move-indigo-fg-solid: var(--move-white);
+  --move-indigo-fg-subtle: #bac8ff;
 
-  /* Yellow */
-  --move-yellow-50: #fefce8;
-  --move-yellow-100: #fef9c3;
-  --move-yellow-200: #fef08a;
-  --move-yellow-300: #fde047;
-  --move-yellow-400: #facc15;
-  --move-yellow-500: #eab308;
-  --move-yellow-600: #ca8a04;
-  --move-yellow-700: #a16207;
-  --move-yellow-800: #854d0e;
-  --move-yellow-900: #713f12;
-  --move-yellow-950: #422006;
+  /* ==========================================
+   * Blue — info, links, data
+   * Open Color blue
+   * ========================================== */
+  --move-blue-50: #e7f5ff;
+  --move-blue-100: #d0ebff;
+  --move-blue-200: #a5d8ff;
+  --move-blue-300: #74c0fc;
+  --move-blue-400: #4dabf7;
+  --move-blue-500: #339af0;
+  --move-blue-600: #228be6;
+  --move-blue-700: #1c7ed6;
+  --move-blue-800: #1971c2;
+  --move-blue-900: #1864ab;
+  --move-blue-950: #0f406e;
+  --move-blue-fg-solid: var(--move-white);
+  --move-blue-fg-subtle: #a5d8ff;
 
-  /* Orange */
-  --move-orange-50: #fff7ed;
-  --move-orange-100: #ffedd5;
-  --move-orange-200: #fed7aa;
-  --move-orange-300: #fdba74;
-  --move-orange-400: #fb923c;
-  --move-orange-500: #f97316;
-  --move-orange-600: #ea580c;
-  --move-orange-700: #c2410c;
-  --move-orange-800: #9a3412;
-  --move-orange-900: #7c2d12;
-  --move-orange-950: #431407;
+  /* ==========================================
+   * Cyan — cool info, data visualization
+   * Open Color cyan
+   * ========================================== */
+  --move-cyan-50: #e3fafc;
+  --move-cyan-100: #c5f6fa;
+  --move-cyan-200: #99e9f2;
+  --move-cyan-300: #66d9e8;
+  --move-cyan-400: #3bc9db;
+  --move-cyan-500: #22b8cf;
+  --move-cyan-600: #15aabf;
+  --move-cyan-700: #1098ad;
+  --move-cyan-800: #0c8599;
+  --move-cyan-900: #0b7285;
+  --move-cyan-950: #074a57;
+  --move-cyan-fg-solid: var(--move-white);
+  --move-cyan-fg-subtle: #99e9f2;
 
-  /* Static colors */
+  /* ==========================================
+   * Teal — cool secondary, dashboards
+   * Open Color teal
+   * ========================================== */
+  --move-teal-50: #e6fcf5;
+  --move-teal-100: #c3fae8;
+  --move-teal-200: #96f2d7;
+  --move-teal-300: #63e6be;
+  --move-teal-400: #38d9a9;
+  --move-teal-500: #20c997;
+  --move-teal-600: #12b886;
+  --move-teal-700: #0ca678;
+  --move-teal-800: #099268;
+  --move-teal-900: #087f5b;
+  --move-teal-950: #05503a;
+  --move-teal-fg-solid: var(--move-white);
+  --move-teal-fg-subtle: #96f2d7;
+
+  /* ==========================================
+   * Green — success, positive
+   * Open Color green
+   * ========================================== */
+  --move-green-50: #ebfbee;
+  --move-green-100: #d3f9d8;
+  --move-green-200: #b2f2bb;
+  --move-green-300: #8ce99a;
+  --move-green-400: #69db7c;
+  --move-green-500: #51cf66;
+  --move-green-600: #40c057;
+  --move-green-700: #37b24d;
+  --move-green-800: #2f9e44;
+  --move-green-900: #2b8a3e;
+  --move-green-950: #1b5727;
+  --move-green-fg-solid: var(--move-white);
+  --move-green-fg-subtle: #b2f2bb;
+
+  /* ==========================================
+   * Lime — fresh positive, eco
+   * Open Color lime
+   * ========================================== */
+  --move-lime-50: #f4fce3;
+  --move-lime-100: #e9fac8;
+  --move-lime-200: #d8f5a2;
+  --move-lime-300: #c0eb75;
+  --move-lime-400: #a9e34b;
+  --move-lime-500: #94d82d;
+  --move-lime-600: #82c91e;
+  --move-lime-700: #74b816;
+  --move-lime-800: #66a80f;
+  --move-lime-900: #5c940d;
+  --move-lime-950: #3b5f09;
+  --move-lime-fg-solid: var(--move-black);
+  --move-lime-fg-subtle: #d8f5a2;
+
+  /* ==========================================
+   * Yellow — warnings, caution
+   * Open Color yellow
+   * ========================================== */
+  --move-yellow-50: #fff9db;
+  --move-yellow-100: #fff3bf;
+  --move-yellow-200: #ffec99;
+  --move-yellow-300: #ffe066;
+  --move-yellow-400: #ffd43b;
+  --move-yellow-500: #fcc419;
+  --move-yellow-600: #fab005;
+  --move-yellow-700: #f59f00;
+  --move-yellow-800: #f08c00;
+  --move-yellow-900: #e67700;
+  --move-yellow-950: #8a4800;
+  --move-yellow-fg-solid: var(--move-black);
+  --move-yellow-fg-subtle: #ffec99;
+
+  /* ==========================================
+   * Orange — warm accent
+   * Open Color orange
+   * ========================================== */
+  --move-orange-50: #fff4e6;
+  --move-orange-100: #ffe8cc;
+  --move-orange-200: #ffd8a8;
+  --move-orange-300: #ffc078;
+  --move-orange-400: #ffa94d;
+  --move-orange-500: #ff922b;
+  --move-orange-600: #fd7e14;
+  --move-orange-700: #f76707;
+  --move-orange-800: #e8590c;
+  --move-orange-900: #d9480f;
+  --move-orange-950: #873008;
+  --move-orange-fg-solid: var(--move-black);
+  --move-orange-fg-subtle: #ffd8a8;
+
+  /* ==========================================
+   * Static colors
+   * ========================================== */
   --move-white: #ffffff;
   --move-black: #000000;
   --move-transparent: transparent;
