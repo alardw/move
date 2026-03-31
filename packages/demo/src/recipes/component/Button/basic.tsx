@@ -1,10 +1,6 @@
-// Generated recipe: Button — Basic
-import { Button } from 'move';
+import BasicButton from '@recipes/component/Button/basic';
+import code from '@recipes/component/Button/basic.tsx?raw';
 import type { Recipe } from '../../types';
-
-function BasicButton() {
-  return <Button>Click me</Button>;
-}
 
 export const recipe: Recipe = {
   id: 'button:basic',
@@ -13,7 +9,5 @@ export const recipe: Recipe = {
   type: 'component',
   component: 'Button',
   render: BasicButton,
-  code: `import { Button } from 'move';
-
-<Button>Click me</Button>`,
+  code,
 };

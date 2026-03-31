@@ -38,7 +38,6 @@ export const demo: DemoDefinition = {
     <Dialog.Content>
       <Dialog.Header>
         <Dialog.Title>Dialog Title</Dialog.Title>
-        <Dialog.Close>X</Dialog.Close>
       </Dialog.Header>
       <Dialog.Body>
         <p>Dialog body content goes here.</p>
@@ -64,7 +63,6 @@ export const demo: DemoDefinition = {
             <Dialog.Content size={props.size as 'sm' | 'md' | 'lg' | 'xl' | 'full'}>
               <Dialog.Header>
                 <Dialog.Title>Basic Dialog</Dialog.Title>
-                <Dialog.Close>X</Dialog.Close>
               </Dialog.Header>
               <Dialog.Body>
                 <p>This is the dialog body content. It can contain any elements you need.</p>
@@ -94,7 +92,6 @@ export const demo: DemoDefinition = {
     <Dialog.Content size="sm">
       <Dialog.Header>
         <Dialog.Title>Are you sure?</Dialog.Title>
-        <Dialog.Close>X</Dialog.Close>
       </Dialog.Header>
       <Dialog.Body>
         <Dialog.Description>
@@ -125,7 +122,6 @@ export const demo: DemoDefinition = {
             <Dialog.Content size="sm">
               <Dialog.Header>
                 <Dialog.Title>Are you sure?</Dialog.Title>
-                <Dialog.Close>X</Dialog.Close>
               </Dialog.Header>
               <Dialog.Body>
                 <Dialog.Description>
@@ -165,7 +161,6 @@ export const demo: DemoDefinition = {
                 <Dialog.Content size={size}>
                   <Dialog.Header>
                     <Dialog.Title>Size: {size}</Dialog.Title>
-                    <Dialog.Close>X</Dialog.Close>
                   </Dialog.Header>
                   <Dialog.Body>
                     <p>This dialog uses the {size} size variant.</p>
@@ -195,7 +190,6 @@ export const demo: DemoDefinition = {
         <Dialog.Content size={props.size as 'sm' | 'md' | 'lg' | 'xl' | 'full'}>
           <Dialog.Header>
             <Dialog.Title>Dialog Title</Dialog.Title>
-            <Dialog.Close>X</Dialog.Close>
           </Dialog.Header>
           <Dialog.Body>
             <p>Dialog body content goes here. Customize the size using the control above.</p>

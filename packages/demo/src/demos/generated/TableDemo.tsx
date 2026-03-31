@@ -54,8 +54,8 @@ export const demo: DemoDefinition = {
       <Table.Caption>Sample data table</Table.Caption>
       <Table.Header>
         <Table.Row>
-          <Table.Head sortable sorted="asc">Name</Table.Head>
-          <Table.Head sortable>Email</Table.Head>
+          <Table.Head>Name</Table.Head>
+          <Table.Head>Email</Table.Head>
           <Table.Head>Role</Table.Head>
         </Table.Row>
       </Table.Header>

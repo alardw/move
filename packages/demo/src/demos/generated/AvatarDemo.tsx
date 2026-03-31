@@ -1,12 +1,14 @@
-// Generated from Avatar.demo.spec.ts + Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
 import { Avatar } from 'move';
 import type { DemoDefinition } from '../types';
+
+const PALETTE_COLORS = ['gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange'];
 
 export const demo: DemoDefinition = {
   id: 'core:Avatar',
   name: 'Avatar',
   category: 'core',
-  description: 'User avatar with image, fallback, size options, and spring entrance animation',
+  description: 'User avatar with image, fallback, color, size options, and spring entrance animation',
   controls: [
     {
       name: 'sample',
@@ -28,9 +30,16 @@ export const demo: DemoDefinition = {
           options: ['xs', 'sm', 'md', 'lg', 'xl'],
           defaultValue: 'md',
         },
+        {
+          name: 'color',
+          kind: 'select',
+          options: ['(none)', ...PALETTE_COLORS],
+          defaultValue: '(none)',
+        },
       ],
       initialProps: {
         size: 'md',
+        color: '(none)',
       },
       children: [
         {
@@ -67,9 +76,10 @@ export const demo: DemoDefinition = {
     const root = (props.Root as Record<string, unknown> | undefined) ?? {};
     const image = (root.Image as Record<string, unknown> | undefined) ?? {};
     const fallback = (root.Fallback as Record<string, unknown> | undefined) ?? {};
+    const color = root.color === '(none)' ? undefined : (root.color as string | undefined);
 
     const singleAvatar = (
-      <Avatar.Root size={root.size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined}>
+      <Avatar.Root size={root.size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined} color={color as string | undefined}>
         {sample !== 'fallbackOnly' && image._enabled !== false && (
           <Avatar.Image
             src={image.src as string | undefined}
@@ -88,7 +98,7 @@ export const demo: DemoDefinition = {
       return (
         <Avatar.Group>
           {['AW', 'BK', 'CL'].map((initials, idx) => (
-            <Avatar.Root key={initials} size={root.size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined}>
+            <Avatar.Root key={initials} size={root.size as 'xs' | 'sm' | 'md' | 'lg' | 'xl' | undefined} color={color as string | undefined}>
               {image._enabled !== false && (
                 <Avatar.Image
                   src={`https://i.pravatar.cc/120?img=${10 + idx}`}

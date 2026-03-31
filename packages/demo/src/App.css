@@ -14,34 +14,51 @@ body {
 }
 
 .lab {
-  display: grid;
-  grid-template-columns: 240px 1fr 320px;
+  display: flex;
   height: 100vh;
-  gap: 0;
 }
 
-.lab.no-props {
-  grid-template-columns: 240px 1fr;
+.sidebar-header-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-sm);
+  width: 100%;
+}
+
+.sidebar-logo {
+  font-weight: var(--move-weight-semibold);
+  font-size: var(--move-size-base);
+}
+
+.sidebar-show-field {
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-sm);
+}
+
+.sidebar-show-label {
+  font-size: var(--move-size-xs);
+  color: var(--move-fg-muted);
+  flex-shrink: 0;
 }
 
 .panel {
-  border-right: 1px solid var(--move-border-base);
   background: var(--move-bg-base);
   overflow-y: auto;
 }
 
-.list-panel,
 .controls-panel {
+  width: 320px;
+  flex-shrink: 0;
   padding: 16px;
+  border-left: 1px solid var(--move-border-base);
 }
 
 .preview-panel {
+  flex: 1;
+  min-width: 0;
   padding: 20px;
-  border-right: 1px solid var(--move-border-base);
-}
-
-.lab.no-props .preview-panel {
-  border-right: none;
+  border-left: 1px solid var(--move-border-base);
 }
 
 .panel-title {
@@ -50,40 +67,6 @@ body {
   letter-spacing: 0.08em;
   color: var(--move-fg-muted);
   margin-bottom: 12px;
-}
-
-.list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.group {
-  margin-bottom: 14px;
-}
-
-.group-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--move-fg-subtle);
-  margin-bottom: 8px;
-}
-
-.list-item {
-  text-align: left;
-  border: 1px solid var(--move-border-base);
-  background: var(--move-bg-subtle);
-  color: var(--move-fg-base);
-  border-radius: 8px;
-  padding: 8px 10px;
-  cursor: pointer;
-}
-
-.list-item.active {
-  background: var(--move-primary);
-  color: var(--move-primary-fg);
-  border-color: var(--move-primary);
 }
 
 .toolbar {
@@ -104,15 +87,6 @@ body {
   color: var(--move-fg-muted);
   font-size: 13px;
   max-width: 720px;
-}
-
-.theme-btn {
-  border: 1px solid var(--move-border-base);
-  background: var(--move-bg-subtle);
-  color: var(--move-fg-base);
-  border-radius: 8px;
-  padding: 8px 12px;
-  cursor: pointer;
 }
 
 .section-tabs {
@@ -234,6 +208,14 @@ body {
   display: grid;
   place-items: center;
   color: var(--move-fg-muted);
+}
+
+.empty-main {
+  display: grid;
+  place-items: center;
+  min-height: 200px;
+  color: var(--move-fg-muted);
+  font-size: var(--move-size-sm);
 }
 
 /* View mode tabs (Recipes / Playground) */
@@ -373,24 +355,7 @@ body {
 }
 
 @media (max-width: 1100px) {
-  .lab {
-    grid-template-columns: 1fr;
-  }
-
-  .panel {
-    border-right: none;
-    border-bottom: 1px solid var(--move-border-base);
-  }
-
-  .preview-panel {
-    order: 1;
-  }
-
-  .list-panel {
-    order: 2;
-  }
-
   .controls-panel {
-    order: 3;
+    display: none;
   }
 }

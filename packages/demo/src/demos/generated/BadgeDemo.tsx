@@ -2,17 +2,25 @@
 import { Badge } from 'move';
 import type { DemoDefinition } from '../types';
 
+const PALETTE_COLORS = ['gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange'];
+
 export const demo: DemoDefinition = {
   id: 'core:Badge',
   name: 'Badge',
   category: 'core',
-  description: 'Inline status label with variant and size options',
+  description: 'Inline status label with variant, color, and size options',
   controls: [
     {
       name: 'variant',
       kind: 'select',
-      options: ['primary', 'secondary', 'outline', 'success', 'warning', 'danger'],
-      defaultValue: 'primary',
+      options: ['solid', 'soft', 'surface', 'outline', 'dot'],
+      defaultValue: 'solid',
+    },
+    {
+      name: 'color',
+      kind: 'select',
+      options: ['default', 'primary', 'success', 'warning', 'danger', 'info', ...PALETTE_COLORS],
+      defaultValue: 'default',
     },
     {
       name: 'size',
@@ -27,13 +35,15 @@ export const demo: DemoDefinition = {
     },
   ],
   initialProps: {
-    variant: 'primary',
+    variant: 'solid',
+    color: 'default',
     size: 'md',
     children: 'Badge',
   },
   render: (props) => (
     <Badge
       variant={props.variant as string}
+      color={props.color as string}
       size={props.size as string}
     >
       {props.children as string}

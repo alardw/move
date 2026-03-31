@@ -2,6 +2,8 @@
 import { Timeline } from 'move';
 import type { DemoDefinition } from '../types';
 
+const PALETTE_COLORS = ['gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange'];
+
 export const demo: DemoDefinition = {
   id: 'data:Timeline',
   name: 'Timeline',
@@ -29,8 +31,8 @@ export const demo: DemoDefinition = {
     {
       name: 'color',
       kind: 'select',
-      options: ['primary', 'gray', 'success', 'warning', 'danger'],
-      defaultValue: 'primary',
+      options: PALETTE_COLORS,
+      defaultValue: 'indigo',
     },
     {
       name: 'lineVariant',
@@ -43,7 +45,7 @@ export const demo: DemoDefinition = {
     active: '1',
     align: 'left',
     size: 'md',
-    color: 'primary',
+    color: 'indigo',
     lineVariant: 'solid',
   },
   render: (props) => (
@@ -60,7 +62,7 @@ export const demo: DemoDefinition = {
       <Timeline.Item title="Payment confirmed" bullet={<span>$</span>}>
         Payment has been successfully processed.
       </Timeline.Item>
-      <Timeline.Item title="Shipped" color="success">
+      <Timeline.Item title="Shipped" color="green">
         Your package is on its way to the destination.
       </Timeline.Item>
       <Timeline.Item title="Delivered">

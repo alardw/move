@@ -1,5 +1,5 @@
 import { useMemo, useState, useCallback, useEffect } from 'react';
-import { MoveRoot, darkTheme, lightTheme } from 'move';
+import { MoveRoot, Sidebar, Select, darkTheme, lightTheme } from 'move';
 import type { Theme } from 'move';
 import * as LucideIcons from 'lucide-react';
 import { codeToHtml } from 'shiki';
@@ -293,18 +293,50 @@ function RecipeCard({ recipe, isActive, onSelect, themeName }: {
 // App
 // ---------------------------------------------------------------------------
 
-function getInitialComponent(demos: DemoDefinition[]): string {
-  const hash = window.location.hash.replace('#/', '').replace('#', '');
-  if (hash && demos.some(d => d.name === hash)) return hash;
-  return demos[0]?.name ?? '';
+type SidebarShowMode = 'components' | 'recipes';
+
+type RouteState = {
+  mode: SidebarShowMode;
+  name: string;
+};
+
+function parseHash(demos: DemoDefinition[], compositeComponents: string[]): RouteState {
+  const raw = window.location.hash.replace('#/', '').replace('#', '');
+  // #/recipes/{component}
+  if (raw.startsWith('recipes/')) {
+    const name = decodeURIComponent(raw.slice('recipes/'.length));
+    if (compositeComponents.includes(name)) return { mode: 'recipes', name };
+  }
+  // #/components/{Name}
+  if (raw.startsWith('components/')) {
+    const name = raw.slice('components/'.length);
+    if (demos.some(d => d.name === name)) return { mode: 'components', name };
+  }
+  // Legacy: #/{Name} — treat as component
+  if (raw && demos.some(d => d.name === raw)) return { mode: 'components', name: raw };
+  return { mode: 'components', name: demos[0]?.name ?? '' };
+}
+
+function buildHash(mode: SidebarShowMode, name: string): string {
+  return mode === 'recipes' ? `#/recipes/${encodeURIComponent(name)}` : `#/components/${name}`;
 }
 
 function App() {
   const demos = generatedDemos;
+
+  // Pre-compute composite component names for routing
+  const compositeComponentNames = useMemo(() => {
+    const composites = recipes.filter(r => r.type === 'composite');
+    return [...new Set(composites.map(r => r.component))];
+  }, []);
+
+  const initialRoute = useMemo(() => parseHash(demos, compositeComponentNames), []);
   const [theme, setTheme] = useState<Theme>(lightTheme);
-  const [activeName, setActiveName] = useState(() => getInitialComponent(demos));
+  const [sidebarShow, setSidebarShow] = useState<SidebarShowMode>(initialRoute.mode);
+  const [activeName, setActiveName] = useState(initialRoute.mode === 'components' ? initialRoute.name : (demos[0]?.name ?? ''));
   const [viewMode, setViewMode] = useState<'recipes' | 'playground'>('recipes');
   const [activeRecipeId, setActiveRecipeId] = useState<string>('');
+  const [activeCompositeGroup, setActiveCompositeGroup] = useState<string>(initialRoute.mode === 'recipes' ? initialRoute.name : '');
 
   const active = demos.find((d) => d.name === activeName) ?? demos[0];
   const [propsState, setPropsState] = useState<Record<string, unknown>>(() =>
@@ -313,9 +345,31 @@ function App() {
 
   // Auto-match recipes by component name
   const componentRecipes = useMemo(
-    () => recipes.filter(r => r.component === active?.name),
+    () => recipes.filter(r => r.component === active?.name && r.type === 'component'),
     [active?.name]
   );
+
+  // Composite recipes grouped by category > component for sidebar recipe mode
+  const compositeGroups = useMemo(() => {
+    const composites = recipes.filter(r => r.type === 'composite');
+    const catMap = new Map<string, Map<string, Recipe[]>>();
+    for (const r of composites) {
+      const category = r.id.includes('/') ? r.id.split('/')[0] : 'other';
+      if (!catMap.has(category)) catMap.set(category, new Map());
+      const compMap = catMap.get(category)!;
+      const list = compMap.get(r.component) ?? [];
+      list.push(r);
+      compMap.set(r.component, list);
+    }
+    return [...catMap.entries()]
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([category, compMap]) => ({
+        category,
+        components: [...compMap.entries()]
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([component, items]) => ({ component, items })),
+      }));
+  }, []);
 
   // Legacy sections support
   const sections = active?.sections ?? [];
@@ -360,7 +414,7 @@ function App() {
       if (!next) return;
       setActiveName(name);
       setPropsState(buildInitialProps(next));
-      window.history.pushState(null, '', `#/${name}`);
+      window.history.pushState(null, '', buildHash('components', name));
     },
     [demos],
   );
@@ -368,16 +422,19 @@ function App() {
   // Sync with browser back/forward
   useEffect(() => {
     const onHashChange = () => {
-      const hash = window.location.hash.replace('#/', '').replace('#', '');
-      if (hash && demos.some(d => d.name === hash)) {
-        setActiveName(hash);
-        const next = demos.find(d => d.name === hash);
+      const route = parseHash(demos, compositeComponentNames);
+      setSidebarShow(route.mode);
+      if (route.mode === 'components') {
+        setActiveName(route.name);
+        const next = demos.find(d => d.name === route.name);
         if (next) setPropsState(buildInitialProps(next));
+      } else {
+        setActiveCompositeGroup(route.name);
       }
     };
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
-  }, [demos]);
+  }, [demos, compositeComponentNames]);
 
   const onFlatPropChange = useCallback((name: string, value: unknown) => {
     setPropsState((prev) => ({ ...prev, [name]: value }));
@@ -406,92 +463,173 @@ function App() {
 
   return (
     <MoveRoot theme={theme} iconResolver={iconResolver}>
+      <Sidebar.Provider>
         <div className={`lab ${showPropsPanel ? '' : 'no-props'}`.trim()}>
-          <aside className="panel list-panel">
-            <div className="panel-title">Components</div>
-            {grouped.map((group) => (
-              <div key={group.category} className="group">
-                <div className="group-title">{group.category}</div>
-                <div className="list">
+          <Sidebar.Root>
+            <Sidebar.Header>
+              <div className="sidebar-header-stack">
+                <span className="sidebar-logo">Move UI</span>
+                <div className="sidebar-show-field">
+                  <span className="sidebar-show-label">Show</span>
+                  <Select.Root value={sidebarShow} onValueChange={(v) => {
+                    const mode = v as SidebarShowMode;
+                    setSidebarShow(mode);
+                    if (mode === 'recipes' && activeCompositeGroup) {
+                      window.history.pushState(null, '', buildHash('recipes', activeCompositeGroup));
+                    } else if (mode === 'components') {
+                      window.history.pushState(null, '', buildHash('components', activeName));
+                    }
+                  }}>
+                    <Select.Trigger size="sm">
+                      <Select.Value />
+                      <Select.Icon />
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Content>
+                        <Select.Viewport>
+                          <Select.Item value="components">Components</Select.Item>
+                          <Select.Item value="recipes">Recipes</Select.Item>
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
+                </div>
+              </div>
+            </Sidebar.Header>
+            <Sidebar.Content>
+              {sidebarShow === 'components' && grouped.map((group) => (
+                <Sidebar.Group key={group.category}>
+                  <Sidebar.GroupLabel>{group.category}</Sidebar.GroupLabel>
                   {group.items.map((item) => (
-                    <button
+                    <Sidebar.Item
                       key={item.id}
-                      className={`list-item ${item.name === active.name ? 'active' : ''}`}
+                      active={item.name === active.name}
                       onClick={() => onPickDemo(item.name)}
                     >
                       {item.name}
-                    </button>
+                    </Sidebar.Item>
                   ))}
-                </div>
-              </div>
-            ))}
-          </aside>
-
-          <main className="panel preview-panel">
-            <div className="toolbar">
-              <div>
-                <h1>{active.name}</h1>
-                <p>{active.description || 'Demo preview'}</p>
-              </div>
-              <button
-                className="theme-btn"
+                </Sidebar.Group>
+              ))}
+              {sidebarShow === 'recipes' && compositeGroups.map((group) => (
+                <Sidebar.Group key={group.category}>
+                  <Sidebar.GroupLabel>{group.category}</Sidebar.GroupLabel>
+                  {group.components.map((comp) => (
+                    <Sidebar.Item
+                      key={comp.component}
+                      active={activeCompositeGroup === comp.component}
+                      onClick={() => {
+                        setActiveCompositeGroup(comp.component);
+                        window.history.pushState(null, '', buildHash('recipes', comp.component));
+                      }}
+                    >
+                      {comp.component}
+                    </Sidebar.Item>
+                  ))}
+                </Sidebar.Group>
+              ))}
+            </Sidebar.Content>
+            <Sidebar.Footer>
+              <Sidebar.Item
+                icon="sun"
                 onClick={() => setTheme(theme.name === 'dark' ? lightTheme : darkTheme)}
               >
                 Theme: {theme.name}
-              </button>
-            </div>
+              </Sidebar.Item>
+            </Sidebar.Footer>
+          </Sidebar.Root>
 
-            {/* View mode tabs: Recipes / Playground */}
-            {showViewTabs && (
-              <div className="view-tabs">
-                <button
-                  className={`view-tab ${viewMode === 'recipes' ? 'active' : ''}`}
-                  onClick={() => setViewMode('recipes')}
-                >
-                  Recipes
-                </button>
-                <button
-                  className={`view-tab ${viewMode === 'playground' ? 'active' : ''}`}
-                  onClick={() => setViewMode('playground')}
-                >
-                  Playground
-                </button>
-              </div>
-            )}
+          <main className="panel preview-panel">
+            {sidebarShow === 'recipes' ? (
+              // Composite recipes view
+              (() => {
+                const groupRecipes = compositeGroups.flatMap(g => g.components).find(c => c.component === activeCompositeGroup)?.items ?? [];
+                if (!activeCompositeGroup || groupRecipes.length === 0) {
+                  return <div className="empty-main">Select a recipe from the sidebar</div>;
+                }
+                return (
+                  <>
+                    <div className="toolbar">
+                      <div>
+                        <h1>{activeCompositeGroup}</h1>
+                      </div>
+                    </div>
+                    <div className="recipe-list">
+                      {groupRecipes.map(recipe => (
+                        <RecipeCard
+                          key={recipe.id}
+                          recipe={recipe}
+                          isActive={recipe.id === activeRecipeId}
+                          onSelect={() => setActiveRecipeId(recipe.id)}
+                          themeName={theme.name}
+                        />
+                      ))}
+                    </div>
+                  </>
+                );
+              })()
+            ) : (
+              // Components view
+              <>
+                <div className="toolbar">
+                  <div>
+                    <h1>{active.name}</h1>
+                    <p>{active.description || 'Demo preview'}</p>
+                  </div>
+                </div>
 
-            {/* Legacy section tabs (backward compat) */}
-            {hasLegacySections && (
-              <LegacySectionTabs
-                sections={sections}
-                propsState={propsState}
-                active={active}
-                controls={active.controls}
-                onFlatPropChange={onFlatPropChange}
-              />
-            )}
+                {/* View mode tabs: Recipes / Playground */}
+                {showViewTabs && (
+                  <div className="view-tabs">
+                    <button
+                      className={`view-tab ${viewMode === 'recipes' ? 'active' : ''}`}
+                      onClick={() => setViewMode('recipes')}
+                    >
+                      Recipes
+                    </button>
+                    <button
+                      className={`view-tab ${viewMode === 'playground' ? 'active' : ''}`}
+                      onClick={() => setViewMode('playground')}
+                    >
+                      Playground
+                    </button>
+                  </div>
+                )}
 
-            {/* Recipe cards view */}
-            {!hasLegacySections && viewMode === 'recipes' && hasRecipes && (
-              <div className="recipe-list">
-                {componentRecipes.map(recipe => (
-                  <RecipeCard
-                    key={recipe.id}
-                    recipe={recipe}
-                    isActive={recipe.id === activeRecipeId}
-                    onSelect={() => setActiveRecipeId(recipe.id)}
-                    themeName={theme.name}
+                {/* Legacy section tabs (backward compat) */}
+                {hasLegacySections && (
+                  <LegacySectionTabs
+                    sections={sections}
+                    propsState={propsState}
+                    active={active}
+                    controls={active.controls}
+                    onFlatPropChange={onFlatPropChange}
                   />
-                ))}
-              </div>
-            )}
+                )}
 
-            {/* Playground view (shown when in playground mode, or when no recipes exist) */}
-            {!hasLegacySections && (viewMode === 'playground' || !hasRecipes) && (
-              <div className="preview-canvas">
-                {active.render(propsState)}
-              </div>
-            )}
+                {/* Recipe cards view */}
+                {!hasLegacySections && viewMode === 'recipes' && hasRecipes && (
+                  <div className="recipe-list">
+                    {componentRecipes.map(recipe => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        isActive={recipe.id === activeRecipeId}
+                        onSelect={() => setActiveRecipeId(recipe.id)}
+                        themeName={theme.name}
+                      />
+                    ))}
+                  </div>
+                )}
 
+                {/* Playground view (shown when in playground mode, or when no recipes exist) */}
+                {!hasLegacySections && (viewMode === 'playground' || !hasRecipes) && (
+                  <div className="preview-canvas">
+                    {active.render(propsState)}
+                  </div>
+                )}
+              </>
+            )}
           </main>
 
           {showPropsPanel && (
@@ -539,6 +677,7 @@ function App() {
             </aside>
           )}
         </div>
+      </Sidebar.Provider>
     </MoveRoot>
   );
 }

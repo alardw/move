@@ -28,19 +28,27 @@ export const demo: DemoDefinition = {
       options: ['sm', 'md', 'lg'],
       defaultValue: 'md',
     },
+    {
+      name: 'color',
+      kind: 'select',
+      options: ['gray', 'red', 'pink', 'grape', 'violet', 'indigo', 'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange'],
+      defaultValue: 'indigo',
+    },
   ],
   initialProps: {
     active: '1',
     orientation: 'horizontal',
     size: 'md',
+    color: 'indigo',
   },
   render: (props) => {
     const active = Number(props.active) || 0;
     const orientation = (props.orientation as string) || 'horizontal';
     const size = (props.size as string) || 'md';
+    const color = (props.color as string) || 'indigo';
 
     return (
-      <Component active={active} orientation={orientation} size={size}>
+      <Component active={active} orientation={orientation} size={size} color={color}>
         <Component.Step>
           <Component.Indicator />
           <Component.Title>Personal Info</Component.Title>
