@@ -14,11 +14,13 @@ Generate an app-specific component composed entirely from Move core components. 
 
 ## Process
 
-### Step 1 — Read reference
+### Step 1 — Read references
 
-Read `references/composition-rules.md` for:
-- The golden rule: no custom CSS, only Move components
-- Available layout components and their props
+Read `../../references/recipes/rules.md` for the golden rules (no custom CSS, i18n pattern, FormField usage, etc.).
+
+Read `references/composition-rules.md` for available layout components and their props.
+
+Browse `../../references/recipes/component/` for correct component API usage and `../../references/recipes/composite/` for existing composite patterns to reuse or extend.
 
 ### Step 2 — Identify components needed
 

@@ -44,7 +44,7 @@ Component tokens are declared on `.root` (not `:root`) so they resolve semantic 
    --move-button-primary-bg: var(--move-primary);
 
    /* Wrong — references primitive */
-   --move-button-primary-bg: var(--move-sage-600);
+   --move-button-primary-bg: var(--move-indigo-600);
 
    /* Wrong — hardcoded value */
    --move-button-primary-bg: #7c3aed;

@@ -18,12 +18,13 @@ Generate a complete feature that spans multiple pages, composites, and routing. 
 
 ## Process
 
-### Step 1 — Read reference
+### Step 1 — Read references
 
-Read `references/feature-patterns.md` for:
-- Feature decomposition strategy
-- Cross-page state patterns
-- Routing conventions
+Read `../../references/recipes/rules.md` for the golden rules (no custom CSS, i18n pattern, FormField usage, hierarchy, etc.).
+
+Read `references/feature-patterns.md` for feature decomposition strategy, cross-page state patterns, and routing conventions.
+
+Browse `../../references/recipes/composite/` for existing composite patterns to reuse across pages, and `../../references/recipes/component/` for correct component API usage.
 
 ### Step 2 — Decompose feature
 

@@ -14,14 +14,13 @@ Generate a page component for a specific route, composed from Move components an
 
 ## Process
 
-### Step 1 — Read reference
+### Step 1 — Read references
 
-Read `references/page-patterns.md` for:
-- Page structure conventions
-- Available layout components
-- The no-custom-CSS rule
+Read `../../references/recipes/rules.md` for the golden rules (no custom CSS, i18n pattern, FormField usage, hierarchy, etc.).
 
-Also read `app/references/layout-composition.md` for component API details.
+Read `references/page-patterns.md` for page structure conventions.
+
+Browse `../../references/recipes/composite/` for existing composite patterns to compose into pages, and `../../references/recipes/component/` for correct component API usage.
 
 ### Step 2 — Identify structure
 

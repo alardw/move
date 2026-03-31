@@ -27,6 +27,8 @@ Composites are app-specific components built entirely from Move core components.
 4. **Typed props** — export an interface for the composite's props
 5. **Single responsibility** — one composite does one thing well
 6. **No internal state for layout** — composites are presentational; state lives in pages or hooks
+7. **Always use stable `key` props** when mapping over arrays of Move components — they are animated, and missing keys cause animations to replay on every parent re-render
+8. **Dialog.Header auto-closes** — `Dialog.Header` renders a close button by default. Don't add `<Dialog.Close />` inside it. Use `<Dialog.Close asChild>` to wrap custom close buttons in footers
 
 ## Available components
 

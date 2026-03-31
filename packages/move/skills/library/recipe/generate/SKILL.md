@@ -1,16 +1,28 @@
 # Generate Recipe — Recipe File Generator
 
-Generate recipe files for a Move component's demo app.
+Generate recipe files for the Move demo app. Supports two recipe types:
+
+- **Component recipes** — showcase a single Move component's API and variants
+- **Composite recipes** — combine multiple Move components into a reusable pattern (e.g. Login form, Settings panel)
 
 ---
 
 ## How to Run
 
-**Input:** A component name (e.g. "Button", "Select", "Dialog").
+**Input:** A component name (e.g. "Button") OR a composite pattern name (e.g. "Login", "SettingsPanel").
 
-**Output:**
+Determine the recipe type:
+- If it maps to a single Move component → `component`
+- If it combines multiple components into a UI pattern → `composite`
+
+**Output (component):**
 - `demo/src/recipes/component/{Name}/{recipeSlug}.tsx` — one file per recipe
 - `demo/src/recipes/component/{Name}/index.ts` — barrel exporting all recipes
+- `demo/src/recipes/index.ts` — updated top-level barrel
+
+**Output (composite):**
+- `demo/src/recipes/composite/{Name}/{recipeSlug}.tsx` — one file per recipe
+- `demo/src/recipes/composite/{Name}/index.ts` — barrel exporting all recipes
 - `demo/src/recipes/index.ts` — updated top-level barrel
 
 ---
@@ -26,14 +38,19 @@ demo/src/recipes/
       index.ts                      # Barrel: exports {name}Recipes[]
       basic.tsx                     # One recipe per file
       variants.tsx
-      sizes.tsx
       ...
-  composite/                        # Future: composite recipes
+  composite/
+    {group}/                        # Domain grouping (e.g. authentication, settings, navigation)
+      {Name}/
+        index.ts                    # Barrel: exports {name}Recipes[]
+        basic.tsx                   # Default composition
+        with-i18n.tsx               # i18n variant
+        ...
 ```
 
 ---
 
-## Process
+## Process — Component Recipes
 
 ### Step 1 — Locate component + spec
 
@@ -86,7 +103,6 @@ export const recipe: Recipe = {
   description: '...',
   type: 'component',
   component: '{Name}',
-  tags: ['...'],
   render: RecipeComponentName,
   code: `import { Name } from 'move';
 
@@ -94,65 +110,140 @@ export const recipe: Recipe = {
 };
 ```
 
-Rules for recipe render components:
-- Must be proper React components (`function Name() {}`)
-- Hooks are legal (useState, useEffect, etc.)
-- Import from `'move'` (library root)
-- Self-contained — no props parameter, no external demo state
-- Show realistic usage, not minimal wiring
+---
 
-### Step 4 — Generate matching static `code` strings
+## Process — Composite Recipes
 
-Each recipe has a `code` string that is copy-paste ready:
-- Import statement at top (`import { Button } from 'move';`)
-- Only the JSX usage, not the full function wrapper
-- No internal demo refs (`props.*`, `playground.*`)
-- Concrete literal values, not variable references
-- Must match what the render function produces
+### Step 1 — Identify components
 
-### Step 5 — Write component barrel
+Determine which Move components are needed for the pattern. Read their source files to understand their APIs:
+`src/components/**/{Name}/{Name}.tsx`
 
-Create/update `demo/src/recipes/component/{Name}/index.ts`:
+### Step 2 — Determine recipe set
+
+Composite recipes typically include:
+
+1. **Always:** one "Basic" recipe — the default composition with hardcoded labels
+2. **If i18n is relevant:** one "i18n" recipe — all user-facing strings passed as props via a labels/translations object
+3. **Variants:** additional recipes for meaningful variations (e.g. "With Social Login", "Minimal")
+
+Aim for 2–4 recipes per composite. Keep them focused and realistic.
+
+### Step 3 — Generate recipe files
+
+Each recipe lives in: `demo/src/recipes/composite/{group}/{Name}/{slug}.tsx`
+
+File structure:
+
+```tsx
+// Generated recipe: {Name} — {Title}
+import { useState } from 'react';
+import { Stack, Button, InputText, ... } from 'move';
+import type { Recipe } from '../../types';
+
+function RecipeComponentName() {
+  // Self-contained — manage own state
+  return (
+    <Stack gap="md">
+      ...
+    </Stack>
+  );
+}
+
+export const recipe: Recipe = {
+  id: '{name}:{slug}',
+  title: '{Title}',
+  description: '...',
+  type: 'composite',
+  component: '{Name}',
+  relatedComponents: ['Stack', 'Button', 'InputText', ...],
+  render: RecipeComponentName,
+  code: `import { Stack, Button, InputText, ... } from 'move';
+
+// ... copy-paste ready code`,
+};
+```
+
+### i18n pattern
+
+For i18n-ready composites, extract all user-facing strings into a `labels` object:
+
+```tsx
+const defaultLabels = {
+  title: 'Log in',
+  emailLabel: 'Email',
+  emailPlaceholder: 'you@example.com',
+  passwordLabel: 'Password',
+  submitLabel: 'Sign in',
+  // ...
+};
+
+type Labels = typeof defaultLabels;
+
+function LoginForm({ labels = defaultLabels }: { labels?: Partial<Labels> }) {
+  const t = { ...defaultLabels, ...labels };
+  // use t.title, t.emailLabel, etc.
+}
+```
+
+The recipe render wrapper calls it without props (uses defaults), but the `code` string shows the labels interface so consumers know what's translatable.
+
+---
+
+## Shared Steps
+
+### Generate barrel
+
+Create/update the barrel. For component recipes: `demo/src/recipes/component/{Name}/index.ts`. For composite recipes: `demo/src/recipes/composite/{group}/{Name}/index.ts`.
 
 ```ts
 import { recipe as basic } from './basic';
-import { recipe as variants } from './variants';
+import { recipe as withI18n } from './with-i18n';
 // ...
 
-export const {name}Recipes = [basic, variants, ...];
+export const {name}Recipes = [basic, withI18n, ...];
 ```
 
-### Step 6 — Update top-level barrel
+### Update top-level barrel
 
 Update `demo/src/recipes/index.ts`:
-- Add import: `import { {name}Recipes } from './component/{Name}';`
+- Add import: `import { {name}Recipes } from './component/{Name}';` or `import { {name}Recipes } from './composite/{group}/{Name}';`
 - Add spread to recipes array: `...{name}Recipes,`
 - Keep imports sorted alphabetically
-- If the component already exists in the barrel, replace the existing import
+- If the entry already exists, replace it
 
 ---
 
 ## Naming Conventions
 
-- Recipe file names: kebab-case slug (e.g. `basic.tsx`, `with-icon.tsx`, `controlled.tsx`)
-- Recipe IDs: `{name}:{kebab-slug}` (e.g. `button:with-icon`)
+- Recipe file names: kebab-case slug (e.g. `basic.tsx`, `with-i18n.tsx`, `with-social.tsx`)
+- Recipe IDs: `{name}:{kebab-slug}` (e.g. `button:basic`, `login:with-i18n`). For composites: `{group}/{name}:{slug}` (e.g. `authentication/login:basic`)
 - Export variable: always `recipe` (singular) per file
-- Barrel export: `{name}Recipes` (e.g. `buttonRecipes`)
-- Render function: PascalCase descriptive (e.g. `ButtonWithIcon`, `BasicButton`)
+- Barrel export: `{name}Recipes` (e.g. `loginRecipes`)
+- Render function: PascalCase descriptive (e.g. `BasicLogin`, `LoginWithI18n`)
 
 ---
 
 ## Rules
 
+**Read `../../references/recipes/rules.md` first** for the golden rules that apply to all generated code.
+
+Browse existing recipes in `../../references/recipes/` before generating — reuse patterns, don't reinvent.
+
 1. Recipe components are real `React.FC` at module scope — hooks are legal.
-2. All recipes set `type: 'component'` and `component: '{Name}'`.
+2. Set `type: 'component'` or `type: 'composite'` accordingly.
 3. `code` must be copy-paste ready — no internal demo refs, no `props.*` bindings.
 4. Import from `'move'` (library root).
 5. Self-check: scan render bodies to verify code string matches what render produces.
 6. Provenance comment on line 1.
-7. Set `relatedComponents` when the recipe imports other Move components.
+7. Set `relatedComponents` when the recipe imports multiple Move components.
 8. Set `dependencies` when the recipe needs non-Move npm packages.
 9. Keep recipes focused — each recipe demonstrates one concept.
 10. Do not duplicate what the playground already covers (raw prop exploration).
-11. Always read source/spec first; never guess API.
+11. Always read component source first; never guess API.
 12. One recipe per file — never bundle multiple recipes in one file.
+13. Composite recipes must be self-contained — manage their own state, no external dependencies.
+14. i18n composites use a `defaultLabels` pattern — all strings extractable, sensible English defaults.
+15. **Always use stable `key` props** when mapping over arrays of Move components. Move components are animated — without keys, React may remount or shift elements, causing animations to replay unexpectedly.
+16. `Dialog.Header` auto-renders a close button by default. Do not add `<Dialog.Close />` inside a header unless you set `closable={false}` on the header. Use `<Dialog.Close asChild>` when wrapping a custom close button (e.g. in footers).
+17. **Use `animateKey` for dynamic lists** — when a List or Timeline's children change (filter, sort, search), pass `animateKey` derived from the filter/sort state to replay the stagger entrance animation: `<List animateKey={searchQuery}>`. Without it, changed items appear with no transition.

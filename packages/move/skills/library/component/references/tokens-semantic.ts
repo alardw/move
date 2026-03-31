@@ -43,10 +43,10 @@ export const BORDER_TOKENS = {
 // =============================================================================
 
 export const PRIMARY_TOKENS = {
-  '--move-primary': 'var(--move-sage-600)',
-  '--move-primary-hover': 'var(--move-sage-500)',
-  '--move-primary-active': 'var(--move-sage-700)',
-  '--move-primary-subtle': 'var(--move-sage-950)',
+  '--move-primary': 'var(--move-indigo-600)',
+  '--move-primary-hover': 'var(--move-indigo-500)',
+  '--move-primary-active': 'var(--move-indigo-700)',
+  '--move-primary-subtle': 'var(--move-indigo-950)',
   '--move-primary-fg': 'var(--move-white)',
 } as const;
 
@@ -115,11 +115,20 @@ export const SELECTION_TOKENS = {
 } as const;
 
 // =============================================================================
+// Selected (UI item selection — rows, list items)
+// =============================================================================
+
+export const SELECTED_TOKENS = {
+  '--move-selected-bg': 'var(--move-primary-subtle)',
+  '--move-selected-fg': 'var(--move-fg-base)',
+} as const;
+
+// =============================================================================
 // Focus Ring
 // =============================================================================
 
 export const FOCUS_TOKENS = {
-  '--move-focus-ring-color': 'var(--move-sage-500)',
+  '--move-focus-ring-color': 'var(--move-indigo-400)',
   '--move-focus-ring-width': '2px',
   '--move-focus-ring-offset': '2px',
   '--move-focus-ring': 'var(--move-focus-ring-width) solid var(--move-focus-ring-color)',
