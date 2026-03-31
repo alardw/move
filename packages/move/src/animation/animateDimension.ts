@@ -47,9 +47,11 @@ function animateDimensionEnter(
   cancelRef: React.MutableRefObject<JSAnimation | null>,
   config?: Animation,
 ): JSAnimation {
-  // Measure natural size
+  // Measure natural size (use getComputedStyle so the value matches the
+  // element's box-sizing — offsetHeight includes padding+border which
+  // overshoots when box-sizing is content-box)
   el.style[prop] = 'auto';
-  const targetSize = prop === 'height' ? el.offsetHeight : el.offsetWidth;
+  const targetSize = parseFloat(getComputedStyle(el)[prop]);
 
   // Set initial state
   el.style[prop] = '0px';
@@ -95,7 +97,7 @@ function animateDimensionExit(
   cancelRef: React.MutableRefObject<JSAnimation | null>,
   config?: Animation,
 ): JSAnimation {
-  const currentSize = prop === 'height' ? el.offsetHeight : el.offsetWidth;
+  const currentSize = parseFloat(getComputedStyle(el)[prop]);
   el.style[prop] = `${currentSize}px`;
   el.style.overflow = 'hidden';
 

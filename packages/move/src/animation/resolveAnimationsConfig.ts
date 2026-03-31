@@ -64,10 +64,11 @@ export function resolveAnimationsConfig(
       continue;
     }
 
-    // Merge: sequence is full replace, vars inherited unless re-declared
+    // Merge: spread defaults first, then user overrides; vars/sequence fall back to defaults
     result.push({
-      trigger: defaultTrigger.trigger,
-      sequence: userOverride.sequence,
+      ...defaultTrigger,
+      ...userOverride,
+      sequence: userOverride.sequence ?? defaultTrigger.sequence,
       vars: userOverride.vars ?? defaultTrigger.vars,
     });
   }

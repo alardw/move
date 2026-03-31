@@ -593,7 +593,12 @@ export function useAnimations(
     };
   }, [handlers, refs]);
 
-  // State triggers — observe data-state mutations
+  // State triggers — observe data-state mutations.
+  // Tracks which DOM element + trigger name was last animated to avoid replaying
+  // when the effect re-runs due to unstable config/states references.
+  // Fires when: different element matches (pagination) OR different trigger fires (checkbox toggle).
+  const lastAnimatedEntry = useRef(new Map<string, { el: WeakRef<Element>; trigger: string }>());
+
   useEffect(() => {
     if (!config || !states || states.length === 0) return;
 
@@ -633,6 +638,23 @@ export function useAnimations(
     }
 
     const observers: MutationObserver[] = [];
+    const animatedEntries = lastAnimatedEntry.current;
+
+    // Helper: fire animation and record which element + trigger matched
+    const fireWatcher = (watcher: Watcher, stateKey: string, matchedEl: Element) => {
+      animatedEntries.set(stateKey, { el: new WeakRef(matchedEl), trigger: watcher.triggerConfig.trigger });
+      executeSequence(
+        watcher.triggerConfig.sequence as SequenceItem[],
+        refs,
+        cancelRefs.current,
+        watcher.slotName,
+        watcher.triggerConfig.vars,
+        'enter',
+        activeAnims.current,
+        triggerAnims.current,
+        watcher.triggerConfig.trigger,
+      ).then(() => watcher.triggerConfig.onComplete?.());
+    };
 
     for (const [observeEl, watchers] of observeGroups) {
       const attributeFilter = [...new Set(watchers.map((w) => w.source))];
@@ -643,21 +665,13 @@ export function useAnimations(
           const attrName = mutation.attributeName;
           if (!attrName) continue;
 
-          const currentValue = (mutation.target as HTMLElement).getAttribute(attrName);
+          const target = mutation.target as HTMLElement;
+          const currentValue = target.getAttribute(attrName);
 
           for (const watcher of watchers) {
             if (watcher.source === attrName && currentValue === watcher.value) {
-              executeSequence(
-                watcher.triggerConfig.sequence as SequenceItem[],
-                refs,
-                cancelRefs.current,
-                watcher.slotName,
-                watcher.triggerConfig.vars,
-                'enter',
-                activeAnims.current,
-                triggerAnims.current,
-                watcher.triggerConfig.trigger,
-              ).then(() => watcher.triggerConfig.onComplete?.());
+              const stateKey = `${watcher.slotName}:${watcher.source}`;
+              fireWatcher(watcher, stateKey, target);
             }
           }
         }
@@ -666,7 +680,13 @@ export function useAnimations(
       observer.observe(observeEl, { attributes: true, attributeFilter, subtree: true });
       observers.push(observer);
 
-      // Fire initial state if already matching (skip if initial === false)
+      // Check current state and animate only if something actually changed.
+      // On first mount: always fires (nothing tracked yet).
+      // On effect re-runs (unstable deps): catches mutations lost when old observer
+      // was disconnected, but skips if nothing changed. Fires when:
+      //   - A different element now matches (pagination: active moves between items)
+      //   - A different trigger now matches (checkbox: "checked" vs "unchecked")
+      //   - First time (no previous entry)
       let initialFired = false;
       const allElements = [observeEl, ...Array.from(observeEl.querySelectorAll<HTMLElement>('*'))];
       for (const child of allElements) {
@@ -675,17 +695,16 @@ export function useAnimations(
           if (!watcher.initial) continue;
           const currentValue = child.getAttribute(watcher.source);
           if (currentValue === watcher.value) {
-            executeSequence(
-              watcher.triggerConfig.sequence as SequenceItem[],
-              refs,
-              cancelRefs.current,
-              watcher.slotName,
-              watcher.triggerConfig.vars,
-              'enter',
-              activeAnims.current,
-              triggerAnims.current,
-              watcher.triggerConfig.trigger,
-            ).then(() => watcher.triggerConfig.onComplete?.());
+            const stateKey = `${watcher.slotName}:${watcher.source}`;
+            const last = animatedEntries.get(stateKey);
+            const lastEl = last?.el.deref();
+            const lastTrigger = last?.trigger;
+            // Skip only if same element AND same trigger (nothing changed)
+            if (lastEl === child && lastTrigger === watcher.triggerConfig.trigger) {
+              initialFired = true;
+              break;
+            }
+            fireWatcher(watcher, stateKey, child);
             initialFired = true;
             break;
           }
@@ -754,7 +773,7 @@ export function useAnimations(
     if (!config) return;
 
     for (const triggerConfig of config) {
-      if (triggerConfig.sequence === false || !triggerConfig.deps) continue;
+      if (!triggerConfig.deps) continue;
 
       const prevDeps = prevDepsRef.current.get(triggerConfig.trigger);
       const currentDeps = triggerConfig.deps;
@@ -771,21 +790,25 @@ export function useAnimations(
 
       if (changed) {
         prevDepsRef.current.set(triggerConfig.trigger, [...currentDeps]);
-        const parsed = parseTrigger(triggerConfig.trigger);
-        const slot = parsed.slot ?? triggerConfig.trigger;
-        const direction = triggerConfig.direction ?? 'enter';
 
-        executeSequence(
-          triggerConfig.sequence as SequenceItem[],
-          refs,
-          cancelRefs.current,
-          slot,
-          triggerConfig.vars,
-          direction,
-          activeAnims.current,
-          triggerAnims.current,
-          triggerConfig.trigger,
-        ).then(() => triggerConfig.onComplete?.());
+        // Only execute when sequence is active (not disabled via false)
+        if (triggerConfig.sequence !== false) {
+          const parsed = parseTrigger(triggerConfig.trigger);
+          const slot = parsed.slot ?? triggerConfig.trigger;
+          const direction = triggerConfig.direction ?? 'enter';
+
+          executeSequence(
+            triggerConfig.sequence as SequenceItem[],
+            refs,
+            cancelRefs.current,
+            slot,
+            triggerConfig.vars,
+            direction,
+            activeAnims.current,
+            triggerAnims.current,
+            triggerConfig.trigger,
+          ).then(() => triggerConfig.onComplete?.());
+        }
       }
     }
   });
