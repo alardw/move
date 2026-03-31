@@ -24,6 +24,7 @@ export default defineConfig({
     alias: [
       { find: 'move/styles.css', replacement: path.resolve('../move/src/styles/system.css') },
       { find: 'move', replacement: path.resolve('../move/src/index.ts') },
+      { find: '@recipes', replacement: path.resolve('../move/skills/references/recipes') },
       { find: 'react', replacement: path.resolve('./node_modules/react') },
       { find: 'react-dom', replacement: path.resolve('./node_modules/react-dom') },
     ],

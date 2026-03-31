@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.26",
+  "version": "0.1.41",
   "description": "Animated UI component library built on Radix UI primitives",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -16,9 +16,14 @@
     "./system.css": "./dist/styles/system.css",
     "./styles/*": "./dist/styles/*"
   },
+  "bin": {
+    "move": "./bin/cli.mjs"
+  },
   "files": [
+    "bin",
     "dist",
     "migrations",
+    "recipes",
     "skills"
   ],
   "scripts": {
@@ -27,7 +32,7 @@
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "pack": "npm version patch --no-git-tag-version && npm run build && node scripts/check-migrations.js && mkdir -p release && npm pack --pack-destination release",
+    "pack": "node -e \"const f='package.json',p=JSON.parse(require('fs').readFileSync(f));const v=p.version.split('.');v[2]=+v[2]+1;p.version=v.join('.');require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\\n');console.log('v'+p.version)\" && npm run build && mkdir -p release && npm pack --pack-destination release",
     "test": "vitest run",
     "test:watch": "vitest"
   },

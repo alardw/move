@@ -22,7 +22,11 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "paths": {
+      "@recipes/*": ["../move/skills/references/recipes/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "../move/skills/references/recipes"]
 }
