@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import styles from './Avatar.module.css';
 
@@ -12,6 +12,25 @@ import styles from './Avatar.module.css';
 // =============================================================================
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+export type AvatarColor =
+  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
+  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+
+type AvatarStatus = 'idle' | 'loading' | 'loaded' | 'error';
+
+// =============================================================================
+// Status context — coordinates loading state between Image and Fallback
+// =============================================================================
+
+interface AvatarStatusContextValue {
+  status: AvatarStatus;
+  setStatus: (s: AvatarStatus) => void;
+}
+
+const AvatarStatusContext = React.createContext<AvatarStatusContextValue>({
+  status: 'idle',
+  setStatus: () => {},
+});
 
 // =============================================================================
 // Group context — staggered entrance coordination
@@ -23,14 +42,6 @@ interface AvatarGroupContextValue {
 }
 
 const AvatarGroupContext = React.createContext<AvatarGroupContextValue | null>(null);
-
-// =============================================================================
-// Default animation
-// =============================================================================
-
-const DEFAULT_ENTER_ANIMATION = {
-  scale: { from: 0, to: 1, ease: poppy },
-};
 
 // =============================================================================
 // Group
@@ -91,6 +102,7 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
 
 export interface AvatarRootProps extends Record<string, unknown> {
   size?: AvatarSize;
+  color?: AvatarColor;
   animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
@@ -102,24 +114,10 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
   styles,
   slots: ['root'] as const,
   defaults: { size: 'md' as AvatarSize },
-  moveProps: ['size', 'animations'],
+  moveProps: ['size', 'color', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const groupCtx = React.useContext(AvatarGroupContext);
-    const indexRef = React.useRef<number | null>(null);
-
-    // Register with group for stagger ordering
-    if (indexRef.current === null && groupCtx) {
-      indexRef.current = groupCtx.registerAvatar();
-    }
-
-    // Build per-avatar stagger delay
-    const staggerDelay = groupCtx ? (indexRef.current ?? 0) * groupCtx.staggerDelay : 0;
-
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Root.enter', sequence: [{ animation: { ...DEFAULT_ENTER_ANIMATION, delay: staggerDelay || undefined } }] },
-    ];
-    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
+    const animConfig = resolveAnimationsConfig([], props.animations as AnimationTrigger[] | false | undefined);
 
     const contentRef = React.useRef<HTMLSpanElement>(null);
     const refs = React.useMemo(() => ({ Root: contentRef as React.RefObject<HTMLElement | null> }), []);
@@ -127,22 +125,29 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 
     const mergedRef = useMergedRef(ref, contentRef);
 
+    const [status, setStatus] = React.useState<AvatarStatus>('idle');
+    const statusCtx = React.useMemo(() => ({ status, setStatus }), [status]);
+
     return {
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
-          <RadixAvatar.Root
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-            data-size={props.size as string}
-          >
-            {props.children}
-          </RadixAvatar.Root>
+          <AvatarStatusContext.Provider value={statusCtx}>
+            <RadixAvatar.Root
+              {...attrs}
+              {...spRest}
+              ref={mergedRef}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              data-size={props.size as string}
+              data-color={props.color as string || undefined}
+              data-status={status}
+            >
+              {props.children}
+            </RadixAvatar.Root>
+          </AvatarStatusContext.Provider>
         );
       },
     };
@@ -156,7 +161,7 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 export interface AvatarImageProps extends Record<string, unknown> {
   src?: string;
   alt?: string;
-  onLoadingStatusChange?: (status: 'idle' | 'loading' | 'loaded' | 'error') => void;
+  onLoadingStatusChange?: (status: AvatarStatus) => void;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -168,6 +173,13 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
   moveProps: ['onLoadingStatusChange'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const { setStatus } = React.useContext(AvatarStatusContext);
+
+    const handleStatusChange = React.useCallback((s: AvatarStatus) => {
+      setStatus(s);
+      (props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange'])?.(s);
+    }, [setStatus, props.onLoadingStatusChange]);
+
     return {
       render() {
         const imageSp = sp('image');
@@ -180,7 +192,7 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
             ref={ref}
             src={props.src as string | undefined}
             alt={props.alt as string | undefined}
-            onLoadingStatusChange={props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange']}
+            onLoadingStatusChange={handleStatusChange}
             className={cx('image', props.className, spClass as string | undefined)}
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           />
@@ -208,6 +220,12 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
   moveProps: ['delayMs'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const { status } = React.useContext(AvatarStatusContext);
+    // Only show fallback content when image has failed or no image was provided.
+    // During loading, Radix still renders the Fallback element but we hide its
+    // children so the root's pulse animation shows through.
+    const showContent = status === 'error' || status === 'idle';
+
     return {
       render() {
         const fallbackSp = sp('fallback');
@@ -221,8 +239,9 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
             delayMs={props.delayMs as number | undefined}
             className={cx('fallback', props.className, spClass as string | undefined)}
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            data-status={status}
           >
-            {props.children}
+            {showContent ? props.children : null}
           </RadixAvatar.Fallback>
         );
       },

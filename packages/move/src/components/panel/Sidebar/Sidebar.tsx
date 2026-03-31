@@ -4,6 +4,8 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { LayerProvider } from '../../../infrastructure/Layer';
 import {
   useAnimations,
   sidebar as sidebarEase,
@@ -168,6 +170,7 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
   setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, mobileOpen, isMobile } = useSidebarContext();
     const animDisabled = React.useContext(SidebarAnimateContext);
+    const surface = useSurfaceFlip();
     const side = (props.side as string) || 'left';
 
     const asideRef = React.useRef<HTMLElement>(null);
@@ -212,18 +215,23 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const aside = (
-          <aside
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            data-collapsed={collapsed}
-            data-side={side}
-            data-mobile={isMobile || undefined}
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </aside>
+          <SurfaceProvider value={surface}>
+            <LayerProvider value={isMobile ? 400 : 0}>
+              <aside
+                {...attrs}
+                {...spRest}
+                ref={mergedRef}
+                data-collapsed={collapsed}
+                data-side={side}
+                data-mobile={isMobile || undefined}
+                data-surface={surface}
+                className={cx('root', props.className, spClass as string | undefined)}
+                style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              >
+                {props.children}
+              </aside>
+            </LayerProvider>
+          </SurfaceProvider>
         );
 
         // Mobile: portal with overlay
@@ -255,13 +263,13 @@ export interface SidebarHeaderProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Content shown when sidebar is collapsed. Falls back to children if not provided. */
   collapsedChildren?: React.ReactNode;
-  sp?: SlotPropsMap<'header'>;
+  sp?: SlotPropsMap<'header' | 'mobileClose'>;
 }
 
-const SidebarHeader = withMoveComponent<'header', SidebarHeaderProps, HTMLDivElement>({
+const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderProps, HTMLDivElement>({
   name: 'SidebarHeader',
   styles,
-  slots: ['header'] as const,
+  slots: ['header', 'mobileClose'] as const,
   moveProps: ['collapsedChildren'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -610,13 +618,13 @@ export interface SidebarTriggerProps extends Record<string, unknown> {
 }
 
 const SidebarTrigger = withMoveComponent<
-  'trigger' | 'triggerIcon' | 'triggerLabel',
+  'trigger' | 'triggerIcon' | 'triggerLabel' | 'itemIcon' | 'itemLabel',
   SidebarTriggerProps,
   HTMLButtonElement
 >({
   name: 'SidebarTrigger',
   styles,
-  slots: ['trigger', 'triggerIcon', 'triggerLabel'] as const,
+  slots: ['trigger', 'triggerIcon', 'triggerLabel', 'itemIcon', 'itemLabel'] as const,
   moveProps: ['icon', 'tooltip', 'visibility', 'asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {

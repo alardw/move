@@ -54,7 +54,7 @@ function renderDialog(props: {
       <Dialog.Portal>
         <Dialog.Overlay data-testid="overlay" {...overlayProps} />
         <Dialog.Content size={size} data-testid="content" {...contentProps}>
-          <Dialog.Header data-testid="header" {...headerProps}>
+          <Dialog.Header data-testid="header" closable={false} {...headerProps}>
             <Dialog.Title data-testid="title" {...titleProps}>Dialog Title</Dialog.Title>
             <Dialog.Close data-testid="close" {...closeProps}>X</Dialog.Close>
           </Dialog.Header>
@@ -325,7 +325,7 @@ describe('Dialog', () => {
 
       await waitFor(() => {
         const desc = screen.getByTestId('description');
-        expect(desc.tagName).toBe('P');
+        expect(desc.tagName).toBe('DIV');
       });
     });
   });

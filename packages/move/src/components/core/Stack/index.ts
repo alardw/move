@@ -6,4 +6,6 @@ export type {
   StackGap,
   StackAlign,
   StackJustify,
+  StackPadding,
+  StackFlex,
 } from './Stack';

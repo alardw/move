@@ -110,7 +110,8 @@
   outline-offset: var(--move-focus-ring-offset);
 }
 
-.item[data-state='active'] {
+.item[data-state='active'],
+.item[data-state='active']:hover {
   color: var(--move-pagination-item-fg-active);
   background-color: transparent;
   cursor: default;

@@ -154,11 +154,9 @@ describe('Select', () => {
       expect(valueSpan?.textContent).toBe('Apple');
     });
 
-    it('controlled value displays in trigger', async () => {
-      const user = userEvent.setup();
+    it('controlled value displays label without opening', () => {
       renderSelect({ rootProps: { value: 'banana', onValueChange: () => {} } });
-      // Items need to mount to register labels, so open first
-      await user.click(screen.getByRole('button'));
+      // extractItemLabels walks the React tree to pre-populate labels
       const valueSpan = document.querySelector('[class*="value"]');
       expect(valueSpan?.textContent).toBe('Banana');
     });
@@ -256,6 +254,44 @@ describe('Select', () => {
       renderSelect({ rootProps: { onOpenChange } });
       await user.click(screen.getByRole('button'));
       expect(onOpenChange).toHaveBeenCalledWith(true);
+    });
+  });
+
+  // === Layer context (z-index in overlays) ===
+  describe('layer context', () => {
+    it('applies elevated z-index when inside a LayerProvider', async () => {
+      const { LayerProvider } = await import('../../../infrastructure/Layer');
+      const user = userEvent.setup();
+      render(
+        <LayerProvider value={400}>
+          <Select.Root>
+            <Select.Trigger>
+              <Select.Value placeholder="Pick" />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Portal>
+              <Select.Content>
+                <Select.Viewport>
+                  <Select.Item value="a">A</Select.Item>
+                </Select.Viewport>
+              </Select.Content>
+            </Select.Portal>
+          </Select.Root>
+        </LayerProvider>
+      );
+      await user.click(screen.getByRole('button'));
+      const content = document.body.querySelector('[class*="content"]') as HTMLElement;
+      expect(content).toBeInTheDocument();
+      expect(content.style.zIndex).toBe('401');
+    });
+
+    it('does not override z-index without LayerProvider', async () => {
+      const user = userEvent.setup();
+      renderSelect();
+      await user.click(screen.getByRole('button'));
+      const content = document.body.querySelector('[class*="content"]') as HTMLElement;
+      expect(content).toBeInTheDocument();
+      expect(content.style.zIndex).toBe('');
     });
   });
 });

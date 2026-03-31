@@ -12,6 +12,7 @@ import {
   revealHeight, staggerItems, quick, poppy,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Select.module.css';
 
 // Fixed pixel amounts for width-relative scale — ensures consistent feel regardless of control width
@@ -84,6 +85,29 @@ export interface SelectRootProps {
   children?: React.ReactNode;
 }
 
+/**
+ * Walk the React children tree to extract Select.Item value→label pairs.
+ * This allows SelectValue to display the correct label before the dropdown
+ * has ever been opened (items inside Portal don't mount until open).
+ */
+function extractItemLabels(children: React.ReactNode, map: Map<string, React.ReactNode>): void {
+  React.Children.forEach(children, (child) => {
+    if (!React.isValidElement(child)) return;
+    // Check if this is a SelectItem by displayName or internal marker
+    const type = child.type as any;
+    if (type?.displayName === 'SelectItem' || type?.__moveSelectItem) {
+      const { value, label, children: itemChildren } = child.props as any;
+      if (typeof value === 'string' && !map.has(value)) {
+        map.set(value, label ?? itemChildren ?? value);
+      }
+    }
+    // Recurse into children (Portal, Content, Viewport, etc.)
+    if (child.props && (child.props as any).children) {
+      extractItemLabels((child.props as any).children, map);
+    }
+  });
+}
+
 const SelectRoot: React.FC<SelectRootProps> = ({
   value: controlledValue,
   defaultValue,
@@ -102,6 +126,10 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const [triggerWidth, setTriggerWidth] = React.useState(200);
   const labelMapRef = React.useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = React.useState(0);
+
+  // Pre-populate label map from children tree so SelectValue can display
+  // the correct label before the dropdown has been opened.
+  extractItemLabels(children, labelMapRef.current);
 
   const isValueControlled = controlledValue !== undefined;
   const value = isValueControlled ? controlledValue : uncontrolledValue;
@@ -371,6 +399,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig, triggerWidth } = useSelectContext();
+    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -458,7 +487,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
             sideOffset={props.sideOffset as number ?? 4}
             align={props.align as 'start' | 'center' | 'end'}
             className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
@@ -557,7 +586,9 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
     };
 
     // Item hover animation via useAnimations
-    const scaleHover = (triggerWidth + SCALE_HOVER_PX) / triggerWidth;
+    // Clamp trigger width to avoid exaggerated scale on narrow selects
+    const effectiveWidth = Math.max(triggerWidth, 120);
+    const scaleHover = (effectiveWidth + SCALE_HOVER_PX) / effectiveWidth;
     const itemConfig = React.useMemo(() => {
       if (!animConfig) return null;
       const hover = animConfig.find((t) => t.trigger === 'Item.hover');
@@ -595,6 +626,9 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
     };
   },
 });
+
+// Static marker so extractItemLabels can identify Select.Item in the React tree
+(SelectItem as any).__moveSelectItem = true;
 
 // ============================================================================
 // Group

@@ -4,4 +4,5 @@ export type {
   GridProps,
   GridCellProps,
   GridGap,
+  GridPadding,
 } from './Grid';

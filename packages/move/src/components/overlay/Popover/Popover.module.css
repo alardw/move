@@ -14,7 +14,7 @@
 
 .content {
   /* Component tokens -- content */
-  --move-popover-content-bg: var(--move-bg-subtle);
+  --move-popover-content-bg: var(--move-surface-bg);
   --move-popover-content-border: var(--move-border-base);
   --move-popover-content-radius: var(--move-rounded-lg);
   --move-popover-content-shadow: var(--move-shadow-overlay);
@@ -32,7 +32,7 @@
   border-radius: var(--move-popover-content-radius);
   box-shadow: var(--move-popover-content-shadow);
   padding: var(--move-popover-content-padding);
-  z-index: var(--move-layer-dropdown);
+  z-index: var(--move-layer-popover);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
   color: var(--move-fg-base);
@@ -53,7 +53,7 @@
   --move-popover-close-radius: var(--move-rounded-sm);
   --move-popover-close-fg: var(--move-fg-muted);
   --move-popover-close-fg-hover: var(--move-fg-base);
-  --move-popover-close-bg-hover: var(--move-bg-muted);
+  --move-popover-close-bg-hover: var(--move-surface-hover);
 
   display: flex;
   align-items: center;

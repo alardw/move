@@ -10,8 +10,8 @@
 
 .root {
   /* Component tokens */
-  --move-card-bg: var(--move-bg-subtle);
-  --move-card-border: var(--move-border-base);
+  --move-card-bg: var(--move-surface-bg);
+  --move-card-border: var(--move-surface-border);
   --move-card-radius: var(--move-rounded-xl);
   --move-card-shadow: none;
   --move-card-padding: var(--move-spacing-lg);
@@ -20,6 +20,8 @@
   --move-card-title-fg: var(--move-fg-base);
   --move-card-description-size: var(--move-size-sm);
   --move-card-description-fg: var(--move-fg-muted);
+
+  max-width: var(--move-card-max-width, none);
 
   display: flex;
   flex-direction: column;

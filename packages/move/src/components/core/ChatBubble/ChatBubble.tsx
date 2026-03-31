@@ -13,6 +13,9 @@ import styles from './ChatBubble.module.css';
 
 export type ChatBubblePlacement = 'start' | 'end';
 export type ChatBubbleVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
+export type ChatBubbleColor =
+  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
+  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
 export type ChatBubbleAvatarSize = 'sm' | 'md' | 'lg';
 
 // =============================================================================
@@ -161,6 +164,7 @@ const ChatBubbleAvatar = withMoveComponent<'avatar', ChatBubbleAvatarProps, HTML
 
 export interface ChatBubbleContainerProps extends Record<string, unknown> {
   variant?: ChatBubbleVariant;
+  color?: ChatBubbleColor;
   tail?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -172,7 +176,7 @@ const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerPr
   styles,
   slots: ['container'] as const,
   defaults: { variant: 'neutral' as ChatBubbleVariant, tail: false },
-  moveProps: [],
+  moveProps: ['color'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const placement = React.useContext(ChatBubbleContext);
@@ -187,7 +191,8 @@ const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerPr
             {...attrs}
             {...spRest}
             ref={ref}
-            data-variant={props.variant as string}
+            data-variant={props.color ? undefined : (props.variant as string)}
+            data-color={props.color as string || undefined}
             data-placement={placement}
             data-tail={props.tail || undefined}
             className={cx('container', props.className, spClass as string | undefined)}

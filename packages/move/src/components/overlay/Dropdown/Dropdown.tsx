@@ -7,6 +7,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems, quick, poppy } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
 
 // ============================================================================
@@ -183,6 +184,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig } = useDropdownContext();
+    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -251,7 +253,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
             sideOffset={props.sideOffset as number}
             align={props.align as 'start' | 'center' | 'end'}
             className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
@@ -832,6 +834,8 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
   moveProps: ['sideOffset'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const layer = useLayer();
+
     return {
       render() {
         const subSp = sp('subContent');
@@ -843,7 +847,7 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
             ref={ref}
             sideOffset={props.sideOffset as number}
             className={cx('subContent', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
           </RadixDropdownMenu.SubContent>

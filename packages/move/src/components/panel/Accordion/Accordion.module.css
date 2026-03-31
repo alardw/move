@@ -8,14 +8,14 @@
   --move-accordion-header-height: var(--move-space-12);
   --move-accordion-trigger-padding-x: var(--move-spacing-md);
   --move-accordion-trigger-padding-y: var(--move-spacing-md);
-  --move-accordion-trigger-bg: var(--move-bg-muted);
-  --move-accordion-trigger-bg-hover: var(--move-bg-emphasis);
+  --move-accordion-trigger-bg: var(--move-surface-alt-hover);
+  --move-accordion-trigger-bg-hover: var(--move-surface-hover);
   --move-accordion-trigger-fg: var(--move-fg-base);
   --move-accordion-trigger-border: var(--move-border-base);
   --move-accordion-trigger-font-size: var(--move-size-sm);
   --move-accordion-trigger-font-weight: var(--move-weight-medium);
   --move-accordion-content-padding: var(--move-spacing-md);
-  --move-accordion-content-bg: var(--move-bg-base);
+  --move-accordion-content-bg: inherit;
   --move-accordion-content-fg: var(--move-fg-muted);
   --move-accordion-content-font-size: var(--move-size-sm);
   --move-accordion-icon-size: var(--move-text-xl);
@@ -57,14 +57,14 @@
 }
 
 .root[data-variant='contained'] {
-  --move-accordion-trigger-bg: var(--move-bg-subtle);
-  --move-accordion-trigger-bg-hover: var(--move-bg-muted);
+  --move-accordion-trigger-bg: var(--move-surface-alt-hover);
+  --move-accordion-trigger-bg-hover: var(--move-surface-hover);
   border: 1px solid var(--move-accordion-border);
 }
 
 .root[data-variant='ghost'] {
   --move-accordion-trigger-bg: transparent;
-  --move-accordion-trigger-bg-hover: var(--move-bg-muted);
+  --move-accordion-trigger-bg-hover: var(--move-surface-hover);
 }
 
 .root[data-variant='ghost'] .item {
@@ -87,6 +87,7 @@
 .trigger {
   display: flex;
   flex: 1;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   padding: var(--move-accordion-trigger-padding-y) var(--move-accordion-trigger-padding-x);
@@ -124,7 +125,7 @@
 
 .content {
   overflow: hidden;
-  background-color: var(--move-accordion-content-bg);
+  background-color: var(--move-surface-bg);
   color: var(--move-accordion-content-fg);
   font-size: var(--move-accordion-content-font-size);
 }

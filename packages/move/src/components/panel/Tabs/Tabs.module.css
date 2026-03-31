@@ -9,7 +9,7 @@
   --move-tabs-border: var(--move-border-base);
   --move-tabs-trigger-fg: var(--move-fg-muted);
   --move-tabs-trigger-fg-active: var(--move-fg-base);
-  --move-tabs-trigger-bg-hover: var(--move-bg-muted);
+  --move-tabs-trigger-bg-hover: var(--move-surface-hover);
   --move-tabs-indicator: var(--move-primary);
 }
 
@@ -82,7 +82,7 @@
 }
 
 .list[data-variant='outline'] .trigger[data-state='active'] {
-  background-color: var(--move-bg-muted);
+  background-color: var(--move-surface-hover);
   border-color: var(--move-primary);
   z-index: 1;
 }

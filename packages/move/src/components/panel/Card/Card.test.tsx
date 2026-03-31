@@ -144,13 +144,13 @@ describe('Card', () => {
       render(<Card.Description data-testid="desc">Description</Card.Description>);
       const el = screen.getByTestId('desc');
       expect(el).toBeInTheDocument();
-      expect(el.tagName).toBe('P');
+      expect(el.tagName).toBe('DIV');
     });
 
     it('forwards ref', () => {
-      const ref = createRef<HTMLParagraphElement>();
+      const ref = createRef<HTMLDivElement>();
       render(<Card.Description ref={ref}>Description</Card.Description>);
-      expect(ref.current).toBeInstanceOf(HTMLParagraphElement);
+      expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
 
     it('forwards className and style', () => {

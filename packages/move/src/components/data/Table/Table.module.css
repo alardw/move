@@ -7,18 +7,18 @@
 
 .root {
   /* Component tokens */
-  --move-table-bg: var(--move-bg-base);
-  --move-table-border: var(--move-border-base);
+  --move-table-bg: var(--move-surface-alt);
+  --move-table-border: var(--move-surface-border);
   --move-table-radius: var(--move-rounded-lg);
-  --move-table-header-bg: var(--move-bg-muted);
+  --move-table-header-bg: var(--move-surface-alt-hover);
   --move-table-header-fg: var(--move-fg-base);
   --move-table-header-weight: var(--move-weight-medium);
   --move-table-cell-padding-x: var(--move-spacing-md);
   --move-table-cell-padding-y: var(--move-spacing-sm);
   --move-table-cell-fg: var(--move-fg-base);
-  --move-table-row-hover-bg: var(--move-bg-emphasis);
-  --move-table-row-selected-bg: var(--move-bg-emphasis);
-  --move-table-stripe-bg: var(--move-bg-subtle);
+  --move-table-row-hover-bg: var(--move-surface-alt-hover);
+  --move-table-row-selected-bg: var(--move-selected-bg);
+  --move-table-stripe-bg: var(--move-surface-alt-hover);
   --move-table-caption-fg: var(--move-fg-muted);
   --move-table-caption-size: var(--move-size-sm);
 
@@ -128,6 +128,10 @@
 }
 
 .row[data-state='selected'] {
+  background-color: var(--move-table-row-selected-bg);
+}
+
+.root[data-hoverable] .body .row[data-state='selected']:hover {
   background-color: var(--move-table-row-selected-bg);
 }
 

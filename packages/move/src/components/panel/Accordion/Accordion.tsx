@@ -18,6 +18,7 @@ import type {
   AnimationTrigger,
 } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import acStyles from './Accordion.module.css';
 
 // ============================================================================
@@ -541,6 +542,7 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const shouldRender = itemContext.isActive || isAnimatingOut;
+    const surface = useSurfaceFlip();
 
     return {
       render() {
@@ -553,24 +555,27 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
         const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
-          <div
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            className={cx('content', className, spClass as string | undefined)}
-            style={{ ...style, ...(spStyle as React.CSSProperties) }}
-            data-state={itemContext.isActive ? 'open' : 'closed'}
-            role="region"
-          >
+          <SurfaceProvider value={surface}>
             <div
-              {...innerSpRest}
-              ref={innerRef}
-              className={cx('contentInner', innerSpClass as string | undefined)}
-              style={innerSpStyle as React.CSSProperties}
+              {...attrs}
+              {...spRest}
+              ref={mergedRef}
+              className={cx('content', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
+              data-state={itemContext.isActive ? 'open' : 'closed'}
+              data-surface={surface}
+              role="region"
             >
-              {children}
+              <div
+                {...innerSpRest}
+                ref={innerRef}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+              >
+                {children}
+              </div>
             </div>
-          </div>
+          </SurfaceProvider>
         );
       },
     };

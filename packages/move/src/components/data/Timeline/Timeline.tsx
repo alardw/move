@@ -17,7 +17,9 @@ import styles from './Timeline.module.css';
 
 export type TimelineSize = 'sm' | 'md' | 'lg';
 export type TimelineAlign = 'left' | 'right' | 'alternate';
-export type TimelineColor = 'primary' | 'gray' | 'success' | 'warning' | 'danger';
+export type TimelineColor =
+  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
+  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
 export type TimelineLineVariant = 'solid' | 'dashed' | 'dotted';
 
 // ============================================================================
@@ -82,7 +84,7 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
     active: -1 as unknown as undefined,
     align: 'left' as TimelineAlign,
     size: 'md' as TimelineSize,
-    color: 'primary' as TimelineColor,
+    color: 'indigo' as TimelineColor,
     lineVariant: 'solid' as TimelineLineVariant,
     reverseActive: false as unknown as undefined,
   },
@@ -181,7 +183,7 @@ const TimelineItem = withMoveComponent<TimelineItemSlots, TimelineItemProps, HTM
         const active = ctx?.active ?? -1;
         const align = ctx?.align ?? 'left';
         const reverseActive = ctx?.reverseActive ?? false;
-        const itemColor = (props.color as TimelineColor) || ctx?.color || 'primary';
+        const itemColor = (props.color as TimelineColor) || ctx?.color || 'indigo';
         const itemLineVariant = (props.lineVariant as TimelineLineVariant) || ctx?.lineVariant || 'solid';
 
         // Determine state

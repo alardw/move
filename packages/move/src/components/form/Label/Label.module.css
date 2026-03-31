@@ -12,7 +12,6 @@
   font-weight: var(--move-label-font-weight);
   color: var(--move-label-color);
   cursor: default;
-  user-select: none;
 }
 
 .root[data-disabled] {

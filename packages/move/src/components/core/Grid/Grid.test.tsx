@@ -115,34 +115,34 @@ describe('Grid', () => {
 
   // === Gap ===
   describe('gap', () => {
-    it('defaults to gap=md', () => {
+    it('defaults to data-gap=md', () => {
       render(<Grid data-testid="grid">Content</Grid>);
       const el = screen.getByTestId('grid');
-      expect(el.style.gap).toBe('var(--move-spacing-md)');
+      expect(el).toHaveAttribute('data-gap', 'md');
     });
 
-    it('resolves gap values through GAP_MAP to spacing tokens', () => {
+    it('sets data-gap attribute for each gap value', () => {
       const { rerender } = render(<Grid data-testid="grid" gap="xs">Content</Grid>);
-      expect(screen.getByTestId('grid').style.gap).toBe('var(--move-spacing-xs)');
+      expect(screen.getByTestId('grid')).toHaveAttribute('data-gap', 'xs');
 
       rerender(<Grid data-testid="grid" gap="sm">Content</Grid>);
-      expect(screen.getByTestId('grid').style.gap).toBe('var(--move-spacing-sm)');
+      expect(screen.getByTestId('grid')).toHaveAttribute('data-gap', 'sm');
 
       rerender(<Grid data-testid="grid" gap="lg">Content</Grid>);
-      expect(screen.getByTestId('grid').style.gap).toBe('var(--move-spacing-lg)');
+      expect(screen.getByTestId('grid')).toHaveAttribute('data-gap', 'lg');
 
       rerender(<Grid data-testid="grid" gap="xl">Content</Grid>);
-      expect(screen.getByTestId('grid').style.gap).toBe('var(--move-spacing-xl)');
+      expect(screen.getByTestId('grid')).toHaveAttribute('data-gap', 'xl');
 
       rerender(<Grid data-testid="grid" gap="none">Content</Grid>);
-      expect(screen.getByTestId('grid').style.gap).toBe('0px');
+      expect(screen.getByTestId('grid')).toHaveAttribute('data-gap', 'none');
     });
 
-    it('supports rowGap and columnGap overrides', () => {
+    it('supports rowGap and columnGap overrides via data attributes', () => {
       render(<Grid data-testid="grid" rowGap="lg" columnGap="xs">Content</Grid>);
       const el = screen.getByTestId('grid');
-      expect(el.style.rowGap).toBe('var(--move-spacing-lg)');
-      expect(el.style.columnGap).toBe('var(--move-spacing-xs)');
+      expect(el).toHaveAttribute('data-row-gap', 'lg');
+      expect(el).toHaveAttribute('data-column-gap', 'xs');
     });
   });
 

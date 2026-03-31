@@ -11,6 +11,7 @@ export type {
   StepperSize,
   StepperOrientation,
   StepStatus,
+  StepperColor,
 } from './Stepper';
 
 export { useStepper } from './Stepper';

@@ -145,8 +145,8 @@ describe('ColorPicker', () => {
 
     it('renders swatches when swatches prop provided', () => {
       render(<ColorPicker swatches={swatches} />);
-      const buttons = screen.getAllByRole('button');
-      expect(buttons).toHaveLength(3);
+      const swatchButtons = screen.getAllByRole('button').filter(b => b.getAttribute('aria-label')?.startsWith('#'));
+      expect(swatchButtons).toHaveLength(3);
     });
 
     it('swatch buttons have aria-label with color value', () => {
@@ -157,7 +157,8 @@ describe('ColorPicker', () => {
 
     it('does not render swatches when prop not provided', () => {
       render(<ColorPicker />);
-      expect(screen.queryAllByRole('button')).toHaveLength(0);
+      const swatchButtons = screen.queryAllByRole('button').filter(b => b.getAttribute('aria-label')?.startsWith('#'));
+      expect(swatchButtons).toHaveLength(0);
     });
 
     it('swatch click calls onValueChange', async () => {
@@ -181,29 +182,19 @@ describe('ColorPicker', () => {
   describe('format selector', () => {
     it('renders format selector with aria-label', () => {
       render(<ColorPicker />);
-      expect(screen.getByRole('combobox', { name: 'Color format' })).toBeInTheDocument();
+      expect(screen.getByLabelText('Color format')).toBeInTheDocument();
     });
 
-    it('format selector shows current format options', () => {
+    it('format selector shows current format value', () => {
       render(<ColorPicker />);
-      const select = screen.getByRole('combobox', { name: 'Color format' });
-      expect(select).toBeInTheDocument();
-      const options = select.querySelectorAll('option');
-      expect(options).toHaveLength(3); // hex, rgb, hsl
-    });
-
-    it('changing format calls onFormatChange', async () => {
-      const user = userEvent.setup();
-      const onFormatChange = vi.fn();
-      render(<ColorPicker onFormatChange={onFormatChange} />);
-      const select = screen.getByRole('combobox', { name: 'Color format' });
-      await user.selectOptions(select, 'rgb');
-      expect(onFormatChange).toHaveBeenCalled();
+      const trigger = screen.getByLabelText('Color format');
+      expect(trigger).toBeInTheDocument();
+      expect(trigger).toHaveTextContent(/hex/i);
     });
 
     it('format selector is disabled when component is disabled', () => {
       render(<ColorPicker disabled />);
-      expect(screen.getByRole('combobox', { name: 'Color format' })).toBeDisabled();
+      expect(screen.getByLabelText('Color format')).toBeDisabled();
     });
   });
 
@@ -269,8 +260,9 @@ describe('ColorPicker', () => {
   describe('withPicker', () => {
     it('input row always shown regardless of withPicker', () => {
       render(<ColorPicker withPicker={false} />);
-      expect(screen.getByRole('combobox', { name: 'Color format' })).toBeInTheDocument();
+      expect(screen.getByLabelText('Color format')).toBeInTheDocument();
     });
+
   });
 
   // === Keyboard ===

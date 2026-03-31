@@ -6,6 +6,8 @@ import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, snappy } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { LayerProvider } from '../../../infrastructure/Layer';
 import styles from './Dialog.module.css';
 
 // ============================================================================
@@ -254,6 +256,7 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { isClosing, close, onCloseComplete, animConfig } = useDialogContext();
+    const surface = useSurfaceFlip();
 
     // Filter triggers for this slot
     const contentConfig = React.useMemo(() => {
@@ -319,20 +322,25 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
         const contentSp = sp('content');
         const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
-          <RadixDialog.Content
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            data-size={props.size}
-            onOpenAutoFocus={handleOpenAutoFocus}
-            onPointerDownOutside={handlePointerDownOutside}
-            onEscapeKeyDown={handleEscapeKeyDown}
-            onInteractOutside={handleInteractOutside}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixDialog.Content>
+          <SurfaceProvider value={surface}>
+            <LayerProvider value={400}>
+              <RadixDialog.Content
+                {...attrs}
+                {...spRest}
+                ref={ref}
+                data-size={props.size}
+                data-surface={surface}
+                onOpenAutoFocus={handleOpenAutoFocus}
+                onPointerDownOutside={handlePointerDownOutside}
+                onEscapeKeyDown={handleEscapeKeyDown}
+                onInteractOutside={handleInteractOutside}
+                className={cx('content', props.className, spClass as string | undefined)}
+                style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              >
+                {props.children}
+              </RadixDialog.Content>
+            </LayerProvider>
+          </SurfaceProvider>
         );
       },
     };
@@ -387,7 +395,7 @@ export interface DialogDescriptionProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'description'>;
 }
 
-const DialogDescription = withMoveComponent<'description', DialogDescriptionProps, HTMLParagraphElement>({
+const DialogDescription = withMoveComponent<'description', DialogDescriptionProps, HTMLDivElement>({
   name: 'DialogDescription',
   styles,
   slots: ['description'] as const,
@@ -398,14 +406,16 @@ const DialogDescription = withMoveComponent<'description', DialogDescriptionProp
         const descSp = sp('description');
         const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
         return (
-          <RadixDialog.Description
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            className={cx('description', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
+          <RadixDialog.Description asChild>
+            <div
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              className={cx('description', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </div>
           </RadixDialog.Description>
         );
       },
@@ -421,6 +431,8 @@ export interface DialogHeaderProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  /** Auto-render a close button in the header. Defaults to `true`. */
+  closable?: boolean;
   sp?: SlotPropsMap<'header'>;
 }
 
@@ -428,6 +440,8 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
   name: 'DialogHeader',
   styles,
   slots: ['header'] as const,
+  moveProps: ['closable'],
+  defaults: { closable: true },
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -443,6 +457,7 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
+            {props.closable !== false && <DialogClose />}
           </div>
         );
       },
@@ -602,6 +617,13 @@ const DialogFooterEnd = withMoveComponent<'footerEnd', DialogFooterEndProps, HTM
 // Close
 // ============================================================================
 
+// Default X icon for close button (inline SVG avoids icon resolver dependency)
+const CloseIcon: React.FC = () => (
+  <svg className={styles.closeIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+    <path d="M4 4l8 8M12 4l-8 8" />
+  </svg>
+);
+
 export interface DialogCloseProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
@@ -638,7 +660,7 @@ const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonEleme
             className={props.asChild ? props.className : cx('close', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {props.children ?? <CloseIcon />}
           </RadixDialog.Close>
         );
       },

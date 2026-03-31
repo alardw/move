@@ -2,6 +2,7 @@
 // Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import styles from './Card.module.css';
 
 // =============================================================================
@@ -18,6 +19,7 @@ export type CardSize = 'sm' | 'md' | 'lg';
 export interface CardRootProps extends Record<string, unknown> {
   variant?: CardVariant;
   size?: CardSize;
+  maxWidth?: string | number;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -29,27 +31,34 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'default' as CardVariant, size: 'md' as CardSize },
-  moveProps: ['variant', 'size'],
+  moveProps: ['variant', 'size', 'maxWidth'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const surface = useSurfaceFlip();
+
     return {
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const maxWidth = props.maxWidth != null
+          ? typeof props.maxWidth === 'number' ? `${props.maxWidth}px` : props.maxWidth
+          : undefined;
 
         return (
-          <div
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            data-variant={props.variant as string}
-            data-size={props.size as string}
-            data-surface="subtle"
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </div>
+          <SurfaceProvider value={surface}>
+            <div
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              data-variant={props.variant as string}
+              data-size={props.size as string}
+              data-surface={surface}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ '--move-card-max-width': maxWidth, ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) } as React.CSSProperties}
+            >
+              {props.children}
+            </div>
+          </SurfaceProvider>
         );
       },
     };
@@ -143,7 +152,7 @@ export interface CardDescriptionProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'description'>;
 }
 
-const CardDescription = withMoveComponent<'description', CardDescriptionProps, HTMLParagraphElement>({
+const CardDescription = withMoveComponent<'description', CardDescriptionProps, HTMLDivElement>({
   name: 'CardDescription',
   styles,
   slots: ['description'] as const,
@@ -155,7 +164,7 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
         const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
 
         return (
-          <p
+          <div
             {...attrs}
             {...spRest}
             ref={ref}
@@ -163,7 +172,7 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-          </p>
+          </div>
         );
       },
     };

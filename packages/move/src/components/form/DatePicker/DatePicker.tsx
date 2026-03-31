@@ -31,6 +31,7 @@ import { InputText } from '../InputText';
 import { TimeField } from '../TimeField';
 import { Button } from '../../core/Button';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useLayer } from '../../../infrastructure/Layer';
 import styles from './DatePicker.module.css';
 
 // =============================================================================
@@ -964,6 +965,7 @@ export interface DatePickerContentProps {
 const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
   ({ children, className, style, sideOffset = 4, align = 'start', ...rest }, forwardedRef) => {
     const dpCtx = React.useContext(DatePickerContext);
+    const layer = useLayer();
     const animConfig = dpCtx?.animConfig ?? null;
 
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -1018,7 +1020,7 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
         sideOffset={sideOffset as number}
         align={align as 'start' | 'center' | 'end'}
         className={`${styles.content} ${className ?? ''}`}
-        style={style as React.CSSProperties}
+        style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
         onOpenAutoFocus={(e) => e.preventDefault()}

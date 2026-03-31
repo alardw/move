@@ -225,36 +225,16 @@
 }
 
 /* =========================================================================
- * Format selector (native <select>)
+ * Format selector (Move Select trigger)
  * ========================================================================= */
 
 .formatSelect {
-  all: unset;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  height: var(--move-colorpicker-input-height);
-  padding: 0 18px 0 6px;
-  font-family: var(--move-font-body);
-  font-size: var(--move-colorpicker-input-font);
-  color: var(--move-fg-base);
-  background-color: var(--move-bg-subtle);
-  border: 1px solid var(--move-border-base);
-  border-radius: var(--move-rounded-sm);
-  cursor: pointer;
   flex-shrink: 0;
-  -webkit-appearance: none;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 5px center;
-  background-size: 10px 6px;
-}
-
-.formatSelect:focus-visible {
-  border-color: var(--move-primary);
-  outline: var(--move-focus-ring);
-  outline-offset: 0;
+  /* Override Select trigger tokens to fit the compact input row */
+  --move-select-trigger-min-width: 0;
+  --move-select-trigger-height: var(--move-colorpicker-input-height);
+  --move-select-trigger-padding-x: var(--move-space-2);
+  --move-select-trigger-font-size: var(--move-colorpicker-input-font);
 }
 
 /* =========================================================================

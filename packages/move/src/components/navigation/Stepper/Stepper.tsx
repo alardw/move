@@ -13,6 +13,9 @@ import styles from './Stepper.module.css';
 export type StepperSize = 'sm' | 'md' | 'lg';
 export type StepperOrientation = 'horizontal' | 'vertical';
 export type StepStatus = 'wait' | 'active' | 'complete' | 'error';
+export type StepperColor =
+  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
+  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
 
 // ============================================================================
 // Context
@@ -58,6 +61,7 @@ export interface StepperRootProps extends Record<string, unknown> {
   onStepClick?: (index: number) => void;
   orientation?: StepperOrientation;
   size?: StepperSize;
+  color?: StepperColor;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -65,8 +69,8 @@ const StepperRoot = withMoveComponent<'root', StepperRootProps, HTMLDivElement>(
   name: 'Stepper',
   styles,
   slots: ['root'] as const,
-  defaults: { active: 0, orientation: 'horizontal', size: 'md' },
-  moveProps: ['active', 'onStepClick', 'orientation', 'size'],
+  defaults: { active: 0, orientation: 'horizontal', size: 'md', color: 'indigo' as StepperColor },
+  moveProps: ['active', 'onStepClick', 'orientation', 'size', 'color'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, active, onStepClick, orientation } = props;
@@ -110,6 +114,7 @@ const StepperRoot = withMoveComponent<'root', StepperRootProps, HTMLDivElement>(
               role="list"
               data-orientation={props.orientation}
               data-size={props.size}
+              data-color={props.color}
               className={cx('root', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
             >

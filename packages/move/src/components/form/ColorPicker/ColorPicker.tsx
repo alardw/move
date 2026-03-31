@@ -8,6 +8,7 @@ import { useColorPicker } from './useColorPicker';
 import type { UseColorPickerOptions } from './useColorPicker';
 import type { ColorFormat, BaseColorFormat } from './colorUtils';
 import { hsvToRgb, rgbToHex, parseColor, getBaseFormat, formatWithAlpha } from './colorUtils';
+import { Select } from '../Select/Select';
 import styles from './ColorPicker.module.css';
 
 // ============================================================================
@@ -141,10 +142,10 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
       cp.commitChange,
     );
 
-    // Hue slider drag
+    // Hue slider drag — clamp to 359 to prevent wrapping (360° === 0°)
     const hueDrag = useDrag(
       React.useCallback((x: number) => {
-        cp.setHue(x * 360);
+        cp.setHue(Math.min(x * 360, 359));
       }, [cp]),
       cp.commitChange,
     );
@@ -158,8 +159,8 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     );
 
     // Format change handler
-    const handleFormatChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-      const base = e.target.value as BaseColorFormat;
+    const handleFormatChange = React.useCallback((value: string) => {
+      const base = value as BaseColorFormat;
       const newFormat = formatWithAlpha(base, cp.showAlpha);
       cp.setActiveFormat(newFormat);
     }, [cp]);
@@ -424,19 +425,33 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
               style={inputRowSpStyle as React.CSSProperties}
             >
               {/* Format selector */}
-              <select
-                {...formatSelectSpRest}
-                className={cx('formatSelect', formatSelectSpClass as string | undefined)}
-                style={formatSelectSpStyle as React.CSSProperties}
+              <Select.Root
                 value={getBaseFormat(cp.activeFormat)}
-                onChange={handleFormatChange}
-                disabled={disabled}
-                aria-label="Color format"
+                onValueChange={handleFormatChange}
               >
-                {formatOptions.map(f => (
-                  <option key={f} value={f}>{f.toUpperCase()}</option>
-                ))}
-              </select>
+                <Select.Trigger
+                  {...formatSelectSpRest}
+                  size="sm"
+                  className={cx('formatSelect', formatSelectSpClass as string | undefined)}
+                  style={formatSelectSpStyle as React.CSSProperties}
+                  disabled={disabled}
+                  aria-label="Color format"
+                >
+                  <Select.Value />
+                  <Select.Icon />
+                </Select.Trigger>
+                <Select.Portal>
+                  <Select.Content>
+                    <Select.Viewport>
+                      {formatOptions.map(f => (
+                        <Select.Item key={f} value={f}>
+                          {f.toUpperCase()}
+                        </Select.Item>
+                      ))}
+                    </Select.Viewport>
+                  </Select.Content>
+                </Select.Portal>
+              </Select.Root>
 
               {/* Channel inputs */}
               {isHexFormat ? (

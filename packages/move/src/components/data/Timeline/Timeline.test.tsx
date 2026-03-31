@@ -145,26 +145,26 @@ describe('Timeline', () => {
       );
       const el = screen.getByTestId('item');
       expect(el).toHaveAttribute('data-state', 'active');
-      expect(el).toHaveAttribute('data-color', 'primary');
+      expect(el).toHaveAttribute('data-color', 'indigo');
       expect(el).toHaveAttribute('data-line-variant', 'solid');
     });
 
     it('inherits color from Root context', () => {
       render(
-        <Timeline active={0} color="success" animations={false}>
+        <Timeline active={0} color="green" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
         </Timeline>
       );
-      expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'success');
+      expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'green');
     });
 
     it('can override color with its own color prop', () => {
       render(
-        <Timeline active={0} color="primary" animations={false}>
-          <Timeline.Item data-testid="item" color="danger">Step 1</Timeline.Item>
+        <Timeline active={0} color="indigo" animations={false}>
+          <Timeline.Item data-testid="item" color="red">Step 1</Timeline.Item>
         </Timeline>
       );
-      expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'danger');
+      expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'red');
     });
 
     it('inherits lineVariant from Root context', () => {

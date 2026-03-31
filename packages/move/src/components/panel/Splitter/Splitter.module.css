@@ -8,7 +8,7 @@
 
 .root {
   /* Component tokens */
-  --move-splitter-gutter-bg: var(--move-bg-emphasis);
+  --move-splitter-gutter-bg: var(--move-border-base);
   --move-splitter-gutter-bg-hover: var(--move-border-emphasis);
   --move-splitter-gutter-bg-active: var(--move-primary);
 

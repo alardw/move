@@ -84,7 +84,7 @@
   border-radius: var(--move-datepicker-content-radius);
   box-shadow: var(--move-datepicker-content-shadow);
   padding: var(--move-datepicker-content-padding);
-  z-index: var(--move-layer-dropdown);
+  z-index: var(--move-layer-popover);
   outline: none;
   overflow: hidden;
   will-change: transform, opacity;

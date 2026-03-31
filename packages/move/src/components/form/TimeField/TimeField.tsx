@@ -7,6 +7,7 @@ import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems } from '../../../animation';
+import { useLayer } from '../../../infrastructure/Layer';
 import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
 import type { UseTimeFieldReturn, SegmentType, TimeFieldGranularity } from './useTimeField';
@@ -484,6 +485,7 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
   style,
 }) => {
   const ctx = useTimeFieldContext();
+  const layer = useLayer();
 
   const contentRef = React.useRef<HTMLDivElement>(null);
 
@@ -520,7 +522,7 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
         sideOffset={4}
         align="start"
         className={`${styles.dropdown} ${className ?? ''}`}
-        style={style}
+        style={{ ...style, ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
         onOpenAutoFocus={(e) => e.preventDefault()}

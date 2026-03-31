@@ -6,6 +6,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useLayer } from '../../../infrastructure/Layer';
 import { useAnimations, resolveAnimationsConfig, extractSteps, revealHeight, staggerItems, quick, poppy } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
@@ -656,6 +657,7 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
+    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -730,6 +732,7 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
             className={cx('content', props.className, spClass as string | undefined)}
             style={{
               ...props.style,
+              ...(layer > 0 ? { zIndex: layer + 1 } : {}),
               ...(spStyle as React.CSSProperties),
               width: 'var(--radix-popover-trigger-width)',
             }}

@@ -7,6 +7,8 @@ import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, poppy } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Popover.module.css';
 
 // =============================================================================
@@ -234,6 +236,8 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig, closeOnScroll } = usePopoverContext();
+    const surface = useSurfaceFlip();
+    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const refs = React.useMemo(() => ({ Content: contentRef as React.RefObject<HTMLElement | null> }), []);
@@ -293,15 +297,18 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
             sideOffset={props.sideOffset as number}
             align={props.align as 'start' | 'center' | 'end'}
             alignOffset={props.alignOffset as number}
+            data-surface={surface}
             className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
             onPointerDownOutside={handlePointerDownOutside}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
             onOpenAutoFocus={props.onOpenAutoFocus as ((e: Event) => void) | undefined}
             onCloseAutoFocus={props.onCloseAutoFocus as ((e: Event) => void) | undefined}
           >
-            {props.children}
+            <SurfaceProvider value={surface}>
+              {props.children}
+            </SurfaceProvider>
           </RadixPopover.Content>
         );
       },

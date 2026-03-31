@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
-import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick, stiff } from '../../../animation';
+import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon/useResolvedIcon';
 import {
@@ -66,14 +66,11 @@ function VariantIcon({ variant }: { variant: string }) {
 
 const DEFAULT_TOAST_ANIMATIONS: AnimationTrigger[] = [
   {
-    trigger: 'Wrapper.enter',
+    trigger: 'Item.enter',
     sequence: [
-      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: stiff } } },
       { target: 'Item', animation: {
-        y: { from: 24, to: 0, ease: quick, duration: 200 },
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        scale: { from: 0.95, to: 1, ease: quick },
-        delay: 60,
+        translateY: { from: 16, to: 0, ease: quick, duration: 250 },
+        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 250 },
       } },
     ],
   },
@@ -81,11 +78,10 @@ const DEFAULT_TOAST_ANIMATIONS: AnimationTrigger[] = [
     trigger: 'Wrapper.exit',
     sequence: [
       { target: 'Item', animation: {
-        y: { from: 0, to: 24, ease: 'outQuart', duration: 300 },
-        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 300 },
-        scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 300 },
+        translateY: { from: 0, to: 16, ease: 'outQuart', duration: 200 },
+        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 200 },
       } },
-      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: 'outQuart', duration: 300 } } },
+      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: 'inOutQuart', duration: 300 } } },
     ],
   },
 ];
@@ -229,10 +225,14 @@ const ToastViewport = withMoveComponent<
   setup({ props, ref, cx, sp, attrs }) {
     const allToasts = useToastStore();
 
-    // Resolve animations prop
-    const animConfig = resolveAnimationsConfig(
-      DEFAULT_TOAST_ANIMATIONS,
-      props.animations as AnimationTrigger[] | false | undefined,
+    // Resolve animations prop (memoize to avoid re-triggering enter animations)
+    const animationsProp = props.animations;
+    const animConfig = React.useMemo(
+      () => resolveAnimationsConfig(
+        DEFAULT_TOAST_ANIMATIONS,
+        animationsProp as AnimationTrigger[] | false | undefined,
+      ),
+      [animationsProp],
     );
 
     // Group toasts by position (max enforced by the store on add)

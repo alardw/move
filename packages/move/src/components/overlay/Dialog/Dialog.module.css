@@ -25,7 +25,7 @@
 
 .content {
   /* Component tokens — content, title, description, close (children inherit) */
-  --move-dialog-content-bg: var(--move-bg-subtle);
+  --move-dialog-content-bg: var(--move-surface-bg);
   --move-dialog-content-border: var(--move-border-base);
   --move-dialog-content-radius: var(--move-rounded-xl);
   --move-dialog-content-shadow: var(--move-shadow-overlay);
@@ -44,7 +44,7 @@
   --move-dialog-close-icon-size: var(--move-text-base);
   --move-dialog-close-fg: var(--move-fg-muted);
   --move-dialog-close-fg-hover: var(--move-fg-base);
-  --move-dialog-close-bg-hover: var(--move-bg-muted);
+  --move-dialog-close-bg-hover: var(--move-surface-hover);
   --move-dialog-close-radius: var(--move-rounded-sm);
   position: fixed;
   top: 50%;

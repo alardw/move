@@ -59,26 +59,12 @@ export interface GridCellProps extends Record<string, unknown> {
 // Helpers
 // ============================================================================
 
-const GAP_MAP: Record<string, string> = {
-  none: '0',
-  xs: 'var(--move-spacing-xs)',
-  sm: 'var(--move-spacing-sm)',
-  md: 'var(--move-spacing-md)',
-  lg: 'var(--move-spacing-lg)',
-  xl: 'var(--move-spacing-xl)',
-};
-
 const ALIGN_SELF_MAP: Record<string, string> = {
   start: 'start',
   center: 'center',
   end: 'end',
   stretch: 'stretch',
 };
-
-function resolveGap(value: string | undefined): string | undefined {
-  if (!value) return undefined;
-  return GAP_MAP[value] || value;
-}
 
 function getGridTemplate(props: GridProps): string {
   const minChildWidth = props.minChildWidth as string | undefined;
@@ -135,9 +121,6 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        const gap = props.gap as string;
-        const rowGap = props.rowGap as string | undefined;
-        const columnGap = props.columnGap as string | undefined;
         const rows = props.rows as number | undefined;
 
         return (
@@ -146,13 +129,13 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
             {...spRest}
             ref={ref}
             className={cx('root', props.className, spClass as string | undefined)}
+            data-gap={props.gap as string}
+            data-row-gap={props.rowGap as string | undefined}
+            data-column-gap={props.columnGap as string | undefined}
             data-padding={props.padding as string | undefined}
             style={{
               '--_grid-template': getGridTemplate(props as GridProps),
               '--_grid-rows': rows ? `repeat(${rows}, 1fr)` : undefined,
-              gap: resolveGap(gap),
-              rowGap: resolveGap(rowGap),
-              columnGap: resolveGap(columnGap),
               ...(props.style as React.CSSProperties),
               ...(spStyle as React.CSSProperties),
             } as React.CSSProperties}

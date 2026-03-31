@@ -9,8 +9,8 @@
 .root {
   /* Component tokens */
   --move-scrollarea-bg: transparent;
-  --move-scrollarea-header-bg: var(--move-bg-subtle);
-  --move-scrollarea-footer-bg: var(--move-bg-subtle);
+  --move-scrollarea-header-bg: transparent;
+  --move-scrollarea-footer-bg: transparent;
   --move-scrollarea-padding: var(--move-spacing-md);
   --move-scrollarea-scrollbar-size: 8px;
   --move-scrollarea-scrollbar-thumb: var(--move-scrollbar-thumb);

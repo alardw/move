@@ -6,6 +6,7 @@ export type {
   ChatBubbleAvatarSize,
   ChatBubbleContainerProps,
   ChatBubbleVariant,
+  ChatBubbleColor,
   ChatBubbleHeaderProps,
   ChatBubbleContentProps,
   ChatBubbleFooterProps,
