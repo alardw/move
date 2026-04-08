@@ -156,7 +156,7 @@
  * Responsive collapse — trailing wraps below on narrow items
  * ========================================================================= */
 
-@container (max-width: 400px) {
+@container (max-width: 480px) {
   .item {
     flex-wrap: wrap;
   }
@@ -164,6 +164,11 @@
   .trailing {
     width: 100%;
     padding-left: 0;
+  }
+
+  .trailing [data-direction="column"] {
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -249,6 +254,7 @@
   display: flex;
   align-items: center;
   flex-shrink: 0;
+  margin-left: auto;
   gap: var(--move-spacing-sm);
 }
 
