@@ -5,7 +5,6 @@ export type {
   DatePickerTriggerProps,
   DatePickerInputProps,
   DatePickerIconProps,
-  DatePickerPortalProps,
   DatePickerContentProps,
   DatePickerSize,
   DatePickerLabels,

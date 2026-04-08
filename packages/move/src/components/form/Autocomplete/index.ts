@@ -10,7 +10,6 @@ export type {
   AutocompleteTagProps,
   AutocompleteIconProps,
   AutocompleteClearTriggerProps,
-  AutocompletePortalProps,
   AutocompleteContentProps,
   AutocompleteItemProps,
   AutocompleteItemIndicatorProps,

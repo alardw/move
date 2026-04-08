@@ -34,8 +34,7 @@ const renderAutocomplete = (props: {
         {showClear && <Autocomplete.ClearTrigger />}
         <Autocomplete.Icon />
       </Autocomplete.Trigger>
-      <Autocomplete.Portal>
-        <Autocomplete.Content>
+      <Autocomplete.Content>
           {items.map((item) => (
             <Autocomplete.Item key={item.value} value={item.value} disabled={item.disabled}>
               {item.label}
@@ -43,7 +42,6 @@ const renderAutocomplete = (props: {
           ))}
           {showEmpty && <Autocomplete.Empty>No results</Autocomplete.Empty>}
         </Autocomplete.Content>
-      </Autocomplete.Portal>
     </Autocomplete.Root>
   );
 };
@@ -336,14 +334,12 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
             <Autocomplete.Content>
               <Autocomplete.Group>
                 <Autocomplete.GroupLabel>Fruits</Autocomplete.GroupLabel>
                 <Autocomplete.Item value="apple">Apple</Autocomplete.Item>
               </Autocomplete.Group>
             </Autocomplete.Content>
-          </Autocomplete.Portal>
         </Autocomplete.Root>
       );
       await user.click(screen.getByRole('combobox'));
@@ -359,13 +355,11 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
             <Autocomplete.Content>
               <Autocomplete.Item value="a">A</Autocomplete.Item>
               <Autocomplete.Separator />
               <Autocomplete.Item value="b">B</Autocomplete.Item>
             </Autocomplete.Content>
-          </Autocomplete.Portal>
         </Autocomplete.Root>
       );
       await user.click(screen.getByRole('combobox'));
@@ -383,12 +377,10 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
             <Autocomplete.Content>
               <Autocomplete.Loading>Loading...</Autocomplete.Loading>
               <Autocomplete.Empty>No results</Autocomplete.Empty>
             </Autocomplete.Content>
-          </Autocomplete.Portal>
         </Autocomplete.Root>
       );
       await user.click(screen.getByRole('combobox'));
@@ -404,11 +396,9 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
             <Autocomplete.Content>
               <Autocomplete.Loading>Loading...</Autocomplete.Loading>
             </Autocomplete.Content>
-          </Autocomplete.Portal>
         </Autocomplete.Root>
       );
       await user.click(screen.getByRole('combobox'));

@@ -623,21 +623,7 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
 });
 
 // =============================================================================
-// Portal
-// =============================================================================
-
-export interface AutocompletePortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const AutocompletePortal: React.FC<AutocompletePortalProps> = (props) => (
-  <RadixPopover.Portal {...props} />
-);
-AutocompletePortal.displayName = 'Autocomplete.Portal';
-
-// =============================================================================
-// Content
+// Content (auto-portals to document.body)
 // =============================================================================
 
 export interface AutocompleteContentProps extends Record<string, unknown> {
@@ -646,6 +632,7 @@ export interface AutocompleteContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
+  container?: HTMLElement;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
@@ -653,7 +640,7 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
   name: 'AutocompleteContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align'],
+  moveProps: ['sideOffset', 'align', 'container'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
@@ -723,36 +710,38 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
         const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
-          <RadixPopover.Content
-            {...attrs}
-            {...spRest}
-            ref={mergedContentRef}
-            sideOffset={props.sideOffset as number ?? 4}
-            align={props.align as 'start' | 'center' | 'end' ?? 'start'}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{
-              ...props.style,
-              ...(layer > 0 ? { zIndex: layer + 1 } : {}),
-              ...(spStyle as React.CSSProperties),
-              width: 'var(--radix-popover-trigger-width)',
-            }}
-            onPointerDownOutside={handlePointerDownOutside}
-            onOpenAutoFocus={handleOpenAutoFocus}
-            onCloseAutoFocus={handleCloseAutoFocus}
-          >
-            <div
-              ref={innerRef}
-              {...innerSpRest}
-              id={ac.listboxId}
-              role="listbox"
-              aria-multiselectable={ac.multiple || undefined}
-              data-mode={ac.multiple ? 'multi' : 'single'}
-              className={cx('contentInner', innerSpClass as string | undefined)}
-              style={innerSpStyle as React.CSSProperties}
+          <RadixPopover.Portal container={props.container as HTMLElement | undefined}>
+            <RadixPopover.Content
+              {...attrs}
+              {...spRest}
+              ref={mergedContentRef}
+              sideOffset={props.sideOffset as number ?? 4}
+              align={props.align as 'start' | 'center' | 'end' ?? 'start'}
+              className={cx('content', props.className, spClass as string | undefined)}
+              style={{
+                ...props.style,
+                ...(layer > 0 ? { zIndex: layer + 1 } : {}),
+                ...(spStyle as React.CSSProperties),
+                width: 'var(--radix-popover-trigger-width)',
+              }}
+              onPointerDownOutside={handlePointerDownOutside}
+              onOpenAutoFocus={handleOpenAutoFocus}
+              onCloseAutoFocus={handleCloseAutoFocus}
             >
-              {props.children}
-            </div>
-          </RadixPopover.Content>
+              <div
+                ref={innerRef}
+                {...innerSpRest}
+                id={ac.listboxId}
+                role="listbox"
+                aria-multiselectable={ac.multiple || undefined}
+                data-mode={ac.multiple ? 'multi' : 'single'}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+              >
+                {props.children}
+              </div>
+            </RadixPopover.Content>
+          </RadixPopover.Portal>
         );
       },
     };
@@ -1160,7 +1149,6 @@ export const Autocomplete = {
   Tag: AutocompleteTag,
   Icon: AutocompleteIcon,
   ClearTrigger: AutocompleteClearTrigger,
-  Portal: AutocompletePortal,
   Content: AutocompleteContent,
   Item: AutocompleteItem,
   ItemIndicator: AutocompleteItemIndicator,

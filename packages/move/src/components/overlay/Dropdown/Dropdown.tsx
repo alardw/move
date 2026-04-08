@@ -147,21 +147,7 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
 });
 
 // ============================================================================
-// Portal (stateless — no factory needed)
-// ============================================================================
-
-export interface DropdownPortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const DropdownPortal: React.FC<DropdownPortalProps> = (props) => (
-  <RadixDropdownMenu.Portal {...props} />
-);
-DropdownPortal.displayName = 'Dropdown.Portal';
-
-// ============================================================================
-// Content
+// Content (auto-portals to document.body)
 // ============================================================================
 
 export interface DropdownContentProps extends Record<string, unknown> {
@@ -170,6 +156,7 @@ export interface DropdownContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
+  container?: HTMLElement;
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   onInteractOutside?: (e: Event) => void;
@@ -180,7 +167,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
   name: 'DropdownContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig } = useDropdownContext();
@@ -246,27 +233,29 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
         const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
-          <RadixDropdownMenu.Content
-            {...attrs}
-            {...spRest}
-            ref={mergedContentRef}
-            sideOffset={props.sideOffset as number}
-            align={props.align as 'start' | 'center' | 'end'}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-            onPointerDownOutside={handlePointerDownOutside}
-            onEscapeKeyDown={handleEscapeKeyDown}
-            onInteractOutside={handleInteractOutside}
-          >
-            <div
-              ref={innerRef}
-              {...innerSpRest}
-              className={cx('contentInner', innerSpClass as string | undefined)}
-              style={innerSpStyle as React.CSSProperties}
+          <RadixDropdownMenu.Portal container={props.container as HTMLElement | undefined}>
+            <RadixDropdownMenu.Content
+              {...attrs}
+              {...spRest}
+              ref={mergedContentRef}
+              sideOffset={props.sideOffset as number}
+              align={props.align as 'start' | 'center' | 'end'}
+              className={cx('content', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+              onPointerDownOutside={handlePointerDownOutside}
+              onEscapeKeyDown={handleEscapeKeyDown}
+              onInteractOutside={handleInteractOutside}
             >
-              {props.children}
-            </div>
-          </RadixDropdownMenu.Content>
+              <div
+                ref={innerRef}
+                {...innerSpRest}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+              >
+                {props.children}
+              </div>
+            </RadixDropdownMenu.Content>
+          </RadixDropdownMenu.Portal>
         );
       },
     };
@@ -864,7 +853,6 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
 export const Dropdown = {
   Root: DropdownRoot,
   Trigger: DropdownTrigger,
-  Portal: DropdownPortal,
   Content: DropdownContent,
   Arrow: DropdownArrow,
   Item: DropdownItem,

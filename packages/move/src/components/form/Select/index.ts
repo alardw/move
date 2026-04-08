@@ -7,7 +7,6 @@ export type {
   SelectTriggerVariant,
   SelectValueProps,
   SelectIconProps,
-  SelectPortalProps,
   SelectContentProps,
   SelectViewportProps,
   SelectItemProps,

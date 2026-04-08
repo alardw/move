@@ -120,21 +120,7 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
 });
 
 // ============================================================================
-// Portal (stateless -- no factory needed)
-// ============================================================================
-
-export interface TooltipPortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const TooltipPortal: React.FC<TooltipPortalProps> = (props) => (
-  <RadixTooltip.Portal {...props} />
-);
-TooltipPortal.displayName = 'Tooltip.Portal';
-
-// ============================================================================
-// Content
+// Content (auto-portals to document.body)
 //
 // Entrance animation is direction-aware: reads data-side from Radix via
 // dynamic vars and computes translate offset accordingly.
@@ -149,6 +135,7 @@ export interface TooltipContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
+  container?: HTMLElement;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'content'>;
 }
@@ -157,7 +144,7 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
   name: 'TooltipContent',
   styles,
   slots: ['content'] as const,
-  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'animations'],
+  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -188,19 +175,21 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
         const contentSp = sp('content');
         const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         return (
-          <RadixTooltip.Content
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            side={props.side as 'top' | 'right' | 'bottom' | 'left'}
-            sideOffset={props.sideOffset as number}
-            align={props.align as 'start' | 'center' | 'end'}
-            alignOffset={props.alignOffset as number}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixTooltip.Content>
+          <RadixTooltip.Portal container={props.container as HTMLElement | undefined}>
+            <RadixTooltip.Content
+              {...attrs}
+              {...spRest}
+              ref={mergedRef}
+              side={props.side as 'top' | 'right' | 'bottom' | 'left'}
+              sideOffset={props.sideOffset as number}
+              align={props.align as 'start' | 'center' | 'end'}
+              alignOffset={props.alignOffset as number}
+              className={cx('content', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </RadixTooltip.Content>
+          </RadixTooltip.Portal>
         );
       },
     };
@@ -288,12 +277,10 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   <TooltipProvider delayDuration={delayDuration ?? 400}>
     <TooltipRoot delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipPortal>
-        <TooltipContent side={side} sideOffset={sideOffset} align={align} animations={animationsProp}>
-          {arrow && <TooltipArrow />}
-          {label}
-        </TooltipContent>
-      </TooltipPortal>
+      <TooltipContent side={side} sideOffset={sideOffset} align={align} animations={animationsProp}>
+        {arrow && <TooltipArrow />}
+        {label}
+      </TooltipContent>
     </TooltipRoot>
   </TooltipProvider>
 );
@@ -307,7 +294,6 @@ export const Tooltip = Object.assign(TooltipSimple, {
   Provider: TooltipProvider,
   Root: TooltipRoot,
   Trigger: TooltipTrigger,
-  Portal: TooltipPortal,
   Content: TooltipContent,
   Arrow: TooltipArrow,
 });

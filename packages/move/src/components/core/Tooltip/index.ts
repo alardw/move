@@ -5,7 +5,6 @@ export type {
   TooltipProviderProps,
   TooltipRootProps,
   TooltipTriggerProps,
-  TooltipPortalProps,
   TooltipContentProps,
   TooltipArrowProps,
 } from './Tooltip';

@@ -440,17 +440,15 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   <Select.Value />
                   <Select.Icon />
                 </Select.Trigger>
-                <Select.Portal>
-                  <Select.Content>
-                    <Select.Viewport>
-                      {formatOptions.map(f => (
-                        <Select.Item key={f} value={f}>
-                          {f.toUpperCase()}
-                        </Select.Item>
-                      ))}
-                    </Select.Viewport>
-                  </Select.Content>
-                </Select.Portal>
+                <Select.Content>
+                  <Select.Viewport>
+                    {formatOptions.map(f => (
+                      <Select.Item key={f} value={f}>
+                        {f.toUpperCase()}
+                      </Select.Item>
+                    ))}
+                  </Select.Viewport>
+                </Select.Content>
               </Select.Root>
 
               {/* Channel inputs */}

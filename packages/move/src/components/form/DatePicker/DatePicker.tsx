@@ -934,21 +934,7 @@ const DatePickerIcon: React.FC<DatePickerIconProps> = ({ className, children }) 
 DatePickerIcon.displayName = 'DatePicker.Icon';
 
 // =============================================================================
-// Portal
-// =============================================================================
-
-export interface DatePickerPortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const DatePickerPortal: React.FC<DatePickerPortalProps> = (props) => (
-  <RadixPopover.Portal {...props} />
-);
-DatePickerPortal.displayName = 'DatePicker.Portal';
-
-// =============================================================================
-// Content
+// Content (auto-portals to document.body)
 // =============================================================================
 
 export interface DatePickerContentProps {
@@ -959,11 +945,13 @@ export interface DatePickerContentProps {
   sideOffset?: number;
   /** Alignment relative to trigger */
   align?: 'start' | 'center' | 'end';
+  /** Custom portal mount target */
+  container?: HTMLElement;
   [key: string]: unknown;
 }
 
 const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
-  ({ children, className, style, sideOffset = 4, align = 'start', ...rest }, forwardedRef) => {
+  ({ children, className, style, sideOffset = 4, align = 'start', container, ...rest }, forwardedRef) => {
     const dpCtx = React.useContext(DatePickerContext);
     const layer = useLayer();
     const animConfig = dpCtx?.animConfig ?? null;
@@ -1014,44 +1002,46 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
     };
 
     return (
-      <RadixPopover.Content
-        {...rest}
-        ref={mergedRef}
-        sideOffset={sideOffset as number}
-        align={align as 'start' | 'center' | 'end'}
-        className={`${styles.content} ${className ?? ''}`}
-        style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
-        onPointerDownOutside={handlePointerDownOutside}
-        onEscapeKeyDown={handleEscapeKeyDown}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        {dpCtx?.mode === 'range' && dpCtx.activeField && (
-          <div className={styles.rangeInstruction}>
-            {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
+      <RadixPopover.Portal container={container}>
+        <RadixPopover.Content
+          {...rest}
+          ref={mergedRef}
+          sideOffset={sideOffset as number}
+          align={align as 'start' | 'center' | 'end'}
+          className={`${styles.content} ${className ?? ''}`}
+          style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
+          onPointerDownOutside={handlePointerDownOutside}
+          onEscapeKeyDown={handleEscapeKeyDown}
+          onOpenAutoFocus={(e) => e.preventDefault()}
+          onCloseAutoFocus={(e) => e.preventDefault()}
+        >
+          {dpCtx?.mode === 'range' && dpCtx.activeField && (
+            <div className={styles.rangeInstruction}>
+              {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
+            </div>
+          )}
+          <div ref={innerRef}>
+            {(children ?? (
+              <>
+                <CalendarNav />
+                <MonthGrid />
+              </>
+            )) as React.ReactNode}
           </div>
-        )}
-        <div ref={innerRef}>
-          {(children ?? (
-            <>
-              <CalendarNav />
-              <MonthGrid />
-            </>
-          )) as React.ReactNode}
-        </div>
-        {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
-          <div className={styles.datePickerTime}>
-            <span className={styles.datePickerTimeLabel}>Time</span>
-            <TimeField
-              value={dpCtx.timeValue}
-              onValueChange={dpCtx.onTimeChange}
-              granularity="minute"
-              hourCycle={dpCtx.timeHourCycle}
-              size="sm"
-            />
-          </div>
-        )}
-      </RadixPopover.Content>
+          {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
+            <div className={styles.datePickerTime}>
+              <span className={styles.datePickerTimeLabel}>Time</span>
+              <TimeField
+                value={dpCtx.timeValue}
+                onValueChange={dpCtx.onTimeChange}
+                granularity="minute"
+                hourCycle={dpCtx.timeHourCycle}
+                size="sm"
+              />
+            </div>
+          )}
+        </RadixPopover.Content>
+      </RadixPopover.Portal>
     );
   },
 );
@@ -1066,6 +1056,5 @@ export const DatePicker = {
   Trigger: DatePickerTrigger,
   Input: DatePickerInput,
   Icon: DatePickerIcon,
-  Portal: DatePickerPortal,
   Content: DatePickerContent,
 };

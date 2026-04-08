@@ -10,7 +10,6 @@ const renderDatePicker = (rootProps: Record<string, any> = {}, inputProps: Recor
       <DatePicker.Trigger>
         <DatePicker.Input {...inputProps} />
       </DatePicker.Trigger>
-      <DatePicker.Portal>
         <DatePicker.Content data-testid="content">
           <div role="grid">
             <div role="gridcell">1</div>
@@ -18,7 +17,6 @@ const renderDatePicker = (rootProps: Record<string, any> = {}, inputProps: Recor
             <div role="gridcell">3</div>
           </div>
         </DatePicker.Content>
-      </DatePicker.Portal>
     </DatePicker.Root>,
   );
 };
@@ -155,12 +153,10 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-          <DatePicker.Portal>
-            <DatePicker.Content>
+                <DatePicker.Content>
               <span data-testid="calendar">Calendar</span>
             </DatePicker.Content>
-          </DatePicker.Portal>
-        </DatePicker.Root>,
+            </DatePicker.Root>,
       );
       expect(screen.getByTestId('calendar')).toBeInTheDocument();
     });
@@ -171,12 +167,10 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-          <DatePicker.Portal>
-            <DatePicker.Content className="content-class" style={{ maxWidth: '300px' }} data-testid="content">
+                <DatePicker.Content className="content-class" style={{ maxWidth: '300px' }} data-testid="content">
               <span>Cal</span>
             </DatePicker.Content>
-          </DatePicker.Portal>
-        </DatePicker.Root>,
+            </DatePicker.Root>,
       );
       const content = screen.getByTestId('content');
       expect(content).toHaveClass('content-class');
@@ -192,12 +186,10 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-          <DatePicker.Portal>
-            <DatePicker.Content data-testid="content">
+                <DatePicker.Content data-testid="content">
               <span>Cal</span>
             </DatePicker.Content>
-          </DatePicker.Portal>
-        </DatePicker.Root>,
+            </DatePicker.Root>,
       );
       expect(screen.getByTestId('content')).toBeInTheDocument();
     });

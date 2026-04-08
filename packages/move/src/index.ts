@@ -162,7 +162,7 @@ export { Text } from './components/core/Text';
 export type { TextProps, TextSize, TextWeight, TextColor, TextAlign, TextAs } from './components/core/Text';
 
 export { Tooltip } from './components/core/Tooltip';
-export type { TooltipSimpleProps, TooltipProviderProps, TooltipRootProps, TooltipTriggerProps, TooltipPortalProps, TooltipContentProps, TooltipArrowProps } from './components/core/Tooltip';
+export type { TooltipSimpleProps, TooltipProviderProps, TooltipRootProps, TooltipTriggerProps, TooltipContentProps, TooltipArrowProps } from './components/core/Tooltip';
 
 export { Calendar } from './components/calendar/Calendar';
 export type { CalendarRootProps, CalendarNavProps, CalendarGridProps } from './components/calendar/Calendar';
@@ -175,7 +175,7 @@ export { useCalendarView } from './components/calendar/CalendarView';
 export type { UseCalendarViewOptions, UseCalendarViewReturn, CalendarViewLabels } from './components/calendar/CalendarView';
 
 export { DatePicker } from './components/form/DatePicker';
-export type { DatePickerRootProps, DatePickerTriggerProps, DatePickerInputProps, DatePickerIconProps, DatePickerPortalProps, DatePickerContentProps, DatePickerSize, DatePickerLabels, DatePickerRangeLabels } from './components/form/DatePicker';
+export type { DatePickerRootProps, DatePickerTriggerProps, DatePickerInputProps, DatePickerIconProps, DatePickerContentProps, DatePickerSize, DatePickerLabels, DatePickerRangeLabels } from './components/form/DatePicker';
 export { useDatePicker } from './components/form/DatePicker';
 export type { UseDatePickerOptions, UseDatePickerReturn } from './components/form/DatePicker';
 
@@ -242,10 +242,10 @@ export { usePinInput } from './components/form/PinInput';
 export type { UsePinInputOptions, UsePinInputReturn } from './components/form/PinInput';
 
 export { Select } from './components/form/Select';
-export type { SelectRootProps, SelectTriggerProps, SelectTriggerSize, SelectTriggerVariant, SelectValueProps, SelectIconProps, SelectPortalProps, SelectContentProps, SelectViewportProps, SelectItemProps, SelectGroupProps, SelectLabelProps, SelectSeparatorProps } from './components/form/Select';
+export type { SelectRootProps, SelectTriggerProps, SelectTriggerSize, SelectTriggerVariant, SelectValueProps, SelectIconProps, SelectContentProps, SelectViewportProps, SelectItemProps, SelectGroupProps, SelectLabelProps, SelectSeparatorProps } from './components/form/Select';
 
 export { Autocomplete } from './components/form/Autocomplete';
-export type { AutocompleteRootProps, AutocompleteTriggerProps, AutocompleteTriggerSize, AutocompleteTriggerVariant, AutocompleteInputProps, AutocompleteTagListProps, AutocompleteTagProps, AutocompleteIconProps, AutocompleteClearTriggerProps, AutocompletePortalProps, AutocompleteContentProps, AutocompleteItemProps, AutocompleteItemIndicatorProps, AutocompleteGroupProps, AutocompleteGroupLabelProps, AutocompleteEmptyProps, AutocompleteLoadingProps, AutocompleteSeparatorProps } from './components/form/Autocomplete';
+export type { AutocompleteRootProps, AutocompleteTriggerProps, AutocompleteTriggerSize, AutocompleteTriggerVariant, AutocompleteInputProps, AutocompleteTagListProps, AutocompleteTagProps, AutocompleteIconProps, AutocompleteClearTriggerProps, AutocompleteContentProps, AutocompleteItemProps, AutocompleteItemIndicatorProps, AutocompleteGroupProps, AutocompleteGroupLabelProps, AutocompleteEmptyProps, AutocompleteLoadingProps, AutocompleteSeparatorProps } from './components/form/Autocomplete';
 export { useAutocomplete } from './components/form/Autocomplete';
 export type { UseAutocompleteOptions, UseAutocompleteReturn, RegisteredItem } from './components/form/Autocomplete';
 
@@ -305,10 +305,10 @@ export type { DrawerRootProps, DrawerTriggerProps, DrawerPortalProps, DrawerOver
 export type { DialogRootProps, DialogTriggerProps, DialogPortalProps, DialogOverlayProps, DialogContentProps, DialogSize, DialogHeaderProps, DialogBodyProps, DialogFooterProps, DialogFooterStartProps, DialogFooterEndProps, DialogTitleProps, DialogDescriptionProps, DialogCloseProps } from './components/overlay/Dialog';
 
 export { Dropdown } from './components/overlay/Dropdown';
-export type { DropdownRootProps, DropdownTriggerProps, DropdownPortalProps, DropdownContentProps, DropdownArrowProps, DropdownItemProps, DropdownGroupProps, DropdownLabelProps, DropdownCheckboxItemProps, DropdownRadioGroupProps, DropdownRadioItemProps, DropdownItemIndicatorProps, DropdownSeparatorProps, DropdownSubProps, DropdownSubTriggerProps, DropdownSubContentProps } from './components/overlay/Dropdown';
+export type { DropdownRootProps, DropdownTriggerProps, DropdownContentProps, DropdownArrowProps, DropdownItemProps, DropdownGroupProps, DropdownLabelProps, DropdownCheckboxItemProps, DropdownRadioGroupProps, DropdownRadioItemProps, DropdownItemIndicatorProps, DropdownSeparatorProps, DropdownSubProps, DropdownSubTriggerProps, DropdownSubContentProps } from './components/overlay/Dropdown';
 
 export { Popover } from './components/overlay/Popover';
-export type { PopoverRootProps, PopoverTriggerProps, PopoverAnchorProps, PopoverPortalProps, PopoverContentProps, PopoverArrowProps, PopoverCloseProps } from './components/overlay/Popover';
+export type { PopoverRootProps, PopoverTriggerProps, PopoverAnchorProps, PopoverContentProps, PopoverArrowProps, PopoverCloseProps } from './components/overlay/Popover';
 
 export { Toast, toast } from './components/overlay/Toast';
 export type { ToastViewportProps, ToastState, ToastPosition, ToastVariant, ToastOptions } from './components/overlay/Toast';

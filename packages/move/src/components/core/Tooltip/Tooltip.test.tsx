@@ -148,11 +148,9 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
             <Tooltip.Content sideOffset={4}>
               Content
             </Tooltip.Content>
-          </Tooltip.Portal>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -167,9 +165,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content>Content</Tooltip.Content>
-          </Tooltip.Portal>
+          <Tooltip.Content>Content</Tooltip.Content>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -184,9 +180,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
             <Tooltip.Content align="start">Content</Tooltip.Content>
-          </Tooltip.Portal>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -201,9 +195,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content>Portaled</Tooltip.Content>
-          </Tooltip.Portal>
+          <Tooltip.Content>Portaled</Tooltip.Content>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -220,11 +212,9 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
             <Tooltip.Content className="custom-content" style={{ padding: '20px' }}>
               Styled
             </Tooltip.Content>
-          </Tooltip.Portal>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -243,9 +233,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button className="custom-trigger" style={{ color: 'red' }} data-testid="trigger-btn">T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content>Content</Tooltip.Content>
-          </Tooltip.Portal>
+          <Tooltip.Content>Content</Tooltip.Content>
         </Tooltip.Root>
       );
       const triggerBtn = screen.getByTestId('trigger-btn');
@@ -262,9 +250,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content>Accessible tooltip</Tooltip.Content>
-          </Tooltip.Portal>
+          <Tooltip.Content>Accessible tooltip</Tooltip.Content>
         </Tooltip.Root>
       );
       await waitFor(() => {
@@ -278,9 +264,7 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button data-testid="trigger">T</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
-            <Tooltip.Content>Tooltip text</Tooltip.Content>
-          </Tooltip.Portal>
+          <Tooltip.Content>Tooltip text</Tooltip.Content>
         </Tooltip.Root>
       );
       const trigger = screen.getByTestId('trigger');
@@ -327,12 +311,10 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button data-testid="trigger">Hover</button>
           </Tooltip.Trigger>
-          <Tooltip.Portal>
             <Tooltip.Content side="top" sideOffset={6}>
               <Tooltip.Arrow />
               Compound tooltip
             </Tooltip.Content>
-          </Tooltip.Portal>
         </Tooltip.Root>
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();

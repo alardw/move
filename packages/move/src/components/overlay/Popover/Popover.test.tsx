@@ -15,12 +15,10 @@ function renderPopover(
       <Popover.Trigger data-testid="trigger">
         <button>Open</button>
       </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content data-testid="content" {...contentProps}>
+      <Popover.Content data-testid="content" {...contentProps}>
           {children ?? 'Popover body'}
           <Popover.Close data-testid="close" />
         </Popover.Content>
-      </Popover.Portal>
     </Popover.Root>,
   );
 }
@@ -79,9 +77,7 @@ describe('Popover', () => {
           <Popover.Trigger className="custom-trigger" style={{ color: 'red' }} data-testid="trigger">
             <button>Open</button>
           </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content>Content</Popover.Content>
-          </Popover.Portal>
+          <Popover.Content>Content</Popover.Content>
         </Popover.Root>,
       );
       const trigger = screen.getByTestId('trigger');
@@ -160,11 +156,9 @@ describe('Popover', () => {
       render(
         <Popover.Root open>
           <Popover.Trigger><button>Open</button></Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content>
+          <Popover.Content>
               <Popover.Close closeLabel="Dismiss" data-testid="close" />
             </Popover.Content>
-          </Popover.Portal>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -176,13 +170,11 @@ describe('Popover', () => {
       render(
         <Popover.Root open>
           <Popover.Trigger><button>Open</button></Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content>
+          <Popover.Content>
               <Popover.Close data-testid="close">
                 <span data-testid="custom-icon">X</span>
               </Popover.Close>
             </Popover.Content>
-          </Popover.Portal>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -197,12 +189,10 @@ describe('Popover', () => {
       render(
         <Popover.Root open>
           <Popover.Trigger><button>Open</button></Popover.Trigger>
-          <Popover.Portal>
             <Popover.Content data-testid="content">
               <Popover.Arrow data-testid="arrow" />
               Body
             </Popover.Content>
-          </Popover.Portal>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -220,9 +210,7 @@ describe('Popover', () => {
             <span>Anchor element</span>
           </Popover.Anchor>
           <Popover.Trigger><button>Open</button></Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content>Body</Popover.Content>
-          </Popover.Portal>
+          <Popover.Content>Body</Popover.Content>
         </Popover.Root>,
       );
       expect(screen.getByTestId('anchor')).toBeInTheDocument();
@@ -267,13 +255,11 @@ describe('Popover', () => {
           <Popover.Trigger asChild>
             <button data-testid="trigger">Open Popover</button>
           </Popover.Trigger>
-          <Popover.Portal>
             <Popover.Content side="bottom" sideOffset={8} data-testid="content">
               <Popover.Arrow />
               <div>Popover panel content</div>
               <Popover.Close data-testid="close" />
             </Popover.Content>
-          </Popover.Portal>
         </Popover.Root>,
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();

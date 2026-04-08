@@ -15,13 +15,11 @@ function renderDropdown(
         <Dropdown.Trigger>
           <button data-testid="trigger">Open</button>
         </Dropdown.Trigger>
-        <Dropdown.Portal>
-          <Dropdown.Content>
+        <Dropdown.Content>
             <Dropdown.Item data-testid="item-1">Item 1</Dropdown.Item>
             <Dropdown.Item data-testid="item-2">Item 2</Dropdown.Item>
             <Dropdown.Item data-testid="item-3">Item 3</Dropdown.Item>
           </Dropdown.Content>
-        </Dropdown.Portal>
       </Dropdown.Root>
     )
   );
@@ -41,11 +39,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -59,11 +55,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -79,11 +73,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger data-testid="trigger">
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await user.click(screen.getByTestId('trigger'));
@@ -106,11 +98,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger className="custom-trigger" style={{ marginLeft: '12px' }}>
             <span>Open</span>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       // Radix Trigger renders a <button> with the className/style from factory
@@ -145,11 +135,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content className="custom-content" style={{ padding: '20px' }}>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -184,13 +172,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item className="custom-item" style={{ fontWeight: 'bold' }}>
                 Styled Item
               </Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -206,11 +192,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item disabled>Disabled</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -228,13 +212,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Group>
                 <Dropdown.Item>Grouped Item</Dropdown.Item>
               </Dropdown.Group>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -248,13 +230,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Group className="custom-group" style={{ margin: '4px' }}>
                 <Dropdown.Item>Item</Dropdown.Item>
               </Dropdown.Group>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -273,12 +253,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Label>Actions</Dropdown.Label>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -292,14 +270,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Label className="custom-label" style={{ marginTop: '10px' }}>
                 Section
               </Dropdown.Label>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -318,13 +294,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem checked={false} onCheckedChange={() => {}}>
                 Toggle
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -338,13 +312,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
                 Checked
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -361,13 +333,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem checked={false} onCheckedChange={onCheckedChange}>
                 Toggle
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -383,7 +353,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem
                 checked={false}
@@ -394,7 +363,6 @@ describe('Dropdown', () => {
                 Item
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -413,14 +381,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
                 <Dropdown.RadioItem value="a">Option A</Dropdown.RadioItem>
                 <Dropdown.RadioItem value="b">Option B</Dropdown.RadioItem>
               </Dropdown.RadioGroup>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -436,7 +402,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.RadioGroup
                 value="a"
@@ -447,7 +412,6 @@ describe('Dropdown', () => {
                 <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
               </Dropdown.RadioGroup>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -463,7 +427,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
                 <Dropdown.RadioItem
@@ -475,7 +438,6 @@ describe('Dropdown', () => {
                 </Dropdown.RadioItem>
               </Dropdown.RadioGroup>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -494,13 +456,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Above</Dropdown.Item>
               <Dropdown.Separator data-testid="sep" />
               <Dropdown.Item>Below</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -514,13 +474,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Above</Dropdown.Item>
               <Dropdown.Separator className="custom-sep" style={{ height: '2px' }} />
               <Dropdown.Item>Below</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -553,11 +511,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       // Radix sets aria-expanded on the trigger button; container is aria-hidden when open
@@ -571,11 +527,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       const trigger = screen.getByRole('button', { name: 'Open', hidden: true });
@@ -588,13 +542,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
                 Check
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -609,13 +561,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
                 <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
               </Dropdown.RadioGroup>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -629,11 +579,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item disabled>Disabled</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -651,11 +599,9 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.Item>Item</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -672,7 +618,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button data-testid="trigger">Actions</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content sideOffset={4}>
               <Dropdown.Label>File</Dropdown.Label>
               <Dropdown.Group>
@@ -682,7 +627,6 @@ describe('Dropdown', () => {
               <Dropdown.Separator />
               <Dropdown.Item disabled>Disabled Action</Dropdown.Item>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();
@@ -702,7 +646,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
                 Show Toolbar
@@ -711,7 +654,6 @@ describe('Dropdown', () => {
                 Show Statusbar
               </Dropdown.CheckboxItem>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {
@@ -728,7 +670,6 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <button>Open</button>
           </Dropdown.Trigger>
-          <Dropdown.Portal>
             <Dropdown.Content>
               <Dropdown.RadioGroup value="light" onValueChange={() => {}}>
                 <Dropdown.RadioItem value="light">Light</Dropdown.RadioItem>
@@ -736,7 +677,6 @@ describe('Dropdown', () => {
                 <Dropdown.RadioItem value="system">System</Dropdown.RadioItem>
               </Dropdown.RadioGroup>
             </Dropdown.Content>
-          </Dropdown.Portal>
         </Dropdown.Root>
       );
       await waitFor(() => {

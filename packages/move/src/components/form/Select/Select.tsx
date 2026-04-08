@@ -362,21 +362,7 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
 });
 
 // ============================================================================
-// Portal
-// ============================================================================
-
-export interface SelectPortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const SelectPortal: React.FC<SelectPortalProps> = (props) => (
-  <RadixDropdownMenu.Portal {...props} />
-);
-SelectPortal.displayName = 'Select.Portal';
-
-// ============================================================================
-// Content
+// Content (auto-portals to document.body)
 // ============================================================================
 
 export interface SelectContentProps extends Record<string, unknown> {
@@ -385,6 +371,7 @@ export interface SelectContentProps extends Record<string, unknown> {
   children?: React.ReactNode;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
+  container?: HTMLElement;
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   onInteractOutside?: (e: Event) => void;
@@ -395,7 +382,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
   name: 'SelectContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig, triggerWidth } = useSelectContext();
@@ -480,28 +467,30 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
         const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
-          <RadixDropdownMenu.Content
-            {...attrs}
-            {...spRest}
-            ref={mergedContentRef}
-            sideOffset={props.sideOffset as number ?? 4}
-            align={props.align as 'start' | 'center' | 'end'}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-            onPointerDownOutside={handlePointerDownOutside}
-            onEscapeKeyDown={handleEscapeKeyDown}
-            onInteractOutside={handleInteractOutside}
-            data-surface="subtle"
-          >
-            <div
-              ref={innerRef}
-              {...innerSpRest}
-              className={cx('contentInner', innerSpClass as string | undefined)}
-              style={innerSpStyle as React.CSSProperties}
+          <RadixDropdownMenu.Portal container={props.container as HTMLElement | undefined}>
+            <RadixDropdownMenu.Content
+              {...attrs}
+              {...spRest}
+              ref={mergedContentRef}
+              sideOffset={props.sideOffset as number ?? 4}
+              align={props.align as 'start' | 'center' | 'end'}
+              className={cx('content', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+              onPointerDownOutside={handlePointerDownOutside}
+              onEscapeKeyDown={handleEscapeKeyDown}
+              onInteractOutside={handleInteractOutside}
+              data-surface="subtle"
             >
-              {props.children}
-            </div>
-          </RadixDropdownMenu.Content>
+              <div
+                ref={innerRef}
+                {...innerSpRest}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+              >
+                {props.children}
+              </div>
+            </RadixDropdownMenu.Content>
+          </RadixDropdownMenu.Portal>
         );
       },
     };
@@ -747,7 +736,6 @@ export const Select = {
   Trigger: SelectTrigger,
   Value: SelectValue,
   Icon: SelectIcon,
-  Portal: SelectPortal,
   Content: SelectContent,
   Viewport: SelectViewport,
   Item: SelectItem,

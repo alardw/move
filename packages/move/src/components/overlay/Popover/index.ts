@@ -4,7 +4,6 @@ export type {
   PopoverRootProps,
   PopoverTriggerProps,
   PopoverAnchorProps,
-  PopoverPortalProps,
   PopoverContentProps,
   PopoverArrowProps,
   PopoverCloseProps,

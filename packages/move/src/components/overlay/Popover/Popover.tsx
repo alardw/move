@@ -195,21 +195,7 @@ const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivEle
 });
 
 // =============================================================================
-// Portal (stateless -- no factory needed)
-// =============================================================================
-
-export interface PopoverPortalProps {
-  children?: React.ReactNode;
-  container?: HTMLElement;
-}
-
-const PopoverPortal: React.FC<PopoverPortalProps> = (props) => (
-  <RadixPopover.Portal {...props} />
-);
-PopoverPortal.displayName = 'Popover.Portal';
-
-// =============================================================================
-// Content
+// Content (auto-portals to document.body)
 // =============================================================================
 
 export interface PopoverContentProps extends Record<string, unknown> {
@@ -220,6 +206,7 @@ export interface PopoverContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   alignOffset?: number;
+  container?: HTMLElement;
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   onInteractOutside?: (e: Event) => void;
@@ -232,7 +219,7 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
   name: 'PopoverContent',
   styles,
   slots: ['content'] as const,
-  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
+  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { isClosing, onCloseComplete, close, animConfig, closeOnScroll } = usePopoverContext();
@@ -289,27 +276,29 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
         const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
 
         return (
-          <RadixPopover.Content
-            {...attrs}
-            {...spRest}
-            ref={mergedContentRef}
-            side={props.side as 'top' | 'right' | 'bottom' | 'left'}
-            sideOffset={props.sideOffset as number}
-            align={props.align as 'start' | 'center' | 'end'}
-            alignOffset={props.alignOffset as number}
-            data-surface={surface}
-            className={cx('content', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-            onPointerDownOutside={handlePointerDownOutside}
-            onEscapeKeyDown={handleEscapeKeyDown}
-            onInteractOutside={handleInteractOutside}
-            onOpenAutoFocus={props.onOpenAutoFocus as ((e: Event) => void) | undefined}
-            onCloseAutoFocus={props.onCloseAutoFocus as ((e: Event) => void) | undefined}
-          >
-            <SurfaceProvider value={surface}>
-              {props.children}
-            </SurfaceProvider>
-          </RadixPopover.Content>
+          <RadixPopover.Portal container={props.container as HTMLElement | undefined}>
+            <RadixPopover.Content
+              {...attrs}
+              {...spRest}
+              ref={mergedContentRef}
+              side={props.side as 'top' | 'right' | 'bottom' | 'left'}
+              sideOffset={props.sideOffset as number}
+              align={props.align as 'start' | 'center' | 'end'}
+              alignOffset={props.alignOffset as number}
+              data-surface={surface}
+              className={cx('content', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+              onPointerDownOutside={handlePointerDownOutside}
+              onEscapeKeyDown={handleEscapeKeyDown}
+              onInteractOutside={handleInteractOutside}
+              onOpenAutoFocus={props.onOpenAutoFocus as ((e: Event) => void) | undefined}
+              onCloseAutoFocus={props.onCloseAutoFocus as ((e: Event) => void) | undefined}
+            >
+              <SurfaceProvider value={surface}>
+                {props.children}
+              </SurfaceProvider>
+            </RadixPopover.Content>
+          </RadixPopover.Portal>
         );
       },
     };
@@ -429,7 +418,6 @@ export const Popover = {
   Root: PopoverRoot,
   Trigger: PopoverTrigger,
   Anchor: PopoverAnchor,
-  Portal: PopoverPortal,
   Content: PopoverContent,
   Arrow: PopoverArrow,
   Close: PopoverClose,

@@ -75,14 +75,13 @@ export function PlayerSettingsMenu({
       <Popover.Trigger asChild>
         {trigger}
       </Popover.Trigger>
-      <Popover.Portal>
-        <Popover.Content
-          side={side}
-          align={align}
-          sideOffset={sideOffset}
-          className={styles.menu}
-          onOpenAutoFocus={(e: Event) => e.preventDefault()}
-        >
+      <Popover.Content
+        side={side}
+        align={align}
+        sideOffset={sideOffset}
+        className={styles.menu}
+        onOpenAutoFocus={(e: Event) => e.preventDefault()}
+      >
           {!activeCat ? (
             // Main view — list of categories
             categories.map((cat) => {
@@ -138,8 +137,7 @@ export function PlayerSettingsMenu({
               ))}
             </>
           )}
-        </Popover.Content>
-      </Popover.Portal>
+      </Popover.Content>
     </Popover.Root>
   );
 }

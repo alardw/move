@@ -26,8 +26,7 @@ const renderSelect = (props: {
         <Select.Value placeholder={placeholder} />
         <Select.Icon />
       </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
+      <Select.Content>
           <Select.Viewport>
             {items.map((item) => (
               <Select.Item key={item.value} value={item.value} disabled={item.disabled}>
@@ -36,7 +35,6 @@ const renderSelect = (props: {
             ))}
           </Select.Viewport>
         </Select.Content>
-      </Select.Portal>
     </Select.Root>
   );
 };
@@ -205,7 +203,6 @@ describe('Select', () => {
             <Select.Value placeholder="Select..." />
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
             <Select.Content>
               <Select.Viewport>
                 <Select.Group>
@@ -214,7 +211,6 @@ describe('Select', () => {
                 </Select.Group>
               </Select.Viewport>
             </Select.Content>
-          </Select.Portal>
         </Select.Root>
       );
       await user.click(screen.getByRole('button'));
@@ -229,7 +225,6 @@ describe('Select', () => {
             <Select.Value placeholder="Select..." />
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
             <Select.Content>
               <Select.Viewport>
                 <Select.Item value="a">A</Select.Item>
@@ -237,7 +232,6 @@ describe('Select', () => {
                 <Select.Item value="b">B</Select.Item>
               </Select.Viewport>
             </Select.Content>
-          </Select.Portal>
         </Select.Root>
       );
       await user.click(screen.getByRole('button'));
@@ -269,13 +263,11 @@ describe('Select', () => {
               <Select.Value placeholder="Pick" />
               <Select.Icon />
             </Select.Trigger>
-            <Select.Portal>
               <Select.Content>
                 <Select.Viewport>
                   <Select.Item value="a">A</Select.Item>
                 </Select.Viewport>
               </Select.Content>
-            </Select.Portal>
           </Select.Root>
         </LayerProvider>
       );

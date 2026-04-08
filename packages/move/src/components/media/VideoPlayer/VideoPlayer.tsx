@@ -575,41 +575,39 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                         {captionsIcon}
                       </Button>
                     </Popover.Trigger>
-                    <Popover.Portal>
-                      <Popover.Content
-                        side="top"
-                        align="center"
-                        sideOffset={4}
-                        className={styles.subtitleMenu}
-                        onOpenAutoFocus={(e: Event) => e.preventDefault()}
+                    <Popover.Content
+                      side="top"
+                      align="center"
+                      sideOffset={4}
+                      className={styles.subtitleMenu}
+                      onOpenAutoFocus={(e: Event) => e.preventDefault()}
+                    >
+                      <button
+                        className={styles.subtitleOption}
+                        data-active={player.activeSubtitleIndex === -1}
+                        onClick={() => {
+                          player.setActiveSubtitleIndex(-1);
+                          setSubtitleMenuOpen(false);
+                        }}
+                        type="button"
                       >
+                        {subtitlesOffLabel}
+                      </button>
+                      {subtitles!.map((track, i) => (
                         <button
+                          key={track.language}
                           className={styles.subtitleOption}
-                          data-active={player.activeSubtitleIndex === -1}
+                          data-active={player.activeSubtitleIndex === i}
                           onClick={() => {
-                            player.setActiveSubtitleIndex(-1);
+                            player.setActiveSubtitleIndex(i);
                             setSubtitleMenuOpen(false);
                           }}
                           type="button"
                         >
-                          {subtitlesOffLabel}
+                          {track.label}
                         </button>
-                        {subtitles!.map((track, i) => (
-                          <button
-                            key={track.language}
-                            className={styles.subtitleOption}
-                            data-active={player.activeSubtitleIndex === i}
-                            onClick={() => {
-                              player.setActiveSubtitleIndex(i);
-                              setSubtitleMenuOpen(false);
-                            }}
-                            type="button"
-                          >
-                            {track.label}
-                          </button>
-                        ))}
-                      </Popover.Content>
-                    </Popover.Portal>
+                      ))}
+                    </Popover.Content>
                   </Popover.Root>
                 )}
 
