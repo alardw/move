@@ -33,7 +33,6 @@ export const demo: DemoDefinition = {
   <Dropdown.Trigger asChild>
     <Button variant="secondary">Open Menu</Button>
   </Dropdown.Trigger>
-  <Dropdown.Portal>
     <Dropdown.Content sideOffset={4}>
       <Dropdown.Label>Actions</Dropdown.Label>
       <Dropdown.Group>
@@ -44,7 +43,6 @@ export const demo: DemoDefinition = {
       <Dropdown.Separator />
       <Dropdown.Item disabled>Print (unavailable)</Dropdown.Item>
     </Dropdown.Content>
-  </Dropdown.Portal>
 </Dropdown.Root>`,
       render: (props) => (
         <div style={{ padding: 40 }}>
@@ -52,7 +50,6 @@ export const demo: DemoDefinition = {
             <Dropdown.Trigger asChild>
               <Button variant="secondary">Open Menu</Button>
             </Dropdown.Trigger>
-            <Dropdown.Portal>
               <Dropdown.Content
                 sideOffset={Number(props.sideOffset) || 4}
                 align={props.align as 'start' | 'center' | 'end'}
@@ -66,7 +63,6 @@ export const demo: DemoDefinition = {
                 <Dropdown.Separator />
                 <Dropdown.Item disabled>Print (unavailable)</Dropdown.Item>
               </Dropdown.Content>
-            </Dropdown.Portal>
           </Dropdown.Root>
         </div>
       ),
@@ -78,7 +74,6 @@ export const demo: DemoDefinition = {
   <Dropdown.Trigger asChild>
     <Button variant="secondary">View Options</Button>
   </Dropdown.Trigger>
-  <Dropdown.Portal>
     <Dropdown.Content>
       <Dropdown.Label>View</Dropdown.Label>
       <Dropdown.CheckboxItem checked={showToolbar} onCheckedChange={setShowToolbar}>
@@ -88,7 +83,6 @@ export const demo: DemoDefinition = {
         Show Statusbar
       </Dropdown.CheckboxItem>
     </Dropdown.Content>
-  </Dropdown.Portal>
 </Dropdown.Root>`,
       render: () => {
         const [toolbar, setToolbar] = React.useState(true);
@@ -99,7 +93,6 @@ export const demo: DemoDefinition = {
               <Dropdown.Trigger asChild>
                 <Button variant="secondary">View Options</Button>
               </Dropdown.Trigger>
-              <Dropdown.Portal>
                 <Dropdown.Content sideOffset={4}>
                   <Dropdown.Label>View</Dropdown.Label>
                   <Dropdown.CheckboxItem checked={toolbar} onCheckedChange={setToolbar}>
@@ -109,7 +102,6 @@ export const demo: DemoDefinition = {
                     Show Statusbar
                   </Dropdown.CheckboxItem>
                 </Dropdown.Content>
-              </Dropdown.Portal>
             </Dropdown.Root>
           </div>
         );
@@ -122,7 +114,6 @@ export const demo: DemoDefinition = {
   <Dropdown.Trigger asChild>
     <Button variant="secondary">Theme</Button>
   </Dropdown.Trigger>
-  <Dropdown.Portal>
     <Dropdown.Content>
       <Dropdown.Label>Appearance</Dropdown.Label>
       <Dropdown.RadioGroup value={theme} onValueChange={setTheme}>
@@ -131,7 +122,6 @@ export const demo: DemoDefinition = {
         <Dropdown.RadioItem value="system">System</Dropdown.RadioItem>
       </Dropdown.RadioGroup>
     </Dropdown.Content>
-  </Dropdown.Portal>
 </Dropdown.Root>`,
       render: () => {
         const [theme, setTheme] = React.useState('system');
@@ -141,7 +131,6 @@ export const demo: DemoDefinition = {
               <Dropdown.Trigger asChild>
                 <Button variant="secondary">Theme: {theme}</Button>
               </Dropdown.Trigger>
-              <Dropdown.Portal>
                 <Dropdown.Content sideOffset={4}>
                   <Dropdown.Label>Appearance</Dropdown.Label>
                   <Dropdown.RadioGroup value={theme} onValueChange={setTheme}>
@@ -150,7 +139,6 @@ export const demo: DemoDefinition = {
                     <Dropdown.RadioItem value="system">System</Dropdown.RadioItem>
                   </Dropdown.RadioGroup>
                 </Dropdown.Content>
-              </Dropdown.Portal>
             </Dropdown.Root>
           </div>
         );
@@ -163,23 +151,19 @@ export const demo: DemoDefinition = {
   <Dropdown.Trigger asChild>
     <Button variant="secondary">More</Button>
   </Dropdown.Trigger>
-  <Dropdown.Portal>
     <Dropdown.Content sideOffset={4}>
       <Dropdown.Item>Back</Dropdown.Item>
       <Dropdown.Item>Forward</Dropdown.Item>
       <Dropdown.Separator />
       <Dropdown.Sub>
         <Dropdown.SubTrigger>Share</Dropdown.SubTrigger>
-        <Dropdown.Portal>
           <Dropdown.SubContent sideOffset={2}>
             <Dropdown.Item>Email</Dropdown.Item>
             <Dropdown.Item>Slack</Dropdown.Item>
             <Dropdown.Item>Copy Link</Dropdown.Item>
           </Dropdown.SubContent>
-        </Dropdown.Portal>
       </Dropdown.Sub>
     </Dropdown.Content>
-  </Dropdown.Portal>
 </Dropdown.Root>`,
       render: () => (
         <div style={{ padding: 40 }}>
@@ -187,23 +171,19 @@ export const demo: DemoDefinition = {
             <Dropdown.Trigger asChild>
               <Button variant="secondary">More</Button>
             </Dropdown.Trigger>
-            <Dropdown.Portal>
               <Dropdown.Content sideOffset={4}>
                 <Dropdown.Item>Back</Dropdown.Item>
                 <Dropdown.Item>Forward</Dropdown.Item>
                 <Dropdown.Separator />
                 <Dropdown.Sub>
                   <Dropdown.SubTrigger>Share &rarr;</Dropdown.SubTrigger>
-                  <Dropdown.Portal>
                     <Dropdown.SubContent sideOffset={2}>
                       <Dropdown.Item>Email</Dropdown.Item>
                       <Dropdown.Item>Slack</Dropdown.Item>
                       <Dropdown.Item>Copy Link</Dropdown.Item>
                     </Dropdown.SubContent>
-                  </Dropdown.Portal>
                 </Dropdown.Sub>
               </Dropdown.Content>
-            </Dropdown.Portal>
           </Dropdown.Root>
         </div>
       ),
@@ -215,7 +195,6 @@ export const demo: DemoDefinition = {
         <Dropdown.Trigger asChild>
           <Button variant="secondary">Open Dropdown</Button>
         </Dropdown.Trigger>
-        <Dropdown.Portal>
           <Dropdown.Content
             sideOffset={Number(props.sideOffset) || 4}
             align={props.align as 'start' | 'center' | 'end'}
@@ -229,7 +208,6 @@ export const demo: DemoDefinition = {
             <Dropdown.Separator />
             <Dropdown.Item disabled>Print (unavailable)</Dropdown.Item>
           </Dropdown.Content>
-        </Dropdown.Portal>
       </Dropdown.Root>
     </div>
   ),

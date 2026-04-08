@@ -484,14 +484,12 @@ function App() {
                       <Select.Value />
                       <Select.Icon />
                     </Select.Trigger>
-                    <Select.Portal>
-                      <Select.Content>
-                        <Select.Viewport>
-                          <Select.Item value="components">Components</Select.Item>
-                          <Select.Item value="recipes">Recipes</Select.Item>
-                        </Select.Viewport>
-                      </Select.Content>
-                    </Select.Portal>
+                    <Select.Content>
+                      <Select.Viewport>
+                        <Select.Item value="components">Components</Select.Item>
+                        <Select.Item value="recipes">Recipes</Select.Item>
+                      </Select.Viewport>
+                    </Select.Content>
                   </Select.Root>
                 </div>
               </div>

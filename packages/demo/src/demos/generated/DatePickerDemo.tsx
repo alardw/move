@@ -66,11 +66,9 @@ export const demo: DemoDefinition = {
   <DatePicker.Trigger>
     <DatePicker.Input />
   </DatePicker.Trigger>
-  <DatePicker.Portal>
-    <DatePicker.Content>
+  <DatePicker.Content>
       {/* Calendar goes here */}
-    </DatePicker.Content>
-  </DatePicker.Portal>
+  </DatePicker.Content>
 </DatePicker.Root>
 
 // Date range
@@ -78,11 +76,9 @@ export const demo: DemoDefinition = {
   <DatePicker.Trigger>
     <DatePicker.Input />
   </DatePicker.Trigger>
-  <DatePicker.Portal>
-    <DatePicker.Content>
+  <DatePicker.Content>
       {/* Calendar goes here */}
-    </DatePicker.Content>
-  </DatePicker.Portal>
+  </DatePicker.Content>
 </DatePicker.Root>`,
       render: (props) => (
         <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
@@ -93,9 +89,7 @@ export const demo: DemoDefinition = {
             <DatePicker.Trigger>
               <DatePicker.Input size={props['consumer.size'] as string} />
             </DatePicker.Trigger>
-            <DatePicker.Portal>
-              <DatePicker.Content />
-            </DatePicker.Portal>
+            <DatePicker.Content />
           </DatePicker.Root>
         </div>
       ),
@@ -113,9 +107,7 @@ export const demo: DemoDefinition = {
   <DatePicker.Trigger>
     <DatePicker.Input size="${size}" />
   </DatePicker.Trigger>
-  <DatePicker.Portal>
-    <DatePicker.Content />
-  </DatePicker.Portal>
+  <DatePicker.Content />
 </DatePicker.Root>`;
       },
       render: (props) => (
@@ -127,9 +119,7 @@ export const demo: DemoDefinition = {
           <DatePicker.Trigger>
             <DatePicker.Input size={props['playground.size'] as string} />
           </DatePicker.Trigger>
-          <DatePicker.Portal>
-            <DatePicker.Content />
-          </DatePicker.Portal>
+          <DatePicker.Content />
         </DatePicker.Root>
       ),
     },
@@ -142,9 +132,7 @@ export const demo: DemoDefinition = {
       <DatePicker.Trigger>
         <DatePicker.Input size={props['playground.size'] as string} />
       </DatePicker.Trigger>
-      <DatePicker.Portal>
-        <DatePicker.Content />
-      </DatePicker.Portal>
+      <DatePicker.Content />
     </DatePicker.Root>
   ),
 };

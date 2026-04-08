@@ -106,12 +106,10 @@ export const demo: DemoDefinition = {
   <Tooltip.Trigger asChild>
     <Button>Hover me</Button>
   </Tooltip.Trigger>
-  <Tooltip.Portal>
-    <Tooltip.Content side="top" sideOffset={6}>
-      <Tooltip.Arrow />
-      Custom tooltip content
-    </Tooltip.Content>
-  </Tooltip.Portal>
+  <Tooltip.Content side="top" sideOffset={6}>
+    <Tooltip.Arrow />
+    Custom tooltip content
+  </Tooltip.Content>
 </Tooltip.Root>`,
       render: () => (
         <Tooltip.Provider delayDuration={200}>
@@ -120,12 +118,10 @@ export const demo: DemoDefinition = {
               <Tooltip.Trigger asChild>
                 <Button variant="secondary">Compound API</Button>
               </Tooltip.Trigger>
-              <Tooltip.Portal>
-                <Tooltip.Content side="top" sideOffset={6}>
-                  <Tooltip.Arrow />
-                  Custom tooltip with compound API
-                </Tooltip.Content>
-              </Tooltip.Portal>
+              <Tooltip.Content side="top" sideOffset={6}>
+                <Tooltip.Arrow />
+                Custom tooltip with compound API
+              </Tooltip.Content>
             </Tooltip.Root>
           </div>
         </Tooltip.Provider>

@@ -51,7 +51,6 @@ export const demo: DemoDefinition = {
   <Popover.Trigger asChild>
     <Button variant="secondary">Open Popover</Button>
   </Popover.Trigger>
-  <Popover.Portal>
     <Popover.Content side="bottom" sideOffset={8}>
       <Popover.Arrow />
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -60,7 +59,6 @@ export const demo: DemoDefinition = {
       </div>
       <p>This is the popover content panel.</p>
     </Popover.Content>
-  </Popover.Portal>
 </Popover.Root>`,
       render: (props) => (
         <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
@@ -68,7 +66,6 @@ export const demo: DemoDefinition = {
             <Popover.Trigger asChild>
               <Button variant="secondary">Open Popover</Button>
             </Popover.Trigger>
-            <Popover.Portal>
               <Popover.Content
                 side={props.side as 'top' | 'right' | 'bottom' | 'left'}
                 sideOffset={Number(props.sideOffset) || 8}
@@ -81,7 +78,6 @@ export const demo: DemoDefinition = {
                 </div>
                 <p style={{ margin: 0 }}>This is the popover content panel.</p>
               </Popover.Content>
-            </Popover.Portal>
           </Popover.Root>
         </div>
       ),
@@ -91,7 +87,7 @@ export const demo: DemoDefinition = {
       label: 'All Sides',
       code: `<Popover.Root>
   <Popover.Trigger asChild><Button>Top</Button></Popover.Trigger>
-  <Popover.Portal><Popover.Content side="top">Top popover</Popover.Content></Popover.Portal>
+  <Popover.Content side="top">Top popover</Popover.Content>
 </Popover.Root>`,
       render: () => (
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', padding: 60, justifyContent: 'center' }}>
@@ -100,7 +96,6 @@ export const demo: DemoDefinition = {
               <Popover.Trigger asChild>
                 <Button variant="secondary">{side}</Button>
               </Popover.Trigger>
-              <Popover.Portal>
                 <Popover.Content side={side} sideOffset={8}>
                   <Popover.Arrow />
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
@@ -109,7 +104,6 @@ export const demo: DemoDefinition = {
                   </div>
                   <p style={{ margin: 0 }}>Content positioned on the {side}.</p>
                 </Popover.Content>
-              </Popover.Portal>
             </Popover.Root>
           ))}
         </div>
@@ -120,12 +114,10 @@ export const demo: DemoDefinition = {
       label: 'No Animation',
       code: `<Popover.Root animations={false}>
   <Popover.Trigger asChild><Button>No Animation</Button></Popover.Trigger>
-  <Popover.Portal>
     <Popover.Content>
       <Popover.Close />
       Instant open/close
     </Popover.Content>
-  </Popover.Portal>
 </Popover.Root>`,
       render: () => (
         <div style={{ padding: 60, display: 'flex', justifyContent: 'center' }}>
@@ -133,7 +125,6 @@ export const demo: DemoDefinition = {
             <Popover.Trigger asChild>
               <Button variant="secondary">No Animation</Button>
             </Popover.Trigger>
-            <Popover.Portal>
               <Popover.Content sideOffset={8}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                   <strong>Instant</strong>
@@ -141,7 +132,6 @@ export const demo: DemoDefinition = {
                 </div>
                 <p style={{ margin: 0 }}>This popover opens and closes instantly.</p>
               </Popover.Content>
-            </Popover.Portal>
           </Popover.Root>
         </div>
       ),
@@ -153,7 +143,6 @@ export const demo: DemoDefinition = {
         <Popover.Trigger asChild>
           <Button variant="secondary">Open Popover</Button>
         </Popover.Trigger>
-        <Popover.Portal>
           <Popover.Content
             side={props.side as 'top' | 'right' | 'bottom' | 'left'}
             sideOffset={Number(props.sideOffset) || 8}
@@ -166,7 +155,6 @@ export const demo: DemoDefinition = {
             </div>
             <p style={{ margin: 0 }}>This is the popover content panel with configurable positioning.</p>
           </Popover.Content>
-        </Popover.Portal>
       </Popover.Root>
     </div>
   ),

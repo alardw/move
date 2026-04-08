@@ -65,13 +65,11 @@ export const demo: DemoDefinition = {
     <Autocomplete.ClearTrigger />
     <Autocomplete.Icon />
   </Autocomplete.Trigger>
-  <Autocomplete.Portal>
-    <Autocomplete.Content>
+  <Autocomplete.Content>
       <Autocomplete.Item value="apple">Apple</Autocomplete.Item>
       <Autocomplete.Item value="banana">Banana</Autocomplete.Item>
       <Autocomplete.Item value="cherry">Cherry</Autocomplete.Item>
     </Autocomplete.Content>
-  </Autocomplete.Portal>
 </Autocomplete.Root>`,
       render: () => (
         <Autocomplete.Root>
@@ -81,14 +79,12 @@ export const demo: DemoDefinition = {
             <Autocomplete.ClearTrigger />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
-            <Autocomplete.Content>
+          <Autocomplete.Content>
               {fruits.map((f) => (
                 <Autocomplete.Item key={f.value} value={f.value}>{f.label}</Autocomplete.Item>
               ))}
               <Autocomplete.Empty>No results found</Autocomplete.Empty>
-            </Autocomplete.Content>
-          </Autocomplete.Portal>
+          </Autocomplete.Content>
         </Autocomplete.Root>
       ),
     },
@@ -102,12 +98,10 @@ export const demo: DemoDefinition = {
     <Autocomplete.ClearTrigger />
     <Autocomplete.Icon />
   </Autocomplete.Trigger>
-  <Autocomplete.Portal>
-    <Autocomplete.Content>
+  <Autocomplete.Content>
       <Autocomplete.Item value="apple">Apple</Autocomplete.Item>
       <Autocomplete.Item value="banana">Banana</Autocomplete.Item>
     </Autocomplete.Content>
-  </Autocomplete.Portal>
 </Autocomplete.Root>`,
       render: () => (
         <Autocomplete.Root multiple>
@@ -117,14 +111,12 @@ export const demo: DemoDefinition = {
             <Autocomplete.ClearTrigger />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
-            <Autocomplete.Content>
+          <Autocomplete.Content>
               {fruits.map((f) => (
                 <Autocomplete.Item key={f.value} value={f.value}>{f.label}</Autocomplete.Item>
               ))}
               <Autocomplete.Empty>No results found</Autocomplete.Empty>
-            </Autocomplete.Content>
-          </Autocomplete.Portal>
+          </Autocomplete.Content>
         </Autocomplete.Root>
       ),
     },
@@ -150,14 +142,12 @@ export const demo: DemoDefinition = {
             <Autocomplete.ClearTrigger />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-          <Autocomplete.Portal>
-            <Autocomplete.Content>
+          <Autocomplete.Content>
               {fruits.map((f) => (
                 <Autocomplete.Item key={f.value} value={f.value}>{f.label}</Autocomplete.Item>
               ))}
               <Autocomplete.Empty>No results found</Autocomplete.Empty>
-            </Autocomplete.Content>
-          </Autocomplete.Portal>
+          </Autocomplete.Content>
         </Autocomplete.Root>
       ),
     },
@@ -175,14 +165,12 @@ export const demo: DemoDefinition = {
         <Autocomplete.ClearTrigger />
         <Autocomplete.Icon />
       </Autocomplete.Trigger>
-      <Autocomplete.Portal>
-        <Autocomplete.Content>
+      <Autocomplete.Content>
           {fruits.map((f) => (
             <Autocomplete.Item key={f.value} value={f.value}>{f.label}</Autocomplete.Item>
           ))}
           <Autocomplete.Empty>No results found</Autocomplete.Empty>
-        </Autocomplete.Content>
-      </Autocomplete.Portal>
+      </Autocomplete.Content>
     </Autocomplete.Root>
   ),
 };

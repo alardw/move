@@ -46,15 +46,13 @@ export const demo: DemoDefinition = {
     <Select.Value placeholder="Pick a fruit" />
     <Select.Icon />
   </Select.Trigger>
-  <Select.Portal>
-    <Select.Content>
-      <Select.Viewport>
-        <Select.Item value="apple">Apple</Select.Item>
-        <Select.Item value="banana">Banana</Select.Item>
-        <Select.Item value="cherry">Cherry</Select.Item>
-      </Select.Viewport>
-    </Select.Content>
-  </Select.Portal>
+  <Select.Content>
+    <Select.Viewport>
+      <Select.Item value="apple">Apple</Select.Item>
+      <Select.Item value="banana">Banana</Select.Item>
+      <Select.Item value="cherry">Cherry</Select.Item>
+    </Select.Viewport>
+  </Select.Content>
 </Select.Root>`,
       render: () => (
         <Select.Root>
@@ -62,15 +60,13 @@ export const demo: DemoDefinition = {
             <Select.Value placeholder="Pick a fruit" />
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
-            <Select.Content>
-              <Select.Viewport>
-                <Select.Item value="apple">Apple</Select.Item>
-                <Select.Item value="banana">Banana</Select.Item>
-                <Select.Item value="cherry">Cherry</Select.Item>
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Portal>
+          <Select.Content>
+            <Select.Viewport>
+              <Select.Item value="apple">Apple</Select.Item>
+              <Select.Item value="banana">Banana</Select.Item>
+              <Select.Item value="cherry">Cherry</Select.Item>
+            </Select.Viewport>
+          </Select.Content>
         </Select.Root>
       ),
     },
@@ -93,15 +89,13 @@ export const demo: DemoDefinition = {
             <Select.Value placeholder="Select..." />
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
-            <Select.Content>
-              <Select.Viewport>
-                <Select.Item value="opt1">Option 1</Select.Item>
-                <Select.Item value="opt2">Option 2</Select.Item>
-                <Select.Item value="opt3">Option 3</Select.Item>
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Portal>
+          <Select.Content>
+            <Select.Viewport>
+              <Select.Item value="opt1">Option 1</Select.Item>
+              <Select.Item value="opt2">Option 2</Select.Item>
+              <Select.Item value="opt3">Option 3</Select.Item>
+            </Select.Viewport>
+          </Select.Content>
         </Select.Root>
       ),
     },
@@ -117,15 +111,13 @@ export const demo: DemoDefinition = {
         <Select.Value placeholder="Select..." />
         <Select.Icon />
       </Select.Trigger>
-      <Select.Portal>
-        <Select.Content>
-          <Select.Viewport>
-            <Select.Item value="opt1">Option 1</Select.Item>
-            <Select.Item value="opt2">Option 2</Select.Item>
-            <Select.Item value="opt3">Option 3</Select.Item>
-          </Select.Viewport>
-        </Select.Content>
-      </Select.Portal>
+      <Select.Content>
+        <Select.Viewport>
+          <Select.Item value="opt1">Option 1</Select.Item>
+          <Select.Item value="opt2">Option 2</Select.Item>
+          <Select.Item value="opt3">Option 3</Select.Item>
+        </Select.Viewport>
+      </Select.Content>
     </Select.Root>
   ),
 };
