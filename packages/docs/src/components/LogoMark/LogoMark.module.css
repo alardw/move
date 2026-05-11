@@ -1,0 +1,39 @@
+.root {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.25ch;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  padding-block: var(--move-spacing-md);
+}
+
+.suffix {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.05ch;
+  font-weight: 400;
+}
+
+/* inline-grid stacks both glyphs in the same cell — the slot auto-sizes
+   to whichever letter is wider, so the trailing I never jumps when the
+   active glyph swaps between U and A. */
+.slot {
+  display: inline-grid;
+  vertical-align: baseline;
+  line-height: 1;
+}
+
+.char {
+  grid-area: 1 / 1;
+  text-align: center;
+  will-change: transform, opacity;
+}
+
+/* A is slightly narrower and its apex reads offset-left against U —
+   nudge it right so the visual center matches U. Uses the CSS
+   `translate` property so the anime.js transform: translateY(...)
+   animation composes cleanly. */
+.charA {
+  translate: 0.06em 0;
+}

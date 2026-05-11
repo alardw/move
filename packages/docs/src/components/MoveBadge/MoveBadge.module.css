@@ -1,0 +1,12 @@
+.badge {
+  display: inline-block;
+  margin-left: var(--move-spacing-xs);
+  padding: 0 var(--move-spacing-xs);
+  font-size: 10px;
+  font-weight: var(--move-weight-semibold);
+  letter-spacing: 0.04em;
+  border-radius: var(--move-rounded-xs);
+  background: var(--move-primary);
+  color: var(--move-primary-fg);
+  vertical-align: middle;
+}

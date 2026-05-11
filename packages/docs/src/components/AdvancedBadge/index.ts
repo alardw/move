@@ -1,0 +1,1 @@
+export { AdvancedBadge } from './AdvancedBadge';

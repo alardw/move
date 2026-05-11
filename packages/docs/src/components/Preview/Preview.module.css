@@ -1,0 +1,32 @@
+/* Card.Root already handles frame + radius + overflow. Only overrides
+   here are Preview-specific layout tweaks. */
+
+.root {
+  /* Card.Root defaults to spacing-lg padding via a component token —
+     Preview wants its body flush to the border, so strip the padding. */
+  --move-card-padding: 0;
+}
+
+/* Card.Header is column-flex for its title/description pattern;
+   Preview uses the slot as a horizontal toolbar instead. */
+.header {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--move-spacing-md);
+  padding: var(--move-spacing-sm) var(--move-spacing-md);
+  border-bottom: 1px solid var(--move-border-base);
+}
+
+.body {
+  position: relative;
+}
+
+.inner {
+  /* Wrapper exists so useMorphHeight can fade opacity independently
+     of the body's size animation. */
+}
+
+.live {
+  padding: var(--move-spacing-lg);
+}

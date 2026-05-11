@@ -1,0 +1,23 @@
+.rail {
+  position: sticky;
+  top: var(--move-spacing-lg);
+  align-self: flex-start;
+  /* Right-rail width — tuned to fit ~32–40 chars of section label. */
+  flex-basis: 14rem;
+  flex-shrink: 0;
+  max-height: calc(100vh - var(--move-spacing-lg) * 2);
+  overflow-y: auto;
+}
+
+.rail > * {
+  min-width: 0;
+}
+
+.label {
+  padding: var(--move-spacing-xs) var(--move-spacing-md);
+  color: var(--move-fg-subtle);
+  font-size: var(--move-size-xs);
+  font-weight: var(--move-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}

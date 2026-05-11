@@ -1,0 +1,78 @@
+.root {
+  /* Shiki renders into a <pre> — collapse it into an inline-block pill so
+     token colors show through while the element still sits inside a table
+     cell like a <code> would. */
+  display: inline-block;
+  vertical-align: middle;
+  font-family: var(--move-font-mono);
+  font-size: 0.875em;
+  line-height: 1.3;
+  padding: 1px 6px;
+  border-radius: var(--move-rounded-sm);
+  background-color: var(--move-gray-soft-bg);
+}
+
+/* Type-shape tints use Badge's `solid` palette stops — saturated fill +
+   solid-fg contrast text — so tinted pills and any solid Badge on the
+   page share the exact same visual language. Shiki token colors get
+   suppressed (forced to fg-solid) because dark saturated backgrounds
+   would eat most of the light syntax theme. */
+.root[data-category] {
+  background-color: var(--_bg);
+  color: var(--_fg);
+}
+
+.root[data-category] :global(pre),
+.root[data-category] :global(pre *) {
+  color: inherit !important;
+}
+
+.root[data-category='primitive'] {
+  --_bg: var(--move-blue-800);
+  --_fg: var(--move-blue-fg-solid);
+}
+
+.root[data-category='union'] {
+  --_bg: var(--move-orange-600);
+  --_fg: var(--move-orange-fg-solid);
+}
+
+.root[data-category='function'] {
+  --_bg: var(--move-violet-600);
+  --_fg: var(--move-violet-fg-solid);
+}
+
+.root[data-category='event'] {
+  --_bg: var(--move-pink-700);
+  --_fg: var(--move-pink-fg-solid);
+}
+
+.root[data-category='node'] {
+  --_bg: var(--move-green-600);
+  --_fg: var(--move-green-fg-solid);
+}
+
+.root[data-category='identifier'] {
+  --_bg: var(--move-teal-900);
+  --_fg: var(--move-teal-fg-solid);
+}
+
+.root :global(pre) {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  background: transparent !important;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.root :global(code) {
+  display: inline;
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+}
+
+.fallback {
+  composes: root;
+}

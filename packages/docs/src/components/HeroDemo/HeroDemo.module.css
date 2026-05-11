@@ -1,0 +1,10 @@
+.root {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  padding: var(--move-spacing-xl);
+  border: 1px solid var(--move-border-base);
+  border-radius: var(--move-rounded-lg);
+  background: linear-gradient(135deg, var(--move-bg-subtle), var(--move-bg-base));
+}

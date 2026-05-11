@@ -1,0 +1,1 @@
+export { MoveBadge } from './MoveBadge';

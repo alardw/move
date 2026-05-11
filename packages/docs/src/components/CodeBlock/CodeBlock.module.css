@@ -1,0 +1,68 @@
+.root {
+  position: relative;
+  border-radius: var(--move-rounded-md);
+  overflow: hidden;
+  font-family: var(--move-font-mono);
+  font-size: var(--move-size-sm);
+  line-height: 1.5;
+  background: var(--move-bg-subtle);
+}
+
+.root[data-flush='true'] {
+  border: none;
+  border-radius: 0;
+}
+
+.body {
+  overflow-x: auto;
+}
+
+.copy {
+  position: absolute;
+  top: var(--move-spacing-xs);
+  right: var(--move-spacing-xs);
+  z-index: 1;
+}
+
+/* Shiki paints token colors via inline styles on each span, but its own
+   <pre> bg would clash with our card background — flatten it. */
+.body :global(pre) {
+  margin: 0;
+  padding: var(--move-spacing-md) 0;
+  background: transparent !important;
+  font-family: inherit;
+}
+
+/* Line numbers via CSS counter — Shiki wraps each row in span.line.
+   Collapse the \n between .line spans (otherwise every row renders twice:
+   once as a block, once as the preserved newline in <pre>) and re-enable
+   whitespace preservation inside each line so indentation survives. */
+.body :global(code) {
+  counter-reset: move-line;
+  display: block;
+  white-space: normal;
+}
+
+.body :global(code .line) {
+  counter-increment: move-line;
+  display: block;
+  padding: 0 var(--move-spacing-md);
+  white-space: pre;
+}
+
+.body :global(code .line::before) {
+  content: counter(move-line);
+  display: inline-block;
+  width: 2em;
+  margin-right: var(--move-spacing-md);
+  text-align: right;
+  color: var(--move-fg-subtle);
+  user-select: none;
+}
+
+.fallback {
+  margin: 0;
+  padding: var(--move-spacing-md);
+  overflow-x: auto;
+  white-space: pre;
+}

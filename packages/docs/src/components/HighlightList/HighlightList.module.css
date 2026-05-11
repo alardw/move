@@ -1,0 +1,7 @@
+/* List handles the ul reset, item layout, and spacing via its own
+   tokens. Only the icon tint is docs-specific here — radius comes
+   from List.Root's `radius="md"` prop. */
+
+.icon {
+  color: var(--move-fg-muted);
+}

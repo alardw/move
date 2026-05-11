@@ -1,0 +1,67 @@
+.root {
+  /* Component tokens mirror TableOfContents so the two feel identical. */
+  /* Stale [data-exiting] selector from the previous exit approach was
+     removed — Collapsible now owns the height animation. */
+  --move-subnav-indicator-color: var(--move-primary);
+  --move-subnav-indicator-width: 2px;
+  --move-subnav-rail-color: var(--move-border-base);
+  --move-subnav-item-fg: var(--move-fg-muted);
+  --move-subnav-item-fg-hover: var(--move-fg-base);
+  --move-subnav-item-fg-active: var(--move-primary);
+  --move-subnav-item-font-size: var(--move-size-sm);
+  --move-subnav-item-padding-y: 6px;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  /* Rail aligns with the centre of the parent Sidebar.Item's icon. */
+  margin-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem);
+  border-left: 1px solid var(--move-subnav-rail-color);
+  font-family: var(--move-font-body);
+}
+
+/* Sliding indicator — position + size are driven by usePositionTracker,
+   we just provide the visual treatment.
+
+   The `+ 1px` compensates for the `.item { margin-left: -1px }` below
+   (which we keep so item text aligns with the parent Sidebar.Item's
+   text). Without this, usePositionTracker's translateX would be 1px
+   less than expected and the indicator would sit a hair to the left
+   of the rail instead of flush against it (matching TOC's indicator). */
+.indicator {
+  position: absolute;
+  left: calc(-1 * var(--move-subnav-indicator-width) + 1px);
+  top: 0;
+  width: var(--move-subnav-indicator-width);
+  background: var(--move-subnav-indicator-color);
+  pointer-events: none;
+  opacity: 0;
+  border-radius: var(--move-subnav-indicator-width);
+}
+
+.item {
+  display: block;
+  /* Match the main Sidebar.Item text position: half-icon + item-gap past
+     the rail, +1px to undo the rail-overlap below. */
+  padding: var(--move-subnav-item-padding-y) calc(var(--move-sidebar-item-padding-x) + 0.625rem + 1px);
+  margin-left: -1px;
+  font-size: var(--move-subnav-item-font-size);
+  line-height: 1.4;
+  color: var(--move-subnav-item-fg);
+  text-decoration: none;
+  transition: color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.item:hover {
+  color: var(--move-subnav-item-fg-hover);
+}
+
+.item:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+.item[data-active] {
+  color: var(--move-subnav-item-fg-active);
+  font-weight: var(--move-weight-medium);
+}
