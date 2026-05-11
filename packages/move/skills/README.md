@@ -2,39 +2,32 @@
 
 ## Overview
 
-Skills are organized into two domains: **library** (building Move itself) and **app** (building apps with Move).
+All skills are flat — each is a direct child of this directory with a `SKILL.md` file. Skills are auto-discovered by Claude Code and available as `/slash-commands`.
 
 ```
 skills/
-  library/                 # Building Move
-    component/             # Core component lifecycle
-      references/          # Spec types, tokens, engine API, contracts
-      analyze/             # Research libraries/primitives
-      spec/                # Define component contract
-      improve/             # Amend existing spec
-      generate-source/     # Code from spec
-      generate-test/       # Tests from spec
-      generate-meta/       # Metadata from source
-      generate-all/        # Batch generate all files
-      validate/            # Conformance check
-    demo/                  # Component showcase
-      generate/            # Generate demo/playground
-    recipe/                # Public discoverable patterns
-      generate/            # Generate recipe example
+  references/              # Shared reference files
+    component/             # Spec types, tokens, engine API, contracts
+    app/                   # Bootstrap, layout, page, feature patterns
+    recipes/               # Component and composite recipe examples
 
-  app/                     # Building with Move
-    setup/                 # Application bootstrap
-      references/          # bootstrap.md, layout-composition.md
-      generate/            # MoveRoot + app shell
-    composite/             # App-specific components from core
-      references/          # Composition rules
-      generate/            # Generate composite component
-    page/                  # Individual routes/views
-      references/          # Page patterns
-      generate/            # Generate page component
-    feature/               # Cross-page functionality
-      references/          # Feature patterns
-      generate/            # Orchestrate pages + composites + routing
+  # Library skills — building Move itself
+  analyze/                 # Research how other libraries implement a component
+  create-spec/             # Create or extract a .spec.ts component contract
+  improve/                 # Amend an existing spec with a change request
+  generate-source/         # Generate .tsx, .module.css, index.ts from spec
+  generate-test/           # Generate test file from spec and source
+  generate-meta/           # Generate ComponentMeta from source
+  generate-demo/           # Generate playground demo file
+  generate-recipe/         # Generate recipe files for demo app
+  generate-all/            # Run full generation pipeline
+  validate/                # Validate component conformance
+
+  # App skills — building with Move
+  app-setup/               # Bootstrap MoveRoot + app shell
+  app-page/                # Generate a page/route component
+  app-composite/           # Generate an app-specific composed component
+  app-feature/             # Generate a cross-page feature
 ```
 
 ## Library Skills
@@ -42,15 +35,18 @@ skills/
 For maintaining the Move component library. Each component follows a lifecycle:
 
 ```
-analyze → spec → generate-source → generate-test → generate-meta → validate
-                                                  → demo/generate
+/analyze → /create-spec → /generate-source → /generate-test → /generate-meta → /validate
+                                            → /generate-demo
+                                            → /generate-recipe
 ```
+
+Or use `/generate-all` to run the full pipeline.
 
 ### Key concepts
 
 **Spec** (`.spec.ts`) — Typed contract. All decisions in one place. Required for generation.
 
-**Reference files** (`references/`) — Scoped to each tier. Types, tokens, patterns, contracts. Read by skills, never edited by skills.
+**Reference files** (`references/`) — Shared across skills. Types, tokens, patterns, contracts. Read by skills, never edited by skills.
 
 **Component classes** determine default animation, keyboard, a11y, and form behavior:
 
@@ -75,13 +71,13 @@ For building applications with Move. All app skills enforce one rule:
 ### Hierarchy
 
 ```
-app/setup/generate       → MoveRoot + app shell (sidebar, top-nav, minimal)
+/app-setup       → MoveRoot + app shell (sidebar, top-nav, minimal)
     ↓
-app/feature/generate     → orchestrates pages + composites for a functional area
+/app-feature     → orchestrates pages + composites for a functional area
     ↓
-app/page/generate        → individual route component
+/app-page        → individual route component
     ↓
-app/composite/generate   → reusable app-specific component from core
+/app-composite   → reusable app-specific component from core
 ```
 
 ### Shell types
@@ -109,14 +105,14 @@ src/components/{category}/{Name}/
 ### App (typical)
 ```
 src/
-├── main.tsx              ← MoveRoot + shell (from app/setup/generate)
-├── composites/           ← shared UI (from app/composite/generate)
+├── main.tsx              ← MoveRoot + shell (from /app-setup)
+├── composites/           ← shared UI (from /app-composite)
 │   ├── UserCard.tsx
 │   └── MetricsPanel.tsx
-├── pages/                ← routes (from app/page/generate)
+├── pages/                ← routes (from /app-page)
 │   ├── Dashboard.tsx
 │   └── Settings.tsx
-└── features/             ← cross-page (from app/feature/generate)
+└── features/             ← cross-page (from /app-feature)
     └── auth/
         ├── LoginPage.tsx
         └── SignupPage.tsx

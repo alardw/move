@@ -105,8 +105,6 @@ function SidebarContent({ labels }: { labels: Labels }) {
       <Sidebar.Footer>
         <AccountIndicator labels={t} collapsed={collapsed && !isMobile} />
       </Sidebar.Footer>
-
-      <Sidebar.Rail />
     </Sidebar.Root>
   );
 }
