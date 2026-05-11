@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Select-Frame--Streamline-Micro">
-  <desc>
-    Select Frame Streamline Icon: https://streamlinehq.com
-  </desc>
-  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7 0.5h1.5a1 1 0 0 1 1 1V3" stroke-width="1"></path>
-  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 3V1.5a1 1 0 0 1 1 -1H3" stroke-width="1"></path>
-  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M7 9.5h1.5a1 1 0 0 0 1 -1V7" stroke-width="1"></path>
-  <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" d="M0.5 7v1.5a1 1 0 0 0 1 1H3" stroke-width="1"></path>
-</svg>

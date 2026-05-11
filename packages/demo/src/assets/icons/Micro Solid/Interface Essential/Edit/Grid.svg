@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 10" id="Grid--Streamline-Micro">
-  <desc>
-    Grid Streamline Icon: https://streamlinehq.com
-  </desc>
-  <path fill="#000000" fill-rule="evenodd" d="M1.667 1.282a0.385 0.385 0 0 0 -0.385 0.385V3H3V1.282H1.667ZM3.5 0H1.667C0.747 0 0 0.746 0 1.667v6.666C0 9.253 0.746 10 1.667 10L3.5 10h3l1.833 0C9.253 10 10 9.254 10 8.333L10 6.5v-3l0 -1.833C10 0.747 9.254 0 8.333 0H3.5ZM4 1.282V3h2V1.282H4ZM3 4H1.282v2H3V4Zm1 2V4h2v2H4ZM3 7H1.282v1.333c0 0.213 0.172 0.385 0.385 0.385H3V7Zm1 1.718V7h2v1.718H4ZM7 4v2h1.718V4H7Zm0 3v1.718h1.333a0.385 0.385 0 0 0 0.385 -0.385V7H7Zm1.333 -5.718H7V3h1.718V1.667a0.385 0.385 0 0 0 -0.385 -0.385Z" clip-rule="evenodd" stroke-width="1"></path>
-</svg>
