@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Gottak — drop OTF files in /public/fonts/ matching the names below */
+@font-face { font-family: 'Gottak'; font-weight: 100; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Thin.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 200; font-style: normal; font-display: swap; src: url('/fonts/Gottak-ExtraLight.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 300; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Light.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 400; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Regular.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 500; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Medium.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 600; font-style: normal; font-display: swap; src: url('/fonts/Gottak-SemiBold.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 700; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Bold.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 800; font-style: normal; font-display: swap; src: url('/fonts/Gottak-ExtraBold.otf') format('opentype'); }
+@font-face { font-family: 'Gottak'; font-weight: 900; font-style: normal; font-display: swap; src: url('/fonts/Gottak-Black.otf') format('opentype'); }
+
+:root {
+  --move-font-sans: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
