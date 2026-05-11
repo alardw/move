@@ -8,6 +8,14 @@ export const spec = {
   category: 'loading',
   description: 'SVG-based spinning loading indicator with CSS keyframe animations for rotation and stroke dash',
 
+  synonyms: ['loader', 'busy indicator', 'loading'],
+  families: {
+    behavior:  ["loading"],
+    state:     ["stateless"],
+    animation: ["continuous-loop"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -17,7 +25,7 @@ export const spec = {
   ],
 
   props: [
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Spinner size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Spinner size' },
     { name: 'variant', type: "'default' | 'secondary' | 'current'", default: "'default'", moveSpecific: true, description: 'Stroke color variant' },
     { name: 'strokeWidth', type: 'number', default: '3', moveSpecific: true, description: 'SVG stroke width' },
   ],

@@ -8,6 +8,14 @@ export const spec = {
   category: 'navigation',
   description: 'Page navigation control with numbered buttons, prev/next triggers, sliding active indicator, and staggered spring entrance animation',
 
+  synonyms: ['pages', 'paging', 'page nav', 'page navigation'],
+  families: {
+    behavior:  ["navigation"],
+    state:     ["controlled-index"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'nav',
   slots: [
@@ -31,7 +39,7 @@ export const spec = {
         { name: 'onChange', type: '(page: number) => void', moveSpecific: true, description: 'Called when active page changes' },
         { name: 'siblings', type: 'number', default: '1', moveSpecific: true, description: 'Pages shown on each side of the active page' },
         { name: 'boundaries', type: 'number', default: '1', moveSpecific: true, description: 'Pages pinned at start and end of range' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of pagination controls' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of pagination controls' },
         { name: 'variant', type: "'default' | 'outline'", default: "'default'", moveSpecific: true, description: 'Visual variant' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'PrevTrigger, Items, NextTrigger' },
       ],
@@ -79,7 +87,7 @@ export const spec = {
     { name: 'onChange', type: '(page: number) => void', moveSpecific: true, description: 'Called when active page changes' },
     { name: 'siblings', type: 'number', default: '1', moveSpecific: true, description: 'Pages shown on each side of active' },
     { name: 'boundaries', type: 'number', default: '1', moveSpecific: true, description: 'Pages pinned at start and end' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of pagination controls' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of pagination controls' },
     { name: 'variant', type: "'default' | 'outline'", default: "'default'", moveSpecific: true, description: 'Visual variant' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'PrevTrigger, Items, NextTrigger' },
   ],

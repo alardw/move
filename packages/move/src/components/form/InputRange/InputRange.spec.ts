@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Slider/range input built on Radix Slider with single or dual thumb, optional value display, and thumb interaction animation',
 
+  synonyms: ['slider', 'range slider', 'range input'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'span',
   slots: [
@@ -27,7 +35,7 @@ export const spec = {
     { name: 'value', type: 'number | number[]', moveSpecific: true, description: 'Controlled value (single number or array for range)' },
     { name: 'defaultValue', type: 'number | number[]', moveSpecific: true, description: 'Default value (uncontrolled)' },
     { name: 'onValueChange', type: '(value: number[]) => void', moveSpecific: true, description: 'Called when value changes (always number[])' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Slider size (affects track height and thumb size)' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Slider size (affects track height and thumb size)' },
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state — changes range/thumb to error color' },
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Slider orientation' },

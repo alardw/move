@@ -62,11 +62,17 @@ function animateDimensionEnter(
   const raw = (config ?? {}) as Record<string, unknown>;
   const { [prop]: propOverride, delay: configDelay, ...extraProps } = raw;
 
+  // Proportional default duration — short content still gets a
+  // deliberate beat, long content takes proportionally longer.
+  // 1ms per pixel is the "natural" correlation: a 300px panel takes
+  // ~300ms, which reads as smooth without dragging.
+  const defaultDuration = Math.round(Math.max(220, Math.min(targetSize * 1.0, 650)));
+
   const propParams: Record<string, unknown> = {
     from: 0,
     to: targetSize,
     ease: 'outQuart',
-    duration: 250,
+    duration: defaultDuration,
   };
 
   if (typeof propOverride === 'object' && propOverride !== null) {
@@ -105,11 +111,16 @@ function animateDimensionExit(
   const raw = (config ?? {}) as Record<string, unknown>;
   const { [prop]: propOverride, delay: configDelay, ...extraProps } = raw;
 
+  // Proportional default duration — exit is a touch quicker than
+  // enter (~70% of the entrance scale) so things put themselves
+  // away decisively without feeling abrupt.
+  const defaultDuration = Math.round(Math.max(180, Math.min(currentSize * 0.7, 450)));
+
   const propParams: Record<string, unknown> = {
     from: currentSize,
     to: 0,
     ease: 'outQuart',
-    duration: 200,
+    duration: defaultDuration,
   };
 
   if (typeof propOverride === 'object' && propOverride !== null) {

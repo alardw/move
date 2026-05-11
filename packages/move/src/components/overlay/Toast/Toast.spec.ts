@@ -8,6 +8,14 @@ export const spec = {
   category: 'overlay',
   description: 'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
 
+  synonyms: ['notification', 'snackbar', 'flash message', 'alert toast'],
+  families: {
+    behavior:  ["notification"],
+    state:     ["controlled-open"],
+    animation: ["scale-fade"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [

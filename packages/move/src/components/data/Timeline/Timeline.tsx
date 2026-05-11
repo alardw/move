@@ -9,17 +9,20 @@ import {
   quick,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import type { Color, Size } from '../../../shared/types';
 import styles from './Timeline.module.css';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export type TimelineSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type TimelineSize = Size;
 export type TimelineAlign = 'left' | 'right' | 'alternate';
-export type TimelineColor =
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+/** Re-exported for backwards-compatible imports. Prefer `Color` from
+ *  `'move'` directly going forward. */
+export type TimelineColor = Color;
 export type TimelineLineVariant = 'solid' | 'dashed' | 'dotted';
 
 // ============================================================================

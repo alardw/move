@@ -553,7 +553,7 @@ const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDro
   moveProps: ['segment'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, close, isOpen } = useTimeFieldContext();
+    const { tf, isOpen } = useTimeFieldContext();
     const colRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, colRef);
     const segType = props.segment as SegmentType | 'period';

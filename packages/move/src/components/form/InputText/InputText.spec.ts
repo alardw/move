@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Single-line text input with outlined/filled variants, icon slots, and configurable size',
 
+  synonyms: ['text field', 'text input', 'string input', 'input'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -19,7 +27,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size controlling height and font size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size controlling height and font size' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the input is in an invalid/error state' },
     { name: 'iconLeft', type: 'React.ReactNode', moveSpecific: true, description: 'Icon element rendered before the input' },
     { name: 'iconRight', type: 'React.ReactNode', moveSpecific: true, description: 'Icon element rendered after the input' },

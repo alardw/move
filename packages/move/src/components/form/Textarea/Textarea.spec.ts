@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Multi-line text input with outlined/filled variants, auto-resize support, and configurable size',
 
+  synonyms: ['multi-line input', 'comment box', 'text area', 'long text'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -17,7 +25,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size controlling padding and font size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size controlling padding and font size' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the textarea is in an invalid/error state' },
     { name: 'autoSize', type: 'boolean', moveSpecific: true, description: 'Automatically adjust height based on content' },
     { name: 'minRows', type: 'number', moveSpecific: true, description: 'Minimum number of visible rows when autoSize is enabled' },

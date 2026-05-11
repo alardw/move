@@ -8,6 +8,14 @@ export const spec = {
   category: 'loading',
   description: 'Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes',
 
+  synonyms: ['progress', 'meter', 'completion bar', 'linear progress'],
+  families: {
+    behavior:  ["loading"],
+    state:     ["stateless"],
+    animation: ["fade"],
+    a11y:      ["progressbar"],
+  },
+
   compound: false,
   rootElement: 'Progress.Root',
   slots: [
@@ -18,7 +26,7 @@ export const spec = {
   props: [
     { name: 'value', type: 'number | null', moveSpecific: true, description: 'Current progress value; null for indeterminate state' },
     { name: 'max', type: 'number', default: '100', moveSpecific: true, description: 'Maximum value for progress calculation' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Bar height' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Bar height' },
     { name: 'variant', type: "'default' | 'success' | 'warning' | 'error'", default: "'default'", moveSpecific: true, description: 'Indicator color variant' },
     { name: 'getValueLabel', type: '(value: number, max: number) => string', moveSpecific: true, description: 'Custom accessible value label function passed to Radix' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Optional children content' },

@@ -8,6 +8,14 @@ export const spec = {
   category: 'panel',
   description: 'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
 
+  synonyms: ['tabbed', 'segmented', 'tab bar', 'tab list'],
+  families: {
+    behavior:  ["navigation"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["tablist"],
+  },
+
   compound: true,
   rootElement: 'RadixTabs.Root',
   slots: [
@@ -48,7 +56,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'loop', type: 'boolean', moveSpecific: true, description: 'Whether keyboard navigation loops around' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Tab size affecting padding and font size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Tab size affecting padding and font size' },
         { name: 'variant', type: "'underline' | 'pills' | 'outline'", default: "'underline'", moveSpecific: true, description: 'Visual style variant' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Pass false to disable sliding indicator animation' },
       ],

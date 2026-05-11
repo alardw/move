@@ -8,6 +8,24 @@ export const spec = {
   category: 'data',
   description: 'Stacked list with three-zone item layout (leading/content/trailing), responsive collapse, line clamping, dividers, density control, and optional Meta shorthand',
 
+  synonyms: ['rows', 'items', 'list view', 'menu list'],
+  families: {
+    behavior:  ["data-row"],
+    state:     ["stateless"],
+    animation: ["stagger"],
+    a11y:      ["none"],
+  },
+  // Shared click-affordance contract for the data-row family.
+  // See `src/shared/families.ts` → DataRowBehavior.
+  behavior: {
+    dataRow: {
+      interactiveProp: true,
+      keyboardActivate: true,
+      hoverAffordance: true,
+      rootHoverModifier: 'hover',
+    },
+  },
+
   compound: true,
   rootElement: 'ul',
   slots: [
@@ -27,15 +45,18 @@ export const spec = {
       name: 'Root',
       slots: [{ name: 'root', element: 'ul', description: 'Root list container' }],
       props: [
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Controls padding, font size, gap, and avatar sizing rhythm' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Controls padding, font size, gap, and avatar sizing rhythm' },
         { name: 'dividers', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show dividers between items' },
         { name: 'density', type: "'compact' | 'default' | 'comfortable'", default: "'default'", moveSpecific: true, description: 'Vertical padding scale for items' },
         { name: 'hover', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable hover highlight on items' },
+        { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg'", default: "'sm'", moveSpecific: true, description: 'Border radius applied to the list container and item hover/active highlights' },
+        { name: 'separator', type: 'React.ReactNode', moveSpecific: true, description: 'Custom separator rendered between items (replaces the default divider).' },
+        { name: 'animateKey', type: 'string | number', moveSpecific: true, description: 'Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced.' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'List.Item children' },
       ],
       usesFactory: true,
-      description: 'Root list container providing context for size, density, hover, and stagger animation',
+      description: 'Root list container providing context for size, density, hover, separator, and stagger animation',
     },
     {
       name: 'Item',
@@ -43,7 +64,8 @@ export const spec = {
       props: [
         { name: 'as', type: "'li' | 'a' | 'button'", default: "'li'", moveSpecific: true, description: 'Rendered element — use a/button for interactive rows' },
         { name: 'href', type: 'string', moveSpecific: false, description: 'Link target — implies as="a"' },
-        { name: 'onClick', type: '() => void', moveSpecific: false, description: 'Click handler — makes row interactive' },
+        { name: 'onClick', type: '() => void', moveSpecific: false, description: 'Click handler.' },
+        { name: 'interactive', type: 'boolean', moveSpecific: true, description: 'Make the row a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation. Defaults to true when `href`, `onClick`, or `as="a"|"button"` is set.' },
         { name: 'active', type: 'boolean', default: 'false', moveSpecific: true, description: 'Visual active/selected state' },
         { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Dims item and prevents interaction' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Leading, Content, Trailing, or Meta children' },
@@ -82,7 +104,7 @@ export const spec = {
       name: 'Description',
       slots: [{ name: 'description', element: 'p', description: 'Secondary text' }],
       props: [
-        { name: 'lines', type: "1 | 2 | 3 | 'none'", default: '1', moveSpecific: true, description: 'Number of visible lines before truncation (line-clamp)' },
+        { name: 'lines', type: "1 | 2 | 3 | 'none'", default: "'none'", moveSpecific: true, description: 'Number of visible lines before truncation (line-clamp). Defaults to none — opt into truncation explicitly.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Secondary text content' },
       ],
       usesFactory: true,
@@ -97,24 +119,12 @@ export const spec = {
       usesFactory: true,
       description: 'Fixed-width trailing slot, flex-shrink-0, vertically centered',
     },
-    {
-      name: 'Meta',
-      slots: [
-        { name: 'meta', element: 'div', description: 'Meta wrapper (renders leading + content internally)' },
-      ],
-      props: [
-        { name: 'avatar', type: 'React.ReactNode', moveSpecific: true, description: 'Leading visual — rendered in Leading slot' },
-        { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Primary text — rendered as Title' },
-        { name: 'description', type: 'React.ReactNode', moveSpecific: true, description: 'Secondary text — rendered as Description' },
-        { name: 'lines', type: "1 | 2 | 3 | 'none'", default: '1', moveSpecific: true, description: 'Line clamp passed to Description' },
-      ],
-      usesFactory: true,
-      description: 'Convenience shorthand — renders Leading (if avatar) + Content > Title + Description from props. Covers 80% of stacked list use cases with minimal code.',
-    },
+    // List.Meta was removed — consumers compose Leading/Content/Title/
+    // Description explicitly. See git log: "refactor: remove List.Meta".
   ],
 
   props: [
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Controls padding, font size, gap' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Controls padding, font size, gap' },
     { name: 'dividers', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show dividers between items' },
     { name: 'density', type: "'compact' | 'default' | 'comfortable'", default: "'default'", moveSpecific: true, description: 'Vertical padding scale' },
     { name: 'hover', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable hover highlight on items' },
@@ -215,7 +225,7 @@ export const spec = {
       'Leading renders children in flex-shrink-0 container',
       'Content renders children in flex-1 min-width-0 container',
       'Title renders with truncation (text-overflow ellipsis)',
-      'Description defaults to lines=1 (single-line clamp)',
+      'Description defaults to lines=none (no truncation; opt into 1/2/3 explicitly)',
       'Description lines=2 applies -webkit-line-clamp: 2',
       'Description lines=3 applies -webkit-line-clamp: 3',
       'Description lines=none shows full text without truncation',

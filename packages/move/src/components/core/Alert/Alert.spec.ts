@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
 
+  synonyms: ['banner', 'notice', 'message', 'callout', 'inline alert'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -21,7 +29,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'info' | 'success' | 'warning' | 'danger'", default: "'info'", moveSpecific: true, description: 'Color variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Alert size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Alert size' },
     { name: 'icon', type: 'string | boolean', default: 'true', moveSpecific: true, description: 'Icon name, true for default variant icon, false to hide' },
     { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Alert title' },
     { name: 'closable', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show close button' },

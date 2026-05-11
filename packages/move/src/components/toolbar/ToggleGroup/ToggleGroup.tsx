@@ -136,6 +136,7 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-orientation={props.orientation || 'horizontal'}
               data-size={props.size}
+              data-variant={props.variant}
               onMouseDown={() => { if (!props.disabled) handlers.Root?.onMouseDown?.(); }}
               onMouseUp={() => { if (!props.disabled) handlers.Root?.onMouseUp?.(); }}
               onMouseLeave={() => { if (!props.disabled) handlers.Root?.onMouseLeave?.(); }}

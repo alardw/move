@@ -11,7 +11,7 @@
   --move-autocomplete-trigger-border-focus: var(--move-primary);
   --move-autocomplete-trigger-radius: var(--move-rounded-md);
   --move-autocomplete-trigger-padding-x: var(--move-spacing-sm);
-  --move-autocomplete-trigger-padding-y: var(--move-spacing-xs);
+  --move-autocomplete-trigger-padding-y: var(--move-spacing-sm);
   --move-autocomplete-trigger-fg: var(--move-fg-base);
   --move-autocomplete-trigger-height: var(--move-control-height-md);
   --move-autocomplete-trigger-min-height: var(--move-autocomplete-trigger-height);
@@ -134,7 +134,7 @@
   all: unset;
   flex: 1;
   min-width: 4rem;
-  padding: var(--move-spacing-2xs) 0;
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
   font-family: var(--move-font-body);
   font-size: var(--move-autocomplete-trigger-font-size, inherit);
   color: var(--move-autocomplete-trigger-fg);
@@ -157,12 +157,16 @@
   --move-autocomplete-tag-fg: var(--move-fg-base);
   --move-autocomplete-tag-border: var(--move-border-base);
   --move-autocomplete-tag-radius: var(--move-rounded-sm);
-  --move-autocomplete-tag-height: 1.5rem;
+  --move-autocomplete-tag-height: 2rem;
+  --move-autocomplete-tag-max-width: 16rem;
 
   display: inline-flex;
   align-items: center;
-  gap: var(--move-spacing-2xs);
+  gap: var(--move-spacing-xs);
   height: var(--move-autocomplete-tag-height);
+  max-width: var(--move-autocomplete-tag-max-width);
+  /* Symmetric horizontal padding; visual balance is carried by the tag's
+     own padding + the button's own padded hit area. */
   padding: 0 var(--move-spacing-xs);
   background-color: var(--move-autocomplete-tag-bg);
   border: 1px solid var(--move-autocomplete-tag-border);
@@ -172,6 +176,16 @@
   white-space: nowrap;
   user-select: none;
   line-height: 1;
+  overflow: hidden;
+}
+
+/* Truncating span for tag text — same rationale as .itemText. */
+.tagText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tagRemove {
@@ -179,12 +193,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  height: 14px;
-  border-radius: var(--move-rounded-full);
+  /* 24px CSS hit area + an expanded touch target via ::before so mobile / imprecise
+     pointers can comfortably hit it without the tag itself needing to be huge.
+     Rectangular (rounded-sm) radius mirrors the tag's own rounded-rectangle shape. */
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--move-rounded-sm);
   cursor: pointer;
   color: var(--move-fg-muted);
   flex-shrink: 0;
+}
+
+/* Expanded hit area for touch — extends the pointer-event region without
+   affecting the visual 24px circle. */
+.tagRemove::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
 }
 
 .tagRemove:hover {
@@ -206,6 +232,7 @@
   display: flex;
   align-items: center;
   color: var(--move-fg-muted);
+  cursor: pointer;
 }
 
 /* =========================================================================
@@ -246,12 +273,14 @@
   --move-autocomplete-content-shadow: var(--move-shadow-overlay);
   --move-autocomplete-content-padding: var(--move-spacing-xs);
   --move-autocomplete-content-min-width: 10rem;
+  --move-autocomplete-content-max-width: none;
   --move-autocomplete-content-max-height: min(var(--radix-popover-content-available-height, 20rem), 20rem);
 
   overflow: hidden;
   will-change: height, transform;
   transform-origin: top center;
   min-width: var(--move-autocomplete-content-min-width);
+  max-width: var(--move-autocomplete-content-max-width);
   background-color: var(--move-autocomplete-content-bg);
   border: 1px solid var(--move-autocomplete-content-border);
   border-radius: var(--move-autocomplete-content-radius);
@@ -268,7 +297,9 @@
 .contentInner {
   max-height: var(--move-autocomplete-content-max-height);
   overflow-y: auto;
-  padding: inherit;
+  /* Keep `padding: inherit` from content + add extra breathing room so item
+     hover scale (~2px per side) doesn't clip against the scroll container. */
+  padding: 4px;
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
@@ -311,6 +342,16 @@
   user-select: none;
   outline: none;
   will-change: transform;
+  overflow: hidden;
+}
+
+/* Wrapping span around item children — see Select.itemText for rationale. */
+.itemText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Single mode: selected gets filled background */

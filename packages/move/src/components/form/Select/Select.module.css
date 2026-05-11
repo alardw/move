@@ -10,16 +10,24 @@
   --move-select-trigger-font-size: var(--move-size-sm);
   --move-select-trigger-fg: var(--move-fg-base);
   --move-select-trigger-height: var(--move-control-height-md);
-  --move-select-trigger-min-width: 8rem;
+  --move-select-trigger-min-width: 10rem;
+  --move-select-trigger-max-width: none;
 
   all: unset;
   box-sizing: border-box;
-  display: inline-flex;
+  /* Fill the parent container by default (matches Mantine/MUI/Ant behaviour).
+     Trigger no longer jumps width when the selected value changes — it's
+     sized by its container, and the value truncates with ellipsis. */
+  display: flex;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   gap: var(--move-spacing-sm);
   height: var(--move-select-trigger-height);
   min-width: var(--move-select-trigger-min-width);
+  /* No default cap — trigger fills its parent. Set `--move-select-trigger-max-width`
+     or pass `maxWidth` prop to constrain per-instance. */
+  max-width: var(--move-select-trigger-max-width);
   padding: var(--move-select-trigger-padding-y) var(--move-select-trigger-padding-x);
   background-color: var(--move-select-trigger-bg);
   border: 1px solid var(--move-select-trigger-border);
@@ -87,6 +95,23 @@
 
 .value {
   flex: 1;
+  /* Flex so Icon + text children center vertically via align-items rather
+     than guessing a vertical-align offset on inline SVGs. min-width: 0
+     lets the inner .valueText wrapper collapse and ellipsize. */
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--move-spacing-xs);
+  overflow: hidden;
+}
+
+/* Text portions of children are wrapped in .valueText (block-level) so
+   text-overflow: ellipsis applies natively. Icon elements stay as direct
+   flex siblings for proper vertical centering. */
+.valueText {
+  flex: 1;
+  min-width: 0;
+  display: block;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -111,12 +136,17 @@
   --move-select-content-shadow: var(--move-shadow-overlay);
   --move-select-content-padding: var(--move-spacing-xs);
   --move-select-content-min-width: 10rem;
+  --move-select-content-max-width: none;
   --move-select-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 20rem), 20rem);
 
-  overflow: hidden;
-  will-change: height, transform;
-  transform-origin: top center;
+  /* Match trigger width by default. No default max-width cap — set
+     `--move-select-content-max-width` or pass `maxWidth` prop to constrain.
+     box-sizing: border-box so padding + border are absorbed inside the
+     trigger width rather than added on top. */
+  box-sizing: border-box;
+  width: var(--radix-dropdown-menu-trigger-width);
   min-width: var(--move-select-content-min-width);
+  max-width: var(--move-select-content-max-width);
   background-color: var(--move-select-content-bg);
   border: 1px solid var(--move-select-content-border);
   border-radius: var(--move-select-content-radius);
@@ -131,9 +161,16 @@
 }
 
 .contentInner {
-  max-height: var(--move-select-content-max-height);
+  /* overflow-y: auto so long option lists scroll when they exceed max-height.
+     Vertical clip is fine; items don't overflow horizontally. */
   overflow-y: auto;
-  padding: inherit;
+  overflow-x: hidden;
+  will-change: height;
+  max-height: var(--move-select-content-max-height);
+  /* Breathing room for item hover scale — the overflow clip above would
+     clip items that scale up beyond their natural bounds (~2px per side
+     at the current 4px hover delta). */
+  padding: 4px;
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
@@ -177,6 +214,20 @@
   user-select: none;
   outline: none;
   will-change: transform;
+  overflow: hidden;
+}
+
+/* Wraps only the string portions of item children so text-overflow:
+   ellipsis applies natively. Icon elements stay as direct flex siblings
+   of .item so align-items: center gives them perfect vertical centering
+   without relying on a vertical-align fudge factor on inline SVGs. */
+.itemText {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item[data-selected] {
@@ -205,15 +256,18 @@
 .label {
   --move-select-label-padding-x: var(--move-spacing-sm);
   --move-select-label-padding-y: var(--move-spacing-xs);
-  --move-select-label-font-size: var(--move-size-sm);
-  --move-select-label-fg: var(--move-fg-muted);
+  --move-select-label-font-size: var(--move-size-xs);
+  --move-select-label-fg: var(--move-fg-subtle);
   --move-select-label-font-weight: var(--move-weight-semibold);
+  --move-select-label-tracking: 0.04em;
 
   padding: var(--move-select-label-padding-y) var(--move-select-label-padding-x);
   font-family: var(--move-font-body);
   font-size: var(--move-select-label-font-size);
   font-weight: var(--move-select-label-font-weight);
   color: var(--move-select-label-fg);
+  letter-spacing: var(--move-select-label-tracking);
+  text-transform: uppercase;
   user-select: none;
 }
 

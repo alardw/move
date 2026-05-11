@@ -1,11 +1,16 @@
 'use client';
 // Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
 import { withMoveComponent } from '../../../engine';
+import type { Gap } from '../../../shared/types';
 import styles from './Align.module.css';
 
-export type AlignGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `Gap` from
+ *  `'move'` directly going forward. */
+export type AlignGap = Gap;
 export type AlignVertical = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
-export type AlignPadding = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `Gap` from
+ *  `'move'` directly going forward. */
+export type AlignPadding = Gap;
 export type AlignFlex = 1 | 'auto' | 'none';
 
 export interface AlignProps extends Record<string, unknown> {

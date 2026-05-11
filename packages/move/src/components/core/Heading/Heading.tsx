@@ -1,11 +1,23 @@
 'use client';
 // Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
+import type { DisplaySize } from '../../../shared/types';
 import styles from './Heading.module.css';
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-export type HeadingSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
-export type HeadingWeight = 'medium' | 'semibold' | 'bold';
+/** Re-exported for backwards-compatible imports. Prefer `DisplaySize`
+ *  from `'move'` directly going forward. */
+export type HeadingSize = DisplaySize;
+export type HeadingWeight =
+  | 'thin'
+  | 'extralight'
+  | 'light'
+  | 'normal'
+  | 'medium'
+  | 'semibold'
+  | 'bold'
+  | 'extrabold'
+  | 'black';
 export type HeadingColor = 'base' | 'muted' | 'subtle';
 export type HeadingTracking = 'tight' | 'normal';
 export type HeadingAlign = 'left' | 'center' | 'right';

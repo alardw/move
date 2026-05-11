@@ -8,6 +8,22 @@ export const spec = {
   category: 'panel',
   description: 'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
 
+  synonyms: ['expander', 'show more', 'disclosure', 'reveal'],
+  families: {
+    behavior:  ['disclosure'],
+    state:     ['controlled-open'],
+    animation: ['height-morph'],
+    a11y:      ['disclosure'],
+  },
+  behavior: {
+    disclosure: {
+      animatesOpen: true,
+      animatesClose: true,
+      keyboardToggle: true,
+      multipleOpen: false,             // single panel
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [

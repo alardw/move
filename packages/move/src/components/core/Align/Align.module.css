@@ -1,6 +1,7 @@
 /* Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097) */
 
 .root {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   width: 100%;

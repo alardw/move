@@ -1,36 +1,106 @@
 /*
  * Table Component — Move UI
- * Provenance: original-components/data/Table/Table.module.css
- * Component tokens on .root so children inherit.
- * 8 slot classes: root, header, body, footer, row, head, cell, caption
+ *
+ * Compound: Root, Header, Body, Footer, Row, Head, Cell, Caption, Group, GroupHeader
+ *
+ * Variants (visual frame):
+ *   - surface  (default) — card-like background, border, radius
+ *   - lines              — borderless frame, hairlines between rows only
+ *   - bordered           — full grid with borders on every cell
+ *
+ * Modifiers: striped, hoverable, stickyHeader
+ *
+ * Responsive modes (data-responsive):
+ *   - scroll (default) — overflow-x on the wrapper
+ *   - stack            — JS observes wrapper width and toggles data-stack
+ *                        on root when below stackBelow; CSS flips the
+ *                        layout to stacked rows with column labels
+ *   - none             — no wrapper behavior
  */
 
+.scrollWrapper {
+  container-type: inline-size;
+  container-name: moveTable;
+}
+
+.scrollWrapper[data-responsive='scroll'] {
+  overflow-x: auto;
+}
+
 .root {
-  /* Component tokens */
-  --move-table-bg: var(--move-surface-alt);
-  --move-table-border: var(--move-surface-border);
+  /* Component tokens ─────────────────────────────────────────────── */
+  --move-table-bg: var(--move-bg-base);
+  --move-table-border: var(--move-border-base);
   --move-table-radius: var(--move-rounded-lg);
-  --move-table-header-bg: var(--move-surface-alt-hover);
+
+  --move-table-header-bg: transparent;
   --move-table-header-fg: var(--move-fg-base);
-  --move-table-header-weight: var(--move-weight-medium);
+  --move-table-header-weight: var(--move-weight-semibold);
+  --move-table-header-border: var(--move-border-base);
+  --move-table-header-border-width: 1px;
+
   --move-table-cell-padding-x: var(--move-spacing-md);
   --move-table-cell-padding-y: var(--move-spacing-sm);
   --move-table-cell-fg: var(--move-fg-base);
-  --move-table-row-hover-bg: var(--move-surface-alt-hover);
+  /* Inter-row rule. Uses a translucent mix of the foreground so the
+     line reads on any surface (page, Card, nested Drawer, etc.). The
+     surface blocks below override with stronger variants where needed. */
+  --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 10%, transparent);
+
+  /* Row hover + zebra stripe use translucent mixes of the foreground
+     so they read against any background without a hard token lookup.
+     The surface remaps below step the ratios up on deeper surfaces. */
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
   --move-table-row-selected-bg: var(--move-selected-bg);
-  --move-table-stripe-bg: var(--move-surface-alt-hover);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 3%, transparent);
+
   --move-table-caption-fg: var(--move-fg-muted);
   --move-table-caption-size: var(--move-size-sm);
+
+  --move-table-group-header-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+  --move-table-group-header-hover-bg: color-mix(in oklch, var(--move-fg-base) 8%, transparent);
 
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border-radius: var(--move-table-radius);
-  overflow: hidden;
   background-color: var(--move-table-bg);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
   color: var(--move-table-cell-fg);
+}
+
+/* ============================================
+ * Surface-aware border tokens
+ *
+ * The surface system sets data-surface on ancestor containers (Card,
+ * Drawer, Dialog, etc.). On a subtle surface the default inter-row
+ * rule can dissolve into the container background; bump the mix to a
+ * stronger fg ratio so lines stay visible one level down. On muted
+ * or emphasis surfaces, bump further.
+ * ============================================ */
+
+[data-surface='subtle'] .root {
+  --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 14%, transparent);
+  --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 20%, transparent);
+  --move-table-border: color-mix(in oklch, var(--move-fg-base) 16%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
+}
+
+[data-surface='muted'] .root,
+[data-surface='emphasis'] .root {
+  --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 18%, transparent);
+  --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 26%, transparent);
+  --move-table-border: color-mix(in oklch, var(--move-fg-base) 20%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 6%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+}
+
+[data-surface='inverse'] .root {
+  --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 12%, transparent);
+  --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 18%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
 }
 
 /* ============================================
@@ -43,10 +113,6 @@
   font-size: var(--move-size-xs);
 }
 
-.root[data-size='md'] {
-  /* defaults above */
-}
-
 .root[data-size='lg'] {
   --move-table-cell-padding-x: var(--move-spacing-lg);
   --move-table-cell-padding-y: var(--move-spacing-md);
@@ -54,28 +120,66 @@
 }
 
 /* ============================================
- * Bordered
+ * Frame variants
  * ============================================ */
 
-.root[data-bordered] {
+/* surface — card-like frame. Default. */
+.root[data-variant='surface'],
+.root:not([data-variant]) {
+  border: 1px solid var(--move-table-border);
+  border-radius: var(--move-table-radius);
+  overflow: hidden;
+}
+
+/* lines — borderless frame, horizontal rules only */
+.root[data-variant='lines'] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+/* bordered — full grid */
+.root[data-variant='bordered'] {
+  border: 1px solid var(--move-table-border);
+  border-radius: var(--move-table-radius);
+  overflow: hidden;
+}
+
+.root[data-variant='bordered'] .head,
+.root[data-variant='bordered'] .cell {
   border: 1px solid var(--move-table-border);
 }
 
-.root[data-bordered] .head,
-.root[data-bordered] .cell {
-  border: 1px solid var(--move-table-border);
+/* ghost — no frame, no inter-row rules, no header underline.
+   A blank canvas for modifier-only tables (e.g. striped-only). */
+.root[data-variant='ghost'] {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+.root[data-variant='ghost'] .cell {
+  border-bottom: none;
+}
+
+.root[data-variant='ghost'] .head {
+  border-bottom: none;
 }
 
 /* ============================================
- * Striped
+ * Striped modifier
  * ============================================ */
 
-.root[data-variant='striped'] .body .row:nth-child(even) {
+/* Stripe the first body row and every other after it. Starting on
+   row 1 anchors the header/body boundary when no underline or frame
+   is present (e.g. ghost variant), and makes the zebra pattern read
+   from the first glance. */
+.root[data-striped] .body .row:nth-child(odd) {
   background-color: var(--move-table-stripe-bg);
 }
 
 /* ============================================
- * Hoverable
+ * Hoverable modifier
  * ============================================ */
 
 .root[data-hoverable] .body .row:hover {
@@ -90,42 +194,43 @@
   position: sticky;
   top: 0;
   z-index: 1;
+  background-color: var(--move-table-bg);
 }
 
 /* ============================================
- * Header
+ * Sections
  * ============================================ */
 
 .header {
   background-color: var(--move-table-header-bg);
 }
 
-/* ============================================
- * Body
- * ============================================ */
-
-.body {}
-
-/* ============================================
- * Footer
- * ============================================ */
+/* Heavier underline under the header anchors the label band without a
+   background color — keeps header separation visible across all
+   variants even when bg is transparent. Applied to <th> because
+   <tr> borders are ignored when border-collapse is 'separate'. */
+.head {
+  border-bottom: var(--move-table-header-border-width) solid var(--move-table-header-border);
+}
 
 .footer {
   background-color: var(--move-table-header-bg);
   font-weight: var(--move-table-header-weight);
+  /* Top rule lives on the cells since <tfoot> borders are dropped by
+     border-collapse: separate. The body's last row already renders a
+     border-bottom (kept by the :last-child-section guard above), so
+     we just style the footer's text. */
 }
 
 /* ============================================
  * Row
+ *
+ * Inter-row rules live on the cells (not the <tr>) because
+ * `border-collapse: separate` — which we need for border-radius on
+ * the outer frame — ignores borders declared on <tr>. We drop the
+ * rule on the final body row so the container's own border finishes
+ * the stack cleanly.
  * ============================================ */
-
-.row {
-  border-bottom: 1px solid var(--move-table-border);
-}
-
-.row:last-child {
-  border-bottom: none;
-}
 
 .row[data-state='selected'] {
   background-color: var(--move-table-row-selected-bg);
@@ -133,6 +238,22 @@
 
 .root[data-hoverable] .body .row[data-state='selected']:hover {
   background-color: var(--move-table-row-selected-bg);
+}
+
+/* Interactive rows: hover tint + pointer + focus ring. Independent
+   of the table-level `hoverable` modifier — an interactive row
+   always feels clickable. */
+.row[data-interactive] {
+  cursor: pointer;
+}
+
+.row[data-interactive]:hover {
+  background-color: var(--move-table-row-hover-bg);
+}
+
+.row[data-interactive]:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }
 
 /* ============================================
@@ -143,6 +264,7 @@
   padding: var(--move-table-cell-padding-y) var(--move-table-cell-padding-x);
   text-align: left;
   font-weight: var(--move-table-header-weight);
+  font-size: inherit;
   color: var(--move-table-header-fg);
   white-space: nowrap;
 }
@@ -184,6 +306,46 @@
 .cell {
   padding: var(--move-table-cell-padding-y) var(--move-table-cell-padding-x);
   color: var(--move-table-cell-fg);
+  border-bottom: 1px solid var(--move-table-cell-border);
+}
+
+/* Per-column alignment — applies to both Head and Cell. */
+.cell[data-align='start'],
+.head[data-align='start'] { text-align: start; }
+
+.cell[data-align='center'],
+.head[data-align='center'] { text-align: center; }
+
+.cell[data-align='end'],
+.head[data-align='end'] { text-align: end; }
+
+/* Two-line cell content: primary (inherits cell color) stacked over a
+   muted description. Triggered by the `description` prop on Cell. */
+.cellStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cellPrimary {
+  font-weight: var(--move-weight-medium);
+  color: var(--move-fg-base);
+}
+
+.cellDescription {
+  font-size: var(--move-size-xs);
+  color: var(--move-fg-muted);
+}
+
+/* Drop the rule under the final row only when that row is genuinely
+   last in the table. `:last-child` on a <tbody> / <tfoot> / .group
+   is false when there's a later section, so a body-with-footer keeps
+   its separator rendered. */
+.body:last-child .row:last-child .cell,
+.group:last-child[data-open='true'] .row:last-child .cell,
+.group:last-child[data-open='false'] .row.groupHeader .cell,
+.footer:last-child .row:last-child .cell {
+  border-bottom: none;
 }
 
 /* ============================================
@@ -196,4 +358,127 @@
   font-size: var(--move-table-caption-size);
   caption-side: bottom;
   text-align: left;
+}
+
+/* ============================================
+ * Group + GroupHeader
+ * ============================================ */
+
+/* Group header should read as a section label — stronger than rows,
+   softer than the table header. A slight size bump + semibold + a
+   muted tint-bg makes them scannable without shouting. */
+.groupHeader {
+  background-color: var(--move-table-group-header-bg);
+  user-select: none;
+}
+
+/* Only collapsible groups get a pointer and hover — static group
+   headers are inert labels. */
+.group[data-collapsible] .groupHeader {
+  cursor: pointer;
+}
+
+.group[data-collapsible] .groupHeader:hover {
+  background-color: var(--move-table-group-header-hover-bg);
+}
+
+.group[data-collapsible] .groupHeader:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}
+
+.groupHeaderCell {
+  padding: var(--move-table-cell-padding-y) var(--move-table-cell-padding-x);
+  font-weight: var(--move-weight-semibold);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  letter-spacing: -0.005em;
+}
+
+.groupChevron {
+  display: inline-block;
+  margin-right: var(--move-spacing-xs);
+  transition: transform 0.18s ease;
+  color: var(--move-fg-muted);
+}
+
+.group[data-collapsible][data-open='true'] .groupChevron {
+  transform: rotate(90deg);
+}
+
+.group[data-open='false'] .row:not(.groupHeader) {
+  display: none;
+}
+
+/* ============================================
+ * Stack mode — JS toggles data-stack on root when the wrapper
+ * (container "moveTable") drops below the stackBelow breakpoint.
+ * Each row becomes a stacked block; each cell becomes a key/value
+ * pair where data-label (injected from the corresponding <th>)
+ * renders via ::before.
+ * ============================================ */
+
+.root[data-stack] {
+  display: block;
+  width: 100%;
+  border-collapse: separate;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  overflow: visible;
+}
+
+.root[data-stack] .header {
+  display: none;
+}
+
+.root[data-stack] .body,
+.root[data-stack] .footer {
+  display: block;
+}
+
+.root[data-stack] .row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-sm);
+  padding: var(--move-spacing-md);
+  border: 1px solid var(--move-table-border);
+  border-radius: var(--move-rounded-md);
+  margin-bottom: var(--move-spacing-lg);
+  background-color: var(--move-table-bg);
+}
+
+.root[data-stack] .row:last-child {
+  margin-bottom: 0;
+}
+
+.root[data-stack] .cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: var(--move-spacing-md);
+  padding: 0;
+  border: none;
+}
+
+.root[data-stack] .cell::before {
+  content: attr(data-label);
+  font-size: var(--move-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--move-fg-muted);
+  font-weight: var(--move-weight-medium);
+  align-self: start;
+}
+
+.root[data-stack][data-striped] .body .row:nth-child(odd) {
+  /* Stripes don't read naturally in card layout — drop them. */
+  background-color: var(--move-table-bg);
+}
+
+.root[data-stack] .groupHeader {
+  display: block;
+  padding: var(--move-table-cell-padding-y) var(--move-table-cell-padding-x);
+  border: 1px solid var(--move-table-border);
+  border-radius: var(--move-rounded-md);
+  margin-bottom: var(--move-spacing-sm);
 }

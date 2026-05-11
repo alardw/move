@@ -1,9 +1,12 @@
 'use client';
 // Generated from Text.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
+import type { TypographySize } from '../../../shared/types';
 import styles from './Text.module.css';
 
-export type TextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+/** Re-exported for backwards-compatible imports. Prefer
+ *  `TypographySize` from `'move'` directly going forward. */
+export type TextSize = TypographySize;
 export type TextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type TextColor = 'base' | 'muted' | 'subtle' | 'primary' | 'success' | 'warning' | 'error';
 export type TextAlign = 'left' | 'center' | 'right';

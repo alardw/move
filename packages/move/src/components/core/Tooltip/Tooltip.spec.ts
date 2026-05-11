@@ -8,6 +8,25 @@ export const spec = {
   category: 'core',
   description: 'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
 
+  synonyms: ['hint', 'tip', 'label', 'overlay tip'],
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['tooltip'],
+  },
+  behavior: {
+    popup: {
+      // Tooltip closes when the trigger loses hover/focus, not on
+      // outside click or escape — those flags don't apply. Same with
+      // scroll/resize, which keep the tooltip pinned via Radix.
+      closeOnEscape: false,
+      closeOnOutsideClick: false,
+      closeOnScroll: false,
+      closeOnResize: false,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -56,16 +75,6 @@ export const spec = {
       description: 'Element that opens tooltip on hover/focus; wraps Radix Tooltip.Trigger',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Portals content to document body (or custom container)',
-    },
-    {
       name: 'Content',
       slots: [{ name: 'content', element: 'div', description: 'Tooltip popup container' }],
       props: [
@@ -76,6 +85,7 @@ export const spec = {
         { name: 'sideOffset', type: 'number', moveSpecific: false, description: 'Distance from trigger in px' },
         { name: 'align', type: "'start' | 'center' | 'end'", default: "'center'", moveSpecific: false, description: 'Alignment along the side axis' },
         { name: 'alignOffset', type: 'number', moveSpecific: false, description: 'Alignment offset in px' },
+        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
       ],
       usesFactory: true,
@@ -116,10 +126,11 @@ export const spec = {
     ],
   },
 
-  controlled: {
-    prop: 'open',
-    defaultProp: 'defaultOpen',
-    event: 'onOpenChange',
+  controlled: 'open' as const,
+  controlledProps: {
+    valueProp: 'open',
+    defaultValueProp: 'defaultOpen',
+    onChangeProp: 'onOpenChange',
   },
   keyboard: null,
   focus: null,

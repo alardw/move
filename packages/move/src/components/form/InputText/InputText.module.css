@@ -11,7 +11,7 @@
   --move-input-padding-y: var(--move-spacing-xs);
   --move-input-font-size: inherit;
   --move-input-fg: var(--move-fg-base);
-  --move-input-placeholder: var(--move-fg-muted);
+  --move-input-placeholder: var(--move-fg-subtle);
   --move-input-height: var(--move-control-height-md);
   --move-input-icon-color: var(--move-fg-muted);
   --move-input-icon-gap: var(--move-spacing-sm);

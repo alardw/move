@@ -4,35 +4,58 @@
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine';
+import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import {
   useAnimations,
   resolveAnimationsConfig, extractSteps,
-  revealHeight, staggerItems, quick, poppy,
+  staggerItems, quick, poppy,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Select.module.css';
 
-// Fixed pixel amounts for width-relative scale — ensures consistent feel regardless of control width
-const SCALE_INSET_PX = 16;
-const SCALE_HOVER_PX = 8;
+// Per-item scale deltas (pixel-based so motion feels consistent at any width).
+// Container (Content) no longer scales — item stagger carries the reveal feel;
+// adding a container scale on top produced inconsistent perceived motion
+// depending on item count (short lists made the solo container scale conspicuous).
+const SCALE_INSET_PX = 16;       // per-item fade-in offset
+const SCALE_HOVER_PX = 4;        // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
+
+// Every visible dropdown row participates in the stagger: items, group
+// labels, and separators. Keeps the reveal cohesive when the menu is
+// grouped. Items are matched via `role="menuitem"` (Radix adds this),
+// labels and separators via their scoped CSS module classes.
+const CHILDREN_SELECTOR = `[role="menuitem"], [class*="label"], [class*="separator"]`;
+
+// Wraps only the string/number leaves of a ReactNode tree in a block-level
+// span so text-overflow: ellipsis applies natively. React elements (Icons,
+// custom components) pass through untouched so they stay as direct flex
+// siblings and center vertically via align-items on the parent.
+function wrapTextChildren(children: React.ReactNode, textClass: string): React.ReactNode {
+  const wrapped = React.Children.map(children, (child, i) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      return <span key={i} className={textClass}>{child}</span>;
+    }
+    return child;
+  });
+  return wrapped ?? children;
+}
 
 const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'open',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
-      { target: 'ContentInner', children: '[role="menuitem"]', stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+      { target: 'ContentInner', children: CHILDREN_SELECTOR, stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
       { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
     ]],
   },
   {
     trigger: 'closed',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
-      { target: 'ContentInner', children: '[role="menuitem"]', stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+      { target: 'ContentInner', children: CHILDREN_SELECTOR, stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
       { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
     ]],
   },
@@ -58,6 +81,7 @@ interface SelectContextValue {
   animConfig: AnimationTrigger[] | null;
   triggerWidth: number;
   setTriggerWidth: (w: number) => void;
+  triggerRef: React.RefObject<HTMLButtonElement>;
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);
@@ -124,6 +148,7 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
   const [isClosing, setIsClosing] = React.useState(false);
   const [triggerWidth, setTriggerWidth] = React.useState(200);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
   const labelMapRef = React.useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = React.useState(0);
 
@@ -174,8 +199,8 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   }, []);
 
   return (
-    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, open: !!open, isClosing, onCloseComplete: handleCloseComplete, close, registerLabel, getLabel, animConfig, triggerWidth, setTriggerWidth }}>
-      <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange}>
+    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, open: !!open, isClosing, onCloseComplete: handleCloseComplete, close, registerLabel, getLabel, animConfig, triggerWidth, setTriggerWidth, triggerRef }}>
+      <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={false}>
         {children}
       </RadixDropdownMenu.Root>
     </SelectContext.Provider>
@@ -199,6 +224,8 @@ export interface SelectTriggerProps extends Record<string, unknown> {
   size?: SelectTriggerSize;
   variant?: SelectTriggerVariant;
   width?: React.CSSProperties['width'];
+  minWidth?: React.CSSProperties['minWidth'];
+  maxWidth?: React.CSSProperties['maxWidth'];
   sp?: SlotPropsMap<'trigger'>;
 }
 
@@ -207,12 +234,11 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
   styles,
   slots: ['trigger'] as const,
   defaults: { size: 'md', variant: 'outlined' },
-  moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
+  moveProps: ['invalid', 'disabled', 'width', 'minWidth', 'maxWidth', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { open, isClosing, setTriggerWidth } = useSelectContext();
+    const { open, isClosing, setTriggerWidth, triggerRef } = useSelectContext();
     const moveState = open && !isClosing ? 'open' : 'closed';
-    const triggerRef = React.useRef<HTMLButtonElement>(null);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
 
     React.useEffect(() => {
@@ -238,7 +264,13 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             data-variant={props.variant}
             data-move-state={moveState}
             className={cx('trigger', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...props.style,
+              ...(props.width != null ? { width: props.width as React.CSSProperties['width'] } : {}),
+              ...(props.minWidth != null ? { minWidth: props.minWidth as React.CSSProperties['minWidth'] } : {}),
+              ...(props.maxWidth != null ? { maxWidth: props.maxWidth as React.CSSProperties['maxWidth'] } : {}),
+              ...(spStyle as React.CSSProperties),
+            }}
             {...(props.disabled ? { 'data-disabled': '' } : {})}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
           >
@@ -278,16 +310,20 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
         const showPlaceholder = value === undefined || value === '';
         const label = value !== undefined ? getLabel(value) : undefined;
         const displayText = showPlaceholder ? (props.placeholder as string) : (props.children ?? label ?? value);
+        // Native tooltip — lets users see the full value when the trigger is too
+        // narrow and the text gets ellipsized.
+        const titleText = typeof displayText === 'string' ? displayText : undefined;
         return (
           <span
             {...attrs}
             {...spRest}
             ref={ref}
+            title={titleText}
             className={cx('value', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             {...(showPlaceholder ? { 'data-placeholder': '' } : {})}
           >
-            {displayText}
+            {wrapTextChildren(displayText, styles.valueText)}
           </span>
         );
       },
@@ -372,26 +408,56 @@ export interface SelectContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
+  width?: React.CSSProperties['width'];
+  minWidth?: React.CSSProperties['minWidth'];
+  maxWidth?: React.CSSProperties['maxWidth'];
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   onInteractOutside?: (e: Event) => void;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const SelectContent = withMoveComponent<'content' | 'contentInner', SelectContentProps, HTMLDivElement>({
-  name: 'SelectContent',
-  styles,
-  slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+// Inner component that lives INSIDE the Portal — its hooks run after Portal
+// has committed children to the DOM, so refs are always available.
+interface SelectContentInnerProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  sideOffset?: number;
+  align?: 'start' | 'center' | 'end';
+  width?: React.CSSProperties['width'];
+  minWidth?: React.CSSProperties['minWidth'];
+  maxWidth?: React.CSSProperties['maxWidth'];
+  onPointerDownOutside?: (e: Event) => void;
+  onEscapeKeyDown?: (e: KeyboardEvent) => void;
+  onInteractOutside?: (e: Event) => void;
+  contentCx: CxFn<'content' | 'contentInner'>;
+  innerCx: CxFn<'content' | 'contentInner'>;
+  contentSp: Record<string, unknown>;
+  innerSp: Record<string, unknown>;
+  layer: number;
+  attrs: Record<string, unknown>;
+}
 
-  setup({ props, ref, cx, sp, attrs }) {
+const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerProps>(
+  function SelectContentInner(props, ref) {
     const { isClosing, onCloseComplete, close, animConfig, triggerWidth } = useSelectContext();
-    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
+    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Width-relative scale from trigger width (known before popup opens)
+    // Close on external scroll — dropdown doesn't reposition so it would become misaligned.
+    React.useEffect(() => {
+      const onScroll = (e: Event) => {
+        if (contentRef.current?.contains(e.target as Node)) return;
+        close();
+      };
+      document.addEventListener('scroll', onScroll, { capture: true, passive: true });
+      return () => document.removeEventListener('scroll', onScroll, { capture: true });
+    }, [close]);
+
+    // Width-relative item scale from trigger width (known before popup opens).
     const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
 
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
@@ -403,38 +469,39 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
       if (closedSteps) result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
       return result.length > 0 ? result : null;
     }, [animConfig, scaleFrom]);
+
     const contentRefs = React.useMemo(() => ({
       Content: contentRef as React.RefObject<HTMLElement | null>,
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    // Scroll to selected item BEFORE animation starts (runs before useAnimations' useLayoutEffect)
+    // Scroll + focus the selected item synchronously on mount — BEFORE the
+    // animation runs and BEFORE Radix's default auto-focus lands on the
+    // first item. This ensures arrow navigation always starts from the
+    // currently-selected value (or from the first item when nothing is
+    // selected), not from whatever Radix happened to focus first.
     React.useLayoutEffect(() => {
-      if (!contentRef.current || !animConfig) return;
+      const content = contentRef.current;
       const inner = innerRef.current;
-      if (inner) {
-        const selectedItem = inner.querySelector('[data-selected]') as HTMLElement | null;
-        if (selectedItem) {
-          inner.scrollTop = Math.max(0, selectedItem.offsetTop - inner.clientHeight / 2 + selectedItem.offsetHeight / 2);
-        }
-      }
-    }, [animConfig]); // eslint-disable-line react-hooks/exhaustive-deps
+      if (!content || !inner) return;
 
-    // Enter/exit via useAnimations orchestrator
-    const { runExit } = useAnimations(contentConfig, contentRefs, undefined, {
-      onEnterComplete: () => {
-        const content = contentRef.current;
-        if (content) {
-          content.focus();
-          const selected = content.querySelector('[data-selected]') as HTMLElement | null;
-          if (selected) {
-            selected.focus();
-          } else {
-            content.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown', bubbles: true }));
-          }
-        }
-      },
-    });
+      const selected = inner.querySelector('[data-selected]') as HTMLElement | null;
+      const target = selected ?? (inner.querySelector('[role="menuitem"]:not([data-disabled])') as HTMLElement | null);
+
+      if (selected) {
+        inner.scrollTop = Math.max(
+          0,
+          selected.offsetTop - inner.clientHeight / 2 + selected.offsetHeight / 2,
+        );
+      }
+
+      // Focus the target so roving tabindex starts from the selected item.
+      target?.focus({ preventScroll: true });
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+    // Enter/exit via useAnimations orchestrator. Focus is already placed
+    // by the useLayoutEffect above, so nothing to do on animation end.
+    const { runExit } = useAnimations(contentConfig, contentRefs);
 
     // Exit animation
     React.useEffect(() => {
@@ -443,53 +510,94 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
       runExit().then(() => onCloseComplete?.());
     }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-
     const handlePointerDownOutside = (e: Event) => {
-      (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
+      props.onPointerDownOutside?.(e);
       if (!e.defaultPrevented) close();
     };
 
     const handleEscapeKeyDown = (e: KeyboardEvent) => {
-      (props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
+      props.onEscapeKeyDown?.(e);
       if (!e.defaultPrevented) close();
     };
 
     const handleInteractOutside = (e: Event) => {
-      (props.onInteractOutside as ((e: Event) => void) | undefined)?.(e);
+      props.onInteractOutside?.(e);
     };
+
+    const { className: spClass, style: spStyle, ...spRest } = props.contentSp;
+    const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
+
+    return (
+      <RadixDropdownMenu.Content
+        {...props.attrs}
+        {...spRest}
+        ref={mergedContentRef}
+        sideOffset={props.sideOffset ?? 4}
+        align={props.align}
+        className={props.contentCx('content', props.className, spClass as string | undefined)}
+        style={{
+          ...props.style,
+          ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
+          ...(props.width != null ? { width: props.width } : {}),
+          ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
+          ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
+          ...(spStyle as React.CSSProperties),
+        }}
+        onPointerDownOutside={handlePointerDownOutside}
+        onEscapeKeyDown={handleEscapeKeyDown}
+        onInteractOutside={handleInteractOutside}
+        data-surface="subtle"
+      >
+        <div
+          ref={innerRef}
+          {...innerSpRest}
+          className={props.innerCx('contentInner', innerSpClass as string | undefined)}
+          style={innerSpStyle as React.CSSProperties}
+        >
+          {props.children}
+        </div>
+      </RadixDropdownMenu.Content>
+    );
+  },
+);
+
+const SelectContent = withMoveComponent<'content' | 'contentInner', SelectContentProps, HTMLDivElement>({
+  name: 'SelectContent',
+  styles,
+  slots: ['content', 'contentInner'] as const,
+  moveProps: ['sideOffset', 'align', 'container', 'width', 'minWidth', 'maxWidth', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const layer = useLayer();
 
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
         const innerSp = sp('contentInner');
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
           <RadixDropdownMenu.Portal container={props.container as HTMLElement | undefined}>
-            <RadixDropdownMenu.Content
-              {...attrs}
-              {...spRest}
-              ref={mergedContentRef}
-              sideOffset={props.sideOffset as number ?? 4}
-              align={props.align as 'start' | 'center' | 'end'}
-              className={cx('content', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-              onPointerDownOutside={handlePointerDownOutside}
-              onEscapeKeyDown={handleEscapeKeyDown}
-              onInteractOutside={handleInteractOutside}
-              data-surface="subtle"
+            <SelectContentInner
+              ref={ref}
+              className={props.className}
+              style={props.style}
+              sideOffset={props.sideOffset as number | undefined}
+              align={props.align as 'start' | 'center' | 'end' | undefined}
+              width={props.width as React.CSSProperties['width'] | undefined}
+              minWidth={props.minWidth as React.CSSProperties['minWidth'] | undefined}
+              maxWidth={props.maxWidth as React.CSSProperties['maxWidth'] | undefined}
+              onPointerDownOutside={props.onPointerDownOutside as ((e: Event) => void) | undefined}
+              onEscapeKeyDown={props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined}
+              onInteractOutside={props.onInteractOutside as ((e: Event) => void) | undefined}
+              contentCx={cx}
+              innerCx={cx}
+              contentSp={contentSp as Record<string, unknown>}
+              innerSp={innerSp as Record<string, unknown>}
+              layer={layer}
+              attrs={attrs}
             >
-              <div
-                ref={innerRef}
-                {...innerSpRest}
-                className={cx('contentInner', innerSpClass as string | undefined)}
-                style={innerSpStyle as React.CSSProperties}
-              >
-                {props.children}
-              </div>
-            </RadixDropdownMenu.Content>
+              {props.children}
+            </SelectContentInner>
           </RadixDropdownMenu.Portal>
         );
       },
@@ -595,6 +703,12 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
         const itemSp = sp('item');
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
 
+        const itemTitle =
+          typeof props.children === 'string'
+            ? props.children
+            : typeof props.label === 'string'
+              ? (props.label as string)
+              : undefined;
         return (
           <RadixDropdownMenu.Item
             {...attrs}
@@ -602,13 +716,14 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
             ref={mergedItemRef}
             disabled={props.disabled as boolean}
             data-selected={isSelected ? '' : undefined}
+            title={itemTitle}
             onSelect={handleSelect}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {wrapTextChildren(props.children, styles.itemText)}
           </RadixDropdownMenu.Item>
         );
       },

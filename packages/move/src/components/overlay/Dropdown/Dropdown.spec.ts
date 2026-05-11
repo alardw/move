@@ -8,6 +8,22 @@ export const spec = {
   category: 'overlay',
   description: 'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
 
+  synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu'],
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-open'],
+    animation: ['height-morph', 'stagger'],
+    a11y:      ['menu'],
+  },
+  behavior: {
+    popup: {
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      closeOnScroll: true,
+      closeOnResize: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -57,16 +73,6 @@ export const spec = {
       description: 'Element that opens the dropdown when clicked',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Portals dropdown content to document body (or custom container)',
-    },
-    {
       name: 'Content',
       slots: [
         { name: 'content', element: 'RadixDropdownMenu.Content', description: 'Menu content panel' },
@@ -76,6 +82,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Menu items' },
+        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
         { name: 'sideOffset', type: 'number', moveSpecific: true, description: 'Distance from trigger in px' },
         { name: 'align', type: "'start' | 'center' | 'end'", moveSpecific: true, description: 'Alignment along the side axis' },
         { name: 'onPointerDownOutside', type: '(e: Event) => void', moveSpecific: true, description: 'Called when pointer down outside content' },

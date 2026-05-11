@@ -54,6 +54,8 @@ const ListContext = React.createContext<ListContextValue | null>(null);
 // Root
 // ============================================================================
 
+export type ListRadius = 'none' | 'sm' | 'md' | 'lg';
+
 export interface ListRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
@@ -63,6 +65,8 @@ export interface ListRootProps extends Record<string, unknown> {
   separator?: boolean;
   density?: ListDensity;
   hover?: boolean;
+  /** Border radius applied to hover/active item highlights. */
+  radius?: ListRadius;
   /** When this value changes, the stagger entrance animation replays. Useful for filter/sort transitions. */
   animateKey?: unknown;
   animations?: AnimationTrigger[] | false;
@@ -79,8 +83,9 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
     separator: true,
     density: 'default' as ListDensity,
     hover: false,
+    radius: 'sm' as ListRadius,
   },
-  moveProps: ['size', 'dividers', 'separator', 'density', 'hover', 'animations', 'animateKey'],
+  moveProps: ['size', 'dividers', 'separator', 'density', 'hover', 'radius', 'animations', 'animateKey'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const rootRef = React.useRef<HTMLUListElement>(null);
@@ -137,6 +142,7 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
               style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
               data-size={props.size as string}
               data-density={props.density as string}
+              data-radius={props.radius as string}
               data-dividers={(props.dividers && !props.separator) ? '' : undefined}
               data-hover={props.hover ? '' : undefined}
             >
@@ -173,6 +179,11 @@ export interface ListItemProps extends Record<string, unknown> {
   onClick?: () => void;
   active?: boolean;
   disabled?: boolean;
+  /** Force the row to render as a click target — adds cursor: pointer,
+   *  hover tint, focus ring, and Enter/Space activation. Auto-derived
+   *  from `href`, `onClick`, or `as="a"|"button"` when omitted. Shared
+   *  opt-in pattern with `Table.Row` and `Image`. */
+  interactive?: boolean;
   sp?: SlotPropsMap<'item'>;
 }
 
@@ -180,7 +191,7 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
   name: 'ListItem',
   styles,
   slots: ['item'] as const,
-  moveProps: ['as', 'href', 'active', 'disabled'],
+  moveProps: ['as', 'href', 'active', 'disabled', 'interactive'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -196,7 +207,8 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
 
         // Determine rendered element
         const Element = href ? 'a' : asProp || 'li';
-        const isInteractive = !!(href || onClick || asProp === 'a' || asProp === 'button');
+        const interactiveProp = props.interactive as boolean | undefined;
+        const isInteractive = interactiveProp ?? !!(href || onClick || asProp === 'a' || asProp === 'button');
 
         const elementProps: Record<string, unknown> = {
           ...attrs,
@@ -361,7 +373,10 @@ const ListDescription = withMoveComponent<'description', ListDescriptionProps, H
   name: 'ListDescription',
   styles,
   slots: ['description'] as const,
-  defaults: { lines: 1 as unknown as undefined },
+  // Default to `none` — text wraps naturally so the component stays
+  // responsive out of the box. Consumers opt into truncation with
+  // lines={1 | 2 | 3} when they actually need it.
+  defaults: { lines: 'none' as unknown as undefined },
   moveProps: ['lines'],
 
   setup({ props, ref, cx, sp, attrs }) {

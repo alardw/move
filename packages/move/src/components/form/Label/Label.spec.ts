@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Text label for form fields with required asterisk indicator and size variants',
 
+  synonyms: ['caption', 'field label', 'form label'],
+  families: {
+    behavior:  ["typography"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'label',
   slots: [
@@ -19,7 +27,7 @@ export const spec = {
     { name: 'htmlFor', type: 'string', moveSpecific: true, description: 'ID of the associated form element' },
     { name: 'required', type: 'boolean', moveSpecific: true, description: 'Show required asterisk indicator' },
     { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether the label appears in disabled styling' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Font size of the label' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Font size of the label' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label text content' },
   ],
 

@@ -44,6 +44,8 @@ export interface CalendarRootProps {
   constraints?: CalendarConstraints;
   numberOfMonths?: number;
   showWeekNumbers?: boolean;
+  yearRange?: number;
+  fixedWeeks?: boolean;
 
   // Renderers
   renderDayCell?: RenderDayCell;
@@ -67,6 +69,8 @@ const CalendarRoot: React.FC<CalendarRootProps> = ({
   constraints,
   numberOfMonths,
   showWeekNumbers,
+  yearRange,
+  fixedWeeks,
   renderDayCell,
   renderEvent,
   labels,
@@ -82,6 +86,8 @@ const CalendarRoot: React.FC<CalendarRootProps> = ({
     constraints,
     numberOfMonths,
     showWeekNumbers,
+    yearRange,
+    fixedWeeks,
     renderDayCell,
     renderEvent,
     labels,
@@ -89,9 +95,15 @@ const CalendarRoot: React.FC<CalendarRootProps> = ({
 
   const ctx = useCalendar(calendarOptions);
 
+  const hasEvents = Array.isArray(events) && events.length > 0;
+
   return (
     <CalendarContext.Provider value={ctx}>
-      <div className={`${styles.root} ${className ?? ''}`} style={style}>
+      <div
+        className={`${styles.root} ${className ?? ''}`}
+        style={style}
+        data-has-events={hasEvents ? '' : undefined}
+      >
         {children}
       </div>
     </CalendarContext.Provider>

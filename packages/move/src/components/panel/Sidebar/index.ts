@@ -11,7 +11,6 @@ export type {
   SidebarGroupLabelProps,
   SidebarItemProps,
   SidebarTriggerProps,
-  SidebarRailProps,
 } from './Sidebar';
 export { useSidebarContext } from './Sidebar';
 export { useSidebar } from './useSidebar';

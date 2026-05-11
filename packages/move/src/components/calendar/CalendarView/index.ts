@@ -6,7 +6,7 @@ export type {
   CalendarViewNavProps,
   CalendarViewTitleProps,
   CalendarViewTodayProps,
-  CalendarViewSwitcherProps,
+  CalendarViewViewSwitcherProps,
   CalendarViewBodyProps,
 } from './CalendarView';
 export { useCalendarView } from './useCalendarView';

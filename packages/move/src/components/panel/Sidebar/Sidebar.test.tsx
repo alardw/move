@@ -336,23 +336,6 @@ describe('Sidebar', () => {
     });
   });
 
-  // === Rail ===
-  describe('Rail', () => {
-    it('has aria-hidden=true', () => {
-      renderWithProvider(<Sidebar.Rail data-testid="rail" />);
-      expect(screen.getByTestId('rail')).toHaveAttribute('aria-hidden', 'true');
-    });
-
-    it('forwards className and style', () => {
-      renderWithProvider(
-        <Sidebar.Rail data-testid="rail" className="custom" style={{ width: '6px' }} />
-      );
-      const el = screen.getByTestId('rail');
-      expect(el.className).toContain('custom');
-      expect(el).toHaveStyle({ width: '6px' });
-    });
-  });
-
   // === Composition ===
   describe('composition', () => {
     it('renders full sidebar composition', () => {
@@ -372,7 +355,6 @@ describe('Sidebar', () => {
             <Sidebar.Footer data-testid="footer">
               <Sidebar.Item icon={<span>U</span>}>User</Sidebar.Item>
             </Sidebar.Footer>
-            <Sidebar.Rail data-testid="rail" />
           </Sidebar.Root>
           <Sidebar.Trigger data-testid="trigger">Toggle</Sidebar.Trigger>
         </Sidebar.Provider>
@@ -382,7 +364,6 @@ describe('Sidebar', () => {
       expect(screen.getByTestId('header')).toBeInTheDocument();
       expect(screen.getByTestId('content')).toBeInTheDocument();
       expect(screen.getByTestId('footer')).toBeInTheDocument();
-      expect(screen.getByTestId('rail')).toBeInTheDocument();
       expect(screen.getByTestId('trigger')).toBeInTheDocument();
       expect(screen.getByRole('group')).toBeInTheDocument();
       expect(screen.getByText('Navigation')).toBeInTheDocument();

@@ -6,6 +6,14 @@
   grid-template-rows: var(--_grid-rows, auto);
 }
 
+/* Grid items default to min-width: auto (content-based), which lets long,
+   non-wrapping content — code blocks, long words, tables — push columns
+   wider than their `1fr` share. Flattening min-width to 0 on every grid
+   child lets inner overflow:auto containers actually do their job. */
+.root > * {
+  min-width: 0;
+}
+
 /* Gap */
 .root[data-gap='none'] {
   gap: 0;

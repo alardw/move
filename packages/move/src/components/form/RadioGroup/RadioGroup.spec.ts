@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
 
+  synonyms: ['radio', 'options', 'single select', 'radio buttons'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["listbox"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -32,7 +40,7 @@ export const spec = {
         { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name for hidden inputs' },
         { name: 'required', type: 'boolean', moveSpecific: false, description: 'Mark all items as required' },
         { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state applied to all items via data-invalid' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of all radio items' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of all radio items' },
         { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", moveSpecific: false, description: 'Layout orientation' },
         { name: 'loop', type: 'boolean', moveSpecific: false, description: 'Whether keyboard navigation loops' },
       ],
@@ -69,7 +77,7 @@ export const spec = {
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name' },
     { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required state' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Radio item size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Radio item size' },
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", moveSpecific: false, description: 'Layout orientation' },
     { name: 'loop', type: 'boolean', moveSpecific: false, description: 'Whether keyboard navigation loops' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'RadioGroup.Item children' },

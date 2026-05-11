@@ -122,6 +122,14 @@
   padding: var(--move-spacing-xl);
 }
 
+.root[data-padding='2xl'] {
+  padding: var(--move-spacing-2xl);
+}
+
+.root[data-padding='3xl'] {
+  padding: var(--move-spacing-3xl);
+}
+
 /* Flex */
 .root[data-flex='1'] {
   flex: 1;

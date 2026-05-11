@@ -23,7 +23,7 @@
   --move-list-description-color: var(--move-fg-muted);
   --move-list-bg: var(--move-surface-alt);
   --move-list-disabled-opacity: 0.5;
-  --move-list-radius: var(--move-radius-sm);
+  --move-list-radius: var(--move-rounded-sm);
 
   display: flex;
   flex-direction: column;
@@ -36,6 +36,14 @@
   color: var(--move-fg-base);
   container-type: inline-size;
 }
+
+/* Radius — per-variant, sets the shared --move-list-radius var so item
+   hover/active highlights inherit the same shape as the container.
+   Same pattern AudioPlayer / VideoPlayer use. */
+.root[data-radius='none'] { --move-list-radius: var(--move-rounded-none); }
+.root[data-radius='sm']   { --move-list-radius: var(--move-rounded-sm); }
+.root[data-radius='md']   { --move-list-radius: var(--move-rounded-md); }
+.root[data-radius='lg']   { --move-list-radius: var(--move-rounded-lg); }
 
 /* =========================================================================
  * Sizes
@@ -189,7 +197,6 @@
 
 .content {
   flex: 1;
-  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

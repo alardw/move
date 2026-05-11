@@ -5,7 +5,6 @@
 import * as React from 'react';
 import { getMonthGrid, getWeekDayNames, getWeekNumber, addMonths } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
-import { prefersReducedMotion } from '../../../animation';
 import { DayCell } from './DayCell';
 import styles from './MonthGrid.module.css';
 

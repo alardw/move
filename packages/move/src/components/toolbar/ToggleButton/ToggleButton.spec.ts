@@ -9,6 +9,14 @@ export const spec = {
   description:
     'Toggle button that switches between pressed and unpressed states, composing Button base styles with Radix Toggle primitive',
 
+  synonyms: ['toggle', 'pressed button', 'icon toggle'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["hover-press"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'RadixToggle.Root',
   slots: [
@@ -21,7 +29,7 @@ export const spec = {
     { name: 'onPressedChange', type: '(pressed: boolean) => void', moveSpecific: true, description: 'Called when pressed state changes' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
     { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", moveSpecific: true, description: 'Visual style variant (inherits Button variants)' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Button size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Button size' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions, or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content' },
   ],

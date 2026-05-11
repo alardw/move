@@ -3,7 +3,7 @@
 // Provenance: original-components/calendar/_shared/DayCell.tsx
 
 import * as React from 'react';
-import { isSameDay, isToday, isSameMonth, isDateDisabled, isWithinRange, isBefore } from './dateUtils';
+import { isSameDay, isToday, isSameMonth, isDateDisabled, isWithinRange } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
 import { useAnimations, scaleDown } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';

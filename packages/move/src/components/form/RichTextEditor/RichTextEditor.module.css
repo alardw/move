@@ -29,6 +29,7 @@
   /* Content tokens */
   --move-rte-content-padding: var(--move-spacing-md);
   --move-rte-content-fg: var(--move-fg-base);
+  --move-rte-content-font-size: var(--move-text-base);
   --move-rte-content-min-height: 200px;
 
   /* Separator tokens */
@@ -164,7 +165,7 @@
   padding: var(--move-rte-content-padding);
   color: var(--move-rte-content-fg);
   font-family: var(--move-rte-font);
-  font-size: var(--move-size-base);
+  font-size: var(--move-rte-content-font-size);
   line-height: var(--move-leading-relaxed);
   min-height: var(--move-rte-content-min-height);
 }

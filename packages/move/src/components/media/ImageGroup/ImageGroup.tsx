@@ -9,6 +9,7 @@ import {
   snappy,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import type { Radius } from '../../../shared/types';
 import styles from './ImageGroup.module.css';
 
 // =============================================================================
@@ -16,7 +17,9 @@ import styles from './ImageGroup.module.css';
 // =============================================================================
 
 export type ImageGroupGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type ImageGroupRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
+/** Re-exported for backwards-compatible imports. Prefer `Radius`
+ *  from `'move'` directly going forward. */
+export type ImageGroupRadius = Radius;
 type ImageGroupSlots = 'root';
 
 // =============================================================================

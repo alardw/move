@@ -275,7 +275,7 @@ describe('List', () => {
 
   // === Description ===
   describe('List.Description', () => {
-    it('defaults to lines=1', () => {
+    it('defaults to lines=none (text wraps naturally)', () => {
       render(
         <List animations={false}>
           <List.Item>
@@ -285,7 +285,7 @@ describe('List', () => {
           </List.Item>
         </List>
       );
-      expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', '1');
+      expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', 'none');
     });
 
     it('applies lines=2', () => {

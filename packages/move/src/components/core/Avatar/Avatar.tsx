@@ -5,16 +5,19 @@ import { Avatar as RadixAvatar } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import type { Color, SizeWithXL } from '../../../shared/types';
 import styles from './Avatar.module.css';
 
 // =============================================================================
 // Types
 // =============================================================================
 
-export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-export type AvatarColor =
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+/** Re-exported for backwards-compatible imports. Prefer `SizeWithXL`
+ *  from `'move'` directly going forward. */
+export type AvatarSize = SizeWithXL;
+/** Re-exported for backwards-compatible imports. Prefer `Color` from
+ *  `'move'` directly going forward. */
+export type AvatarColor = Color;
 
 type AvatarStatus = 'idle' | 'loading' | 'loaded' | 'error';
 

@@ -42,7 +42,6 @@
   height: 100%;
   background-color: var(--move-sidebar-bg);
   color: var(--move-sidebar-fg);
-  border-right: 1px solid var(--move-sidebar-border);
   flex-shrink: 0;
   overflow: hidden;
   will-change: width;
@@ -51,11 +50,6 @@
 .root a {
   text-decoration: none;
   color: inherit;
-}
-
-.root[data-side='right'] {
-  border-right: none;
-  border-left: 1px solid var(--move-sidebar-border);
 }
 
 .root[data-collapsed='true'] {
@@ -69,7 +63,6 @@
   bottom: 0;
   width: var(--move-sidebar-width-mobile);
   z-index: var(--move-layer-modal);
-  border-right: 1px solid var(--move-sidebar-border);
 }
 
 .root[data-mobile='true'][data-side='left'] {
@@ -92,8 +85,17 @@
   gap: var(--move-spacing-md);
   padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
   flex-shrink: 0;
-  background-color: var(--move-sidebar-chrome-bg);
-  border-bottom: 1px solid var(--move-sidebar-border);
+  /* Inherits the sidebar root bg so Header/Content/Footer read as one
+     surface. The bottom border only renders once the content has been
+     scrolled past the top — see SidebarContent's scroll listener
+     toggling [data-scrolled]. Reserving 1px of transparent border up
+     front prevents a 1px layout jump when it appears. */
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.header[data-scrolled] {
+  border-bottom-color: var(--move-sidebar-border);
 }
 
 .root[data-collapsed='true'] .header {
@@ -129,8 +131,17 @@
   gap: var(--move-spacing-xs);
   padding: var(--move-spacing-sm);
   flex-shrink: 0;
-  background-color: var(--move-sidebar-chrome-bg);
-  border-top: 1px solid var(--move-sidebar-border);
+  /* Inherits the sidebar root bg, matching Header/Content. The top
+     border only renders while there's more content below the visible
+     area — see SidebarContent's scroll listener toggling
+     [data-scrolled]. Reserving 1px of transparent border up front
+     prevents a 1px layout jump when it appears. */
+  border-top: 1px solid transparent;
+  transition: border-color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.footer[data-scrolled] {
+  border-top-color: var(--move-sidebar-border);
 }
 
 .root[data-collapsed='true'] .footer {
@@ -321,34 +332,6 @@
   justify-content: center;
   padding: var(--move-sidebar-item-padding-y) 0;
   gap: 0;
-}
-
-/* ============================================
- * Rail — thin edge bar for re-expanding
- * ============================================ */
-
-.rail {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  cursor: pointer;
-  opacity: 0;
-  /* Hover only */
-  transition: opacity var(--move-transition-fast) var(--move-ease-default);
-}
-
-.rail:hover {
-  opacity: 1;
-  background-color: var(--move-primary);
-}
-
-.root[data-side='left'] .rail {
-  right: -2px;
-}
-
-.root[data-side='right'] .rail {
-  left: -2px;
 }
 
 /* ============================================

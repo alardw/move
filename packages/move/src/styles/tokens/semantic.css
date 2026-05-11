@@ -140,6 +140,8 @@
   --move-spacing-md: var(--move-space-4);
   --move-spacing-lg: var(--move-space-6);
   --move-spacing-xl: var(--move-space-8);
+  --move-spacing-2xl: var(--move-space-12);
+  --move-spacing-3xl: var(--move-space-16);
 
   /* ============================================
    * Border Radius - Semantic

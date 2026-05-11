@@ -74,6 +74,18 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
       adjustHeight();
     }, [adjustHeight, props.value]);
 
+    const rootRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+      const root = rootRef.current;
+      if (!root || !props.autoSize) return;
+
+      const ro = new ResizeObserver(adjustHeight);
+      ro.observe(root);
+
+      return () => ro.disconnect();
+    }, [adjustHeight, props.autoSize]);
+
     const handleInput = React.useCallback(() => {
       adjustHeight();
     }, [adjustHeight]);
@@ -94,6 +106,7 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
         return (
           <div
             {...spRest}
+            ref={rootRef}
             className={cx('root', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
             data-variant={props.variant}

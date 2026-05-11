@@ -8,14 +8,19 @@ import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
 import { useAudioPlayer } from './useAudioPlayer';
+import type { Radius, Size } from '../../../shared/types';
 import styles from './AudioPlayer.module.css';
 
 // =============================================================================
 // Types
 // =============================================================================
 
-export type AudioPlayerRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
-export type AudioPlayerSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Radius`
+ *  from `'move'` directly going forward. */
+export type AudioPlayerRadius = Radius;
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type AudioPlayerSize = Size;
 
 type AudioPlayerSlots =
   | 'root'

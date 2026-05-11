@@ -18,11 +18,16 @@
   --move-text-3xl: 1.875rem;  /* 30px */
   --move-text-4xl: 2.25rem;   /* 36px */
 
-  /* Font weights */
+  /* Font weights — full 9-stop typographic scale */
+  --move-weight-thin: 100;
+  --move-weight-extralight: 200;
+  --move-weight-light: 300;
   --move-weight-normal: 400;
   --move-weight-medium: 500;
   --move-weight-semibold: 600;
   --move-weight-bold: 700;
+  --move-weight-extrabold: 800;
+  --move-weight-black: 900;
 
   /* Line heights */
   --move-leading-none: 1;

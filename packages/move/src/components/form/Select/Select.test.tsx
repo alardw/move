@@ -54,8 +54,11 @@ describe('Select', () => {
 
     it('placeholder has data-placeholder attribute', () => {
       renderSelect({ placeholder: 'Pick one' });
-      const valueEl = screen.getByText('Pick one');
-      expect(valueEl).toHaveAttribute('data-placeholder');
+      // The placeholder text is wrapped in an inner .valueText span by
+      // wrapTextChildren; data-placeholder lives on the outer .value
+      // span (the semantic anchor for the placeholder state).
+      const valueEl = screen.getByText('Pick one').closest('[data-placeholder]');
+      expect(valueEl).not.toBeNull();
     });
 
     it('icon has aria-hidden', () => {

@@ -116,6 +116,22 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       }
     }, []);
 
+    // Close the popup on viewport changes — scroll (any ancestor) or
+    // resize. Without this the popover floats away from the trigger
+    // when the page or a parent ScrollArea scrolls. capture: true so
+    // we catch scroll events on nested scroll containers, not just
+    // window. passive: true so we don't block the scroll itself.
+    React.useEffect(() => {
+      if (!open || isClosing || typeof window === 'undefined') return;
+      const onViewportChange = () => close();
+      window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
+      window.addEventListener('resize', onViewportChange);
+      return () => {
+        window.removeEventListener('scroll', onViewportChange, { capture: true });
+        window.removeEventListener('resize', onViewportChange);
+      };
+    }, [open, isClosing, close]);
+
     // Lifecycle animation for popup content
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);

@@ -2,13 +2,11 @@
 // Generated from ColorPicker.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 
 import { useCallback, useMemo, useRef, useState } from 'react';
-import type { HsvColor, ColorFormat, ColorChannel, BaseColorFormat } from './colorUtils';
+import type { HsvColor, ColorFormat, ColorChannel } from './colorUtils';
 import {
   parseColor,
   formatColor,
   hasAlphaChannel,
-  getBaseFormat,
-  formatWithAlpha,
   getColorChannels,
   setChannelFromInput,
   getHexString,

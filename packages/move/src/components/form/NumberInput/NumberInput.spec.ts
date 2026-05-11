@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Numeric input with increment/decrement stepper buttons, controlled/uncontrolled value, format/parse support, and hold-to-repeat',
 
+  synonyms: ['number field', 'numeric', 'spinner input', 'stepper input'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -23,7 +31,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Visual variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
     { name: 'value', type: 'number | string', moveSpecific: true, description: 'Controlled numeric value' },
     { name: 'defaultValue', type: 'number | string', moveSpecific: true, description: 'Default value (uncontrolled)' },
     { name: 'onValueChange', type: '(value: number | undefined, displayValue: string) => void', moveSpecific: true, description: 'Called when value changes with both numeric and display string' },

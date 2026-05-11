@@ -11,12 +11,25 @@
   --move-toggle-group-radius: var(--move-rounded-md);
   --move-toggle-group-padding: 3px;
 
+  /* Variant-driven tokens — override these via data-variant to change
+     how prominent the selected pill looks. Default is the brand pill. */
+  --move-toggle-group-indicator-bg: var(--move-primary);
+  --move-toggle-group-selected-fg: var(--move-primary-fg);
+
   display: inline-flex;
   gap: 0;
   position: relative;
   background-color: var(--move-button-secondary-bg, var(--move-bg-muted));
   border-radius: var(--move-toggle-group-radius);
   padding: var(--move-toggle-group-padding);
+}
+
+/* Softer pill: neutral surface background + base text. Use for UI where
+   the toggle is secondary to the content (docs preview/code toggle, etc). */
+.root[data-variant='secondary'],
+.root[data-variant='ghost'] {
+  --move-toggle-group-indicator-bg: var(--move-bg-emphasis);
+  --move-toggle-group-selected-fg: var(--move-fg-base);
 }
 
 .root[data-orientation='vertical'] {
@@ -38,7 +51,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: var(--move-primary);
+  background-color: var(--move-toggle-group-indicator-bg);
   border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding));
   pointer-events: none;
   will-change: transform, width, height;
@@ -75,7 +88,7 @@
 /* Selected state — text color only, indicator provides background.
    !important needed to override composed Button variant color at same specificity. */
 .item[data-state='on'] {
-  color: var(--move-primary-fg) !important;
+  color: var(--move-toggle-group-selected-fg) !important;
   z-index: 1;
   transition-duration: 120ms;
   transition-delay: 80ms;

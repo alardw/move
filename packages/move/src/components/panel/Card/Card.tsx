@@ -3,6 +3,7 @@
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import type { Size } from '../../../shared/types';
 import styles from './Card.module.css';
 
 // =============================================================================
@@ -10,7 +11,9 @@ import styles from './Card.module.css';
 // =============================================================================
 
 export type CardVariant = 'default' | 'elevated' | 'ghost';
-export type CardSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type CardSize = Size;
 
 // =============================================================================
 // Root

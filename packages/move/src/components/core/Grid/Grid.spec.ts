@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
 
+  synonyms: ['layout grid', 'columns', 'simple grid'],
+  families: {
+    behavior:  ["layout"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -37,9 +45,9 @@ export const spec = {
     { name: 'rows', type: 'number', moveSpecific: true, description: 'Equal-height rows (shorthand for repeat(N, 1fr))' },
     { name: 'columns', type: 'number', moveSpecific: true, description: 'Total columns for span-based mode (default 12)' },
     { name: 'minChildWidth', type: 'string', moveSpecific: true, description: 'Auto-fit: minimum child width before wrapping (e.g. "200px")' },
-    { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
-    { name: 'rowGap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", moveSpecific: true, description: 'Row gap override' },
-    { name: 'columnGap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", moveSpecific: true, description: 'Column gap override' },
+    { name: 'gap', typeRef: 'Gap', default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
+    { name: 'rowGap', typeRef: 'Gap', moveSpecific: true, description: 'Row gap override' },
+    { name: 'columnGap', typeRef: 'Gap', moveSpecific: true, description: 'Column gap override' },
     { name: 'collapseBelow', type: 'string', moveSpecific: true, description: 'Container width (px) below which grid collapses to 1 column' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Grid.Cell children' },
   ],
@@ -122,12 +130,6 @@ export const spec = {
       'CSS overrides grid-template-columns to 1fr when data-collapsed is set',
     ],
   },
-
-  notes: [
-    'Layout props (gap, cols, rows, etc.) are applied via inline styles rather than data-attributes — this is a deliberate design choice for CSS grid flexibility',
-    'The GAP_MAP maps named sizes to semantic spacing tokens: xs->--move-spacing-xs, sm->--move-spacing-sm, md->--move-spacing-md, lg->--move-spacing-lg, xl->--move-spacing-xl, none->0',
-    'No component-specific CSS custom property tokens — all styling is structural CSS grid',
-  ],
 
   defaultReview: {
     status: 'approved' as const,

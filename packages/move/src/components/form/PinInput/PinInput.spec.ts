@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Multi-slot PIN/OTP code input with single hidden input, visual slot rendering, grouping, mask support, and caret animation',
 
+  synonyms: ['otp', '2fa', 'verification code', 'one-time code', 'pin code'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -29,7 +37,7 @@ export const spec = {
     { name: 'oneTimeCode', type: 'boolean', default: 'true', moveSpecific: true, description: 'Enable autocomplete="one-time-code" for SMS autofill' },
     { name: 'grouping', type: 'number[]', moveSpecific: true, description: 'Grouping pattern (e.g. [3,3] splits 6 into two groups with separator)' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state with error border styling' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Slot size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Slot size' },
     { name: 'ariaLabel', type: 'string', default: "'PIN input'", moveSpecific: true, description: 'Accessible label for the hidden input' },
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Hidden input name for form submission' },

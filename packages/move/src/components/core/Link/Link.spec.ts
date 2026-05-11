@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Inline anchor element with variant colors, underline modes, optional size, and external link support',
 
+  synonyms: ['anchor', 'hyperlink', 'nav link'],
+  families: {
+    behavior:  ["typography"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'a',
   slots: [
@@ -17,7 +25,7 @@ export const spec = {
   props: [
     { name: 'variant', type: "'default' | 'muted' | 'subtle'", default: "'default'", moveSpecific: true, description: 'Color variant' },
     { name: 'underline', type: "'always' | 'hover' | 'none'", default: "'hover'", moveSpecific: true, description: 'Underline behavior' },
-    { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'", moveSpecific: true, description: 'Font size (optional, inherits when unset)' },
+    { name: 'size', typeRef: 'TypographySize', moveSpecific: true, description: 'Font size (optional, inherits when unset)' },
     { name: 'external', type: 'boolean', moveSpecific: true, description: 'Opens in new tab with noopener noreferrer' },
     { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as child element via Radix Slot' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Link content' },

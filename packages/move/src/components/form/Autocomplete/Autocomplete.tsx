@@ -4,10 +4,10 @@
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import type { SlotPropsMap } from '../../../engine';
+import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
-import { useAnimations, resolveAnimationsConfig, extractSteps, revealHeight, staggerItems, quick, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, extractSteps, staggerItems, quick, poppy } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
@@ -17,15 +17,16 @@ import styles from './Autocomplete.module.css';
 // Animation defaults
 // =============================================================================
 
-// Fixed pixel inset for scale animation — ensures consistent feel regardless of control width
-const SCALE_INSET_PX = 16;
-const SCALE_HOVER_PX = 8;
+// Per-item scale deltas (pixel-based). Container (Content) only fades; item
+// stagger carries the reveal. See Select for rationale.
+const SCALE_INSET_PX = 16;        // per-item fade-in offset
+const SCALE_HOVER_PX = 4;         // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
 
 const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'open',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
       { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
       { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
     ]],
@@ -33,7 +34,7 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'closed',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
       { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
       { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
     ]],
@@ -102,6 +103,12 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   const animConfig = resolveAnimationsConfig(DEFAULT_AUTOCOMPLETE_ANIMATIONS, animationsProp);
 
   const ac = useAutocomplete(hookOptions);
+
+  // Items mount lazily inside Radix Popover.Content (unmounted while closed),
+  // so on initial render the label cache is empty and tags fall back to raw
+  // values. Walk the JSX tree once per render to seed labels — runs before
+  // descendants render, so TagList sees the cache populated on first paint.
+  walkChildrenForLabels(children, ac.primeLabelCache);
 
   // Animation closing state — decoupled from open state for exit animation
   const [isClosing, setIsClosing] = React.useState(false);
@@ -174,7 +181,8 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
   moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { inputRef, isOpen, isClosing, setTriggerWidth } = useAutocompleteContext();
+    const ac = useAutocompleteContext();
+    const { inputRef, isOpen, isClosing, setTriggerWidth } = ac;
     const moveState = isOpen && !isClosing ? 'open' : 'closed';
     const triggerRef = React.useRef<HTMLDivElement>(null);
     const mergedTriggerRef = useMergedRef<HTMLDivElement>(ref, triggerRef);
@@ -188,7 +196,13 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
       return () => ro.disconnect();
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handleClick = () => {
+    const handleClick = (e: React.MouseEvent) => {
+      // Ignore clicks originating in the input itself — typing should keep
+      // the user's filter active and not flip into browse-all mode.
+      if (!(e.target instanceof HTMLInputElement)) {
+        ac.setBypassFilter(true);
+        if (!ac.isOpen) ac.open();
+      }
       inputRef.current?.focus();
     };
 
@@ -461,7 +475,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
-    const resolvedX = useResolvedIcon('x', 10);
+    const resolvedX = useResolvedIcon('x', 16);
 
     const handleRemove = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -475,6 +489,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
         const { className: spClass, style: spStyle, ...spRest } = tagSp as Record<string, unknown>;
         const removeSp = sp('tagRemove');
         const { className: removeSpClass, style: removeSpStyle, ...removeSpRest } = removeSp as Record<string, unknown>;
+        const titleText = typeof props.children === 'string' ? props.children : (props.value as string);
 
         return (
           <span
@@ -484,7 +499,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
             className={cx('tag', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            <span className={styles.tagText} title={titleText}>{props.children}</span>
             <button
               {...removeSpRest}
               type="button"
@@ -633,23 +648,37 @@ export interface AutocompleteContentProps extends Record<string, unknown> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
+  width?: React.CSSProperties['width'];
+  minWidth?: React.CSSProperties['minWidth'];
+  maxWidth?: React.CSSProperties['maxWidth'];
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const AutocompleteContent = withMoveComponent<'content' | 'contentInner', AutocompleteContentProps, HTMLDivElement>({
-  name: 'AutocompleteContent',
-  styles,
-  slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'container'],
+interface AutocompleteContentInnerProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  sideOffset?: number;
+  align?: 'start' | 'center' | 'end';
+  width?: React.CSSProperties['width'];
+  minWidth?: React.CSSProperties['minWidth'];
+  maxWidth?: React.CSSProperties['maxWidth'];
+  contentCx: CxFn<'content' | 'contentInner'>;
+  innerCx: CxFn<'content' | 'contentInner'>;
+  contentSp: Record<string, unknown>;
+  innerSp: Record<string, unknown>;
+  layer: number;
+  attrs: Record<string, unknown>;
+}
 
-  setup({ props, ref, cx, sp, attrs }) {
+const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteContentInnerProps>(
+  function AutocompleteContentInner(props, ref) {
     const ac = useAutocompleteContext();
-    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
+    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Width-relative scale from trigger width (known before popup opens)
     const scaleFrom = (ac.triggerWidth - SCALE_INSET_PX) / ac.triggerWidth;
 
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
@@ -661,24 +690,20 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
       if (closedSteps) result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
       return result.length > 0 ? result : null;
     }, [ac.animConfig, scaleFrom]);
+
     const contentRefs = React.useMemo(() => ({
       Content: contentRef as React.RefObject<HTMLElement | null>,
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    // Enter/exit via useAnimations orchestrator
     const { runExit } = useAnimations(contentConfig, contentRefs);
 
-    // Exit animation
     React.useEffect(() => {
       if (!ac.isClosing) return;
       if (!contentConfig) { ac.onCloseComplete?.(); return; }
       runExit().then(() => ac.onCloseComplete?.());
     }, [ac.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-
-    // Intercept close events from outside clicks
     const handlePointerDownOutside = (e: Event) => {
       const target = e.target as Node;
       const trigger = (contentRef.current as HTMLElement | null)
@@ -692,55 +717,81 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
       if (!e.defaultPrevented) ac.close();
     };
 
-    // Prevent auto-focus to content — focus stays on input
-    const handleOpenAutoFocus = (e: Event) => {
-      e.preventDefault();
-    };
+    const handleOpenAutoFocus = (e: Event) => { e.preventDefault(); };
+    const handleCloseAutoFocus = (e: Event) => { e.preventDefault(); };
 
-    // Prevent auto-focus restore on close — input manages its own focus
-    const handleCloseAutoFocus = (e: Event) => {
-      e.preventDefault();
-    };
+    const { className: spClass, style: spStyle, ...spRest } = props.contentSp;
+    const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
+
+    return (
+      <RadixPopover.Content
+        {...props.attrs}
+        {...spRest}
+        ref={mergedContentRef}
+        sideOffset={props.sideOffset ?? 4}
+        align={props.align ?? 'start'}
+        className={props.contentCx('content', props.className, spClass as string | undefined)}
+        style={{
+          ...props.style,
+          ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
+          ...(spStyle as React.CSSProperties),
+          // Default to matching trigger width; props override per-instance.
+          width: (props.width as React.CSSProperties['width'] | undefined) ?? 'var(--radix-popover-trigger-width)',
+          ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
+          ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
+        }}
+        onPointerDownOutside={handlePointerDownOutside}
+        onOpenAutoFocus={handleOpenAutoFocus}
+        onCloseAutoFocus={handleCloseAutoFocus}
+      >
+        <div
+          ref={innerRef}
+          {...innerSpRest}
+          id={ac.listboxId}
+          role="listbox"
+          aria-multiselectable={ac.multiple || undefined}
+          data-mode={ac.multiple ? 'multi' : 'single'}
+          className={props.innerCx('contentInner', innerSpClass as string | undefined)}
+          style={innerSpStyle as React.CSSProperties}
+        >
+          {props.children}
+        </div>
+      </RadixPopover.Content>
+    );
+  },
+);
+
+const AutocompleteContent = withMoveComponent<'content' | 'contentInner', AutocompleteContentProps, HTMLDivElement>({
+  name: 'AutocompleteContent',
+  styles,
+  slots: ['content', 'contentInner'] as const,
+  moveProps: ['sideOffset', 'align', 'container', 'width', 'minWidth', 'maxWidth'],
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const layer = useLayer();
 
     return {
       render() {
-        const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const innerSp = sp('contentInner');
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
-
         return (
           <RadixPopover.Portal container={props.container as HTMLElement | undefined}>
-            <RadixPopover.Content
-              {...attrs}
-              {...spRest}
-              ref={mergedContentRef}
-              sideOffset={props.sideOffset as number ?? 4}
-              align={props.align as 'start' | 'center' | 'end' ?? 'start'}
-              className={cx('content', props.className, spClass as string | undefined)}
-              style={{
-                ...props.style,
-                ...(layer > 0 ? { zIndex: layer + 1 } : {}),
-                ...(spStyle as React.CSSProperties),
-                width: 'var(--radix-popover-trigger-width)',
-              }}
-              onPointerDownOutside={handlePointerDownOutside}
-              onOpenAutoFocus={handleOpenAutoFocus}
-              onCloseAutoFocus={handleCloseAutoFocus}
+            <AutocompleteContentInner
+              ref={ref}
+              className={props.className}
+              style={props.style}
+              sideOffset={props.sideOffset as number | undefined}
+              align={props.align as 'start' | 'center' | 'end' | undefined}
+              width={props.width as React.CSSProperties['width'] | undefined}
+              minWidth={props.minWidth as React.CSSProperties['minWidth'] | undefined}
+              maxWidth={props.maxWidth as React.CSSProperties['maxWidth'] | undefined}
+              contentCx={cx}
+              innerCx={cx}
+              contentSp={sp('content') as Record<string, unknown>}
+              innerSp={sp('contentInner') as Record<string, unknown>}
+              layer={layer}
+              attrs={attrs}
             >
-              <div
-                ref={innerRef}
-                {...innerSpRest}
-                id={ac.listboxId}
-                role="listbox"
-                aria-multiselectable={ac.multiple || undefined}
-                data-mode={ac.multiple ? 'multi' : 'single'}
-                className={cx('contentInner', innerSpClass as string | undefined)}
-                style={innerSpStyle as React.CSSProperties}
-              >
-                {props.children}
-              </div>
-            </RadixPopover.Content>
+              {props.children}
+            </AutocompleteContentInner>
           </RadixPopover.Portal>
         );
       },
@@ -786,8 +837,9 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
       return () => ac.unregisterItem(itemValue);
     }, [itemValue, props.children, textContent, isDisabled]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Filtering: hide if doesn't match
-    const isVisible = ac.filterFn(ac.inputValue, itemValue, textContent);
+    // Filtering: hide if doesn't match (bypass while the user opened via
+    // the trigger to "browse all" — cleared as soon as they type).
+    const isVisible = ac.bypassFilter || ac.filterFn(ac.inputValue, itemValue, textContent);
 
     // Check if highlighted
     const visibleItems = ac.getVisibleItems();
@@ -866,7 +918,18 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
               </span>
             )}
             <AutocompleteItemContext.Provider value={{ value: itemValue }}>
-              {props.children}
+              <span
+                className={styles.itemText}
+                title={
+                  typeof props.children === 'string'
+                    ? props.children
+                    : typeof props.label === 'string'
+                      ? (props.label as string)
+                      : undefined
+                }
+              >
+                {props.children}
+              </span>
             </AutocompleteItemContext.Provider>
           </div>
         );
@@ -1135,6 +1198,21 @@ function extractTextContent(children: React.ReactNode): string {
     return extractTextContent((children.props as { children?: React.ReactNode }).children);
   }
   return '';
+}
+
+function walkChildrenForLabels(
+  node: React.ReactNode,
+  prime: (value: string, label: React.ReactNode) => void,
+): void {
+  React.Children.forEach(node, (child) => {
+    if (!React.isValidElement(child)) return;
+    const displayName = (child.type as { displayName?: string }).displayName;
+    const props = child.props as { value?: unknown; children?: React.ReactNode };
+    if (displayName === 'AutocompleteItem' && typeof props.value === 'string') {
+      prime(props.value, props.children);
+    }
+    if (props.children) walkChildrenForLabels(props.children, prime);
+  });
 }
 
 // =============================================================================

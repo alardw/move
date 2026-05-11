@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Semantic heading element (h1-h6) with size, weight, color, tracking, alignment, and truncation control',
 
+  synonyms: ['title', 'h1', 'h2', 'header', 'page title'],
+  families: {
+    behavior:  ["typography"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'h2',
   slots: [
@@ -16,7 +24,7 @@ export const spec = {
 
   props: [
     { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '2', moveSpecific: true, description: 'Heading level (determines HTML element h1-h6)' },
-    { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'", moveSpecific: true, description: 'Font size override (defaults to level-derived size via levelToSize map)' },
+    { name: 'size', typeRef: 'DisplaySize', moveSpecific: true, description: 'Font size override (defaults to level-derived size via levelToSize map)' },
     { name: 'weight', type: "'medium' | 'semibold' | 'bold'", default: "'bold'", moveSpecific: true, description: 'Font weight' },
     { name: 'color', type: "'base' | 'muted' | 'subtle'", default: "'base'", moveSpecific: true, description: 'Text color' },
     { name: 'tracking', type: "'tight' | 'normal'", default: "'tight'", moveSpecific: true, description: 'Letter spacing' },
@@ -103,13 +111,6 @@ export const spec = {
       'Spreads HTML attributes',
     ],
   },
-
-  notes: [
-    'CSS references --move-spacing-2xl for margin-top on 3xl/4xl sizes, but --move-spacing-2xl is not in the semantic token set. Closest available token is --move-spacing-xl. This should be resolved during migration.',
-    'Uses var(--move-font-body) for font-family, not a heading-specific font token',
-    'First-child rule removes top margin for headings that are the first child of their parent',
-    'Truncation applies overflow: hidden, text-overflow: ellipsis, and white-space: nowrap',
-  ],
 
   defaultReview: {
     status: 'approved' as const,

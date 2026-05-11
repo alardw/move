@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Inline or block code element with variant styling and optional syntax highlighting via CodeHighlighterProvider',
 
+  synonyms: ['snippet', 'monospace', 'inline code', 'kbd'],
+  families: {
+    behavior:  ["typography"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'code',
   slots: [
@@ -16,7 +24,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'subtle' | 'outline' | 'ghost'", default: "'subtle'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg'", default: "'sm'", moveSpecific: true, description: 'Font size' },
+    { name: 'size', typeRef: 'TypographySize', default: "'sm'", moveSpecific: true, description: 'Font size. Code now accepts the full TypographySize range; xl maps to text-lg in the body bundle.' },
     { name: 'block', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as block <pre> instead of inline <code>' },
     { name: 'language', type: 'string', moveSpecific: true, description: 'Language for syntax highlighting (requires CodeHighlighterProvider)' },
     { name: 'className', type: 'string', moveSpecific: false, description: 'Additional CSS class' },
@@ -59,18 +67,6 @@ export const spec = {
     { id: 'data-language-conditional', description: 'data-language is only set when language prop is provided' },
   ],
 
-  companions: [
-    {
-      name: 'CodeHighlighterProvider',
-      kind: 'provider' as const,
-      description: 'Context provider that supplies a syntax highlighter function to all Code components in the tree',
-      props: [
-        { name: 'highlighter', type: '(code: string, language: string) => ReactNode | string | Promise<ReactNode | string>', description: 'Highlighter function (user-supplied, library-agnostic)' },
-        { name: 'children', type: 'React.ReactNode', description: 'Children' },
-      ],
-    },
-  ],
-
   hasHook: false,
   engineImports: ['withMoveComponent'],
 
@@ -100,13 +96,6 @@ export const spec = {
       'Falls back to plain children when highlighter returns null',
     ],
   },
-
-  notes: [
-    'Uses monospace font via var(--move-font-code)',
-    'Block mode uses overflow-x: auto and white-space: pre for horizontal scrolling',
-    'Outline variant renders transparent background with 1px solid border',
-    'Ghost variant renders fully transparent (no background, no border)',
-  ],
 
   defaultReview: {
     status: 'approved' as const,

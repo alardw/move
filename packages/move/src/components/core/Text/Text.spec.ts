@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Typography primitive with configurable element, size, weight, color, alignment, and truncation',
 
+  synonyms: ['paragraph', 'body', 'copy', 'typography'],
+  families: {
+    behavior:  ["typography"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'p',
   slots: [
@@ -16,7 +24,7 @@ export const spec = {
 
   props: [
     { name: 'as', type: "'p' | 'span' | 'div' | 'em' | 'strong' | 'small' | 'del'", default: "'p'", moveSpecific: true, description: 'HTML element to render as' },
-    { name: 'size', type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'", default: "'base'", moveSpecific: true, description: 'Font size' },
+    { name: 'size', typeRef: 'TypographySize', default: "'base'", moveSpecific: true, description: 'Font size' },
     { name: 'weight', type: "'normal' | 'medium' | 'semibold' | 'bold'", default: "'normal'", moveSpecific: true, description: 'Font weight' },
     { name: 'color', type: "'base' | 'muted' | 'subtle' | 'primary' | 'success' | 'warning' | 'error'", default: "'base'", moveSpecific: true, description: 'Text color' },
     { name: 'align', type: "'left' | 'center' | 'right'", moveSpecific: true, description: 'Text alignment (optional)' },

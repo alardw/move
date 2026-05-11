@@ -3,7 +3,7 @@
 // Provenance: original-components/calendar/_shared/TimeGrid.tsx
 
 import * as React from 'react';
-import { getTimeSlots, formatTime, isSameDay, isToday as checkIsToday } from './dateUtils';
+import { getTimeSlots, isSameDay, isToday as checkIsToday } from './dateUtils';
 import type { CalendarEvent, RenderEvent } from './types';
 import { EventSlot } from './EventSlot';
 import styles from './TimeGrid.module.css';
@@ -34,7 +34,7 @@ interface PositionedEvent {
 function computeEventPositions(
   events: CalendarEvent[],
   startHour: number,
-  endHour: number,
+  _endHour: number,
   slotHeight: number = 48,
   slotInterval: number = 60
 ): PositionedEvent[] {

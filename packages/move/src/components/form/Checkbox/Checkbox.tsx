@@ -99,7 +99,6 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
       invalid,
       name,
       value,
-      required,
       children,
     } = props;
 

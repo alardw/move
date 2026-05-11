@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Password input with visibility toggle button, outlined/filled variants, and optional left icon',
 
+  synonyms: ['secret', 'pin field', 'password input'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -22,7 +30,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Visual variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state with error border styling' },
     { name: 'iconLeft', type: 'React.ReactNode', moveSpecific: true, description: 'Optional icon rendered before input' },
     { name: 'showIcon', type: 'React.ReactNode', moveSpecific: true, description: 'Custom icon for show password state (defaults to eye icon)' },

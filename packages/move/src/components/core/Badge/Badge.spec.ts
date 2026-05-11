@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Inline status label with variant and size options',
 
+  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'span',
   slots: [
@@ -16,7 +24,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Badge size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Badge size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Badge content' },
   ],
 

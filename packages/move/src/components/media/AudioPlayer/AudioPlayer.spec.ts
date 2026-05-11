@@ -8,6 +8,14 @@ export const spec = {
   category: 'media',
   description: 'Horizontal bar-style audio player with play/pause, progress scrubbing, volume control, subtitle overlay, playback speed, and settings menu',
 
+  synonyms: ['audio', 'sound', 'mp3', 'podcast', 'audio control'],
+  families: {
+    behavior:  ["media"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -53,8 +61,8 @@ export const spec = {
     { name: 'unmuteLabel', type: 'string', moveSpecific: true, description: 'i18n label for unmute button' },
     { name: 'settingsLabel', type: 'string', moveSpecific: true, description: 'i18n label for settings button' },
     { name: 'subtitlesLabel', type: 'string', moveSpecific: true, description: 'i18n label for subtitles button' },
-    { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", default: "'none'", moveSpecific: true, description: 'Border radius of the player container' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size variant controlling padding, gap, and control button dimensions' },
+    { name: 'radius', typeRef: 'Radius', default: "'none'", moveSpecific: true, description: 'Border radius of the player container' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size variant controlling padding, gap, and control button dimensions' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Additional content rendered inside the player container' },
   ],
 

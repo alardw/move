@@ -19,6 +19,7 @@ import type {
 } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import type { Size } from '../../../shared/types';
 import acStyles from './Accordion.module.css';
 
 // ============================================================================
@@ -66,7 +67,9 @@ function useAccordionItemContext() {
 // Root
 // ============================================================================
 
-export type AccordionSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type AccordionSize = Size;
 export type AccordionVariant = 'default' | 'contained' | 'ghost';
 
 export interface AccordionAnimateConfig {
@@ -90,10 +93,15 @@ export interface AccordionRootProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'root'>;
 }
 
+// Pixel-based fade-in scale (matches Select children) — keeps the motion's
+// visible amplitude constant regardless of accordion width, rather than a
+// fixed 10% relative scale that looks huge on wide layouts.
+const ITEM_SCALE_INSET_PX = 16;
+
 const defaultRootAnimation: AccordionAnimateConfig = {
   enter: {
     opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-    scale: { from: 0.9, to: 1, ease: poppy },
+    scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
   },
   stagger: { delay: 80 },
   content: expandContent,
@@ -255,10 +263,21 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
 
     const mergedRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    // Item enter animation with stagger delay from context
+    // Item enter animation with stagger delay from context. `$itemScaleFrom`
+    // is computed per-item at animation time from the item's actual width so
+    // the visible scale-up is a constant pixel delta across sizes.
     const delay = (context.stagger?.delay ?? 0) * (indexRef.current ?? 0);
+    const computeItemVars = () => {
+      const w = itemRef.current?.getBoundingClientRect().width ?? 0;
+      const itemScaleFrom = w > 0 ? (w - ITEM_SCALE_INSET_PX) / w : 0.95;
+      return { itemScaleFrom };
+    };
     const itemEnterConfig: AnimationTrigger[] | null = context.enterAnimation
-      ? [{ trigger: 'Item.enter', sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }] }]
+      ? [{
+          trigger: 'Item.enter',
+          sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }],
+          vars: computeItemVars,
+        }]
       : null;
     const itemRefs = React.useMemo(() => ({ Item: itemRef as React.RefObject<HTMLElement | null> }), []);
     useAnimations(itemEnterConfig, itemRefs);

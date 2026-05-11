@@ -8,6 +8,14 @@ export const spec = {
   category: 'panel',
   description: 'Presentational container with header, title, description, body, and footer sections for grouping related content',
 
+  synonyms: ['tile', 'panel', 'container', 'surface'],
+  families: {
+    behavior:  ["layout"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -27,11 +35,12 @@ export const spec = {
       slots: [{ name: 'root', element: 'div', description: 'Outer card container' }],
       props: [
         { name: 'variant', type: "'default' | 'elevated' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Card size controlling padding and title size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Card size controlling padding and title size' },
+        { name: 'maxWidth', type: 'string | number', moveSpecific: true, description: 'Cap the card width via the --move-card-max-width custom property.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Card content sections' },
       ],
       usesFactory: true,
-      description: 'Root container that sets variant, size, and provides token scope for child slots',
+      description: 'Root container that sets variant, size, max-width, and provides token scope for child slots.',
     },
     {
       name: 'Header',
@@ -100,7 +109,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'default' | 'elevated' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Card size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Card size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Card content sections' },
   ],
 

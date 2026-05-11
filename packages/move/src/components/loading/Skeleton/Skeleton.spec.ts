@@ -8,6 +8,14 @@ export const spec = {
   category: 'loading',
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',
 
+  synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder'],
+  families: {
+    behavior:  ["loading"],
+    state:     ["stateless"],
+    animation: ["continuous-loop"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [

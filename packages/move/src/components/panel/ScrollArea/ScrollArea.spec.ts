@@ -8,6 +8,14 @@ export const spec = {
   category: 'panel',
   description: 'Scrollable content container with customizable scrollbar styling, optional sticky header and footer',
 
+  synonyms: ['scrollbar', 'overflow', 'scroll container', 'scrollable'],
+  families: {
+    behavior:  ["layout"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [

@@ -24,7 +24,7 @@ import {
   isBefore,
   startOfDay,
 } from '../../calendar/_shared/dateUtils';
-import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, poppy } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useMergedRef } from '../../../engine';
 import { InputText } from '../InputText';
@@ -73,14 +73,14 @@ const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 }, scale: { from: 0.95, to: 1, ease: poppy } } },
       { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.enter },
     ]],
   },
   {
     trigger: 'Content.exit',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 }, scale: { to: 0.95, duration: 150 } } },
       { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.exit },
     ]],
   },
@@ -397,6 +397,22 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   const close = React.useCallback(() => {
     setIsClosing(true);
   }, []);
+
+  // Close the popup on viewport changes — scroll (any ancestor) or
+  // resize. Without this the popover floats away from the trigger
+  // when the page or a parent ScrollArea scrolls. capture: true so
+  // we catch scroll events on nested scroll containers, not just
+  // window. passive: true so we don't block the scroll itself.
+  React.useEffect(() => {
+    if (!isOpen || isClosing || typeof window === 'undefined') return;
+    const onViewportChange = () => close();
+    window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
+    window.addEventListener('resize', onViewportChange);
+    return () => {
+      window.removeEventListener('scroll', onViewportChange, { capture: true });
+      window.removeEventListener('resize', onViewportChange);
+    };
+  }, [isOpen, isClosing, close]);
 
   const openPopover = React.useCallback(() => {
     if (!isOpen && !isClosing) {
@@ -950,16 +966,15 @@ export interface DatePickerContentProps {
   [key: string]: unknown;
 }
 
-const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
-  ({ children, className, style, sideOffset = 4, align = 'start', container, ...rest }, forwardedRef) => {
+const DatePickerContentInner = React.forwardRef<HTMLDivElement, DatePickerContentProps & { layer: number }>(
+  function DatePickerContentInner({ children, className, style, sideOffset = 4, align = 'start', layer: rawLayer, ...rest }, forwardedRef) {
+    const layer = rawLayer as number;
     const dpCtx = React.useContext(DatePickerContext);
-    const layer = useLayer();
     const animConfig = dpCtx?.animConfig ?? null;
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
 
-    // Filter content triggers for useAnimations
     const contentConfig = React.useMemo(() =>
       animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
       [animConfig]);
@@ -968,10 +983,8 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    // Enter/exit via useAnimations orchestrator
     const { runExit } = useAnimations(contentConfig, contentRefs);
 
-    // Exit animation
     React.useEffect(() => {
       if (!dpCtx?.isClosing) return;
       if (!contentConfig) { dpCtx?.onCloseComplete?.(); return; }
@@ -980,7 +993,6 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
 
     const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
-    // Focus calendar content when requested
     React.useEffect(() => {
       if (dpCtx?.shouldFocusCalendar && contentRef.current) {
         contentRef.current.focus();
@@ -1002,45 +1014,54 @@ const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProp
     };
 
     return (
-      <RadixPopover.Portal container={container}>
-        <RadixPopover.Content
-          {...rest}
-          ref={mergedRef}
-          sideOffset={sideOffset as number}
-          align={align as 'start' | 'center' | 'end'}
-          className={`${styles.content} ${className ?? ''}`}
-          style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
-          onPointerDownOutside={handlePointerDownOutside}
-          onEscapeKeyDown={handleEscapeKeyDown}
-          onOpenAutoFocus={(e) => e.preventDefault()}
-          onCloseAutoFocus={(e) => e.preventDefault()}
-        >
-          {dpCtx?.mode === 'range' && dpCtx.activeField && (
-            <div className={styles.rangeInstruction}>
-              {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
-            </div>
-          )}
-          <div ref={innerRef}>
-            {(children ?? (
-              <>
-                <CalendarNav />
-                <MonthGrid />
-              </>
-            )) as React.ReactNode}
+      <RadixPopover.Content
+        {...rest}
+        ref={mergedRef}
+        sideOffset={sideOffset as number}
+        align={align as 'start' | 'center' | 'end'}
+        className={`${styles.content} ${className ?? ''}`}
+        style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
+        onPointerDownOutside={handlePointerDownOutside}
+        onEscapeKeyDown={handleEscapeKeyDown}
+        onOpenAutoFocus={(e) => e.preventDefault()}
+        onCloseAutoFocus={(e) => e.preventDefault()}
+      >
+        {dpCtx?.mode === 'range' && dpCtx.activeField && (
+          <div className={styles.rangeInstruction}>
+            {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
           </div>
-          {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
-            <div className={styles.datePickerTime}>
-              <span className={styles.datePickerTimeLabel}>Time</span>
-              <TimeField
-                value={dpCtx.timeValue}
-                onValueChange={dpCtx.onTimeChange}
-                granularity="minute"
-                hourCycle={dpCtx.timeHourCycle}
-                size="sm"
-              />
-            </div>
-          )}
-        </RadixPopover.Content>
+        )}
+        <div ref={innerRef}>
+          {(children ?? (
+            <>
+              <CalendarNav />
+              <MonthGrid />
+            </>
+          )) as React.ReactNode}
+        </div>
+        {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
+          <div className={styles.datePickerTime}>
+            <span className={styles.datePickerTimeLabel}>Time</span>
+            <TimeField
+              value={dpCtx.timeValue}
+              onValueChange={dpCtx.onTimeChange}
+              granularity="minute"
+              hourCycle={dpCtx.timeHourCycle}
+              size="sm"
+            />
+          </div>
+        )}
+      </RadixPopover.Content>
+    );
+  },
+);
+
+const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
+  ({ container, ...rest }, forwardedRef) => {
+    const layer = useLayer();
+    return (
+      <RadixPopover.Portal container={container as HTMLElement | undefined}>
+        <DatePickerContentInner ref={forwardedRef} layer={layer} {...rest} />
       </RadixPopover.Portal>
     );
   },

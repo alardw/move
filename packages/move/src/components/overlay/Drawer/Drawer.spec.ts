@@ -8,6 +8,22 @@ export const spec = {
   category: 'overlay',
   description: 'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
 
+  synonyms: ['sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in'],
+  families: {
+    behavior:  ['modal-overlay'],
+    state:     ['controlled-open'],
+    animation: ['slide-in'],
+    a11y:      ['dialog'],
+  },
+  behavior: {
+    modal: {
+      closeOnEscape: true,
+      closeOnOverlayClick: true,
+      lockBodyScroll: true,
+      trapFocus: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -34,9 +50,12 @@ export const spec = {
         { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
         { name: 'modal', type: 'boolean', default: 'true', moveSpecific: false, description: 'Whether to render as modal with backdrop' },
+        { name: 'position', type: "'left' | 'right' | 'top' | 'bottom'", default: "'right'", moveSpecific: true, description: 'Edge the drawer slides in from. Lives on Root so the entire compound (overlay, content, animations) can react to the side.' },
+        { name: 'responsive', type: 'boolean', default: 'true', moveSpecific: true, description: 'Auto-switch to a bottom sheet on mobile viewport.' },
+        { name: 'breakpoint', type: 'number', default: '768', moveSpecific: true, description: 'Viewport width below which responsive mode activates (px).' },
       ],
       usesFactory: false,
-      description: 'Stateful root that manages open/close state, animation context, and close-after-exit-animation coordination',
+      description: 'Stateful root that manages open/close state, animation context, position/responsive behavior, and close-after-exit-animation coordination.',
     },
     {
       name: 'Trigger',
@@ -50,16 +69,6 @@ export const spec = {
       usesFactory: true,
       radixPrimitive: 'Dialog.Trigger',
       description: 'Element that opens the drawer when clicked',
-    },
-    {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Portals drawer content to document body (or custom container)',
     },
     {
       name: 'Overlay',
@@ -79,10 +88,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Drawer body content' },
-        { name: 'position', type: "'left' | 'right' | 'top' | 'bottom'", default: "'right'", moveSpecific: true, description: 'Edge the drawer slides in from' },
-        { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'", default: "'md'", moveSpecific: true, description: 'Drawer width (left/right) or height (top/bottom)' },
-        { name: 'responsive', type: 'boolean', default: 'true', moveSpecific: true, description: 'Auto-switch to bottom sheet on mobile viewport' },
-        { name: 'breakpoint', type: 'number', default: '768', moveSpecific: true, description: 'Viewport width below which responsive mode activates (px)' },
+        { name: 'size', typeRef: 'SizeFull', default: "'md'", moveSpecific: true, description: 'Drawer width (left/right) or height (top/bottom). Position lives on Root.' },
         { name: 'onOpenAutoFocus', type: '(event: Event) => void', moveSpecific: false, description: 'Called when content receives auto focus on open' },
         { name: 'onPointerDownOutside', type: '(event: Event) => void', moveSpecific: false, description: 'Called when pointer down outside content' },
         { name: 'onEscapeKeyDown', type: '(event: KeyboardEvent) => void', moveSpecific: false, description: 'Called when escape key pressed' },
@@ -98,10 +104,11 @@ export const spec = {
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'closable', type: 'boolean', default: 'true', moveSpecific: true, description: 'Render the auto-close button on the right side of the header.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Header content (typically Title + Close)' },
       ],
       usesFactory: true,
-      description: 'Top section with flex layout for title and close button',
+      description: 'Top section with flex layout for title and (when `closable`) an auto-close button.',
     },
     {
       name: 'Body',
@@ -231,14 +238,6 @@ export const spec = {
       note: 'Mirrors enter direction. Position variants adjust axis and direction.',
     },
   ],
-
-  responsive: {
-    prop: 'responsive',
-    breakpointProp: 'breakpoint',
-    defaultBreakpoint: 768,
-    behavior: 'When viewport < breakpoint and responsive=true, position overrides to bottom, max-height constrains to 85vh, handle slot auto-renders, border-radius switches to top-only rounded corners',
-    implementation: 'Internal useMediaQuery hook. Content reads effective position from context. Animation axis switches from translateX to translateY.',
-  },
 
   renderContracts: [
     { id: 'animation-context', description: 'Root provides DrawerContext with isClosing, close(), onCloseComplete, and animation config to all sub-components' },

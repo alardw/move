@@ -46,20 +46,13 @@ const DEFAULT_TOOLTIP_ANIMATIONS: AnimationTrigger[] = [
 ];
 
 // ============================================================================
-// Provider (stateless -- no factory needed)
+// Provider — defined in a separate file so MoveRoot can import only the
+// provider without dragging in the rest of Tooltip (and the animation
+// engine). Re-exported here for the compound shape.
 // ============================================================================
 
-export interface TooltipProviderProps {
-  children: React.ReactNode;
-  delayDuration?: number;
-  skipDelayDuration?: number;
-  disableHoverableContent?: boolean;
-}
-
-const TooltipProvider: React.FC<TooltipProviderProps> = (props) => (
-  <RadixTooltip.Provider {...props} />
-);
-TooltipProvider.displayName = 'Tooltip.Provider';
+import { TooltipProvider } from './TooltipProvider';
+export type { TooltipProviderProps } from './TooltipProvider';
 
 // ============================================================================
 // Root (stateless -- no factory needed)

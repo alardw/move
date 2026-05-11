@@ -71,6 +71,8 @@ export {
   // Position tracking
   usePositionTracker,
   useSlidingIndicator,
+  // Container resize / morph
+  useMorphHeight,
   // Presence system
   Presence,
   usePresence,
@@ -85,6 +87,7 @@ export type {
   PresenceContextValue,
   Animation,
   StaggerConfig,
+  JSAnimation,
   // Trigger-sequence types
   AnimationState,
   AnimationStep,
@@ -170,7 +173,7 @@ export { useCalendar } from './components/calendar/Calendar';
 export type { UseCalendarOptions, UseCalendarSingleOptions, UseCalendarRangeOptions, UseCalendarMultipleOptions, UseCalendarReturn } from './components/calendar/Calendar';
 
 export { CalendarView } from './components/calendar/CalendarView';
-export type { CalendarViewRootProps, CalendarViewHeaderProps, CalendarViewNavProps, CalendarViewTitleProps, CalendarViewTodayProps, CalendarViewSwitcherProps, CalendarViewBodyProps } from './components/calendar/CalendarView';
+export type { CalendarViewRootProps, CalendarViewHeaderProps, CalendarViewNavProps, CalendarViewTitleProps, CalendarViewTodayProps, CalendarViewViewSwitcherProps, CalendarViewBodyProps } from './components/calendar/CalendarView';
 export { useCalendarView } from './components/calendar/CalendarView';
 export type { UseCalendarViewOptions, UseCalendarViewReturn, CalendarViewLabels } from './components/calendar/CalendarView';
 
@@ -294,7 +297,7 @@ export { Splitter } from './components/panel/Splitter';
 export type { SplitterRootProps, SplitterPanelProps } from './components/panel/Splitter';
 
 export { Sidebar } from './components/panel/Sidebar';
-export type { SidebarProviderProps, SidebarRootProps, SidebarOverlayProps, SidebarHeaderProps, SidebarContentProps, SidebarFooterProps, SidebarGroupProps, SidebarGroupLabelProps, SidebarItemProps, SidebarTriggerProps, SidebarRailProps } from './components/panel/Sidebar';
+export type { SidebarProviderProps, SidebarRootProps, SidebarOverlayProps, SidebarHeaderProps, SidebarContentProps, SidebarFooterProps, SidebarGroupProps, SidebarGroupLabelProps, SidebarItemProps, SidebarTriggerProps } from './components/panel/Sidebar';
 export { useSidebar, useSidebarContext } from './components/panel/Sidebar';
 export type { UseSidebarOptions, UseSidebarReturn } from './components/panel/Sidebar';
 
@@ -313,8 +316,25 @@ export type { PopoverRootProps, PopoverTriggerProps, PopoverAnchorProps, Popover
 export { Toast, toast } from './components/overlay/Toast';
 export type { ToastViewportProps, ToastState, ToastPosition, ToastVariant, ToastOptions } from './components/overlay/Toast';
 
-export { Table } from './components/data/Table';
-export type { TableVariant, TableSize, TableRootProps, TableHeaderProps, TableBodyProps, TableFooterProps, TableRowProps, TableHeadProps, TableCellProps, TableCaptionProps } from './components/data/Table';
+export { Table, useTableSelection } from './components/data/Table';
+export type {
+  TableVariant,
+  TableSize,
+  TableAlign,
+  TableResponsive,
+  TableRootProps,
+  TableHeaderProps,
+  TableBodyProps,
+  TableFooterProps,
+  TableRowProps,
+  TableHeadProps,
+  TableCellProps,
+  TableCaptionProps,
+  TableGroupProps,
+  TableGroupHeaderProps,
+  UseTableSelectionOptions,
+  UseTableSelectionReturn,
+} from './components/data/Table';
 
 export { Timeline } from './components/data/Timeline';
 export type { TimelineSize, TimelineAlign, TimelineColor, TimelineLineVariant, TimelineRootProps, TimelineItemSlots, TimelineItemProps } from './components/data/Timeline';
@@ -330,6 +350,9 @@ export type { ToggleGroupRootProps, ToggleGroupItemProps } from './components/to
 
 export { Breadcrumb } from './components/nav/Breadcrumb';
 export type { BreadcrumbRootProps, BreadcrumbItemProps, BreadcrumbLinkProps, BreadcrumbPageProps, BreadcrumbSeparatorProps, BreadcrumbEllipsisProps, BreadcrumbSize } from './components/nav/Breadcrumb';
+
+export { TableOfContents } from './components/nav/TableOfContents';
+export type { TableOfContentsRootProps, TableOfContentsItemProps } from './components/nav/TableOfContents';
 
 export { Pagination } from './components/navigation/Pagination';
 export type { PaginationSize, PaginationVariant, PaginationRootProps, PaginationPrevTriggerProps, PaginationNextTriggerProps, PaginationItemsProps } from './components/navigation/Pagination';
@@ -359,3 +382,34 @@ export type { UseCarouselOptions, UseCarouselReturn, CarouselOrientation, Carous
 
 export { VideoPlayer } from './components/media/VideoPlayer';
 export type { VideoPlayerProps } from './components/media/VideoPlayer';
+
+// Canonical shared prop unions — use these instead of inlining
+// `'sm' | 'md' | 'lg'` style literal unions in component types.
+// Two families: `Size` for controls (sm/md/lg-anchored), `TypographySize`
+// for inline text (base-anchored, matching --move-text-base).
+export type {
+  Size, SizeWithXS, SizeWithXL, SizeFull,
+  TypographySize, DisplaySize,
+  Gap, GapWithXL2,
+  Color,
+  Radius,
+} from './shared/types';
+export { CANONICAL_TYPES, resolveTypeRef, valuesForTypeRef } from './shared/typeRegistry';
+export type { CanonicalTypeName } from './shared/typeRegistry';
+
+// Spec contract — types, taxonomies, and tooling helpers consumed by
+// the docs site and AI skills. The `Animation` taxonomy is aliased to
+// `AnimationFamily` here to avoid clash with the runtime `Animation`
+// type from the animation module.
+export { SCHEMA_VERSION, ANIMATION_RULES, Z_LAYERS, deriveZ } from './contract';
+export type {
+  Spec,
+  Identity, Taxonomies, Composition, Interaction, Style, AnimationBlock, Lifecycle, Tooling,
+  PropDef, PropRequired, PropOptionalLiteral, PropOptionalLabeled, PropRole,
+  SlotDef, SubComponentDef, TokenDef, AnimationDef, AnimationStateDef,
+  RenderContractDef, AnatomyDef, LabelDef, ControlledProps, TestingDef,
+  DefaultReview, DeprecatedDef, ChildrenKind, KeyboardPattern, FocusPattern, FormType,
+  Category, ComponentClass, Behavior, State, Surface, A11y, Z,
+  ComponentClassKind, BehaviorKind, StateKind, AnimationKind, SurfaceKind, ZKind, A11yKind,
+} from './contract';
+export type { Animation as AnimationFamily, AnimationStep as AnimationFamilyStep } from './contract';

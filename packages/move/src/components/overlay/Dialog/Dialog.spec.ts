@@ -8,6 +8,22 @@ export const spec = {
   category: 'overlay',
   description: 'Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout',
 
+  synonyms: ['modal', 'popup', 'lightbox', 'overlay', 'alert dialog'],
+  families: {
+    behavior:  ['modal-overlay'],
+    state:     ['controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['dialog'],
+  },
+  behavior: {
+    modal: {
+      closeOnEscape: true,
+      closeOnOverlayClick: true,
+      lockBodyScroll: true,
+      trapFocus: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -53,16 +69,6 @@ export const spec = {
       description: 'Element that opens the dialog when clicked',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Portals dialog content to document body (or custom container)',
-    },
-    {
       name: 'Overlay',
       slots: [{ name: 'overlay', element: 'RadixDialog.Overlay', description: 'Backdrop element' }],
       props: [
@@ -96,10 +102,11 @@ export const spec = {
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'closable', type: 'boolean', default: 'true', moveSpecific: true, description: 'Render the auto-close button on the right side of the header.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Header content (typically Title + Close)' },
       ],
       usesFactory: true,
-      description: 'Top section with flex layout for title and close button',
+      description: 'Top section with flex layout for title and (when `closable`) an auto-close button.',
     },
     {
       name: 'Body',

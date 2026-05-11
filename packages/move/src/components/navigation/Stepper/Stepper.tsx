@@ -4,18 +4,21 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
+import type { Color, Size } from '../../../shared/types';
 import styles from './Stepper.module.css';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export type StepperSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type StepperSize = Size;
 export type StepperOrientation = 'horizontal' | 'vertical';
 export type StepStatus = 'wait' | 'active' | 'complete' | 'error';
-export type StepperColor =
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+/** Re-exported for backwards-compatible imports. Prefer `Color` from
+ *  `'move'` directly going forward. */
+export type StepperColor = Color;
 
 // ============================================================================
 // Context

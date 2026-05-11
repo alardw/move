@@ -8,6 +8,22 @@ export const spec = {
   category: 'overlay',
   description: 'Floating popup panel anchored to a trigger with close button, arrow, and optional close-on-scroll behavior',
 
+  synonyms: ['callout', 'flyout', 'inline overlay', 'hover card'],
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['dialog'],
+  },
+  behavior: {
+    popup: {
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      closeOnScroll: true,
+      closeOnResize: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -61,22 +77,13 @@ export const spec = {
       description: 'Alternative positioning reference element (popover positions relative to this instead of trigger)',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Portals popover content to document body (or custom container)',
-    },
-    {
       name: 'Content',
       slots: [{ name: 'content', element: 'RadixPopover.Content', description: 'Popover content panel' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Popover body content' },
+        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
         { name: 'side', type: "'top' | 'right' | 'bottom' | 'left'", moveSpecific: true, description: 'Preferred side relative to trigger' },
         { name: 'sideOffset', type: 'number', moveSpecific: true, description: 'Distance from trigger in px' },
         { name: 'align', type: "'start' | 'center' | 'end'", moveSpecific: true, description: 'Alignment along the side axis' },

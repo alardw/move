@@ -9,7 +9,6 @@ import {
   isSameDay,
   isSameMonth,
   isToday as checkIsToday,
-  formatDate,
 } from '../_shared/dateUtils';
 import type { CalendarEvent, RenderEvent } from '../_shared/types';
 import { EventSlot } from '../_shared/EventSlot';

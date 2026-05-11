@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'User avatar with image, fallback, size options, and spring entrance animation',
 
+  synonyms: ['profile picture', 'user image', 'portrait', 'user icon'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["spring-transform", "stagger"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'span',
   slots: [
@@ -33,7 +41,8 @@ export const spec = {
         { name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root element' },
       ],
       props: [
-        { name: 'size', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", moveSpecific: true, description: 'Avatar size' },
+        { name: 'size', typeRef: 'SizeWithXL', default: "'md'", moveSpecific: true, description: 'Avatar size' },
+        { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Tints the fallback bg/fg using the named Open Color palette.' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config override or false to disable entrance animation' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Image and Avatar.Fallback' },
       ],

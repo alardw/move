@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Editor-agnostic rich text editor chrome with toolbar, control groups, formatting controls, and content area wrapping any editor engine (TipTap, Lexical, Plate, etc.)',
 
+  synonyms: ['wysiwyg', 'editor', 'markdown editor', 'text editor'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -28,7 +36,7 @@ export const spec = {
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Toolbar and Content sub-components' },
         { name: 'variant', type: "'outline' | 'subtle'", default: "'outline'", moveSpecific: true, description: 'Visual variant — outline has border, subtle is borderless' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Component size affecting control size, toolbar padding, and content padding' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Component size affecting control size, toolbar padding, and content padding' },
       ],
       usesFactory: false,
       description: 'Context provider and visual wrapper; plain FC that provides variant/size via RichTextEditorContext',
@@ -101,7 +109,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'outline' | 'subtle'", default: "'outline'", moveSpecific: true, description: 'Visual variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Component size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Component size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Toolbar and Content sub-components' },
   ],
 

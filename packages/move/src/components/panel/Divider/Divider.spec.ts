@@ -8,6 +8,14 @@ export const spec = {
   category: 'panel',
   description: 'Visual separator for content sections with optional inline label, orientation, line style, and alignment',
 
+  synonyms: ['separator', 'rule', 'hr', 'line'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -19,7 +27,7 @@ export const spec = {
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Divider direction' },
     { name: 'type', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", moveSpecific: true, description: 'Border line style' },
     { name: 'align', type: "'left' | 'center' | 'right' | 'top' | 'bottom'", default: "'center'", moveSpecific: true, description: 'Position of inline content along the divider' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'sm'", moveSpecific: true, description: 'Line thickness' },
+    { name: 'size', typeRef: 'Size', default: "'sm'", moveSpecific: true, description: 'Line thickness' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Optional inline content (text or element)' },
   ],
 

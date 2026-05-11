@@ -636,7 +636,8 @@ describe('Dropdown', () => {
         expect(screen.getByText('New')).toBeInTheDocument();
         expect(screen.getByText('Open')).toBeInTheDocument();
         expect(screen.getByRole('separator')).toBeInTheDocument();
-        expect(screen.getByText('Disabled Action')).toHaveAttribute('data-disabled');
+        // Text is wrapped in .itemText span for truncation; data-disabled lives on the Item div.
+        expect(screen.getByText('Disabled Action').closest('[role="menuitem"]')).toHaveAttribute('data-disabled');
       });
     });
 

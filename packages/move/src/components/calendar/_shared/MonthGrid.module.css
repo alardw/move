@@ -30,7 +30,13 @@
   color: var(--move-calendar-header-fg);
   padding: var(--move-calendar-header-padding);
   user-select: none;
+  /* Match the day-cell row height (set on .dayCell via the
+     --move-calendar-row-height token). */
   height: 2.25rem;
+}
+
+[data-has-events] .weekDayHeader {
+  height: 2.75rem;
 }
 
 .weekNumber {

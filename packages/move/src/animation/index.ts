@@ -73,6 +73,13 @@ export { usePositionTracker, useSlidingIndicator } from './utils/usePositionTrac
 export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingIndicatorOptions, UseSlidingIndicatorReturn } from './utils/usePositionTracker';
 
 // =============================================================================
+// Morph height
+// =============================================================================
+
+export { useMorphHeight } from './useMorphHeight';
+export type { UseMorphHeightOptions } from './useMorphHeight';
+
+// =============================================================================
 // Presence system
 // =============================================================================
 

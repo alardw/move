@@ -8,6 +8,24 @@ export const spec = {
   category: 'media',
   description: 'Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support',
 
+  synonyms: ['picture', 'photo', 'media'],
+  families: {
+    behavior:  ["media", "data-row"],
+    state:     ["stateless"],
+    animation: ["fade"],
+    a11y:      ["none"],
+  },
+  // Shared click-affordance contract for the data-row family.
+  // See `src/shared/families.ts` → DataRowBehavior.
+  behavior: {
+    dataRow: {
+      interactiveProp: true,
+      keyboardActivate: true,
+      hoverAffordance: true,
+      rootHoverModifier: null,
+    },
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -23,13 +41,15 @@ export const spec = {
     { name: 'alt', type: 'string', moveSpecific: true, description: 'Alt text for the image' },
     { name: 'fallbackSrc', type: 'string', moveSpecific: true, description: 'Fallback image URL displayed when the primary src fails' },
     { name: 'fit', type: "'cover' | 'contain' | 'fill' | 'none' | 'scale-down'", default: "'cover'", moveSpecific: true, description: 'CSS object-fit value for the img element' },
-    { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", default: "'none'", moveSpecific: true, description: 'Border radius applied to the root container' },
+    { name: 'radius', typeRef: 'Radius', default: "'none'", moveSpecific: true, description: 'Border radius applied to the root container' },
     { name: 'position', type: "'center' | 'top' | 'bottom' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right'", default: "'center'", moveSpecific: true, description: 'CSS object-position value for the img element' },
     { name: 'aspectRatio', type: 'string', moveSpecific: true, description: 'CSS aspect-ratio value applied to the root container' },
     { name: 'width', type: 'string | number', moveSpecific: true, description: 'Width of the root container (number treated as px)' },
     { name: 'height', type: 'string | number', moveSpecific: true, description: 'Height of the root container (number treated as px)' },
     { name: 'loading', type: "'lazy' | 'eager'", moveSpecific: true, description: 'Native loading attribute passed to the img element' },
-    { name: 'action', type: 'React.ReactNode', moveSpecific: true, description: 'Content rendered in the action overlay (shown on hover/focus)' },
+    { name: 'action', type: 'React.ReactNode', moveSpecific: true, description: 'Content rendered in the action overlay, revealed on hover or focus.' },
+    { name: 'interactive', type: 'boolean', moveSpecific: true, description: 'Make the image a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation. Defaults to true when `onClick` is set.' },
+    { name: 'onClick', type: '(event: React.MouseEvent<HTMLDivElement>) => void', moveSpecific: false, description: 'Click handler on the wrapper.' },
     { name: 'onLoad', type: 'React.ReactEventHandler<HTMLImageElement>', moveSpecific: true, description: 'Called when the image loads successfully' },
     { name: 'onError', type: 'React.ReactEventHandler<HTMLImageElement>', moveSpecific: true, description: 'Called when the image fails to load' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom fallback content rendered inside the fallback slot when image errors and no fallbackSrc is set' },

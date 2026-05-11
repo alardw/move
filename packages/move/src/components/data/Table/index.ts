@@ -1,8 +1,9 @@
-// Generated from Table.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 export { Table } from './Table';
 export type {
   TableVariant,
   TableSize,
+  TableAlign,
+  TableResponsive,
   TableRootProps,
   TableHeaderProps,
   TableBodyProps,
@@ -11,4 +12,11 @@ export type {
   TableHeadProps,
   TableCellProps,
   TableCaptionProps,
+  TableGroupProps,
+  TableGroupHeaderProps,
 } from './Table';
+export { useTableSelection } from './useTableSelection';
+export type {
+  UseTableSelectionOptions,
+  UseTableSelectionReturn,
+} from './useTableSelection';

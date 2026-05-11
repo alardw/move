@@ -8,6 +8,31 @@ export const spec = {
   category: 'form',
   description: 'Searchable dropdown with single/multi-value support, tag management, keyboard navigation, and filtered option list',
 
+  synonyms: ['combobox', 'typeahead', 'search input', 'suggest', 'autosuggest'],
+  // Family memberships. All values are arrays even when only one
+  // applies — keeps downstream tooling simple. See
+  // `src/shared/families.ts` for the allowed values per axis.
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-value', 'controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['combobox'],
+  },
+
+  // Behavior-family-specific contract. The popup family asserts a
+  // component closes on Escape, outside click, scroll, and resize.
+  // Declared as the *intended* behavior; the family drift check
+  // verifies these stay consistent and a future Playwright pass
+  // verifies the runtime matches.
+  behavior: {
+    popup: {
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      closeOnScroll: true,
+      closeOnResize: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -70,7 +95,7 @@ export const spec = {
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Input, TagList, Icon, ClearTrigger' },
         { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Disabled state' },
         { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Trigger size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Trigger size' },
         { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Trigger variant' },
         { name: 'width', type: 'React.CSSProperties[\'width\']', moveSpecific: true, description: 'Explicit width override' },
       ],
@@ -140,16 +165,6 @@ export const spec = {
       description: 'Clear all button that resets selection and input text; hidden when empty',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target' },
-      ],
-      usesFactory: false,
-      description: 'Radix Popover.Portal wrapper',
-    },
-    {
       name: 'Content',
       slots: [
         { name: 'content', element: 'div', description: 'Popover content' },
@@ -161,9 +176,13 @@ export const spec = {
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Items, groups, empty, loading' },
         { name: 'sideOffset', type: 'number', default: '4', moveSpecific: true, description: 'Offset from trigger' },
         { name: 'align', type: "'start' | 'center' | 'end'", default: "'start'", moveSpecific: true, description: 'Alignment relative to trigger' },
+        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
+        { name: 'width', type: 'string | number', moveSpecific: true, description: 'Override the popover width.' },
+        { name: 'minWidth', type: 'string | number', moveSpecific: true, description: 'Minimum popover width.' },
+        { name: 'maxWidth', type: 'string | number', moveSpecific: true, description: 'Maximum popover width.' },
       ],
       usesFactory: true,
-      description: 'Animated popup content with scrollable listbox and height animation',
+      description: 'Animated popup content with scrollable listbox, height animation, and bake-in portaling.',
     },
     {
       name: 'Item',

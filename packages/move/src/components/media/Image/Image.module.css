@@ -6,7 +6,7 @@
 
 .root {
   /* Component tokens */
-  --move-image-bg: var(--move-gray-800);
+  --move-image-bg: var(--move-bg-muted);
   --move-image-fallback-bg: var(--move-bg-subtle);
   --move-image-fallback-fg: var(--move-fg-subtle);
   --move-image-fallback-min-height: var(--move-space-20);
@@ -40,11 +40,36 @@
   border-radius: var(--move-rounded-full);
 }
 
-/* Img */
+/* Interactive tile — shared opt-in pattern with Table.Row and List.Item.
+   Cursor + subtle scale on hover + focus ring for keyboard users.
+   Activation (Enter/Space → onClick) is wired in the component. */
+.root[data-interactive] {
+  cursor: pointer;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.root[data-interactive]:hover {
+  transform: scale(1.01);
+}
+
+.root[data-interactive]:focus-visible {
+  outline: 2px solid var(--move-primary);
+  outline-offset: 2px;
+}
+
+/* Img — fade in on load so the swap from placeholder bg to image
+   isn't an abrupt pop. The Image source toggles data-loaded=""
+   when the native onLoad fires. */
 .img {
   display: block;
   width: 100%;
   height: 100%;
+  opacity: 0;
+  transition: opacity 240ms ease-out;
+}
+
+.img[data-loaded] {
+  opacity: 1;
 }
 
 /* Fit */

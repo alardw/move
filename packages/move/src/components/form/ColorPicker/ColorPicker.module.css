@@ -229,7 +229,11 @@
  * ========================================================================= */
 
 .formatSelect {
-  flex-shrink: 0;
+  /* Select.Trigger defaults to width: 100% (fill-parent like Mantine/MUI),
+     which would push the channel inputs off the row. Override to size
+     by content here. */
+  width: auto;
+  flex: 0 0 auto;
   /* Override Select trigger tokens to fit the compact input row */
   --move-select-trigger-min-width: 0;
   --move-select-trigger-height: var(--move-colorpicker-input-height);
@@ -263,9 +267,12 @@
   outline-offset: 0;
 }
 
-/* Hex input gets more space */
+/* Hex input gets more space — min-width guarantees the full 7-char
+   value (#aabbcc) fits at every size without clipping when the format
+   selector takes up most of the row. */
 .channelInput[data-channel='hex'] {
   flex: 3;
+  min-width: 6.5ch;
   letter-spacing: 0.02em;
 }
 

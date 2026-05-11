@@ -1,7 +1,6 @@
 // Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { useCallback, useRef, useReducer } from 'react';
 import type {
-  FileUploadAdapter,
   FileUploadEntry,
   FileUploadStatus,
   UploadProgress,

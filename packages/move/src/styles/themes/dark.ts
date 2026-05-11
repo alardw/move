@@ -18,11 +18,13 @@ const darkShadows = createThemeShadows({
 export const darkTheme: Theme = {
   name: 'dark',
   tokens: {
-    // Background
-    '--move-bg-base': 'var(--move-gray-950)',
-    '--move-bg-subtle': 'var(--move-gray-900)',
-    '--move-bg-muted': 'var(--move-gray-800)',
-    '--move-bg-emphasis': 'var(--move-gray-700)',
+    // Background — surface scale shifted one step lighter from the
+    // OLED-black baseline. bg-base at gray-950 reads too stark for
+    // long sessions on most displays.
+    '--move-bg-base': 'var(--move-gray-900)',
+    '--move-bg-subtle': 'var(--move-gray-800)',
+    '--move-bg-muted': 'var(--move-gray-700)',
+    '--move-bg-emphasis': 'var(--move-gray-600)',
     '--move-bg-inverse': 'var(--move-gray-50)',
 
     // Foreground

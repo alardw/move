@@ -4,7 +4,11 @@ import * as React from 'react';
 import { ThemeProvider } from '../Theme';
 import { IconProvider } from '../Icon';
 import { MoveProvider } from '../../engine';
-import { Tooltip } from '../../components/core/Tooltip';
+// Import the standalone TooltipProvider directly — going through the
+// Tooltip compound would pull in the animated Tooltip code (and the
+// animation engine) for every app, even ones that never render a
+// Tooltip themselves.
+import { TooltipProvider } from '../../components/core/Tooltip/TooltipProvider';
 import { darkTheme } from '../../styles/themes/dark';
 import type { Theme } from '../../styles/themes/types';
 import type { IconResolver } from '../Icon/IconProvider';
@@ -64,9 +68,9 @@ export function MoveRoot({
 
   let content = (
     <ThemeProvider theme={theme} asWrapper={false}>
-      <Tooltip.Provider>
+      <TooltipProvider>
         {children}
-      </Tooltip.Provider>
+      </TooltipProvider>
     </ThemeProvider>
   );
 

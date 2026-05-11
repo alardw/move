@@ -8,6 +8,22 @@ export const spec = {
   category: 'form',
   description: 'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
 
+  synonyms: ['color field', 'colour input', 'hex picker', 'swatch input'],
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-value', 'controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['dialog'],
+  },
+  behavior: {
+    popup: {
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      closeOnScroll: true,
+      closeOnResize: true,
+    },
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -23,7 +39,7 @@ export const spec = {
   props: [
     // Appearance
     { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Input variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
     { name: 'width', type: 'React.CSSProperties[\'width\']', moveSpecific: true, description: 'Explicit width override' },
     // Value
     { name: 'format', type: 'ColorFormat', default: "'hex'", moveSpecific: true, description: 'Active color format (hex, hexa, rgb, rgba, hsl, hsla)' },

@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label',
 
+  synonyms: ['toggle', 'on off', 'toggle switch'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["spring-transform"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'button',
   slots: [
@@ -29,7 +37,7 @@ export const spec = {
         { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether the switch is disabled' },
         { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the switch is in an invalid state' },
         { name: 'label', type: 'React.ReactNode', moveSpecific: true, description: 'Optional label text rendered beside the switch' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the switch' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of the switch' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
         { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required for form validation' },
         { name: 'name', type: 'string', moveSpecific: false, description: 'Form submission name' },
@@ -59,7 +67,7 @@ export const spec = {
     { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether the switch is disabled' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the switch is in an invalid state' },
     { name: 'label', type: 'React.ReactNode', moveSpecific: true, description: 'Optional label displayed beside the switch' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the switch' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of the switch' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
     { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required for form validation' },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form submission name' },

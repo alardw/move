@@ -8,6 +8,22 @@ export const spec = {
   category: 'form',
   description: 'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
 
+  synonyms: ['date', 'calendar input', 'date field', 'date select'],
+  families: {
+    behavior:  ['popup-anchored'],
+    state:     ['controlled-value', 'controlled-open'],
+    animation: ['scale-fade'],
+    a11y:      ['dialog'],
+  },
+  behavior: {
+    popup: {
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      closeOnScroll: true,
+      closeOnResize: true,
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -39,7 +55,7 @@ export const spec = {
       ],
       props: [
         { name: 'placeholder', type: 'string', moveSpecific: false, description: 'Input placeholder text' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
       ],
       usesFactory: false,
       description: 'Smart input that dispatches to SingleInput or RangeInput based on mode from CalendarContext',
@@ -54,16 +70,6 @@ export const spec = {
       description: 'Calendar icon slot (backwards-compat / custom icon override)',
     },
     {
-      name: 'Portal',
-      slots: [],
-      props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Portal content' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Portal container element' },
-      ],
-      usesFactory: false,
-      description: 'Radix Popover.Portal wrapper',
-    },
-    {
       name: 'Content',
       slots: [
         { name: 'content', element: 'div', description: 'Popover content with enter/exit animation' },
@@ -73,10 +79,11 @@ export const spec = {
       props: [
         { name: 'sideOffset', type: 'number', default: '4', moveSpecific: false, description: 'Offset from trigger' },
         { name: 'align', type: "'start' | 'center' | 'end'", default: "'start'", moveSpecific: false, description: 'Alignment relative to trigger' },
+        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Calendar content' },
       ],
       usesFactory: false,
-      description: 'Animated popover content container with enter/exit transitions and day cell stagger',
+      description: 'Animated popover content with bake-in portaling, enter/exit transitions, and day-cell stagger.',
     },
   ],
 
@@ -210,33 +217,6 @@ export const spec = {
     rangeLabels: 'i18n',
     placeholder: 'displayText',
     children: 'composition',
-  },
-
-  demo: {
-    renderMode: 'samples' as const,
-    controls: [
-      { id: 'consumer.mode', kind: 'select', options: ['single', 'range', 'multiple'], defaultValue: 'single' },
-      { id: 'consumer.closeOnSelect', kind: 'boolean', defaultValue: true },
-      { id: 'consumer.size', kind: 'select', options: ['sm', 'md', 'lg'], defaultValue: 'md' },
-      { id: 'playground.mode', kind: 'select', options: ['single', 'range', 'multiple'], defaultValue: 'single' },
-      { id: 'playground.closeOnSelect', kind: 'boolean', defaultValue: true },
-      { id: 'playground.showTime', kind: 'boolean', defaultValue: false },
-      { id: 'playground.size', kind: 'select', options: ['sm', 'md', 'lg'], defaultValue: 'md' },
-    ],
-    samples: [
-      { id: 'single', label: 'Single Date', defaults: { mode: 'single' } },
-      { id: 'range', label: 'Date Range', defaults: { mode: 'range' } },
-      { id: 'withTime', label: 'With Time', defaults: { mode: 'single', showTime: true } },
-    ],
-    bindings: [
-      { control: 'consumer.mode', target: 'consumer.DatePicker.Root.mode' },
-      { control: 'consumer.closeOnSelect', target: 'consumer.DatePicker.Root.closeOnSelect' },
-      { control: 'consumer.size', target: 'consumer.DatePicker.Input.size' },
-      { control: 'playground.mode', target: 'playground.DatePicker.Root.mode' },
-      { control: 'playground.closeOnSelect', target: 'playground.DatePicker.Root.closeOnSelect' },
-      { control: 'playground.showTime', target: 'playground.DatePicker.Root.showTime' },
-      { control: 'playground.size', target: 'playground.DatePicker.Input.size' },
-    ],
   },
 
   hasHook: true,

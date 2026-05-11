@@ -1,7 +1,15 @@
 /* DayCell.module.css — provenance: original-components/calendar/_shared/DayCell.module.css */
 
 .dayCell {
-  --move-calendar-cell-size: 2.25rem;
+  /* Circle (selection pill) size. Decoupled from row height so the
+     row can grow to leave breathing room for the event dots, which
+     sit absolutely-positioned below the day number — that way the
+     number stays at the cell's vertical center regardless of whether
+     the day has events, so all numbers in a week align.
+     Row height shrinks back to circle-size when there are no events
+     (see [data-has-events] rule on the Calendar root below). */
+  --move-calendar-cell-size: 1.75rem;
+  --move-calendar-row-height: 2.25rem;
   --move-calendar-cell-radius: var(--move-rounded-md);
   --move-calendar-cell-font-size: var(--move-size-sm);
   --move-calendar-cell-fg: var(--move-fg-base);
@@ -15,31 +23,43 @@
 
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: var(--move-calendar-cell-size);
-  height: var(--move-calendar-cell-size);
-  border-radius: var(--move-rounded-full);
+  /* Fill the grid column (1fr) so range backgrounds touch their
+     neighbours edge-to-edge. The selected/today pill is drawn on the
+     inner .dayNumber at a fixed cell-size so it stays circular even
+     when the column is wider than the cell. */
+  width: 100%;
+  height: var(--move-calendar-row-height);
   font-family: var(--move-font-body);
   font-size: var(--move-calendar-cell-font-size);
   color: var(--move-calendar-cell-fg);
   cursor: pointer;
   user-select: none;
   outline: none;
-  border: 2px solid transparent;
+  /* No border on the cell — a 2px transparent border would interrupt
+     the in-range background between adjacent cells. Focus ring lives
+     on the inner .dayNumber instead. */
+  border: 0;
   padding: 0;
   background: transparent;
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.dayCell:hover:not([data-disabled]) {
+/* When the Calendar.Root has events, grow the row so the event dots
+   below the day-number circle have breathing room. */
+[data-has-events] .dayCell {
+  --move-calendar-row-height: 2.75rem;
+}
+
+.dayCell:hover:not([data-disabled]) .dayNumber {
   background-color: var(--move-calendar-cell-bg-hover);
 }
 
-.dayCell:focus-visible:not(:active) {
-  border-color: var(--move-focus-ring-color);
+.dayCell:focus-visible:not(:active) .dayNumber {
+  outline: 2px solid var(--move-focus-ring-color);
+  outline-offset: 0;
 }
 
 .dayCell[data-today] {
@@ -65,37 +85,35 @@
 
 .dayCell[data-state='selected'] .dayNumber {
   background-color: var(--move-calendar-cell-bg-selected);
-  border-radius: var(--move-rounded-full);
-}
-
-.dayCell[data-state='selected']:hover:not([data-disabled]) {
-  background-color: transparent;
 }
 
 .dayCell[data-state='selected']:hover:not([data-disabled]) .dayNumber {
   background-color: var(--move-primary-hover);
 }
 
+/* Range start: the cell carries the in-range tint on its right half so
+   it bleeds into the next day; the round selected pill on .dayNumber
+   stays centered and circular. */
 .dayCell[data-state='range-start'] {
-  background-color: var(--move-calendar-cell-bg-selected);
+  background: linear-gradient(to right, transparent 50%, var(--move-calendar-cell-bg-range) 50%);
   color: var(--move-calendar-cell-fg-selected);
-  border-start-start-radius: var(--move-calendar-cell-radius);
-  border-end-start-radius: var(--move-calendar-cell-radius);
-  border-start-end-radius: 0;
-  border-end-end-radius: 0;
+}
+
+.dayCell[data-state='range-start'] .dayNumber {
+  background-color: var(--move-calendar-cell-bg-selected);
 }
 
 .dayCell[data-state='range-end'] {
-  background-color: var(--move-calendar-cell-bg-selected);
+  background: linear-gradient(to left, transparent 50%, var(--move-calendar-cell-bg-range) 50%);
   color: var(--move-calendar-cell-fg-selected);
-  border-start-start-radius: 0;
-  border-end-start-radius: 0;
-  border-start-end-radius: var(--move-calendar-cell-radius);
-  border-end-end-radius: var(--move-calendar-cell-radius);
 }
 
-.dayCell[data-state='range-start']:hover:not([data-disabled]),
-.dayCell[data-state='range-end']:hover:not([data-disabled]) {
+.dayCell[data-state='range-end'] .dayNumber {
+  background-color: var(--move-calendar-cell-bg-selected);
+}
+
+.dayCell[data-state='range-start']:hover:not([data-disabled]) .dayNumber,
+.dayCell[data-state='range-end']:hover:not([data-disabled]) .dayNumber {
   background-color: var(--move-primary-hover);
 }
 
@@ -105,23 +123,31 @@
 
 .dayCell[data-state='in-range'] {
   background-color: var(--move-calendar-cell-bg-range);
-  border-radius: 0;
 }
 
 .dayNumber {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  width: var(--move-calendar-cell-size);
+  height: var(--move-calendar-cell-size);
+  border-radius: var(--move-rounded-full);
   line-height: 1;
+  transition: background-color 0.15s ease;
 }
 
 .dayEvents {
+  position: absolute;
+  /* Dots sit flush with the cell's bottom edge — that way the gap to
+     the day-number circle above is small (~4px) and the gap to the
+     next row's circle is large (~8px), so the dots clearly belong
+     to this day, not the one below. */
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   gap: 2px;
   justify-content: center;
-  padding-bottom: 2px;
 }
 
 .dayEventDot {

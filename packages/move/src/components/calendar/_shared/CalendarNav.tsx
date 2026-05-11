@@ -54,17 +54,32 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
     const value = monthValueRef.current;
     if (!trigger || !value) return;
 
-    const original = value.textContent;
-    let maxWidth = 0;
+    // Compute the trigger's chrome (padding + icon + gap) by subtracting the
+    // value span's width from the trigger's. Then measure each month name in
+    // a detached probe element with the same font, and pick the widest.
+    //
+    // Why not write into `value` directly? Mutating React-owned DOM
+    // (value.textContent = ...) puts React's vdom out of sync with the
+    // real DOM. Future re-renders silently fail to update the displayed
+    // month — picking a new month from the dropdown wouldn't refresh
+    // the trigger's label. Probe is detached so React never sees it.
+    const chrome =
+      trigger.getBoundingClientRect().width - value.getBoundingClientRect().width;
 
+    const computed = window.getComputedStyle(value);
+    const probe = document.createElement('span');
+    probe.style.cssText = `position:absolute;visibility:hidden;white-space:nowrap;font:${computed.font}`;
+    document.body.appendChild(probe);
+
+    let maxText = 0;
     for (const name of monthNames) {
-      value.textContent = name;
-      const w = trigger.getBoundingClientRect().width;
-      if (w > maxWidth) maxWidth = w;
+      probe.textContent = name;
+      const w = probe.getBoundingClientRect().width;
+      if (w > maxText) maxText = w;
     }
 
-    value.textContent = original;
-    setMonthMinWidth(Math.ceil(maxWidth));
+    document.body.removeChild(probe);
+    setMonthMinWidth(Math.ceil(maxText + chrome));
   }, [monthNames]);
 
   const handleMonthChange = (value: string) => {
@@ -102,15 +117,13 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
             <Select.Value ref={monthValueRef}>{monthName}</Select.Value>
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
-            <Select.Content align="center">
-              {monthNames.map((name, i) => (
-                <Select.Item key={i} value={String(i)}>
-                  {name}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Portal>
+          <Select.Content align="center">
+            {monthNames.map((name, i) => (
+              <Select.Item key={i} value={String(i)}>
+                {name}
+              </Select.Item>
+            ))}
+          </Select.Content>
         </Select.Root>
 
         <Select.Root
@@ -121,15 +134,13 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
             <Select.Value>{year}</Select.Value>
             <Select.Icon />
           </Select.Trigger>
-          <Select.Portal>
-            <Select.Content align="center">
-              {years.map((yr) => (
-                <Select.Item key={yr} value={String(yr)}>
-                  {yr}
-                </Select.Item>
-              ))}
-            </Select.Content>
-          </Select.Portal>
+          <Select.Content align="center">
+            {years.map((yr) => (
+              <Select.Item key={yr} value={String(yr)}>
+                {yr}
+              </Select.Item>
+            ))}
+          </Select.Content>
         </Select.Root>
       </div>
 

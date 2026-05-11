@@ -3,15 +3,20 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
+import type { Gap } from '../../../shared/types';
 import styles from './Grid.module.css';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export type GridGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `Gap` from
+ *  `'move'` directly going forward. */
+export type GridGap = Gap;
 
-export type GridPadding = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `Gap` from
+ *  `'move'` directly going forward. */
+export type GridPadding = Gap;
 
 export interface GridProps extends Record<string, unknown> {
   /** Equal-width columns (shorthand for repeat(N, 1fr)) */

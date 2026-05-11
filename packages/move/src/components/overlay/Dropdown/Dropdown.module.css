@@ -51,7 +51,9 @@
 .contentInner {
   max-height: var(--move-dropdown-content-max-height);
   overflow-y: auto;
-  padding: inherit;
+  /* `padding: inherit` picks up content padding; added 4px extends breathing
+     room for item hover scale (~2px per side) so overflow doesn't clip. */
+  padding: 4px;
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
@@ -95,6 +97,17 @@
   user-select: none;
   outline: none;
   will-change: transform;
+  overflow: hidden;
+}
+
+/* Wrapping span around string item children — see Select.itemText for rationale. */
+.itemText {
+  flex: 1;
+  min-width: 0;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .item[data-highlighted] {

@@ -212,6 +212,13 @@
  * ========================================================================= */
 
 .content {
+  /* Body-portal popovers default to z-auto, but Move's Buttons (and any
+     other will-change: transform element) form their own stacking
+     contexts on the page, so an unstyled popover can render *under*
+     them. Use the popover token to land above page chrome. The
+     Layer system can override this per-instance via inline style for
+     popovers nested inside Dialogs etc. */
+  z-index: var(--move-layer-popover);
   overflow: hidden;
   background: var(--move-bg-base);
   border: 1px solid var(--move-border-base);

@@ -8,6 +8,14 @@ export const spec = {
   category: 'loading',
   description: 'Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations',
 
+  synonyms: ['spinner', 'loading', 'wait', 'progress indicator', 'busy indicator'],
+  families: {
+    behavior:  ["loading"],
+    state:     ["stateless"],
+    animation: ["continuous-loop"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -20,7 +28,7 @@ export const spec = {
   props: [
     { name: 'variant', type: "'spinner' | 'dots'", default: "'spinner'", moveSpecific: true, description: 'Loading indicator style' },
     { name: 'color', type: "'primary' | 'secondary' | 'current'", default: "'primary'", moveSpecific: true, description: 'Indicator color' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Indicator size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Indicator size' },
     { name: 'strokeWidth', type: 'number', default: '3', moveSpecific: true, description: 'SVG stroke width for spinner variant' },
   ],
 

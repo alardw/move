@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system',
 
+  synonyms: ['file input', 'upload', 'dropzone', 'attach', 'file picker'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["fade"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -45,7 +53,7 @@ export const spec = {
         { name: 'onFilesChange', type: '(files: File[]) => void', moveSpecific: true, description: 'Called when the file list changes' },
         { name: 'onFileReject', type: '(rejections: FileRejection[]) => void', moveSpecific: true, description: 'Called when files fail validation' },
         { name: 'validate', type: '(file: File) => string | null', moveSpecific: true, description: 'Custom per-file validation function' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Component size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Component size' },
         { name: 'variant', type: "'default' | 'compact'", default: "'default'", moveSpecific: true, description: 'Layout variant' },
         { name: 'adapter', type: 'FileUploadAdapter', moveSpecific: true, description: 'Upload adapter function for server uploads' },
         { name: 'autoUpload', type: 'boolean', default: 'false', moveSpecific: true, description: 'Automatically start uploading when files are added' },
@@ -140,8 +148,7 @@ export const spec = {
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom delete icon (defaults to X icon)' },
-        { name: 'aria-label', type: 'string', moveSpecific: true, description: 'Override aria-label for i18n (default: "Remove {filename}")' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom delete icon (defaults to X icon). Use aria-label via attribute passthrough to localize the default "Remove {filename}" announcement.' },
       ],
       usesFactory: true,
       description: 'Remove button per file item; aborts upload if in progress; renders check icon when upload is complete',
@@ -212,7 +219,7 @@ export const spec = {
     { name: 'onFilesChange', type: '(files: File[]) => void', moveSpecific: true, description: 'Called when the file list changes' },
     { name: 'onFileReject', type: '(rejections: FileRejection[]) => void', moveSpecific: true, description: 'Called when files fail validation' },
     { name: 'validate', type: '(file: File) => string | null', moveSpecific: true, description: 'Custom per-file validation function' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Component size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Component size' },
     { name: 'variant', type: "'default' | 'compact'", default: "'default'", moveSpecific: true, description: 'Layout variant' },
     { name: 'adapter', type: 'FileUploadAdapter', moveSpecific: true, description: 'Upload adapter function for server uploads' },
     { name: 'autoUpload', type: 'boolean', default: 'false', moveSpecific: true, description: 'Automatically start uploading when files are added' },

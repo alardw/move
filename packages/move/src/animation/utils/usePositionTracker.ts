@@ -74,7 +74,7 @@ export function usePositionTracker(
       ...(track === 'height' || track === 'both' ? { height } : {}),
       ease: spring(defaultIndicatorSpring),
     });
-  }, [containerRef, activeSelector, disabled]);
+  }, [containerRef, activeSelector, disabled, track]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -89,7 +89,24 @@ export function usePositionTracker(
       subtree: true,
     });
 
-    return () => observer.disconnect();
+    const resizeObserver = new ResizeObserver(update);
+    resizeObserver.observe(container);
+
+    const tabTriggers = container.querySelectorAll<HTMLElement>('[role="tab"]');
+    tabTriggers.forEach((node) => resizeObserver.observe(node));
+
+    window.addEventListener('resize', update);
+    window.addEventListener('orientationchange', update);
+
+    const fonts = (typeof document !== 'undefined' ? (document as Document & { fonts?: FontFaceSet }).fonts : undefined);
+    void fonts?.ready.then(update).catch(() => undefined);
+
+    return () => {
+      observer.disconnect();
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', update);
+      window.removeEventListener('orientationchange', update);
+    };
   }, [containerRef, update]);
 
   return { indicatorRef, update };

@@ -9,106 +9,126 @@ export const spec = {
   description:
     'Date selection grid supporting single, range, and multiple selection modes with event display, keyboard navigation, and locale-aware formatting',
 
-  // Compound pattern — plain object (Root is a context orchestrator)
-  compound: {
-    pattern: 'object' as const,
-    subComponents: ['Root', 'Nav', 'Grid'] as string[],
+  synonyms: ['date picker grid', 'datepicker', 'month grid', 'date grid'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
   },
 
-  anatomy: ['Root', 'Nav', 'Grid'] as string[],
+  compound: true,
+  rootElement: 'div',
+  slots: [
+    { name: 'root', element: 'div', description: 'Calendar context container that wraps Nav and Grid' },
+    { name: 'nav', element: 'div', description: 'Navigation header with previous/next controls and month/year pickers' },
+    { name: 'grid', element: 'div', description: 'Month grid rendering weekday headers and day cells' },
+  ],
 
-  slots: ['root', 'nav', 'grid'] as string[],
-
-  props: {
-    Root: [
-      'animations',
-      'mode',
-      'value',
-      'defaultValue',
-      'onValueChange',
-      'events',
-      'locale',
-      'weekStartsOn',
-      'constraints',
-      'numberOfMonths',
-      'showWeekNumbers',
-      'yearRange',
-      'fixedWeeks',
-      'renderDayCell',
-      'renderEvent',
-      'labels',
-      'children',
-      'className',
-      'style',
-    ] as string[],
-    Nav: ['className', 'sp'] as string[],
-    Grid: ['className'] as string[],
-  },
-
-  defaults: {
-    mode: 'single',
-    events: [] as unknown[],
-    locale: 'en-US',
-    numberOfMonths: 1,
-    showWeekNumbers: false,
-    yearRange: 12,
-    fixedWeeks: false,
-  },
-
-  moveProps: [
-    'animations',
-    'mode',
-    'value',
-    'defaultValue',
-    'onValueChange',
-    'events',
-    'locale',
-    'weekStartsOn',
-    'constraints',
-    'numberOfMonths',
-    'showWeekNumbers',
-    'yearRange',
-    'fixedWeeks',
-    'renderDayCell',
-    'renderEvent',
-    'labels',
-  ] as string[],
-
-  variants: null,
-  sizes: null,
-
-  controlled: { pattern: 'value' as const },
-  controlledProps: {
-    value: {
-      prop: 'value',
-      defaultProp: 'defaultValue',
-      onChange: 'onValueChange',
+  subComponents: [
+    {
+      name: 'Root',
+      slots: [{ name: 'root', element: 'div', description: 'Calendar context container' }],
+      props: [
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Calendar.Nav and Calendar.Grid (and any custom composition)' },
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'mode', typeRef: 'SelectionMode', default: "'single'", moveSpecific: true, description: 'Selection mode: single date, date range, or multiple dates' },
+        { name: 'value', type: 'Date | DateRange | Date[] | null', moveSpecific: true, description: 'Controlled selected value (shape depends on mode)' },
+        { name: 'defaultValue', type: 'Date | DateRange | Date[] | null', moveSpecific: true, description: 'Initial selected value when uncontrolled' },
+        { name: 'onValueChange', type: '(value: any) => void', moveSpecific: true, description: 'Called when the selection changes' },
+        { name: 'events', typeRef: 'CalendarEvent[]', default: '[]', moveSpecific: true, description: 'List of events to display on day cells' },
+        { name: 'locale', type: 'string', default: "'en-US'", moveSpecific: true, description: 'BCP-47 locale tag for date formatting and weekday order' },
+        { name: 'weekStartsOn', type: 'number', moveSpecific: true, description: 'First day of week (0=Sunday, 1=Monday); defaults from locale' },
+        { name: 'constraints', typeRef: 'CalendarConstraints', moveSpecific: true, description: 'Min/max date and disabled-day predicate' },
+        { name: 'numberOfMonths', type: 'number', default: '1', moveSpecific: true, description: 'Number of months to render side-by-side' },
+        { name: 'showWeekNumbers', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show ISO week number column on each grid' },
+        { name: 'yearRange', type: 'number', default: '12', moveSpecific: true, description: 'Number of years on either side of the current year shown in the year picker' },
+        { name: 'fixedWeeks', type: 'boolean', default: 'false', moveSpecific: true, description: 'Always render six week rows so the grid does not reflow as months change' },
+        { name: 'renderDayCell', typeRef: 'RenderDayCell', moveSpecific: true, description: 'Custom renderer for day cell content' },
+        { name: 'renderEvent', typeRef: 'RenderEvent', moveSpecific: true, description: 'Custom renderer for an event chip inside a day cell' },
+        { name: 'labels', typeRef: 'CalendarLabels', moveSpecific: true, description: 'Localizable strings for nav buttons and pickers' },
+      ],
+      usesFactory: false,
+      description: 'Stateful root that creates CalendarContext via useCalendar and renders children inside the calendar slot',
     },
+    {
+      name: 'Nav',
+      slots: [{ name: 'nav', element: 'div', description: 'Navigation header' }],
+      props: [
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'sp', typeRef: 'CalendarNavSp', moveSpecific: true, description: 'Spacing prop forwarded to the shared CalendarNav layout' },
+      ],
+      usesFactory: false,
+      description: 'Thin wrapper around the shared CalendarNav that exposes the previous/next controls and month/year pickers',
+    },
+    {
+      name: 'Grid',
+      slots: [{ name: 'grid', element: 'div', description: 'Month grid' }],
+      props: [
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+      ],
+      usesFactory: false,
+      description: 'Thin wrapper around the shared MonthGrid that reads display state from CalendarContext',
+    },
+  ],
+
+  props: [],
+
+  anatomy: {
+    slot: 'root',
+    children: [
+      {
+        slot: 'nav',
+        ariaAttributes: ['aria-live="polite"'],
+      },
+      {
+        slot: 'grid',
+        ariaAttributes: ['role="grid"', 'aria-label="formatted month/year"'],
+        children: [
+          {
+            slot: 'weekDayHeader',
+            ariaAttributes: ['role="columnheader"'],
+          },
+          {
+            slot: 'weekRow',
+            ariaAttributes: ['role="row"'],
+            children: [
+              {
+                slot: 'dayCell',
+                dataAttributes: ['data-today', 'data-outside', 'data-disabled', 'data-selected', 'data-range-start', 'data-range-end'],
+                ariaAttributes: ['role="gridcell"', 'aria-selected', 'aria-disabled', 'aria-label="localized date"'],
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
 
-  dismissBehavior: null,
-
-  renderContracts: [
-    'Root provides CalendarContext consumed by Nav and Grid',
-    'Root forwards animations config into Grid for month-transition stagger',
-    'Nav reads displayMonth, locale, yearRange, labels from CalendarContext',
-    'Grid reads displayMonth, locale, weekStartsOn, numberOfMonths, showWeekNumbers, fixedWeeks, focusedDate from CalendarContext',
-    'DayCell (internal) reads mode, value, onSelect, constraints, events, focusedDate, renderDayCell from CalendarContext',
-  ] as string[],
+  controlled: 'value' as const,
+  controlledProps: {
+    valueProp: 'value',
+    defaultValueProp: 'defaultValue',
+    onChangeProp: 'onValueChange',
+  },
+  keyboard: 'roving' as const,
+  focus: 'roving' as const,
+  formType: null,
+  asChild: false,
 
   animations: [
     { trigger: 'Grid.enter', sequence: [{ children: ':scope > *', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } }, stagger: { delay: 15 } }] },
     { trigger: 'DayCell.press', sequence: [{ preset: 'scaleDown' }] },
   ],
 
-
-
-  labels: {
-    previousMonth: 'Previous month',
-    nextMonth: 'Next month',
-    selectMonth: 'Select month',
-    selectYear: 'Select year',
-  },
+  renderContracts: [
+    { id: 'root-provides-context', description: 'Root provides CalendarContext consumed by Nav and Grid' },
+    { id: 'root-forwards-animations', description: 'Root forwards animations config into Grid for month-transition stagger' },
+    { id: 'nav-reads-context', description: 'Nav reads displayMonth, locale, yearRange, labels from CalendarContext' },
+    { id: 'grid-reads-context', description: 'Grid reads displayMonth, locale, weekStartsOn, numberOfMonths, showWeekNumbers, fixedWeeks, focusedDate from CalendarContext' },
+    { id: 'daycell-reads-context', description: 'DayCell (internal) reads mode, value, onSelect, constraints, events, focusedDate, renderDayCell from CalendarContext' },
+  ],
 
   tokens: [
     // Root
@@ -199,149 +219,24 @@ export const spec = {
     { name: '--move-calendar-event-padding-y', value: '1px', slot: 'eventSlot' },
   ],
 
-  hasHook: true,
-  radixPrimitive: null,
+  variants: {},
+  sizes: [],
 
-  a11y: {
-    role: 'grid' as const,
-    focusPattern: 'roving' as const,
-    keyboardPattern: 'grid' as const,
-    attributes: [
-      'role="grid" on month grid element',
-      'role="row" on week rows',
-      'role="columnheader" on weekday headers',
-      'role="gridcell" on day cells',
-      'aria-selected on selected day cells',
-      'aria-disabled on disabled day cells',
-      'aria-label on grid (formatted month/year)',
-      'aria-label on day cells (localized date)',
-      'aria-label on nav buttons (Previous month / Next month)',
-      'aria-live="polite" on nav container',
-      'Roving tabIndex (0 on focused day, -1 on others)',
-    ] as string[],
-  },
+  labels: [
+    { key: 'previousMonth', default: 'Previous month', description: 'Aria label for the previous-month nav button' },
+    { key: 'nextMonth', default: 'Next month', description: 'Aria label for the next-month nav button' },
+    { key: 'selectMonth', default: 'Select month', description: 'Aria label for the month picker trigger' },
+    { key: 'selectYear', default: 'Select year', description: 'Aria label for the year picker trigger' },
+  ],
+
+  radixPrimitive: null,
+  hasHook: true,
+  engineImports: [] as string[],
 
   componentDeps: ['Button', 'Icon', 'Select'] as string[],
 
-  // Shared infrastructure files used by both Calendar and CalendarView.
-  // These must be generated alongside Calendar into src/components/calendar/_shared/.
-  sharedFiles: [
-    {
-      path: '_shared/CalendarContext.tsx',
-      exports: [
-        'CalendarContext',
-        'CalendarContextValue',
-        'CalendarLabels',
-        'DEFAULT_CALENDAR_LABELS',
-        'useCalendarContext',
-      ],
-    },
-    {
-      path: '_shared/types.ts',
-      exports: [
-        'CalendarEvent',
-        'DateRange',
-        'CalendarConstraints',
-        'SelectionMode',
-        'DayState',
-        'DayCellData',
-        'RenderDayCell',
-        'RenderEvent',
-        'CalendarViewMode',
-      ],
-    },
-    {
-      path: '_shared/dateUtils.ts',
-      exports: [
-        'getLocaleFirstDay',
-        'startOfDay',
-        'isSameDay',
-        'isSameMonth',
-        'isToday',
-        'isWithinRange',
-        'isBefore',
-        'isAfter',
-        'addDays',
-        'addMonths',
-        'addYears',
-        'getMonthGrid',
-        'getWeekRange',
-        'getWeekDayNames',
-        'formatMonthYear',
-        'formatMonth',
-        'formatDate',
-        'formatTime',
-        'getMonthNames',
-        'getTimeSlots',
-        'isDateDisabled',
-        'getLocaleDatePattern',
-        'parseDate',
-        'getWeekNumber',
-      ],
-    },
-    { path: '_shared/DayCell.tsx', exports: ['DayCell'] },
-    { path: '_shared/DayCell.module.css', exports: [] },
-    { path: '_shared/MonthGrid.tsx', exports: ['MonthGrid'] },
-    { path: '_shared/MonthGrid.module.css', exports: [] },
-    { path: '_shared/CalendarNav.tsx', exports: ['CalendarNav'] },
-    { path: '_shared/CalendarNav.module.css', exports: [] },
-    { path: '_shared/EventSlot.tsx', exports: ['EventSlot'] },
-    { path: '_shared/EventSlot.module.css', exports: [] },
-    { path: '_shared/MonthPicker.tsx', exports: ['MonthPicker'] },
-    { path: '_shared/MonthPicker.module.css', exports: [] },
-    { path: '_shared/YearPicker.tsx', exports: ['YearPicker'] },
-    { path: '_shared/YearPicker.module.css', exports: [] },
-  ],
-
-  childrenKind: 'composition' as const,
-
-  demo: {
-    controls: [
-      {
-        name: 'consumer.mode',
-        kind: 'select',
-        options: ['single', 'range', 'multiple'],
-        defaultValue: 'single',
-      },
-      {
-        name: 'consumer.numberOfMonths',
-        kind: 'select',
-        options: ['1', '2', '3'],
-        defaultValue: '1',
-      },
-      { name: 'consumer.showWeekNumbers', kind: 'boolean', defaultValue: false },
-      {
-        name: 'playground.mode',
-        kind: 'select',
-        options: ['single', 'range', 'multiple'],
-        defaultValue: 'single',
-      },
-      {
-        name: 'playground.numberOfMonths',
-        kind: 'select',
-        options: ['1', '2', '3'],
-        defaultValue: '1',
-      },
-      { name: 'playground.showWeekNumbers', kind: 'boolean', defaultValue: false },
-      { name: 'playground.fixedWeeks', kind: 'boolean', defaultValue: false },
-    ],
-    sections: [
-      {
-        id: 'consumer',
-        label: 'Consumer Samples',
-        description: 'Common Calendar usage patterns',
-      },
-      {
-        id: 'playground',
-        label: 'Props Playground',
-        description: 'Explore all Calendar configuration options',
-      },
-    ],
-    renderMode: 'grid' as const,
-  },
-
   testing: {
-    cases: [
+    behaviors: [
       'Root renders children',
       'Root forwards className and style',
       'Root defaults to mode=single',
@@ -355,10 +250,25 @@ export const spec = {
       'Range mode shows range-start and range-end states',
       'Nav renders previous/next buttons with aria-labels',
       'Nav buttons navigate months',
-      'Keyboard navigation: arrow keys move focus between days',
       'Labels support customization',
       'Week numbers display when showWeekNumbers=true',
-    ] as string[],
+    ],
+    keyboard: [
+      'Arrow keys move focus between days (roving tabindex)',
+      'Roving tabIndex sets 0 on focused day and -1 on the rest',
+    ],
+    aria: [
+      'role="grid" on month grid element',
+      'role="row" on week rows',
+      'role="columnheader" on weekday headers',
+      'role="gridcell" on day cells',
+      'aria-selected on selected day cells',
+      'aria-disabled on disabled day cells',
+      'aria-label on grid (formatted month/year)',
+      'aria-label on day cells (localized date)',
+      'aria-label on nav buttons (Previous month / Next month)',
+      'aria-live="polite" on nav container',
+    ],
   },
 
   defaultReview: {

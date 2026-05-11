@@ -8,6 +8,14 @@ export const spec = {
   category: 'loading',
   description: 'Centered placeholder for empty views with icon, title, description, and optional action',
 
+  synonyms: ['placeholder', 'no results', 'nothing here', 'zero state'],
+  families: {
+    behavior:  ["loading"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -23,7 +31,7 @@ export const spec = {
     { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Title text content' },
     { name: 'description', type: 'React.ReactNode', moveSpecific: true, description: 'Description text content' },
     { name: 'action', type: 'React.ReactNode', moveSpecific: true, description: 'Action content (e.g. button) rendered below description' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Controls padding, gap, and typography sizes' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Controls padding, gap, and typography sizes' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Additional content rendered after structured slots' },
   ],
 

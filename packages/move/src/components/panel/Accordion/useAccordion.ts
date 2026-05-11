@@ -1,5 +1,5 @@
 // Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useControlledState } from '../../../engine';
 
 // =============================================================================
@@ -52,8 +52,6 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
     defaultValue: options.defaultValue ?? emptyValue,
     onChange: options.onValueChange,
   });
-
-  const rootRef = useRef<HTMLElement | null>(null);
 
   const isItemActive = useCallback(
     (itemValue: string): boolean => {

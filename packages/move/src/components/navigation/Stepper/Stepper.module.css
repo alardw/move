@@ -100,7 +100,7 @@
   align-items: center;
   justify-items: center;
   text-align: center;
-  row-gap: 2px;
+  row-gap: var(--move-stepper-gap);
 }
 
 .root[data-orientation='vertical'] .step {
@@ -127,6 +127,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: var(--move-stepper-indicator-size);
   height: var(--move-stepper-indicator-size);
   min-width: var(--move-stepper-indicator-size);
@@ -184,13 +185,11 @@
 .root[data-orientation='horizontal'] .title {
   grid-column: 1 / -1;
   grid-row: 2;
-  margin-top: var(--move-stepper-gap);
 }
 
 .root[data-orientation='horizontal'] .description {
   grid-column: 1 / -1;
   grid-row: 3;
-  margin-top: 2px;
 }
 
 .root[data-orientation='horizontal'] .indicator {
@@ -202,13 +201,8 @@
   align-self: flex-start;
 }
 
-.root[data-orientation='vertical'] .title {
-  margin-top: 1px;
-}
-
-.root[data-orientation='vertical'] .description {
-  margin-top: 2px;
-}
+/* Vertical title/description spacing comes from `.content { gap }` above
+   — no per-element margins needed. */
 
 /* -- Separator -- */
 
@@ -289,6 +283,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: var(--move-stepper-gap);
 }
 
 /* -- Content wrapper for labels -- */

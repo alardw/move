@@ -3,10 +3,13 @@
 import React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useCodeHighlighter } from './CodeHighlighter';
+import type { TypographySize } from '../../../shared/types';
 import styles from './Code.module.css';
 
 export type CodeVariant = 'subtle' | 'outline' | 'ghost';
-export type CodeSize = 'xs' | 'sm' | 'base' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer
+ *  `TypographySize` from `'move'` directly going forward. */
+export type CodeSize = TypographySize;
 
 export interface CodeProps extends Record<string, unknown> {
   variant?: CodeVariant;

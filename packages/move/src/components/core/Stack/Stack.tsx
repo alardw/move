@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
+import type { Gap, GapWithXL2 } from '../../../shared/types';
 import styles from './Stack.module.css';
 
 // ============================================================================
@@ -10,10 +11,14 @@ import styles from './Stack.module.css';
 // ============================================================================
 
 export type StackDirection = 'row' | 'column';
-export type StackGap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `Gap` from
+ *  `'move'` directly going forward. */
+export type StackGap = Gap;
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'evenly';
-export type StackPadding = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
+/** Re-exported for backwards-compatible imports. Prefer `GapWithXL2`
+ *  (the extended spacing scale) from `'move'` directly going forward. */
+export type StackPadding = GapWithXL2;
 export type StackFlex = 1 | 'auto' | 'none';
 
 export interface StackProps extends Record<string, unknown> {

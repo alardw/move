@@ -53,6 +53,11 @@ export interface UseAutocompleteReturn {
   open: () => void;
   close: () => void;
 
+  // Browse-all (chevron click): show every item regardless of input filter,
+  // until the user types. Cleared on input change and close.
+  bypassFilter: boolean;
+  setBypassFilter: (v: boolean) => void;
+
   // Keyboard navigation
   highlightedIndex: number;
   setHighlightedIndex: (i: number) => void;
@@ -61,6 +66,7 @@ export interface UseAutocompleteReturn {
   // Item registry
   registerItem: (value: string, label: React.ReactNode, textContent: string, disabled: boolean, ref: React.RefObject<HTMLElement | null>) => void;
   unregisterItem: (value: string) => void;
+  primeLabelCache: (value: string, label: React.ReactNode) => void;
   getLabel: (value: string) => React.ReactNode | undefined;
   getVisibleItems: () => RegisteredItem[];
 
@@ -143,6 +149,8 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     onChange: options.onOpenChange,
   });
 
+  const [bypassFilter, setBypassFilter] = useState(false);
+
   const open = useCallback(() => {
     setIsOpen(true);
   }, [setIsOpen]);
@@ -150,6 +158,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   const close = useCallback(() => {
     setIsOpen(false);
     setHighlightedIndex(-1);
+    setBypassFilter(false);
     // Single mode: restore input to selected label
     if (!multiple && selectedValues.length > 0 && !allowCustomValue) {
       const label = itemMapRef.current.get(selectedValues[0]);
@@ -159,11 +168,39 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     }
   }, [setIsOpen, multiple, selectedValues, allowCustomValue, setInputValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Close the popup on viewport changes — scroll (any ancestor) or
+  // resize. Without this the popover floats away from the trigger
+  // when the page or a parent ScrollArea scrolls. capture: true so
+  // we catch scroll events on nested scroll containers, not just
+  // window. passive: true so we don't block the scroll itself.
+  //
+  // Arm the listener only after a short delay so that the scroll the
+  // browser fires when it scrolls the input into view on focus (which
+  // happens right when we open the popover) doesn't immediately close
+  // what we just opened.
+  useEffect(() => {
+    if (!isOpen || typeof window === 'undefined') return;
+    let armed = false;
+    const armTimer = window.setTimeout(() => { armed = true; }, 150);
+    const onViewportChange = () => { if (armed) setIsOpen(false); };
+    window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
+    window.addEventListener('resize', onViewportChange);
+    return () => {
+      window.clearTimeout(armTimer);
+      window.removeEventListener('scroll', onViewportChange, { capture: true });
+      window.removeEventListener('resize', onViewportChange);
+    };
+  }, [isOpen, setIsOpen]);
+
   // -------------------------------------------------------------------------
   // Item registry
   // -------------------------------------------------------------------------
 
   const itemMapRef = useRef<Map<string, RegisteredItem>>(new Map());
+  // Persistent label cache — survives Item unmount (Radix Popover unmounts
+  // Content+Items on close). Keeps tag labels available when the dropdown
+  // is closed. Live operations (getVisibleItems, keyboard nav) use itemMapRef.
+  const labelCacheRef = useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = useState(0);
 
   const registerItem = useCallback((
@@ -173,6 +210,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     disabled: boolean,
     ref: React.RefObject<HTMLElement | null>,
   ) => {
+    labelCacheRef.current.set(value, label);
     const prev = itemMapRef.current.get(value);
     if (!prev || prev.label !== label || prev.disabled !== disabled || prev.textContent !== textContent) {
       itemMapRef.current.set(value, { value, label, textContent, disabled, ref });
@@ -187,19 +225,23 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     }
   }, []);
 
+  const primeLabelCache = useCallback((value: string, label: React.ReactNode) => {
+    labelCacheRef.current.set(value, label);
+  }, []);
+
   const getLabel = useCallback((value: string) => {
-    return itemMapRef.current.get(value)?.label;
+    return itemMapRef.current.get(value)?.label ?? labelCacheRef.current.get(value);
   }, []);
 
   const getVisibleItems = useCallback((): RegisteredItem[] => {
     const items: RegisteredItem[] = [];
     itemMapRef.current.forEach((item) => {
-      if (filterFn(inputValue, item.value, item.textContent)) {
+      if (bypassFilter || filterFn(inputValue, item.value, item.textContent)) {
         items.push(item);
       }
     });
     return items;
-  }, [inputValue, filterFn]);
+  }, [inputValue, filterFn, bypassFilter]);
 
   // -------------------------------------------------------------------------
   // Keyboard navigation
@@ -219,6 +261,18 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
       setHighlightedIndex(0);
     }
   }, [inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // When the dropdown opens (single-mode, no filter), highlight the currently
+  // selected value so arrow-nav starts from there rather than from the first
+  // item. If nothing is selected, leave the highlight at 0.
+  useEffect(() => {
+    if (!isOpen || multiple || inputValue !== '') return;
+    const currentValue = selectedValues[0];
+    if (!currentValue) return;
+    const visible = getVisibleItems();
+    const idx = visible.findIndex((item) => item.value === currentValue);
+    if (idx >= 0) setHighlightedIndex(idx);
+  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // -------------------------------------------------------------------------
   // Selection
@@ -266,6 +320,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
 
   const handleInputValueChange = useCallback((value: string) => {
     setInputValue(value);
+    setBypassFilter(false);
     if (!isOpen) {
       open();
     }
@@ -292,11 +347,14 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     isOpen,
     open,
     close,
+    bypassFilter,
+    setBypassFilter,
     highlightedIndex,
     setHighlightedIndex,
     highlightedValue,
     registerItem,
     unregisterItem,
+    primeLabelCache,
     getLabel,
     getVisibleItems,
     loading,

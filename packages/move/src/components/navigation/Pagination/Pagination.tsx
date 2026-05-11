@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { scaleUp, scaleDown, popIn, poppy, pagination as paginationEase, useAnimations, resolveAnimationsConfig } from '../../../animation';
+import { scaleUp, scaleDown, popIn, pagination as paginationEase, useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
@@ -344,7 +344,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
       Indicator: indicatorRef,
       Active: activeRef,
     }), [internalRef]);
-    const { handlers } = useAnimations(DEFAULT_ANIMATIONS, animRefs, STATES);
+    useAnimations(DEFAULT_ANIMATIONS, animRefs, STATES);
 
     // Horizontal slide animation for newly appearing page numbers via deps trigger
     const rangeKey = JSON.stringify(range);

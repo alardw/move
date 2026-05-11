@@ -8,6 +8,22 @@ export const spec = {
   category: 'panel',
   description: 'Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal',
 
+  synonyms: ['expander', 'collapsible group', 'faq', 'disclosure list'],
+  families: {
+    behavior:  ['disclosure'],
+    state:     ['controlled-value'],  // value identifies which item(s) are open
+    animation: ['height-morph'],
+    a11y:      ['disclosure'],
+  },
+  behavior: {
+    disclosure: {
+      animatesOpen: true,
+      animatesClose: true,
+      keyboardToggle: true,            // Enter/Space toggles a focused trigger
+      multipleOpen: true,              // type="multiple" supports many open
+    },
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -30,7 +46,7 @@ export const spec = {
         { name: 'defaultValue', type: 'string | string[]', moveSpecific: true, description: 'Default value for uncontrolled mode' },
         { name: 'onValueChange', type: '(value: string | string[]) => void', moveSpecific: true, description: 'Called when value changes' },
         { name: 'collapsible', type: 'boolean', default: 'true', moveSpecific: true, description: 'Allow closing all items in single mode' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
         { name: 'variant', type: "'default' | 'contained' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for enter stagger and content expand/collapse, or false to disable' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Accordion items' },
@@ -91,7 +107,7 @@ export const spec = {
     { name: 'defaultValue', type: 'string | string[]', moveSpecific: true, description: 'Default value for uncontrolled mode' },
     { name: 'onValueChange', type: '(value: string | string[]) => void', moveSpecific: true, description: 'Called when value changes' },
     { name: 'collapsible', type: 'boolean', default: 'true', moveSpecific: true, description: 'Allow closing all items in single mode' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size affecting padding and font sizes' },
     { name: 'variant', type: "'default' | 'contained' | 'ghost'", default: "'default'", moveSpecific: true, description: 'Visual style variant' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Accordion items' },

@@ -8,6 +8,14 @@ export const spec = {
   category: 'media',
   description: 'Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls',
 
+  synonyms: ['slider', 'gallery', 'slideshow', 'image rotator'],
+  families: {
+    behavior:  ["media","data-row"],
+    state:     ["controlled-index"],
+    animation: ["stagger"],
+    a11y:      ["tablist"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -81,8 +89,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom trigger content (default: chevron icon)' },
-        { name: 'aria-label', type: 'string', moveSpecific: false, description: 'Accessible label for the button' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", moveSpecific: true, description: 'Button size' },
+        { name: 'size', typeRef: 'Size', moveSpecific: true, description: 'Button size' },
         { name: 'variant', type: "'surface' | 'ghost' | 'solid'", moveSpecific: true, description: 'Button visual variant' },
       ],
       usesFactory: true,
@@ -95,8 +102,7 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom trigger content (default: chevron icon)' },
-        { name: 'aria-label', type: 'string', moveSpecific: false, description: 'Accessible label for the button' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", moveSpecific: true, description: 'Button size' },
+        { name: 'size', typeRef: 'Size', moveSpecific: true, description: 'Button size' },
         { name: 'variant', type: "'surface' | 'ghost' | 'solid'", moveSpecific: true, description: 'Button visual variant' },
       ],
       usesFactory: true,
@@ -109,7 +115,6 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom indicators (auto-generated if omitted)' },
-        { name: 'aria-label', type: 'string', moveSpecific: false, description: 'Accessible label for the indicator group' },
       ],
       usesFactory: true,
       description: 'Container for page indicators; auto-generates indicator buttons when no children provided',

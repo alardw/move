@@ -8,6 +8,25 @@ export const spec = {
   category: 'panel',
   description: 'Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations',
 
+  synonyms: ['side nav', 'navigation rail', 'app rail', 'app shell', 'side menu'],
+  families: {
+    // Sidebar collapses in place on desktop and overlays on mobile —
+    // disclosure is the dominant pattern; the mobile overlay is a
+    // responsive mode rather than a different a11y pattern.
+    behavior:  ['disclosure', 'navigation'],
+    state:     ['controlled-open'],   // collapsed/expanded state
+    animation: ['slide-in', 'stagger'],
+    a11y:      ['disclosure'],
+  },
+  behavior: {
+    disclosure: {
+      animatesOpen: true,
+      animatesClose: true,
+      keyboardToggle: true,
+      multipleOpen: false,             // sidebar is one piece
+    },
+  },
+
   compound: true,
   rootElement: 'aside',
   slots: [
@@ -23,7 +42,6 @@ export const spec = {
     { name: 'itemLabel', element: 'span', description: 'Label text within an item, hidden when collapsed' },
     { name: 'itemBadge', element: 'span', description: 'Badge container within an item, hidden when collapsed' },
     { name: 'trigger', element: 'button', description: 'Toggle button for collapse/expand or mobile open/close' },
-    { name: 'rail', element: 'div', description: 'Thin edge bar for re-expanding collapsed sidebar on click' },
   ],
 
   subComponents: [
@@ -152,19 +170,12 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'asChild', type: 'boolean', moveSpecific: true, description: 'Merge props onto child element instead of wrapping in button' },
+        { name: 'icon', type: 'string | React.ReactNode', moveSpecific: true, description: 'Icon to render — either a Lucide name (resolved via the icon resolver) or any ReactNode.' },
+        { name: 'tooltip', type: 'string', moveSpecific: true, description: 'Tooltip label shown on hover when the sidebar is collapsed.' },
+        { name: 'visibility', type: "'desktop' | 'mobile' | 'always'", default: "'always'", moveSpecific: true, description: 'When to render the trigger — desktop-only collapse handle, mobile-only menu, or always.' },
       ],
       usesFactory: true,
-      description: 'Toggle button that collapses/expands on desktop or opens/closes on mobile',
-    },
-    {
-      name: 'Rail',
-      slots: [{ name: 'rail', element: 'div', description: 'Edge bar' }],
-      props: [
-        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-      ],
-      usesFactory: true,
-      description: 'Thin edge bar on sidebar border, clicks to toggle collapsed state, aria-hidden',
+      description: 'Toggle button that collapses/expands on desktop or opens/closes on mobile.',
     },
   ],
 
@@ -203,7 +214,6 @@ export const spec = {
         slot: 'footer',
         children: [],
       },
-      { slot: 'rail' },
     ],
   },
 

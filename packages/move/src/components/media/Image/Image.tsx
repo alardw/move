@@ -4,6 +4,7 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Icon } from '../../../infrastructure/Icon';
+import type { Radius } from '../../../shared/types';
 import styles from './Image.module.css';
 
 // =============================================================================
@@ -11,7 +12,9 @@ import styles from './Image.module.css';
 // =============================================================================
 
 export type ImageFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
-export type ImageRadius = 'none' | 'sm' | 'md' | 'lg' | 'full';
+/** Re-exported for backwards-compatible imports. Prefer `Radius` from
+ *  `'move'` directly going forward. */
+export type ImageRadius = Radius;
 export type ImagePosition = 'center' | 'top' | 'bottom' | 'left' | 'right'
   | 'top left' | 'top right' | 'bottom left' | 'bottom right';
 type ImageSlots = 'root' | 'img' | 'fallback' | 'action';
@@ -39,8 +42,15 @@ export interface ImageProps extends Record<string, unknown> {
   height?: string | number;
   loading?: 'lazy' | 'eager';
   action?: React.ReactNode;
+  /** Mark the image as a click target — adds cursor: pointer, hover
+   *  tint, focus ring, and Enter/Space activation. Shared opt-in
+   *  pattern with `Table.Row` and `List.Item`. */
+  interactive?: boolean;
   onLoad?: React.ReactEventHandler<HTMLImageElement>;
   onError?: React.ReactEventHandler<HTMLImageElement>;
+  /** Click handler. Combine with `interactive` (or pass `onClick` to
+   *  imply interactivity) for keyboard-accessible click targets. */
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -54,7 +64,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
   defaults: { fit: 'cover', radius: 'none', position: 'center' },
   moveProps: [
     'src', 'sources', 'alt', 'fallbackSrc', 'fit', 'radius', 'position',
-    'aspectRatio', 'width', 'height', 'loading', 'action', 'onLoad', 'onError',
+    'aspectRatio', 'width', 'height', 'loading', 'action', 'interactive', 'onLoad', 'onError',
   ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
@@ -92,16 +102,20 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
       return () => observer.disconnect();
     }, [sources, internalRef]);
 
-    // ---- Error state reset on source change ----
+    const [loaded, setLoaded] = React.useState(false);
+
+    // ---- Error/loaded reset on source change ----
     const baseSrc = resolvedSrc ?? (props.src as string | undefined);
     const baseSrcRef = React.useRef(baseSrc);
     if (baseSrcRef.current !== baseSrc) {
       baseSrcRef.current = baseSrc;
       if (error) setError(false);
+      setLoaded(false);
     }
 
     const handleLoad = React.useCallback(
       (e: React.SyntheticEvent<HTMLImageElement>) => {
+        setLoaded(true);
         (props.onLoad as React.ReactEventHandler<HTMLImageElement> | undefined)?.(e);
       },
       [props.onLoad],
@@ -144,6 +158,26 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
           ...(rootSpStyle as React.CSSProperties),
         };
 
+        // Shared "clickable tile" pattern with Table.Row and List.Item:
+        // explicit `interactive` prop OR an onClick implies the tile
+        // should respond to click + keyboard activation. data-interactive
+        // hooks the cursor / hover / focus styling.
+        const userOnClick = props.onClick as ((e: React.MouseEvent<HTMLDivElement>) => void) | undefined;
+        const isInteractive = !!(props.interactive || userOnClick);
+        const interactiveAttrs = isInteractive
+          ? {
+              role: 'button' as const,
+              tabIndex: 0,
+              onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => {
+                if (!userOnClick) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  userOnClick(e as unknown as React.MouseEvent<HTMLDivElement>);
+                }
+              },
+            }
+          : null;
+
         return (
           <div
             {...attrs}
@@ -152,8 +186,11 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
             data-fit={props.fit}
             data-radius={props.radius}
             data-position={props.position}
+            data-interactive={isInteractive ? '' : undefined}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={rootStyle}
+            onClick={userOnClick}
+            {...interactiveAttrs}
           >
             {!showFallback && effectiveSrc && (
               <img
@@ -161,6 +198,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
                 src={effectiveSrc}
                 alt={props.alt as string}
                 loading={props.loading as 'lazy' | 'eager' | undefined}
+                data-loaded={loaded ? '' : undefined}
                 className={cx('img', imgSpClass as string | undefined)}
                 style={imgSpStyle as React.CSSProperties}
                 onLoad={handleLoad}

@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Clickable interactive element with variant, size, and animation support',
 
+  synonyms: ['cta', 'action', 'submit', 'icon button'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["hover-press"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'button',
   slots: [
@@ -28,7 +36,7 @@ export const spec = {
 
   props: [
     { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Button size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Button size' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions' },
     { name: 'elevation', type: 'ElevationLevel', default: 'null', moveSpecific: true, description: 'Shadow elevation level' },
     { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as child element via Radix Slot' },
@@ -83,40 +91,6 @@ export const spec = {
     disabled: 'behavior',
     children: 'displayText',
   },
-  demo: {
-    renderMode: 'grid',
-    controls: [
-      { id: 'consumer.textOnly.variant', kind: 'select', options: ['primary', 'secondary', 'ghost', 'danger'], defaultValue: 'primary' },
-      { id: 'consumer.withIcon.variant', kind: 'select', options: ['primary', 'secondary', 'ghost', 'danger'], defaultValue: 'secondary' },
-      { id: 'consumer.size', kind: 'select', options: ['sm', 'md', 'lg'], defaultValue: 'md' },
-      { id: 'consumer.disabled', kind: 'boolean', defaultValue: false },
-      { id: 'playground.variant', kind: 'select', options: ['primary', 'secondary', 'ghost', 'danger'], defaultValue: 'primary' },
-      { id: 'playground.size', kind: 'select', options: ['sm', 'md', 'lg'], defaultValue: 'md' },
-      { id: 'playground.disabled', kind: 'boolean', defaultValue: false },
-      { id: 'playground.text', kind: 'text', defaultValue: 'Button' },
-      { id: 'playground.withIcon', kind: 'boolean', defaultValue: true },
-      { id: 'playground.icon', kind: 'text', defaultValue: 'sparkles' },
-      { id: 'playground.iconPosition', kind: 'select', options: ['left', 'right'], defaultValue: 'left' },
-    ],
-    samples: [
-      { id: 'textOnly', label: 'Text Only', defaults: {} },
-      { id: 'withIcon', label: 'Icon + Text', defaults: {} },
-    ],
-    bindings: [
-      { control: 'consumer.textOnly.variant', target: 'consumer.textOnly.Button.variant' },
-      { control: 'consumer.withIcon.variant', target: 'consumer.withIcon.Button.variant' },
-      { control: 'consumer.size', target: 'consumer.Button.size' },
-      { control: 'consumer.disabled', target: 'consumer.Button.disabled' },
-      { control: 'playground.variant', target: 'playground.Button.variant' },
-      { control: 'playground.size', target: 'playground.Button.size' },
-      { control: 'playground.disabled', target: 'playground.Button.disabled' },
-      { control: 'playground.text', target: 'playground.Button.childrenText' },
-      { control: 'playground.withIcon', target: 'playground.Icon.visible' },
-      { control: 'playground.icon', target: 'playground.Icon.name' },
-      { control: 'playground.iconPosition', target: 'playground.Icon.position' },
-    ],
-  },
-
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
   componentDeps: [],

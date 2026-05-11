@@ -22,7 +22,7 @@ import {
   useAnimations,
   resolveAnimationsConfig,
 } from '../../../animation';
-import type { Animation, AnimationTrigger, StaggerConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './FileUpload.module.css';
 
 // =============================================================================

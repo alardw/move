@@ -2,11 +2,14 @@
 // Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
+import type { TypographySize } from '../../../shared/types';
 import styles from './Link.module.css';
 
 export type LinkVariant = 'default' | 'muted' | 'subtle';
 export type LinkUnderline = 'always' | 'hover' | 'none';
-export type LinkSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+/** Re-exported for backwards-compatible imports. Prefer
+ *  `TypographySize` from `'move'` directly going forward. */
+export type LinkSize = TypographySize;
 
 export interface LinkProps extends Record<string, unknown> {
   variant?: LinkVariant;

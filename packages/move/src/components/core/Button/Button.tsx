@@ -6,6 +6,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { snappy } from '../../../animation/easings';
+import type { Size } from '../../../shared/types';
 import styles from './Button.module.css';
 
 // Width-relative scale — consistent feel regardless of button width
@@ -13,7 +14,9 @@ const SCALE_HOVER_PX = 4;
 const SCALE_PRESS_PX = 6;
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
-export type ButtonSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type ButtonSize = Size;
 
 export interface ButtonProps extends Record<string, unknown> {
   variant?: ButtonVariant;

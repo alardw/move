@@ -8,6 +8,14 @@ export const spec = {
   category: 'data',
   description: 'Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation',
 
+  synonyms: ['log', 'history', 'feed', 'activity feed'],
+  families: {
+    behavior:  ["data-row"],
+    state:     ["stateless"],
+    animation: ["stagger"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -26,8 +34,8 @@ export const spec = {
       props: [
         { name: 'active', type: 'number', default: '-1', moveSpecific: true, description: 'Index of the active step (-1 for all inactive)' },
         { name: 'align', type: "'left' | 'right' | 'alternate'", default: "'left'", moveSpecific: true, description: 'Content alignment relative to the timeline line' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Timeline size affecting bullet, line width, and spacing' },
-        { name: 'color', type: "'primary' | 'gray' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Default color for active/completed items' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Timeline size affecting bullet, line width, and spacing' },
+        { name: 'color', typeRef: 'Color', default: "'indigo'", moveSpecific: true, description: 'Default color for active/completed items' },
         { name: 'lineVariant', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", moveSpecific: true, description: 'Line style for connectors' },
         { name: 'reverseActive', type: 'boolean', default: 'false', moveSpecific: true, description: 'Reverse active direction (items after active index are completed)' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
@@ -49,7 +57,7 @@ export const spec = {
         { name: 'bullet', type: 'React.ReactNode', moveSpecific: true, description: 'Custom bullet content (icon, avatar, etc.)' },
         { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Item title text' },
         { name: 'lineVariant', type: "'solid' | 'dashed' | 'dotted'", moveSpecific: true, description: 'Override line variant for this item' },
-        { name: 'color', type: "'primary' | 'gray' | 'success' | 'warning' | 'danger'", moveSpecific: true, description: 'Override color for this item' },
+        { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Override color for this item' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Item body content' },
       ],
       usesFactory: true,
@@ -60,8 +68,8 @@ export const spec = {
   props: [
     { name: 'active', type: 'number', default: '-1', moveSpecific: true, description: 'Index of the active step' },
     { name: 'align', type: "'left' | 'right' | 'alternate'", default: "'left'", moveSpecific: true, description: 'Content alignment' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Timeline size' },
-    { name: 'color', type: "'primary' | 'gray' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Default color for active/completed items' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Timeline size' },
+    { name: 'color', typeRef: 'Color', default: "'indigo'", moveSpecific: true, description: 'Default color for active/completed items' },
     { name: 'lineVariant', type: "'solid' | 'dashed' | 'dotted'", default: "'solid'", moveSpecific: true, description: 'Line style for connectors' },
     { name: 'reverseActive', type: 'boolean', default: 'false', moveSpecific: true, description: 'Reverse active direction' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },

@@ -8,6 +8,14 @@ export const spec = {
   category: 'media',
   description: 'CSS Grid wrapper for arranging images in a responsive column grid with gap, radius, and stagger enter animation',
 
+  synonyms: ['gallery', 'image grid', 'photos', 'photo grid'],
+  families: {
+    behavior:  ["media"],
+    state:     ["stateless"],
+    animation: ["stagger"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -17,7 +25,7 @@ export const spec = {
   props: [
     { name: 'columns', type: 'number', default: '3', moveSpecific: true, description: 'Number of grid columns' },
     { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl'", default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
-    { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg' | 'full'", moveSpecific: true, description: 'Border radius applied to child Image elements via CSS' },
+    { name: 'radius', typeRef: 'Radius', moveSpecific: true, description: 'Border radius applied to child Image elements via CSS' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Stagger enter animation config for children, or false to disable' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Image components or other content placed in the grid' },
   ],

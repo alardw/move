@@ -52,10 +52,13 @@ export const toggleIndicator = {
   unchecked: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } },
 };
 
-/** Accordion/Collapsible content — expand/collapse with opacity */
+/** Accordion/Collapsible content — expand/collapse with opacity.
+ * Height has no explicit duration so `animateDimension` computes one
+ * proportional to the measured content size (short panels reveal quickly,
+ * long panels take proportionally longer, clamped to sane bounds). */
 export const expandContent = {
-  open: { height: { from: 0, to: 'auto', ease: 'outQuart', duration: 400 }, opacity: { from: 0, to: 1, ease: 'outQuart', duration: 400 } },
-  close: { height: { from: 'auto', to: 0, ease: 'outQuart', duration: 300 }, opacity: { from: 1, to: 0, ease: 'outQuart', duration: 300 } },
+  open: { height: { from: 0, to: 'auto', ease: 'outQuart' }, opacity: { from: 0, to: 1, ease: 'outQuart', duration: 250 } },
+  close: { height: { from: 'auto', to: 0, ease: 'outQuart' }, opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 } },
 };
 
 // =============================================================================

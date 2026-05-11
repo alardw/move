@@ -2,30 +2,45 @@
 
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
-import type { SlotPropsMap } from '../../../engine';
+import type { SlotPropsMap, CxFn } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems, quick, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, quick, poppy } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
+
+// Wraps only the string/number leaves of a ReactNode tree in a block-level
+// span so text-overflow: ellipsis applies natively. React elements (Icons,
+// custom components) pass through untouched so they stay as direct flex
+// siblings and center vertically via align-items on the parent.
+function wrapTextChildren(children: React.ReactNode, textClass: string): React.ReactNode {
+  const wrapped = React.Children.map(children, (child, i) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      return <span key={i} className={textClass}>{child}</span>;
+    }
+    return child;
+  });
+  return wrapped ?? children;
+}
 
 // ============================================================================
 // Animation defaults
 // ============================================================================
 
+// Container (Content) only fades; item stagger carries the reveal.
 const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
       { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.enter },
     ]],
   },
   {
     trigger: 'Content.exit',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
       { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.exit },
     ]],
   },
@@ -163,20 +178,31 @@ export interface DropdownContentProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownContentProps, HTMLDivElement>({
-  name: 'DropdownContent',
-  styles,
-  slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+interface DropdownContentInnerProps {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+  sideOffset?: number;
+  align?: 'start' | 'center' | 'end';
+  onPointerDownOutside?: (e: Event) => void;
+  onEscapeKeyDown?: (e: KeyboardEvent) => void;
+  onInteractOutside?: (e: Event) => void;
+  contentCx: CxFn<'content' | 'contentInner'>;
+  innerCx: CxFn<'content' | 'contentInner'>;
+  contentSp: Record<string, unknown>;
+  innerSp: Record<string, unknown>;
+  layer: number;
+  attrs: Record<string, unknown>;
+}
 
-  setup({ props, ref, cx, sp, attrs }) {
+const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInnerProps>(
+  function DropdownContentInner(props, ref) {
     const { isClosing, onCloseComplete, close, animConfig } = useDropdownContext();
-    const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
+    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Filter content triggers for useAnimations
     const contentConfig = React.useMemo(() =>
       animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
       [animConfig]);
@@ -185,76 +211,90 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    // Enter/exit via useAnimations orchestrator
-    const { runExit } = useAnimations(contentConfig, contentRefs, undefined, {
-      onEnterComplete: () => {
-        const content = contentRef.current;
-        if (content) {
-          content.focus();
-          content.dispatchEvent(new KeyboardEvent('keydown', {
-            key: 'ArrowDown',
-            code: 'ArrowDown',
-            bubbles: true,
-          }));
-        }
-      },
-    });
+    // Radix DropdownMenu handles focus-on-open natively (auto-focuses the
+    // first menuitem). We don't override it because a menu has no "current
+    // value" — starting from the first item is the right UX. The previous
+    // post-animation focus dispatch was redundant and caused a focus flash.
+    const { runExit } = useAnimations(contentConfig, contentRefs);
 
-    // Exit animation
     React.useEffect(() => {
       if (!isClosing) return;
       if (!contentConfig) { onCloseComplete?.(); return; }
       runExit().then(() => onCloseComplete?.());
     }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-
-    // Intercept close events to trigger animation.
-    // No preventDefault on pointer/interact — allows native events to propagate.
     const handlePointerDownOutside = (e: Event) => {
-      (props.onPointerDownOutside as ((e: Event) => void) | undefined)?.(e);
+      props.onPointerDownOutside?.(e);
       if (!e.defaultPrevented) close();
     };
-
     const handleEscapeKeyDown = (e: KeyboardEvent) => {
-      (props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined)?.(e);
+      props.onEscapeKeyDown?.(e);
       if (!e.defaultPrevented) close();
     };
-
     const handleInteractOutside = (e: Event) => {
-      (props.onInteractOutside as ((e: Event) => void) | undefined)?.(e);
+      props.onInteractOutside?.(e);
     };
+
+    const { className: spClass, style: spStyle, ...spRest } = props.contentSp;
+    const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
+
+    return (
+      <RadixDropdownMenu.Content
+        {...props.attrs}
+        {...spRest}
+        ref={mergedContentRef}
+        sideOffset={props.sideOffset as number}
+        align={props.align}
+        className={props.contentCx('content', props.className, spClass as string | undefined)}
+        style={{ ...props.style, ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+        onPointerDownOutside={handlePointerDownOutside}
+        onEscapeKeyDown={handleEscapeKeyDown}
+        onInteractOutside={handleInteractOutside}
+      >
+        <div
+          ref={innerRef}
+          {...innerSpRest}
+          className={props.innerCx('contentInner', innerSpClass as string | undefined)}
+          style={innerSpStyle as React.CSSProperties}
+        >
+          {props.children}
+        </div>
+      </RadixDropdownMenu.Content>
+    );
+  },
+);
+
+const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownContentProps, HTMLDivElement>({
+  name: 'DropdownContent',
+  styles,
+  slots: ['content', 'contentInner'] as const,
+  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const layer = useLayer();
 
     return {
       render() {
-        const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const innerSp = sp('contentInner');
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
-
         return (
           <RadixDropdownMenu.Portal container={props.container as HTMLElement | undefined}>
-            <RadixDropdownMenu.Content
-              {...attrs}
-              {...spRest}
-              ref={mergedContentRef}
-              sideOffset={props.sideOffset as number}
-              align={props.align as 'start' | 'center' | 'end'}
-              className={cx('content', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-              onPointerDownOutside={handlePointerDownOutside}
-              onEscapeKeyDown={handleEscapeKeyDown}
-              onInteractOutside={handleInteractOutside}
+            <DropdownContentInner
+              ref={ref}
+              className={props.className}
+              style={props.style}
+              sideOffset={props.sideOffset as number | undefined}
+              align={props.align as 'start' | 'center' | 'end' | undefined}
+              onPointerDownOutside={props.onPointerDownOutside as ((e: Event) => void) | undefined}
+              onEscapeKeyDown={props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined}
+              onInteractOutside={props.onInteractOutside as ((e: Event) => void) | undefined}
+              contentCx={cx}
+              innerCx={cx}
+              contentSp={sp('content') as Record<string, unknown>}
+              innerSp={sp('contentInner') as Record<string, unknown>}
+              layer={layer}
+              attrs={attrs}
             >
-              <div
-                ref={innerRef}
-                {...innerSpRest}
-                className={cx('contentInner', innerSpClass as string | undefined)}
-                style={innerSpStyle as React.CSSProperties}
-              >
-                {props.children}
-              </div>
-            </RadixDropdownMenu.Content>
+              {props.children}
+            </DropdownContentInner>
           </RadixDropdownMenu.Portal>
         );
       },
@@ -355,8 +395,9 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            title={typeof props.children === 'string' ? props.children : undefined}
           >
-            {props.children}
+            {wrapTextChildren(props.children, styles.itemText)}
           </RadixDropdownMenu.Item>
         );
       },

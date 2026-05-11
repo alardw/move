@@ -8,6 +8,14 @@ export const spec = {
   category: 'nav',
   description: 'Navigation breadcrumb trail with auto-injected separators, collapsible overflow with ellipsis, and customizable separator content',
 
+  synonyms: ['trail', 'path', 'location', 'breadcrumbs'],
+  families: {
+    behavior:  ["navigation"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'nav',
   slots: [
@@ -32,7 +40,7 @@ export const spec = {
         { name: 'maxItems', type: 'number', moveSpecific: true, description: 'Maximum visible items before collapsing with ellipsis' },
         { name: 'itemsBeforeCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Number of items to show before ellipsis when collapsed' },
         { name: 'itemsAfterCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Number of items to show after ellipsis when collapsed' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Breadcrumb size affecting font size and gap' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Breadcrumb size affecting font size and gap' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Breadcrumb.Item children' },
       ],
       usesFactory: true,
@@ -91,7 +99,7 @@ export const spec = {
     { name: 'maxItems', type: 'number', moveSpecific: true, description: 'Maximum visible items before collapsing' },
     { name: 'itemsBeforeCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Items shown before ellipsis' },
     { name: 'itemsAfterCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Items shown after ellipsis' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Breadcrumb size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Breadcrumb size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Breadcrumb.Item children' },
   ],
 

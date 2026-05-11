@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
 
+  synonyms: ['tickbox', 'toggle', 'option', 'check'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["hover-press"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'button',
   slots: [
@@ -35,7 +43,7 @@ export const spec = {
     { name: 'onCheckedChange', type: '(checked: boolean) => void', moveSpecific: true, description: 'Called when checked state changes' },
     { name: 'icon', type: 'string', default: "'check'", moveSpecific: true, description: 'Icon name for the check indicator (resolved via useResolvedIcon)' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size of the checkbox' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of the checkbox' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Whether the checkbox is disabled' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the checkbox is in an invalid state' },
     { name: 'name', type: 'string', moveSpecific: true, description: 'Name for form submission (renders hidden input)' },

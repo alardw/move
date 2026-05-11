@@ -8,6 +8,7 @@ import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface
 import { LayerProvider } from '../../../infrastructure/Layer';
 import {
   useAnimations,
+  poppy,
   sidebar as sidebarEase,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
@@ -23,7 +24,23 @@ import styles from './Sidebar.module.css';
 // Animation config
 // ============================================================================
 
-const SIDEBAR_STAGGER_DELAY = 30;
+const SIDEBAR_STAGGER_DELAY = 60;
+// Pixel-based scale offset (matches Select item reveal). Dynamic per-item
+// via $itemScaleFrom so the visible motion stays at a fixed pixel delta
+// regardless of sidebar width.
+const ITEM_SCALE_INSET_PX = 24;
+// Horizontal travel distance for the collapse/expand stagger. Items slide
+// in from this offset on each toggle. Kept below 32px so the shift stays
+// within the visible area even with overflow-x: hidden on Content.
+const COLLAPSE_STAGGER_TRAVEL_PX = 24;
+const COLLAPSE_STAGGER_DELAY = 40;
+// Matches Sidebar.Item by default AND any consumer-rendered element that
+// opts in via data-sidebar-animate (e.g. custom NavLinks used for sub-nav).
+// Resolved lazily inside the component — styles.item is only defined once
+// the CSS module has loaded, which at module-scope it already has.
+function getItemSelector() {
+  return `.${styles.item}, [data-sidebar-animate]`;
+}
 
 const DEFAULT_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
   {
@@ -42,8 +59,8 @@ const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
       children: `.${styles.item}`,
       stagger: { delay: SIDEBAR_STAGGER_DELAY },
       animation: {
-        opacity: { from: 0, to: 1, ease: sidebarEase },
-        translateX: { from: -8, to: 0, ease: sidebarEase },
+        opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
+        scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
       },
     }],
   },
@@ -61,6 +78,21 @@ const SidebarContext = React.createContext<UseSidebarReturn | null>(null);
  * - `undefined` = use defaults
  */
 const SidebarAnimateContext = React.createContext<false | undefined>(undefined);
+
+/**
+ * Scroll-state context — SidebarContent observes its scroll position
+ * and publishes two flags. Header reads `scrolledFromTop` (there's
+ * content above the visible area, show a bottom border). Footer
+ * reads `scrolledFromBottom` (there's more content below the visible
+ * area, show a top border). Kept on a separate context so updates
+ * don't re-render every consumer of the main SidebarContext.
+ */
+interface SidebarScrollContextValue {
+  scrolledFromTop: boolean;
+  scrolledFromBottom: boolean;
+  setScroll: (v: { scrolledFromTop: boolean; scrolledFromBottom: boolean }) => void;
+}
+const SidebarScrollContext = React.createContext<SidebarScrollContextValue | null>(null);
 
 export function useSidebarContext() {
   const ctx = React.useContext(SidebarContext);
@@ -86,10 +118,20 @@ const SidebarProvider: React.FC<SidebarProviderProps> = ({
   ...options
 }) => {
   const sidebar = useSidebar(options);
+  const [scrollState, setScroll] = React.useState({
+    scrolledFromTop: false,
+    scrolledFromBottom: false,
+  });
+  const scrollCtx = React.useMemo(
+    () => ({ ...scrollState, setScroll }),
+    [scrollState],
+  );
   return (
     <SidebarContext.Provider value={sidebar}>
       <SidebarAnimateContext.Provider value={animations}>
-        {children}
+        <SidebarScrollContext.Provider value={scrollCtx}>
+          {children}
+        </SidebarScrollContext.Provider>
       </SidebarAnimateContext.Provider>
     </SidebarContext.Provider>
   );
@@ -274,6 +316,7 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
 
   setup({ props, ref, cx, sp, attrs }) {
     const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
+    const scrollCtx = React.useContext(SidebarScrollContext);
     const showCollapsed = collapsed && !isMobile;
 
     const handleClose = React.useCallback(() => {
@@ -291,6 +334,7 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
             ref={ref}
             className={cx('header', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-scrolled={scrollCtx?.scrolledFromTop ? '' : undefined}
           >
             {showCollapsed && props.collapsedChildren !== undefined
               ? props.collapsedChildren
@@ -325,14 +369,82 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
 
   setup({ props, ref, cx, sp, attrs }) {
     const animDisabled = React.useContext(SidebarAnimateContext);
+    const { collapsed } = useSidebarContext();
+    const scrollCtx = React.useContext(SidebarScrollContext);
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
+
+    // Publish two scroll-state flags. Header reads `scrolledFromTop`
+    // to decide whether to render its bottom border (content has been
+    // scrolled past the top). Footer reads `scrolledFromBottom` to
+    // decide whether to render its top border (there's more content
+    // below the visible area). Updates only fire when a flag flips —
+    // not on every scroll px — so re-renders stay rare. Also runs
+    // when content size changes, so a resize that newly exposes
+    // overflow correctly toggles the bottom flag.
+    React.useEffect(() => {
+      const el = contentRef.current;
+      if (!el || !scrollCtx) return;
+      const update = () => {
+        const fromTop = el.scrollTop > 0;
+        const fromBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+        if (
+          fromTop !== scrollCtx.scrolledFromTop ||
+          fromBottom !== scrollCtx.scrolledFromBottom
+        ) {
+          scrollCtx.setScroll({ scrolledFromTop: fromTop, scrolledFromBottom: fromBottom });
+        }
+      };
+      update();
+      el.addEventListener('scroll', update, { passive: true });
+      const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(update) : null;
+      ro?.observe(el);
+      return () => {
+        el.removeEventListener('scroll', update);
+        ro?.disconnect();
+      };
+    }, [scrollCtx]);
 
     const contentRefs = React.useMemo(() => ({
       Content: contentRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    useAnimations(animDisabled === false ? false : DEFAULT_CONTENT_ANIMATIONS, contentRefs);
+    // Compute $itemScaleFrom at animation time from the Content's measured
+    // width — keeps the stagger scale at a fixed pixel delta regardless of
+    // sidebar width.
+    // Adds a collapsed-change trigger that slides items horizontally in a
+    // stagger on every toggle: on expand they drift in from the left, on
+    // collapse they drift in from the right — mirrors the Stocklabs-style
+    // sidebar reveal from Dribbble.
+    const configWithVars: AnimationTrigger[] | false = React.useMemo(() => {
+      if (animDisabled === false) return false;
+      const mountAnims = DEFAULT_CONTENT_ANIMATIONS.map((t) => ({
+        ...t,
+        vars: () => {
+          const w = contentRef.current?.getBoundingClientRect().width ?? 0;
+          const itemScaleFrom = w > 0 ? (w - ITEM_SCALE_INSET_PX) / w : 0.95;
+          return { itemScaleFrom };
+        },
+      }));
+      const collapseAnim: AnimationTrigger = {
+        trigger: 'collapsed-change',
+        deps: [collapsed],
+        sequence: [{
+          target: 'Content',
+          children: getItemSelector(),
+          stagger: { delay: COLLAPSE_STAGGER_DELAY },
+          animation: {
+            // Always drift in from the right on every toggle — keeps the
+            // motion direction consistent instead of mirroring per state.
+            translateX: { from: COLLAPSE_STAGGER_TRAVEL_PX, to: 0, ease: 'outQuart', duration: 360 },
+            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 260 },
+          },
+        }],
+      };
+      return [...mountAnims, collapseAnim];
+    }, [animDisabled, collapsed]);
+
+    useAnimations(configWithVars, contentRefs);
 
     return {
       render() {
@@ -371,6 +483,7 @@ const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivEle
   slots: ['footer'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
+    const scrollCtx = React.useContext(SidebarScrollContext);
     return {
       render() {
         const footerSp = sp('footer');
@@ -382,6 +495,7 @@ const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivEle
             ref={ref}
             className={cx('footer', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-scrolled={scrollCtx?.scrolledFromBottom ? '' : undefined}
           >
             {props.children}
           </div>
@@ -628,9 +742,15 @@ const SidebarTrigger = withMoveComponent<
   moveProps: ['icon', 'tooltip', 'visibility', 'asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { collapsed, toggleCollapsed, toggleMobileOpen, isMobile } = useSidebarContext();
+    const { toggleCollapsed, toggleMobileOpen, isMobile } = useSidebarContext();
     const visibility = (props.visibility as string) || 'both';
-    const showTooltip = collapsed && !isMobile && !!props.tooltip;
+    // Show the tooltip whenever the consumer set one. (Original
+    // logic only showed it when collapsed, treating the tooltip as a
+    // fallback for the hidden label — that hid intentional tooltips
+    // on expanded triggers like a "Collapse" affordance.) Mobile is
+    // still excluded since hover-driven tooltips don't make sense
+    // there.
+    const showTooltip = !isMobile && !!props.tooltip;
 
     const handleClick = React.useCallback(
       (e: React.MouseEvent) => {
@@ -713,44 +833,6 @@ const SidebarTrigger = withMoveComponent<
 });
 
 // ============================================================================
-// Rail (thin edge bar for re-expanding)
-// ============================================================================
-
-export interface SidebarRailProps extends Record<string, unknown> {
-  className?: string;
-  style?: React.CSSProperties;
-  sp?: SlotPropsMap<'rail'>;
-}
-
-const SidebarRail = withMoveComponent<'rail', SidebarRailProps, HTMLDivElement>({
-  name: 'SidebarRail',
-  styles,
-  slots: ['rail'] as const,
-
-  setup({ props, ref, cx, sp, attrs }) {
-    const { toggleCollapsed } = useSidebarContext();
-
-    return {
-      render() {
-        const railSp = sp('rail');
-        const { className: spClass, style: spStyle, ...spRest } = railSp as Record<string, unknown>;
-        return (
-          <div
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            className={cx('rail', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => toggleCollapsed()}
-            aria-hidden="true"
-          />
-        );
-      },
-    };
-  },
-});
-
-// ============================================================================
 // Export
 // ============================================================================
 
@@ -764,6 +846,5 @@ export const Sidebar = {
   GroupLabel: SidebarGroupLabel,
   Item: SidebarItem,
   Trigger: SidebarTrigger,
-  Rail: SidebarRail,
   Overlay: SidebarOverlay,
 };

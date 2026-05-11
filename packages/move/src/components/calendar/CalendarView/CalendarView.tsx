@@ -5,8 +5,7 @@
 import * as React from 'react';
 import { useCalendarView } from './useCalendarView';
 import type { UseCalendarViewOptions } from './useCalendarView';
-import type { CalendarViewLabels } from './useCalendarView';
-import type { CalendarEvent, CalendarViewMode, RenderEvent } from '../_shared/types';
+import type { CalendarViewMode } from '../_shared/types';
 import { DayView } from './DayView';
 import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
@@ -164,12 +163,12 @@ CalendarViewToday.displayName = 'CalendarView.Today';
 // ViewSwitcher
 // ============================================================================
 
-export interface CalendarViewSwitcherProps {
+export interface CalendarViewViewSwitcherProps {
   className?: string;
   views?: CalendarViewMode[];
 }
 
-const CalendarViewSwitcher: React.FC<CalendarViewSwitcherProps> = ({
+const CalendarViewSwitcher: React.FC<CalendarViewViewSwitcherProps> = ({
   className,
   views = ['day', 'week', 'month', 'agenda'],
 }) => {

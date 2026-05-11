@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
 
+  synonyms: ['message', 'chat', 'speech bubble', 'comment bubble'],
+  families: {
+    behavior:  ["display"],
+    state:     ["stateless"],
+    animation: ["stagger"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -37,7 +45,7 @@ export const spec = {
       props: [
         { name: 'src', type: 'string', moveSpecific: true, description: 'Avatar image source' },
         { name: 'fallback', type: 'React.ReactNode', moveSpecific: true, description: 'Fallback content when image unavailable' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Avatar size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Avatar size' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom avatar content (overrides src/fallback)' },
       ],
       usesFactory: true,
@@ -48,6 +56,7 @@ export const spec = {
       slots: [{ name: 'container', element: 'div', description: 'Bubble shape' }],
       props: [
         { name: 'variant', type: "'neutral' | 'primary' | 'success' | 'warning' | 'error'", default: "'neutral'", moveSpecific: true, description: 'Bubble color variant' },
+        { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Override bubble bg/fg via the named Open Color palette. Takes precedence over `variant` when set.' },
         { name: 'tail', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show tail pointing toward avatar' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Bubble content' },
       ],

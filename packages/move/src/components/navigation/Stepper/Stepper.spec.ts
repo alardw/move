@@ -8,6 +8,14 @@ export const spec = {
   category: 'navigation',
   description: 'Multi-step progress indicator with numbered/icon indicators, horizontal/vertical orientation, clickable steps, and status-driven styling',
 
+  synonyms: ['wizard', 'steps', 'progress steps', 'step indicator'],
+  families: {
+    behavior:  ["navigation"],
+    state:     ["controlled-index"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -27,7 +35,8 @@ export const spec = {
         { name: 'active', type: 'number', default: '0', moveSpecific: true, description: 'Index of the currently active step (0-based)' },
         { name: 'onStepClick', type: '(index: number) => void', moveSpecific: true, description: 'Callback when a step is clicked; enables clickable steps' },
         { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Layout orientation' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Size affecting indicator, typography, and separator dimensions' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size affecting indicator, typography, and separator dimensions' },
+        { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Indicator/active-state color from the named Open Color palette.' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Stepper.Step children' },
       ],
       usesFactory: true,
@@ -95,7 +104,7 @@ export const spec = {
     { name: 'active', type: 'number', default: '0', moveSpecific: true, description: 'Index of the active step (0-based)' },
     { name: 'onStepClick', type: '(index: number) => void', moveSpecific: true, description: 'Callback when a step is clicked' },
     { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Layout orientation' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Stepper size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Stepper size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Stepper.Step children' },
   ],
 

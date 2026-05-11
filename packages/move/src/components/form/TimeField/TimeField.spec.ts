@@ -8,6 +8,14 @@ export const spec = {
   category: 'form',
   description: 'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
 
+  synonyms: ['time input', 'clock input', 'time picker'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: true,
   rootElement: 'div',
   slots: [
@@ -34,7 +42,7 @@ export const spec = {
         { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: '12 or 24 hour display cycle' },
         { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show dropdown column picker on ArrowDown' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for dropdown enter/exit' },
-        { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
         { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
         { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
         { name: 'min', type: 'string', moveSpecific: true, description: 'Minimum time constraint (24h format)' },
@@ -108,7 +116,7 @@ export const spec = {
     { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: 'Hour display cycle' },
     { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable dropdown picker' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Dropdown animation config' },
-    { name: 'size', type: "'sm' | 'md' | 'lg'", default: "'md'", moveSpecific: true, description: 'Input size' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
     { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
     { name: 'min', type: 'string', moveSpecific: true, description: 'Min time constraint' },

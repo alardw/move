@@ -6,81 +6,91 @@ export const spec = {
   name: 'ToggleGroup',
   componentClass: 'interactive' as const,
   category: 'toolbar',
-  description:
-    'Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive',
+  description: 'Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive',
 
-  compound: {
-    pattern: 'object' as const,
-    subComponents: ['Root', 'Item'] as string[],
+  synonyms: ['segmented control', 'tab-like group', 'button group'],
+  families: {
+    behavior:  ["form-input"],
+    state:     ["controlled-value"],
+    animation: ["hover-press"],
+    a11y:      ["tablist"],
   },
 
-  rootElement: 'div',
-  anatomy: ['Root', 'Item'] as string[],
-  slots: ['root', 'indicator', 'item'] as string[],
+  compound: true,
+  rootElement: 'RadixToggleGroup.Root',
+  slots: [
+    { name: 'root', element: 'RadixToggleGroup.Root', description: 'Segmented control container managing selection state' },
+    { name: 'indicator', element: 'div', description: 'Decorative sliding indicator behind the active item' },
+    { name: 'item', element: 'RadixToggleGroup.Item', description: 'Selectable item button' },
+  ],
 
-  props: {
-    Root: [
-      'value',
-      'defaultValue',
-      'onValueChange',
-      'orientation',
-      'disabled',
-      'loop',
-      'size',
-      'variant',
-      'animations',
-      'children',
-      'className',
-      'style',
-    ] as string[],
-    Item: [
-      'value',
-      'disabled',
-      'animations',
-      'children',
-      'className',
-      'style',
-    ] as string[],
-  },
-
-  defaults: {
-    variant: 'secondary',
-    size: 'md',
-    orientation: 'horizontal',
-    loop: true,
-  },
-
-  moveProps: [
-    'value',
-    'defaultValue',
-    'onValueChange',
-    'orientation',
-    'disabled',
-    'loop',
-    'size',
-    'variant',
-    'animations',
-  ] as string[],
-
-  controlled: { pattern: 'value' as const },
-  controlledProps: {
-    value: {
-      prop: 'value',
-      defaultProp: 'defaultValue',
-      onChange: 'onValueChange',
+  subComponents: [
+    {
+      name: 'Root',
+      slots: [
+        { name: 'root', element: 'RadixToggleGroup.Root', description: 'Segmented control container' },
+        { name: 'indicator', element: 'div', description: 'Sliding indicator' },
+      ],
+      props: [
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'ToggleGroup.Item elements' },
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'value', type: 'string', moveSpecific: true, description: 'Controlled selected item value' },
+        { name: 'defaultValue', type: 'string', moveSpecific: true, description: 'Initial selected item value (uncontrolled)' },
+        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when selection changes' },
+        { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Layout orientation' },
+        { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disable the entire group' },
+        { name: 'loop', type: 'boolean', default: 'true', moveSpecific: true, description: 'Whether keyboard navigation loops around' },
+        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Item size affecting padding and font size' },
+        { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", moveSpecific: true, description: 'Visual style variant inherited by items' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Pass false to disable indicator animation' },
+      ],
+      usesFactory: true,
+      radixPrimitive: 'ToggleGroup.Root',
+      description: 'Single-selection root that blocks deselection and provides size/variant via context to items',
     },
+    {
+      name: 'Item',
+      slots: [{ name: 'item', element: 'RadixToggleGroup.Item', description: 'Selectable item button' }],
+      props: [
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Item label content' },
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'value', type: 'string', moveSpecific: true, description: 'Unique value for this item' },
+        { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disable this specific item' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Per-item animation overrides; defaults to no animation to avoid scale artifacts on connected items' },
+      ],
+      usesFactory: true,
+      radixPrimitive: 'ToggleGroup.Item',
+      description: 'Selectable item that reads size and variant from ToggleGroupContext',
+    },
+  ],
+
+  props: [],
+
+  anatomy: {
+    slot: 'root',
+    dataAttributes: ['data-orientation', 'data-size', 'data-variant'],
+    children: [
+      { slot: 'item', dataAttributes: ['data-state', 'data-disabled', 'data-size', 'data-variant'] },
+      { slot: 'indicator' },
+    ],
   },
 
+  controlled: 'value' as const,
+  controlledProps: {
+    valueProp: 'value',
+    defaultValueProp: 'defaultValue',
+    onChangeProp: 'onValueChange',
+  },
   keyboard: 'roving' as const,
   focus: 'roving' as const,
   formType: null,
   asChild: false,
 
-  dismissBehavior: null,
-
   animations: [
-    { trigger: 'Item.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'Item.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'Root.press', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92 } } }] },
+    { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, translateY: { to: '$Active.y' }, width: { to: '$Active.width' }, height: { to: '$Active.height' } } }] },
   ],
 
   renderContracts: [
@@ -96,15 +106,10 @@ export const spec = {
   ],
 
   tokens: [
-    // Root
     { name: '--move-toggle-group-radius', value: 'var(--move-rounded-md)', description: 'Root container border radius' },
     { name: '--move-toggle-group-padding', value: '3px', description: 'Root inner padding (gap between edge and items)' },
     { name: '--move-toggle-group-bg', value: 'var(--move-bg-muted)', description: 'Root container background' },
-
-    // Indicator
     { name: '--move-toggle-group-indicator-bg', value: 'var(--move-primary)', description: 'Sliding indicator background' },
-
-    // Item states
     { name: '--move-toggle-group-item-fg-off', value: 'var(--move-fg-muted)', description: 'Item text color when unselected' },
     { name: '--move-toggle-group-item-fg-off-hover', value: 'var(--move-fg-base)', description: 'Item text color on hover when unselected' },
     { name: '--move-toggle-group-item-fg-on', value: 'var(--move-primary-fg)', description: 'Item text color when selected' },
@@ -126,7 +131,7 @@ export const spec = {
   childrenKind: 'composition' as const,
 
   testing: {
-    cases: [
+    behaviors: [
       'Root renders as Radix ToggleGroup.Root with type="single"',
       'Root renders children',
       'Root forwards className and style',
@@ -151,10 +156,18 @@ export const spec = {
       'Controlled value prop selects the matching item',
       'onValueChange fires when selection changes',
       'Uncontrolled defaultValue sets initial selection',
-      'Keyboard arrow keys move focus between items (roving tabindex)',
       'Vertical orientation uses flex-direction: column',
       'Size sm uses --move-rounded-md radius, size lg uses --move-rounded-lg radius',
-    ] as string[],
+    ],
+    keyboard: [
+      'Arrow keys navigate between items (roving tabindex)',
+      'Loop prop wraps focus from last to first item',
+    ],
+    aria: [
+      'Root sets role=group from Radix',
+      'Items have role=button with aria-pressed',
+      'Disabled item has aria-disabled',
+    ],
   },
 
   defaultReview: {

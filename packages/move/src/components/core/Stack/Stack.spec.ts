@@ -8,6 +8,14 @@ export const spec = {
   category: 'core',
   description: 'Flex layout container for vertical or horizontal stacking with configurable gap, alignment, and responsive collapse',
 
+  synonyms: ['flex', 'column', 'row', 'flex layout'],
+  families: {
+    behavior:  ["layout"],
+    state:     ["stateless"],
+    animation: ["none"],
+    a11y:      ["none"],
+  },
+
   compound: false,
   rootElement: 'div',
   slots: [
@@ -16,7 +24,8 @@ export const spec = {
 
   props: [
     { name: 'direction', type: "'row' | 'column'", default: "'column'", moveSpecific: true, description: 'Flex direction' },
-    { name: 'gap', type: "'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none'", default: "'md'", moveSpecific: true, description: 'Gap between children' },
+    { name: 'gap', typeRef: 'Gap', default: "'md'", moveSpecific: true, description: 'Gap between children' },
+    { name: 'padding', typeRef: 'GapWithXL2', moveSpecific: true, description: 'Padding around the stack. Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.' },
     { name: 'align', type: "'start' | 'center' | 'end' | 'stretch' | 'baseline'", default: "'stretch'", moveSpecific: true, description: 'Cross-axis alignment (align-items)' },
     { name: 'justify', type: "'start' | 'center' | 'end' | 'between' | 'evenly'", default: "'start'", moveSpecific: true, description: 'Main-axis alignment (justify-content)' },
     { name: 'wrap', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow children to wrap to next line' },

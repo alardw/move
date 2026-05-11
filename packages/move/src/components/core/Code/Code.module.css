@@ -1,5 +1,9 @@
 .root {
-  /* Component tokens */
+  /* Component tokens. We don't use --move-surface-inset here: on the
+     subtle surface that token maps to bg-base, which renders as white
+     in light theme and makes inline code disappear inside a Card.
+     bg-muted is theme-aware (gray-100 / gray-800) and stays visible on
+     every surface, even if it doesn't follow the alternating cascade. */
   --move-code-bg-subtle: var(--move-bg-muted);
   --move-code-fg: var(--move-fg-base);
   --move-code-border: var(--move-border-base);
@@ -38,22 +42,30 @@
   border: none;
 }
 
-/* ── Size ── */
+/* ── Size ──
+   Code renders one step tighter than surrounding text at every tier.
+   Monospace reads bigger than a sans counterpart at the same nominal
+   size; stepping down keeps code tokens from looming inside a
+   paragraph or table cell. */
 
 .root[data-size='xs'] {
-  font-size: var(--move-text-xs);
+  font-size: 0.6875rem; /* 11px — half-step below text-xs (12px) */
 }
 
 .root[data-size='sm'],
 .root:not([data-size]) {
-  font-size: var(--move-text-sm);
+  font-size: var(--move-text-xs);
 }
 
 .root[data-size='base'] {
-  font-size: var(--move-text-base);
+  font-size: var(--move-text-sm);
 }
 
 .root[data-size='lg'] {
+  font-size: var(--move-text-base);
+}
+
+.root[data-size='xl'] {
   font-size: var(--move-text-lg);
 }
 

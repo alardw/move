@@ -2,9 +2,10 @@
 // Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import { moveAnimate, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { Avatar as MoveAvatar } from '../Avatar';
+import type { Color, Size } from '../../../shared/types';
 import styles from './ChatBubble.module.css';
 
 // =============================================================================
@@ -13,10 +14,12 @@ import styles from './ChatBubble.module.css';
 
 export type ChatBubblePlacement = 'start' | 'end';
 export type ChatBubbleVariant = 'neutral' | 'primary' | 'success' | 'warning' | 'error';
-export type ChatBubbleColor =
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
-export type ChatBubbleAvatarSize = 'sm' | 'md' | 'lg';
+/** Re-exported for backwards-compatible imports. Prefer `Color` from
+ *  `'move'` directly going forward. */
+export type ChatBubbleColor = Color;
+/** Re-exported for backwards-compatible imports. Prefer `Size` from
+ *  `'move'` directly going forward. */
+export type ChatBubbleAvatarSize = Size;
 
 // =============================================================================
 // Animation defaults
@@ -55,36 +58,36 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
   moveProps: ['animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    // Compute sibling-index stagger delay
-    const staggerIndex = React.useRef<number>(0);
+    // Sibling-index stagger: the index isn't known synchronously
+    // during render (no parent context, ChatBubble.Root is composed
+    // directly inside whatever container the consumer chooses), so we
+    // measure in a layout effect and fire the enter animation manually
+    // via moveAnimate. The declarative useAnimations API can't help
+    // here — its config is captured during render, before measurement.
+    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
     React.useLayoutEffect(() => {
+      if (animationsProp === false) return;
       const el = internalRef.current;
       if (!el) return;
+
       const parent = el.parentElement;
-      if (parent) {
-        staggerIndex.current = Array.from(parent.children).indexOf(el);
-      }
-    }, [internalRef]);
+      const index = parent ? Array.from(parent.children).indexOf(el) : 0;
+      const delay = index * STAGGER_DELAY;
 
-    const delay = staggerIndex.current * STAGGER_DELAY;
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Root.enter', sequence: [{ animation: { ...DEFAULT_ENTER_ANIMATION, delay: delay || undefined } }] },
-    ];
-    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
+      // Hide before measurement so the bubble doesn't paint visible
+      // for a frame before its animation begins.
+      el.style.opacity = '0';
+      el.style.transform = 'scale(0.6)';
 
-    const rootRef = React.useRef<HTMLDivElement>(null);
-    const refs = React.useMemo(() => ({ Root: rootRef as React.RefObject<HTMLElement | null> }), []);
-    useAnimations(animConfig, refs);
+      const anim = moveAnimate(el, {
+        ...DEFAULT_ENTER_ANIMATION,
+        delay,
+      });
 
-    // Merge refs
-    const mergedRef = React.useCallback(
-      (node: HTMLDivElement | null) => {
-        (rootRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-        if (typeof ref === 'function') (ref as (el: HTMLDivElement | null) => void)(node);
-        else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      },
-      [ref],
-    );
+      return () => {
+        anim?.cancel?.();
+      };
+    }, []); // mount-only
 
     return {
       render() {
@@ -96,7 +99,7 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
             <div
               {...attrs}
               {...spRest}
-              ref={mergedRef}
+              ref={ref}
               data-placement={props.placement as string}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}

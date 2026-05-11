@@ -6,14 +6,14 @@
   --move-carousel-gap: var(--move-spacing-md);
   --move-carousel-trigger-size: 36px;
   --move-carousel-trigger-radius: var(--move-rounded-full);
-  --move-carousel-trigger-bg: var(--move-surface);
+  --move-carousel-trigger-bg: var(--move-surface-bg);
   --move-carousel-trigger-bg-hover: var(--move-surface-hover);
-  --move-carousel-trigger-fg: var(--move-text);
-  --move-carousel-trigger-border: var(--move-border);
+  --move-carousel-trigger-fg: var(--move-fg-base);
+  --move-carousel-trigger-border: var(--move-surface-border);
   --move-carousel-trigger-shadow: var(--move-shadow-sm);
   --move-carousel-indicator-size: 9px;
   --move-carousel-indicator-hit-size: 20px;
-  --move-carousel-indicator-bg: var(--move-border);
+  --move-carousel-indicator-bg: var(--move-fg-muted);
   --move-carousel-indicator-bg-active: var(--move-primary);
   --move-carousel-indicator-gap: 6px;
   --move-carousel-indicator-inset: var(--move-spacing-sm);
@@ -140,7 +140,26 @@
   gap: var(--move-carousel-gap);
 }
 
+/* Vertical orientation: Root and Frame must propagate height down to the
+   Viewport so overflow can actually clip and scroll-snap has somewhere to
+   travel. The consumer sets an explicit height on Root (or on a wrapper);
+   we just make sure that height reaches the viewport. */
+.root[data-orientation='vertical'] {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.root[data-orientation='vertical'] .frame {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .viewport[data-orientation='vertical'] {
+  flex: 1;
+  min-height: 0;
   flex-direction: column;
   scroll-snap-type: y mandatory;
 }

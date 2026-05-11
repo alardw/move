@@ -3,11 +3,22 @@
 
 import * as React from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, useControlledState } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations } from '../../../animation';
-import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { useAnimations, useSlidingIndicator } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Tabs.module.css';
+
+// =============================================================================
+// Context — exposes the active value and orientation so Content can drive
+// the vertical-orientation stagger reveal.
+// =============================================================================
+
+interface TabsContextValue {
+  value: string | undefined;
+  orientation: 'horizontal' | 'vertical';
+}
+const TabsContext = React.createContext<TabsContextValue | null>(null);
 
 // =============================================================================
 // Root
@@ -33,27 +44,47 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
   moveProps: ['defaultValue', 'value', 'onValueChange', 'orientation', 'dir', 'activationMode'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Track value internally so TabsContent can match against it via
+    // context. Honors controlled / uncontrolled modes via
+    // useControlledState — same triple Radix expects.
+    const userOnChange = props.onValueChange as ((value: string) => void) | undefined;
+    const [value, setValue] = useControlledState<string | undefined>({
+      value: props.value as string | undefined,
+      defaultValue: props.defaultValue as string | undefined,
+      onChange: (v) => {
+        if (typeof v === 'string') userOnChange?.(v);
+      },
+    });
+
+    const orientation = (props.orientation as 'horizontal' | 'vertical' | undefined) ?? 'horizontal';
+    const ctx = React.useMemo(
+      () => ({ value, orientation }),
+      [value, orientation],
+    );
+
     return {
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         return (
-          <RadixTabs.Root
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            defaultValue={props.defaultValue as string | undefined}
-            value={props.value as string | undefined}
-            onValueChange={props.onValueChange as ((value: string) => void) | undefined}
-            orientation={props.orientation as 'horizontal' | 'vertical' | undefined}
-            dir={props.dir as 'ltr' | 'rtl' | undefined}
-            activationMode={props.activationMode as 'automatic' | 'manual' | undefined}
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixTabs.Root>
+          <TabsContext.Provider value={ctx}>
+            <RadixTabs.Root
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              defaultValue={props.defaultValue as string | undefined}
+              value={props.value as string | undefined}
+              onValueChange={(v) => setValue(v)}
+              orientation={orientation}
+              dir={props.dir as 'ltr' | 'rtl' | undefined}
+              activationMode={props.activationMode as 'automatic' | 'manual' | undefined}
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </RadixTabs.Root>
+          </TabsContext.Provider>
         );
       },
     };
@@ -88,37 +119,17 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const variant = props.variant as TabsVariant;
     const showIndicator = variant === 'underline';
+    const { indicatorRef, update } = useSlidingIndicator({
+      containerRef: internalRef as React.RefObject<HTMLElement | null>,
+      activeSelector: '[data-state="active"]',
+      track: 'width',
+      disabled: props.animations === false || !showIndicator,
+    });
 
-    // --- Sliding indicator via animatePosition ---
-    const indicatorRef = React.useRef<HTMLElement | null>(null);
-
-    const activeRef = React.useMemo(() => {
-      const ref = { current: null as HTMLElement | null };
-      Object.defineProperty(ref, 'current', {
-        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="active"]') ?? null; },
-        set() { /* no-op — always queries live DOM */ },
-      });
-      return ref;
-    }, [internalRef]);
-
-    const STATES: AnimationState[] = [
-      { name: 'activeChange', slot: 'List', source: 'data-state', value: 'active' },
-    ];
-
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
-        translateX: { to: '$Active.x' },
-        width: { to: '$Active.width' },
-      } }] },
-    ];
-
-    const disabled = props.animations === false || !showIndicator;
-    const animRefs = React.useMemo(() => ({
-      List: internalRef as React.RefObject<HTMLElement | null>,
-      Indicator: indicatorRef,
-      Active: activeRef,
-    }), [internalRef]);
-    useAnimations(disabled ? null : DEFAULT_ANIMATIONS, animRefs, STATES);
+    React.useEffect(() => {
+      if (!showIndicator) return;
+      update();
+    }, [showIndicator, update, props.children]);
 
     return {
       render() {
@@ -142,7 +153,7 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
             {showIndicator && (
               <div
                 {...indSpRest}
-                ref={indicatorRef as React.Ref<HTMLDivElement>}
+                ref={indicatorRef}
                 className={cx('indicator', indSpClass as string | undefined)}
                 style={indSpStyle as React.CSSProperties}
               />
@@ -217,6 +228,41 @@ const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElemen
   moveProps: ['value', 'forceMount'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const ctx = React.useContext(TabsContext);
+    const isActive = ctx?.value === (props.value as string);
+    const isVertical = ctx?.orientation === 'vertical';
+    const innerRef = React.useRef<HTMLDivElement | null>(null);
+
+    // Stagger reveal — only for vertical Tabs and only when this
+    // panel is the active one. Mirrors the AccordionContent /
+    // AnimatedSubnav reveal: a per-child opacity + translateY,
+    // sequenced via stagger, all driven through useAnimations so
+    // it respects prefers-reduced-motion via the move system.
+    const config: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!isVertical || !isActive) return null;
+      return [
+        {
+          trigger: 'Inner.enter',
+          sequence: [{
+            target: 'Inner',
+            children: '> *',
+            stagger: { delay: 30 },
+            animation: {
+              opacity: { from: 0, to: 1, ease: 'outQuart', duration: 240, delay: 80 },
+              translateY: { from: 6, to: 0, ease: 'outQuart', duration: 240, delay: 80 },
+            },
+          }],
+        },
+      ];
+    }, [isVertical, isActive]);
+
+    const refs = React.useMemo(
+      () => ({ Inner: innerRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
+
+    useAnimations(config, refs);
+
     return {
       render() {
         const contentSp = sp('content');
@@ -233,7 +279,10 @@ const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElemen
             className={cx('content', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {/* Inner wrapper exists so the stagger sequence has a
+                stable ref target distinct from RadixTabs.Content
+                itself (which Radix mounts/unmounts on tab switch). */}
+            <div ref={innerRef}>{props.children}</div>
           </RadixTabs.Content>
         );
       },

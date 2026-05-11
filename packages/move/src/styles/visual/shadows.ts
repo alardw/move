@@ -1,4 +1,4 @@
-import type { CreateShadowOptions, ShadowElevation, ShadowLayer, ShadowPresets } from './types';
+import type { CreateShadowOptions, ShadowLayer, ShadowPresets } from './types';
 
 /**
  * Default shadow color CSS variable

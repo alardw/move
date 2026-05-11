@@ -2,6 +2,7 @@
 
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
+import type { Gap } from '../../../shared/types';
 import styles from './Divider.module.css';
 
 // ============================================================================
@@ -12,12 +13,18 @@ export type DividerSlots = 'root' | 'content';
 export type DividerType = 'solid' | 'dashed' | 'dotted';
 export type DividerAlign = 'left' | 'center' | 'right' | 'top' | 'bottom';
 export type DividerSize = 'sm' | 'md' | 'lg';
+/** Outer gap on the divider — translates to vertical margin on
+ *  horizontal dividers, horizontal margin on vertical ones. */
+export type DividerGap = Gap;
 
 export interface DividerProps extends Record<string, unknown> {
   orientation?: 'horizontal' | 'vertical';
   type?: DividerType;
   align?: DividerAlign;
   size?: DividerSize;
+  /** Spacing around the divider. Defaults to `md`; pass `none` for a
+   *  flush separator (e.g. inside a tightly-stacked Card list). */
+  gap?: DividerGap;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -32,12 +39,13 @@ export const Divider = withMoveComponent<DividerSlots, DividerProps, HTMLDivElem
   name: 'Divider',
   styles,
   slots: ['root', 'content'] as const,
-  moveProps: ['orientation', 'type', 'align', 'size'],
+  moveProps: ['orientation', 'type', 'align', 'size', 'gap'],
   defaults: {
     orientation: 'horizontal',
     type: 'solid',
     align: 'center',
     size: 'sm',
+    gap: 'md' as DividerGap,
   },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -61,6 +69,7 @@ export const Divider = withMoveComponent<DividerSlots, DividerProps, HTMLDivElem
             data-orientation={props.orientation as string}
             data-type={props.type as string}
             data-size={props.size}
+            data-gap={props.gap as string}
             {...(hasContent ? { 'data-has-content': '', 'data-align': props.align as string } : {})}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
