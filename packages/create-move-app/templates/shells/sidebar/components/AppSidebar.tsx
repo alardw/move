@@ -19,7 +19,6 @@ export function AppSidebar() {
       <Sidebar.Footer>
         <Sidebar.Trigger icon="panel-left" tooltip="Toggle sidebar" visibility="desktop">Collapse</Sidebar.Trigger>
       </Sidebar.Footer>
-      <Sidebar.Rail />
     </Sidebar.Root>
   );
 }

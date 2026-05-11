@@ -74,7 +74,7 @@ function generateSidebarApp({ themeImport, iconImports, iconResolverBlock, iconR
   if (router === 'react-router') {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Sidebar, Stack, Heading, Text } from 'move';
+import { MoveRoot, ${themeImport}, Sidebar, Stack, Heading, Text, ScrollArea } from 'move';
 import 'move/styles.css';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';${iconImports}
 import { HomePage } from './pages/HomePage';
@@ -95,7 +95,6 @@ function AppSidebar() {
       <Sidebar.Footer>
         <Sidebar.Trigger icon="panel-left" tooltip="Toggle sidebar" visibility="desktop">Collapse</Sidebar.Trigger>
       </Sidebar.Footer>
-      <Sidebar.Rail />
     </Sidebar.Root>
   );
 }
@@ -105,13 +104,15 @@ function App() {
     <Sidebar.Provider>
       <Stack direction="row" gap="none" align="stretch" fill>
         <AppSidebar />
-        <Stack flex={1} padding="lg" gap="lg">
-          <Sidebar.Trigger icon="menu" visibility="mobile" />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/about" element={<AboutPage />} />
-          </Routes>
-        </Stack>
+        <ScrollArea.Root>
+          <ScrollArea.Content padded>
+            <Sidebar.Trigger icon="menu" visibility="mobile" />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutPage />} />
+            </Routes>
+          </ScrollArea.Content>
+        </ScrollArea.Root>
       </Stack>
     </Sidebar.Provider>
   );
@@ -132,7 +133,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   if (router === 'tanstack') {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Sidebar, Stack, Heading, Text } from 'move';
+import { MoveRoot, ${themeImport}, Sidebar, Stack, Heading, Text, ScrollArea } from 'move';
 import 'move/styles.css';
 import { RouterProvider, createRouter, createRoute, createRootRoute, Link, useMatch, Outlet } from '@tanstack/react-router';${iconImports}
 import { HomePage } from './pages/HomePage';
@@ -167,7 +168,6 @@ function AppSidebar() {
       <Sidebar.Footer>
         <Sidebar.Trigger icon="panel-left" tooltip="Toggle sidebar" visibility="desktop">Collapse</Sidebar.Trigger>
       </Sidebar.Footer>
-      <Sidebar.Rail />
     </Sidebar.Root>
   );
 }
@@ -177,10 +177,12 @@ function RootLayout() {
     <Sidebar.Provider>
       <Stack direction="row" gap="none" align="stretch" fill>
         <AppSidebar />
-        <Stack flex={1} padding="lg" gap="lg">
-          <Sidebar.Trigger icon="menu" visibility="mobile" />
-          <Outlet />
-        </Stack>
+        <ScrollArea.Root>
+          <ScrollArea.Content padded>
+            <Sidebar.Trigger icon="menu" visibility="mobile" />
+            <Outlet />
+          </ScrollArea.Content>
+        </ScrollArea.Root>
       </Stack>
     </Sidebar.Provider>
   );
@@ -199,7 +201,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   // No router — inline sidebar with static pages
   return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Sidebar, Stack } from 'move';
+import { MoveRoot, ${themeImport}, Sidebar, Stack, ScrollArea } from 'move';
 import 'move/styles.css';${iconImports}
 import { AppSidebar } from './components/AppSidebar';
 import { HomePage } from './pages/HomePage';
@@ -209,10 +211,12 @@ function App() {
     <Sidebar.Provider>
       <Stack direction="row" gap="none" align="stretch" fill>
         <AppSidebar />
-        <Stack flex={1} padding="lg" gap="lg">
-          <Sidebar.Trigger icon="menu" visibility="mobile" />
-          <HomePage />
-        </Stack>
+        <ScrollArea.Root>
+          <ScrollArea.Content padded>
+            <Sidebar.Trigger icon="menu" visibility="mobile" />
+            <HomePage />
+          </ScrollArea.Content>
+        </ScrollArea.Root>
       </Stack>
     </Sidebar.Provider>
   );
@@ -232,7 +236,7 @@ function generateTopNavApp({ themeImport, iconImports, iconResolverBlock, iconRe
   if (router === 'react-router') {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading, Link as MoveLink } from 'move';
+import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading, Link as MoveLink, ScrollArea } from 'move';
 import 'move/styles.css';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';${iconImports}
 import { HomePage } from './pages/HomePage';
@@ -253,12 +257,14 @@ function App() {
         </Align.Center>
       </Align>
       <Divider />
-      <Stack flex={1} padding="lg" gap="lg">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-        </Routes>
-      </Stack>
+      <ScrollArea.Root>
+        <ScrollArea.Content padded>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+          </Routes>
+        </ScrollArea.Content>
+      </ScrollArea.Root>
     </Stack>
   );
 }
@@ -278,7 +284,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   if (router === 'tanstack') {
     return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading, Link as MoveLink } from 'move';
+import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading, Link as MoveLink, ScrollArea } from 'move';
 import 'move/styles.css';
 import { RouterProvider, createRouter, createRoute, createRootRoute, Link, Outlet } from '@tanstack/react-router';${iconImports}
 import { HomePage } from './pages/HomePage';
@@ -304,9 +310,11 @@ function RootLayout() {
         </Align.Center>
       </Align>
       <Divider />
-      <Stack flex={1} padding="lg" gap="lg">
-        <Outlet />
-      </Stack>
+      <ScrollArea.Root>
+        <ScrollArea.Content padded>
+          <Outlet />
+        </ScrollArea.Content>
+      </ScrollArea.Root>
     </Stack>
   );
 }
@@ -324,7 +332,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   // No router
   return `import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading } from 'move';
+import { MoveRoot, ${themeImport}, Stack, Align, Divider, Heading, ScrollArea } from 'move';
 import 'move/styles.css';${iconImports}
 import { HomePage } from './pages/HomePage';
 ${iconResolverBlock}
@@ -337,9 +345,11 @@ function App() {
         </Align.Start>
       </Align>
       <Divider />
-      <Stack flex={1} padding="lg" gap="lg">
-        <HomePage />
-      </Stack>
+      <ScrollArea.Root>
+        <ScrollArea.Content padded>
+          <HomePage />
+        </ScrollArea.Content>
+      </ScrollArea.Root>
     </Stack>
   );
 }
