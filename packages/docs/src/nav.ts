@@ -4,9 +4,9 @@
  * main label lands).
  *
  * The full originally-planned structure (Animation deep-dives, Theming
- * sub-pages, Recipes sub-categories, Reference section) lives in the repo
- * root README.md. This nav is the pruned shipping version — entries that
- * don't have real content yet are kept out so visitors don't hit dead links.
+ * sub-pages, Recipes sub-categories, Reference section) lives in
+ * `packages/docs/PLAN.md`. This nav is the pruned shipping version — entries
+ * that don't have real content yet are kept out so visitors don't hit dead links.
  */
 export interface NavItem {
   to: string;
