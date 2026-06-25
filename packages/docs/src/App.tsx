@@ -144,12 +144,23 @@ function AppSidebar() {
 }
 
 function App() {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const { pathname, hash } = useLocation();
+
+  // The page scrolls inside ScrollArea.Content, not the window — so navigating
+  // between routes keeps the previous scroll position unless we reset it here.
+  // useLayoutEffect runs before paint so there's no visible jump. Skip when a
+  // hash is present so in-page anchor links (TOC rail) still land on target.
+  React.useLayoutEffect(() => {
+    if (!hash) contentRef.current?.scrollTo({ top: 0 });
+  }, [pathname, hash]);
+
   return (
     <Sidebar.Provider>
       <Stack direction="row" gap="none" align="stretch" fill>
         <AppSidebar />
         <ScrollArea.Root>
-          <ScrollArea.Content>
+          <ScrollArea.Content ref={contentRef}>
             <Stack padding="2xl">
               <Sidebar.Trigger icon="menu" visibility="mobile" />
               <Routes>
