@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -24,18 +24,27 @@ const BADGES = [
   { icon: 'contrast', label: 'Accessibility' },
 ];
 
-const STRENGTHS: HighlightItem[] = [
+interface Strength {
+  icon: string;
+  title: string;
+  text: string;
+}
+
+const STRENGTHS: Strength[] = [
   {
     icon: 'zap',
-    text: 'It is astonishingly fast. A sentence becomes a working screen in seconds — layout, copy, and a sensible first structure, with none of the blank-page friction.',
+    title: 'Fast',
+    text: 'A sentence becomes a working screen in seconds — layout, copy, and a sensible first structure, with none of the blank-page friction.',
   },
   {
     icon: 'sparkles',
-    text: 'It makes great demos. The happy path looks polished, the spacing reads well, and the first impression is genuinely impressive — exactly what you want for a prototype or a pitch.',
+    title: 'Great demos',
+    text: 'The happy path looks polished, the spacing reads well, and the first impression is genuinely impressive — exactly what you want for a prototype or a pitch.',
   },
   {
     icon: 'wand-sparkles',
-    text: 'It has enormous breadth. Having seen millions of interfaces, it can reproduce the shape of almost any pattern you describe without you naming a single library.',
+    title: 'Broad',
+    text: 'Having seen millions of interfaces, it can reproduce the shape of almost any pattern you describe without you naming a single library.',
   },
 ];
 
@@ -69,15 +78,19 @@ const WITHOUT_LIBRARY: HighlightItem[] = [
 const COMPONENT_LIBRARY: HighlightItem[] = [
   {
     icon: 'package-x',
-    text: 'The model still has to reach for it. It will happily hand-roll a div-based control right next to your imported ones, so the guarantees apply on some elements and not others.',
+    text: 'Even with a good library installed, the model doesn’t always use it. It hand-rolls a div-based control instead of importing the real one, so accessibility holds on some elements and quietly breaks on others.',
+  },
+  {
+    icon: 'shuffle',
+    text: 'The model reaches for the library unevenly. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. It is good at lookups and bad at consistent invention, so each prompt re-decides instead of reusing.',
   },
   {
     icon: 'sliders-horizontal',
-    text: 'It uses a component and misuses it — the wrong variant, props the API never offered, an inline override that defeats the point of importing it at all.',
+    text: 'When the model does use a component, it can still misuse it — the wrong variant, props the API never offered, an inline override that defeats the point of importing it.',
   },
   {
     icon: 'puzzle',
-    text: 'A library only covers what it ships. Everything composed around the primitives — the layout, the glue, the one-off bits — is still hand-written and unguarded.',
+    text: 'A component library only covers the primitives it ships. The layout, the glue, and the one-off pieces composed around them are still hand-written and unguarded.',
   },
 ];
 
@@ -88,11 +101,7 @@ const DESIGN_SYSTEM: HighlightItem[] = [
   },
   {
     icon: 'library',
-    text: 'It approximates the system instead of adhering to it — a component that looks like yours but isn’t, hardcoded values where tokens belong. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
-  },
-  {
-    icon: 'shuffle',
-    text: 'Patterns drift from page to page. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. The model is good at lookups and bad at consistent invention, so each prompt re-decides instead of reusing.',
+    text: 'The model approximates the design system instead of adhering to it — a component that looks like yours but isn’t, hardcoded values where tokens belong. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
   },
   {
     icon: 'ruler',
@@ -196,7 +205,19 @@ export function WhatAIGetsWrongPage() {
           title="What AI gets right"
           lede="None of this is an argument against using AI. It is genuinely good at the hard first part — and understanding the strength is what explains the gap."
         >
-          <HighlightList items={STRENGTHS} />
+          <Grid minChildWidth="180px" gap="md">
+            {STRENGTHS.map((s) => (
+              <Card.Root key={s.title} variant="elevated">
+                <Card.Body>
+                  <Stack gap="sm">
+                    <Icon name={s.icon} size={24} />
+                    <Text weight="semibold">{s.title}</Text>
+                    <Text color="muted" size="sm">{s.text}</Text>
+                  </Stack>
+                </Card.Body>
+              </Card.Root>
+            ))}
+          </Grid>
         </Section>
 
         <Section
