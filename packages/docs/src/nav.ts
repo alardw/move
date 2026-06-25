@@ -2,6 +2,11 @@
  * Docs navigation config. Single source of truth for the sidebar and routing.
  * Each section's first item is the section landing page (where clicking the
  * main label lands).
+ *
+ * The full originally-planned structure (Animation deep-dives, Theming
+ * sub-pages, Recipes sub-categories, Reference section) lives in the repo
+ * root README.md. This nav is the pruned shipping version — entries that
+ * don't have real content yet are kept out so visitors don't hit dead links.
  */
 export interface NavItem {
   to: string;
@@ -39,6 +44,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/core-concepts/component-contract', label: 'Component Contract' },
       { to: '/core-concepts/animation-system', label: 'Animation System' },
       { to: '/core-concepts/theming-model', label: 'Theming Model' },
+      { to: '/core-concepts/hooks', label: 'Hooks' },
     ],
   },
   {
@@ -127,30 +133,13 @@ export const DOCS_NAV: NavSection[] = [
     ],
   },
   {
-    key: 'animation',
-    label: 'Animation',
-    icon: 'sparkles',
-    items: [
-      { to: '/animation', label: 'Overview' },
-      { to: '/animation/triggers', label: 'Triggers' },
-      { to: '/animation/sequences', label: 'Sequences' },
-      { to: '/animation/springs', label: 'Springs & easings' },
-      { to: '/animation/stagger', label: 'Stagger' },
-      { to: '/animation/use-animations', label: 'useAnimations' },
-    ],
-  },
-  {
     key: 'theming',
     label: 'Theming',
     icon: 'palette',
     items: [
       { to: '/theming', label: 'Overview' },
-      { to: '/theming/tokens', label: 'Tokens' },
-      { to: '/theming/colors', label: 'Colors' },
-      { to: '/theming/typography', label: 'Typography' },
       { to: '/theming/surfaces', label: 'Surfaces' },
       { to: '/theming/stacking', label: 'Stacking' },
-      { to: '/theming/slot-props', label: 'Slot props' },
     ],
   },
   {
@@ -159,21 +148,6 @@ export const DOCS_NAV: NavSection[] = [
     icon: 'book-open',
     items: [
       { to: '/recipes', label: 'Overview' },
-      { to: '/recipes/app-shells', label: 'App shells' },
-      { to: '/recipes/forms', label: 'Forms' },
-      { to: '/recipes/data', label: 'Data patterns' },
-      { to: '/recipes/dashboards', label: 'Dashboards' },
-    ],
-  },
-  {
-    key: 'reference',
-    label: 'Reference',
-    icon: 'list',
-    items: [
-      { to: '/reference', label: 'All exports' },
-      { to: '/reference/hooks', label: 'Hooks' },
-      { to: '/reference/changelog', label: 'Changelog' },
-      { to: '/reference/faq', label: 'FAQ' },
     ],
   },
 ];

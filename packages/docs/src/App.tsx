@@ -10,14 +10,24 @@ import './index.css';
 import { DOCS_NAV } from './nav';
 import { Placeholder } from './pages/Placeholder';
 import { AIOverviewPage } from './pages/ai/AIOverviewPage';
+import { SkillsPage } from './pages/ai/SkillsPage';
+import { SpecsPage } from './pages/ai/SpecsPage';
+import { WritingYourOwnSkillsPage } from './pages/ai/WritingYourOwnSkillsPage';
 import { ComponentDocPage } from './pages/components/ComponentDocPage';
+import { ComponentsOverviewPage } from './pages/components/ComponentsOverviewPage';
 import { CoreConceptsOverviewPage } from './pages/core-concepts/CoreConceptsOverviewPage';
 import { HowMoveWorksPage } from './pages/core-concepts/HowMoveWorksPage';
 import { ComponentContractPage } from './pages/core-concepts/ComponentContractPage';
+import { AnimationSystemPage } from './pages/core-concepts/AnimationSystemPage';
+import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
+import { HooksPage } from './pages/core-concepts/HooksPage';
+import { ThemingOverviewPage } from './pages/theming/ThemingOverviewPage';
 import { StackingPage } from './pages/theming/StackingPage';
 import { SurfacesPage } from './pages/theming/SurfacesPage';
+import { RecipesOverviewPage } from './pages/recipes/RecipesOverviewPage';
 import { InstallationPage } from './pages/getting-started/InstallationPage';
 import { MoveRootPage } from './pages/getting-started/MoveRootPage';
+import { CreateMoveAppPage } from './pages/getting-started/CreateMoveAppPage';
 import { NextPage } from './pages/getting-started/NextPage';
 import { OverviewPage } from './pages/getting-started/OverviewPage';
 import { VitePage } from './pages/getting-started/VitePage';
@@ -146,41 +156,30 @@ function App() {
                 <Route path="/getting-started" element={<OverviewPage />} />
                 <Route path="/getting-started/installation" element={<InstallationPage />} />
                 <Route path="/getting-started/move-root" element={<MoveRootPage />} />
+                <Route path="/getting-started/create-move-app" element={<CreateMoveAppPage />} />
                 <Route path="/getting-started/next" element={<NextPage />} />
                 <Route path="/getting-started/vite" element={<VitePage />} />
                 <Route path="/core-concepts" element={<CoreConceptsOverviewPage />} />
                 <Route path="/core-concepts/how-move-works" element={<HowMoveWorksPage />} />
                 <Route path="/core-concepts/component-contract" element={<ComponentContractPage />} />
+                <Route path="/core-concepts/animation-system" element={<AnimationSystemPage />} />
+                <Route path="/core-concepts/theming-model" element={<ThemingModelPage />} />
+                <Route path="/core-concepts/hooks" element={<HooksPage />} />
+                <Route path="/ai" element={<AIOverviewPage />} />
+                <Route path="/ai/skills" element={<SkillsPage />} />
+                <Route path="/ai/specs" element={<SpecsPage />} />
+                <Route path="/ai/writing-your-own-skills" element={<WritingYourOwnSkillsPage />} />
+                <Route path="/components" element={<ComponentsOverviewPage />} />
+                <Route path="/theming" element={<ThemingOverviewPage />} />
                 <Route path="/theming/stacking" element={<StackingPage />} />
                 <Route path="/theming/surfaces" element={<SurfacesPage />} />
-                <Route path="/ai" element={<AIOverviewPage />} />
+                <Route path="/recipes" element={<RecipesOverviewPage />} />
                 {/* Component pages share a single data-driven template.
                     ComponentDocPage looks the slug up in COMPONENT_CONTENT
                     and falls back to Placeholder for unknown slugs. */}
                 <Route path="/components/:slug" element={<ComponentDocPage />} />
-                {/* Fallback: placeholder for every other route in the nav.
-                    Skip `/components/*` entries (handled above) and any
-                    path that has an explicit real page. */}
-                {DOCS_NAV.flatMap((section) =>
-                  section.items
-                    .filter((item) =>
-                      !item.to.startsWith('/components/') &&
-                      item.to !== '/getting-started' &&
-                      item.to !== '/getting-started/installation' &&
-                      item.to !== '/getting-started/move-root' &&
-                      item.to !== '/getting-started/next' &&
-                      item.to !== '/getting-started/vite' &&
-                      item.to !== '/core-concepts' &&
-                      item.to !== '/core-concepts/how-move-works' &&
-                      item.to !== '/core-concepts/component-contract' &&
-                      item.to !== '/theming/stacking' &&
-                      item.to !== '/theming/surfaces' &&
-                      item.to !== '/ai',
-                    )
-                    .map((item) => (
-                      <Route key={item.to} path={item.to} element={<Placeholder />} />
-                    )),
-                )}
+                {/* Every nav item now has a real route. Anything else
+                    falls through to the catchall below. */}
                 <Route path="*" element={<Placeholder />} />
               </Routes>
             </Stack>
