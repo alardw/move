@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
 import {
+  CodeBlock,
   HighlightList,
   type HighlightItem,
   Section,
@@ -11,6 +12,21 @@ import {
 const BADGES = [
   { icon: 'wand-sparkles', label: 'Slash-command discoverable' },
   { icon: 'bot', label: 'Spec-aware' },
+];
+
+const INSTALL_NOTES: HighlightItem[] = [
+  {
+    icon: 'copy',
+    text: 'Copies real files into both .claude/skills/ (Claude Code) and .agents/skills/ (Codex). Neither tool reads the other’s folder, so you get both — no choice to make.',
+  },
+  {
+    icon: 'folder',
+    text: 'Each skill lands as a flat folder with a SKILL.md, so your agent discovers it as a /slash-command straight away.',
+  },
+  {
+    icon: 'git-commit-horizontal',
+    text: 'The skills are yours once copied — commit them, tweak a prompt, or drop the ones you don’t use. Re-run the command to pull updates.',
+  },
 ];
 
 const LIBRARY_SKILLS: HighlightItem[] = [
@@ -57,6 +73,7 @@ const APP_SKILLS: HighlightItem[] = [
 
 const TOC: TocItem[] = [
   { href: '#skills', label: 'Overview' },
+  { href: '#install', label: 'Install' },
   { href: '#library', label: 'Library skills' },
   { href: '#app', label: 'App skills' },
 ];
@@ -97,6 +114,17 @@ export function SkillsPage() {
             ))}
           </Stack>
         </Stack>
+
+        <Section
+          id="install"
+          title="Installing the skills"
+          lede="One command copies the whole set into your project, so your AI agent can run Move’s spec-driven workflow right where your code lives."
+        >
+          <Stack gap="md">
+            <CodeBlock language="bash" code="npx move skills" />
+            <HighlightList items={INSTALL_NOTES} />
+          </Stack>
+        </Section>
 
         <Section
           id="library"
