@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -57,8 +57,12 @@ const WITH_LIBRARY: HighlightItem[] = [
     text: 'Color choices routinely fail WCAG contrast. Muted gray on white, brand text on a brand fill, a placeholder that disappears — they read fine in a thumbnail preview and fail an actual contrast check.',
   },
   {
+    icon: 'library',
+    text: 'Even when a design system is right there, the assistant approximates it instead of using it — generating a component that looks like yours but isn’t, with hardcoded values where tokens belong. It’s off-system work that looks on-brand, which is harder to catch than output that looks obviously wrong.',
+  },
+  {
     icon: 'shuffle',
-    text: 'Patterns drift from page to page. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. Each prompt re-decides instead of reusing.',
+    text: 'Patterns drift from page to page. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. Each prompt re-decides instead of reusing, because the model is good at lookups and bad at consistent invention.',
   },
   {
     icon: 'ruler',
@@ -89,11 +93,40 @@ const HOW_MOVE: HighlightItem[] = [
   },
 ];
 
+interface Source {
+  href: string;
+  title: string;
+  note: string;
+}
+
+/**
+ * Backing for the failure modes above. Each source is a primary report or
+ * a hands-on writeup, with a short note on which claims it supports.
+ */
+const SOURCES: Source[] = [
+  {
+    href: 'https://webaim.org/projects/million/',
+    title: 'WebAIM Million (February 2026)',
+    note: 'The accessibility baseline models train on: 83.9% of home pages have low-contrast text and 95.9% have detected WCAG 2 failures.',
+  },
+  {
+    href: 'https://frontendmasters.com/blog/ai-generated-ui-is-inaccessible-by-default/',
+    title: 'AI-Generated UI Is Inaccessible by Default — Frontend Masters (2026)',
+    note: 'Hands-on testing across tools: div-with-onClick instead of button is the norm, missing ARIA state is near-universal, keyboard handling is absent — ten distinct failures in one twenty-nine-line component.',
+  },
+  {
+    href: 'https://www.uxpin.com/studio/blog/ai-design-tools-ignore-design-system/',
+    title: 'Why AI Design Tools That Ignore Your Design System Create More Problems — UXPin (2026)',
+    note: 'Design-system drift: tools approximate your components rather than use them, producing off-system work that looks on-brand while spacing, tokens, and variants silently diverge.',
+  },
+];
+
 const TOC: TocItem[] = [
   { href: '#what-ai-gets-wrong', label: 'Overview' },
   { href: '#without-a-system', label: 'Without a system' },
   { href: '#with-a-library', label: 'Even with a library' },
   { href: '#how-move-helps', label: 'How Move helps' },
+  { href: '#sources', label: 'Where this comes from' },
   { href: '#next-steps', label: 'Next steps' },
 ];
 
@@ -141,7 +174,7 @@ export function WhatAIGetsWrongPage() {
         <Section
           id="with-a-library"
           title="Even with a library, it’s not enough"
-          lede="Reaching for components removes the worst of it. What’s left is everything a screenshot can’t convey: contrast, and consistency across screens."
+          lede="Reaching for components removes the worst of it. What’s left is everything a screenshot can’t convey: contrast, and the discipline to actually use the system the same way on every screen."
         >
           <HighlightList items={WITH_LIBRARY} />
         </Section>
@@ -152,6 +185,23 @@ export function WhatAIGetsWrongPage() {
           lede="Move moves these decisions out of the prompt and into the system, so the assistant can’t get them wrong by omission."
         >
           <HighlightList items={HOW_MOVE} />
+        </Section>
+
+        <Section
+          id="sources"
+          title="Where this comes from"
+          lede="These aren’t hypotheticals — they’re measured and documented."
+        >
+          <Stack gap="sm">
+            {SOURCES.map((s) => (
+              <Stack key={s.href} gap="xs">
+                <Link href={s.href} external>
+                  {s.title}
+                </Link>
+                <Text color="muted" size="sm">{s.note}</Text>
+              </Stack>
+            ))}
+          </Stack>
         </Section>
 
         <Section id="next-steps" title="Next steps">
