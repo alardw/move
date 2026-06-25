@@ -100,8 +100,8 @@ const DESIGN_SYSTEM: HighlightItem[] = [
     text: 'The model approximates the system instead of adhering to it — hardcoded values where tokens belong, spacing and type scale re-picked per screen, so two pages built an hour apart already feel like two products. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
   },
   {
-    icon: 'layers',
-    text: 'Whole-app behavior goes uncoordinated. Stacking turns into a z-index guessing game where a dropdown renders behind the dialog that opened it; motion is missing or a different ad-hoc transition on every element; a nested panel doesn’t adapt to the surface it sits inside. Each gets solved locally, so nothing agrees with anything else.',
+    icon: 'activity',
+    text: 'Motion and layering are nobody’s job. Animation is missing, or a different ad-hoc transition on every element, with jarring jumps as things appear and disappear; stacking becomes a z-index guessing game where a dropdown renders behind the dialog that opened it; a nested panel doesn’t adapt to the surface it sits inside. Each gets solved locally, so nothing agrees with anything else.',
   },
 ];
 
@@ -124,7 +124,7 @@ const HOW_MOVE: HighlightItem[] = [
   },
   {
     icon: 'orbit',
-    text: 'Tokens, motion, stacking, and surface nesting are one coordinated system, not four separate problems. Layering is managed so overlays stack in the right order, animation runs through a single trigger model, and a panel adapts to whatever surface it’s nested in — the whole-app concerns the model usually botches are decided by the system, once.',
+    text: 'Motion is a system, not a per-element afterthought. Enter and exit, expand, and stagger run through one trigger model with shared springs — and the same coordination layers overlays in the right order and adapts a panel to whatever surface it’s nested in. The whole-app concerns the model usually botches are decided once.',
   },
   {
     icon: 'package-plus',
@@ -154,9 +154,9 @@ const SOURCES: Source[] = [
     note: 'Hands-on testing across tools: div-with-onClick instead of button is the norm, missing ARIA state is near-universal, keyboard handling is absent — ten distinct failures in one twenty-nine-line component.',
   },
   {
-    href: 'https://www.uxpin.com/studio/blog/ai-design-tools-ignore-design-system/',
-    title: 'Why AI Design Tools That Ignore Your Design System Create More Problems — UXPin (2026)',
-    note: 'Design-system drift: tools approximate your components rather than use them, producing off-system work that looks on-brand while spacing, tokens, and variants silently diverge.',
+    href: 'https://dl.acm.org/doi/10.1145/3772363.3799002',
+    title: 'Looks Good, But Is It Usable? — CHI 2026 (ACM)',
+    note: 'Peer-reviewed: 138 AI-generated mobile screens across three tools, scored against Nielsen’s heuristics. Strong on visuals, weak where it counts — error prevention, error recovery, and help — a measured gap between looking polished and being usable.',
   },
 ];
 
