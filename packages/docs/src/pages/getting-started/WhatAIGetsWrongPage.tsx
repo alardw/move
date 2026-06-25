@@ -119,8 +119,8 @@ const HOW_MOVE: HighlightItem[] = [
     text: 'Accessibility is the default, not a checklist to remember. Components carry the right semantics, ARIA, and focus behavior, and every color resolves to a WCAG-legible foreground token — so the accessible build is the only build on offer, in light mode and dark.',
   },
   {
-    icon: 'route',
-    text: 'The system is the path of least resistance. Composing Move’s typed components is less work than hand-rolling a div and styling it from scratch, so the off-system shortcut stops being a shortcut and the model just stays inside the library.',
+    icon: 'book-open-check',
+    text: 'The assistant builds from the system’s own catalog, not from half-remembered training data. Specs and metadata tell it exactly which components, slots, and variants exist, and the skills compose pages out of Move components only — so it reaches for the real Select because it can see the real Select, instead of improvising a div that looks like one.',
   },
   {
     icon: 'scan-search',
