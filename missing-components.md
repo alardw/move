@@ -145,7 +145,8 @@ Spinner = Loader) are not listed.
 - Found in: Ant Design (Popconfirm), shadcn (via AlertDialog patterns)
 - Purpose: Tiny inline confirmation popover ("Are you sure?") anchored to a
   trigger, lighter than a full Dialog.
-- Closest in Move: Dialog exists; no inline popover-style confirm.
+- Closest in Move: Popover and Dialog exist; an inline confirm could be built
+  on Popover, but there is no dedicated popconfirm component.
 
 ### Watermark
 - Found in: Ant Design (Watermark)
