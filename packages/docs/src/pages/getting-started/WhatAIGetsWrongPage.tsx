@@ -126,7 +126,7 @@ const TOC: TocItem[] = [
   { href: '#without-a-system', label: 'Without a system' },
   { href: '#with-a-library', label: 'Even with a library' },
   { href: '#how-move-helps', label: 'How Move helps' },
-  { href: '#sources', label: 'Where this comes from' },
+  { href: '#sources', label: 'References' },
   { href: '#next-steps', label: 'Next steps' },
 ];
 
@@ -187,11 +187,7 @@ export function WhatAIGetsWrongPage() {
           <HighlightList items={HOW_MOVE} />
         </Section>
 
-        <Section
-          id="sources"
-          title="Where this comes from"
-          lede="These aren’t hypotheticals — they’re measured and documented."
-        >
+        <Section id="sources" title="References">
           <Stack gap="sm">
             {SOURCES.map((s) => (
               <Stack key={s.href} gap="xs">
