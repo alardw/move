@@ -18,9 +18,10 @@ const PIPELINE: HighlightItem[] = [
     icon: 'file-code',
     text: (
       <>
-        You write the spec. A typed <Code>.spec.ts</Code> (via{' '}
-        <Code>/component-create-spec</Code>) defines the component’s shape,
-        behaviour, tokens, and accessibility. Every field is documented in the{' '}
+        It starts with a spec. <Code>/component-create-spec</Code> turns your
+        description into a typed <Code>.spec.ts</Code> — the component’s shape,
+        behaviour, tokens, and accessibility in one reviewable file. Every field
+        is documented in the{' '}
         <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink>.
       </>
     ),

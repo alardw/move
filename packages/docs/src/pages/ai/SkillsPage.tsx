@@ -27,9 +27,13 @@ const INSTALL_NOTES: HighlightItem[] = [
     icon: 'git-commit-horizontal',
     text: 'The skills are yours once copied — commit them, tweak a prompt, or drop the ones you don’t use. Re-run the command to pull updates.',
   },
+  {
+    icon: 'rotate-cw',
+    text: 'Restart your AI assistant after installing (or re-running) so it picks up the new skills — agents discover skills at startup, not mid-session.',
+  },
 ];
 
-const LIBRARY_SKILLS: HighlightItem[] = [
+const COMPONENT_SKILLS: HighlightItem[] = [
   {
     icon: 'search',
     text: '/component-analyze — research how other UI libraries implement a component and propose a Move-shaped approach.',
@@ -74,7 +78,7 @@ const APP_SKILLS: HighlightItem[] = [
 const TOC: TocItem[] = [
   { href: '#skills', label: 'Overview' },
   { href: '#install', label: 'Install' },
-  { href: '#library', label: 'Library skills' },
+  { href: '#component', label: 'Component skills' },
   { href: '#app', label: 'App skills' },
 ];
 
@@ -102,8 +106,9 @@ export function SkillsPage() {
           <Heading level={1} weight="normal">Skills</Heading>
           <Text color="muted" size="lg">
             Every Move skill is a structured workflow your AI agent can invoke
-            with a slash command. Two tracks: library (extend Move itself) and
-            app (build with Move).
+            with a slash command. Two tracks: component skills (author a Move
+            component from a typed spec) and app skills (compose pages,
+            composites, and features).
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -127,11 +132,11 @@ export function SkillsPage() {
         </Section>
 
         <Section
-          id="library"
-          title="Library skills"
-          lede="For working on Move itself — analyzing, specifying, generating, validating."
+          id="component"
+          title="Component skills"
+          lede="Author a component from a typed spec — analyze, specify, generate, validate. Use them to extend Move itself, or to build your own spec-driven components in your app."
         >
-          <HighlightList items={LIBRARY_SKILLS} />
+          <HighlightList items={COMPONENT_SKILLS} />
         </Section>
 
         <Section
