@@ -30,6 +30,7 @@ import { MoveRootPage } from './pages/getting-started/MoveRootPage';
 import { CreateMoveAppPage } from './pages/getting-started/CreateMoveAppPage';
 import { NextPage } from './pages/getting-started/NextPage';
 import { OverviewPage } from './pages/getting-started/OverviewPage';
+import { WhatAIGetsWrongPage } from './pages/getting-started/WhatAIGetsWrongPage';
 import { VitePage } from './pages/getting-started/VitePage';
 
 function toPascalCase(str: string) {
@@ -154,6 +155,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Navigate to="/getting-started" replace />} />
                 <Route path="/getting-started" element={<OverviewPage />} />
+                <Route path="/getting-started/what-ai-gets-wrong" element={<WhatAIGetsWrongPage />} />
                 <Route path="/getting-started/installation" element={<InstallationPage />} />
                 <Route path="/getting-started/move-root" element={<MoveRootPage />} />
                 <Route path="/getting-started/create-move-app" element={<CreateMoveAppPage />} />

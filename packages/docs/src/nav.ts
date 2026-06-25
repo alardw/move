@@ -27,6 +27,7 @@ export const DOCS_NAV: NavSection[] = [
     icon: 'rocket',
     items: [
       { to: '/getting-started', label: 'Overview' },
+      { to: '/getting-started/what-ai-gets-wrong', label: 'What AI Gets Wrong' },
       { to: '/getting-started/installation', label: 'Installation' },
       { to: '/getting-started/move-root', label: 'MoveRoot' },
       { to: '/getting-started/create-move-app', label: 'Create Move App' },
