@@ -6,6 +6,8 @@ component contract out of the box. It's designed to be authored and
 maintained through specs and AI skills, so the same generators and checks
 that build the library also help you build with it.
 
+📖 **[Read the docs →](https://alardw.github.io/move/)**
+
 ## Packages
 
 This is an npm-workspaces monorepo. Everything lives under `packages/`:
