@@ -8,6 +8,7 @@ import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, snappy } from '../../../animation';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import type { AnimationTrigger } from '../../../animation';
 import styles from './Drawer.module.css';
 
@@ -565,12 +566,6 @@ const DrawerDescription = withMoveComponent<'description', DrawerDescriptionProp
 // Close
 // ============================================================================
 
-const CloseIcon: React.FC = () => (
-  <svg className={styles.closeIcon} viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-    <path d="M4 4l8 8M12 4l-8 8" />
-  </svg>
-);
-
 export interface DrawerCloseProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
@@ -587,6 +582,9 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
 
   setup({ props, ref, cx, sp, attrs }) {
     const { close } = useDrawerContext();
+    // Default close glyph resolves through the icon resolver (falls back to the
+    // built-in 'x'), so it re-skins with the rest of the app's icons.
+    const closeIcon = useResolvedIcon('x', 16);
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -607,7 +605,7 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
             className={props.asChild ? props.className : cx('close', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children ?? <CloseIcon />}
+            {props.children ?? closeIcon}
           </RadixDialog.Close>
         );
       },

@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { Popover } from '../../overlay/Popover';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './PlayerSettingsMenu.module.css';
 
 // =============================================================================
@@ -27,26 +28,6 @@ export interface PlayerSettingsMenuProps {
 }
 
 // =============================================================================
-// Chevron icons (inline, no dependency on Icon resolver in portal)
-// =============================================================================
-
-function ChevronRightSmall() {
-  return (
-    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
-
-function ChevronLeftSmall() {
-  return (
-    <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="m15 18-6-6 6-6" />
-    </svg>
-  );
-}
-
-// =============================================================================
 // PlayerSettingsMenu
 // =============================================================================
 
@@ -65,6 +46,10 @@ export function PlayerSettingsMenu({
   React.useEffect(() => {
     if (!open) setActiveCategory(null);
   }, [open]);
+
+  // Resolve through the icon resolver (falls back to the built-in chevrons).
+  const chevronRightIcon = useResolvedIcon('chevron-right', 14);
+  const chevronLeftIcon = useResolvedIcon('chevron-left', 14);
 
   if (categories.length === 0) return <>{trigger}</>;
 
@@ -106,7 +91,7 @@ export function PlayerSettingsMenu({
                 >
                   <span className={styles.categoryLabel}>{cat.label}</span>
                   <span className={styles.categoryValue}>{activeLabel}</span>
-                  <span className={styles.categoryChevron}><ChevronRightSmall /></span>
+                  <span className={styles.categoryChevron}>{chevronRightIcon}</span>
                 </button>
               );
             })
@@ -118,7 +103,7 @@ export function PlayerSettingsMenu({
                 className={styles.backRow}
                 onClick={() => setActiveCategory(null)}
               >
-                <span className={styles.backChevron}><ChevronLeftSmall /></span>
+                <span className={styles.backChevron}>{chevronLeftIcon}</span>
                 <span className={styles.backLabel}>{activeCat.label}</span>
               </button>
               {activeCat.options.map((opt) => (

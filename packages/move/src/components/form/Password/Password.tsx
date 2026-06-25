@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Password.module.css';
 
 // =============================================================================
@@ -89,6 +90,11 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
       inputRef.current?.focus();
     };
 
+    // Default reveal/hide glyphs resolve through the icon resolver (fall back to
+    // the built-in 'eye'/'eye-off'), so they re-skin with the app's icon set.
+    const defaultShowIcon = useResolvedIcon('eye', 16);
+    const defaultHideIcon = useResolvedIcon('eye-off', 16);
+
     return {
       render() {
         const rootSp = sp('root');
@@ -101,21 +107,6 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
         const { className: toggleSpClass, style: toggleSpStyle, ...toggleSpRest } = toggleSp as Record<string, unknown>;
         const toggleIconSp = sp('toggleIcon');
         const { className: tiSpClass, style: tiSpStyle, ...tiSpRest } = toggleIconSp as Record<string, unknown>;
-
-        const defaultShowIcon = (
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-            <circle cx="12" cy="12" r="3" />
-          </svg>
-        );
-        const defaultHideIcon = (
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49" />
-            <path d="M14.084 14.158a3 3 0 0 1-4.242-4.242" />
-            <path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143" />
-            <path d="m2 2 20 20" />
-          </svg>
-        );
 
         const showIconNode = (props.showIcon as React.ReactNode) ?? defaultShowIcon;
         const hideIconNode = (props.hideIcon as React.ReactNode) ?? defaultHideIcon;

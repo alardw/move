@@ -7,6 +7,7 @@ import { scaleUp, scaleDown, popIn, pagination as paginationEase, useAnimations,
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
+import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Pagination.module.css';
 
 // =============================================================================
@@ -159,6 +160,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
     const { handlers } = useAnimations(animConfig, btnRefs);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
     const isDisabled = !canPrevious;
+    const defaultIcon = useResolvedIcon('chevron-left', 16);
 
     return {
       render() {
@@ -193,11 +195,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
               (props.onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >
-            {props.children ?? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="m15 18-6-6 6-6" />
-              </svg>
-            )}
+            {props.children ?? defaultIcon}
           </button>
         );
       },
@@ -247,6 +245,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
     const { handlers } = useAnimations(animConfig, btnRefs);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
     const isDisabled = !canNext;
+    const defaultIcon = useResolvedIcon('chevron-right', 16);
 
     return {
       render() {
@@ -281,11 +280,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
               (props.onMouseUp as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
             }}
           >
-            {props.children ?? (
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            )}
+            {props.children ?? defaultIcon}
           </button>
         );
       },
