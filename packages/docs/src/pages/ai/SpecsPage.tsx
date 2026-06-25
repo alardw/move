@@ -15,10 +15,10 @@ const BADGES = [
 ];
 
 const STEPS = [
-  { icon: 'search', label: 'Analyze', hint: 'Research the shape' },
-  { icon: 'file-code', label: 'Spec', hint: 'Author the .spec.ts' },
-  { icon: 'wand-sparkles', label: 'Generate', hint: 'Source, meta, tests' },
-  { icon: 'shield-check', label: 'Validate', hint: 'Check against the spec' },
+  { icon: 'search', label: 'Analyze', hint: 'Research the shape', skill: '/component-analyze' },
+  { icon: 'file-code', label: 'Spec', hint: 'Author the .spec.ts', skill: '/component-create-spec' },
+  { icon: 'wand-sparkles', label: 'Generate', hint: 'Source, meta, tests', skill: '/component-generate-*' },
+  { icon: 'shield-check', label: 'Validate', hint: 'Check against the spec', skill: '/component-validate' },
 ];
 
 const WHY_IT_HOLDS: HighlightItem[] = [
@@ -82,35 +82,26 @@ export function SpecsPage() {
           title="The loop"
           lede="Research the shape, write the spec, generate source/meta/tests from it, and validate the result back against it."
         >
-          <Stack gap="lg">
-            <Stack direction="row" align="stretch" gap="sm" wrap>
-              {STEPS.map((s, i) => (
-                <Fragment key={s.label}>
-                  <Card.Root variant="elevated">
-                    <Card.Body>
-                      <Stack gap="xs" align="center">
-                        <Icon name={s.icon} size={22} />
-                        <Text weight="semibold" size="sm">{s.label}</Text>
-                        <Text color="muted" size="xs">{s.hint}</Text>
-                      </Stack>
-                    </Card.Body>
-                  </Card.Root>
-                  {i < STEPS.length - 1 && (
-                    <Stack justify="center">
-                      <Icon name="arrow-right" />
+          <Stack direction="row" align="stretch" gap="sm" wrap>
+            {STEPS.map((s, i) => (
+              <Fragment key={s.label}>
+                <Card.Root variant="elevated">
+                  <Card.Body>
+                    <Stack gap="xs" align="center">
+                      <Icon name={s.icon} size={22} />
+                      <Text weight="semibold" size="sm">{s.label}</Text>
+                      <Text color="muted" size="xs">{s.hint}</Text>
+                      <Code size="xs">{s.skill}</Code>
                     </Stack>
-                  )}
-                </Fragment>
-              ))}
-            </Stack>
-            <Text color="muted">
-              <Code>/component-analyze</Code> proposes a Move-shaped approach;{' '}
-              <Code>/component-create-spec</Code> turns it into the typed spec;{' '}
-              <Code>/component-generate-*</Code> produces source, metadata, and
-              tests; <Code>/component-validate</Code> and the spec-drift checks
-              hold the implementation to the spec. Source, metadata, and tests
-              all trace back to that one file.
-            </Text>
+                  </Card.Body>
+                </Card.Root>
+                {i < STEPS.length - 1 && (
+                  <Stack justify="center">
+                    <Icon name="arrow-right" />
+                  </Stack>
+                )}
+              </Fragment>
+            ))}
           </Stack>
         </Section>
 
