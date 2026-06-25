@@ -61,6 +61,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | A17 | Default review audit present | Spec schema v5+ includes approved `defaultReview` block |
 | A18 | No approved `undefined` defaults | Approved defaults are explicit values, `null`, or omitted keys |
 | A19 | Defaultable prop coverage complete | Every defaultable prop has an explicit reviewed decision |
+| A20 | Icons resolve through the resolver | Default/decorative icons render via `useResolvedIcon(name, size)` or `<Icon name>`, never a hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner, Loader) and Radix Arrow SVGs. |
 
 #### B. CSS Module (`{Name}.module.css`)
 
