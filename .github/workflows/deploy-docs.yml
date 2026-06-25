@@ -1,0 +1,52 @@
+name: Deploy docs to GitHub Pages
+
+# Builds packages/docs and publishes it to GitHub Pages on every push to the
+# default branch. The site is served from a project page, so it lives under
+# the /move/ base path; the build is told that via --base, and the router
+# picks it up through import.meta.env.BASE_URL.
+
+on:
+  push:
+    branches: [dev]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let an in-progress deploy finish, but only keep the latest queued one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - name: Install (all workspaces)
+        run: npm ci
+      - name: Build docs
+        run: npm run build --workspace docs -- --base=/move/
+      - name: SPA fallback + skip Jekyll
+        run: |
+          cp packages/docs/dist/index.html packages/docs/dist/404.html
+          touch packages/docs/dist/.nojekyll
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: packages/docs/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
