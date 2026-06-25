@@ -35,24 +35,44 @@ const THE_MODEL: HighlightItem[] = [
 
 const SUB_TOPICS: HighlightItem[] = [
   {
+    icon: 'type',
+    text: (
+      <>
+        <RouterLink to="/theming/typography">Typography</RouterLink> — set the font with one token, plus the size and weight scale.
+      </>
+    ),
+  },
+  {
+    icon: 'square-stack',
+    text: (
+      <>
+        <RouterLink to="/theming/surfaces">Surfaces</RouterLink> — bg-base, bg-subtle, bg-muted, bg-emphasis, and when to reach for each.
+      </>
+    ),
+  },
+  {
+    icon: 'arrow-up-down',
+    text: (
+      <>
+        <RouterLink to="/theming/stacking">Stacking</RouterLink> — the z-layer system for modals, popovers, and toasts.
+      </>
+    ),
+  },
+  {
+    icon: 'shapes',
+    text: (
+      <>
+        <RouterLink to="/theming/icons">Icons</RouterLink> — bring your own icon library through one resolver.
+      </>
+    ),
+  },
+  {
     icon: 'file-code',
     text: 'Tokens — the naming convention (--move-<scope>-<role>-<state>) and how layers stack.',
   },
   {
     icon: 'palette',
     text: 'Colors — the 13 Open Color palettes plus Move gray; per-palette text and soft-bg pairs.',
-  },
-  {
-    icon: 'type',
-    text: 'Typography — font families, the size scale, weights, headings.',
-  },
-  {
-    icon: 'square-stack',
-    text: 'Surfaces — bg-base, bg-subtle, bg-muted, bg-emphasis. When to reach for each.',
-  },
-  {
-    icon: 'arrow-up-down',
-    text: 'Stacking — the z-layer system, modals, popovers, toasts.',
   },
   {
     icon: 'puzzle',
@@ -114,7 +134,7 @@ export function ThemingModelPage() {
         <Section
           id="sub-topics"
           title="Going deeper"
-          lede="Each piece of the system has its own dedicated page."
+          lede="The Theming section drills into each piece — the linked ones have a dedicated page today."
         >
           <HighlightList items={SUB_TOPICS} />
         </Section>
