@@ -14,64 +14,64 @@ import {
  */
 
 const TAGLINE =
-  'A structured, typed UI system designed for AI-assisted product development.';
+  'Finished, accessible, animated React components — so you and the AI building with you can ship real products, not just demos.';
 
 const BADGES = [
-  { icon: 'blocks', label: 'Architecture-first' },
-  { icon: 'sparkles', label: 'Animation as system' },
-  { icon: 'bot', label: 'AI as structure' },
+  { icon: 'blocks', label: 'Finished components' },
+  { icon: 'sparkles', label: 'Motion built in' },
+  { icon: 'bot', label: 'Built for AI' },
 ];
 
 const PRINCIPLES: HighlightItem[] = [
   {
-    icon: 'file-code',
-    text: 'Move starts with a structured component contract. Slots, variants, controlled patterns, animation wiring, and token resolution are part of the architecture, not implied by convention.',
+    icon: 'package-check',
+    text: 'Every component arrives finished. Keyboard support, focus handling, the loading and error states, the motion — it is all already inside, so you put screens together instead of wiring that behavior up from scratch.',
   },
   {
     icon: 'sparkles',
-    text: 'Animation is a unified subsystem, not a surface enhancement. Motion behavior is defined as part of the system instead of being bolted onto isolated components.',
+    text: 'Motion is built in, not bolted on. Components animate the same way out of the box, so the whole app feels alive and of a piece without you hand-tuning a single transition.',
   },
   {
     icon: 'palette',
-    text: 'Theming is token-first. Color, spacing, radius, typography, and slot props resolve through shared tokens so customization stays structural instead of brittle.',
+    text: 'Restyle everything from one place. Color, spacing, and type come from one shared set of values, so changing the look of the whole app does not mean editing every screen.',
   },
   {
     icon: 'bot',
-    text: 'AI works because it can read the same contract. Specs give coding agents enough structure to generate, validate, and extend UI without drifting away from the system.',
+    text: 'AI can actually build inside it. Each component is described in a way an assistant can read, so it produces real UI that stays on-system instead of drifting from screen to screen.',
   },
 ];
 
 const HOW_IT_WORKS: HighlightItem[] = [
   {
     icon: 'layout-template',
-    text: 'Components expose named slots and supported composition patterns so structure is explicit.',
+    text: 'Components are made of clearly named parts, so it is obvious how to put them together.',
   },
   {
     icon: 'toggle-left',
-    text: 'State behavior is typed. Controlled and uncontrolled paths are documented instead of inferred from implementation details.',
+    text: 'Whether a component manages its own state or hands control to you is spelled out — not something you discover by trial and error.',
   },
   {
     icon: 'sparkles',
-    text: 'Motion hooks into those same components through shared trigger types and animation wiring.',
+    text: 'Animation plugs into those same components, so motion stays consistent everywhere.',
   },
   {
     icon: 'file-json',
-    text: 'Specs describe all of the above in a machine-readable form that generation and validation tools can use.',
+    text: 'All of it is written down in a format that tools — and AI — can read, generate, and check.',
   },
 ];
 
 const WHY_AI_WORKS: HighlightItem[] = [
   {
     icon: 'bot',
-    text: 'The assistant is not guessing from screenshots or naming vibes. It is reading typed specs and component metadata.',
+    text: 'The assistant is not guessing from a screenshot. It is reading an exact description of each component.',
   },
   {
     icon: 'shield-check',
-    text: 'That shared contract makes generated output more deterministic: the same slots, the same variants, the same composition patterns.',
+    text: 'So what it builds is predictable: the same components, used the same way, every time.',
   },
   {
     icon: 'refresh-cw',
-    text: 'Docs, source, demos, and AI workflows can stay aligned because they are derived from or checked against the same structural definition.',
+    text: 'And the docs, the code, the demos, and the AI all stay in sync, because they come from that one description.',
   },
 ];
 
@@ -156,7 +156,7 @@ export function OverviewPage() {
         <Section
           id="how-it-works"
           title="How it works"
-          lede="Architecture comes first. AI follows because the system is already explicit."
+          lede="A quick look under the hood — though none of this is something you have to think about to use Move."
         >
           <HighlightList items={HOW_IT_WORKS} />
         </Section>
