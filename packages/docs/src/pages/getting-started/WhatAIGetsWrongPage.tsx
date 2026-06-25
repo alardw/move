@@ -111,20 +111,20 @@ const DESIGN_SYSTEM: HighlightItem[] = [
 
 const HOW_MOVE: HighlightItem[] = [
   {
-    icon: 'file-code',
-    text: 'Behavior lives in the component contract, not the prompt. Focus management, keyboard interaction, collision flipping, and overflow handling come with Select, Dropdown, and Dialog — the assistant cannot forget to add what it never had to write.',
+    icon: 'shield-check',
+    text: 'The behavior ships inside the component. Focus, keyboard, collision flipping, and overflow handling are built into Select, Dropdown, and Dialog — the model can’t forget to add what it never had to write, and there is no happy-path version that skips the hard parts.',
   },
   {
-    icon: 'contrast',
-    text: 'Contrast is a property of the palette, not a per-prompt guess. Each color ships legible foreground tokens, so the accessible choice is the default choice instead of something the model has to get right by eye.',
+    icon: 'accessibility',
+    text: 'Accessibility is the default, not a checklist to remember. Components carry the right semantics, ARIA, and focus behavior, and every color resolves to a WCAG-legible foreground token — so the accessible build is the only build on offer, in light mode and dark.',
   },
   {
-    icon: 'blocks',
-    text: 'There is one Select, one Dialog, one Card, reached for through the same slots every time. Consistency stops depending on the assistant remembering what it did on the last page.',
+    icon: 'route',
+    text: 'The system is the path of least resistance. Composing Move’s typed components is less work than hand-rolling a div and styling it from scratch, so the off-system shortcut stops being a shortcut and the model just stays inside the library.',
   },
   {
-    icon: 'file-json',
-    text: 'Specs describe the slots, variants, and defaults in a form the assistant reads directly, so it composes inside the system instead of inventing raw HTML and CSS next to it.',
+    icon: 'scan-search',
+    text: 'Consistency becomes a lookup, and drift gets caught. Spacing, color, and radius are tokens the model reads instead of inventing — exactly what it’s good at — and validation skills check generated output against the spec, so “looks on-brand but isn’t” fails the check instead of shipping.',
   },
 ];
 
