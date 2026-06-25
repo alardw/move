@@ -97,9 +97,43 @@ const LAZY = `import { lazy } from 'react';
 export const iconResolver = (name: string) =>
   lazy(() => import(\`./icons/\${name}.tsx\`));`;
 
+// The fixed vocabulary Move's components ask for internally.
+const INTERNAL_ICONS = [
+  'calendar', 'captions', 'check', 'chevron-down', 'chevron-left', 'chevron-right',
+  'chevron-up', 'circle-check', 'circle-x', 'eye', 'eye-off', 'file', 'image-off',
+  'info', 'maximize', 'minimize', 'pause', 'pipette', 'play', 'search', 'settings',
+  'triangle-alert', 'upload', 'volume-x',
+];
+
+const OVERRIDE_ALL = `import * as Phosphor from '@phosphor-icons/react';
+import type { ComponentType } from 'react';
+
+const toPascal = (s: string) =>
+  s.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+
+// Map Move's internal vocabulary to your library once. Because the resolver
+// runs before Move's built-ins, this re-skins every component at once.
+const aliases: Record<string, ComponentType> = {
+  'chevron-down': Phosphor.CaretDown,
+  'chevron-up': Phosphor.CaretUp,
+  'chevron-left': Phosphor.CaretLeft,
+  'chevron-right': Phosphor.CaretRight,
+  check: Phosphor.Check,
+  'circle-check': Phosphor.CheckCircle,
+  'circle-x': Phosphor.XCircle,
+  'eye-off': Phosphor.EyeSlash,
+  // …the rest of the vocabulary → your equivalents
+};
+
+export const iconResolver = (name: string) =>
+  aliases[name] ??
+  ((Phosphor as Record<string, unknown>)[toPascal(name)] as ComponentType) ??
+  null;`;
+
 const TOC: TocItem[] = [
   { href: '#icons', label: 'Overview' },
   { href: '#how-it-works', label: 'How it works' },
+  { href: '#internal', label: 'Override all at once' },
   { href: '#lucide', label: 'Lucide' },
   { href: '#map', label: 'Heroicons / Phosphor' },
   { href: '#custom', label: 'Your own SVGs' },
@@ -151,6 +185,28 @@ export function IconsPage() {
           <Stack gap="md">
             <HighlightList items={PRINCIPLE} />
             <CodeBlock language="tsx" code={WIRING} />
+          </Stack>
+        </Section>
+
+        <Section
+          id="internal"
+          title="Override every component’s icons at once"
+          lede="Move’s components draw from a fixed vocabulary of names. Your resolver runs before Move’s built-ins, so mapping that vocabulary to your library re-skins every component in one place — no per-component wiring."
+        >
+          <Stack gap="md">
+            <Text>These are the names components ask for internally:</Text>
+            <Stack direction="row" gap="xs" wrap>
+              {INTERNAL_ICONS.map((n) => (
+                <Code key={n}>{n}</Code>
+              ))}
+            </Stack>
+            <Text color="muted">
+              Resolution order is your resolver → Move’s built-in essentials → the optional fallback, so returning <Code>null</Code> for a name keeps the built-in. Using Lucide? These are Lucide’s own kebab names, so the resolver above already covers them — no alias map needed.
+            </Text>
+            <CodeBlock language="tsx" code={OVERRIDE_ALL} />
+            <Text color="muted">
+              For one-off swaps, components also take an <Code>icon</Code> prop (and friends like <Code>iconLeft</Code>, <Code>CloseIcon</Code>) that accepts a name or a node — reach for that instead of the resolver when you only need to change one spot.
+            </Text>
           </Stack>
         </Section>
 
