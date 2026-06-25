@@ -1,6 +1,6 @@
 ---
 name: generate-all
-description: "Run full generation pipeline: source, meta, recipe, demo, test, validate. Requires spec."
+description: "Run full generation pipeline for a Move component: source, meta, test, validate. Requires spec."
 user-invocable: true
 argument-hint: "[ComponentName]"
 ---
@@ -21,8 +21,6 @@ Run all generation skills for a component in sequence. Requires an existing spec
 - `index.ts` — barrel exports
 - `use{Name}.ts` — headless hook (if spec declares `hasHook: true`)
 - `{Name}.meta.ts` — component metadata
-- `demo/src/recipes/component/{Name}Recipes.tsx` — recipe file
-- `demo/src/demos/generated/{Name}Demo.tsx` — demo file (playground)
 - `{Name}.test.tsx` — test file
 - `{Name}.report.md` — validation report
 - `src/index.ts` — updated with component exports
@@ -45,21 +43,19 @@ Pre-check before Step 1:
 ### Step 2 — `/generate-meta {Name}`
 Generates `.meta.ts` from the component source.
 
-### Step 3 — `/generate-recipe {Name}`
-Generates `demo/src/recipes/component/{Name}Recipes.tsx` — curated usage examples (recipes).
+> Recipe and demo generation are temporarily out of this pipeline: the
+> `generate-recipe`/`generate-demo` skills targeted the old `demo/` app and
+> were removed pending docs-app replacements (see repo `TODO.md`).
 
-### Step 4 — `/generate-demo {Name}`
-Generates `demo/src/demos/generated/{Name}Demo.tsx` — interactive playground (simplified, no sections).
-
-### Step 5 — `/generate-test {Name}`
+### Step 3 — `/generate-test {Name}`
 Generates `.test.tsx` from the spec and component source.
 
-### Step 6 — `/validate {Name}`
+### Step 4 — `/validate {Name}`
 Validates all generated files and writes `.report.md`.
 
 If `/validate` returns any BLOCKER failures, stop pipeline immediately and report them as generation failures (do not continue to acceptance).
 
-### Step 7 — Delta report (if original exists)
+### Step 5 — Delta report (if original exists)
 
 Search for `original-components/**/{Name}/{Name}.tsx`. If found, compare the generated output against the original and report meaningful deltas:
 
@@ -82,4 +78,4 @@ Skip this step if no original exists.
 3. **Follow each skill's own rules** — this skill only orchestrates; each sub-skill's SKILL.md governs its output
 4. **Spec must already exist** — this skill does not generate or modify specs
 5. **Default review must be approved** — refuse pipeline when spec lacks approved `defaultReview`
-6. **No hand-edited generated artifacts** — component/demo/test/meta output files must be produced by generation skills, not manual patching
+6. **No hand-edited generated artifacts** — component/test/meta output files must be produced by generation skills, not manual patching

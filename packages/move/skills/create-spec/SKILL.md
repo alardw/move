@@ -96,7 +96,6 @@ Read these files for class defaults and available options:
 | labels | Hardcoded user-visible strings (aria-label values, button text, placeholder text) |
 | componentDeps | Other Move components used in source or expected in stories (e.g. Button, Icon) |
 | childrenKind / propRoles | Whether children/props are text content vs structural composition |
-| demo | Optional explicit demo contract (controls, samples, bindings, reference images). Prefer separate `{Name}.demo.spec.ts` for active demo iteration. |
 
 **Create mode:** From user input + class defaults from `references/`.
 
@@ -146,7 +145,7 @@ In extract mode, the extracted values take precedence over class defaults.
 Use these conventions unless extraction/user decisions override them:
 - Preserve original runtime behavior when migrating.
 - Controlled props (`open`, `checked`, `value`) default to uncontrolled mode by default (do not force controlled false values).
-- Text-bearing preview values should be visible in demos (avoid blank defaults).
+- Text-bearing props should have visible (non-blank) defaults.
 - Prefer `size: 'md'` as baseline default for size-bearing components.
 - Typography components default to `size: 'base'`.
 - Do not force closed/inactive defaults (`open: false`) unless intentionally part of behavior.
@@ -174,27 +173,17 @@ In extract mode, preserve component behavior that templates can accidentally era
 
 Do not reduce these to generic class defaults.
 
-### Step 3e — Demo semantics extraction
+### Step 3e — Prop semantics extraction
 
-For components where demo inference is ambiguous (especially compound/composable APIs):
+For components where prop intent is ambiguous (especially compound/composable APIs):
 - Set `childrenKind`:
   - `text` when `children` is direct display content
   - `composition` when `children` is primarily structural (sub-components/slots)
 - Set `propRoles` for ambiguous props (`displayText`, `composition`, `data`, `behavior`).
-- Add explicit `demo` contract when needed:
-  - `controls`: playground controls shown in demo UI (debug/edit surface)
-  - `samples`: consumer-first usage recipes (what a real user would copy/paste)
-  - `bindings`: control-to-template mappings
-  - `renderMode`: prefer `'grid'` when multiple samples should be visible simultaneously; use `'samples'` only when a selector is intentional
-  - `referenceImages` (optional): visual targets (URLs/paths + notes) for QA alignment
 
-Consumer-first demo policy:
-- Treat `samples` as the primary demo intent (real usage, not prop exhaustiveness).
-- Keep the full-prop playground separate via controls/bindings (usually with `playground.*` control IDs).
-- Do not force every prop into consumer samples; include only props that matter for realistic usage comprehension.
-- When both views are needed, define demo `sections` (`consumer`, `playground`) so preview and shown code stay aligned.
-
-If `demo` is present, `/generate-demo` must use it over heuristics.
+> Demo/recipe contracts were removed from the spec for now, pending the
+> docs-app generators (see repo `TODO.md`). Re-add a `demo` contract here
+> when those land.
 
 ### Step 4 — Validate token values
 
@@ -260,6 +249,3 @@ Note: Specs use inline `as const` assertions instead of importing from `referenc
 14. **`undefined` is not a default value** — defaults must be explicit concrete values, `null`, or omitted key
 15. **Complete default coverage required** — every defaultable prop must get a default via rule-based assignment
 16. **Composable children must be marked** — set `childrenKind: 'composition'` for structural children to avoid text-control misgeneration
-17. **Prefer explicit demo contracts for compound components** — define `demo.controls/samples/bindings` when a single inferred preview is insufficient
-18. **Use reference images when available** — include `demo.referenceImages` for components where visual fidelity matters
-19. **Prefer separate demo spec file** — keep fast-changing demo controls/samples/fixtures in `{Name}.demo.spec.ts` when possible

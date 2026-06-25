@@ -35,7 +35,6 @@ Merged validation skill: component conformance, theme validation, spec drift det
 3. `src/components/{category}/{Name}/index.ts` — barrel exports
 4. `src/components/{category}/{Name}/use{Name}.ts` — headless hook (if exists)
 5. `src/components/{category}/{Name}/{Name}.spec.ts` — spec (if exists)
-6. `demo/src/demos/generated/{Name}Demo.tsx` — demo file (if exists)
 
 ### Step 2 — Run validation rules
 
@@ -83,23 +82,9 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | C2 | Component added to `src/index.ts` |
 | C3 | Headless hook exported (if exists) |
 
-#### D. Demo File
-
-| # | Rule |
-|---|------|
-| D1 | Demo file exists (`demo/src/demos/generated/{Name}Demo.tsx`) |
-| D2 | Exports `demo` object with `name`, `category`, `render` |
-| D3 | Controls + initialProps align with component props/spec |
-| D4 | Demo does not override animation defaults unless explicitly requested/spec-driven |
-| D5 | Controlled boolean defaults are neutral | `open`/`checked` defaults use omitted keys unless intentionally controlled |
-| D6 | Text-bearing props have visible defaults | `children`/`label`/`title` should not default to empty when preview would appear blank |
-| D7 | No `undefined` literals in `initialProps` | Demo defaults use explicit values, `null`, or omitted keys |
-| D8 | Demo text defaults are generator-derived | Non-empty text defaults follow deterministic generation policy, not ad-hoc manual edits |
-| D9 | Spec demo contract honored | If `spec.demo` exists, generated demo controls/samples/bindings reflect it |
-| D10 | Reference image metadata preserved | If `spec.demo.referenceImages` exists, generated demo retains these references for QA |
-| D11 | Compound controls are nested | For compound demos, controls are grouped under `subComponents` instead of flattened |
-| D12 | No manual drift in generated files | Generated files match generation patterns/provenance; manual one-off edits are flagged |
-| D13 | Consumer-first demo structure | When demo defines multiple samples, preview presents consumer samples by default (not hidden behind selector) and playground controls are secondary |
+> Demo-file validation removed: the `demo/` app moved to `packages/docs`.
+> Demo/recipe checks will return when the docs-app generators land (see
+> repo `TODO.md`).
 
 #### E. Accessibility & i18n
 
