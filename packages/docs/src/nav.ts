@@ -141,6 +141,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/theming/surfaces', label: 'Surfaces' },
       { to: '/theming/stacking', label: 'Stacking' },
       { to: '/theming/icons', label: 'Icons' },
+      { to: '/theming/typography', label: 'Typography' },
     ],
   },
   {
