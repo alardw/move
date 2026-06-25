@@ -23,16 +23,17 @@ This is an npm-workspaces monorepo. Everything lives under `packages/`:
 
 ## Documentation
 
-The docs site is the primary reference. Run it locally:
+The primary reference is **[the docs site](https://alardw.github.io/move/)**.
+It covers getting started, core concepts (the component contract, the
+animation system, the theming model, hooks), every component, theming,
+recipes, and the AI workflow (specs and skills).
+
+To run the docs locally (for offline reference or to work on them):
 
 ```bash
 npm install
 npm run dev --workspace docs
 ```
-
-It covers getting started, core concepts (the component contract, the
-animation system, the theming model, hooks), every component, theming,
-recipes, and the AI workflow (specs and skills).
 
 ## Using Move in your app
 
