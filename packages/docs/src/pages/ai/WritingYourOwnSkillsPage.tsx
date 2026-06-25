@@ -15,20 +15,20 @@ const BADGES = [
 
 const HOW_IT_WORKS: HighlightItem[] = [
   {
-    icon: 'folder',
-    text: 'Skills live under .agents/skills/<name>/SKILL.md. Open-standard layout: works with Claude Code, Cursor, and anything else that reads the same conventions.',
-  },
-  {
     icon: 'file-code',
-    text: 'Each skill is a markdown file with frontmatter declaring its name, description, and arguments. The body is the agent prompt.',
+    text: 'Each skill is a folder with one SKILL.md — frontmatter (name, description) on top, the agent prompt below. The folder name becomes the slash command.',
   },
   {
-    icon: 'books',
-    text: 'Skills can pull in shared references — design system contracts, code conventions, recipe templates — so prompts stay tight.',
+    icon: 'layers',
+    text: 'Claude Code reads skills from .claude/skills/, Codex from .agents/skills/ — neither reads the other, so a skill lives in both. Keep them flat: a folder directly under skills/, not nested in categories, or they won’t be discovered.',
+  },
+  {
+    icon: 'library',
+    text: 'Skills can pull in shared references — tokens, conventions, contracts — so the prompt stays tight instead of repeating itself.',
   },
   {
     icon: 'rocket',
-    text: 'Once installed, the skill is discoverable as a slash command. No registration step, no plugin manifest.',
+    text: 'Restart your agent after adding one and it shows up as a slash command — no registration step, no plugin manifest.',
   },
 ];
 
