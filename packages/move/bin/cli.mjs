@@ -20,29 +20,37 @@ if (!command || command === '--help' || command === '-h') {
 }
 
 if (command === 'skills') {
-  const sourceDir = join(packageRoot, 'skills', 'app');
+  const sourceDir = join(packageRoot, 'skills');
 
   if (!existsSync(sourceDir)) {
     console.error('  Could not find Move skills. Is the move package installed correctly?');
     process.exit(1);
   }
 
+  // Claude Code reads .claude/skills only; Codex reads .agents/skills only —
+  // neither reads the other, so write real (flat) skill folders to both.
+  // Skip the top-level README; everything else (skill folders + references/)
+  // is copied so the skills' relative `references/...` paths resolve.
   const targets = [
     join(process.cwd(), '.agents', 'skills'),
     join(process.cwd(), '.claude', 'skills'),
   ];
 
+  const skipReadme = (src) => src !== join(sourceDir, 'README.md');
+
   for (const target of targets) {
     mkdirSync(target, { recursive: true });
-    cpSync(sourceDir, target, { recursive: true });
+    cpSync(sourceDir, target, { recursive: true, filter: skipReadme });
   }
 
   console.log(`
   Move skills installed:
-    .agents/skills/   (Codex, open standard)
+    .agents/skills/   (Codex)
     .claude/skills/   (Claude Code)
 
-  Your AI assistant can now generate composites, pages, features, and app setup.
+  Both get the full set: the component spec pipeline (component-*) and the app
+  builders (app-*). Your AI assistant can now drive Move's spec-driven workflow
+  and scaffold apps, pages, and composites.
 `);
   process.exit(0);
 }
