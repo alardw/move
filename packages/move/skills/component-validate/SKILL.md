@@ -91,7 +91,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 
 | # | Rule |
 |---|------|
-| E1 | All user-visible strings come from `labels` prop with defaults (no hardcoded strings) |
+| E1 | User-facing strings use ONE `labels` object | Every user-facing string — including every `aria-label` — comes from a single `labels?: Partial<{Name}Labels>` prop merged with a `DEFAULT_LABELS` const. **FAIL on:** (a) hardcoded string literals in `aria-label=` or visible text; (b) flat per-string props like `playLabel`/`muteLabel`/`closeLabel` (consolidate into the `labels` object). Grep check: no `aria-label="…"` literals, no `[a-zA-Z]+Label\?:` props outside the `labels` object. |
 | E2 | Built-in icons use `useResolvedIcon` |
 | E3 | Essential icons have built-in fallbacks |
 | E4 | Fallback children for icon slots |
