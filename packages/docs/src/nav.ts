@@ -56,7 +56,6 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/ai', label: 'Overview' },
       { to: '/ai/skills', label: 'Skills' },
       { to: '/ai/specs', label: 'Spec pipeline' },
-      { to: '/ai/writing-your-own-skills', label: 'Writing Your Own Skills' },
     ],
   },
   {
