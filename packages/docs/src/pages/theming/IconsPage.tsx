@@ -1,0 +1,192 @@
+import { Link as RouterLink } from 'react-router-dom';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import {
+  CodeBlock,
+  HighlightList,
+  type HighlightItem,
+  Section,
+  TocRail,
+  type TocItem,
+} from '../../components';
+
+const BADGES = [
+  { icon: 'shapes', label: 'Bring your own icons' },
+  { icon: 'plug', label: 'One resolver' },
+];
+
+const PRINCIPLE: HighlightItem[] = [
+  {
+    icon: 'tag',
+    text: (
+      <>
+        <Code>{'<Icon name="chevron-down" />'}</Code> imports nothing itself. It
+        asks the resolver you gave <Code>MoveRoot</Code> for whatever a name
+        should render.
+      </>
+    ),
+  },
+  {
+    icon: 'function-square',
+    text: (
+      <>
+        A resolver is a plain function: <Code>{'(name) => Component | ReactNode | null'}</Code>.
+        Return a component, return raw SVG, or return <Code>null</Code> to fall through.
+      </>
+    ),
+  },
+  {
+    icon: 'shield-check',
+    text: 'Move tries your resolver first, then a small set of built-in essential icons — so a missing name degrades gracefully instead of rendering an empty box.',
+  },
+  {
+    icon: 'replace',
+    text: 'Switch icon libraries by switching the resolver. Not a single <Icon> in your app changes.',
+  },
+];
+
+const WIRING = `import { MoveRoot } from 'move';
+import { iconResolver } from './icons';
+
+export function App() {
+  return (
+    <MoveRoot iconResolver={iconResolver}>
+      {/* every <Icon name="…" /> below now resolves through iconResolver */}
+    </MoveRoot>
+  );
+}`;
+
+const LUCIDE = `import * as Lucide from 'lucide-react';
+import type { ComponentType } from 'react';
+
+// kebab name → PascalCase export: "chevron-down" → Lucide.ChevronDown
+const toPascal = (s: string) =>
+  s.replace(/(^|-)([a-z])/g, (_, __, c) => c.toUpperCase());
+
+export const iconResolver = (name: string) =>
+  ((Lucide as Record<string, unknown>)[toPascal(name)] as ComponentType) ?? null;`;
+
+const MAP = `import { HomeIcon, Cog6ToothIcon, BellIcon } from '@heroicons/react/24/outline';
+import type { ComponentType } from 'react';
+
+// Import only the icons you use, then map your names to them.
+const icons: Record<string, ComponentType> = {
+  home: HomeIcon,
+  settings: Cog6ToothIcon,
+  bell: BellIcon,
+};
+
+export const iconResolver = (name: string) => icons[name] ?? null;`;
+
+const CUSTOM = `// Your own SVGs as components (SVGR, or Vite's ?react suffix)
+import Logo from './icons/logo.svg?react';
+import type { ComponentType } from 'react';
+
+const icons: Record<string, ComponentType> = { logo: Logo };
+
+// A resolver can also return raw JSX, not just a component:
+export const iconResolver = (name: string) =>
+  icons[name] ??
+  (name === 'dot'
+    ? <svg viewBox="0 0 8 8" width="1em" height="1em"><circle cx="4" cy="4" r="4" fill="currentColor" /></svg>
+    : null);`;
+
+const LAZY = `import { lazy } from 'react';
+
+// Code-split: only the icons actually rendered get fetched. Returning a lazy
+// component is fine — render Move's tree inside a <Suspense> boundary.
+export const iconResolver = (name: string) =>
+  lazy(() => import(\`./icons/\${name}.tsx\`));`;
+
+const TOC: TocItem[] = [
+  { href: '#icons', label: 'Overview' },
+  { href: '#how-it-works', label: 'How it works' },
+  { href: '#lucide', label: 'Lucide' },
+  { href: '#map', label: 'Heroicons / Phosphor' },
+  { href: '#custom', label: 'Your own SVGs' },
+  { href: '#lazy', label: 'Lazy-load' },
+];
+
+export function IconsPage() {
+  return (
+    <Stack direction="row" gap="xl" align="stretch" id="icons">
+      <Stack gap="xl" flex={1}>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/">Docs</RouterLink>
+            </Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/theming">Theming</RouterLink>
+            </Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Icons</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+
+        <Stack gap="sm">
+          <Heading level={1} weight="normal">Icons</Heading>
+          <Text color="muted" size="lg">
+            Move’s <Code>Icon</Code> is library-agnostic. You give <Code>MoveRoot</Code> one
+            resolver that turns a name into something to render, and every icon in your app
+            draws from the set you chose — Lucide, Heroicons, Phosphor, your own SVGs, anything.
+          </Text>
+          <Stack direction="row" gap="xs" wrap>
+            {BADGES.map((b) => (
+              <Badge key={b.label} variant="soft">
+                <Icon name={b.icon} />
+                {b.label}
+              </Badge>
+            ))}
+          </Stack>
+        </Stack>
+
+        <Section
+          id="how-it-works"
+          title="How it works"
+          lede="One function decides what every icon name renders to. Wire it once on MoveRoot."
+        >
+          <Stack gap="md">
+            <HighlightList items={PRINCIPLE} />
+            <CodeBlock language="tsx" code={WIRING} />
+          </Stack>
+        </Section>
+
+        <Section
+          id="lucide"
+          title="Lucide — transform a namespace"
+          lede="When a library exports every icon by name, one resolver covers the whole pack: map the kebab name to its PascalCase export."
+        >
+          <CodeBlock language="tsx" code={LUCIDE} />
+        </Section>
+
+        <Section
+          id="map"
+          title="Heroicons, Phosphor, react-icons — map what you import"
+          lede="Import only the icons you use and map your names to them. Tree-shaking-friendly, and the same shape works for any named-export library."
+        >
+          <CodeBlock language="tsx" code={MAP} />
+        </Section>
+
+        <Section
+          id="custom"
+          title="Your own SVGs — return a node"
+          lede="Brand icons or a custom set: map names to imported SVG components, or return raw JSX straight from the resolver."
+        >
+          <CodeBlock language="tsx" code={CUSTOM} />
+        </Section>
+
+        <Section
+          id="lazy"
+          title="Lazy-load a large set"
+          lede="For very large packs, return a lazily-imported component so only the icons you actually render get fetched."
+        >
+          <CodeBlock language="tsx" code={LAZY} />
+        </Section>
+      </Stack>
+      <TocRail items={TOC} />
+    </Stack>
+  );
+}

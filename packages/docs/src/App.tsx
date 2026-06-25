@@ -21,6 +21,7 @@ import { AnimationSystemPage } from './pages/core-concepts/AnimationSystemPage';
 import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/core-concepts/HooksPage';
 import { ThemingOverviewPage } from './pages/theming/ThemingOverviewPage';
+import { IconsPage } from './pages/theming/IconsPage';
 import { StackingPage } from './pages/theming/StackingPage';
 import { SurfacesPage } from './pages/theming/SurfacesPage';
 import { RecipesOverviewPage } from './pages/recipes/RecipesOverviewPage';
@@ -182,6 +183,7 @@ function App() {
                 <Route path="/ai/specs" element={<SpecsPage />} />
                 <Route path="/components" element={<ComponentsOverviewPage />} />
                 <Route path="/theming" element={<ThemingOverviewPage />} />
+                <Route path="/theming/icons" element={<IconsPage />} />
                 <Route path="/theming/stacking" element={<StackingPage />} />
                 <Route path="/theming/surfaces" element={<SurfacesPage />} />
                 <Route path="/recipes" element={<RecipesOverviewPage />} />
