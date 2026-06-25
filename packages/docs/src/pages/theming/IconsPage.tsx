@@ -104,11 +104,13 @@ const INTERNAL_ICON_USAGE: { name: string; usedBy: string }[] = [
   { name: 'captions', usedBy: 'AudioPlayer, VideoPlayer' },
   { name: 'check', usedBy: 'Autocomplete, Checkbox, Dropdown, Stepper' },
   { name: 'chevron-down', usedBy: 'Accordion, Autocomplete, Carousel, Collapsible, NumberInput, Select' },
-  { name: 'chevron-left', usedBy: 'CalendarView, Carousel' },
-  { name: 'chevron-right', usedBy: 'Breadcrumb, CalendarView, Carousel' },
+  { name: 'chevron-left', usedBy: 'CalendarView, Carousel, Pagination, media players' },
+  { name: 'chevron-right', usedBy: 'Breadcrumb, CalendarView, Carousel, Pagination, media players' },
   { name: 'chevron-up', usedBy: 'Carousel, NumberInput' },
   { name: 'circle-check', usedBy: 'Alert, FileUpload, Toast' },
   { name: 'circle-x', usedBy: 'Alert, Toast' },
+  { name: 'eye', usedBy: 'Password' },
+  { name: 'eye-off', usedBy: 'Password' },
   { name: 'file', usedBy: 'FileUpload' },
   { name: 'image-off', usedBy: 'Image' },
   { name: 'info', usedBy: 'Alert, Badge, Toast' },
@@ -120,6 +122,7 @@ const INTERNAL_ICON_USAGE: { name: string; usedBy: string }[] = [
   { name: 'settings', usedBy: 'AudioPlayer, VideoPlayer' },
   { name: 'triangle-alert', usedBy: 'Alert, Toast' },
   { name: 'volume-x', usedBy: 'AudioPlayer, VideoPlayer' },
+  { name: 'x', usedBy: 'Alert, Autocomplete, Dialog, Drawer, FileUpload, Popover, Sidebar, Toast' },
 ];
 
 const OVERRIDE_ALL = `import * as Phosphor from '@phosphor-icons/react';
@@ -234,9 +237,10 @@ export function IconsPage() {
               </Table.Body>
             </Table>
             <Text color="muted">
-              <Code>eye</Code>, <Code>eye-off</Code>, <Code>search</Code>, and <Code>upload</Code> also
-              ship as built-ins, but components surface them through props (e.g. Password’s{' '}
-              <Code>showIcon</Code>/<Code>hideIcon</Code>) rather than rendering them by name.
+              <Code>search</Code> and <Code>upload</Code> also ship as built-ins but aren’t
+              rendered by any component yet — they’re there for your resolver and future use.
+              Components that render a default icon also accept an icon prop (e.g. Password’s{' '}
+              <Code>showIcon</Code>/<Code>hideIcon</Code>) to override just that one instance.
             </Text>
           </Stack>
         </Section>
