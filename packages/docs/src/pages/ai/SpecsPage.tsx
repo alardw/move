@@ -19,7 +19,6 @@ const STEPS = [
   { icon: 'file-code', label: 'Spec', hint: 'Author the .spec.ts' },
   { icon: 'wand-sparkles', label: 'Generate', hint: 'Source, meta, tests' },
   { icon: 'shield-check', label: 'Validate', hint: 'Check against the spec' },
-  { icon: 'refresh-cw', label: 'Derive', hint: 'Docs, demos, recipes' },
 ];
 
 const WHY_IT_HOLDS: HighlightItem[] = [
@@ -64,8 +63,8 @@ export function SpecsPage() {
           <Heading level={1} weight="normal">Spec pipeline</Heading>
           <Text color="muted" size="lg">
             Every Move component is generated from a spec and checked back
-            against it. This is the loop — and why it keeps source, docs, and
-            tests honest. For what a spec actually contains, see the{' '}
+            against it. This is the loop — and why source, metadata, and tests
+            never drift from the description. For what a spec actually contains, see the{' '}
             <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink>.
           </Text>
           <Stack direction="row" gap="xs" wrap>
@@ -81,7 +80,7 @@ export function SpecsPage() {
         <Section
           id="loop"
           title="The loop"
-          lede="Research the shape, write the spec, generate from it, validate against it — then everything else falls out of the same file."
+          lede="Research the shape, write the spec, generate source/meta/tests from it, and validate the result back against it."
         >
           <Stack gap="lg">
             <Stack direction="row" align="stretch" gap="sm" wrap>
@@ -109,8 +108,8 @@ export function SpecsPage() {
               <Code>/component-create-spec</Code> turns it into the typed spec;{' '}
               <Code>/component-generate-*</Code> produces source, metadata, and
               tests; <Code>/component-validate</Code> and the spec-drift checks
-              hold the implementation to the spec. Docs, demos, and recipes all
-              derive from that same file.
+              hold the implementation to the spec. Source, metadata, and tests
+              all trace back to that one file.
             </Text>
           </Stack>
         </Section>
