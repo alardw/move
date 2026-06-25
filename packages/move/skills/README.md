@@ -40,7 +40,7 @@ own spec-driven components in an app. Each component follows a lifecycle:
 
 > Demo and recipe generation are temporarily out of the pipeline (their old
 > `demo/` target moved to `packages/docs`); docs-app replacements are tracked
-> in the repo `TODO.md`.
+> in the repo `notes/TODO.md`.
 
 Or use `/component-generate-all` to run the full pipeline.
 

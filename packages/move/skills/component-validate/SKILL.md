@@ -85,7 +85,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 
 > Demo-file validation removed: the `demo/` app moved to `packages/docs`.
 > Demo/recipe checks will return when the docs-app generators land (see
-> repo `TODO.md`).
+> repo `notes/TODO.md`).
 
 #### E. Accessibility & i18n
 

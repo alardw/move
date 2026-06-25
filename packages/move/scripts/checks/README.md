@@ -5,7 +5,7 @@ bundle budgets, consistency rules. Each check is a self-contained
 Node script that exits 0 on success and 1 on failure, so they slot
 straight into CI.
 
-See `QUALITY.md` at the workspace root for the full framework and
+See `notes/QUALITY.md` for the full framework and
 why each check exists.
 
 ## Conventions

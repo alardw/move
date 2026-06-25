@@ -182,7 +182,7 @@ For components where prop intent is ambiguous (especially compound/composable AP
 - Set `propRoles` for ambiguous props (`displayText`, `composition`, `data`, `behavior`).
 
 > Demo/recipe contracts were removed from the spec for now, pending the
-> docs-app generators (see repo `TODO.md`). Re-add a `demo` contract here
+> docs-app generators (see repo `notes/TODO.md`). Re-add a `demo` contract here
 > when those land.
 
 ### Step 4 — Validate token values

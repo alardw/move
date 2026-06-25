@@ -45,7 +45,7 @@ Generates `.meta.ts` from the component source.
 
 > Recipe and demo generation are temporarily out of this pipeline: the
 > `generate-recipe`/`generate-demo` skills targeted the old `demo/` app and
-> were removed pending docs-app replacements (see repo `TODO.md`).
+> were removed pending docs-app replacements (see repo `notes/TODO.md`).
 
 ### Step 3 — `/component-generate-test {Name}`
 Generates `.test.tsx` from the spec and component source.
