@@ -63,7 +63,7 @@ const WITHOUT_LIBRARY: HighlightItem[] = [
   },
   {
     icon: 'square-dashed',
-    text: 'The non-happy states simply do not get built: disabled, loading, error, empty, RTL, high-zoom. The model generates what a screenshot shows, and a screenshot only shows one state.',
+    text: 'Everything past the happy path is missing — not just loading, error, and empty states, but the guardrails that prevent mistakes, the help for when someone gets stuck, and the shortcuts a returning user expects. The model builds one idealized, uninterrupted journey and abandons anyone who steps off it.',
   },
   {
     icon: 'keyboard',
@@ -109,6 +109,10 @@ const HOW_MOVE: HighlightItem[] = [
   {
     icon: 'shield-check',
     text: 'The behavior ships inside the component. Focus, keyboard, collision flipping, and overflow handling are built into Select, Dropdown, and Dialog — the model can’t forget to add what it never had to write, and there is no happy-path version that skips the hard parts.',
+  },
+  {
+    icon: 'life-buoy',
+    text: 'The un-happy path has components too. EmptyState, inline FormField errors, Toast, and Tooltip are first-class parts of the library — so building what happens when data is missing, input is wrong, or a user needs a hand is composition, not something the model has to remember to invent from nothing.',
   },
   {
     icon: 'accessibility',
