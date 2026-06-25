@@ -2,77 +2,32 @@
 
 Move is a React component library where the components come finished —
 accessible, animated, and consistent out of the box — so you and the AI
-building with you can ship real products, not just demos. Under the hood:
-~65 components built on Radix UI primitives, with motion, theming, and a
-strict component contract, all authored and maintained through specs and AI
-skills — the same generators and checks that build the library help you
-build with it.
+building with you can ship real products, not just demos. ~65 components
+built on Radix UI primitives, with motion, theming, and a strict component
+contract, all authored and maintained through specs and AI skills.
 
-📖 **[Read the docs →](https://alardw.github.io/move/)**
+📖 **[Read the docs →](https://alardw.github.io/move/)** — getting started,
+every component, theming, recipes, and the AI workflow. Everything about
+*using* Move lives there; this README is just the repo map.
 
-## Packages
+## Repo layout
 
-This is an npm-workspaces monorepo. Everything lives under `packages/`:
+An npm-workspaces monorepo — everything lives under `packages/`:
 
 | Package | What it is |
 | --- | --- |
-| [`move`](packages/move) | The published component library. Components, the `withMoveComponent` engine, the animation system, theming, and the `move` CLI (`npx move skills`). |
-| [`create-move-app`](packages/create-move-app) | Scaffolding CLI — `npx create-move-app` stands up a full Move app with shell, routing, and AI skills. |
-| [`docs`](packages/docs) | The documentation site (Vite + React Router). The page-by-page plan lives in [`packages/docs/PLAN.md`](packages/docs/PLAN.md). |
-| [`benchmark`](packages/benchmark) | A comparison app that renders the same screens in Move and in other libraries (MUI, Mantine, Chakra, Ant, HeroUI) for side-by-side evaluation. |
-
-## Documentation
-
-The primary reference is **[the docs site](https://alardw.github.io/move/)**.
-It covers getting started, core concepts (the component contract, the
-animation system, the theming model, hooks), every component, theming,
-recipes, and the AI workflow (specs and skills).
-
-To run the docs locally (for offline reference or to work on them):
-
-```bash
-npm install
-npm run dev --workspace docs
-```
-
-## Using Move in your app
-
-```bash
-npm install move
-```
-
-```tsx
-import 'move/styles.css';
-import { MoveRoot } from 'move';
-
-export function App() {
-  return (
-    <MoveRoot>
-      {/* your screens */}
-    </MoveRoot>
-  );
-}
-```
-
-There are three adoption tiers:
-
-1. **`npm install move`** — use the components and `MoveRoot`.
-2. **`npx move skills`** — add the AI skills to an existing project.
-3. **`npx create-move-app`** — full scaffold with shell, routing, and skills.
-
-## The AI workflow
-
-Move components are described by typed `.spec.ts` files, and a set of skills
-(under `.agents/skills/`) generate the source, tests, meta, demos, and
-recipes from those specs — then validate the result against the component
-contract. The skills follow an open standard that works with both Codex and
-Claude Code. See the docs' AI section for the full workflow.
+| [`move`](packages/move) | The published component library: components, the `withMoveComponent` engine, the animation system, theming, and the `move` CLI. |
+| [`create-move-app`](packages/create-move-app) | Scaffolding CLI — `npx create-move-app` stands up a full Move app. |
+| [`docs`](packages/docs) | The documentation site (Vite + React Router), deployed to GitHub Pages. Page-by-page plan in [`PLAN.md`](packages/docs/PLAN.md). |
+| [`benchmark`](packages/benchmark) | A comparison app rendering the same screens in Move and in other libraries (MUI, Mantine, Chakra, Ant, HeroUI). |
 
 ## Development
 
 ```bash
-npm install                              # install all workspaces
-npm run build   --workspace move         # build the library
-npm run test    --workspace move         # run the test suite
-npm run dev     --workspace docs         # run the docs site
+npm install                          # install all workspaces
+npm run build  --workspace move      # build the library
+npm run test   --workspace move      # run the test suite
+npm run dev    --workspace docs      # run the docs site locally
 ```
+
+The docs site auto-deploys to GitHub Pages on every push to `dev`.
