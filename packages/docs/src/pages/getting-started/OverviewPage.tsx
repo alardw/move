@@ -133,6 +133,9 @@ export function OverviewPage() {
         <Stack gap="sm">
           <Heading level={1} weight="normal">Move UI</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted">
+            AI is great at building UI until a demo has to become a product — see <RouterLink to="/getting-started/what-ai-gets-wrong">What AI gets wrong</RouterLink> for where it breaks and how Move closes the gap.
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
