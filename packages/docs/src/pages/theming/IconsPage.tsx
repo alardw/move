@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Table } from 'move';
 import {
   CodeBlock,
   HighlightList,
@@ -97,12 +97,29 @@ const LAZY = `import { lazy } from 'react';
 export const iconResolver = (name: string) =>
   lazy(() => import(\`./icons/\${name}.tsx\`));`;
 
-// The fixed vocabulary Move's components ask for internally.
-const INTERNAL_ICONS = [
-  'calendar', 'captions', 'check', 'chevron-down', 'chevron-left', 'chevron-right',
-  'chevron-up', 'circle-check', 'circle-x', 'eye', 'eye-off', 'file', 'image-off',
-  'info', 'maximize', 'minimize', 'pause', 'pipette', 'play', 'search', 'settings',
-  'triangle-alert', 'upload', 'volume-x',
+// Which built-in name each component renders by default. Derived from the
+// component source; map any of these to re-skin those components.
+const INTERNAL_ICON_USAGE: { name: string; usedBy: string }[] = [
+  { name: 'calendar', usedBy: 'DatePicker' },
+  { name: 'captions', usedBy: 'AudioPlayer, VideoPlayer' },
+  { name: 'check', usedBy: 'Autocomplete, Checkbox, Dropdown, Stepper' },
+  { name: 'chevron-down', usedBy: 'Accordion, Autocomplete, Carousel, Collapsible, NumberInput, Select' },
+  { name: 'chevron-left', usedBy: 'CalendarView, Carousel' },
+  { name: 'chevron-right', usedBy: 'Breadcrumb, CalendarView, Carousel' },
+  { name: 'chevron-up', usedBy: 'Carousel, NumberInput' },
+  { name: 'circle-check', usedBy: 'Alert, FileUpload, Toast' },
+  { name: 'circle-x', usedBy: 'Alert, Toast' },
+  { name: 'file', usedBy: 'FileUpload' },
+  { name: 'image-off', usedBy: 'Image' },
+  { name: 'info', usedBy: 'Alert, Badge, Toast' },
+  { name: 'maximize', usedBy: 'VideoPlayer' },
+  { name: 'minimize', usedBy: 'VideoPlayer' },
+  { name: 'pause', usedBy: 'AudioPlayer, VideoPlayer' },
+  { name: 'pipette', usedBy: 'ColorInput' },
+  { name: 'play', usedBy: 'AudioPlayer, VideoPlayer' },
+  { name: 'settings', usedBy: 'AudioPlayer, VideoPlayer' },
+  { name: 'triangle-alert', usedBy: 'Alert, Toast' },
+  { name: 'volume-x', usedBy: 'AudioPlayer, VideoPlayer' },
 ];
 
 const OVERRIDE_ALL = `import * as Phosphor from '@phosphor-icons/react';
@@ -133,6 +150,7 @@ export const iconResolver = (name: string) =>
 const TOC: TocItem[] = [
   { href: '#icons', label: 'Overview' },
   { href: '#how-it-works', label: 'How it works' },
+  { href: '#internal-icons', label: 'Internal icons' },
   { href: '#internal', label: 'Override all at once' },
   { href: '#lucide', label: 'Lucide' },
   { href: '#map', label: 'Heroicons / Phosphor' },
@@ -189,17 +207,43 @@ export function IconsPage() {
         </Section>
 
         <Section
+          id="internal-icons"
+          title="Internal icons"
+          lede="The built-in name each component renders by default — map any of these to re-skin specific components."
+        >
+          <Stack gap="sm">
+            <Table>
+              <Table.Header>
+                <Table.Row>
+                  <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Icon name</Table.Head>
+                  <Table.Head>Used by</Table.Head>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {INTERNAL_ICON_USAGE.map((row) => (
+                  <Table.Row key={row.name}>
+                    <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                      <Code>{row.name}</Code>
+                    </Table.Cell>
+                    <Table.Cell>{row.usedBy}</Table.Cell>
+                  </Table.Row>
+                ))}
+              </Table.Body>
+            </Table>
+            <Text color="muted">
+              <Code>eye</Code>, <Code>eye-off</Code>, <Code>search</Code>, and <Code>upload</Code> also
+              ship as built-ins, but components surface them through props (e.g. Password’s{' '}
+              <Code>showIcon</Code>/<Code>hideIcon</Code>) rather than rendering them by name.
+            </Text>
+          </Stack>
+        </Section>
+
+        <Section
           id="internal"
           title="Override every component’s icons at once"
-          lede="Move’s components draw from a fixed vocabulary of names. Your resolver runs before Move’s built-ins, so mapping that vocabulary to your library re-skins every component in one place — no per-component wiring."
+          lede="Your resolver runs before Move’s built-ins, so mapping the names above to your library re-skins every component in one place — no per-component wiring."
         >
           <Stack gap="md">
-            <Text>These are the names components ask for internally:</Text>
-            <Stack direction="row" gap="xs" wrap>
-              {INTERNAL_ICONS.map((n) => (
-                <Code key={n}>{n}</Code>
-              ))}
-            </Stack>
             <Text color="muted">
               Resolution order is your resolver → Move’s built-in essentials → the optional fallback, so returning <Code>null</Code> for a name keeps the built-in. Using Lucide? These are Lucide’s own kebab names, so the resolver above already covers them — no alias map needed.
             </Text>
