@@ -146,10 +146,9 @@ export function OverviewPage() {
         <Section
           id="principles"
           title="What Move is"
-          lede="If you have built frontend with AI, you know the pattern: one screen looks right, the next comes back as raw HTML and custom CSS, and by the third prompt the product already feels inconsistent. Move gives the assistant a real system to build inside, so every screen behaves and feels like one product."
         >
           <Text color="muted">
-            See <RouterLink to="/getting-started/what-ai-gets-wrong">What AI gets wrong</RouterLink> for the failure modes in detail and how Move closes each one.
+            If you have built frontend with AI, you know the pattern: it demos beautifully, then falls apart in real use — inconsistent across screens, inaccessible, broken at the edges (see <RouterLink to="/getting-started/what-ai-gets-wrong">what AI gets wrong</RouterLink>). Move gives the assistant a real system to build inside, so every screen behaves and feels like one product.
           </Text>
           <HighlightList items={PRINCIPLES} />
         </Section>
