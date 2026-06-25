@@ -107,6 +107,10 @@ const DESIGN_SYSTEM: HighlightItem[] = [
     icon: 'ruler',
     text: 'Spacing, radius, and type scale get re-picked per screen, so two pages built an hour apart already feel like two products.',
   },
+  {
+    icon: 'layers',
+    text: 'Whole-app behavior goes uncoordinated. Stacking turns into a z-index guessing game where a dropdown renders behind the dialog that opened it; motion is missing or a different ad-hoc transition on every element; a nested panel doesn’t adapt to the surface it sits inside. Each gets solved locally, so nothing agrees with anything else.',
+  },
 ];
 
 const HOW_MOVE: HighlightItem[] = [
@@ -125,6 +129,10 @@ const HOW_MOVE: HighlightItem[] = [
   {
     icon: 'scan-search',
     text: 'Consistency is enforced, not requested. Spacing, color, and radius are tokens the model looks up instead of inventing — exactly what it’s good at — and validation skills plus spec-drift checks measure generated output against the contract, so “looks on-brand but isn’t” fails a check instead of shipping.',
+  },
+  {
+    icon: 'orbit',
+    text: 'Tokens, motion, stacking, and surface nesting are one coordinated system, not four separate problems. Layering is managed so overlays stack in the right order, animation runs through a single trigger model, and a panel adapts to whatever surface it’s nested in — the whole-app concerns the model usually botches are decided by the system, once.',
   },
   {
     icon: 'package-plus',
