@@ -264,7 +264,7 @@ export const RADII = {
 
 export const TYPOGRAPHY = {
   families: {
-    '--move-font-sans': "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
+    '--move-font': "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif",
     '--move-font-mono': "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
   },
   sizes: {

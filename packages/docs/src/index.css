@@ -17,7 +17,7 @@
 @font-face { font-family: 'Gottak'; font-weight: 700; font-style: italic; font-display: swap; src: url('./fonts/Gottak-BoldItalic.woff2') format('woff2'), url('./fonts/Gottak-BoldItalic.woff') format('woff'); }
 
 :root {
-  --move-font-sans: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --move-font: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
 
 /* Pin the height chain to viewport so the Sidebar (height: 100%) and

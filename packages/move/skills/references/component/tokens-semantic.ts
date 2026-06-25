@@ -182,7 +182,7 @@ export const RADIUS_TOKENS = {
 // =============================================================================
 
 export const TYPOGRAPHY_TOKENS = {
-  '--move-font-body': 'var(--move-font-sans)',
+  '--move-font-body': 'var(--move-font)',
   '--move-font-code': 'var(--move-font-mono)',
   '--move-size-xs': 'var(--move-text-xs)',
   '--move-size-sm': 'var(--move-text-sm)',

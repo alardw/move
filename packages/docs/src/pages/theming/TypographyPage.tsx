@@ -19,8 +19,8 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     icon: 'type',
     text: (
       <>
-        Two font tokens drive everything: <Code>--move-font-sans</Code> (UI and
-        body text) and <Code>--move-font-mono</Code> (code).
+        Two tokens carry the fonts: <Code>--move-font</Code> (all text and UI)
+        and <Code>--move-font-mono</Code> (code). Set those.
       </>
     ),
   },
@@ -28,9 +28,10 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     icon: 'git-merge',
     text: (
       <>
-        The semantic tokens <Code>--move-font-body</Code> and{' '}
-        <Code>--move-font-code</Code> derive from them, and components read those —
-        so set the primitive once and it cascades everywhere.
+        Components read the semantic <Code>--move-font-body</Code> /{' '}
+        <Code>--move-font-code</Code>, which point at those two — so setting{' '}
+        <Code>--move-font</Code> cascades everywhere. The name implies no style:
+        a serif is perfectly fine.
       </>
     ),
   },
@@ -40,10 +41,10 @@ const FONT_PRINCIPLE: HighlightItem[] = [
   },
 ];
 
-const SET_TOKENS = `/* Set once on :root — the semantic tokens (and every component) follow. */
+const SET_TOKENS = `/* Set once on :root — every Move component follows. */
 :root {
-  --move-font-sans: 'Inter', system-ui, sans-serif;  /* UI + body */
-  --move-font-mono: 'JetBrains Mono', monospace;      /* code */
+  --move-font: 'Inter', system-ui, sans-serif;    /* all text + UI — any family */
+  --move-font-mono: 'JetBrains Mono', monospace;  /* code */
 }`;
 
 const LOAD_FONT = `/* Load a custom font, then point the token at it.
@@ -57,12 +58,12 @@ const LOAD_FONT = `/* Load a custom font, then point the token at it.
 }
 
 :root {
-  --move-font-sans: 'Gottak', system-ui, sans-serif;
+  --move-font: 'Gottak', system-ui, sans-serif;
 }`;
 
 const SCOPE = `/* Tokens are plain CSS variables, so scope a different font to a subtree. */
 .legal-prose {
-  --move-font-sans: Georgia, 'Times New Roman', serif;
+  --move-font: Georgia, 'Times New Roman', serif;
 }`;
 
 const SIZES = ['xs', 'sm', 'base', 'lg', 'xl'] as const;
