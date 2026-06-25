@@ -59,11 +59,7 @@ const WITHOUT_LIBRARY: HighlightItem[] = [
   },
   {
     icon: 'text',
-    text: 'Layouts assume short content. A long label, a long name, a long URL overflows its container or pushes the layout apart — nothing truncates, wraps, or reserves space.',
-  },
-  {
-    icon: 'list',
-    text: 'Long lists render every row into the page with no bounded scroll region, no virtualization, and no empty or loading state — fine with three items, janky with three thousand.',
+    text: 'Content is assumed short and tidy. A long label or URL overflows instead of truncating; a long list renders every row with no bounded scroll or virtualization — fine with three items, broken with three thousand.',
   },
   {
     icon: 'square-dashed',
@@ -101,11 +97,7 @@ const DESIGN_SYSTEM: HighlightItem[] = [
   },
   {
     icon: 'library',
-    text: 'The model approximates the design system instead of adhering to it — a component that looks like yours but isn’t, hardcoded values where tokens belong. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
-  },
-  {
-    icon: 'ruler',
-    text: 'Spacing, radius, and type scale get re-picked per screen, so two pages built an hour apart already feel like two products.',
+    text: 'The model approximates the system instead of adhering to it — hardcoded values where tokens belong, spacing and type scale re-picked per screen, so two pages built an hour apart already feel like two products. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
   },
   {
     icon: 'layers',
@@ -235,7 +227,7 @@ export function WhatAIGetsWrongPage() {
         <Section
           id="without-a-system"
           title="But a demo isn’t a product"
-          lede="The strength is the trap. A demo is the happy path, and a product is everything the demo skips. Ask a model to build UI from nothing and it writes div-and-onClick approximations of real components — they demo well and break the moment someone uses a keyboard, a long string, or the edge of the screen."
+          lede="The strength is the trap: a demo is the happy path, and a product is everything the demo skips. Build UI from nothing and you get div-and-onClick approximations — they demo well and break the moment someone uses a keyboard, a long string, or the edge of the screen."
         >
           <HighlightList items={WITHOUT_LIBRARY} />
         </Section>
