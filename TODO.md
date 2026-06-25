@@ -8,6 +8,7 @@
 - Audit tool: takes spec-diff JSON + consumer source tree, reports per-file findings (consumer-side migration helper)
 - Add specs for all docs-internal components (`packages/docs/src/components/*`: Section, HighlightList, KeyboardTable, PropsTable, TokensTable, TocRail, CodeBlock, InlineCode, Preview, HeroDemo, ColorSwatch, MoveBadge, AdvancedBadge, AnimatedSubnav, RelatedComponents, LogoMark) — same Spec contract once it lands; lets the same generators/checks/spec-diff tooling cover docs primitives, not just published Move components
 - Tighten Move prop types: every component's `Props` extends `Record<string, unknown>`, which means `tsc` accepts invalid literal values (e.g. `gap="3xl"` on Stack passes type-check even though `StackGap` excludes `3xl`). The type-safety hole is widespread — Stack/Grid/Heading/Text all affected. Either drop the `Record<string, unknown>` extension or split prop types so the public API stays strict while the internal wiring keeps the loose record
+- Make `asChild` universal on every trigger-like part so polymorphism is uniform across the library (Radix-style pattern shadcn ships everywhere). Today it's present in some places, missing in others — audit + add. Consider for consistency story alongside `sp` slot-prop coverage and token-naming regularity.
 
 ## Default-enforcement (close the AI-picks-small drift)
 
