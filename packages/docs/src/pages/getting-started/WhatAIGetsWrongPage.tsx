@@ -174,7 +174,7 @@ export function WhatAIGetsWrongPage() {
         <Section
           id="with-a-library"
           title="Even with a library, it’s not enough"
-          lede="Reaching for components removes the worst of it. What’s left is everything a screenshot can’t convey: contrast, and the discipline to actually use the system the same way on every screen."
+          lede="A design system is no holy grail. Reaching for components removes the worst of it, but adopting one doesn’t guarantee any of this gets fixed. What’s left is everything a screenshot can’t convey: contrast, and the discipline to actually use the system the same way on every screen."
         >
           <HighlightList items={WITH_LIBRARY} />
         </Section>
