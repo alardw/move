@@ -149,7 +149,7 @@ const SOURCES: Source[] = [
 
 const TOC: TocItem[] = [
   { href: '#what-ai-gets-wrong', label: 'Overview' },
-  { href: '#what-ai-is-great-at', label: 'What AI is great at' },
+  { href: '#what-ai-gets-right', label: 'What AI gets right' },
   { href: '#without-a-system', label: 'Without a system' },
   { href: '#component-library', label: 'A component library' },
   { href: '#design-system', label: 'A design system' },
@@ -192,8 +192,8 @@ export function WhatAIGetsWrongPage() {
         </Stack>
 
         <Section
-          id="what-ai-is-great-at"
-          title="Start with what AI is great at"
+          id="what-ai-gets-right"
+          title="What AI gets right"
           lede="None of this is an argument against using AI. It is genuinely good at the hard first part — and understanding the strength is what explains the gap."
         >
           <HighlightList items={STRENGTHS} />
