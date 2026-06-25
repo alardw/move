@@ -223,7 +223,10 @@ export function IconsPage() {
                 {INTERNAL_ICON_USAGE.map((row) => (
                   <Table.Row key={row.name}>
                     <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
-                      <Code>{row.name}</Code>
+                      <Stack direction="row" align="center" gap="xs">
+                        <Icon name={row.name} />
+                        <Code>{row.name}</Code>
+                      </Stack>
                     </Table.Cell>
                     <Table.Cell>{row.usedBy}</Table.Cell>
                   </Table.Row>
