@@ -133,6 +133,10 @@
 /* Flex */
 .root[data-flex='1'] {
   flex: 1;
+  /* Allow the item to shrink below its content's intrinsic width (the default
+     min-width:auto otherwise lets wide children — e.g. a code block with long
+     lines — blow out the row instead of scrolling within their own box). */
+  min-width: 0;
 }
 
 .root[data-flex='auto'] {
