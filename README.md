@@ -1,10 +1,12 @@
 # Move
 
-Move is an animated React component library built on Radix UI primitives —
-~65 accessible components that ship with motion, theming, and a strict
-component contract out of the box. It's designed to be authored and
-maintained through specs and AI skills, so the same generators and checks
-that build the library also help you build with it.
+Move is a React component library where the components come finished —
+accessible, animated, and consistent out of the box — so you and the AI
+building with you can ship real products, not just demos. Under the hood:
+~65 components built on Radix UI primitives, with motion, theming, and a
+strict component contract, all authored and maintained through specs and AI
+skills — the same generators and checks that build the library help you
+build with it.
 
 📖 **[Read the docs →](https://alardw.github.io/move/)**
 
