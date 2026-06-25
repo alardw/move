@@ -38,7 +38,7 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'type',
     text: (
       <>
-        <RouterLink to="/theming/typography">Typography</RouterLink> — set the font with one token, plus the size and weight scale.
+        <RouterLink to="/customize/typography">Typography</RouterLink> — set the font with one token, plus the size and weight scale.
       </>
     ),
   },
@@ -46,7 +46,7 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'square-stack',
     text: (
       <>
-        <RouterLink to="/theming/surfaces">Surfaces</RouterLink> — bg-base, bg-subtle, bg-muted, bg-emphasis, and when to reach for each.
+        <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink> — bg-base, bg-subtle, bg-muted, bg-emphasis, and when to reach for each.
       </>
     ),
   },
@@ -54,7 +54,7 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'arrow-up-down',
     text: (
       <>
-        <RouterLink to="/theming/stacking">Stacking</RouterLink> — the z-layer system for modals, popovers, and toasts.
+        <RouterLink to="/core-concepts/stacking">Stacking</RouterLink> — the z-layer system for modals, popovers, and toasts.
       </>
     ),
   },
@@ -62,7 +62,7 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'shapes',
     text: (
       <>
-        <RouterLink to="/theming/icons">Icons</RouterLink> — bring your own icon library through one resolver.
+        <RouterLink to="/customize/icons">Icons</RouterLink> — bring your own icon library through one resolver.
       </>
     ),
   },
@@ -134,7 +134,7 @@ export function ThemingModelPage() {
         <Section
           id="sub-topics"
           title="Going deeper"
-          lede="The Theming section drills into each piece — the linked ones have a dedicated page today."
+          lede="These go deeper — Surfaces and Stacking here in Core Concepts, the configurable pieces under Make it your own."
         >
           <HighlightList items={SUB_TOPICS} />
         </Section>

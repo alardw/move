@@ -180,7 +180,7 @@ export function Hello() {
                 icon: 'palette',
                 text: (
                   <>
-                    Set up a custom theme — see <RouterLink to="/theming/tokens">Tokens</RouterLink>{' '}
+                    Set up a custom theme — see <RouterLink to="/customize">Make it your own</RouterLink>{' '}
                     to override colors, spacing, and typography at the root.
                   </>
                 ),

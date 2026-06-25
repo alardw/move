@@ -247,7 +247,7 @@ export function MoveRootPage() {
           <Stack gap="xs">
             <Text size="sm">• Keyed by component name (<Code>Card</Code>, <Code>Button</Code>, …) and then by slot name (<Code>root</Code>, <Code>header</Code>, …).</Text>
             <Text size="sm">• Per-instance <Code>sp</Code> props on individual components override the global ones.</Text>
-            <Text size="sm">• See <RouterLink to="/theming/slot-props">Theming → Slot props</RouterLink> for the full slot-props mental model.</Text>
+            <Text size="sm">• See <RouterLink to="/customize">Make it your own</RouterLink> for the full slot-props mental model.</Text>
           </Stack>
         </Section>
 
@@ -289,9 +289,9 @@ export function MoveRootPage() {
 
         <Section id="next-steps" title="Next steps">
           <Stack gap="xs">
-            <Text size="sm">• <RouterLink to="/theming/tokens">Theming → Tokens</RouterLink> — what's actually in a theme.</Text>
-            <Text size="sm">• <RouterLink to="/theming/colors">Theming → Colors</RouterLink> — palette + per-component color tokens.</Text>
-            <Text size="sm">• <RouterLink to="/theming/slot-props">Theming → Slot props</RouterLink> — global vs per-instance, the full mental model.</Text>
+            <Text size="sm">• <RouterLink to="/customize">Make it your own</RouterLink> — what's actually in a theme.</Text>
+            <Text size="sm">• <RouterLink to="/customize">Make it your own</RouterLink> — palette + per-component color tokens.</Text>
+            <Text size="sm">• <RouterLink to="/customize">Make it your own</RouterLink> — global vs per-instance, the full mental model.</Text>
             <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — the catalog, now that you're set up.</Text>
           </Stack>
         </Section>

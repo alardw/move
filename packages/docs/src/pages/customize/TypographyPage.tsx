@@ -93,7 +93,7 @@ export function TypographyPage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/theming">Theming</RouterLink>
+              <RouterLink to="/customize">Make it your own</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>

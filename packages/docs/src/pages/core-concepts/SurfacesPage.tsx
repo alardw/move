@@ -3,7 +3,7 @@ import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Table, Card } from
 import { Section, TocRail, type TocItem } from '../../components';
 
 /**
- * Theming → Surfaces. The two-level surface elevation system,
+ * Surfaces. The two-level surface elevation system,
  * the alternating-tint rule, the CSS tokens, and which components
  * declare which level.
  */
@@ -43,7 +43,7 @@ export function SurfacesPage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/theming">Theming</RouterLink>
+              <RouterLink to="/core-concepts">Core Concepts</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>

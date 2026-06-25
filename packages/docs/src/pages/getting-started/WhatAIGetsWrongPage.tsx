@@ -288,7 +288,7 @@ export function WhatAIGetsWrongPage() {
                 icon: 'palette',
                 text: (
                   <>
-                    The <RouterLink to="/theming">Theming</RouterLink> model is where the contrast guarantees come from.
+                    The <RouterLink to="/core-concepts/theming-model">Theming model</RouterLink> is where the contrast guarantees come from.
                   </>
                 ),
               },

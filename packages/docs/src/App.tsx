@@ -20,11 +20,12 @@ import { ComponentContractPage } from './pages/core-concepts/ComponentContractPa
 import { AnimationSystemPage } from './pages/core-concepts/AnimationSystemPage';
 import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/core-concepts/HooksPage';
-import { ThemingOverviewPage } from './pages/theming/ThemingOverviewPage';
-import { IconsPage } from './pages/theming/IconsPage';
-import { TypographyPage } from './pages/theming/TypographyPage';
-import { StackingPage } from './pages/theming/StackingPage';
-import { SurfacesPage } from './pages/theming/SurfacesPage';
+import { SurfacesPage } from './pages/core-concepts/SurfacesPage';
+import { StackingPage } from './pages/core-concepts/StackingPage';
+import { CustomizeOverviewPage } from './pages/customize/CustomizeOverviewPage';
+import { IconsPage } from './pages/customize/IconsPage';
+import { TypographyPage } from './pages/customize/TypographyPage';
+import { InternationalizationPage } from './pages/customize/InternationalizationPage';
 import { RecipesOverviewPage } from './pages/recipes/RecipesOverviewPage';
 import { InstallationPage } from './pages/getting-started/InstallationPage';
 import { MoveRootPage } from './pages/getting-started/MoveRootPage';
@@ -178,16 +179,17 @@ function App() {
                 <Route path="/core-concepts/component-contract" element={<ComponentContractPage />} />
                 <Route path="/core-concepts/animation-system" element={<AnimationSystemPage />} />
                 <Route path="/core-concepts/theming-model" element={<ThemingModelPage />} />
+                <Route path="/core-concepts/surfaces" element={<SurfacesPage />} />
+                <Route path="/core-concepts/stacking" element={<StackingPage />} />
                 <Route path="/core-concepts/hooks" element={<HooksPage />} />
                 <Route path="/ai" element={<AIOverviewPage />} />
                 <Route path="/ai/skills" element={<SkillsPage />} />
                 <Route path="/ai/specs" element={<SpecsPage />} />
                 <Route path="/components" element={<ComponentsOverviewPage />} />
-                <Route path="/theming" element={<ThemingOverviewPage />} />
-                <Route path="/theming/icons" element={<IconsPage />} />
-                <Route path="/theming/typography" element={<TypographyPage />} />
-                <Route path="/theming/stacking" element={<StackingPage />} />
-                <Route path="/theming/surfaces" element={<SurfacesPage />} />
+                <Route path="/customize" element={<CustomizeOverviewPage />} />
+                <Route path="/customize/typography" element={<TypographyPage />} />
+                <Route path="/customize/icons" element={<IconsPage />} />
+                <Route path="/customize/internationalization" element={<InternationalizationPage />} />
                 <Route path="/recipes" element={<RecipesOverviewPage />} />
                 {/* Component pages share a single data-driven template.
                     ComponentDocPage looks the slug up in COMPONENT_CONTENT

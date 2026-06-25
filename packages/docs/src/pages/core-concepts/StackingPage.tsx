@@ -4,7 +4,7 @@ import type { ZKind } from 'move';
 import { Section, TocRail, type TocItem } from '../../components';
 
 /**
- * Theming → Stacking. The z-layer hierarchy: how Move components
+ * Stacking. The z-layer hierarchy: how Move components
  * order themselves on the z-axis, the CSS tokens that materialize
  * each layer, and the derivation rules that pick a layer from a
  * spec's behaviors + a11y.
@@ -68,7 +68,7 @@ export function StackingPage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/theming">Theming</RouterLink>
+              <RouterLink to="/core-concepts">Core Concepts</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>

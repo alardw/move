@@ -481,7 +481,7 @@ const TAXONOMIES: TaxonomyDef[] = [
     axis: 'surface',
     flavor: 'contract',
     multiValued: false,
-    description: <>Surface elevation marker for components that render a tinted or elevated panel. Levels alternate background tints so nested surfaces stay visually distinct. Optional — absent when the component has no distinct surface. Full reference: <RouterLink to="/theming/surfaces">Theming → Surfaces</RouterLink>.</>,
+    description: <>Surface elevation marker for components that render a tinted or elevated panel. Levels alternate background tints so nested surfaces stay visually distinct. Optional — absent when the component has no distinct surface. Full reference: <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink>.</>,
     values: [
       { kind: 'base', meaning: 'Base background tint.', fields: [
         { name: 'slot', type: 'string', required: true, description: 'Slot the surface applies to.' },
@@ -496,7 +496,7 @@ const TAXONOMIES: TaxonomyDef[] = [
     axis: 'z (derived)',
     flavor: 'contract',
     multiValued: false,
-    description: <>Stacking layer — <strong>derived</strong> from <Code>behaviors[]</Code> and <Code>a11y</Code> via <Code>deriveZ(spec)</Code>. Not declared on the spec; the model enforces that every component's z-layer falls out of its other taxonomies. Layers ordered low → high. Full reference, derivation rules, and per-component table: <RouterLink to="/theming/stacking">Theming → Stacking</RouterLink>.</>,
+    description: <>Stacking layer — <strong>derived</strong> from <Code>behaviors[]</Code> and <Code>a11y</Code> via <Code>deriveZ(spec)</Code>. Not declared on the spec; the model enforces that every component's z-layer falls out of its other taxonomies. Layers ordered low → high. Full reference, derivation rules, and per-component table: <RouterLink to="/core-concepts/stacking">Stacking</RouterLink>.</>,
     values: [
       { kind: 'sticky', meaning: 'Sticky elements within scrollable content.', examples: 'sticky table headers' },
       { kind: 'app-shell', meaning: 'Top-level chrome — sidebars, fixed top bars.', examples: 'Sidebar' },
@@ -856,8 +856,8 @@ export function ComponentContractPage() {
               Adjacent reading from the same contract:
             </Text>
             <Stack gap="xs">
-              <Text size="sm">• <RouterLink to="/theming/surfaces">Theming → Surfaces</RouterLink> — the surface elevation system, alternating-tint rule, and per-component table.</Text>
-              <Text size="sm">• <RouterLink to="/theming/stacking">Theming → Stacking</RouterLink> — z-layer hierarchy, derivation rules, and stacking pitfalls.</Text>
+              <Text size="sm">• <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink> — the surface elevation system, alternating-tint rule, and per-component table.</Text>
+              <Text size="sm">• <RouterLink to="/core-concepts/stacking">Stacking</RouterLink> — z-layer hierarchy, derivation rules, and stacking pitfalls.</Text>
               <Text size="sm">• <RouterLink to="/core-concepts/animation-system">Animation System</RouterLink> — how the <Code>animations[]</Code> field is consumed at runtime.</Text>
               <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — every spec rendered into a doc page.</Text>
             </Stack>
