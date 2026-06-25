@@ -128,7 +128,7 @@ const HOW_MOVE: HighlightItem[] = [
   },
   {
     icon: 'orbit',
-    text: 'Motion is a system, not a per-element afterthought. Enter and exit, expand, and stagger run through one trigger model with shared springs — and the same coordination layers overlays in the right order and adapts a panel to whatever surface it’s nested in. The whole-app concerns the model usually botches are decided once, so every screen moves, layers, and feels the same way.',
+    text: 'Motion is a system, not a per-element afterthought. Enter and exit, expand, and stagger run through one trigger model with shared springs — and the same coordination layers overlays in the right order and adapts a panel to whatever surface it’s nested in. The whole-app concerns the model usually botches are decided once.',
   },
   {
     icon: 'package-plus',
