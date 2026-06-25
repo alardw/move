@@ -24,3 +24,10 @@ npm-debug.log*
 .env.local
 .env.*.local
 .aider*
+
+# AI tooling — local only. The skills themselves live in packages/move/skills;
+# .agents/.claude are convenience pointers recreated per machine (and consumers
+# get the skills via `npx move skills`). Kept out of git so the repo doesn't
+# ship fragile symlinks that break on Windows / show up empty on GitHub.
+.agents/
+.claude/
