@@ -153,7 +153,9 @@ export const spec = {
   variants: {},
   sizes: ['sm', 'md', 'lg'] as string[],
 
-  labels: [],
+  labels: [
+    { key: 'label', default: 'Breadcrumb', description: 'aria-label for the breadcrumb nav landmark' },
+  ],
   childrenKind: 'composition' as const,
 
   renderContracts: [

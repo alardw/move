@@ -29,12 +29,22 @@ function useBreadcrumbContext() {
 
 export type BreadcrumbSize = 'sm' | 'md' | 'lg';
 
+export interface BreadcrumbLabels {
+  /** aria-label for the breadcrumb nav landmark. */
+  label: string;
+}
+
+const DEFAULT_LABELS: BreadcrumbLabels = {
+  label: 'Breadcrumb',
+};
+
 export interface BreadcrumbRootProps extends Record<string, unknown> {
   separator?: React.ReactNode;
   maxItems?: number;
   itemsBeforeCollapse?: number;
   itemsAfterCollapse?: number;
   size?: BreadcrumbSize;
+  labels?: Partial<BreadcrumbLabels>;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -46,9 +56,10 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
   styles,
   slots: ['root', 'list'] as const,
   defaults: { size: 'md', itemsBeforeCollapse: 1, itemsAfterCollapse: 1 },
-  moveProps: ['separator', 'maxItems', 'itemsBeforeCollapse', 'itemsAfterCollapse', 'size'],
+  moveProps: ['separator', 'maxItems', 'itemsBeforeCollapse', 'itemsAfterCollapse', 'size', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<BreadcrumbLabels>) };
     const {
       className,
       style,
@@ -105,7 +116,7 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
               {...attrs}
               {...spRest}
               ref={ref}
-              aria-label="Breadcrumb"
+              aria-label={labels.label}
               className={cx('root', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-size={size}
