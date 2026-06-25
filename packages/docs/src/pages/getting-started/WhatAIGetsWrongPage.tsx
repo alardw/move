@@ -16,12 +16,27 @@ import {
  */
 
 const TAGLINE =
-  'AI can produce a screen that looks right and behaves wrong. The failures are predictable — and most of them are structural.';
+  'AI is remarkably good at building UI — right up until the demo has to become a product. The gap is predictable, and most of it is structural.';
 
 const BADGES = [
-  { icon: 'triangle-alert', label: 'The problem' },
+  { icon: 'gauge', label: 'Demo vs product' },
   { icon: 'keyboard', label: 'Behavior, not pixels' },
   { icon: 'contrast', label: 'Accessibility' },
+];
+
+const STRENGTHS: HighlightItem[] = [
+  {
+    icon: 'zap',
+    text: 'It is astonishingly fast. A sentence becomes a working screen in seconds — layout, copy, and a sensible first structure, with none of the blank-page friction.',
+  },
+  {
+    icon: 'sparkles',
+    text: 'It makes great demos. The happy path looks polished, the spacing reads well, and the first impression is genuinely impressive — exactly what you want for a prototype or a pitch.',
+  },
+  {
+    icon: 'wand-sparkles',
+    text: 'It has enormous breadth. Having seen millions of interfaces, it can reproduce the shape of almost any pattern you describe without you naming a single library.',
+  },
 ];
 
 const WITHOUT_LIBRARY: HighlightItem[] = [
@@ -51,26 +66,45 @@ const WITHOUT_LIBRARY: HighlightItem[] = [
   },
 ];
 
-const WITH_LIBRARY: HighlightItem[] = [
+const COMPONENT_LIBRARY: HighlightItem[] = [
+  {
+    icon: 'package-check',
+    text: 'A component library is the coded part: a real Select, Dialog, and Combobox with the focus, keyboard, and collision handling from the section above already built in. Import it and those guarantees come for free. That is the floor it raises.',
+  },
+  {
+    icon: 'package-x',
+    text: 'But the model still has to reach for it. It will happily hand-roll a div-based control right next to your imported ones, so the guarantees apply on some elements and not others.',
+  },
+  {
+    icon: 'sliders-horizontal',
+    text: 'Or it uses a component and misuses it — the wrong variant, props the API never offered, an inline override that defeats the point of importing it at all.',
+  },
+  {
+    icon: 'puzzle',
+    text: 'And a library only covers what it ships. Everything composed around the primitives — the layout, the glue, the one-off bits — is still hand-written and unguarded.',
+  },
+];
+
+const DESIGN_SYSTEM: HighlightItem[] = [
+  {
+    icon: 'layers',
+    text: 'A design system is the layer above the components: tokens, a spacing and type scale, and the patterns that decide how screens get composed so a product feels like one product. It is rules, not just code.',
+  },
   {
     icon: 'contrast',
-    text: 'Color choices routinely fail WCAG contrast. Muted gray on white, brand text on a brand fill, a placeholder that disappears — they read fine in a thumbnail preview and fail an actual contrast check.',
+    text: 'The model picks color combinations that look right and fail WCAG contrast. Muted gray on white, brand text on a brand fill, a placeholder that disappears — without enforced color tokens, they read fine in a preview and fail a real contrast check.',
   },
   {
     icon: 'library',
-    text: 'Even when a design system is right there, the assistant approximates it instead of using it — generating a component that looks like yours but isn’t, with hardcoded values where tokens belong. It’s off-system work that looks on-brand, which is harder to catch than output that looks obviously wrong.',
+    text: 'It approximates the system instead of adhering to it — a component that looks like yours but isn’t, hardcoded values where tokens belong. Off-system work that looks on-brand is harder to catch than output that looks obviously wrong.',
   },
   {
     icon: 'shuffle',
-    text: 'Patterns drift from page to page. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. Each prompt re-decides instead of reusing, because the model is good at lookups and bad at consistent invention.',
+    text: 'Patterns drift from page to page. One screen confirms with a Dialog, the next hand-builds a modal; one form stacks labels, the next floats them. The model is good at lookups and bad at consistent invention, so each prompt re-decides instead of reusing.',
   },
   {
     icon: 'ruler',
-    text: 'Spacing, radius, and type scale get re-picked per screen. Without a token vocabulary the assistant invents values, so two pages built an hour apart already feel like two products.',
-  },
-  {
-    icon: 'paintbrush',
-    text: 'Hard-coded hex and pixel values slip in beside the library’s components, so theming and dark mode break exactly where the generated code touched.',
+    text: 'Spacing, radius, and type scale get re-picked per screen, so two pages built an hour apart already feel like two products.',
   },
 ];
 
@@ -123,8 +157,10 @@ const SOURCES: Source[] = [
 
 const TOC: TocItem[] = [
   { href: '#what-ai-gets-wrong', label: 'Overview' },
+  { href: '#what-ai-is-great-at', label: 'What AI is great at' },
   { href: '#without-a-system', label: 'Without a system' },
-  { href: '#with-a-library', label: 'Even with a library' },
+  { href: '#component-library', label: 'A component library' },
+  { href: '#design-system', label: 'A design system' },
   { href: '#how-move-helps', label: 'How Move helps' },
   { href: '#sources', label: 'References' },
   { href: '#next-steps', label: 'Next steps' },
@@ -164,19 +200,35 @@ export function WhatAIGetsWrongPage() {
         </Stack>
 
         <Section
+          id="what-ai-is-great-at"
+          title="Start with what AI is great at"
+          lede="None of this is an argument against using AI. It is genuinely good at the hard first part — and understanding the strength is what explains the gap."
+        >
+          <HighlightList items={STRENGTHS} />
+        </Section>
+
+        <Section
           id="without-a-system"
-          title="Without a system, you’re doomed"
-          lede="Ask a model to build UI from nothing and it writes div-and-onClick approximations of real components. They demo well and break the moment someone uses a keyboard, a long string, or the edge of the screen."
+          title="But a demo isn’t a product"
+          lede="The strength is the trap. A demo is the happy path, and a product is everything the demo skips. Ask a model to build UI from nothing and it writes div-and-onClick approximations of real components — they demo well and break the moment someone uses a keyboard, a long string, or the edge of the screen."
         >
           <HighlightList items={WITHOUT_LIBRARY} />
         </Section>
 
         <Section
-          id="with-a-library"
-          title="Even with a library, it’s not enough"
-          lede="A design system is no holy grail. Reaching for components removes the worst of it, but adopting one doesn’t guarantee any of this gets fixed. What’s left is everything a screenshot can’t convey: contrast, and the discipline to actually use the system the same way on every screen."
+          id="component-library"
+          title="A component library raises the floor — if it’s used"
+          lede="A component library is the coded part: real, accessible primitives you import. It removes the worst of the failures above. The catch is that the model still has to reach for it, and use it the way it’s meant to be used."
         >
-          <HighlightList items={WITH_LIBRARY} />
+          <HighlightList items={COMPONENT_LIBRARY} />
+        </Section>
+
+        <Section
+          id="design-system"
+          title="A design system is no holy grail either"
+          lede="A design system is a different thing from the library: the tokens, scales, and patterns that keep a product feeling like one product. It’s exactly the kind of consistency the model is worst at holding to."
+        >
+          <HighlightList items={DESIGN_SYSTEM} />
         </Section>
 
         <Section
