@@ -124,7 +124,11 @@ const HOW_MOVE: HighlightItem[] = [
   },
   {
     icon: 'scan-search',
-    text: 'Consistency becomes a lookup, and drift gets caught. Spacing, color, and radius are tokens the model reads instead of inventing — exactly what it’s good at — and validation skills check generated output against the spec, so “looks on-brand but isn’t” fails the check instead of shipping.',
+    text: 'Consistency is enforced, not requested. Spacing, color, and radius are tokens the model looks up instead of inventing — exactly what it’s good at — and validation skills plus spec-drift checks measure generated output against the contract, so “looks on-brand but isn’t” fails a check instead of shipping.',
+  },
+  {
+    icon: 'package-plus',
+    text: 'When Move doesn’t ship what you need, you generate it into the system. A new component starts from a typed spec and comes out with the same slots, tokens, motion, and accessibility as everything else — so the piece you add to fill a gap is a first-class part of the system, not the unguarded one-off it would be anywhere else.',
   },
 ];
 
