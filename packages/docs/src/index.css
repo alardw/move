@@ -12,3 +12,18 @@
 :root {
   --move-font-sans: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 }
+
+/* Pin the height chain to viewport so the Sidebar (height: 100%) and
+   the page ScrollArea each get the room they need without making the
+   whole document scroll. Without these rules, a tall sidebar nav
+   stretches the document past the viewport and the logo / footer
+   slide off-screen at higher zoom levels. 100dvh on body so mobile
+   address-bar collapse doesn't flicker the layout. */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  height: 100dvh;
+}
