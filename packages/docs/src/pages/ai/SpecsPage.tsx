@@ -1,5 +1,6 @@
+import { Fragment } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Card } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -13,43 +14,12 @@ const BADGES = [
   { icon: 'shield-check', label: 'Drift-checked' },
 ];
 
-const PIPELINE: HighlightItem[] = [
-  {
-    icon: 'file-code',
-    text: (
-      <>
-        It starts with a spec. <Code>/component-create-spec</Code> turns your
-        description into a typed <Code>.spec.ts</Code> — the component’s shape,
-        behaviour, tokens, and accessibility in one reviewable file. Every field
-        is documented in the{' '}
-        <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink>.
-      </>
-    ),
-  },
-  {
-    icon: 'wand-sparkles',
-    text: (
-      <>
-        The AI generates from it. Source, metadata, and tests come out of the
-        spec through the <Code>/component-generate-*</Code> skills. The spec is
-        the input; the implementation is an output.
-      </>
-    ),
-  },
-  {
-    icon: 'shield-check',
-    text: (
-      <>
-        Source is checked back against the spec. <Code>/component-validate</Code>{' '}
-        and the spec-drift checks compare what was built to what the spec
-        promised, so the implementation can’t silently break the contract.
-      </>
-    ),
-  },
-  {
-    icon: 'refresh-cw',
-    text: 'Everything else derives from the same spec — docs, demos, recipes. One source of truth; nothing to keep in sync by hand.',
-  },
+const STEPS = [
+  { icon: 'search', label: 'Analyze', hint: 'Research the shape' },
+  { icon: 'file-code', label: 'Spec', hint: 'Author the .spec.ts' },
+  { icon: 'wand-sparkles', label: 'Generate', hint: 'Source, meta, tests' },
+  { icon: 'shield-check', label: 'Validate', hint: 'Check against the spec' },
+  { icon: 'refresh-cw', label: 'Derive', hint: 'Docs, demos, recipes' },
 ];
 
 const WHY_IT_HOLDS: HighlightItem[] = [
@@ -111,9 +81,38 @@ export function SpecsPage() {
         <Section
           id="loop"
           title="The loop"
-          lede="Author a spec, generate from it, validate against it — then everything else falls out of the same file."
+          lede="Research the shape, write the spec, generate from it, validate against it — then everything else falls out of the same file."
         >
-          <HighlightList items={PIPELINE} />
+          <Stack gap="lg">
+            <Stack direction="row" align="stretch" gap="sm" wrap>
+              {STEPS.map((s, i) => (
+                <Fragment key={s.label}>
+                  <Card.Root variant="elevated">
+                    <Card.Body>
+                      <Stack gap="xs" align="center">
+                        <Icon name={s.icon} size={22} />
+                        <Text weight="semibold" size="sm">{s.label}</Text>
+                        <Text color="muted" size="xs">{s.hint}</Text>
+                      </Stack>
+                    </Card.Body>
+                  </Card.Root>
+                  {i < STEPS.length - 1 && (
+                    <Stack justify="center">
+                      <Icon name="arrow-right" />
+                    </Stack>
+                  )}
+                </Fragment>
+              ))}
+            </Stack>
+            <Text color="muted">
+              <Code>/component-analyze</Code> proposes a Move-shaped approach;{' '}
+              <Code>/component-create-spec</Code> turns it into the typed spec;{' '}
+              <Code>/component-generate-*</Code> produces source, metadata, and
+              tests; <Code>/component-validate</Code> and the spec-drift checks
+              hold the implementation to the spec. Docs, demos, and recipes all
+              derive from that same file.
+            </Text>
+          </Stack>
         </Section>
 
         <Section
