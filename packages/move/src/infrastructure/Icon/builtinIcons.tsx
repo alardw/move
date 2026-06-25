@@ -164,16 +164,6 @@ function FileIcon({ width, height }: { width: number | string; height: number | 
   );
 }
 
-function Upload({ width, height }: { width: number | string; height: number | string }) {
-  return (
-    <Svg width={width} height={height}>
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-      <polyline points="17 8 12 3 7 8" />
-      <line x1="12" x2="12" y1="3" y2="15" />
-    </Svg>
-  );
-}
-
 function Play({ width, height }: { width: number | string; height: number | string }) {
   return <Svg width={width} height={height}><polygon points="6 3 20 12 6 21 6 3" /></Svg>;
 }
@@ -238,15 +228,6 @@ function Minimize({ width, height }: { width: number | string; height: number | 
   );
 }
 
-function Search({ width, height }: { width: number | string; height: number | string }) {
-  return (
-    <Svg width={width} height={height}>
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </Svg>
-  );
-}
-
 function Settings({ width, height }: { width: number | string; height: number | string }) {
   return (
     <Svg width={width} height={height}>
@@ -288,7 +269,6 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'eye': Eye,
   'eye-off': EyeOff,
   'file': FileIcon,
-  'upload': Upload,
   'play': Play,
   'pause': Pause,
   'volume-2': Volume2,
@@ -296,7 +276,6 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'captions': Captions,
   'maximize': Maximize,
   'minimize': Minimize,
-  'search': Search,
   'settings': Settings,
   'pipette': Pipette,
 };

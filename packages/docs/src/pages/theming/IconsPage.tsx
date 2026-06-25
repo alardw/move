@@ -237,10 +237,10 @@ export function IconsPage() {
               </Table.Body>
             </Table>
             <Text color="muted">
-              <Code>search</Code> and <Code>upload</Code> also ship as built-ins but aren’t
-              rendered by any component yet — they’re there for your resolver and future use.
-              Components that render a default icon also accept an icon prop (e.g. Password’s{' '}
-              <Code>showIcon</Code>/<Code>hideIcon</Code>) to override just that one instance.
+              Every name above ships as a built-in fallback, so these render even before you
+              wire a resolver. Components that render a default icon also accept an icon prop
+              (e.g. Password’s <Code>showIcon</Code>/<Code>hideIcon</Code>) to override just that
+              one instance.
             </Text>
           </Stack>
         </Section>
