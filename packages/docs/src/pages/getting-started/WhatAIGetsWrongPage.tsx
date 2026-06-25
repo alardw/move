@@ -155,8 +155,8 @@ const SOURCES: Source[] = [
   },
   {
     href: 'https://dl.acm.org/doi/10.1145/3772363.3799002',
-    title: 'Looks Good, But Is It Usable? — CHI 2026 (ACM)',
-    note: 'Peer-reviewed: 138 AI-generated mobile screens across three tools, scored against Nielsen’s heuristics. Strong on visuals, weak where it counts — error prevention, error recovery, and help — a measured gap between looking polished and being usable.',
+    title: 'Looks Good, But Is It Usable? — CHI 2026 (ACM, open access)',
+    note: 'Peer-reviewed: 138 AI-generated mobile screens from Figma, Banani, and Stitch, scored against Nielsen’s heuristics. Strong on visual convention, weak on error prevention, recovery, and help — and consistency that holds within a screen but breaks across screens, “local visual coherence over global interaction standards.”',
   },
 ];
 
