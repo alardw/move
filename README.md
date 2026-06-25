@@ -19,7 +19,6 @@ An npm-workspaces monorepo — everything lives under `packages/`:
 | [`move`](packages/move) | The published component library: components, the `withMoveComponent` engine, the animation system, theming, and the `move` CLI. |
 | [`create-move-app`](packages/create-move-app) | Scaffolding CLI — `npx create-move-app` stands up a full Move app. |
 | [`docs`](packages/docs) | The documentation site (Vite + React Router), deployed to GitHub Pages. Page-by-page plan in [`PLAN.md`](packages/docs/PLAN.md). |
-| [`benchmark`](packages/benchmark) | A comparison app rendering the same screens in Move and in other libraries (MUI, Mantine, Chakra, Ant, HeroUI). |
 
 ## Development
 

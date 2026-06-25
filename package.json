@@ -3,11 +3,5 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ],
-  "dependencies": {
-    "@mui/material": "^9.0.0",
-    "@radix-ui/themes": "^3.3.0",
-    "primeicons": "^7.0.0",
-    "primereact": "^10.9.7"
-  }
+  ]
 }
