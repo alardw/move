@@ -68,28 +68,20 @@ const WITHOUT_LIBRARY: HighlightItem[] = [
 
 const COMPONENT_LIBRARY: HighlightItem[] = [
   {
-    icon: 'package-check',
-    text: 'A component library is the coded part: a real Select, Dialog, and Combobox with the focus, keyboard, and collision handling from the section above already built in. Import it and those guarantees come for free. That is the floor it raises.',
-  },
-  {
     icon: 'package-x',
-    text: 'But the model still has to reach for it. It will happily hand-roll a div-based control right next to your imported ones, so the guarantees apply on some elements and not others.',
+    text: 'The model still has to reach for it. It will happily hand-roll a div-based control right next to your imported ones, so the guarantees apply on some elements and not others.',
   },
   {
     icon: 'sliders-horizontal',
-    text: 'Or it uses a component and misuses it — the wrong variant, props the API never offered, an inline override that defeats the point of importing it at all.',
+    text: 'It uses a component and misuses it — the wrong variant, props the API never offered, an inline override that defeats the point of importing it at all.',
   },
   {
     icon: 'puzzle',
-    text: 'And a library only covers what it ships. Everything composed around the primitives — the layout, the glue, the one-off bits — is still hand-written and unguarded.',
+    text: 'A library only covers what it ships. Everything composed around the primitives — the layout, the glue, the one-off bits — is still hand-written and unguarded.',
   },
 ];
 
 const DESIGN_SYSTEM: HighlightItem[] = [
-  {
-    icon: 'layers',
-    text: 'A design system is the layer above the components: tokens, a spacing and type scale, and the patterns that decide how screens get composed so a product feels like one product. It is rules, not just code.',
-  },
   {
     icon: 'contrast',
     text: 'The model picks color combinations that look right and fail WCAG contrast. Muted gray on white, brand text on a brand fill, a placeholder that disappears — without enforced color tokens, they read fine in a preview and fail a real contrast check.',
@@ -218,7 +210,7 @@ export function WhatAIGetsWrongPage() {
         <Section
           id="component-library"
           title="A component library raises the floor — if it’s used"
-          lede="A component library is the coded part: real, accessible primitives you import. It removes the worst of the failures above. The catch is that the model still has to reach for it, and use it the way it’s meant to be used."
+          lede="A component library is the coded part: import a real Select, Dialog, or Combobox and the focus, keyboard, and collision handling come for free. That removes the worst of the failures above — but only where the model actually reaches for it and uses it the way it’s meant to be used."
         >
           <HighlightList items={COMPONENT_LIBRARY} />
         </Section>
