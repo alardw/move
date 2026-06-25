@@ -11,17 +11,16 @@ skills/
     app/                   # Bootstrap, layout, page, feature patterns
     recipes/               # Component and composite recipe examples
 
-  # Library skills — building Move itself
-  analyze/                 # Research how other libraries implement a component
-  create-spec/             # Create or extract a .spec.ts component contract
-  improve/                 # Amend an existing spec with a change request
-  generate-source/         # Generate .tsx, .module.css, index.ts from spec
-  generate-test/           # Generate test file from spec and source
-  generate-meta/           # Generate ComponentMeta from source
-  generate-demo/           # Generate playground demo file
-  generate-recipe/         # Generate recipe files for demo app
-  generate-all/            # Run full generation pipeline
-  validate/                # Validate component conformance
+  # Component skills — author a component from a typed spec
+  # (extend Move itself, or build your own spec-driven components in an app)
+  component-analyze/          # Research how other libraries implement a component
+  component-create-spec/      # Create or extract a .spec.ts component contract
+  component-improve/          # Amend an existing spec with a change request
+  component-generate-source/  # Generate .tsx, .module.css, index.ts from spec
+  component-generate-test/    # Generate test file from spec and source
+  component-generate-meta/    # Generate ComponentMeta from source
+  component-generate-all/     # Run the generation pipeline
+  component-validate/         # Validate component conformance
 
   # App skills — building with Move
   app-setup/               # Bootstrap MoveRoot + app shell
@@ -30,9 +29,10 @@ skills/
   app-feature/             # Generate a cross-page feature
 ```
 
-## Library Skills
+## Component Skills
 
-For maintaining the Move component library. Each component follows a lifecycle:
+Author a component from a typed spec — to extend Move itself, or to build your
+own spec-driven components in an app. Each component follows a lifecycle:
 
 ```
 /component-analyze → /component-create-spec → /component-generate-source → /component-generate-test → /component-generate-meta → /component-validate

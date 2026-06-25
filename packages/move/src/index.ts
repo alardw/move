@@ -122,7 +122,7 @@ export type { ShadowElevation, CreateShadowOptions, SurfaceLevel, ThemeShadowCon
 export { Icon, IconProvider, useIconContext, useResolvedIcon } from './infrastructure/Icon';
 export type { IconComponentProps, IconProps, IconResolver, IconProviderProps } from './infrastructure/Icon';
 
-// Components — generated via /generate-source pipeline
+// Components — generated via the /component-generate-source pipeline
 export { Alert } from './components/core/Alert';
 export type { AlertProps, AlertVariant, AlertSize, AlertLabels } from './components/core/Alert';
 
