@@ -1,5 +1,5 @@
 ---
-name: create-spec
+name: component-create-spec
 description: "Create or extract a typed .spec.ts for a Move component. Auto-detects extract vs create mode."
 user-invocable: true
 argument-hint: "[ComponentName]"

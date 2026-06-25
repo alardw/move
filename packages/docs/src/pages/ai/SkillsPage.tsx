@@ -16,23 +16,23 @@ const BADGES = [
 const LIBRARY_SKILLS: HighlightItem[] = [
   {
     icon: 'search',
-    text: '/analyze — research how other UI libraries implement a component and propose a Move-shaped approach.',
+    text: '/component-analyze — research how other UI libraries implement a component and propose a Move-shaped approach.',
   },
   {
     icon: 'file-code',
-    text: '/create-spec — author or extract a typed .spec.ts for a new component.',
+    text: '/component-create-spec — author or extract a typed .spec.ts for a new component.',
   },
   {
     icon: 'edit',
-    text: '/improve — amend an existing spec with a change request; surfaces what defaults flip.',
+    text: '/component-improve — amend an existing spec with a change request; surfaces what defaults flip.',
   },
   {
     icon: 'wrench',
-    text: '/generate-source, /generate-meta, /generate-recipe, /generate-demo, /generate-test, /generate-all — produce each artifact from a spec.',
+    text: '/component-generate-source, /component-generate-meta, /component-generate-test, /component-generate-all — produce each artifact from a spec.',
   },
   {
     icon: 'shield-check',
-    text: '/validate — check component conformance, theme alignment, and spec drift. Optional fix mode.',
+    text: '/component-validate — check component conformance, theme alignment, and spec drift. Optional fix mode.',
   },
 ];
 

@@ -82,9 +82,9 @@ export const INFRASTRUCTURE_GUIDELINES = {
   /**
    * Infrastructure modules are NOT spec-driven:
    * - No .spec.ts files
-   * - /generate-source skips source generation
-   * - /generate-demo, /generate-test, /generate-meta work by reading source directly
-   * - /validate applies reduced rules (no factory checks)
+   * - /component-generate-source skips source generation
+   * - /component-generate-test, /component-generate-meta work by reading source directly
+   * - /component-validate applies reduced rules (no factory checks)
    */
   noSpec: 'Infrastructure modules do not go through the spec → generate pipeline',
 

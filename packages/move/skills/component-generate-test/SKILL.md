@@ -1,5 +1,5 @@
 ---
-name: generate-test
+name: component-generate-test
 description: "Generate test file for a Move component from spec and source."
 user-invocable: true
 argument-hint: "[ComponentName]"

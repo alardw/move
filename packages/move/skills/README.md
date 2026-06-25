@@ -35,12 +35,14 @@ skills/
 For maintaining the Move component library. Each component follows a lifecycle:
 
 ```
-/analyze → /create-spec → /generate-source → /generate-test → /generate-meta → /validate
-                                            → /generate-demo
-                                            → /generate-recipe
+/component-analyze → /component-create-spec → /component-generate-source → /component-generate-test → /component-generate-meta → /component-validate
 ```
 
-Or use `/generate-all` to run the full pipeline.
+> Demo and recipe generation are temporarily out of the pipeline (their old
+> `demo/` target moved to `packages/docs`); docs-app replacements are tracked
+> in the repo `TODO.md`.
+
+Or use `/component-generate-all` to run the full pipeline.
 
 ### Key concepts
 

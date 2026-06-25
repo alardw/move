@@ -4,7 +4,7 @@
  * Maps ComponentClass to required ARIA role/attributes and focus pattern defaults.
  */
 
-import type { ComponentClass, FocusPattern } from './spec-type';
+import type { ComponentClass, FocusPattern } from './component-create-spec-type';
 
 export interface A11yContract {
   /** Required ARIA role (null = no specific role required) */

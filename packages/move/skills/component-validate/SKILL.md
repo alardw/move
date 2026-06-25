@@ -1,5 +1,5 @@
 ---
-name: validate
+name: component-validate
 description: "Validate component conformance, theme, spec drift. Writes report. Supports fix mode."
 user-invocable: true
 argument-hint: "[ComponentName|all|theme|registry]"
@@ -234,7 +234,7 @@ When input includes "fix", after audit:
 
 ## Report staleness detection
 
-`/validate` detects stale reports by comparing the `sourceHash` in the report header against the current source hash. If they differ, the report is regenerated.
+`/component-validate` detects stale reports by comparing the `sourceHash` in the report header against the current source hash. If they differ, the report is regenerated.
 
 ---
 

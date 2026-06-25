@@ -1,5 +1,5 @@
 ---
-name: generate-all
+name: component-generate-all
 description: "Run full generation pipeline for a Move component: source, meta, test, validate. Requires spec."
 user-invocable: true
 argument-hint: "[ComponentName]"
@@ -25,7 +25,7 @@ Run all generation skills for a component in sequence. Requires an existing spec
 - `{Name}.report.md` — validation report
 - `src/index.ts` — updated with component exports
 
-**REFUSES if:** `{Name}.spec.ts` does not exist. Run `/spec {Name}` first.
+**REFUSES if:** `{Name}.spec.ts` does not exist. Run `/component-create-spec {Name}` first.
 
 ---
 
@@ -33,27 +33,27 @@ Run all generation skills for a component in sequence. Requires an existing spec
 
 Run these skills in order. Each step must complete before the next begins, because later steps read files produced by earlier ones.
 
-### Step 1 — `/generate-source {Name}`
+### Step 1 — `/component-generate-source {Name}`
 Generates `.tsx`, `.module.css`, `index.ts`, `use{Name}.ts` (if applicable), updates `src/index.ts`.
 
 Pre-check before Step 1:
 - Read `{Name}.spec.ts` and verify `defaultReview.status === 'approved'`.
-- If missing, stop immediately and refuse generation with instruction to re-run `/spec {Name}` and complete default review.
+- If missing, stop immediately and refuse generation with instruction to re-run `/component-create-spec {Name}` and complete default review.
 
-### Step 2 — `/generate-meta {Name}`
+### Step 2 — `/component-generate-meta {Name}`
 Generates `.meta.ts` from the component source.
 
 > Recipe and demo generation are temporarily out of this pipeline: the
 > `generate-recipe`/`generate-demo` skills targeted the old `demo/` app and
 > were removed pending docs-app replacements (see repo `TODO.md`).
 
-### Step 3 — `/generate-test {Name}`
+### Step 3 — `/component-generate-test {Name}`
 Generates `.test.tsx` from the spec and component source.
 
-### Step 4 — `/validate {Name}`
+### Step 4 — `/component-validate {Name}`
 Validates all generated files and writes `.report.md`.
 
-If `/validate` returns any BLOCKER failures, stop pipeline immediately and report them as generation failures (do not continue to acceptance).
+If `/component-validate` returns any BLOCKER failures, stop pipeline immediately and report them as generation failures (do not continue to acceptance).
 
 ### Step 5 — Delta report (if original exists)
 
@@ -74,7 +74,7 @@ Skip this step if no original exists.
 
 1. **Run in order** — each step depends on output from previous steps
 2. **Stop on failure** — if any step fails, report the failure and stop
-2a. **Validate is a hard gate** — BLOCKER findings from `/validate` are treated as step failure
+2a. **Validate is a hard gate** — BLOCKER findings from `/component-validate` are treated as step failure
 3. **Follow each skill's own rules** — this skill only orchestrates; each sub-skill's SKILL.md governs its output
 4. **Spec must already exist** — this skill does not generate or modify specs
 5. **Default review must be approved** — refuse pipeline when spec lacks approved `defaultReview`

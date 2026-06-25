@@ -1,5 +1,5 @@
 ---
-name: improve
+name: component-improve
 description: "Amend an existing component spec with a change request. Only reviews new defaults."
 user-invocable: true
 argument-hint: "[ComponentName]: [change description]"
@@ -14,17 +14,17 @@ Amend an existing component spec based on a natural language change request. Onl
 ## How to Run
 
 **Input:** A component name and a change description.
-Format: `/improve {Name}: {description of change}`
+Format: `/component-improve {Name}: {description of change}`
 
 Examples:
-- `/improve Alert: add closable prop with dismiss animation`
-- `/improve Badge: add outline variant`
-- `/improve Tooltip: change default placement from top to bottom`
-- `/improve Dialog: add fullscreen size option`
+- `/component-improve Alert: add closable prop with dismiss animation`
+- `/component-improve Badge: add outline variant`
+- `/component-improve Tooltip: change default placement from top to bottom`
+- `/component-improve Dialog: add fullscreen size option`
 
 **Output:** Updated `{Name}.spec.ts` with new specHash.
 
-**REFUSES if:** `{Name}.spec.ts` does not exist. Run `/spec {Name}` first.
+**REFUSES if:** `{Name}.spec.ts` does not exist. Run `/component-create-spec {Name}` first.
 
 ---
 
@@ -38,7 +38,7 @@ Read the spec and parse the `ComponentSpec` object. Store as `oldSpec`.
 
 ### Step 2 — Load reference data
 
-Read the same reference files as `/spec`:
+Read the same reference files as `/component-create-spec`:
 
 | File | Purpose |
 |------|---------|
@@ -80,7 +80,7 @@ Create `newSpec` by deep-cloning `oldSpec` and applying the parsed changes:
 - **Add fields**: insert new entries into the appropriate arrays/objects
 - **Modify fields**: update values in place
 - **Remove fields**: filter out entries
-- **Token values**: validate against `references/component/tokens-semantic.ts` (same rule as `/spec`)
+- **Token values**: validate against `references/component/tokens-semantic.ts` (same rule as `/component-create-spec`)
 - **Preserve everything else**: do not touch unchanged fields
 
 ### Step 5 — Show diff
@@ -110,7 +110,7 @@ Identify props/fields that are new (not present in `oldSpec`) and have defaultab
 - New enum/union props
 - New size/variant values that need token defaults
 
-For each NEW defaultable prop, run the same default review format as `/spec`:
+For each NEW defaultable prop, run the same default review format as `/component-create-spec`:
 - `prop`: name
 - `proposed`: value
 - `why`: one sentence
@@ -147,7 +147,7 @@ Recompute specHash from the updated spec object. Write the updated spec file wit
 6. **Show diff before writing** — user must see and approve what changed
 7. **No specHash collision** — always recompute hash from final spec content
 8. **Deterministic** — same change request on same spec produces same output
-9. **Do not regenerate** — this skill only updates the spec. User runs `/generate-all` separately
+9. **Do not regenerate** — this skill only updates the spec. User runs `/component-generate-all` separately
 10. **Change scope** — only modify what the change request asks for. Do not "clean up" or refactor unrelated parts of the spec
-11. **Default value policy** — same as `/spec`: no `undefined` defaults, use explicit values or `null`
+11. **Default value policy** — same as `/component-create-spec`: no `undefined` defaults, use explicit values or `null`
 12. **Compound components** — changes can target specific sub-components (e.g. "add size prop to Container")

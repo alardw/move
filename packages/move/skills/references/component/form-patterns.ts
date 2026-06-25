@@ -4,7 +4,7 @@
  * Maps FormType to implementation pattern and controlled pattern prop names.
  */
 
-import type { FormType, ControlledPattern } from './spec-type';
+import type { FormType, ControlledPattern } from './component-create-spec-type';
 
 export interface FormPatternDef {
   /** Implementation description */

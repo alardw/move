@@ -288,7 +288,7 @@ const LIFECYCLE: FieldRow[] = [
 ];
 
 const DEFAULT_REVIEW_FIELDS: FieldRow[] = [
-  { name: 'status', type: "'approved' | 'pending'", required: true, description: <><Code>'pending'</Code> blocks AI generation; <Code>'approved'</Code> lets it through. Generators (<Code>/generate-all</Code>, etc.) check this before running.</> },
+  { name: 'status', type: "'approved' | 'pending'", required: true, description: <><Code>'pending'</Code> blocks AI generation; <Code>'approved'</Code> lets it through. Generators (<Code>/component-generate-all</Code>, etc.) check this before running.</> },
   { name: 'decisionSource', type: "'rule-based' | 'user-confirmed' | 'accept-all'", required: true, description: <>How the approval was reached. <Term>rule-based</Term>: auto-approved by deterministic rules (highest confidence). <Term>user-confirmed</Term>: a human reviewed each default individually. <Term>accept-all</Term>: bulk-approved during a migration (lower confidence).</> },
   { name: 'overrides', type: 'Record<string, unknown>', required: true, description: 'Specific defaults the human changed during review. Key = prop name, value = chosen default. Empty object when no overrides.' },
 ];

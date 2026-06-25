@@ -4,7 +4,7 @@
  * Maps KeyboardPattern to keys, behavior, and typical component classes.
  */
 
-import type { KeyboardPattern, ComponentClass } from './spec-type';
+import type { KeyboardPattern, ComponentClass } from './component-create-spec-type';
 
 export interface KeyboardPatternDef {
   /** Keys involved */

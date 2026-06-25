@@ -1,5 +1,5 @@
 ---
-name: generate-source
+name: component-generate-source
 description: "Generate component .tsx, .module.css, index.ts from a .spec.ts. Refuses without spec."
 user-invocable: true
 argument-hint: "[ComponentName]"
@@ -30,7 +30,7 @@ Generate component source files from a `.spec.ts` specification. **REFUSES witho
 
 ### Step 1 — Locate and read spec
 
-Find `src/components/{category}/{Name}/{Name}.spec.ts`. If not found, REFUSE and tell the user to run `/spec {Name}` first.
+Find `src/components/{category}/{Name}/{Name}.spec.ts`. If not found, REFUSE and tell the user to run `/component-create-spec {Name}` first.
 
 Read the spec file and extract the `ComponentSpec` object.
 

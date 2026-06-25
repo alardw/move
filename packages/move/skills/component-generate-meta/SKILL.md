@@ -1,5 +1,5 @@
 ---
-name: generate-meta
+name: component-generate-meta
 description: "Generate canonical ComponentMeta file from component source."
 user-invocable: true
 argument-hint: "[ComponentName]"
