@@ -27,6 +27,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'timeline',
+  preview: { sample: 'steps' },
   name: 'Timeline',
   tagline: 'A vertical timeline for chronological history — bullets, connector lines, per-item colour, and a staggered entrance.',
   badges: [
