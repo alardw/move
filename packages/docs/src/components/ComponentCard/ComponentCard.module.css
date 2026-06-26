@@ -1,7 +1,6 @@
 .card {
+  position: relative;
   display: block;
-  text-decoration: none;
-  color: inherit;
   border: 1px solid var(--move-border-base);
   border-radius: 12px;
   overflow: hidden;
@@ -15,11 +14,26 @@
   transform: translateY(-2px);
 }
 
+/* Stretched link: the title is the only anchor, its ::after covers the whole
+   card so the entire card is clickable without wrapping the preview in an <a>. */
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 /* Lively, brand-tinted backdrop — replaces the flat grey frame. */
 .frame {
   position: relative;
   height: 200px;
   overflow: hidden;
+  pointer-events: none;
   border-bottom: 1px solid var(--move-border-base);
   background: var(--move-primary);
   background-image: radial-gradient(120% 100% at 78% -10%, color-mix(in oklab, white 26%, transparent), transparent 60%);

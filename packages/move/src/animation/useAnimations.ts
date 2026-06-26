@@ -151,7 +151,6 @@ function executeStep(
   // Stagger path
   if (step.children && step.stagger) {
     if (!el) {
-      console.warn(`[useAnimations] Missing ref for stagger container: ${target}`);
       return Promise.resolve();
     }
     const anim = staggerAnimate(el, step.children, animation, step.stagger, cancelRef, direction);
@@ -171,7 +170,6 @@ function executeStep(
   // animateDimension path
   if (step.fn === 'animateDimension') {
     if (!el) {
-      console.warn(`[useAnimations] Missing ref for animateDimension target: ${target}`);
       return Promise.resolve();
     }
     const raw = animation ?? {};
@@ -190,7 +188,6 @@ function executeStep(
   // animatePosition path
   if (step.fn === 'animatePosition') {
     if (!el) {
-      console.warn(`[useAnimations] Missing ref for animatePosition target: ${target}`);
       return Promise.resolve();
     }
     const slotElements: Record<string, HTMLElement | null> = {};
@@ -221,7 +218,6 @@ function executeStep(
 
   // Default: moveAnimate
   if (!el) {
-    console.warn(`[useAnimations] Missing ref for target: ${target}`);
     return Promise.resolve();
   }
   if (!animation) {

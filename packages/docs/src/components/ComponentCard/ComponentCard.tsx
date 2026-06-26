@@ -48,15 +48,17 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
     .join(' ');
 
   return (
-    <RouterLink to={`/components/${meta.slug}`} className={styles.card}>
-      <div className={styles.frame}>
+    <div className={styles.card}>
+      {/* The preview is decorative — hidden from a11y and non-interactive
+          (pointer-events: none in CSS) so the card (a div with a stretched
+          title link) never wraps the sample's own anchors. */}
+      <div className={styles.frame} aria-hidden>
         {previewImage ? (
           <img src={previewImage} alt="" className={styles.image} />
         ) : Sample ? (
           <div
             className={tiltClass}
             style={width !== 'fit' && width !== 'full' ? { width: PREVIEW_WIDTHS[width] } : undefined}
-            aria-hidden
           >
             <Sample />
           </div>
@@ -68,11 +70,14 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
       </div>
       <Stack gap="xs" className={styles.body}>
         <Stack direction="row" gap="sm" align="center" justify="between">
-          <Text weight="medium">{meta.name}</Text>
+          {/* Stretched link — the ::after covers the whole card. */}
+          <RouterLink to={`/components/${meta.slug}`} className={styles.titleLink}>
+            <Text weight="medium">{meta.name}</Text>
+          </RouterLink>
           <Badge variant="soft" size="sm">{category}</Badge>
         </Stack>
         <Text size="sm" color="muted">{meta.tagline}</Text>
       </Stack>
-    </RouterLink>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ export default function BasicSample() {
         <Avatar.Fallback>AS</Avatar.Fallback>
       </Avatar.Root>
       <Avatar.Root>
-        <Avatar.Image src="https://does-not-exist.example/none.jpg" alt="Jamie Chen" />
+        <Avatar.Image src="https://i.pravatar.cc/96?img=12" alt="Jamie Chen" />
         <Avatar.Fallback>JC</Avatar.Fallback>
       </Avatar.Root>
       <Avatar.Root>

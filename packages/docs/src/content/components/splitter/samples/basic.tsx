@@ -10,7 +10,7 @@ export default function BasicSample() {
   return (
     <div style={{ height: 240 }}>
       <Splitter.Root>
-        <Splitter.Panel defaultSize={30}>
+        <Splitter.Panel>
           <Stack gap="xs" style={panel}>
             <Text weight="medium">Sidebar</Text>
             <Text size="sm" color="muted">Drag the gutter to resize.</Text>
