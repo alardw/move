@@ -4,9 +4,13 @@ import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
 import styles from './ComponentCard.module.css';
 
-/** Components with a container query that collapses below a breakpoint — their
- *  preview must stay at the full desktop width, not hug content. */
-const WIDE_PREVIEW = new Set(['list', 'form-field', 'image-group']);
+/** Small/atomic components whose preview should hug its content instead of
+ *  floating in the full-width (560px) panel. Everything else stays full width
+ *  (safe for width:100% components like Table and the inputs). */
+const NARROW_PREVIEW = new Set([
+  'badge', 'button', 'code', 'label', 'link', 'switch', 'checkbox',
+  'toggle-button', 'avatar', 'kbd', 'loader', 'accordion', 'collapsible',
+]);
 
 export interface ComponentCardProps {
   content: ComponentContent;
@@ -55,7 +59,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
           <img src={image} alt="" className={styles.image} />
         ) : Sample ? (
           <div
-            className={WIDE_PREVIEW.has(meta.slug) ? `${styles.tilt} ${styles.tiltWide}` : styles.tilt}
+            className={NARROW_PREVIEW.has(meta.slug) ? `${styles.tilt} ${styles.tiltNarrow}` : styles.tilt}
             aria-hidden
           >
             {inView ? <Sample /> : null}

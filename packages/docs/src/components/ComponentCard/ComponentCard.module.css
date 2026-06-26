@@ -34,12 +34,7 @@
   position: absolute;
   top: 96px;
   left: 36px;
-  /* Hug the content: narrow components get a narrow panel. Width-hungry ones
-     grow up to the cap; the few container-query components are forced wide via
-     .tiltWide so they don't collapse. */
-  width: max-content;
-  min-width: 240px;
-  max-width: 560px;
+  width: 560px;
   height: auto;
   max-height: 360px;
   display: grid;
@@ -61,16 +56,19 @@
   user-select: none;
 }
 
-/* Container-query components: pin to the full desktop width so they don't
-   collapse, and let the sample fill it. */
-.tiltWide {
-  width: 560px;
-  min-width: 560px;
+.tilt > * {
+  width: 100%;
+}
+
+/* Small/atomic components hug their content instead of floating in a 560px box. */
+.tiltNarrow {
+  width: max-content;
+  min-width: 200px;
   max-width: 560px;
 }
 
-.tiltWide > * {
-  width: 100%;
+.tiltNarrow > * {
+  width: auto;
 }
 
 .image {
