@@ -28,7 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'pin-input',
-  preview: { layout: 'fit' },
+  preview: { width: 'fit' },
   name: 'PinInput',
   tagline: 'A multi-cell pin/OTP input that auto-advances, supports paste-distribution, and masks like a password when you ask it to.',
   badges: [

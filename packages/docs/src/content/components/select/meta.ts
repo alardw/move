@@ -28,7 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'select',
-  preview: { layout: 'fit' },
+  preview: { width: 'fit' },
   name: 'Select',
   tagline: 'Choose from a list with a little zzzing.',
   badges: [

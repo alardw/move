@@ -32,7 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'calendar',
-  preview: { layout: 'fit' },
+  preview: { width: 'fit' },
   name: 'Calendar',
   tagline: 'A date-selection grid with single, range, and multi modes — locale-aware, keyboard-driven, and willing to show event dots when you have them.',
   badges: [

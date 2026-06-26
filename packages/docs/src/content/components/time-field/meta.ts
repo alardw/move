@@ -23,7 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'time-field',
-  preview: { layout: 'fit' },
+  preview: { width: 'fit' },
   name: 'TimeField',
   tagline: 'A time input with hour, minute, optional seconds, and optional AM/PM — typed and tab-able like a real form field.',
   badges: [

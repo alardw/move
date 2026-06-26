@@ -27,7 +27,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'input-range',
-  preview: { layout: 'fit' },
+  preview: { width: 'fit' },
   name: 'InputRange',
   tagline: 'A slider with single or dual thumbs, an optional value readout, and a real keyboard contract from Radix Slider.',
   badges: [

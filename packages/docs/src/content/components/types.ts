@@ -19,24 +19,26 @@ export interface ComponentSample {
 }
 
 /**
+ * Named preview-panel widths (px) — the single source of truth so component
+ * previews stay visually consistent instead of using ad-hoc pixel values.
+ */
+export const PREVIEW_WIDTHS = { xs: 280, sm: 340, md: 420, lg: 500, full: 560 } as const;
+
+export type PreviewWidth = 'fit' | keyof typeof PREVIEW_WIDTHS;
+
+/**
  * How a component renders in the overview's isometric preview card. Co-located
  * with the rest of a component's docs metadata so each component declares its
  * own preview behaviour — instead of central allow/deny lists.
  */
 export interface ComponentPreview {
   /**
-   * `'fill'` (default) lays the sample out at a 560px desktop width so
-   * width:100% components (Table, inputs) render correctly and container
-   * queries don't collapse. `'fit'` hugs the content — for atoms (Badge,
-   * Switch), single inputs, Calendar, etc. that look lost in a wide panel.
+   * Panel width. `'fit'` hugs the content (atoms — Badge, Switch). The named
+   * sizes are fixed widths from `PREVIEW_WIDTHS`, so long content wraps and
+   * components share a consistent scale. `'full'` (default, 560px) is the
+   * desktop width that width:100% components (Table, inputs) need.
    */
-  layout?: 'fill' | 'fit';
-  /**
-   * Cap the preview width in px — for `'fit'` components whose content is long
-   * (e.g. Accordion questions) and would otherwise hug too wide. The content
-   * wraps to this width.
-   */
-  maxWidth?: number;
+  width?: PreviewWidth;
   /**
    * `true` for components that are their own surface (Alert, Card, Toast):
    * drop the white preview panel so it isn't a card-in-a-card; the component's

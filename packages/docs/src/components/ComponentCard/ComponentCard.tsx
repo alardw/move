@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
+import { PREVIEW_WIDTHS } from '../../content/components/types';
 import styles from './ComponentCard.module.css';
 
 export interface ComponentCardProps {
@@ -36,6 +37,7 @@ function useInView(rootMargin = '300px') {
 export function ComponentCard({ content, image }: ComponentCardProps) {
   const { meta, samples } = content;
   const preview = meta.preview ?? {};
+  const width = preview.width ?? 'full';
   const category = meta.badges[0]?.label ?? 'Component';
   const icon = meta.badges[0]?.icon ?? 'box';
   const previewImage = image ?? preview.image;
@@ -61,7 +63,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   const tiltClass = [
     styles.tilt,
     tilted && styles.tiltActive,
-    preview.layout === 'fit' && styles.tiltNarrow,
+    width === 'fit' && styles.tiltNarrow,
     preview.bare && styles.tiltBare,
   ]
     .filter(Boolean)
@@ -75,7 +77,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
         ) : Sample ? (
           <div
             className={tiltClass}
-            style={preview.maxWidth ? { maxWidth: preview.maxWidth } : undefined}
+            style={width !== 'fit' && width !== 'full' ? { width: PREVIEW_WIDTHS[width] } : undefined}
             aria-hidden
           >
             {inView ? <Sample /> : null}
