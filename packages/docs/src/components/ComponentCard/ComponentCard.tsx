@@ -37,7 +37,9 @@ function useInView(rootMargin = '300px') {
 export function ComponentCard({ content, image }: ComponentCardProps) {
   const { meta, samples } = content;
   const preview = meta.preview ?? {};
-  const width = preview.width ?? 'full';
+  // Default to a contained width so every preview fits within the card boundary
+  // (EmptyState's size); components opt into 'fit', a larger size, or 'full'.
+  const width = preview.width ?? 'sm';
   const category = meta.badges[0]?.label ?? 'Component';
   const icon = meta.badges[0]?.icon ?? 'box';
   const previewImage = image ?? preview.image;
