@@ -63,6 +63,7 @@ export const spec = {
         { name: 'onUploadComplete', type: '(entry: FileUploadEntry) => void', moveSpecific: true, description: 'Called when a single file upload completes' },
         { name: 'onUploadError', type: '(entry: FileUploadEntry, error: Error) => void', moveSpecific: true, description: 'Called when a single file upload fails' },
         { name: 'onAllComplete', type: '(entries: FileUploadEntry[]) => void', moveSpecific: true, description: 'Called when all files have finished uploading' },
+        { name: 'labels', type: 'Partial<FileUploadLabels>', moveSpecific: true, description: 'Overridable user-facing strings' },
         { name: 'removeOnComplete', type: 'boolean | number', moveSpecific: true, description: 'Remove files from list after upload completes; true = 2000ms delay, number = custom delay in ms' },
       ],
       usesFactory: true,

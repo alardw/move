@@ -88,9 +88,10 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', description: 'Sticky header' }],
+      slots: [{ name: 'header', element: 'div', description: 'Sticky header' }, { name: 'mobileClose', element: 'button', description: 'Mobile close button' }],
       props: [
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Header content' },
+        { name: 'labels', type: 'Partial<SidebarLabels>', moveSpecific: true, description: 'Overridable user-facing strings' },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'collapsedChildren', type: 'React.ReactNode', moveSpecific: true, description: 'Alternative content shown when sidebar is collapsed (desktop only)' },
@@ -166,7 +167,7 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', description: 'Toggle button' }],
+      slots: [{ name: 'trigger', element: 'button', description: 'Toggle button' }, { name: 'triggerIcon', element: 'span', description: 'Trigger icon' }, { name: 'triggerLabel', element: 'span', description: 'Trigger label' }],
       props: [
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger content (typically a hamburger/collapse icon)' },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },

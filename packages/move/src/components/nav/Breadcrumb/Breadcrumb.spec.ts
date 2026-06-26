@@ -43,6 +43,7 @@ export const spec = {
         { name: 'itemsBeforeCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Number of items to show before ellipsis when collapsed' },
         { name: 'itemsAfterCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Number of items to show after ellipsis when collapsed' },
         { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Breadcrumb size affecting font size and gap' },
+        { name: 'labels', type: 'Partial<BreadcrumbLabels>', moveSpecific: true, description: 'Overridable user-facing strings' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Breadcrumb.Item children' },
       ],
       usesFactory: true,
@@ -102,6 +103,7 @@ export const spec = {
     { name: 'itemsBeforeCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Items shown before ellipsis' },
     { name: 'itemsAfterCollapse', type: 'number', default: '1', moveSpecific: true, description: 'Items shown after ellipsis' },
     { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Breadcrumb size' },
+    { name: 'labels', type: 'Partial<BreadcrumbLabels>', moveSpecific: true, description: 'Overridable user-facing strings' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Breadcrumb.Item children' },
   ],
 

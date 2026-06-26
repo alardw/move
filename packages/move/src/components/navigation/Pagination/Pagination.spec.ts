@@ -43,6 +43,7 @@ export const spec = {
         { name: 'boundaries', type: 'number', default: '1', moveSpecific: true, description: 'Pages pinned at start and end of range' },
         { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of pagination controls' },
         { name: 'variant', type: "'default' | 'outline'", default: "'default'", moveSpecific: true, description: 'Visual variant' },
+    { name: 'labels', type: 'Partial<PaginationLabels>', moveSpecific: true, description: 'Overridable user-facing strings' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'PrevTrigger, Items, NextTrigger' },
       ],
       usesFactory: true,

@@ -22,6 +22,7 @@ export const spec = {
   slots: [
     { name: 'root', element: 'nav', description: 'Navigation landmark wrapping the list of items' },
     { name: 'item', element: 'a', description: 'Individual anchor item with active state' },
+    { name: 'indicator', element: 'div', description: 'Active-item indicator' },
   ],
 
   subComponents: [

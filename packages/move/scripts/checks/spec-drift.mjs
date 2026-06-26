@@ -84,9 +84,14 @@ function getProp(objectLiteral, name) {
   return null;
 }
 
-/** Unwrap `(x)` and `x as T` to the inner node. */
+/** Unwrap `(x)`, `x as T`, and `x satisfies T` to the inner node. */
 function unwrap(node) {
-  while (node && (ts.isAsExpression(node) || ts.isParenthesizedExpression(node))) {
+  while (
+    node &&
+    (ts.isAsExpression(node) ||
+      ts.isParenthesizedExpression(node) ||
+      ts.isSatisfiesExpression(node))
+  ) {
     node = node.expression;
   }
   return node;
@@ -141,11 +146,8 @@ function parseSpec(file) {
           decl.name.text === 'spec' &&
           decl.initializer
         ) {
-          // Spec is sometimes wrapped in `(...) as const` or similar.
-          let init = decl.initializer;
-          while (ts.isAsExpression(init) || ts.isParenthesizedExpression(init)) {
-            init = init.expression;
-          }
+          // Spec is sometimes wrapped in `(...) as const` / `satisfies T`.
+          const init = unwrap(decl.initializer);
           if (ts.isObjectLiteralExpression(init)) {
             specObj = init;
           }
@@ -404,6 +406,53 @@ function resolveAllProps(interfaceName, interfacePool, seen = new Set()) {
   return Array.from(new Set([...own, ...inherited]));
 }
 
+/** Collect `withMoveComponent` slots + defaults from every .ts/.tsx in `dir`
+ *  (excluding tests/specs). Sub-components often live in sibling files, so the
+ *  main `<Name>.tsx` alone misses their slots — union the whole directory. */
+function gatherSlotsDefaults(dir) {
+  const slots = new Set();
+  const defaults = {};
+  for (const entry of readdirSync(dir)) {
+    if (!entry.endsWith('.ts') && !entry.endsWith('.tsx')) continue;
+    if (entry.endsWith('.spec.ts') || entry.endsWith('.test.tsx')) continue;
+    const filePath = join(dir, entry);
+    if (!statSync(filePath).isFile()) continue;
+    try {
+      const sf = parse(filePath);
+      walk(sf, (node) => {
+        if (
+          ts.isCallExpression(node) &&
+          ((ts.isIdentifier(node.expression) && node.expression.text === 'withMoveComponent') ||
+            (ts.isPropertyAccessExpression(node.expression) &&
+              node.expression.name.text === 'withMoveComponent'))
+        ) {
+          const cfg = node.arguments[0];
+          if (!cfg || !ts.isObjectLiteralExpression(cfg)) return;
+          const slotsArr = unwrap(getProp(cfg, 'slots'));
+          if (slotsArr && ts.isArrayLiteralExpression(slotsArr)) {
+            for (const el of slotsArr.elements) {
+              const v = asString(el);
+              if (v) slots.add(v);
+            }
+          }
+          const defaultsObj = getProp(cfg, 'defaults');
+          if (defaultsObj && ts.isObjectLiteralExpression(defaultsObj)) {
+            for (const p of defaultsObj.properties) {
+              if (ts.isPropertyAssignment(p)) {
+                const key = ts.isIdentifier(p.name) ? p.name.text : asString(p.name);
+                if (key && !(key in defaults)) defaults[key] = nodeValue(p.initializer);
+              }
+            }
+          }
+        }
+      });
+    } catch {
+      // ignore unparseable siblings
+    }
+  }
+  return { slots: [...slots], defaults };
+}
+
 function checkComponent(componentDir) {
   const name = basename(componentDir);
   const sourceFile = join(componentDir, `${name}.tsx`);
@@ -425,6 +474,8 @@ function checkComponent(componentDir) {
   const source = parseSource(sourceFile, name);
   // Pool: every interface in the component dir, used to resolve `extends`.
   const interfacePool = { ...readSiblingInterfaces(componentDir), ...source.interfaces };
+  // Slots + defaults gathered across the whole component dir (sub-component files).
+  const dirSD = gatherSlotsDefaults(componentDir);
 
   if (spec._missing) {
     errors.push('spec.ts has no `export const spec = { ... }`');
@@ -487,14 +538,17 @@ function checkComponent(componentDir) {
     }
   }
 
-  // 3. Slots parity (spec slots ↔ source `withMoveComponent` slots)
+  // 3. Slots parity. Only one direction is reliable: a slot the parser FINDS in
+  //    a source `withMoveComponent({ slots })` that the spec omits is real drift.
+  //    The reverse ("spec slot not in source") is skipped — many components
+  //    declare slots in sub-component / _shared files this parser can't reach,
+  //    so it produces false positives.
   {
     const specSlots = new Set(spec.slots ?? []);
-    const srcSlots = new Set(source.slots ?? []);
-    const inSrcNotSpec = [...srcSlots].filter((s) => !specSlots.has(s));
-    const inSpecNotSrc = [...specSlots].filter((s) => !srcSlots.has(s));
-    if (inSrcNotSpec.length) warnings.push(`slot(s) in source not in spec: ${inSrcNotSpec.join(', ')}`);
-    if (inSpecNotSrc.length) warnings.push(`slot(s) in spec not in source: ${inSpecNotSrc.join(', ')}`);
+    const inSrcNotSpec = dirSD.slots.filter((s) => !specSlots.has(s));
+    if (inSrcNotSpec.length) {
+      warnings.push(`slot(s) in source not in spec: ${inSrcNotSpec.join(', ')}`);
+    }
   }
 
   // 4. Default-value parity. Only compare keys present in BOTH the source
@@ -504,7 +558,7 @@ function checkComponent(componentDir) {
   //    so flagging them is noise.
   {
     const specD = spec.defaults ?? {};
-    const srcD = source.defaults ?? {};
+    const srcD = dirSD.defaults;
     for (const [k, v] of Object.entries(srcD)) {
       if (k in specD && specD[k] !== v) {
         errors.push(`default mismatch for '${k}': source=${v} vs spec=${specD[k]}`);
