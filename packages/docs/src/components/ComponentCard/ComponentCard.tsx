@@ -10,7 +10,13 @@ import styles from './ComponentCard.module.css';
 const NARROW_PREVIEW = new Set([
   'badge', 'button', 'code', 'label', 'link', 'switch', 'checkbox',
   'toggle-button', 'avatar', 'kbd', 'loader', 'accordion', 'collapsible',
+  'select', 'number-input', 'time-field', 'input-text', 'password',
+  'color-input', 'pin-input', 'input-range',
 ]);
+
+/** Components that are their own surface (card/panel) — render bare, without
+ *  the white preview panel, so it isn't a card-in-a-card. */
+const BARE_SURFACE = new Set(['alert', 'card', 'toast']);
 
 export interface ComponentCardProps {
   content: ComponentContent;
@@ -52,16 +58,35 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   const Sample = samples?.[0]?.render;
   const { ref, inView } = useInView();
 
+  // Measure flat, then tilt. The sliding indicators (Tabs, Pagination,
+  // TableOfContents…) position via getBoundingClientRect, which is wrong inside
+  // a CSS transform. We let the sample mount + measure UNtransformed, then apply
+  // the iso transform (a transform doesn't re-trigger the measurement), so the
+  // highlight stays correct and just tilts along — all in the docs, no
+  // component change.
+  const [tilted, setTilted] = useState(false);
+  useEffect(() => {
+    if (!inView) return;
+    const t = setTimeout(() => setTilted(true), 150);
+    return () => clearTimeout(t);
+  }, [inView]);
+
+  const tiltClass = [
+    styles.tilt,
+    tilted && styles.tiltActive,
+    NARROW_PREVIEW.has(meta.slug) && styles.tiltNarrow,
+    BARE_SURFACE.has(meta.slug) && styles.tiltBare,
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <RouterLink to={`/components/${meta.slug}`} className={styles.card}>
       <div className={styles.frame} ref={ref}>
         {image ? (
           <img src={image} alt="" className={styles.image} />
         ) : Sample ? (
-          <div
-            className={NARROW_PREVIEW.has(meta.slug) ? `${styles.tilt} ${styles.tiltNarrow}` : styles.tilt}
-            aria-hidden
-          >
+          <div className={tiltClass} aria-hidden>
             {inView ? <Sample /> : null}
           </div>
         ) : (
