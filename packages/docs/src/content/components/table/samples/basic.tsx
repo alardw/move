@@ -5,6 +5,9 @@ const rows = [
   { name: 'Banana', category: 'Berry', origin: 'Southeast Asia' },
   { name: 'Cherry', category: 'Stone fruit', origin: 'Europe' },
   { name: 'Date', category: 'Drupe', origin: 'Middle East' },
+  { name: 'Elderberry', category: 'Berry', origin: 'Europe' },
+  { name: 'Fig', category: 'Multiple fruit', origin: 'Mediterranean' },
+  { name: 'Grape', category: 'Berry', origin: 'Near East' },
 ];
 
 export default function BasicSample() {

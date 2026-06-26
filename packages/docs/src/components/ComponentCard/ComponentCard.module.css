@@ -40,7 +40,7 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 16px;
+  padding: 24px;
   background: var(--move-bg-base);
   border: 1px solid var(--move-border-base);
   border-radius: 14px;
