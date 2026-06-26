@@ -21,16 +21,21 @@
   overflow: hidden;
   background: var(--move-bg-subtle);
   border-bottom: 1px solid var(--move-border-base);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-items: safe center; /* centre when it fits, pin to top when it overflows */
 }
 
 .scale {
-  width: 360px; /* a real layout width so width:100% samples (Table, List) lay out */
-  flex: none;
-  zoom: 0.6; /* shrinks the layout box too, so flex centring works on the scaled size */
+  /* Lay out at a desktop width (above components' container-query breakpoints,
+     e.g. List collapses ≤480px) so previews show the real desktop layout, then
+     scale down. transform (not zoom) keeps the layout box at 560 so container
+     queries don't trip. Absolute + left:50% + translateX(-50%) centres it
+     horizontally regardless of overflow; top:0 keeps the recognisable top
+     visible instead of clipping tall samples through the middle. */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 560px;
+  transform: translateX(-50%) scale(0.42);
+  transform-origin: top center;
   padding: 16px;
   pointer-events: none;
   user-select: none;
@@ -54,12 +59,15 @@
 }
 
 .iconTile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px;
   height: 48px;
-  align-self: center;
   border-radius: 12px;
   background: var(--move-bg-base);
   color: var(--move-fg-muted);
