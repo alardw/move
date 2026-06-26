@@ -32,6 +32,12 @@ export interface ComponentPreview {
    */
   layout?: 'fill' | 'fit';
   /**
+   * Cap the preview width in px — for `'fit'` components whose content is long
+   * (e.g. Accordion questions) and would otherwise hug too wide. The content
+   * wraps to this width.
+   */
+  maxWidth?: number;
+  /**
    * `true` for components that are their own surface (Alert, Card, Toast):
    * drop the white preview panel so it isn't a card-in-a-card; the component's
    * own surface floats with a drop-shadow.

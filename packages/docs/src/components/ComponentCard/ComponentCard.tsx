@@ -73,7 +73,11 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
         {previewImage ? (
           <img src={previewImage} alt="" className={styles.image} />
         ) : Sample ? (
-          <div className={tiltClass} aria-hidden>
+          <div
+            className={tiltClass}
+            style={preview.maxWidth ? { maxWidth: preview.maxWidth } : undefined}
+            aria-hidden
+          >
             {inView ? <Sample /> : null}
           </div>
         ) : (
