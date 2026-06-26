@@ -556,7 +556,7 @@ function TaxonomyTable({ tax }: { tax: TaxonomyDef }) {
       <Card.Body>
         <Stack gap="md">
           <Stack direction="row" gap="xs" align="center" wrap>
-            <Heading level={3} size="lg" weight="normal">{tax.name}</Heading>
+            <Heading level={3} weight="normal">{tax.name}</Heading>
             <Code>{tax.axis}</Code>
           </Stack>
           <Text color="muted" size="sm">{tax.description}</Text>
@@ -715,7 +715,7 @@ export function ComponentContractPage() {
         <Section id="lifecycle" title="Lifecycle" lede="When the component was added, whether it's on the way out, and whether AI tooling is allowed to generate from this spec.">
           <FieldTable fields={LIFECYCLE} />
           <Stack gap="sm">
-            <Heading level={3} size="lg" weight="normal"><Code>defaultReview</Code> — fields</Heading>
+            <Heading level={3} weight="normal"><Code>defaultReview</Code> — fields</Heading>
             <FieldTable fields={DEFAULT_REVIEW_FIELDS} />
           </Stack>
         </Section>
@@ -743,7 +743,7 @@ export function ComponentContractPage() {
         <Section id="composition" title="Composition" lede="How the component is structured — slots, sub-components, anatomy.">
           <FieldTable fields={COMPOSITION} />
           <Stack gap="sm">
-            <Heading level={3} size="lg" weight="normal">Prop rule</Heading>
+            <Heading level={3} weight="normal">Prop rule</Heading>
             <Text>
               Every prop declares a <Code>role</Code> and falls into one of three variants. The role narrows the variant, so a literal default can never sneak in for a user-facing string.
             </Text>
@@ -819,13 +819,13 @@ export function ComponentContractPage() {
         >
           <Stack gap="md">
             <Stack gap="sm">
-              <Heading level={3} size="lg" weight="normal">1. TypeScript</Heading>
+              <Heading level={3} weight="normal">1. TypeScript</Heading>
               <Text>
                 Each <Code>*.spec.ts</Code> imports <Code>Spec</Code> from <Code>src/contract</Code> and annotates: <Code>export const spec: Spec = {`{...}`}</Code>. Discriminated unions enforce sub-contracts: pick <Code>{`{ kind: 'popup-anchored' }`}</Code> and TypeScript demands <Code>closeOnEscape</Code>, <Code>closeOnOutsideClick</Code>, <Code>closeOnScroll</Code>, <Code>closeOnResize</Code>. Pick <Code>{`{ kind: 'a11y.dialog' }`}</Code> and the role + required ARIA attrs are demanded too.
               </Text>
             </Stack>
             <Stack gap="sm">
-              <Heading level={3} size="lg" weight="normal">2. Structural validation (`scripts/checks/spec-schema.mjs`)</Heading>
+              <Heading level={3} weight="normal">2. Structural validation (`scripts/checks/spec-schema.mjs`)</Heading>
               <Text>
                 Catches what types can't:
               </Text>
@@ -842,7 +842,7 @@ export function ComponentContractPage() {
               </Stack>
             </Stack>
             <Stack gap="sm">
-              <Heading level={3} size="lg" weight="normal">3. Source-vs-spec drift (`check:spec-drift`, `check:family-*`)</Heading>
+              <Heading level={3} weight="normal">3. Source-vs-spec drift (`check:spec-drift`, `check:family-*`)</Heading>
               <Text>
                 Per-family scripts ensure the source code actually implements the contract — e.g. a <Code>modal-overlay</Code> component must call <Code>trapFocus</Code> in its source. <Code>check:spec-drift</Code> ensures the prop list on the component matches the spec.
               </Text>

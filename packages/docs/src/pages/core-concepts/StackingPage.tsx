@@ -178,7 +178,7 @@ export function StackingPage() {
         >
           <Stack gap="md">
             <Stack gap="sm">
-              <Heading level={3} size="lg" weight="normal">New stacking contexts</Heading>
+              <Heading level={3} weight="normal">New stacking contexts</Heading>
               <Text>
                 Any element with <Code>position: relative/absolute/fixed</Code> + <Code>z-index</Code>, or <Code>transform</Code>, <Code>filter</Code>, <Code>opacity {'<'} 1</Code>, or <Code>will-change</Code>, creates a new stacking context. Children are clipped to that context's z-range — they can't escape to a higher layer even if they declare a larger z-index.
               </Text>
@@ -187,7 +187,7 @@ export function StackingPage() {
               </Text>
             </Stack>
             <Stack gap="sm">
-              <Heading level={3} size="lg" weight="normal">Don't write raw z-index in component CSS</Heading>
+              <Heading level={3} weight="normal">Don't write raw z-index in component CSS</Heading>
               <Text>
                 Always reference the token: <Code>z-index: var(--move-z-popover);</Code>. The numeric values are tuned and may shift on schema bumps; a hard-coded number stops tracking the layer system.
               </Text>

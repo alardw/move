@@ -23,7 +23,7 @@ export default function SignIn({ labels }: { labels?: Partial<Labels> }) {
   return (
     <Card.Root maxWidth={400}>
       <Card.Header>
-        <Heading level={2} size="xl">{t.title}</Heading>
+        <Heading level={2}>{t.title}</Heading>
       </Card.Header>
       <Card.Body>
         <Stack gap="md">

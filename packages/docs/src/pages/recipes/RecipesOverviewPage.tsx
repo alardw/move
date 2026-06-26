@@ -90,7 +90,7 @@ export function RecipesOverviewPage() {
               groupsToShow.map((g) => (
                 <Stack key={g} gap="sm">
                   {group === 'All' && (
-                    <Heading level={2} size="lg" weight="normal">{g}</Heading>
+                    <Heading level={2} weight="normal">{g}</Heading>
                   )}
                   <div style={GRID}>
                     {filtered

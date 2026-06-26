@@ -101,11 +101,6 @@ describe('Heading', () => {
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', 'base');
     });
 
-    it('applies explicit size override via data-size', () => {
-      render(<Heading level={1} size="sm" data-testid="heading">Title</Heading>);
-      expect(screen.getByTestId('heading')).toHaveAttribute('data-size', 'sm');
-    });
-
     it('defaults to 3xl size for default level=2', () => {
       render(<Heading data-testid="heading">Title</Heading>);
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', '3xl');

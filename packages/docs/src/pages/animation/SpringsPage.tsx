@@ -17,7 +17,7 @@ const BADGES = [
   { icon: 'spline', label: 'Easings when you need them' },
 ];
 
-const SPRINGS: HighlightItem[] = [
+const FEEL_SPRINGS: HighlightItem[] = [
   { icon: 'zap', text: 'snappy — quick and responsive. Buttons and small controls.' },
   { icon: 'zap', text: 'quick — a touch looser than snappy.' },
   { icon: 'sparkles', text: 'poppy — bouncy and playful. Scale pops and lively entrances.' },
@@ -26,9 +26,12 @@ const SPRINGS: HighlightItem[] = [
   { icon: 'feather', text: 'lazy — slower still, for unhurried motion.' },
   { icon: 'candy', text: 'jelly — wobbly and fun. Notifications and playful touches.' },
   { icon: 'minus', text: 'stiff — minimal overshoot. Controlled, precise motion.' },
-  { icon: 'message-square', text: 'tooltip — feather-light. Tooltips and small popovers.' },
-  { icon: 'panel-left', text: 'sidebar — smooth and professional. Modals and overlays.' },
-  { icon: 'arrow-right', text: 'pagination — moderate overshoot. Sliding indicators.' },
+];
+
+const TUNED_SPRINGS: HighlightItem[] = [
+  { icon: 'message-square', text: 'tooltip — feather-light, for tooltips and small popovers.' },
+  { icon: 'panel-left', text: 'sidebar — smooth and steady, for the sidebar and overlays.' },
+  { icon: 'arrow-right', text: 'pagination — moderate overshoot, for sliding indicators.' },
 ];
 
 const TOC: TocItem[] = [
@@ -83,7 +86,15 @@ export function SpringsPage() {
             <Code>snappy</Code> or <Code>poppy</Code> and gets a consistent feel
             without anyone picking numbers.
           </Text>
-          <HighlightList items={SPRINGS} />
+          <HighlightList items={FEEL_SPRINGS} />
+          <Text>
+            Three more are tuned for a specific component and named after where
+            they're used — <Code>tooltip</Code>, <Code>sidebar</Code>, and{' '}
+            <Code>pagination</Code>. They're springs like the rest; they exist so
+            those components stay consistent, and you can reach for them anywhere
+            the feel fits.
+          </Text>
+          <HighlightList items={TUNED_SPRINGS} />
         </Section>
 
         <Section

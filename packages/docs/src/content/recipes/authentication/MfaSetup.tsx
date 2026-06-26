@@ -41,7 +41,7 @@ export default function MfaSetup({ labels }: { labels?: Partial<Labels> }) {
     <Card.Root maxWidth={440}>
       <Card.Header>
         <Stack direction="row" gap="sm" align="center">
-          <Heading level={2} size="xl">{t.title}</Heading>
+          <Heading level={2}>{t.title}</Heading>
           <Badge size="sm" color="primary" variant="soft">
             {t.stepLabel(step === 'scan' ? 1 : 2, 2)}
           </Badge>

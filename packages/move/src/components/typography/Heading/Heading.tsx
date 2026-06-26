@@ -33,7 +33,6 @@ const levelToSize: Record<HeadingLevel, HeadingSize> = {
 
 export interface HeadingProps extends Record<string, unknown> {
   level?: HeadingLevel;
-  size?: HeadingSize;
   weight?: HeadingWeight;
   color?: HeadingColor;
   tracking?: HeadingTracking;
@@ -49,7 +48,7 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
   styles,
   slots: ['root'] as const,
   defaults: { level: 2 as HeadingLevel, color: 'base' as HeadingColor, tracking: 'tight' as HeadingTracking },
-  moveProps: ['size', 'align', 'truncate'],
+  moveProps: ['align', 'truncate'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -58,7 +57,7 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const level = props.level || 2;
-        const resolvedSize = props.size || levelToSize[level as HeadingLevel];
+        const resolvedSize = levelToSize[level as HeadingLevel];
         const Comp = `h${level}` as React.ElementType;
 
         return (

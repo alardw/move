@@ -20,7 +20,7 @@ export function Section({
   return (
     <Stack gap="md">
       <Stack gap="xs">
-        <Heading level={2} size="xl" weight="semibold" id={id}>
+        <Heading level={2} weight="semibold" id={id}>
           {title}
         </Heading>
         {lede && <Text color="muted">{lede}</Text>}

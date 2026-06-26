@@ -5,6 +5,7 @@ export type { ComponentCardProps } from './ComponentCard';
 export { ColorSwatch, isColorValue } from './ColorSwatch';
 export { HeroDemo } from './HeroDemo';
 export { InlineCode } from './InlineCode';
+export { InlineDemo } from './InlineDemo';
 export { HighlightList } from './HighlightList';
 export type { HighlightItem } from './HighlightList';
 export { KeyboardTable } from './KeyboardTable';

@@ -33,7 +33,7 @@ const related: RelatedItem[] = [
 export const meta: ComponentMeta = {
   slug: 'heading',
   name: 'Heading',
-  tagline: 'Semantic heading h1–h6 with size, weight, colour, alignment, and truncation — visual style decoupled from semantic level.',
+  tagline: 'Semantic heading h1–h6 with weight, colour, alignment, and truncation — size follows the level.',
   categories: ['typography'],
   badges: [
   ],

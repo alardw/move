@@ -25,7 +25,7 @@ export default function ForgotPassword({ labels }: { labels?: Partial<Labels> })
     return (
       <Card.Root maxWidth={400}>
         <Card.Header>
-          <Heading level={2} size="xl">{t.confirmTitle}</Heading>
+          <Heading level={2}>{t.confirmTitle}</Heading>
           <Text color="muted">
             {t.confirmSentTo} <Text weight="semibold">{email}</Text>.
           </Text>
@@ -48,7 +48,7 @@ export default function ForgotPassword({ labels }: { labels?: Partial<Labels> })
   return (
     <Card.Root maxWidth={400}>
       <Card.Header>
-        <Heading level={2} size="xl">{t.title}</Heading>
+        <Heading level={2}>{t.title}</Heading>
         <Text color="muted">{t.description}</Text>
       </Card.Header>
       <Card.Body>

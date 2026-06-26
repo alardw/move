@@ -30,7 +30,7 @@ export default function MfaVerify({ labels }: { labels?: Partial<Labels> }) {
   return (
     <Card.Root maxWidth={400}>
       <Card.Header>
-        <Heading level={2} size="xl">{t.title}</Heading>
+        <Heading level={2}>{t.title}</Heading>
         <Text color="muted">{t.description}</Text>
       </Card.Header>
       <Card.Body>

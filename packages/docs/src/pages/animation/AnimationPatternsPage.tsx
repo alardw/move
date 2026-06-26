@@ -1,12 +1,50 @@
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import {
+  Stack,
+  Heading,
+  Text,
+  Breadcrumb,
+  Icon,
+  Badge,
+  Code,
+  Button,
+  Switch,
+  Select,
+  Popover,
+  Dialog,
+  Accordion,
+  Tabs,
+} from 'move';
 import {
   HighlightList,
   type HighlightItem,
+  InlineDemo,
   Section,
   TocRail,
   type TocItem,
 } from '../../components';
+
+const FRUITS = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
+
+function SelectDemo() {
+  const [value, setValue] = useState('Apple');
+  return (
+    <Select.Root value={value} onValueChange={setValue}>
+      <Select.Trigger>
+        <Select.Value />
+        <Select.Icon />
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Viewport>
+          {FRUITS.map((f) => (
+            <Select.Item key={f} value={f}>{f}</Select.Item>
+          ))}
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Root>
+  );
+}
 
 const TAGLINE =
   'The motion in Move components is assembled from a handful of named patterns. These are them.';
@@ -14,37 +52,6 @@ const TAGLINE =
 const BADGES = [
   { icon: 'puzzle', label: 'Ready-made' },
   { icon: 'blocks', label: 'Shared across components' },
-];
-
-const COMMON: HighlightItem[] = [
-  {
-    icon: 'mouse-pointer-click',
-    text: 'interactive — scale up on hover, down on press. Buttons, toggles, pagination, day cells.',
-  },
-  {
-    icon: 'toggle-left',
-    text: 'toggle — animate a thumb or mark as a value flips. Checkbox, radio, switch.',
-  },
-  {
-    icon: 'chevron-down',
-    text: 'popup — reveal a panel by height and stagger its items in. Select, dropdown, autocomplete, date picker.',
-  },
-  {
-    icon: 'log-in',
-    text: 'enterExit — fade and slide on mount and unmount. Alert, avatar, chat bubble, popover, toast.',
-  },
-  {
-    icon: 'layers',
-    text: 'overlay — fade a backdrop while its panel springs in. Dialog, drawer.',
-  },
-  {
-    icon: 'unfold-vertical',
-    text: 'expand — grow height and opacity together as a region opens. Accordion, collapsible.',
-  },
-  {
-    icon: 'move-horizontal',
-    text: 'position — slide an indicator to track the active item. Tabs, pagination, toggle group.',
-  },
 ];
 
 const SPECIALIZED: HighlightItem[] = [
@@ -72,7 +79,7 @@ const SPECIALIZED: HighlightItem[] = [
 
 const TOC: TocItem[] = [
   { href: '#patterns', label: 'Overview' },
-  { href: '#common', label: 'Common patterns' },
+  { href: '#see-it-in-action', label: 'See it in action' },
   { href: '#specialized', label: 'Specialized patterns' },
   { href: '#presets', label: 'Presets underneath' },
 ];
@@ -111,16 +118,142 @@ export function AnimationPatternsPage() {
         </Stack>
 
         <Section
-          id="common"
-          title="Common patterns"
+          id="see-it-in-action"
+          title="See it in action"
           lede="The recipes most components reach for."
         >
           <Text>
             A pattern is a trigger and sequence paired for a recurring job.
             Because the same pattern drives many components, a press feels like a
-            press and a reveal feels like a reveal across the whole library.
+            press and a reveal feels like a reveal across the whole library. Each
+            one below is live — interact with it to feel the motion.
           </Text>
-          <HighlightList items={COMMON} />
+          <Stack gap="xl">
+            <InlineDemo
+              label={<Code>interactive</Code>}
+              blurb="Scale up on hover, down on press. Hover and press the button."
+            >
+              <Button>Press me</Button>
+            </InlineDemo>
+
+            <InlineDemo
+              label={<Code>toggle</Code>}
+              blurb="Animate a thumb as a value flips. Click the switch."
+            >
+              <Switch.Root defaultChecked label="Notifications">
+                <Switch.Thumb />
+              </Switch.Root>
+            </InlineDemo>
+
+            <InlineDemo
+              label={<Code>popup</Code>}
+              blurb="Reveal a panel by height and stagger its items in. Open the select."
+            >
+              <SelectDemo />
+            </InlineDemo>
+
+            <InlineDemo
+              label={<Code>enterExit</Code>}
+              blurb="Fade and slide on open and close. Open and dismiss the popover."
+            >
+              <Popover.Root>
+                <Popover.Trigger asChild>
+                  <Button variant="secondary">Show details</Button>
+                </Popover.Trigger>
+                <Popover.Content sideOffset={8}>
+                  <Text size="sm" color="muted">Refreshed every 30 seconds.</Text>
+                </Popover.Content>
+              </Popover.Root>
+            </InlineDemo>
+
+            <InlineDemo
+              label={<Code>overlay</Code>}
+              blurb="Fade a backdrop while the panel springs in. Open the dialog."
+            >
+              <Dialog.Root>
+                <Dialog.Trigger asChild>
+                  <Button>Open dialog</Button>
+                </Dialog.Trigger>
+                <Dialog.Portal>
+                  <Dialog.Overlay />
+                  <Dialog.Content>
+                    <Dialog.Header>
+                      <Dialog.Title>Publish changes</Dialog.Title>
+                    </Dialog.Header>
+                    <Dialog.Body>
+                      <Dialog.Description>
+                        Push the last hour of edits live?
+                      </Dialog.Description>
+                    </Dialog.Body>
+                    <Dialog.Footer>
+                      <Dialog.FooterEnd>
+                        <Dialog.Close asChild>
+                          <Button variant="ghost">Not yet</Button>
+                        </Dialog.Close>
+                        <Dialog.Close asChild>
+                          <Button>Publish</Button>
+                        </Dialog.Close>
+                      </Dialog.FooterEnd>
+                    </Dialog.Footer>
+                  </Dialog.Content>
+                </Dialog.Portal>
+              </Dialog.Root>
+            </InlineDemo>
+
+            <InlineDemo
+              block
+              label={<Code>expand</Code>}
+              blurb="Grow height and opacity together as a region opens. Toggle a row."
+            >
+              <Accordion.Root type="single" collapsible defaultValue="shipping">
+                <Accordion.Item value="shipping">
+                  <Accordion.Header>
+                    <Accordion.Trigger>How long does shipping take?</Accordion.Trigger>
+                  </Accordion.Header>
+                  <Accordion.Content>
+                    Most orders ship within one business day.
+                  </Accordion.Content>
+                </Accordion.Item>
+                <Accordion.Item value="tracking">
+                  <Accordion.Header>
+                    <Accordion.Trigger>Can I track my order?</Accordion.Trigger>
+                  </Accordion.Header>
+                  <Accordion.Content>
+                    Yes — we email a tracking link the moment it ships.
+                  </Accordion.Content>
+                </Accordion.Item>
+              </Accordion.Root>
+            </InlineDemo>
+
+            <InlineDemo
+              block
+              label={<Code>position</Code>}
+              blurb="Slide an indicator to track the active item. Switch tabs."
+            >
+              <Tabs.Root defaultValue="overview">
+                <Tabs.List>
+                  <Tabs.Trigger value="overview">Overview</Tabs.Trigger>
+                  <Tabs.Trigger value="activity">Activity</Tabs.Trigger>
+                  <Tabs.Trigger value="settings">Settings</Tabs.Trigger>
+                </Tabs.List>
+                <Tabs.Content value="overview">
+                  <Stack padding="md">
+                    <Text size="sm" color="muted">High-level summary.</Text>
+                  </Stack>
+                </Tabs.Content>
+                <Tabs.Content value="activity">
+                  <Stack padding="md">
+                    <Text size="sm" color="muted">Pushes, comments, merges.</Text>
+                  </Stack>
+                </Tabs.Content>
+                <Tabs.Content value="settings">
+                  <Stack padding="md">
+                    <Text size="sm" color="muted">Permissions and webhooks.</Text>
+                  </Stack>
+                </Tabs.Content>
+              </Tabs.Root>
+            </InlineDemo>
+          </Stack>
         </Section>
 
         <Section

@@ -32,7 +32,7 @@ export default function ResetPassword({ labels }: { labels?: Partial<Labels> }) 
     return (
       <Card.Root maxWidth={400}>
         <Card.Header>
-          <Heading level={2} size="xl">{t.successTitle}</Heading>
+          <Heading level={2}>{t.successTitle}</Heading>
           <Text color="muted">{t.successDescription}</Text>
         </Card.Header>
         <Card.Body>
@@ -45,7 +45,7 @@ export default function ResetPassword({ labels }: { labels?: Partial<Labels> }) 
   return (
     <Card.Root maxWidth={400}>
       <Card.Header>
-        <Heading level={2} size="xl">{t.title}</Heading>
+        <Heading level={2}>{t.title}</Heading>
         <Text color="muted">{t.description}</Text>
       </Card.Header>
       <Card.Body>

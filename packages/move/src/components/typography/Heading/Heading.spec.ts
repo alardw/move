@@ -8,7 +8,7 @@ export const spec = {
   name: 'Heading',
   componentClass: 'presentational' as const,
   category: 'typography',
-  description: 'Semantic heading element (h1-h6) with size, weight, color, tracking, alignment, and truncation control',
+  description: 'Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control',
 
   synonyms: ['title', 'h1', 'h2', 'header', 'page title'],
   families: {
@@ -26,7 +26,6 @@ export const spec = {
 
   props: [
     { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '2', moveSpecific: true, description: 'Heading level (determines HTML element h1-h6)' },
-    { name: 'size', typeRef: 'DisplaySize', moveSpecific: true, description: 'Font size override (defaults to level-derived size via levelToSize map)' },
     { name: 'weight', type: "'medium' | 'semibold' | 'bold'", moveSpecific: true, description: 'Font weight' },
     { name: 'color', type: "'base' | 'muted' | 'subtle'", default: "'base'", moveSpecific: true, description: 'Text color' },
     { name: 'tracking', type: "'tight' | 'normal'", default: "'tight'", moveSpecific: true, description: 'Letter spacing' },
@@ -62,7 +61,7 @@ export const spec = {
     tracking: ['tight', 'normal'],
     align: ['left', 'center', 'right'],
   },
-  sizes: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'],
+  sizes: ['base', 'lg', 'xl', '2xl', '3xl', '4xl'],
 
   labels: [],
   childrenKind: 'text' as const,
@@ -74,7 +73,7 @@ export const spec = {
     },
     {
       id: 'level-to-size-mapping',
-      description: 'When size is not explicitly provided, it is derived from level via levelToSize map: 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base',
+      description: 'Size is always derived from level via levelToSize map: 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base',
     },
     {
       id: 'data-align-conditional',
@@ -97,8 +96,7 @@ export const spec = {
       'Renders as h1-h6 based on level prop',
       'Renders children as text content',
       'Applies size via data-size attribute',
-      'Derives size from level when size prop is not provided (level 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base)',
-      'Applies explicit size override via data-size',
+      'Derives size from level (level 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base)',
       'Applies weight via data-weight attribute',
       'weight omitted — unspecified headings inherit the --move-weight-heading token',
       'Applies color via data-color attribute',
