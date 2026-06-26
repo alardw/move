@@ -32,7 +32,6 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'image-group',
-  preview: { width: 'lg' },
   name: 'ImageGroup',
   tagline: 'A responsive image grid with shared gap, radius, and a staggered entrance — drop Images in, get a tidy gallery out.',
   badges: [

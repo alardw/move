@@ -38,6 +38,7 @@
   height: auto;
   max-height: 360px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* column fills the panel so width:100% samples follow it */
   place-items: center;
   overflow: hidden;
   padding: 24px;
