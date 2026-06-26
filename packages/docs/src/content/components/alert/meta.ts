@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'sm' },
   name: 'Alert',
   tagline: 'A status banner with a sensible default icon, a real ARIA contract, and an exit animation that doesn’t leave a hole in the layout.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'info', label: 'Display' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

@@ -27,8 +27,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'ToggleButton',
   tagline: 'A button that remembers its on/off state — perfect for toolbar formatting controls (bold, italic, view toggles).',
+  categories: ['actions'],
   badges: [
-    { icon: 'toggle-left', label: 'Toolbar' },
   ],
   highlights,
   related,

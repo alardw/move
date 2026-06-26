@@ -31,8 +31,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'NumberInput',
   tagline: 'A numeric input with stepper buttons, hold-to-repeat, min/max clamping, and pluggable format/parse.',
+  categories: ['forms'],
   badges: [
-    { icon: 'hash', label: 'Form' },
   ],
   highlights,
   related,

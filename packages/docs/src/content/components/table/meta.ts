@@ -25,8 +25,8 @@ export const meta: ComponentMeta = {
   slug: 'table',
   name: 'Table',
   tagline: 'Rows and columns with the frame, density, and responsive behavior you pick.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'rows', label: 'Data' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

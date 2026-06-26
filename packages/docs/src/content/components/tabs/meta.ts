@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'tabs',
   name: 'Tabs',
   tagline: 'Switch between sibling views with a sliding indicator, two variants, and Radix-backed keyboard navigation.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'layout', label: 'Navigation' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'xs' },
   name: 'Collapsible',
   tagline: 'A single show/hide region with a measured-height animation, an auto-rotating chevron, and a real button under the trigger.',
+  categories: ['disclosure'],
   badges: [
-    { icon: 'chevron-down', label: 'Disclosure' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

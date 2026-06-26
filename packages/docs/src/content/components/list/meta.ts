@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'list',
   name: 'List',
   tagline: 'A structured list with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'list', label: 'Data' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'form-field',
   name: 'FormField',
   tagline: 'A compound layout wrapper for form fields — handles label / control / description placement so your forms align without manual flex tweaks.',
+  categories: ['forms'],
   badges: [
-    { icon: 'layout', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

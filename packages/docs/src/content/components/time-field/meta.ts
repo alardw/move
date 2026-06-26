@@ -26,8 +26,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'TimeField',
   tagline: 'A time input with hour, minute, optional seconds, and optional AM/PM — typed and tab-able like a real form field.',
+  categories: ['date-time', 'forms'],
   badges: [
-    { icon: 'clock', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

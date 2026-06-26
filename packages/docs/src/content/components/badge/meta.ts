@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Badge',
   tagline: 'A small, glanceable label — pill-shaped, opinionated about colour, and quiet enough to live next to text without shouting over it.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'tag', label: 'Display' },
   ],
   highlights,
   related,

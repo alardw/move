@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'radio-group',
   name: 'RadioGroup',
   tagline: 'A single-select group of options with a real keyboard contract from Radix — Arrow keys traverse, Space activates.',
+  categories: ['forms'],
   badges: [
-    { icon: 'circle-dot', label: 'Form' },
   ],
   highlights,
   related,

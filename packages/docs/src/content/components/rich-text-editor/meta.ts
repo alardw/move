@@ -25,8 +25,8 @@ export const meta: ComponentMeta = {
   slug: 'rich-text-editor',
   name: 'RichTextEditor',
   tagline: 'A rich-text editing surface with a configurable, tokenised toolbar and a plain-text paste fallback.',
+  categories: ['forms'],
   badges: [
-    { icon: 'pen-line', label: 'Form' },
   ],
   highlights,
   related,

@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'image',
   name: 'Image',
   tagline: 'A wrapped `<img>` with aspect ratio, object-fit, radius, fallback, and an overlay slot — no more `<img>`-in-a-`<div>`-with-a-style-prop dance.',
+  categories: ['media'],
   badges: [
-    { icon: 'image', label: 'Media' },
   ],
   highlights,
   related,

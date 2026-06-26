@@ -2,6 +2,7 @@ import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Stack, Grid, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
 
 import { COMPONENT_CONTENT } from '../../content/components';
+import { TAXONOMY_BY_ID } from '../../content/components/taxonomies';
 import {
   CodeBlock,
   HighlightList,
@@ -83,16 +84,23 @@ export function ComponentDocPage() {
         <Stack gap="sm">
           <Heading level={1} weight="normal">{meta.name}</Heading>
           <Text color="muted" size="lg">{meta.tagline}</Text>
-          {meta.badges.length > 0 && (
-            <Stack direction="row" gap="xs" wrap>
-              {meta.badges.map((b) => (
-                <Badge key={b.label} variant="soft">
-                  <Icon name={b.icon} />
-                  {b.label}
+          <Stack direction="row" gap="xs" wrap>
+            {meta.categories
+              .map((id) => TAXONOMY_BY_ID[id])
+              .filter(Boolean)
+              .map((c) => (
+                <Badge key={c.id} variant="solid">
+                  <Icon name={c.icon} />
+                  {c.label}
                 </Badge>
               ))}
-            </Stack>
-          )}
+            {meta.badges.map((b) => (
+              <Badge key={b.label} variant="soft">
+                <Icon name={b.icon} />
+                {b.label}
+              </Badge>
+            ))}
+          </Stack>
         </Stack>
 
         {meta.highlights.length > 0 && (

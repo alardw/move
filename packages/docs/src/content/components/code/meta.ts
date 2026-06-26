@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Code',
   tagline: 'Inline or block code with three variants and a pluggable syntax highlighter — no opinion on which library colours the tokens.',
+  categories: ['typography'],
   badges: [
-    { icon: 'code', label: 'Typography' },
   ],
   highlights,
   related,

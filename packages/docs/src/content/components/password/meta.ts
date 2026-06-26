@@ -31,8 +31,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Password',
   tagline: 'A password input with a show/hide toggle — outlined or filled, three sizes, the rest of InputText’s contract.',
+  categories: ['forms'],
   badges: [
-    { icon: 'lock', label: 'Form' },
   ],
   highlights,
   related,

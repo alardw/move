@@ -31,8 +31,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'PinInput',
   tagline: 'A multi-cell pin/OTP input that auto-advances, supports paste-distribution, and masks like a password when you ask it to.',
+  categories: ['forms'],
   badges: [
-    { icon: 'key', label: 'Form' },
   ],
   highlights,
   related,

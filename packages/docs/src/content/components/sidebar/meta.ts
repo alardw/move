@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'sidebar',
   name: 'Sidebar',
   tagline: 'A collapsible navigation aside that does the right thing on every screen — full labels on desktop, icons-only when collapsed, an overlay sheet on mobile.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'panel-left', label: 'Navigation' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

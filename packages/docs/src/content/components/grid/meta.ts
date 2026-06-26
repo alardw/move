@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'grid',
   name: 'Grid',
   tagline: 'A CSS grid layout primitive — equal columns, span-based, or auto-fit, with a Cell sub-component for per-item placement.',
+  categories: ['layout'],
   badges: [
-    { icon: 'grid-3x3', label: 'Layout' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

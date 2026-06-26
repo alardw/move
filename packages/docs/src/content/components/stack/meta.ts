@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'stack',
   name: 'Stack',
   tagline: 'A flexbox layout primitive — direction, gap, padding, align, justify, wrap, flex — driven by tokens, no CSS required.',
+  categories: ['layout'],
   badges: [
-    { icon: 'rows', label: 'Layout' },
   ],
   highlights,
   related,

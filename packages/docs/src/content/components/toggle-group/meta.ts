@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'toggle-group',
   name: 'ToggleGroup',
   tagline: 'A row of connected toggle buttons — single or multi select, with variant and size set once on the Root.',
+  categories: ['actions'],
   badges: [
-    { icon: 'toggle-left', label: 'Toolbar' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

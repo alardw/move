@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'text',
   name: 'Text',
   tagline: 'A typography primitive for body copy — size, weight, colour, alignment, and a polymorphic `as`.',
+  categories: ['typography'],
   badges: [
-    { icon: 'type', label: 'Typography' },
   ],
   highlights,
   related,

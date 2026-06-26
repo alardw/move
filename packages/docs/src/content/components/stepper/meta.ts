@@ -25,8 +25,8 @@ export const meta: ComponentMeta = {
   slug: 'stepper',
   name: 'Stepper',
   tagline: 'A progress indicator for multi-step flows — numbered steps, completion state, optional click-to-jump, horizontal or vertical.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'list-ordered', label: 'Navigation' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

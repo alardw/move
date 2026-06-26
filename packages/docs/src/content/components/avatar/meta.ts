@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Avatar',
   tagline: 'A user portrait with a graceful fallback, five sizes, a tinted Group for stacks of teammates, and a tiny spring entrance to make it feel alive.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'user', label: 'Display' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

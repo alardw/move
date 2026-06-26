@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'textarea',
   name: 'Textarea',
   tagline: 'A native `<textarea>` with variants, auto-resize, and the same tokens as InputText.',
+  categories: ['forms'],
   badges: [
-    { icon: 'pen-line', label: 'Form' },
   ],
   highlights,
   related,

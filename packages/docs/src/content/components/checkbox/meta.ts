@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Checkbox',
   tagline: 'A real `<button role="checkbox">` with checked, indeterminate, and disabled states — plus a hidden input for plain-form submission and a tidy Group container.',
+  categories: ['forms'],
   badges: [
-    { icon: 'check', label: 'Form' },
     { icon: 'keyboard', label: 'Native' },
     { icon: 'rabbit', label: 'Animated' },
   ],

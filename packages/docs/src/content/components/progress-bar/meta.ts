@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'progress-bar',
   name: 'ProgressBar',
   tagline: 'A horizontal progress indicator — determinate (with %) or indeterminate (striped), tokenised for variant and size.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'loader-2', label: 'Loading' },
   ],
   highlights,
   related,

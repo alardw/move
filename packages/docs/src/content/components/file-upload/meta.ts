@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'FileUpload',
   tagline: 'Drag-and-drop file upload with previews, per-file progress, an aggregate progress bar, and a pluggable upload adapter — UI is yours, network is yours.',
+  categories: ['forms'],
   badges: [
-    { icon: 'upload-cloud', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'sm' },
   name: 'InputText',
   tagline: 'A single-line text input — outlined or filled, three sizes, icon slots, and a real `<input>` underneath.',
+  categories: ['forms'],
   badges: [
-    { icon: 'pen-line', label: 'Form' },
   ],
   highlights,
   related,

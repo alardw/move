@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'carousel',
   name: 'Carousel',
   tagline: 'A scroll-snap carousel with drag, autoplay, loops, and built-in triggers — composable, but you can ship a working one with two props.',
+  categories: ['media'],
   badges: [
-    { icon: 'move-horizontal', label: 'Media' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

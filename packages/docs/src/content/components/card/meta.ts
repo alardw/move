@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { bare: true, width: 'md' },
   name: 'Card',
   tagline: 'A framed container for content that belongs together — with a Header for the title, a Body for the meat, and a Footer that already knows about start/end action splits.',
+  categories: ['layout'],
   badges: [
-    { icon: 'rectangle', label: 'Layout' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

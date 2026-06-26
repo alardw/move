@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'skeleton',
   name: 'Skeleton',
   tagline: 'Layout-shaped loading placeholders — Circle, Rectangle, Rounded, Text — with pulse or wave animation.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'shapes', label: 'Loading' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

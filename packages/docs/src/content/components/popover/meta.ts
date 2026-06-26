@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'popover',
   name: 'Popover',
   tagline: 'A click-to-open anchored panel for any content — forms, mini-cards, inspectors. Real focus contract from Radix.',
+  categories: ['overlays'],
   badges: [
-    { icon: 'message-circle', label: 'Overlay' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

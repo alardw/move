@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'chat-bubble',
   name: 'ChatBubble',
   tagline: 'A conversation bubble with avatar, tail, and placement-aware corners — for chat UIs, AI assistants, and anything that wants to look like a message thread.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'message-square', label: 'Display' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

@@ -26,8 +26,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Switch',
   tagline: 'An immediate-action toggle — animated thumb, three sizes, real `role="switch"` semantics.',
+  categories: ['forms'],
   badges: [
-    { icon: 'toggle-right', label: 'Form' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

@@ -3,6 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
 import { PREVIEW_WIDTHS } from '../../content/components/types';
+import { TAXONOMY_BY_ID } from '../../content/components/taxonomies';
 import styles from './ComponentCard.module.css';
 
 export interface ComponentCardProps {
@@ -17,8 +18,9 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   // Default to a contained width so every preview fits within the card boundary
   // (EmptyState's size); components opt into 'fit', a larger size, or 'full'.
   const width = preview.width ?? 'sm';
-  const category = meta.badges[0]?.label ?? 'Component';
-  const icon = meta.badges[0]?.icon ?? 'box';
+  const cat = TAXONOMY_BY_ID[meta.categories?.[0] ?? ''];
+  const category = cat?.label ?? 'Component';
+  const icon = cat?.icon ?? 'box';
   const previewImage = image ?? preview.image;
   const sample = preview.sample
     ? samples?.find((s) => s.id === preview.sample)

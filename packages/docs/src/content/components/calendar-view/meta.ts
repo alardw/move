@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'calendar-view',
   name: 'CalendarView',
   tagline: 'A full month/week/day/agenda calendar with a real time grid, events that span days, an all-day row, and built-in controls for navigation and view switching.',
+  categories: ['date-time'],
   badges: [
-    { icon: 'calendar-days', label: 'Calendar' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

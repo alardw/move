@@ -25,8 +25,8 @@ export const meta: ComponentMeta = {
   slug: 'scroll-area',
   name: 'ScrollArea',
   tagline: 'A custom-scrollbar wrapper around native overflow — quiet by default, visible on hover, polished on every platform.',
+  categories: ['layout'],
   badges: [
-    { icon: 'mouse', label: 'Layout' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

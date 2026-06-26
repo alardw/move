@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'sm' },
   name: 'EmptyState',
   tagline: 'A friendly "nothing here yet" placeholder — icon, title, description, optional call-to-action, all centered and tokenised.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'inbox', label: 'Display' },
   ],
   highlights,
   related,

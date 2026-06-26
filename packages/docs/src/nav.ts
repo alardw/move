@@ -51,6 +51,19 @@ export const DOCS_NAV: NavSection[] = [
     ],
   },
   {
+    key: 'animation',
+    label: 'Animation',
+    icon: 'sparkles',
+    items: [
+      { to: '/animation', label: 'Overview' },
+      { to: '/animation/lifecycle', label: 'Lifecycle' },
+      { to: '/animation/triggers-and-sequences', label: 'Triggers & sequences' },
+      { to: '/animation/springs', label: 'Springs & easings' },
+      { to: '/animation/patterns', label: 'Patterns' },
+      { to: '/animation/reference', label: 'Reference' },
+    ],
+  },
+  {
     key: 'ai',
     label: 'AI',
     icon: 'bot',

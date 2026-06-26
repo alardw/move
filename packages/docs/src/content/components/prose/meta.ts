@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   slug: 'prose',
   name: 'Prose',
   tagline: 'Wrap long-form content for readable defaults — headings, paragraphs, lists, code, blockquotes, all spaced and styled with no extra typography work.',
+  categories: ['typography'],
   badges: [
-    { icon: 'book-open', label: 'Typography' },
   ],
   highlights,
   related,

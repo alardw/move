@@ -29,8 +29,8 @@ export const meta: ComponentMeta = {
   slug: 'splitter',
   name: 'Splitter',
   tagline: 'A resizable two-or-more panel layout with draggable gutters, keyboard resize, and responsive collapse.',
+  categories: ['layout'],
   badges: [
-    { icon: 'columns-2', label: 'Layout' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

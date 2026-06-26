@@ -31,8 +31,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Loader',
   tagline: 'An indeterminate loading indicator — three sizes, theme-aware colour, GPU-friendly loop.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'loader-circle', label: 'Loading' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

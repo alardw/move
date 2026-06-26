@@ -4,13 +4,14 @@ import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button } from
 import { ComponentCard, TocRail, type TocItem } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
+import { TAXONOMY_BY_ID, CATEGORY_ORDER } from '../../content/components/taxonomies';
 
-const catOf = (c: ComponentContent): string => c.meta.badges[0]?.label ?? 'Component';
+const catsOf = (c: ComponentContent): string[] => c.meta.categories ?? [];
+const labelOf = (id: string): string => TAXONOMY_BY_ID[id]?.label ?? id;
 
 const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
   a.meta.name.localeCompare(b.meta.name),
 );
-const CATEGORIES = [...new Set(ALL.map(catOf))].sort();
 
 const BADGES = [
   { icon: 'blocks', label: `${ALL.length} components` },
@@ -32,21 +33,21 @@ export function ComponentsOverviewPage() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return ALL.filter((c) => {
-      if (category !== 'All' && catOf(c) !== category) return false;
+      if (category !== 'All' && !catsOf(c).includes(category)) return false;
       if (!q) return true;
       const aliases = (c.spec.synonyms as string[] | undefined) ?? [];
       return (
         c.meta.name.toLowerCase().includes(q) ||
         c.meta.tagline.toLowerCase().includes(q) ||
-        catOf(c).toLowerCase().includes(q) ||
+        catsOf(c).some((cat) => labelOf(cat).toLowerCase().includes(q)) ||
         aliases.some((a) => a.includes(q))
       );
     });
   }, [query, category]);
 
   const grouped = category === 'All';
-  const sections = (grouped ? CATEGORIES : [category]).filter((cat) =>
-    filtered.some((c) => catOf(c) === cat),
+  const sections = (grouped ? CATEGORY_ORDER : [category]).filter((cat) =>
+    filtered.some((c) => catsOf(c).includes(cat)),
   );
 
   return (
@@ -84,14 +85,14 @@ export function ComponentsOverviewPage() {
               onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
             />
             <Stack direction="row" gap="xs" wrap>
-              {['All', ...CATEGORIES].map((c) => (
+              {['All', ...CATEGORY_ORDER].map((c) => (
                 <Button
                   key={c}
                   size="sm"
                   variant={category === c ? 'solid' : 'ghost'}
                   onClick={() => setCategory(c)}
                 >
-                  {c}
+                  {c === 'All' ? 'All' : labelOf(c)}
                 </Button>
               ))}
             </Stack>
@@ -103,11 +104,11 @@ export function ComponentsOverviewPage() {
             sections.map((cat) => (
               <Stack key={cat} gap="sm">
                 {grouped && (
-                  <Heading level={2} size="lg" weight="normal">{cat}</Heading>
+                  <Heading level={2} size="lg" weight="normal">{labelOf(cat)}</Heading>
                 )}
                 <div style={GRID}>
                   {filtered
-                    .filter((c) => catOf(c) === cat)
+                    .filter((c) => catsOf(c).includes(cat))
                     .map((c) => (
                       <ComponentCard key={c.meta.slug} content={c} />
                     ))}

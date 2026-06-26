@@ -26,8 +26,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Label',
   tagline: 'A real `<label>` with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
+  categories: ['forms'],
   badges: [
-    { icon: 'tag', label: 'Form' },
   ],
   highlights,
   related,

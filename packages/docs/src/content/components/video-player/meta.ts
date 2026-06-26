@@ -29,8 +29,8 @@ export const meta: ComponentMeta = {
   slug: 'video-player',
   name: 'VideoPlayer',
   tagline: 'A video player with the controls you’d expect — play, scrub, fullscreen, quality switching, subtitles, speed — and a real keyboard contract.',
+  categories: ['media'],
   badges: [
-    { icon: 'play', label: 'Media' },
     { icon: 'mouse-pointer-click', label: 'Interactive' },
   ],
   highlights,

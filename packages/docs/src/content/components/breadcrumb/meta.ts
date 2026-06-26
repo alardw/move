@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'breadcrumb',
   name: 'Breadcrumb',
   tagline: 'A trail of links showing the path from root to current page — with auto-separators, collapsible overflow, and the right ARIA semantics.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'chevron-right', label: 'Navigation' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

@@ -22,6 +22,12 @@ import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/core-concepts/HooksPage';
 import { SurfacesPage } from './pages/core-concepts/SurfacesPage';
 import { StackingPage } from './pages/core-concepts/StackingPage';
+import { AnimationOverviewPage } from './pages/animation/AnimationOverviewPage';
+import { AnimationLifecyclePage } from './pages/animation/AnimationLifecyclePage';
+import { TriggersAndSequencesPage } from './pages/animation/TriggersAndSequencesPage';
+import { SpringsPage } from './pages/animation/SpringsPage';
+import { AnimationPatternsPage } from './pages/animation/AnimationPatternsPage';
+import { AnimationReferencePage } from './pages/animation/AnimationReferencePage';
 import { CustomizeOverviewPage } from './pages/customize/CustomizeOverviewPage';
 import { IconsPage } from './pages/customize/IconsPage';
 import { TypographyPage } from './pages/customize/TypographyPage';
@@ -201,6 +207,12 @@ function App() {
                 <Route path="/core-concepts/surfaces" element={<SurfacesPage />} />
                 <Route path="/core-concepts/stacking" element={<StackingPage />} />
                 <Route path="/core-concepts/hooks" element={<HooksPage />} />
+                <Route path="/animation" element={<AnimationOverviewPage />} />
+                <Route path="/animation/lifecycle" element={<AnimationLifecyclePage />} />
+                <Route path="/animation/triggers-and-sequences" element={<TriggersAndSequencesPage />} />
+                <Route path="/animation/springs" element={<SpringsPage />} />
+                <Route path="/animation/patterns" element={<AnimationPatternsPage />} />
+                <Route path="/animation/reference" element={<AnimationReferencePage />} />
                 <Route path="/ai" element={<AIOverviewPage />} />
                 <Route path="/ai/skills" element={<SkillsPage />} />
                 <Route path="/ai/specs" element={<SpecsPage />} />

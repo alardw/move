@@ -31,8 +31,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Select',
   tagline: 'Choose from a list with a little zzzing.',
+  categories: ['forms'],
   badges: [
-    { icon: 'rectangle-ellipsis', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

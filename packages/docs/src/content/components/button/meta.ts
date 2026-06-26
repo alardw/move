@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Button',
   tagline: 'The workhorse click target — variants, sizes, and a snappy hover/press animation that respects how wide the button actually is.',
+  categories: ['actions', 'forms'],
   badges: [
-    { icon: 'mouse-pointer-click', label: 'Interactive' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

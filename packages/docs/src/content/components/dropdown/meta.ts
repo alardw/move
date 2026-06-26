@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'dropdown',
   name: 'Dropdown',
   tagline: 'A context menu with items, groups, sub-menus, and toggleable checkbox/radio entries — animated, keyboard-driven, ARIA-correct.',
+  categories: ['overlays'],
   badges: [
-    { icon: 'menu', label: 'Overlay' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

@@ -29,8 +29,8 @@ export const meta: ComponentMeta = {
   slug: 'pagination',
   name: 'Pagination',
   tagline: 'A page navigator with prev/next, numbered buttons, ellipsis collapse, and a sliding active indicator.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'arrow-left-right', label: 'Navigation' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

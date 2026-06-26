@@ -25,8 +25,8 @@ export const meta: ComponentMeta = {
   slug: 'tooltip',
   name: 'Tooltip',
   tagline: 'A small hover/focus label — Radix-backed, delay-grouped, animated, with the right ARIA semantics.',
+  categories: ['overlays'],
   badges: [
-    { icon: 'message-square', label: 'Overlay' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

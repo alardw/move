@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'heading',
   name: 'Heading',
   tagline: 'Semantic heading h1–h6 with size, weight, colour, alignment, and truncation — visual style decoupled from semantic level.',
+  categories: ['typography'],
   badges: [
-    { icon: 'heading', label: 'Typography' },
   ],
   highlights,
   related,

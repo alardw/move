@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'xs' },
   name: 'Accordion',
   tagline: 'Collapsible sections for FAQs, settings panels, and anything that shouldn’t be visible all at once.',
+  categories: ['disclosure'],
   badges: [
-    { icon: 'layers', label: 'Disclosure' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

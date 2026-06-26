@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'drawer',
   name: 'Drawer',
   tagline: 'A slide-in panel from any edge — perfect for filters, detail views, multi-step flows. Modal by default, bottom-sheet on mobile, full keyboard contract.',
+  categories: ['overlays'],
   badges: [
-    { icon: 'panel-right', label: 'Overlay' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

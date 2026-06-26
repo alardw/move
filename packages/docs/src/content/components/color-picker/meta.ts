@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'ColorPicker',
   tagline: 'A standalone colour picker — saturation field, hue and alpha sliders, format toggle, channel inputs, and a tidy swatch grid. Drop in inline, or nest inside a popover.',
+  categories: ['forms'],
   badges: [
-    { icon: 'palette', label: 'Form' },
     { icon: 'pipette', label: 'Picker' },
   ],
   highlights,

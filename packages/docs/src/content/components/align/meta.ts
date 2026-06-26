@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'full' },
   name: 'Align',
   tagline: 'A three-slot bar — Start, Center, End — for app headers, page titles, dialog footers, and any toolbar that wants its centre to stay centred.',
+  categories: ['layout'],
   badges: [
-    { icon: 'columns-3', label: 'Layout' },
     { icon: 'boxes', label: 'Compound' },
   ],
   highlights,

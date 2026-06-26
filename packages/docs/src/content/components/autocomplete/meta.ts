@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Autocomplete',
   tagline: 'A text input that suggests as you type — single or multi, with tags, groups, async loading, and an empty state that doesn’t feel rude.',
+  categories: ['forms'],
   badges: [
-    { icon: 'rectangle-ellipsis', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'search', label: 'Filterable' },
     { icon: 'rabbit', label: 'Animated' },

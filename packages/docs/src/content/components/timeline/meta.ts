@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   preview: { sample: 'steps' },
   name: 'Timeline',
   tagline: 'A vertical timeline for chronological history — bullets, connector lines, per-item colour, and a staggered entrance.',
+  categories: ['data-display'],
   badges: [
-    { icon: 'git-commit-vertical', label: 'Data' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

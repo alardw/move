@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'DatePicker',
   tagline: 'A date input with a popover calendar — single date, range, or multi-select, with optional time picker, sensible localisation, and a real keyboard contract.',
+  categories: ['date-time', 'forms'],
   badges: [
-    { icon: 'calendar', label: 'Form' },
     { icon: 'boxes', label: 'Compound' },
     { icon: 'rabbit', label: 'Animated' },
   ],

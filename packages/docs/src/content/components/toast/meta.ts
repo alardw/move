@@ -26,8 +26,8 @@ export const meta: ComponentMeta = {
   preview: { bare: true, width: 'md' },
   name: 'Toast',
   tagline: 'A notification toast system with an imperative API, variant icons, auto-dismiss progress, and grouped positioning.',
+  categories: ['feedback'],
   badges: [
-    { icon: 'message-circle', label: 'Overlay' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

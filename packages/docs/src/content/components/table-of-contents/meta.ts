@@ -21,8 +21,8 @@ export const meta: ComponentMeta = {
   slug: 'table-of-contents',
   name: 'TableOfContents',
   tagline: 'A scroll-aware page rail that highlights the active section as you scroll — useful on long docs and articles.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'list', label: 'Navigation' },
   ],
   highlights,
   related,

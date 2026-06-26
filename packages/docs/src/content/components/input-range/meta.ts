@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'md' },
   name: 'InputRange',
   tagline: 'A slider with single or dual thumbs, an optional value readout, and a real keyboard contract from Radix Slider.',
+  categories: ['forms'],
   badges: [
-    { icon: 'sliders-horizontal', label: 'Form' },
     { icon: 'rabbit', label: 'Animated' },
   ],
   highlights,

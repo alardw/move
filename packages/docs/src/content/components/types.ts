@@ -66,7 +66,10 @@ export interface ComponentMeta {
   name: string;
   /** Short descriptor shown under the page title. */
   tagline: string;
-  /** Badges under the title — category and traits. */
+  /** Taxonomy category ids (see taxonomies.ts); categories[0] = canonical home. */
+  categories: string[];
+  /** Trait badges under the title (Animated, etc.) — the category badge is
+   *  derived from `categories[0]`, so these no longer carry the category. */
   badges: ComponentBadge[];
   /** Bullet list of what makes this component notable. */
   highlights: HighlightItem[];

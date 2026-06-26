@@ -34,8 +34,8 @@ export const meta: ComponentMeta = {
   slug: 'audio-player',
   name: 'AudioPlayer',
   tagline: 'A horizontal audio bar with everything you’d expect — play, scrub, volume, speed, subtitles, source switching. Keyboard works the way you’d hope.',
+  categories: ['media'],
   badges: [
-    { icon: 'headphones', label: 'Media' },
     { icon: 'mouse-pointer-click', label: 'Interactive' },
   ],
   highlights,

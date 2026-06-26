@@ -30,8 +30,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'Link',
   tagline: 'An inline `<a>` with variants, underline control, and a real external-link contract — `asChild` lets you wrap your router’s Link without losing styling.',
+  categories: ['navigation'],
   badges: [
-    { icon: 'link', label: 'Navigation' },
   ],
   highlights,
   related,

@@ -35,8 +35,8 @@ export const meta: ComponentMeta = {
   preview: { width: 'fit' },
   name: 'ColorInput',
   tagline: 'A text input with a colour swatch trigger — type a value, click the swatch to drop into a full picker, or grab a colour off the screen with the eye-dropper.',
+  categories: ['forms'],
   badges: [
-    { icon: 'palette', label: 'Form' },
     { icon: 'pipette', label: 'Picker' },
     { icon: 'rabbit', label: 'Animated' },
   ],

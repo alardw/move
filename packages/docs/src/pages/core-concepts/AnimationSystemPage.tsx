@@ -35,31 +35,50 @@ const THE_MODEL: HighlightItem[] = [
 
 const SUB_TOPICS: HighlightItem[] = [
   {
-    icon: 'zap',
-    text: 'Triggers — the full vocabulary (mount, unmount, state, deps, delegate, closest-ancestor) and when each one fits.',
+    icon: 'activity',
+    text: (
+      <>
+        <RouterLink to="/animation/lifecycle">Lifecycle</RouterLink> — the
+        three moments a component animates: enter, respond, exit.
+      </>
+    ),
   },
   {
-    icon: 'list-ordered',
-    text: 'Sequences — parallel vs serial steps, the `[[…]]` syntax, onComplete callbacks, conditional skips.',
+    icon: 'zap',
+    text: (
+      <>
+        <RouterLink to="/animation/triggers-and-sequences">
+          Triggers &amp; sequences
+        </RouterLink>{' '}
+        — the full vocabulary of when an animation fires and what plays.
+      </>
+    ),
   },
   {
     icon: 'wind',
-    text: 'Springs & easings — the named springs Move ships and why you should reach for them before tuning numbers.',
-  },
-  {
-    icon: 'layers',
-    text: 'Stagger — animating children with a delay between them. The pattern behind list reveals, dropdown items, accordion content.',
+    text: (
+      <>
+        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
+        — the named springs Move ships and when to reach for each.
+      </>
+    ),
   },
   {
     icon: 'puzzle',
-    text: 'useAnimations — the consumer-facing hook that ties it all together.',
+    text: (
+      <>
+        <RouterLink to="/animation/patterns">Patterns</RouterLink> and the{' '}
+        <RouterLink to="/animation/reference">hook reference</RouterLink> —
+        the recipes the components use, and the API for driving motion yourself.
+      </>
+    ),
   },
 ];
 
 const TOC: TocItem[] = [
   { href: '#animation-system', label: 'Overview' },
   { href: '#the-model', label: 'The model' },
-  { href: '#sub-topics', label: 'Going deeper' },
+  { href: '#sub-topics', label: 'The Animation section' },
 ];
 
 export function AnimationSystemPage() {
@@ -109,8 +128,8 @@ export function AnimationSystemPage() {
 
         <Section
           id="sub-topics"
-          title="Going deeper"
-          lede="Each sub-topic gets its own section below once it earns the depth."
+          title="The Animation section"
+          lede="This is the short version. The full story lives in its own section."
         >
           <HighlightList items={SUB_TOPICS} />
         </Section>
