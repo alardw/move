@@ -1,6 +1,8 @@
 // Carousel.spec.ts — Component specification
 // specHash: PLACEHOLDER
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Carousel',
@@ -302,4 +304,4 @@ export const spec = {
     decisionSource: 'user-confirmed' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

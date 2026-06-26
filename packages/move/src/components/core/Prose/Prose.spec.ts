@@ -1,6 +1,8 @@
 // Prose.spec.ts — Component specification
 // specHash: PLACEHOLDER
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Prose',
@@ -93,4 +95,4 @@ export const spec = {
     decisionSource: 'rule-based' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

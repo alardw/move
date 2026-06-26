@@ -1,6 +1,8 @@
 // Calendar.spec.ts — Component specification
 // specHash: 7dc1c820
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Calendar',
@@ -276,4 +278,4 @@ export const spec = {
     decisionSource: 'rule-based' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

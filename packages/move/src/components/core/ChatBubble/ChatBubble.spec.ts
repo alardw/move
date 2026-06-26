@@ -1,6 +1,8 @@
 // ChatBubble.spec.ts — Component specification
 // specHash: af768c01
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'ChatBubble',
@@ -178,4 +180,4 @@ export const spec = {
     decisionSource: 'rule-based' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

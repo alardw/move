@@ -1,6 +1,8 @@
 // Button.spec.ts — Component specification
 // specHash: e263843a
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Button',
@@ -122,4 +124,4 @@ export const spec = {
     decisionSource: 'accept-all' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

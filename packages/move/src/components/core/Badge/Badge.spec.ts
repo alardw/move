@@ -1,6 +1,8 @@
 // Badge.spec.ts — Component specification
 // specHash: ddc033c4
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Badge',
@@ -86,4 +88,4 @@ export const spec = {
     decisionSource: 'rule-based' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

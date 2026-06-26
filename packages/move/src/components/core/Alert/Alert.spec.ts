@@ -1,6 +1,8 @@
 // Alert.spec.ts — Component specification
 // specHash: b9fbaaa9
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'Alert',
@@ -132,4 +134,4 @@ export const spec = {
     decisionSource: 'rule-based' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;

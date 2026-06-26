@@ -1,5 +1,7 @@
 // TableOfContents.spec.ts — Component specification
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: 'TableOfContents',
@@ -128,4 +130,4 @@ export const spec = {
     decisionSource: 'user-confirmed' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;
