@@ -11,7 +11,7 @@ const NARROW_PREVIEW = new Set([
   'badge', 'button', 'code', 'label', 'link', 'switch', 'checkbox',
   'toggle-button', 'avatar', 'kbd', 'loader', 'accordion', 'collapsible',
   'select', 'number-input', 'time-field', 'input-text', 'password',
-  'color-input', 'pin-input', 'input-range',
+  'color-input', 'pin-input', 'input-range', 'calendar', 'date-picker',
 ]);
 
 /** Components that are their own surface (card/panel) — render bare, without
