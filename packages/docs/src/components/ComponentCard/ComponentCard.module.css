@@ -32,8 +32,8 @@
    children fill the width so List/Table lay out correctly. */
 .tilt {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 96px;
+  left: 36px;
   width: 560px;
   height: auto;
   max-height: 360px;
@@ -47,9 +47,11 @@
   box-shadow: 0 50px 80px -28px rgb(0 0 0 / 55%);
   /* Isometric tile: rotateX squishes (foreshortens), rotateZ spins it — the
      classic CSS isometric look. Parallel, so the panel's sides run at an angle
-     rather than converging. Straightens on hover for readability. */
-  transform: translate(-50%, -50%) rotateX(38deg) rotateZ(-30deg) scale(0.64);
-  transform-origin: center;
+     rather than converging. Pivot on the top-left corner so it always stays in
+     frame; the panel rises up-right and bleeds off the far edges. Straightens
+     on hover for readability. */
+  transform: rotateX(38deg) rotateZ(-30deg) scale(0.66);
+  transform-origin: top left;
   pointer-events: none;
   user-select: none;
   transition: transform 340ms cubic-bezier(0.2, 0.7, 0.2, 1);
@@ -60,7 +62,7 @@
 }
 
 .card:hover .tilt {
-  transform: translate(-50%, -50%) rotateX(0deg) rotateZ(0deg) scale(0.66);
+  transform: rotateX(0deg) rotateZ(0deg) scale(0.44);
 }
 
 .image {
