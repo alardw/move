@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
 
-  synonyms: ['radio', 'options', 'single select', 'radio buttons'],
+  synonyms: ['radio', 'options', 'single select', 'radio buttons', 'choices'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

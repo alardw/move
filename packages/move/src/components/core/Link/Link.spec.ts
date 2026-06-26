@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'Inline anchor element with variant colors, underline modes, optional size, and external link support',
 
-  synonyms: ['anchor', 'hyperlink', 'nav link'],
+  synonyms: ['anchor', 'hyperlink', 'nav link', 'href'],
   families: {
     behavior:  ["typography"],
     state:     ["stateless"],

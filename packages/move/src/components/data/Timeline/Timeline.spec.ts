@@ -10,7 +10,7 @@ export const spec = {
   category: 'data',
   description: 'Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation',
 
-  synonyms: ['log', 'history', 'feed', 'activity feed'],
+  synonyms: ['log', 'history', 'feed', 'activity feed', 'steps'],
   families: {
     behavior:  ["data-row"],
     state:     ["stateless"],

@@ -10,7 +10,7 @@ export const spec = {
   category: 'media',
   description: 'CSS Grid wrapper for arranging images in a responsive column grid with gap, radius, and stagger enter animation',
 
-  synonyms: ['gallery', 'image grid', 'photos', 'photo grid'],
+  synonyms: ['gallery', 'image grid', 'photos', 'photo grid', 'thumbnails'],
   families: {
     behavior:  ["media"],
     state:     ["stateless"],

@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'User avatar with image, fallback, size options, and spring entrance animation',
 
-  synonyms: ['profile picture', 'user image', 'portrait', 'user icon'],
+  synonyms: ['profile picture', 'user image', 'portrait', 'user icon', 'gravatar', 'initials'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

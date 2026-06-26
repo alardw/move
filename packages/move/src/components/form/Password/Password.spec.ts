@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Password input with visibility toggle button, outlined/filled variants, and optional left icon',
 
-  synonyms: ['secret', 'pin field', 'password input'],
+  synonyms: ['secret', 'pin field', 'password input', 'masked input'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

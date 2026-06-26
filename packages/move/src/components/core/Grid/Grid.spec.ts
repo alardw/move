@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
 
-  synonyms: ['layout grid', 'columns', 'simple grid'],
+  synonyms: ['layout grid', 'columns', 'simple grid', 'masonry'],
   families: {
     behavior:  ["layout"],
     state:     ["stateless"],

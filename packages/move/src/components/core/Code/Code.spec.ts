@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'Inline or block code element with variant styling and optional syntax highlighting via CodeHighlighterProvider',
 
-  synonyms: ['snippet', 'monospace', 'inline code', 'kbd'],
+  synonyms: ['snippet', 'monospace', 'inline code', 'kbd', 'codeblock', 'syntax'],
   families: {
     behavior:  ["typography"],
     state:     ["stateless"],

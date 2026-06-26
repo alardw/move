@@ -10,7 +10,7 @@ export const spec = {
   category: 'media',
   description: 'Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls',
 
-  synonyms: ['slider', 'gallery', 'slideshow', 'image rotator'],
+  synonyms: ['slider', 'gallery', 'slideshow', 'image rotator', 'swiper'],
   families: {
     behavior:  ["media","data-row"],
     state:     ["controlled-index"],

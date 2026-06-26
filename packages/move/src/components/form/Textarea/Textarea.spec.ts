@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Multi-line text input with outlined/filled variants, auto-resize support, and configurable size',
 
-  synonyms: ['multi-line input', 'comment box', 'text area', 'long text'],
+  synonyms: ['multi-line input', 'comment box', 'text area', 'long text', 'multiline'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

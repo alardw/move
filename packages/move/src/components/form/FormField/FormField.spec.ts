@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Compound form layout wrapper that arranges label, field input, and description/error in a responsive grid',
 
-  synonyms: ['form row', 'field group', 'label group', 'form control'],
+  synonyms: ['form row', 'field group', 'label group', 'form control', 'input wrapper'],
   families: {
     behavior:  ["form-input"],
     state:     ["stateless"],

@@ -10,7 +10,7 @@ export const spec = {
   category: 'panel',
   description: 'Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking',
 
-  synonyms: ['resizer', 'pane split', 'panes', 'resizable panels'],
+  synonyms: ['resizer', 'pane split', 'panes', 'resizable panels', 'split pane', 'divider'],
   families: {
     behavior:  ["layout"],
     state:     ["controlled-value"],

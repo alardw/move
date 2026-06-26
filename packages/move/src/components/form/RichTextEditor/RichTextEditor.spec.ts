@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Editor-agnostic rich text editor chrome with toolbar, control groups, formatting controls, and content area wrapping any editor engine (TipTap, Lexical, Plate, etc.)',
 
-  synonyms: ['wysiwyg', 'editor', 'markdown editor', 'text editor'],
+  synonyms: ['wysiwyg', 'editor', 'markdown editor', 'text editor', 'formatting', 'prose'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
 
-  synonyms: ['date', 'calendar input', 'date field', 'date select'],
+  synonyms: ['date', 'calendar input', 'date field', 'date select', 'datepicker', 'schedule'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-value', 'controlled-open'],

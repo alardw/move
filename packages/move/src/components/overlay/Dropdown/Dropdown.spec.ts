@@ -10,7 +10,7 @@ export const spec = {
   category: 'overlay',
   description: 'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
 
-  synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu'],
+  synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu', 'actions'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-open'],

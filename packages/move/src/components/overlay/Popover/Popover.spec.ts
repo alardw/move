@@ -10,7 +10,7 @@ export const spec = {
   category: 'overlay',
   description: 'Floating popup panel anchored to a trigger with close button, arrow, and optional close-on-scroll behavior',
 
-  synonyms: ['callout', 'flyout', 'inline overlay', 'hover card'],
+  synonyms: ['callout', 'flyout', 'inline overlay', 'hover card', 'popup', 'hint'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-open'],

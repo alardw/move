@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
 
-  synonyms: ['message', 'chat', 'speech bubble', 'comment bubble'],
+  synonyms: ['message', 'chat', 'speech bubble', 'comment bubble', 'conversation', 'im'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

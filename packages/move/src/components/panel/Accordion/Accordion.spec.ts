@@ -10,7 +10,7 @@ export const spec = {
   category: 'panel',
   description: 'Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal',
 
-  synonyms: ['expander', 'collapsible group', 'faq', 'disclosure list'],
+  synonyms: ['expander', 'collapsible group', 'faq', 'disclosure list', 'collapse'],
   families: {
     behavior:  ['disclosure'],
     state:     ['controlled-value'],  // value identifies which item(s) are open

@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
 
-  synonyms: ['banner', 'notice', 'message', 'callout', 'inline alert'],
+  synonyms: ['banner', 'notice', 'message', 'callout', 'inline alert', 'notification'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

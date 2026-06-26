@@ -10,7 +10,7 @@ export const spec = {
   category: 'media',
   description: 'Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support',
 
-  synonyms: ['picture', 'photo', 'media'],
+  synonyms: ['picture', 'photo', 'media', 'img'],
   families: {
     behavior:  ["media", "data-row"],
     state:     ["stateless"],

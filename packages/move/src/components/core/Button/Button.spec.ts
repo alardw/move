@@ -10,7 +10,7 @@ export const spec = {
   category: 'core',
   description: 'Clickable interactive element with variant, size, and animation support',
 
-  synonyms: ['cta', 'action', 'submit', 'icon button'],
+  synonyms: ['cta', 'action', 'submit', 'icon button', 'btn'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

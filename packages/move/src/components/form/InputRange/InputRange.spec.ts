@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Slider/range input built on Radix Slider with single or dual thumb, optional value display, and thumb interaction animation',
 
-  synonyms: ['slider', 'range slider', 'range input'],
+  synonyms: ['slider', 'range slider', 'range input', 'track'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

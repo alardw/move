@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Searchable dropdown with single/multi-value support, tag management, keyboard navigation, and filtered option list',
 
-  synonyms: ['combobox', 'typeahead', 'search input', 'suggest', 'autosuggest'],
+  synonyms: ['combobox', 'typeahead', 'search input', 'suggest', 'autosuggest', 'search select'],
   // Family memberships. All values are arrays even when only one
   // applies — keeps downstream tooling simple. See
   // `src/shared/families.ts` for the allowed values per axis.

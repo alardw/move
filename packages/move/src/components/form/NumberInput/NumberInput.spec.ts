@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Numeric input with increment/decrement stepper buttons, controlled/uncontrolled value, format/parse support, and hold-to-repeat',
 
-  synonyms: ['number field', 'numeric', 'spinner input', 'stepper input'],
+  synonyms: ['number field', 'numeric', 'spinner input', 'stepper input', 'quantity', 'spinbutton'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

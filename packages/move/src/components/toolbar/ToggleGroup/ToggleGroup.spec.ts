@@ -10,7 +10,7 @@ export const spec = {
   category: 'toolbar',
   description: 'Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive',
 
-  synonyms: ['segmented control', 'tab-like group', 'button group'],
+  synonyms: ['segmented control', 'tab-like group', 'button group', 'toggle'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

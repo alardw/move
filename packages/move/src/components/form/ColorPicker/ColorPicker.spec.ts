@@ -10,7 +10,7 @@ export const spec = {
   category: 'form',
   description: 'Standalone color picker with saturation/brightness area, hue and alpha sliders, color swatches, format selector, and per-channel inputs',
 
-  synonyms: ['color', 'colour', 'hsl', 'rgb', 'hex', 'eyedropper'],
+  synonyms: ['color', 'colour', 'hsl', 'rgb', 'hex', 'eyedropper', 'swatch'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],

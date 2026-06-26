@@ -10,7 +10,7 @@ export const spec = {
   category: 'overlay',
   description: 'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
 
-  synonyms: ['sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in'],
+  synonyms: ['sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in', 'off-canvas', 'slide-over'],
   families: {
     behavior:  ['modal-overlay'],
     state:     ['controlled-open'],

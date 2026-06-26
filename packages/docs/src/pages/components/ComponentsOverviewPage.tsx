@@ -4,7 +4,6 @@ import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button } from
 import { ComponentCard, TocRail, type TocItem } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
-import { SEARCH_ALIASES } from '../../content/components/searchAliases';
 
 const catOf = (c: ComponentContent): string => c.meta.badges[0]?.label ?? 'Component';
 
@@ -35,7 +34,7 @@ export function ComponentsOverviewPage() {
     return ALL.filter((c) => {
       if (category !== 'All' && catOf(c) !== category) return false;
       if (!q) return true;
-      const aliases = SEARCH_ALIASES[c.meta.slug] ?? [];
+      const aliases = (c.spec.synonyms as string[] | undefined) ?? [];
       return (
         c.meta.name.toLowerCase().includes(q) ||
         c.meta.tagline.toLowerCase().includes(q) ||

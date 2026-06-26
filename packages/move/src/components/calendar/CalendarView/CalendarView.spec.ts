@@ -11,7 +11,7 @@ export const spec = {
   description:
     'Full-featured calendar view supporting day, week, month, and agenda modes with event display, time grid, locale-aware formatting, and view switching',
 
-  synonyms: ['agenda', 'schedule', 'planner', 'event calendar', 'timeline calendar'],
+  synonyms: ['agenda', 'schedule', 'planner', 'event calendar', 'timeline calendar', 'events', 'week view', 'month view'],
   families: {
     behavior:  ["display"],
     state:     ["controlled-value"],
