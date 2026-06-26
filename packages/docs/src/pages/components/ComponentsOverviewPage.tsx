@@ -1,7 +1,7 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Switch, ToggleGroup } from 'move';
-import { ComponentCard, TocRail, type TocItem } from '../../components';
+import { ComponentCard } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
 import { TAXONOMY_BY_ID, CATEGORY_ORDER } from '../../content/components/taxonomies';
@@ -22,8 +22,6 @@ const BADGES = [
   { icon: 'blocks', label: `${ALL.length} components` },
   { icon: 'search', label: 'Search + filter' },
 ];
-
-const TOC: TocItem[] = [{ href: '#components-overview', label: 'Overview' }];
 
 const GRID: React.CSSProperties = {
   display: 'grid',
@@ -60,8 +58,8 @@ export function ComponentsOverviewPage() {
   );
 
   return (
-    <Stack direction="row" gap="xl" align="stretch" id="components-overview">
-      <Stack gap="xl" flex={1}>
+    <Stack gap="xl" id="components-overview">
+      <Stack gap="xl">
         <Breadcrumb>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
@@ -141,7 +139,6 @@ export function ComponentsOverviewPage() {
           )}
         </Stack>
       </Stack>
-      <TocRail items={TOC} />
     </Stack>
   );
 }
