@@ -55,8 +55,8 @@ const DOORS: HighlightItem[] = [
     icon: 'puzzle',
     text: (
       <>
-        <RouterLink to="/animation/patterns">Patterns</RouterLink> — the
-        ready-made recipes the components are built from.
+        <RouterLink to="/animation/patterns">See it in action</RouterLink> —
+        the ready-made patterns the components are built from, live.
       </>
     ),
   },

@@ -79,7 +79,7 @@ const SPECIALIZED: HighlightItem[] = [
 
 const TOC: TocItem[] = [
   { href: '#patterns', label: 'Overview' },
-  { href: '#see-it-in-action', label: 'See it in action' },
+  { href: '#patterns-list', label: 'Patterns' },
   { href: '#specialized', label: 'Specialized patterns' },
   { href: '#presets', label: 'Presets underneath' },
 ];
@@ -100,12 +100,12 @@ export function AnimationPatternsPage() {
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Patterns</Breadcrumb.Page>
+            <Breadcrumb.Page>See it in action</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1}>Patterns</Heading>
+          <Heading level={1}>See it in action</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -118,8 +118,8 @@ export function AnimationPatternsPage() {
         </Stack>
 
         <Section
-          id="see-it-in-action"
-          title="See it in action"
+          id="patterns-list"
+          title="Patterns"
           lede="The recipes most components reach for."
         >
           <Text>
