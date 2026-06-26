@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
@@ -6,30 +7,64 @@ import styles from './ComponentCard.module.css';
 export interface ComponentCardProps {
   content: ComponentContent;
   /**
-   * Optional pre-rendered preview image. When present the card shows this on
-   * top — the slot we'll fill once component thumbnails are automated. Until
-   * then the card is icon-led to stay light on a ~65-item grid.
+   * Optional pre-rendered preview image. When present the card shows this
+   * instead of the live sample — the slot we'll fill once component
+   * thumbnails are automated.
    */
   image?: string;
 }
 
+/** Mounts its preview only once the card scrolls near the viewport, so a
+ *  ~65-card grid never renders every live sample at once. */
+function useInView(rootMargin = '300px') {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || inView) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setInView(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [inView, rootMargin]);
+  return { ref, inView };
+}
+
 export function ComponentCard({ content, image }: ComponentCardProps) {
-  const { meta } = content;
+  const { meta, samples } = content;
   const category = meta.badges[0]?.label ?? 'Component';
   const icon = meta.badges[0]?.icon ?? 'box';
+  const Sample = samples?.[0]?.render;
+  const { ref, inView } = useInView();
+
   return (
     <RouterLink to={`/components/${meta.slug}`} className={styles.card}>
-      {image && <img src={image} alt="" className={styles.image} />}
-      <Stack gap="sm" className={styles.body}>
+      <div className={styles.frame} ref={ref}>
+        {image ? (
+          <img src={image} alt="" className={styles.image} />
+        ) : Sample ? (
+          <>
+            <div className={styles.scale} aria-hidden>
+              {inView ? <Sample /> : null}
+            </div>
+            <div className={styles.fade} />
+          </>
+        ) : (
+          <span className={styles.iconTile}>
+            <Icon name={icon} size={20} />
+          </span>
+        )}
+      </div>
+      <Stack gap="xs" className={styles.body}>
         <Stack direction="row" gap="sm" align="center" justify="between">
-          <Stack direction="row" gap="sm" align="center">
-            {!image && (
-              <span className={styles.iconTile}>
-                <Icon name={icon} />
-              </span>
-            )}
-            <Text weight="medium">{meta.name}</Text>
-          </Stack>
+          <Text weight="medium">{meta.name}</Text>
           <Badge variant="soft" size="sm">{category}</Badge>
         </Stack>
         <Text size="sm" color="muted">{meta.tagline}</Text>
