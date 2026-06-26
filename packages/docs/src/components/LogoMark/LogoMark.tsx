@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Text, moveAnimate, type JSAnimation } from 'move';
+import { moveAnimate, type JSAnimation } from 'move';
 import styles from './LogoMark.module.css';
 
 const SWAP_INTERVAL_MS = 10000;
@@ -64,7 +64,7 @@ export function LogoMark() {
   }, [letter]);
 
   return (
-    <Text as="span" className={styles.root}>
+    <span className={styles.root}>
       <span>Move</span>
       <span className={styles.suffix} aria-label={`Move ${letter}I`}>
         <span className={styles.slot} aria-hidden="true">
@@ -73,6 +73,6 @@ export function LogoMark() {
         </span>
         <span>I</span>
       </span>
-    </Text>
+    </span>
   );
 }
