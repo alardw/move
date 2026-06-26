@@ -117,7 +117,14 @@ import { snappy, poppy } from '../../../animation';
 // Types
 import type { Animation, AnimationTrigger, AnimationState } from '../../../animation';
 // Note: moveAnimate, animateDimension, staggerAnimate are used internally by useAnimations.
-// Do NOT import them directly — only Carousel uses moveAnimate directly (imperative scroll API).
+// Do NOT import or use them — or raw anime.js, or the usePositionTracker hook —
+// UNLESS the spec declares a matching `animationCapabilities` entry (enforced by
+// check:animation-capabilities, which runs in pre-commit + CI):
+//   'slidingIndicator'   → usePositionTracker hook (track an active element)
+//   'valueLoop'          → raw anime.js animate() with loop (Loader/Skeleton)
+//   'measureThenAnimate' → moveAnimate after a post-render measurement (ChatBubble)
+//   'scrollApi'          → imperative scroll/gesture API (Carousel)
+// Everything else animates through the declarative spec.animations only.
 ```
 
 #### Step 2: Define defaults and wire

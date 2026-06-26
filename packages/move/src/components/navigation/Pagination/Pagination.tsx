@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { scaleUp, scaleDown, popIn, pagination as paginationEase, useAnimations, resolveAnimationsConfig } from '../../../animation';
-import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { scaleUp, scaleDown, popIn, pagination as paginationEase, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
@@ -330,41 +330,28 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
     const prevNumbersRef = React.useRef<Set<number>>(new Set());
     const prevPageRef = React.useRef(page);
 
-    // --- Sliding indicator via animatePosition ---
-    const indicatorRef = React.useRef<HTMLElement | null>(null);
-
-    const activeRef = React.useMemo(() => {
-      const ref = { current: null as HTMLElement | null };
-      Object.defineProperty(ref, 'current', {
-        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="active"]') ?? null; },
-        set() { /* no-op — always queries live DOM */ },
-      });
-      return ref;
-    }, [internalRef]);
-
-    const STATES: AnimationState[] = [
-      { name: 'activeChange', slot: 'Items', source: 'data-state', value: 'active' },
-    ];
+    // --- Sliding indicator: shared usePositionTracker hook (the slidingIndicator
+    // capability) — same impl as Tabs / TableOfContents. ---
+    const { indicatorRef, update: updateIndicator } = usePositionTracker({
+      containerRef: internalRef as React.RefObject<HTMLElement | null>,
+      activeSelector: '[data-state="active"]',
+      track: 'both',
+      disabled: props.animations === false,
+    });
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       { trigger: 'Items.enter', sequence: [{ children: 'li', animation: popIn, stagger: { delay: 30 } }] },
-      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
-        translateX: { to: '$Active.x' },
-        translateY: { to: '$Active.y' },
-        width: { to: '$Active.width' },
-        height: { to: '$Active.height' },
-      } }] },
     ];
 
     const animRefs = React.useMemo(() => ({
       Items: internalRef as React.RefObject<HTMLElement | null>,
-      Indicator: indicatorRef,
-      Active: activeRef,
     }), [internalRef]);
-    useAnimations(DEFAULT_ANIMATIONS, animRefs, STATES);
+    useAnimations(DEFAULT_ANIMATIONS, animRefs);
 
-    // Horizontal slide animation for newly appearing page numbers via deps trigger
+    // Re-measure the indicator when the active page or the visible range changes
+    // (the hook also re-measures on data-state mutations, resize and font load).
     const rangeKey = JSON.stringify(range);
+    React.useEffect(() => { updateIndicator(); }, [page, rangeKey, updateIndicator]);
 
     const slideConfig: AnimationTrigger[] = React.useMemo(() => [{
       trigger: 'Items.slide',

@@ -4,8 +4,8 @@ import * as React from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { poppy, useAnimations, resolveAnimationsConfig } from '../../../animation';
-import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { poppy, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { ButtonVariant, ButtonSize } from '../../actions/Button';
 import styles from './ToggleGroup.module.css';
 
@@ -73,32 +73,17 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
       [props.onValueChange, isControlled],
     );
 
-    // --- Sliding indicator via animatePosition ---
-    const indicatorRef = React.useRef<HTMLElement | null>(null);
-
-    // Dynamic ref that queries for the active element on access —
-    // avoids race conditions between multiple MutationObservers.
-    const activeRef = React.useMemo(() => {
-      const ref = { current: null as HTMLElement | null };
-      Object.defineProperty(ref, 'current', {
-        get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="on"]') ?? null; },
-        set() { /* no-op — always queries live DOM */ },
-      });
-      return ref;
-    }, [internalRef]);
-
-    const STATES: AnimationState[] = [
-      { name: 'activeChange', slot: 'Root', source: 'data-state', value: 'on' },
-    ];
+    // --- Sliding indicator: shared usePositionTracker hook (the slidingIndicator
+    // capability). The press-scale stays a declarative Root.press animation. ---
+    const { indicatorRef, update: updateIndicator } = usePositionTracker({
+      containerRef: internalRef as React.RefObject<HTMLElement | null>,
+      activeSelector: '[data-state="on"]',
+      track: 'both',
+      disabled: props.animations === false,
+    });
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       { trigger: 'Root.press', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92, ease: poppy } } }] },
-      { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
-        translateX: { to: '$Active.x' },
-        translateY: { to: '$Active.y' },
-        width: { to: '$Active.width' },
-        height: { to: '$Active.height' },
-      } }] },
     ];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
@@ -109,9 +94,9 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
     const animRefs = React.useMemo(() => ({
       Root: internalRef as React.RefObject<HTMLElement | null>,
       Indicator: indicatorRef,
-      Active: activeRef,
     }), [internalRef]);
-    const { handlers } = useAnimations(animConfig, animRefs, STATES);
+    const { handlers } = useAnimations(animConfig, animRefs);
+    React.useEffect(() => { updateIndicator(); }, [currentValue, updateIndicator]);
 
     return {
       render() {

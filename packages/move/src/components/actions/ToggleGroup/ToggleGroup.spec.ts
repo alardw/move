@@ -93,13 +93,12 @@ export const spec = {
   animationCapabilities: ['slidingIndicator'],
   animations: [
     { trigger: 'Root.press', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92 } } }] },
-    { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, translateY: { to: '$Active.y' }, width: { to: '$Active.width' }, height: { to: '$Active.height' } } }] },
   ],
 
   renderContracts: [
     { id: 'context-provides-size-variant', description: 'Root provides ToggleGroupContext with size and variant; Item reads from context to set data-variant and data-size' },
     { id: 'single-mode-no-deselect', description: 'Root is always type="single" and blocks deselection by ignoring empty-string onValueChange from Radix' },
-    { id: 'indicator-absolutely-positioned', description: 'Indicator element is position:absolute inside Root, positioned by animatePosition state trigger tracking [data-state="on"] item via dynamic Active ref' },
+    { id: 'indicator-absolutely-positioned', description: 'Indicator element is position:absolute inside Root, positioned by the slidingIndicator capability (usePositionTracker hook) tracking the [data-state="on"] item' },
     { id: 'indicator-aria-hidden', description: 'Indicator is decorative and carries aria-hidden="true"' },
     { id: 'item-composes-button', description: 'Item slot composes Button.module.css root class for shared sizing and typography' },
     { id: 'item-transparent-bg', description: 'Items have transparent background; the sliding indicator provides the active-item background' },
@@ -146,7 +145,7 @@ export const spec = {
       'Root blocks deselection (ignores empty value)',
       'Root provides size and variant to Items via context',
       'Indicator renders with aria-hidden="true"',
-      'Indicator is positioned by animatePosition state trigger',
+      'Indicator is positioned by the slidingIndicator hook',
       'Indicator receives press animation on mouseDown',
       'Item renders as Radix ToggleGroup.Item',
       'Item receives data-variant and data-size from context',
