@@ -90,6 +90,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['slidingIndicator'],
   animations: [
     { trigger: 'Root.press', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92 } } }] },
     { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, translateY: { to: '$Active.y' }, width: { to: '$Active.width' }, height: { to: '$Active.height' } } }] },

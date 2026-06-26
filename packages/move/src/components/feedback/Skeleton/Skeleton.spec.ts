@@ -125,6 +125,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['valueLoop'],
   animations: [],
 
   renderContracts: [

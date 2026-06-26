@@ -185,6 +185,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['scrollApi'],
   animations: [
     { trigger: 'Viewport.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 } } }] },
   ],

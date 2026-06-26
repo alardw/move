@@ -69,6 +69,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['slidingIndicator'],
   animations: [],
 
   renderContracts: [

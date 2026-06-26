@@ -134,6 +134,7 @@ export const spec = {
     { name: 'activeChange', slot: 'List', source: 'data-state', value: 'active' },
   ],
 
+  animationCapabilities: ['slidingIndicator'],
   animations: [
     { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, width: { to: '$Active.width' } } }] },
   ],

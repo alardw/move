@@ -137,6 +137,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['slidingIndicator'],
   animations: [
     { trigger: 'PrevTrigger.hover', sequence: [{ preset: 'scaleUp' }] },
     { trigger: 'PrevTrigger.press', sequence: [{ preset: 'scaleDown' }] },

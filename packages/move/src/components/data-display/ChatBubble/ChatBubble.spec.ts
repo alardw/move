@@ -123,6 +123,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['measureThenAnimate'],
   animations: [
     { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0, ease: 'poppy' } } }] },
   ],

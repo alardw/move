@@ -220,6 +220,13 @@ export interface AnimationTriggerBinding {
   note?: string;
 }
 
+/** Sanctioned Tier-2 animation capability (see ComponentSpec.animationCapabilities). */
+export type AnimationCapability =
+  | 'slidingIndicator'
+  | 'valueLoop'
+  | 'measureThenAnimate'
+  | 'scrollApi';
+
 /** Explicit controlled/uncontrolled prop triad mapping */
 export interface ControlledProps {
   /** Controlled prop key (e.g. 'open', 'value', 'checked') */
@@ -451,6 +458,24 @@ export interface ComponentSpec {
 
   /** Animation trigger-sequence bindings (empty array = no animation) */
   animations: AnimationTriggerBinding[];
+
+  /**
+   * Tier-2 animation capabilities a component uses BEYOND the declarative
+   * `animations` system. The declarative trigger/sequence vocabulary covers
+   * ~90% of cases; these are the sanctioned escapes for what it genuinely can't
+   * express, and MUST be declared here so imperative animation code is never
+   * ad-hoc. The animation-capabilities check enforces source ↔ this field.
+   *
+   * - `slidingIndicator` — measure + track an active element, re-measuring on
+   *   resize/fonts (the shared usePositionTracker hook). Tabs, TableOfContents…
+   * - `valueLoop` — animate a JS value/proxy in a loop, applied via a render
+   *   callback (raw anime.js). Loader, Skeleton.
+   * - `measureThenAnimate` — an enter animation whose values depend on a layout
+   *   measurement taken after render (imperative moveAnimate). ChatBubble.
+   * - `scrollApi` — an imperative scroll/gesture API, not an anime.js animation.
+   *   Carousel.
+   */
+  animationCapabilities?: AnimationCapability[];
 
   /** Render/composition behavior that must survive generation. A bare string is
    *  shorthand for a contract with that description. */
