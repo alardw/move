@@ -21,10 +21,9 @@
   height: 200px;
   overflow: hidden;
   border-bottom: 1px solid var(--move-border-base);
-  background:
-    radial-gradient(140% 120% at 12% -15%, color-mix(in oklab, var(--move-primary) 32%, transparent), transparent 55%),
-    linear-gradient(140deg, var(--move-bg-subtle), color-mix(in oklab, var(--move-primary) 16%, var(--move-bg-subtle)));
-  perspective: 1500px;
+  background: var(--move-primary);
+  background-image: radial-gradient(120% 100% at 78% -10%, color-mix(in oklab, white 26%, transparent), transparent 60%);
+  perspective: 1200px;
 }
 
 /* The live sample on a floating white panel, tilted into an isometric-ish
@@ -36,16 +35,17 @@
   top: 50%;
   left: 50%;
   width: 560px;
-  height: 320px;
+  height: auto;
+  max-height: 360px;
   display: grid;
   place-items: center;
   overflow: hidden;
-  padding: 24px;
+  padding: 16px;
   background: var(--move-bg-base);
   border: 1px solid var(--move-border-base);
-  border-radius: 16px;
-  box-shadow: 0 40px 70px -24px rgb(0 0 0 / 45%);
-  transform: translate(-50%, -50%) rotateX(7deg) rotateY(-17deg) rotateZ(1deg) scale(0.52);
+  border-radius: 14px;
+  box-shadow: 0 50px 80px -28px rgb(0 0 0 / 55%);
+  transform: translate(-50%, -50%) rotateX(15deg) rotateY(-28deg) scale(0.58);
   transform-origin: center;
   pointer-events: none;
   user-select: none;
@@ -57,7 +57,7 @@
 }
 
 .card:hover .tilt {
-  transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(0.6);
+  transform: translate(-50%, -50%) rotateX(0deg) rotateY(0deg) scale(0.64);
 }
 
 .image {
