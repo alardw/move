@@ -54,15 +54,10 @@
   transform-origin: top left;
   pointer-events: none;
   user-select: none;
-  transition: transform 340ms cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .tilt > * {
   width: 100%;
-}
-
-.card:hover .tilt {
-  transform: rotateX(0deg) rotateZ(0deg) scale(0.44);
 }
 
 .image {
