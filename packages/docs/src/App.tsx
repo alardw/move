@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { MoveRoot, lightTheme, darkTheme, Sidebar, Stack, Text, Button, Icon, Tooltip, ScrollArea, Collapsible, useSidebarContext, type Theme } from 'move';
+import { MoveRoot, lightTheme, darkTheme, Sidebar, Stack, Button, Icon, Tooltip, ScrollArea, Collapsible, useSidebarContext, type Theme } from 'move';
 import { AnimatedSubnav, LogoMark } from './components';
 import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import * as LucideIcons from 'lucide-react';

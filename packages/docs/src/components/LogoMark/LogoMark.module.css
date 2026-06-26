@@ -6,6 +6,8 @@
   line-height: 1;
   letter-spacing: -0.02em;
   padding-block: var(--move-spacing-md);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .suffix {
