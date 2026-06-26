@@ -25,7 +25,7 @@ export const spec = {
   props: [
     { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '2', moveSpecific: true, description: 'Heading level (determines HTML element h1-h6)' },
     { name: 'size', typeRef: 'DisplaySize', moveSpecific: true, description: 'Font size override (defaults to level-derived size via levelToSize map)' },
-    { name: 'weight', type: "'medium' | 'semibold' | 'bold'", default: "'bold'", moveSpecific: true, description: 'Font weight' },
+    { name: 'weight', type: "'medium' | 'semibold' | 'bold'", default: "'semibold'", moveSpecific: true, description: 'Font weight' },
     { name: 'color', type: "'base' | 'muted' | 'subtle'", default: "'base'", moveSpecific: true, description: 'Text color' },
     { name: 'tracking', type: "'tight' | 'normal'", default: "'tight'", moveSpecific: true, description: 'Letter spacing' },
     { name: 'align', type: "'left' | 'center' | 'right'", moveSpecific: true, description: 'Text alignment (only set when provided)' },
@@ -98,7 +98,7 @@ export const spec = {
       'Derives size from level when size prop is not provided (level 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base)',
       'Applies explicit size override via data-size',
       'Applies weight via data-weight attribute',
-      'Defaults to weight=bold',
+      'Defaults to weight=semibold',
       'Applies color via data-color attribute',
       'Defaults to color=base',
       'Applies tracking via data-tracking attribute',

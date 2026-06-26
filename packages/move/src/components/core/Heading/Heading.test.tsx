@@ -114,9 +114,9 @@ describe('Heading', () => {
 
   // === Weight ===
   describe('weight', () => {
-    it('defaults to weight=bold', () => {
+    it('defaults to weight=semibold', () => {
       render(<Heading data-testid="heading">Title</Heading>);
-      expect(screen.getByTestId('heading')).toHaveAttribute('data-weight', 'bold');
+      expect(screen.getByTestId('heading')).toHaveAttribute('data-weight', 'semibold');
     });
 
     it('applies weight via data-weight attribute', () => {
