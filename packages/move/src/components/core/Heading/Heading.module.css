@@ -58,10 +58,13 @@
 .root[data-weight='extrabold']   { font-weight: var(--move-weight-extrabold); }
 .root[data-weight='black']       { font-weight: var(--move-weight-black); }
 
-/* `bold` is the default */
-.root[data-weight='bold'],
-.root:not([data-weight]) {
+.root[data-weight='bold'] {
   font-weight: var(--move-weight-bold);
+}
+
+/* Unspecified headings inherit the shared heading-weight token (also used by Prose). */
+.root:not([data-weight]) {
+  font-weight: var(--move-weight-heading);
 }
 
 /* ── Color ── */

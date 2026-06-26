@@ -159,6 +159,9 @@
   --move-font-body: var(--move-font);
   --move-font-code: var(--move-font-mono);
 
+  /* Heading weight — shared by the Heading component default and Prose */
+  --move-weight-heading: var(--move-weight-semibold);
+
   --move-size-xs: var(--move-text-xs);
   --move-size-sm: var(--move-text-sm);
   --move-size-base: var(--move-text-base);
