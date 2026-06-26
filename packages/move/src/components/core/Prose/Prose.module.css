@@ -39,7 +39,7 @@
 .root h5,
 .root h6 {
   color: var(--move-prose-fg);
-  font-weight: var(--move-weight-bold);
+  font-weight: var(--move-weight-semibold);
   letter-spacing: var(--move-tracking-tight);
   line-height: var(--move-leading-tight);
   margin-top: var(--move-prose-heading-gap);
