@@ -1,6 +1,6 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button, ToggleButton } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Switch, ToggleGroup } from 'move';
 import { ComponentCard, TocRail, type TocItem } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
@@ -87,38 +87,42 @@ export function ComponentsOverviewPage() {
         </Stack>
 
         <Stack gap="lg" id="browse">
-          <Stack direction="row" gap="sm" align="center" wrap>
-            <InputText
-              placeholder="Search — try “modal”, “spinner”, “otp”…"
-              value={query}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
-            />
-            <Stack direction="row" gap="xs" wrap>
-              {['All', ...CATEGORY_ORDER].map((c) => (
-                <Button
-                  key={c}
-                  size="sm"
-                  variant={category === c ? 'solid' : 'ghost'}
-                  onClick={() => setCategory(c)}
-                >
-                  {c === 'All' ? 'All' : labelOf(c)}
-                </Button>
-              ))}
+          <Stack gap="sm">
+            <Stack direction="row" gap="md" align="center" wrap>
+              <InputText
+                placeholder="Search — try “modal”, “spinner”, “otp”…"
+                value={query}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              />
+              <Switch.Root checked={animated} onCheckedChange={setAnimated} label="Animated">
+                <Switch.Thumb />
+              </Switch.Root>
+              <Switch.Root checked={compound} onCheckedChange={setCompound} label="Compound">
+                <Switch.Thumb />
+              </Switch.Root>
             </Stack>
-            <Stack direction="row" gap="xs">
-              <ToggleButton pressed={animated} onPressedChange={setAnimated} size="sm">
-                <Icon name="sparkles" />
-                Animated
-              </ToggleButton>
-              <ToggleButton pressed={compound} onPressedChange={setCompound} size="sm">
-                <Icon name="component" />
-                Compound
-              </ToggleButton>
-            </Stack>
+            <div style={{ overflowX: 'auto', maxWidth: '100%', paddingBottom: '2px' }}>
+              <ToggleGroup.Root
+                type="single"
+                value={category}
+                onValueChange={(v: string) => v && setCategory(v)}
+                variant="ghost"
+                size="sm"
+              >
+                <ToggleGroup.Item value="All">All</ToggleGroup.Item>
+                {CATEGORY_ORDER.map((c) => (
+                  <ToggleGroup.Item key={c} value={c}>
+                    {labelOf(c)}
+                  </ToggleGroup.Item>
+                ))}
+              </ToggleGroup.Root>
+            </div>
           </Stack>
 
           {filtered.length === 0 ? (
-            <Text color="muted">No components match “{query}”.</Text>
+            <Text color="muted">
+              No components match {query ? `“${query}”` : 'these filters'}.
+            </Text>
           ) : (
             sections.map((cat) => (
               <Stack key={cat} gap="sm">
