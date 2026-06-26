@@ -120,7 +120,7 @@ export function ComponentsOverviewPage() {
             sections.map((cat) => (
               <Stack key={cat} gap="sm">
                 {grouped && (
-                  <Heading level={2} size="lg" weight="normal">{labelOf(cat)}</Heading>
+                  <Heading level={3} weight="normal">{labelOf(cat)}</Heading>
                 )}
                 <div style={GRID}>
                   {filtered
