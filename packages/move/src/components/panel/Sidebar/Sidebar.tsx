@@ -21,6 +21,19 @@ import type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
 import styles from './Sidebar.module.css';
 
 // ============================================================================
+// Labels (i18n)
+// ============================================================================
+
+export interface SidebarLabels {
+  /** aria-label for the mobile close button. */
+  close: string;
+}
+
+const DEFAULT_LABELS: SidebarLabels = {
+  close: 'Close sidebar',
+};
+
+// ============================================================================
 // Animation config
 // ============================================================================
 
@@ -305,6 +318,8 @@ export interface SidebarHeaderProps extends Record<string, unknown> {
   children?: React.ReactNode;
   /** Content shown when sidebar is collapsed. Falls back to children if not provided. */
   collapsedChildren?: React.ReactNode;
+  /** Localized strings rendered by the header (mobile close button). */
+  labels?: Partial<SidebarLabels>;
   sp?: SlotPropsMap<'header' | 'mobileClose'>;
 }
 
@@ -312,9 +327,10 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
   name: 'SidebarHeader',
   styles,
   slots: ['header', 'mobileClose'] as const,
-  moveProps: ['collapsedChildren'],
+  moveProps: ['collapsedChildren', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<SidebarLabels>) };
     const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
     const scrollCtx = React.useContext(SidebarScrollContext);
     const showCollapsed = collapsed && !isMobile;
@@ -340,7 +356,7 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
               ? props.collapsedChildren
               : props.children}
             {isMobile && (
-              <Button variant="ghost" size="sm" onClick={handleClose} aria-label="Close sidebar" className={cx('mobileClose')}>
+              <Button variant="ghost" size="sm" onClick={handleClose} aria-label={labels.close} className={cx('mobileClose')}>
                 <Icon name="x" />
               </Button>
             )}

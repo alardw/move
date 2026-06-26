@@ -77,7 +77,9 @@ export const spec = {
   },
   sizes: ['sm', 'md', 'lg'] as string[],
 
-  labels: [],
+  labels: [
+    { key: 'loading', default: 'Loading', description: 'Accessible label announced while loading (dots variant)' },
+  ],
 
   hasHook: false,
   engineImports: ['withMoveComponent'],

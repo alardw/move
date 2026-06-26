@@ -248,22 +248,22 @@ describe('VideoPlayer', () => {
   // === i18n labels ===
   describe('i18n labels', () => {
     it('uses custom play/pause labels', () => {
-      render(<VideoPlayer src="test.mp4" playLabel="Reproducir" />);
+      render(<VideoPlayer src="test.mp4" labels={{ play: 'Reproducir' }} />);
       expect(screen.getByLabelText('Reproducir')).toBeInTheDocument();
     });
 
     it('uses custom mute/unmute labels', () => {
-      render(<VideoPlayer src="test.mp4" muteLabel="Silenciar" />);
+      render(<VideoPlayer src="test.mp4" labels={{ mute: 'Silenciar' }} />);
       expect(screen.getByLabelText('Silenciar')).toBeInTheDocument();
     });
 
     it('uses custom fullscreen label', () => {
-      render(<VideoPlayer src="test.mp4" fullscreenLabel="Pantalla completa" />);
+      render(<VideoPlayer src="test.mp4" labels={{ fullscreen: 'Pantalla completa' }} />);
       expect(screen.getByLabelText('Pantalla completa')).toBeInTheDocument();
     });
 
     it('uses custom settings label', () => {
-      render(<VideoPlayer src="test.mp4" settingsLabel="Ajustes" />);
+      render(<VideoPlayer src="test.mp4" labels={{ settings: 'Ajustes' }} />);
       expect(screen.getByLabelText('Ajustes')).toBeInTheDocument();
     });
   });

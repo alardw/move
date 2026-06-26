@@ -161,9 +161,10 @@ export const spec = {
   sizes: ['sm', 'md', 'lg'] as string[],
 
   labels: [
+    { key: 'label', default: 'Pagination', description: 'Aria-label for the root nav element' },
     { key: 'previous', default: 'Go to previous page', description: 'Aria-label for previous trigger button' },
     { key: 'next', default: 'Go to next page', description: 'Aria-label for next trigger button' },
-    { key: 'page', default: 'Go to page {page}', description: 'Aria-label template for page buttons' },
+    { key: 'page', default: 'Go to page {page}', description: 'Aria-label template for page buttons; {page} is replaced with the page number' },
   ],
   childrenKind: 'composition' as const,
 

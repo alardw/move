@@ -50,9 +50,7 @@ export const spec = {
     // Sections
     { name: 'withPicker', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show saturation/hue/alpha picker area' },
     // Labels
-    { name: 'saturationLabel', type: 'string', default: "'Color saturation and brightness'", moveSpecific: true, description: 'Saturation area accessible label' },
-    { name: 'hueLabel', type: 'string', default: "'Hue'", moveSpecific: true, description: 'Hue slider accessible label' },
-    { name: 'alphaLabel', type: 'string', default: "'Opacity'", moveSpecific: true, description: 'Alpha slider accessible label' },
+    { name: 'labels', type: 'Partial<ColorPickerLabels>', moveSpecific: true, description: 'Accessible label overrides for picker controls' },
     // State
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'readOnly', type: 'boolean', moveSpecific: true, description: 'Read-only state (pointer-events: none)' },
@@ -130,12 +128,18 @@ export const spec = {
   sizes: ['sm', 'md', 'lg'] as string[],
 
   labels: [
-    { key: 'saturationLabel', default: 'Color saturation and brightness', description: 'Saturation area accessible label' },
-    { key: 'hueLabel', default: 'Hue', description: 'Hue slider accessible label' },
-    { key: 'alphaLabel', default: 'Opacity', description: 'Alpha slider accessible label' },
-    { key: 'formatLabel', default: 'Color format', description: 'Format selector accessible label' },
-    { key: 'hexLabel', default: 'Hex color value', description: 'Hex input accessible label' },
-    { key: 'alphaInputLabel', default: 'Alpha', description: 'Alpha input accessible label' },
+    { key: 'saturation', default: 'Color saturation and brightness', description: 'Saturation area accessible label' },
+    { key: 'hue', default: 'Hue', description: 'Hue slider accessible label' },
+    { key: 'alpha', default: 'Opacity', description: 'Alpha slider accessible label' },
+    { key: 'format', default: 'Color format', description: 'Format selector accessible label' },
+    { key: 'hex', default: 'Hex color value', description: 'Hex input accessible label' },
+    { key: 'alphaInput', default: 'Alpha', description: 'Alpha input accessible label' },
+    { key: 'red', default: 'Red', description: 'Red channel input accessible label' },
+    { key: 'green', default: 'Green', description: 'Green channel input accessible label' },
+    { key: 'blue', default: 'Blue', description: 'Blue channel input accessible label' },
+    { key: 'hueChannel', default: 'Hue', description: 'Hue channel input accessible label' },
+    { key: 'saturationChannel', default: 'Saturation', description: 'Saturation channel input accessible label' },
+    { key: 'lightness', default: 'Lightness', description: 'Lightness channel input accessible label' },
   ],
 
   childrenKind: undefined,

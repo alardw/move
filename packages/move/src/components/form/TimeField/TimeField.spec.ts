@@ -48,6 +48,7 @@ export const spec = {
         { name: 'min', type: 'string', moveSpecific: true, description: 'Minimum time constraint (24h format)' },
         { name: 'max', type: 'string', moveSpecific: true, description: 'Maximum time constraint (24h format)' },
         { name: 'step', type: 'number', default: '1', moveSpecific: true, description: 'Arrow key increment in seconds' },
+        { name: 'labels', type: 'Partial<TimeFieldLabels>', moveSpecific: true, description: 'Override aria-label strings for segments and period' },
       ],
       usesFactory: false,
       description: 'Stateful root that provides TimeFieldContext, renders segments auto or via children, optionally wraps in Radix Popover for dropdown mode',
@@ -122,6 +123,7 @@ export const spec = {
     { name: 'min', type: 'string', moveSpecific: true, description: 'Min time constraint' },
     { name: 'max', type: 'string', moveSpecific: true, description: 'Max time constraint' },
     { name: 'step', type: 'number', default: '1', moveSpecific: true, description: 'Increment step' },
+    { name: 'labels', type: 'Partial<TimeFieldLabels>', moveSpecific: true, description: 'Override aria-label strings for segments and period' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom segment layout' },
     { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
     { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
@@ -204,7 +206,12 @@ export const spec = {
   variants: {},
   sizes: ['sm', 'md', 'lg'] as string[],
 
-  labels: [] as { key: string; default: string; description: string }[],
+  labels: [
+    { key: 'hour', default: 'hour', description: 'aria-label for the hour segment' },
+    { key: 'minute', default: 'minute', description: 'aria-label for the minute segment' },
+    { key: 'second', default: 'second', description: 'aria-label for the second segment' },
+    { key: 'period', default: 'period', description: 'aria-label for the AM/PM period toggle' },
+  ] as { key: string; default: string; description: string }[],
 
   childrenKind: 'composition' as const,
   propRoles: {

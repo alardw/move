@@ -25,6 +25,39 @@ export type { SubtitleTrack } from '../_shared/types';
 
 export type VideoPlayerRadius = 'none' | 'sm' | 'md' | 'lg';
 
+export interface VideoPlayerLabels {
+  /** Aria label for the play button. */
+  play: string;
+  /** Aria label for the pause button. */
+  pause: string;
+  /** Aria label for the mute button. */
+  mute: string;
+  /** Aria label for the unmute button. */
+  unmute: string;
+  /** Aria label for the fullscreen button. */
+  fullscreen: string;
+  /** Aria label for the exit-fullscreen button. */
+  exitFullscreen: string;
+  /** Aria label for the settings button. */
+  settings: string;
+  /** Aria label for the subtitles button. */
+  subtitles: string;
+  /** Label for the "Off" option in the subtitle menu. */
+  subtitlesOff: string;
+}
+
+const DEFAULT_LABELS: VideoPlayerLabels = {
+  play: 'Play',
+  pause: 'Pause',
+  mute: 'Mute',
+  unmute: 'Unmute',
+  fullscreen: 'Fullscreen',
+  exitFullscreen: 'Exit fullscreen',
+  settings: 'Settings',
+  subtitles: 'Subtitles',
+  subtitlesOff: 'Off',
+};
+
 type VideoPlayerSlots =
   | 'root'
   | 'video'
@@ -73,24 +106,8 @@ export interface VideoPlayerProps extends Record<string, unknown> {
   showFullscreen?: boolean;
   showTime?: boolean;
 
-  /** i18n label for play button. */
-  playLabel?: string;
-  /** i18n label for pause button. */
-  pauseLabel?: string;
-  /** i18n label for mute button. */
-  muteLabel?: string;
-  /** i18n label for unmute button. */
-  unmuteLabel?: string;
-  /** i18n label for fullscreen button. */
-  fullscreenLabel?: string;
-  /** i18n label for exit-fullscreen button. */
-  exitFullscreenLabel?: string;
-  /** i18n label for settings button. */
-  settingsLabel?: string;
-  /** i18n label for subtitles button. */
-  subtitlesLabel?: string;
-  /** i18n label for "Off" in the subtitle menu. */
-  subtitlesOffLabel?: string;
+  /** i18n labels for the player's controls. */
+  labels?: Partial<VideoPlayerLabels>;
 
   radius?: VideoPlayerRadius;
   aspectRatio?: string;
@@ -150,13 +167,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     'onEnded', 'onError', 'onReady',
     'qualities', 'audioTracks', 'onQualityChange', 'onAudioTrackChange',
     'showSettings', 'showVolume', 'showSubtitles', 'showFullscreen', 'showTime',
-    'playLabel', 'pauseLabel', 'muteLabel', 'unmuteLabel',
-    'fullscreenLabel', 'exitFullscreenLabel', 'settingsLabel',
-    'subtitlesLabel', 'subtitlesOffLabel',
+    'labels',
     'radius', 'aspectRatio', 'width', 'height',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<VideoPlayerLabels>) };
+
     const player = useVideoPlayer({
       src: props.src as string | undefined,
       provider: props.provider as VideoPlayerProvider | undefined,
@@ -190,17 +207,6 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     const qualitiesProp = props.qualities as QualityOption[] | undefined;
     const audioTracksProp = props.audioTracks as AudioTrack[] | undefined;
     const poster = props.poster as string | undefined;
-
-    // i18n labels
-    const playLabel = (props.playLabel as string) || 'Play';
-    const pauseLabel = (props.pauseLabel as string) || 'Pause';
-    const muteLabel = (props.muteLabel as string) || 'Mute';
-    const unmuteLabel = (props.unmuteLabel as string) || 'Unmute';
-    const fullscreenLabel = (props.fullscreenLabel as string) || 'Fullscreen';
-    const exitFullscreenLabel = (props.exitFullscreenLabel as string) || 'Exit fullscreen';
-    const settingsLabel = (props.settingsLabel as string) || 'Settings';
-    const subtitlesLabel = (props.subtitlesLabel as string) || 'Subtitles';
-    const subtitlesOffLabel = (props.subtitlesOffLabel as string) || 'Off';
 
     // Resolved icons
     const playIcon = useResolvedIcon('play', 18);
@@ -522,7 +528,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                   size="sm"
                   className={cx('playButton')}
                   onClick={player.togglePlay}
-                  aria-label={player.playing ? pauseLabel : playLabel}
+                  aria-label={player.playing ? labels.pause : labels.play}
 
                 >
                   {player.playing ? pauseIcon : playIcon}
@@ -552,7 +558,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                         variant="ghost"
                         size="sm"
                         className={cx('settingsButton')}
-                        aria-label={settingsLabel}
+                        aria-label={labels.settings}
                       >
                         {settingsIcon}
                       </Button>
@@ -569,7 +575,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                         size="sm"
                         className={cx('subtitleButton')}
                         data-active={player.activeSubtitleIndex >= 0}
-                        aria-label={subtitlesLabel}
+                        aria-label={labels.subtitles}
 
                       >
                         {captionsIcon}
@@ -591,7 +597,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                         }}
                         type="button"
                       >
-                        {subtitlesOffLabel}
+                        {labels.subtitlesOff}
                       </button>
                       {subtitles!.map((track, i) => (
                         <button
@@ -619,7 +625,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       size="sm"
                       className={cx('volumeButton')}
                       onClick={player.toggleMute}
-                      aria-label={player.muted ? unmuteLabel : muteLabel}
+                      aria-label={player.muted ? labels.unmute : labels.mute}
 
                     >
                       {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
@@ -642,7 +648,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                     size="sm"
                     className={cx('fullscreenButton')}
                     onClick={player.toggleFullscreen}
-                    aria-label={player.isFullscreen ? exitFullscreenLabel : fullscreenLabel}
+                    aria-label={player.isFullscreen ? labels.exitFullscreen : labels.fullscreen}
 
                   >
                     {player.isFullscreen ? minimizeIcon : maximizeIcon}

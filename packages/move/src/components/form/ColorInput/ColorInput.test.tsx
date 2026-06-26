@@ -103,8 +103,8 @@ describe('ColorInput', () => {
       expect(swatch.style.backgroundColor).toBeTruthy();
     });
 
-    it('swatch custom label via swatchLabel prop', () => {
-      const { container } = render(<ColorInput swatchLabel="Choose" />);
+    it('swatch custom label via labels prop', () => {
+      const { container } = render(<ColorInput labels={{ swatch: 'Choose' }} />);
       const swatch = container.querySelector('[role="button"]');
       expect(swatch).toHaveAttribute('aria-label', 'Choose');
     });

@@ -14,12 +14,22 @@ import styles from './ProgressBar.module.css';
 export type ProgressBarSize = 'sm' | 'md' | 'lg';
 export type ProgressBarVariant = 'default' | 'success' | 'warning' | 'error';
 
+export interface ProgressBarLabels {
+  /** Accessible name for the progress bar; applied as aria-label when set. */
+  label: string;
+}
+
+const DEFAULT_LABELS: ProgressBarLabels = {
+  label: 'Progress',
+};
+
 export interface ProgressBarProps extends Record<string, unknown> {
   value?: number | null;
   max?: number;
   size?: ProgressBarSize;
   variant?: ProgressBarVariant;
   getValueLabel?: (value: number, max: number) => string;
+  labels?: Partial<ProgressBarLabels>;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -35,9 +45,10 @@ export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarPr
   styles,
   slots: ['root', 'indicator'] as const,
   defaults: { max: 100, size: 'md', variant: 'default' },
-  moveProps: ['value', 'max', 'getValueLabel', 'size', 'variant'],
+  moveProps: ['value', 'max', 'getValueLabel', 'size', 'variant', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ProgressBarLabels>) };
     const indicatorRef = React.useRef<HTMLDivElement | null>(null);
 
     React.useEffect(() => {
@@ -66,6 +77,7 @@ export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarPr
 
         return (
           <RadixProgress.Root
+            aria-label={labels.label}
             {...attrs}
             {...spRest}
             ref={ref}

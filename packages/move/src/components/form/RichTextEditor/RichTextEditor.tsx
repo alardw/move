@@ -26,6 +26,19 @@ const RichTextEditorContext = React.createContext<RichTextEditorContextValue>({
 });
 
 // =============================================================================
+// Labels (i18n)
+// =============================================================================
+
+export interface RichTextEditorLabels {
+  /** Default aria-label for the toolbar */
+  toolbar: string;
+}
+
+const DEFAULT_LABELS: RichTextEditorLabels = {
+  toolbar: 'Text formatting',
+};
+
+// =============================================================================
 // Root (plain FC — context wrapper)
 // =============================================================================
 
@@ -71,7 +84,7 @@ export interface RichTextEditorToolbarProps extends Record<string, unknown> {
   children?: React.ReactNode;
   sticky?: boolean;
   stickyOffset?: number;
-  toolbarLabel?: string;
+  labels?: Partial<RichTextEditorLabels>;
   sp?: SlotPropsMap<'toolbar'>;
 }
 
@@ -79,9 +92,10 @@ const RichTextEditorToolbar = withMoveComponent<'toolbar', RichTextEditorToolbar
   name: 'RichTextEditorToolbar',
   styles,
   slots: ['toolbar'] as const,
-  moveProps: ['sticky', 'stickyOffset', 'toolbarLabel'],
+  moveProps: ['sticky', 'stickyOffset', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<RichTextEditorLabels>) };
     return {
       render() {
         const toolbarSp = sp('toolbar');
@@ -94,7 +108,7 @@ const RichTextEditorToolbar = withMoveComponent<'toolbar', RichTextEditorToolbar
             {...spRest}
             ref={ref}
             role="toolbar"
-            aria-label={(props.toolbarLabel as string) || 'Text formatting'}
+            aria-label={labels.toolbar}
             data-sticky={props.sticky || undefined}
             className={cx('toolbar', props.className, spClass as string | undefined)}
             style={{

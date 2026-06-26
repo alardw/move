@@ -144,6 +144,11 @@ describe('Loader', () => {
       render(<Loader variant="dots" />);
       expect(screen.getByRole('progressbar')).toHaveAttribute('aria-label', 'Loading');
     });
+
+    it('overrides aria-label via labels prop', () => {
+      render(<Loader variant="dots" labels={{ loading: 'Bezig met laden' }} />);
+      expect(screen.getByRole('progressbar')).toHaveAttribute('aria-label', 'Bezig met laden');
+    });
   });
 
   // === Slot props ===

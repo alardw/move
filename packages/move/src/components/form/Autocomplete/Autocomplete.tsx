@@ -47,6 +47,22 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
 
 
 // =============================================================================
+// Labels (i18n)
+// =============================================================================
+
+export interface AutocompleteLabels {
+  /** ClearTrigger accessible label */
+  clearAll: string;
+  /** Tag remove button accessible label template; `{value}` is replaced with the tag value */
+  removeTag: string;
+}
+
+const DEFAULT_LABELS: AutocompleteLabels = {
+  clearAll: 'Clear all',
+  removeTag: 'Remove {value}',
+};
+
+// =============================================================================
 // Context
 // =============================================================================
 
@@ -56,6 +72,7 @@ interface AutocompleteContextValue extends UseAutocompleteReturn {
   animConfig: AnimationTrigger[] | null;
   triggerWidth: number;
   setTriggerWidth: (w: number) => void;
+  labels: AutocompleteLabels;
 }
 
 const AutocompleteContext = React.createContext<AutocompleteContextValue | null>(null);
@@ -92,14 +109,17 @@ export interface AutocompleteRootProps {
   openOnFocus?: boolean;
   allowCustomValue?: boolean;
   filterFn?: (inputValue: string, itemValue: string, itemLabel: string) => boolean;
+  labels?: Partial<AutocompleteLabels>;
   children?: React.ReactNode;
 }
 
 const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   animations: animationsProp,
+  labels: labelsProp,
   children,
   ...hookOptions
 }) => {
+  const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const animConfig = resolveAnimationsConfig(DEFAULT_AUTOCOMPLETE_ANIMATIONS, animationsProp);
 
   const ac = useAutocomplete(hookOptions);
@@ -142,6 +162,7 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
         animConfig,
         triggerWidth,
         setTriggerWidth,
+        labels,
       }}
     >
       <RadixPopover.Root open={radixOpen} onOpenChange={() => { /* Controlled externally */ }}>
@@ -463,7 +484,6 @@ export interface AutocompleteTagProps extends Record<string, unknown> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   value: string;
-  removeLabel?: string;
   sp?: SlotPropsMap<'tag' | 'tagRemove'>;
 }
 
@@ -471,7 +491,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
   name: 'AutocompleteTag',
   styles,
   slots: ['tag', 'tagRemove'] as const,
-  moveProps: ['value', 'removeLabel'],
+  moveProps: ['value'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
@@ -503,7 +523,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
             <button
               {...removeSpRest}
               type="button"
-              aria-label={(props.removeLabel as string) ?? `Remove ${props.value}`}
+              aria-label={ac.labels.removeTag.replace('{value}', props.value as string)}
               className={cx('tagRemove', removeSpClass as string | undefined)}
               style={removeSpStyle as React.CSSProperties}
               onClick={handleRemove}
@@ -592,7 +612,6 @@ export interface AutocompleteClearTriggerProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  clearLabel?: string;
   sp?: SlotPropsMap<'clearTrigger'>;
 }
 
@@ -600,7 +619,6 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
   name: 'AutocompleteClearTrigger',
   styles,
   slots: ['clearTrigger'] as const,
-  moveProps: ['clearLabel'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
@@ -623,7 +641,7 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
             {...spRest}
             ref={ref}
             type="button"
-            aria-label={(props.clearLabel as string) ?? 'Clear all'}
+            aria-label={ac.labels.clearAll}
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}

@@ -148,7 +148,7 @@ export const spec = {
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom delete icon (defaults to X icon). Use aria-label via attribute passthrough to localize the default "Remove {filename}" announcement.' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom delete icon (defaults to X icon). Localize the default "Remove {filename}" announcement via the Root labels prop.' },
       ],
       usesFactory: true,
       description: 'Remove button per file item; aborts upload if in progress; renders check icon when upload is complete',

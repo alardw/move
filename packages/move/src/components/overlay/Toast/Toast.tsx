@@ -18,10 +18,19 @@ import styles from './Toast.module.css';
 // Types
 // =============================================================================
 
+export interface ToastLabels {
+  /** Accessible label for toast close buttons */
+  close: string;
+}
+
+const DEFAULT_LABELS: ToastLabels = {
+  close: 'Close notification',
+};
+
 export interface ToastViewportProps extends Record<string, unknown> {
   position?: ToastPosition;
   animations?: AnimationTrigger[] | false;
-  closeLabel?: string;
+  labels?: Partial<ToastLabels>;
 }
 
 export type { ToastState, ToastPosition, ToastVariant, ToastOptions } from './store';
@@ -221,8 +230,9 @@ const ToastViewport = withMoveComponent<
   name: 'ToastViewport',
   styles,
   slots: ['viewport'] as const,
-  moveProps: ['position', 'animations', 'closeLabel'] as const,
+  moveProps: ['position', 'animations', 'labels'] as const,
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ToastLabels>) };
     const allToasts = useToastStore();
 
     // Resolve animations prop (memoize to avoid re-triggering enter animations)
@@ -252,7 +262,7 @@ const ToastViewport = withMoveComponent<
         const { className: spClass, style: spStyle, ...spRest } = viewportSp as Record<string, unknown>;
 
         return createPortal(
-          <ToastCloseLabelContext.Provider value={(props.closeLabel as string) ?? 'Close notification'}>
+          <ToastCloseLabelContext.Provider value={labels.close}>
           <ToastAnimateContext.Provider value={animConfig}>
             <div
               {...attrs}

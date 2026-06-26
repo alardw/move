@@ -26,6 +26,22 @@ import type { AnimationTrigger } from '../../../animation';
 import styles from './FileUpload.module.css';
 
 // =============================================================================
+// Labels (i18n)
+// =============================================================================
+
+export interface FileUploadLabels {
+  /** Aria-label for the per-file delete button. `{filename}` is replaced with the file name. */
+  removeFile: string;
+  /** Aria-label for the check icon shown on completed uploads. */
+  uploadComplete: string;
+}
+
+const DEFAULT_LABELS: FileUploadLabels = {
+  removeFile: 'Remove {filename}',
+  uploadComplete: 'Upload complete',
+};
+
+// =============================================================================
 // Context
 // =============================================================================
 
@@ -72,6 +88,8 @@ interface FileUploadContextValue {
   // Animation
   animConfig: AnimationTrigger[] | false | null;
   removeOnComplete?: number;
+  // i18n
+  labels: FileUploadLabels;
 }
 
 const FileUploadContext = React.createContext<FileUploadContextValue | null>(null);
@@ -127,6 +145,8 @@ export interface FileUploadRootProps extends Record<string, unknown> {
   onAllComplete?: UseUploadManagerOptions['onAllComplete'];
   /** Remove files from list after upload completes. Number = delay in ms, true = 2000ms */
   removeOnComplete?: boolean | number;
+  /** Localizable strings for the component's built-in labels. */
+  labels?: Partial<FileUploadLabels>;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -182,8 +202,6 @@ export interface FileUploadItemDeleteProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  /** Override the default aria-label for i18n. Receives the file name. */
-  'aria-label'?: string;
   sp?: SlotPropsMap<'itemDelete'>;
 }
 
@@ -235,10 +253,12 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
     'size', 'variant',
     'adapter', 'autoUpload', 'concurrency',
     'onUploadComplete', 'onUploadError', 'onAllComplete',
-    'removeOnComplete',
+    'removeOnComplete', 'labels',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<FileUploadLabels>) };
+
     // Upload manager — always called, inert when no adapter
     const adapterProp = props.adapter as FileUploadAdapter | undefined;
     const hasAdapter = !!adapterProp;
@@ -329,6 +349,8 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       // Animation
       animConfig,
       removeOnComplete: removeDelay || undefined,
+      // i18n
+      labels,
     };
 
     // Build input props once for the embedded hidden input
@@ -698,11 +720,10 @@ const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDelet
   styles,
   slots: ['itemDelete'] as const,
 
-  moveProps: ['aria-label'],
-
   setup({ props, ref, cx, sp, attrs }) {
     const context = useFileUploadContext();
     const { file, entry } = useFileUploadItemContext();
+    const labels = context.labels;
     const fallbackXIcon = useResolvedIcon('x', 14);
     const checkIcon = useResolvedIcon('circle-check', 16);
 
@@ -718,14 +739,14 @@ const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDelet
               ref={ref as React.Ref<HTMLSpanElement>}
               className={cx('itemDelete', 'itemComplete', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-              aria-label="Upload complete"
+              aria-label={labels.uploadComplete}
             >
               {checkIcon}
             </span>
           );
         }
 
-        const ariaLabel = (props['aria-label'] as string) || `Remove ${file.name}`;
+        const ariaLabel = labels.removeFile.replace('{filename}', file.name);
         return (
           <button
             {...attrs}

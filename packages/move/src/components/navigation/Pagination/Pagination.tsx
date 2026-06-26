@@ -15,7 +15,7 @@ import styles from './Pagination.module.css';
 // =============================================================================
 
 const PaginationContext = React.createContext<
-  (UsePaginationReturn & { size?: PaginationSize; variant?: PaginationVariant }) | null
+  (UsePaginationReturn & { size?: PaginationSize; variant?: PaginationVariant; labels: PaginationLabels }) | null
 >(null);
 
 function usePaginationContext() {
@@ -38,6 +38,24 @@ function usePaginationContext() {
 
 export type PaginationSize = 'sm' | 'md' | 'lg';
 export type PaginationVariant = 'default' | 'outline';
+
+export interface PaginationLabels {
+  /** Aria-label for the root nav element */
+  label: string;
+  /** Aria-label for the previous trigger button */
+  previous: string;
+  /** Aria-label for the next trigger button */
+  next: string;
+  /** Aria-label template for page buttons; '{page}' is replaced with the page number */
+  page: string;
+}
+
+const DEFAULT_LABELS: PaginationLabels = {
+  label: 'Pagination',
+  previous: 'Go to previous page',
+  next: 'Go to next page',
+  page: 'Go to page {page}',
+};
 
 // =============================================================================
 // Root
@@ -63,6 +81,8 @@ export interface PaginationRootProps extends Record<string, unknown> {
   size?: PaginationSize;
   /** Visual variant */
   variant?: PaginationVariant;
+  /** Accessible labels for nav, triggers, and page buttons */
+  labels?: Partial<PaginationLabels>;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -71,9 +91,10 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
   styles,
   slots: ['root'] as const,
   defaults: { size: 'md', variant: 'default', siblings: 1, boundaries: 1 },
-  moveProps: ['total', 'page', 'defaultPage', 'onChange', 'siblings', 'boundaries', 'size', 'variant'],
+  moveProps: ['total', 'page', 'defaultPage', 'onChange', 'siblings', 'boundaries', 'size', 'variant', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PaginationLabels>) };
     const pagination = usePagination({
       total: props.total as number,
       page: props.page as number | undefined,
@@ -88,8 +109,9 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
         ...pagination,
         size: props.size as PaginationSize,
         variant: props.variant as PaginationVariant,
+        labels,
       }),
-      [pagination, props.size, props.variant]
+      [pagination, props.size, props.variant, labels.label, labels.previous, labels.next, labels.page]
     );
 
     return {
@@ -103,7 +125,7 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
               {...attrs}
               {...spRest}
               ref={ref}
-              aria-label="Pagination"
+              aria-label={labels.label}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-size={props.size}
@@ -143,7 +165,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
   moveProps: ['animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { previous, canPrevious } = usePaginationContext();
+    const { previous, canPrevious, labels } = usePaginationContext();
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       { trigger: 'Prev.hover', sequence: [{ animation: scaleUp }] },
@@ -173,7 +195,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
             {...spRest}
             ref={mergedRef}
             type="button"
-            aria-label="Go to previous page"
+            aria-label={labels.previous}
             disabled={!canPrevious}
             className={cx('prev', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -228,7 +250,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
   moveProps: ['animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { next, canNext } = usePaginationContext();
+    const { next, canNext, labels } = usePaginationContext();
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       { trigger: 'Next.hover', sequence: [{ animation: scaleUp }] },
@@ -258,7 +280,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
             {...spRest}
             ref={mergedRef}
             type="button"
-            aria-label="Go to next page"
+            aria-label={labels.next}
             disabled={!canNext}
             className={cx('next', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -304,7 +326,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
   slots: ['items', 'item', 'ellipsis', 'indicator'] as const,
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { range, page, setPage } = usePaginationContext();
+    const { range, page, setPage, labels } = usePaginationContext();
     const prevNumbersRef = React.useRef<Set<number>>(new Set());
     const prevPageRef = React.useRef(page);
 
@@ -451,6 +473,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
                     cx={cx}
                     isActive={isActive}
                     pageNumber={item}
+                    pageLabel={labels.page}
                     onSelect={setPage}
                   />
                 </li>
@@ -486,10 +509,11 @@ interface PageButtonProps {
   cx: (...args: any[]) => string;
   isActive: boolean;
   pageNumber: number;
+  pageLabel: string;
   onSelect: (page: number) => void;
 }
 
-function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNumber, onSelect }: PageButtonProps) {
+function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNumber, pageLabel, onSelect }: PageButtonProps) {
   const btnRef = React.useRef<HTMLElement | null>(null);
   const btnRefs = React.useMemo(() => ({ Btn: btnRef }), []);
   const { handlers } = useAnimations(PAGE_BUTTON_ANIMATIONS, btnRefs);
@@ -499,7 +523,7 @@ function PageButton({ itemSpRest, itemSpClass, itemSpStyle, cx, isActive, pageNu
       {...itemSpRest}
       ref={btnRef as React.Ref<HTMLButtonElement>}
       type="button"
-      aria-label={`Go to page ${pageNumber}`}
+      aria-label={pageLabel.replace('{page}', String(pageNumber))}
       aria-current={isActive ? 'page' : undefined}
       data-state={isActive ? 'active' : undefined}
       className={cx('item', itemSpClass)}

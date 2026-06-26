@@ -31,6 +31,7 @@ export const spec = {
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'TableOfContents.Item elements' },
         { name: 'offset', type: 'number', default: '80', moveSpecific: true, description: 'Top-of-viewport offset (in px) used to decide which heading is current' },
+        { name: 'labels', type: 'Partial<TableOfContentsLabels>', moveSpecific: true, description: 'Override accessible label strings' },
       ],
       usesFactory: true,
       description: 'Container and scroll-spy state manager. Tracks which registered heading intersects the viewport above the offset line and exposes activeHref via context.',
@@ -94,7 +95,9 @@ export const spec = {
 
   variants: {},
   sizes: [] as string[],
-  labels: [],
+  labels: [
+    { key: 'label', default: 'On this page', description: 'Accessible label for the navigation landmark' },
+  ],
 
   radixPrimitive: null,
   hasHook: false,

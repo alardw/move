@@ -206,6 +206,21 @@ describe('FileUpload', () => {
       expect(screen.getByLabelText('Remove photo.jpg')).toBeInTheDocument();
     });
 
+    it('uses labels.removeFile to localize the aria-label', () => {
+      const file = createFile('photo.jpg', 500, 'image/jpeg');
+      render(
+        <FileUpload.Root defaultValue={[file]} labels={{ removeFile: 'Verwijder {filename}' }}>
+          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.ItemGroup>
+            <FileUpload.Item file={file}>
+              <FileUpload.ItemDelete />
+            </FileUpload.Item>
+          </FileUpload.ItemGroup>
+        </FileUpload.Root>
+      );
+      expect(screen.getByLabelText('Verwijder photo.jpg')).toBeInTheDocument();
+    });
+
     it('removes file on click', async () => {
       const user = userEvent.setup();
       const file = createFile('photo.jpg', 500, 'image/jpeg');

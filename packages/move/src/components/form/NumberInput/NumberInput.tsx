@@ -16,6 +16,18 @@ export type NumberInputVariant = 'outlined' | 'filled';
 export type NumberInputSize = 'sm' | 'md' | 'lg';
 export type NumberInputSlots = 'root' | 'input' | 'iconLeft' | 'controls' | 'increment' | 'decrement';
 
+export interface NumberInputLabels {
+  /** Aria label for the increment button */
+  increment: string;
+  /** Aria label for the decrement button */
+  decrement: string;
+}
+
+const DEFAULT_LABELS: NumberInputLabels = {
+  increment: 'Increment',
+  decrement: 'Decrement',
+};
+
 export interface NumberInputProps extends Record<string, unknown> {
   variant?: NumberInputVariant;
   size?: NumberInputSize;
@@ -36,8 +48,7 @@ export interface NumberInputProps extends Record<string, unknown> {
   iconLeft?: React.ReactNode;
   prefix?: string;
   suffix?: string;
-  incrementLabel?: string;
-  decrementLabel?: string;
+  labels?: Partial<NumberInputLabels>;
   formatValue?: (v: number) => string;
   parseValue?: (s: string) => number | undefined;
   disabled?: boolean;
@@ -84,11 +95,12 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     'min', 'max', 'step', 'shiftStep', 'clampBehavior',
     'allowDecimal', 'decimalScale', 'allowNegative',
     'hideControls', 'invalid', 'width', 'iconLeft',
-    'prefix', 'suffix', 'incrementLabel', 'decrementLabel',
+    'prefix', 'suffix', 'labels',
     'formatValue', 'parseValue',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<NumberInputLabels>) };
     const inputRef = React.useRef<HTMLInputElement>(null);
 
     const holdTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -168,8 +180,6 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
         const hideControls = props.hideControls as boolean;
         const width = props.width as React.CSSProperties['width'] | undefined;
         const iconLeft = props.iconLeft as React.ReactNode | undefined;
-        const incrementLabel = (props.incrementLabel as string) || 'Increment';
-        const decrementLabel = (props.decrementLabel as string) || 'Decrement';
 
         return (
           <div
@@ -244,7 +254,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
                   style={incSpStyle as React.CSSProperties}
                   tabIndex={-1}
                   disabled={disabled}
-                  aria-label={incrementLabel}
+                  aria-label={labels.increment}
                   onPointerDown={(e) => {
                     e.preventDefault();
                     startHold(() => ni.increment(e.shiftKey));
@@ -261,7 +271,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
                   style={decSpStyle as React.CSSProperties}
                   tabIndex={-1}
                   disabled={disabled}
-                  aria-label={decrementLabel}
+                  aria-label={labels.decrement}
                   onPointerDown={(e) => {
                     e.preventDefault();
                     startHold(() => ni.decrement(e.shiftKey));

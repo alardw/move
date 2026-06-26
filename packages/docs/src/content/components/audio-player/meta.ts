@@ -49,5 +49,5 @@ export const meta: ComponentMeta = {
     { key: 'Tab', action: 'Moves focus through the controls (play, scrubber, volume, settings, subtitles).' },
   ],
   accessibilityLede:
-    'Each control button carries an `aria-label` you can override per-locale via `playLabel`, `pauseLabel`, `muteLabel`, etc. The root takes focus so the keyboard shortcuts work without clicking a control first.',
+    'Each control button carries an `aria-label` you can override per-locale via the `labels` object (`labels={{ play, pause, mute, ... }}`). The root takes focus so the keyboard shortcuts work without clicking a control first.',
 };

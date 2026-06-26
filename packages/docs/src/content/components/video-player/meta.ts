@@ -44,5 +44,5 @@ export const meta: ComponentMeta = {
     { key: 'Arrow Up / Down', action: 'Adjusts volume by 5%.' },
   ],
   accessibilityLede:
-    'Each control button carries an `aria-label` you can override per locale (`playLabel`, `pauseLabel`, etc.). The video element keeps native captions support — pass `subtitles` for VTT tracks.',
+    'Each control button carries an `aria-label` you can override per locale via the `labels` object (`labels={{ play, pause, ... }}`). The video element keeps native captions support — pass `subtitles` for VTT tracks.',
 };

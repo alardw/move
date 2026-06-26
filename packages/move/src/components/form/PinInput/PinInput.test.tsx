@@ -209,7 +209,7 @@ describe('PinInput', () => {
     });
 
     it('has aria-label', () => {
-      const { container } = renderPin({ ariaLabel: 'Verification code' });
+      const { container } = renderPin({ labels: { pinInput: 'Verification code' } });
       const input = container.querySelector('input') as HTMLInputElement;
       expect(input).toHaveAttribute('aria-label', 'Verification code');
     });

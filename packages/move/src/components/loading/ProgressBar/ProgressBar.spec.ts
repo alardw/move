@@ -70,7 +70,9 @@ export const spec = {
   },
   sizes: ['sm', 'md', 'lg'] as string[],
 
-  labels: [],
+  labels: [
+    { key: 'label', default: 'Progress', description: 'Accessible name for the progress bar, applied as aria-label' },
+  ],
 
   radixPrimitive: 'Progress',
 

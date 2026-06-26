@@ -329,6 +329,32 @@ describe('Pagination', () => {
     });
   });
 
+  // === Labels ===
+  describe('labels', () => {
+    it('overrides nav, prev, next, and page aria-labels via labels prop', () => {
+      render(
+        <Pagination.Root
+          total={5}
+          defaultPage={3}
+          labels={{
+            label: 'Pages',
+            previous: 'Previous',
+            next: 'Next',
+            page: 'Page {page}',
+          }}
+        >
+          <Pagination.PrevTrigger />
+          <Pagination.Items />
+          <Pagination.NextTrigger />
+        </Pagination.Root>
+      );
+      expect(screen.getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Previous' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Page 3' })).toBeInTheDocument();
+    });
+  });
+
   // === Composition ===
   describe('composition', () => {
     it('renders full pagination composition', () => {

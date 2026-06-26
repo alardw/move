@@ -275,7 +275,9 @@ export const spec = {
   variants: {},
   sizes: [] as string[],
 
-  labels: [],
+  labels: [
+    { key: 'close', default: 'Close sidebar', description: 'aria-label for the mobile close button in the header' },
+  ],
 
   radixPrimitive: 'Slot',
 

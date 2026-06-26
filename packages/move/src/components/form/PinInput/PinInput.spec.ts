@@ -38,7 +38,7 @@ export const spec = {
     { name: 'grouping', type: 'number[]', moveSpecific: true, description: 'Grouping pattern (e.g. [3,3] splits 6 into two groups with separator)' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state with error border styling' },
     { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Slot size' },
-    { name: 'ariaLabel', type: 'string', default: "'PIN input'", moveSpecific: true, description: 'Accessible label for the hidden input' },
+    { name: 'labels', type: 'Partial<PinInputLabels>', moveSpecific: true, description: 'Accessible label overrides' },
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Hidden input name for form submission' },
     { name: 'autoFocus', type: 'boolean', moveSpecific: false, description: 'Auto-focus the input on mount' },
@@ -153,7 +153,7 @@ export const spec = {
       'Invalid characters are blocked (preventDefault)',
     ] as string[],
     aria: [
-      'Hidden input has aria-label from ariaLabel prop',
+      'Hidden input has aria-label from labels.pinInput',
       'Hidden input has appropriate inputMode (numeric or text)',
       'Separator has aria-hidden=true',
     ] as string[],

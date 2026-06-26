@@ -433,5 +433,32 @@ describe('Autocomplete', () => {
       const clearBtn = document.body.querySelector('[aria-label="Clear all"]');
       expect(clearBtn).toBeInTheDocument();
     });
+
+    it('uses labels.clearAll override for aria-label', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete({ showClear: true, rootProps: { labels: { clearAll: 'Reset' } } });
+      const input = screen.getByRole('combobox');
+      await user.type(input, 'x');
+      expect(document.body.querySelector('[aria-label="Reset"]')).toBeInTheDocument();
+    });
+  });
+
+  // === Labels (i18n) ===
+  describe('labels', () => {
+    it('tag remove button uses default removeTag label with value substitution', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete({ rootProps: { multiple: true } });
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByText('Apple'));
+      expect(document.body.querySelector('[aria-label="Remove apple"]')).toBeInTheDocument();
+    });
+
+    it('tag remove button uses labels.removeTag override with value substitution', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete({ rootProps: { multiple: true, labels: { removeTag: 'Delete {value}' } } });
+      await user.click(screen.getByRole('combobox'));
+      await user.click(screen.getByText('Apple'));
+      expect(document.body.querySelector('[aria-label="Delete apple"]')).toBeInTheDocument();
+    });
   });
 });

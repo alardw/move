@@ -20,6 +20,48 @@ export type ColorPickerSlots =
   'root' | 'saturation' | 'hue' | 'alpha' | 'swatches' |
   'inputRow' | 'formatSelect' | 'channelInput' | 'alphaInput';
 
+export interface ColorPickerLabels {
+  /** Saturation area accessible label */
+  saturation: string;
+  /** Hue slider accessible label */
+  hue: string;
+  /** Alpha slider accessible label */
+  alpha: string;
+  /** Format selector accessible label */
+  format: string;
+  /** Hex input accessible label */
+  hex: string;
+  /** Alpha input accessible label */
+  alphaInput: string;
+  /** Red channel input accessible label */
+  red: string;
+  /** Green channel input accessible label */
+  green: string;
+  /** Blue channel input accessible label */
+  blue: string;
+  /** Hue channel input accessible label */
+  hueChannel: string;
+  /** Saturation channel input accessible label */
+  saturationChannel: string;
+  /** Lightness channel input accessible label */
+  lightness: string;
+}
+
+const DEFAULT_LABELS: ColorPickerLabels = {
+  saturation: 'Color saturation and brightness',
+  hue: 'Hue',
+  alpha: 'Opacity',
+  format: 'Color format',
+  hex: 'Hex color value',
+  alphaInput: 'Alpha',
+  red: 'Red',
+  green: 'Green',
+  blue: 'Blue',
+  hueChannel: 'Hue',
+  saturationChannel: 'Saturation',
+  lightness: 'Lightness',
+};
+
 export interface ColorPickerProps extends Record<string, unknown> {
   size?: ColorPickerSize;
   format?: ColorFormat;
@@ -33,9 +75,7 @@ export interface ColorPickerProps extends Record<string, unknown> {
   swatchesPerRow?: number;
   withPicker?: boolean;
   fullWidth?: boolean;
-  saturationLabel?: string;
-  hueLabel?: string;
-  alphaLabel?: string;
+  labels?: Partial<ColorPickerLabels>;
   disabled?: boolean;
   readOnly?: boolean;
   className?: string;
@@ -49,9 +89,9 @@ export interface ColorPickerProps extends Record<string, unknown> {
 
 const DEFAULT_FORMAT_OPTIONS: BaseColorFormat[] = ['hex', 'rgb', 'hsl'];
 
-const CHANNEL_ARIA_LABELS: Record<string, string> = {
-  R: 'Red', G: 'Green', B: 'Blue',
-  H: 'Hue', S: 'Saturation', L: 'Lightness',
+const CHANNEL_LABEL_KEYS: Record<string, keyof ColorPickerLabels> = {
+  R: 'red', G: 'green', B: 'blue',
+  H: 'hueChannel', S: 'saturationChannel', L: 'lightness',
 };
 
 // ============================================================================
@@ -119,10 +159,12 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     'format', 'value', 'defaultValue', 'onValueChange', 'onChangeEnd',
     'onFormatChange', 'formatOptions',
     'swatches', 'swatchesPerRow', 'withPicker', 'fullWidth',
-    'saturationLabel', 'hueLabel', 'alphaLabel', 'readOnly',
+    'labels', 'readOnly',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ColorPickerLabels>) };
+
     const hookOptions: UseColorPickerOptions = {
       value: props.value as string | undefined,
       defaultValue: props.defaultValue as string | undefined,
@@ -290,9 +332,6 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         const fullWidth = props.fullWidth as boolean | undefined;
         const swatches = props.swatches as string[] | undefined;
         const swatchesPerRow = props.swatchesPerRow as number;
-        const saturationLabel = (props.saturationLabel as string) || 'Color saturation and brightness';
-        const hueLabel = (props.hueLabel as string) || 'Hue';
-        const alphaLabel = (props.alphaLabel as string) || 'Opacity';
         const formatOptions = (props.formatOptions as BaseColorFormat[] | undefined) || DEFAULT_FORMAT_OPTIONS;
 
         // Compute display values
@@ -325,7 +364,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   {...satSpRest}
                   role="slider"
                   tabIndex={0}
-                  aria-label={saturationLabel}
+                  aria-label={labels.saturation}
                   aria-valuetext={`Saturation ${Math.round(cp.hsv.s)}%, Brightness ${Math.round(cp.hsv.v)}%`}
                   className={cx('saturation', satSpClass as string | undefined)}
                   style={{
@@ -349,7 +388,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   {...hueSpRest}
                   role="slider"
                   tabIndex={0}
-                  aria-label={hueLabel}
+                  aria-label={labels.hue}
                   aria-valuemin={0}
                   aria-valuemax={360}
                   aria-valuenow={Math.round(cp.hsv.h)}
@@ -369,7 +408,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     {...alphaSpRest}
                     role="slider"
                     tabIndex={0}
-                    aria-label={alphaLabel}
+                    aria-label={labels.alpha}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-valuenow={Math.round(cp.hsv.a * 100)}
@@ -435,7 +474,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   className={cx('formatSelect', formatSelectSpClass as string | undefined)}
                   style={formatSelectSpStyle as React.CSSProperties}
                   disabled={disabled}
-                  aria-label="Color format"
+                  aria-label={labels.format}
                 >
                   <Select.Value />
                   <Select.Icon />
@@ -464,7 +503,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
                   disabled={disabled}
                   readOnly={readOnly}
-                  aria-label="Hex color value"
+                  aria-label={labels.hex}
                 />
               ) : (
                 cp.channels.map((ch, i) => (
@@ -481,7 +520,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     onKeyDown={handleInputKeyDown}
                     disabled={disabled}
                     readOnly={readOnly}
-                    aria-label={CHANNEL_ARIA_LABELS[ch.label] || ch.label}
+                    aria-label={CHANNEL_LABEL_KEYS[ch.label] ? labels[CHANNEL_LABEL_KEYS[ch.label]] : ch.label}
                   />
                 ))
               )}
@@ -500,7 +539,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     onKeyDown={handleInputKeyDown}
                     disabled={disabled}
                     readOnly={readOnly}
-                    aria-label="Alpha"
+                    aria-label={labels.alphaInput}
                   />
                   <span className={styles.channelSuffix}>%</span>
                 </>

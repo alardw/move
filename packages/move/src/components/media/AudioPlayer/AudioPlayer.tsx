@@ -22,6 +22,30 @@ export type AudioPlayerRadius = Radius;
  *  `'move'` directly going forward. */
 export type AudioPlayerSize = Size;
 
+export interface AudioPlayerLabels {
+  /** Aria label for the play button. */
+  play: string;
+  /** Aria label for the pause button. */
+  pause: string;
+  /** Aria label for the mute button. */
+  mute: string;
+  /** Aria label for the unmute button. */
+  unmute: string;
+  /** Aria label for the settings button. */
+  settings: string;
+  /** Aria label for the subtitles button. */
+  subtitles: string;
+}
+
+const DEFAULT_LABELS: AudioPlayerLabels = {
+  play: 'Play',
+  pause: 'Pause',
+  mute: 'Mute',
+  unmute: 'Unmute',
+  settings: 'Settings',
+  subtitles: 'Subtitles',
+};
+
 type AudioPlayerSlots =
   | 'root'
   | 'playButton'
@@ -64,18 +88,8 @@ export interface AudioPlayerProps extends Record<string, unknown> {
   showVolume?: boolean;
   showTime?: boolean;
 
-  /** i18n label for play button. */
-  playLabel?: string;
-  /** i18n label for pause button. */
-  pauseLabel?: string;
-  /** i18n label for mute button. */
-  muteLabel?: string;
-  /** i18n label for unmute button. */
-  unmuteLabel?: string;
-  /** i18n label for settings button. */
-  settingsLabel?: string;
-  /** i18n label for subtitles button. */
-  subtitlesLabel?: string;
+  /** i18n labels for the player's controls. */
+  labels?: Partial<AudioPlayerLabels>;
 
   radius?: AudioPlayerRadius;
   size?: AudioPlayerSize;
@@ -133,11 +147,13 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     'onEnded', 'onError', 'onReady',
     'subtitles', 'qualities', 'audioTracks', 'onQualityChange', 'onAudioTrackChange',
     'showSettings', 'showSubtitles', 'showVolume', 'showTime',
-    'playLabel', 'pauseLabel', 'muteLabel', 'unmuteLabel', 'settingsLabel', 'subtitlesLabel',
+    'labels',
     'radius', 'size',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<AudioPlayerLabels>) };
+
     const player = useAudioPlayer({
       src: props.src as string | undefined,
       autoPlay: props.autoPlay as boolean | undefined,
@@ -168,14 +184,6 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     const subtitles = props.subtitles as SubtitleTrack[] | undefined;
     const qualitiesProp = props.qualities as QualityOption[] | undefined;
     const audioTracksProp = props.audioTracks as AudioTrack[] | undefined;
-
-    // i18n labels
-    const playLabel = (props.playLabel as string) || 'Play';
-    const pauseLabel = (props.pauseLabel as string) || 'Pause';
-    const muteLabel = (props.muteLabel as string) || 'Mute';
-    const unmuteLabel = (props.unmuteLabel as string) || 'Unmute';
-    const settingsLabel = (props.settingsLabel as string) || 'Settings';
-    const subtitlesLabel = (props.subtitlesLabel as string) || 'Subtitles';
 
     // Resolved icons
     const playIcon = useResolvedIcon('play', 18);
@@ -378,7 +386,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
               size="sm"
               className={cx('playButton')}
               onClick={player.togglePlay}
-              aria-label={player.playing ? pauseLabel : playLabel}
+              aria-label={player.playing ? labels.pause : labels.play}
 
             >
               {player.playing ? pauseIcon : playIcon}
@@ -412,7 +420,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                 className={cx('subtitleButton')}
                 data-active={player.activeSubtitleIndex >= 0}
                 onClick={handleSubtitleToggle}
-                aria-label={subtitlesLabel}
+                aria-label={labels.subtitles}
               >
                 {captionsIcon}
               </Button>
@@ -432,7 +440,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                     variant="ghost"
                     size="sm"
                     className={cx('settingsButton')}
-                    aria-label={settingsLabel}
+                    aria-label={labels.settings}
                   >
                     {settingsIcon}
                   </Button>
@@ -448,7 +456,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                   size="sm"
                   className={cx('volumeButton')}
                   onClick={player.toggleMute}
-                  aria-label={player.muted ? unmuteLabel : muteLabel}
+                  aria-label={player.muted ? labels.unmute : labels.mute}
 
                 >
                   {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}

@@ -348,12 +348,21 @@ const PopoverArrow = withMoveComponent<'arrow', PopoverArrowProps, HTMLElement>(
 // Close
 // =============================================================================
 
+export interface PopoverLabels {
+  /** Accessible label for the close button */
+  close: string;
+}
+
+const DEFAULT_LABELS: PopoverLabels = {
+  close: 'Close',
+};
+
 export interface PopoverCloseProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   asChild?: boolean;
-  closeLabel?: string;
+  labels?: Partial<PopoverLabels>;
   sp?: SlotPropsMap<'close'>;
 }
 
@@ -361,9 +370,10 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
   name: 'PopoverClose',
   styles,
   slots: ['close'] as const,
-  moveProps: ['asChild', 'closeLabel'],
+  moveProps: ['asChild', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PopoverLabels>) };
     const { close } = usePopoverContext();
     const resolvedCloseIcon = useResolvedIcon('x', 14);
 
@@ -400,7 +410,7 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
             className={cx('close', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
-            aria-label={props.closeLabel ?? 'Close'}
+            aria-label={labels.close}
           >
             {props.children ?? resolvedCloseIcon}
           </button>

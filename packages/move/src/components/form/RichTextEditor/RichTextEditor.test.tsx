@@ -83,10 +83,10 @@ describe('RichTextEditor', () => {
       expect(screen.getByRole('toolbar')).toHaveAttribute('aria-label', 'Text formatting');
     });
 
-    it('applies custom aria-label via toolbarLabel', () => {
+    it('applies custom aria-label via labels.toolbar', () => {
       render(
         <RichTextEditor.Root>
-          <RichTextEditor.Toolbar toolbarLabel="Custom label">
+          <RichTextEditor.Toolbar labels={{ toolbar: 'Custom label' }}>
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
         </RichTextEditor.Root>

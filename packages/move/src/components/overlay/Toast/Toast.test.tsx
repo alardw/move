@@ -171,7 +171,7 @@ describe('Toast', () => {
     });
 
     it('provides custom closeLabel via context', async () => {
-      render(<Toast.Viewport closeLabel="Dismiss" />);
+      render(<Toast.Viewport labels={{ close: 'Dismiss' }} />);
       await act(async () => {
         toast('Test');
       });
@@ -278,7 +278,7 @@ describe('Toast', () => {
     });
 
     it('has accessible aria-label from context', async () => {
-      render(<Toast.Viewport closeLabel="Close it" />);
+      render(<Toast.Viewport labels={{ close: 'Close it' }} />);
       await act(async () => {
         toast('Test');
       });

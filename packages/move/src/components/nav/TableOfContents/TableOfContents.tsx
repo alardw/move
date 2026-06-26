@@ -33,6 +33,15 @@ function useTocContext() {
 // Root
 // =============================================================================
 
+export interface TableOfContentsLabels {
+  /** Accessible label for the navigation landmark. */
+  label: string;
+}
+
+const DEFAULT_LABELS: TableOfContentsLabels = {
+  label: 'On this page',
+};
+
 export interface TableOfContentsRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
@@ -40,6 +49,7 @@ export interface TableOfContentsRootProps extends Record<string, unknown> {
   /** Offset in pixels from the top of the viewport used when determining
    * which heading is "current." Default: 80. */
   offset?: number;
+  labels?: Partial<TableOfContentsLabels>;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -48,9 +58,10 @@ const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfConte
   styles,
   slots: ['root', 'indicator'] as const,
   defaults: { offset: 80 },
-  moveProps: ['offset'],
+  moveProps: ['offset', 'labels'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<TableOfContentsLabels>) };
     const offset = (props.offset as number) ?? 80;
     const [activeHref, setActiveHref] = React.useState<string | null>(null);
     const hrefsRef = React.useRef<Set<string>>(new Set());
@@ -160,7 +171,7 @@ const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfConte
               {...attrs}
               {...spRest}
               ref={ref as React.Ref<HTMLElement>}
-              aria-label="On this page"
+              aria-label={labels.label}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >

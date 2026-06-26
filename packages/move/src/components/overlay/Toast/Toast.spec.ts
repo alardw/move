@@ -40,7 +40,7 @@ export const spec = {
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
         { name: 'position', type: 'ToastPosition', moveSpecific: true, description: 'Default position for toasts (overridden per-toast by store)' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable all toast animations' },
-        { name: 'closeLabel', type: 'string', default: "'Close notification'", moveSpecific: true, description: 'Accessible label for close buttons' },
+        { name: 'labels', type: 'Partial<ToastLabels>', moveSpecific: true, description: 'i18n labels object for accessible strings (close)' },
       ],
       usesFactory: true,
       description: 'Portaled viewport that renders all active toasts grouped by position, provides animation and label context',

@@ -256,6 +256,24 @@ describe('TimeField', () => {
     });
   });
 
+  // === Labels ===
+  describe('labels', () => {
+    it('overrides segment aria-labels via labels prop', () => {
+      render(<TimeField.Root labels={{ hour: 'uur', minute: 'minuut' }} />);
+      const spinbuttons = screen.getAllByRole('spinbutton');
+      expect(spinbuttons[0]).toHaveAttribute('aria-label', 'uur');
+      expect(spinbuttons[1]).toHaveAttribute('aria-label', 'minuut');
+    });
+
+    it('overrides period aria-label via labels prop', () => {
+      render(<TimeField.Root hourCycle={12} labels={{ period: 'dagdeel' }} />);
+      const periodBtn = screen.getAllByRole('spinbutton').find(
+        (el) => el.getAttribute('aria-label') === 'dagdeel'
+      );
+      expect(periodBtn).toBeInTheDocument();
+    });
+  });
+
   // === Disabled ===
   describe('disabled state', () => {
     it('prevents ArrowUp increment when disabled', async () => {

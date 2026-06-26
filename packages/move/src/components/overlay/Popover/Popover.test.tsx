@@ -152,12 +152,12 @@ describe('Popover', () => {
       });
     });
 
-    it('uses custom closeLabel for aria-label', async () => {
+    it('uses custom labels.close for aria-label', async () => {
       render(
         <Popover.Root open>
           <Popover.Trigger><button>Open</button></Popover.Trigger>
           <Popover.Content>
-              <Popover.Close closeLabel="Dismiss" data-testid="close" />
+              <Popover.Close labels={{ close: 'Dismiss' }} data-testid="close" />
             </Popover.Content>
         </Popover.Root>,
       );

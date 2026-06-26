@@ -21,6 +21,18 @@ export type ColorInputVariant = 'outlined' | 'filled';
 export type ColorInputSize = 'sm' | 'md' | 'lg';
 export type ColorInputSlots = 'root' | 'swatch' | 'input' | 'content' | 'contentInner';
 
+export interface ColorInputLabels {
+  /** Swatch button accessible label */
+  swatch: string;
+  /** Eye dropper button accessible label */
+  eyeDropper: string;
+}
+
+const DEFAULT_LABELS: ColorInputLabels = {
+  swatch: 'Open color picker',
+  eyeDropper: 'Pick color from screen',
+};
+
 export interface ColorInputProps extends Record<string, unknown> {
   variant?: ColorInputVariant;
   size?: ColorInputSize;
@@ -35,11 +47,10 @@ export interface ColorInputProps extends Record<string, unknown> {
   swatchesPerRow?: number;
   withPicker?: boolean;
   withEyeDropper?: boolean;
-  eyeDropperLabel?: string;
   closeOnColorSwatchClick?: boolean;
   invalid?: boolean;
   width?: React.CSSProperties['width'];
-  swatchLabel?: string;
+  labels?: Partial<ColorInputLabels>;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
@@ -90,11 +101,12 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
   moveProps: [
     'variant', 'size', 'format', 'value', 'defaultValue', 'onValueChange', 'onChangeEnd',
     'onFormatChange', 'formatOptions',
-    'swatches', 'swatchesPerRow', 'withPicker', 'withEyeDropper', 'eyeDropperLabel',
-    'closeOnColorSwatchClick', 'invalid', 'width', 'readOnly', 'swatchLabel',
+    'swatches', 'swatchesPerRow', 'withPicker', 'withEyeDropper',
+    'closeOnColorSwatchClick', 'invalid', 'width', 'readOnly', 'labels',
   ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ColorInputLabels>) };
     const [open, setOpen] = React.useState(false);
     const [isClosing, setIsClosing] = React.useState(false);
     const [inputText, setInputText] = React.useState('');
@@ -277,8 +289,6 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
         const readOnly = props.readOnly as boolean | undefined;
         const width = props.width as React.CSSProperties['width'] | undefined;
         const withEyeDropper = props.withEyeDropper as boolean | undefined;
-        const eyeDropperLabel = (props.eyeDropperLabel as string) || 'Pick color from screen';
-        const swatchLabel = (props.swatchLabel as string) || 'Open color picker';
         const showEyeDropper = withEyeDropper && typeof window !== 'undefined' && !!window.EyeDropper;
 
         return (
@@ -311,7 +321,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                   onClick={handleSwatchClick}
                   role="button"
                   tabIndex={-1}
-                  aria-label={swatchLabel}
+                  aria-label={labels.swatch}
                 />
 
                 <input
@@ -339,7 +349,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                     className={styles.eyeDropper}
                     onClick={handleEyeDropper}
                     tabIndex={-1}
-                    aria-label={eyeDropperLabel}
+                    aria-label={labels.eyeDropper}
                     disabled={disabled}
                   >
                     {pipetteIcon}

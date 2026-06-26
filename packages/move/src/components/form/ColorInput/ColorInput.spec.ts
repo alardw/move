@@ -68,8 +68,7 @@ export const spec = {
     { name: 'onFocus', type: 'React.FocusEventHandler<HTMLInputElement>', moveSpecific: false, description: 'Input focus handler' },
     { name: 'onBlur', type: 'React.FocusEventHandler<HTMLInputElement>', moveSpecific: false, description: 'Input blur handler' },
     // Labels
-    { name: 'swatchLabel', type: 'string', default: "'Open color picker'", moveSpecific: true, description: 'Swatch button accessible label' },
-    { name: 'eyeDropperLabel', type: 'string', default: "'Pick color from screen'", moveSpecific: true, description: 'Eye dropper button accessible label' },
+    { name: 'labels', type: 'Partial<ColorInputLabels>', moveSpecific: true, description: 'Accessible label overrides' },
     // Standard
     { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
     { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
@@ -150,8 +149,8 @@ export const spec = {
   sizes: ['sm', 'md', 'lg'] as string[],
 
   labels: [
-    { key: 'swatchLabel', default: 'Open color picker', description: 'Swatch button accessible label' },
-    { key: 'eyeDropperLabel', default: 'Pick color from screen', description: 'Eye dropper button accessible label' },
+    { key: 'swatch', default: 'Open color picker', description: 'Swatch button accessible label' },
+    { key: 'eyeDropper', default: 'Pick color from screen', description: 'Eye dropper button accessible label' },
   ],
 
   childrenKind: undefined,
@@ -215,8 +214,8 @@ export const spec = {
     ],
     aria: [
       'Swatch has role="button" and tabIndex=-1',
-      'Swatch has aria-label from swatchLabel prop',
-      'Eye dropper has aria-label from eyeDropperLabel prop',
+      'Swatch has aria-label from labels.swatch',
+      'Eye dropper has aria-label from labels.eyeDropper',
       'Input is a native input with name and label association',
     ],
     form: [

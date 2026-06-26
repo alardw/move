@@ -19,6 +19,24 @@ import styles from './TimeField.module.css';
 
 export type TimeFieldSize = 'sm' | 'md' | 'lg';
 
+export interface TimeFieldLabels {
+  /** aria-label for the hour segment */
+  hour: string;
+  /** aria-label for the minute segment */
+  minute: string;
+  /** aria-label for the second segment */
+  second: string;
+  /** aria-label for the AM/PM period toggle */
+  period: string;
+}
+
+const DEFAULT_LABELS: TimeFieldLabels = {
+  hour: 'hour',
+  minute: 'minute',
+  second: 'second',
+  period: 'period',
+};
+
 // ============================================================================
 // Context
 // ============================================================================
@@ -40,6 +58,7 @@ interface TimeFieldContextValue {
   onCloseComplete: () => void;
   animConfig: AnimationTrigger[] | null;
   withDropdown: boolean;
+  labels: TimeFieldLabels;
 }
 
 const TimeFieldContext = React.createContext<TimeFieldContextValue | null>(null);
@@ -75,6 +94,7 @@ export interface TimeFieldRootProps {
   min?: string;
   max?: string;
   step?: number;
+  labels?: Partial<TimeFieldLabels>;
 }
 
 const DEFAULT_TIMEFIELD_ANIMATIONS: AnimationTrigger[] = [
@@ -111,7 +131,9 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   min,
   max,
   step,
+  labels: labelsProp,
 }) => {
+  const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const animConfig = resolveAnimationsConfig(DEFAULT_TIMEFIELD_ANIMATIONS, animationsProp);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
@@ -196,6 +218,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     onCloseComplete,
     animConfig,
     withDropdown,
+    labels,
   };
 
   // Auto-render when no children
@@ -277,7 +300,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
   moveProps: ['segment'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, segmentRefs, focusNext, focusPrev, disabled, withDropdown, openDropdown, isOpen } = useTimeFieldContext();
+    const { tf, segmentRefs, focusNext, focusPrev, disabled, withDropdown, openDropdown, isOpen, labels } = useTimeFieldContext();
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
     const segType = props.segment as SegmentType;
@@ -342,7 +365,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
             type="text"
             inputMode="numeric"
             role="spinbutton"
-            aria-label={segType}
+            aria-label={labels[segType as keyof TimeFieldLabels] ?? segType}
             aria-valuenow={parseInt(segInfo?.value ?? '0', 10)}
             value={segInfo?.value ?? ''}
             readOnly
@@ -413,7 +436,7 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
   slots: ['period'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown } = useTimeFieldContext();
+    const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown, labels } = useTimeFieldContext();
     const btnRef = React.useRef<HTMLButtonElement>(null);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef);
 
@@ -452,7 +475,7 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
             ref={mergedRef}
             type="button"
             role="spinbutton"
-            aria-label="period"
+            aria-label={labels.period}
             aria-valuenow={tf.period === 'AM' ? 0 : 1}
             disabled={disabled}
             tabIndex={0}

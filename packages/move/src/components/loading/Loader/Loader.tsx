@@ -14,11 +14,21 @@ export type LoaderVariant = 'spinner' | 'dots';
 export type LoaderColor = 'primary' | 'secondary' | 'current';
 export type LoaderSize = 'sm' | 'md' | 'lg';
 
+export interface LoaderLabels {
+  /** Accessible label announced to assistive tech while loading */
+  loading: string;
+}
+
+const DEFAULT_LABELS: LoaderLabels = {
+  loading: 'Loading',
+};
+
 export interface LoaderProps extends Record<string, unknown> {
   variant?: LoaderVariant;
   color?: LoaderColor;
   size?: LoaderSize;
   strokeWidth?: number;
+  labels?: Partial<LoaderLabels>;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -36,9 +46,10 @@ export const Loader = withMoveComponent<
   styles,
   slots: ['root', 'svg', 'circle', 'dot'] as const,
   defaults: { variant: 'spinner', color: 'primary', size: 'md', strokeWidth: 3 },
-  moveProps: ['variant', 'color', 'size', 'strokeWidth'],
+  moveProps: ['variant', 'color', 'size', 'strokeWidth', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<LoaderLabels>) };
     const svgRef = React.useRef<SVGSVGElement | null>(null);
     const circleRef = React.useRef<SVGCircleElement | null>(null);
     const dotsRef = React.useRef<(HTMLSpanElement | null)[]>([]);
@@ -140,7 +151,7 @@ export const Loader = withMoveComponent<
               ref={ref}
               role="progressbar"
               aria-busy
-              aria-label="Loading"
+              aria-label={labels.loading}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-variant="dots"

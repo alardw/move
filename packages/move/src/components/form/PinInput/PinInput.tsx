@@ -14,6 +14,15 @@ import styles from './PinInput.module.css';
 export type PinInputSize = 'sm' | 'md' | 'lg';
 type PinInputSlots = 'root' | 'slot';
 
+export interface PinInputLabels {
+  /** Accessible label for the hidden input element */
+  pinInput: string;
+}
+
+const DEFAULT_LABELS: PinInputLabels = {
+  pinInput: 'PIN input',
+};
+
 export interface PinInputProps extends Record<string, unknown> {
   length?: number;
   value?: string;
@@ -27,7 +36,7 @@ export interface PinInputProps extends Record<string, unknown> {
   grouping?: number[];
   invalid?: boolean;
   size?: PinInputSize;
-  ariaLabel?: string;
+  labels?: Partial<PinInputLabels>;
   disabled?: boolean;
   name?: string;
   autoFocus?: boolean;
@@ -48,10 +57,12 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
   moveProps: [
     'length', 'value', 'defaultValue', 'onChange', 'onComplete',
     'type', 'mask', 'placeholder', 'oneTimeCode', 'grouping',
-    'invalid', 'size', 'ariaLabel',
+    'invalid', 'size', 'labels',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PinInputLabels>) };
+
     const pin = usePinInput({
       value: props.value as string | undefined,
       defaultValue: props.defaultValue as string | undefined,
@@ -151,7 +162,7 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
               className={styles.hiddenInput}
               {...pin.inputProps}
               name={props.name as string}
-              aria-label={props.ariaLabel as string || 'PIN input'}
+              aria-label={labels.pinInput}
               tabIndex={0}
               style={{ pointerEvents: 'auto' }}
             />
