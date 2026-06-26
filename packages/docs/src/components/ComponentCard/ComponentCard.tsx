@@ -4,6 +4,10 @@ import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
 import styles from './ComponentCard.module.css';
 
+/** Components with a container query that collapses below a breakpoint — their
+ *  preview must stay at the full desktop width, not hug content. */
+const WIDE_PREVIEW = new Set(['list', 'form-field', 'image-group']);
+
 export interface ComponentCardProps {
   content: ComponentContent;
   /**
@@ -50,7 +54,10 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
         {image ? (
           <img src={image} alt="" className={styles.image} />
         ) : Sample ? (
-          <div className={styles.tilt} aria-hidden>
+          <div
+            className={WIDE_PREVIEW.has(meta.slug) ? `${styles.tilt} ${styles.tiltWide}` : styles.tilt}
+            aria-hidden
+          >
             {inView ? <Sample /> : null}
           </div>
         ) : (

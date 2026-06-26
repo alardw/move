@@ -34,7 +34,12 @@
   position: absolute;
   top: 96px;
   left: 36px;
-  width: 560px;
+  /* Hug the content: narrow components get a narrow panel. Width-hungry ones
+     grow up to the cap; the few container-query components are forced wide via
+     .tiltWide so they don't collapse. */
+  width: max-content;
+  min-width: 240px;
+  max-width: 560px;
   height: auto;
   max-height: 360px;
   display: grid;
@@ -56,7 +61,15 @@
   user-select: none;
 }
 
-.tilt > * {
+/* Container-query components: pin to the full desktop width so they don't
+   collapse, and let the sample fill it. */
+.tiltWide {
+  width: 560px;
+  min-width: 560px;
+  max-width: 560px;
+}
+
+.tiltWide > * {
   width: 100%;
 }
 

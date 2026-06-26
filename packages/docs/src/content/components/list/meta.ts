@@ -33,7 +33,7 @@ const related: RelatedItem[] = [
 export const meta: ComponentMeta = {
   slug: 'list',
   name: 'List',
-  tagline: 'A structured `<ul>` with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
+  tagline: 'A structured list with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
   badges: [
     { icon: 'list', label: 'Data' },
     { icon: 'boxes', label: 'Compound' },
