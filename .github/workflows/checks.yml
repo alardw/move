@@ -1,0 +1,24 @@
+name: Checks
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+
+jobs:
+  move:
+    name: Move — spec & schema checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Typecheck (every spec satisfies ComponentSpec)
+        run: npm run typecheck --workspace move
+      - name: Drift checks (spec ↔ source, cross-component, families)
+        run: npm run check:all --workspace move
+      - name: Tests
+        run: npm run test --workspace move

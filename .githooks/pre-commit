@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# Pre-commit: keep Move specs ↔ source ↔ schema in sync.
+# Scoped: only runs the move checks when a component/spec is actually staged,
+# so unrelated commits (docs, config) stay instant.
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.(tsx|ts)$'; then
+  echo "▶ pre-commit: Move components/specs changed — checking spec ↔ source ↔ schema…"
+
+  if ! npm run check:spec-drift --workspace move --silent; then
+    echo "✗ spec-drift: a spec is out of sync with its source. Fix the spec (or the source)."
+    exit 1
+  fi
+
+  if ! npm run typecheck --workspace move --silent; then
+    echo "✗ typecheck: a spec no longer satisfies ComponentSpec, or the source has a type error."
+    exit 1
+  fi
+
+  echo "✓ spec checks passed"
+fi
