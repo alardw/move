@@ -9,10 +9,9 @@ import { TAXONOMY_BY_ID, CATEGORY_ORDER } from '../../content/components/taxonom
 const catsOf = (c: ComponentContent): string[] => c.meta.categories ?? [];
 const labelOf = (id: string): string => TAXONOMY_BY_ID[id]?.label ?? id;
 
-// Capability traits derived from the spec — secondary filter toggles.
+// Animated = has motion (spec.animations non-empty) — secondary filter toggle.
 const isAnimated = (c: ComponentContent): boolean =>
   ((c.spec.animations as unknown[] | undefined)?.length ?? 0) > 0;
-const isCompound = (c: ComponentContent): boolean => c.spec.compound === true;
 
 const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
   a.meta.name.localeCompare(b.meta.name),
@@ -33,14 +32,12 @@ export function ComponentsOverviewPage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
   const [animated, setAnimated] = useState(false);
-  const [compound, setCompound] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return ALL.filter((c) => {
       if (category !== 'All' && !catsOf(c).includes(category)) return false;
       if (animated && !isAnimated(c)) return false;
-      if (compound && !isCompound(c)) return false;
       if (!q) return true;
       const aliases = (c.spec.synonyms as string[] | undefined) ?? [];
       return (
@@ -50,7 +47,7 @@ export function ComponentsOverviewPage() {
         aliases.some((a) => a.includes(q))
       );
     });
-  }, [query, category, animated, compound]);
+  }, [query, category, animated]);
 
   const grouped = category === 'All';
   const sections = (grouped ? CATEGORY_ORDER : [category]).filter((cat) =>
@@ -93,9 +90,6 @@ export function ComponentsOverviewPage() {
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
               />
               <Switch.Root checked={animated} onCheckedChange={setAnimated} label="Animated">
-                <Switch.Thumb />
-              </Switch.Root>
-              <Switch.Root checked={compound} onCheckedChange={setCompound} label="Compound">
                 <Switch.Thumb />
               </Switch.Root>
             </Stack>
