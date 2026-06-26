@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Prose/Prose.spec';
+import { spec } from '@move-specs/typography/Prose/Prose.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

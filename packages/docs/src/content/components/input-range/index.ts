@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/InputRange/InputRange.spec';
+import { spec } from '@move-specs/forms/InputRange/InputRange.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { Button } from '../../core/Button';
+import { Button } from '../../actions/Button';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';

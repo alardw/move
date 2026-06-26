@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Sidebar/Sidebar.spec';
+import { spec } from '@move-specs/navigation/Sidebar/Sidebar.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/FormField/FormField.spec';
+import { spec } from '@move-specs/forms/FormField/FormField.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

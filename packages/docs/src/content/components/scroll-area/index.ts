@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/ScrollArea/ScrollArea.spec';
+import { spec } from '@move-specs/layout/ScrollArea/ScrollArea.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

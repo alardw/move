@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/RadioGroup/RadioGroup.spec';
+import { spec } from '@move-specs/forms/RadioGroup/RadioGroup.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

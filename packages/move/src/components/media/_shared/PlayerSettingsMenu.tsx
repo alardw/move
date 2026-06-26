@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Popover } from '../../overlay/Popover';
+import { Popover } from '../../overlays/Popover';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './PlayerSettingsMenu.module.css';
 

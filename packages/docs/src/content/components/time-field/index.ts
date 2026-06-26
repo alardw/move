@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/TimeField/TimeField.spec';
+import { spec } from '@move-specs/date-time/TimeField/TimeField.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

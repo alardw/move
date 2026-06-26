@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Avatar/Avatar.spec';
+import { spec } from '@move-specs/data-display/Avatar/Avatar.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

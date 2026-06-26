@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Select/Select.spec';
+import { spec } from '@move-specs/forms/Select/Select.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

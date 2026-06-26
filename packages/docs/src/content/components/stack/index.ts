@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Stack/Stack.spec';
+import { spec } from '@move-specs/layout/Stack/Stack.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

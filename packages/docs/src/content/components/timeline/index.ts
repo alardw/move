@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/data/Timeline/Timeline.spec';
+import { spec } from '@move-specs/data-display/Timeline/Timeline.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

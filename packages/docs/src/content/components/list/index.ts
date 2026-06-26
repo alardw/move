@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/data/List/List.spec';
+import { spec } from '@move-specs/data-display/List/List.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

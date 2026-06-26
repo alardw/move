@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/toolbar/ToggleButton/ToggleButton.spec';
+import { spec } from '@move-specs/actions/ToggleButton/ToggleButton.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

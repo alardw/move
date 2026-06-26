@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Switch/Switch.spec';
+import { spec } from '@move-specs/forms/Switch/Switch.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

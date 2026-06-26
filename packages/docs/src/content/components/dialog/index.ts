@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/overlay/Dialog/Dialog.spec';
+import { spec } from '@move-specs/overlays/Dialog/Dialog.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

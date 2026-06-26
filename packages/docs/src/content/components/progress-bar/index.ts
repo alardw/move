@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/loading/ProgressBar/ProgressBar.spec';
+import { spec } from '@move-specs/feedback/ProgressBar/ProgressBar.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

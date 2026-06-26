@@ -8,7 +8,7 @@ import { MoveProvider } from '../../engine';
 // Tooltip compound would pull in the animated Tooltip code (and the
 // animation engine) for every app, even ones that never render a
 // Tooltip themselves.
-import { TooltipProvider } from '../../components/core/Tooltip/TooltipProvider';
+import { TooltipProvider } from '../../components/overlays/Tooltip/TooltipProvider';
 import { darkTheme } from '../../styles/themes/dark';
 import type { Theme } from '../../styles/themes/types';
 import type { IconResolver } from '../Icon/IconProvider';

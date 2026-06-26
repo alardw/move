@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Alert/Alert.spec';
+import { spec } from '@move-specs/feedback/Alert/Alert.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

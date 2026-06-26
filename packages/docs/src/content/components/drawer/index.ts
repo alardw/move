@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/overlay/Drawer/Drawer.spec';
+import { spec } from '@move-specs/overlays/Drawer/Drawer.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

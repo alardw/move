@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/calendar/Calendar/Calendar.spec';
+import { spec } from '@move-specs/date-time/Calendar/Calendar.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

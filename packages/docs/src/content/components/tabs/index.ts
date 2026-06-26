@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Tabs/Tabs.spec';
+import { spec } from '@move-specs/navigation/Tabs/Tabs.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

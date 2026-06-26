@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Text/Text.spec';
+import { spec } from '@move-specs/typography/Text/Text.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

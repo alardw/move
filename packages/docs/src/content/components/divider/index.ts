@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Divider/Divider.spec';
+import { spec } from '@move-specs/layout/Divider/Divider.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

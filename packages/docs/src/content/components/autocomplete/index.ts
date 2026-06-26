@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Autocomplete/Autocomplete.spec';
+import { spec } from '@move-specs/forms/Autocomplete/Autocomplete.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

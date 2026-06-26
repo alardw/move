@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/nav/Breadcrumb/Breadcrumb.spec';
+import { spec } from '@move-specs/navigation/Breadcrumb/Breadcrumb.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

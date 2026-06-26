@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Label/Label.spec';
+import { spec } from '@move-specs/forms/Label/Label.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

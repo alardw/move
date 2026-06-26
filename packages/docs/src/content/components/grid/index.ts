@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Grid/Grid.spec';
+import { spec } from '@move-specs/layout/Grid/Grid.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

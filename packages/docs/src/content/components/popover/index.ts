@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/overlay/Popover/Popover.spec';
+import { spec } from '@move-specs/overlays/Popover/Popover.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

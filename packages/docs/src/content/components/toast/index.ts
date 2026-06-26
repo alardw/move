@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/overlay/Toast/Toast.spec';
+import { spec } from '@move-specs/feedback/Toast/Toast.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

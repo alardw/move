@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/ColorInput/ColorInput.spec';
+import { spec } from '@move-specs/forms/ColorInput/ColorInput.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

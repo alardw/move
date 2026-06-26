@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/loading/Loader/Loader.spec';
+import { spec } from '@move-specs/feedback/Loader/Loader.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

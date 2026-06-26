@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/ChatBubble/ChatBubble.spec';
+import { spec } from '@move-specs/data-display/ChatBubble/ChatBubble.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

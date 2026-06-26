@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Collapsible/Collapsible.spec';
+import { spec } from '@move-specs/disclosure/Collapsible/Collapsible.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

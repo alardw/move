@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Checkbox/Checkbox.spec';
+import { spec } from '@move-specs/forms/Checkbox/Checkbox.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/loading/Skeleton/Skeleton.spec';
+import { spec } from '@move-specs/feedback/Skeleton/Skeleton.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

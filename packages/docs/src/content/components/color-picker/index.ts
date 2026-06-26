@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/ColorPicker/ColorPicker.spec';
+import { spec } from '@move-specs/forms/ColorPicker/ColorPicker.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

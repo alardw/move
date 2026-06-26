@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/calendar/CalendarView/CalendarView.spec';
+import { spec } from '@move-specs/date-time/CalendarView/CalendarView.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

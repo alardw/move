@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Link/Link.spec';
+import { spec } from '@move-specs/navigation/Link/Link.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

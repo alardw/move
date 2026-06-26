@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Tooltip/Tooltip.spec';
+import { spec } from '@move-specs/overlays/Tooltip/Tooltip.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

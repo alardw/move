@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/overlay/Dropdown/Dropdown.spec';
+import { spec } from '@move-specs/overlays/Dropdown/Dropdown.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

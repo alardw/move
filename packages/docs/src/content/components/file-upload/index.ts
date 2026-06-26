@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/FileUpload/FileUpload.spec';
+import { spec } from '@move-specs/forms/FileUpload/FileUpload.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

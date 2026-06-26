@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Accordion/Accordion.spec';
+import { spec } from '@move-specs/disclosure/Accordion/Accordion.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Textarea/Textarea.spec';
+import { spec } from '@move-specs/forms/Textarea/Textarea.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

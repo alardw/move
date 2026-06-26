@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Splitter/Splitter.spec';
+import { spec } from '@move-specs/layout/Splitter/Splitter.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

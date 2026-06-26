@@ -1,0 +1,114 @@
+/*
+ * ToggleGroup Component — Generated from ToggleGroup.spec.ts
+ * Root carries the "unselected" surface (background + border + radius).
+ * Items are transparent — only text color changes.
+ * The sliding indicator provides the active-item background.
+ */
+
+/* ---- Root ---- */
+
+.root {
+  --move-toggle-group-radius: var(--move-rounded-md);
+  --move-toggle-group-padding: 3px;
+
+  /* Variant-driven tokens — override these via data-variant to change
+     how prominent the selected pill looks. Default is the brand pill. */
+  --move-toggle-group-indicator-bg: var(--move-primary);
+  --move-toggle-group-selected-fg: var(--move-primary-fg);
+
+  display: inline-flex;
+  gap: 0;
+  position: relative;
+  background-color: var(--move-button-secondary-bg, var(--move-bg-muted));
+  border-radius: var(--move-toggle-group-radius);
+  padding: var(--move-toggle-group-padding);
+}
+
+/* Softer pill: neutral surface background + base text. Use for UI where
+   the toggle is secondary to the content (docs preview/code toggle, etc). */
+.root[data-variant='secondary'],
+.root[data-variant='ghost'] {
+  --move-toggle-group-indicator-bg: var(--move-bg-emphasis);
+  --move-toggle-group-selected-fg: var(--move-fg-base);
+}
+
+.root[data-orientation='vertical'] {
+  flex-direction: column;
+}
+
+/* Size-aware root radii */
+.root[data-size='sm'] {
+  --move-toggle-group-radius: var(--move-rounded-md);
+}
+
+.root[data-size='lg'] {
+  --move-toggle-group-radius: var(--move-rounded-lg);
+}
+
+/* ---- Indicator (sliding active background) ---- */
+
+.indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--move-toggle-group-indicator-bg);
+  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding));
+  pointer-events: none;
+  will-change: transform, width, height;
+  z-index: 0;
+}
+
+/* ---- Item ---- */
+
+.item {
+  composes: root from '../../actions/Button/Button.module.css';
+  background-color: transparent !important;
+  border: none !important;
+  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding)) !important;
+  box-shadow: none !important;
+  font-weight: var(--move-weight-regular, 400);
+  position: relative;
+  z-index: 1;
+  transition-property: color, opacity;
+}
+
+/* Unselected state */
+.item[data-state='off'] {
+  color: var(--move-fg-muted);
+  transition-duration: 100ms;
+  transition-delay: 0ms;
+}
+
+.item[data-state='off']:hover:not(:disabled) {
+  color: var(--move-fg-base);
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Selected state — text color only, indicator provides background.
+   !important needed to override composed Button variant color at same specificity. */
+.item[data-state='on'] {
+  color: var(--move-toggle-group-selected-fg) !important;
+  z-index: 1;
+  transition-duration: 120ms;
+  transition-delay: 80ms;
+}
+
+.item[data-state='on']:hover:not(:disabled) {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+/* Unselected: inset focus ring */
+.item[data-state='off']:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * (var(--move-focus-ring-width, 2px) + var(--move-focus-ring-offset, 2px)));
+  z-index: 2;
+}
+
+/* Selected: standard outer focus ring */
+.item[data-state='on']:focus-visible:not(:active) {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+  z-index: 2;
+}

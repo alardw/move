@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/nav/TableOfContents/TableOfContents.spec';
+import { spec } from '@move-specs/navigation/TableOfContents/TableOfContents.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

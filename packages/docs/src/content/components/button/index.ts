@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Button/Button.spec';
+import { spec } from '@move-specs/actions/Button/Button.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

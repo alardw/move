@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Align/Align.spec';
+import { spec } from '@move-specs/layout/Align/Align.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

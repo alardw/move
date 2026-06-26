@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/DatePicker/DatePicker.spec';
+import { spec } from '@move-specs/date-time/DatePicker/DatePicker.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

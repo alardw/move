@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/core/Badge/Badge.spec';
+import { spec } from '@move-specs/data-display/Badge/Badge.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

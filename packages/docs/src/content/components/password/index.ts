@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/Password/Password.spec';
+import { spec } from '@move-specs/forms/Password/Password.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

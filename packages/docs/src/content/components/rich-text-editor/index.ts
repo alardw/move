@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/form/RichTextEditor/RichTextEditor.spec';
+import { spec } from '@move-specs/forms/RichTextEditor/RichTextEditor.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';

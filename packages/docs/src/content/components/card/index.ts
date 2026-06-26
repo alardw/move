@@ -1,4 +1,4 @@
-import { spec } from '@move-specs/panel/Card/Card.spec';
+import { spec } from '@move-specs/layout/Card/Card.spec';
 
 import type { ComponentContent } from '../types';
 import { meta } from './meta';
