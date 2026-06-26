@@ -17,14 +17,25 @@ function measureSlot(
   container: HTMLElement,
   target: HTMLElement,
 ): SlotMeasurement {
-  const containerRect = container.getBoundingClientRect();
-  const targetRect = target.getBoundingClientRect();
+  // Layout coordinates (offsetLeft/Top/Width/Height) — unaffected by a CSS
+  // transform on an ancestor, unlike getBoundingClientRect. Walk the
+  // offsetParent chain up to the container so the indicator stays aligned even
+  // inside a transformed context (e.g. an isometric preview tilt). Kept
+  // identical to usePositionTracker so every sliding indicator behaves the same.
+  let x = 0;
+  let y = 0;
+  let node: HTMLElement | null = target;
+  while (node && node !== container) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
 
   return {
-    x: targetRect.left - containerRect.left + container.scrollLeft,
-    y: targetRect.top - containerRect.top + container.scrollTop,
-    width: targetRect.width,
-    height: targetRect.height,
+    x,
+    y,
+    width: target.offsetWidth,
+    height: target.offsetHeight,
   };
 }
 

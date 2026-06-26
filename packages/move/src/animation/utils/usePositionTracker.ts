@@ -47,12 +47,21 @@ export function usePositionTracker(
       return;
     }
 
-    const containerRect = container.getBoundingClientRect();
-    const activeRect = active.getBoundingClientRect();
-    const left = activeRect.left - containerRect.left + container.scrollLeft;
-    const top = activeRect.top - containerRect.top + container.scrollTop;
-    const width = activeRect.width;
-    const height = activeRect.height;
+    // Measure in layout coordinates (offsetLeft/Top/Width/Height). Unlike
+    // getBoundingClientRect these are unaffected by a CSS transform on an
+    // ancestor (e.g. an isometric preview tilt), so the indicator stays aligned
+    // inside transformed contexts. Walk the offsetParent chain up to the
+    // container so nested positioned wrappers are accounted for.
+    let left = 0;
+    let top = 0;
+    let node: HTMLElement | null = active;
+    while (node && node !== container) {
+      left += node.offsetLeft;
+      top += node.offsetTop;
+      node = node.offsetParent as HTMLElement | null;
+    }
+    const width = active.offsetWidth;
+    const height = active.offsetHeight;
 
     indicator.style.opacity = '1';
     if (track === 'width' || track === 'both') indicator.style.width = `${width}px`;
