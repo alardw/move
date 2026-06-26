@@ -57,30 +57,63 @@ function Form() {
         labels={{ showPassword: t('a11y.showPassword'), hidePassword: t('a11y.hidePassword') }}
       />
       <DatePicker labels={{ selectDate: t('date.select'), openCalendar: t('date.open') }} />
-
-      {/* Media players use individual *Label props (not a labels object — yet) */}
-      <VideoPlayer playLabel={t('player.play')} muteLabel={t('player.mute')} />
+      <VideoPlayer labels={{ play: t('player.play'), mute: t('player.mute') }} />
     </>
   );
 }`;
 
-// Verified against component source — these are the components that expose an
-// overridable labels prop, with their default (English) values.
+// Verified against component source — every component that renders built-in
+// strings, with its labels keys and default (English) values.
 const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'Alert', key: 'close', def: 'Close alert' },
+  { component: 'Autocomplete', key: 'clearAll', def: 'Clear all' },
+  { component: 'Autocomplete', key: 'removeTag', def: 'Remove {value}' },
+  { component: 'AudioPlayer', key: 'play', def: 'Play' },
+  { component: 'AudioPlayer', key: 'pause', def: 'Pause' },
+  { component: 'AudioPlayer', key: 'mute', def: 'Mute' },
+  { component: 'AudioPlayer', key: 'unmute', def: 'Unmute' },
+  { component: 'AudioPlayer', key: 'settings', def: 'Settings' },
+  { component: 'AudioPlayer', key: 'subtitles', def: 'Subtitles' },
+  { component: 'Breadcrumb', key: 'label', def: 'Breadcrumb' },
   { component: 'Calendar', key: 'previousMonth', def: 'Previous month' },
   { component: 'Calendar', key: 'nextMonth', def: 'Next month' },
   { component: 'Calendar', key: 'selectMonth', def: 'Select month' },
   { component: 'Calendar', key: 'selectYear', def: 'Select year' },
+  { component: 'CalendarView', key: 'today', def: 'Today' },
+  { component: 'CalendarView', key: 'previous', def: 'Previous' },
+  { component: 'CalendarView', key: 'next', def: 'Next' },
+  { component: 'CalendarView', key: 'day / week / month / agenda', def: 'Day / Week / Month / Agenda' },
+  { component: 'CalendarView', key: 'allDay', def: 'All day' },
+  { component: 'CalendarView', key: 'noEvents', def: 'No events in this period' },
+  { component: 'CalendarView', key: 'more', def: '(count) ⇒ "+{count} more"' },
+  { component: 'ColorInput', key: 'swatch', def: 'Open color picker' },
+  { component: 'ColorInput', key: 'eyeDropper', def: 'Pick color from screen' },
+  { component: 'ColorPicker', key: 'saturation / hue / alpha / format / hex', def: 'Color saturation…, Hue, Opacity, Color format, Hex color value' },
+  { component: 'ColorPicker', key: 'red / green / blue / lightness', def: 'channel aria-labels' },
   { component: 'DatePicker', key: 'selectDate', def: 'Select date' },
   { component: 'DatePicker', key: 'datesSelected', def: '(count) ⇒ "{count} dates selected"' },
   { component: 'DatePicker', key: 'openCalendar', def: 'Open calendar' },
-  { component: 'DatePicker', key: 'startDate', def: 'Start date' },
-  { component: 'DatePicker', key: 'endDate', def: 'End date' },
-  { component: 'DatePicker', key: 'selectStartDate', def: 'Select start date' },
-  { component: 'DatePicker', key: 'selectEndDate', def: 'Select end date' },
+  { component: 'DatePicker', key: 'startDate / endDate', def: 'Start date / End date' },
+  { component: 'DatePicker', key: 'selectStartDate / selectEndDate', def: 'Select start/end date' },
+  { component: 'FileUpload', key: 'removeFile', def: 'Remove {filename}' },
+  { component: 'FileUpload', key: 'uploadComplete', def: 'Upload complete' },
+  { component: 'Loader', key: 'loading', def: 'Loading' },
+  { component: 'NumberInput', key: 'increment / decrement', def: 'Increment / Decrement' },
+  { component: 'Pagination', key: 'label', def: 'Pagination' },
+  { component: 'Pagination', key: 'previous / next', def: 'Go to previous / next page' },
+  { component: 'Pagination', key: 'page', def: 'Go to page {page}' },
   { component: 'Password', key: 'showPassword', def: 'Show password' },
   { component: 'Password', key: 'hidePassword', def: 'Hide password' },
+  { component: 'PinInput', key: 'pinInput', def: 'PIN input' },
+  { component: 'Popover', key: 'close', def: 'Close' },
+  { component: 'ProgressBar', key: 'label', def: 'Progress' },
+  { component: 'RichTextEditor', key: 'toolbar', def: 'Text formatting' },
+  { component: 'Sidebar', key: 'close', def: 'Close sidebar' },
+  { component: 'TableOfContents', key: 'label', def: 'On this page' },
+  { component: 'TimeField', key: 'hour / minute / second / period', def: 'hour / minute / second / period' },
+  { component: 'VideoPlayer', key: 'play / pause / mute / unmute', def: 'Play / Pause / Mute / Unmute' },
+  { component: 'VideoPlayer', key: 'fullscreen / exitFullscreen', def: 'Fullscreen / Exit fullscreen' },
+  { component: 'VideoPlayer', key: 'settings / subtitles / subtitlesOff', def: 'Settings / Subtitles / Off' },
 ];
 
 const TOC: TocItem[] = [
@@ -177,10 +210,8 @@ export function InternationalizationPage() {
           <Text color="muted" size="sm">
             These also supply the accessible name for icon-only buttons (the toggle on
             Password, the controls on the media players), so screen readers announce them.
-            Move’s contract requires user-facing strings to flow through <Code>labels</Code>{' '}
-            (validate rule E1). One known gap: <Code>AudioPlayer</Code>/<Code>VideoPlayer</Code>{' '}
-            expose individual <Code>playLabel</Code>/<Code>muteLabel</Code>/… props rather than a
-            <Code>labels</Code> object — being unified.
+            Every component with built-in strings exposes them through one <Code>labels</Code>{' '}
+            object — validate rule E1 enforces it, so localization works the same way everywhere.
           </Text>
         </Section>
       </Stack>
