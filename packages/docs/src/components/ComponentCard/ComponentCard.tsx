@@ -50,15 +50,12 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
         {image ? (
           <img src={image} alt="" className={styles.image} />
         ) : Sample ? (
-          <>
-            <div className={styles.scale} aria-hidden>
-              {inView ? <Sample /> : null}
-            </div>
-            <div className={styles.fade} />
-          </>
+          <div className={styles.tilt} aria-hidden>
+            {inView ? <Sample /> : null}
+          </div>
         ) : (
           <span className={styles.iconTile}>
-            <Icon name={icon} size={20} />
+            <Icon name={icon} size={24} />
           </span>
         )}
       </div>
