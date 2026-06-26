@@ -92,8 +92,27 @@ function AppSidebar() {
 
   return (
     <Sidebar.Root>
-      <Sidebar.Header collapsedChildren={<Text weight="bold" size="xl">M</Text>}>
+      <Sidebar.Header
+        collapsedChildren={
+          <Tooltip label="Expand" side="right" sideOffset={8}>
+            <Button variant="ghost" size="sm" onClick={toggleCollapsed} aria-label="Expand sidebar">
+              <Icon name="panel-left" />
+            </Button>
+          </Tooltip>
+        }
+      >
         <LogoMark />
+        <Tooltip label="Collapse" sideOffset={8}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleCollapsed}
+            aria-label="Collapse sidebar"
+            style={{ marginLeft: 'auto' }}
+          >
+            <Icon name="panel-left-close" />
+          </Button>
+        </Tooltip>
       </Sidebar.Header>
       <Sidebar.Content>
         <Sidebar.Group>
@@ -123,23 +142,8 @@ function AppSidebar() {
         </Sidebar.Group>
       </Sidebar.Content>
       <Sidebar.Footer>
-        <Stack
-          direction={collapsed ? 'column' : 'row'}
-          justify={collapsed ? 'center' : 'between'}
-          align="center"
-          gap="xs"
-        >
+        <Stack direction="row" justify={collapsed ? 'center' : 'start'} align="center">
           <ThemeToggle />
-          <Tooltip label={collapsed ? 'Expand' : 'Collapse'} side="right" sideOffset={8}>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleCollapsed}
-              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            >
-              <Icon name="panel-left" />
-            </Button>
-          </Tooltip>
         </Stack>
       </Sidebar.Footer>
     </Sidebar.Root>
