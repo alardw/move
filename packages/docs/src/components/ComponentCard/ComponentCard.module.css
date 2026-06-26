@@ -17,21 +17,23 @@
 
 .frame {
   position: relative;
-  height: 168px;
+  height: 176px;
   overflow: hidden;
   background: var(--move-bg-subtle);
   border-bottom: 1px solid var(--move-border-base);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  align-items: safe center; /* centre when it fits, pin to top when it overflows */
 }
 
 .scale {
-  transform: scale(0.7);
-  transform-origin: center;
+  width: 360px; /* a real layout width so width:100% samples (Table, List) lay out */
+  flex: none;
+  zoom: 0.6; /* shrinks the layout box too, so flex centring works on the scaled size */
+  padding: 16px;
   pointer-events: none;
   user-select: none;
-  padding: 20px;
 }
 
 .fade {
