@@ -1,0 +1,82 @@
+/* Only the moving demo objects + their tracks live here — anime.js needs raw
+   nodes to animate, and these are visual primitives the component library
+   doesn't expose. Everything around them is built from Move components. */
+
+.rowLabel {
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 48px;
+}
+
+.stage {
+  flex: 1;
+  height: 48px;
+}
+
+.dot {
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--move-radius-full, 9999px);
+  background: var(--move-primary);
+}
+
+.square {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--move-radius-md, 8px);
+  background: var(--move-primary);
+}
+
+.fill {
+  flex: 1;
+  min-width: 260px;
+}
+
+.plot {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+}
+
+.svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.curve {
+  fill: none;
+  stroke: var(--move-primary);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.tracer {
+  fill: var(--move-primary);
+}
+
+.box {
+  fill: none;
+  stroke: var(--move-border-base);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.axis {
+  fill: var(--move-fg-subtle);
+  font-size: 11px;
+  font-family: var(--move-font-mono);
+}
+
+.axisTitle {
+  fill: var(--move-fg-muted);
+  font-size: 12px;
+}

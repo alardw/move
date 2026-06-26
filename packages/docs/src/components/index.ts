@@ -1,4 +1,5 @@
 export { AnimatedSubnav } from './AnimatedSubnav';
+export { AnimationPlayground } from './AnimationPlayground';
 export { CodeBlock } from './CodeBlock';
 export { ComponentCard } from './ComponentCard';
 export type { ComponentCardProps } from './ComponentCard';

@@ -1,9 +1,8 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link } from 'move';
 import {
+  AnimationPlayground,
   CodeBlock,
-  HighlightList,
-  type HighlightItem,
   Section,
   TocRail,
   type TocItem,
@@ -17,26 +16,10 @@ const BADGES = [
   { icon: 'spline', label: 'Easings when you need them' },
 ];
 
-const FEEL_SPRINGS: HighlightItem[] = [
-  { icon: 'zap', text: 'snappy — quick and responsive. Buttons and small controls.' },
-  { icon: 'zap', text: 'quick — a touch looser than snappy.' },
-  { icon: 'sparkles', text: 'poppy — bouncy and playful. Scale pops and lively entrances.' },
-  { icon: 'wind', text: 'gentle — slow and soft.' },
-  { icon: 'feather', text: 'slow — elegant. Large elements and page transitions.' },
-  { icon: 'feather', text: 'lazy — slower still, for unhurried motion.' },
-  { icon: 'candy', text: 'jelly — wobbly and fun. Notifications and playful touches.' },
-  { icon: 'minus', text: 'stiff — minimal overshoot. Controlled, precise motion.' },
-];
-
-const TUNED_SPRINGS: HighlightItem[] = [
-  { icon: 'message-square', text: 'tooltip — feather-light, for tooltips and small popovers.' },
-  { icon: 'panel-left', text: 'sidebar — smooth and steady, for the sidebar and overlays.' },
-  { icon: 'arrow-right', text: 'pagination — moderate overshoot, for sliding indicators.' },
-];
-
 const TOC: TocItem[] = [
   { href: '#springs', label: 'Overview' },
   { href: '#the-springs', label: 'The springs' },
+  { href: '#try-it', label: 'Try it' },
   { href: '#springs-vs-easings', label: 'Springs vs easings' },
   { href: '#using-one', label: 'Using one' },
 ];
@@ -86,7 +69,6 @@ export function SpringsPage() {
             <Code>snappy</Code> or <Code>poppy</Code> and gets a consistent feel
             without anyone picking numbers.
           </Text>
-          <HighlightList items={FEEL_SPRINGS} />
           <Text>
             Three more are tuned for a specific component and named after where
             they're used — <Code>tooltip</Code>, <Code>sidebar</Code>, and{' '}
@@ -94,7 +76,14 @@ export function SpringsPage() {
             those components stay consistent, and you can reach for them anywhere
             the feel fits.
           </Text>
-          <HighlightList items={TUNED_SPRINGS} />
+        </Section>
+
+        <Section
+          id="try-it"
+          title="Try it"
+          lede="Pick a spring or easing — or dial in your own physics — and watch it move."
+        >
+          <AnimationPlayground />
         </Section>
 
         <Section
