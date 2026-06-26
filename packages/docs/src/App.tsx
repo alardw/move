@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { MoveRoot, lightTheme, darkTheme, Sidebar, Stack, Text, Button, Icon, Tooltip, ScrollArea, Collapsible, useSidebarContext, type Theme } from 'move';
 import { AnimatedSubnav, LogoMark } from './components';
-import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, NavLink, Navigate, useLocation, useNavigationType } from 'react-router-dom';
 import * as LucideIcons from 'lucide-react';
 import 'move/styles.css';
 import './index.css';
@@ -148,15 +148,29 @@ function AppSidebar() {
 
 function App() {
   const contentRef = React.useRef<HTMLDivElement>(null);
-  const { pathname, hash } = useLocation();
+  const scrollPositions = React.useRef<Map<string, number>>(new Map());
+  const { pathname, hash, key } = useLocation();
+  const navType = useNavigationType();
 
-  // The page scrolls inside ScrollArea.Content, not the window — so navigating
-  // between routes keeps the previous scroll position unless we reset it here.
-  // useLayoutEffect runs before paint so there's no visible jump. Skip when a
-  // hash is present so in-page anchor links (TOC rail) still land on target.
+  // The page scrolls inside ScrollArea.Content, not the window. Remember each
+  // history entry's scroll position so Back/Forward (POP) restores it, while new
+  // navigations go to the top. useLayoutEffect runs before paint so there's no
+  // visible jump. Skip when a hash is present so TOC anchor links still land.
   React.useLayoutEffect(() => {
-    if (!hash) contentRef.current?.scrollTo({ top: 0 });
-  }, [pathname, hash]);
+    const el = contentRef.current;
+    if (!el || hash) return;
+    const saved = scrollPositions.current.get(key);
+    el.scrollTo({ top: navType === 'POP' && saved != null ? saved : 0 });
+  }, [pathname, hash, key, navType]);
+
+  // Track the current history entry's scroll position as the user scrolls.
+  React.useEffect(() => {
+    const el = contentRef.current;
+    if (!el) return;
+    const onScroll = () => scrollPositions.current.set(key, el.scrollTop);
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, [key]);
 
   return (
     <Sidebar.Provider>
