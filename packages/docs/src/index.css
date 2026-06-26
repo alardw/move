@@ -18,6 +18,9 @@
 
 :root {
   --move-font: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  /* Docs run headings one step lighter than the stock semibold — set once here
+     instead of overriding weight on every <Heading>. */
+  --move-weight-heading: var(--move-weight-medium);
 }
 
 /* Pin the height chain to viewport so the Sidebar (height: 100%) and

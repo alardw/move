@@ -44,7 +44,7 @@ export function AnimationLifecyclePage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">The lifecycle</Heading>
+          <Heading level={1}>The lifecycle</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

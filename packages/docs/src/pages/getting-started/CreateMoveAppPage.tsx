@@ -58,7 +58,7 @@ export function CreateMoveAppPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Create Move App</Heading>
+          <Heading level={1}>Create Move App</Heading>
           <Text color="muted" size="lg">
             The fastest way to start a Move project. One command and you&apos;re
             rendering, theming, and ready for AI to help.

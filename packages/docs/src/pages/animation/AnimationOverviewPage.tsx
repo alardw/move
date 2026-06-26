@@ -97,7 +97,7 @@ export function AnimationOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Animation</Heading>
+          <Heading level={1}>Animation</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

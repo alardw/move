@@ -55,7 +55,7 @@ export function CoreConceptsOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Core Concepts</Heading>
+          <Heading level={1}>Core Concepts</Heading>
           <Text color="muted" size="lg">
             Move is easier to use once you read it as a system: contract, animation, theming, then AI.
           </Text>

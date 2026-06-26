@@ -69,7 +69,7 @@ export function ComponentsOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Components</Heading>
+          <Heading level={1}>Components</Heading>
           <Text color="muted" size="lg">Every Move primitive, in one place.</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -120,7 +120,7 @@ export function ComponentsOverviewPage() {
             sections.map((cat) => (
               <Stack key={cat} gap="sm">
                 {grouped && (
-                  <Heading level={3} weight="normal">{labelOf(cat)}</Heading>
+                  <Heading level={3}>{labelOf(cat)}</Heading>
                 )}
                 <div style={GRID}>
                   {filtered

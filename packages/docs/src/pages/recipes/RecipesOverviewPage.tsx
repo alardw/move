@@ -51,7 +51,7 @@ export function RecipesOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Recipes</Heading>
+          <Heading level={1}>Recipes</Heading>
           <Text color="muted" size="lg">
             Ready-made patterns built entirely from Move components — whole flows
             and layouts you can drop in and adapt. Search, or filter by area.
@@ -90,7 +90,7 @@ export function RecipesOverviewPage() {
               groupsToShow.map((g) => (
                 <Stack key={g} gap="sm">
                   {group === 'All' && (
-                    <Heading level={2} weight="normal">{g}</Heading>
+                    <Heading level={2}>{g}</Heading>
                   )}
                   <div style={GRID}>
                     {filtered

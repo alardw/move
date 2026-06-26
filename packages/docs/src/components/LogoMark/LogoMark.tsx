@@ -64,7 +64,7 @@ export function LogoMark() {
   }, [letter]);
 
   return (
-    <Text as="span" size="2xl" className={styles.root}>
+    <Text as="span" className={styles.root}>
       <span>Move</span>
       <span className={styles.suffix} aria-label={`Move ${letter}I`}>
         <span className={styles.slot} aria-hidden="true">

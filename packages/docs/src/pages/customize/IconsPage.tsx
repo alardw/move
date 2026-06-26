@@ -182,7 +182,7 @@ export function IconsPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Icons</Heading>
+          <Heading level={1}>Icons</Heading>
           <Text color="muted" size="lg">
             Move’s <Code>Icon</Code> is library-agnostic. You give <Code>MoveRoot</Code> one
             resolver that turns a name into something to render, and every icon in your app

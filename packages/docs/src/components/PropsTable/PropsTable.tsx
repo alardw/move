@@ -78,7 +78,7 @@ export function PropsTable({ subComponents }: { subComponents: SubComponent[] })
         if (sub.props.length === 0) return null;
         return (
           <Stack key={sub.name} gap="sm">
-            <Heading level={3} weight="normal">
+            <Heading level={3}>
               {sub.name}
             </Heading>
             {sub.description && (

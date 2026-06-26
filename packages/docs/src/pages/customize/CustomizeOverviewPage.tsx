@@ -77,7 +77,7 @@ export function CustomizeOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Make it your own</Heading>
+          <Heading level={1}>Make it your own</Heading>
           <Text color="muted" size="lg">
             Move ships with sensible defaults; this is where you make it yours —
             pick a theme and colors, set your font, swap in your icon library,

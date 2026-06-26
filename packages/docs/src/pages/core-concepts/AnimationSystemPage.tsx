@@ -102,7 +102,7 @@ export function AnimationSystemPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Animation System</Heading>
+          <Heading level={1}>Animation System</Heading>
           <Text color="muted" size="lg">
             One animation engine for the whole library. Every component speaks
             triggers, sequences, and springs — same vocabulary everywhere, so

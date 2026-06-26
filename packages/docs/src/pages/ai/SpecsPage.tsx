@@ -60,7 +60,7 @@ export function SpecsPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Spec pipeline</Heading>
+          <Heading level={1}>Spec pipeline</Heading>
           <Text color="muted" size="lg">
             Every Move component is generated from a spec and checked back
             against it. This is the loop — and why source, metadata, and tests

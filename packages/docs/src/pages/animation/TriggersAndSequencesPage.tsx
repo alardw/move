@@ -69,7 +69,7 @@ export function TriggersAndSequencesPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Triggers &amp; sequences</Heading>
+          <Heading level={1}>Triggers &amp; sequences</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

@@ -76,7 +76,7 @@ export function HowMoveWorksPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">How Move Works</Heading>
+          <Heading level={1}>How Move Works</Heading>
           <Text color="muted" size="lg">
             Move works because the architecture is explicit. Components, motion, tokens, and AI all point at the same contract.
           </Text>

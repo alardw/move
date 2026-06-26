@@ -15,7 +15,7 @@ export function RecipeDetailPage() {
   if (!recipe) {
     return (
       <Stack gap="md" id="recipe">
-        <Heading level={1} weight="normal">Recipe not found</Heading>
+        <Heading level={1}>Recipe not found</Heading>
         <Text color="muted">There’s no recipe at /recipes/{group}/{slug}.</Text>
         <RouterLink to="/recipes">← Back to recipes</RouterLink>
       </Stack>
@@ -45,7 +45,7 @@ export function RecipeDetailPage() {
 
         <Stack gap="sm">
           <Stack direction="row" gap="xs" align="center">
-            <Heading level={1} weight="normal">{recipe.title}</Heading>
+            <Heading level={1}>{recipe.title}</Heading>
             <Badge variant="soft">{recipe.group}</Badge>
           </Stack>
           <Text color="muted" size="lg">{recipe.description}</Text>

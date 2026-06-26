@@ -103,7 +103,7 @@ export function SkillsPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Skills</Heading>
+          <Heading level={1}>Skills</Heading>
           <Text color="muted" size="lg">
             Every Move skill is a structured workflow your AI agent can invoke
             with a slash command. Two tracks: component skills (author a Move

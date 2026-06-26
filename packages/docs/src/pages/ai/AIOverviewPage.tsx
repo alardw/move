@@ -51,7 +51,7 @@ export function AIOverviewPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">AI Overview</Heading>
+          <Heading level={1}>AI Overview</Heading>
           <Text color="muted" size="lg">
             Move does not treat AI as an add-on. The assistant works because the UI system is already explicit enough to read.
           </Text>

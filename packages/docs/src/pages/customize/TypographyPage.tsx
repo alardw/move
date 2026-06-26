@@ -102,7 +102,7 @@ export function TypographyPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Typography</Heading>
+          <Heading level={1}>Typography</Heading>
           <Text color="muted" size="lg">
             Type in Move is token-driven: one token sets the font for the whole
             app, and size and weight come from a fixed scale you reach through{' '}

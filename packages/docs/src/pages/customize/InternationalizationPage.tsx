@@ -144,7 +144,7 @@ export function InternationalizationPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Internationalization</Heading>
+          <Heading level={1}>Internationalization</Heading>
           <Text color="muted" size="lg">
             The strings Move’s components render themselves are exposed as
             overridable labels with English defaults. Localize by passing your

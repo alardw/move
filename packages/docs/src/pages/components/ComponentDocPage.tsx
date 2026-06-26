@@ -82,7 +82,7 @@ export function ComponentDocPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">{meta.name}</Heading>
+          <Heading level={1}>{meta.name}</Heading>
           <Text color="muted" size="lg">{meta.tagline}</Text>
           <Stack direction="row" gap="xs" wrap>
             {meta.categories

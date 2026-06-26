@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: baseline;
   gap: 0.25ch;
+  font-size: var(--move-text-2xl);
   font-weight: 700;
   line-height: 1;
   letter-spacing: -0.02em;

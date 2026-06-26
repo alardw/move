@@ -98,7 +98,7 @@ export function VitePage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Vite</Heading>
+          <Heading level={1}>Vite</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

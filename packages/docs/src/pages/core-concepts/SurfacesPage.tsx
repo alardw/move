@@ -52,7 +52,7 @@ export function SurfacesPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Surfaces</Heading>
+          <Heading level={1}>Surfaces</Heading>
           <Text color="muted" size="lg">
             Two-level elevation system. Components that render a tinted or elevated panel pick a surface level; nested surfaces alternate so each panel reads as visually distinct from its parent.
           </Text>

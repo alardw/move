@@ -107,7 +107,7 @@ export function ThemingModelPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Theming Model</Heading>
+          <Heading level={1}>Theming Model</Heading>
           <Text color="muted" size="lg">
             Tokens are the system. Every visible decision — color, spacing,
             radius, type — flows through one set of variables that you can

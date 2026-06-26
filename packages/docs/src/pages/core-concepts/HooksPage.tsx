@@ -62,7 +62,7 @@ export function HooksPage() {
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1} weight="normal">Hooks</Heading>
+          <Heading level={1}>Hooks</Heading>
           <Text color="muted" size="lg">
             A small set of React hooks Move ships for the cases that need to
             cross component lines. Same shape as React&apos;s built-ins, no extra
