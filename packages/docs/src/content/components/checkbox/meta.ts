@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'checkbox',
+  preview: { layout: 'fit' },
   name: 'Checkbox',
   tagline: 'A real `<button role="checkbox">` with checked, indeterminate, and disabled states — plus a hidden input for plain-form submission and a tidy Group container.',
   badges: [

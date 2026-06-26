@@ -4,27 +4,9 @@ import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
 import styles from './ComponentCard.module.css';
 
-/** Small/atomic components whose preview should hug its content instead of
- *  floating in the full-width (560px) panel. Everything else stays full width
- *  (safe for width:100% components like Table and the inputs). */
-const NARROW_PREVIEW = new Set([
-  'badge', 'button', 'code', 'label', 'link', 'switch', 'checkbox',
-  'toggle-button', 'avatar', 'kbd', 'loader', 'accordion', 'collapsible',
-  'select', 'number-input', 'time-field', 'input-text', 'password',
-  'color-input', 'pin-input', 'input-range', 'calendar', 'date-picker',
-]);
-
-/** Components that are their own surface (card/panel) — render bare, without
- *  the white preview panel, so it isn't a card-in-a-card. */
-const BARE_SURFACE = new Set(['alert', 'card', 'toast']);
-
 export interface ComponentCardProps {
   content: ComponentContent;
-  /**
-   * Optional pre-rendered preview image. When present the card shows this
-   * instead of the live sample — the slot we'll fill once component
-   * thumbnails are automated.
-   */
+  /** Override the preview image (otherwise `meta.preview.image` is used). */
   image?: string;
 }
 
@@ -53,9 +35,14 @@ function useInView(rootMargin = '300px') {
 
 export function ComponentCard({ content, image }: ComponentCardProps) {
   const { meta, samples } = content;
+  const preview = meta.preview ?? {};
   const category = meta.badges[0]?.label ?? 'Component';
   const icon = meta.badges[0]?.icon ?? 'box';
-  const Sample = samples?.[0]?.render;
+  const previewImage = image ?? preview.image;
+  const sample = preview.sample
+    ? samples?.find((s) => s.id === preview.sample)
+    : samples?.[0];
+  const Sample = sample?.render;
   const { ref, inView } = useInView();
 
   // Measure flat, then tilt. The sliding indicators (Tabs, Pagination,
@@ -74,8 +61,8 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   const tiltClass = [
     styles.tilt,
     tilted && styles.tiltActive,
-    NARROW_PREVIEW.has(meta.slug) && styles.tiltNarrow,
-    BARE_SURFACE.has(meta.slug) && styles.tiltBare,
+    preview.layout === 'fit' && styles.tiltNarrow,
+    preview.bare && styles.tiltBare,
   ]
     .filter(Boolean)
     .join(' ');
@@ -83,8 +70,8 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   return (
     <RouterLink to={`/components/${meta.slug}`} className={styles.card}>
       <div className={styles.frame} ref={ref}>
-        {image ? (
-          <img src={image} alt="" className={styles.image} />
+        {previewImage ? (
+          <img src={previewImage} alt="" className={styles.image} />
         ) : Sample ? (
           <div className={tiltClass} aria-hidden>
             {inView ? <Sample /> : null}

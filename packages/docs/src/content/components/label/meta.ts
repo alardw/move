@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'label',
+  preview: { layout: 'fit' },
   name: 'Label',
   tagline: 'A real `<label>` with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
   badges: [

@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'code',
+  preview: { layout: 'fit' },
   name: 'Code',
   tagline: 'Inline or block code with three variants and a pluggable syntax highlighter — no opinion on which library colours the tokens.',
   badges: [

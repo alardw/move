@@ -24,6 +24,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'toggle-button',
+  preview: { layout: 'fit' },
   name: 'ToggleButton',
   tagline: 'A button that remembers its on/off state — perfect for toolbar formatting controls (bold, italic, view toggles).',
   badges: [

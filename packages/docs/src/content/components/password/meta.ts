@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'password',
+  preview: { layout: 'fit' },
   name: 'Password',
   tagline: 'A password input with a show/hide toggle — outlined or filled, three sizes, the rest of InputText’s contract.',
   badges: [

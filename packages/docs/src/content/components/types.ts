@@ -18,6 +18,39 @@ export interface ComponentSample {
   code: string;
 }
 
+/**
+ * How a component renders in the overview's isometric preview card. Co-located
+ * with the rest of a component's docs metadata so each component declares its
+ * own preview behaviour — instead of central allow/deny lists.
+ */
+export interface ComponentPreview {
+  /**
+   * `'fill'` (default) lays the sample out at a 560px desktop width so
+   * width:100% components (Table, inputs) render correctly and container
+   * queries don't collapse. `'fit'` hugs the content — for atoms (Badge,
+   * Switch), single inputs, Calendar, etc. that look lost in a wide panel.
+   */
+  layout?: 'fill' | 'fit';
+  /**
+   * `true` for components that are their own surface (Alert, Card, Toast):
+   * drop the white preview panel so it isn't a card-in-a-card; the component's
+   * own surface floats with a drop-shadow.
+   */
+  bare?: boolean;
+  /**
+   * Which sample (by its `id`) to render in the preview card. Defaults to the
+   * first sample — set this when a later sample reads better as the thumbnail
+   * (e.g. an open-state sample for an overlay).
+   */
+  sample?: string;
+  /**
+   * Optional pre-rendered preview image (e.g. an automated screenshot, or an
+   * open-state shot for portalled overlays). When set it replaces the live
+   * render in the card.
+   */
+  image?: string;
+}
+
 export interface ComponentMeta {
   /** Route slug, e.g. "select". */
   slug: string;
@@ -39,6 +72,8 @@ export interface ComponentMeta {
   accessibilityLede?: string;
   /** Optional override for the samples section title. */
   samplesTitle?: string;
+  /** How this component renders in the overview's isometric preview card. */
+  preview?: ComponentPreview;
 }
 
 export interface ComponentContent {

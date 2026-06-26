@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'collapsible',
+  preview: { layout: 'fit' },
   name: 'Collapsible',
   tagline: 'A single show/hide region with a measured-height animation, an auto-rotating chevron, and a real button under the trigger.',
   badges: [

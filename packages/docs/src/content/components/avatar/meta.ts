@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'avatar',
+  preview: { layout: 'fit' },
   name: 'Avatar',
   tagline: 'A user portrait with a graceful fallback, five sizes, a tinted Group for stacks of teammates, and a tiny spring entrance to make it feel alive.',
   badges: [

@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'toast',
+  preview: { bare: true },
   name: 'Toast',
   tagline: 'A notification toast system with an imperative API, variant icons, auto-dismiss progress, and grouped positioning.',
   badges: [
