@@ -5,7 +5,7 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 const highlights: HighlightItem[] = [
   {
     icon: 'pen-line',
-    text: 'A full WYSIWYG editor — bold, italic, headings, lists, links, code blocks, blockquotes — wrapped in a tokenised toolbar that matches the rest of Move.',
+    text: 'Common formatting — bold, italic, headings, lists, links, code blocks, blockquotes — through a tokenised toolbar that matches the rest of Move.',
   },
   {
     icon: 'shapes',
@@ -24,7 +24,7 @@ const related: RelatedItem[] = [
 export const meta: ComponentMeta = {
   slug: 'rich-text-editor',
   name: 'RichTextEditor',
-  tagline: 'A WYSIWYG editor with a configurable toolbar, tokenised typography, and a real plain-text fallback for paste.',
+  tagline: 'A rich-text editing surface with a configurable, tokenised toolbar and a plain-text paste fallback.',
   badges: [
     { icon: 'pen-line', label: 'Form' },
   ],
