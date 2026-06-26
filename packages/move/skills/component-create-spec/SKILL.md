@@ -56,7 +56,7 @@ Read these files for class defaults and available options:
 
 | File | Purpose |
 |------|---------|
-| `references/component/spec-type.ts` | `ComponentSpec` type definition |
+| `src/spec-type.ts` (canonical) | `ComponentSpec` type — specs `satisfies` it |
 | `references/component/categories.ts` | Valid categories and placement rules |
 | `references/component/animation-map.ts` | Animation patterns, presets, and core functions |
 | `references/component/keyboard-map.ts` | Keyboard pattern → keys/behavior |
@@ -209,6 +209,8 @@ Write to `src/components/{category}/{Name}/{Name}.spec.ts`:
 // {Name}.spec.ts — Component specification
 // specHash: {hash}
 
+import type { ComponentSpec } from '../../../spec-type';
+
 export const spec = {
   schemaVersion: 7 as const,
   name: '{Name}',
@@ -219,10 +221,10 @@ export const spec = {
     decisionSource: 'accept-all' as const,
     overrides: {},
   },
-};
+} satisfies ComponentSpec;
 ```
 
-Note: Specs use inline `as const` assertions instead of importing from `references/component/spec-type.ts`. The spec-type file is a reference for skills, not a runtime dependency.
+Note: Every spec MUST end with `satisfies ComponentSpec` and import the type from the canonical `src/spec-type.ts` (3 levels up). `tsc` then enforces spec ↔ schema conformance — a spec that drifts from the schema fails typecheck. Keep the inline `as const` on literal fields so unions stay narrow. If a spec legitimately needs a field the schema lacks, update `src/spec-type.ts`, not just the spec.
 
 ---
 

@@ -42,7 +42,7 @@ Read the same reference files as `/component-create-spec`:
 
 | File | Purpose |
 |------|---------|
-| `references/component/spec-type.ts` | `ComponentSpec` type |
+| `src/spec-type.ts` (canonical) | `ComponentSpec` type |
 | `references/component/categories.ts` | Valid categories |
 | `references/component/animation-map.ts` | Class → animation wiring |
 | `references/component/a11y-contract.ts` | Class → ARIA requirements |
