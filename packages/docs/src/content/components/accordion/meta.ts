@@ -32,7 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'accordion',
-  preview: { layout: 'fit', maxWidth: 340 },
+  preview: { layout: 'fit', maxWidth: 280 },
   name: 'Accordion',
   tagline: 'Collapsible sections for FAQs, settings panels, and anything that shouldn’t be visible all at once.',
   badges: [
