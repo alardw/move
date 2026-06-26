@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'autocomplete',
+  preview: { width: 'fit' },
   name: 'Autocomplete',
   tagline: 'A text input that suggests as you type — single or multi, with tags, groups, async loading, and an empty state that doesn’t feel rude.',
   badges: [
