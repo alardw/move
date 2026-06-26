@@ -84,6 +84,38 @@ function getProp(objectLiteral, name) {
   return null;
 }
 
+/** Unwrap `(x)` and `x as T` to the inner node. */
+function unwrap(node) {
+  while (node && (ts.isAsExpression(node) || ts.isParenthesizedExpression(node))) {
+    node = node.expression;
+  }
+  return node;
+}
+
+/** Normalise a default for comparison: strip an `as T` cast and any surrounding
+ *  quotes, so source `'semibold' as HeadingWeight` and spec `"'semibold'"`
+ *  both reduce to `semibold`. */
+function normalizeValue(text) {
+  if (text == null) return null;
+  let v = String(text).trim();
+  while (
+    v.length >= 2 &&
+    ((v[0] === "'" && v.endsWith("'")) ||
+      (v[0] === '"' && v.endsWith('"')) ||
+      (v[0] === '`' && v.endsWith('`')))
+  ) {
+    v = v.slice(1, -1).trim();
+  }
+  return v;
+}
+
+/** Value of an object-literal property, normalised (unwrapping `as` casts). */
+function nodeValue(node) {
+  const inner = unwrap(node);
+  if (!inner) return null;
+  return normalizeValue(asString(inner) ?? inner.getText());
+}
+
 // ──────────────────────────────────────────────────────────────────────────────
 // Spec parsing
 // ──────────────────────────────────────────────────────────────────────────────
@@ -156,7 +188,35 @@ function parseSpec(file) {
     }
   }
 
-  return { subComponents, slots, name };
+  // Default values declared on prop objects (top-level `props` and per
+  // sub-component `props`), keyed by prop name.
+  const defaults = {};
+  const collectDefaults = (propsArrNode) => {
+    if (!propsArrNode || !ts.isArrayLiteralExpression(propsArrNode)) return;
+    for (const p of propsArrNode.elements) {
+      const pn = asString(getProp(p, 'name'));
+      const dft = getProp(p, 'default');
+      if (pn && dft) defaults[pn] = nodeValue(dft);
+    }
+  };
+  collectDefaults(getProp(specObj, 'props'));
+
+  // Slots: union of top-level slots and every sub-component's slots.
+  const allSlots = new Set(slots);
+  if (subsNode && ts.isArrayLiteralExpression(subsNode)) {
+    for (const el of subsNode.elements) {
+      collectDefaults(getProp(el, 'props'));
+      const subSlots = getProp(el, 'slots');
+      if (subSlots && ts.isArrayLiteralExpression(subSlots)) {
+        for (const s of subSlots.elements) {
+          const sn = asString(getProp(s, 'name'));
+          if (sn) allSlots.add(sn);
+        }
+      }
+    }
+  }
+
+  return { subComponents, slots: [...allSlots], defaults, name };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -176,9 +236,40 @@ function parseSpec(file) {
 function parseSource(file, componentName) {
   const sf = parse(file);
   const interfaces = {};
+  const slots = new Set();
+  const defaults = {};
   let compoundKeys = null;
 
   walk(sf, (node) => {
+    // withMoveComponent({ slots: [...], defaults: {...}, ... }) — one per
+    // sub-component; union their slots + defaults.
+    if (
+      ts.isCallExpression(node) &&
+      ((ts.isIdentifier(node.expression) && node.expression.text === 'withMoveComponent') ||
+        (ts.isPropertyAccessExpression(node.expression) &&
+          node.expression.name.text === 'withMoveComponent'))
+    ) {
+      const cfg = node.arguments[0];
+      if (cfg && ts.isObjectLiteralExpression(cfg)) {
+        const slotsArr = unwrap(getProp(cfg, 'slots'));
+        if (slotsArr && ts.isArrayLiteralExpression(slotsArr)) {
+          for (const el of slotsArr.elements) {
+            const v = asString(el);
+            if (v) slots.add(v);
+          }
+        }
+        const defaultsObj = getProp(cfg, 'defaults');
+        if (defaultsObj && ts.isObjectLiteralExpression(defaultsObj)) {
+          for (const p of defaultsObj.properties) {
+            if (ts.isPropertyAssignment(p)) {
+              const key = ts.isIdentifier(p.name) ? p.name.text : asString(p.name);
+              if (key) defaults[key] = nodeValue(p.initializer);
+            }
+          }
+        }
+      }
+    }
+
     // interface XxxProps extends Y, Z { ... }
     if (ts.isInterfaceDeclaration(node) && node.name.text.endsWith('Props')) {
       const props = [];
@@ -235,7 +326,7 @@ function parseSource(file, componentName) {
     }
   });
 
-  return { interfaces, compoundKeys };
+  return { interfaces, compoundKeys, slots: [...slots], defaults };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -396,7 +487,32 @@ function checkComponent(componentDir) {
     }
   }
 
-  // 3. Optional docs cross-check: if a docs entry exists, sanity-check it.
+  // 3. Slots parity (spec slots ↔ source `withMoveComponent` slots)
+  {
+    const specSlots = new Set(spec.slots ?? []);
+    const srcSlots = new Set(source.slots ?? []);
+    const inSrcNotSpec = [...srcSlots].filter((s) => !specSlots.has(s));
+    const inSpecNotSrc = [...specSlots].filter((s) => !srcSlots.has(s));
+    if (inSrcNotSpec.length) warnings.push(`slot(s) in source not in spec: ${inSrcNotSpec.join(', ')}`);
+    if (inSpecNotSrc.length) warnings.push(`slot(s) in spec not in source: ${inSpecNotSrc.join(', ')}`);
+  }
+
+  // 4. Default-value parity. Only compare keys present in BOTH the source
+  //    `defaults` object and the spec — a value mismatch there is unambiguous
+  //    drift (error). Presence-only differences are skipped: many real defaults
+  //    live in CSS / controlled-state handling rather than the defaults object,
+  //    so flagging them is noise.
+  {
+    const specD = spec.defaults ?? {};
+    const srcD = source.defaults ?? {};
+    for (const [k, v] of Object.entries(srcD)) {
+      if (k in specD && specD[k] !== v) {
+        errors.push(`default mismatch for '${k}': source=${v} vs spec=${specD[k]}`);
+      }
+    }
+  }
+
+  // 5. Optional docs cross-check: if a docs entry exists, sanity-check it.
   const slug = name.toLowerCase();
   const docsEntry = join(DOCS_CONTENT_DIR, slug, 'index.ts');
   if (existsSync(docsEntry)) {

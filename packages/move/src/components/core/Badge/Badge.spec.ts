@@ -23,7 +23,7 @@ export const spec = {
   ],
 
   props: [
-    { name: 'variant', type: "'primary' | 'secondary' | 'outline' | 'success' | 'warning' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Visual style variant' },
+    { name: 'variant', type: "'solid' | 'soft' | 'surface' | 'outline' | 'dot'", default: "'solid'", moveSpecific: true, description: 'Visual style variant' },
     { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Badge size' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Badge content' },
   ],
@@ -56,7 +56,7 @@ export const spec = {
   ],
 
   variants: {
-    variant: ['primary', 'secondary', 'outline', 'success', 'warning', 'danger'],
+    variant: ['solid', 'soft', 'surface', 'outline', 'dot'],
   },
   sizes: ['sm', 'md', 'lg'],
 
@@ -73,7 +73,7 @@ export const spec = {
       'Renders children content',
       'Applies variant via data-variant attribute',
       'Applies size via data-size attribute',
-      'Defaults to variant=primary',
+      'Defaults to variant=solid',
       'Defaults to size=md',
       'Forwards className and style',
       'Forwards ref to root element',
