@@ -2,7 +2,7 @@ import { Stack, Switch } from 'move';
 
 export default function BasicSample() {
   return (
-    <Stack gap="sm" align="start">
+    <Stack gap="lg" align="start">
       <Switch.Root defaultChecked label="Email notifications">
         <Switch.Thumb />
       </Switch.Root>
