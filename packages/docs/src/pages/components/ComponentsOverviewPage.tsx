@@ -1,6 +1,6 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button, ToggleButton } from 'move';
 import { ComponentCard, TocRail, type TocItem } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
@@ -8,6 +8,11 @@ import { TAXONOMY_BY_ID, CATEGORY_ORDER } from '../../content/components/taxonom
 
 const catsOf = (c: ComponentContent): string[] => c.meta.categories ?? [];
 const labelOf = (id: string): string => TAXONOMY_BY_ID[id]?.label ?? id;
+
+// Capability traits derived from the spec — secondary filter toggles.
+const isAnimated = (c: ComponentContent): boolean =>
+  ((c.spec.animations as unknown[] | undefined)?.length ?? 0) > 0;
+const isCompound = (c: ComponentContent): boolean => c.spec.compound === true;
 
 const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
   a.meta.name.localeCompare(b.meta.name),
@@ -29,11 +34,15 @@ const GRID: React.CSSProperties = {
 export function ComponentsOverviewPage() {
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('All');
+  const [animated, setAnimated] = useState(false);
+  const [compound, setCompound] = useState(false);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return ALL.filter((c) => {
       if (category !== 'All' && !catsOf(c).includes(category)) return false;
+      if (animated && !isAnimated(c)) return false;
+      if (compound && !isCompound(c)) return false;
       if (!q) return true;
       const aliases = (c.spec.synonyms as string[] | undefined) ?? [];
       return (
@@ -43,7 +52,7 @@ export function ComponentsOverviewPage() {
         aliases.some((a) => a.includes(q))
       );
     });
-  }, [query, category]);
+  }, [query, category, animated, compound]);
 
   const grouped = category === 'All';
   const sections = (grouped ? CATEGORY_ORDER : [category]).filter((cat) =>
@@ -95,6 +104,16 @@ export function ComponentsOverviewPage() {
                   {c === 'All' ? 'All' : labelOf(c)}
                 </Button>
               ))}
+            </Stack>
+            <Stack direction="row" gap="xs">
+              <ToggleButton pressed={animated} onPressedChange={setAnimated} size="sm">
+                <Icon name="sparkles" />
+                Animated
+              </ToggleButton>
+              <ToggleButton pressed={compound} onPressedChange={setCompound} size="sm">
+                <Icon name="component" />
+                Compound
+              </ToggleButton>
             </Stack>
           </Stack>
 
