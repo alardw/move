@@ -32,7 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'input-text',
-  preview: { width: 'fit' },
+  preview: { width: 'sm' },
   name: 'InputText',
   tagline: 'A single-line text input — outlined or filled, three sizes, icon slots, and a real `<input>` underneath.',
   badges: [

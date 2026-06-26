@@ -32,7 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'alert',
-  preview: { width: 'md' },
+  preview: { width: 'sm' },
   name: 'Alert',
   tagline: 'A status banner with a sensible default icon, a real ARIA contract, and an exit animation that doesn’t leave a hole in the layout.',
   badges: [
