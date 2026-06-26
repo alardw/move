@@ -27,6 +27,7 @@ import { IconsPage } from './pages/customize/IconsPage';
 import { TypographyPage } from './pages/customize/TypographyPage';
 import { InternationalizationPage } from './pages/customize/InternationalizationPage';
 import { RecipesOverviewPage } from './pages/recipes/RecipesOverviewPage';
+import { RecipeDetailPage } from './pages/recipes/RecipeDetailPage';
 import { InstallationPage } from './pages/getting-started/InstallationPage';
 import { MoveRootPage } from './pages/getting-started/MoveRootPage';
 import { CreateMoveAppPage } from './pages/getting-started/CreateMoveAppPage';
@@ -191,6 +192,7 @@ function App() {
                 <Route path="/customize/icons" element={<IconsPage />} />
                 <Route path="/customize/internationalization" element={<InternationalizationPage />} />
                 <Route path="/recipes" element={<RecipesOverviewPage />} />
+                <Route path="/recipes/:group/:slug" element={<RecipeDetailPage />} />
                 {/* Component pages share a single data-driven template.
                     ComponentDocPage looks the slug up in COMPONENT_CONTENT
                     and falls back to Placeholder for unknown slugs. */}

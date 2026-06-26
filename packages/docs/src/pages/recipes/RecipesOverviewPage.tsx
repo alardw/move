@@ -1,59 +1,41 @@
+import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
-import {
-  HighlightList,
-  type HighlightItem,
-  Section,
-  TocRail,
-  type TocItem,
-} from '../../components';
-
-const BADGES = [
-  { icon: 'book-open', label: 'Real app patterns' },
-  { icon: 'blocks', label: 'Composed from primitives' },
-];
-
-const RECIPES: HighlightItem[] = [
-  {
-    icon: 'layout-template',
-    text: 'App shells — sidebar + content + header, or split-pane editor, or multi-panel canvas. The skeleton most apps start with.',
-  },
-  {
-    icon: 'form-input',
-    text: 'Forms — single column, two column, wizards, autosave, validation surfacing. The patterns that span most products.',
-  },
-  {
-    icon: 'table',
-    text: 'Data patterns — filterable tables, paginated lists, infinite scrolls, empty states, loading states. The "actual product" layer.',
-  },
-  {
-    icon: 'gauge',
-    text: 'Dashboards — KPI tiles, card grids, chart placeholders, mixed-density layouts. The "show me what\'s happening" layer.',
-  },
-];
-
-const HOW_TO_READ: HighlightItem[] = [
-  {
-    icon: 'eye',
-    text: 'Every recipe shows the final screen as a live preview at the top — start there, see what you\'re building toward.',
-  },
-  {
-    icon: 'file-code',
-    text: 'Below the preview is the full JSX. Copy it, paste it, adjust the props.',
-  },
-  {
-    icon: 'link',
-    text: 'Components used are listed with links, so you can dig into individual primitives without leaving the recipe context.',
-  },
-];
+import { Stack, Heading, Text, Breadcrumb, InputText, Button } from 'move';
+import { RecipeCard, Section, TocRail, type TocItem } from '../../components';
+import { RECIPES, RECIPE_GROUPS } from '../../content/recipes/registry';
 
 const TOC: TocItem[] = [
   { href: '#recipes', label: 'Overview' },
-  { href: '#what-we-cover', label: 'What we cover' },
-  { href: '#how-to-read', label: 'How to read a recipe' },
+  { href: '#browse', label: 'Browse' },
 ];
 
+const GRID: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+  gap: '1rem',
+};
+
 export function RecipesOverviewPage() {
+  const [query, setQuery] = useState('');
+  const [group, setGroup] = useState<string>('All');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return RECIPES.filter((r) => {
+      if (group !== 'All' && r.group !== group) return false;
+      if (!q) return true;
+      return (
+        r.title.toLowerCase().includes(q) ||
+        r.description.toLowerCase().includes(q) ||
+        r.group.toLowerCase().includes(q)
+      );
+    });
+  }, [query, group]);
+
+  const groupsToShow = (group === 'All' ? RECIPE_GROUPS : [group]).filter((g) =>
+    filtered.some((r) => r.group === g),
+  );
+
   return (
     <Stack direction="row" gap="xl" align="stretch" id="recipes">
       <Stack gap="xl" flex={1}>
@@ -71,34 +53,56 @@ export function RecipesOverviewPage() {
         <Stack gap="sm">
           <Heading level={1} weight="normal">Recipes</Heading>
           <Text color="muted" size="lg">
-            Real product patterns, composed entirely from Move primitives. The
-            proof that you don&apos;t need a custom CSS file to ship the screen
-            you have in mind.
+            Ready-made patterns built entirely from Move components — whole flows
+            and layouts you can drop in and adapt. Search, or filter by area.
           </Text>
-          <Stack direction="row" gap="xs" wrap>
-            {BADGES.map((b) => (
-              <Badge key={b.label} variant="soft">
-                <Icon name={b.icon} />
-                {b.label}
-              </Badge>
-            ))}
-          </Stack>
         </Stack>
 
         <Section
-          id="what-we-cover"
-          title="What we cover"
-          lede="The four patterns most apps spend their lives on."
+          id="browse"
+          title="Browse"
+          lede="Each card previews the live recipe; click through for the full version and its source."
         >
-          <HighlightList items={RECIPES} />
-        </Section>
+          <Stack gap="lg">
+            <Stack direction="row" gap="sm" align="center" wrap>
+              <InputText
+                placeholder="Search recipes…"
+                value={query}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              />
+              <Stack direction="row" gap="xs" wrap>
+                {['All', ...RECIPE_GROUPS].map((g) => (
+                  <Button
+                    key={g}
+                    size="sm"
+                    variant={group === g ? 'solid' : 'ghost'}
+                    onClick={() => setGroup(g)}
+                  >
+                    {g}
+                  </Button>
+                ))}
+              </Stack>
+            </Stack>
 
-        <Section
-          id="how-to-read"
-          title="How to read a recipe"
-          lede="Each one follows the same shape so you can skim it fast."
-        >
-          <HighlightList items={HOW_TO_READ} />
+            {groupsToShow.length === 0 ? (
+              <Text color="muted">No recipes match “{query}”.</Text>
+            ) : (
+              groupsToShow.map((g) => (
+                <Stack key={g} gap="sm">
+                  {group === 'All' && (
+                    <Heading level={2} size="lg" weight="normal">{g}</Heading>
+                  )}
+                  <div style={GRID}>
+                    {filtered
+                      .filter((r) => r.group === g)
+                      .map((r) => (
+                        <RecipeCard key={`${r.groupSlug}/${r.slug}`} recipe={r} />
+                      ))}
+                  </div>
+                </Stack>
+              ))
+            )}
+          </Stack>
         </Section>
       </Stack>
       <TocRail items={TOC} />

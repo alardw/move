@@ -1,5 +1,7 @@
 export { AnimatedSubnav } from './AnimatedSubnav';
 export { CodeBlock } from './CodeBlock';
+export { ComponentCard } from './ComponentCard';
+export type { ComponentCardProps } from './ComponentCard';
 export { ColorSwatch, isColorValue } from './ColorSwatch';
 export { HeroDemo } from './HeroDemo';
 export { InlineCode } from './InlineCode';
@@ -10,6 +12,8 @@ export { LogoMark } from './LogoMark';
 export { MoveBadge } from './MoveBadge';
 export { Preview } from './Preview';
 export { PropsTable } from './PropsTable';
+export { RecipeCard } from './RecipeCard';
+export type { RecipeCardProps } from './RecipeCard';
 export { RelatedComponents } from './RelatedComponents';
 export type { RelatedItem } from './RelatedComponents';
 export { Section } from './Section';

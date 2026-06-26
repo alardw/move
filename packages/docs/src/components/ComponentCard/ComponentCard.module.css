@@ -1,0 +1,42 @@
+.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--move-border-base);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--move-bg-base);
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.card:hover {
+  border-color: var(--move-border-strong, var(--move-fg-muted));
+  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+  transform: translateY(-2px);
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  object-position: top center;
+  border-bottom: 1px solid var(--move-border-base);
+  background: var(--move-bg-subtle);
+}
+
+.body {
+  padding: 16px;
+}
+
+.iconTile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--move-bg-subtle);
+  color: var(--move-fg-base);
+}

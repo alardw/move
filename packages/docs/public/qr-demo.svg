@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" role="img" aria-label="Demo QR code">
+  <rect width="180" height="180" rx="8" fill="#ffffff"/>
+  <g fill="#1a1a1a">
+    <!-- finder patterns -->
+    <path d="M16 16h40v40H16z M24 24v24h24V24z M30 30h12v12H30z"/>
+    <path d="M124 16h40v40h-40z M132 24v24h24V24z M138 30h12v12h-12z"/>
+    <path d="M16 124h40v40H16z M24 132v24h24v-24z M30 138h12v12H30z"/>
+    <!-- timing + data modules (decorative) -->
+    <rect x="64" y="16" width="8" height="8"/><rect x="80" y="16" width="8" height="8"/><rect x="104" y="16" width="8" height="8"/>
+    <rect x="64" y="32" width="8" height="8"/><rect x="96" y="32" width="8" height="8"/><rect x="112" y="32" width="8" height="8"/>
+    <rect x="72" y="48" width="8" height="8"/><rect x="88" y="48" width="8" height="8"/><rect x="104" y="48" width="8" height="8"/>
+    <rect x="16" y="72" width="8" height="8"/><rect x="32" y="72" width="8" height="8"/><rect x="56" y="72" width="8" height="8"/><rect x="72" y="72" width="8" height="8"/><rect x="96" y="72" width="8" height="8"/><rect x="120" y="72" width="8" height="8"/><rect x="144" y="72" width="8" height="8"/>
+    <rect x="24" y="88" width="8" height="8"/><rect x="48" y="88" width="8" height="8"/><rect x="80" y="88" width="8" height="8"/><rect x="112" y="88" width="8" height="8"/><rect x="136" y="88" width="8" height="8"/>
+    <rect x="16" y="104" width="8" height="8"/><rect x="40" y="104" width="8" height="8"/><rect x="64" y="104" width="8" height="8"/><rect x="88" y="104" width="8" height="8"/><rect x="104" y="104" width="8" height="8"/><rect x="128" y="104" width="8" height="8"/><rect x="152" y="104" width="8" height="8"/>
+    <rect x="72" y="120" width="8" height="8"/><rect x="96" y="120" width="8" height="8"/><rect x="120" y="120" width="8" height="8"/><rect x="144" y="120" width="8" height="8"/>
+    <rect x="80" y="136" width="8" height="8"/><rect x="104" y="136" width="8" height="8"/><rect x="136" y="136" width="8" height="8"/><rect x="152" y="136" width="8" height="8"/>
+    <rect x="72" y="152" width="8" height="8"/><rect x="96" y="152" width="8" height="8"/><rect x="112" y="152" width="8" height="8"/><rect x="144" y="152" width="8" height="8"/>
+  </g>
+</svg>

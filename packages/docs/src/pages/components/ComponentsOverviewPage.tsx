@@ -1,43 +1,48 @@
+import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
-import {
-  HighlightList,
-  type HighlightItem,
-  Section,
-  TocRail,
-  type TocItem,
-} from '../../components';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Button } from 'move';
+import { ComponentCard, Section, TocRail, type TocItem } from '../../components';
+import { COMPONENT_CONTENT } from '../../content/components';
+
+const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
+  a.meta.name.localeCompare(b.meta.name),
+);
+const CATEGORIES = [...new Set(ALL.map((c) => c.meta.badges[0]?.label ?? 'Component'))].sort();
 
 const BADGES = [
-  { icon: 'blocks', label: '65+ components' },
+  { icon: 'blocks', label: `${ALL.length} components` },
   { icon: 'search', label: 'Search + filter' },
-];
-
-const WHATS_HERE: HighlightItem[] = [
-  {
-    icon: 'search',
-    text: 'Search by name, by what it does, or by what it pairs with. The fastest way to find the right primitive.',
-  },
-  {
-    icon: 'filter',
-    text: 'Filter by category — layout, input, navigation, overlay, feedback, data, media. The sidebar groups by spec; here you can slice across.',
-  },
-  {
-    icon: 'image',
-    text: 'Preview thumbnails so you recognize what you\'re reaching for before clicking through.',
-  },
-  {
-    icon: 'list-todo',
-    text: 'A transparent "still to come" list at the bottom — components on the roadmap that aren\'t shipped yet.',
-  },
 ];
 
 const TOC: TocItem[] = [
   { href: '#components-overview', label: 'Overview' },
-  { href: '#whats-here', label: 'What\'s here' },
+  { href: '#browse', label: 'Browse' },
 ];
 
+const GRID: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+  gap: '1rem',
+};
+
 export function ComponentsOverviewPage() {
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('All');
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return ALL.filter((c) => {
+      const cat = c.meta.badges[0]?.label ?? 'Component';
+      if (category !== 'All' && cat !== category) return false;
+      if (!q) return true;
+      return (
+        c.meta.name.toLowerCase().includes(q) ||
+        c.meta.tagline.toLowerCase().includes(q) ||
+        cat.toLowerCase().includes(q)
+      );
+    });
+  }, [query, category]);
+
   return (
     <Stack direction="row" gap="xl" align="stretch" id="components-overview">
       <Stack gap="xl" flex={1}>
@@ -55,8 +60,8 @@ export function ComponentsOverviewPage() {
         <Stack gap="sm">
           <Heading level={1} weight="normal">Components</Heading>
           <Text color="muted" size="lg">
-            Every Move primitive, in one place. Skim the previews, search by
-            name, or filter by category to find the right building block.
+            Every Move primitive, in one place. Search by name or by what it
+            does, or filter by category.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -69,11 +74,41 @@ export function ComponentsOverviewPage() {
         </Stack>
 
         <Section
-          id="whats-here"
-          title="What's here"
-          lede="An index, not a tour. The sidebar still lists everything alphabetically — this page is for when you want to browse by purpose."
+          id="browse"
+          title="Browse"
+          lede="Every shipped component. Click through for examples, props, and tokens."
         >
-          <HighlightList items={WHATS_HERE} />
+          <Stack gap="lg">
+            <Stack direction="row" gap="sm" align="center" wrap>
+              <InputText
+                placeholder="Search components…"
+                value={query}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              />
+              <Stack direction="row" gap="xs" wrap>
+                {['All', ...CATEGORIES].map((c) => (
+                  <Button
+                    key={c}
+                    size="sm"
+                    variant={category === c ? 'solid' : 'ghost'}
+                    onClick={() => setCategory(c)}
+                  >
+                    {c}
+                  </Button>
+                ))}
+              </Stack>
+            </Stack>
+
+            {filtered.length === 0 ? (
+              <Text color="muted">No components match “{query}”.</Text>
+            ) : (
+              <div style={GRID}>
+                {filtered.map((c) => (
+                  <ComponentCard key={c.meta.slug} content={c} />
+                ))}
+              </div>
+            )}
+          </Stack>
         </Section>
       </Stack>
       <TocRail items={TOC} />
