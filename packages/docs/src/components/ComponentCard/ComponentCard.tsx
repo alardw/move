@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
@@ -9,29 +9,6 @@ export interface ComponentCardProps {
   content: ComponentContent;
   /** Override the preview image (otherwise `meta.preview.image` is used). */
   image?: string;
-}
-
-/** Mounts its preview only once the card scrolls near the viewport, so a
- *  ~65-card grid never renders every live sample at once. */
-function useInView(rootMargin = '300px') {
-  const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || inView) return;
-    const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [inView, rootMargin]);
-  return { ref, inView };
 }
 
 export function ComponentCard({ content, image }: ComponentCardProps) {
@@ -47,20 +24,17 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
     ? samples?.find((s) => s.id === preview.sample)
     : samples?.[0];
   const Sample = sample?.render;
-  const { ref, inView } = useInView();
 
-  // Measure flat, then tilt. The sliding indicators (Tabs, Pagination,
-  // TableOfContents…) position via getBoundingClientRect, which is wrong inside
-  // a CSS transform. We let the sample mount + measure UNtransformed, then apply
-  // the iso transform (a transform doesn't re-trigger the measurement), so the
-  // highlight stays correct and just tilts along — all in the docs, no
-  // component change.
+  // Render flat first, then tilt on mount: the sliding indicators (Tabs,
+  // Pagination, TableOfContents…) position via getBoundingClientRect, which is
+  // wrong inside a CSS transform. Letting the sample measure untransformed, then
+  // applying the iso transform (which doesn't re-trigger measurement), keeps the
+  // highlight correct. Visible from page load — no scroll-triggered mount.
   const [tilted, setTilted] = useState(false);
   useEffect(() => {
-    if (!inView) return;
     const t = setTimeout(() => setTilted(true), 150);
     return () => clearTimeout(t);
-  }, [inView]);
+  }, []);
 
   const tiltClass = [
     styles.tilt,
@@ -73,7 +47,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
 
   return (
     <RouterLink to={`/components/${meta.slug}`} className={styles.card}>
-      <div className={styles.frame} ref={ref}>
+      <div className={styles.frame}>
         {previewImage ? (
           <img src={previewImage} alt="" className={styles.image} />
         ) : Sample ? (
@@ -82,7 +56,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
             style={width !== 'fit' && width !== 'full' ? { width: PREVIEW_WIDTHS[width] } : undefined}
             aria-hidden
           >
-            {inView ? <Sample /> : null}
+            <Sample />
           </div>
         ) : (
           <span className={styles.iconTile}>
