@@ -12,7 +12,6 @@ export const springs = {
   // === Quick & Responsive - for small UI elements, buttons ===
   snappy: { mass: 1, stiffness: 500, damping: 30, velocity: 0 },
   quick: { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 },
-  tooltip: { mass: 0.4, stiffness: 450, damping: 18, velocity: 0 },
 
   // === Bouncy & Playful - for scale animations, popovers ===
   poppy: { mass: 0.8, stiffness: 350, damping: 12, velocity: 0 },
@@ -79,6 +78,5 @@ export const slow = spring(springs.slow);
 export const lazy = spring(springs.lazy);
 export const jelly = spring(springs.jelly);
 export const stiff = spring(springs.stiff);
-export const tooltip = spring(springs.tooltip);
 export const sidebar = spring(springs.sidebar);
 export const pagination = spring(springs.pagination);

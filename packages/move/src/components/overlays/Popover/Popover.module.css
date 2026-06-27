@@ -12,6 +12,11 @@
   display: inline-block;
 }
 
+/* Two layers: `.content` is the Radix-positioned shell — Radix owns its
+   `transform: translate(x,y)` and re-applies it on scroll, so this layer never
+   carries a transform animation. `.contentInner` is the visible box: it owns the
+   scale entrance AND the scroll region. Tokens live on the shell so the inner box
+   and any descendants resolve them. */
 .content {
   /* Component tokens -- content */
   --move-popover-content-bg: var(--move-surface-bg);
@@ -21,25 +26,39 @@
   --move-popover-content-padding: var(--move-spacing-md);
   --move-popover-content-min-width: 12rem;
   --move-popover-content-max-width: 24rem;
+  /* Cap to the space Radix measured between trigger and viewport edge, so long
+     content scrolls internally instead of overflowing off-screen. */
+  --move-popover-content-max-height: var(--radix-popover-content-available-height, 28rem);
 
-  overflow: hidden;
-  will-change: transform, opacity;
-  transform-origin: var(--radix-popover-content-transform-origin);
+  /* Positioned shell only — Radix owns the transform; this layer stacks. */
+  z-index: var(--move-layer-popover);
+}
+
+.contentInner {
+  /* Scale animates here (origin from Radix' var); overflow-y + max-height let
+     long content (e.g. a list) scroll internally without closing the popover. */
   min-width: var(--move-popover-content-min-width);
   max-width: var(--move-popover-content-max-width);
+  max-height: var(--move-popover-content-max-height);
+  overflow-y: auto;
+  overflow-x: hidden;
   background-color: var(--move-popover-content-bg);
   border: 1px solid var(--move-popover-content-border);
   border-radius: var(--move-popover-content-radius);
   box-shadow: var(--move-popover-content-shadow);
   padding: var(--move-popover-content-padding);
-  z-index: var(--move-layer-popover);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
   color: var(--move-fg-base);
   line-height: 1.5;
+  transform-origin: var(--radix-popover-content-transform-origin);
+  will-change: transform, opacity;
+  scrollbar-width: thin;
+  scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
 
-.content:focus {
+.content:focus,
+.contentInner:focus {
   outline: none;
 }
 

@@ -67,6 +67,7 @@ export const spec = {
   formType: 'hidden-input' as const,
   asChild: false,
 
+  animationCapabilities: ['cssAnimation'],
   animations: [],
 
   renderContracts: [

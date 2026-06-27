@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
@@ -53,8 +53,9 @@ const DEFAULT_POPOVER_ANIMATIONS: AnimationTrigger[] = [
     trigger: 'Content.enter',
     sequence: [{
       animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        scale: { from: 0.5, to: 1, ease: poppy },
+        // Same recipe as the tooltip: subtle scale + quick spring (not bouncy).
+        opacity: { from: 0, to: 1, ease: quick },
+        scale: { from: 0.88, to: 1, ease: quick },
       },
     }],
   },
@@ -212,34 +213,64 @@ export interface PopoverContentProps extends Record<string, unknown> {
   onInteractOutside?: (e: Event) => void;
   onOpenAutoFocus?: (e: Event) => void;
   onCloseAutoFocus?: (e: Event) => void;
-  sp?: SlotPropsMap<'content'>;
+  sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDivElement>({
+/**
+ * Inner animated surface. Lives INSIDE RadixPopover.Content so it mounts per open
+ * — that is what makes the lifecycle `Content.enter` fire on every open
+ * (useAnimations runs its enter once per mount; keeping it in the always-mounted
+ * outer component fired it once, at page load, with a null ref). Carries the
+ * scale transform and the scroll region; the outer shell keeps Radix' positioning
+ * transform free so the popup follows the trigger on scroll.
+ */
+const PopoverContentInner: React.FC<{
+  surface: ReturnType<typeof useSurfaceFlip>;
+  className?: string;
+  style?: React.CSSProperties;
+  rest?: Record<string, unknown>;
+  children?: React.ReactNode;
+}> = ({ surface, className, style, rest, children }) => {
+  const { isClosing, onCloseComplete, animConfig } = usePopoverContext();
+  const innerRef = React.useRef<HTMLDivElement>(null);
+  const refs = React.useMemo(
+    () => ({ Content: innerRef as React.RefObject<HTMLElement | null> }),
+    [],
+  );
+  const { runExit } = useAnimations(animConfig, refs);
+
+  React.useEffect(() => {
+    if (!isClosing) return;
+    if (!animConfig) { onCloseComplete?.(); return; }
+    runExit().then(() => onCloseComplete?.());
+  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div ref={innerRef} {...rest} className={className} style={style}>
+      <SurfaceProvider value={surface}>
+        {children}
+      </SurfaceProvider>
+    </div>
+  );
+};
+
+const PopoverContent = withMoveComponent<'content' | 'contentInner', PopoverContentProps, HTMLDivElement>({
   name: 'PopoverContent',
   styles,
-  slots: ['content'] as const,
+  slots: ['content', 'contentInner'] as const,
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { isClosing, onCloseComplete, close, animConfig, closeOnScroll } = usePopoverContext();
+    const { close, closeOnScroll } = usePopoverContext();
     const surface = useSurfaceFlip();
     const layer = useLayer();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
-    const refs = React.useMemo(() => ({ Content: contentRef as React.RefObject<HTMLElement | null> }), []);
-    const { runExit } = useAnimations(animConfig, refs);
-
-    // Exit
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!animConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
-
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Close on ancestor scroll
+    // Close on ancestor scroll — opt-in (default off). When off, Radix keeps the
+    // popup pinned to the trigger via autoUpdate (the inner-layer transform leaves
+    // Radix' positioning transform free), so the popup follows instead of hanging.
     React.useEffect(() => {
       if (!closeOnScroll) return;
       const el = contentRef.current;
@@ -273,7 +304,9 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
     return {
       render() {
         const contentSp = sp('content');
+        const innerSp = sp('contentInner');
         const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
 
         return (
           <RadixPopover.Portal container={props.container as HTMLElement | undefined}>
@@ -294,9 +327,14 @@ const PopoverContent = withMoveComponent<'content', PopoverContentProps, HTMLDiv
               onOpenAutoFocus={props.onOpenAutoFocus as ((e: Event) => void) | undefined}
               onCloseAutoFocus={props.onCloseAutoFocus as ((e: Event) => void) | undefined}
             >
-              <SurfaceProvider value={surface}>
+              <PopoverContentInner
+                surface={surface}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+                rest={innerSpRest}
+              >
                 {props.children}
-              </SurfaceProvider>
+              </PopoverContentInner>
             </RadixPopover.Content>
           </RadixPopover.Portal>
         );

@@ -48,6 +48,13 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
     (capMatch ? capMatch[1].match(/'([a-zA-Z]+)'/g) ?? [] : []).map((s) => s.replace(/'/g, '')),
   );
 
+  let css = '';
+  for (const f of readdirSync(dir)) {
+    if (/\.module\.css$/.test(f)) css += read(join(dir, f)) + '\n';
+  }
+  // Strip CSS comments so a "@keyframes" mention in a comment doesn't count.
+  const usesKeyframes = /@keyframes\s+[\w-]+\s*\{/.test(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+
   const usesHook = /\b(usePositionTracker|useSlidingIndicator)\s*\(/.test(src);
   const usesMoveAnimate = /\bmoveAnimate\s*\(/.test(src);
   const usesRawAnimate = /from ['"]animejs['"]/.test(src) && /\banimate\s*\(/.test(src);
@@ -64,6 +71,12 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
       `uses imperative anime.js (${usesMoveAnimate ? 'moveAnimate' : 'raw animate'}) but declares none of: ${ESCAPES.join(', ')}`,
     ]);
 
+  if (usesKeyframes && !declared.has('cssAnimation'))
+    issues.push([
+      'error',
+      "defines a CSS @keyframes animation but spec.animationCapabilities lacks 'cssAnimation' — a discrete open/close animation belongs in spec.animations (the Move system), not CSS keyframes; only continuous loops (spinner, indeterminate, caret) are 'cssAnimation'",
+    ]);
+
   if (usesAnimatePosition)
     issues.push([
       'warn',
@@ -72,6 +85,8 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
 
   if (declared.has('slidingIndicator') && !usesHook && !usesAnimatePosition)
     issues.push(['warn', "declares 'slidingIndicator' but source uses neither the hook nor animatePosition"]);
+  if (declared.has('cssAnimation') && !usesKeyframes)
+    issues.push(['warn', "declares 'cssAnimation' but the CSS has no @keyframes"]);
   for (const c of ESCAPES)
     if (declared.has(c) && !usesMoveAnimate && !usesRawAnimate)
       issues.push(['warn', `declares '${c}' but source has no imperative anime.js`]);

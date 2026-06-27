@@ -72,6 +72,9 @@
 }
 
 /* Content (popover) */
+/* Two layers: `.content` is the Radix-positioned shell (Radix owns its transform,
+   re-applied on scroll), `.contentInner` is the visible box that scales. Tokens on
+   the shell so the inner box resolves them. */
 .content {
   --move-datepicker-content-bg: var(--move-bg-subtle);
   --move-datepicker-content-border: var(--move-border-base);
@@ -79,15 +82,19 @@
   --move-datepicker-content-shadow: var(--move-shadow-lg);
   --move-datepicker-content-padding: var(--move-spacing-sm);
 
+  z-index: var(--move-layer-popover);
+  outline: none;
+  will-change: opacity;
+}
+
+.contentInner {
   background-color: var(--move-datepicker-content-bg);
   border: 1px solid var(--move-datepicker-content-border);
   border-radius: var(--move-datepicker-content-radius);
   box-shadow: var(--move-datepicker-content-shadow);
   padding: var(--move-datepicker-content-padding);
-  z-index: var(--move-layer-popover);
-  outline: none;
   overflow: hidden;
-  will-change: transform, opacity;
+  will-change: transform;
   transform-origin: top center;
   font-family: var(--move-font-body);
 }

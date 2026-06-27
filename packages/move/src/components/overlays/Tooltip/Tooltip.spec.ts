@@ -8,6 +8,7 @@ export const spec = {
   name: 'Tooltip',
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
+  preview: { staged: true, bare: true, width: 'sm' as const },
   description: 'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
 
   synonyms: ['hint', 'tip', 'label', 'overlay tip', 'popup', 'title'],
@@ -33,7 +34,8 @@ export const spec = {
   rootElement: 'div',
   slots: [
     { name: 'trigger', element: 'button', description: 'Element that activates the tooltip on hover/focus' },
-    { name: 'content', element: 'div', description: 'Tooltip popup container with inverted colors' },
+    { name: 'content', element: 'div', description: 'Positioned shell — Radix owns its transform; carries only z-index and the opacity fade' },
+    { name: 'contentInner', element: 'div', description: 'Visible tooltip box (inverted colors); owns the scale/slide entrance so it never clobbers Radix positioning' },
     { name: 'arrow', element: 'svg', description: 'Arrow pointing toward the trigger' },
   ],
 
@@ -91,7 +93,7 @@ export const spec = {
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
       ],
       usesFactory: true,
-      description: 'Positioned tooltip popup with spring entrance animation and CSS exit animation',
+      description: 'Positioned tooltip shell wrapping an inner animated surface; spring entrance and exit both run through the Move animation system',
     },
     {
       name: 'Arrow',
@@ -140,9 +142,12 @@ export const spec = {
   asChild: true,
   surface: null,
 
+  // Animates the inner surface (contentInner); the outer Content shell keeps
+  // Radix' positioning transform untouched. Lives inside RadixTooltip.Content so
+  // it remounts per open — that is what makes the lifecycle enter fire each time.
   animations: [
-    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 150 }, y: { from: 4, to: 0, ease: 'snappy' } } }] },
-    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { to: 0, duration: 100 } } }] },
+    { trigger: 'Content.enter', sequence: [{ target: 'ContentInner', animation: { opacity: { from: 0, to: 1, ease: 'quick' }, scale: { from: 0.88, to: 1, ease: 'quick' }, translateX: { from: '$offsetX', to: 0, ease: 'quick' }, translateY: { from: '$offsetY', to: 0, ease: 'quick' } } }] },
+    { trigger: 'Content.exit', sequence: [{ target: 'ContentInner', animation: { opacity: { to: 0, duration: 120 }, scale: { to: 0.9, duration: 120, ease: 'outQuart' } } }] },
   ],
 
   tokens: [
@@ -167,7 +172,8 @@ export const spec = {
     { id: 'simple-forwards-controlled', description: 'Simple API forwards open and onOpenChange into Root sub-component' },
     { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) to ensure correct typography outside the tree' },
     { id: 'direction-aware-entrance', description: 'Entrance animation computes translate offset from data-side attribute: top=translateY(6), bottom=translateY(-6), left=translateX(6), right=translateX(-6)' },
-    { id: 'css-exit-animation', description: 'Exit animation uses CSS @keyframes tooltip-out (opacity 1->0, scale 1->0.9, 120ms) triggered by data-state=closed' },
+    { id: 'two-layer-content', description: 'Content is a Radix-positioned shell (Radix owns transform: translate, re-applied on scroll) wrapping contentInner, which carries the scale/slide transform — so the entrance never clobbers positioning' },
+    { id: 'move-native-exit', description: 'Exit runs through the Move animation system (useAnimations Content.exit + runExit); the stateful Root defers Radix unmount until the exit completes. No CSS @keyframes' },
     { id: 'arrow-fill-matches-bg', description: 'Arrow fill color matches tooltip content background via --move-tooltip-content-bg' },
   ],
 

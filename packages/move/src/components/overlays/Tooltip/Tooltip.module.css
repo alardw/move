@@ -2,10 +2,14 @@
  * Tooltip Component
  * Generated from Tooltip.spec.ts
  *
- * Component tokens on each slot so they resolve in local scope.
- * Content lives in a portal — must declare font-family explicitly.
- * Entrance animation via useLifecycleAnimate (anime.js spring physics).
- * Exit animation via CSS @keyframes (Radix manages unmount lifecycle).
+ * Two layers: `.content` is the Radix-positioned shell (Radix owns its
+ * `transform: translate(x,y)` and re-applies it on every scroll, so this layer
+ * never carries a transform animation — only z-index + opacity). `.contentInner`
+ * is the visible box and owns the scale/slide "pop". Component tokens live on
+ * `.content` so both the inner box and the arrow resolve them.
+ *
+ * Enter AND exit run through the Move animation system (useAnimations) — no CSS
+ * @keyframes. prefers-reduced-motion is handled inside the runtime.
  */
 
 .trigger {
@@ -23,6 +27,12 @@
   --move-tooltip-content-font-size: var(--move-size-sm);
   --move-tooltip-content-max-width: 18rem;
 
+  /* Positioned shell only — Radix owns the transform; this layer stacks + fades. */
+  z-index: var(--move-layer-tooltip);
+  will-change: opacity;
+}
+
+.contentInner {
   padding: var(--move-tooltip-content-padding-y) var(--move-tooltip-content-padding-x);
   background-color: var(--move-tooltip-content-bg);
   color: var(--move-tooltip-content-fg);
@@ -32,33 +42,10 @@
   font-size: var(--move-tooltip-content-font-size);
   line-height: var(--move-leading-normal);
   max-width: var(--move-tooltip-content-max-width);
-  z-index: var(--move-layer-tooltip);
   user-select: none;
   will-change: transform, opacity;
 }
 
-/* Exit — CSS handles close since Radix controls unmount lifecycle */
-.content[data-state='closed'] {
-  animation: tooltip-out 120ms var(--move-ease-exit) forwards;
-}
-
 .arrow {
   fill: var(--move-tooltip-content-bg, var(--move-fg-base));
-}
-
-@keyframes tooltip-out {
-  from {
-    opacity: 1;
-    transform: translate(0, 0) scale(1);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .content[data-state='closed'] {
-    animation: none;
-  }
 }

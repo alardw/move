@@ -225,7 +225,8 @@ export type AnimationCapability =
   | 'slidingIndicator'
   | 'valueLoop'
   | 'measureThenAnimate'
-  | 'scrollApi';
+  | 'scrollApi'
+  | 'cssAnimation';
 
 /** Explicit controlled/uncontrolled prop triad mapping */
 export interface ControlledProps {
@@ -377,6 +378,27 @@ export interface TestingSpec {
 }
 
 // =============================================================================
+// Docs preview
+// =============================================================================
+
+/**
+ * How a component renders in the docs overview preview card. Consumed by the
+ * docs `ComponentCard`; preview-only, never affects the shipped component.
+ */
+export interface PreviewSpec {
+  /**
+   * Portalled overlay (Dialog, Popover, Drawer, Dropdown): render the OPEN
+   * state inside a contained, inert stage instead of just the trigger. The
+   * docs supply a card-only render that wraps the overlay in `StagedOverlay`.
+   */
+  staged?: boolean;
+  /** Component is its own surface — drop the white preview panel (no card-in-a-card). */
+  bare?: boolean;
+  /** Preview-panel width. */
+  width?: 'fit' | 'xs' | 'sm' | 'md' | 'lg' | 'full';
+}
+
+// =============================================================================
 // The spec itself
 // =============================================================================
 
@@ -474,6 +496,11 @@ export interface ComponentSpec {
    *   measurement taken after render (imperative moveAnimate). ChatBubble.
    * - `scrollApi` — an imperative scroll/gesture API, not an anime.js animation.
    *   Carousel.
+   * - `cssAnimation` — a continuous CSS `@keyframes` animation that isn't a
+   *   discrete enter/exit (so it can't go through the trigger system): a spinner
+   *   rotation, indeterminate progress, a blinking caret. Spinner, ProgressBar,
+   *   PinInput, Avatar. (A discrete open/close animation via CSS @keyframes is NOT
+   *   this — that belongs in `animations`; the check flags undeclared keyframes.)
    */
   animationCapabilities?: AnimationCapability[];
 
@@ -492,6 +519,9 @@ export interface ComponentSpec {
 
   /** Optional explicit demo contract (controls + samples + bindings) */
   demo?: DemoSpec;
+
+  /** Optional docs preview-card behaviour (see PreviewSpec) */
+  preview?: PreviewSpec;
 
   // --- Surface ---
 

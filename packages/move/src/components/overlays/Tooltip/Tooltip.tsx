@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, tooltip as tooltipSpring } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine';
 import styles from './Tooltip.module.css';
@@ -26,20 +26,35 @@ function getSideOffset(side: string): { x: number; y: number } {
 // Default animations (direction offsets are added at runtime based on data-side)
 // ============================================================================
 
+// The animation targets the inner surface (the visible box). The outer Content
+// is the Radix-positioned shell — Radix owns its `transform: translate(x,y)` and
+// re-applies it on scroll, so we never animate transform there. `data-side` lives
+// on the shell, so the entrance reads it via closest(). One animation object →
+// opacity + scale + slide all run together (parallel).
 const DEFAULT_TOOLTIP_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
     vars: (el: HTMLElement) => {
-      const side = el.getAttribute('data-side') || 'top';
+      const side = el.closest<HTMLElement>('[data-side]')?.getAttribute('data-side') || 'top';
       const offset = getSideOffset(side);
       return { offsetX: offset.x, offsetY: offset.y };
     },
     sequence: [{
       animation: {
-        opacity: { from: 0, to: 1, ease: tooltipSpring },
-        scale: { from: 0.88, to: 1, ease: tooltipSpring },
-        translateX: { from: '$offsetX', to: 0, ease: tooltipSpring },
-        translateY: { from: '$offsetY', to: 0, ease: tooltipSpring },
+        opacity: { from: 0, to: 1, ease: quick },
+        scale: { from: 0.88, to: 1, ease: quick },
+        translateX: { from: '$offsetX', to: 0, ease: quick },
+        translateY: { from: '$offsetY', to: 0, ease: quick },
+      },
+    }],
+  },
+  {
+    // Exit via the Move system (no CSS @keyframes).
+    trigger: 'Content.exit',
+    sequence: [{
+      animation: {
+        opacity: { to: 0, duration: 120 },
+        scale: { to: 0.9, duration: 120, ease: 'outQuart' },
       },
     }],
   },
@@ -55,8 +70,15 @@ import { TooltipProvider } from './TooltipProvider';
 export type { TooltipProviderProps } from './TooltipProvider';
 
 // ============================================================================
-// Root (stateless -- no factory needed)
+// Context + Root (stateful — defers unmount so the Move exit animation plays)
 // ============================================================================
+
+interface TooltipContextValue {
+  isClosing: boolean;
+  onCloseComplete: () => void;
+}
+const TooltipContext = React.createContext<TooltipContextValue | null>(null);
+const useTooltipContext = () => React.useContext(TooltipContext);
 
 export interface TooltipRootProps {
   children?: React.ReactNode;
@@ -67,9 +89,43 @@ export interface TooltipRootProps {
   disableHoverableContent?: boolean;
 }
 
-const TooltipRoot: React.FC<TooltipRootProps> = (props) => (
-  <RadixTooltip.Root {...props} />
-);
+const TooltipRoot: React.FC<TooltipRootProps> = ({
+  children,
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  ...rest
+}) => {
+  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
+  const [isClosing, setIsClosing] = React.useState(false);
+  const isControlled = controlledOpen !== undefined;
+  const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+  const handleOpenChange = React.useCallback((newOpen: boolean) => {
+    if (newOpen) {
+      setIsClosing(false);
+      if (!isControlled) setUncontrolledOpen(true);
+      onOpenChange?.(true);
+    } else {
+      // Defer the real close so the Move exit animation can play first.
+      setIsClosing(true);
+    }
+  }, [isControlled, onOpenChange]);
+
+  const handleCloseComplete = React.useCallback(() => {
+    setIsClosing(false);
+    if (!isControlled) setUncontrolledOpen(false);
+    onOpenChange?.(false);
+  }, [isControlled, onOpenChange]);
+
+  return (
+    <TooltipContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete }}>
+      <RadixTooltip.Root {...rest} open={open || isClosing} onOpenChange={handleOpenChange}>
+        {children}
+      </RadixTooltip.Root>
+    </TooltipContext.Provider>
+  );
+};
 TooltipRoot.displayName = 'Tooltip.Root';
 
 // ============================================================================
@@ -116,8 +172,8 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
 // Content (auto-portals to document.body)
 //
 // Entrance animation is direction-aware: reads data-side from Radix via
-// dynamic vars and computes translate offset accordingly.
-// Exit animation is CSS @keyframes via data-state=closed (Radix lifecycle).
+// dynamic vars and computes translate offset accordingly. Entrance AND exit
+// both run through the Move animation system (useAnimations) — no CSS keyframes.
 // ============================================================================
 
 export interface TooltipContentProps extends Record<string, unknown> {
@@ -130,43 +186,73 @@ export interface TooltipContentProps extends Record<string, unknown> {
   alignOffset?: number;
   container?: HTMLElement;
   animations?: AnimationTrigger[] | false;
-  sp?: SlotPropsMap<'content'>;
+  sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDivElement>({
+/**
+ * Inner animated surface. Lives INSIDE RadixTooltip.Content so it mounts/unmounts
+ * with the portal each time the tooltip opens — that is what makes the lifecycle
+ * `Content.enter` fire on every open (useAnimations runs its enter once per mount;
+ * keeping the hook in the always-mounted outer component fired it only once, at
+ * page load, when the ref was still null). Carries the scale/slide transform; the
+ * outer shell keeps Radix' positioning transform.
+ */
+const TooltipContentInner: React.FC<{
+  animations?: AnimationTrigger[] | false;
+  className?: string;
+  style?: React.CSSProperties;
+  rest?: Record<string, unknown>;
+  children?: React.ReactNode;
+}> = ({ animations, className, style, rest, children }) => {
+  const innerRef = React.useRef<HTMLDivElement>(null);
+  const ctx = useTooltipContext();
+
+  const animConfig = React.useMemo(
+    () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animations || undefined),
+    [animations],
+  );
+  const refs = React.useMemo(
+    () => ({ Content: innerRef as React.RefObject<HTMLElement | null> }),
+    [],
+  );
+  const { runExit } = useAnimations(animConfig, refs, undefined, {
+    onEnterComplete: () => {
+      const el = innerRef.current;
+      if (el) { el.style.opacity = ''; el.style.transform = ''; }
+    },
+  });
+
+  // Exit through the Move system, then let Radix unmount.
+  React.useEffect(() => {
+    if (!ctx?.isClosing) return;
+    if (!animConfig) { ctx.onCloseComplete(); return; }
+    runExit().then(() => ctx.onCloseComplete());
+  }, [ctx?.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div ref={innerRef} {...rest} className={className} style={style}>
+      {children}
+    </div>
+  );
+};
+
+const TooltipContent = withMoveComponent<'content' | 'contentInner', TooltipContentProps, HTMLDivElement>({
   name: 'TooltipContent',
   styles,
-  slots: ['content'] as const,
+  slots: ['content', 'contentInner'] as const,
   moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-    const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
-
-    const animConfig = React.useMemo(
-      () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animationsProp || undefined),
-      [animationsProp],
-    );
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-    }), []);
-
-    useAnimations(animConfig, contentRefs, undefined, {
-      onEnterComplete: () => {
-        // Clear inline styles so CSS exit animation can take over
-        const el = contentRef.current;
-        if (el) {
-          el.style.opacity = '';
-          el.style.transform = '';
-        }
-      },
-    });
 
     return {
       render() {
+        const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
         const contentSp = sp('content');
+        const innerSp = sp('contentInner');
         const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
         return (
           <RadixTooltip.Portal container={props.container as HTMLElement | undefined}>
             <RadixTooltip.Content
@@ -180,7 +266,14 @@ const TooltipContent = withMoveComponent<'content', TooltipContentProps, HTMLDiv
               className={cx('content', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
-              {props.children}
+              <TooltipContentInner
+                animations={animationsProp}
+                className={cx('contentInner', innerSpClass as string | undefined)}
+                style={innerSpStyle as React.CSSProperties}
+                rest={innerSpRest}
+              >
+                {props.children}
+              </TooltipContentInner>
             </RadixTooltip.Content>
           </RadixTooltip.Portal>
         );

@@ -49,6 +49,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['cssAnimation'],
   animations: [],
 
   renderContracts: [

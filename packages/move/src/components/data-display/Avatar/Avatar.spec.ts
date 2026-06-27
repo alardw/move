@@ -98,6 +98,7 @@ export const spec = {
   formType: null,
   asChild: false,
 
+  animationCapabilities: ['cssAnimation'],
   animations: [
     { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } } }] },
   ],

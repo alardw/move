@@ -24,7 +24,7 @@ import {
   isBefore,
   startOfDay,
 } from '../../date-time/_shared/dateUtils';
-import { useAnimations, resolveAnimationsConfig, staggerItems, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useMergedRef } from '../../../engine';
 import { InputText } from '../../forms/InputText';
@@ -71,16 +71,20 @@ const DEFAULT_LABELS: Required<DatePickerLabels> = {
 
 const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
   {
+    // Shell only fades (Radix owns its transform). The scale lives on the inner
+    // box; the gridcells stagger on top. All parallel (nested array).
     trigger: 'Content.enter',
     sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 }, scale: { from: 0.95, to: 1, ease: poppy } } },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+      { target: 'ContentInner', animation: { scale: { from: 0.95, to: 1, ease: quick } } },
       { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.enter },
     ]],
   },
   {
     trigger: 'Content.exit',
     sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 }, scale: { to: 0.95, duration: 150 } } },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+      { target: 'ContentInner', animation: { scale: { to: 0.95, duration: 150 } } },
       { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.exit },
     ]],
   },
@@ -1026,31 +1030,31 @@ const DatePickerContentInner = React.forwardRef<HTMLDivElement, DatePickerConten
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
       >
-        {dpCtx?.mode === 'range' && dpCtx.activeField && (
-          <div className={styles.rangeInstruction}>
-            {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
-          </div>
-        )}
-        <div ref={innerRef}>
+        <div ref={innerRef} className={styles.contentInner}>
+          {dpCtx?.mode === 'range' && dpCtx.activeField && (
+            <div className={styles.rangeInstruction}>
+              {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
+            </div>
+          )}
           {(children ?? (
             <>
               <CalendarNav />
               <MonthGrid />
             </>
           )) as React.ReactNode}
+          {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
+            <div className={styles.datePickerTime}>
+              <span className={styles.datePickerTimeLabel}>Time</span>
+              <TimeField
+                value={dpCtx.timeValue}
+                onValueChange={dpCtx.onTimeChange}
+                granularity="minute"
+                hourCycle={dpCtx.timeHourCycle}
+                size="sm"
+              />
+            </div>
+          )}
         </div>
-        {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
-          <div className={styles.datePickerTime}>
-            <span className={styles.datePickerTimeLabel}>Time</span>
-            <TimeField
-              value={dpCtx.timeValue}
-              onValueChange={dpCtx.onTimeChange}
-              granularity="minute"
-              hourCycle={dpCtx.timeHourCycle}
-              size="sm"
-            />
-          </div>
-        )}
       </RadixPopover.Content>
     );
   },

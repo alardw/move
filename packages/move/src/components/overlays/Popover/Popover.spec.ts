@@ -8,6 +8,7 @@ export const spec = {
   name: 'Popover',
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
+  preview: { staged: true, bare: true, width: 'md' as const },
   description: 'Floating popup panel anchored to a trigger with close button, arrow, and optional close-on-scroll behavior',
 
   synonyms: ['callout', 'flyout', 'inline overlay', 'hover card', 'popup', 'hint'],
@@ -31,7 +32,8 @@ export const spec = {
   slots: [
     { name: 'trigger', element: 'RadixPopover.Trigger', description: 'Button that opens the popover' },
     { name: 'anchor', element: 'RadixPopover.Anchor', description: 'Alternative positioning anchor (instead of trigger)' },
-    { name: 'content', element: 'RadixPopover.Content', description: 'Popup content panel with positioning and animation' },
+    { name: 'content', element: 'RadixPopover.Content', description: 'Positioned shell — Radix owns its transform; this layer only stacks' },
+    { name: 'contentInner', element: 'div', description: 'Visible box + scroll region (max-height/overflow); owns the scale entrance so the shell keeps Radix positioning free for scroll repositioning' },
     { name: 'arrow', element: 'RadixPopover.Arrow', description: 'Arrow pointing toward the trigger/anchor' },
     { name: 'close', element: 'button', description: 'Close button with X icon and animated close behavior' },
   ],
@@ -158,9 +160,10 @@ export const spec = {
     level: 'subtle' as const,
   },
 
+  // Targets contentInner (the visible box); the shell keeps Radix positioning.
   animations: [
-    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.95, to: 1, ease: 'poppy' } } }] },
-    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { to: 0 }, scale: { to: 0.95, ease: 'snappy' } } }] },
+    { trigger: 'Content.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, ease: 'quick' }, scale: { from: 0.88, to: 1, ease: 'quick' } } }] },
+    { trigger: 'Content.exit', sequence: [{ animation: { opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 }, scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 200 } } }] },
   ],
 
   renderContracts: [
@@ -234,8 +237,8 @@ export const spec = {
       'Close button has focus-visible outline',
     ],
     animation: [
-      'Content entrance uses scale 0.5->1 + opacity 0->1 with outQuart',
-      'Content exit uses scale 1->0.95 + opacity 1->0 in 200ms',
+      'Content entrance (on contentInner) uses scale 0.88->1 + opacity 0->1 with the quick spring',
+      'Content exit (on contentInner) uses scale 1->0.95 + opacity 1->0 in ~200ms with outQuart',
       'Content exit animation calls onCloseComplete to unmount',
       'animations={false} disables all animations',
       'Reduced motion preference disables animations',
