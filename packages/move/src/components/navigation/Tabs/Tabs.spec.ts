@@ -23,7 +23,7 @@ export const spec = {
   slots: [
     { name: 'root', element: 'RadixTabs.Root', description: 'Root container managing tab state via Radix Tabs.Root' },
     { name: 'list', element: 'RadixTabs.List', description: 'Tab trigger list container with variant and size styling' },
-    { name: 'indicator', element: 'div', description: 'Sliding underline indicator positioned via animatePosition state trigger' },
+    { name: 'indicator', element: 'div', description: 'Sliding underline indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger' },
     { name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button that activates its panel' },
     { name: 'content', element: 'RadixTabs.Content', description: 'Tab panel content associated with a trigger value' },
   ],
@@ -130,18 +130,16 @@ export const spec = {
   formType: null,
   asChild: false,
 
-  states: [
-    { name: 'activeChange', slot: 'List', source: 'data-state', value: 'active' },
-  ],
+  states: [],
 
+  // The underline indicator is driven by the shared usePositionTracker hook
+  // (the slidingIndicator capability), not a declarative animatePosition trigger.
   animationCapabilities: ['slidingIndicator'],
-  animations: [
-    { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: { translateX: { to: '$Active.x' }, width: { to: '$Active.width' } } }] },
-  ],
+  animations: [],
 
   renderContracts: [
     { id: 'indicator-underline-only', description: 'Sliding indicator is only rendered when variant is underline (default). Pills and outline variants do not render the indicator element.' },
-    { id: 'indicator-tracks-width', description: 'animatePosition tracks translateX and width only, matching the horizontal underline position to the active trigger via $Active.x and $Active.width expressions.' },
+    { id: 'indicator-tracks-width', description: 'The usePositionTracker hook runs with track: "width" — it matches the underline to the active trigger horizontally (offsetLeft + offsetWidth), re-measuring on resize and font load.' },
     { id: 'content-tabindex-minus-one', description: 'Content panel sets tabIndex={-1} to prevent it from being a tab stop while allowing programmatic focus.' },
     { id: 'size-via-data-attr', description: 'Size is set as data-size on List, and triggers inherit sizing via CSS descendant selectors (.list[data-size] .trigger).' },
     { id: 'variant-via-data-attr', description: 'Variant is set as data-variant on List, and triggers inherit variant styling via CSS descendant selectors.' },

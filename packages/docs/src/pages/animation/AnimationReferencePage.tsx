@@ -28,7 +28,7 @@ const RUNTIME: HighlightItem[] = [
   },
   {
     icon: 'move-horizontal',
-    text: 'animatePosition — slide an indicator to a measured slot, resolving expressions like $slot.x.',
+    text: 'animatePosition — low-level: animate an element toward a measured slot, resolving expressions like $slot.x. For a sliding indicator, reach for the usePositionTracker hook below instead.',
   },
   {
     icon: 'layers',
