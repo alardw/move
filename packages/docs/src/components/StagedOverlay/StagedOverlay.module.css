@@ -1,0 +1,15 @@
+.stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--move-radius-lg, 12px);
+  display: grid;
+  place-items: center;
+  /* Decorative preview: the open overlay must not capture clicks meant for the
+     card link (Radix sets pointer-events:auto on content, so `inert` on the
+     element does the real work; this is belt-and-suspenders). */
+  pointer-events: none;
+  /* A non-none transform makes this a containing block for position:fixed
+     descendants, so a portalled overlay scopes to this box, not the viewport. */
+  transform: translateZ(0);
+}

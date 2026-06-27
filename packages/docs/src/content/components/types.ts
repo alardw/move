@@ -94,4 +94,10 @@ export interface ComponentContent {
    *  Shape is the loosely-typed `spec` exported from each component's
    *  `.spec.ts`; the template narrows `subComponents` and `tokens` at render. */
   spec: Record<string, unknown>;
+  /**
+   * Card-only preview render, separate from `samples`. For portalled overlays
+   * whose spec sets `preview.staged`: a `StagedOverlay`-wrapped open snapshot
+   * shown in the overview card but kept out of the interactive page samples.
+   */
+  preview?: React.ComponentType;
 }

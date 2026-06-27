@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge, Icon } from 'move';
 import type { ComponentContent } from '../../content/components/types';
-import { PREVIEW_WIDTHS } from '../../content/components/types';
+import { PREVIEW_WIDTHS, type PreviewWidth } from '../../content/components/types';
 import { TAXONOMY_BY_ID } from '../../content/components/taxonomies';
 import styles from './ComponentCard.module.css';
 
@@ -13,17 +13,26 @@ export interface ComponentCardProps {
 }
 
 export function ComponentCard({ content, image }: ComponentCardProps) {
-  const { meta, samples } = content;
-  const preview = meta.preview ?? {};
+  const { meta, samples, preview: PreviewComponent } = content;
+  const metaPreview = meta.preview ?? {};
+  // Overlays declare preview behaviour in the spec (`preview.staged/bare/width`)
+  // and ship a card-only `content.preview` render; everything else uses the
+  // hand-authored docs `meta.preview`. Spec wins for bare/width.
+  const specPreview = (content.spec?.preview ?? {}) as {
+    staged?: boolean;
+    bare?: boolean;
+    width?: PreviewWidth;
+  };
+  const bare = specPreview.bare ?? metaPreview.bare;
   // Default to a contained width so every preview fits within the card boundary
   // (EmptyState's size); components opt into 'fit', a larger size, or 'full'.
-  const width = preview.width ?? 'sm';
+  const width = specPreview.width ?? metaPreview.width ?? 'sm';
   const cat = TAXONOMY_BY_ID[meta.categories?.[0] ?? ''];
   const category = cat?.label ?? 'Component';
   const icon = cat?.icon ?? 'box';
-  const previewImage = image ?? preview.image;
-  const sample = preview.sample
-    ? samples?.find((s) => s.id === preview.sample)
+  const previewImage = image ?? metaPreview.image;
+  const sample = metaPreview.sample
+    ? samples?.find((s) => s.id === metaPreview.sample)
     : samples?.[0];
   const Sample = sample?.render;
 
@@ -42,7 +51,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
     styles.tilt,
     tilted && styles.tiltActive,
     width === 'fit' && styles.tiltNarrow,
-    preview.bare && styles.tiltBare,
+    bare && styles.tiltBare,
   ]
     .filter(Boolean)
     .join(' ');
@@ -55,6 +64,13 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
       <div className={styles.frame} aria-hidden>
         {previewImage ? (
           <img src={previewImage} alt="" className={styles.image} />
+        ) : PreviewComponent ? (
+          <div
+            className={tiltClass}
+            style={width !== 'fit' && width !== 'full' ? { width: PREVIEW_WIDTHS[width] } : undefined}
+          >
+            <PreviewComponent />
+          </div>
         ) : Sample ? (
           <div
             className={tiltClass}

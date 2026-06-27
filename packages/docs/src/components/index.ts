@@ -12,6 +12,8 @@ export type { HighlightItem } from './HighlightList';
 export { KeyboardTable } from './KeyboardTable';
 export { LogoMark } from './LogoMark';
 export { MoveBadge } from './MoveBadge';
+export { StagedOverlay } from './StagedOverlay';
+export type { StagedOverlayApi } from './StagedOverlay';
 export { Preview } from './Preview';
 export { PropsTable } from './PropsTable';
 export { RecipeCard } from './RecipeCard';
