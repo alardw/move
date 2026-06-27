@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Button, Toast, toast } from 'move';
 import {
+  InlineDemo,
   Section,
   TocRail,
   type TocItem,
@@ -17,6 +18,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#lifecycle', label: 'The lifecycle' },
+  { href: '#one-component', label: 'One component, all three' },
   { href: '#enter', label: 'Enter' },
   { href: '#respond', label: 'Respond' },
   { href: '#exit', label: 'Exit' },
@@ -55,6 +57,26 @@ export function AnimationLifecyclePage() {
             ))}
           </Stack>
         </Stack>
+
+        <Section
+          id="one-component"
+          title="One component, all three"
+          lede="A toast runs the whole lifecycle — send one and watch."
+        >
+          <Text>
+            It slides up when it appears (enter), holds its countdown while you
+            hover it (respond), and slides away when it dismisses (exit) — the
+            same three phases every Move component moves through.
+          </Text>
+          <InlineDemo blurb="Send a toast, then hover it before it clears.">
+            <Stack direction="row" gap="sm">
+              <Button onClick={() => toast.success('Saved — your changes are live.')}>
+                Send a toast
+              </Button>
+            </Stack>
+            <Toast.Viewport />
+          </InlineDemo>
+        </Section>
 
         <Section id="enter" title="Enter">
           <Text>
