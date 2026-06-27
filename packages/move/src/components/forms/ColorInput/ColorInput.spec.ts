@@ -115,7 +115,7 @@ export const spec = {
     { id: 'input-blur-validates', description: 'On blur, input validates text via isValidColor, parses, formats in active format, and calls handleValueChange+handleChangeEnd' },
     { id: 'input-arrowdown-opens', description: 'ArrowDown on input opens popover when closed' },
     { id: 'input-enter-blurs', description: 'Enter key on input triggers blur to commit value' },
-    { id: 'content-height-animation', description: 'Content uses animateDimension for height reveal on open/close' },
+    { id: 'content-fade-only', description: 'Content only fades (opacity) on open/close — never a size-changing animation, so Radix cannot re-flip the popup below the trigger (the close flash)' },
     { id: 'content-embeds-colorpicker', description: 'Content inner renders ColorPicker component with forwarded picker props (format, swatches, withPicker, size)' },
     { id: 'content-prevents-autofocus', description: 'Content prevents auto-focus on open to keep focus on input' },
     { id: 'dismiss-outside-root', description: 'Pointer down outside root triggers animated close; inside root is ignored (swatch handles toggle)' },
@@ -125,8 +125,8 @@ export const spec = {
   ],
 
   animations: [
-    { trigger: 'Content.enter', sequence: [{ fn: 'animateDimension', animation: { height: { ease: 'poppy' } } }] },
-    { trigger: 'Content.exit', sequence: [{ fn: 'animateDimension', animation: { height: { ease: 'snappy' } } }] },
+    { trigger: 'Content.enter', sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }] },
+    { trigger: 'Content.exit', sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }] },
   ],
 
   tokens: [
@@ -226,7 +226,7 @@ export const spec = {
       'Required attribute passes through to input',
     ],
     animation: [
-      'Content uses animateDimension for height reveal',
+      'Content fades (opacity); no size change, so the popup never re-flips on close',
       'Content enter/exit animation via popupPresence profile',
       'Exit animation coordinates with isClosing state before unmount',
       'Position-aware transform-origin set via data-side and data-align',

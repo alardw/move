@@ -176,12 +176,12 @@ export const spec = {
 
   animations: [
     { trigger: 'Content.enter', sequence: [[
-      { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
-      { children: '[role="option"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+      { children: 'button', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
     ]] },
     { trigger: 'Content.exit', sequence: [[
-      { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
-      { children: '[role="option"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+      { children: 'button', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
     ]] },
   ],
 
@@ -287,7 +287,7 @@ export const spec = {
       'Separator has aria-hidden="true"',
     ],
     animation: [
-      'Dropdown uses animateDimension with stagger for enter/exit',
+      'Dropdown container fades (opacity) with item stagger; no size-changing animation, so the side never re-flips on close',
       'Enter: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Exit: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',
       'Stagger: items via button selector with 30ms delay',

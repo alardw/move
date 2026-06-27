@@ -6,7 +6,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, revealHeight, staggerItems } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
@@ -101,14 +101,14 @@ const DEFAULT_TIMEFIELD_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.enter },
+      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
       { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.enter },
     ]],
   },
   {
     trigger: 'Content.exit',
     sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: revealHeight.exit },
+      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
       { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.exit },
     ]],
   },

@@ -6,7 +6,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { useAnimations, revealHeight } from '../../../animation';
+import { useAnimations } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
@@ -86,9 +86,12 @@ declare global {
 // Component
 // ============================================================================
 
+// Container only fades — never a size-changing animation (height/dimension).
+// A shrinking box makes Radix re-measure and flip the popup below the trigger
+// (an ugly flash on close when it opened above). Same rule as Select/Autocomplete.
 const DEFAULT_COLORINPUT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Content.enter', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.enter }] },
-  { trigger: 'Content.exit', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.exit }] },
+  { trigger: 'Content.enter', sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }] },
+  { trigger: 'Content.exit', sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }] },
 ];
 
 // Inner lives BELOW the Portal so it mounts/unmounts per open — that is what makes
