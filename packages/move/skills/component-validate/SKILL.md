@@ -72,7 +72,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | B3 | Component tokens on `.root` not `:root` |
 | B4 | Data-attribute selectors for variant/size/state |
 | B5 | CSS variable naming: `--move-{component}-{property}` |
-| B6 | No CSS `@keyframes`/`animation`/`transition` for state/entrance/exit |
+| B6 | No CSS `@keyframes` for state/entrance/exit — those run through `useAnimations` (the Move system). CSS `@keyframes` is allowed ONLY for a continuous loop (spinner, indeterminate, caret blink) and then the spec MUST declare `animationCapabilities: ['cssAnimation']`. Enforced by `check:animation-capabilities` (in `check:all` → pre-commit + CI). |
 | B7 | All `var(--move-*)` references resolve to real tokens — cross-check against `references/component/tokens-primitive.ts` and `references/component/tokens-semantic.ts` |
 
 #### C. Exports

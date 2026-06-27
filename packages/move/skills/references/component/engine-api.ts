@@ -45,7 +45,7 @@ export const ENGINE_EXPORTS = {
 
 export const ANIMATION_EXPORTS = {
   coreFunctions: {
-    moveAnimate: 'Core apply function — moveAnimate(el, animation, cancelRef?). Handles reduced motion, cancellation. Used internally by useAnimations; only Carousel uses it directly.',
+    moveAnimate: 'Core apply function — moveAnimate(el, animation, cancelRef?). Handles reduced motion, cancellation. Used internally by useAnimations. Direct use is a declared Tier-2 capability only: Carousel (scrollApi), ChatBubble (measureThenAnimate). Loader/Skeleton use raw anime.js animate() (valueLoop). Everything else animates through useAnimations.',
     animateDimension: 'Dimension reveal/collapse — animateDimension(el, prop, direction, cancelRef, config?). Measures size, animates height/width, restores auto.',
     staggerAnimate: 'Multi-child delay — staggerAnimate(container, selector, animation, stagger, cancelRef, direction?).',
     animatePosition: 'Position animation — animatePosition(indicator, animation, cancelRef, options?). Resolves $slot.property expressions.',
@@ -58,8 +58,8 @@ export const ANIMATION_EXPORTS = {
     bundles: '@deprecated — interactive, revealHeight, staggerItems, toggleIndicator, expandContent. Use trigger-sequence defaults instead.',
   },
   positionTracking: {
-    useSlidingIndicator: '@deprecated — Use animatePosition with state triggers and dynamic Active ref instead. See ToggleGroup/Tabs/Pagination for pattern.',
-    usePositionTracker: '@deprecated — Use animatePosition with state triggers instead.',
+    usePositionTracker: 'Sliding-indicator hook — usePositionTracker({ containerRef, activeSelector, track }) → { indicatorRef, update }. Measures the active element via offsetLeft/Top/Width/Height (transform-agnostic, unlike getBoundingClientRect) and re-measures on resize, font load, and data-state mutations. THE sanctioned way to drive any active-element indicator — declare animationCapabilities: ["slidingIndicator"]. Used by Tabs, TableOfContents, Pagination, ToggleGroup.',
+    useSlidingIndicator: 'Legacy alias of usePositionTracker (identical hook).',
   },
   presence: {
     Presence: 'Component for managing enter/exit animations with mount/unmount lifecycle.',
@@ -90,7 +90,7 @@ export const ANIMATION_EXPORTS = {
   deprecated: {
     animateMeasured: '@deprecated — Use animateDimension instead.',
     resolveAnimateConfig: '@deprecated — Use resolveAnimationsConfig instead.',
-    measureRelativePosition: '@deprecated — Use animatePosition instead.',
+    measureRelativePosition: '@deprecated — Use the usePositionTracker hook (slidingIndicator capability) instead.',
     LifecycleAnimate: '@deprecated — Use AnimationTrigger[] with lifecycle triggers.',
     InteractionAnimate: '@deprecated — Use AnimationTrigger[] with event triggers.',
     ToggleAnimate: '@deprecated — Use AnimationTrigger[] with state triggers.',
@@ -150,12 +150,12 @@ export const IMPORT_PATTERNS = {
    */
   animation: {
     orchestrator: "import { useAnimations, resolveAnimationsConfig } from '../../../animation';",
-    coreFunctions: "// Rarely needed — useAnimations calls these internally. Only Carousel imports moveAnimate directly.\nimport { moveAnimate, animateDimension, staggerAnimate, animatePosition } from '../../../animation';",
+    coreFunctions: "// Rarely needed — useAnimations calls these internally. Direct import only behind a declared Tier-2 capability (Carousel/ChatBubble: moveAnimate; Loader/Skeleton: raw animejs).\nimport { moveAnimate, animateDimension, staggerAnimate, animatePosition } from '../../../animation';",
     presets: "import { scaleUp, scaleDown, fadeIn, fadeOut, popIn, popOut, scaleIn, PRESET_REGISTRY } from '../../../animation';",
     springs: "import { snappy, quick, poppy } from '../../../animation';",
     types: "import type { Animation, AnimationTrigger, AnimationState, AnimationStep, SequenceItem, JSAnimation } from '../../../animation';",
     presence: "import { Presence, usePresence } from '../../../animation';",
-    positionTracking: "@deprecated — use animatePosition via useAnimations state triggers instead. No direct import needed.",
+    slidingIndicator: "import { usePositionTracker } from '../../../animation'; // the sanctioned active-element indicator hook (declare animationCapabilities: ['slidingIndicator']). Prefer over a fn:'animatePosition' trigger.",
     note: "ALWAYS import from '../../../animation' — NEVER from sub-paths. The barrel re-exports everything.",
   },
   infrastructure: {

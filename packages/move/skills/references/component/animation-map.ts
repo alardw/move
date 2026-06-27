@@ -277,40 +277,22 @@ const contentConfig: AnimationTrigger[] = useMemo(() => [
   },
 
   position: {
-    description: 'Sliding indicator with $slot.property expressions via animatePosition.',
-    components: ['ToggleGroup', 'Tabs', 'Pagination'],
-    note: 'Uses a dynamic Active ref (Object.defineProperty getter querying live DOM) + state trigger + animatePosition fn. animatePosition defaults to snappy spring; first run snaps without animation.',
-    states: `
-const STATES: AnimationState[] = [
-  { name: 'activeChange', slot: 'Root', source: 'data-state', value: 'on' },
-];`,
-    defaultAnimations: `
-const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'activeChange', sequence: [{ target: 'Indicator', fn: 'animatePosition', animation: {
-    translateX: { to: '$Active.x' },
-    translateY: { to: '$Active.y' },
-    width: { to: '$Active.width' },
-    height: { to: '$Active.height' },
-  } }] },
-];`,
+    description: 'Sliding indicator that tracks the active element (tab underline, segmented-control thumb, pagination indicator).',
+    components: ['Tabs', 'TableOfContents', 'Pagination', 'ToggleGroup'],
+    note: 'Use the shared usePositionTracker hook and declare animationCapabilities: ["slidingIndicator"]. It measures the active element via offsetLeft/Top/Width/Height (transform-agnostic, unlike getBoundingClientRect) and re-measures on resize, font load, and data-state mutations. Do NOT hand-roll a fn:"animatePosition" trigger + a dynamic Active ref for an indicator — that is the deprecated pattern (it broke inside CSS-transformed contexts and duplicated measurement). A press/scale on the indicator (ToggleGroup) stays a normal declarative Root.press trigger; only the position tracking uses the hook.',
     wiring: `
-// Dynamic ref — queries DOM on access, avoids MutationObserver race conditions
-const activeRef = React.useMemo(() => {
-  const ref = { current: null as HTMLElement | null };
-  Object.defineProperty(ref, 'current', {
-    get() { return internalRef.current?.querySelector<HTMLElement>('[data-state="on"]') ?? null; },
-    set() { /* no-op — always queries live DOM */ },
-  });
-  return ref;
-}, [internalRef]);
+import { usePositionTracker } from '../../../animation';
 
-const animRefs = React.useMemo(() => ({
-  Root: internalRef,
-  Indicator: indicatorRef,
-  Active: activeRef,
-}), [internalRef]);
-useAnimations(animConfig, animRefs, STATES);
-// For width-only tracking (Tabs underline): omit translateY and height from animation config.`,
+// indicatorRef goes on the absolutely-positioned indicator div inside the container.
+const { indicatorRef, update } = usePositionTracker({
+  containerRef: internalRef,
+  activeSelector: '[data-state="active"]', // '[data-state="on"]' for ToggleGroup
+  track: 'both',                            // 'width' for a horizontal underline (Tabs)
+  disabled: props.animations === false,
+});
+
+// Re-measure after content changes the observers can't catch (e.g. Pagination range):
+React.useEffect(() => { update(); }, [page, update]);`,
   },
 
   listStagger: {

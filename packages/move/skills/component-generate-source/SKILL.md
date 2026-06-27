@@ -244,13 +244,35 @@ For compound components where sub-components need direct animation control, the 
 
 #### Pattern: Sliding indicator
 
-Uses `animatePosition` with state triggers and dynamic Active ref:
+Use the shared `usePositionTracker` hook and declare `animationCapabilities: ['slidingIndicator']`. It measures via offsetLeft/Top/Width/Height (transform-agnostic) and re-measures on resize/fonts/data-state. Never hand-roll a `fn:'animatePosition'` trigger + a dynamic Active ref for an indicator:
 ```tsx
-const { indicatorRef } = useSlidingIndicator({
+const { indicatorRef, update } = usePositionTracker({
   containerRef: internalRef,
-  activeSelector: '[data-state="on"]',
+  activeSelector: '[data-state="on"]', // or '[data-state="active"]'
+  track: 'both',                        // 'width' for a Tabs underline
 });
 ```
+
+#### Pattern: Portaled overlay (Tooltip / Popover / DropdownMenu / Select / DatePicker)
+
+A Radix Popper positions the floating element with `transform: translate(x,y)` and re-applies it on every scroll. Two rules follow:
+
+1. **Two layers.** Animating `scale`/`translate` on the Radix-positioned `Content` clobbers that positioning transform (the scale dies; the popup can't follow the trigger). Wrap the body in an inner surface (`contentInner`) that owns the scale/slide; the shell keeps Radix's transform. Put the visible box (bg/border/radius/scroll region) on the inner so the whole box scales. The shell only fades (opacity).
+2. **`useAnimations` BELOW the Portal.** The lifecycle `Content.enter` fires once per `useAnimations` mount. If the hook sits in the always-mounted component that *renders* `<Radix.Portal>`, the enter fires once at page load with a null ref and never on open. Put `useAnimations` in a small inner component rendered as a **child** of `<Radix.Portal>` (the Portal gates children via Presence, so it remounts per open and the enter fires every time).
+
+```tsx
+const ContentInner = ({ animations, isClosing, onCloseComplete, ... }) => {
+  const innerRef = useRef(null);
+  const { runExit } = useAnimations(config, { ContentInner: innerRef });
+  useEffect(() => { if (isClosing) runExit().then(onCloseComplete); }, [isClosing]);
+  return <div ref={innerRef} className={cx('contentInner')}>{children}</div>;
+};
+// Outer: <Radix.Portal><Radix.Content className={cx('content')}><ContentInner .../></Radix.Content></Radix.Portal>
+```
+
+- Enter AND exit run through `useAnimations` — **never** CSS `@keyframes` for an open/close (those only exist for continuous loops, declared as `cssAnimation`).
+- Separate top-level sequence steps run **sequentially** (`await` each). For steps that should run together (shell fade + inner scale), wrap them in a nested array: `sequence: [[stepA, stepB]]`.
+- A long scrollable body goes on the inner: `max-height: var(--radix-popover-content-available-height)` + `overflow-y: auto`. Keep the trigger followed (don't close-on-scroll) — the freed shell transform lets Radix reposition.
 
 ### Step 3c — Surface wiring
 
