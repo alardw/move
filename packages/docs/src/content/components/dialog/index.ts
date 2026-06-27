@@ -13,10 +13,12 @@ import Destructive from './samples/destructive';
 import destructiveCode from './samples/destructive?raw';
 import Controlled from './samples/controlled';
 import controlledCode from './samples/controlled?raw';
+import Preview from './preview';
 
 export const content: ComponentContent = {
   meta,
   spec,
+  preview: Preview,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },

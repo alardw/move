@@ -13,10 +13,12 @@ import Details from './samples/details';
 import detailsCode from './samples/details?raw';
 import NonModal from './samples/non-modal';
 import nonModalCode from './samples/non-modal?raw';
+import Preview from './preview';
 
 export const content: ComponentContent = {
   meta,
   spec,
+  preview: Preview,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'positions', title: 'Positions (left, right, top, bottom)', render: Positions, code: positionsCode },

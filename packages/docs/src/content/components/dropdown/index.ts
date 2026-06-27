@@ -11,10 +11,12 @@ import CheckboxRadio from './samples/checkbox-radio';
 import checkboxRadioCode from './samples/checkbox-radio?raw';
 import SubMenus from './samples/sub-menus';
 import subMenusCode from './samples/sub-menus?raw';
+import Preview from './preview';
 
 export const content: ComponentContent = {
   meta,
   spec,
+  preview: Preview,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'grouped', title: 'Groups & labels', render: Grouped, code: groupedCode },
