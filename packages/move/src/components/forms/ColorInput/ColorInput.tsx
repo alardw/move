@@ -86,6 +86,40 @@ declare global {
 // Component
 // ============================================================================
 
+const DEFAULT_COLORINPUT_ANIMATIONS: AnimationTrigger[] = [
+  { trigger: 'Content.enter', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.enter }] },
+  { trigger: 'Content.exit', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.exit }] },
+];
+
+// Inner lives BELOW the Portal so it mounts/unmounts per open — that is what makes
+// the lifecycle Content.enter (the height reveal) fire on every open. Keeping
+// useAnimations in the always-mounted parent fired it once, at page load, with a
+// null ref, so the reveal never played.
+const ColorInputDropdownInner: React.FC<{
+  isClosing: boolean;
+  onCloseComplete: () => void;
+  contentProps: Record<string, unknown>;
+  children?: React.ReactNode;
+}> = ({ isClosing, onCloseComplete, contentProps, children }) => {
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const contentRefs = React.useMemo(
+    () => ({ Content: contentRef as React.RefObject<HTMLElement | null> }),
+    [],
+  );
+  const { runExit } = useAnimations(DEFAULT_COLORINPUT_ANIMATIONS, contentRefs);
+
+  React.useEffect(() => {
+    if (!isClosing) return;
+    runExit().then(() => onCloseComplete());
+  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <RadixPopover.Content ref={contentRef} {...contentProps}>
+      {children}
+    </RadixPopover.Content>
+  );
+};
+
 export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HTMLDivElement>({
   name: 'ColorInput',
   styles,
@@ -144,22 +178,8 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       };
     }, [open, isClosing, close]);
 
-    // Lifecycle animation for popup content
-    const contentRef = React.useRef<HTMLDivElement>(null);
+    // Popup enter/exit animation runs in ColorInputDropdownInner (below the Portal).
     const innerRef = React.useRef<HTMLDivElement>(null);
-
-    const CONTENT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Content.enter', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.enter }] },
-      { trigger: 'Content.exit', sequence: [{ target: 'Content', fn: 'animateDimension', animation: revealHeight.exit }] },
-    ];
-    const contentRefs = React.useMemo(() => ({ Content: contentRef as React.RefObject<HTMLElement | null> }), []);
-    const { runExit } = useAnimations(CONTENT_ANIMATIONS, contentRefs);
-
-    // Exit animation
-    React.useEffect(() => {
-      if (!isClosing) return;
-      runExit().then(() => handleCloseComplete());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const format = props.format as ColorFormat;
 
@@ -359,17 +379,20 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
             </RadixPopover.Anchor>
 
             <RadixPopover.Portal>
-              <RadixPopover.Content
-                {...contentSpRest}
-                ref={contentRef}
-                sideOffset={4}
-                align="start"
-                className={cx('content', contentSpClass as string | undefined)}
-                style={contentSpStyle as React.CSSProperties}
-                onOpenAutoFocus={(e) => e.preventDefault()}
-                onPointerDownOutside={handlePointerDownOutside}
-                onEscapeKeyDown={handleEscapeKeyDown as any}
-                onInteractOutside={() => {}}
+              <ColorInputDropdownInner
+                isClosing={isClosing}
+                onCloseComplete={handleCloseComplete}
+                contentProps={{
+                  ...contentSpRest,
+                  sideOffset: 4,
+                  align: 'start',
+                  className: cx('content', contentSpClass as string | undefined),
+                  style: contentSpStyle as React.CSSProperties,
+                  onOpenAutoFocus: (e: Event) => e.preventDefault(),
+                  onPointerDownOutside: handlePointerDownOutside,
+                  onEscapeKeyDown: handleEscapeKeyDown as unknown,
+                  onInteractOutside: () => {},
+                }}
               >
                 <div
                   ref={innerRef}
@@ -390,7 +413,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                     size={sizeVal as 'sm' | 'md' | 'lg'}
                   />
                 </div>
-              </RadixPopover.Content>
+              </ColorInputDropdownInner>
             </RadixPopover.Portal>
           </RadixPopover.Root>
         );

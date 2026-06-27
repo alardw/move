@@ -502,7 +502,11 @@ export interface TimeFieldDropdownProps {
   style?: React.CSSProperties;
 }
 
-const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
+// Inner lives BELOW the Portal, so it mounts/unmounts per open — that is what
+// makes the lifecycle Content.enter (the height reveal) fire on every open.
+// Keeping useAnimations in the Portal-rendering parent fired it once, at page
+// load, with a null ref, so the reveal never played.
+const TimeFieldDropdownInner: React.FC<TimeFieldDropdownProps> = ({
   children,
   className,
   style,
@@ -512,7 +516,6 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
 
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  // Filter content triggers for useAnimations
   const contentConfig = React.useMemo(() =>
     ctx.animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
     [ctx.animConfig]);
@@ -520,10 +523,8 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
     Content: contentRef as React.RefObject<HTMLElement | null>,
   }), []);
 
-  // Enter/exit via useAnimations orchestrator
   const { runExit } = useAnimations(contentConfig, contentRefs);
 
-  // Exit animation
   React.useEffect(() => {
     if (!ctx.isClosing) return;
     if (!contentConfig) { ctx.onCloseComplete?.(); return; }
@@ -539,23 +540,27 @@ const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = ({
   };
 
   return (
-    <RadixPopover.Portal>
-      <RadixPopover.Content
-        ref={contentRef}
-        sideOffset={4}
-        align="start"
-        className={`${styles.dropdown} ${className ?? ''}`}
-        style={{ ...style, ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
-        onPointerDownOutside={handlePointerDownOutside}
-        onEscapeKeyDown={handleEscapeKeyDown}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        {children}
-      </RadixPopover.Content>
-    </RadixPopover.Portal>
+    <RadixPopover.Content
+      ref={contentRef}
+      sideOffset={4}
+      align="start"
+      className={`${styles.dropdown} ${className ?? ''}`}
+      style={{ ...style, ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
+      onPointerDownOutside={handlePointerDownOutside}
+      onEscapeKeyDown={handleEscapeKeyDown}
+      onOpenAutoFocus={(e) => e.preventDefault()}
+      onCloseAutoFocus={(e) => e.preventDefault()}
+    >
+      {children}
+    </RadixPopover.Content>
   );
 };
+
+const TimeFieldDropdown: React.FC<TimeFieldDropdownProps> = (props) => (
+  <RadixPopover.Portal>
+    <TimeFieldDropdownInner {...props} />
+  </RadixPopover.Portal>
+);
 TimeFieldDropdown.displayName = 'TimeField.Dropdown';
 
 // ============================================================================
