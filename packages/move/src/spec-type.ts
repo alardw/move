@@ -392,6 +392,13 @@ export interface PreviewSpec {
    * docs supply a card-only render that wraps the overlay in `StagedOverlay`.
    */
   staged?: boolean;
+  /**
+   * The card preview is a hand-built static replica (e.g. Toast, which can't be
+   * staged — its store is a singleton and its viewport portals to document.body).
+   * The replica reuses the real component's CSS, and a docs drift-test asserts it
+   * stays structurally identical to a really-rendered instance.
+   */
+  mock?: boolean;
   /** Component is its own surface — drop the white preview panel (no card-in-a-card). */
   bare?: boolean;
   /** Preview-panel width. */

@@ -8,6 +8,7 @@ export const spec = {
   name: 'Drawer',
   componentClass: 'overlay_layer' as const,
   category: 'overlays',
+  preview: { staged: true, bare: true, width: 'lg' as const },
   description: 'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
 
   synonyms: ['sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in', 'off-canvas', 'slide-over'],
