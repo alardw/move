@@ -82,6 +82,14 @@ export const DOCS_NAV: NavSection[] = [
     ],
   },
   {
+    key: 'recipes',
+    label: 'Recipes',
+    icon: 'book-open',
+    items: [
+      { to: '/recipes', label: 'Overview' },
+    ],
+  },
+  {
     key: 'customize',
     label: 'Make it your own',
     icon: 'palette',
@@ -90,14 +98,6 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/customize/typography', label: 'Typography' },
       { to: '/customize/icons', label: 'Icons' },
       { to: '/customize/internationalization', label: 'Internationalization' },
-    ],
-  },
-  {
-    key: 'recipes',
-    label: 'Recipes',
-    icon: 'book-open',
-    items: [
-      { to: '/recipes', label: 'Overview' },
     ],
   },
 ];
