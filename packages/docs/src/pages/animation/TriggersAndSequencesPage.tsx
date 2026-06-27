@@ -107,10 +107,11 @@ export function TriggersAndSequencesPage() {
           </Text>
           <CodeBlock
             language="ts"
-            code={`{
+            code={`// a popover's entrance — the panel fades and springs up
+{
   trigger: 'Content.enter',
   sequence: [
-    { target: 'Content', animation: { opacity: { to: 1 }, y: { from: 8, to: 0 } } },
+    { target: 'Content', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.88, to: 1, ease: 'quick' } } },
   ],
 }`}
           />
@@ -124,20 +125,19 @@ export function TriggersAndSequencesPage() {
           <Text>
             Top-level steps play one after another, each starting when the last
             finishes. Group steps in a nested array and they play together in
-            the same frame — the way an overlay fades while its panel springs
+            the same frame — the way a select fades while its options stagger
             in. A step can carry an <Code>onComplete</Code> callback for when it
             finishes.
           </Text>
           <CodeBlock
             language="ts"
-            code={`sequence: [
-  // these two play together
+            code={`// how a Select opens — the two run together (one nested array)
+sequence: [
   [
-    { target: 'Overlay', animation: { opacity: { to: 1 } } },
-    { target: 'Content', preset: 'popIn' },
+    { target: 'Content', animation: { opacity: { from: 0, to: 1 } } },
+    { target: 'ContentInner', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } },
   ],
-  // then this one
-  { target: 'Content', animation: { y: { to: 0 } } },
+  // a step out here (not nested) would wait for that block to finish — that's serial
 ]`}
           />
         </Section>
@@ -155,8 +155,13 @@ export function TriggersAndSequencesPage() {
           </Text>
           <CodeBlock
             language="ts"
-            code={`{ target: 'List', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } }`}
+            code={`// Select and Autocomplete cascade their options with exactly this step
+{ target: 'List', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } }`}
           />
+          <Text color="muted">
+            See these running in real components on{' '}
+            <RouterLink to="/animation/patterns">See it in action</RouterLink>.
+          </Text>
         </Section>
       </Stack>
       <TocRail items={TOC} />
