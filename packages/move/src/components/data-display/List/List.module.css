@@ -99,7 +99,6 @@
   text-align: left;
   font: inherit;
   cursor: default;
-  container-type: inline-size;
 }
 
 /* Dividers between items */
@@ -162,6 +161,13 @@
 
 /* =========================================================================
  * Responsive collapse — trailing wraps below on narrow items
+ *
+ * Both rules below must resolve against the SAME query container (.root), so
+ * the item wraps and the trailing goes full-width together. Only .root carries
+ * `container-type` — if .item were also a container, `.trailing` would key off
+ * the item while `.item` keys off the root, and a browser evaluating those two
+ * thresholds differently could give the trailing `width: 100%` (≈480px) while
+ * the item stays nowrap, squeezing the content to a word per line.
  * ========================================================================= */
 
 @container (max-width: 480px) {
@@ -197,6 +203,10 @@
 
 .content {
   flex: 1;
+  /* Allow the column to shrink below its content's intrinsic width so the
+     title can ellipsis and the description can clamp, instead of forcing the
+     row wider than the item. */
+  min-width: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;

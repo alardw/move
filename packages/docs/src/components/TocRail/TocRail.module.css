@@ -13,6 +13,16 @@
   min-width: 0;
 }
 
+/* The rail never shrinks (flex-shrink: 0), so on narrow viewports it would
+   keep its 14rem and squeeze the main column until prose wraps a word per
+   line. Below this width there isn't room for both — drop the rail and let
+   the content reclaim full width. */
+@media (max-width: 1100px) {
+  .rail {
+    display: none;
+  }
+}
+
 .label {
   padding: var(--move-spacing-xs) var(--move-spacing-md);
   color: var(--move-fg-subtle);
