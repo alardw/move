@@ -24,6 +24,7 @@ export interface ButtonProps extends Record<string, unknown> {
   animations?: AnimationTrigger[] | false;
   elevation?: number;
   asChild?: boolean;
+  fullWidth?: boolean;
   type?: string;
   disabled?: boolean;
   className?: string;
@@ -77,6 +78,7 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
       animations: animationsProp,
       elevation,
       asChild,
+      fullWidth,
       type,
       className,
       style,
@@ -146,6 +148,7 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
             style={combinedStyle}
             data-variant={variant as string}
             data-size={size as string}
+            data-full-width={fullWidth ? '' : undefined}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               if (!isDisabled) handlers.Root?.onMouseEnter?.();
               (onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);

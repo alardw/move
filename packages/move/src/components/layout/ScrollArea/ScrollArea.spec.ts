@@ -33,6 +33,7 @@ export const spec = {
       slots: [{ name: 'root', element: 'div', description: 'Outer flex container' }],
       props: [
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Header, Content, and Footer elements' },
+        { name: 'fill', type: "boolean | 'screen'", moveSpecific: true, description: "Stretch to fill height. The Root already fills its parent (100%); set 'screen' to own the viewport height (100dvh) when it's the app-shell root with no sized ancestor." },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
       ],
@@ -81,6 +82,7 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
+    dataAttributes: ['data-fill'],
     children: [
       {
         slot: 'header',

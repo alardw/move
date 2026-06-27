@@ -1,6 +1,6 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, InputText, Switch, ToggleGroup } from 'move';
+import { Stack, Heading, Text, Breadcrumb, InputText, Switch, ToggleGroup } from 'move';
 import { ComponentCard } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
@@ -16,11 +16,6 @@ const isAnimated = (c: ComponentContent): boolean =>
 const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
   a.meta.name.localeCompare(b.meta.name),
 );
-
-const BADGES = [
-  { icon: 'blocks', label: `${ALL.length} components` },
-  { icon: 'search', label: 'Search + filter' },
-];
 
 const GRID: React.CSSProperties = {
   display: 'grid',
@@ -71,14 +66,6 @@ export function ComponentsOverviewPage() {
         <Stack gap="sm">
           <Heading level={1}>Components</Heading>
           <Text color="muted" size="lg">Every Move primitive, in one place.</Text>
-          <Stack direction="row" gap="xs" wrap>
-            {BADGES.map((b) => (
-              <Badge key={b.label} variant="soft">
-                <Icon name={b.icon} />
-                {b.label}
-              </Badge>
-            ))}
-          </Stack>
         </Stack>
 
         <Stack gap="lg" id="browse">

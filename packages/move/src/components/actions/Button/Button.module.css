@@ -41,6 +41,11 @@
   will-change: transform;
 }
 
+/* Full width — fill the container (form actions, sidebar rows) */
+.root[data-full-width] {
+  width: 100%;
+}
+
 /* Primary variant (default) */
 .root[data-variant='primary'],
 .root:not([data-variant]) {

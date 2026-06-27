@@ -1,13 +1,8 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, InputText, Button } from 'move';
-import { RecipeCard, Section, TocRail, type TocItem } from '../../components';
+import { Stack, Heading, Text, Breadcrumb, InputText, ToggleGroup } from 'move';
+import { RecipeCard } from '../../components';
 import { RECIPES, RECIPE_GROUPS } from '../../content/recipes/registry';
-
-const TOC: TocItem[] = [
-  { href: '#recipes', label: 'Overview' },
-  { href: '#browse', label: 'Browse' },
-];
 
 const GRID: React.CSSProperties = {
   display: 'grid',
@@ -32,13 +27,14 @@ export function RecipesOverviewPage() {
     });
   }, [query, group]);
 
-  const groupsToShow = (group === 'All' ? RECIPE_GROUPS : [group]).filter((g) =>
+  const grouped = group === 'All';
+  const sections = (grouped ? RECIPE_GROUPS : [group]).filter((g) =>
     filtered.some((r) => r.group === g),
   );
 
   return (
-    <Stack direction="row" gap="xl" align="stretch" id="recipes">
-      <Stack gap="xl" flex={1}>
+    <Stack gap="xl" id="recipes">
+      <Stack gap="xl">
         <Breadcrumb>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
@@ -54,58 +50,58 @@ export function RecipesOverviewPage() {
           <Heading level={1}>Recipes</Heading>
           <Text color="muted" size="lg">
             Ready-made patterns built entirely from Move components — whole flows
-            and layouts you can drop in and adapt. Search, or filter by area.
+            you can drop in and adapt.
           </Text>
         </Stack>
 
-        <Section
-          id="browse"
-          title="Browse"
-          lede="Each card previews the live recipe; click through for the full version and its source."
-        >
-          <Stack gap="lg">
-            <Stack direction="row" gap="sm" align="center" wrap>
+        <Stack gap="lg" id="browse">
+          <Stack gap="sm">
+            <Stack direction="row" gap="md" align="center" wrap>
               <InputText
+                width={320}
                 placeholder="Search recipes…"
                 value={query}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
               />
-              <Stack direction="row" gap="xs" wrap>
-                {['All', ...RECIPE_GROUPS].map((g) => (
-                  <Button
-                    key={g}
-                    size="sm"
-                    variant={group === g ? 'solid' : 'ghost'}
-                    onClick={() => setGroup(g)}
-                  >
-                    {g}
-                  </Button>
-                ))}
-              </Stack>
             </Stack>
-
-            {groupsToShow.length === 0 ? (
-              <Text color="muted">No recipes match “{query}”.</Text>
-            ) : (
-              groupsToShow.map((g) => (
-                <Stack key={g} gap="sm">
-                  {group === 'All' && (
-                    <Heading level={2}>{g}</Heading>
-                  )}
-                  <div style={GRID}>
-                    {filtered
-                      .filter((r) => r.group === g)
-                      .map((r) => (
-                        <RecipeCard key={`${r.groupSlug}/${r.slug}`} recipe={r} />
-                      ))}
-                  </div>
-                </Stack>
-              ))
-            )}
+            <div style={{ overflowX: 'auto', maxWidth: '100%', paddingBottom: '2px' }}>
+              <ToggleGroup.Root
+                type="single"
+                value={group}
+                onValueChange={(v: string) => v && setGroup(v)}
+                variant="ghost"
+                size="sm"
+              >
+                <ToggleGroup.Item value="All">All</ToggleGroup.Item>
+                {RECIPE_GROUPS.map((g) => (
+                  <ToggleGroup.Item key={g} value={g}>
+                    {g}
+                  </ToggleGroup.Item>
+                ))}
+              </ToggleGroup.Root>
+            </div>
           </Stack>
-        </Section>
+
+          {filtered.length === 0 ? (
+            <Text color="muted">
+              No recipes match {query ? `“${query}”` : 'these filters'}.
+            </Text>
+          ) : (
+            sections.map((g) => (
+              <Stack key={g} gap="sm">
+                {grouped && <Heading level={3}>{g}</Heading>}
+                <div style={GRID}>
+                  {filtered
+                    .filter((r) => r.group === g)
+                    .map((r) => (
+                      <RecipeCard key={`${r.groupSlug}/${r.slug}`} recipe={r} />
+                    ))}
+                </div>
+              </Stack>
+            ))
+          )}
+        </Stack>
       </Stack>
-      <TocRail items={TOC} />
     </Stack>
   );
 }

@@ -1,12 +1,7 @@
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Badge } from 'move';
-import { Preview, TocRail, type TocItem } from '../../components';
+import { Preview } from '../../components';
 import { getRecipe } from '../../content/recipes/registry';
-
-const TOC: TocItem[] = [
-  { href: '#recipe', label: 'Overview' },
-  { href: '#preview', label: 'Preview & code' },
-];
 
 export function RecipeDetailPage() {
   const { group = '', slug = '' } = useParams();
@@ -25,39 +20,36 @@ export function RecipeDetailPage() {
   const { Component } = recipe;
 
   return (
-    <Stack direction="row" gap="xl" align="stretch" id="recipe">
-      <Stack gap="xl" flex={1}>
-        <Breadcrumb>
-          <Breadcrumb.Item>
-            <Breadcrumb.Link asChild>
-              <RouterLink to="/">Docs</RouterLink>
-            </Breadcrumb.Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <Breadcrumb.Link asChild>
-              <RouterLink to="/recipes">Recipes</RouterLink>
-            </Breadcrumb.Link>
-          </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            <Breadcrumb.Page>{recipe.title}</Breadcrumb.Page>
-          </Breadcrumb.Item>
-        </Breadcrumb>
+    <Stack gap="xl" id="recipe">
+      <Breadcrumb>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link asChild>
+            <RouterLink to="/">Docs</RouterLink>
+          </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Breadcrumb.Link asChild>
+            <RouterLink to="/recipes">Recipes</RouterLink>
+          </Breadcrumb.Link>
+        </Breadcrumb.Item>
+        <Breadcrumb.Item>
+          <Breadcrumb.Page>{recipe.title}</Breadcrumb.Page>
+        </Breadcrumb.Item>
+      </Breadcrumb>
 
-        <Stack gap="sm">
-          <Stack direction="row" gap="xs" align="center">
-            <Heading level={1}>{recipe.title}</Heading>
-            <Badge variant="soft">{recipe.group}</Badge>
-          </Stack>
-          <Text color="muted" size="lg">{recipe.description}</Text>
+      <Stack gap="sm">
+        <Stack direction="row" gap="xs" align="center">
+          <Heading level={1}>{recipe.title}</Heading>
+          <Badge variant="soft">{recipe.group}</Badge>
         </Stack>
-
-        <div id="preview">
-          <Preview code={recipe.source}>
-            <Component />
-          </Preview>
-        </div>
+        <Text color="muted" size="lg">{recipe.description}</Text>
       </Stack>
-      <TocRail items={TOC} />
+
+      <div id="preview">
+        <Preview code={recipe.source}>
+          <Component />
+        </Preview>
+      </div>
     </Stack>
   );
 }

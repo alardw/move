@@ -32,12 +32,14 @@ export const spec = {
     { name: 'justify', type: "'start' | 'center' | 'end' | 'between' | 'evenly'", default: "'start'", moveSpecific: true, description: 'Main-axis alignment (justify-content)' },
     { name: 'wrap', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow children to wrap to next line' },
     { name: 'collapseBelow', type: 'string', moveSpecific: true, description: 'Container width threshold (px) below which direction collapses to column' },
+    { name: 'flex', type: "1 | 'auto' | 'none'", moveSpecific: true, description: "Flex sizing along the parent's main axis. 1 = grow to fill remaining space (with min-width:0 so wide children scroll instead of overflowing the row); 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size." },
+    { name: 'fill', type: "boolean | 'screen'", moveSpecific: true, description: "Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height." },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Child elements to lay out' },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-direction', 'data-gap', 'data-align', 'data-justify', 'data-wrap', 'data-collapsed'],
+    dataAttributes: ['data-direction', 'data-gap', 'data-align', 'data-justify', 'data-padding', 'data-wrap', 'data-collapsed', 'data-flex', 'data-fill'],
   },
 
   controlled: null,

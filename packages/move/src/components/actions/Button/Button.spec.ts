@@ -42,6 +42,7 @@ export const spec = {
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions' },
     { name: 'elevation', type: 'ElevationLevel', default: 'null', moveSpecific: true, description: 'Shadow elevation level' },
     { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as child element via Radix Slot' },
+    { name: 'fullWidth', type: 'boolean', moveSpecific: true, description: 'Stretch the button to fill its container width — for form submit actions, sidebar rows, and other full-width contexts.' },
     { name: 'type', type: 'string', default: "'button'", moveSpecific: false, description: 'HTML button type attribute' },
     { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: false, description: 'Disabled state' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content' },
@@ -49,7 +50,7 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-variant', 'data-size'],
+    dataAttributes: ['data-variant', 'data-size', 'data-full-width'],
   },
 
   controlled: null,

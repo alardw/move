@@ -1,7 +1,6 @@
 .card {
+  position: relative;
   display: block;
-  text-decoration: none;
-  color: inherit;
   border: 1px solid var(--move-border-base);
   border-radius: 12px;
   overflow: hidden;
@@ -11,41 +10,101 @@
 
 .card:hover {
   border-color: var(--move-border-strong, var(--move-fg-muted));
-  box-shadow: 0 4px 16px rgb(0 0 0 / 8%);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
   transform: translateY(-2px);
 }
 
+/* Stretched link: the title is the only anchor, its ::after covers the whole
+   card so the entire card is clickable without wrapping the preview in an <a>. */
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Lively, brand-tinted backdrop — matches ComponentCard. */
 .frame {
   position: relative;
   height: 200px;
   overflow: hidden;
-  background: var(--move-bg-subtle);
+  pointer-events: none;
   border-bottom: 1px solid var(--move-border-base);
+  background: var(--move-primary);
+  background-image: radial-gradient(120% 100% at 78% -10%, color-mix(in oklab, white 26%, transparent), transparent 60%);
+  /* No perspective: isometric is a PARALLEL projection (no vanishing point). */
 }
 
-.scale {
-  transform: scale(0.72);
-  transform-origin: top center;
+/* The live recipe on a floating white panel, tilted into an isometric-ish
+   projection. Mirrors ComponentCard's `.tilt`. */
+.tilt {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 560px;
+  height: auto;
+  max-height: 360px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* column fills the panel so width:100% recipes follow it */
+  place-items: center;
+  overflow: hidden;
+  padding: 24px;
+  background: var(--move-bg-base);
+  border: 1px solid var(--move-border-base);
+  border-radius: 14px;
+  box-shadow: 0 50px 80px -28px rgb(0 0 0 / 55%);
+  transform: translate(-50%, -50%);
+  transform-origin: center;
+  opacity: 0;
   pointer-events: none;
   user-select: none;
-  padding: 24px;
-  display: flex;
-  justify-content: center;
 }
 
-.fade {
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0;
-  height: 64px;
-  background: linear-gradient(to bottom, transparent, var(--move-bg-subtle));
-  pointer-events: none;
+/* Isometric tile: rotateX foreshortens, rotateZ spins it — parallel projection,
+   centred. Applied only AFTER the recipe mounts + measures flat, so JS-measured
+   indicators stay correct, then tilt along. */
+.tiltActive {
+  opacity: 1;
+  transform: translate(-50%, -50%) rotateX(28deg) rotateZ(-22deg) scale(0.66);
+}
+
+.tilt > * {
+  width: 100%;
+  /* there's no global border-box reset, so width:100% + a recipe's own padding
+     would otherwise overflow the panel (clipping its right margin) */
+  box-sizing: border-box;
+}
+
+/* Small recipes hug their content instead of floating in a 560px box. */
+.tiltNarrow {
+  width: max-content;
+  min-width: 200px;
+  max-width: 560px;
+}
+
+.tiltNarrow > * {
+  width: auto;
+}
+
+/* Self-surface recipes (the auth Cards): drop the white panel so it isn't a
+   card-in-a-card; the recipe's own surface floats, with a drop-shadow. */
+.tiltBare {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 28px;
+  filter: drop-shadow(0 36px 48px rgb(0 0 0 / 38%));
 }
 
 .image {
   display: block;
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
   object-position: top center;
 }

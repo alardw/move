@@ -152,6 +152,12 @@
   height: 100%;
 }
 
+/* Fill=screen — owns the viewport height (app-shell roots) */
+.root[data-fill='screen'] {
+  height: 100vh; /* fallback for browsers without dvh */
+  height: 100dvh;
+}
+
 /* Collapse: overrides direction to column on narrow containers */
 .root[data-collapsed] {
   flex-direction: column;

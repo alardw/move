@@ -12,6 +12,10 @@ export interface ScrollAreaRootProps extends Record<string, unknown> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  /** Stretch to fill height. The Root already fills its parent (100%); set
+   *  `'screen'` to own the viewport height (100dvh) when it's the app-shell
+   *  root with no sized ancestor. */
+  fill?: boolean | 'screen';
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -19,6 +23,7 @@ const ScrollAreaRoot = withMoveComponent<'root', ScrollAreaRootProps, HTMLDivEle
   name: 'ScrollAreaRoot',
   styles,
   slots: ['root'] as const,
+  moveProps: ['fill'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -31,6 +36,7 @@ const ScrollAreaRoot = withMoveComponent<'root', ScrollAreaRootProps, HTMLDivEle
             {...spRest}
             ref={ref}
             className={cx('root', props.className, spClass as string | undefined)}
+            data-fill={props.fill ? (props.fill === true ? '' : String(props.fill)) : undefined}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}

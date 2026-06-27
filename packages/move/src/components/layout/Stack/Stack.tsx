@@ -20,6 +20,9 @@ export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'evenly';
  *  (the extended spacing scale) from `'move'` directly going forward. */
 export type StackPadding = GapWithXL2;
 export type StackFlex = 1 | 'auto' | 'none';
+/** `true` fills the parent's height (100%); `'screen'` fills the viewport
+ *  (100dvh) — for app-shell roots that own the full window height. */
+export type StackFill = boolean | 'screen';
 
 export interface StackProps extends Record<string, unknown> {
   direction?: StackDirection;
@@ -28,7 +31,7 @@ export interface StackProps extends Record<string, unknown> {
   justify?: StackJustify;
   padding?: StackPadding;
   flex?: StackFlex;
-  fill?: boolean;
+  fill?: StackFill;
   wrap?: boolean;
   collapseBelow?: string;
   className?: string;
@@ -94,7 +97,7 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
             data-justify={props.justify as string}
             data-padding={props.padding as string | undefined}
             data-flex={props.flex != null ? String(props.flex) : undefined}
-            data-fill={props.fill ? '' : undefined}
+            data-fill={props.fill ? (props.fill === true ? '' : String(props.fill)) : undefined}
             data-wrap={props.wrap ? '' : undefined}
           >
             {props.children}

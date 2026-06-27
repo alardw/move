@@ -26,6 +26,12 @@
   min-height: 0;
 }
 
+/* Fill=screen — own the viewport height (app-shell root with no sized ancestor) */
+.root[data-fill='screen'] {
+  height: 100vh; /* fallback for browsers without dvh */
+  height: 100dvh;
+}
+
 /* ============================================
  * Header
  * ============================================ */
