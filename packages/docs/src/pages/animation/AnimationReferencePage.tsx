@@ -57,6 +57,7 @@ const TOC: TocItem[] = [
   { href: '#runtime', label: 'Runtime functions' },
   { href: '#presence', label: 'Presence' },
   { href: '#utilities', label: 'Utilities' },
+  { href: '#portaled-overlays', label: 'Portaled overlays' },
 ];
 
 export function AnimationReferencePage() {
@@ -147,6 +148,49 @@ export function AnimationReferencePage() {
           lede="Smaller helpers for specific jobs."
         >
           <HighlightList items={UTILITIES} />
+        </Section>
+
+        <Section
+          id="portaled-overlays"
+          title="Portaled overlays"
+          lede="Two rules for animating a Radix-positioned popup yourself — tooltip, popover, menu, date picker."
+        >
+          <Text>
+            A Radix popper positions the floating element with{' '}
+            <Code>transform: translate(x, y)</Code> and re-applies it on every
+            scroll. Two things follow whenever you animate one by hand. (Move’s
+            built-in overlays already do this — you only need it for a custom one.)
+          </Text>
+          <HighlightList
+            items={[
+              { icon: 'layers', text: 'Two layers. Animating scale or translate on the positioned Content clobbers Radix’s positioning transform — the scale dies and the popup can’t follow the trigger on scroll. Wrap the body in an inner surface that owns the scale/slide; the shell keeps Radix’s transform and only fades.' },
+              { icon: 'log-in', text: 'useAnimations below the Portal. The lifecycle enter fires once per mount, so in the always-mounted parent it fires once at page load with a null ref — never on open. Put it in a small component rendered as a child of the Portal: that remounts per open (Presence gates it), so the enter plays every time.' },
+              { icon: 'list', text: 'Parallel steps. Separate top-level sequence steps run one after another — wrap them in a nested array to play the shell fade and the inner scale together.' },
+            ]}
+          />
+          <CodeBlock
+            language="tsx"
+            code={`// Inner lives BELOW the Portal → mounts per open → the enter fires each time.
+function ContentInner({ isClosing, onCloseComplete, children }) {
+  const innerRef = useRef(null);
+  const { runExit } = useAnimations(config, { ContentInner: innerRef });
+  useEffect(() => {
+    if (isClosing) runExit().then(onCloseComplete);
+  }, [isClosing]);
+  return <div ref={innerRef} className={cx('contentInner')}>{children}</div>;
+}
+
+<Radix.Portal>
+  <Radix.Content className={cx('content')}>  {/* shell — Radix owns transform */}
+    <ContentInner ... />                      {/* inner — owns scale/slide   */}
+  </Radix.Content>
+</Radix.Portal>`}
+          />
+          <Text color="muted">
+            Enter and exit both run through <Code>useAnimations</Code> — CSS{' '}
+            <Code>@keyframes</Code> are reserved for continuous loops (a spinner,
+            an indeterminate bar), never for open/close.
+          </Text>
         </Section>
       </Stack>
       <TocRail items={TOC} />

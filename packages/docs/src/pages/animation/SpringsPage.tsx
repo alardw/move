@@ -12,7 +12,7 @@ const TAGLINE =
   'Move ships a small set of named springs. You pick a feel by name instead of tuning numbers.';
 
 const BADGES = [
-  { icon: 'wind', label: '11 springs' },
+  { icon: 'wind', label: '10 springs' },
   { icon: 'spline', label: 'Easings when you need them' },
 ];
 
@@ -70,11 +70,10 @@ export function SpringsPage() {
             without anyone picking numbers.
           </Text>
           <Text>
-            Three more are tuned for a specific component and named after where
-            they're used — <Code>tooltip</Code>, <Code>sidebar</Code>, and{' '}
-            <Code>pagination</Code>. They're springs like the rest; they exist so
-            those components stay consistent, and you can reach for them anywhere
-            the feel fits.
+            Two more are tuned for a specific component and named after where
+            they're used — <Code>sidebar</Code> and <Code>pagination</Code>.
+            They're springs like the rest; they exist so those components stay
+            consistent, and you can reach for them anywhere the feel fits.
           </Text>
         </Section>
 
