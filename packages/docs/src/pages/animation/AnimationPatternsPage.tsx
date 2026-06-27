@@ -11,7 +11,7 @@ import {
   Button,
   Switch,
   Select,
-  Popover,
+  Tooltip,
   Dialog,
   Accordion,
   Tabs,
@@ -154,16 +154,11 @@ export function AnimationPatternsPage() {
 
             <InlineDemo
               label={<Code>enterExit</Code>}
-              blurb="Fade and slide on open and close. Open and dismiss the popover."
+              blurb="Fade and slide in on show, back out on hide. Hover the button."
             >
-              <Popover.Root>
-                <Popover.Trigger asChild>
-                  <Button variant="secondary">Show details</Button>
-                </Popover.Trigger>
-                <Popover.Content sideOffset={8}>
-                  <Text size="sm" color="muted">Refreshed every 30 seconds.</Text>
-                </Popover.Content>
-              </Popover.Root>
+              <Tooltip label="Saves without publishing">
+                <Button variant="secondary">Save draft</Button>
+              </Tooltip>
             </InlineDemo>
 
             <InlineDemo
@@ -211,7 +206,15 @@ export function AnimationPatternsPage() {
                     <Accordion.Trigger>How long does shipping take?</Accordion.Trigger>
                   </Accordion.Header>
                   <Accordion.Content>
-                    Most orders ship within one business day.
+                    Most orders ship within one business day. Standard delivery
+                    then takes three to five business days, express options arrive
+                    the next morning, and overnight gets it to you by 10 AM.
+                    Anything placed before 2 PM on a weekday goes out the same
+                    afternoon; orders after the cutoff, or on weekends and public
+                    holidays, ship the next business day instead. International
+                    shipping reaches most countries within seven to fourteen days,
+                    and any customs duties are calculated at checkout so there is
+                    nothing extra to pay when the parcel arrives at your door.
                   </Accordion.Content>
                 </Accordion.Item>
                 <Accordion.Item value="tracking">
@@ -219,7 +222,14 @@ export function AnimationPatternsPage() {
                     <Accordion.Trigger>Can I track my order?</Accordion.Trigger>
                   </Accordion.Header>
                   <Accordion.Content>
-                    Yes — we email a tracking link the moment it ships.
+                    Yes — we email a tracking link the moment your order leaves
+                    the warehouse, and a second note when it is out for delivery.
+                    You can also see live status, the carrier, and the estimated
+                    delivery date under Orders in your account at any time, on web
+                    or in the app. If anything looks stuck for more than a couple
+                    of days, just reply to that email and our support team will
+                    chase the carrier for you and, if it has gone missing, send a
+                    replacement right away at no extra cost.
                   </Accordion.Content>
                 </Accordion.Item>
               </Accordion.Root>
