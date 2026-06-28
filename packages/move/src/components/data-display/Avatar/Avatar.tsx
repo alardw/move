@@ -1,5 +1,5 @@
 'use client';
-// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: 45042d3b)
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: c909e0e0)
 import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
@@ -36,22 +36,10 @@ const AvatarStatusContext = React.createContext<AvatarStatusContextValue>({
 });
 
 // =============================================================================
-// Group context — staggered entrance coordination
-// =============================================================================
-
-interface AvatarGroupContextValue {
-  registerAvatar: () => number;
-  staggerDelay: number;
-}
-
-const AvatarGroupContext = React.createContext<AvatarGroupContextValue | null>(null);
-
-// =============================================================================
 // Group
 // =============================================================================
 
 export interface AvatarGroupProps extends Record<string, unknown> {
-  staggerDelay?: number;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -61,38 +49,26 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
   name: 'AvatarGroup',
   styles,
   slots: ['group'] as const,
-  defaults: { staggerDelay: 50 },
-  moveProps: ['staggerDelay'],
+  defaults: {},
+  moveProps: [],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const indexRef = React.useRef(0);
-
-    const registerAvatar = React.useCallback(() => {
-      return indexRef.current++;
-    }, []);
-
-    const contextValue = React.useMemo(
-      () => ({ registerAvatar, staggerDelay: props.staggerDelay as number }),
-      [registerAvatar, props.staggerDelay],
-    );
-
     return {
       render() {
         const groupSp = sp('group');
         const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
 
+        // Overlap is pure CSS (negative margin on .group children).
         return (
-          <AvatarGroupContext.Provider value={contextValue}>
-            <div
-              {...attrs}
-              {...spRest}
-              ref={ref}
-              className={cx('group', props.className, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-            >
-              {props.children}
-            </div>
-          </AvatarGroupContext.Provider>
+          <div
+            {...attrs}
+            {...spRest}
+            ref={ref}
+            className={cx('group', props.className, spClass as string | undefined)}
+            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
         );
       },
     };

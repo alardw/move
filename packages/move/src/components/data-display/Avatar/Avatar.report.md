@@ -1,4 +1,4 @@
-<!-- Validated: 2026-03-01 | sourceHash: 45042d3b | specHash: 45042d3b -->
+<!-- Validated: 2026-03-01 | sourceHash: c909e0e0 | specHash: c909e0e0 -->
 # Avatar -- Validation Report
 
 ## Component File (Avatar.tsx)
@@ -88,7 +88,7 @@
 
 ## Spec Drift
 
-Spec drift: none (provenance hash matches spec hash: 45042d3b)
+Spec drift: none (provenance hash matches spec hash: c909e0e0)
 
 ## Summary
 

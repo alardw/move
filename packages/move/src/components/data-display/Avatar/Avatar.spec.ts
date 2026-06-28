@@ -1,5 +1,5 @@
 // Avatar.spec.ts — Component specification
-// specHash: 45042d3b
+// specHash: c909e0e0
 
 import type { ComponentSpec } from '../../../spec-type';
 
@@ -31,11 +31,10 @@ export const spec = {
         { name: 'group', element: 'div', description: 'Inline-flex container for stacked avatars' },
       ],
       props: [
-        { name: 'staggerDelay', type: 'number', default: '50', moveSpecific: true, description: 'Delay between each avatar entrance animation' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Root children' },
       ],
       usesFactory: true,
-      description: 'Container for overlapping avatar group with staggered entrance',
+      description: 'Container for an overlapping avatar group',
     },
     {
       name: 'Root',
