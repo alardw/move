@@ -1,6 +1,6 @@
 import { Stack, Tabs, Text } from 'move';
 
-const variants = ['underline', 'pill'] as const;
+const variants = ['underline', 'pills'] as const;
 
 export default function VariantsSample() {
   return (
@@ -8,8 +8,8 @@ export default function VariantsSample() {
       {variants.map((v) => (
         <Stack key={v} gap="xs">
           <Text size="sm" weight="medium">variant="{v}"</Text>
-          <Tabs.Root defaultValue="day" variant={v}>
-            <Tabs.List>
+          <Tabs.Root defaultValue="day">
+            <Tabs.List variant={v}>
               <Tabs.Trigger value="day">Day</Tabs.Trigger>
               <Tabs.Trigger value="week">Week</Tabs.Trigger>
               <Tabs.Trigger value="month">Month</Tabs.Trigger>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Stack, Heading, Text, Card, Badge, Breadcrumb, Button, List, Icon, Grid, Avatar, Accordion, Table } from 'move';
+import type { Color } from 'move';
 
 const defaultLabels = {
   home: 'Home',
@@ -22,7 +23,7 @@ type Labels = typeof defaultLabels;
 
 type DetailRow = { label: string; value: React.ReactNode };
 
-type TeamMember = { name: string; initials: string; color: string; role: string; access: string };
+type TeamMember = { name: string; initials: string; color: Color; role: string; access: string };
 
 // Integration point: sample data — replace with the real values.
 const SAMPLE_TEAM: TeamMember[] = [
@@ -32,7 +33,7 @@ const SAMPLE_TEAM: TeamMember[] = [
   { name: 'David Brown', initials: 'DB', color: 'violet', role: 'Backend Dev', access: 'member' },
 ];
 
-const ACCESS_COLOR: Record<string, string> = { owner: 'indigo', admin: 'blue', member: 'green', viewer: 'gray' };
+const ACCESS_COLOR: Record<string, Color> = { owner: 'indigo', admin: 'blue', member: 'green', viewer: 'gray' };
 
 // Integration point: sample data — replace with the real values.
 const SAMPLE_INTEGRATIONS = [
@@ -47,9 +48,9 @@ const SAMPLE_ACTIVITY = [
   { user: 'Alice', initials: 'AJ', color: 'indigo', action: 'Updated profile settings', date: 'Mar 10, 2026', type: 'settings' },
   { user: 'Bob', initials: 'BS', color: 'teal', action: 'Added to Design System project', date: 'Mar 8, 2026', type: 'project' },
   { user: 'Carol', initials: 'CW', color: 'orange', action: 'Changed role to Senior Engineer', date: 'Mar 5, 2026', type: 'role' },
-];
+] as const;
 
-const TYPE_COLOR: Record<string, string> = { settings: 'gray', project: 'indigo', role: 'violet' };
+const TYPE_COLOR: Record<string, Color> = { settings: 'gray', project: 'indigo', role: 'violet' };
 
 export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
@@ -88,7 +89,7 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
           </Avatar.Root>
           <Stack gap="xs">
             <Stack direction="row" align="center" gap="sm" wrap>
-              <Heading level={1} size="2xl">{t.name}</Heading>
+              <Heading level={1}>{t.name}</Heading>
               <Badge variant="dot" color="green">{t.statusValue}</Badge>
             </Stack>
             <Text color="muted">{t.role}</Text>
@@ -100,7 +101,7 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
         </Button>
       </Stack>
 
-      <Grid columns={3} gap="md" collapseBelow={768}>
+      <Grid columns={3} gap="md" collapseBelow="768">
         <Grid.Cell span={2}>
           <Card.Root>
             <Card.Header>

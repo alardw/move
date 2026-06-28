@@ -8,7 +8,7 @@ export default function BasicSample() {
           <Icon name="upload-cloud" />
           <Text weight="medium">Drop files here</Text>
           <Text size="sm" color="muted">PNG, JPG, PDF up to 10 MB</Text>
-          <FileUpload.Trigger asChild>
+          <FileUpload.Trigger>
             <Button variant="secondary" size="sm">Choose files</Button>
           </FileUpload.Trigger>
         </Stack>

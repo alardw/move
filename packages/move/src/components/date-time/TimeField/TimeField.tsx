@@ -286,7 +286,7 @@ TimeFieldRoot.displayName = 'TimeField';
 // Segment
 // ============================================================================
 
-export interface TimeFieldSegmentProps extends Record<string, unknown> {
+export interface TimeFieldSegmentProps extends React.HTMLAttributes<HTMLElement> {
   segment: SegmentType;
   className?: string;
   style?: React.CSSProperties;
@@ -386,7 +386,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
 // Separator
 // ============================================================================
 
-export interface TimeFieldSeparatorProps extends Record<string, unknown> {
+export interface TimeFieldSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -424,7 +424,7 @@ const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProp
 // Period
 // ============================================================================
 
-export interface TimeFieldPeriodProps extends Record<string, unknown> {
+export interface TimeFieldPeriodProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'period'>;
@@ -567,7 +567,7 @@ TimeFieldDropdown.displayName = 'TimeField.Dropdown';
 // DropdownColumn
 // ============================================================================
 
-export interface TimeFieldDropdownColumnProps extends Record<string, unknown> {
+export interface TimeFieldDropdownColumnProps extends React.HTMLAttributes<HTMLElement> {
   segment: SegmentType | 'period';
   className?: string;
   style?: React.CSSProperties;

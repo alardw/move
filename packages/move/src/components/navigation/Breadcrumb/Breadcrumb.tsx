@@ -38,7 +38,7 @@ const DEFAULT_LABELS: BreadcrumbLabels = {
   label: 'Breadcrumb',
 };
 
-export interface BreadcrumbRootProps extends Record<string, unknown> {
+export interface BreadcrumbRootProps extends React.HTMLAttributes<HTMLElement> {
   separator?: React.ReactNode;
   maxItems?: number;
   itemsBeforeCollapse?: number;
@@ -140,7 +140,7 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
 // Item
 // ============================================================================
 
-export interface BreadcrumbItemProps extends Record<string, unknown> {
+export interface BreadcrumbItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -177,7 +177,7 @@ const BreadcrumbItem = withMoveComponent<'item', BreadcrumbItemProps, HTMLLIElem
 // Link
 // ============================================================================
 
-export interface BreadcrumbLinkProps extends Record<string, unknown> {
+export interface BreadcrumbLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   asChild?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -220,7 +220,7 @@ const BreadcrumbLink = withMoveComponent<'link', BreadcrumbLinkProps, HTMLAnchor
 // Page
 // ============================================================================
 
-export interface BreadcrumbPageProps extends Record<string, unknown> {
+export interface BreadcrumbPageProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -260,7 +260,7 @@ const BreadcrumbPage = withMoveComponent<'page', BreadcrumbPageProps, HTMLSpanEl
 // Separator
 // ============================================================================
 
-export interface BreadcrumbSeparatorProps extends Record<string, unknown> {
+export interface BreadcrumbSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -301,7 +301,7 @@ const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorPr
 // Ellipsis
 // ============================================================================
 
-export interface BreadcrumbEllipsisProps extends Record<string, unknown> {
+export interface BreadcrumbEllipsisProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

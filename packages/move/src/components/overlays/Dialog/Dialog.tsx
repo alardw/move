@@ -126,7 +126,7 @@ DialogRoot.displayName = 'Dialog.Root';
 // Trigger
 // ============================================================================
 
-export interface DialogTriggerProps extends Record<string, unknown> {
+export interface DialogTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -180,7 +180,7 @@ DialogPortal.displayName = 'Dialog.Portal';
 // Overlay
 // ============================================================================
 
-export interface DialogOverlayProps extends Record<string, unknown> {
+export interface DialogOverlayProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'overlay'>;
@@ -236,7 +236,7 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
 
 export type DialogSize = 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
-export interface DialogContentProps extends Record<string, unknown> {
+export interface DialogContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -352,7 +352,7 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
 // Title
 // ============================================================================
 
-export interface DialogTitleProps extends Record<string, unknown> {
+export interface DialogTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -389,7 +389,7 @@ const DialogTitle = withMoveComponent<'title', DialogTitleProps, HTMLHeadingElem
 // Description
 // ============================================================================
 
-export interface DialogDescriptionProps extends Record<string, unknown> {
+export interface DialogDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -428,7 +428,7 @@ const DialogDescription = withMoveComponent<'description', DialogDescriptionProp
 // Header
 // ============================================================================
 
-export interface DialogHeaderProps extends Record<string, unknown> {
+export interface DialogHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -470,7 +470,7 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
 // Body
 // ============================================================================
 
-export interface DialogBodyProps extends Record<string, unknown> {
+export interface DialogBodyProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -507,7 +507,7 @@ const DialogBody = withMoveComponent<'body', DialogBodyProps, HTMLDivElement>({
 // Footer
 // ============================================================================
 
-export interface DialogFooterProps extends Record<string, unknown> {
+export interface DialogFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -544,7 +544,7 @@ const DialogFooter = withMoveComponent<'footer', DialogFooterProps, HTMLDivEleme
 // FooterStart
 // ============================================================================
 
-export interface DialogFooterStartProps extends Record<string, unknown> {
+export interface DialogFooterStartProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -581,7 +581,7 @@ const DialogFooterStart = withMoveComponent<'footerStart', DialogFooterStartProp
 // FooterEnd
 // ============================================================================
 
-export interface DialogFooterEndProps extends Record<string, unknown> {
+export interface DialogFooterEndProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -618,7 +618,7 @@ const DialogFooterEnd = withMoveComponent<'footerEnd', DialogFooterEndProps, HTM
 // Close
 // ============================================================================
 
-export interface DialogCloseProps extends Record<string, unknown> {
+export interface DialogCloseProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

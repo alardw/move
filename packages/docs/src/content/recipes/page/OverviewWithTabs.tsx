@@ -26,7 +26,7 @@ export default function OverviewWithTabs({ labels }: { labels?: Partial<Labels> 
 
   return (
     <Stack gap="lg" padding="lg">
-      <Heading level={1} size="2xl">{t.title}</Heading>
+      <Heading level={1}>{t.title}</Heading>
 
       <Tabs.Root defaultValue="overview">
         <Tabs.List>
@@ -37,7 +37,7 @@ export default function OverviewWithTabs({ labels }: { labels?: Partial<Labels> 
 
         <Tabs.Content value="overview">
           <Stack gap="md">
-            <Grid columns={4} gap="md" collapseBelow={640}>
+            <Grid columns={4} gap="md" collapseBelow="640">
               {SAMPLE_STATS.map((stat) => (
                 <Card.Root key={stat.label}>
                   <Card.Body>
@@ -46,14 +46,14 @@ export default function OverviewWithTabs({ labels }: { labels?: Partial<Labels> 
                         <Text size="sm" color="muted">{stat.label}</Text>
                         <Icon name={stat.icon} size="sm" color="muted" />
                       </Stack>
-                      <Heading level={3} size="2xl">{stat.value}</Heading>
+                      <Heading level={3}>{stat.value}</Heading>
                     </Stack>
                   </Card.Body>
                 </Card.Root>
               ))}
             </Grid>
 
-            <Grid columns={2} gap="md" collapseBelow={640}>
+            <Grid columns={2} gap="md" collapseBelow="640">
               <Card.Root>
                 <Card.Header>
                   <Card.Title>Revenue</Card.Title>

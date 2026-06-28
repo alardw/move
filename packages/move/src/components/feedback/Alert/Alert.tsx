@@ -46,7 +46,7 @@ const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   },
 ];
 
-export interface AlertProps extends Record<string, unknown> {
+export interface AlertProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   variant?: AlertVariant;
   size?: AlertSize;
   icon?: string | boolean;

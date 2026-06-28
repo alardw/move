@@ -80,7 +80,7 @@ export type TableVariant = 'surface' | 'lines' | 'bordered' | 'ghost';
 export type TableSize = 'sm' | 'md' | 'lg';
 export type TableResponsive = 'scroll' | 'stack' | 'none';
 
-export interface TableRootProps extends Record<string, unknown> {
+export interface TableRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -225,7 +225,7 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
 // Header
 // ============================================================================
 
-export interface TableHeaderProps extends Record<string, unknown> {
+export interface TableHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -287,7 +287,7 @@ const TableHeader = withMoveComponent<'header', TableHeaderProps, HTMLTableSecti
 // Body
 // ============================================================================
 
-export interface TableBodyProps extends Record<string, unknown> {
+export interface TableBodyProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -336,7 +336,7 @@ const TableBody = withMoveComponent<'body', TableBodyProps, HTMLTableSectionElem
 // Footer
 // ============================================================================
 
-export interface TableFooterProps extends Record<string, unknown> {
+export interface TableFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -373,7 +373,7 @@ const TableFooter = withMoveComponent<'footer', TableFooterProps, HTMLTableSecti
 // Row
 // ============================================================================
 
-export interface TableRowProps extends Record<string, unknown> {
+export interface TableRowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -479,7 +479,7 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
 
 export type TableAlign = 'start' | 'center' | 'end';
 
-export interface TableHeadProps extends Record<string, unknown> {
+export interface TableHeadProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, 'align'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -552,7 +552,7 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
 // Cell
 // ============================================================================
 
-export interface TableCellProps extends Record<string, unknown> {
+export interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -607,7 +607,7 @@ const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement
 // Caption
 // ============================================================================
 
-export interface TableCaptionProps extends Record<string, unknown> {
+export interface TableCaptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -644,7 +644,7 @@ const TableCaption = withMoveComponent<'caption', TableCaptionProps, HTMLTableCa
 // Group — one <tbody> per group, toggles open/close via context
 // ============================================================================
 
-export interface TableGroupProps extends Record<string, unknown> {
+export interface TableGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -716,7 +716,7 @@ const TableGroup = withMoveComponent<'group', TableGroupProps, HTMLTableSectionE
 // GroupHeader — clickable row that toggles the enclosing Group
 // ============================================================================
 
-export interface TableGroupHeaderProps extends Record<string, unknown> {
+export interface TableGroupHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

@@ -119,7 +119,7 @@ PopoverRoot.displayName = 'Popover.Root';
 // Trigger
 // =============================================================================
 
-export interface PopoverTriggerProps extends Record<string, unknown> {
+export interface PopoverTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -159,7 +159,7 @@ const PopoverTrigger = withMoveComponent<'trigger', PopoverTriggerProps, HTMLBut
 // Anchor
 // =============================================================================
 
-export interface PopoverAnchorProps extends Record<string, unknown> {
+export interface PopoverAnchorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -199,7 +199,7 @@ const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivEle
 // Content (auto-portals to document.body)
 // =============================================================================
 
-export interface PopoverContentProps extends Record<string, unknown> {
+export interface PopoverContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -347,7 +347,7 @@ const PopoverContent = withMoveComponent<'content' | 'contentInner', PopoverCont
 // Arrow
 // =============================================================================
 
-export interface PopoverArrowProps extends Record<string, unknown> {
+export interface PopoverArrowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   width?: number;
@@ -395,7 +395,7 @@ const DEFAULT_LABELS: PopoverLabels = {
   close: 'Close',
 };
 
-export interface PopoverCloseProps extends Record<string, unknown> {
+export interface PopoverCloseProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

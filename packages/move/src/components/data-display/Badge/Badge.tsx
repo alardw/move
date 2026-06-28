@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import styles from './Badge.module.css';
 
@@ -9,7 +10,7 @@ export type BadgeColor =
   | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
   | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
 
-export interface BadgeProps extends Record<string, unknown> {
+export interface BadgeProps extends React.HTMLAttributes<HTMLElement> {
   /** Visual style: solid fill, soft tint, surface (tint + border), outline, or dot indicator. */
   variant?: BadgeVariant;
   /** Size. */

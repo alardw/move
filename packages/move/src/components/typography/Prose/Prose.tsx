@@ -6,7 +6,7 @@ import styles from './Prose.module.css';
 
 export type ProseSize = 'sm' | 'base' | 'lg';
 
-export interface ProseProps extends Record<string, unknown> {
+export interface ProseProps extends React.HTMLAttributes<HTMLElement> {
   size?: ProseSize;
   className?: string;
   style?: React.CSSProperties;

@@ -61,7 +61,7 @@ const DEFAULT_LABELS: PaginationLabels = {
 // Root
 // =============================================================================
 
-export interface PaginationRootProps extends Record<string, unknown> {
+export interface PaginationRootProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -144,7 +144,7 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
 // PrevTrigger
 // =============================================================================
 
-export interface PaginationPrevTriggerProps extends Record<string, unknown> {
+export interface PaginationPrevTriggerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -229,7 +229,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
 // NextTrigger
 // =============================================================================
 
-export interface PaginationNextTriggerProps extends Record<string, unknown> {
+export interface PaginationNextTriggerProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -314,9 +314,10 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
 // Items
 // =============================================================================
 
-export interface PaginationItemsProps extends Record<string, unknown> {
+export interface PaginationItemsProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'items'>;
 }
 

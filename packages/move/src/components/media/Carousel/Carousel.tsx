@@ -241,7 +241,7 @@ CarouselRoot.displayName = 'Carousel.Root';
 // Viewport
 // =============================================================================
 
-export interface CarouselViewportProps extends Record<string, unknown> {
+export interface CarouselViewportProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -301,7 +301,7 @@ const CarouselViewport = withMoveComponent<'viewport', CarouselViewportProps, HT
 // Slide
 // =============================================================================
 
-export interface CarouselSlideProps extends Record<string, unknown> {
+export interface CarouselSlideProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -348,7 +348,7 @@ const CarouselSlide = withMoveComponent<'slide', CarouselSlideProps, HTMLDivElem
 // PrevTrigger
 // =============================================================================
 
-export interface CarouselPrevTriggerProps extends Record<string, unknown> {
+export interface CarouselPrevTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -405,7 +405,7 @@ const CarouselPrevTrigger = withMoveComponent<'prevTrigger', CarouselPrevTrigger
 // NextTrigger
 // =============================================================================
 
-export interface CarouselNextTriggerProps extends Record<string, unknown> {
+export interface CarouselNextTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -462,7 +462,7 @@ const CarouselNextTrigger = withMoveComponent<'nextTrigger', CarouselNextTrigger
 // IndicatorGroup
 // =============================================================================
 
-export interface CarouselIndicatorGroupProps extends Record<string, unknown> {
+export interface CarouselIndicatorGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -518,7 +518,7 @@ const CarouselIndicatorGroup = withMoveComponent<'indicatorGroup', CarouselIndic
 // Indicator
 // =============================================================================
 
-export interface CarouselIndicatorProps extends Record<string, unknown> {
+export interface CarouselIndicatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

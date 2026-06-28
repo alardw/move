@@ -8,11 +8,11 @@ export default function StepSample() {
     <Stack gap="lg">
       <Stack gap="xs">
         <Text size="sm" weight="medium">Volume — step 0.05</Text>
-        <InputRange min={0} max={1} step={0.05} value={vol} onValueChange={setVol} showValue />
+        <InputRange min={0} max={1} step={0.05} value={vol} onValueChange={(v) => setVol(v[0])} showValue />
       </Stack>
       <Stack gap="xs">
         <Text size="sm" weight="medium">Hour — step 1, min 0, max 23</Text>
-        <InputRange min={0} max={23} step={1} value={hour} onValueChange={setHour} showValue />
+        <InputRange min={0} max={23} step={1} value={hour} onValueChange={(v) => setHour(v[0])} showValue />
       </Stack>
     </Stack>
   );

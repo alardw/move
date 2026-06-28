@@ -19,7 +19,7 @@ export type RadioGroupSize = 'sm' | 'md' | 'lg';
 // Root
 // ============================================================================
 
-export interface RadioGroupRootProps extends Record<string, unknown> {
+export interface RadioGroupRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -79,7 +79,7 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
 // Item
 // ============================================================================
 
-export interface RadioGroupItemProps extends Record<string, unknown> {
+export interface RadioGroupItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

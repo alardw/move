@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -17,7 +18,7 @@ export type DividerSize = 'sm' | 'md' | 'lg';
  *  horizontal dividers, horizontal margin on vertical ones. */
 export type DividerGap = Gap;
 
-export interface DividerProps extends Record<string, unknown> {
+export interface DividerProps extends React.HTMLAttributes<HTMLElement> {
   orientation?: 'horizontal' | 'vertical';
   type?: DividerType;
   align?: DividerAlign;

@@ -42,7 +42,7 @@ const DEFAULT_LABELS: TableOfContentsLabels = {
   label: 'On this page',
 };
 
-export interface TableOfContentsRootProps extends Record<string, unknown> {
+export interface TableOfContentsRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -195,7 +195,7 @@ const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfConte
 // Item
 // =============================================================================
 
-export interface TableOfContentsItemProps extends Record<string, unknown> {
+export interface TableOfContentsItemProps extends React.HTMLAttributes<HTMLElement> {
   href: string;
   children?: React.ReactNode;
   /** Nesting level — 1 (default, no indent), 2, 3, 4. */

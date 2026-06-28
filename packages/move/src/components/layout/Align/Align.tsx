@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 // Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
 import { withMoveComponent } from '../../../engine';
 import type { Gap } from '../../../shared/types';
@@ -13,7 +14,7 @@ export type AlignVertical = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type AlignPadding = Gap;
 export type AlignFlex = 1 | 'auto' | 'none';
 
-export interface AlignProps extends Record<string, unknown> {
+export interface AlignProps extends React.HTMLAttributes<HTMLElement> {
   gap?: AlignGap;
   align?: AlignVertical;
   padding?: AlignPadding;
@@ -23,7 +24,7 @@ export interface AlignProps extends Record<string, unknown> {
   children?: React.ReactNode;
 }
 
-export interface AlignSectionProps extends Record<string, unknown> {
+export interface AlignSectionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

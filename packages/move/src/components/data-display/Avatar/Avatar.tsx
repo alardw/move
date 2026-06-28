@@ -39,7 +39,7 @@ const AvatarStatusContext = React.createContext<AvatarStatusContextValue>({
 // Group
 // =============================================================================
 
-export interface AvatarGroupProps extends Record<string, unknown> {
+export interface AvatarGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -79,7 +79,7 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
 // Root
 // =============================================================================
 
-export interface AvatarRootProps extends Record<string, unknown> {
+export interface AvatarRootProps extends React.HTMLAttributes<HTMLElement> {
   size?: AvatarSize;
   color?: AvatarColor;
   animations?: AnimationTrigger[] | false;
@@ -137,7 +137,7 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
 // Image
 // =============================================================================
 
-export interface AvatarImageProps extends Record<string, unknown> {
+export interface AvatarImageProps extends React.HTMLAttributes<HTMLElement> {
   src?: string;
   alt?: string;
   onLoadingStatusChange?: (status: AvatarStatus) => void;
@@ -185,7 +185,7 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
 // Fallback
 // =============================================================================
 
-export interface AvatarFallbackProps extends Record<string, unknown> {
+export interface AvatarFallbackProps extends React.HTMLAttributes<HTMLElement> {
   delayMs?: number;
   className?: string;
   style?: React.CSSProperties;

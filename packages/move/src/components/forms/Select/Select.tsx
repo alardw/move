@@ -215,7 +215,7 @@ SelectRoot.displayName = 'Select.Root';
 export type SelectTriggerSize = 'sm' | 'md' | 'lg';
 export type SelectTriggerVariant = 'outlined' | 'filled';
 
-export interface SelectTriggerProps extends Record<string, unknown> {
+export interface SelectTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -286,7 +286,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
 // Value
 // ============================================================================
 
-export interface SelectValueProps extends Record<string, unknown> {
+export interface SelectValueProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   placeholder?: string;
@@ -335,7 +335,7 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
 // Icon
 // ============================================================================
 
-export interface SelectIconProps extends Record<string, unknown> {
+export interface SelectIconProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -401,7 +401,7 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
 // Content (auto-portals to document.body)
 // ============================================================================
 
-export interface SelectContentProps extends Record<string, unknown> {
+export interface SelectContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -609,7 +609,7 @@ const SelectContent = withMoveComponent<'content' | 'contentInner', SelectConten
 // Viewport
 // ============================================================================
 
-export interface SelectViewportProps extends Record<string, unknown> {
+export interface SelectViewportProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -646,7 +646,7 @@ const SelectViewport = withMoveComponent<'viewport', SelectViewportProps, HTMLDi
 // Item
 // ============================================================================
 
-export interface SelectItemProps extends Record<string, unknown> {
+export interface SelectItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -738,7 +738,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 // Group
 // ============================================================================
 
-export interface SelectGroupProps extends Record<string, unknown> {
+export interface SelectGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -775,7 +775,7 @@ const SelectGroup = withMoveComponent<'group', SelectGroupProps, HTMLDivElement>
 // Label
 // ============================================================================
 
-export interface SelectLabelProps extends Record<string, unknown> {
+export interface SelectLabelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -812,7 +812,7 @@ const SelectLabel = withMoveComponent<'label', SelectLabelProps, HTMLDivElement>
 // Separator
 // ============================================================================
 
-export interface SelectSeparatorProps extends Record<string, unknown> {
+export interface SelectSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'separator'>;

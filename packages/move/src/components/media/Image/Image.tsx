@@ -29,7 +29,7 @@ export interface ImageSource {
 // Image
 // =============================================================================
 
-export interface ImageProps extends Record<string, unknown> {
+export interface ImageProps extends React.HTMLAttributes<HTMLElement> {
   src?: string;
   sources?: ImageSource[];
   alt?: string;

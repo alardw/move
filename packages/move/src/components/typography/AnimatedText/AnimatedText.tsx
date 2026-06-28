@@ -23,7 +23,7 @@ export type AnimatedTextAs = 'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 
 export type AnimatedTextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 export type AnimatedTextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
-export interface AnimatedTextProps extends Record<string, unknown> {
+export interface AnimatedTextProps extends React.HTMLAttributes<HTMLElement> {
   /** The text to animate. A plain string, or (with `asChild`) a single element
    *  like `<Heading>` whose text content is split. */
   children?: React.ReactNode;

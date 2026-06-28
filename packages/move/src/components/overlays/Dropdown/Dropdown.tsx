@@ -125,7 +125,7 @@ DropdownRoot.displayName = 'Dropdown.Root';
 // Trigger
 // ============================================================================
 
-export interface DropdownTriggerProps extends Record<string, unknown> {
+export interface DropdownTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -165,7 +165,7 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
 // Content (auto-portals to document.body)
 // ============================================================================
 
-export interface DropdownContentProps extends Record<string, unknown> {
+export interface DropdownContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -307,7 +307,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
 // Arrow
 // ============================================================================
 
-export interface DropdownArrowProps extends Record<string, unknown> {
+export interface DropdownArrowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'arrow'>;
@@ -341,7 +341,7 @@ const DropdownArrow = withMoveComponent<'arrow', DropdownArrowProps, HTMLElement
 // Item
 // ============================================================================
 
-export interface DropdownItemProps extends Record<string, unknown> {
+export interface DropdownItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -410,7 +410,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
 // Group
 // ============================================================================
 
-export interface DropdownGroupProps extends Record<string, unknown> {
+export interface DropdownGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -447,7 +447,7 @@ const DropdownGroup = withMoveComponent<'group', DropdownGroupProps, HTMLDivElem
 // Label
 // ============================================================================
 
-export interface DropdownLabelProps extends Record<string, unknown> {
+export interface DropdownLabelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -484,7 +484,7 @@ const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElem
 // CheckboxItem
 // ============================================================================
 
-export interface DropdownCheckboxItemProps extends Record<string, unknown> {
+export interface DropdownCheckboxItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -611,7 +611,7 @@ const DropdownCheckboxItem = withMoveComponent<
 // RadioGroup
 // ============================================================================
 
-export interface DropdownRadioGroupProps extends Record<string, unknown> {
+export interface DropdownRadioGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -653,7 +653,7 @@ const DropdownRadioGroup = withMoveComponent<'radioGroup', DropdownRadioGroupPro
 // RadioItem
 // ============================================================================
 
-export interface DropdownRadioItemProps extends Record<string, unknown> {
+export interface DropdownRadioItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -723,7 +723,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
 // ItemIndicator
 // ============================================================================
 
-export interface DropdownItemIndicatorProps extends Record<string, unknown> {
+export interface DropdownItemIndicatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -760,7 +760,7 @@ const DropdownItemIndicator = withMoveComponent<'itemIndicator', DropdownItemInd
 // Separator
 // ============================================================================
 
-export interface DropdownSeparatorProps extends Record<string, unknown> {
+export interface DropdownSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'separator'>;
@@ -810,7 +810,7 @@ DropdownSub.displayName = 'Dropdown.Sub';
 // SubTrigger
 // ============================================================================
 
-export interface DropdownSubTriggerProps extends Record<string, unknown> {
+export interface DropdownSubTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -850,7 +850,7 @@ const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerPro
 // SubContent
 // ============================================================================
 
-export interface DropdownSubContentProps extends Record<string, unknown> {
+export interface DropdownSubContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

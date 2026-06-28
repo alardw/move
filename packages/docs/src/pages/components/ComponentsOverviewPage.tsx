@@ -78,7 +78,6 @@ export function ComponentsOverviewPage() {
             </Stack>
             <div style={{ overflowX: 'auto', maxWidth: '100%', paddingBottom: '2px' }}>
               <ToggleGroup.Root
-                type="single"
                 value={category}
                 onValueChange={(v: string) => v && setCategory(v)}
                 variant="ghost"

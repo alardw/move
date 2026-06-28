@@ -32,7 +32,7 @@ const MOVE_INTERNAL_KEYS = new Set(['sp']);
  */
 export function withMoveComponent<
   TSlots extends string,
-  TProps extends Record<string, unknown>,
+  TProps extends object,
   TRef extends Element = HTMLElement,
   TSubs extends Record<string, React.ComponentType<any>> = Record<string, never>,
 >(

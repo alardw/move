@@ -65,7 +65,7 @@ const TimelineContext = React.createContext<TimelineContextValue | null>(null);
 // Root
 // ============================================================================
 
-export interface TimelineRootProps extends Record<string, unknown> {
+export interface TimelineRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -154,7 +154,7 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
 
 export type TimelineItemSlots = 'item' | 'bullet' | 'line' | 'content' | 'title';
 
-export interface TimelineItemProps extends Record<string, unknown> {
+export interface TimelineItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

@@ -173,7 +173,7 @@ DrawerRoot.displayName = 'Drawer.Root';
 // Trigger
 // ============================================================================
 
-export interface DrawerTriggerProps extends Record<string, unknown> {
+export interface DrawerTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -227,7 +227,7 @@ DrawerPortal.displayName = 'Drawer.Portal';
 // Overlay
 // ============================================================================
 
-export interface DrawerOverlayProps extends Record<string, unknown> {
+export interface DrawerOverlayProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'overlay'>;
@@ -279,7 +279,7 @@ const DrawerOverlay = withMoveComponent<'overlay', DrawerOverlayProps, HTMLDivEl
 // Content
 // ============================================================================
 
-export interface DrawerContentProps extends Record<string, unknown> {
+export interface DrawerContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -375,7 +375,7 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
 // Header
 // ============================================================================
 
-export interface DrawerHeaderProps extends Record<string, unknown> {
+export interface DrawerHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -416,7 +416,7 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
 // Body
 // ============================================================================
 
-export interface DrawerBodyProps extends Record<string, unknown> {
+export interface DrawerBodyProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -453,7 +453,7 @@ const DrawerBody = withMoveComponent<'body', DrawerBodyProps, HTMLDivElement>({
 // Footer
 // ============================================================================
 
-export interface DrawerFooterProps extends Record<string, unknown> {
+export interface DrawerFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -490,7 +490,7 @@ const DrawerFooter = withMoveComponent<'footer', DrawerFooterProps, HTMLDivEleme
 // Title
 // ============================================================================
 
-export interface DrawerTitleProps extends Record<string, unknown> {
+export interface DrawerTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -527,7 +527,7 @@ const DrawerTitle = withMoveComponent<'title', DrawerTitleProps, HTMLHeadingElem
 // Description
 // ============================================================================
 
-export interface DrawerDescriptionProps extends Record<string, unknown> {
+export interface DrawerDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -566,7 +566,7 @@ const DrawerDescription = withMoveComponent<'description', DrawerDescriptionProp
 // Close
 // ============================================================================
 
-export interface DrawerCloseProps extends Record<string, unknown> {
+export interface DrawerCloseProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -617,7 +617,7 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
 // Handle
 // ============================================================================
 
-export interface DrawerHandleProps extends Record<string, unknown> {
+export interface DrawerHandleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'handle'>;

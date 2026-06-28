@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 // Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import type { DisplaySize } from '../../../shared/types';
@@ -31,7 +32,7 @@ const levelToSize: Record<HeadingLevel, HeadingSize> = {
   6: 'base',
 };
 
-export interface HeadingProps extends Record<string, unknown> {
+export interface HeadingProps extends React.HTMLAttributes<HTMLElement> {
   level?: HeadingLevel;
   weight?: HeadingWeight;
   color?: HeadingColor;

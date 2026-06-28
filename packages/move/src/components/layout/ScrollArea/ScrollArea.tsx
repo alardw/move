@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
@@ -8,7 +9,7 @@ import styles from './ScrollArea.module.css';
 // Root
 // ============================================================================
 
-export interface ScrollAreaRootProps extends Record<string, unknown> {
+export interface ScrollAreaRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -51,7 +52,7 @@ const ScrollAreaRoot = withMoveComponent<'root', ScrollAreaRootProps, HTMLDivEle
 // Header
 // ============================================================================
 
-export interface ScrollAreaHeaderProps extends Record<string, unknown> {
+export interface ScrollAreaHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -93,7 +94,7 @@ const ScrollAreaHeader = withMoveComponent<'header', ScrollAreaHeaderProps, HTML
 // Content
 // ============================================================================
 
-export interface ScrollAreaContentProps extends Record<string, unknown> {
+export interface ScrollAreaContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -135,7 +136,7 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
 // Footer
 // ============================================================================
 
-export interface ScrollAreaFooterProps extends Record<string, unknown> {
+export interface ScrollAreaFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

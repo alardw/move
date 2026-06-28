@@ -23,7 +23,7 @@ const DEFAULT_LABELS: PinInputLabels = {
   pinInput: 'PIN input',
 };
 
-export interface PinInputProps extends Record<string, unknown> {
+export interface PinInputProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
   length?: number;
   value?: string;
   defaultValue?: string;

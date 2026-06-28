@@ -120,7 +120,7 @@ function useFileUploadItemContext() {
 export type FileUploadSize = 'sm' | 'md' | 'lg';
 export type FileUploadVariant = 'default' | 'compact';
 
-export interface FileUploadRootProps extends Record<string, unknown> {
+export interface FileUploadRootProps extends Omit<React.HTMLAttributes<HTMLElement>, 'defaultValue'> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -150,28 +150,28 @@ export interface FileUploadRootProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'root'>;
 }
 
-export interface FileUploadDropzoneProps extends Record<string, unknown> {
+export interface FileUploadDropzoneProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'dropzone'>;
 }
 
-export interface FileUploadTriggerProps extends Record<string, unknown> {
+export interface FileUploadTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'trigger'>;
 }
 
-export interface FileUploadItemGroupProps extends Record<string, unknown> {
+export interface FileUploadItemGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'itemGroup'>;
 }
 
-export interface FileUploadItemProps extends Record<string, unknown> {
+export interface FileUploadItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -179,59 +179,59 @@ export interface FileUploadItemProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'item'>;
 }
 
-export interface FileUploadItemPreviewProps extends Record<string, unknown> {
+export interface FileUploadItemPreviewProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'itemPreview'>;
 }
 
-export interface FileUploadItemNameProps extends Record<string, unknown> {
+export interface FileUploadItemNameProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'itemName'>;
 }
 
-export interface FileUploadItemSizeProps extends Record<string, unknown> {
+export interface FileUploadItemSizeProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'itemSize'>;
 }
 
-export interface FileUploadItemDeleteProps extends Record<string, unknown> {
+export interface FileUploadItemDeleteProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'itemDelete'>;
 }
 
-export interface FileUploadClearTriggerProps extends Record<string, unknown> {
+export interface FileUploadClearTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sp?: SlotPropsMap<'clearTrigger'>;
 }
 
-export interface FileUploadItemProgressProps extends Record<string, unknown> {
+export interface FileUploadItemProgressProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'itemProgress'>;
 }
 
-export interface FileUploadTotalProgressProps extends Record<string, unknown> {
+export interface FileUploadTotalProgressProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   showLabel?: boolean;
   sp?: SlotPropsMap<'totalProgress'>;
 }
 
-export interface FileUploadItemStatusProps extends Record<string, unknown> {
+export interface FileUploadItemStatusProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'itemStatus'>;
 }
 
-export interface FileUploadUploadTriggerProps extends Record<string, unknown> {
+export interface FileUploadUploadTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

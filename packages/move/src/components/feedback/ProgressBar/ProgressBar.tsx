@@ -23,7 +23,7 @@ const DEFAULT_LABELS: ProgressBarLabels = {
   label: 'Progress',
 };
 
-export interface ProgressBarProps extends Record<string, unknown> {
+export interface ProgressBarProps extends React.HTMLAttributes<HTMLElement> {
   value?: number | null;
   max?: number;
   size?: ProgressBarSize;

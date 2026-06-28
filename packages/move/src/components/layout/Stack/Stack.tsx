@@ -30,7 +30,7 @@ export type StackFill = boolean | 'screen';
  *  the object form tunes the per-item delay and the stagger origin. */
 export type StackStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
 
-export interface StackProps extends Record<string, unknown> {
+export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   direction?: StackDirection;
   gap?: StackGap;
   align?: StackAlign;

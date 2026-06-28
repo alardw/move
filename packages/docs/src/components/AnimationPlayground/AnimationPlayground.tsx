@@ -160,10 +160,10 @@ function EasingsTab() {
     <Stack gap="lg">
       <Stack gap="xs">
         <Text size="sm" weight="medium">Duration (ms)</Text>
-        <InputRange min={200} max={3000} step={100} value={duration} onValueChange={setDuration} showValue />
+        <InputRange min={200} max={3000} step={100} value={duration} onValueChange={(v: number[]) => setDuration(v[0])} showValue />
       </Stack>
 
-      <Grid minChildWidth="116px" gap="2xs">
+      <Grid minChildWidth="116px" gap="xs">
         {easings.map((e) => (
           <Button
             key={e}
@@ -217,19 +217,19 @@ function SpringsTab() {
         <Grid minChildWidth="200px" gap="lg">
           <Stack gap="xs">
             <Text size="sm" color="muted">Mass</Text>
-            <InputRange min={0.1} max={10} step={0.1} value={params.mass} onValueChange={(v: number) => update('mass', v)} showValue />
+            <InputRange min={0.1} max={10} step={0.1} value={params.mass} onValueChange={(v: number[]) => update('mass', v[0])} showValue />
           </Stack>
           <Stack gap="xs">
             <Text size="sm" color="muted">Stiffness</Text>
-            <InputRange min={10} max={1000} step={10} value={params.stiffness} onValueChange={(v: number) => update('stiffness', v)} showValue />
+            <InputRange min={10} max={1000} step={10} value={params.stiffness} onValueChange={(v: number[]) => update('stiffness', v[0])} showValue />
           </Stack>
           <Stack gap="xs">
             <Text size="sm" color="muted">Damping</Text>
-            <InputRange min={1} max={100} step={1} value={params.damping} onValueChange={(v: number) => update('damping', v)} showValue />
+            <InputRange min={1} max={100} step={1} value={params.damping} onValueChange={(v: number[]) => update('damping', v[0])} showValue />
           </Stack>
           <Stack gap="xs">
             <Text size="sm" color="muted">Velocity</Text>
-            <InputRange min={0} max={10} step={0.5} value={params.velocity} onValueChange={(v: number) => update('velocity', v)} showValue />
+            <InputRange min={0} max={10} step={0.5} value={params.velocity} onValueChange={(v: number[]) => update('velocity', v[0])} showValue />
           </Stack>
         </Grid>
       </Stack>

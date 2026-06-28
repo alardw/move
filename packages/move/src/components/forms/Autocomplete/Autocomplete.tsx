@@ -180,7 +180,7 @@ AutocompleteRoot.displayName = 'Autocomplete.Root';
 export type AutocompleteTriggerSize = 'sm' | 'md' | 'lg';
 export type AutocompleteTriggerVariant = 'outlined' | 'filled';
 
-export interface AutocompleteTriggerProps extends Record<string, unknown> {
+export interface AutocompleteTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -277,7 +277,7 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
 // Input
 // =============================================================================
 
-export interface AutocompleteInputProps extends Record<string, unknown> {
+export interface AutocompleteInputProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   placeholder?: string;
@@ -432,7 +432,7 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
 // TagList
 // =============================================================================
 
-export interface AutocompleteTagListProps extends Record<string, unknown> {
+export interface AutocompleteTagListProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -479,7 +479,7 @@ const AutocompleteTagList = withMoveComponent<'tagList', AutocompleteTagListProp
 // Tag
 // =============================================================================
 
-export interface AutocompleteTagProps extends Record<string, unknown> {
+export interface AutocompleteTagProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -542,7 +542,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
 // Icon
 // =============================================================================
 
-export interface AutocompleteIconProps extends Record<string, unknown> {
+export interface AutocompleteIconProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -608,7 +608,7 @@ const AutocompleteIcon = withMoveComponent<'icon', AutocompleteIconProps, HTMLSp
 // ClearTrigger
 // =============================================================================
 
-export interface AutocompleteClearTriggerProps extends Record<string, unknown> {
+export interface AutocompleteClearTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -659,7 +659,7 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
 // Content (auto-portals to document.body)
 // =============================================================================
 
-export interface AutocompleteContentProps extends Record<string, unknown> {
+export interface AutocompleteContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -821,7 +821,7 @@ const AutocompleteContent = withMoveComponent<'content' | 'contentInner', Autoco
 // Item
 // =============================================================================
 
-export interface AutocompleteItemProps extends Record<string, unknown> {
+export interface AutocompleteItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -960,7 +960,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
 // ItemIndicator
 // =============================================================================
 
-export interface AutocompleteItemIndicatorProps extends Record<string, unknown> {
+export interface AutocompleteItemIndicatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -1009,7 +1009,7 @@ const AutocompleteItemIndicator = withMoveComponent<'itemIndicator', Autocomplet
 // Group
 // =============================================================================
 
-export interface AutocompleteGroupProps extends Record<string, unknown> {
+export interface AutocompleteGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -1047,7 +1047,7 @@ const AutocompleteGroup = withMoveComponent<'group', AutocompleteGroupProps, HTM
 // GroupLabel
 // =============================================================================
 
-export interface AutocompleteGroupLabelProps extends Record<string, unknown> {
+export interface AutocompleteGroupLabelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -1084,7 +1084,7 @@ const AutocompleteGroupLabel = withMoveComponent<'groupLabel', AutocompleteGroup
 // Empty
 // =============================================================================
 
-export interface AutocompleteEmptyProps extends Record<string, unknown> {
+export interface AutocompleteEmptyProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -1129,7 +1129,7 @@ const AutocompleteEmpty = withMoveComponent<'empty', AutocompleteEmptyProps, HTM
 // Loading
 // =============================================================================
 
-export interface AutocompleteLoadingProps extends Record<string, unknown> {
+export interface AutocompleteLoadingProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -1173,7 +1173,7 @@ const AutocompleteLoading = withMoveComponent<'loading', AutocompleteLoadingProp
 // Separator
 // =============================================================================
 
-export interface AutocompleteSeparatorProps extends Record<string, unknown> {
+export interface AutocompleteSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'separator'>;

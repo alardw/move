@@ -72,7 +72,7 @@ type VideoPlayerSlots =
   | 'fullscreenButton'
   | 'subtitleOverlay';
 
-export interface VideoPlayerProps extends Record<string, unknown> {
+export interface VideoPlayerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onError' | 'onVolumeChange'> {
   src?: string;
   poster?: string;
   provider?: VideoPlayerProvider;

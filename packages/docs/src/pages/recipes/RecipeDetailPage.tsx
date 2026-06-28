@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useParams, Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Badge, Code, Table } from 'move';
+import type { BadgeProps } from 'move';
 import {
   Preview,
   Section,
@@ -19,7 +20,7 @@ const NARROW: React.CSSProperties = { width: 1, whiteSpace: 'nowrap' };
 
 /** Integration-point kind → human label + badge colour. `data` is flagged
  * most prominently — it's the sample data a consumer must replace. */
-const KIND_META: Record<string, { label: string; color: string }> = {
+const KIND_META: Record<string, { label: string; color: NonNullable<BadgeProps['color']> }> = {
   data: { label: 'Sample data', color: 'orange' },
   handler: { label: 'Handler', color: 'blue' },
   navigation: { label: 'Navigation', color: 'teal' },

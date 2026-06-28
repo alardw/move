@@ -132,7 +132,7 @@ function AccountIndicator({
           </Button>
         )}
       </Dropdown.Trigger>
-      <Dropdown.Content side="top" align="start" sideOffset={8}>
+      <Dropdown.Content align="start" sideOffset={8}>
         <Dropdown.Item>
           <Icon name="user" />
           {labels.profile}

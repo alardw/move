@@ -27,7 +27,7 @@ const DEFAULT_LABELS: ToastLabels = {
   close: 'Close notification',
 };
 
-export interface ToastViewportProps extends Record<string, unknown> {
+export interface ToastViewportProps extends React.HTMLAttributes<HTMLElement> {
   position?: ToastPosition;
   animations?: AnimationTrigger[] | false;
   labels?: Partial<ToastLabels>;

@@ -47,7 +47,7 @@ export type CollapsibleAnimate = { open?: Animation; close?: Animation };
 // Root
 // ============================================================================
 
-export interface CollapsibleRootProps extends Record<string, unknown> {
+export interface CollapsibleRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -147,7 +147,7 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
 // Trigger — minimal wrapper, supports asChild
 // ============================================================================
 
-export interface CollapsibleTriggerProps extends Record<string, unknown> {
+export interface CollapsibleTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -197,7 +197,7 @@ const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps,
 // Icon — auto-rotating chevron, place anywhere inside Root
 // ============================================================================
 
-export interface CollapsibleIconProps extends Record<string, unknown> {
+export interface CollapsibleIconProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -264,7 +264,7 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
 // Content
 // ============================================================================
 
-export interface CollapsibleContentProps extends Record<string, unknown> {
+export interface CollapsibleContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

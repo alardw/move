@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 // Generated from Text.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import type { TypographySize } from '../../../shared/types';
@@ -12,7 +13,7 @@ export type TextColor = 'base' | 'muted' | 'subtle' | 'primary' | 'success' | 'w
 export type TextAlign = 'left' | 'center' | 'right';
 export type TextAs = 'p' | 'span' | 'div' | 'em' | 'strong' | 'small' | 'del';
 
-export interface TextProps extends Record<string, unknown> {
+export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   as?: TextAs;
   size?: TextSize;
   weight?: TextWeight;

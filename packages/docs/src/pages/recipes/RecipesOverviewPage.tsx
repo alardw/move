@@ -67,7 +67,6 @@ export function RecipesOverviewPage() {
             </Stack>
             <div style={{ overflowX: 'auto', maxWidth: '100%', paddingBottom: '2px' }}>
               <ToggleGroup.Root
-                type="single"
                 value={group}
                 onValueChange={(v: string) => v && setGroup(v)}
                 variant="ghost"

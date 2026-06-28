@@ -18,7 +18,7 @@ import styles from './InputRange.module.css';
 export type InputRangeSlots = 'root' | 'track' | 'range' | 'thumb' | 'value';
 export type InputRangeSize = 'sm' | 'md' | 'lg';
 
-export interface InputRangeProps extends Record<string, unknown> {
+export interface InputRangeProps extends Omit<React.HTMLAttributes<HTMLElement>, 'defaultValue'> {
   min?: number;
   max?: number;
   step?: number;

@@ -33,7 +33,7 @@ export default function ForgotPassword({ labels }: { labels?: Partial<Labels> })
         <Card.Body>
           <Stack gap="md">
             <Text size="sm" color="muted">{t.confirmHint}</Text>
-            <Button variant="outline" onClick={() => setSubmitted(false)}>{t.tryAnother}</Button>
+            <Button variant="secondary" onClick={() => setSubmitted(false)}>{t.tryAnother}</Button>
           </Stack>
         </Card.Body>
         <Card.Footer>

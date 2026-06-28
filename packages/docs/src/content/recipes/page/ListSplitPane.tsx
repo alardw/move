@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Stack, Heading, Text, Splitter, ScrollArea, List, Badge, Button, Divider, Icon, Avatar } from 'move';
+import type { Color } from 'move';
 
 const defaultLabels = {
   title: 'Inbox',
@@ -17,7 +18,7 @@ type Message = {
   id: string;
   from: string;
   initials: string;
-  color: string;
+  color: Color;
   subject: string;
   preview: string;
   time: string;
@@ -43,7 +44,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
     <ScrollArea.Root fill="screen">
       <ScrollArea.Header>
         <Stack direction="row" align="center" justify="between" wrap gap="md">
-          <Heading level={1} size="2xl">{t.title}</Heading>
+          <Heading level={1}>{t.title}</Heading>
           <Button>
             <Icon name="plus" size="sm" />
             {t.compose}
@@ -90,7 +91,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
                         <Avatar.Fallback>{selected.initials}</Avatar.Fallback>
                       </Avatar.Root>
                       <Stack gap="xs">
-                        <Heading level={2} size="lg">{selected.subject}</Heading>
+                        <Heading level={2}>{selected.subject}</Heading>
                         <Text size="sm" color="muted">From: {selected.from} — {selected.time}</Text>
                       </Stack>
                     </Stack>

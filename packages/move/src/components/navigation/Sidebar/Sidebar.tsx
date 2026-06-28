@@ -155,7 +155,7 @@ SidebarProvider.displayName = 'Sidebar.Provider';
 // Overlay (mobile backdrop)
 // ============================================================================
 
-export interface SidebarOverlayProps extends Record<string, unknown> {
+export interface SidebarOverlayProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'overlay'>;
@@ -207,7 +207,7 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
 // Root (<aside> container)
 // ============================================================================
 
-export interface SidebarRootProps extends Record<string, unknown> {
+export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -312,7 +312,7 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
 // Header (sticky top)
 // ============================================================================
 
-export interface SidebarHeaderProps extends Record<string, unknown> {
+export interface SidebarHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -371,7 +371,7 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
 // Content (scrollable middle — stagger items on mount)
 // ============================================================================
 
-export interface SidebarContentProps extends Record<string, unknown> {
+export interface SidebarContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -486,7 +486,7 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
 // Footer (sticky bottom)
 // ============================================================================
 
-export interface SidebarFooterProps extends Record<string, unknown> {
+export interface SidebarFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -525,7 +525,7 @@ const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivEle
 // Group (section container)
 // ============================================================================
 
-export interface SidebarGroupProps extends Record<string, unknown> {
+export interface SidebarGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -563,7 +563,7 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
 // GroupLabel (section heading)
 // ============================================================================
 
-export interface SidebarGroupLabelProps extends Record<string, unknown> {
+export interface SidebarGroupLabelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -600,7 +600,7 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
 // Item (interactive nav element)
 // ============================================================================
 
-export interface SidebarItemProps extends Record<string, unknown> {
+export interface SidebarItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -735,7 +735,7 @@ const SidebarItem = withMoveComponent<
 // Trigger (toggle button)
 // ============================================================================
 
-export interface SidebarTriggerProps extends Record<string, unknown> {
+export interface SidebarTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

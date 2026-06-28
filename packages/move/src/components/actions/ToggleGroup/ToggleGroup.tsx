@@ -27,7 +27,7 @@ const ToggleGroupContext = React.createContext<ToggleGroupContextValue>({
 // Root
 // ============================================================================
 
-export interface ToggleGroupRootProps extends Record<string, unknown> {
+export interface ToggleGroupRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -146,7 +146,7 @@ const ToggleGroupRoot = withMoveComponent<'root' | 'indicator', ToggleGroupRootP
 // Item
 // ============================================================================
 
-export interface ToggleGroupItemProps extends Record<string, unknown> {
+export interface ToggleGroupItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

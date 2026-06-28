@@ -78,7 +78,7 @@ RichTextEditorRoot.displayName = 'RichTextEditor.Root';
 // Toolbar
 // =============================================================================
 
-export interface RichTextEditorToolbarProps extends Record<string, unknown> {
+export interface RichTextEditorToolbarProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -129,7 +129,7 @@ const RichTextEditorToolbar = withMoveComponent<'toolbar', RichTextEditorToolbar
 // ControlGroup
 // =============================================================================
 
-export interface RichTextEditorControlGroupProps extends Record<string, unknown> {
+export interface RichTextEditorControlGroupProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -168,7 +168,7 @@ const RichTextEditorControlGroup = withMoveComponent<'controlGroup', RichTextEdi
 // Control
 // =============================================================================
 
-export interface RichTextEditorControlProps extends Record<string, unknown> {
+export interface RichTextEditorControlProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -232,7 +232,7 @@ const RichTextEditorControl = withMoveComponent<'control', RichTextEditorControl
 // Separator
 // =============================================================================
 
-export interface RichTextEditorSeparatorProps extends Record<string, unknown> {
+export interface RichTextEditorSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'separator'>;
@@ -269,7 +269,7 @@ const RichTextEditorSeparator = withMoveComponent<'separator', RichTextEditorSep
 // Content
 // =============================================================================
 
-export interface RichTextEditorContentProps extends Record<string, unknown> {
+export interface RichTextEditorContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

@@ -22,14 +22,14 @@ const SAMPLE_ACTIVITY = [
   { user: 'Alice Johnson', initials: 'AJ', color: 'indigo', action: 'Design review completed', detail: 'Approved the final mockups', time: '2 hours ago', dotColor: 'blue' },
   { user: 'Bob Smith', initials: 'BS', color: 'teal', action: 'Development started', detail: 'Picked up the frontend task', time: '1 day ago', dotColor: 'green' },
   { user: 'Carol White', initials: 'CW', color: 'orange', action: 'Project created', detail: 'Created this project', time: '5 days ago', dotColor: 'gray' },
-];
+] as const;
 
 // Integration point: sample data — replace with the real values.
 const SAMPLE_RELATED = [
   { name: 'Brand Guidelines v2', type: 'Document', status: 'Final', color: 'indigo' },
   { name: 'Homepage Wireframes', type: 'Design', status: 'Approved', color: 'green' },
   { name: 'Content Migration', type: 'Task', status: 'In Progress', color: 'blue' },
-];
+] as const;
 
 export default function DetailWithTabs({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
@@ -66,7 +66,7 @@ export default function DetailWithTabs({ labels }: { labels?: Partial<Labels> })
       <Stack direction="row" align="center" justify="between" wrap gap="md">
         <Stack gap="xs">
           <Stack direction="row" align="center" gap="sm" wrap>
-            <Heading level={1} size="2xl">{t.name}</Heading>
+            <Heading level={1}>{t.name}</Heading>
             <Badge variant="soft" color="blue">{t.status}</Badge>
           </Stack>
           <Text color="muted">{t.description}</Text>

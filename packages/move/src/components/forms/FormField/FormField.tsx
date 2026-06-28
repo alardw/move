@@ -8,7 +8,7 @@ import styles from './FormField.module.css';
 // Root
 // ============================================================================
 
-export interface FormFieldRootProps extends Record<string, unknown> {
+export interface FormFieldRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -52,7 +52,7 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
 // Label
 // ============================================================================
 
-export interface FormFieldLabelProps extends Record<string, unknown> {
+export interface FormFieldLabelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -88,7 +88,7 @@ const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLDivEl
 // Field
 // ============================================================================
 
-export interface FormFieldFieldProps extends Record<string, unknown> {
+export interface FormFieldFieldProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -124,7 +124,7 @@ const FormFieldField = withMoveComponent<'field', FormFieldFieldProps, HTMLDivEl
 // Description
 // ============================================================================
 
-export interface FormFieldDescriptionProps extends Record<string, unknown> {
+export interface FormFieldDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

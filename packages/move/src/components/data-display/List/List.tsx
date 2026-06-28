@@ -56,7 +56,7 @@ const ListContext = React.createContext<ListContextValue | null>(null);
 
 export type ListRadius = 'none' | 'sm' | 'md' | 'lg';
 
-export interface ListRootProps extends Record<string, unknown> {
+export interface ListRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -170,7 +170,7 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
 
 export type ListItemElement = 'li' | 'a' | 'button';
 
-export interface ListItemProps extends Record<string, unknown> {
+export interface ListItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -247,7 +247,7 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
 // Leading
 // ============================================================================
 
-export interface ListLeadingProps extends Record<string, unknown> {
+export interface ListLeadingProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -285,7 +285,7 @@ const ListLeading = withMoveComponent<'leading', ListLeadingProps, HTMLDivElemen
 // Content
 // ============================================================================
 
-export interface ListContentProps extends Record<string, unknown> {
+export interface ListContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -323,7 +323,7 @@ const ListContent = withMoveComponent<'content', ListContentProps, HTMLDivElemen
 // Title
 // ============================================================================
 
-export interface ListTitleProps extends Record<string, unknown> {
+export interface ListTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -361,7 +361,7 @@ const ListTitle = withMoveComponent<'title', ListTitleProps, HTMLDivElement>({
 // Description
 // ============================================================================
 
-export interface ListDescriptionProps extends Record<string, unknown> {
+export interface ListDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -406,7 +406,7 @@ const ListDescription = withMoveComponent<'description', ListDescriptionProps, H
 // Trailing
 // ============================================================================
 
-export interface ListTrailingProps extends Record<string, unknown> {
+export interface ListTrailingProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

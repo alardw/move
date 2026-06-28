@@ -13,7 +13,7 @@ import styles from './ToggleButton.module.css';
 // ToggleButton
 // ============================================================================
 
-export interface ToggleButtonProps extends Record<string, unknown> {
+export interface ToggleButtonProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

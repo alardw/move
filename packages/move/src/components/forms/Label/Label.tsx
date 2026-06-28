@@ -7,7 +7,7 @@ import styles from './Label.module.css';
 
 export type LabelSize = 'sm' | 'md' | 'lg';
 
-export interface LabelProps extends Record<string, unknown> {
+export interface LabelProps extends React.HTMLAttributes<HTMLElement> {
   htmlFor?: string;
   required?: boolean;
   disabled?: boolean;

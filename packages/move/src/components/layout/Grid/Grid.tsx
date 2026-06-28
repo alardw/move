@@ -23,7 +23,7 @@ export type GridPadding = Gap;
 /** Opt-in staggered entrance for direct children. */
 export type GridStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
 
-export interface GridProps extends Record<string, unknown> {
+export interface GridProps extends React.HTMLAttributes<HTMLElement> {
   /** Equal-width columns (shorthand for repeat(N, 1fr)) */
   cols?: number;
   /** Equal-height rows (shorthand for repeat(N, 1fr)) */
@@ -52,7 +52,7 @@ export interface GridProps extends Record<string, unknown> {
   sp?: SlotPropsMap<'root'>;
 }
 
-export interface GridCellProps extends Record<string, unknown> {
+export interface GridCellProps extends React.HTMLAttributes<HTMLElement> {
   /** Column span */
   span?: number;
   /** Row span */

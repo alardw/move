@@ -62,7 +62,7 @@ const DEFAULT_LABELS: ColorPickerLabels = {
   lightness: 'Lightness',
 };
 
-export interface ColorPickerProps extends Record<string, unknown> {
+export interface ColorPickerProps extends React.HTMLAttributes<HTMLElement> {
   size?: ColorPickerSize;
   format?: ColorFormat;
   value?: string;

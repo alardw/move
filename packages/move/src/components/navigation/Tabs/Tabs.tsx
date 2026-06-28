@@ -24,7 +24,7 @@ const TabsContext = React.createContext<TabsContextValue | null>(null);
 // Root
 // =============================================================================
 
-export interface TabsRootProps extends Record<string, unknown> {
+export interface TabsRootProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -98,7 +98,7 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
 export type TabsSize = 'sm' | 'md' | 'lg';
 export type TabsVariant = 'underline' | 'pills' | 'outline';
 
-export interface TabsListProps extends Record<string, unknown> {
+export interface TabsListProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -169,7 +169,7 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
 // Trigger
 // =============================================================================
 
-export interface TabsTriggerProps extends Record<string, unknown> {
+export interface TabsTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -212,7 +212,7 @@ const TabsTrigger = withMoveComponent<'trigger', TabsTriggerProps, HTMLButtonEle
 // Content
 // =============================================================================
 
-export interface TabsContentProps extends Record<string, unknown> {
+export interface TabsContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

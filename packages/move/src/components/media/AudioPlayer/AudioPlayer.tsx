@@ -57,7 +57,7 @@ type AudioPlayerSlots =
   | 'subtitleButton'
   | 'subtitleOverlay';
 
-export interface AudioPlayerProps extends Record<string, unknown> {
+export interface AudioPlayerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onError' | 'onVolumeChange'> {
   src?: string;
 
   autoPlay?: boolean;

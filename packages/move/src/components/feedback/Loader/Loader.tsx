@@ -23,7 +23,7 @@ const DEFAULT_LABELS: LoaderLabels = {
   loading: 'Loading',
 };
 
-export interface LoaderProps extends Record<string, unknown> {
+export interface LoaderProps extends React.HTMLAttributes<HTMLElement> {
   variant?: LoaderVariant;
   color?: LoaderColor;
   size?: LoaderSize;

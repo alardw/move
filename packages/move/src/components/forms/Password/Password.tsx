@@ -25,7 +25,7 @@ const DEFAULT_LABELS: PasswordLabels = {
   hidePassword: 'Hide password',
 };
 
-export interface PasswordProps extends Record<string, unknown> {
+export interface PasswordProps extends React.HTMLAttributes<HTMLElement> {
   variant?: PasswordVariant;
   size?: PasswordSize;
   invalid?: boolean;

@@ -33,7 +33,7 @@ const DEFAULT_LABELS: ColorInputLabels = {
   eyeDropper: 'Pick color from screen',
 };
 
-export interface ColorInputProps extends Record<string, unknown> {
+export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   variant?: ColorInputVariant;
   size?: ColorInputSize;
   format?: ColorFormat;

@@ -13,7 +13,7 @@ export default function ConstraintsSample() {
         <Stack gap="sm" align="center">
           <Icon name="image" />
           <Text weight="medium">Images only · 5 MB each · up to 3</Text>
-          <FileUpload.Trigger asChild>
+          <FileUpload.Trigger>
             <Button variant="secondary" size="sm">Browse</Button>
           </FileUpload.Trigger>
         </Stack>

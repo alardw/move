@@ -7,7 +7,7 @@ import styles from './Textarea.module.css';
 export type TextareaVariant = 'outlined' | 'filled';
 export type TextareaSize = 'sm' | 'md' | 'lg';
 
-export interface TextareaProps extends Record<string, unknown> {
+export interface TextareaProps extends React.HTMLAttributes<HTMLElement> {
   variant?: TextareaVariant;
   size?: TextareaSize;
   invalid?: boolean;

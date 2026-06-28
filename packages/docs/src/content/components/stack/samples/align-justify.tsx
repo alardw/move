@@ -20,9 +20,9 @@ export default function AlignJustifySample() {
         </Card.Root>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">align="center" + justify="around"</Text>
+        <Text size="sm" weight="medium">align="center" + justify="evenly"</Text>
         <Card.Root>
-          <Stack direction="row" gap="sm" align="center" justify="around" padding="sm">
+          <Stack direction="row" gap="sm" align="center" justify="evenly" padding="sm">
             <Tile>1</Tile>
             <Tile tall>2 (tall)</Tile>
             <Tile>3</Tile>

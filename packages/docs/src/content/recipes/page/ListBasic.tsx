@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Stack, Heading, Text, Card, Table, Badge, Button, InputText, Pagination, EmptyState, Icon, Avatar } from 'move';
 import { usePagination } from 'move';
+import type { Color } from 'move';
 
 const defaultLabels = {
   title: 'Users',
@@ -21,7 +22,7 @@ type Labels = typeof defaultLabels;
 type User = {
   name: string;
   initials: string;
-  color: string;
+  color: Color;
   email: string;
   role: string;
   status: 'active' | 'inactive' | 'pending';
@@ -44,8 +45,8 @@ const SAMPLE_USERS: User[] = [
   { name: 'Leo Garcia', initials: 'LG', color: 'yellow', email: 'leo@example.com', role: 'Editor', status: 'active', project: 'API Platform' },
 ];
 
-const STATUS_COLOR: Record<string, string> = { active: 'green', inactive: 'gray', pending: 'yellow' };
-const PROJECT_COLOR: Record<string, string> = { 'Design System': 'indigo', 'Mobile App': 'teal', 'API Platform': 'violet' };
+const STATUS_COLOR: Record<string, Color> = { active: 'green', inactive: 'gray', pending: 'yellow' };
+const PROJECT_COLOR: Record<string, Color> = { 'Design System': 'indigo', 'Mobile App': 'teal', 'API Platform': 'violet' };
 
 const PAGE_SIZE = 5;
 
@@ -69,7 +70,7 @@ export default function ListBasic({ labels }: { labels?: Partial<Labels> }) {
     <Stack gap="lg" padding="lg">
       <Stack direction="row" align="center" justify="between" wrap gap="md">
         <Stack gap="xs">
-          <Heading level={1} size="2xl">{t.title}</Heading>
+          <Heading level={1}>{t.title}</Heading>
           <Text color="muted">{t.description}</Text>
         </Stack>
         <Button>
@@ -137,7 +138,7 @@ export default function ListBasic({ labels }: { labels?: Partial<Labels> }) {
         </Card.Body>
         {filtered.length > PAGE_SIZE && (
           <Card.Footer>
-            <Stack direction="row" align="center" justify="between" flex="1">
+            <Stack direction="row" align="center" justify="between" flex={1}>
               <Text size="sm" color="muted">
                 {filtered.length} total
               </Text>

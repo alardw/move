@@ -38,7 +38,7 @@ export type SpFn<TSlots extends string> = (
 /** Context passed to every setup() function */
 export interface SetupContext<
   TSlots extends string,
-  TProps extends Record<string, unknown>,
+  TProps extends object,
   TRef,
 > {
   /** Resolved props (defaults merged with user props, Move-specific keys removed) */
@@ -63,7 +63,7 @@ export interface SetupReturn {
 /** Options for withMoveComponent */
 export interface MoveComponentOptions<
   TSlots extends string,
-  TProps extends Record<string, unknown>,
+  TProps extends object,
   TRef,
   TSubs extends Record<string, React.ComponentType<any>> = Record<string, never>,
 > {

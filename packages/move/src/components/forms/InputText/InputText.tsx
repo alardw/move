@@ -7,7 +7,7 @@ import styles from './InputText.module.css';
 export type InputTextVariant = 'outlined' | 'filled';
 export type InputTextSize = 'sm' | 'md' | 'lg';
 
-export interface InputTextProps extends Record<string, unknown> {
+export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
   variant?: InputTextVariant;
   size?: InputTextSize;
   invalid?: boolean;

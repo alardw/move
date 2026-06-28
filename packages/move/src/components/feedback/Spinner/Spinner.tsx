@@ -14,7 +14,7 @@ export type SpinnerVariant = 'default' | 'secondary' | 'current';
 
 type SpinnerSlots = 'root' | 'svg' | 'circle';
 
-export interface SpinnerProps extends Record<string, unknown> {
+export interface SpinnerProps extends React.HTMLAttributes<HTMLElement> {
   size?: SpinnerSize;
   variant?: SpinnerVariant;
   strokeWidth?: number;

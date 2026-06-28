@@ -56,7 +56,7 @@ function useStepItemContext() {
 // Root
 // ============================================================================
 
-export interface StepperRootProps extends Record<string, unknown> {
+export interface StepperRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -134,7 +134,7 @@ const StepperRoot = withMoveComponent<'root', StepperRootProps, HTMLDivElement>(
 // Step
 // ============================================================================
 
-export interface StepperStepProps extends Record<string, unknown> {
+export interface StepperStepProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -260,7 +260,7 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
 // Indicator
 // ============================================================================
 
-export interface StepperIndicatorProps extends Record<string, unknown> {
+export interface StepperIndicatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -317,7 +317,7 @@ const StepperIndicator = withMoveComponent<'indicator', StepperIndicatorProps, H
 // Title
 // ============================================================================
 
-export interface StepperTitleProps extends Record<string, unknown> {
+export interface StepperTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -354,7 +354,7 @@ const StepperTitle = withMoveComponent<'title', StepperTitleProps, HTMLDivElemen
 // Description
 // ============================================================================
 
-export interface StepperDescriptionProps extends Record<string, unknown> {
+export interface StepperDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -391,7 +391,7 @@ const StepperDescription = withMoveComponent<'description', StepperDescriptionPr
 // Separator (public)
 // ============================================================================
 
-export interface StepperSeparatorProps extends Record<string, unknown> {
+export interface StepperSeparatorProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'separator'>;

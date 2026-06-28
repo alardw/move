@@ -18,7 +18,7 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
  *  `'move'` directly going forward. */
 export type ButtonSize = Size;
 
-export interface ButtonProps extends Record<string, unknown> {
+export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   animations?: AnimationTrigger[] | false;
@@ -39,7 +39,7 @@ export interface ButtonProps extends Record<string, unknown> {
   onKeyUp?: React.KeyboardEventHandler<HTMLButtonElement>;
 }
 
-export interface ButtonGroupProps extends Record<string, unknown> {
+export interface ButtonGroupProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;

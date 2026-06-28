@@ -125,7 +125,7 @@ function ParallelSerialDemo() {
   return (
     <Stack gap="lg">
       <Stack direction="row" gap="md" align="center" wrap>
-        <ToggleGroup.Root type="single" value={mode} onValueChange={(v: string) => { if (v) { setMode(v); setPlay((p) => p + 1); } }} variant="outlined" size="sm">
+        <ToggleGroup.Root value={mode} onValueChange={(v: string) => { if (v) { setMode(v); setPlay((p) => p + 1); } }} variant="secondary" size="sm">
           <ToggleGroup.Item value="parallel">Together</ToggleGroup.Item>
           <ToggleGroup.Item value="serial">In order</ToggleGroup.Item>
         </ToggleGroup.Root>

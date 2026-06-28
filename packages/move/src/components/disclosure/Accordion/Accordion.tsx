@@ -78,7 +78,7 @@ export interface AccordionAnimateConfig {
   content?: { open?: Animation; close?: Animation };
 }
 
-export interface AccordionRootProps extends Record<string, unknown> {
+export interface AccordionRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -235,7 +235,7 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
 // Item
 // ============================================================================
 
-export interface AccordionItemProps extends Record<string, unknown> {
+export interface AccordionItemProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -309,7 +309,7 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
 // Header
 // ============================================================================
 
-export interface AccordionHeaderProps extends Record<string, unknown> {
+export interface AccordionHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -346,7 +346,7 @@ const AccordionHeader = withMoveComponent<'header', AccordionHeaderProps, HTMLDi
 // Trigger
 // ============================================================================
 
-export interface AccordionTriggerProps extends Record<string, unknown> {
+export interface AccordionTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -459,7 +459,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
 // Content
 // ============================================================================
 
-export interface AccordionContentProps extends Record<string, unknown> {
+export interface AccordionContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

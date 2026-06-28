@@ -57,7 +57,7 @@ function useSkeletonPulse(ref: React.RefObject<HTMLElement | null>) {
 // Root
 // ============================================================================
 
-export interface SkeletonRootProps extends Record<string, unknown> {
+export interface SkeletonRootProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   loading?: boolean;
   animation?: SkeletonAnimation;
@@ -130,7 +130,7 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
 // Circle
 // ============================================================================
 
-export interface SkeletonCircleProps extends Record<string, unknown> {
+export interface SkeletonCircleProps extends React.HTMLAttributes<HTMLElement> {
   size?: number | string;
   className?: string;
   style?: React.CSSProperties;
@@ -177,7 +177,7 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
 // Rectangle
 // ============================================================================
 
-export interface SkeletonRectangleProps extends Record<string, unknown> {
+export interface SkeletonRectangleProps extends React.HTMLAttributes<HTMLElement> {
   width?: number | string;
   height?: number | string;
   className?: string;
@@ -226,7 +226,7 @@ const SkeletonRectangle = withMoveComponent<'rectangle', SkeletonRectangleProps,
 // Rounded
 // ============================================================================
 
-export interface SkeletonRoundedProps extends Record<string, unknown> {
+export interface SkeletonRoundedProps extends React.HTMLAttributes<HTMLElement> {
   width?: number | string;
   height?: number | string;
   radius?: string;
@@ -277,7 +277,7 @@ const SkeletonRounded = withMoveComponent<'rounded', SkeletonRoundedProps, HTMLD
 // Text
 // ============================================================================
 
-export interface SkeletonTextProps extends Record<string, unknown> {
+export interface SkeletonTextProps extends React.HTMLAttributes<HTMLElement> {
   lines?: number;
   spacing?: string;
   lineHeight?: string;

@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 // Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -19,7 +20,7 @@ export type CardSize = Size;
 // Root
 // =============================================================================
 
-export interface CardRootProps extends Record<string, unknown> {
+export interface CardRootProps extends React.HTMLAttributes<HTMLElement> {
   variant?: CardVariant;
   size?: CardSize;
   maxWidth?: string | number;
@@ -72,7 +73,7 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
 // Header
 // =============================================================================
 
-export interface CardHeaderProps extends Record<string, unknown> {
+export interface CardHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -110,7 +111,7 @@ const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>(
 // Title
 // =============================================================================
 
-export interface CardTitleProps extends Record<string, unknown> {
+export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -148,7 +149,7 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
 // Description
 // =============================================================================
 
-export interface CardDescriptionProps extends Record<string, unknown> {
+export interface CardDescriptionProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -186,7 +187,7 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
 // Body
 // =============================================================================
 
-export interface CardBodyProps extends Record<string, unknown> {
+export interface CardBodyProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -224,7 +225,7 @@ const CardBody = withMoveComponent<'body', CardBodyProps, HTMLDivElement>({
 // Footer
 // =============================================================================
 
-export interface CardFooterProps extends Record<string, unknown> {
+export interface CardFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -262,7 +263,7 @@ const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>(
 // FooterStart
 // =============================================================================
 
-export interface CardFooterStartProps extends Record<string, unknown> {
+export interface CardFooterStartProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -300,7 +301,7 @@ const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, H
 // FooterEnd
 // =============================================================================
 
-export interface CardFooterEndProps extends Record<string, unknown> {
+export interface CardFooterEndProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

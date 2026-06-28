@@ -62,10 +62,11 @@ export default function ResetPassword({ labels }: { labels?: Partial<Labels> }) 
             <FormField.Description>{t.newPasswordHint}</FormField.Description>
           </FormField.Root>
 
-          <FormField.Root invalid={mismatch || undefined}>
+          <FormField.Root>
             <FormField.Label>{t.confirmLabel}</FormField.Label>
             <FormField.Field>
               <Password
+                invalid={mismatch}
                 placeholder={t.confirmPlaceholder}
                 value={confirm}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setConfirm(e.target.value)}

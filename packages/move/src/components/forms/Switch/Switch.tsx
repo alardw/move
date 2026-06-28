@@ -24,7 +24,7 @@ const SwitchContext = React.createContext<SwitchContextValue | null>(null);
 
 export type SwitchSize = 'sm' | 'md' | 'lg';
 
-export interface SwitchRootProps extends Record<string, unknown> {
+export interface SwitchRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -162,7 +162,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
 // Thumb
 // ============================================================================
 
-export interface SwitchThumbProps extends Record<string, unknown> {
+export interface SwitchThumbProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
 }

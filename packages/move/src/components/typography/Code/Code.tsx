@@ -11,7 +11,7 @@ export type CodeVariant = 'subtle' | 'outline' | 'ghost';
  *  `TypographySize` from `'move'` directly going forward. */
 export type CodeSize = TypographySize;
 
-export interface CodeProps extends Record<string, unknown> {
+export interface CodeProps extends React.HTMLAttributes<HTMLElement> {
   variant?: CodeVariant;
   size?: CodeSize;
   block?: boolean;

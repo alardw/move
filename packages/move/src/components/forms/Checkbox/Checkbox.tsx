@@ -18,7 +18,7 @@ type CheckboxSlots = 'root' | 'indicator' | 'icon';
 
 export type CheckboxSize = 'sm' | 'md' | 'lg';
 
-export interface CheckboxProps extends Record<string, unknown> {
+export interface CheckboxProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

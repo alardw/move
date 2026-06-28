@@ -13,7 +13,7 @@ import styles from './EmptyState.module.css';
 export type EmptyStateSize = 'sm' | 'md' | 'lg';
 type EmptyStateSlots = 'root' | 'icon' | 'title' | 'description' | 'action';
 
-export interface EmptyStateProps extends Record<string, unknown> {
+export interface EmptyStateProps extends Omit<React.HTMLAttributes<HTMLElement>, 'title'> {
   icon?: string;
   title?: React.ReactNode;
   description?: React.ReactNode;

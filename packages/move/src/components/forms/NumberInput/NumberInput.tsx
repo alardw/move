@@ -28,7 +28,7 @@ const DEFAULT_LABELS: NumberInputLabels = {
   decrement: 'Decrement',
 };
 
-export interface NumberInputProps extends Record<string, unknown> {
+export interface NumberInputProps extends React.HTMLAttributes<HTMLElement> {
   variant?: NumberInputVariant;
   size?: NumberInputSize;
   value?: number | string;

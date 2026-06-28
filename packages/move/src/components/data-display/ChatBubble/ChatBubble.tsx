@@ -42,7 +42,7 @@ const ChatBubbleContext = React.createContext<ChatBubblePlacement>('start');
 // Root
 // =============================================================================
 
-export interface ChatBubbleRootProps extends Record<string, unknown> {
+export interface ChatBubbleRootProps extends React.HTMLAttributes<HTMLElement> {
   placement?: ChatBubblePlacement;
   animations?: AnimationTrigger[] | false;
   className?: string;
@@ -117,7 +117,7 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
 // Avatar
 // =============================================================================
 
-export interface ChatBubbleAvatarProps extends Record<string, unknown> {
+export interface ChatBubbleAvatarProps extends React.HTMLAttributes<HTMLElement> {
   src?: string;
   fallback?: React.ReactNode;
   size?: ChatBubbleAvatarSize;
@@ -165,7 +165,7 @@ const ChatBubbleAvatar = withMoveComponent<'avatar', ChatBubbleAvatarProps, HTML
 // Container
 // =============================================================================
 
-export interface ChatBubbleContainerProps extends Record<string, unknown> {
+export interface ChatBubbleContainerProps extends React.HTMLAttributes<HTMLElement> {
   variant?: ChatBubbleVariant;
   color?: ChatBubbleColor;
   tail?: boolean;
@@ -213,7 +213,7 @@ const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerPr
 // Header
 // =============================================================================
 
-export interface ChatBubbleHeaderProps extends Record<string, unknown> {
+export interface ChatBubbleHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -250,7 +250,7 @@ const ChatBubbleHeader = withMoveComponent<'header', ChatBubbleHeaderProps, HTML
 // Content
 // =============================================================================
 
-export interface ChatBubbleContentProps extends Record<string, unknown> {
+export interface ChatBubbleContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -287,7 +287,7 @@ const ChatBubbleContent = withMoveComponent<'content', ChatBubbleContentProps, H
 // Footer
 // =============================================================================
 
-export interface ChatBubbleFooterProps extends Record<string, unknown> {
+export interface ChatBubbleFooterProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

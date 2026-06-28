@@ -132,7 +132,7 @@ TooltipRoot.displayName = 'Tooltip.Root';
 // Trigger
 // ============================================================================
 
-export interface TooltipTriggerProps extends Record<string, unknown> {
+export interface TooltipTriggerProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -176,7 +176,7 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
 // both run through the Move animation system (useAnimations) — no CSS keyframes.
 // ============================================================================
 
-export interface TooltipContentProps extends Record<string, unknown> {
+export interface TooltipContentProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -289,7 +289,7 @@ const TooltipContent = withMoveComponent<'content' | 'contentInner', TooltipCont
 // Arrow
 // ============================================================================
 
-export interface TooltipArrowProps extends Record<string, unknown> {
+export interface TooltipArrowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   width?: number;

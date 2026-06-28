@@ -10,7 +10,7 @@ import styles from './LayoutGroup.module.css';
 export type LayoutGroupAs = 'div' | 'ul' | 'ol' | 'section';
 export type LayoutGroupAnim = LayoutEnterExit;
 
-export interface LayoutGroupProps extends Record<string, unknown> {
+export interface LayoutGroupProps extends React.HTMLAttributes<HTMLElement> {
   /** Items to lay out. Each needs a stable React key so the FLIP engine can
    *  track it across reorders. */
   children?: React.ReactNode;

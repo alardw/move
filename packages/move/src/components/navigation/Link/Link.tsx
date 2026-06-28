@@ -1,4 +1,5 @@
 'use client';
+import * as React from 'react';
 // Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
@@ -11,7 +12,7 @@ export type LinkUnderline = 'always' | 'hover' | 'none';
  *  `TypographySize` from `'move'` directly going forward. */
 export type LinkSize = TypographySize;
 
-export interface LinkProps extends Record<string, unknown> {
+export interface LinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   variant?: LinkVariant;
   underline?: LinkUnderline;
   size?: LinkSize;

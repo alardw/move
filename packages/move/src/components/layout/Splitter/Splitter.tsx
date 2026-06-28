@@ -33,7 +33,7 @@ function useSplitterContext() {
 // Root
 // ============================================================================
 
-export interface SplitterRootProps extends Record<string, unknown> {
+export interface SplitterRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -294,7 +294,7 @@ const SplitterGutter: React.FC<SplitterGutterProps> = ({ index, onResizeEnd }) =
 // Panel
 // ============================================================================
 
-export interface SplitterPanelProps extends Record<string, unknown> {
+export interface SplitterPanelProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
