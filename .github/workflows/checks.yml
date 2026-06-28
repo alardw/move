@@ -22,3 +22,20 @@ jobs:
         run: npm run check:all --workspace move
       - name: Tests
         run: npm run test --workspace move
+
+  browser:
+    name: Move — browser invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Real-browser invariant tests (FLIP, sliding indicator) — things jsdom
+      # can't see (layout/paint/rAF). Needs the matching Chromium build.
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser invariants
+        run: npm run test:browser --workspace move
