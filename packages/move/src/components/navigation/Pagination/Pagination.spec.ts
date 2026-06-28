@@ -77,7 +77,9 @@ export const spec = {
         { name: 'ellipsis', element: 'span', description: 'Ellipsis between ranges' },
         { name: 'indicator', element: 'div', description: 'Sliding active indicator' },
       ],
-      props: [],
+      props: [
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Interactive animation config or false to disable' },
+      ],
       usesFactory: true,
       description: 'Renders page number buttons and ellipsis indicators based on computed range from usePagination; includes sliding indicator and staggered entrance animation',
     },
