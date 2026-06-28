@@ -2,6 +2,7 @@ import type { ComponentContent } from './types';
 import { content as accordion } from './accordion';
 import { content as align } from './align';
 import { content as alert } from './alert';
+import { content as animatedText } from './animated-text';
 import { content as audioPlayer } from './audio-player';
 import { content as autocomplete } from './autocomplete';
 import { content as avatar } from './avatar';
@@ -28,8 +29,8 @@ import { content as fileUpload } from './file-upload';
 import { content as formField } from './form-field';
 import { content as grid } from './grid';
 import { content as heading } from './heading';
+import { content as layoutGroup } from './layout-group';
 import { content as image } from './image';
-import { content as imageGroup } from './image-group';
 import { content as inputRange } from './input-range';
 import { content as inputText } from './input-text';
 import { content as label } from './label';
@@ -70,6 +71,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   accordion,
   align,
   alert,
+  'animated-text': animatedText,
   'audio-player': audioPlayer,
   autocomplete,
   avatar,
@@ -96,8 +98,8 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   'form-field': formField,
   grid,
   heading,
+  'layout-group': layoutGroup,
   image,
-  'image-group': imageGroup,
   'input-range': inputRange,
   'input-text': inputText,
   label,

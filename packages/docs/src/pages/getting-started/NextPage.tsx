@@ -266,7 +266,7 @@ export function NextPage() {
               <Text size="sm">• Dialog, Drawer, Popover, Dropdown, Tooltip, Toast</Text>
               <Text size="sm">• InputText, Select, Checkbox, Switch, Calendar, …</Text>
               <Text size="sm">• Button, ToggleGroup, Tabs, Accordion, Collapsible</Text>
-              <Text size="sm">• Carousel, ImageGroup, AudioPlayer, VideoPlayer</Text>
+              <Text size="sm">• Carousel, AudioPlayer, VideoPlayer</Text>
             </Stack>
             <Text>
               Presentational — these work in Server Components without a directive:

@@ -1,5 +1,7 @@
+import { useState, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button, Select, InputRange, ToggleGroup, Alert, poppy } from 'move';
+import type { AnimationTrigger } from 'move';
 import {
   CodeBlock,
   HighlightList,
@@ -47,6 +49,93 @@ const TOC: TocItem[] = [
   { href: '#parallel-and-serial', label: 'Parallel and serial' },
   { href: '#stagger', label: 'Stagger' },
 ];
+
+const STAGGER_FRUITS = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry', 'Fig'];
+
+// Live, real-component stagger: a Select whose option cascade you can tune.
+function SelectStaggerDemo() {
+  const [value, setValue] = useState('Apple');
+  const [delay, setDelay] = useState(30);
+
+  // Select's ACTUAL entrance — each row scales up (from the trigger width, poppy
+  // spring) and fades. Only the stagger delay is wired to the slider; everything
+  // else mirrors the component's real config.
+  const animations = useMemo<AnimationTrigger[]>(() => {
+    const ITEMS = '[role="menuitem"], [class*="label"], [class*="separator"]';
+    return [
+      { trigger: 'open', sequence: [[
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        { target: 'ContentInner', children: ITEMS, stagger: { delay }, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
+        { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+      ]] },
+      { trigger: 'closed', sequence: [[
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        { target: 'ContentInner', children: ITEMS, stagger: { delay }, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
+        { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+      ]] },
+    ];
+  }, [delay]);
+
+  return (
+    <Stack gap="lg">
+      <Text size="sm" color="muted">
+        Stagger delay: <Code>{delay}ms</Code> — open the select, drag, open again.
+      </Text>
+      <InputRange
+        min={0}
+        max={100}
+        step={5}
+        value={delay}
+        onValueChange={(v: number[]) => setDelay(v[0])}
+      />
+      <Select.Root value={value} onValueChange={setValue} animations={animations}>
+        <Select.Trigger>
+          <Select.Value />
+          <Select.Icon />
+        </Select.Trigger>
+        <Select.Content>
+          <Select.Viewport>
+            {STAGGER_FRUITS.map((f) => (
+              <Select.Item key={f} value={f}>{f}</Select.Item>
+            ))}
+          </Select.Viewport>
+        </Select.Content>
+      </Select.Root>
+    </Stack>
+  );
+}
+
+// A real Alert — two steps in one Root.enter sequence: the alert scales in, and
+// its icon does a bouncy pulse to draw the eye. Together = the pulse rides along
+// with the entrance; In order = the alert lands first, THEN the icon highlights.
+function ParallelSerialDemo() {
+  const [mode, setMode] = useState('parallel');
+  const [play, setPlay] = useState(0);
+
+  const animations = useMemo<AnimationTrigger[]>(() => {
+    const enter = { target: 'Root', animation: { opacity: { from: 0, to: 1, duration: 200 }, scale: { from: 0.92, to: 1, ease: poppy } } };
+    const iconPulse = { target: 'Icon', animation: { scale: { from: 1, to: 1.4, ease: poppy }, loop: 1, alternate: true } };
+    return [{ trigger: 'Root.enter', sequence: mode === 'parallel' ? [[enter, iconPulse]] : [enter, iconPulse] }];
+  }, [mode]);
+
+  return (
+    <Stack gap="lg">
+      <Stack direction="row" gap="md" align="center" wrap>
+        <ToggleGroup.Root type="single" value={mode} onValueChange={(v: string) => { if (v) { setMode(v); setPlay((p) => p + 1); } }} variant="outlined" size="sm">
+          <ToggleGroup.Item value="parallel">Together</ToggleGroup.Item>
+          <ToggleGroup.Item value="serial">In order</ToggleGroup.Item>
+        </ToggleGroup.Root>
+        <Button variant="secondary" size="sm" onClick={() => setPlay((p) => p + 1)}>
+          <Icon name="play" /> Replay
+        </Button>
+      </Stack>
+      {/* key remounts the Alert, so its Root.enter sequence fires fresh each replay */}
+      <Alert key={play} variant="success" icon="check" title="Changes published" animations={animations}>
+        Your edits are now live.
+      </Alert>
+    </Stack>
+  );
+}
 
 export function TriggersAndSequencesPage() {
   return (
@@ -125,21 +214,27 @@ export function TriggersAndSequencesPage() {
           <Text>
             Top-level steps play one after another, each starting when the last
             finishes. Group steps in a nested array and they play together in
-            the same frame — the way a select fades while its options stagger
-            in. A step can carry an <Code>onComplete</Code> callback for when it
-            finishes.
+            the same frame — the way an alert scales in while its icon pulses to
+            catch the eye. A step can carry an <Code>onComplete</Code> callback
+            for when it finishes.
           </Text>
           <CodeBlock
             language="ts"
-            code={`// how a Select opens — the two run together (one nested array)
+            code={`// Together — one nested array, both in the same frame
 sequence: [
   [
-    { target: 'Content', animation: { opacity: { from: 0, to: 1 } } },
-    { target: 'ContentInner', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } },
+    { target: 'Root', animation: { scale: { from: 0.92, to: 1, ease: poppy } } },
+    { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
   ],
-  // a step out here (not nested) would wait for that block to finish — that's serial
+]
+
+// In order — top-level steps; the icon pulses only after the alert lands
+sequence: [
+  { target: 'Root', animation: { scale: { from: 0.92, to: 1, ease: poppy } } },
+  { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
 ]`}
           />
+          <ParallelSerialDemo />
         </Section>
 
         <Section
@@ -158,8 +253,9 @@ sequence: [
             code={`// Select and Autocomplete cascade their options with exactly this step
 { target: 'List', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } }`}
           />
+          <SelectStaggerDemo />
           <Text color="muted">
-            See these running in real components on{' '}
+            More of these running in real components on{' '}
             <RouterLink to="/animation/patterns">See it in action</RouterLink>.
           </Text>
         </Section>

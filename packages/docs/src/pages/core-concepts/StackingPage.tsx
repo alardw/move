@@ -4,16 +4,15 @@ import type { ZKind } from 'move';
 import { Section, TocRail, type TocItem } from '../../components';
 
 /**
- * Stacking. The z-layer hierarchy: how Move components
- * order themselves on the z-axis, the CSS tokens that materialize
- * each layer, and the derivation rules that pick a layer from a
- * spec's behaviors + a11y.
+ * Stacking. The z-layer hierarchy: how Move components order themselves on the
+ * z-axis, the CSS tokens that materialize each layer, and how a component picks
+ * the layer for its role.
  */
 
 const TOC: TocItem[] = [
   { href: '#overview', label: 'Overview' },
   { href: '#layers', label: 'Layers' },
-  { href: '#derivation', label: 'Derivation rules' },
+  { href: '#choosing', label: 'Choosing a layer' },
   { href: '#components', label: 'Per-component layer' },
   { href: '#pitfalls', label: 'Stacking pitfalls' },
 ];
@@ -48,12 +47,14 @@ const COMPONENT_BY_LAYER: Record<ZKind, string[]> = {
   'toast': ['Toast'],
 };
 
-const DERIVATION_RULES = [
-  { precedence: 1, rule: <><Code>a11y.kind === 'tooltip'</Code></>, layer: 'tooltip', why: 'Tooltips need to sit above other popovers.' },
-  { precedence: 2, rule: <>any <Code>behaviors[].kind === 'notification-floating'</Code></>, layer: 'toast', why: 'Floating notifications stack highest of all.' },
-  { precedence: 3, rule: <>any <Code>behaviors[].kind === 'modal-overlay'</Code></>, layer: 'overlay', why: 'Modal content layer (the backdrop is rendered separately at overlay-backdrop).' },
-  { precedence: 4, rule: <>any <Code>behaviors[].kind === 'popup-anchored'</Code></>, layer: 'popover', why: 'Anchored popups not otherwise classified.' },
-  { precedence: 5, rule: <>otherwise</>, layer: 'base', why: 'No z-index needed — component lives at document flow.' },
+const LAYER_GUIDANCE = [
+  { role: <>Floating notifications</>, layer: 'toast', why: 'Stack highest of all so alerts are never hidden.' },
+  { role: <>Tooltips</>, layer: 'tooltip', why: 'Sit above other popups.' },
+  { role: <>Anchored popups (Popover, Dropdown, Select, …)</>, layer: 'popover', why: 'Float above page content and modals’ siblings.' },
+  { role: <>Modal content (Dialog, Drawer)</>, layer: 'overlay', why: 'Above the page; the backdrop renders separately at overlay-backdrop.' },
+  { role: <>Top-level chrome (Sidebar, fixed bars)</>, layer: 'app-shell', why: 'Above scrolling content but below transient overlays.' },
+  { role: <>Sticky in-flow elements</>, layer: 'sticky', why: 'Pinned within scroll regions (e.g. sticky table headers).' },
+  { role: <>Everything else</>, layer: 'base', why: 'No z-index needed — lives in normal document flow.' },
 ];
 
 export function StackingPage() {
@@ -83,7 +84,7 @@ export function StackingPage() {
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft"><Icon name="layers" />{LAYER_ORDER.length} layers</Badge>
-            <Badge variant="soft"><Icon name="git-branch" />Derived from spec, not declared</Badge>
+            <Badge variant="soft"><Icon name="git-branch" />One CSS token per layer</Badge>
           </Stack>
         </Stack>
 
@@ -115,24 +116,22 @@ export function StackingPage() {
         </Section>
 
         <Section
-          id="derivation"
-          title="Derivation rules"
-          lede="Z-layer is computed from a spec's behaviors and a11y, not declared. The deriveZ function applies these rules in order."
+          id="choosing"
+          title="Choosing a layer"
+          lede="A component references the CSS token for its role, so the whole library shares one consistent ordering."
         >
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>#</Table.Head>
-                <Table.Head>Match</Table.Head>
+                <Table.Head>Role</Table.Head>
                 <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Layer</Table.Head>
                 <Table.Head>Why</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {DERIVATION_RULES.map((r) => (
-                <Table.Row key={r.precedence}>
-                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>{r.precedence}</Table.Cell>
-                  <Table.Cell><Text size="sm">{r.rule}</Text></Table.Cell>
+              {LAYER_GUIDANCE.map((r) => (
+                <Table.Row key={r.layer}>
+                  <Table.Cell><Text size="sm">{r.role}</Text></Table.Cell>
                   <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}><Code>{r.layer}</Code></Table.Cell>
                   <Table.Cell><Text size="sm">{r.why}</Text></Table.Cell>
                 </Table.Row>
@@ -140,7 +139,7 @@ export function StackingPage() {
             </Table.Body>
           </Table>
           <Text>
-            The rules are exhaustive — if derivation can't pick a layer cleanly for a new component, the answer is to refine an underlying taxonomy (e.g. split a coarse behaviour kind), not to add an override field to the spec.
+            If a new component doesn't fit any layer cleanly, prefer extending the scale here (a new named token) over hard-coding a one-off z-index, so the ordering stays centralized.
           </Text>
         </Section>
 

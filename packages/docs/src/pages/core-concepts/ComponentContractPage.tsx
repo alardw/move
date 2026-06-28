@@ -3,30 +3,28 @@ import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Table, Tooltip, Ca
 import { Section, TocRail, type TocItem, InlineCode, CodeBlock } from '../../components';
 
 /**
- * Docs page describing the spec contract — the canonical shape every
- * `*.spec.ts` must conform to. Sourced from `packages/move/src/contract/`
- * (the TypeScript interface). This page is the human-readable view; the
- * type is the enforced view.
+ * Docs page describing the component spec — the canonical shape every
+ * `*.spec.ts` must conform to. The TypeScript interface `ComponentSpec`
+ * in `packages/move/src/spec-type.ts` is the enforced view; this page is
+ * the human-readable view of the same contract.
  */
 
 const TAGLINE =
-  'Every component in Move is described by a spec file. Generators, the docs site, spec-diff, and the AI skills all read the same spec. The contract on this page is what every spec must satisfy.';
+  'Every component in Move is described by a typed spec file. Generators, validators, the docs site, and the AI skills all read the same spec. The ComponentSpec interface on this page is what every spec must satisfy.';
 
 const TOC: TocItem[] = [
-  { href: '#overview', label: 'Overview' },
   { href: '#why-a-contract', label: 'Why a contract' },
-  { href: '#whats-in-a-spec', label: "What's in a spec" },
-  { href: '#naming', label: 'Naming convention' },
-  { href: '#schema-version', label: 'Schema version' },
-  { href: '#identity', label: 'Identity' },
-  { href: '#lifecycle', label: 'Lifecycle' },
-  { href: '#taxonomies', label: 'Taxonomies' },
-  { href: '#composition', label: 'Composition' },
-  { href: '#interaction', label: 'Interaction' },
-  { href: '#style-variants', label: 'Style + variants' },
-  { href: '#animation-tokens', label: 'Animation + tokens' },
-  { href: '#tests', label: 'Tests' },
-  { href: '#tooling', label: 'Tooling' },
+  { href: '#example', label: 'A complete spec' },
+  { href: '#schema-version', label: 'Schema version + naming' },
+  { href: '#identity', label: 'Identity & classification' },
+  { href: '#structure', label: 'Structure' },
+  { href: '#behavior', label: 'Behavior' },
+  { href: '#animation', label: 'Animation' },
+  { href: '#styling', label: 'Styling' },
+  { href: '#i18n', label: 'Internationalization' },
+  { href: '#dependencies', label: 'Dependencies' },
+  { href: '#testing', label: 'Testing' },
+  { href: '#review', label: 'Review' },
   { href: '#enforcement', label: 'Enforcement' },
   { href: '#next-steps', label: 'Next steps' },
 ];
@@ -38,147 +36,134 @@ interface FieldRow {
   description: React.ReactNode;
 }
 
-/** Worked example used early in the page so readers can see the
- *  shape of a real spec before walking through field tables. Kept
- *  short and realistic — Badge has no taxonomies beyond class +
- *  presentational, so it shows the minimum surface. */
-const EXAMPLE_SPEC = `import type { Spec } from 'move';
+/** The real Badge spec, used as a worked example so readers can see the
+ *  shape of a complete spec before walking through field tables. Badge is
+ *  presentational with no behavior, so it shows the minimum surface. */
+const EXAMPLE_SPEC = `import type { ComponentSpec } from '../../../spec-type';
 
-export const spec: Spec = {
-  schemaVersion: 1,
+export const spec = {
+  schemaVersion: 7 as const,
+  name: 'Badge',
+  componentClass: 'presentational' as const,
+  category: 'data-display',
+  description: 'Inline status label with variant and size options',
 
-  identity: {
-    name: 'Badge',
-    description: 'Small label for status, count, or category.',
-    synonyms: ['tag', 'pill', 'chip', 'status'],
+  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
+  families: {
+    behavior:  ['display'],
+    state:     ['stateless'],
+    animation: ['none'],
+    a11y:      ['none'],
   },
 
-  taxonomies: {
-    category: 'core',
-    class: { kind: 'presentational' },
-  },
-
-  composition: {
-    compound: false,
-    rootElement: 'span',
-    asChild: false,
-    slots: [
-      { name: 'root', element: 'span', description: 'Badge container.' },
-    ],
-    props: [
-      {
-        name: 'children',
-        required: true,
-        role: 'composition',
-        type: 'React.ReactNode',
-        description: 'Badge content.',
-        moveSpecific: false,
-      },
-      {
-        name: 'variant',
-        required: false,
-        role: 'data',
-        type: "'subtle' | 'solid' | 'outline'",
-        default: "'subtle'",
-        description: 'Visual style.',
-        moveSpecific: true,
-      },
-      {
-        name: 'size',
-        required: false,
-        role: 'data',
-        typeRef: 'Size',
-        default: "'md'",
-        description: 'Size scale.',
-        moveSpecific: true,
-      },
-    ],
-    anatomy: { slot: 'root', dataAttributes: ['data-variant', 'data-size'] },
-  },
-
-  interaction: {
-    keyboard: 'none',
-    focus: 'self',
-    formType: null,
-  },
-
-  style: {
-    variants: { variant: ['subtle', 'solid', 'outline'] },
-    sizes: ['sm', 'md', 'lg'],
-    labels: [],
-  },
-
-  animation: {
-    triggers: [],
-    tokens: [
-      { name: '--move-badge-bg', value: 'var(--move-bg-subtle)', description: 'Background.' },
-      { name: '--move-badge-fg', value: 'var(--move-fg-base)', description: 'Text colour.' },
-    ],
-    renderContracts: [
-      { id: 'data-attrs', description: 'variant + size set as data-* attributes on root for CSS targeting.' },
-    ],
-  },
-
-  tests: {
-    behaviors: ['Renders children', 'Applies data-variant attribute'],
-  },
-
-  lifecycle: {
-    since: '0.1.0',
-    defaultReview: { status: 'approved', decisionSource: 'rule-based', overrides: {} },
-  },
-
-  tooling: {
-    hasHook: false,
-    engineImports: ['withMoveComponent'],
-    componentDeps: [],
-  },
-};
-`;
-
-/** Snippet shown in the Taxonomies overview to make the
- *  discriminated-union pattern concrete. */
-const TAXONOMY_VARIANT_SNIPPET = `taxonomies: {
-  // ...
-  behaviors: [
-    {
-      kind: 'popup-anchored',
-      closeOnEscape: true,
-      closeOnOutsideClick: true,
-      closeOnScroll: true,
-      closeOnResize: true,
-    },
+  compound: false,
+  rootElement: 'span',
+  slots: [
+    { name: 'root', element: 'span', description: 'Badge container' },
   ],
-},
+
+  props: [
+    { name: 'variant', type: "'solid' | 'soft' | 'surface' | 'outline' | 'dot'", default: "'solid'", moveSpecific: true, description: 'Visual style variant' },
+    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Badge size' },
+    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Badge content' },
+  ],
+
+  anatomy: {
+    slot: 'root',
+    dataAttributes: ['data-variant', 'data-size'],
+  },
+
+  controlled: null,
+  keyboard: null,
+  focus: null,
+  formType: null,
+  asChild: false,
+
+  animations: [],
+
+  tokens: [
+    { name: '--move-badge-radius', value: 'var(--move-rounded-full)', description: 'Border radius' },
+    { name: '--move-badge-font-weight', value: 'var(--move-weight-medium)', description: 'Font weight' },
+    // …
+  ],
+
+  variants: {
+    variant: ['solid', 'soft', 'surface', 'outline', 'dot'],
+  },
+  sizes: ['sm', 'md', 'lg'],
+
+  labels: [],
+
+  hasHook: false,
+  engineImports: ['withMoveComponent'],
+  componentDeps: [],
+
+  testing: {
+    behaviors: [
+      'Renders as span element',
+      'Applies variant via data-variant attribute',
+      'Defaults to variant=solid',
+      'Forwards ref to root element',
+    ],
+  },
+
+  defaultReview: {
+    status: 'approved' as const,
+    decisionSource: 'rule-based' as const,
+    overrides: {},
+  },
+} satisfies ComponentSpec;
 `;
 
 const GLOSSARY: Record<string, string> = {
+  // componentClass
+  presentational: 'Pure visual; no state, no interaction (Badge, Avatar, Skeleton).',
+  interactive: 'Accepts user input but is not a form field (Button, ToggleButton).',
+  input_toggle: 'Form input with a boolean checked state (Checkbox, Switch).',
+  input_popup: 'Form input backed by a floating layer (Select, DatePicker, ColorInput).',
+  input_plain: 'Plain form input rendering a real <input> (InputText, Textarea).',
+  disclosure: 'Open/close container with an animated reveal (Accordion, Collapsible).',
+  overlay_layer: 'Full-viewport blocking layer (Dialog, Drawer).',
+  overlay_popup: 'Anchored, non-blocking floating layer (Popover, Dropdown, Tooltip).',
+  display: 'Shows data; no input semantics (Table, Timeline, List).',
+  navigation: 'Moves the user between locations (Link, Breadcrumb, Pagination).',
   // keyboard patterns
-  roving: 'Roving tabindex — Tab enters the group, arrows move within. Only one descendant is in the tab order at any time.',
-  linear: 'Standard tab-order navigation; no arrow handling.',
-  toggle: 'A single key (Space or Enter) toggles the state.',
+  roving: 'Roving tabindex — Tab enters the group, arrows move within; only one descendant is tabbable at a time.',
+  linear: 'Arrow up/down navigates a list.',
+  toggle: 'Space/Enter toggles the state.',
+  typeahead: 'Typing filters/searches the options.',
   grid: '2D grid navigation with arrow keys in both axes.',
   // focus patterns
   self: 'Component itself is focusable; standard browser handling.',
-  delegated: 'Focus is delegated to an inner input or trigger.',
-  trap: 'Focus is trapped inside while open (modal pattern).',
-  child: 'Focus is delegated to a specific named child.',
+  delegated: 'Focus is delegated to an inner input.',
+  trap: 'Focus is trapped inside while open (overlays).',
+  child: 'Focus a specific named child element.',
   // formType
-  'native-name': 'Renders a real form element with name/value.',
-  'hidden-input': 'Renders a hidden <input> carrying the value (used by custom UI components that still need to submit).',
-  // surface levels
-  base: 'Base background tint.',
-  subtle: 'Slightly raised; muted background.',
+  'native-name': 'Standard <input name="…"> participates in form submission.',
+  'hidden-input': 'A hidden <input> carries the value for form submission.',
+  // controlled
+  open: 'open / defaultOpen / onOpenChange.',
+  value: 'value / defaultValue / onValueChange.',
+  checked: 'checked / defaultChecked / onCheckedChange.',
+  // dismissBehavior
+  hide: 'The component stays mounted and is visually hidden when dismissed.',
+  unmountAfterExit: 'The component unmounts once its exit animation completes.',
   // decisionSource
-  'rule-based': "Auto-approved by the review pipeline's rules.",
-  'user-confirmed': 'A human signed off after review.',
+  'rule-based': "Auto-approved by the review pipeline's deterministic rules.",
+  'user-confirmed': 'A human reviewed each default and signed off.',
   'accept-all': 'Bulk-approved during a migration; lower confidence than user-confirmed.',
+  // animation capabilities
+  slidingIndicator: 'Measure + track an active element, re-measuring on resize/fonts (usePositionTracker). Tabs, TableOfContents.',
+  valueLoop: 'Animate a JS value/proxy in a loop, applied via a render callback (raw anime.js). Loader, Skeleton.',
+  measureThenAnimate: 'An enter animation whose values depend on a layout measurement taken after render. ChatBubble.',
+  scrollApi: 'An imperative scroll/gesture API, not an anime.js animation. Carousel.',
+  cssAnimation: 'A continuous CSS @keyframes animation that is not a discrete enter/exit — a spinner rotation, indeterminate progress, a blinking caret.',
+  textSplit: 'Split a text node into runtime-generated character/word/line elements and stagger them (useSplitText). AnimatedText.',
 };
 
 /**
  * Code chip with an info icon when the literal appears in the
- * glossary. The icon is the visible "I have a definition" cue;
- * hovering reveals the meaning via tooltip.
+ * glossary. Hovering reveals the meaning via tooltip.
  */
 function Term({ children }: { children: string }) {
   const meaning = GLOSSARY[children];
@@ -219,393 +204,187 @@ function FieldTable({ fields }: { fields: FieldRow[] }) {
   );
 }
 
-const IDENTITY: FieldRow[] = [
-  { name: 'schemaVersion', type: '1', required: true, description: 'Pinned literal. Bumped only on breaking schema changes; bumps come with a migration over all specs.' },
-  { name: 'name', type: 'string', required: true, description: 'PascalCase component name. Must match the file basename and the runtime export.' },
-  { name: 'description', type: 'string', required: true, description: 'One-sentence summary of what the component does.' },
-  { name: 'synonyms', type: 'string[]', required: true, description: <>Alternate search terms (e.g. Dialog → modal, popup, lightbox). <Code>[]</Code> when none apply.</> },
-];
-
-const TAXONOMY_FIELDS: FieldRow[] = [
-  { name: 'category', type: 'Category', required: true, description: <>Top-level grouping label — <strong>metadata only</strong>. See <a href="#taxonomy-category">Category</a>.</> },
-  { name: 'class', type: 'ComponentClass', required: true, description: <>Structural class. Discriminated union — each variant carries its required slots and prop expectations.</> },
-  { name: 'behaviors', type: 'Behavior[]', required: false, description: <>Multi-valued behaviour family memberships. Absent when none apply.</> },
-  { name: 'state', type: 'State', required: false, description: <>Controlled-state shape. Absent on stateless components.</> },
-  { name: 'animation', type: 'Animation', required: false, description: <>Animation pattern. Absent when no pattern applies.</> },
-  { name: 'surface', type: 'Surface', required: false, description: <>Surface elevation marker. Absent when the component has no distinct surface.</> },
-  { name: 'a11y', type: 'A11y', required: false, description: <>WAI-ARIA pattern. Absent when no specific pattern applies.</> },
-];
-
-const COMPOSITION: FieldRow[] = [
-  { name: 'compound', type: 'boolean', required: true, description: <><Code>false</Code> = a single self-contained component you use directly (e.g. <Code>{`<Image src="…" />`}</Code>). <Code>true</Code> = a component you assemble from named sub-pieces (e.g. <Code>{`<Tabs.Root>`}</Code> with <Code>{`<Tabs.List>`}</Code>, <Code>{`<Tabs.Trigger>`}</Code>, <Code>{`<Tabs.Content>`}</Code>). Props for compound components are listed per sub-piece on <Code>subComponents[]</Code>.</> },
-  { name: 'rootElement', type: 'string', required: true, description: <>The element or Radix primitive rendered for the root slot.</> },
-  { name: 'asChild', type: 'boolean', required: true, description: <>Whether the component supports Radix UI's <Code>asChild</Code> pattern — pass <Code>asChild</Code> with a single child element and the component merges its props/ref onto that child instead of rendering its own default element. Borrowed from Radix; non-Radix runtimes adopting this contract would implement an equivalent slot-replace pattern.</> },
-  { name: 'slots', type: 'SlotDef[]', required: true, description: 'Flat list of every named rendering slot.' },
-  { name: 'props', type: 'PropDef[]', required: true, description: <>Top-level props. <Code>[]</Code> when <Code>compound: true</Code>.</> },
-  { name: 'subComponents', type: 'SubComponentDef[]', required: false, description: 'One entry per public sub-component.' },
-  { name: 'anatomy', type: 'AnatomyDef', required: true, description: 'Recursive tree describing slot composition. Children must reference declared slot names.' },
-  { name: 'childrenKind', type: "'composition' | 'text'", required: false, description: 'Declared only when the children slot has a constrained role.' },
-  { name: 'radixPrimitive', type: 'string | null', required: false, description: 'Top-level Radix primitive being wrapped.' },
-];
-
-const INTERACTION: FieldRow[] = [
-  { name: 'keyboard', type: 'KeyboardPattern', required: true, description: <>One of <Term>roving</Term>, <Term>linear</Term>, <Term>toggle</Term>, <Term>grid</Term>, <Term>none</Term>.</> },
-  { name: 'focus', type: 'FocusPattern', required: true, description: <>One of <Term>self</Term>, <Term>roving</Term>, <Term>delegated</Term>, <Term>trap</Term>, <Term>child</Term>, <Term>none</Term>.</> },
-  { name: 'formType', type: "'hidden-input' | 'native-name' | null", required: true, description: <>One of <Term>native-name</Term>, <Term>hidden-input</Term>, or <Code>null</Code>.</> },
-  { name: 'states', type: 'AnimationStateDef[]', required: false, description: 'DOM-attribute observers that drive animation state triggers.' },
-];
-
-const STYLE: FieldRow[] = [
-  { name: 'variants', type: 'Record<string, string[]>', required: true, description: 'Variant axes and their allowed values.' },
-  { name: 'sizes', type: 'string[]', required: true, description: 'Size scale token names.' },
-  { name: 'labels', type: 'LabelDef[]', required: true, description: <>Localizable string rows — <Code>{`{ key, default, description }`}</Code>. User-visible defaults the component ships (button labels, aria-labels, format templates). <Code>[]</Code> when the component exposes no labels.</> },
-];
-
-const ANIMATION: FieldRow[] = [
-  { name: 'triggers', type: 'AnimationDef[]', required: true, description: <>Concrete trigger/sequence pairs. The pattern these fit is named in <Code>taxonomies.animation.kind</Code>.</> },
-  { name: 'tokens', type: 'TokenDef[]', required: true, description: <>CSS custom properties this component owns. Names follow <Code>--move-{`<component>`}-</Code>.</> },
-  { name: 'renderContracts', type: 'RenderContractDef[]', required: true, description: 'Stable, ID-keyed contracts about how the component renders.' },
-];
-
-const TESTS: FieldRow[] = [
-  { name: 'behaviors', type: 'string[]', required: true, description: 'Functional cases. Used as a checklist when generating tests.' },
-  { name: 'aria', type: 'string[]', required: false, description: 'Accessibility assertions.' },
-  { name: 'keyboard', type: 'string[]', required: false, description: 'Keyboard interaction assertions.' },
-  { name: 'animation', type: 'string[]', required: false, description: 'Animation assertions.' },
-  { name: 'form', type: 'string[]', required: false, description: 'Form-participation assertions.' },
-];
-
-const TOOLING: FieldRow[] = [
-  { name: 'hasHook', type: 'boolean', required: true, description: 'Whether the component exports a public hook.' },
-  { name: 'engineImports', type: 'string[]', required: true, description: 'Names imported from `engine/`.' },
-  { name: 'componentDeps', type: 'string[]', required: true, description: 'Other Move components this one composes.' },
-];
-
-const LIFECYCLE: FieldRow[] = [
-  { name: 'since', type: 'string', required: true, description: <>Package version when this component was first introduced (e.g. <Code>'0.1.48'</Code>). Used by the version-log generator and by the components overview to filter "what shipped in v2.0?".</> },
-  { name: 'defaultReview', type: 'DefaultReview', required: true, description: <>AI safety gate. Records whether a human has signed off on the proposed defaults — generators refuse to run when <Code>status === 'pending'</Code>. See the field breakdown below.</> },
-  { name: 'deprecated', type: 'DeprecatedDef', required: false, description: <>Set on a component scheduled for removal. Drives the docs deprecation banner and the <Code>componentDeprecated</Code> spec-diff event. Carries <Code>since</Code>, <Code>removeIn</Code>, optional <Code>replacement</Code>, and <Code>reason</Code>.</> },
-];
-
-const DEFAULT_REVIEW_FIELDS: FieldRow[] = [
-  { name: 'status', type: "'approved' | 'pending'", required: true, description: <><Code>'pending'</Code> blocks AI generation; <Code>'approved'</Code> lets it through. Generators (<Code>/component-generate-all</Code>, etc.) check this before running.</> },
-  { name: 'decisionSource', type: "'rule-based' | 'user-confirmed' | 'accept-all'", required: true, description: <>How the approval was reached. <Term>rule-based</Term>: auto-approved by deterministic rules (highest confidence). <Term>user-confirmed</Term>: a human reviewed each default individually. <Term>accept-all</Term>: bulk-approved during a migration (lower confidence).</> },
-  { name: 'overrides', type: 'Record<string, unknown>', required: true, description: 'Specific defaults the human changed during review. Key = prop name, value = chosen default. Empty object when no overrides.' },
-];
-
-// ============================================================================
-// Taxonomy values + sub-contracts
-// ============================================================================
-
-interface TaxonomyField {
-  name: string;
-  type: string;
-  required: boolean;
-  description: string;
-}
-interface TaxonomyValue {
-  kind: string;
-  meaning: string;
-  fields?: TaxonomyField[];
-  examples?: string;
-}
-interface TaxonomyDef {
-  name: string;
-  axis: string;
-  flavor: 'metadata' | 'contract';
-  multiValued: boolean;
-  description: React.ReactNode;
-  values: TaxonomyValue[];
-}
-
-const TAXONOMIES: TaxonomyDef[] = [
-  {
-    name: 'Category',
-    axis: 'category',
-    flavor: 'metadata',
-    multiValued: false,
-    description: <>Top-level grouping label. Drives docs navigation and the "by category" filter.</>,
-    values: [
-      { kind: 'core', meaning: 'Primitive building blocks: text, layout, badges, links.', examples: 'Alert, Avatar, Badge, Button, Heading, Link, Stack' },
-      { kind: 'form', meaning: 'Form inputs and field-related controls.', examples: 'InputText, Checkbox, Select, DatePicker, Switch' },
-      { kind: 'overlay', meaning: 'Floating layers — both modals and anchored popups.', examples: 'Dialog, Drawer, Dropdown, Popover, Toast' },
-      { kind: 'panel', meaning: 'Container surfaces.', examples: 'Accordion, Card, Collapsible, Sidebar, Tabs' },
-      { kind: 'navigation', meaning: 'Wayfinding and linear navigation.', examples: 'Breadcrumb, Pagination, Stepper, TableOfContents' },
-      { kind: 'data', meaning: 'Tabular and list data display.', examples: 'List, Table, Timeline' },
-      { kind: 'media', meaning: 'Audio, video, image, gallery.', examples: 'AudioPlayer, Carousel, Image, ImageGroup, VideoPlayer' },
-      { kind: 'loading', meaning: 'Loaders, skeletons, progress, empty states.', examples: 'EmptyState, Loader, ProgressBar, Skeleton' },
-      { kind: 'calendar', meaning: 'Date grids and calendar views.', examples: 'Calendar, CalendarView' },
-      { kind: 'toolbar', meaning: 'Segmented controls and toolbar items.', examples: 'ToggleButton, ToggleGroup' },
-    ],
-  },
-  {
-    name: 'ComponentClass',
-    axis: 'class',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>Structural class. Each variant declares the slot set the generator must scaffold and any class-level prop expectation. The class drives generator template selection.</>,
-    values: [
-      { kind: 'presentational', meaning: 'Pure visual; no state, no interaction. Covers display primitives (Avatar, Badge, Skeleton) and typography (Heading, Text, Code, Prose).', examples: 'Image, Card, Heading, Text, Avatar, Badge, Skeleton' },
-      { kind: 'layout', meaning: 'Structural wrapper that arranges children.', fields: [
-        { name: 'axis', type: "'flex' | 'grid' | 'split'", required: true, description: 'How children are arranged.' },
-      ], examples: 'Stack, Grid, Splitter' },
-      { kind: 'display', meaning: 'Shows data; no input semantics.', fields: [
-        { name: 'requiredSlots', type: "['root']", required: true, description: 'Slots the generator must scaffold.' },
-      ], examples: 'Calendar, Timeline, Table, List' },
-      { kind: 'interactive', meaning: 'Accepts user input but is not a form field.', fields: [
-        { name: 'requiredSlots', type: "['root']", required: true, description: 'Slots the generator must scaffold.' },
-        { name: 'requiresOnClick', type: 'true', required: true, description: 'Component must accept an onClick prop.' },
-      ], examples: 'Button, ToggleGroup, ToggleButton' },
-      { kind: 'navigation', meaning: 'Moves the user between locations.', fields: [
-        { name: 'requiredSlots', type: "['root']", required: true, description: 'Slots the generator must scaffold.' },
-      ], examples: 'Link, Breadcrumb, Pagination, Tabs' },
-      { kind: 'input', meaning: 'Form input. Sub-divisions (plain/popup/toggle) live in the behaviors taxonomy.', fields: [
-        { name: 'requiredSlots', type: "['root', 'input']", required: true, description: 'Wraps a real input element.' },
-        { name: 'requiresValue', type: 'true', required: true, description: 'Must accept a value prop.' },
-      ], examples: 'InputText, Select, Checkbox, DatePicker' },
-      { kind: 'overlay', meaning: 'Floating layer. Modal vs anchored distinction lives in behaviors.', fields: [
-        { name: 'requiredSlots', type: "['root', 'trigger', 'content']", required: true, description: 'Slots the generator must scaffold.' },
-        { name: 'requiresPortal', type: 'true', required: true, description: 'Content portals out of the DOM tree.' },
-      ], examples: 'Dialog, Drawer, Popover, Dropdown' },
-      { kind: 'disclosure', meaning: 'Open/close container with animated reveal.', fields: [
-        { name: 'requiredSlots', type: "['root', 'trigger', 'content']", required: true, description: 'Slots the generator must scaffold.' },
-      ], examples: 'Accordion, Collapsible, Sidebar' },
-    ],
-  },
-  {
-    name: 'Behavior',
-    axis: 'behaviors',
-    flavor: 'contract',
-    multiValued: true,
-    description: <>What the component DOES at the page level. Multi-valued — a component can be in several behaviour families simultaneously. Every variant carries a sub-contract; pure-label entries (layout, typography, display) live on the class taxonomy instead.</>,
-    values: [
-      { kind: 'popup-anchored', meaning: 'Anchored to a trigger; non-blocking overlay.', fields: [
-        { name: 'closeOnEscape', type: 'boolean', required: true, description: 'Closes when Escape is pressed.' },
-        { name: 'closeOnOutsideClick', type: 'boolean', required: true, description: 'Closes on outside pointer/touch.' },
-        { name: 'closeOnScroll', type: 'boolean', required: true, description: 'Closes when an ancestor scrolls.' },
-        { name: 'closeOnResize', type: 'boolean', required: true, description: 'Closes on viewport resize.' },
-      ], examples: 'Popover, Dropdown, Tooltip' },
-      { kind: 'modal-overlay', meaning: 'Full-viewport blocking surface.', fields: [
-        { name: 'closeOnEscape', type: 'boolean', required: true, description: 'Closes when Escape is pressed.' },
-        { name: 'closeOnOverlayClick', type: 'boolean', required: true, description: 'Closes when the backdrop is clicked.' },
-        { name: 'lockBodyScroll', type: 'boolean', required: true, description: 'Disables document scrolling while open.' },
-        { name: 'trapFocus', type: 'boolean', required: true, description: 'Focus is trapped inside while open.' },
-      ], examples: 'Dialog, Drawer' },
-      { kind: 'disclosure', meaning: 'Expand/collapse container with open/close state.', fields: [
-        { name: 'animatesOpen', type: 'boolean', required: true, description: 'Open transition is animated.' },
-        { name: 'animatesClose', type: 'boolean', required: true, description: 'Close transition is animated.' },
-        { name: 'keyboardToggle', type: 'boolean', required: true, description: 'Space/Enter on trigger toggles.' },
-        { name: 'multipleOpen', type: 'boolean', required: true, description: 'Multiple items can be open at once.' },
-      ], examples: 'Accordion, Collapsible, Sidebar' },
-      { kind: 'data-row', meaning: 'Clickable row in a list/table/gallery.', fields: [
-        { name: 'interactiveProp', type: 'boolean', required: true, description: 'Exposes an `interactive` prop or auto-derives.' },
-        { name: 'keyboardActivate', type: 'boolean', required: true, description: 'Enter/Space activates onClick.' },
-        { name: 'hoverAffordance', type: 'boolean', required: true, description: 'Cursor + hover tint + focus ring.' },
-        { name: 'rootHoverModifier', type: "'hoverable' | 'hover' | null", required: true, description: 'Root-level modifier name when present.' },
-      ], examples: 'List.Item, Table.Row, Image' },
-      { kind: 'form-input', meaning: 'Contributes a value to a form.', fields: [
-        { name: 'name', type: 'string', required: false, description: 'Submission name attribute when applicable.' },
-        { name: 'hiddenInput', type: 'boolean', required: true, description: 'Emits a hidden <input> carrying the value.' },
-      ], examples: 'InputText, Select, Checkbox, DatePicker' },
-      { kind: 'notification-inline', meaning: 'Ephemeral feedback rendered inline (not floating).', fields: [
-        { name: 'dismissable', type: 'boolean', required: true, description: 'Can be manually dismissed.' },
-      ], examples: 'Alert' },
-      { kind: 'notification-floating', meaning: 'Ephemeral feedback floating above content (drives the toast z-layer).', fields: [
-        { name: 'autoDismissMs', type: 'number | null', required: true, description: 'Auto-dismiss timeout. `null` for manual-only.' },
-        { name: 'dismissable', type: 'boolean', required: true, description: 'Can be manually dismissed.' },
-      ], examples: 'Toast' },
-      { kind: 'navigation', meaning: 'Moves the user.', fields: [
-        { name: 'target', type: "'href' | 'onClick' | 'both'", required: true, description: 'Source of the routing target.' },
-      ], examples: 'Link, Breadcrumb, Pagination, Tabs, Stepper' },
-      { kind: 'media', meaning: 'Image, audio, video, gallery.', fields: [
-        { name: 'mediaType', type: "'image' | 'audio' | 'video' | 'mixed'", required: true, description: 'Media kind handled.' },
-      ], examples: 'Image, AudioPlayer, VideoPlayer, Carousel' },
-      { kind: 'loading', meaning: 'Signals progress or waiting.', fields: [
-        { name: 'determinate', type: 'boolean', required: true, description: 'Whether progress is known.' },
-      ], examples: 'Loader, Skeleton, ProgressBar' },
-    ],
-  },
-  {
-    name: 'State',
-    axis: 'state',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>The controlled-state shape. Optional — absent on stateless components. The variant carries the controlled-prop wiring.</>,
-    values: [
-      { kind: 'controlled-value', meaning: 'A value/defaultValue/onChange trio.', fields: [
-        { name: 'valueProp', type: 'string', required: true, description: "e.g. 'value', 'checked'." },
-        { name: 'defaultValueProp', type: 'string', required: true, description: "e.g. 'defaultValue', 'defaultChecked'." },
-        { name: 'onChangeProp', type: 'string', required: true, description: "e.g. 'onValueChange', 'onCheckedChange'." },
-      ], examples: 'Tabs, Select, InputText, Checkbox, Switch' },
-      { kind: 'controlled-open', meaning: 'Open/defaultOpen/onOpenChange.', fields: [
-        { name: 'valueProp', type: "'open'", required: true, description: 'Always the literal "open".' },
-        { name: 'defaultValueProp', type: "'defaultOpen'", required: true, description: 'Always the literal "defaultOpen".' },
-        { name: 'onChangeProp', type: "'onOpenChange'", required: true, description: 'Always the literal "onOpenChange".' },
-      ], examples: 'Dialog, Drawer, Popover, Sidebar' },
-    ],
-  },
-  {
-    name: 'Animation',
-    axis: 'animation',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>Dominant motion pattern. Optional — absent when no pattern applies. Each variant declares the parameters that vary per spec; pattern rules (which triggers and properties must appear in <Code>animations[]</Code>) are constants of the kind, validated by the spec-schema check.</>,
-    values: [
-      { kind: 'fade', meaning: 'Pure opacity transition.', fields: [
-        { name: 'direction', type: "'enter' | 'exit' | 'both'", required: true, description: 'Which transition direction(s) animate.' },
-      ], examples: 'FileUpload, ProgressBar, Image' },
-      { kind: 'scale-fade', meaning: 'Scale + opacity (popups, dialogs).', fields: [
-        { name: 'direction', type: "'enter' | 'exit' | 'both'", required: true, description: 'Which transition direction(s) animate.' },
-      ], examples: 'Tooltip, Select, Dialog' },
-      { kind: 'slide', meaning: 'Translate-based enter and exit.', fields: [
-        { name: 'direction', type: "'left' | 'right' | 'top' | 'bottom'", required: true, description: 'Edge the component slides from on enter and to on exit.' },
-      ], examples: 'Drawer, Sidebar' },
-      { kind: 'dimension-morph', meaning: 'animateDimension on a single axis (height or width).', fields: [
-        { name: 'axis', type: "'height' | 'width'", required: true, description: 'Dimension being animated.' },
-      ], examples: 'Dropdown, Accordion, Collapsible' },
-      { kind: 'hover-press', meaning: 'Pointer feedback.', fields: [
-        { name: 'triggers', type: "('hover' | 'press')[]", required: true, description: 'Which pointer events fire feedback.' },
-      ], examples: 'Button, Checkbox, ToggleButton, ToggleGroup' },
-      { kind: 'stagger', meaning: 'Children animate in sequence.', fields: [
-        { name: 'intervalMs', type: 'number', required: true, description: 'Stagger interval in milliseconds.' },
-        { name: 'target', type: "'children' | 'self'", required: true, description: 'What is staggered.' },
-      ], examples: 'ChatBubble, List, Timeline' },
-      { kind: 'loop', meaning: 'Perpetual motion.', fields: [
-        { name: 'durationMs', type: 'number', required: true, description: 'Loop period in milliseconds.' },
-        { name: 'alternate', type: 'boolean', required: true, description: 'Loop reverses direction every cycle.' },
-      ], examples: 'Loader, Skeleton, Spinner' },
-    ],
-  },
-  {
-    name: 'Surface',
-    axis: 'surface',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>Surface elevation marker for components that render a tinted or elevated panel. Levels alternate background tints so nested surfaces stay visually distinct. Optional — absent when the component has no distinct surface. Full reference: <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink>.</>,
-    values: [
-      { kind: 'base', meaning: 'Base background tint.', fields: [
-        { name: 'slot', type: 'string', required: true, description: 'Slot the surface applies to.' },
-      ], examples: 'TableOfContents' },
-      { kind: 'subtle', meaning: 'Slightly raised; muted background.', fields: [
-        { name: 'slot', type: 'string', required: true, description: 'Slot the surface applies to.' },
-      ], examples: 'Alert, Card, Dialog, Drawer, Dropdown, Popover, Toast' },
-    ],
-  },
-  {
-    name: 'Z',
-    axis: 'z (derived)',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>Stacking layer — <strong>derived</strong> from <Code>behaviors[]</Code> and <Code>a11y</Code> via <Code>deriveZ(spec)</Code>. Not declared on the spec; the model enforces that every component's z-layer falls out of its other taxonomies. Layers ordered low → high. Full reference, derivation rules, and per-component table: <RouterLink to="/core-concepts/stacking">Stacking</RouterLink>.</>,
-    values: [
-      { kind: 'sticky', meaning: 'Sticky elements within scrollable content.', examples: 'sticky table headers' },
-      { kind: 'app-shell', meaning: 'Top-level chrome — sidebars, fixed top bars.', examples: 'Sidebar' },
-      { kind: 'overlay-backdrop', meaning: 'Backdrop behind a modal.', examples: 'Dialog/Drawer overlay' },
-      { kind: 'overlay', meaning: 'Modal content layer.', examples: 'Dialog, Drawer' },
-      { kind: 'popover', meaning: 'Anchored popups.', examples: 'Popover, Dropdown, Select, Autocomplete' },
-      { kind: 'tooltip', meaning: 'Tooltips.', examples: 'Tooltip' },
-      { kind: 'toast', meaning: 'Toast notifications — highest layer.', examples: 'Toast' },
-    ],
-  },
-  {
-    name: 'A11y',
-    axis: 'a11y',
-    flavor: 'contract',
-    multiValued: false,
-    description: <>WAI-ARIA pattern. Optional — absent when no specific pattern applies. The variant carries the role and the required attributes the validation script cross-checks against <Code>anatomy.ariaAttributes</Code>.</>,
-    values: [
-      { kind: 'dialog', meaning: 'WAI-ARIA Dialog.', fields: [
-        { name: 'role', type: "'dialog' | 'alertdialog'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['aria-modal', 'aria-labelledby']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Dialog, Drawer, Popover, ColorInput, DatePicker' },
-      { kind: 'menu', meaning: 'WAI-ARIA Menu.', fields: [
-        { name: 'role', type: "'menu'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Dropdown' },
-      { kind: 'listbox', meaning: 'WAI-ARIA Listbox.', fields: [
-        { name: 'role', type: "'listbox'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'RadioGroup, Select' },
-      { kind: 'combobox', meaning: 'WAI-ARIA Combobox.', fields: [
-        { name: 'role', type: "'combobox'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role', 'aria-expanded']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Autocomplete' },
-      { kind: 'tablist', meaning: 'WAI-ARIA Tabs.', fields: [
-        { name: 'role', type: "'tablist'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Tabs, ToggleGroup, Carousel' },
-      { kind: 'tooltip', meaning: 'WAI-ARIA Tooltip.', fields: [
-        { name: 'role', type: "'tooltip'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Tooltip' },
-      { kind: 'disclosure', meaning: 'WAI-ARIA Disclosure.', fields: [
-        { name: 'requiredAttrs', type: "['aria-expanded']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'Accordion, Collapsible, Sidebar' },
-      { kind: 'progressbar', meaning: 'WAI-ARIA Progressbar.', fields: [
-        { name: 'role', type: "'progressbar'", required: true, description: 'ARIA role on the root.' },
-        { name: 'requiredAttrs', type: "['role', 'aria-valuenow']", required: true, description: 'Attributes that must appear in anatomy.' },
-      ], examples: 'ProgressBar' },
-    ],
-  },
-];
-
-function TaxonomyTable({ tax }: { tax: TaxonomyDef }) {
-  const hasFields = tax.values.some((v) => v.fields && v.fields.length);
+/** Compact card wrapper for a nested-type field table. */
+function NestedType({ name, lede, fields }: { name: string; lede: React.ReactNode; fields: FieldRow[] }) {
   return (
-    <Card.Root id={`taxonomy-${tax.axis}`}>
+    <Card.Root>
       <Card.Body>
         <Stack gap="md">
-          <Stack direction="row" gap="xs" align="center" wrap>
-            <Heading level={3}>{tax.name}</Heading>
-            <Code>{tax.axis}</Code>
+          <Stack gap="xs">
+            <Heading level={4}><Code>{name}</Code></Heading>
+            <Text color="muted" size="sm">{lede}</Text>
           </Stack>
-          <Text color="muted" size="sm">{tax.description}</Text>
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>kind</Table.Head>
-            <Table.Head>Meaning</Table.Head>
-            {hasFields && <Table.Head>Sub-contract</Table.Head>}
-            <Table.Head>Examples</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {tax.values.map((v) => (
-            <Table.Row key={v.kind}>
-              <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
-                <Code>{v.kind}</Code>
-              </Table.Cell>
-              <Table.Cell><Text size="sm">{v.meaning}</Text></Table.Cell>
-              {hasFields && (
-                <Table.Cell>
-                  {v.fields?.length ? (
-                    <Stack gap="sm">
-                      {v.fields.map((f) => (
-                        <Stack key={f.name} direction="row" gap="xs" align="baseline" wrap>
-                          <Code>{f.name}</Code>
-                          <InlineCode code={f.type} tintByType />
-                          <Badge variant={f.required ? 'soft' : 'outline'}>
-                            {f.required ? 'required' : 'optional'}
-                          </Badge>
-                          {f.description && <Text size="sm" color="muted">{f.description}</Text>}
-                        </Stack>
-                      ))}
-                    </Stack>
-                  ) : (
-                    <Text size="sm" color="muted">—</Text>
-                  )}
-                </Table.Cell>
-              )}
-              <Table.Cell><Text size="sm" color="muted">{v.examples ?? '—'}</Text></Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+          <FieldTable fields={fields} />
         </Stack>
       </Card.Body>
     </Card.Root>
   );
 }
+
+// ============================================================================
+// Top-level ComponentSpec fields, grouped by section
+// ============================================================================
+
+const IDENTITY: FieldRow[] = [
+  { name: 'schemaVersion', type: '7', required: true, description: <>Schema version — always the pinned literal <Code>SPEC_SCHEMA_VERSION</Code> (<Code>7 as const</Code>). Bumped only on breaking schema changes, which ship with a migration over all specs.</> },
+  { name: 'name', type: 'string', required: true, description: 'Component display name (PascalCase). Matches the file basename and the runtime export.' },
+  { name: 'componentClass', type: 'ComponentClass', required: true, description: <>Component class — determines template and default behaviors. One of <Term>presentational</Term>, <Term>interactive</Term>, <Term>input_toggle</Term>, <Term>input_popup</Term>, <Term>input_plain</Term>, <Term>disclosure</Term>, <Term>overlay_layer</Term>, <Term>overlay_popup</Term>, <Term>display</Term>, <Term>navigation</Term>.</> },
+  { name: 'category', type: 'string', required: true, description: <>Source category folder (e.g. <Code>'form'</Code>, <Code>'overlay'</Code>, <Code>'data-display'</Code>).</> },
+  { name: 'description', type: 'string', required: true, description: 'Brief one-line description.' },
+  { name: 'synonyms', type: 'string[]', required: false, description: <>Search synonyms / aliases (e.g. Dialog → <Code>'modal'</Code>, <Code>'popup'</Code>) for docs search.</> },
+  { name: 'families', type: 'Record<string, string[]>', required: false, description: <>Component-family memberships (<Code>behavior</Code> / <Code>state</Code> / <Code>animation</Code> / <Code>a11y</Code>) used by the cross-component drift checks.</> },
+];
+
+const STRUCTURE: FieldRow[] = [
+  { name: 'compound', type: 'boolean', required: true, description: <><Code>false</Code> = a single self-contained component used directly. <Code>true</Code> = a component assembled from named sub-pieces (e.g. <Code>{`<Tabs.Root>`}</Code> + <Code>{`<Tabs.List>`}</Code>); per-piece props live on <Code>subComponents[]</Code>.</> },
+  { name: 'rootElement', type: 'string', required: true, description: 'Root element HTML tag or Radix primitive.' },
+  { name: 'slots', type: 'SlotDef[]', required: true, description: 'All slots (for simple components).' },
+  { name: 'subComponents', type: 'SubComponentDef[]', required: false, description: 'Sub-components (for compound components).' },
+  { name: 'props', type: 'PropDef[]', required: true, description: 'Root-level props.' },
+  { name: 'anatomy', type: 'AnatomyNode', required: true, description: 'Render tree anatomy. Slot names must reference declared slots[].' },
+  { name: 'childrenKind', type: "'text' | 'composition'", required: false, description: 'Children semantics hint: text content vs structural composition.' },
+  { name: 'propRoles', type: 'Record<string, DemoPropRole>', required: false, description: <>Optional prop role hints (<Code>displayText</Code> / <Code>composition</Code> / <Code>data</Code> / <Code>behavior</Code> / <Code>i18n</Code>) for demo generation.</> },
+];
+
+const SLOT_DEF: FieldRow[] = [
+  { name: 'name', type: 'string', required: true, description: <>Slot name (e.g. <Code>'root'</Code>, <Code>'indicator'</Code>, <Code>'content'</Code>).</> },
+  { name: 'element', type: 'string', required: true, description: 'HTML element or Radix primitive this slot renders.' },
+  { name: 'description', type: 'string', required: true, description: 'Brief description of purpose.' },
+];
+
+const PROP_DEF: FieldRow[] = [
+  { name: 'name', type: 'string', required: true, description: 'Prop name.' },
+  { name: 'type', type: 'string', required: false, description: 'TypeScript type as a string.' },
+  { name: 'typeRef', type: 'string', required: false, description: <>Canonical type reference (e.g. <Code>'Size'</Code>, <Code>'Color'</Code>) instead of an inline union.</> },
+  { name: 'default', type: 'string', required: false, description: 'Default value, as a TS-literal string, if any.' },
+  { name: 'moveSpecific', type: 'boolean', required: true, description: <>Whether this is a Move-specific prop (goes in <Code>moveProps</Code>/defaults).</> },
+  { name: 'advanced', type: 'boolean', required: false, description: 'Advanced / rarely-used prop — de-emphasised in docs.' },
+  { name: 'description', type: 'string', required: true, description: 'Brief description.' },
+];
+
+const SUBCOMPONENT_DEF: FieldRow[] = [
+  { name: 'name', type: 'string', required: true, description: <>Sub-component display name (e.g. <Code>'Trigger'</Code>, <Code>'Content'</Code>).</> },
+  { name: 'slots', type: 'SlotDef[]', required: true, description: 'Slots owned by this sub-component.' },
+  { name: 'props', type: 'PropDef[]', required: true, description: 'Props for this sub-component.' },
+  { name: 'usesFactory', type: 'boolean', required: true, description: 'Whether this sub-component uses the factory (vs a plain FC).' },
+  { name: 'radixPrimitive', type: 'string', required: false, description: 'Radix primitive this wraps (if any).' },
+  { name: 'description', type: 'string', required: true, description: 'Brief description.' },
+];
+
+const ANATOMY_NODE: FieldRow[] = [
+  { name: 'slot', type: 'string', required: true, description: 'Slot name (must match a SlotDef).' },
+  { name: 'dataAttributes', type: 'string[]', required: false, description: <><Code>data-*</Code> attributes set on this element.</> },
+  { name: 'ariaAttributes', type: 'string[]', required: false, description: 'ARIA attributes set on this element.' },
+  { name: 'children', type: 'AnatomyNode[]', required: false, description: 'Child anatomy nodes.' },
+];
+
+const BEHAVIOR: FieldRow[] = [
+  { name: 'controlled', type: 'ControlledPattern', required: true, description: <>Controlled state pattern: <Term>open</Term>, <Term>value</Term>, <Term>checked</Term>, or <Code>null</Code>.</> },
+  { name: 'controlledProps', type: 'ControlledProps | Record<…>', required: false, description: <>Explicit controlled/uncontrolled prop mapping (when <Code>controlled != null</Code>). Either the flat single-prop form or a keyed map for multi-controlled components.</> },
+  { name: 'keyboard', type: 'KeyboardPattern', required: true, description: <>Keyboard interaction pattern: <Term>toggle</Term>, <Term>linear</Term>, <Term>roving</Term>, <Term>typeahead</Term>, <Term>grid</Term>, <Code>'none'</Code>, or <Code>null</Code>.</> },
+  { name: 'focus', type: 'FocusPattern', required: true, description: <>Focus management pattern: <Term>self</Term>, <Term>trap</Term>, <Term>roving</Term>, <Term>delegated</Term>, <Term>child</Term>, <Code>'none'</Code>, or <Code>null</Code>.</> },
+  { name: 'formType', type: 'FormType', required: true, description: <>Form integration type: <Term>native-name</Term>, <Term>hidden-input</Term>, or <Code>null</Code>.</> },
+  { name: 'asChild', type: 'boolean', required: true, description: <>Whether the component supports <Code>asChild</Code> (Slot) rendering — merges its props/ref onto a single child instead of rendering its own element.</> },
+  { name: 'dismissBehavior', type: 'DismissBehavior', required: false, description: <>Close/dismiss semantics for dismissible components: <Code>'none'</Code>, <Term>hide</Term>, or <Term>unmountAfterExit</Term>.</> },
+  { name: 'renderContracts', type: '(RenderContract | string)[]', required: false, description: <>Render/composition behavior that must survive generation. A bare string is shorthand for a contract with that description; the object form is <Code>{`{ id, description }`}</Code>.</> },
+  { name: 'behavior', type: 'Record<string, unknown>', required: false, description: 'Component-specific behavior config (modal/dismiss/…); shape varies per component.' },
+];
+
+const ANIMATION: FieldRow[] = [
+  { name: 'states', type: 'AnimationStateDef[]', required: false, description: 'State declarations for state-triggered animations — DOM-attribute observers that fire matching triggers.' },
+  { name: 'animations', type: 'AnimationTriggerBinding[]', required: true, description: <>Animation trigger-sequence bindings. An empty array means no animation.</> },
+  { name: 'animationCapabilities', type: 'AnimationCapability[]', required: false, description: <>Tier-2 capabilities a component uses beyond the declarative <Code>animations</Code> system — the sanctioned escapes for what triggers/sequences can't express. The animation-capabilities check enforces source ↔ this field.</> },
+];
+
+const ANIMATION_STATE_DEF: FieldRow[] = [
+  { name: 'name', type: 'string', required: true, description: <>Trigger name — matches an <Code>AnimationTriggerBinding.trigger</Code>.</> },
+  { name: 'slot', type: 'string', required: true, description: 'Which slot element to observe.' },
+  { name: 'source', type: 'string', required: true, description: <>DOM attribute to watch (e.g. <Code>'data-state'</Code>).</> },
+  { name: 'value', type: 'string', required: true, description: 'Attribute value that activates this state.' },
+  { name: 'closest', type: 'string', required: false, description: 'CSS selector for ancestor observation — observes an ancestor instead of the slot ref.' },
+  { name: 'initial', type: 'boolean', required: false, description: 'Skip the initial fire on mount when false (default true). Use for animations that should only run on subsequent state changes.' },
+];
+
+const ANIMATION_TRIGGER_BINDING: FieldRow[] = [
+  { name: 'trigger', type: 'string', required: true, description: <>Trigger name. Formats: <Code>'Slot.event'</Code> (hover, press), <Code>'Slot.enter'</Code> / <Code>'Slot.exit'</Code> (lifecycle), or <Code>'stateName'</Code> (must have a matching entry in <Code>states[]</Code>).</> },
+  { name: 'sequence', type: '(AnimationStepDef | AnimationStepDef[])[]', required: true, description: 'Steps to execute — an array of steps, or nested arrays for parallel execution.' },
+  { name: 'vars', type: 'Record<string, string>', required: false, description: 'Variable definitions for expression resolution.' },
+  { name: 'delegate', type: 'string', required: false, description: 'Delegate CSS selector — attach event handlers to matching descendants instead of the slot ref.' },
+  { name: 'onComplete', type: 'string', required: false, description: "Callback after all steps in this trigger's sequence complete." },
+  { name: 'deps', type: 'string[]', required: false, description: 'Dependency array — re-execute the sequence when deps change (skips first run). Used for value-reactive animations.' },
+  { name: 'direction', type: "'enter' | 'exit'", required: false, description: <>Direction hint for <Code>animateDimension</Code> in deps triggers: <Code>'enter'</Code> expands, <Code>'exit'</Code> collapses.</> },
+  { name: 'note', type: 'string', required: false, description: 'Free-form note / rationale for this binding.' },
+];
+
+const ANIMATION_STEP_DEF: FieldRow[] = [
+  { name: 'target', type: 'string', required: false, description: "Target slot to animate (defaults to the trigger's slot if omitted)." },
+  { name: 'animation', type: 'string | Record<string, unknown>', required: false, description: 'Inline animation config — a preset name or an anime.js property object.' },
+  { name: 'preset', type: 'string', required: false, description: 'Named preset from PRESET_REGISTRY.' },
+  { name: 'fn', type: "'animateDimension' | 'animatePosition'", required: false, description: 'Runtime function override.' },
+  { name: 'children', type: 'string', required: false, description: 'CSS selector for stagger children (implies staggerAnimate).' },
+  { name: 'stagger', type: '{ delay?, from? }', required: false, description: <>Stagger timing config — <Code>delay</Code> plus <Code>from: 'first' | 'last' | 'center'</Code>.</> },
+  { name: 'onComplete', type: 'string', required: false, description: "Callback after this step's animation completes." },
+];
+
+const STYLING: FieldRow[] = [
+  { name: 'tokens', type: 'TokenDeclaration[]', required: true, description: <>Component CSS tokens — all values MUST reference <Code>var(--move-*)</Code> semantic tokens.</> },
+  { name: 'variants', type: 'Record<string, string[] | Record<…>>', required: true, description: 'Variant prop values — a list of values, or a richer map of value → metadata.' },
+  { name: 'sizes', type: 'string[]', required: true, description: 'Size prop values.' },
+  { name: 'surface', type: '{ slot, level } | null', required: false, description: <>Surface this component creates (sets background + shadow context for children). <Code>level</Code> is one of <Code>base</Code> / <Code>subtle</Code> / <Code>muted</Code> / <Code>emphasis</Code> / <Code>inverse</Code>.</> },
+];
+
+const TOKEN_DECLARATION: FieldRow[] = [
+  { name: 'name', type: 'string', required: true, description: <>Full token name (e.g. <Code>--move-button-primary-bg</Code>).</> },
+  { name: 'value', type: 'string', required: true, description: <>Value — MUST reference <Code>var(--move-*)</Code> semantic tokens.</> },
+  { name: 'slot', type: 'string', required: false, description: 'Slot this token is scoped to (if any).' },
+  { name: 'description', type: 'string', required: false, description: 'What this token controls.' },
+];
+
+const LABEL_DEF: FieldRow[] = [
+  { name: 'key', type: 'string', required: true, description: <>Label key used in the <Code>labels</Code> prop object (e.g. <Code>'close'</Code>, <Code>'next'</Code>, <Code>'dropzone'</Code>).</> },
+  { name: 'default', type: 'string', required: true, description: 'English default value.' },
+  { name: 'description', type: 'string', required: true, description: 'Where this label is used.' },
+];
+
+const DEPENDENCIES: FieldRow[] = [
+  { name: 'radixPrimitive', type: 'string | null', required: false, description: <>Radix primitive used (if any; <Code>null</Code> = explicitly none).</> },
+  { name: 'hasHook', type: 'boolean', required: true, description: <>Whether the component uses a headless hook (<Code>use{`{Name}`}.ts</Code>).</> },
+  { name: 'engineImports', type: 'string[]', required: true, description: <>Engine imports needed (e.g. <Code>withMoveComponent</Code>).</> },
+  { name: 'componentDeps', type: 'string[]', required: false, description: 'Move components this component depends on (used in source and demos).' },
+];
+
+const TESTING: FieldRow[] = [
+  { name: 'behaviors', type: 'string[]', required: true, description: 'Key behaviors to test. Used as a checklist when generating the test file.' },
+  { name: 'keyboard', type: 'string[]', required: false, description: 'Keyboard interactions to test.' },
+  { name: 'aria', type: 'string[]', required: false, description: 'ARIA expectations to verify.' },
+  { name: 'form', type: 'string[]', required: false, description: 'Form integration tests.' },
+  { name: 'animation', type: 'string[]', required: false, description: 'Animation tests.' },
+  { name: 'highlighting', type: 'string[]', required: false, description: 'Syntax-highlighting tests (Code/editor components).' },
+  { name: 'cell', type: 'string[]', required: false, description: 'Cell-rendering tests (Table-like components).' },
+  { name: 'collapse', type: 'string[]', required: false, description: 'Responsive-collapse tests.' },
+];
+
+const REVIEW: FieldRow[] = [
+  { name: 'defaultReview', type: 'DefaultReview', required: true, description: 'Required audit record that defaults were interactively reviewed. Generation and validation fail when it is missing.' },
+  { name: 'preview', type: 'PreviewSpec', required: false, description: 'Optional docs preview-card behaviour (staged overlay, static mock, bare surface, panel width). Preview-only; never affects the shipped component.' },
+  { name: 'demo', type: 'DemoSpec', required: false, description: 'Optional explicit demo contract (controls + samples + bindings).' },
+];
+
+const DEFAULT_REVIEW_FIELDS: FieldRow[] = [
+  { name: 'status', type: "'approved'", required: true, description: 'Must be approved before the spec is written.' },
+  { name: 'decisionSource', type: "'user-confirmed' | 'accept-all' | 'rule-based'", required: true, description: <>How approval happened. <Term>rule-based</Term>: auto-approved by deterministic rules. <Term>user-confirmed</Term>: a human reviewed each default. <Term>accept-all</Term>: bulk-approved during a migration.</> },
+  { name: 'overrides', type: 'Record<string, string>', required: false, description: 'Explicit per-prop overrides accepted by the user. Key = prop name, value = chosen default.' },
+];
+
+const CHECK_SCRIPTS: { name: string; what: string }[] = [
+  { name: 'check:spec-drift', what: 'The component source actually implements its spec — prop list, slots, and default values match.' },
+  { name: 'check:family-popup', what: 'Anchored-popup components share consistent close/dismiss wiring.' },
+  { name: 'check:family-modal', what: 'Modal-overlay components trap focus, lock body scroll, and wire the backdrop.' },
+  { name: 'check:family-disclosure', what: 'Disclosure components share consistent open/close + animation wiring.' },
+  { name: 'check:cross-component-drift', what: 'Family memberships stay consistent across components that should behave alike.' },
+  { name: 'check:animation-capabilities', what: 'Imperative animation code in source matches the declared animationCapabilities[].' },
+  { name: 'check:recipes', what: 'Docs recipes use only Move components (no custom CSS / raw layout HTML).' },
+];
 
 export function ComponentContractPage() {
   return (
@@ -631,89 +410,110 @@ export function ComponentContractPage() {
           <Heading level={1}>Component Contract</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
-            <Badge variant="soft"><Icon name="file-code" />schemaVersion: 1</Badge>
-            <Badge variant="soft"><Icon name="shield-check" />Type-checked via tsc</Badge>
-            <Badge variant="soft"><Icon name="git-branch" />Tracked by spec-diff</Badge>
-            <Badge variant="soft"><Icon name="globe" />Framework-agnostic</Badge>
+            <Badge variant="soft"><Icon name="file-code" />schemaVersion: 7</Badge>
+            <Badge variant="soft"><Icon name="shield-check" />satisfies ComponentSpec</Badge>
+            <Badge variant="soft"><Icon name="git-branch" />Pre-commit + CI checks</Badge>
           </Stack>
         </Stack>
 
         <Section
           id="why-a-contract"
           title="Why a contract"
-          lede="The spec is the load-bearing source of truth. Generators read it. The docs site reads it. spec-diff reads it. AI skills read it."
+          lede="The spec is the load-bearing source of truth. Generators read it. Validators read it. The docs site reads it. The AI skills read it."
         >
           <Stack gap="sm">
             <Text>
-              Without a pinned contract, anything not explicitly checked can change silently — a renamed field, a flipped boolean, a swapped enum value — and tooling downstream breaks long after the change ships. The <Code>Spec</Code> interface pins every field so the type checker rejects drift at compile time. Cross-references that types can't reach (anatomy slot names, render-contract IDs, A11y required attributes) are caught by a structural validation step.
+              Every component is described by a single <Code>{`{Name}.spec.ts`}</Code> file, and each one ends with <Code>satisfies ComponentSpec</Code>. That keeps the literal object's narrow types while forcing it to conform to the <Code>ComponentSpec</Code> interface in <Code>packages/move/src/spec-type.ts</Code> — so <Code>tsc</Code> rejects any drift in field names, types, or optionality at compile time.
             </Text>
             <Text>
-              <strong>The contract is framework-agnostic.</strong> Today Move's components are implemented in React on top of Radix, but the spec describes a component's surface — slots, props, anatomy, contracts, families — without requiring React. The same spec could drive a Vue, Svelte, or Web Components implementation, and AI skills could generate any of them. The TypeScript file is the most ergonomic format we can validate today; the shape itself isn't React-specific.
+              Cross-references that types can't reach — anatomy slot names matching declared slots, tokens resolving to real <Code>var(--move-*)</Code> values, source implementing the declared behavior — are caught by the structural checks described under <RouterLink to="#enforcement">Enforcement</RouterLink>. The spec is the human-authored decision record; everything downstream is generated or validated from it.
             </Text>
           </Stack>
         </Section>
 
         <Section
-          id="whats-in-a-spec"
-          title="What's in a spec"
-          lede="Every component is described by a single .spec.ts file. The Spec interface is the shape of those files. The rest of this page details each section."
+          id="example"
+          title="A complete spec"
+          lede="The real Badge spec, small enough to read end-to-end. Every section below corresponds to one block of fields you'll see here."
         >
-          <Stack gap="sm">
-            <Text>
-              Below is a complete spec for a Badge — small enough to read end-to-end. Every section in this page (<RouterLink to="#identity">Identity</RouterLink>, <RouterLink to="#lifecycle">Lifecycle</RouterLink>, <RouterLink to="#taxonomies">Taxonomies</RouterLink>, <RouterLink to="#composition">Composition</RouterLink>, …) corresponds to one block of fields you'll see here.
-            </Text>
-            <CodeBlock code={EXAMPLE_SPEC} language="tsx" />
-          </Stack>
-        </Section>
-
-        <Section id="naming" title="Naming convention" lede="Three case styles, three domains.">
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Case</Table.Head>
-                <Table.Head>Used for</Table.Head>
-                <Table.Head>Examples</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell><Code>PascalCase</Code></Table.Cell>
-                <Table.Cell><Text size="sm">TypeScript type names.</Text></Table.Cell>
-                <Table.Cell><Stack direction="row" gap="xs" wrap><Code>Spec</Code><Code>Behavior</Code><Code>ComponentClass</Code><Code>PropDef</Code></Stack></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell><Code>camelCase</Code></Table.Cell>
-                <Table.Cell><Text size="sm">TypeScript identifiers — field names, prop names.</Text></Table.Cell>
-                <Table.Cell><Stack direction="row" gap="xs" wrap><Code>closeOnEscape</Code><Code>valueProp</Code><Code>intervalMs</Code><Code>behaviors</Code></Stack></Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell><Code>kebab-case</Code></Table.Cell>
-                <Table.Cell><Text size="sm">String-literal values — taxonomy kinds, ARIA attributes, CSS variables, slugs.</Text></Table.Cell>
-                <Table.Cell><Stack direction="row" gap="xs" wrap><Code>scale-fade</Code><Code>data-row</Code><Code>aria-modal</Code><Code>--move-fg-base</Code></Stack></Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-          <Text>
-            String-literal values use kebab-case so they travel cleanly across HTML, CSS, ARIA, and URL slugs. TypeScript identifiers stay camelCase / PascalCase per JS convention. Two intentional exceptions: <Code>'onClick'</Code> and <Code>'translateX'</Code> appear camelCase as string values because they reference React prop names and CSS-in-JS transform identifiers respectively.
-          </Text>
+          <CodeBlock code={EXAMPLE_SPEC} language="tsx" />
         </Section>
 
         <Section
           id="schema-version"
-          title="Schema version"
-          lede="One number, pinned at the top of every spec."
+          title="Schema version + naming"
+          lede="One pinned version literal, and a fixed naming convention for the file and component."
         >
-          <Text>
-            Every spec carries <Code>schemaVersion: 1 as const</Code>. A future bump is a breaking schema change and comes with a one-shot migration over all specs in the same commit.
-          </Text>
+          <Stack gap="sm">
+            <Text>
+              Every spec carries <Code>schemaVersion: 7 as const</Code> — always the exported <Code>SPEC_SCHEMA_VERSION</Code>. A bump is a breaking schema change and comes with a one-shot migration over all specs in the same commit.
+            </Text>
+            <Text>
+              The component <Code>name</Code> is PascalCase and matches both the runtime export and the file basename: a component named <Code>Badge</Code> lives in <Code>Badge.spec.ts</Code>. The <Code>category</Code> mirrors the source folder it lives under (e.g. <Code>data-display</Code>, <Code>forms</Code>, <Code>overlay</Code>).
+            </Text>
+          </Stack>
         </Section>
 
-        <Section id="identity" title="Identity" lede="Who the component is.">
+        <Section id="identity" title="Identity & classification" lede="Who the component is and how it is grouped.">
           <FieldTable fields={IDENTITY} />
         </Section>
 
-        <Section id="lifecycle" title="Lifecycle" lede="When the component was added, whether it's on the way out, and whether AI tooling is allowed to generate from this spec.">
-          <FieldTable fields={LIFECYCLE} />
+        <Section id="structure" title="Structure" lede="Slots, sub-components, props, and the render-tree anatomy.">
+          <FieldTable fields={STRUCTURE} />
+          <Stack gap="md">
+            <NestedType name="SlotDef" lede="A named slot in the component anatomy." fields={SLOT_DEF} />
+            <NestedType name="PropDef" lede="A public prop definition." fields={PROP_DEF} />
+            <NestedType name="SubComponentDef" lede="A public sub-component of a compound component." fields={SUBCOMPONENT_DEF} />
+            <NestedType name="AnatomyNode" lede="A node in the component's render-tree anatomy. Recurses via children." fields={ANATOMY_NODE} />
+          </Stack>
+        </Section>
+
+        <Section id="behavior" title="Behavior" lede="Controlled state, keyboard, focus, form participation, dismiss semantics, and render contracts.">
+          <FieldTable fields={BEHAVIOR} />
+        </Section>
+
+        <Section
+          id="animation"
+          title="Animation"
+          lede="The trigger → sequence model. A trigger names an event, lifecycle phase, or state; its sequence is the steps that run."
+        >
+          <FieldTable fields={ANIMATION} />
+          <Stack gap="md">
+            <NestedType name="AnimationStateDef" lede="A state declaration the runtime observes on a slot element; it fires the matching trigger when value matches." fields={ANIMATION_STATE_DEF} />
+            <NestedType name="AnimationTriggerBinding" lede="A trigger paired with the sequence to run. Trigger formats: 'Slot.event', 'Slot.enter' / 'Slot.exit', or a state name." fields={ANIMATION_TRIGGER_BINDING} />
+            <NestedType name="AnimationStepDef" lede="A single step in a sequence." fields={ANIMATION_STEP_DEF} />
+          </Stack>
+        </Section>
+
+        <Section id="styling" title="Styling" lede="Tokens, variant axes, size scale, and the surface this component creates.">
+          <FieldTable fields={STYLING} />
+          <NestedType name="TokenDeclaration" lede="A CSS custom property. Values MUST reference var(--move-*) semantic tokens — enforced by the token check." fields={TOKEN_DECLARATION} />
+        </Section>
+
+        <Section
+          id="i18n"
+          title="Internationalization"
+          lede="Every user-facing string the component ships goes through a single labels object."
+        >
+          <FieldTable fields={[
+            { name: 'labels', type: 'LabelDef[]', required: true, description: <>Translatable labels exposed via the component's single <Code>labels</Code> prop. An empty array means no labels. Consumers feed this from their own i18n library; there is no global provider.</> },
+          ]} />
+          <NestedType name="LabelDef" lede="One translatable label exposed via the labels prop." fields={LABEL_DEF} />
+        </Section>
+
+        <Section id="dependencies" title="Dependencies" lede="What the component is built on.">
+          <FieldTable fields={DEPENDENCIES} />
+        </Section>
+
+        <Section id="testing" title="Testing" lede="A spec-side checklist of what the generated test file must cover.">
+          <FieldTable fields={TESTING} />
+          <Text color="muted" size="sm">
+            These arrays live under the <Code>testing</Code> field (a <Code>TestingSpec</Code>). Only <Code>behaviors</Code> is required; the rest are added when the component has keyboard interaction, ARIA expectations, form participation, animation, and so on.
+          </Text>
+        </Section>
+
+        <Section id="review" title="Review" lede="The audit record that the proposed defaults were signed off before the spec was written.">
+          <FieldTable fields={REVIEW} />
           <Stack gap="sm">
             <Heading level={3}><Code>defaultReview</Code> — fields</Heading>
             <FieldTable fields={DEFAULT_REVIEW_FIELDS} />
@@ -721,144 +521,49 @@ export function ComponentContractPage() {
         </Section>
 
         <Section
-          id="taxonomies"
-          title="Taxonomies"
-          lede="Six axes that classify a component. Each axis is either contract-carrying (the value carries data the rest of the system reads) or metadata-only (a label for grouping)."
-        >
-          <FieldTable fields={TAXONOMY_FIELDS} />
-          <Stack gap="sm">
-            <Text color="muted" size="sm">
-              Each contract-carrying taxonomy is a TypeScript discriminated union. The <Code>kind</Code> field is the classification; the rest of the variant is the contract data. Picking a kind in a spec looks like:
-            </Text>
-            <CodeBlock code={TAXONOMY_VARIANT_SNIPPET} language="ts" />
-            <Text color="muted" size="sm">
-              <Code>tsc --noEmit</Code> rejects a spec that picks <Code>kind: 'popup-anchored'</Code> without supplying all four close-trigger fields.
-            </Text>
-          </Stack>
-          <Stack gap="xl">
-            {TAXONOMIES.map((t) => <TaxonomyTable key={t.name} tax={t} />)}
-          </Stack>
-        </Section>
-
-        <Section id="composition" title="Composition" lede="How the component is structured — slots, sub-components, anatomy.">
-          <FieldTable fields={COMPOSITION} />
-          <Stack gap="sm">
-            <Heading level={3}>Prop rule</Heading>
-            <Text>
-              Every prop declares a <Code>role</Code> and falls into one of three variants. The role narrows the variant, so a literal default can never sneak in for a user-facing string.
-            </Text>
-            <Table>
-              <Table.Header>
-                <Table.Row>
-                  <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Role</Table.Head>
-                  <Table.Head>What it means</Table.Head>
-                  <Table.Head>Optional shape</Table.Head>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell><Code>data</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">Affects rendered data (size, variant, mode, count).</Text></Table.Cell>
-                  <Table.Cell><Code>default: string</Code></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell><Code>behavior</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">Affects how the component behaves (disabled, controlled, animations).</Text></Table.Cell>
-                  <Table.Cell><Code>default: string</Code></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell><Code>composition</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">Controls children/structure (children, renderItem).</Text></Table.Cell>
-                  <Table.Cell><Code>default: string</Code></Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell><Code>i18n</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">User-facing localizable string (placeholder, button label, format template).</Text></Table.Cell>
-                  <Table.Cell><Code>labelKey: string</Code></Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-            <Text>
-              The three variants:
-            </Text>
-            <Stack gap="xs">
-              <Text size="sm">• <Code>PropRequired</Code> — user must supply. No fallback. Any role.</Text>
-              <Text size="sm">• <Code>PropOptionalLiteral</Code> — has a hard-coded fallback. Role must be <Code>data</Code>, <Code>behavior</Code>, or <Code>composition</Code>. <Code>default</Code> holds the TS-literal string (<Code>"'md'"</Code>, <Code>'false'</Code>, <Code>'undefined'</Code>).</Text>
-              <Text size="sm">• <Code>PropOptionalLabeled</Code> — user-facing string default. Role must be <Code>i18n</Code>. <Code>labelKey</Code> references a row in <Code>labels[]</Code>.</Text>
-            </Stack>
-            <Text>
-              <Code>tsc --noEmit</Code> rejects mixing them: a prop with <Code>role: 'i18n'</Code> can't have a literal <Code>default</Code>, and a prop with <Code>role: 'data'</Code> can't have a <Code>labelKey</Code>. Every user-visible default is forced through <Code>labels[]</Code>.
-            </Text>
-          </Stack>
-        </Section>
-
-        <Section id="interaction" title="Interaction" lede="Keyboard, focus, and form-participation patterns.">
-          <FieldTable fields={INTERACTION} />
-        </Section>
-
-        <Section id="style-variants" title="Style + variants" lede="Variant axes, size scale, and i18n-able default labels.">
-          <FieldTable fields={STYLE} />
-        </Section>
-
-        <Section id="animation-tokens" title="Animation + tokens" lede="Motion triggers, themable tokens, and renderer contracts.">
-          <FieldTable fields={ANIMATION} />
-        </Section>
-
-        <Section id="tests" title="Tests" lede="A spec-side checklist of what's tested.">
-          <FieldTable fields={TESTS} />
-        </Section>
-
-        <Section id="tooling" title="Tooling" lede="Hooks, engine imports, dependencies.">
-          <FieldTable fields={TOOLING} />
-        </Section>
-
-        <Section
           id="enforcement"
           title="Enforcement"
-          lede="Three layers: TypeScript discriminated unions, structural cross-reference validation, and source-vs-spec drift checks."
+          lede="Two layers: the TypeScript type, and the structural checks wired into a native pre-commit hook and CI."
         >
           <Stack gap="md">
             <Stack gap="sm">
-              <Heading level={3}>1. TypeScript</Heading>
+              <Heading level={3}>1. Compile-time — <Code>satisfies ComponentSpec</Code></Heading>
               <Text>
-                Each <Code>*.spec.ts</Code> imports <Code>Spec</Code> from <Code>src/contract</Code> and annotates: <Code>export const spec: Spec = {`{...}`}</Code>. Discriminated unions enforce sub-contracts: pick <Code>{`{ kind: 'popup-anchored' }`}</Code> and TypeScript demands <Code>closeOnEscape</Code>, <Code>closeOnOutsideClick</Code>, <Code>closeOnScroll</Code>, <Code>closeOnResize</Code>. Pick <Code>{`{ kind: 'a11y.dialog' }`}</Code> and the role + required ARIA attrs are demanded too.
+                Each <Code>*.spec.ts</Code> imports <Code>ComponentSpec</Code> from <Code>spec-type.ts</Code> and ends with <Code>satisfies ComponentSpec</Code>. This keeps the object literal's precise types while making <Code>tsc</Code> reject any field that doesn't match the interface — a renamed field, a wrong type, a missing required field.
               </Text>
             </Stack>
             <Stack gap="sm">
-              <Heading level={3}>2. Structural validation (`scripts/checks/spec-schema.mjs`)</Heading>
+              <Heading level={3}>2. Structural — <Code>check:all</Code></Heading>
               <Text>
-                Catches what types can't:
+                The structural checks catch what types can't. They run together via the <Code>check:all</Code> npm script, wired into a native pre-commit hook and CI:
               </Text>
-              <Stack gap="xs">
-                <Text size="sm">• Anatomy slots reference declared <Code>slots[]</Code> entries.</Text>
-                <Text size="sm">• Render-contract IDs are unique within a spec.</Text>
-                <Text size="sm">• Token names follow <Code>--move-{`<component>`}-</Code> convention.</Text>
-                <Text size="sm">• <Code>state.valueProp</Code> matches a real prop on the component.</Text>
-                <Text size="sm">• <Code>a11y.requiredAttrs</Code> appear in <Code>anatomy.ariaAttributes</Code>.</Text>
-                <Text size="sm">• Class-level <Code>requiredSlots</Code> are present in <Code>slots[]</Code>.</Text>
-                <Text size="sm">• Every <Code>labelKey</Code> on a <Code>PropOptionalLabeled</Code> exists in <Code>labels[]</Code>.</Text>
-                <Text size="sm">• No orphan labels — every <Code>labels[]</Code> entry is referenced by at least one <Code>labelKey</Code> or anatomy attribute.</Text>
-                <Text size="sm">• Nested surfaces alternate levels — a <Code>subtle</Code>-surface component nested inside another <Code>subtle</Code> surface is flagged.</Text>
-              </Stack>
-            </Stack>
-            <Stack gap="sm">
-              <Heading level={3}>3. Source-vs-spec drift (`check:spec-drift`, `check:family-*`)</Heading>
-              <Text>
-                Per-family scripts ensure the source code actually implements the contract — e.g. a <Code>modal-overlay</Code> component must call <Code>trapFocus</Code> in its source. <Code>check:spec-drift</Code> ensures the prop list on the component matches the spec.
-              </Text>
+              <Table>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Script</Table.Head>
+                    <Table.Head>What it verifies</Table.Head>
+                  </Table.Row>
+                </Table.Header>
+                <Table.Body>
+                  {CHECK_SCRIPTS.map((c) => (
+                    <Table.Row key={c.name}>
+                      <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}><Code>{c.name}</Code></Table.Cell>
+                      <Table.Cell><Text size="sm">{c.what}</Text></Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
             </Stack>
           </Stack>
         </Section>
 
         <Section id="next-steps" title="Next steps">
           <Stack gap="sm">
-            <Text>
-              Adjacent reading from the same contract:
-            </Text>
+            <Text>Adjacent reading from the same contract:</Text>
             <Stack gap="xs">
-              <Text size="sm">• <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink> — the surface elevation system, alternating-tint rule, and per-component table.</Text>
-              <Text size="sm">• <RouterLink to="/core-concepts/stacking">Stacking</RouterLink> — z-layer hierarchy, derivation rules, and stacking pitfalls.</Text>
-              <Text size="sm">• <RouterLink to="/core-concepts/animation-system">Animation System</RouterLink> — how the <Code>animations[]</Code> field is consumed at runtime.</Text>
+              <Text size="sm">• <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink> — the surface elevation system referenced by <Code>surface</Code>.</Text>
+              <Text size="sm">• <RouterLink to="/core-concepts/stacking">Stacking</RouterLink> — the z-layer hierarchy for overlays.</Text>
+              <Text size="sm">• <RouterLink to="/core-concepts/animation-system">Animation System</RouterLink> — how <Code>animations</Code> and <Code>states</Code> are consumed at runtime.</Text>
               <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — every spec rendered into a doc page.</Text>
             </Stack>
           </Stack>

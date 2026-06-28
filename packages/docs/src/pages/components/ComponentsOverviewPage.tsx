@@ -1,6 +1,6 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, InputText, Switch, ToggleGroup } from 'move';
+import { Stack, Heading, Text, Breadcrumb, InputText, Switch, ToggleGroup, LayoutGroup } from 'move';
 import { ComponentCard } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
@@ -43,11 +43,6 @@ export function ComponentsOverviewPage() {
       );
     });
   }, [query, category, animated]);
-
-  const grouped = category === 'All';
-  const sections = (grouped ? CATEGORY_ORDER : [category]).filter((cat) =>
-    filtered.some((c) => catsOf(c).includes(cat)),
-  );
 
   return (
     <Stack gap="xl" id="components-overview">
@@ -104,20 +99,15 @@ export function ComponentsOverviewPage() {
               No components match {query ? `“${query}”` : 'these filters'}.
             </Text>
           ) : (
-            sections.map((cat) => (
-              <Stack key={cat} gap="sm">
-                {grouped && (
-                  <Heading level={3}>{labelOf(cat)}</Heading>
-                )}
-                <div style={GRID}>
-                  {filtered
-                    .filter((c) => catsOf(c).includes(cat))
-                    .map((c) => (
-                      <ComponentCard key={c.meta.slug} content={c} />
-                    ))}
-                </div>
-              </Stack>
-            ))
+            // One flat grid, one LayoutGroup — cards FLIP cohesively across the
+            // whole view as search/category/animated filters change.
+            <LayoutGroup asChild initial stagger={25}>
+              <div style={GRID}>
+                {filtered.map((c) => (
+                  <ComponentCard key={c.meta.slug} content={c} />
+                ))}
+              </div>
+            </LayoutGroup>
           )}
         </Stack>
       </Stack>

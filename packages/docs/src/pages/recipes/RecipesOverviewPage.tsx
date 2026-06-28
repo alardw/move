@@ -1,14 +1,19 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, InputText, ToggleGroup } from 'move';
+import { Stack, Heading, Text, Breadcrumb, InputText, ToggleGroup, LayoutGroup } from 'move';
 import { RecipeCard } from '../../components';
 import { RECIPES, RECIPE_GROUPS } from '../../content/recipes/registry';
 
+// Recipes are whole flows/layouts, not single primitives — give each card more
+// room than the components grid's 260px so the live preview isn't cramped.
 const GRID: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(500px, 1fr))',
   gap: '1rem',
 };
+
+// Flat grid → sort by title, the same model components use (meta.name).
+const ALL = [...RECIPES].sort((a, b) => a.title.localeCompare(b.title));
 
 export function RecipesOverviewPage() {
   const [query, setQuery] = useState('');
@@ -16,7 +21,7 @@ export function RecipesOverviewPage() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return RECIPES.filter((r) => {
+    return ALL.filter((r) => {
       if (group !== 'All' && r.group !== group) return false;
       if (!q) return true;
       return (
@@ -26,11 +31,6 @@ export function RecipesOverviewPage() {
       );
     });
   }, [query, group]);
-
-  const grouped = group === 'All';
-  const sections = (grouped ? RECIPE_GROUPS : [group]).filter((g) =>
-    filtered.some((r) => r.group === g),
-  );
 
   return (
     <Stack gap="xl" id="recipes">
@@ -87,18 +87,15 @@ export function RecipesOverviewPage() {
               No recipes match {query ? `“${query}”` : 'these filters'}.
             </Text>
           ) : (
-            sections.map((g) => (
-              <Stack key={g} gap="sm">
-                {grouped && <Heading level={3}>{g}</Heading>}
-                <div style={GRID}>
-                  {filtered
-                    .filter((r) => r.group === g)
-                    .map((r) => (
-                      <RecipeCard key={`${r.groupSlug}/${r.slug}`} recipe={r} />
-                    ))}
-                </div>
-              </Stack>
-            ))
+            // One flat grid, one LayoutGroup — cards FLIP cohesively across the
+            // whole view as search/group filters change (mirrors components).
+            <LayoutGroup asChild initial stagger={25}>
+              <div style={GRID}>
+                {filtered.map((r) => (
+                  <RecipeCard key={`${r.groupSlug}/${r.slug}`} recipe={r} />
+                ))}
+              </div>
+            </LayoutGroup>
           )}
         </Stack>
       </Stack>
