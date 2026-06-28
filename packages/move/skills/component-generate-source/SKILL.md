@@ -64,7 +64,7 @@ Follow the factory contract exactly:
 5. Radix import if spec declares `radixPrimitive`
 6. CSS module import
 7. Type exports (variant, size, props)
-8. Props interface `extends Record<string, unknown>`
+8. Props interface extends the correct React HTML attrs — `React.HTMLAttributes<HTMLElement>` by default, or the element-specific attrs the root slot renders (`AnchorHTMLAttributes` for `<a>`, `InputHTMLAttributes` for `<input>`, `TdHTMLAttributes`/`ThHTMLAttributes` for table cells, `ImgHTMLAttributes` for `<img>`, etc.). Use `Omit<…, 'key'>` when the component intentionally redefines a native prop (custom `onChange`/`title`/`align`/…). **Never** `extends Record<string, unknown>` — it disables literal-union + unknown-prop checking (enforced by `check:strict-props`; the factory generic is `TProps extends object`).
 9. Labels type and prop (if spec has `labels`): generate `{Name}Labels` type with all keys, `DEFAULT_LABELS` const with defaults, add `labels?: Partial<{Name}Labels>` prop, merge with defaults in setup
 10. `withMoveComponent` call with:
     - `name` from spec
@@ -368,7 +368,7 @@ When a spec declares `componentDeps`, read `references/component/infrastructure.
 3. **Follow css-contract.md exactly** — tokens on .root, data-attributes, no CSS animations
 4. **Provenance headers on all files** — `Generated from {Name}.spec.ts (schemaVersion: N, specHash: XXXX)`
 5. **All token values reference semantic tokens** — as specified in the spec
-6. **Props interface extends Record<string, unknown>** — for every factory-based component
+6. **Props interface extends the correct React HTML attrs** — `React.HTMLAttributes<HTMLElement>` (or element-specific `Anchor`/`Input`/`Td`/`Th`/`Img`… attrs for the rendered root), with `Omit<…,'key'>` for intentionally-redefined native props. NEVER `extends Record<string, unknown>` (enforced by `check:strict-props`; the factory generic is `TProps extends object`).
 7. **No hardcoded values in CSS** — always `var(--move-*)` for colors/spacing/radius
 8. **Use infrastructure when needed** — if the spec has `componentDeps`, read `references/component/infrastructure.ts` and use the appropriate imports in the generated source
 9. **Always merge className and style** — every slot's `cx()` call MUST include `props.className` (for root) or the equivalent prop, and every slot's style MUST spread `props.style`. This is not optional — without it, user className/style passthrough is broken. Pattern: `className={cx('slot', props.className, spClass)}` and `style={{ ...props.style, ...spStyle }}`

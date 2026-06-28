@@ -43,7 +43,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | # | Rule | How to check |
 |---|------|-------------|
 | A1 | `'use client'` at line 1 | First line is `'use client';` |
-| A2 | Props extends `Record<string, unknown>` | Every factory-based props interface |
+| A2 | Props extends React HTML attrs, NOT `Record<string, unknown>` | Every factory-based props interface extends `React.HTMLAttributes<HTMLElement>` (or element-specific Anchor/Input/Td/Th/Img attrs), with `Omit<…>` for redefined props. **FAIL** on `extends Record<string, unknown>` (also caught by `check:strict-props`). |
 | A3 | Move-specific props in `moveProps`/`defaults` | Cross-reference props interface vs moveProps + defaults keys |
 | A4 | Default values in `defaults` object | No inline defaults in destructuring |
 | A5 | `slots` array matches `sp()`/`cx()` calls | Every slot used, every used slot listed |
