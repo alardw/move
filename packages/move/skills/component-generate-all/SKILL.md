@@ -43,19 +43,24 @@ Pre-check before Step 1:
 ### Step 2 — `/component-generate-meta {Name}`
 Generates `.meta.ts` from the component source.
 
-> Recipe and demo generation are temporarily out of this pipeline: the
-> `generate-recipe`/`generate-demo` skills targeted the old `demo/` app and
-> were removed pending docs-app replacements (see repo `notes/TODO.md`).
-
 ### Step 3 — `/component-generate-test {Name}`
 Generates `.test.tsx` from the spec and component source.
 
-### Step 4 — `/component-validate {Name}`
+### Step 4 — `/component-generate-docs {Name}`
+Generates the `packages/docs` content folder (`meta.ts`, `samples/*.tsx`,
+`index.ts`) and registers the slug. Derives the API/tokens tables from the spec
+automatically. Skip only if the docs app is absent.
+
+> Replaces the removed `generate-recipe`/`generate-demo` skills, which targeted
+> the old `demo/` app. Bespoke `/animation/*` concept pages are still authored by
+> hand (see repo `notes/TODO.md`).
+
+### Step 5 — `/component-validate {Name}`
 Validates all generated files and writes `.report.md`.
 
 If `/component-validate` returns any BLOCKER failures, stop pipeline immediately and report them as generation failures (do not continue to acceptance).
 
-### Step 5 — Delta report (if original exists)
+### Step 6 — Delta report (if original exists)
 
 Search for `original-components/**/{Name}/{Name}.tsx`. If found, compare the generated output against the original and report meaningful deltas:
 

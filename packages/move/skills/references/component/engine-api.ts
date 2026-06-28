@@ -61,6 +61,9 @@ export const ANIMATION_EXPORTS = {
     usePositionTracker: 'Sliding-indicator hook — usePositionTracker({ containerRef, activeSelector, track }) → { indicatorRef, update }. Measures the active element via offsetLeft/Top/Width/Height (transform-agnostic, unlike getBoundingClientRect) and re-measures on resize, font load, and data-state mutations. THE sanctioned way to drive any active-element indicator — declare animationCapabilities: ["slidingIndicator"]. Used by Tabs, TableOfContents, Pagination, ToggleGroup.',
     useSlidingIndicator: 'Legacy alias of usePositionTracker (identical hook).',
   },
+  splitText: {
+    useSplitText: 'Split-text reveal hook — useSplitText({ text, by, effect, trigger, once, stagger, delay, duration }) → { ref, animated }. Splits the element text into runtime-generated character/word/line segments (anime.js splitText) and staggers their entrance. THE sanctioned way to animate split text — declare animationCapabilities: ["textSplit"] and never import animejs in the component. Splits with accessible:true (aria-label on container, aria-hidden segments), bypasses entirely under prefers-reduced-motion, supports mount/inView/hover triggers. Used by AnimatedText.',
+  },
   presence: {
     Presence: 'Component for managing enter/exit animations with mount/unmount lifecycle.',
     usePresence: 'Hook to access presence context. Returns [isPresent, safeToRemove].',
@@ -156,6 +159,7 @@ export const IMPORT_PATTERNS = {
     types: "import type { Animation, AnimationTrigger, AnimationState, AnimationStep, SequenceItem, JSAnimation } from '../../../animation';",
     presence: "import { Presence, usePresence } from '../../../animation';",
     slidingIndicator: "import { usePositionTracker } from '../../../animation'; // the sanctioned active-element indicator hook (declare animationCapabilities: ['slidingIndicator']). Prefer over a fn:'animatePosition' trigger.",
+    splitText: "import { useSplitText } from '../../../animation'; // the sanctioned split-text reveal hook (declare animationCapabilities: ['textSplit']). Never import animejs splitText/animate directly in the component.",
     note: "ALWAYS import from '../../../animation' — NEVER from sub-paths. The barrel re-exports everything.",
   },
   infrastructure: {

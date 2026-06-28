@@ -295,9 +295,23 @@ const { indicatorRef, update } = usePositionTracker({
 React.useEffect(() => { update(); }, [page, update]);`,
   },
 
+  textReveal: {
+    description: 'Staggered per-character / per-word / per-line text entrance (anime.js splitText). The set of animated nodes is generated at runtime from the text, so it cannot be expressed as fixed declarative slots.',
+    components: ['AnimatedText'],
+    note: 'Use the shared useSplitText hook and declare animationCapabilities: ["textSplit"]. Do NOT import animejs (splitText/animate) directly in the component — the hook owns all splitting/staggering and the barrel keeps the no-direct-animejs rule intact. The hook splits with accessible:true (aria-label on the container, aria-hidden segments), bypasses entirely under prefers-reduced-motion, and supports mount/inView/hover triggers. Key the rendered element on the text so a content change remounts cleanly instead of reconciling against the splitText-mutated DOM.',
+    wiring: `
+import { useSplitText } from '../../../animation';
+
+const { ref: splitRef, animated } = useSplitText({
+  text, by, effect, trigger, once, stagger, delay, duration,
+});
+const mergedRef = useMergedRef(ref, splitRef); // merge with the factory ref
+// element: <Comp key={text} ref={mergedRef} {...(animated ? { 'data-animated': '' } : {})}>{text}</Comp>`,
+  },
+
   listStagger: {
     description: 'Per-item stagger on mount.',
-    components: ['Table', 'Timeline', 'ImageGroup', 'FileUpload', 'ChatBubble'],
+    components: ['Table', 'Timeline', 'Grid', 'Stack', 'FileUpload', 'ChatBubble'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: popIn, stagger: { delay: 30 } }] },
