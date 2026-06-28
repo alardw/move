@@ -1,5 +1,5 @@
 // Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Autocomplete } from './Autocomplete';
@@ -282,14 +282,20 @@ describe('Autocomplete', () => {
   // === Filtering ===
   describe('filtering', () => {
     it('filters items based on input text', async () => {
-      const user = userEvent.setup();
+      // delay: null → no real-timer wait between keystrokes, so typing isn't
+      // slowed by a saturated machine under full-suite parallel load (the flake).
+      const user = userEvent.setup({ delay: null });
       renderAutocomplete();
       const input = screen.getByRole('combobox');
       await user.click(input);
       await user.type(input, 'ban');
-      const options = screen.getAllByRole('option');
-      expect(options).toHaveLength(1);
-      expect(options[0].textContent).toBe('Banana');
+      // Filtering re-renders (state + Radix popover) can settle a tick after the
+      // keystroke resolves — wait for the list to converge instead of snapshotting.
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options).toHaveLength(1);
+        expect(options[0].textContent).toBe('Banana');
+      });
     });
 
     it('shows all items when input is empty', async () => {
