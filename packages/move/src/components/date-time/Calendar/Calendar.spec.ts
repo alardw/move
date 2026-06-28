@@ -139,7 +139,7 @@ export const spec = {
     { name: '--move-calendar-width', value: 'auto', slot: 'root' },
 
     // Day cell
-    { name: '--move-calendar-cell-size', value: '2.25rem', slot: 'dayCell' },
+    { name: '--move-calendar-cell-size', value: '1.75rem', slot: 'dayCell' },
     { name: '--move-calendar-cell-radius', value: 'var(--move-rounded-md)', slot: 'dayCell' },
     { name: '--move-calendar-cell-font-size', value: 'var(--move-size-sm)', slot: 'dayCell' },
     { name: '--move-calendar-cell-fg', value: 'var(--move-fg-base)', slot: 'dayCell' },

@@ -65,7 +65,7 @@ export const spec = {
     { name: '--move-divider-content-bg', value: 'var(--move-bg-base)', description: 'Content label background' },
     { name: '--move-divider-content-color', value: 'var(--move-fg-muted)', description: 'Content label text color' },
     { name: '--move-divider-content-padding', value: '0 var(--move-spacing-md)', description: 'Content label padding' },
-    { name: '--move-divider-content-size', value: 'var(--move-size-sm)', description: 'Content label font size' },
+    { name: '--move-divider-content-size', value: 'var(--move-font-size-sm)', description: 'Content label font size' },
   ],
 
   variants: {

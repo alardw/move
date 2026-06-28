@@ -67,12 +67,8 @@ export const spec = {
 
   tokens: [
     // ToggleButton inherits all Button tokens via composes.
-    // Only the "on" state overrides are ToggleButton-specific.
-    { name: '--move-toggle-button-on-bg', value: 'var(--move-primary)', description: 'Background when pressed (data-state="on")' },
-    { name: '--move-toggle-button-on-bg-hover', value: 'var(--move-primary-hover)', description: 'Hover background when pressed' },
-    { name: '--move-toggle-button-on-fg', value: 'var(--move-primary-fg)', description: 'Foreground when pressed' },
-    { name: '--move-toggle-button-on-shadow', value: 'var(--move-shadow-subtle)', description: 'Box shadow when pressed' },
-    { name: '--move-toggle-button-on-shadow-hover', value: 'var(--move-shadow-default)', description: 'Box shadow on hover when pressed' },
+    // The "on" state styles reference shared tokens (--move-primary, --move-shadow-*) directly,
+    // so ToggleButton defines no custom properties of its own.
   ],
 
   variants: {

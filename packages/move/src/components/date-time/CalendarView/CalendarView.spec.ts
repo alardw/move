@@ -182,44 +182,6 @@ export const spec = {
 
     // Header
     { name: '--move-calendarview-header-padding', value: 'var(--move-spacing-md)', slot: 'header' },
-
-    // Title
-    { name: '--move-calendarview-title-font-size', value: 'var(--move-size-lg)', slot: 'title' },
-    { name: '--move-calendarview-title-font-weight', value: 'var(--move-weight-semibold)', slot: 'title' },
-    { name: '--move-calendarview-title-fg', value: 'var(--move-fg-base)', slot: 'title' },
-
-    // MonthView
-    { name: '--move-calendarview-month-header-font-size', value: 'var(--move-size-xs)', slot: 'monthWeekHeader' },
-    { name: '--move-calendarview-month-header-fg', value: 'var(--move-fg-muted)', slot: 'monthWeekHeader' },
-    { name: '--move-calendarview-month-cell-border', value: 'var(--move-border-base)', slot: 'monthDayCell' },
-    { name: '--move-calendarview-month-cell-bg-hover', value: 'var(--move-bg-subtle)', slot: 'monthDayCell' },
-    { name: '--move-calendarview-month-cell-bg-today', value: 'color-mix(in srgb, var(--move-primary-subtle) 30%, transparent)', slot: 'monthDayCell' },
-    { name: '--move-calendarview-month-day-fg', value: 'var(--move-fg-base)', slot: 'monthDayNumber' },
-    { name: '--move-calendarview-month-today-bg', value: 'var(--move-primary)', slot: 'monthDayNumber' },
-    { name: '--move-calendarview-month-today-fg', value: 'var(--move-primary-fg)', slot: 'monthDayNumber' },
-    { name: '--move-calendarview-month-more-fg', value: 'var(--move-fg-muted)', slot: 'monthMoreButton' },
-    { name: '--move-calendarview-month-popover-bg', value: 'var(--move-bg-subtle)', slot: 'monthMorePopover' },
-    { name: '--move-calendarview-month-popover-border', value: 'var(--move-border-base)', slot: 'monthMorePopover' },
-    { name: '--move-calendarview-month-popover-radius', value: 'var(--move-rounded-lg)', slot: 'monthMorePopover' },
-    { name: '--move-calendarview-month-popover-shadow', value: 'var(--move-shadow-default)', slot: 'monthMorePopover' },
-
-    // WeekView / DayView headers
-    { name: '--move-calendarview-dayheader-font-size', value: 'var(--move-size-sm)', slot: 'dayHeader' },
-    { name: '--move-calendarview-dayheader-fg', value: 'var(--move-fg-base)', slot: 'dayHeader' },
-    { name: '--move-calendarview-dayheader-today-fg', value: 'var(--move-primary)', slot: 'dayHeader' },
-
-    // All-day section
-    { name: '--move-calendarview-allday-label-font-size', value: 'var(--move-size-xs)', slot: 'allDayLabel' },
-    { name: '--move-calendarview-allday-label-fg', value: 'var(--move-fg-muted)', slot: 'allDayLabel' },
-
-    // AgendaView
-    { name: '--move-calendarview-agenda-date-font-size', value: 'var(--move-size-lg)', slot: 'agendaDayHeader' },
-    { name: '--move-calendarview-agenda-date-fg', value: 'var(--move-fg-base)', slot: 'agendaDayHeader' },
-    { name: '--move-calendarview-agenda-day-fg', value: 'var(--move-fg-muted)', slot: 'agendaDayHeader' },
-    { name: '--move-calendarview-agenda-today-bg', value: 'var(--move-primary)', slot: 'agendaDayHeader' },
-    { name: '--move-calendarview-agenda-today-fg', value: 'var(--move-primary-fg)', slot: 'agendaDayHeader' },
-    { name: '--move-calendarview-agenda-empty-fg', value: 'var(--move-fg-muted)', slot: 'agendaEmpty' },
-    { name: '--move-calendarview-agenda-header-border', value: 'var(--move-border-base)', slot: 'agendaDayHeader' },
   ],
 
   variants: {},

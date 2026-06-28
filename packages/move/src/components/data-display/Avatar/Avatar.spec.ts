@@ -103,8 +103,8 @@ export const spec = {
   tokens: [
     { name: '--move-avatar-size', value: 'var(--move-space-10)', description: 'Avatar size (width and height)' },
     { name: '--move-avatar-radius', value: 'var(--move-rounded-full)', description: 'Border radius' },
-    { name: '--move-avatar-bg', value: 'var(--move-bg-muted)', description: 'Fallback background color' },
-    { name: '--move-avatar-fg', value: 'var(--move-fg-base)', description: 'Fallback text color' },
+    { name: '--move-avatar-bg', value: 'var(--move-primary)', description: 'Fallback background color' },
+    { name: '--move-avatar-fg', value: 'var(--move-primary-fg)', description: 'Fallback text color' },
     { name: '--move-avatar-border', value: 'var(--move-border-base)', description: 'Border color in group' },
   ],
 

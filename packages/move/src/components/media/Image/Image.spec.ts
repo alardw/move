@@ -79,7 +79,7 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-image-bg', value: 'var(--move-gray-800)', description: 'Root background color visible while image loads' },
+    { name: '--move-image-bg', value: 'var(--move-bg-muted)', description: 'Root background color visible while image loads' },
     { name: '--move-image-fallback-bg', value: 'var(--move-bg-subtle)', description: 'Fallback placeholder background color' },
     { name: '--move-image-fallback-fg', value: 'var(--move-fg-subtle)', description: 'Fallback placeholder text/icon color' },
     { name: '--move-image-fallback-min-height', value: 'var(--move-space-20)', description: 'Minimum height of the fallback placeholder' },

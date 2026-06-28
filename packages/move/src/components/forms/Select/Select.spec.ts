@@ -268,7 +268,7 @@ export const spec = {
     { name: '--move-select-trigger-fg', value: 'var(--move-fg-base)', description: 'Trigger text color' },
     { name: '--move-select-trigger-height', value: 'var(--move-control-height-md)', description: 'Trigger height' },
     { name: '--move-select-trigger-min-width', value: '10rem', description: 'Trigger minimum width' },
-    { name: '--move-select-trigger-max-width', value: '30rem', description: 'Trigger maximum width — prevents absurdly wide selects in stretched parents' },
+    { name: '--move-select-trigger-max-width', value: 'none', description: 'Trigger maximum width — prevents absurdly wide selects in stretched parents' },
     // Content tokens
     { name: '--move-select-content-bg', value: 'var(--move-bg-subtle)', description: 'Content background color' },
     { name: '--move-select-content-border', value: 'var(--move-border-base)', description: 'Content border color' },
@@ -276,7 +276,7 @@ export const spec = {
     { name: '--move-select-content-shadow', value: 'var(--move-shadow-overlay)', description: 'Content box shadow' },
     { name: '--move-select-content-padding', value: 'var(--move-spacing-xs)', description: 'Content inner padding' },
     { name: '--move-select-content-min-width', value: '10rem', description: 'Content minimum width (floor when matching trigger)' },
-    { name: '--move-select-content-max-width', value: '30rem', description: 'Content maximum width (cap when matching trigger)' },
+    { name: '--move-select-content-max-width', value: 'none', description: 'Content maximum width (cap when matching trigger)' },
     // Item tokens
     { name: '--move-select-item-radius', value: 'var(--move-rounded-md)', description: 'Item border radius' },
     { name: '--move-select-item-padding-x', value: 'var(--move-spacing-sm)', description: 'Item horizontal padding' },
@@ -288,8 +288,8 @@ export const spec = {
     // Label tokens
     { name: '--move-select-label-padding-x', value: 'var(--move-spacing-sm)', description: 'Label horizontal padding' },
     { name: '--move-select-label-padding-y', value: 'var(--move-spacing-xs)', description: 'Label vertical padding' },
-    { name: '--move-select-label-font-size', value: 'var(--move-size-sm)', description: 'Label font size' },
-    { name: '--move-select-label-fg', value: 'var(--move-fg-muted)', description: 'Label text color' },
+    { name: '--move-select-label-font-size', value: 'var(--move-size-xs)', description: 'Label font size' },
+    { name: '--move-select-label-fg', value: 'var(--move-fg-subtle)', description: 'Label text color' },
     { name: '--move-select-label-font-weight', value: 'var(--move-weight-semibold)', description: 'Label font weight' },
     // Separator tokens
     { name: '--move-select-separator-color', value: 'var(--move-border-base)', description: 'Separator line color' },

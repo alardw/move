@@ -78,7 +78,7 @@ export const spec = {
     { name: '--move-input-padding-y', value: 'var(--move-spacing-xs)', description: 'Input vertical padding' },
     { name: '--move-input-font-size', value: 'inherit', description: 'Input font size (overridden per size)' },
     { name: '--move-input-fg', value: 'var(--move-fg-base)', description: 'Input text color' },
-    { name: '--move-input-placeholder', value: 'var(--move-fg-muted)', description: 'Input placeholder text color' },
+    { name: '--move-input-placeholder', value: 'var(--move-fg-subtle)', description: 'Input placeholder text color' },
     { name: '--move-input-height', value: 'var(--move-control-height-md)', description: 'Input height' },
     { name: '--move-input-icon-color', value: 'var(--move-fg-muted)', description: 'Icon slot color' },
     { name: '--move-input-icon-gap', value: 'var(--move-spacing-sm)', description: 'Gap between icons and input' },

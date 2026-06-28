@@ -120,7 +120,7 @@ export const spec = {
     { name: '--move-videoplayer-subtitle-bg', value: 'rgba(0, 0, 0, 0.7)', description: 'Subtitle overlay background' },
     { name: '--move-videoplayer-subtitle-fg', value: 'var(--move-white)', description: 'Subtitle overlay text color' },
     { name: '--move-videoplayer-controls-hover', value: 'rgba(255, 255, 255, 0.1)', description: 'Control button hover background' },
-    { name: '--move-videoplayer-controls-active-bg', value: 'var(--move-primary)', description: 'Active subtitle button background' },
+    { name: '--move-videoplayer-controls-active-bg', value: 'var(--move-primary, #3b82f6)', description: 'Active subtitle button background' },
     { name: '--move-videoplayer-controls-active-fg', value: 'var(--move-white)', description: 'Active subtitle button foreground' },
   ],
 

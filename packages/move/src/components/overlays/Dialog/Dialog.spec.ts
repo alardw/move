@@ -265,7 +265,7 @@ export const spec = {
   tokens: [
     { name: '--move-dialog-overlay-bg', value: 'var(--move-overlay-heavy)', description: 'Overlay backdrop color' },
     { name: '--move-dialog-overlay-backdrop-blur', value: 'var(--move-overlay-blur)', description: 'Overlay backdrop blur amount' },
-    { name: '--move-dialog-content-bg', value: 'var(--move-bg-subtle)', description: 'Content panel background' },
+    { name: '--move-dialog-content-bg', value: 'var(--move-surface-bg)', description: 'Content panel background' },
     { name: '--move-dialog-content-border', value: 'var(--move-border-base)', description: 'Content panel border color' },
     { name: '--move-dialog-content-radius', value: 'var(--move-rounded-xl)', description: 'Content panel border radius' },
     { name: '--move-dialog-content-shadow', value: 'var(--move-shadow-overlay)', description: 'Content panel box shadow' },
@@ -284,7 +284,7 @@ export const spec = {
     { name: '--move-dialog-close-icon-size', value: 'var(--move-text-base)', description: 'Close button icon size' },
     { name: '--move-dialog-close-fg', value: 'var(--move-fg-muted)', description: 'Close button text color' },
     { name: '--move-dialog-close-fg-hover', value: 'var(--move-fg-base)', description: 'Close button text color on hover' },
-    { name: '--move-dialog-close-bg-hover', value: 'var(--move-bg-muted)', description: 'Close button background on hover' },
+    { name: '--move-dialog-close-bg-hover', value: 'var(--move-surface-hover)', description: 'Close button background on hover' },
     { name: '--move-dialog-close-radius', value: 'var(--move-rounded-sm)', description: 'Close button border radius' },
   ],
 

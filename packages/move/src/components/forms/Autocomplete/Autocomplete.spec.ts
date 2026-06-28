@@ -383,7 +383,7 @@ export const spec = {
     { name: '--move-autocomplete-trigger-border-focus', value: 'var(--move-primary)', description: 'Trigger border color on focus-within' },
     { name: '--move-autocomplete-trigger-radius', value: 'var(--move-rounded-md)', description: 'Trigger border radius' },
     { name: '--move-autocomplete-trigger-padding-x', value: 'var(--move-spacing-sm)', description: 'Trigger horizontal padding' },
-    { name: '--move-autocomplete-trigger-padding-y', value: 'var(--move-spacing-xs)', description: 'Trigger vertical padding' },
+    { name: '--move-autocomplete-trigger-padding-y', value: 'var(--move-spacing-sm)', description: 'Trigger vertical padding' },
     { name: '--move-autocomplete-trigger-fg', value: 'var(--move-fg-base)', description: 'Trigger text color' },
     { name: '--move-autocomplete-trigger-height', value: 'var(--move-control-height-md)', description: 'Trigger minimum height' },
     // Tag tokens

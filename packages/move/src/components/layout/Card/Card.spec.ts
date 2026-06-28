@@ -159,8 +159,8 @@ export const spec = {
   ],
 
   tokens: [
-    { name: '--move-card-bg', value: 'var(--move-bg-subtle)', description: 'Card background color' },
-    { name: '--move-card-border', value: 'var(--move-border-base)', description: 'Card border color' },
+    { name: '--move-card-bg', value: 'var(--move-surface-bg)', description: 'Card background color' },
+    { name: '--move-card-border', value: 'var(--move-surface-border)', description: 'Card border color' },
     { name: '--move-card-radius', value: 'var(--move-rounded-xl)', description: 'Card border radius' },
     { name: '--move-card-shadow', value: 'none', description: 'Card box shadow (elevated variant uses var(--move-shadow-md))' },
     { name: '--move-card-padding', value: 'var(--move-spacing-lg)', description: 'Card section padding' },

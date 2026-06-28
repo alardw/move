@@ -180,7 +180,7 @@ export const spec = {
   ],
 
   tokens: [
-    { name: '--move-popover-content-bg', value: 'var(--move-bg-subtle)', description: 'Content panel background' },
+    { name: '--move-popover-content-bg', value: 'var(--move-surface-bg)', description: 'Content panel background' },
     { name: '--move-popover-content-border', value: 'var(--move-border-base)', description: 'Content panel border color' },
     { name: '--move-popover-content-radius', value: 'var(--move-rounded-lg)', description: 'Content panel border radius' },
     { name: '--move-popover-content-shadow', value: 'var(--move-shadow-overlay)', description: 'Content panel box shadow' },
@@ -191,7 +191,7 @@ export const spec = {
     { name: '--move-popover-close-radius', value: 'var(--move-rounded-sm)', description: 'Close button border radius' },
     { name: '--move-popover-close-fg', value: 'var(--move-fg-muted)', description: 'Close button text color' },
     { name: '--move-popover-close-fg-hover', value: 'var(--move-fg-base)', description: 'Close button text color on hover' },
-    { name: '--move-popover-close-bg-hover', value: 'var(--move-bg-muted)', description: 'Close button background on hover' },
+    { name: '--move-popover-close-bg-hover', value: 'var(--move-surface-hover)', description: 'Close button background on hover' },
   ],
 
   variants: {},

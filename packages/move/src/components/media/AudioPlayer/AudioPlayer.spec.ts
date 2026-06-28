@@ -93,7 +93,7 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-audioplayer-bg', value: 'var(--move-gray-900)', description: 'Player background color' },
+    { name: '--move-audioplayer-bg', value: 'var(--move-gray-800)', description: 'Player background color' },
     { name: '--move-audioplayer-fg', value: 'var(--move-white)', description: 'Player foreground/icon color' },
     { name: '--move-audioplayer-fg-muted', value: 'rgba(255, 255, 255, 0.6)', description: 'Muted foreground color for time display' },
     { name: '--move-audioplayer-progress-track', value: 'rgba(255, 255, 255, 0.2)', description: 'Progress bar track background' },
@@ -101,7 +101,7 @@ export const spec = {
     { name: '--move-audioplayer-progress-fill', value: 'var(--move-white)', description: 'Progress bar fill color' },
     { name: '--move-audioplayer-progress-thumb', value: 'var(--move-white)', description: 'Progress bar thumb color' },
     { name: '--move-audioplayer-hover', value: 'rgba(255, 255, 255, 0.1)', description: 'Button hover background' },
-    { name: '--move-audioplayer-active-bg', value: 'var(--move-primary)', description: 'Active subtitle button background' },
+    { name: '--move-audioplayer-active-bg', value: 'var(--move-primary, #3b82f6)', description: 'Active subtitle button background' },
     { name: '--move-audioplayer-active-fg', value: 'var(--move-white)', description: 'Active subtitle button foreground' },
   ],
 

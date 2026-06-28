@@ -116,8 +116,8 @@ export const spec = {
 
   tokens: [
     { name: '--move-scrollarea-bg', value: 'transparent', description: 'Root background color' },
-    { name: '--move-scrollarea-header-bg', value: 'var(--move-bg-subtle)', description: 'Header background color' },
-    { name: '--move-scrollarea-footer-bg', value: 'var(--move-bg-subtle)', description: 'Footer background color' },
+    { name: '--move-scrollarea-header-bg', value: 'transparent', description: 'Header background color' },
+    { name: '--move-scrollarea-footer-bg', value: 'transparent', description: 'Footer background color' },
     { name: '--move-scrollarea-padding', value: 'var(--move-spacing-md)', description: 'Padding applied when padded=true' },
     { name: '--move-scrollarea-scrollbar-size', value: '8px', description: 'Scrollbar width for webkit scrollbars' },
     { name: '--move-scrollarea-scrollbar-thumb', value: 'var(--move-scrollbar-thumb)', description: 'Scrollbar thumb color' },

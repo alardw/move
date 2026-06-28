@@ -52,7 +52,7 @@ export const spec = {
     { name: '--move-badge-height-sm', value: 'var(--move-space-5)', description: 'Height for sm' },
     { name: '--move-badge-height-md', value: 'var(--move-space-6)', description: 'Height for md' },
     { name: '--move-badge-height-lg', value: 'var(--move-space-8)', description: 'Height for lg (snapped from 1.75rem)' },
-    { name: '--move-badge-padding-x-sm', value: 'var(--move-space-1)', description: 'Horizontal padding for sm (snapped from 0.375rem)' },
+    { name: '--move-badge-padding-x-sm', value: 'var(--move-space-2)', description: 'Horizontal padding for sm (snapped from 0.375rem)' },
     { name: '--move-badge-padding-x-md', value: 'var(--move-space-2)', description: 'Horizontal padding for md' },
     { name: '--move-badge-padding-x-lg', value: 'var(--move-space-3)', description: 'Horizontal padding for lg (snapped from 0.625rem)' },
   ],

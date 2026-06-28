@@ -149,7 +149,7 @@ export const spec = {
     { name: '--move-tabs-border', value: 'var(--move-border-base)', description: 'Border color for underline and outline variants' },
     { name: '--move-tabs-trigger-fg', value: 'var(--move-fg-muted)', description: 'Inactive trigger text color' },
     { name: '--move-tabs-trigger-fg-active', value: 'var(--move-fg-base)', description: 'Active trigger text color' },
-    { name: '--move-tabs-trigger-bg-hover', value: 'var(--move-bg-muted)', description: 'Trigger hover background color' },
+    { name: '--move-tabs-trigger-bg-hover', value: 'var(--move-surface-hover)', description: 'Trigger hover background color' },
     { name: '--move-tabs-indicator', value: 'var(--move-primary)', description: 'Sliding indicator color for underline variant' },
   ],
 

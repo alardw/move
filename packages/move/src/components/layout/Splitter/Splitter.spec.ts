@@ -103,7 +103,7 @@ export const spec = {
   ],
 
   tokens: [
-    { name: '--move-splitter-gutter-bg', value: 'var(--move-bg-emphasis)', description: 'Gutter default background color' },
+    { name: '--move-splitter-gutter-bg', value: 'var(--move-border-base)', description: 'Gutter default background color' },
     { name: '--move-splitter-gutter-bg-hover', value: 'var(--move-border-emphasis)', description: 'Gutter background on hover' },
     { name: '--move-splitter-gutter-bg-active', value: 'var(--move-primary)', description: 'Gutter background while dragging' },
   ],

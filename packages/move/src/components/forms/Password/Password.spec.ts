@@ -108,7 +108,7 @@ export const spec = {
     { name: '--move-password-padding-y', value: 'var(--move-spacing-xs)', description: 'Root vertical padding' },
     { name: '--move-password-font-size', value: 'inherit', description: 'Input font size (inherits, overridden by size)' },
     { name: '--move-password-fg', value: 'var(--move-fg-base)', description: 'Input text color' },
-    { name: '--move-password-placeholder', value: 'var(--move-fg-muted)', description: 'Placeholder text color' },
+    { name: '--move-password-placeholder', value: 'var(--move-fg-subtle)', description: 'Placeholder text color' },
     { name: '--move-password-height', value: 'var(--move-control-height-md)', description: 'Root height' },
     { name: '--move-password-icon-color', value: 'var(--move-fg-muted)', description: 'Icon and toggle color' },
     { name: '--move-password-icon-gap', value: 'var(--move-spacing-sm)', description: 'Gap between icon, input, and toggle' },

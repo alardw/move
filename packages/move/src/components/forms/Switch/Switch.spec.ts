@@ -115,7 +115,7 @@ export const spec = {
     { name: '--move-switch-radius', value: 'var(--move-rounded-full)', description: 'Track border radius (pill shape)' },
     { name: '--move-switch-padding', value: '3px', description: 'Inner padding between track edge and thumb' },
     { name: '--move-switch-transition', value: 'var(--move-transition-fast)', description: 'Background color transition duration' },
-    { name: '--move-switch-thumb-bg', value: 'var(--move-white)', description: 'Thumb background color' },
+    { name: '--move-switch-thumb-bg', value: 'var(--move-white, #fff)', description: 'Thumb background color' },
     { name: '--move-switch-thumb-shadow', value: 'var(--move-shadow-subtle)', description: 'Thumb box shadow' },
   ],
 

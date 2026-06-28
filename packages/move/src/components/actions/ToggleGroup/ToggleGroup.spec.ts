@@ -110,11 +110,7 @@ export const spec = {
   tokens: [
     { name: '--move-toggle-group-radius', value: 'var(--move-rounded-md)', description: 'Root container border radius' },
     { name: '--move-toggle-group-padding', value: '3px', description: 'Root inner padding (gap between edge and items)' },
-    { name: '--move-toggle-group-bg', value: 'var(--move-bg-muted)', description: 'Root container background' },
     { name: '--move-toggle-group-indicator-bg', value: 'var(--move-primary)', description: 'Sliding indicator background' },
-    { name: '--move-toggle-group-item-fg-off', value: 'var(--move-fg-muted)', description: 'Item text color when unselected' },
-    { name: '--move-toggle-group-item-fg-off-hover', value: 'var(--move-fg-base)', description: 'Item text color on hover when unselected' },
-    { name: '--move-toggle-group-item-fg-on', value: 'var(--move-primary-fg)', description: 'Item text color when selected' },
   ],
 
   variants: {
