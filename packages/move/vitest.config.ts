@@ -7,6 +7,8 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
     include: ['src/**/*.test.{ts,tsx}'],
+    // Real-browser invariant tests run via vitest.browser.config.ts, not jsdom.
+    exclude: ['**/node_modules/**', '**/dist/**', '**/*.browser.test.{ts,tsx}'],
   },
   resolve: {
     alias: {

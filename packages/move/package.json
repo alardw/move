@@ -34,6 +34,7 @@
     "pack": "node -e \"const f='package.json',p=JSON.parse(require('fs').readFileSync(f));const v=p.version.split('.');v[2]=+v[2]+1;p.version=v.join('.');require('fs').writeFileSync(f,JSON.stringify(p,null,2)+'\\n');console.log('v'+p.version)\" && npm run build && mkdir -p release && npm pack --pack-destination release",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:browser": "vitest --config vitest.browser.config.ts run",
     "check:spec-drift": "node scripts/checks/spec-drift.mjs",
     "check:family-popup": "node scripts/checks/family-popup.mjs",
     "check:family-modal": "node scripts/checks/family-modal.mjs",
