@@ -221,7 +221,7 @@
   color: var(--move-sidebar-item-fg);
   font-family: var(--move-font-body);
   font-size: var(--move-size-base);
-  font-weight: var(--move-weight-regular);
+  font-weight: var(--move-weight-normal);
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
@@ -323,7 +323,7 @@
   color: var(--move-sidebar-item-fg);
   font-family: var(--move-font-body);
   font-size: var(--move-size-base);
-  font-weight: var(--move-weight-regular);
+  font-weight: var(--move-weight-normal);
   cursor: pointer;
   /* Hover color/bg only */
   transition:

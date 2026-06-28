@@ -205,7 +205,7 @@
   cursor: pointer;
   color: var(--move-fg-muted);
   border-radius: var(--move-rounded-sm);
-  padding: var(--move-spacing-2xs);
+  padding: var(--move-spacing-xs);
   transition: color var(--move-fileupload-transition);
 }
 
@@ -242,7 +242,7 @@
 .itemProgress {
   flex: 1;
   min-width: 0;
-  padding: var(--move-spacing-2xs) 0;
+  padding: var(--move-spacing-xs) 0;
 }
 
 /* ========================================================================= */

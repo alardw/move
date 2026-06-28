@@ -69,7 +69,7 @@
 
 .root[data-size='sm'] .list {
   font-size: var(--move-size-xs);
-  gap: var(--move-spacing-xxs);
+  gap: var(--move-spacing-xs);
 }
 
 .root[data-size='lg'] .list {
