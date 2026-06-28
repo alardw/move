@@ -208,7 +208,10 @@ const TooltipContentInner: React.FC<{
   const ctx = useTooltipContext();
 
   const animConfig = React.useMemo(
-    () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animations || undefined),
+    // Pass `animations` straight through: `|| undefined` would coerce `false`
+    // (disable) into `undefined`, which resolveAnimationsConfig treats as "use
+    // defaults" — so animations={false} silently did nothing.
+    () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animations as AnimationTrigger[] | false | undefined),
     [animations],
   );
   const refs = React.useMemo(

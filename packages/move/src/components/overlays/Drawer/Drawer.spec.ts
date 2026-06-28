@@ -39,7 +39,7 @@ export const spec = {
     { name: 'title', element: 'RadixDialog.Title', description: 'Heading element for the drawer title' },
     { name: 'description', element: 'RadixDialog.Description', description: 'Paragraph element for the drawer description' },
     { name: 'close', element: 'RadixDialog.Close', description: 'Button that triggers animated close' },
-    { name: 'handle', element: 'div', description: 'Drag handle indicator shown in bottom-sheet mode' },
+    { name: 'handle', element: 'div', description: 'Drag handle bar (optional, placed inside Content)' },
   ],
 
   subComponents: [
@@ -180,7 +180,7 @@ export const spec = {
         { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
       ],
       usesFactory: true,
-      description: 'Visual drag handle indicator, auto-shown in bottom-sheet mode',
+      description: 'Visual drag handle bar; place inside Content (typically the bottom-sheet/mobile layout)',
     },
   ],
 
@@ -193,7 +193,6 @@ export const spec = {
         slot: 'content',
         dataAttributes: ['data-position', 'data-size', 'data-responsive'],
         children: [
-          { slot: 'handle' },
           {
             slot: 'header',
             children: [
@@ -249,7 +248,7 @@ export const spec = {
     { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) to ensure correct typography outside the tree' },
     { id: 'position-aware-animation', description: 'Content determines slide axis (X or Y) and direction (positive or negative) based on effective position (respecting responsive override)' },
     { id: 'responsive-position-override', description: 'When responsive=true and viewport < breakpoint, Content overrides position to bottom regardless of prop value' },
-    { id: 'handle-auto-render', description: 'Handle renders automatically in bottom-sheet mode (responsive override active); hidden in side-panel mode unless explicitly included' },
+    { id: 'handle-manual', description: 'Handle is an optional sub-component the consumer places inside Content (typically the bottom-sheet/mobile layout). Automatic rendering in bottom-sheet mode is a planned enhancement, not yet wired.' },
     { id: 'escape-triggers-animated-close', description: 'Escape key and pointer-down-outside trigger animated close via context close() instead of Radix default unmount' },
   ],
 
@@ -323,7 +322,6 @@ export const spec = {
       'Content size full sets width/height to 100%',
       'Content responsive=true switches position to bottom below breakpoint',
       'Content responsive=false preserves original position at all viewports',
-      'Content renders Handle automatically in bottom-sheet responsive mode',
       'Content applies top-only border-radius in bottom-sheet mode',
       'Content constrains max-height to 85vh in bottom-sheet mode',
       'Close button triggers animated close via context instead of immediate unmount',
