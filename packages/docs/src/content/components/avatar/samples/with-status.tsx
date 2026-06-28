@@ -16,13 +16,16 @@ export default function WithStatusSample() {
     <Stack gap="md">
       {people.map((p) => (
         <Stack key={p.name} direction="row" gap="md" align="center">
+          {/* recipe-purity-ignore: Avatar has no built-in status dot — a relative wrapper + absolutely positioned coloured dot; no Move primitive expresses this overlay */}
           <span style={{ position: 'relative', display: 'inline-flex' }}>
             <Avatar.Root>
               <Avatar.Image src={p.src} alt={p.name} />
               <Avatar.Fallback>{p.initials}</Avatar.Fallback>
             </Avatar.Root>
+            {/* recipe-purity-ignore: status dot — absolutely positioned coloured circle, no Move primitive */}
             <span
               aria-hidden
+              // recipe-purity-ignore: inline positioning for the status dot; no Move primitive
               style={{
                 position: 'absolute',
                 right: -2,

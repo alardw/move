@@ -1,14 +1,15 @@
 import type { ReactNode } from 'react';
 
-const palette = ['blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange', 'red', 'pink', 'grape', 'violet', 'indigo'];
-
+// Uniform neutral tile — a muted gray surface with base foreground (AA contrast
+// in both themes). Filler only, so the Grid layout reads clearly.
 export function Tile({ index, children }: { index: number; children?: ReactNode }) {
-  const c = palette[index % palette.length];
   return (
+    // recipe-purity-ignore: neutral filler tile (solid gray surface) so the Grid layout reads clearly; no Move colored-box primitive
     <div
+      // recipe-purity-ignore: neutral filler tile; no Move colored-box primitive
       style={{
-        background: `var(--move-${c}-100)`,
-        color: `var(--move-${c}-900)`,
+        background: 'var(--move-gray-700)',
+        color: 'var(--move-white)',
         padding: 'var(--move-spacing-md)',
         borderRadius: 'var(--move-rounded-md)',
         display: 'flex',

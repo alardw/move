@@ -11,16 +11,21 @@ export default function TooltipPreview() {
   return (
     <StagedOverlay minHeight={160}>
       {({ container }) => (
-        <Tooltip.Root open onOpenChange={() => {}} delayDuration={0}>
-          <Tooltip.Trigger asChild>
-            <Button variant="secondary">
-              <Icon name="save" />
-            </Button>
-          </Tooltip.Trigger>
-          <Tooltip.Content container={container} sideOffset={8}>
-            Save (Cmd+S)
-          </Tooltip.Content>
-        </Tooltip.Root>
+        // Own provider so this force-open tooltip isn't coordinated (and
+        // intermittently closed) by the global provider shared with every other
+        // card's staged tooltip on the overview grid.
+        <Tooltip.Provider delayDuration={0}>
+          <Tooltip.Root open onOpenChange={() => {}} delayDuration={0}>
+            <Tooltip.Trigger asChild>
+              <Button variant="secondary">
+                <Icon name="save" />
+              </Button>
+            </Tooltip.Trigger>
+            <Tooltip.Content container={container} sideOffset={8}>
+              Save (Cmd+S)
+            </Tooltip.Content>
+          </Tooltip.Root>
+        </Tooltip.Provider>
       )}
     </StagedOverlay>
   );

@@ -8,7 +8,9 @@ const palette = ['blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange', 'r
 export function SlideTile({ index, label, height = 200 }: { index: number; label?: ReactNode; height?: number }) {
   const color = palette[index % palette.length];
   return (
+    // recipe-purity-ignore: coloured placeholder slide tile (palette swatch + fixed height); no Move colored-box primitive
     <div
+      // recipe-purity-ignore: coloured placeholder slide tile; no Move colored-box primitive
       style={{
         height,
         display: 'flex',

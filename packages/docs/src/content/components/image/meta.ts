@@ -24,16 +24,16 @@ const related: RelatedItem[] = [
     reason: 'For profile pictures with a circular crop and fallback initials. Image is the rectangular general-purpose version.',
   },
   {
-    to: '/components/image-group',
-    name: 'ImageGroup',
-    reason: 'For overlapping gallery layouts.',
+    to: '/components/grid',
+    name: 'Grid',
+    reason: 'For galleries: `<Grid stagger>` with `Image` children (use `backdrop` to fill mixed aspect ratios).',
   },
 ];
 
 export const meta: ComponentMeta = {
   slug: 'image',
   name: 'Image',
-  tagline: 'A wrapped `<img>` with aspect ratio, object-fit, radius, fallback, and an overlay slot — no more `<img>`-in-a-`<div>`-with-a-style-prop dance.',
+  tagline: 'A wrapped image with aspect ratio, object-fit, radius, fallback, a blurred backdrop fill, and an overlay slot.',
   categories: ['media'],
   badges: [
   ],

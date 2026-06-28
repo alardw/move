@@ -9,7 +9,7 @@ export default function PopoverPreview() {
   return (
     <StagedOverlay>
       {({ container, root, content }) => (
-        <Popover.Root {...root}>
+        <Popover.Root {...root} animations={false}>
           <Popover.Trigger asChild>
             <Button variant="secondary">Show details</Button>
           </Popover.Trigger>

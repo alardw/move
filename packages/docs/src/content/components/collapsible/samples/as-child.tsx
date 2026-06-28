@@ -1,29 +1,19 @@
-import { Badge, Collapsible, Icon, Stack, Text } from 'move';
+import { Badge, Button, Collapsible, Icon, Stack, Text } from 'move';
 
 /**
  * `asChild` lets the Trigger borrow any element. Here it wraps a
- * styled summary row — a div with padding, a status pill, a chevron —
- * and the row becomes a real button, with all the keyboard and ARIA
- * semantics, no extra wrapper required.
+ * full-width Button — a status pill, a title, a chevron — and that
+ * Button becomes the disclosure trigger, keeping all of its keyboard
+ * and ARIA semantics, no extra wrapper required.
  */
 export default function AsChildSample() {
-  const rowStyle: React.CSSProperties = {
-    display: 'block',
-    width: '100%',
-    padding: 'var(--move-spacing-md) var(--move-spacing-lg)',
-    border: '1px solid var(--move-border-base)',
-    borderRadius: 'var(--move-rounded-lg)',
-    background: 'var(--move-surface-bg)',
-    cursor: 'pointer',
-    textAlign: 'left',
-  };
-
   return (
     <Collapsible.Root>
       <Stack gap="sm">
         <Collapsible.Trigger asChild>
-          <button type="button" style={rowStyle}>
-            <Stack direction="row" gap="md" align="center" justify="between">
+          <Button variant="secondary" fullWidth>
+            {/* recipe-purity-ignore: full-width flex row inside the button so justify spreads — no Move width prop */}
+            <Stack direction="row" gap="md" align="center" justify="between" style={{ width: '100%' }}>
               <Stack gap="none">
                 <Text weight="medium">Diagnostics</Text>
                 <Text size="sm" color="muted">Server health, queue depth, recent errors</Text>
@@ -35,7 +25,7 @@ export default function AsChildSample() {
                 </Collapsible.Icon>
               </Stack>
             </Stack>
-          </button>
+          </Button>
         </Collapsible.Trigger>
         <Collapsible.Content>
           <Stack gap="xs" padding="md">

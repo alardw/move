@@ -38,10 +38,14 @@ const VERBOSE = process.argv.includes('--verbose');
 
 const IGNORE_MARKER = 'recipe-purity-ignore';
 
-// Recipe source trees to enforce. Composite recipes only, for now.
+// Source trees to enforce: composite recipes AND the docs component samples +
+// card previews. All must be built only from Move components — no raw HTML, no
+// inline `style=` (use the recipe-purity-ignore marker for the rare case with
+// no Move primitive, e.g. fixed-height demo frames or colored filler tiles).
 const SCAN_ROOTS = [
   join(REPO, 'packages/move/skills/references/recipes/composite'),
   join(REPO, 'packages/docs/src/content/recipes'),
+  join(REPO, 'packages/docs/src/content/components'),
 ];
 
 /** Recursively collect every .tsx file under a directory. */

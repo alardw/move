@@ -16,16 +16,16 @@ export default function VariantsSample() {
               <Tabs.Trigger value="year">Year</Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content value="day">
-              <Text size="sm" color="muted" style={{ padding: 'var(--move-spacing-md)' }}>Daily view content</Text>
+              <Stack padding="md"><Text size="sm" color="muted">Daily view content</Text></Stack>
             </Tabs.Content>
             <Tabs.Content value="week">
-              <Text size="sm" color="muted" style={{ padding: 'var(--move-spacing-md)' }}>Weekly view content</Text>
+              <Stack padding="md"><Text size="sm" color="muted">Weekly view content</Text></Stack>
             </Tabs.Content>
             <Tabs.Content value="month">
-              <Text size="sm" color="muted" style={{ padding: 'var(--move-spacing-md)' }}>Monthly view content</Text>
+              <Stack padding="md"><Text size="sm" color="muted">Monthly view content</Text></Stack>
             </Tabs.Content>
             <Tabs.Content value="year">
-              <Text size="sm" color="muted" style={{ padding: 'var(--move-spacing-md)' }}>Yearly view content</Text>
+              <Stack padding="md"><Text size="sm" color="muted">Yearly view content</Text></Stack>
             </Tabs.Content>
           </Tabs.Root>
         </Stack>

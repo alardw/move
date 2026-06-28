@@ -1,14 +1,5 @@
 import { useRef, useState } from 'react';
-import {
-  Card,
-  Stack,
-  ToggleGroup,
-  Tooltip,
-  Button,
-  Icon,
-  Text,
-  useMorphHeight,
-} from 'move';
+import { Card, Stack, ToggleGroup, Text, useMorphHeight } from 'move';
 import { CodeBlock } from '../CodeBlock';
 import styles from './Preview.module.css';
 
@@ -22,24 +13,17 @@ export interface PreviewProps {
 }
 
 /**
- * Live demo with a sample label above the card and a header row containing
- * the Preview/Code toggle on the left and a copy-to-clipboard button on
- * the right. The card itself carries only the frame + body.
+ * Live demo with a sample label above the card and a header row containing the
+ * Preview/Code toggle. Copy-to-clipboard lives on the CodeBlock itself (shown
+ * in the Code view), so there's a single, unambiguous copy affordance.
  */
 export function Preview({ title, code, children }: PreviewProps) {
   const [view, setView] = useState<'preview' | 'code'>('preview');
-  const [copied, setCopied] = useState(false);
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
 
   useMorphHeight({ key: view, containerRef: bodyRef, innerRef });
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
 
   return (
     <Stack gap="sm">
@@ -56,16 +40,6 @@ export function Preview({ title, code, children }: PreviewProps) {
             <ToggleGroup.Item value="preview">Preview</ToggleGroup.Item>
             <ToggleGroup.Item value="code">Code</ToggleGroup.Item>
           </ToggleGroup.Root>
-          <Tooltip label={copied ? 'Copied' : 'Copy code'}>
-            <Button
-              variant="ghost"
-              size="sm"
-              aria-label="Copy code"
-              onClick={handleCopy}
-            >
-              <Icon name={copied ? 'check' : 'copy'} />
-            </Button>
-          </Tooltip>
         </Card.Header>
         <div ref={bodyRef} className={styles.body}>
           <div ref={innerRef} key={view} className={styles.inner}>

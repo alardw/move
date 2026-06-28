@@ -11,25 +11,25 @@ export default function WithIconSample() {
       <Button variant="primary">
         <Stack direction="row" gap="xs" align="center">
           <Icon name="plus" />
-          <span>New project</span>
+          New project
         </Stack>
       </Button>
       <Button variant="secondary">
         <Stack direction="row" gap="xs" align="center">
-          <span>Continue</span>
+          Continue
           <Icon name="arrow-right" />
         </Stack>
       </Button>
       <Button variant="ghost">
         <Stack direction="row" gap="xs" align="center">
           <Icon name="download" />
-          <span>Export CSV</span>
+          Export CSV
         </Stack>
       </Button>
       <Button variant="danger">
         <Stack direction="row" gap="xs" align="center">
           <Icon name="trash-2" />
-          <span>Delete</span>
+          Delete
         </Stack>
       </Button>
     </Stack>

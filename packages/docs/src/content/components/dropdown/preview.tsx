@@ -4,9 +4,9 @@ import { StagedOverlay } from '../../../components';
 /** Card-only preview: the menu staged open and inert; the trigger anchors it. */
 export default function DropdownPreview() {
   return (
-    <StagedOverlay>
+    <StagedOverlay align="start">
       {({ container, root, content }) => (
-        <Dropdown.Root {...root}>
+        <Dropdown.Root {...root} animations={false}>
           <Dropdown.Trigger asChild>
             <Button variant="secondary">
               Actions <Icon name="chevron-down" />
@@ -16,8 +16,6 @@ export default function DropdownPreview() {
             <Dropdown.Item>Edit</Dropdown.Item>
             <Dropdown.Item>Duplicate</Dropdown.Item>
             <Dropdown.Item>Share</Dropdown.Item>
-            <Dropdown.Separator />
-            <Dropdown.Item disabled>Archive</Dropdown.Item>
           </Dropdown.Content>
         </Dropdown.Root>
       )}

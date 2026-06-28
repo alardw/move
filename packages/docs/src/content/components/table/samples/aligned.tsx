@@ -1,4 +1,4 @@
-import { Button, Icon, Table } from 'move';
+import { Button, Icon, Table, Text } from 'move';
 
 const rows = [
   { sku: 'TS-001', item: 'Heavyweight T-shirt', qty: 120, revenue: 3598.4 },
@@ -16,7 +16,7 @@ export default function AlignedSample() {
           <Table.Head align="end">Qty</Table.Head>
           <Table.Head align="end">Revenue</Table.Head>
           <Table.Head align="end">
-            <span className="sr-only">Actions</span>
+            <Text as="span" className="sr-only">Actions</Text>
           </Table.Head>
         </Table.Row>
       </Table.Header>

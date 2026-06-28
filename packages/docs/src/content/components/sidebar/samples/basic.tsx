@@ -1,18 +1,30 @@
-import { Icon, Sidebar, Stack, Text } from 'move';
+import { Button, Icon, Sidebar, Stack, Text, Tooltip, useSidebarContext } from 'move';
 
 /**
- * Sidebar lives inside a `Sidebar.Provider` that holds the collapsed/mobile
- * state. The Trigger toggles between modes — collapse on desktop, slide-in
- * sheet on mobile. Items take an `icon` and an optional `tooltip` so they
- * keep their labels when the rail is collapsed to icons-only.
+ * The collapse toggle is a plain ghost Button wired to `useSidebarContext`,
+ * not a Sidebar.Trigger (that's a full-width row for the content/footer). The
+ * header lays the logo and actions out at opposite ends.
  */
+function HeaderToggle() {
+  const { collapsed, toggleCollapsed } = useSidebarContext();
+  return (
+    <Tooltip label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} side="right">
+      <Button variant="ghost" size="sm" onClick={toggleCollapsed} aria-label="Toggle sidebar">
+        <Icon name={collapsed ? 'panel-left' : 'panel-left-close'} />
+      </Button>
+    </Tooltip>
+  );
+}
+
 export default function BasicSample() {
   return (
+    // recipe-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
     <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
       <Sidebar.Provider>
         <Sidebar.Root>
-          <Sidebar.Header>
+          <Sidebar.Header collapsedChildren={<HeaderToggle />}>
             <Text weight="semibold">Acme Co.</Text>
+            <HeaderToggle />
           </Sidebar.Header>
           <Sidebar.Content>
             <Sidebar.Group>
@@ -33,7 +45,7 @@ export default function BasicSample() {
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">
-          <Sidebar.Trigger icon="panel-left" tooltip="Toggle sidebar" />
+          <Text color="muted">Main content</Text>
         </Stack>
       </Sidebar.Provider>
     </div>

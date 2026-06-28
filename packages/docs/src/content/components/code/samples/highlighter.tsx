@@ -13,6 +13,7 @@ const highlighter = (code: string) => {
     <>
       {parts.map((p, i) =>
         KEYWORDS.has(p)
+          // recipe-purity-ignore: coloured token output is the whole point of a syntax highlighter; no Move primitive
           ? <span key={i} style={{ color: 'var(--move-indigo-400)', fontWeight: 600 }}>{p}</span>
           : p
       )}

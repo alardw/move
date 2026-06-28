@@ -29,7 +29,7 @@ const related: RelatedItem[] = [
 export const meta: ComponentMeta = {
   slug: 'textarea',
   name: 'Textarea',
-  tagline: 'A native `<textarea>` with variants, auto-resize, and the same tokens as InputText.',
+  tagline: 'A native multi-line text field with variants, auto-resize, and the same tokens as InputText.',
   categories: ['forms'],
   badges: [
   ],

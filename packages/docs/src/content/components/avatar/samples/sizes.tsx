@@ -14,7 +14,7 @@ export default function SizesSample() {
     <Stack gap="md">
       {sizes.map((size) => (
         <Stack key={size} direction="row" gap="md" align="center">
-          <Text size="sm" weight="medium" style={{ width: '4ch' }}>{size}</Text>
+          <Text size="sm" weight="medium">{size}</Text>
           <Avatar.Root size={size}>
             <Avatar.Image src="https://i.pravatar.cc/96?img=15" alt="Sample user" />
             <Avatar.Fallback>SU</Avatar.Fallback>

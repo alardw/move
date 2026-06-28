@@ -25,7 +25,7 @@ export const meta: ComponentMeta = {
   slug: 'label',
   preview: { width: 'fit' },
   name: 'Label',
-  tagline: 'A real `<label>` with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
+  tagline: 'A real form label with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
   categories: ['forms'],
   badges: [
   ],

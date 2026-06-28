@@ -28,7 +28,9 @@
    <pre> bg would clash with our card background — flatten it. */
 .body :global(pre) {
   margin: 0;
-  padding: var(--move-spacing-md) 0;
+  /* Top padding reserves the copy button's row so it never overlaps the first
+     line; bottom matches for balance. */
+  padding: var(--move-spacing-2xl) 0 var(--move-spacing-xl);
   background: transparent !important;
   font-family: inherit;
 }
@@ -62,7 +64,7 @@
 
 .fallback {
   margin: 0;
-  padding: var(--move-spacing-md);
+  padding: var(--move-spacing-2xl) var(--move-spacing-md) var(--move-spacing-xl);
   overflow-x: auto;
   white-space: pre;
 }

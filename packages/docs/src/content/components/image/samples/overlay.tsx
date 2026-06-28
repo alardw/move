@@ -1,4 +1,4 @@
-import { Button, Icon, Image, Stack } from 'move';
+import { Button, Icon, Image, Stack, Tooltip } from 'move';
 
 const photos = [
   { id: 1015, alt: 'Mountain river' },
@@ -26,15 +26,21 @@ export default function OverlaySample() {
           onClick={() => undefined}
           action={
             <Stack direction="row" gap="sm">
-              <Button variant="secondary" size="sm" aria-label="Favourite">
-                <Icon name="heart" />
-              </Button>
-              <Button variant="secondary" size="sm" aria-label="Share">
-                <Icon name="share-2" />
-              </Button>
-              <Button variant="danger" size="sm" aria-label="Delete">
-                <Icon name="trash-2" />
-              </Button>
+              <Tooltip label="Favourite">
+                <Button variant="secondary" size="sm" aria-label="Favourite">
+                  <Icon name="heart" />
+                </Button>
+              </Tooltip>
+              <Tooltip label="Share">
+                <Button variant="secondary" size="sm" aria-label="Share">
+                  <Icon name="share-2" />
+                </Button>
+              </Tooltip>
+              <Tooltip label="Delete">
+                <Button variant="danger" size="sm" aria-label="Delete">
+                  <Icon name="trash-2" />
+                </Button>
+              </Tooltip>
             </Stack>
           }
         />

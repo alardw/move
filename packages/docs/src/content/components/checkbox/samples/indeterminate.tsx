@@ -38,6 +38,7 @@ export default function IndeterminateSample() {
       >
         Select all filters
       </Checkbox>
+      {/* recipe-purity-ignore: left-only indent for the child checkboxes; Stack padding is all-sides */}
       <Stack gap="xs" style={{ paddingLeft: 'var(--move-spacing-lg)' }}>
         {items.map((it) => (
           <Checkbox

@@ -1,10 +1,11 @@
-import { Stack, Text } from 'move';
+import type { ReactNode } from 'react';
+import { Card, Stack, Text } from 'move';
 
-const tile: React.CSSProperties = {
-  background: 'var(--move-bg-muted)',
-  padding: 'var(--move-spacing-md)',
-  borderRadius: 'var(--move-rounded-md)',
-};
+const Tile = ({ children }: { children: ReactNode }) => (
+  <Card.Root>
+    <Card.Body>{children}</Card.Body>
+  </Card.Root>
+);
 
 export default function BasicSample() {
   return (
@@ -12,17 +13,17 @@ export default function BasicSample() {
       <Stack gap="xs">
         <Text size="sm" weight="medium">Vertical (default)</Text>
         <Stack gap="sm">
-          <div style={tile}>One</div>
-          <div style={tile}>Two</div>
-          <div style={tile}>Three</div>
+          <Tile>One</Tile>
+          <Tile>Two</Tile>
+          <Tile>Three</Tile>
         </Stack>
       </Stack>
       <Stack gap="xs">
         <Text size="sm" weight="medium">Horizontal</Text>
         <Stack direction="row" gap="sm">
-          <div style={tile}>One</div>
-          <div style={tile}>Two</div>
-          <div style={tile}>Three</div>
+          <Tile>One</Tile>
+          <Tile>Two</Tile>
+          <Tile>Three</Tile>
         </Stack>
       </Stack>
     </Stack>

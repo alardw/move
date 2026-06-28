@@ -34,7 +34,7 @@ export const meta: ComponentMeta = {
   slug: 'checkbox',
   preview: { width: 'fit' },
   name: 'Checkbox',
-  tagline: 'A real `<button role="checkbox">` with checked, indeterminate, and disabled states — plus a hidden input for plain-form submission and a tidy Group container.',
+  tagline: 'A real checkbox built on an accessible button — checked, indeterminate, and disabled states, plus a hidden input for plain-form submission and a tidy Group container.',
   categories: ['forms'],
   badges: [
     { icon: 'keyboard', label: 'Native' },

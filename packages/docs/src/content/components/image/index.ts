@@ -7,6 +7,8 @@ import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
 import ObjectFit from './samples/object-fit';
 import objectFitCode from './samples/object-fit?raw';
+import Backdrop from './samples/backdrop';
+import backdropCode from './samples/backdrop?raw';
 import Fallback from './samples/fallback';
 import fallbackCode from './samples/fallback?raw';
 import Overlay from './samples/overlay';
@@ -18,6 +20,7 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'object-fit', title: 'Object fit', render: ObjectFit, code: objectFitCode },
+    { id: 'backdrop', title: 'Blurred backdrop fill', render: Backdrop, code: backdropCode },
     { id: 'fallback', title: 'Fallback on error', render: Fallback, code: fallbackCode },
     { id: 'overlay', title: 'Action overlay (hover)', render: Overlay, code: overlayCode },
   ],

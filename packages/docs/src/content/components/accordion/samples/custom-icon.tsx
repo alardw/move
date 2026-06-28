@@ -37,7 +37,7 @@ export default function CustomIconSample() {
             <Accordion.Trigger icon={<Icon name="plus" />}>
               <Stack direction="row" gap="sm" align="center">
                 <Icon name={it.indicator} />
-                <span>{it.label}</span>
+                {it.label}
               </Stack>
             </Accordion.Trigger>
           </Accordion.Header>

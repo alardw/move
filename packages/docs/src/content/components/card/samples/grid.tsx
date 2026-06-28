@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Stack, Text } from 'move';
+import { Badge, Button, Card, Grid, Stack, Text } from 'move';
 
 /**
  * Cards drop happily into a CSS grid — `maxWidth` keeps each column
@@ -14,7 +14,7 @@ const projects = [
 
 export default function GridSample() {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(16rem, 1fr))', gap: 'var(--move-spacing-md)' }}>
+    <Grid minChildWidth="16rem" gap="md">
       {projects.map((p) => (
         <Card.Root key={p.name} variant="elevated">
           <Card.Header>
@@ -33,6 +33,6 @@ export default function GridSample() {
           </Card.Footer>
         </Card.Root>
       ))}
-    </div>
+    </Grid>
   );
 }

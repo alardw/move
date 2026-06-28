@@ -6,7 +6,7 @@ export default function DrawerPreview() {
   return (
     <StagedOverlay minHeight={280}>
       {({ root, content, portal }) => (
-        <Drawer.Root {...root}>
+        <Drawer.Root {...root} animations={false}>
           <Drawer.Portal {...portal}>
             <Drawer.Overlay />
             <Drawer.Content {...content}>

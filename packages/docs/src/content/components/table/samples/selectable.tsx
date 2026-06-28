@@ -42,6 +42,7 @@ export default function SelectableSample() {
       <Table hoverable>
         <Table.Header>
           <Table.Row>
+            {/* recipe-purity-ignore: tight checkbox column width hint; no Move column-width prop on Table cells */}
             <Table.Head style={CHECK_CELL}>
               <Checkbox
                 checked={selection.isAllSelected}
@@ -61,6 +62,7 @@ export default function SelectableSample() {
             const checked = selection.isSelected(inv.id);
             return (
               <Table.Row key={inv.id} selected={checked}>
+                {/* recipe-purity-ignore: tight checkbox column width hint; no Move column-width prop on Table cells */}
                 <Table.Cell style={CHECK_CELL}>
                   <Checkbox
                     checked={checked}

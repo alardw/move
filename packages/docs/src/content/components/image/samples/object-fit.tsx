@@ -19,6 +19,7 @@ export default function ObjectFitSample() {
             height={140}
             fit={fit}
             radius="md"
+            // recipe-purity-ignore: muted backdrop behind contain/none letterboxing; no Move background prop on Image
             style={{ background: 'var(--move-bg-muted)' }}
           />
         </Stack>

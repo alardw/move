@@ -44,9 +44,16 @@ export interface StagedOverlayApi {
  */
 export function StagedOverlay({
   minHeight = 240,
+  align = 'center',
   children,
 }: {
   minHeight?: number;
+  /**
+   * Vertical placement of the staged content. Default `center`. Use `start`
+   * for overlays whose body opens downward from the trigger (Dropdown/Select)
+   * so the menu has room within the card's clipped preview area.
+   */
+  align?: 'center' | 'start';
   children: (api: StagedOverlayApi) => ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -64,7 +71,11 @@ export function StagedOverlay({
   }, []);
 
   return (
-    <div ref={ref} className={styles.stage} style={{ minHeight }}>
+    <div
+      ref={ref}
+      className={styles.stage}
+      style={align === 'start' ? { minHeight, alignItems: 'start', paddingTop: 20 } : { minHeight }}
+    >
       {container &&
         children({
           container,
