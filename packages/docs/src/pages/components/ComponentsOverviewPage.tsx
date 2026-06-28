@@ -19,7 +19,7 @@ const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
 
 const GRID: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+  gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
   gap: '1rem',
 };
 
