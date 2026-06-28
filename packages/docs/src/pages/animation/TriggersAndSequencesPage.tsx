@@ -113,8 +113,12 @@ function ParallelSerialDemo() {
   const [play, setPlay] = useState(0);
 
   const animations = useMemo<AnimationTrigger[]>(() => {
-    const enter = { target: 'Root', animation: { opacity: { from: 0, to: 1, duration: 200 }, scale: { from: 0.92, to: 1, ease: poppy } } };
-    const iconPulse = { target: 'Icon', animation: { scale: { from: 1, to: 1.4, ease: poppy }, loop: 1, alternate: true } };
+    // Uniform fixed duration so the step's promise resolves only when the
+    // entrance is visually DONE — otherwise (a spring scale + a 200ms opacity)
+    // the step "completes" early and the serial pulse overlaps the still-running
+    // entrance, making "in order" look identical to "together".
+    const enter = { target: 'Root', animation: { opacity: { from: 0, to: 1, duration: 380 }, scale: { from: 0.88, to: 1, ease: 'outBack', duration: 380 } } };
+    const iconPulse = { target: 'Icon', animation: { scale: { from: 1, to: 1.5, ease: poppy, duration: 260 }, loop: 1, alternate: true } };
     return [{ trigger: 'Root.enter', sequence: mode === 'parallel' ? [[enter, iconPulse]] : [enter, iconPulse] }];
   }, [mode]);
 
