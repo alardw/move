@@ -47,7 +47,9 @@
   --move-surface-inset: var(--move-bg-muted);
   --move-surface-alt: var(--move-bg-subtle);
   --move-surface-alt-hover: var(--move-bg-muted);
-  --move-surface-border: transparent;
+  /* Visible on base (matches the :root default ground); subtle relies on bg
+     contrast instead. Base IS the page ground, so the two must agree. */
+  --move-surface-border: var(--move-border-base);
 }
 
 [data-surface="subtle"] {

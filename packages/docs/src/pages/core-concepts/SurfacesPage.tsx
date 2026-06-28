@@ -22,12 +22,13 @@ interface Level {
 }
 
 const LEVELS: Level[] = [
-  { kind: 'base', bgToken: '--move-bg-base', description: 'The base background of the page or container.' },
+  { kind: 'base', bgToken: '--move-bg-base', description: 'The page/app ground. Established implicitly by MoveRoot (:root) — no component declares it.' },
   { kind: 'subtle', bgToken: '--move-bg-subtle', description: 'Slightly raised tint over base — used for cards, popovers, dialogs, and other contained panels.' },
 ];
 
 const COMPONENT_BY_LEVEL: Record<Level['kind'], string[]> = {
-  'base': ['TableOfContents'],
+  // base is the implicit page ground (MoveRoot / :root) — no component declares it.
+  'base': [],
   'subtle': ['Alert', 'Card', 'Dialog', 'Drawer', 'Dropdown', 'Popover', 'Toast', 'ColorInput', 'Select'],
 };
 
@@ -137,7 +138,13 @@ export function SurfacesPage() {
               {LEVELS.map((l) => (
                 <Table.Row key={l.kind}>
                   <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}><Code>{l.kind}</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">{COMPONENT_BY_LEVEL[l.kind].join(', ')}</Text></Table.Cell>
+                  <Table.Cell>
+                    <Text size="sm" color={COMPONENT_BY_LEVEL[l.kind].length ? undefined : 'muted'}>
+                      {COMPONENT_BY_LEVEL[l.kind].length
+                        ? COMPONENT_BY_LEVEL[l.kind].join(', ')
+                        : 'Implicit page ground — declared by no component.'}
+                    </Text>
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

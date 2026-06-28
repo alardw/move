@@ -64,7 +64,10 @@ export function PlayerSettingsMenu({
         side={side}
         align={align}
         sideOffset={sideOffset}
-        className={styles.menu}
+        // Move's Popover paints its surface on an inner box; the dark menu look
+        // must land there (the contentInner slot), not the outer positioning
+        // shell — otherwise the light inner covers it (the white-box bug).
+        sp={{ contentInner: { className: styles.menu } }}
         onOpenAutoFocus={(e: Event) => e.preventDefault()}
       >
           {!activeCat ? (

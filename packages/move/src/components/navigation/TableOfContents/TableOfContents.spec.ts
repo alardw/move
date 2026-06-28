@@ -79,10 +79,10 @@ export const spec = {
     { id: 'nav-landmark', description: 'Root renders a <nav> with aria-label="On this page".' },
   ],
 
-  surface: {
-    slot: 'root',
-    level: 'base' as const,
-  },
+  // No surface: TableOfContents paints no background — it sits transparently on
+  // the page's implicit `base` ground (established by MoveRoot / :root). Only
+  // components that raise a panel declare a surface.
+  surface: null,
 
   tokens: [
     { name: '--move-toc-indicator-color', value: 'var(--move-primary)', description: 'Left-border indicator color on the active item' },
