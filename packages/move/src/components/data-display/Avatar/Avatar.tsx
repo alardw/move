@@ -1,5 +1,5 @@
 'use client';
-// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: 45042d3b)
 import * as React from 'react';
 import { Avatar as RadixAvatar } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

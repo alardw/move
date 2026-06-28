@@ -1,4 +1,4 @@
-// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: 45042d3b)
 import { META_SCHEMA_VERSION } from "@/meta-schema";
 import type { ComponentMeta } from "@/meta-schema";
 

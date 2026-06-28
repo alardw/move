@@ -1,4 +1,4 @@
-// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: aeb52a7f)
+// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: 45042d3b)
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRef } from 'react';

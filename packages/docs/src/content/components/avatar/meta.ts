@@ -8,8 +8,8 @@ const highlights: HighlightItem[] = [
     text: 'Image with a Fallback that takes over when the URL is broken or still loading — initials, an icon, anything renderable. No half-loaded states bleeding through.',
   },
   {
-    icon: 'rabbit',
-    text: 'Springs in on mount; in a Group, each avatar staggers behind the previous so the row settles in instead of popping.',
+    icon: 'users',
+    text: 'Stack teammates with `Avatar.Group` — a clean overlap with a trailing “+N” overflow. Each avatar fades in on mount.',
   },
   {
     icon: 'palette',
@@ -34,7 +34,7 @@ export const meta: ComponentMeta = {
   slug: 'avatar',
   preview: { width: 'fit' },
   name: 'Avatar',
-  tagline: 'A user portrait with a graceful fallback, five sizes, a tinted Group for stacks of teammates, and a tiny spring entrance to make it feel alive.',
+  tagline: 'A user portrait with a graceful fallback, five sizes, and a Group for stacks of teammates.',
   categories: ['data-display'],
   badges: [
     { icon: 'boxes', label: 'Compound' },

@@ -8,9 +8,8 @@ const teammates = [
 ];
 
 /**
- * `Avatar.Group` overlaps avatars with a small negative margin and
- * staggers their entrance animations. Trailing "+N" overflow can be a
- * plain Avatar with a fallback.
+ * `Avatar.Group` overlaps avatars with a small negative margin. A
+ * trailing "+N" overflow can be a plain Avatar with a fallback.
  */
 export default function GroupSample() {
   return (

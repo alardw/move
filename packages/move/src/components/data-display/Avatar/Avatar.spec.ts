@@ -1,5 +1,5 @@
 // Avatar.spec.ts — Component specification
-// specHash: aeb52a7f
+// specHash: 45042d3b
 
 import type { ComponentSpec } from '../../../spec-type';
 
@@ -8,13 +8,13 @@ export const spec = {
   name: 'Avatar',
   componentClass: 'display' as const,
   category: 'data-display',
-  description: 'User avatar with image, fallback, size options, and spring entrance animation',
+  description: 'User avatar with image, fallback, and size options',
 
   synonyms: ['profile picture', 'user image', 'portrait', 'user icon', 'gravatar', 'initials'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],
-    animation: ["spring-transform", "stagger"],
+    animation: ["fade"],
     a11y:      ["none"],
   },
 
@@ -45,12 +45,12 @@ export const spec = {
       props: [
         { name: 'size', typeRef: 'SizeWithXL', default: "'md'", moveSpecific: true, description: 'Avatar size' },
         { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Tints the fallback bg/fg using the named Open Color palette.' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config override or false to disable entrance animation' },
+        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Optional declarative animation config — none by default (the mount fade is CSS)' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Image and Avatar.Fallback' },
       ],
       usesFactory: true,
       radixPrimitive: 'Avatar.Root',
-      description: 'Individual avatar container with spring entrance animation',
+      description: 'Individual avatar container',
     },
     {
       name: 'Image',
@@ -99,9 +99,7 @@ export const spec = {
   asChild: false,
 
   animationCapabilities: ['cssAnimation'],
-  animations: [
-    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } } }] },
-  ],
+  animations: [],
 
   tokens: [
     { name: '--move-avatar-size', value: 'var(--move-space-10)', description: 'Avatar size (width and height)' },
@@ -133,9 +131,7 @@ export const spec = {
       'Forwards ref to root element',
     ],
     animation: [
-      'Spring entrance animation on mount',
-      'Staggered entrance in group',
-      'animations={false} disables entrance animation',
+      'Fades in on mount via CSS @keyframes (cssAnimation capability)',
     ],
   },
 

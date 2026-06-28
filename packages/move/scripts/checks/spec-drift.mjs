@@ -482,6 +482,26 @@ function checkComponent(componentDir) {
     return { name, errors, warnings };
   }
 
+  // 0. Animation wiring parity. spec-drift otherwise only checks structure
+  //    (slots/props/defaults), so a spec that promises a declarative animation
+  //    the code never wires slipped through (e.g. Avatar's removed spring still
+  //    declared in the spec). If the spec's `animations` array has trigger
+  //    entries, the source must NOT wire empty defaults via
+  //    resolveAnimationsConfig([]). (Deeper trigger-by-trigger parity remains the
+  //    job of `/component-validate` A13; this catches the gross "declared but not
+  //    wired" drift in CI.)
+  {
+    const specText = readFileSync(specFile, 'utf8');
+    const srcText = readFileSync(sourceFile, 'utf8');
+    const specDeclaresAnim = /\banimations:\s*\[\s*\{/.test(specText); // array with ≥1 entry
+    const srcWiresEmpty = /resolveAnimationsConfig\(\s*\[\s*\]/.test(srcText);
+    if (specDeclaresAnim && srcWiresEmpty) {
+      errors.push(
+        'spec declares `animations` triggers but source wires resolveAnimationsConfig([]) — animation drift (spec promises an animation the code does not ship)',
+      );
+    }
+  }
+
   // 1. Compound keys ↔ subComponents
   if (source.compoundKeys) {
     const runtimeKeys = source.compoundKeys.filter((k) => k !== 'Root');
