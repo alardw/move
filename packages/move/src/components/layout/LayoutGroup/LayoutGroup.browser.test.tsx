@@ -12,9 +12,9 @@ const microtasks = async () => { await Promise.resolve(); await Promise.resolve(
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 const near = (a: number, b: number, eps = 3) => Math.abs(a - b) <= eps;
 
-function List({ order }: { order: string[] }) {
+function List({ order, ...rest }: { order: string[] } & Record<string, unknown>) {
   return (
-    <LayoutGroup duration={300}>
+    <LayoutGroup duration={300} {...rest}>
       {order.map((id) => (
         <div key={id} data-id={id} style={{ height: '40px', background: '#ddd', marginBottom: '8px' }}>
           {id}
@@ -73,5 +73,30 @@ describe('useAutoLayout — FLIP invariants (real browser)', () => {
     expect(ids).toEqual(['d', 'c', 'b', 'a']);
     // a (was first) ends below d (was last).
     expect(top(root, 'a')).toBeGreaterThan(top(root, 'd'));
+  });
+
+  it('INVARIANT: disabled applies the new layout instantly — no animation/transform', async () => {
+    const { rerender, container } = render(<List order={['a', 'b', 'c']} disabled />);
+    const root = container.firstElementChild!;
+    const aOld = top(root, 'a');
+
+    rerender(<List order={['b', 'c', 'a']} disabled />);
+    await microtasks();
+
+    expect(el(root, 'a').style.transform).toBe(''); // no FLIP transform
+    expect(top(root, 'a')).toBeGreaterThan(aOld);    // already at its new (bottom) spot
+  });
+
+  it('INVARIANT: initial reveals children hidden→visible on mount (opt-in only)', async () => {
+    const { container } = render(<List order={['a', 'b']} initial />);
+    const root = container.firstElementChild!;
+    await microtasks();
+
+    // Seeded hidden then animating in.
+    expect(Number(getComputedStyle(el(root, 'a')).opacity)).toBeLessThan(1);
+    await sleep(600);
+    // Revealed + cleaned up.
+    expect(Number(getComputedStyle(el(root, 'a')).opacity)).toBe(1);
+    expect(el(root, 'a').style.transform).toBe('');
   });
 });
