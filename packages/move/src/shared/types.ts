@@ -90,6 +90,6 @@ export type Color =
 // Image / media radius scale. `'full'` is the only non-token entry —
 // it pins to 50% rounding for circular crops.
 
-/** Border-radius scale for media surfaces (Image, ImageGroup,
- *  AudioPlayer, VideoPlayer). */
+/** Border-radius scale for media surfaces (Image, AudioPlayer,
+ *  VideoPlayer). */
 export type Radius = 'none' | 'sm' | 'md' | 'lg' | 'full';

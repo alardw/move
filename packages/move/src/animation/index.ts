@@ -32,6 +32,10 @@ export { animatePosition } from './animatePosition';
 /** Animate children with staggered delay */
 export { staggerAnimate } from './staggerAnimate';
 
+/** Canonical "reveal children on mount" stagger trigger builder (opacity + scale) */
+export { staggerEnter } from './staggerEnter';
+export type { StaggerEnterOptions } from './staggerEnter';
+
 // =============================================================================
 // Trigger-sequence orchestrator
 // =============================================================================
@@ -78,6 +82,26 @@ export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingInd
 
 export { useMorphHeight } from './useMorphHeight';
 export type { UseMorphHeightOptions } from './useMorphHeight';
+
+// =============================================================================
+// Split text (Tier-2 textSplit capability)
+// =============================================================================
+
+export { useSplitText } from './useSplitText';
+export type {
+  UseSplitTextOptions,
+  UseSplitTextReturn,
+  SplitTextBy,
+  SplitTextEffect,
+  SplitTextTrigger,
+} from './useSplitText';
+
+export { useAutoLayout } from './useAutoLayout';
+export type {
+  UseAutoLayoutOptions,
+  UseAutoLayoutReturn,
+  LayoutEnterExit,
+} from './useAutoLayout';
 
 // =============================================================================
 // Presence system

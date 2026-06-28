@@ -148,6 +148,11 @@ export type { CodeHighlighterFn, CodeHighlighterProviderProps, HighlightResult }
 
 export { Grid } from './components/layout/Grid';
 export type { GridProps, GridCellProps, GridGap, GridPadding } from './components/layout/Grid';
+export { LayoutGroup } from './components/layout/LayoutGroup';
+export type { LayoutGroupProps, LayoutGroupAs, LayoutGroupAnim } from './components/layout/LayoutGroup';
+
+export { AnimatedText } from './components/typography/AnimatedText';
+export type { AnimatedTextProps, AnimatedTextAs, AnimatedTextSize, AnimatedTextWeight, AnimatedTextBy, AnimatedTextEffect, AnimatedTextTrigger } from './components/typography/AnimatedText';
 
 export { Heading } from './components/typography/Heading';
 export type { HeadingProps, HeadingLevel, HeadingSize, HeadingWeight, HeadingColor, HeadingTracking, HeadingAlign } from './components/typography/Heading';
@@ -367,8 +372,6 @@ export type { UseStepperOptions, UseStepperReturn } from './components/navigatio
 export { Image } from './components/media/Image';
 export type { ImageProps, ImageSource, ImageFit, ImageRadius, ImagePosition } from './components/media/Image';
 
-export { ImageGroup } from './components/media/ImageGroup';
-export type { ImageGroupProps, ImageGroupGap, ImageGroupRadius } from './components/media/ImageGroup';
 
 export { AudioPlayer } from './components/media/AudioPlayer';
 export type { AudioPlayerProps, AudioPlayerRadius, AudioPlayerSize } from './components/media/AudioPlayer';
@@ -397,19 +400,8 @@ export type {
 export { CANONICAL_TYPES, resolveTypeRef, valuesForTypeRef } from './shared/typeRegistry';
 export type { CanonicalTypeName } from './shared/typeRegistry';
 
-// Spec contract — types, taxonomies, and tooling helpers consumed by
-// the docs site and AI skills. The `Animation` taxonomy is aliased to
-// `AnimationFamily` here to avoid clash with the runtime `Animation`
-// type from the animation module.
-export { SCHEMA_VERSION, ANIMATION_RULES, Z_LAYERS, deriveZ } from './contract';
-export type {
-  Spec,
-  Identity, Taxonomies, Composition, Interaction, Style, AnimationBlock, Lifecycle, Tooling,
-  PropDef, PropRequired, PropOptionalLiteral, PropOptionalLabeled, PropRole,
-  SlotDef, SubComponentDef, TokenDef, AnimationDef, AnimationStateDef,
-  RenderContractDef, AnatomyDef, LabelDef, ControlledProps, TestingDef,
-  DefaultReview, DeprecatedDef, ChildrenKind, KeyboardPattern, FocusPattern, FormType,
-  Category, ComponentClass, Behavior, State, Surface, A11y, Z,
-  ComponentClassKind, BehaviorKind, StateKind, AnimationKind, SurfaceKind, ZKind, A11yKind,
-} from './contract';
-export type { Animation as AnimationFamily, AnimationStep as AnimationFamilyStep } from './contract';
+// Stacking layers — the canonical z-index scale + CSS tokens, surfaced in the
+// docs "Stacking" page. (The legacy `contract/` spec-design module was removed;
+// the real spec shape is `ComponentSpec` in `spec-type.ts`.)
+export { Z_LAYERS } from './shared/z-layers';
+export type { Z, ZKind, ZLayers } from './shared/z-layers';

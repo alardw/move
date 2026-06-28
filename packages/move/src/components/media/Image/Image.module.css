@@ -12,11 +12,31 @@
   --move-image-fallback-min-height: var(--move-space-20);
   --move-image-action-bg: var(--move-overlay);
   --move-image-action-fg: var(--move-white);
+  --move-image-backdrop-blur: 20px;
 
   position: relative;
   display: inline-flex;
   overflow: hidden;
   background-color: var(--move-image-bg);
+}
+
+/* Letterbox backdrop — a blurred, scaled copy of the image painted behind it
+   to fill the dead bands left by object-fit: contain. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(var(--move-image-backdrop-blur)) saturate(1.2);
+  transform: scale(1.15);
+  z-index: 0;
+}
+
+/* Keep the real image above the backdrop. */
+.root[data-backdrop] .img {
+  position: relative;
+  z-index: 1;
 }
 
 /* Radius */

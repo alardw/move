@@ -1,7 +1,9 @@
 'use client';
-// Generated from Stack.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Stack.spec.ts (schemaVersion: 7, specHash: ff9e4b6e)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
+import { useAnimations, resolveAnimationsConfig, staggerEnter } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine/types';
 import type { Gap, GapWithXL2 } from '../../../shared/types';
 import styles from './Stack.module.css';
@@ -24,6 +26,10 @@ export type StackFlex = 1 | 'auto' | 'none';
  *  (100dvh) — for app-shell roots that own the full window height. */
 export type StackFill = boolean | 'screen';
 
+/** Opt-in staggered entrance for direct children. `true` uses defaults;
+ *  the object form tunes the per-item delay and the stagger origin. */
+export type StackStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
+
 export interface StackProps extends Record<string, unknown> {
   direction?: StackDirection;
   gap?: StackGap;
@@ -34,6 +40,10 @@ export interface StackProps extends Record<string, unknown> {
   fill?: StackFill;
   wrap?: boolean;
   collapseBelow?: string;
+  /** Reveal direct children with a staggered fade+rise on mount. Off by default. */
+  stagger?: StackStagger;
+  /** Override or disable the entrance stagger (only relevant when `stagger` is set). */
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -54,11 +64,31 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
     align: 'stretch' as StackAlign,
     justify: 'start' as StackJustify,
     wrap: false,
+    stagger: false as StackStagger,
   },
-  moveProps: ['collapseBelow', 'fill'],
+  moveProps: ['collapseBelow', 'fill', 'stagger', 'animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
+
+    // Opt-in staggered entrance — the standard declarative children-stagger
+    // (List/Table/Timeline pattern). Off (and zero-cost) when `stagger` is unset.
+    const staggerProp = props.stagger as StackStagger | undefined;
+    const staggerOn = !!staggerProp;
+    const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
+    const animConfig = React.useMemo(() => {
+      if (!staggerOn || props.animations === false) return null;
+      return resolveAnimationsConfig(
+        [staggerEnter({ delay: staggerCfg.delay, from: staggerCfg.from })],
+        props.animations as AnimationTrigger[] | undefined,
+      );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [staggerOn, staggerCfg.delay, staggerCfg.from, props.animations]);
+    const animRefs = React.useMemo(
+      () => ({ Root: internalRef as React.RefObject<HTMLElement | null> }),
+      [internalRef],
+    );
+    useAnimations(animConfig, animRefs);
 
     React.useEffect(() => {
       const el = internalRef.current;

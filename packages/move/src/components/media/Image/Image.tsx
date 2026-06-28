@@ -1,5 +1,5 @@
 'use client';
-// Generated from Image.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Image.spec.ts (schemaVersion: 6, specHash: 56031b51)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
@@ -17,7 +17,7 @@ export type ImageFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 export type ImageRadius = Radius;
 export type ImagePosition = 'center' | 'top' | 'bottom' | 'left' | 'right'
   | 'top left' | 'top right' | 'bottom left' | 'bottom right';
-type ImageSlots = 'root' | 'img' | 'fallback' | 'action';
+type ImageSlots = 'root' | 'backdrop' | 'img' | 'fallback' | 'action';
 
 /** Describes one responsive image variant with its intrinsic pixel width. */
 export interface ImageSource {
@@ -35,6 +35,9 @@ export interface ImageProps extends Record<string, unknown> {
   alt?: string;
   fallbackSrc?: string;
   fit?: ImageFit;
+  /** Fill letterbox bands with a blurred, scaled-up copy of the image
+   *  behind it (Apple Music / Spotify pattern). Best with `fit="contain"`. */
+  backdrop?: boolean;
   radius?: ImageRadius;
   position?: ImagePosition;
   aspectRatio?: string;
@@ -60,10 +63,10 @@ export interface ImageProps extends Record<string, unknown> {
 export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
   name: 'Image',
   styles,
-  slots: ['root', 'img', 'fallback', 'action'] as const,
-  defaults: { fit: 'cover', radius: 'none', position: 'center' },
+  slots: ['root', 'backdrop', 'img', 'fallback', 'action'] as const,
+  defaults: { fit: 'cover', radius: 'none', position: 'center', backdrop: false },
   moveProps: [
-    'src', 'sources', 'alt', 'fallbackSrc', 'fit', 'radius', 'position',
+    'src', 'sources', 'alt', 'fallbackSrc', 'fit', 'backdrop', 'radius', 'position',
     'aspectRatio', 'width', 'height', 'loading', 'action', 'interactive', 'onLoad', 'onError',
   ],
 
@@ -134,6 +137,9 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
         const rootSp = sp('root');
         const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
 
+        const backdropSp = sp('backdrop');
+        const { className: bdSpClass, style: bdSpStyle, ...bdSpRest } = backdropSp as Record<string, unknown>;
+
         const imgSp = sp('img');
         const { className: imgSpClass, style: imgSpStyle, ...imgSpRest } = imgSp as Record<string, unknown>;
 
@@ -149,6 +155,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
         const fallbackSrc = props.fallbackSrc as string | undefined;
         const showFallback = error && !fallbackSrc;
         const effectiveSrc = error && fallbackSrc ? fallbackSrc : baseSrc;
+        const showBackdrop = !!props.backdrop && !showFallback && !!effectiveSrc;
 
         const rootStyle: React.CSSProperties = {
           ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : undefined),
@@ -186,12 +193,25 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
             data-fit={props.fit}
             data-radius={props.radius}
             data-position={props.position}
+            data-backdrop={showBackdrop ? '' : undefined}
             data-interactive={isInteractive ? '' : undefined}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={rootStyle}
             onClick={userOnClick}
             {...interactiveAttrs}
           >
+            {showBackdrop && (
+              <img
+                {...(bdSpRest as React.ImgHTMLAttributes<HTMLImageElement>)}
+                src={effectiveSrc}
+                alt=""
+                aria-hidden
+                loading={props.loading as 'lazy' | 'eager' | undefined}
+                className={cx('backdrop', bdSpClass as string | undefined)}
+                style={bdSpStyle as React.CSSProperties}
+              />
+            )}
+
             {!showFallback && effectiveSrc && (
               <img
                 {...(imgSpRest as React.ImgHTMLAttributes<HTMLImageElement>)}

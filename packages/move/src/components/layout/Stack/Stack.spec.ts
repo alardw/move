@@ -1,5 +1,5 @@
 // Stack.spec.ts — Component specification
-// specHash: PLACEHOLDER
+// specHash: ff9e4b6e
 
 import type { ComponentSpec } from '../../../spec-type';
 
@@ -14,7 +14,7 @@ export const spec = {
   families: {
     behavior:  ["layout"],
     state:     ["stateless"],
-    animation: ["none"],
+    animation: ["stagger"],
     a11y:      ["none"],
   },
 
@@ -34,6 +34,8 @@ export const spec = {
     { name: 'collapseBelow', type: 'string', moveSpecific: true, description: 'Container width threshold (px) below which direction collapses to column' },
     { name: 'flex', type: "1 | 'auto' | 'none'", moveSpecific: true, description: "Flex sizing along the parent's main axis. 1 = grow to fill remaining space (with min-width:0 so wide children scroll instead of overflowing the row); 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size." },
     { name: 'fill', type: "boolean | 'screen'", moveSpecific: true, description: "Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height." },
+    { name: 'stagger', type: "boolean | { delay?: number; from?: 'first' | 'last' | 'center' }", default: 'false', moveSpecific: true, description: "Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop." },
+    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Override or disable the entrance stagger animation (only relevant when `stagger` is set).' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Child elements to lay out' },
   ],
 
@@ -77,6 +79,7 @@ export const spec = {
     { id: 'justify-data-attr', description: 'Justify is applied via data-justify attribute, justify-content resolved in CSS' },
     { id: 'wrap-data-attr', description: 'Wrap is applied via data-wrap boolean attribute when wrap=true' },
     { id: 'collapse-responsive', description: 'When collapseBelow is set, a ResizeObserver sets data-collapsed on the root when container width is below the threshold, overriding direction to column' },
+    { id: 'stagger-opt-in', description: "When the `stagger` prop is set, a Root.enter trigger animates direct children (`:scope > *`) with a staggered fade+rise (opacity 0→1, translateY 8→0, outQuart ~200ms) via useAnimations + resolveAnimationsConfig — the same declarative children-stagger pattern as List/Table/Timeline. When the prop is absent, no animation config is built and no animation wiring runs. Consumers can pass `animations={false}` to disable or an AnimationTrigger[] to override." },
   ],
 
   hasHook: false,
@@ -105,6 +108,11 @@ export const spec = {
       'Forwards className and style',
       'Forwards ref to root element',
       'Spreads HTML attributes',
+      'Renders no animation wiring when stagger prop is absent (default off)',
+      'Reveals direct children with a staggered entrance on mount when stagger prop is set',
+    ],
+    animation: [
+      'stagger prop injects a Root.enter children-stagger; animations={false} disables it',
     ],
   },
 

@@ -4,9 +4,10 @@
  *
  * The declarative `spec.animations` trigger/sequence system is the default way
  * to animate a component. Anything BEYOND it (imperative anime.js, the
- * sliding-indicator hook, …) is a sanctioned Tier-2 capability that MUST be
- * declared in `spec.animationCapabilities` — so imperative animation code is
- * never ad-hoc and every exception is visible in the spec.
+ * sliding-indicator hook, the split-text hook, …) is a sanctioned Tier-2
+ * capability that MUST be declared in `spec.animationCapabilities` — so
+ * imperative animation code is never ad-hoc and every exception is visible in
+ * the spec.
  *
  * Fails when a component uses an imperative mechanism without declaring the
  * matching capability. Warns on migration candidates (e.g. an indicator still
@@ -56,6 +57,8 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
   const usesKeyframes = /@keyframes\s+[\w-]+\s*\{/.test(css.replace(/\/\*[\s\S]*?\*\//g, ''));
 
   const usesHook = /\b(usePositionTracker|useSlidingIndicator)\s*\(/.test(src);
+  const usesSplitText = /\buseSplitText\s*\(/.test(src);
+  const usesAutoLayout = /\buseAutoLayout\s*\(/.test(src);
   const usesMoveAnimate = /\bmoveAnimate\s*\(/.test(src);
   const usesRawAnimate = /from ['"]animejs['"]/.test(src) && /\banimate\s*\(/.test(src);
   const usesAnimatePosition = /fn:\s*['"]animatePosition['"]/.test(src);
@@ -64,6 +67,12 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
 
   if (usesHook && !declared.has('slidingIndicator'))
     issues.push(['error', "uses the sliding-indicator hook but spec.animationCapabilities lacks 'slidingIndicator'"]);
+
+  if (usesSplitText && !declared.has('textSplit'))
+    issues.push(['error', "uses the useSplitText hook but spec.animationCapabilities lacks 'textSplit'"]);
+
+  if (usesAutoLayout && !declared.has('layoutFlip'))
+    issues.push(['error', "uses the useAutoLayout hook but spec.animationCapabilities lacks 'layoutFlip'"]);
 
   if ((usesMoveAnimate || usesRawAnimate) && !ESCAPES.some((c) => declared.has(c)))
     issues.push([
@@ -87,6 +96,10 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
     issues.push(['warn', "declares 'slidingIndicator' but source uses neither the hook nor animatePosition"]);
   if (declared.has('cssAnimation') && !usesKeyframes)
     issues.push(['warn', "declares 'cssAnimation' but the CSS has no @keyframes"]);
+  if (declared.has('textSplit') && !usesSplitText)
+    issues.push(['warn', "declares 'textSplit' but source does not use the useSplitText hook"]);
+  if (declared.has('layoutFlip') && !usesAutoLayout)
+    issues.push(['warn', "declares 'layoutFlip' but source does not use the useAutoLayout hook"]);
   for (const c of ESCAPES)
     if (declared.has(c) && !usesMoveAnimate && !usesRawAnimate)
       issues.push(['warn', `declares '${c}' but source has no imperative anime.js`]);

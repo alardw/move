@@ -226,7 +226,9 @@ export type AnimationCapability =
   | 'valueLoop'
   | 'measureThenAnimate'
   | 'scrollApi'
-  | 'cssAnimation';
+  | 'cssAnimation'
+  | 'textSplit'
+  | 'layoutFlip';
 
 /** Explicit controlled/uncontrolled prop triad mapping */
 export interface ControlledProps {
@@ -508,6 +510,16 @@ export interface ComponentSpec {
    *   rotation, indeterminate progress, a blinking caret. Spinner, ProgressBar,
    *   PinInput, Avatar. (A discrete open/close animation via CSS @keyframes is NOT
    *   this — that belongs in `animations`; the check flags undeclared keyframes.)
+   * - `textSplit` — split a text node into a variable number of generated
+   *   character/word/line elements at runtime (anime.js `splitText`) and stagger
+   *   them via the `useSplitText` primitive. The declarative trigger system
+   *   animates fixed named slots, so it can't express a runtime-generated,
+   *   data-dependent node set. AnimatedText.
+   * - `layoutFlip` — FLIP-animate a container's children when the set/order
+   *   changes (filter/sort/reorder/add/remove) via the `useAutoLayout` primitive
+   *   (MutationObserver + rect cache + anime.js). The node set and positions are
+   *   data-driven and only known at runtime, outside the declarative model.
+   *   LayoutGroup.
    */
   animationCapabilities?: AnimationCapability[];
 

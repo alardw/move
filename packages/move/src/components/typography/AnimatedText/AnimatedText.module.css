@@ -1,0 +1,35 @@
+/* Generated from AnimatedText.spec.ts (schemaVersion: 7, specHash: e7eefb38) */
+
+.root {
+  /* Inline-block so per-segment transforms render and IntersectionObserver has
+     a measurable box. Color inherits; size/weight come from data attributes. */
+  display: inline-block;
+  /* Generated split segments are inline-block wrappers; keep wrapping natural
+     and let long runs break instead of overflowing their container. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  /* Reset the UA margin so rendering as a heading element (h1–h6) or <p> does
+     not pull in browser default block margins. */
+  margin: 0;
+}
+
+/* Line-level splits stack vertically; each generated line wraps as a block. */
+.root[data-by='line'] {
+  display: block;
+}
+
+/* Size — Move typography scale, overrides any element default (e.g. h3 1.17em). */
+.root[data-size='xs']   { font-size: var(--move-text-xs); }
+.root[data-size='sm']   { font-size: var(--move-text-sm); }
+.root[data-size='base'] { font-size: var(--move-text-base); }
+.root[data-size='lg']   { font-size: var(--move-text-lg); }
+.root[data-size='xl']   { font-size: var(--move-text-xl); }
+.root[data-size='2xl']  { font-size: var(--move-text-2xl); }
+.root[data-size='3xl']  { font-size: var(--move-text-3xl); }
+.root[data-size='4xl']  { font-size: var(--move-text-4xl); }
+
+/* Weight — overrides the UA bold that heading elements carry. */
+.root[data-weight='normal']   { font-weight: var(--move-weight-normal); }
+.root[data-weight='medium']   { font-weight: var(--move-weight-medium); }
+.root[data-weight='semibold'] { font-weight: var(--move-weight-semibold); }
+.root[data-weight='bold']     { font-weight: var(--move-weight-bold); }

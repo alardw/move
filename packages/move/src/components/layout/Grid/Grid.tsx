@@ -1,7 +1,9 @@
 'use client';
-// Generated from Grid.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Grid.spec.ts (schemaVersion: 7, specHash: 796ba7e8)
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
+import { useAnimations, resolveAnimationsConfig, staggerEnter } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine/types';
 import type { Gap } from '../../../shared/types';
 import styles from './Grid.module.css';
@@ -17,6 +19,9 @@ export type GridGap = Gap;
 /** Re-exported for backwards-compatible imports. Prefer `Gap` from
  *  `'move'` directly going forward. */
 export type GridPadding = Gap;
+
+/** Opt-in staggered entrance for direct children. */
+export type GridStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
 
 export interface GridProps extends Record<string, unknown> {
   /** Equal-width columns (shorthand for repeat(N, 1fr)) */
@@ -37,6 +42,10 @@ export interface GridProps extends Record<string, unknown> {
   padding?: GridPadding;
   /** Container width (px) below which grid collapses to 1 column */
   collapseBelow?: string;
+  /** Reveal direct children with a staggered fade+rise on mount. Off by default. */
+  stagger?: GridStagger;
+  /** Override or disable the entrance stagger (only relevant when `stagger` is set). */
+  animations?: AnimationTrigger[] | false;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -96,11 +105,30 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
   name: 'Grid',
   styles,
   slots: ['root'] as const,
-  defaults: { gap: 'md' as GridGap },
-  moveProps: ['cols', 'rows', 'columns', 'minChildWidth', 'rowGap', 'columnGap', 'padding', 'collapseBelow'],
+  defaults: { gap: 'md' as GridGap, stagger: false as GridStagger },
+  moveProps: ['cols', 'rows', 'columns', 'minChildWidth', 'rowGap', 'columnGap', 'padding', 'collapseBelow', 'stagger', 'animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
+
+    // Opt-in staggered entrance — the standard declarative children-stagger
+    // (List/Table/Timeline pattern). Off (and zero-cost) when `stagger` is unset.
+    const staggerProp = props.stagger as GridStagger | undefined;
+    const staggerOn = !!staggerProp;
+    const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
+    const animConfig = React.useMemo(() => {
+      if (!staggerOn || props.animations === false) return null;
+      return resolveAnimationsConfig(
+        [staggerEnter({ delay: staggerCfg.delay, from: staggerCfg.from })],
+        props.animations as AnimationTrigger[] | undefined,
+      );
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [staggerOn, staggerCfg.delay, staggerCfg.from, props.animations]);
+    const animRefs = React.useMemo(
+      () => ({ Root: internalRef as React.RefObject<HTMLElement | null> }),
+      [internalRef],
+    );
+    useAnimations(animConfig, animRefs);
 
     React.useEffect(() => {
       const el = internalRef.current;

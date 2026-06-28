@@ -1,0 +1,9 @@
+/* Generated from LayoutGroup.spec.ts (schemaVersion: 7, specHash: ca963d3b) */
+
+.root {
+  /* A neutral container — the consumer composes the actual layout (flex/grid)
+     via surrounding Stack/Grid or their own classes. The FLIP engine animates
+     transforms on the direct children; the container only needs to be a stable
+     positioning context for them. */
+  display: block;
+}
