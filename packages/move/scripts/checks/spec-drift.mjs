@@ -502,6 +502,33 @@ function checkComponent(componentDir) {
     }
   }
 
+  // 0b. Behavior-contract parity (controlledProps + dismissBehavior). The spec can
+  //     declare a controlled triad or an unmount-after-exit dismiss that the source
+  //     doesn't actually implement. Scan the WHOLE component dir (not just
+  //     {Name}.tsx) so triads defined via an extended `Use*Options` interface /
+  //     hook still resolve (e.g. Sidebar, CalendarView).
+  {
+    const dirSrc = readdirSync(componentDir)
+      .filter((f) => /\.(ts|tsx)$/.test(f) && !/\.(test|spec|browser)\./.test(f))
+      .map((f) => readFileSync(join(componentDir, f), 'utf8'))
+      .join('\n');
+    const specText = readFileSync(specFile, 'utf8');
+
+    const cp = specText.match(/controlledProps:\s*\{([^}]*)\}/s);
+    if (cp) {
+      const props = [...cp[1].matchAll(/(?:valueProp|defaultValueProp|onChangeProp):\s*'([^']+)'/g)].map((m) => m[1]);
+      const missing = props.filter((p) => !new RegExp(`\\b${p}\\b`).test(dirSrc));
+      if (missing.length) {
+        errors.push(`spec controlledProps declares [${props.join(', ')}] but source is missing: ${missing.join(', ')}`);
+      }
+    }
+
+    const db = specText.match(/dismissBehavior:\s*'([^']+)'/);
+    if (db && db[1] === 'unmountAfterExit' && !/\brunExit\b/.test(dirSrc)) {
+      errors.push("spec dismissBehavior='unmountAfterExit' but source never calls runExit() (no exit-then-unmount flow)");
+    }
+  }
+
   // 1. Compound keys ↔ subComponents
   if (source.compoundKeys) {
     const runtimeKeys = source.compoundKeys.filter((k) => k !== 'Root');
