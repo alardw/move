@@ -32,3 +32,8 @@ npm-debug.log*
 # ship fragile symlinks that break on Windows / show up empty on GitHub.
 .agents/
 .claude/
+
+# Vitest browser-mode auto-captures screenshots on test failure
+# (screenshotFailures). These are machine-specific run artifacts, not committed
+# baselines — our browser tests assert DOM invariants, not visual snapshots.
+**/__screenshots__/
