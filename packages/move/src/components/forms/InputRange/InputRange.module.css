@@ -43,6 +43,10 @@
   display: flex;
   align-items: center;
   width: 100%;
+  /* The thumb is absolutely positioned (out of flow), so reserve its height
+     here — otherwise the root collapses to the track height and the larger
+     thumb overflows into adjacent components, eating their spacing. */
+  min-height: var(--move-range-thumb-size);
   user-select: none;
   touch-action: none;
 }
@@ -50,6 +54,10 @@
 .root[data-orientation='vertical'] {
   flex-direction: column;
   width: var(--move-range-track-height);
+  /* Mirror of the horizontal fix: reserve the thumb's width so it doesn't
+     overflow the narrow track box sideways. */
+  min-width: var(--move-range-thumb-size);
+  min-height: 0;
   height: 100%;
 }
 
@@ -106,6 +114,10 @@
 
 .thumb {
   all: unset;
+  /* `all: unset` resets box-sizing to content-box, so the 2px border would
+     push the thumb to thumb-size + 4px and overflow the reserved root height.
+     Force border-box so the visible thumb is exactly --move-range-thumb-size. */
+  box-sizing: border-box;
   display: block;
   width: var(--move-range-thumb-size);
   height: var(--move-range-thumb-size);

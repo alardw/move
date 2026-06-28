@@ -68,7 +68,7 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'primary' as ButtonVariant, size: 'md' as ButtonSize, asChild: false, type: 'button' },
-  moveProps: ['animations', 'elevation', 'asChild'],
+  moveProps: ['animations', 'elevation', 'asChild', 'fullWidth'],
   subComponents: { Group: ButtonGroup },
 
   setup({ props, ref, cx, sp, attrs }) {

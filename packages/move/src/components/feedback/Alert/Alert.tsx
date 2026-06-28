@@ -82,7 +82,11 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
     const contentRef = React.useRef<HTMLDivElement>(null);
 
     const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
-    const refs = React.useMemo(() => ({ Root: contentRef as React.RefObject<HTMLElement | null> }), []);
+    const iconRef = React.useRef<HTMLSpanElement>(null);
+    const refs = React.useMemo(() => ({
+      Root: contentRef as React.RefObject<HTMLElement | null>,
+      Icon: iconRef as React.RefObject<HTMLElement | null>,
+    }), []);
     const { runExit } = useAnimations(animConfig, refs);
 
     // Exit
@@ -147,6 +151,7 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
             {iconName && (
               <span
                 {...iconSpRest}
+                ref={iconRef}
                 className={cx('icon', iconSpClass as string | undefined)}
                 style={iconSpStyle as React.CSSProperties}
                 aria-hidden="true"

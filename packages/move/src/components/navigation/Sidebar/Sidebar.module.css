@@ -85,6 +85,9 @@
   gap: var(--move-spacing-md);
   padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
   flex-shrink: 0;
+  /* Keep the rail single-line so the width spring (collapse/expand) never
+     reflows the logo into extra lines and jostles the vertical layout. */
+  white-space: nowrap;
   /* Inherits the sidebar root bg so Header/Content/Footer read as one
      surface. The bottom border only renders once the content has been
      scrolled past the top — see SidebarContent's scroll listener
@@ -96,6 +99,12 @@
 
 .header[data-scrolled] {
   border-bottom-color: var(--move-sidebar-border);
+}
+
+/* Logo on one end, header actions (e.g. a collapse toggle) on the other —
+   so a plain Button can sit beside the logo without any inline margin. */
+.header {
+  justify-content: space-between;
 }
 
 .root[data-collapsed='true'] .header {
@@ -178,6 +187,10 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   user-select: none;
+  /* Single-line, like items + header — stable height through the width spring. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
 }

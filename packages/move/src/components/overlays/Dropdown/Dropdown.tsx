@@ -268,6 +268,7 @@ const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownCo
   name: 'DropdownContent',
   styles,
   slots: ['content', 'contentInner'] as const,
+  defaults: { sideOffset: 6 },
   moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
 
   setup({ props, ref, cx, sp, attrs }) {
