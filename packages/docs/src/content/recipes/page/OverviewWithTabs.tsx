@@ -5,14 +5,6 @@ const defaultLabels = {
   overview: 'Overview',
   analytics: 'Analytics',
   reports: 'Reports',
-  totalRevenue: 'Total Revenue',
-  totalRevenueValue: '$45,231.89',
-  subscriptions: 'Subscriptions',
-  subscriptionsValue: '2,350',
-  sales: 'Sales',
-  salesValue: '12,234',
-  activeNow: 'Active Now',
-  activeNowValue: '573',
   analyticsPlaceholder: 'Charts and analytics content',
   reportsPlaceholder: 'Reports and exports content',
 };
@@ -21,15 +13,16 @@ type Labels = typeof defaultLabels;
 
 type StatCard = { label: string; value: string; icon: string };
 
+// Integration point: stats — replace with the real KPI figures.
+const SAMPLE_STATS: StatCard[] = [
+  { label: 'Total Revenue', value: '$45,231.89', icon: 'dollar-sign' },
+  { label: 'Subscriptions', value: '2,350', icon: 'users' },
+  { label: 'Sales', value: '12,234', icon: 'credit-card' },
+  { label: 'Active Now', value: '573', icon: 'activity' },
+];
+
 export default function OverviewWithTabs({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
-
-  const stats: StatCard[] = [
-    { label: t.totalRevenue, value: t.totalRevenueValue, icon: 'dollar-sign' },
-    { label: t.subscriptions, value: t.subscriptionsValue, icon: 'users' },
-    { label: t.sales, value: t.salesValue, icon: 'credit-card' },
-    { label: t.activeNow, value: t.activeNowValue, icon: 'activity' },
-  ];
 
   return (
     <Stack gap="lg" padding="lg">
@@ -45,7 +38,7 @@ export default function OverviewWithTabs({ labels }: { labels?: Partial<Labels> 
         <Tabs.Content value="overview">
           <Stack gap="md">
             <Grid columns={4} gap="md" collapseBelow={640}>
-              {stats.map((stat) => (
+              {SAMPLE_STATS.map((stat) => (
                 <Card.Root key={stat.label}>
                   <Card.Body>
                     <Stack gap="sm">

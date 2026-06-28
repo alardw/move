@@ -14,9 +14,31 @@
 - `defineTheme()` — minimize the theming surface. A helper that takes a small seed (neutral palette, accent, status colors, font) and expands it to the full token set, so consumers configure a handful of values instead of the whole token surface. Referenced as "coming soon" on the Theming Overview page (the "theming roadmap" pointer there is currently dangling — wire it to this once built).
 - Tooltip compound `Content` tests time out in jsdom (migrated from the removed `generation-issues.md`, status UNRESOLVED). `<Tooltip.Root open>` + compound API: the content element never appears in jsdom, yet the Simple API (`<Tooltip label … open>`) works with the same Provider and the "rendered in a portal" compound test passes. Needs investigation.
 - ~~Unify the i18n label API~~ DONE 2026-06-26. All components now expose user-facing strings through one `labels?: Partial<{Name}Labels>` object with English defaults (flat `*Label` props and hardcoded `aria-label` literals removed). Specs' `labels` fields filled, validate E1 tightened to enforce it, Internationalization docs table covers every component. typecheck clean, 1758 tests pass.
-- Recipes: wire the remaining composite groups into the docs registry (same pattern as `authentication`, which is done): `data` (FilterableDataTable, SearchFilter), `navigation` (AppSidebar), `page` (OverviewBasic/WithTabs, ListBasic/SplitPane, DetailBasic/WithTabs). These are much larger than the auth recipes — annotate implicit-any `onChange` params, check asset refs, and consider a wider/taller preview frame for full page-layout recipes.
+- ~~Recipes: wire the remaining composite groups into the docs registry~~ DONE 2026-06-29 — all 14 recipes (auth/data/navigation/page) registered via a spec-driven `registry.ts` (`toMeta(spec, Component, source)`); each recipe has a co-located `{Name}.spec.ts`. Follow-ups in "Recipe pipeline backlog" below.
 - Recipes are docs-owned COPIES under `packages/docs/src/content/recipes/` of `packages/move/skills/references/recipes/composite/*` — single-source or generate them later to avoid drift.
 - Automate preview thumbnails: both `RecipeCard` and `ComponentCard` already take a pluggable `image?` slot (image wins over the live render). Add a screenshot step that fills these so the grids can stop rendering live components.
+
+## Recipe pipeline backlog (from dogfooding, 2026-06-29)
+
+State: recipes are now spec-driven (each has `{Name}.spec.ts`; registry derives from specs). Recipes **ship as hand-authored source** — the working model is "hand versions are canonical, `recipe-generate-source` is a generate-and-compare *check*, not an in-place replace." The full pipeline (create-spec → generate-source → generate-docs → generate-test → validate) was exercised end-to-end on `FilterableDataTable`. Docs-package test infra was added (`vitest.setup.ts` observer/pointer mocks + `src/testing.d.ts` jest-dom matcher types). Generated comparison copies live in scratchpad only (not committed).
+
+### Library gaps (`packages/move`) the generation surfaced — highest value
+- **`Splitter.Root` needs a `fill`/height prop.** Full-height layouts (master-detail / inbox / app shell) can't bound height with pure Move components today — `ListSplitPane` requires a `recipe-purity-ignore` raw `<div>`. Add `fill` to `Splitter.Root` (and probably a bounded-height `ScrollArea`/surface). Affects every real app layout.
+- **`animateKey` is inconsistent.** 18 components stagger on entrance; only `List` exposes `animateKey`. Of the *dynamic-collection* staggers (List / Timeline / Table) only List has it (the rest are popup-open staggers where it doesn't apply). Either **(A)** add `animateKey` to `Timeline` + `Table` and rewrite golden rule #12 to "collection components only, discrete changes (filter/sort/page), NOT live search," or **(B)** drop `animateKey` from `List` and delete rule #12. Low priority — a nicety, not correctness; re-staggering on every keystroke is bad UX.
+
+### Spec-hardening (do when actually (re)generating a recipe — makes generation deterministic)
+- Add `shape` to every `kind:'data'` integration point (only `FilterableDataTable` has it; without it the generator invents the record fields/columns).
+- Resolve header-labels vs the "all copy via labels" behavior: data-table column headers / dashboard card titles (Overview/Detail) aren't in `labels` → add header label keys, or relax that behavior.
+- Clarify data/copy ownership where `entity`/`account` integration points overlap label keys (name/role/status are both).
+- Add a render/badge-colour hint to data fields (status→badge colour is invented in every recipe).
+- `RecipeSpec` has no `specHash` (component specs carry provenance/drift hashes) — add if recipe drift-checking is wanted.
+
+### Done this session (2026-06-29)
+- Fixed a real shipped bug: `SearchFilter` + `FilterableDataTable` filtered OR-across-groups; now **AND across groups, OR within a group**.
+- `FilterableDataTable`: native `Table.Head` `sortable`/`sorted`/`onSort`/`align` headers (was a padded `<Button>` that misaligned), type-aware sort (numeric/date), loads-unsorted.
+- A5 rule carve-out: a standalone toolbar/search input may omit `FormField` if it carries `aria-label` (golden rules + `recipe-validate` + `recipe-generate-source` updated).
+- KPI stats moved out of `labels` into `SAMPLE_STATS` data (Overview recipes).
+- Placeholder data uniformly `SAMPLE_`-prefixed + `// Integration point:` marked; `integrationPoint.kind` (`data`/`handler`/`navigation`/`asset`) + `shape` added to the spec type; detail page renders spec-derived sections (Built with / Included / Integration points / Labels).
 
 ## Default-enforcement (close the AI-picks-small drift)
 

@@ -1,9 +1,23 @@
 import { useState, useMemo, type ChangeEvent } from 'react';
 import { Stack, InputText, Button, Badge, Dialog, Checkbox, FormField, Icon, List } from 'move';
 
+const defaultLabels = {
+  searchPlaceholder: 'Search...',
+  filtersButton: 'Filters',
+  clearAll: 'Clear all',
+  filtersTitle: 'Filters',
+  cancel: 'Cancel',
+  apply: 'Apply',
+  noResultsTitle: 'No results',
+  noResultsDescription: 'Try adjusting your search or filters.',
+};
+
+type Labels = typeof defaultLabels;
+
 type FilterOption = { label: string; value: string; group: string };
 
-const filterOptions: FilterOption[] = [
+// Integration point: SAMPLE_FILTER_OPTIONS — the available filter facets.
+const SAMPLE_FILTER_OPTIONS: FilterOption[] = [
   { label: 'Active', value: 'active', group: 'Status' },
   { label: 'Inactive', value: 'inactive', group: 'Status' },
   { label: 'Pending', value: 'pending', group: 'Status' },
@@ -13,7 +27,8 @@ const filterOptions: FilterOption[] = [
   { label: 'Sales', value: 'sales', group: 'Department' },
 ];
 
-const sampleData = [
+// Integration point: data — replace with the real records to search/filter.
+const SAMPLE_DATA = [
   { name: 'Leslie Alexander', email: 'leslie@example.com', status: 'active', department: 'engineering' },
   { name: 'Michael Foster', email: 'michael@example.com', status: 'active', department: 'design' },
   { name: 'Dries Vincent', email: 'dries@example.com', status: 'inactive', department: 'marketing' },
@@ -22,7 +37,8 @@ const sampleData = [
   { name: 'Tom Cook', email: 'tom@example.com', status: 'inactive', department: 'design' },
 ];
 
-export default function SearchFilter() {
+export default function SearchFilter({ labels }: { labels?: Partial<Labels> }) {
+  const t = { ...defaultLabels, ...labels };
   const [search, setSearch] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [pendingFilters, setPendingFilters] = useState<string[]>([]);
@@ -30,7 +46,7 @@ export default function SearchFilter() {
 
   const groups = useMemo(() => {
     const map = new Map<string, FilterOption[]>();
-    for (const opt of filterOptions) {
+    for (const opt of SAMPLE_FILTER_OPTIONS) {
       const list = map.get(opt.group) ?? [];
       list.push(opt);
       map.set(opt.group, list);
@@ -39,13 +55,27 @@ export default function SearchFilter() {
   }, []);
 
   const filtered = useMemo(() => {
-    return sampleData.filter((item) => {
+    // Group active filter values by facet group → AND across groups, OR within a group.
+    const activeByGroup = new Map<string, string[]>();
+    for (const value of activeFilters) {
+      const opt = SAMPLE_FILTER_OPTIONS.find((o) => o.value === value);
+      if (!opt) continue;
+      const list = activeByGroup.get(opt.group) ?? [];
+      list.push(value);
+      activeByGroup.set(opt.group, list);
+    }
+    const fieldForGroup: Record<string, (item: typeof SAMPLE_DATA[number]) => string> = {
+      Status: (item) => item.status,
+      Department: (item) => item.department,
+    };
+    return SAMPLE_DATA.filter((item) => {
       const matchesSearch = !search ||
         item.name.toLowerCase().includes(search.toLowerCase()) ||
         item.email.toLowerCase().includes(search.toLowerCase());
-      const matchesFilters = activeFilters.length === 0 ||
-        activeFilters.includes(item.status) ||
-        activeFilters.includes(item.department);
+      const matchesFilters = [...activeByGroup.entries()].every(([group, values]) => {
+        const get = fieldForGroup[group];
+        return get ? values.includes(get(item)) : true;
+      });
       return matchesSearch && matchesFilters;
     });
   }, [search, activeFilters]);
@@ -75,13 +105,13 @@ export default function SearchFilter() {
   };
 
   const getLabel = (value: string) =>
-    filterOptions.find((o) => o.value === value)?.label ?? value;
+    SAMPLE_FILTER_OPTIONS.find((o) => o.value === value)?.label ?? value;
 
   return (
     <Stack gap="md">
       <Stack direction="row" gap="sm" align="center">
         <InputText
-          placeholder="Search..."
+          placeholder={t.searchPlaceholder}
           iconLeft={<Icon name="search" size="sm" />}
           value={search}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
@@ -89,7 +119,7 @@ export default function SearchFilter() {
         />
         <Button variant="secondary" onClick={openDialog}>
           <Icon name="sliders-horizontal" size="sm" />
-          Filters
+          {t.filtersButton}
           {activeFilters.length > 0 && (
             <Badge size="sm" color="primary" variant="solid">
               {activeFilters.length}
@@ -107,7 +137,7 @@ export default function SearchFilter() {
             </Button>
           ))}
           <Button variant="ghost" size="sm" onClick={() => setActiveFilters([])}>
-            Clear all
+            {t.clearAll}
           </Button>
         </Stack>
       )}
@@ -116,8 +146,8 @@ export default function SearchFilter() {
         {filtered.length === 0 ? (
           <List.Item>
             <List.Content>
-              <List.Title>No results</List.Title>
-              <List.Description>Try adjusting your search or filters.</List.Description>
+              <List.Title>{t.noResultsTitle}</List.Title>
+              <List.Description>{t.noResultsDescription}</List.Description>
             </List.Content>
           </List.Item>
         ) : (
@@ -146,7 +176,7 @@ export default function SearchFilter() {
           <Dialog.Overlay />
           <Dialog.Content size="sm">
             <Dialog.Header>
-              <Dialog.Title>Filters</Dialog.Title>
+              <Dialog.Title>{t.filtersTitle}</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
               <Stack gap="md">
@@ -173,16 +203,16 @@ export default function SearchFilter() {
             <Dialog.Footer>
               <Dialog.FooterStart>
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  Clear all
+                  {t.clearAll}
                 </Button>
               </Dialog.FooterStart>
               <Dialog.FooterEnd>
                 <Stack direction="row" gap="sm">
                   <Dialog.Close asChild>
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="secondary">{t.cancel}</Button>
                   </Dialog.Close>
                   <Button onClick={applyFilters}>
-                    Apply {pendingFilters.length > 0 && `(${pendingFilters.length})`}
+                    {t.apply} {pendingFilters.length > 0 && `(${pendingFilters.length})`}
                   </Button>
                 </Stack>
               </Dialog.FooterEnd>

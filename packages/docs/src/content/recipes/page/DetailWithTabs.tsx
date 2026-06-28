@@ -17,13 +17,15 @@ type Labels = typeof defaultLabels;
 
 type DetailRow = { label: string; value: React.ReactNode };
 
-const ACTIVITY = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_ACTIVITY = [
   { user: 'Alice Johnson', initials: 'AJ', color: 'indigo', action: 'Design review completed', detail: 'Approved the final mockups', time: '2 hours ago', dotColor: 'blue' },
   { user: 'Bob Smith', initials: 'BS', color: 'teal', action: 'Development started', detail: 'Picked up the frontend task', time: '1 day ago', dotColor: 'green' },
   { user: 'Carol White', initials: 'CW', color: 'orange', action: 'Project created', detail: 'Created this project', time: '5 days ago', dotColor: 'gray' },
 ];
 
-const RELATED = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_RELATED = [
   { name: 'Brand Guidelines v2', type: 'Document', status: 'Final', color: 'indigo' },
   { name: 'Homepage Wireframes', type: 'Design', status: 'Approved', color: 'green' },
   { name: 'Content Migration', type: 'Task', status: 'In Progress', color: 'blue' },
@@ -105,7 +107,7 @@ export default function DetailWithTabs({ labels }: { labels?: Partial<Labels> })
           <Card.Root>
             <Card.Body>
               <Timeline>
-                {ACTIVITY.map((entry) => (
+                {SAMPLE_ACTIVITY.map((entry) => (
                   <Timeline.Item key={entry.action} color={entry.dotColor}>
                     <Stack direction="row" align="center" gap="sm">
                       <Avatar.Root size="xs" color={entry.color}>
@@ -135,7 +137,7 @@ export default function DetailWithTabs({ labels }: { labels?: Partial<Labels> })
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {RELATED.map((item) => (
+                  {SAMPLE_RELATED.map((item) => (
                     <Table.Row key={item.name}>
                       <Table.Cell>
                         <Text weight="medium">{item.name}</Text>

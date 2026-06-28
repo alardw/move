@@ -25,7 +25,8 @@ type Message = {
   body: string;
 };
 
-const MESSAGES: Message[] = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_MESSAGES: Message[] = [
   { id: '1', from: 'Alice Johnson', initials: 'AJ', color: 'indigo', subject: 'Design review feedback', preview: 'Hey, I reviewed the latest mockups and have some thoughts...', time: '10:32 AM', unread: true, body: 'Hey, I reviewed the latest mockups and have some thoughts on the navigation layout. The sidebar looks great but I think we should consider adding a collapsible option for smaller screens. Can we discuss this in our next sync?' },
   { id: '2', from: 'Bob Smith', initials: 'BS', color: 'teal', subject: 'Sprint planning notes', preview: 'Here are the action items from today\'s planning...', time: '9:15 AM', unread: true, body: 'Here are the action items from today\'s planning session:\n\n1. Finalize component API for Drawer\n2. Write integration tests for auth flow\n3. Update documentation for new features\n\nLet me know if I missed anything.' },
   { id: '3', from: 'Carol White', initials: 'CW', color: 'orange', subject: 'Q1 metrics report', preview: 'Attached is the quarterly report with updated figures...', time: 'Yesterday', unread: false, body: 'Attached is the quarterly report with updated figures. Key highlights: user engagement up 23%, churn down 5%. The new onboarding flow is showing promising results. Full breakdown in the attached PDF.' },
@@ -36,7 +37,7 @@ const MESSAGES: Message[] = [
 export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selected = MESSAGES.find((m) => m.id === selectedId);
+  const selected = SAMPLE_MESSAGES.find((m) => m.id === selectedId);
 
   return (
     <ScrollArea.Root fill="screen">
@@ -56,7 +57,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
           <Splitter.Root layout="horizontal" collapseBelow={640}>
             <Splitter.Panel size={35} minSize={25}>
               <List hover>
-                {MESSAGES.map((msg) => (
+                {SAMPLE_MESSAGES.map((msg) => (
                   <List.Item
                     key={msg.id}
                     active={msg.id === selectedId}

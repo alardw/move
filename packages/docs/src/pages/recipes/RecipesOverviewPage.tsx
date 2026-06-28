@@ -27,7 +27,8 @@ export function RecipesOverviewPage() {
       return (
         r.title.toLowerCase().includes(q) ||
         r.description.toLowerCase().includes(q) ||
-        r.group.toLowerCase().includes(q)
+        r.group.toLowerCase().includes(q) ||
+        r.synonyms.some((s) => s.includes(q))
       );
     });
   }, [query, group]);

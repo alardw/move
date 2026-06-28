@@ -32,7 +32,8 @@ const defaultLabels = {
 
 type Labels = typeof defaultLabels;
 
-const menuItems = [
+// Integration point: navItems — replace with the real nav items.
+const SAMPLE_NAV_ITEMS = [
   { key: 'home', icon: 'home', labelKey: 'home' as const },
   { key: 'chat', icon: 'message-circle', labelKey: 'chat' as const, badge: '3' },
   { key: 'explore', icon: 'compass', labelKey: 'explore' as const },
@@ -77,7 +78,7 @@ function SidebarContent({ labels }: { labels: Labels }) {
 
       <Sidebar.Content>
         <Sidebar.Group>
-          {menuItems.map((item) => (
+          {SAMPLE_NAV_ITEMS.map((item) => (
             <Sidebar.Item
               key={item.key}
               icon={<Icon name={item.icon} />}

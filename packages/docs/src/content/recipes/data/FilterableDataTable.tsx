@@ -22,9 +22,20 @@ type Labels = typeof defaultLabels;
 type SortKey = 'name' | 'role' | 'email' | 'status';
 type SortDir = 'asc' | 'desc';
 
+// Per-column value type — drives the comparator so numeric/date columns sort
+// correctly (not lexically). All columns here are strings; an adaptation with a
+// numeric/date column flips its entry and the sort follows.
+const COLUMN_TYPE: Record<SortKey, 'string' | 'number'> = {
+  name: 'string',
+  role: 'string',
+  email: 'string',
+  status: 'string',
+};
+
 type FilterOption = { label: string; value: string; group: string };
 
-const filterOptions: FilterOption[] = [
+// Integration point: filterOptions — the available filter facets.
+const SAMPLE_FILTER_OPTIONS: FilterOption[] = [
   { label: 'Active', value: 'Active', group: 'Status' },
   { label: 'Inactive', value: 'Inactive', group: 'Status' },
   { label: 'Pending', value: 'Pending', group: 'Status' },
@@ -33,7 +44,8 @@ const filterOptions: FilterOption[] = [
   { label: 'Manager', value: 'Manager', group: 'Role' },
 ];
 
-const DATA = [
+// Integration point: data — replace with the real rows to display.
+const SAMPLE_DATA = [
   { name: 'Alice Johnson', role: 'Engineer', email: 'alice@example.com', status: 'Active' },
   { name: 'Bob Smith', role: 'Designer', email: 'bob@example.com', status: 'Active' },
   { name: 'Carol White', role: 'Manager', email: 'carol@example.com', status: 'Inactive' },
@@ -58,17 +70,20 @@ const statusColor: Record<string, 'green' | 'red' | 'yellow'> = {
 
 export default function FilterableDataTable({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
+  // Map each facet group's data key to its localized heading (so group titles
+  // are translatable, not taken raw from the data).
+  const groupLabel: Record<string, string> = { Status: t.statusGroup, Role: t.roleGroup };
   const [search, setSearch] = useState('');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [pendingFilters, setPendingFilters] = useState<string[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [sortKey, setSortKey] = useState<SortKey>('name');
-  const [sortDir, setSortDir] = useState<SortDir>('asc');
+  // Loads unsorted; first header click sorts ascending (per spec).
+  const [sort, setSort] = useState<{ key: SortKey; dir: SortDir } | null>(null);
   const [page, setPage] = useState(1);
 
   const groups = useMemo(() => {
     const map = new Map<string, FilterOption[]>();
-    for (const opt of filterOptions) {
+    for (const opt of SAMPLE_FILTER_OPTIONS) {
       const list = map.get(opt.group) ?? [];
       list.push(opt);
       map.set(opt.group, list);
@@ -78,19 +93,36 @@ export default function FilterableDataTable({ labels }: { labels?: Partial<Label
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return DATA
-      .filter(row => {
+    // Group active filter values by facet group → AND across groups, OR within a group.
+    const activeByGroup = new Map<string, string[]>();
+    for (const value of activeFilters) {
+      const opt = SAMPLE_FILTER_OPTIONS.find((o) => o.value === value);
+      if (!opt) continue;
+      const list = activeByGroup.get(opt.group) ?? [];
+      list.push(value);
+      activeByGroup.set(opt.group, list);
+    }
+    const fieldForGroup: Record<string, (row: typeof SAMPLE_DATA[number]) => string> = {
+      Status: (row) => row.status,
+      Role: (row) => row.role,
+    };
+    return SAMPLE_DATA
+      .filter((row) => {
         const matchesSearch = !q || row.name.toLowerCase().includes(q) || row.email.toLowerCase().includes(q);
-        const matchesFilters = activeFilters.length === 0 ||
-          activeFilters.includes(row.status) ||
-          activeFilters.includes(row.role);
+        const matchesFilters = [...activeByGroup.entries()].every(([group, values]) => {
+          const get = fieldForGroup[group];
+          return get ? values.includes(get(row)) : true;
+        });
         return matchesSearch && matchesFilters;
       })
       .sort((a, b) => {
-        const cmp = a[sortKey].localeCompare(b[sortKey]);
-        return sortDir === 'asc' ? cmp : -cmp;
+        if (!sort) return 0;
+        const cmp = COLUMN_TYPE[sort.key] === 'number'
+          ? Number(a[sort.key]) - Number(b[sort.key])
+          : String(a[sort.key]).localeCompare(String(b[sort.key]));
+        return sort.dir === 'asc' ? cmp : -cmp;
       });
-  }, [search, activeFilters, sortKey, sortDir]);
+  }, [search, activeFilters, sort]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
@@ -99,17 +131,13 @@ export default function FilterableDataTable({ labels }: { labels?: Partial<Label
   const to = Math.min(safePage * PAGE_SIZE, filtered.length);
 
   const toggleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortKey(key);
-      setSortDir('asc');
-    }
+    setSort((prev) =>
+      prev?.key === key
+        ? { key, dir: prev.dir === 'asc' ? 'desc' : 'asc' }
+        : { key, dir: 'asc' },
+    );
     setPage(1);
   };
-
-  const sortIcon = (key: SortKey) =>
-    sortKey === key ? <Icon name={sortDir === 'asc' ? 'arrow-up' : 'arrow-down'} size="xs" /> : null;
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -142,6 +170,7 @@ export default function FilterableDataTable({ labels }: { labels?: Partial<Label
     <Stack gap="md">
       <Stack direction="row" gap="sm" align="center">
         <InputText
+          aria-label={t.searchPlaceholder}
           placeholder={t.searchPlaceholder}
           iconLeft={<Icon name="search" size="sm" />}
           value={search}
@@ -176,13 +205,13 @@ export default function FilterableDataTable({ labels }: { labels?: Partial<Label
         <Table.Header>
           <Table.Row>
             {(['name', 'role', 'email', 'status'] as SortKey[]).map((key) => (
-              <Table.Head key={key}>
-                <Button variant="ghost" size="sm" onClick={() => toggleSort(key)}>
-                  <Stack direction="row" gap="xs" align="center">
-                    <Text size="sm" weight="semibold">{t[key]}</Text>
-                    {sortIcon(key)}
-                  </Stack>
-                </Button>
+              <Table.Head
+                key={key}
+                sortable
+                sorted={sort?.key === key ? sort.dir : false}
+                onSort={() => toggleSort(key)}
+              >
+                {t[key]}
               </Table.Head>
             ))}
           </Table.Row>
@@ -227,7 +256,7 @@ export default function FilterableDataTable({ labels }: { labels?: Partial<Label
               <Stack gap="md">
                 {groups.map(([groupName, options]) => (
                   <FormField.Root key={groupName}>
-                    <FormField.Label>{groupName}</FormField.Label>
+                    <FormField.Label>{groupLabel[groupName] ?? groupName}</FormField.Label>
                     <FormField.Field>
                       <Stack gap="xs">
                         {options.map((opt) => (

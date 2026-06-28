@@ -24,7 +24,8 @@ type DetailRow = { label: string; value: React.ReactNode };
 
 type TeamMember = { name: string; initials: string; color: string; role: string; access: string };
 
-const TEAM: TeamMember[] = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_TEAM: TeamMember[] = [
   { name: 'Alice Johnson', initials: 'AJ', color: 'indigo', role: 'Lead Engineer', access: 'owner' },
   { name: 'Bob Smith', initials: 'BS', color: 'teal', role: 'Designer', access: 'admin' },
   { name: 'Carol White', initials: 'CW', color: 'orange', role: 'PM', access: 'admin' },
@@ -33,14 +34,16 @@ const TEAM: TeamMember[] = [
 
 const ACCESS_COLOR: Record<string, string> = { owner: 'indigo', admin: 'blue', member: 'green', viewer: 'gray' };
 
-const INTEGRATIONS = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_INTEGRATIONS = [
   { name: 'GitHub', description: 'Repository and CI/CD', status: 'connected', icon: 'git-branch' },
   { name: 'Slack', description: 'Team notifications', status: 'connected', icon: 'message-circle' },
   { name: 'Figma', description: 'Design handoff', status: 'connected', icon: 'pen-tool' },
   { name: 'Linear', description: 'Issue tracking', status: 'disconnected', icon: 'list-checks' },
 ];
 
-const ACTIVITY_LOG = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_ACTIVITY = [
   { user: 'Alice', initials: 'AJ', color: 'indigo', action: 'Updated profile settings', date: 'Mar 10, 2026', type: 'settings' },
   { user: 'Bob', initials: 'BS', color: 'teal', action: 'Added to Design System project', date: 'Mar 8, 2026', type: 'project' },
   { user: 'Carol', initials: 'CW', color: 'orange', action: 'Changed role to Senior Engineer', date: 'Mar 5, 2026', type: 'role' },
@@ -143,12 +146,12 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                 <Stack direction="row" align="center" gap="sm">
                   <Icon name="users" size="sm" />
                   {t.teamTitle}
-                  <Badge variant="solid" size="sm" color="indigo">{TEAM.length}</Badge>
+                  <Badge variant="solid" size="sm" color="indigo">{SAMPLE_TEAM.length}</Badge>
                 </Stack>
               </Accordion.Trigger>
               <Accordion.Content>
                 <List dividers>
-                  {TEAM.map((m) => (
+                  {SAMPLE_TEAM.map((m) => (
                     <List.Item key={m.name}>
                       <List.Leading>
                         <Avatar.Root size="sm" color={m.color}>
@@ -176,13 +179,13 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                   <Icon name="plug" size="sm" />
                   {t.integrationsTitle}
                   <Badge variant="solid" size="sm" color="green">
-                    {INTEGRATIONS.filter((i) => i.status === 'connected').length} active
+                    {SAMPLE_INTEGRATIONS.filter((i) => i.status === 'connected').length} active
                   </Badge>
                 </Stack>
               </Accordion.Trigger>
               <Accordion.Content>
                 <List dividers>
-                  {INTEGRATIONS.map((integration) => (
+                  {SAMPLE_INTEGRATIONS.map((integration) => (
                     <List.Item key={integration.name}>
                       <List.Leading>
                         <Icon name={integration.icon} size="sm" />
@@ -224,7 +227,7 @@ export default function DetailBasic({ labels }: { labels?: Partial<Labels> }) {
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
-                    {ACTIVITY_LOG.map((entry) => (
+                    {SAMPLE_ACTIVITY.map((entry) => (
                       <Table.Row key={entry.action}>
                         <Table.Cell>
                           <Stack direction="row" align="center" gap="sm">

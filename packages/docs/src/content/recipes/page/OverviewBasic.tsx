@@ -2,18 +2,6 @@ import { Stack, Grid, Card, Heading, Text, Badge, Button, Icon, Avatar, List, Ta
 
 const defaultLabels = {
   title: 'Overview',
-  totalRevenue: 'Total Revenue',
-  totalRevenueValue: '$45,231.89',
-  totalRevenueChange: '+20.1% from last month',
-  activeUsers: 'Active Users',
-  activeUsersValue: '2,350',
-  activeUsersChange: '+180 since last hour',
-  newOrders: 'New Orders',
-  newOrdersValue: '12,234',
-  newOrdersChange: '+19% from last month',
-  conversionRate: 'Conversion Rate',
-  conversionRateValue: '3.2%',
-  conversionRateChange: '+0.4% from last month',
   recentActivity: 'Recent Activity',
   topPerformers: 'Top Performers',
   viewAll: 'View all',
@@ -30,7 +18,16 @@ type StatCard = {
   color: string;
 };
 
-const activities = [
+// Integration point: stats — replace with the real KPI figures.
+const SAMPLE_STATS: StatCard[] = [
+  { label: 'Total Revenue', value: '$45,231.89', change: '+20.1% from last month', icon: 'dollar-sign', trend: 'up', color: 'green' },
+  { label: 'Active Users', value: '2,350', change: '+180 since last hour', icon: 'users', trend: 'up', color: 'blue' },
+  { label: 'New Orders', value: '12,234', change: '+19% from last month', icon: 'shopping-cart', trend: 'up', color: 'indigo' },
+  { label: 'Conversion Rate', value: '3.2%', change: '+0.4% from last month', icon: 'trending-up', trend: 'up', color: 'violet' },
+];
+
+// Integration point: sample data — replace with the real values.
+const SAMPLE_ACTIVITIES = [
   { user: 'Alice Johnson', initials: 'AJ', color: 'indigo', action: 'Placed order #1234', detail: 'Acme Corp — $4,200', time: '2 min ago', type: 'order' },
   { user: 'Bob Smith', initials: 'BS', color: 'teal', action: 'Updated profile settings', detail: 'Changed notification preferences', time: '5 min ago', type: 'settings' },
   { user: 'Carol White', initials: 'CW', color: 'orange', action: 'Submitted support ticket', detail: 'Billing inquiry — #T-892', time: '12 min ago', type: 'support' },
@@ -40,7 +37,8 @@ const activities = [
 
 const TYPE_COLOR: Record<string, string> = { order: 'indigo', settings: 'gray', support: 'orange', onboarding: 'green' };
 
-const performers = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_PERFORMERS = [
   { name: 'Alice Johnson', initials: 'AJ', color: 'indigo', role: 'Sales Lead', metric: '$12,400', metricLabel: 'Revenue' },
   { name: 'Frank Miller', initials: 'FM', color: 'cyan', role: 'Account Exec', metric: '$9,800', metricLabel: 'Revenue' },
   { name: 'Grace Lee', initials: 'GL', color: 'green', role: 'Sales Rep', metric: '$8,200', metricLabel: 'Revenue' },
@@ -50,19 +48,12 @@ const performers = [
 export default function OverviewBasic({ labels }: { labels?: Partial<Labels> }) {
   const t = { ...defaultLabels, ...labels };
 
-  const stats: StatCard[] = [
-    { label: t.totalRevenue, value: t.totalRevenueValue, change: t.totalRevenueChange, icon: 'dollar-sign', trend: 'up', color: 'green' },
-    { label: t.activeUsers, value: t.activeUsersValue, change: t.activeUsersChange, icon: 'users', trend: 'up', color: 'blue' },
-    { label: t.newOrders, value: t.newOrdersValue, change: t.newOrdersChange, icon: 'shopping-cart', trend: 'up', color: 'indigo' },
-    { label: t.conversionRate, value: t.conversionRateValue, change: t.conversionRateChange, icon: 'trending-up', trend: 'up', color: 'violet' },
-  ];
-
   return (
     <Stack gap="lg" padding="lg">
       <Heading level={1} size="2xl">{t.title}</Heading>
 
       <Grid columns={4} gap="md" collapseBelow={640}>
-        {stats.map((stat) => (
+        {SAMPLE_STATS.map((stat) => (
           <Card.Root key={stat.label}>
             <Card.Body>
               <Stack gap="sm">
@@ -98,7 +89,7 @@ export default function OverviewBasic({ labels }: { labels?: Partial<Labels> }) 
                   </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                  {activities.map((a, i) => (
+                  {SAMPLE_ACTIVITIES.map((a, i) => (
                     <Table.Row key={i}>
                       <Table.Cell>
                         <Stack direction="row" align="center" gap="sm">
@@ -134,7 +125,7 @@ export default function OverviewBasic({ labels }: { labels?: Partial<Labels> }) 
           </Card.Header>
           <Card.Body>
             <List dividers>
-              {performers.map((p) => (
+              {SAMPLE_PERFORMERS.map((p) => (
                 <List.Item key={p.name}>
                   <List.Leading>
                     <Avatar.Root size="sm" color={p.color}>

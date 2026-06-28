@@ -28,7 +28,8 @@ type User = {
   project: string;
 };
 
-const USERS: User[] = [
+// Integration point: sample data — replace with the real values.
+const SAMPLE_USERS: User[] = [
   { name: 'Alice Johnson', initials: 'AJ', color: 'indigo', email: 'alice@example.com', role: 'Admin', status: 'active', project: 'Design System' },
   { name: 'Bob Smith', initials: 'BS', color: 'teal', email: 'bob@example.com', role: 'Editor', status: 'active', project: 'Mobile App' },
   { name: 'Carol White', initials: 'CW', color: 'orange', email: 'carol@example.com', role: 'Viewer', status: 'inactive', project: 'Design System' },
@@ -53,9 +54,9 @@ export default function ListBasic({ labels }: { labels?: Partial<Labels> }) {
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
-    if (!search) return USERS;
+    if (!search) return SAMPLE_USERS;
     const q = search.toLowerCase();
-    return USERS.filter(
+    return SAMPLE_USERS.filter(
       (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q),
     );
   }, [search]);
