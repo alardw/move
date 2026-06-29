@@ -18,7 +18,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#lifecycle', label: 'The lifecycle' },
-  { href: '#one-component', label: 'One component, all three' },
+  { href: '#one-component', label: 'All three at once' },
   { href: '#enter', label: 'Enter' },
   { href: '#respond', label: 'Respond' },
   { href: '#exit', label: 'Exit' },
@@ -60,7 +60,7 @@ export function AnimationLifecyclePage() {
 
         <Section
           id="one-component"
-          title="One component, all three"
+          title="All three at once"
           lede="A toast runs the whole lifecycle — send one and watch."
         >
           <Text>

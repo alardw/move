@@ -9,18 +9,19 @@ import {
 } from '../../components';
 
 const TAGLINE =
-  'Move ships a small set of named springs. You pick a feel by name instead of tuning numbers.';
+  'Two named vocabularies for the feel of motion: springs that settle with physics, and easings that run a fixed curve for a fixed time. You pick one by name instead of tuning numbers.';
 
 const BADGES = [
   { icon: 'wind', label: '5 springs' },
-  { icon: 'spline', label: 'Easings when you need them' },
+  { icon: 'spline', label: 'Standard easings' },
 ];
 
 const TOC: TocItem[] = [
   { href: '#springs', label: 'Overview' },
-  { href: '#the-springs', label: 'The springs' },
+  { href: '#the-springs', label: 'Springs' },
+  { href: '#the-easings', label: 'Easings' },
   { href: '#try-it', label: 'Try it' },
-  { href: '#springs-vs-easings', label: 'Springs vs easings' },
+  { href: '#choosing', label: 'Choosing between them' },
   { href: '#using-one', label: 'Using one' },
 ];
 
@@ -59,15 +60,16 @@ export function SpringsPage() {
 
         <Section
           id="the-springs"
-          title="The springs"
+          title="Springs"
           lede="A vocabulary of feels. Each name is a tuned spring you reach for by personality."
         >
           <Text>
             A spring describes motion with physics — tension and weight — so an
             element overshoots a little and settles, the way a real object does.
-            Move tunes a set of them once and names them, so a component asks for{' '}
-            <Code>snappy</Code> or <Code>poppy</Code> and gets a consistent feel
-            without anyone picking numbers.
+            It decides its own duration; you don't set one. Move tunes a set once
+            and names them, so a component asks for <Code>snappy</Code> or{' '}
+            <Code>poppy</Code> and gets a consistent feel without anyone picking
+            numbers.
           </Text>
           <Text>
             The five cover the range you reach for — <Code>snappy</Code> and{' '}
@@ -79,46 +81,71 @@ export function SpringsPage() {
         </Section>
 
         <Section
+          id="the-easings"
+          title="Easings"
+          lede="Fixed curves for fixed time — when a duration matters more than physics."
+        >
+          <Text>
+            An easing runs a set curve over a <Code>duration</Code> you give it —
+            no overshoot, no settle. Move exposes the standard set: <Code>linear</Code>{' '}
+            for steady progress; the <Code>out…</Code> curves (<Code>outQuart</Code>,{' '}
+            <Code>outCubic</Code>) for things that arrive and decelerate, like a
+            fade or a reveal; <Code>inOut…</Code> for symmetric moves; and{' '}
+            <Code>outBack</Code> or <Code>outElastic</Code> for a touch of
+            overshoot without reaching for a spring.
+          </Text>
+          <Text color="muted">
+            Each comes in <Code>in</Code>, <Code>out</Code>, and <Code>inOut</Code>{' '}
+            across the Quad / Cubic / Quart / Expo / Circ / Back / Elastic /
+            Bounce families — the full anime.js set, by name.
+          </Text>
+        </Section>
+
+        <Section
           id="try-it"
           title="Try it"
-          lede="Pick a spring or easing — or dial in your own physics — and watch it move."
+          lede="Pick a spring or an easing — or dial in your own physics — and watch it move."
         >
           <AnimationPlayground />
         </Section>
 
         <Section
-          id="springs-vs-easings"
-          title="Springs vs easings"
-          lede="Springs settle. Easings run a fixed curve for a fixed time."
+          id="choosing"
+          title="Choosing between them"
+          lede="Springs settle; easings run a fixed curve for a fixed time."
         >
           <Text>
-            A spring decides its own duration from its physics. When you instead
-            need motion to take an exact amount of time — a progress fill, a
-            steady reveal — reach for a named easing like <Code>outQuart</Code>{' '}
-            with a duration. Springs are the default across Move; easings cover
-            the cases where time matters more than feel. Both come from{' '}
-            <Link href="https://animejs.com" external>anime.js</Link> — Move just
-            names the ones worth reaching for.
+            Reach for a <Text as="span" weight="medium">spring</Text> when the
+            motion should feel physical — a pop, a slide, a press — and you want
+            it to decide its own timing. Reach for an{' '}
+            <Text as="span" weight="medium">easing</Text> when the motion must take
+            an exact amount of time — a progress fill, a steady reveal — and pair
+            it with a <Code>duration</Code>. Springs are the default across Move;
+            easings cover the cases where time matters more than feel. Both come
+            from <Link href="https://animejs.com" external>anime.js</Link> — Move
+            just names the ones worth reaching for.
           </Text>
         </Section>
 
         <Section
           id="using-one"
           title="Using one"
-          lede="A spring is the ease on a step."
+          lede="Either one is the step's ease."
         >
           <Text>
-            Inside a sequence, a step names its spring through <Code>ease</Code>.
-            Leave it off and the step takes a sensible default for what it's
-            doing.
+            Inside a sequence, a step names its spring or easing through{' '}
+            <Code>ease</Code>. A spring carries its own duration; an easing takes
+            the <Code>duration</Code> you give it. Leave <Code>ease</Code> off and
+            the step takes a sensible default for what it's doing.
           </Text>
           <CodeBlock
             language="ts"
-            code={`{ target: 'Thumb', animation: { x: { to: 16, ease: 'poppy' } } }`}
+            code={`{ target: 'Thumb', animation: { x: { to: 16, ease: 'poppy' } } }                       // a spring
+{ target: 'Panel', animation: { opacity: { to: 1, ease: 'outQuart', duration: 200 } } } // an easing`}
           />
           <Text color="muted" size="sm">
-            To swap the spring a component already uses, override its animation
-            from the outside — see{' '}
+            To swap the spring or easing a component already uses, override its
+            animation from the outside — see{' '}
             <RouterLink to="/customize">Make it your own</RouterLink>.
           </Text>
         </Section>
