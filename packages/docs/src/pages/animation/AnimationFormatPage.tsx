@@ -8,7 +8,7 @@ import type { Animation, JSAnimation } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
 
 const TAGLINE =
-  'The building blocks under every sequence: how a single property animates, and the named presets you reach for instead of spelling it out.';
+  'The building blocks under every sequence: how a single property animates, and the self-explaining motions whose name says what moves and which way.';
 
 const BADGES = [
   { icon: 'code', label: 'Format' },

@@ -25,7 +25,7 @@ const THE_MODEL: HighlightItem[] = [
   },
   {
     icon: 'wind',
-    text: 'Springs say how. A small named set (snappy, quick, poppy, gentle, slow, jelly…) so you pick a feel, not numbers.',
+    text: 'Springs say how. A small named set (snappy, quick, poppy, brisk, smooth) so you pick a feel, not numbers.',
   },
   {
     icon: 'accessibility',
