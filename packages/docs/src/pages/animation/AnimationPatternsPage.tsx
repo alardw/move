@@ -94,7 +94,7 @@ export function AnimationPatternsPage() {
         <Section
           id="patterns-list"
           title="Shared recipes"
-          lede="Each one is used across two or more components — that's what makes it a pattern."
+          lede="The recipes most components reach for."
         >
           <Text>
             A pattern is a trigger and sequence paired for a recurring job, named

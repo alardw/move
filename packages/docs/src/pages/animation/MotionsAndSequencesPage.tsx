@@ -82,25 +82,6 @@ function CollapsibleDemo() {
   );
 }
 
-function SelectDemo() {
-  const [value, setValue] = useState('Apple');
-  return (
-    <Select.Root value={value} onValueChange={setValue}>
-      <Select.Trigger>
-        <Select.Value />
-        <Select.Icon />
-      </Select.Trigger>
-      <Select.Content>
-        <Select.Viewport>
-          {['Apple', 'Banana', 'Cherry', 'Date'].map((f) => (
-            <Select.Item key={f} value={f}>{f}</Select.Item>
-          ))}
-        </Select.Viewport>
-      </Select.Content>
-    </Select.Root>
-  );
-}
-
 function DrawerDemo() {
   return (
     <Drawer.Root>
@@ -157,20 +138,6 @@ const DEMOS: { motions: string; code: string; caption: string; render: () => Rea
 ]`,
     caption: 'Hover — the tooltip pops in.',
     render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip>,
-  },
-  {
-    motions: 'scaleIn · fadeIn (stagger)',
-    code: `[
-  {
-    trigger: 'open',
-    sequence: [
-      { target: 'List', children: '[role="option"]',
-        animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
-    ],
-  },
-]`,
-    caption: 'Open — the options pop in.',
-    render: () => <SelectDemo />,
   },
   {
     motions: 'slideLeft · fadeIn',
@@ -383,17 +350,30 @@ export function MotionsAndSequencesPage() {
             A motion is a function that returns an animation object. Call it in a
             step's <Code>animation</Code>, and combine motions by spreading them
             into one object — they touch different properties, so they run
-            together. Each one is the move a real component already makes —
-            interact to see it in context:
+            together.
           </Text>
           <Text color="muted">
-            Every motion carries its own default <Code>ease</Code>, so the calls
-            omit it: the fades, slides and <Code>rotate</Code> use{' '}
-            <Code>outQuart</Code> (<Code>rotate</Code> over 300ms); the scale-pops
-            (<Code>scaleIn</Code>/<Code>scaleOut</Code>) use <Code>poppy</Code>;
-            the <Code>scaleUp</Code>/<Code>scaleDown</Code> micro-interactions use{' '}
-            <Code>snappy</Code>. Pass a property object instead of the builder to
-            override one.
+            Each motion bakes sensible defaults — its from → to, its ease, and a
+            duration (springs carry their own). Here's exactly what each returns;
+            pass a property object instead of the builder to override one:
+          </Text>
+          <CodeBlock
+            language="ts"
+            code={`fadeIn()             → { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } }
+fadeOut()            → { opacity: { to: 0, ease: 'outQuart', duration: 150 } }
+slideUp(distance=8)  → { translateY: { from: distance, to: 0, ease: 'outQuart', duration: 200 } }
+slideDown · slideLeft · slideRight  → the same on the other axis / sign
+scaleIn(from=0.9)    → { scale: { from, to: 1, ease: poppy } }      // spring — no duration
+scaleOut(to=0.9)     → { scale: { from: 1, to, ease: 'outQuart', duration: 150 } }
+scaleUp(to=1.04)     → { scale: { to, ease: snappy } }              // hover
+scaleDown(to=0.96)   → { scale: { to, ease: snappy } }              // press
+rotate(from, to)     → { rotate: { from, to, ease: 'outQuart', duration: 300 } }
+expand()             → { height: 0 → 'auto', opacity: 0 → 1 }       // duration ∝ content
+collapse()           → { height: 'auto' → 0, opacity: 1 → 0 }`}
+          />
+          <Text>
+            Each one is the move a real component already makes — interact to see
+            it in context:
           </Text>
           <MotionGallery />
         </Section>
@@ -442,25 +422,26 @@ export function MotionsAndSequencesPage() {
         >
           <Text>
             Top-level steps play one after another, each starting when the last
-            finishes. Group steps in a nested array and they play together in
-            the same frame — the way an alert scales in while its icon pulses to
-            catch the eye. A step can carry an <Code>onComplete</Code> callback
-            for when it finishes.
+            finishes; group steps in a nested array and they play together in the
+            same frame. A drawer opens with its overlay and panel together; a
+            toast leaves in order — it slides out, then its row collapses so the
+            stack closes. A step can carry an <Code>onComplete</Code> callback for
+            when it finishes.
           </Text>
           <CodeBlock
             language="ts"
-            code={`// Together — one nested array, both in the same frame
+            code={`// Together — a drawer's enter: overlay and panel in the same frame
 sequence: [
   [
-    { target: 'Root', animation: scaleIn(0.92) },
-    { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
+    { target: 'Overlay', animation: fadeIn() },
+    { target: 'Content', animation: slideLeft() },
   ],
 ]
 
-// In order — top-level steps; the icon pulses only after the alert lands
+// In order — a toast's exit: it slides + fades out, THEN the row collapses
 sequence: [
-  { target: 'Root', animation: scaleIn(0.92) },
-  { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
+  { target: 'Item',    animation: { translateY: { to: 16 }, opacity: { to: 0 } } },
+  { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: 'inOutQuart', duration: 300 } } },
 ]`}
           />
         </Section>
