@@ -1,11 +1,22 @@
 import { useState, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button,
+  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button, Table,
   moveAnimate, fadeIn, fadeOut, slideUp, scaleIn, scaleOut, scaleUp, scaleDown, rotate,
 } from 'move';
 import type { Animation, JSAnimation } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
+
+// Each motion is the move a real Move component already makes — illustrate by
+// pointing at where it shows up, not an abstract box alone.
+const MOTION_USAGE: { motion: string; where: string }[] = [
+  { motion: 'fadeIn / fadeOut', where: 'Dialog & Drawer overlays, Alert' },
+  { motion: 'slideUp / slideDown / slideLeft / slideRight', where: 'Drawer, Toast' },
+  { motion: 'scaleIn / scaleOut', where: 'Select, Dropdown & menu items' },
+  { motion: 'scaleUp / scaleDown', where: 'Button, ToggleButton (hover / press)' },
+  { motion: 'rotate', where: 'Accordion & Collapsible caret' },
+  { motion: 'expand / collapse', where: 'Accordion, Collapsible' },
+];
 
 const TAGLINE =
   'The building blocks under every sequence: how a single property animates, and the self-explaining motions whose name says what moves and which way.';
@@ -18,7 +29,7 @@ const BADGES = [
 const TOC: TocItem[] = [
   { href: '#format', label: 'Overview' },
   { href: '#property-format', label: 'The property format' },
-  { href: '#presets', label: 'Presets' },
+  { href: '#motions', label: 'Motions' },
 ];
 
 // Motions — self-explaining builders (name = what + direction). Combine by
@@ -110,12 +121,12 @@ export function AnimationFormatPage() {
             <Breadcrumb.Link asChild><RouterLink to="/animation">Animation</RouterLink></Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Format &amp; presets</Breadcrumb.Page>
+            <Breadcrumb.Page>Format &amp; motions</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1}>Format &amp; presets</Heading>
+          <Heading level={1}>Format &amp; motions</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -152,22 +163,40 @@ export function AnimationFormatPage() {
         </Section>
 
         <Section
-          id="presets"
-          title="Presets"
-          lede="Named, tuned animations for the moves you reach for again and again."
+          id="motions"
+          title="Motions"
+          lede="Self-explaining builders for the moves you reach for. The name says what animates and which way; the parameter says how much."
         >
           <Text>
-            A step can take a <Code>preset</Code> name instead of a literal{' '}
-            <Code>animation</Code> — same result, less to write, and consistent
-            across components. Pick one to feel it:
+            A motion is a function that returns an animation object. Call it in a
+            step's <Code>animation</Code>, and combine motions by spreading them
+            into one object — they touch different properties, so they run
+            together. Pick one to feel its from → to:
           </Text>
           <PresetPlayer />
           <CodeBlock
             language="ts"
-            code={`// these two are equivalent
-{ target: 'Item', preset: 'popIn' }
-{ target: 'Item', animation: { scale: { from: 0.8, to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } }`}
+            code={`// a motion is a builder; combine by spreading
+{ target: 'Item', animation: { ...scaleIn(), ...fadeIn() } }   // a pop-in
+{ target: 'Caret', animation: rotate(0, 180) }                 // a flip`}
           />
+          <Text>Each motion is the move a real component already makes:</Text>
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>Motion</Table.Head>
+                <Table.Head>Shows up in</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {MOTION_USAGE.map((m) => (
+                <Table.Row key={m.motion}>
+                  <Table.Cell><Code>{m.motion}</Code></Table.Cell>
+                  <Table.Cell><Text size="sm">{m.where}</Text></Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         </Section>
       </Stack>
       <TocRail items={TOC} />
