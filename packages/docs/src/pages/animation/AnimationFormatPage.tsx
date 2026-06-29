@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Table,
+  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
   Button, Collapsible, Tooltip, Select, Drawer,
 } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
@@ -80,38 +80,60 @@ function DrawerDemo() {
   );
 }
 
-const DEMOS: { motions: string; caption: string; render: () => ReactNode }[] = [
-  { motions: 'scaleUp · scaleDown', caption: 'Hover and press — the button grows, then dips.', render: () => <Button variant="primary">Hover &amp; press me</Button> },
-  { motions: 'rotate · expand · collapse', caption: 'Toggle — the caret rotates as the panel expands.', render: () => <CollapsibleDemo /> },
-  { motions: 'scaleIn · slideUp · fadeIn', caption: 'Hover — the tooltip pops in.', render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip> },
-  { motions: 'scaleIn · fadeIn (stagger)', caption: 'Open — the options pop in.', render: () => <SelectDemo /> },
-  { motions: 'slide · fadeIn', caption: 'Open — the drawer slides in, the overlay fades.', render: () => <DrawerDemo /> },
-];
-
-// Each motion's signature and the animation object it returns — the definition
-// behind the feel shown in the gallery.
-const MOTION_API: { sig: string; returns: string }[] = [
-  { sig: 'fadeIn()', returns: 'opacity 0 → 1 · outQuart 200ms' },
-  { sig: 'fadeOut()', returns: 'opacity → 0 · outQuart 150ms' },
-  { sig: 'slideUp(distance = 8)', returns: 'translateY distance → 0 · outQuart' },
-  { sig: 'slideDown / slideLeft / slideRight(distance = 8)', returns: 'translate from that side → 0 · outQuart' },
-  { sig: 'scaleIn(from = 0.9)', returns: 'scale from → 1 · poppy' },
-  { sig: 'scaleOut(to = 0.9)', returns: 'scale 1 → to · outQuart 150ms' },
-  { sig: 'scaleUp(to = 1.04)', returns: 'scale → to · snappy (hover)' },
-  { sig: 'scaleDown(to = 0.96)', returns: 'scale → to · snappy (press)' },
-  { sig: 'rotate(from, to)', returns: 'rotate from → to° · outQuart 300ms' },
-  { sig: 'expand() / collapse()', returns: 'height 0 ↔ auto + fade · outQuart' },
+// Each entry pairs the real component (the feel) with the exact code the motions
+// it makes resolve to (the definition) — code and demo side by side, in context.
+const DEMOS: { motions: string; code: string; caption: string; render: () => ReactNode }[] = [
+  {
+    motions: 'scaleUp · scaleDown',
+    code: `scaleUp()   // { scale: { to: 1.04, ease: snappy } }
+scaleDown() // { scale: { to: 0.96, ease: snappy } }`,
+    caption: 'Hover and press — the button grows, then dips.',
+    render: () => <Button variant="primary">Hover &amp; press me</Button>,
+  },
+  {
+    motions: 'rotate · expand · collapse',
+    code: `rotate(0, 180) // { rotate: { from: 0, to: 180, ease: 'outQuart', duration: 300 } }
+expand()       // { height: { from: 0, to: 'auto' }, opacity: { from: 0, to: 1 } }
+collapse()     // { height: { from: 'auto', to: 0 }, opacity: { from: 1, to: 0 } }`,
+    caption: 'Toggle — the caret rotates as the panel expands.',
+    render: () => <CollapsibleDemo />,
+  },
+  {
+    motions: 'scaleIn · slideUp · fadeIn',
+    code: `// spread into one object — they run together
+{ ...scaleIn(0.88), ...slideUp(6), ...fadeIn() }
+// scaleIn → { scale: { from: 0.88, to: 1, ease: poppy } }
+// slideUp → { translateY: { from: 6, to: 0, ease: 'outQuart' } }
+// fadeIn  → { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } }`,
+    caption: 'Hover — the tooltip pops in.',
+    render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip>,
+  },
+  {
+    motions: 'scaleIn · fadeIn (stagger)',
+    code: `// each option, with a stagger delay between them
+{ ...scaleIn(0.8), ...fadeIn() }`,
+    caption: 'Open — the options pop in.',
+    render: () => <SelectDemo />,
+  },
+  {
+    motions: 'slideLeft · fadeIn',
+    code: `slideLeft() // { translateX: { from: 8, to: 0, ease: 'outQuart' } }
+fadeIn()    // the overlay fades in`,
+    caption: 'Open — the drawer slides in, the overlay fades.',
+    render: () => <DrawerDemo />,
+  },
 ];
 
 function MotionGallery() {
   return (
-    <Stack gap="lg">
+    <Stack gap="xl">
       {DEMOS.map((d) => (
         <Stack key={d.motions} gap="sm">
           <Stack direction="row" gap="sm" align="center" wrap>
             <Code>{d.motions}</Code>
             <Text size="sm" color="muted">{d.caption}</Text>
           </Stack>
+          <CodeBlock language="ts" code={d.code} />
           <div
             style={{
               padding: '1.5rem',
@@ -224,32 +246,6 @@ scaleIn()   // { scale: { from: 0.9, to: 1, ease: poppy } }
             interact to see it in context:
           </Text>
           <MotionGallery />
-          <CodeBlock
-            language="ts"
-            code={`// each motion is a builder — call it to get an animation object
-scaleIn(0.9)   // { scale: { from: 0.9, to: 1, ease: poppy } }
-rotate(0, 180) // { rotate: { from: 0, to: 180 } } — a flip
-
-// combine by spreading into one object — they run together
-{ ...scaleIn(), ...fadeIn() }   // a pop-in: scale + fade`}
-          />
-          <Text>Every motion, and the animation it returns:</Text>
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>Motion</Table.Head>
-                <Table.Head>Returns</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {MOTION_API.map((m) => (
-                <Table.Row key={m.sig}>
-                  <Table.Cell><Code>{m.sig}</Code></Table.Cell>
-                  <Table.Cell><Text size="sm" color="muted">{m.returns}</Text></Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
         </Section>
       </Stack>
       <TocRail items={TOC} />
