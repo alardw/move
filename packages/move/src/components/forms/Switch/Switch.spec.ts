@@ -104,7 +104,7 @@ export const spec = {
   animations: [
     { trigger: 'checked', sequence: [{ target: 'thumb', animation: { x: { to: 'calc($track.width - $thumb.width)', ease: 'poppy' } } }] },
     { trigger: 'unchecked', sequence: [{ target: 'thumb', animation: { x: { to: 0, ease: 'snappy' } } }] },
-    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   tokens: [

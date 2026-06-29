@@ -141,12 +141,12 @@ export const spec = {
 
   animationCapabilities: ['slidingIndicator'],
   animations: [
-    { trigger: 'PrevTrigger.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'PrevTrigger.press', sequence: [{ preset: 'scaleDown' }] },
-    { trigger: 'NextTrigger.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'NextTrigger.press', sequence: [{ preset: 'scaleDown' }] },
-    { trigger: 'PageButton.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'PageButton.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'PrevTrigger.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'PrevTrigger.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
+    { trigger: 'NextTrigger.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'NextTrigger.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
+    { trigger: 'PageButton.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'PageButton.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   tokens: [

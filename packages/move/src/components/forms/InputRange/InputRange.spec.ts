@@ -76,8 +76,8 @@ export const spec = {
   asChild: false,
 
   animations: [
-    { trigger: 'Thumb.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'Thumb.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'Thumb.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'Thumb.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [

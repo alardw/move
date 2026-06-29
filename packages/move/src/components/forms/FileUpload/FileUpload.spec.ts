@@ -276,8 +276,8 @@ export const spec = {
   asChild: false,
 
   animations: [
-    { trigger: 'Dropzone.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'Dropzone.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'Dropzone.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'Dropzone.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   tokens: [

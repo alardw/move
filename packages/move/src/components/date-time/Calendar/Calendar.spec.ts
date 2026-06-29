@@ -121,7 +121,7 @@ export const spec = {
 
   animations: [
     { trigger: 'Grid.enter', sequence: [{ children: ':scope > *', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.8, to: 1, ease: 'poppy' } }, stagger: { delay: 15 } }] },
-    { trigger: 'DayCell.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'DayCell.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
