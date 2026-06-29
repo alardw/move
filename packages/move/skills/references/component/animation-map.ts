@@ -163,10 +163,15 @@ export const MOTIONS = {
 // Component animation patterns — examples per category
 // =============================================================================
 
+// Shared animation patterns — reused across 2+ components. Keys ARE the
+// AnimationPattern vocabulary (spec-type.ts ANIMATION_PATTERNS); each spec's
+// `animationPatterns` is the authoritative component↔pattern link. The
+// `components` lists here mirror it and are kept in sync by the
+// animation-pattern check.
 export const PATTERNS = {
-  interactive: {
-    description: 'Hover/press via event triggers. Auto-reverses.',
-    components: ['Button', 'ToggleButton', 'Pagination', 'DayCell', 'InputRange'],
+  press: {
+    description: 'Hover-grow / press-dip on a control. Auto-reverses.',
+    components: ['Button', 'ToggleButton', 'DayCell', 'InputRange', 'Pagination'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
@@ -200,7 +205,7 @@ const refs = { Root: rootRef, indicator: indicatorRef };
 const { handlers } = useAnimations(animConfig, refs, STATES);`,
   },
 
-  popup: {
+  popupMenu: {
     description: 'Height reveal + stagger for dropdown content.',
     components: ['Select', 'Dropdown', 'Autocomplete', 'TimeField', 'DatePicker'],
     defaultAnimations: `
@@ -229,23 +234,27 @@ const { runExit } = useAnimations(animConfig, refs, STATES, {
 // Exit: runExit().then(() => onCloseComplete?.());`,
   },
 
-  enterExit: {
-    description: 'Mount/unmount with Presence for exit delay.',
-    components: ['Alert', 'Avatar', 'ChatBubble', 'Popover', 'Toast'],
+  popupSurface: {
+    description: 'Anchored content surface scales + fades in/out (Presence for exit).',
+    components: ['Popover', 'Tooltip', 'ColorInput'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -8, to: 0 } } }] },
-  { trigger: 'Root.exit', sequence: [{ animation: { opacity: { to: 0 }, y: { to: -8 } } }] },
+  { trigger: 'Content.enter', sequence: [{ target: 'Content', animation: { ...scaleIn(0.9), ...fadeIn() } }] },
+  { trigger: 'Content.exit', sequence: [{ target: 'Content', animation: { ...scaleOut(0.9), ...fadeOut() } }] },
 ];`,
+    note: 'See "Portaled overlays" — the inner Content surface owns the scale/fade BELOW the Radix Portal so the shell keeps Radix positioning.',
     wiring: `
 const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations);
-const refs = { Root: rootRef };
+const refs = { Content: contentRef };
 const { runExit } = useAnimations(animConfig, refs);
 // Exit: runExit().then(() => onCloseComplete?.());`,
   },
 
-  overlay: {
-    description: 'Multi-target enter/exit (overlay + content).',
+  // Component-specific entries below (single component — NOT shared patterns):
+  // modal (Dialog), textReveal (AnimatedText), countdown (Toast),
+  // exitOnStatus (FileUpload), pageSlide (Pagination).
+  modal: {
+    description: 'Component-specific (Dialog) — centered surface scales+fades over a fading backdrop.',
     components: ['Dialog'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
@@ -257,9 +266,9 @@ const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
     note: 'Sub-components filter config by slot prefix (e.g. overlayConfig = config.filter(t => t.trigger.startsWith("Overlay."))).',
   },
 
-  expand: {
+  disclosure: {
     description: 'Height open/close for disclosure panels with dual-target parallel steps (height + opacity). Uses deps triggers watching open/close state. Icon rotation synced to content animation duration.',
-    components: ['Accordion', 'Collapsible', 'ColorInput'],
+    components: ["Accordion", "Collapsible"],
     defaultAnimations: `
 // Icon rotation via deps triggers (in Trigger sub-component)
 const iconConfig: AnimationTrigger[] = useMemo(() => [
@@ -285,9 +294,9 @@ const contentConfig: AnimationTrigger[] = useMemo(() => [
     note: 'When animations: false, use separate useEffect fallbacks to immediately set styles and call complete callbacks — bypass useAnimations entirely.',
   },
 
-  position: {
+  slidingIndicator: {
     description: 'Sliding indicator that tracks the active element (tab underline, segmented-control thumb, pagination indicator).',
-    components: ['Tabs', 'TableOfContents', 'Pagination', 'ToggleGroup'],
+    components: ["Tabs", "ToggleGroup", "TableOfContents"],
     note: 'Use the shared usePositionTracker hook and declare animationCapabilities: ["slidingIndicator"]. It measures the active element via offsetLeft/Top/Width/Height (transform-agnostic, unlike getBoundingClientRect) and re-measures on resize, font load, and data-state mutations. Do NOT hand-roll a fn:"animatePosition" trigger + a dynamic Active ref for an indicator — that is the deprecated pattern (it broke inside CSS-transformed contexts and duplicated measurement). A press/scale on the indicator (ToggleGroup) stays a normal declarative Root.press trigger; only the position tracking uses the hook.',
     wiring: `
 import { usePositionTracker } from '../../../animation';
@@ -318,22 +327,39 @@ const mergedRef = useMergedRef(ref, splitRef); // merge with the factory ref
 // element: <Comp key={text} ref={mergedRef} {...(animated ? { 'data-animated': '' } : {})}>{text}</Comp>`,
   },
 
-  listStagger: {
-    description: 'Per-item stagger on mount.',
-    components: ['Table', 'Timeline', 'Grid', 'Stack', 'FileUpload', 'ChatBubble'],
+  listReveal: {
+    description: 'Per-item stagger on mount — data rows / items.',
+    components: ["List", "Table", "Timeline", "FileUpload", "ChatBubble"],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }] },
 ];`,
   },
 
-  widthCollapse: {
-    description: 'Width animation for collapsible sidebar. Uses deps trigger with dynamic vars function to read CSS custom properties.',
-    components: ['Sidebar'],
+  layoutReveal: {
+    description: 'A generic layout container staggers its children in on mount.',
+    components: ['Grid', 'Stack'],
     defaultAnimations: `
+const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+  { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { ...scaleIn(0.9), ...fadeIn() }, stagger: { delay: 30 } }] },
+];`,
+  },
+
+  sidePanel: {
+    description: 'Panel from an edge — overlay (backdrop + slide: Drawer, Sidebar mobile) or in-flow (width collapse: Sidebar desktop).',
+    components: ['Drawer', 'Sidebar'],
+    defaultAnimations: `
+// Overlay mode — backdrop fade + panel slide (Drawer, Sidebar mobile)
+const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+  { trigger: 'Overlay.enter', sequence: [{ animation: fadeIn() }] },
+  { trigger: 'Content.enter', sequence: [{ animation: { ...slideLeft(), ...fadeIn() } }] },
+  { trigger: 'Content.exit',  sequence: [{ animation: { ...slideLeft(), ...fadeOut() } }] },
+];
+
+// In-flow mode — animate width via a deps trigger reading CSS vars (Sidebar desktop)
 const widthConfig: AnimationTrigger[] = useMemo(() => [{
   trigger: 'width-change', deps: [collapsed],
-  sequence: [{ target: 'Root', animation: { width: { to: '$targetWidth', ease: sidebarEase } } }],
+  sequence: [{ target: 'Root', animation: { width: { to: '$targetWidth', ease: smooth } } }],
   vars: (el: HTMLElement) => {
     const rootStyles = getComputedStyle(el);
     const expandedWidth = rootStyles.getPropertyValue('--move-sidebar-width').trim() || '15rem';
@@ -343,7 +369,7 @@ const widthConfig: AnimationTrigger[] = useMemo(() => [{
   },
   onComplete: () => { el.style.width = ''; }, // let CSS take over
 }], [collapsed]);`,
-    note: 'Uses vars function to snapshot current width and compute target. onComplete clears inline style so CSS resumes control.',
+    note: 'Drawer/Sidebar-mobile portal to a fixed overlay; Sidebar desktop collapses width in-flow — same edge-panel family.',
   },
 
   countdown: {
@@ -389,9 +415,9 @@ const slideConfig: AnimationTrigger[] = useMemo(() => [{
     note: 'vars function identifies new DOM elements, marks them with data-entering and sets initial inline styles. children selector targets only marked elements.',
   },
 
-  loopPulse: {
+  loader: {
     description: 'Looping pulse animation via lifecycle enter trigger with loop + alternate.',
-    components: ['Skeleton'],
+    components: ["Loader", "Skeleton"],
     defaultAnimations: `
 const pulseConfig: AnimationTrigger[] = useMemo(() => [{
   trigger: 'Pulse.enter',
