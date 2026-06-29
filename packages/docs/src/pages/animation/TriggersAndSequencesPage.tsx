@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button, Select, InputRange, ToggleGroup, Alert, poppy } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button, Select, InputRange, ToggleGroup, Alert, Popover, Checkbox, poppy } from 'move';
 import type { AnimationTrigger } from 'move';
 import {
   CodeBlock,
@@ -141,6 +141,43 @@ function ParallelSerialDemo() {
   );
 }
 
+// Real components firing two of the trigger kinds — hover/press a Button (event)
+// and toggle a Checkbox (state) to feel "a trigger names a moment".
+function TriggerDemo() {
+  return (
+    <Stack direction="row" gap="xl" wrap align="start">
+      <Stack gap="xs" align="start">
+        <Badge variant="soft"><Icon name="mouse-pointer-click" />Event</Badge>
+        <Button variant="secondary">Hover &amp; press me</Button>
+        <Text size="sm" color="muted">Fires on interaction.</Text>
+      </Stack>
+      <Stack gap="xs" align="start">
+        <Badge variant="soft"><Icon name="toggle-left" />State</Badge>
+        <Checkbox defaultChecked>Toggle me</Checkbox>
+        <Text size="sm" color="muted">Fires when the value changes.</Text>
+      </Stack>
+    </Stack>
+  );
+}
+
+// The sequence above, on a real component: open the Popover and its Content slot
+// plays its enter sequence (scale + fade).
+function SequenceDemo() {
+  return (
+    <Popover.Root>
+      <Popover.Trigger asChild>
+        <Button variant="secondary">Show details</Button>
+      </Popover.Trigger>
+      <Popover.Content sideOffset={8}>
+        <Stack gap="sm">
+          <Text weight="medium">A small overlay</Text>
+          <Text size="sm" color="muted">It scales and fades in — the sequence above, on a real component.</Text>
+        </Stack>
+      </Popover.Content>
+    </Popover.Root>
+  );
+}
+
 export function TriggersAndSequencesPage() {
   return (
     <Stack direction="row" gap="xl" align="stretch" id="triggers-and-sequences">
@@ -185,6 +222,7 @@ export function TriggersAndSequencesPage() {
             kinds, and most components only use two or three.
           </Text>
           <HighlightList items={TRIGGER_TYPES} />
+          <TriggerDemo />
         </Section>
 
         <Section
@@ -209,6 +247,7 @@ export function TriggersAndSequencesPage() {
   ],
 }`}
           />
+          <SequenceDemo />
         </Section>
 
         <Section

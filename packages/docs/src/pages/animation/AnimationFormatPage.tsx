@@ -182,9 +182,12 @@ export function AnimationFormatPage() {
           <MotionGallery />
           <CodeBlock
             language="ts"
-            code={`// a motion is a builder; combine by spreading
-{ target: 'Item', animation: { ...scaleIn(), ...fadeIn() } }   // a pop-in
-{ target: 'Caret', animation: rotate(0, 180) }                 // a flip`}
+            code={`// each motion is a builder — call it to get an animation object
+scaleIn(0.9)   // { scale: { from: 0.9, to: 1, ease: poppy } }
+rotate(0, 180) // { rotate: { from: 0, to: 180 } } — a flip
+
+// combine by spreading into one object — they run together
+{ ...scaleIn(), ...fadeIn() }   // a pop-in: scale + fade`}
           />
         </Section>
       </Stack>
