@@ -75,7 +75,7 @@ export const DayCell = React.memo(function DayCell({
   const cellRef = React.useRef<HTMLButtonElement | null>(null);
 
   const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-    { trigger: 'Root.press', sequence: [{ animation: scaleDown }] },
+    { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] },
   ];
   const refs = React.useMemo(() => ({ Root: cellRef as React.RefObject<HTMLElement | null> }), []);
   const { handlers } = useAnimations(DEFAULT_ANIMATIONS, refs);

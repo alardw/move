@@ -4,7 +4,6 @@ import { moveAnimate } from './moveAnimate';
 import { animateDimension } from './animateDimension';
 import { animatePosition } from './animatePosition';
 import { staggerAnimate } from './staggerAnimate';
-import { PRESET_REGISTRY } from './presets';
 import type { Animation, AnimationTrigger, AnimationStep, AnimationState, SequenceItem } from './types';
 
 type RefMap = Record<string, React.RefObject<HTMLElement | null>>;
@@ -62,18 +61,11 @@ function resolveAnimationVars(animation: Animation, vars: Record<string, unknown
 }
 
 /**
- * Resolve an AnimationStep's animation — either inline, from preset, or undefined.
+ * Resolve an AnimationStep's animation — the inline `animation` object (motions
+ * are spread into it), or undefined.
  */
 function resolveStepAnimation(step: AnimationStep): Animation | undefined {
   if (step.animation) return step.animation;
-  if (step.preset) {
-    const preset = PRESET_REGISTRY[step.preset];
-    if (!preset) {
-      console.warn(`[useAnimations] Unknown preset: ${step.preset}`);
-      return undefined;
-    }
-    return preset;
-  }
   return undefined;
 }
 
@@ -359,7 +351,6 @@ function createResetSequence(sequence: SequenceItem[]): SequenceItem[] {
         return {
           ...step,
           animation: anim ? createResetAnimation(anim) : undefined,
-          preset: undefined,
         };
       });
     }
@@ -367,7 +358,6 @@ function createResetSequence(sequence: SequenceItem[]): SequenceItem[] {
     return {
       ...item,
       animation: anim ? createResetAnimation(anim) : undefined,
-      preset: undefined,
     };
   });
 }

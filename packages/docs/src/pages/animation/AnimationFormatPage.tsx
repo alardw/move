@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button,
-  moveAnimate, fadeIn, fadeOut, popIn, popOut, scaleIn, scaleUp, scaleDown,
+  moveAnimate, fadeIn, fadeOut, slideUp, scaleIn, scaleOut, scaleUp, scaleDown, rotate,
 } from 'move';
 import type { Animation, JSAnimation } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
@@ -12,7 +12,7 @@ const TAGLINE =
 
 const BADGES = [
   { icon: 'code', label: 'Format' },
-  { icon: 'package', label: '7 presets' },
+  { icon: 'package', label: '8 motions' },
 ];
 
 const TOC: TocItem[] = [
@@ -21,18 +21,21 @@ const TOC: TocItem[] = [
   { href: '#presets', label: 'Presets' },
 ];
 
+// Motions — self-explaining builders (name = what + direction). Combine by
+// spreading into one animation object; e.g. a pop-in = { ...scaleIn(), ...fadeIn() }.
 const PRESETS: { name: string; desc: string; anim: Animation }[] = [
-  { name: 'fadeIn', desc: 'opacity 0 → 1', anim: fadeIn },
-  { name: 'fadeOut', desc: 'opacity → 0', anim: fadeOut },
-  { name: 'popIn', desc: 'scale 0.8 → 1 + fade, with bounce — entering list items', anim: popIn },
-  { name: 'popOut', desc: 'scale → 0.8 + fade out — exiting list items', anim: popOut },
-  { name: 'scaleIn', desc: 'scale 0.5 → 1 with bounce — indicators, avatars', anim: scaleIn },
-  { name: 'scaleUp', desc: 'grow to 1.05 — hover', anim: scaleUp },
-  { name: 'scaleDown', desc: 'shrink to 0.95 — press', anim: scaleDown },
+  { name: 'fadeIn', desc: 'opacity 0 → 1', anim: fadeIn() },
+  { name: 'fadeOut', desc: 'opacity 1 → 0', anim: fadeOut() },
+  { name: 'slideUp', desc: 'translateY 8 → 0', anim: slideUp() },
+  { name: 'scaleIn', desc: 'scale 0.9 → 1, bouncy', anim: scaleIn() },
+  { name: 'scaleOut', desc: 'scale 1 → 0.9', anim: scaleOut() },
+  { name: 'scaleUp', desc: 'scale 1 → 1.04 (hover)', anim: scaleUp() },
+  { name: 'scaleDown', desc: 'scale 1 → 0.96 (press)', anim: scaleDown() },
+  { name: 'rotate', desc: 'rotate 0 → 180°', anim: rotate(0, 180) },
 ];
 
 function PresetPlayer() {
-  const [active, setActive] = useState('popIn');
+  const [active, setActive] = useState('scaleIn');
   const boxRef = useRef<HTMLDivElement>(null);
   const animRef = useRef<JSAnimation | null>(null);
 

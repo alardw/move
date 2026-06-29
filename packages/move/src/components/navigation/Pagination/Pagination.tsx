@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { scaleUp, scaleDown, popIn, brisk, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
+import { scaleUp, scaleDown, scaleIn, fadeIn, brisk, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
@@ -168,8 +168,8 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
     const { previous, canPrevious, labels } = usePaginationContext();
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Prev.hover', sequence: [{ animation: scaleUp }] },
-      { trigger: 'Prev.press', sequence: [{ animation: scaleDown }] },
+      { trigger: 'Prev.hover', sequence: [{ animation: scaleUp() }] },
+      { trigger: 'Prev.press', sequence: [{ animation: scaleDown() }] },
     ];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
@@ -253,8 +253,8 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
     const { next, canNext, labels } = usePaginationContext();
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Next.hover', sequence: [{ animation: scaleUp }] },
-      { trigger: 'Next.press', sequence: [{ animation: scaleDown }] },
+      { trigger: 'Next.hover', sequence: [{ animation: scaleUp() }] },
+      { trigger: 'Next.press', sequence: [{ animation: scaleDown() }] },
     ];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
@@ -341,7 +341,7 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
     });
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Items.enter', sequence: [{ children: 'li', animation: popIn, stagger: { delay: 30 } }] },
+      { trigger: 'Items.enter', sequence: [{ children: 'li', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }] },
     ];
 
     const animRefs = React.useMemo(() => ({
@@ -486,8 +486,8 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
 // =============================================================================
 
 const PAGE_BUTTON_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Btn.hover', sequence: [{ animation: scaleUp }] },
-  { trigger: 'Btn.press', sequence: [{ animation: scaleDown }] },
+  { trigger: 'Btn.hover', sequence: [{ animation: scaleUp() }] },
+  { trigger: 'Btn.press', sequence: [{ animation: scaleDown() }] },
 ];
 
 interface PageButtonProps {

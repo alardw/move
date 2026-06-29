@@ -51,20 +51,26 @@ export {
   // Orchestration
   useAnimations,
   resolveAnimationsConfig,
-  // Presets
+  // Motions
   fadeIn,
   fadeOut,
-  popIn,
-  popOut,
+  slideUp,
+  slideDown,
+  slideLeft,
+  slideRight,
+  scaleIn,
+  scaleOut,
   scaleUp,
   scaleDown,
-  scaleIn,
+  rotate,
+  expand,
+  collapse,
+  // Sequence helpers
   interactive,
   revealHeight,
   staggerItems,
   toggleIndicator,
   expandContent,
-  PRESET_REGISTRY,
   // Position tracking
   usePositionTracker,
   useSlidingIndicator,
