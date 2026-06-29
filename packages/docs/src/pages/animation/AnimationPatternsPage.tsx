@@ -12,7 +12,9 @@ import {
   Switch,
   Select,
   Tooltip,
-  Dialog,
+  Drawer,
+  Loader,
+  List,
   Accordion,
   Tabs,
 } from 'move';
@@ -105,7 +107,7 @@ export function AnimationPatternsPage() {
           </Text>
           <Stack gap="xl">
             <InlineDemo
-              label={<Code>interactive</Code>}
+              label={<Code>press</Code>}
               blurb="Scale up on hover, down on press. Hover and press the button."
             >
               <Button>Press me</Button>
@@ -121,14 +123,14 @@ export function AnimationPatternsPage() {
             </InlineDemo>
 
             <InlineDemo
-              label={<Code>popup</Code>}
+              label={<Code>popupMenu</Code>}
               blurb="Reveal a panel by height and stagger its items in. Open the select."
             >
               <SelectDemo />
             </InlineDemo>
 
             <InlineDemo
-              label={<Code>enterExit</Code>}
+              label={<Code>popupSurface</Code>}
               blurb="Fade and slide in on show, back out on hide. Hover the button."
             >
               <Tooltip label="Saves without publishing">
@@ -137,42 +139,32 @@ export function AnimationPatternsPage() {
             </InlineDemo>
 
             <InlineDemo
-              label={<Code>overlay</Code>}
-              blurb="Fade a backdrop while the panel springs in. Open the dialog."
+              label={<Code>sidePanel</Code>}
+              blurb="Slide a panel in from the edge while the backdrop fades. Open the drawer."
             >
-              <Dialog.Root>
-                <Dialog.Trigger asChild>
-                  <Button>Open dialog</Button>
-                </Dialog.Trigger>
-                <Dialog.Portal>
-                  <Dialog.Overlay />
-                  <Dialog.Content>
-                    <Dialog.Header>
-                      <Dialog.Title>Publish changes</Dialog.Title>
-                    </Dialog.Header>
-                    <Dialog.Body>
-                      <Dialog.Description>
-                        Push the last hour of edits live?
-                      </Dialog.Description>
-                    </Dialog.Body>
-                    <Dialog.Footer>
-                      <Dialog.FooterEnd>
-                        <Dialog.Close asChild>
-                          <Button variant="ghost">Not yet</Button>
-                        </Dialog.Close>
-                        <Dialog.Close asChild>
-                          <Button>Publish</Button>
-                        </Dialog.Close>
-                      </Dialog.FooterEnd>
-                    </Dialog.Footer>
-                  </Dialog.Content>
-                </Dialog.Portal>
-              </Dialog.Root>
+              <Drawer.Root>
+                <Drawer.Trigger asChild>
+                  <Button>Open drawer</Button>
+                </Drawer.Trigger>
+                <Drawer.Portal>
+                  <Drawer.Overlay />
+                  <Drawer.Content>
+                    <Drawer.Header>
+                      <Drawer.Title>Filters</Drawer.Title>
+                    </Drawer.Header>
+                    <Drawer.Body>
+                      <Drawer.Description>
+                        Tweak the filter criteria here. Changes apply immediately.
+                      </Drawer.Description>
+                    </Drawer.Body>
+                  </Drawer.Content>
+                </Drawer.Portal>
+              </Drawer.Root>
             </InlineDemo>
 
             <InlineDemo
               block
-              label={<Code>expand</Code>}
+              label={<Code>disclosure</Code>}
               blurb="Grow height and opacity together as a region opens. Toggle a row."
             >
               <Accordion.Root type="single" collapsible defaultValue="shipping">
@@ -212,7 +204,7 @@ export function AnimationPatternsPage() {
 
             <InlineDemo
               block
-              label={<Code>position</Code>}
+              label={<Code>slidingIndicator</Code>}
               blurb="Slide an indicator to track the active item. Switch tabs."
             >
               <Tabs.Root defaultValue="overview">
@@ -237,6 +229,39 @@ export function AnimationPatternsPage() {
                   </Stack>
                 </Tabs.Content>
               </Tabs.Root>
+            </InlineDemo>
+
+            <InlineDemo
+              block
+              label={<Code>listReveal</Code>}
+              blurb="Rows stagger in on mount."
+            >
+              <List>
+                <List.Item>Inbox</List.Item>
+                <List.Item>Drafts</List.Item>
+                <List.Item>Sent</List.Item>
+                <List.Item>Archive</List.Item>
+              </List>
+            </InlineDemo>
+
+            <InlineDemo
+              block
+              label={<Code>layoutReveal</Code>}
+              blurb="A layout container staggers its children in."
+            >
+              <Stack direction="row" gap="sm" wrap>
+                <Badge variant="soft">One</Badge>
+                <Badge variant="soft">Two</Badge>
+                <Badge variant="soft">Three</Badge>
+                <Badge variant="soft">Four</Badge>
+              </Stack>
+            </InlineDemo>
+
+            <InlineDemo
+              label={<Code>loader</Code>}
+              blurb="A continuous loop while work is pending."
+            >
+              <Loader />
             </InlineDemo>
           </Stack>
         </Section>
