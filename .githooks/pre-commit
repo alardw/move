@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
-# Pre-commit: keep Move specs ↔ source ↔ schema in sync.
-# Scoped: only runs the move checks when a component/spec is actually staged,
-# so unrelated commits (docs, config) stay instant.
+# Pre-commit: keep Move specs ↔ source ↔ schema in sync, and recipes/samples pure.
+# Scoped per area so unrelated commits (config, docs prose) stay instant.
 
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
 
+# --- Move components/specs: spec-drift + typecheck + strict-props ---
 if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.(tsx|ts)$'; then
-  echo "▶ pre-commit: Move components/specs changed — checking spec ↔ source ↔ schema…"
+  echo "▶ pre-commit: Move components/specs changed — spec ↔ source ↔ schema + strict-props…"
 
   if ! npm run check:spec-drift --workspace move --silent; then
     echo "✗ spec-drift: a spec is out of sync with its source. Fix the spec (or the source)."
@@ -18,5 +18,27 @@ if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.(tsx|ts
     exit 1
   fi
 
-  echo "✓ spec checks passed"
+  if ! npm run check:strict-props --workspace move --silent; then
+    echo "✗ strict-props: a component Props interface uses 'extends Record<string, unknown>'. Use React HTML attrs."
+    exit 1
+  fi
+
+  echo "✓ component checks passed"
+fi
+
+# --- Recipe / docs-sample sources: purity + recipe spec↔source drift ---
+if printf '%s\n' "$staged" | grep -qE '^packages/docs/src/content/(recipes|components)/.*\.(tsx|ts)$|^packages/move/skills/references/recipes/composite/.*\.tsx$'; then
+  echo "▶ pre-commit: recipe/sample sources changed — recipe purity + spec drift…"
+
+  if ! npm run check:recipes --workspace move --silent; then
+    echo "✗ recipe-purity: inline styles, raw HTML, or non-Move components. Use Move components + their props."
+    exit 1
+  fi
+
+  if ! npm run check:recipe-spec-drift --workspace move --silent; then
+    echo "✗ recipe-spec-drift: a recipe's composition/labels are out of sync with its .spec.ts."
+    exit 1
+  fi
+
+  echo "✓ recipe checks passed"
 fi
