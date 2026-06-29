@@ -59,7 +59,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/animation/lifecycle', label: 'Lifecycle' },
       { to: '/animation/springs', label: 'Springs & easings' },
       { to: '/animation/motions-and-sequences', label: 'Motions & sequences' },
-      { to: '/animation/patterns', label: 'See it in action' },
+      { to: '/animation/patterns', label: 'Patterns' },
       { to: '/animation/reference', label: 'Reference' },
     ],
   },
