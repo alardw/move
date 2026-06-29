@@ -11,6 +11,7 @@ export const spec = {
   description: 'Stacked list with three-zone item layout (leading/content/trailing), responsive collapse, line clamping, dividers, density control, and optional Meta shorthand',
 
   synonyms: ['rows', 'items', 'list view', 'menu list', 'listview', 'ul'],
+  animationPatterns: ['listReveal'],
   families: {
     behavior:  ["data-row"],
     state:     ["stateless"],

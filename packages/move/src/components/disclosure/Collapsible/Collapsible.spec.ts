@@ -11,6 +11,7 @@ export const spec = {
   description: 'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
 
   synonyms: ['expander', 'show more', 'disclosure', 'reveal', 'accordion'],
+  animationPatterns: ['disclosure'],
   families: {
     behavior:  ['disclosure'],
     state:     ['controlled-open'],

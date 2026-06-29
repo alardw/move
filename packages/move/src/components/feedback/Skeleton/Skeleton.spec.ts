@@ -11,6 +11,7 @@ export const spec = {
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',
 
   synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder', 'ghost'],
+  animationPatterns: ['loader'],
   families: {
     behavior:  ["loading"],
     state:     ["stateless"],

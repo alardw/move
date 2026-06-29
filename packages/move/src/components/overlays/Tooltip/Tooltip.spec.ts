@@ -12,6 +12,7 @@ export const spec = {
   description: 'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
 
   synonyms: ['hint', 'tip', 'label', 'overlay tip', 'popup', 'title'],
+  animationPatterns: ['popupSurface'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-open'],

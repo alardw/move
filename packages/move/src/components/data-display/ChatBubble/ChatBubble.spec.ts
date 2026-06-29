@@ -11,6 +11,7 @@ export const spec = {
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
 
   synonyms: ['message', 'chat', 'speech bubble', 'comment bubble', 'conversation', 'im'],
+  animationPatterns: ['listReveal'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

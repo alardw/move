@@ -11,6 +11,7 @@ export const spec = {
   description: 'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
 
   synonyms: ['date', 'calendar input', 'date field', 'date select', 'datepicker', 'schedule'],
+  animationPatterns: ['popupMenu'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-value', 'controlled-open'],

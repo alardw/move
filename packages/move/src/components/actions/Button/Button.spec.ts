@@ -11,6 +11,7 @@ export const spec = {
   description: 'Clickable interactive element with variant, size, and animation support',
 
   synonyms: ['cta', 'action', 'submit', 'icon button', 'btn'],
+  animationPatterns: ['press'],
   families: {
     behavior:  ["display"],
     state:     ["stateless"],

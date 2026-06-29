@@ -14,6 +14,7 @@ export const spec = {
   // Family memberships. All values are arrays even when only one
   // applies — keeps downstream tooling simple. See
   // `src/shared/families.ts` for the allowed values per axis.
+  animationPatterns: ['popupMenu'],
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-value', 'controlled-open'],

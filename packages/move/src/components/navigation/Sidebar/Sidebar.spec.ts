@@ -11,6 +11,7 @@ export const spec = {
   description: 'Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations',
 
   synonyms: ['side nav', 'navigation rail', 'app rail', 'app shell', 'side menu'],
+  animationPatterns: ['sidePanel'],
   families: {
     // Sidebar collapses in place on desktop and overlays on mobile —
     // disclosure is the dominant pattern; the mobile overlay is a

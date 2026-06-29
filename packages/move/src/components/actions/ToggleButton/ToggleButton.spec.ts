@@ -12,6 +12,7 @@ export const spec = {
     'Toggle button that switches between pressed and unpressed states, composing Button base styles with Radix Toggle primitive',
 
   synonyms: ['toggle', 'pressed button', 'icon toggle', 'switch'],
+  animationPatterns: ['press'],
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],
