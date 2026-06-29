@@ -1,22 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Button, Table,
-  moveAnimate, fadeIn, fadeOut, slideUp, scaleIn, scaleOut, scaleUp, scaleDown, rotate,
+  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
+  Button, Collapsible, Tooltip, Select, Drawer,
 } from 'move';
-import type { Animation, JSAnimation } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
-
-// Each motion is the move a real Move component already makes — illustrate by
-// pointing at where it shows up, not an abstract box alone.
-const MOTION_USAGE: { motion: string; where: string }[] = [
-  { motion: 'fadeIn / fadeOut', where: 'Dialog & Drawer overlays, Alert' },
-  { motion: 'slideUp / slideDown / slideLeft / slideRight', where: 'Drawer, Toast' },
-  { motion: 'scaleIn / scaleOut', where: 'Select, Dropdown & menu items' },
-  { motion: 'scaleUp / scaleDown', where: 'Button, ToggleButton (hover / press)' },
-  { motion: 'rotate', where: 'Accordion & Collapsible caret' },
-  { motion: 'expand / collapse', where: 'Accordion, Collapsible' },
-];
 
 const TAGLINE =
   'The building blocks under every sequence: how a single property animates, and the self-explaining motions whose name says what moves and which way.';
@@ -32,79 +21,95 @@ const TOC: TocItem[] = [
   { href: '#motions', label: 'Motions' },
 ];
 
-// Motions — self-explaining builders (name = what + direction). Combine by
-// spreading into one animation object; e.g. a pop-in = { ...scaleIn(), ...fadeIn() }.
-const PRESETS: { name: string; desc: string; anim: Animation }[] = [
-  { name: 'fadeIn', desc: 'opacity 0 → 1', anim: fadeIn() },
-  { name: 'fadeOut', desc: 'opacity 1 → 0', anim: fadeOut() },
-  { name: 'slideUp', desc: 'translateY 8 → 0', anim: slideUp() },
-  { name: 'scaleIn', desc: 'scale 0.9 → 1, bouncy', anim: scaleIn() },
-  { name: 'scaleOut', desc: 'scale 1 → 0.9', anim: scaleOut() },
-  { name: 'scaleUp', desc: 'scale 1 → 1.04 (hover)', anim: scaleUp() },
-  { name: 'scaleDown', desc: 'scale 1 → 0.96 (press)', anim: scaleDown() },
-  { name: 'rotate', desc: 'rotate 0 → 180°', anim: rotate(0, 180) },
+// Each motion is illustrated by the real Move component that makes it — interact
+// with each one (hover, press, toggle, open) to see the motion in context.
+function CollapsibleDemo() {
+  return (
+    <Collapsible.Root>
+      <Stack gap="sm">
+        <Collapsible.Trigger>
+          <Stack direction="row" gap="sm" align="center">
+            <Text weight="medium">Toggle me</Text>
+            <Collapsible.Icon />
+          </Stack>
+        </Collapsible.Trigger>
+        <Collapsible.Content>
+          <Text size="sm" color="muted">The caret rotates as this panel expands.</Text>
+        </Collapsible.Content>
+      </Stack>
+    </Collapsible.Root>
+  );
+}
+
+function SelectDemo() {
+  const [value, setValue] = useState('Apple');
+  return (
+    <Select.Root value={value} onValueChange={setValue}>
+      <Select.Trigger>
+        <Select.Value />
+        <Select.Icon />
+      </Select.Trigger>
+      <Select.Content>
+        <Select.Viewport>
+          {['Apple', 'Banana', 'Cherry', 'Date'].map((f) => (
+            <Select.Item key={f} value={f}>{f}</Select.Item>
+          ))}
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Root>
+  );
+}
+
+function DrawerDemo() {
+  return (
+    <Drawer.Root>
+      <Drawer.Trigger asChild>
+        <Button variant="secondary">Open drawer</Button>
+      </Drawer.Trigger>
+      <Drawer.Portal>
+        <Drawer.Overlay />
+        <Drawer.Content>
+          <Drawer.Header><Drawer.Title>Filters</Drawer.Title></Drawer.Header>
+          <Drawer.Body>
+            <Drawer.Description>The panel slides in from the edge; the overlay fades.</Drawer.Description>
+          </Drawer.Body>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
+  );
+}
+
+const DEMOS: { motions: string; caption: string; render: () => ReactNode }[] = [
+  { motions: 'scaleUp · scaleDown', caption: 'Hover and press — the button grows, then dips.', render: () => <Button variant="secondary">Hover &amp; press me</Button> },
+  { motions: 'rotate · expand · collapse', caption: 'Toggle — the caret rotates as the panel expands.', render: () => <CollapsibleDemo /> },
+  { motions: 'scaleIn · slideUp · fadeIn', caption: 'Hover — the tooltip pops in.', render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="secondary">Hover for a tooltip</Button></Tooltip> },
+  { motions: 'scaleIn · fadeIn (stagger)', caption: 'Open — the options pop in.', render: () => <SelectDemo /> },
+  { motions: 'slide · fadeIn', caption: 'Open — the drawer slides in, the overlay fades.', render: () => <DrawerDemo /> },
 ];
 
-function PresetPlayer() {
-  const [active, setActive] = useState('scaleIn');
-  const boxRef = useRef<HTMLDivElement>(null);
-  const animRef = useRef<JSAnimation | null>(null);
-
-  const play = (name: string) => {
-    const el = boxRef.current;
-    if (!el) return;
-    // Reset to a neutral baseline first so every preset plays cleanly, every time.
-    el.style.opacity = '1';
-    el.style.transform = 'none';
-    const preset = PRESETS.find((p) => p.name === name);
-    if (preset) moveAnimate(el, preset.anim, animRef);
-  };
-
+function MotionGallery() {
   return (
     <Stack gap="lg">
-      <Stack direction="row" gap="xs" wrap>
-        {PRESETS.map((p) => (
-          <Button
-            key={p.name}
-            variant={active === p.name ? 'secondary' : 'ghost'}
-            size="sm"
-            onClick={() => { setActive(p.name); play(p.name); }}
+      {DEMOS.map((d) => (
+        <Stack key={d.motions} gap="sm">
+          <Stack direction="row" gap="sm" align="center" wrap>
+            <Code>{d.motions}</Code>
+            <Text size="sm" color="muted">{d.caption}</Text>
+          </Stack>
+          <div
+            style={{
+              padding: '1.5rem',
+              borderRadius: 'var(--move-rounded-lg)',
+              border: '1px solid var(--move-border-base)',
+              background: 'var(--move-bg-subtle)',
+              display: 'flex',
+              justifyContent: 'center',
+            }}
           >
-            {p.name}
-          </Button>
-        ))}
-      </Stack>
-      <div
-        style={{
-          position: 'relative',
-          height: '9rem',
-          borderRadius: 'var(--move-rounded-lg)',
-          border: '1px solid var(--move-border-base)',
-          background: 'var(--move-bg-subtle)',
-          display: 'grid',
-          placeItems: 'center',
-        }}
-      >
-        <div
-          ref={boxRef}
-          style={{
-            padding: '0.75rem 1.5rem',
-            borderRadius: 'var(--move-rounded-md)',
-            background: 'var(--move-bg-base)',
-            boxShadow: 'var(--move-shadow-overlay)',
-            fontFamily: 'var(--move-font-mono)',
-            fontWeight: 600,
-          }}
-        >
-          {active}
-        </div>
-      </div>
-      <Stack direction="row" gap="md" align="center" wrap>
-        <Button variant="secondary" size="sm" onClick={() => play(active)}>
-          <Icon name="play" /> Replay
-        </Button>
-        <Text size="sm" color="muted">{PRESETS.find((p) => p.name === active)?.desc}</Text>
-      </Stack>
+            {d.render()}
+          </div>
+        </Stack>
+      ))}
     </Stack>
   );
 }
@@ -171,32 +176,16 @@ export function AnimationFormatPage() {
             A motion is a function that returns an animation object. Call it in a
             step's <Code>animation</Code>, and combine motions by spreading them
             into one object — they touch different properties, so they run
-            together. Pick one to feel its from → to:
+            together. Each one is the move a real component already makes —
+            interact to see it in context:
           </Text>
-          <PresetPlayer />
+          <MotionGallery />
           <CodeBlock
             language="ts"
             code={`// a motion is a builder; combine by spreading
 { target: 'Item', animation: { ...scaleIn(), ...fadeIn() } }   // a pop-in
 { target: 'Caret', animation: rotate(0, 180) }                 // a flip`}
           />
-          <Text>Each motion is the move a real component already makes:</Text>
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>Motion</Table.Head>
-                <Table.Head>Shows up in</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {MOTION_USAGE.map((m) => (
-                <Table.Row key={m.motion}>
-                  <Table.Cell><Code>{m.motion}</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">{m.where}</Text></Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
         </Section>
       </Stack>
       <TocRail items={TOC} />
