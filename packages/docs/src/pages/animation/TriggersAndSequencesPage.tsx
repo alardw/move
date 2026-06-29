@@ -193,18 +193,19 @@ export function TriggersAndSequencesPage() {
           lede="A sequence is a list of steps. Each step animates a slot with a feel."
         >
           <Text>
-            A step says which slot to animate, which properties to move, and the
-            spring or easing to move them with. A sequence is plain data, so a
-            component declares its motion as a value rather than imperative
-            code.
+            A step says which slot to animate and how it moves — either a literal
+            property object, or a{' '}
+            <RouterLink to="/animation/format">motion</RouterLink> builder (and a
+            spread combination of them). A sequence is plain data, so a component
+            declares its motion as a value rather than imperative code.
           </Text>
           <CodeBlock
             language="ts"
-            code={`// a popover's entrance — the panel fades and springs up
+            code={`// a popover's entrance — the panel scales and fades in
 {
   trigger: 'Content.enter',
   sequence: [
-    { target: 'Content', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.88, to: 1, ease: 'quick' } } },
+    { target: 'Content', animation: { ...scaleIn(0.88), ...fadeIn() } },
   ],
 }`}
           />
@@ -227,14 +228,14 @@ export function TriggersAndSequencesPage() {
             code={`// Together — one nested array, both in the same frame
 sequence: [
   [
-    { target: 'Root', animation: { scale: { from: 0.92, to: 1, ease: poppy } } },
+    { target: 'Root', animation: scaleIn(0.92) },
     { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
   ],
 ]
 
 // In order — top-level steps; the icon pulses only after the alert lands
 sequence: [
-  { target: 'Root', animation: { scale: { from: 0.92, to: 1, ease: poppy } } },
+  { target: 'Root', animation: scaleIn(0.92) },
   { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
 ]`}
           />
@@ -255,7 +256,7 @@ sequence: [
           <CodeBlock
             language="ts"
             code={`// Select and Autocomplete cascade their options with exactly this step
-{ target: 'List', children: '[role="option"]', preset: 'popIn', stagger: { delay: 30 } }`}
+{ target: 'List', children: '[role="option"]', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }`}
           />
           <SelectStaggerDemo />
           <Text color="muted">

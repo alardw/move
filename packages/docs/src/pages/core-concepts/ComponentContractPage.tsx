@@ -318,8 +318,7 @@ const ANIMATION_TRIGGER_BINDING: FieldRow[] = [
 
 const ANIMATION_STEP_DEF: FieldRow[] = [
   { name: 'target', type: 'string', required: false, description: "Target slot to animate (defaults to the trigger's slot if omitted)." },
-  { name: 'animation', type: 'string | Record<string, unknown>', required: false, description: 'Inline animation config — a preset name or an anime.js property object.' },
-  { name: 'preset', type: 'string', required: false, description: 'Named preset from PRESET_REGISTRY.' },
+  { name: 'animation', type: 'string | Record<string, unknown>', required: false, description: 'Inline animation config — an anime.js property object, or a motion builder / spread combination (e.g. { ...scaleIn(), ...fadeIn() }).' },
   { name: 'fn', type: "'animateDimension' | 'animatePosition'", required: false, description: 'Runtime function override.' },
   { name: 'children', type: 'string', required: false, description: 'CSS selector for stagger children (implies staggerAnimate).' },
   { name: 'stagger', type: '{ delay?, from? }', required: false, description: <>Stagger timing config — <Code>delay</Code> plus <Code>from: 'first' | 'last' | 'center'</Code>.</> },

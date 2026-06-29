@@ -81,7 +81,7 @@ const TOC: TocItem[] = [
   { href: '#patterns', label: 'Overview' },
   { href: '#patterns-list', label: 'Patterns' },
   { href: '#specialized', label: 'Specialized patterns' },
-  { href: '#presets', label: 'Presets underneath' },
+  { href: '#motions', label: 'Motions underneath' },
 ];
 
 export function AnimationPatternsPage() {
@@ -275,17 +275,17 @@ export function AnimationPatternsPage() {
         </Section>
 
         <Section
-          id="presets"
-          title="Presets underneath"
-          lede="Patterns are built from smaller animation atoms."
+          id="motions"
+          title="Motions underneath"
+          lede="Patterns are built from smaller, self-explaining motions."
         >
           <Text>
-            Below the patterns sit a set of named atoms — <Code>fadeIn</Code>,{' '}
-            <Code>popIn</Code>, <Code>scaleUp</Code> and a few others — and
-            bundles that combine them. A step can name a preset instead of
-            spelling out properties, which is how a sequence stays short. The{' '}
-            <RouterLink to="/animation/reference">Reference</RouterLink> lists
-            the full set.
+            Below the patterns sit the motion builders — <Code>fadeIn</Code>,{' '}
+            <Code>scaleIn</Code>, <Code>slideUp</Code>, <Code>rotate</Code> and a
+            few more. A step's animation is a motion (or a spread combination of
+            them), which is how a sequence stays short. The{' '}
+            <RouterLink to="/animation/format">Format &amp; motions</RouterLink>{' '}
+            page lists the full set.
           </Text>
         </Section>
       </Stack>
