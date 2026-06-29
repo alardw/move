@@ -18,7 +18,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#lifecycle', label: 'The lifecycle' },
-  { href: '#one-component', label: 'One component, all three' },
+  { href: '#one-component', label: 'All three at once' },
   { href: '#enter', label: 'Enter' },
   { href: '#respond', label: 'Respond' },
   { href: '#exit', label: 'Exit' },
@@ -60,7 +60,7 @@ export function AnimationLifecyclePage() {
 
         <Section
           id="one-component"
-          title="One component, all three"
+          title="All three at once"
           lede="A toast runs the whole lifecycle — send one and watch."
         >
           <Text>
@@ -131,11 +131,11 @@ export function AnimationLifecyclePage() {
           <Text>
             Enter and exit are lifecycle triggers — they fire on mount and
             unmount. Responses are state and event triggers — they fire when a
-            value changes or an interaction happens. The next page,{' '}
-            <RouterLink to="/animation/triggers-and-sequences">
-              Triggers &amp; sequences
-            </RouterLink>
-            , covers each kind and what plays when it fires.
+            value changes or an interaction happens.{' '}
+            <RouterLink to="/animation/motions-and-sequences">
+              Motions &amp; sequences
+            </RouterLink>{' '}
+            covers each kind and what plays when it fires.
           </Text>
         </Section>
       </Stack>

@@ -25,8 +25,7 @@ import { SurfacesPage } from './pages/core-concepts/SurfacesPage';
 import { StackingPage } from './pages/core-concepts/StackingPage';
 import { AnimationOverviewPage } from './pages/animation/AnimationOverviewPage';
 import { AnimationLifecyclePage } from './pages/animation/AnimationLifecyclePage';
-import { AnimationFormatPage } from './pages/animation/AnimationFormatPage';
-import { TriggersAndSequencesPage } from './pages/animation/TriggersAndSequencesPage';
+import { MotionsAndSequencesPage } from './pages/animation/MotionsAndSequencesPage';
 import { SpringsPage } from './pages/animation/SpringsPage';
 import { AnimationPatternsPage } from './pages/animation/AnimationPatternsPage';
 import { AnimationReferencePage } from './pages/animation/AnimationReferencePage';
@@ -211,8 +210,10 @@ function App() {
                 <Route path="/core-concepts/hooks" element={<HooksPage />} />
                 <Route path="/animation" element={<AnimationOverviewPage />} />
                 <Route path="/animation/lifecycle" element={<AnimationLifecyclePage />} />
-                <Route path="/animation/format" element={<AnimationFormatPage />} />
-                <Route path="/animation/triggers-and-sequences" element={<TriggersAndSequencesPage />} />
+                <Route path="/animation/motions-and-sequences" element={<MotionsAndSequencesPage />} />
+                {/* merged: old paths redirect to the combined page */}
+                <Route path="/animation/format" element={<Navigate to="/animation/motions-and-sequences" replace />} />
+                <Route path="/animation/triggers-and-sequences" element={<Navigate to="/animation/motions-and-sequences" replace />} />
                 <Route path="/animation/springs" element={<SpringsPage />} />
                 <Route path="/animation/patterns" element={<AnimationPatternsPage />} />
                 <Route path="/animation/reference" element={<AnimationReferencePage />} />

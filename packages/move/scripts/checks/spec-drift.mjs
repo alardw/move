@@ -44,6 +44,20 @@ const DOCS_CONTENT_DIR = join(
 
 const VERBOSE = process.argv.includes('--verbose');
 
+// Named types that are legitimately referenced in a spec `type:` but aren't
+// component-local (React/TS/DOM) — skip the prop-type resolution check for these.
+const BUILTIN_TYPES = new Set([
+  'ReactNode', 'ReactElement', 'CSSProperties', 'RefObject', 'MutableRefObject',
+  'Ref', 'ElementType', 'ComponentType', 'ComponentProps', 'ForwardedRef',
+  'Partial', 'Record', 'Omit', 'Pick', 'Readonly', 'Required', 'Array',
+  'ReadonlyArray', 'Promise', 'Map', 'Set', 'NonNullable', 'Exclude', 'Extract',
+  'ReturnType', 'Awaited', 'Date', 'RegExp', 'Error',
+  'HTMLElement', 'HTMLDivElement', 'HTMLButtonElement', 'HTMLInputElement',
+  'HTMLSpanElement', 'HTMLAnchorElement', 'HTMLParagraphElement', 'SVGSVGElement',
+  'MouseEvent', 'KeyboardEvent', 'ChangeEvent', 'FocusEvent', 'FormEvent',
+  'PointerEvent', 'TouchEvent', 'DragEvent', 'ClipboardEvent', 'WheelEvent',
+]);
+
 // ──────────────────────────────────────────────────────────────────────────────
 // AST helpers
 // ──────────────────────────────────────────────────────────────────────────────
@@ -193,15 +207,39 @@ function parseSpec(file) {
   // Default values declared on prop objects (top-level `props` and per
   // sub-component `props`), keyed by prop name.
   const defaults = {};
+  const propTypes = {};
+  const typeRefs = {};
+  const descriptions = {};
+  const moveSpecific = {};
   const collectDefaults = (propsArrNode) => {
     if (!propsArrNode || !ts.isArrayLiteralExpression(propsArrNode)) return;
     for (const p of propsArrNode.elements) {
       const pn = asString(getProp(p, 'name'));
+      if (!pn) continue;
       const dft = getProp(p, 'default');
-      if (pn && dft) defaults[pn] = nodeValue(dft);
+      if (dft) defaults[pn] = nodeValue(dft);
+      const typ = asString(getProp(p, 'type'));
+      if (typ) propTypes[pn] = typ;
+      const tref = asString(getProp(p, 'typeRef'));
+      if (tref) typeRefs[pn] = tref;
+      descriptions[pn] = asString(getProp(p, 'description')) ?? '';
+      const ms = getProp(p, 'moveSpecific');
+      if (ms) moveSpecific[pn] = ms.kind === ts.SyntaxKind.TrueKeyword;
     }
   };
   collectDefaults(getProp(specObj, 'props'));
+
+  // Top-level prop names (the main/root interface) — distinct from per-sub props.
+  const topLevelProps = [];
+  {
+    const tp = getProp(specObj, 'props');
+    if (tp && ts.isArrayLiteralExpression(tp)) {
+      for (const p of tp.elements) {
+        const pn = asString(getProp(p, 'name'));
+        if (pn) topLevelProps.push(pn);
+      }
+    }
+  }
 
   // Slots: union of top-level slots and every sub-component's slots.
   const allSlots = new Set(slots);
@@ -218,7 +256,7 @@ function parseSpec(file) {
     }
   }
 
-  return { subComponents, slots: [...allSlots], defaults, name };
+  return { subComponents, slots: [...allSlots], defaults, propTypes, typeRefs, descriptions, moveSpecific, topLevelProps, name };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -275,12 +313,14 @@ function parseSource(file, componentName) {
     // interface XxxProps extends Y, Z { ... }
     if (ts.isInterfaceDeclaration(node) && node.name.text.endsWith('Props')) {
       const props = [];
+      const propTypes = {};
       for (const member of node.members) {
         if (
           ts.isPropertySignature(member) &&
           ts.isIdentifier(member.name)
         ) {
           props.push(member.name.text);
+          if (member.type) propTypes[member.name.text] = member.type.getText();
         }
       }
       const extendsList = [];
@@ -293,7 +333,7 @@ function parseSource(file, componentName) {
           }
         }
       }
-      interfaces[node.name.text] = { props, extends: extendsList };
+      interfaces[node.name.text] = { props, propTypes, extends: extendsList };
     }
 
     // export const ComponentName = Object.assign(Root, { Header, Item, ... })
@@ -367,9 +407,11 @@ function readSiblingInterfaces(dir) {
       walk(sf, (node) => {
         if (ts.isInterfaceDeclaration(node)) {
           const props = [];
+          const propTypes = {};
           for (const m of node.members) {
             if (ts.isPropertySignature(m) && ts.isIdentifier(m.name)) {
               props.push(m.name.text);
+              if (m.type) propTypes[m.name.text] = m.type.getText();
             }
           }
           const extendsList = [];
@@ -382,7 +424,7 @@ function readSiblingInterfaces(dir) {
               }
             }
           }
-          out[node.name.text] = { props, extends: extendsList };
+          out[node.name.text] = { props, propTypes, extends: extendsList };
         }
       });
     } catch {
@@ -406,12 +448,27 @@ function resolveAllProps(interfaceName, interfacePool, seen = new Set()) {
   return Array.from(new Set([...own, ...inherited]));
 }
 
+/** Resolve prop name → type text on an interface, walking `extends` chains.
+ *  Own props win over inherited. */
+function resolveAllPropTypes(interfaceName, interfacePool, seen = new Set()) {
+  if (seen.has(interfaceName)) return {};
+  seen.add(interfaceName);
+  const entry = interfacePool[interfaceName];
+  if (!entry) return {};
+  const inherited = {};
+  for (const parent of entry.extends ?? []) {
+    Object.assign(inherited, resolveAllPropTypes(parent, interfacePool, seen));
+  }
+  return { ...inherited, ...(entry.propTypes ?? {}) };
+}
+
 /** Collect `withMoveComponent` slots + defaults from every .ts/.tsx in `dir`
  *  (excluding tests/specs). Sub-components often live in sibling files, so the
  *  main `<Name>.tsx` alone misses their slots — union the whole directory. */
 function gatherSlotsDefaults(dir) {
   const slots = new Set();
   const defaults = {};
+  const moveProps = new Set();
   for (const entry of readdirSync(dir)) {
     if (!entry.endsWith('.ts') && !entry.endsWith('.tsx')) continue;
     if (entry.endsWith('.spec.ts') || entry.endsWith('.test.tsx')) continue;
@@ -444,13 +501,71 @@ function gatherSlotsDefaults(dir) {
               }
             }
           }
+          const mpArr = unwrap(getProp(cfg, 'moveProps'));
+          if (mpArr && ts.isArrayLiteralExpression(mpArr)) {
+            for (const el of mpArr.elements) {
+              const v = asString(el);
+              if (v) moveProps.add(v);
+            }
+          }
         }
       });
     } catch {
       // ignore unparseable siblings
     }
   }
-  return { slots: [...slots], defaults };
+  return { slots: [...slots], defaults, moveProps: [...moveProps] };
+}
+
+/** Type/interface/enum names exported from shared/types.ts — the shared pool
+ *  that spec `typeRef`s resolve against (Size, Gap, Color, Radius, …). */
+function loadSharedTypes() {
+  const f = join(MOVE_ROOT, 'src', 'shared', 'types.ts');
+  const set = new Set();
+  if (!existsSync(f)) return set;
+  try {
+    walk(parse(f), (node) => {
+      if (
+        (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isEnumDeclaration(node)) &&
+        node.name
+      ) {
+        set.add(node.name.text);
+      }
+    });
+  } catch {
+    /* ignore */
+  }
+  return set;
+}
+const SHARED_TYPES = loadSharedTypes();
+
+/** Type names a component dir defines or imports — type/interface/enum
+ *  declarations plus imported identifiers. Used to resolve `typeRef`s. */
+function gatherLocalTypeNames(dir) {
+  const set = new Set();
+  for (const entry of readdirSync(dir)) {
+    if (!/\.(ts|tsx)$/.test(entry) || /\.(test|spec)\./.test(entry)) continue;
+    const fp = join(dir, entry);
+    if (!statSync(fp).isFile()) continue;
+    try {
+      walk(parse(fp), (node) => {
+        if (
+          (ts.isTypeAliasDeclaration(node) || ts.isInterfaceDeclaration(node) || ts.isEnumDeclaration(node)) &&
+          node.name
+        ) {
+          set.add(node.name.text);
+        }
+        if (ts.isImportDeclaration(node) && node.importClause) {
+          if (node.importClause.name) set.add(node.importClause.name.text);
+          const nb = node.importClause.namedBindings;
+          if (nb && ts.isNamedImports(nb)) for (const e of nb.elements) set.add(e.name.text);
+        }
+      });
+    } catch {
+      /* ignore */
+    }
+  }
+  return set;
 }
 
 function checkComponent(componentDir) {
@@ -559,6 +674,27 @@ function checkComponent(componentDir) {
     }
     // Resolve own props plus everything inherited via `extends`.
     const sourceProps = resolveAllProps(interfaceName, interfacePool);
+    const sourcePropTypes = resolveAllPropTypes(interfaceName, interfacePool);
+
+    // Prop-type parity (Tier 1): when a spec prop's `type` is a single named
+    // type reference (e.g. 'ElevationLevel'), that name must appear in the source
+    // prop's actual type. Catches phantom/stale type strings the name + default
+    // checks miss — e.g. spec 'ElevationLevel' vs source 'number'.
+    for (const prop of sub.props) {
+      const specType = spec.propTypes?.[prop];
+      if (!specType) continue;
+      const simple = specType
+        .replace(/\s*\|\s*(null|undefined)\b/g, '')
+        .replace(/\[\]\s*$/, '')
+        .trim();
+      if (!/^[A-Z][A-Za-z0-9]*$/.test(simple) || BUILTIN_TYPES.has(simple)) continue;
+      const srcType = sourcePropTypes[prop];
+      if (srcType && !srcType.includes(simple)) {
+        errors.push(
+          `${sub.name}.${prop}: spec type '${specType}' not reflected in source type '${srcType}'`,
+        );
+      }
+    }
     // Subtract noise: structural props (sp/className/style/children/ref/key)
     // and standard React event handlers that come along for the ride on any
     // interactive element. They're rarely intentional API surface — when
@@ -582,6 +718,35 @@ function checkComponent(componentDir) {
       errors.push(
         `${sub.name}.${interfaceName}: prop(s) in spec not in source: ${inSpecNotSource.join(', ')}`,
       );
+    }
+  }
+
+  // 2b. Top-level prop types (the main/root interface). The sub-component loop
+  //     above only covers spec.subComponents; props at spec top level map to
+  //     <Name>Props / <Name>RootProps. Name parity is skipped here (root props
+  //     often inherit from HTMLAttributes this parser can't resolve), but the
+  //     single-named-type check is precise — it's what caught Button's phantom
+  //     'ElevationLevel' (source: number).
+  if (spec.topLevelProps?.length) {
+    const candidates = [`${name}Props`, `${name}RootProps`];
+    const interfaceName = candidates.find((c) => interfacePool[c]);
+    if (interfaceName) {
+      const sourcePropTypes = resolveAllPropTypes(interfaceName, interfacePool);
+      for (const prop of spec.topLevelProps) {
+        const specType = spec.propTypes?.[prop];
+        if (!specType) continue;
+        const simple = specType
+          .replace(/\s*\|\s*(null|undefined)\b/g, '')
+          .replace(/\[\]\s*$/, '')
+          .trim();
+        if (!/^[A-Z][A-Za-z0-9]*$/.test(simple) || BUILTIN_TYPES.has(simple)) continue;
+        const srcType = sourcePropTypes[prop];
+        if (srcType && !srcType.includes(simple)) {
+          errors.push(
+            `${prop}: spec type '${specType}' not reflected in source type '${srcType}'`,
+          );
+        }
+      }
     }
   }
 
@@ -619,6 +784,34 @@ function checkComponent(componentDir) {
   if (existsSync(docsEntry)) {
     // Could later parse the docs index to confirm sample IDs match etc.
     // For v1, just record that docs exist.
+  }
+
+  // 6. Spec-quality tightening.
+  {
+    // 6a. Non-empty descriptions — the docstring promised it; now enforced.
+    for (const [pn, desc] of Object.entries(spec.descriptions ?? {})) {
+      if (!desc || !String(desc).trim()) {
+        errors.push(`prop '${pn}': empty description`);
+      }
+    }
+
+    // 6b. typeRef resolution — every `typeRef` must resolve to a shared type
+    //     (shared/types.ts) or one the component defines/imports. Catches typos
+    //     and stale references the name/default checks miss.
+    const knownTypes = new Set([...SHARED_TYPES, ...gatherLocalTypeNames(componentDir)]);
+    for (const [pn, tref] of Object.entries(spec.typeRefs ?? {})) {
+      const base = String(tref).replace(/\[\]\s*$/, '').trim();
+      if (!base || BUILTIN_TYPES.has(base)) continue;
+      if (!knownTypes.has(base)) {
+        errors.push(
+          `prop '${pn}': typeRef '${tref}' resolves to no known type (not in shared/types.ts or ${name}'s imports/declarations)`,
+        );
+      }
+    }
+
+    // (A moveSpecific ↔ moveProps parity check was tried here and removed: the
+    //  two aren't a 1:1 contract — `moveProps` controls DOM-passthrough filtering
+    //  while `moveSpecific` is spec doc metadata, so they legitimately differ.)
   }
 
   return { name, errors, warnings };

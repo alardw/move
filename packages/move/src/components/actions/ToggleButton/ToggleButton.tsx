@@ -45,8 +45,8 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
     } = props;
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Root.hover', sequence: [{ animation: scaleUp }] },
-      { trigger: 'Root.press', sequence: [{ animation: scaleDown }] },
+      { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
+      { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] },
     ];
     const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
     const btnRef = React.useRef<HTMLElement | null>(null);

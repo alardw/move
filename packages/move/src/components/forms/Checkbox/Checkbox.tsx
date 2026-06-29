@@ -5,7 +5,7 @@ import { useRef, useCallback } from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
-import { useAnimations, resolveAnimationsConfig, scaleIn, snappy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, scaleIn, scaleOut, fadeIn, fadeOut, scaleDown } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Checkbox.module.css';
@@ -113,15 +113,15 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       {
         trigger: 'checked',
-        sequence: [{ target: 'indicator', animation: { ...scaleIn, opacity: { from: 0, to: 1, duration: 150 } } }],
+        sequence: [{ target: 'indicator', animation: { ...scaleIn(0.5), ...fadeIn() } }],
       },
       {
         trigger: 'unchecked',
-        sequence: [{ target: 'indicator', animation: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } } }],
+        sequence: [{ target: 'indicator', animation: { ...scaleOut(0.5), ...fadeOut() } }],
       },
       {
         trigger: 'Root.press',
-        sequence: [{ animation: { scale: { to: 0.9, ease: snappy } } }],
+        sequence: [{ animation: scaleDown(0.9) }],
       },
     ];
 

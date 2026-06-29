@@ -178,10 +178,8 @@ export interface AnimationStateDef {
 export interface AnimationStepDef {
   /** Target slot to animate (defaults to trigger's slot if omitted) */
   target?: string;
-  /** Inline animation config — a preset name or an anime.js property object */
+  /** Inline animation config — an anime.js property object (motions inlined) */
   animation?: string | Record<string, unknown>;
-  /** Named preset from PRESET_REGISTRY */
-  preset?: string;
   /** Runtime function override: 'animateDimension' | 'animatePosition' */
   fn?: 'animateDimension' | 'animatePosition';
   /** CSS selector for stagger children (implies staggerAnimate) */

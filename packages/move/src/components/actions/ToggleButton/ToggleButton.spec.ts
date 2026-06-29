@@ -54,8 +54,8 @@ export const spec = {
   asChild: false,
 
   animations: [
-    { trigger: 'Root.hover', sequence: [{ preset: 'scaleUp' }] },
-    { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
+    { trigger: 'Root.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
+    { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [

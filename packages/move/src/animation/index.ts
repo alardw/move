@@ -6,7 +6,7 @@ export type { SpringParams, SpringPreset, Easing, AnimationPreset } from './easi
 export type { JSAnimation } from 'animejs';
 
 // Pre-computed spring constants — use directly as `ease` in per-property params
-export { snappy, quick, poppy, gentle, slow, lazy, jelly, stiff, sidebar, pagination } from './easings';
+export { snappy, quick, poppy, brisk, smooth } from './easings';
 
 // Animation utilities
 export {
@@ -51,22 +51,26 @@ export { resolveAnimationsConfig, extractSteps } from './resolveAnimationsConfig
 // =============================================================================
 
 export {
-  // Atoms
+  // Motions (self-explaining builders)
   fadeIn,
   fadeOut,
-  popIn,
-  popOut,
+  slideUp,
+  slideDown,
+  slideLeft,
+  slideRight,
+  scaleIn,
+  scaleOut,
   scaleUp,
   scaleDown,
-  scaleIn,
-  // Event bundles
+  rotate,
+  expand,
+  collapse,
+  // Sequence helpers
   interactive,
   revealHeight,
   staggerItems,
   toggleIndicator,
   expandContent,
-  // Registry
-  PRESET_REGISTRY,
 } from './presets';
 
 // =============================================================================

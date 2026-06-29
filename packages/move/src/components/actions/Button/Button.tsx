@@ -22,7 +22,6 @@ export interface ButtonProps extends React.HTMLAttributes<HTMLElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   animations?: AnimationTrigger[] | false;
-  elevation?: number;
   asChild?: boolean;
   fullWidth?: boolean;
   type?: string;
@@ -68,7 +67,7 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'primary' as ButtonVariant, size: 'md' as ButtonSize, asChild: false, type: 'button' },
-  moveProps: ['animations', 'elevation', 'asChild', 'fullWidth'],
+  moveProps: ['animations', 'asChild', 'fullWidth'],
   subComponents: { Group: ButtonGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -76,7 +75,6 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
       variant,
       size,
       animations: animationsProp,
-      elevation,
       asChild,
       fullWidth,
       type,
@@ -127,14 +125,8 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        const extraClasses: string[] = [];
-        if (elevation !== undefined) {
-          extraClasses.push('cast-shadow');
-        }
-
         const combinedStyle: React.CSSProperties = {
           ...(style as React.CSSProperties),
-          ...(elevation !== undefined && ({ '--elevation': (elevation as number) * 4 } as React.CSSProperties)),
           ...(spStyle as React.CSSProperties),
         };
 
@@ -144,7 +136,7 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
             {...spRest}
             ref={mergedRef}
             type={asChild ? undefined : (type as 'button' | 'submit' | 'reset')}
-            className={cx('root', ...extraClasses, className, spClass as string | undefined)}
+            className={cx('root', className, spClass as string | undefined)}
             style={combinedStyle}
             data-variant={variant as string}
             data-size={size as string}

@@ -17,8 +17,6 @@ import {
   Tabs,
 } from 'move';
 import {
-  HighlightList,
-  type HighlightItem,
   InlineDemo,
   Section,
   TocRail,
@@ -47,41 +45,17 @@ function SelectDemo() {
 }
 
 const TAGLINE =
-  'The motion in Move components is assembled from a handful of named patterns. These are them.';
+  'Named recipes — a trigger and sequence paired for a recurring job — that Move components share. The top of the ladder: spring → motion → pattern.';
 
 const BADGES = [
-  { icon: 'puzzle', label: 'Ready-made' },
-  { icon: 'blocks', label: 'Shared across components' },
-];
-
-const SPECIALIZED: HighlightItem[] = [
-  {
-    icon: 'panel-left',
-    text: 'widthCollapse — animate width to a CSS variable as a rail collapses. Sidebar.',
-  },
-  {
-    icon: 'timer',
-    text: 'countdown — run a progress bar that pauses on hover and resumes on leave. Toast.',
-  },
-  {
-    icon: 'check-check',
-    text: 'exitOnStatus — animate an item out when its status changes, then remove it. File upload.',
-  },
-  {
-    icon: 'arrow-right',
-    text: 'pageSlide — slide newly appearing items in as a page changes. Pagination.',
-  },
-  {
-    icon: 'activity',
-    text: 'loopPulse — a looping, alternating pulse. Skeleton.',
-  },
+  { icon: 'puzzle', label: 'Shared recipes' },
+  { icon: 'blocks', label: 'Across components' },
 ];
 
 const TOC: TocItem[] = [
   { href: '#patterns', label: 'Overview' },
-  { href: '#patterns-list', label: 'Patterns' },
-  { href: '#specialized', label: 'Specialized patterns' },
-  { href: '#presets', label: 'Presets underneath' },
+  { href: '#patterns-list', label: 'Shared recipes' },
+  { href: '#motions', label: 'Built from motions' },
 ];
 
 export function AnimationPatternsPage() {
@@ -100,12 +74,12 @@ export function AnimationPatternsPage() {
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>See it in action</Breadcrumb.Page>
+            <Breadcrumb.Page>Patterns</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1}>See it in action</Heading>
+          <Heading level={1}>Patterns</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -119,14 +93,15 @@ export function AnimationPatternsPage() {
 
         <Section
           id="patterns-list"
-          title="Patterns"
+          title="Shared recipes"
           lede="The recipes most components reach for."
         >
           <Text>
-            A pattern is a trigger and sequence paired for a recurring job.
-            Because the same pattern drives many components, a press feels like a
-            press and a reveal feels like a reveal across the whole library. Each
-            one below is live — interact with it to feel the motion.
+            A pattern is a trigger and sequence paired for a recurring job, named
+            once and reused. Because the same pattern drives many components, a
+            press feels like a press and a reveal feels like a reveal across the
+            whole library. Each one below is live — interact with it to feel the
+            motion.
           </Text>
           <Stack gap="xl">
             <InlineDemo
@@ -267,25 +242,22 @@ export function AnimationPatternsPage() {
         </Section>
 
         <Section
-          id="specialized"
-          title="Specialized patterns"
-          lede="A few components need motion that's specific to them."
-        >
-          <HighlightList items={SPECIALIZED} />
-        </Section>
-
-        <Section
-          id="presets"
-          title="Presets underneath"
-          lede="Patterns are built from smaller animation atoms."
+          id="motions"
+          title="Built from motions"
+          lede="Patterns are built from smaller, self-explaining motions."
         >
           <Text>
-            Below the patterns sit a set of named atoms — <Code>fadeIn</Code>,{' '}
-            <Code>popIn</Code>, <Code>scaleUp</Code> and a few others — and
-            bundles that combine them. A step can name a preset instead of
-            spelling out properties, which is how a sequence stays short. The{' '}
-            <RouterLink to="/animation/reference">Reference</RouterLink> lists
-            the full set.
+            Below the patterns sit the motion builders — <Code>fadeIn</Code>,{' '}
+            <Code>scaleIn</Code>, <Code>slideUp</Code>, <Code>rotate</Code> and a
+            few more. A step's animation is a motion (or a spread combination of
+            them), which is how a sequence stays short. The{' '}
+            <RouterLink to="/animation/motions-and-sequences">Motions &amp; sequences</RouterLink>{' '}
+            page lists the full set.
+          </Text>
+          <Text color="muted">
+            Motion specific to a single component — a sidebar's width collapse, a
+            toast's countdown — lives on that component's own page, not here. A
+            pattern earns its place by being shared.
           </Text>
         </Section>
       </Stack>

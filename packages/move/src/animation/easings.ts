@@ -7,31 +7,18 @@ export interface SpringParams {
   velocity: number;
 }
 
-// Spring presets - organized by use case
+// Springs — named by FEEL (character), never by component or use-case.
 export const springs = {
-  // === Quick & Responsive - for small UI elements, buttons ===
+  // Strak, minimale overshoot — micro-interacties (press/lift)
   snappy: { mass: 1, stiffness: 500, damping: 30, velocity: 0 },
+  // Licht & vlug — overlays
   quick: { mass: 0.6, stiffness: 400, damping: 20, velocity: 0 },
-
-  // === Bouncy & Playful - for scale animations, popovers ===
+  // Stuiterig — scale-pops
   poppy: { mass: 0.8, stiffness: 350, damping: 12, velocity: 0 },
-
-  // === Smooth & Professional - for modals, overlays ===
-  sidebar: { mass: 1, stiffness: 300, damping: 25, velocity: 0 },
-  gentle: { mass: 1, stiffness: 80, damping: 12, velocity: 0 },
-
-  // === Slow & Elegant - for page transitions, large elements ===
-  slow: { mass: 2, stiffness: 100, damping: 20, velocity: 0 },
-  lazy: { mass: 3, stiffness: 80, damping: 25, velocity: 0 },
-
-  // === Wobbly & Fun - for playful interactions, notifications ===
-  jelly: { mass: 0.5, stiffness: 150, damping: 6, velocity: 0 },
-
-  // === Stiff & Controlled - minimal overshoot ===
-  stiff: { mass: 1, stiffness: 400, damping: 35, velocity: 0 },
-
-  // === Pagination — moderate overshoot for slide-in items ===
-  pagination: { mass: 1, stiffness: 400, damping: 26, velocity: 0 },
+  // Kwiek, lichte veer — slide-in lijsten
+  brisk: { mass: 1, stiffness: 400, damping: 26, velocity: 0 },
+  // Soepel glijden, weinig overshoot — breedte/grote vlakken
+  smooth: { mass: 1, stiffness: 300, damping: 25, velocity: 0 },
 } as const satisfies Record<string, SpringParams>;
 
 export type SpringPreset = keyof typeof springs;
@@ -73,10 +60,5 @@ export const DEFAULT_DURATION = 200;
 export const snappy = spring(springs.snappy);
 export const quick = spring(springs.quick);
 export const poppy = spring(springs.poppy);
-export const gentle = spring(springs.gentle);
-export const slow = spring(springs.slow);
-export const lazy = spring(springs.lazy);
-export const jelly = spring(springs.jelly);
-export const stiff = spring(springs.stiff);
-export const sidebar = spring(springs.sidebar);
-export const pagination = spring(springs.pagination);
+export const brisk = spring(springs.brisk);
+export const smooth = spring(springs.smooth);

@@ -58,10 +58,8 @@ export interface AnimationState {
 export interface AnimationStep {
   /** Target slot to animate (defaults to trigger's slot if omitted) */
   target?: string;
-  /** Inline animation config */
+  /** Inline animation config (motions are spread into this object) */
   animation?: Animation;
-  /** Named preset from PRESET_REGISTRY */
-  preset?: string;
   /** Runtime function: 'animateDimension' | 'animatePosition' (default: moveAnimate) */
   fn?: 'animateDimension' | 'animatePosition';
   /** CSS selector for stagger targets (implies staggerAnimate) */

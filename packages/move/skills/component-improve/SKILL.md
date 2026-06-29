@@ -95,7 +95,7 @@ Present a clear summary of what changed between `oldSpec` and `newSpec`:
 - tokens: `--move-alert-close-size` = var(--move-size-5)
 
 ### Changed
-- animations: added { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] }
+- animations: added { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] }
 
 ### Removed
 - (nothing)

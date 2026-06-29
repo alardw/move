@@ -111,7 +111,7 @@ Always import from `'../../../animation'` — never sub-paths.
 // Core orchestrator (always needed for animated components)
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 // Presets (pick what's needed for defaults)
-import { scaleUp, scaleDown, popIn, popOut, fadeIn, fadeOut } from '../../../animation';
+import { scaleUp, scaleDown, scaleIn, fadeIn, fadeOut, slideUp } from '../../../animation';
 // Springs (if needed in inline configs)
 import { snappy, poppy } from '../../../animation';
 // Types
@@ -143,8 +143,8 @@ animations?: AnimationTrigger[] | false;
 
 // Defaults
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Root.hover', sequence: [{ preset: 'scaleUp' }] },
-  { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
+  { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
+  { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] },
 ];
 
 // In setup():

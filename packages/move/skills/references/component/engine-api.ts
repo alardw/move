@@ -53,8 +53,7 @@ export const ANIMATION_EXPORTS = {
     resolveAnimationsConfig: 'Merge user overrides — resolveAnimationsConfig(defaults, userProp?). Matches by trigger name. Returns null if false.',
   },
   presets: {
-    atoms: 'fadeIn, fadeOut, popIn, popOut, scaleUp, scaleDown, scaleIn — single Animation configs.',
-    PRESET_REGISTRY: 'Name → Animation lookup for preset resolution in sequence steps.',
+    motions: 'fadeIn/fadeOut, slideUp/Down/Left/Right, scaleIn/scaleOut, scaleUp/scaleDown, rotate(from,to), expand/collapse — self-explaining builders. Call to get an Animation object; spread to combine ({ ...scaleIn(), ...fadeIn() }). No `preset` string field — inline in `animation`.',
     bundles: '@deprecated — interactive, revealHeight, staggerItems, toggleIndicator, expandContent. Use trigger-sequence defaults instead.',
   },
   positionTracking: {
@@ -154,8 +153,8 @@ export const IMPORT_PATTERNS = {
   animation: {
     orchestrator: "import { useAnimations, resolveAnimationsConfig } from '../../../animation';",
     coreFunctions: "// Rarely needed — useAnimations calls these internally. Direct import only behind a declared Tier-2 capability (Carousel/ChatBubble: moveAnimate; Loader/Skeleton: raw animejs).\nimport { moveAnimate, animateDimension, staggerAnimate, animatePosition } from '../../../animation';",
-    presets: "import { scaleUp, scaleDown, fadeIn, fadeOut, popIn, popOut, scaleIn, PRESET_REGISTRY } from '../../../animation';",
-    springs: "import { snappy, quick, poppy } from '../../../animation';",
+    motions: "import { fadeIn, fadeOut, slideUp, scaleIn, scaleOut, scaleUp, scaleDown, rotate } from '../../../animation';",
+    springs: "import { snappy, quick, poppy, brisk, smooth } from '../../../animation';",
     types: "import type { Animation, AnimationTrigger, AnimationState, AnimationStep, SequenceItem, JSAnimation } from '../../../animation';",
     presence: "import { Presence, usePresence } from '../../../animation';",
     slidingIndicator: "import { usePositionTracker } from '../../../animation'; // the sanctioned active-element indicator hook (declare animationCapabilities: ['slidingIndicator']). Prefer over a fn:'animatePosition' trigger.",

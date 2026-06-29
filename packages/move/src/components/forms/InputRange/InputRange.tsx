@@ -69,8 +69,8 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
     });
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Thumb.hover', sequence: [{ animation: scaleUp }] },
-      { trigger: 'Thumb.press', sequence: [{ animation: scaleDown }] },
+      { trigger: 'Thumb.hover', sequence: [{ animation: scaleUp() }] },
+      { trigger: 'Thumb.press', sequence: [{ animation: scaleDown() }] },
     ];
     const animConfig = (props.animations as AnimationTrigger[] | false | undefined) === false
       ? null

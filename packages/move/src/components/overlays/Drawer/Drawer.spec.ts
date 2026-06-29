@@ -231,7 +231,7 @@ export const spec = {
     { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 150 } } }] },
     {
       trigger: 'Content.enter',
-      sequence: [{ animation: { translateX: { from: '100%', to: '0%', ease: 'sidebar' } } }],
+      sequence: [{ animation: { translateX: { from: '100%', to: '0%', ease: 'smooth' } } }],
       note: 'Default for position=right. Position variants: left=-100%→0%, top=translateY -100%→0%, bottom=translateY 100%→0%',
     },
     {
@@ -330,7 +330,7 @@ export const spec = {
       'Close button has focus-visible outline',
     ],
     animation: [
-      'Content entrance slides from edge using spring (sidebar ease)',
+      'Content entrance slides from edge using spring (smooth ease)',
       'Content exit slides back to edge using snappy ease',
       'Content slide direction matches position (translateX for left/right, translateY for top/bottom)',
       'Content slide direction is negative for left/top, positive for right/bottom',
