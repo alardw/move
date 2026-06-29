@@ -64,7 +64,7 @@ function DrawerDemo() {
   return (
     <Drawer.Root>
       <Drawer.Trigger asChild>
-        <Button variant="secondary">Open drawer</Button>
+        <Button variant="primary">Open drawer</Button>
       </Drawer.Trigger>
       <Drawer.Portal>
         <Drawer.Overlay />
@@ -80,9 +80,9 @@ function DrawerDemo() {
 }
 
 const DEMOS: { motions: string; caption: string; render: () => ReactNode }[] = [
-  { motions: 'scaleUp · scaleDown', caption: 'Hover and press — the button grows, then dips.', render: () => <Button variant="secondary">Hover &amp; press me</Button> },
+  { motions: 'scaleUp · scaleDown', caption: 'Hover and press — the button grows, then dips.', render: () => <Button variant="primary">Hover &amp; press me</Button> },
   { motions: 'rotate · expand · collapse', caption: 'Toggle — the caret rotates as the panel expands.', render: () => <CollapsibleDemo /> },
-  { motions: 'scaleIn · slideUp · fadeIn', caption: 'Hover — the tooltip pops in.', render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="secondary">Hover for a tooltip</Button></Tooltip> },
+  { motions: 'scaleIn · slideUp · fadeIn', caption: 'Hover — the tooltip pops in.', render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip> },
   { motions: 'scaleIn · fadeIn (stagger)', caption: 'Open — the options pop in.', render: () => <SelectDemo /> },
   { motions: 'slide · fadeIn', caption: 'Open — the drawer slides in, the overlay fades.', render: () => <DrawerDemo /> },
 ];

@@ -148,7 +148,7 @@ function TriggerDemo() {
     <Stack direction="row" gap="xl" wrap align="start">
       <Stack gap="xs" align="start">
         <Badge variant="soft"><Icon name="mouse-pointer-click" />Event</Badge>
-        <Button variant="secondary">Hover &amp; press me</Button>
+        <Button variant="primary">Hover &amp; press me</Button>
         <Text size="sm" color="muted">Fires on interaction.</Text>
       </Stack>
       <Stack gap="xs" align="start">
@@ -166,7 +166,7 @@ function SequenceDemo() {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <Button variant="secondary">Show details</Button>
+        <Button variant="primary">Show details</Button>
       </Popover.Trigger>
       <Popover.Content sideOffset={8}>
         <Stack gap="sm">
