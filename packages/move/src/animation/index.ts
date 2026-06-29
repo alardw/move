@@ -6,7 +6,7 @@ export type { SpringParams, SpringPreset, Easing, AnimationPreset } from './easi
 export type { JSAnimation } from 'animejs';
 
 // Pre-computed spring constants — use directly as `ease` in per-property params
-export { snappy, quick, poppy, gentle, slow, lazy, jelly, stiff, sidebar, pagination } from './easings';
+export { snappy, quick, poppy, brisk, smooth } from './easings';
 
 // Animation utilities
 export {

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { scaleUp, scaleDown, popIn, pagination as paginationEase, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
+import { scaleUp, scaleDown, popIn, brisk, useAnimations, usePositionTracker, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
@@ -362,9 +362,9 @@ const PaginationItems = withMoveComponent<'items' | 'item' | 'ellipsis' | 'indic
         children: '[data-entering]',
         stagger: { delay: 20 },
         animation: {
-          opacity: { to: 1, ease: paginationEase },
-          translateX: { to: 0, ease: paginationEase },
-          scale: { to: 1, ease: paginationEase },
+          opacity: { to: 1, ease: brisk },
+          translateX: { to: 0, ease: brisk },
+          scale: { to: 1, ease: brisk },
         },
       }],
       vars: (el: HTMLElement) => {

@@ -41,11 +41,8 @@ export {
   snappy,
   quick,
   poppy,
-  gentle,
-  slow,
-  lazy,
-  jelly,
-  stiff,
+  brisk,
+  smooth,
   // Core animation functions
   moveAnimate,
   animateDimension,

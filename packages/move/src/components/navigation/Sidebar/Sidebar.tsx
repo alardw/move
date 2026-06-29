@@ -9,7 +9,7 @@ import { LayerProvider } from '../../../infrastructure/Layer';
 import {
   useAnimations,
   poppy,
-  sidebar as sidebarEase,
+  smooth,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../overlays/Tooltip';
@@ -239,7 +239,7 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
         deps: [collapsed],
         sequence: [{
           target: 'Root',
-          animation: { width: { to: '$targetWidth', ease: sidebarEase } },
+          animation: { width: { to: '$targetWidth', ease: smooth } },
         }],
         vars: (el: HTMLElement) => {
           const rootStyles = getComputedStyle(el);
