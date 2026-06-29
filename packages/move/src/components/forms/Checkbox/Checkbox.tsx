@@ -113,7 +113,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       {
         trigger: 'checked',
-        sequence: [{ target: 'indicator', animation: { ...scaleIn, opacity: { from: 0, to: 1, duration: 150 } } }],
+        sequence: [{ target: 'indicator', animation: { ...scaleIn(0.5), opacity: { from: 0, to: 1, duration: 150 } } }],
       },
       {
         trigger: 'unchecked',
