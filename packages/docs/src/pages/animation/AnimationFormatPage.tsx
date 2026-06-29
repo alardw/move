@@ -80,45 +80,62 @@ function DrawerDemo() {
   );
 }
 
-// Each entry pairs the real component (the feel) with the exact code the motions
-// it makes resolve to (the definition) — code and demo side by side, in context.
+// Each entry pairs the real component (the feel) with the FULL config that drives
+// it — trigger → sequence → target → motion — so the sample is copyable, not an
+// orphan fragment.
 const DEMOS: { motions: string; code: string; caption: string; render: () => ReactNode }[] = [
   {
     motions: 'scaleUp · scaleDown',
-    code: `scaleUp()   // { scale: { to: 1.04, ease: snappy } }
-scaleDown() // { scale: { to: 0.96, ease: snappy } }`,
+    code: `{ trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },   // scale → 1.04
+{ trigger: 'Root.press', sequence: [{ animation: scaleDown() }] }, // scale → 0.96`,
     caption: 'Hover and press — the button grows, then dips.',
     render: () => <Button variant="primary">Hover &amp; press me</Button>,
   },
   {
     motions: 'rotate · expand · collapse',
-    code: `rotate(0, 180) // { rotate: { from: 0, to: 180, ease: 'outQuart', duration: 300 } }
-expand()       // { height: { from: 0, to: 'auto' }, opacity: { from: 0, to: 1 } }
-collapse()     // { height: { from: 'auto', to: 0 }, opacity: { from: 1, to: 0 } }`,
+    code: `{ trigger: 'open', sequence: [
+  { target: 'Content', animation: expand() },
+  { target: 'Icon',    animation: rotate(0, 180) },
+]},
+{ trigger: 'closed', sequence: [
+  { target: 'Content', animation: collapse() },
+  { target: 'Icon',    animation: rotate(180, 0) },
+]}`,
     caption: 'Toggle — the caret rotates as the panel expands.',
     render: () => <CollapsibleDemo />,
   },
   {
     motions: 'scaleIn · slideUp · fadeIn',
-    code: `// spread into one object — they run together
-{ ...scaleIn(0.88), ...slideUp(6), ...fadeIn() }
-// scaleIn → { scale: { from: 0.88, to: 1, ease: poppy } }
-// slideUp → { translateY: { from: 6, to: 0, ease: 'outQuart' } }
-// fadeIn  → { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } }`,
+    code: `{
+  trigger: 'Content.enter',
+  sequence: [
+    { target: 'Content', animation: { ...scaleIn(0.88), ...slideUp(6), ...fadeIn() } },
+  ],
+}`,
     caption: 'Hover — the tooltip pops in.',
     render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip>,
   },
   {
     motions: 'scaleIn · fadeIn (stagger)',
-    code: `// each option, with a stagger delay between them
-{ ...scaleIn(0.8), ...fadeIn() }`,
+    code: `{
+  trigger: 'open',
+  sequence: [
+    { target: 'List', children: '[role="option"]',
+      animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
+  ],
+}`,
     caption: 'Open — the options pop in.',
     render: () => <SelectDemo />,
   },
   {
     motions: 'slideLeft · fadeIn',
-    code: `slideLeft() // { translateX: { from: 8, to: 0, ease: 'outQuart' } }
-fadeIn()    // the overlay fades in`,
+    code: `{
+  trigger: 'Content.enter',
+  sequence: [
+    { target: 'Content', animation: slideLeft() },
+    { target: 'Overlay', animation: fadeIn() },
+  ],
+}`,
     caption: 'Open — the drawer slides in, the overlay fades.',
     render: () => <DrawerDemo />,
   },
