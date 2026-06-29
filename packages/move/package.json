@@ -48,7 +48,8 @@
     "check:spec-tokens": "node scripts/checks/spec-tokens.mjs",
     "check:strict-props": "node checks/strict-props.mjs",
     "check:recipe-spec-drift": "node scripts/checks/recipe-spec-drift.mjs",
-    "check:all": "npm run check:spec-drift && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:recipes && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:recipe-spec-drift",
+    "check:animation-patterns": "node scripts/checks/animation-patterns.mjs",
+    "check:all": "npm run check:spec-drift && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:recipes && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:recipe-spec-drift && npm run check:animation-patterns",
     "spec-diff": "tsx scripts/spec-diff/cli.mjs diff",
     "spec-snapshot": "tsx scripts/spec-diff/cli.mjs snapshot --from src/components"
   },

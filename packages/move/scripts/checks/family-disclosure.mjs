@@ -6,7 +6,9 @@
  *      (`'controlled-open'` or `'controlled-value'` for multi-mode).
  *   2. Declares `behavior.disclosure` with all four flags
  *      (animatesOpen, animatesClose, keyboardToggle, multipleOpen).
- *   3. `animationPatterns` includes `'disclosure'`.
+ *
+ * (Animation is a separate axis — `animationPatterns` — not checked here:
+ *  a disclosure-behavior component may animate as `sidePanel` (Sidebar).)
  *
  * Exit: 0 = pass, 1 = fail.
  */
@@ -44,11 +46,6 @@ function check(component) {
       if (v === null) errors.push(`behavior.disclosure.${flag} not declared`);
       else flags[flag] = v;
     }
-  }
-
-  const patterns = asArray(getProp(specObj, 'animationPatterns')) ?? [];
-  if (!patterns.includes('disclosure')) {
-    errors.push('animationPatterns should include "disclosure"');
   }
 
   return { name: component.name, member: true, errors, flags };

@@ -171,7 +171,7 @@ export const MOTIONS = {
 export const PATTERNS = {
   press: {
     description: 'Hover-grow / press-dip on a control. Auto-reverses.',
-    components: ['Button', 'ToggleButton', 'DayCell', 'InputRange', 'Pagination'],
+    components: ['Button', 'ToggleButton', 'InputRange', 'Pagination'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
