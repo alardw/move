@@ -9,6 +9,7 @@ import {
   resolveAnimationsConfig,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import type { Radius } from '../../../shared/types';
 import styles from './List.module.css';
 
 // ============================================================================
@@ -54,7 +55,7 @@ const ListContext = React.createContext<ListContextValue | null>(null);
 // Root
 // ============================================================================
 
-export type ListRadius = 'none' | 'sm' | 'md' | 'lg';
+export type ListRadius = Radius;
 
 export interface ListRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;

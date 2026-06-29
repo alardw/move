@@ -5,6 +5,7 @@ import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useSplitText } from '../../../animation';
 import type { SplitTextBy, SplitTextEffect, SplitTextTrigger } from '../../../animation';
+import type { DisplaySize } from '../../../shared/types';
 import styles from './AnimatedText.module.css';
 
 /** Flatten a React node tree to its text content (for splitText + re-split key). */
@@ -20,7 +21,7 @@ export type AnimatedTextBy = SplitTextBy;
 export type AnimatedTextEffect = SplitTextEffect;
 export type AnimatedTextTrigger = SplitTextTrigger;
 export type AnimatedTextAs = 'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
-export type AnimatedTextSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+export type AnimatedTextSize = DisplaySize;
 export type AnimatedTextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 
 export interface AnimatedTextProps extends React.HTMLAttributes<HTMLElement> {

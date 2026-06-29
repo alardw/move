@@ -52,7 +52,7 @@ export const spec = {
     },
     {
       name: 'size',
-      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'",
+      typeRef: 'DisplaySize',
       moveSpecific: true,
       description: 'Optional font size from the Move typography scale. When omitted, the text inherits its surrounding typography (no data-size, no override).',
     },

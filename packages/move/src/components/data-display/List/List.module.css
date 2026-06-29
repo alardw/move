@@ -44,6 +44,7 @@
 .root[data-radius='sm']   { --move-list-radius: var(--move-rounded-sm); }
 .root[data-radius='md']   { --move-list-radius: var(--move-rounded-md); }
 .root[data-radius='lg']   { --move-list-radius: var(--move-rounded-lg); }
+.root[data-radius='full'] { --move-list-radius: var(--move-rounded-full); }
 
 /* =========================================================================
  * Sizes

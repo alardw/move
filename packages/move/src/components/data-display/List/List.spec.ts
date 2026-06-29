@@ -51,7 +51,7 @@ export const spec = {
         { name: 'dividers', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show dividers between items' },
         { name: 'density', type: "'compact' | 'default' | 'comfortable'", default: "'default'", moveSpecific: true, description: 'Vertical padding scale for items' },
         { name: 'hover', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable hover highlight on items' },
-        { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg'", default: "'sm'", moveSpecific: true, description: 'Border radius applied to the list container and item hover/active highlights' },
+        { name: 'radius', typeRef: 'Radius', default: "'sm'", moveSpecific: true, description: 'Border radius applied to the list container and item hover/active highlights' },
         { name: 'separator', type: 'React.ReactNode', moveSpecific: true, description: 'Custom separator rendered between items (replaces the default divider).' },
         { name: 'animateKey', type: 'string | number', moveSpecific: true, description: 'Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced.' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Staggered entrance animation config or false to disable' },
