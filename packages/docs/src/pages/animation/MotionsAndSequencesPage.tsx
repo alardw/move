@@ -27,7 +27,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#motions-and-sequences', label: 'Overview' },
-  { href: '#layers', label: 'The three layers' },
+  { href: '#anatomy', label: 'Anatomy' },
   { href: '#property-format', label: 'The property format' },
   { href: '#motions', label: 'Motions' },
   { href: '#triggers', label: 'Triggers — when' },
@@ -375,29 +375,31 @@ export function MotionsAndSequencesPage() {
         </Stack>
 
         <Section
-          id="layers"
-          title="The three layers"
-          lede="A spring or easing gives the feel, motions say what moves, sequences wire it to a moment — each layer builds on the one before."
+          id="anatomy"
+          title="Anatomy of an animation"
+          lede="One config, four questions — when, where, what, and how it feels — nested from the trigger down to the ease."
         >
           <CodeBlock
             language="ts"
-            code={`// 1 · the feel — a spring (poppy, snappy…) or an easing ('outQuart'…)
-poppy
-
-// 2 · motion — what moves, in that feel (a builder)
-scaleIn()   // { scale: { from: 0.9, to: 1, ease: poppy } }
-
-// 3 · sequence — motions wired to a moment
-{
-  trigger: 'Content.enter',
-  sequence: [
-    { target: 'Content', animation: { ...scaleIn(), ...fadeIn() } },
-  ],
-}`}
+            code={`{ trigger: 'Content.enter',          // WHEN  — the event that fires it
+  sequence: [                          //   sequence: orders the steps
+    { target: 'Content',              // WHERE — which slot responds
+      animation: {                     //   animation: the object (bundles dimensions)
+        scale: { from: 0.9, to: 1,     // WHAT  — a dimension + from → to
+                 ease: poppy } } } ] }  // FEEL  — a spring or easing on it`}
           />
+          <Text>
+            Read top to bottom, it answers four questions: when it fires (the
+            trigger), where it lands (the target), what moves (the dimension and
+            its from → to), and how it feels (a spring or easing). Between them sit
+            two containers — the <Code>sequence</Code> that orders steps and the{' '}
+            <Code>animation</Code> object that bundles dimensions.
+          </Text>
           <Text color="muted">
-            <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
-            have their own page; motions and sequences live here.
+            A <Code>motion</Code> is the builder for the what + feel —{' '}
+            <Code>scaleIn()</Code> returns that <Code>scale</Code> object; spread a
+            few into one animation. The feel vocabulary lives on{' '}
+            <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>.
           </Text>
         </Section>
 
@@ -416,7 +418,7 @@ scaleIn()   // { scale: { from: 0.9, to: 1, ease: poppy } }
           </Text>
           <CodeBlock
             language="ts"
-            code={`animation: {
+            code={`{
   opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
   scale:   { from: 0.9, to: 1, ease: poppy },   // spring — no duration
 }`}
