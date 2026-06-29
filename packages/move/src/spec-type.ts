@@ -409,6 +409,24 @@ export interface PreviewSpec {
 // The spec itself
 // =============================================================================
 
+/** Shared animation patterns — motion recipes reused across 2+ components. A
+ *  component's `animationPatterns` lists which it composes (multi-valued).
+ *  Single-component animations (Dialog modal, Toast notification, AnimatedText
+ *  textReveal, …) are NOT patterns — they're component-specific. */
+export const ANIMATION_PATTERNS = [
+  'press', // hover-grow / press-dip on a control
+  'toggle', // indicator flip on state change
+  'popupMenu', // anchored list: panel scale+fade, caret, item stagger
+  'popupSurface', // anchored content: scale + fade
+  'sidePanel', // panel from an edge — overlay or in-flow
+  'disclosure', // in-flow region reveals by animating a dimension
+  'listReveal', // data rows / items stagger in
+  'layoutReveal', // a generic container staggers its children
+  'slidingIndicator', // an indicator slides to track the active item
+  'loader', // continuous loading motion
+] as const;
+export type AnimationPattern = (typeof ANIMATION_PATTERNS)[number];
+
 export interface ComponentSpec {
   /** Schema version — always SPEC_SCHEMA_VERSION */
   schemaVersion: typeof SPEC_SCHEMA_VERSION;
@@ -430,6 +448,11 @@ export interface ComponentSpec {
 
   /** Component-family memberships (behavior/state/...) used by cross-component checks */
   families?: Record<string, string[]>;
+
+  /** Shared animation patterns this component composes (see ANIMATION_PATTERNS).
+   *  Multi-valued; [] for components with no animation, or only a
+   *  component-specific one (Dialog, Toast, Alert, AnimatedText, LayoutGroup). */
+  animationPatterns?: AnimationPattern[];
 
   // --- Structure ---
 
