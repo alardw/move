@@ -30,6 +30,16 @@ const DOORS: HighlightItem[] = [
     ),
   },
   {
+    icon: 'wind',
+    text: (
+      <>
+        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
+        — the named springs that give Move its feel, and when to reach for a
+        plain easing instead.
+      </>
+    ),
+  },
+  {
     icon: 'zap',
     text: (
       <>
@@ -38,16 +48,6 @@ const DOORS: HighlightItem[] = [
         </RouterLink>{' '}
         — the two ideas the whole system rests on: when an animation fires,
         and what plays when it does.
-      </>
-    ),
-  },
-  {
-    icon: 'wind',
-    text: (
-      <>
-        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
-        — the named springs that give Move its feel, and when to reach for a
-        plain easing instead.
       </>
     ),
   },
