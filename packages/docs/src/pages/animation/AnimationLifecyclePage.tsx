@@ -132,8 +132,8 @@ export function AnimationLifecyclePage() {
             Enter and exit are lifecycle triggers — they fire on mount and
             unmount. Responses are state and event triggers — they fire when a
             value changes or an interaction happens. The next page,{' '}
-            <RouterLink to="/animation/triggers-and-sequences">
-              Triggers &amp; sequences
+            <RouterLink to="/animation/motions-and-sequences">
+              Motions &amp; sequences
             </RouterLink>
             , covers each kind and what plays when it fires.
           </Text>

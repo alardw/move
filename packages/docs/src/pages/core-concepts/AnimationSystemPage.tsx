@@ -47,8 +47,8 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'zap',
     text: (
       <>
-        <RouterLink to="/animation/triggers-and-sequences">
-          Triggers &amp; sequences
+        <RouterLink to="/animation/motions-and-sequences">
+          Motions &amp; sequences
         </RouterLink>{' '}
         — the full vocabulary of when an animation fires and what plays.
       </>

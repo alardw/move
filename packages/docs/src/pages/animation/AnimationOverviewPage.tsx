@@ -33,8 +33,8 @@ const DOORS: HighlightItem[] = [
     icon: 'zap',
     text: (
       <>
-        <RouterLink to="/animation/triggers-and-sequences">
-          Triggers &amp; sequences
+        <RouterLink to="/animation/motions-and-sequences">
+          Motions &amp; sequences
         </RouterLink>{' '}
         — the two ideas the whole system rests on: when an animation fires,
         and what plays when it does.

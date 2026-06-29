@@ -284,7 +284,7 @@ export function AnimationPatternsPage() {
             <Code>scaleIn</Code>, <Code>slideUp</Code>, <Code>rotate</Code> and a
             few more. A step's animation is a motion (or a spread combination of
             them), which is how a sequence stays short. The{' '}
-            <RouterLink to="/animation/format">Format &amp; motions</RouterLink>{' '}
+            <RouterLink to="/animation/motions-and-sequences">Motions &amp; sequences</RouterLink>{' '}
             page lists the full set.
           </Text>
         </Section>
