@@ -14,7 +14,6 @@ export const spec = {
   families: {
     behavior:  ["media","data-row"],
     state:     ["controlled-index"],
-    animation: ["stagger"],
     a11y:      ["tablist"],
   },
 

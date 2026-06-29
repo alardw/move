@@ -14,7 +14,6 @@ export const spec = {
   families: {
     behavior:  ["navigation"],
     state:     ["controlled-index"],
-    animation: ["none"],
     a11y:      ["none"],
   },
 

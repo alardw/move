@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior: ['typography', 'motion'],
     state: ['stateless'],
-    animation: ['textSplit'],
     a11y: ['label'],
   },
 

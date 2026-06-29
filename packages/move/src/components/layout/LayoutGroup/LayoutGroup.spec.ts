@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior: ['layout', 'motion'],
     state: ['stateless'],
-    animation: ['layoutFlip'],
     a11y: ['none'],
   },
 

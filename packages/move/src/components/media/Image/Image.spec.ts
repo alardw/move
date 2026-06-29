@@ -14,7 +14,6 @@ export const spec = {
   families: {
     behavior:  ["media", "data-row"],
     state:     ["stateless"],
-    animation: ["fade"],
     a11y:      ["none"],
   },
   // Shared click-affordance contract for the data-row family.

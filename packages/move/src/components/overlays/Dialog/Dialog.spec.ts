@@ -14,7 +14,6 @@ export const spec = {
   families: {
     behavior:  ['modal-overlay'],
     state:     ['controlled-open'],
-    animation: ['pop'],
     a11y:      ['dialog'],
   },
   behavior: {

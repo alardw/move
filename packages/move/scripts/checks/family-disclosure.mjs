@@ -6,8 +6,7 @@
  *      (`'controlled-open'` or `'controlled-value'` for multi-mode).
  *   2. Declares `behavior.disclosure` with all four flags
  *      (animatesOpen, animatesClose, keyboardToggle, multipleOpen).
- *   3. Animation family includes `'height-morph'` OR `'slide-in'`
- *      (the two ways disclosure components reveal content).
+ *   3. `animationPatterns` includes `'disclosure'`.
  *
  * Exit: 0 = pass, 1 = fail.
  */
@@ -21,7 +20,6 @@ import {
 
 const COMPONENTS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'src', 'components');
 const REQUIRED_DISCLOSURE_FLAGS = ['animatesOpen', 'animatesClose', 'keyboardToggle', 'multipleOpen'];
-const ALLOWED_ANIMATIONS = new Set(['expand', 'slide', 'fade']);
 
 function check(component) {
   const errors = [];
@@ -48,9 +46,9 @@ function check(component) {
     }
   }
 
-  const animFamilies = asArray(getProp(getProp(specObj, 'families'), 'animation')) ?? [];
-  if (!animFamilies.some((a) => ALLOWED_ANIMATIONS.has(a))) {
-    errors.push(`families.animation should include one of: ${[...ALLOWED_ANIMATIONS].join(', ')}`);
+  const patterns = asArray(getProp(specObj, 'animationPatterns')) ?? [];
+  if (!patterns.includes('disclosure')) {
+    errors.push('animationPatterns should include "disclosure"');
   }
 
   return { name: component.name, member: true, errors, flags };

@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior:  ["navigation"],
     state:     ["controlled-value"],
-    animation: ["none"],
     a11y:      ["tablist"],
   },
 

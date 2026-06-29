@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior:  ["layout"],
     state:     ["stateless"],
-    animation: ["stagger"],
     a11y:      ["none"],
   },
 

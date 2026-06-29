@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior:  ["display"],
     state:     ["stateless"],
-    animation: ["interactive"],
     a11y:      ["none"],
   },
 

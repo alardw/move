@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior:  ['disclosure'],
     state:     ['controlled-open'],
-    animation: ['expand'],
     a11y:      ['disclosure'],
   },
   behavior: {

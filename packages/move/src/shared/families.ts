@@ -68,32 +68,9 @@ export const STATE_FAMILIES = [
 
 export type StateFamily = typeof STATE_FAMILIES[number];
 
-// ─── Animation pattern ───────────────────────────────────────────────
-
-// Animation families — aligned with the pattern vocabulary (interactive, pop,
-// slide, expand, toggle, loop, …) so specs, docs, and code share one naming.
-export const ANIMATION_FAMILIES = [
-  /** Pure opacity fade in/out. */
-  'fade',
-  /** Scale + fade — most popups (scaleIn + fadeIn). */
-  'pop',
-  /** Slide from an edge — drawers, sheets. */
-  'slide',
-  /** Animated height (and usually opacity) — accordions, expand/collapse. */
-  'expand',
-  /** Children stagger in sequence. */
-  'stagger',
-  /** Spring-driven transform — switch/checkbox thumb, etc. */
-  'toggle',
-  /** Looping animation — loaders, skeletons. */
-  'loop',
-  /** Hover / press scale used by interactive controls. */
-  'interactive',
-  /** No animation. */
-  'none',
-] as const;
-
-export type AnimationFamily = typeof ANIMATION_FAMILIES[number];
+// Animation classification moved to the spec's `animationPatterns` field
+// (ANIMATION_PATTERNS in spec-type.ts). The old families.animation axis was
+// removed — it mixed dimension/behavior/structure and duplicated other axes.
 
 // ─── Accessibility pattern ───────────────────────────────────────────
 
@@ -116,7 +93,6 @@ export type A11yFamily = typeof A11Y_FAMILIES[number];
 export interface ComponentFamilies {
   behavior:  BehaviorFamily[];
   state:     StateFamily[];
-  animation: AnimationFamily[];
   a11y:      A11yFamily[];
 }
 

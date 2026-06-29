@@ -16,7 +16,6 @@ export const spec = {
   families: {
     behavior:  ['popup-anchored'],
     state:     ['controlled-open'],
-    animation: ['expand', 'stagger'],
     a11y:      ['menu'],
   },
   behavior: {

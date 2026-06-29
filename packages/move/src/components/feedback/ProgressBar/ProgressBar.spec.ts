@@ -14,7 +14,6 @@ export const spec = {
   families: {
     behavior:  ["loading"],
     state:     ["stateless"],
-    animation: ["fade"],
     a11y:      ["progressbar"],
   },
 

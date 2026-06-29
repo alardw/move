@@ -15,7 +15,6 @@ export const spec = {
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],
-    animation: ["interactive"],
     a11y:      ["tablist"],
   },
 
