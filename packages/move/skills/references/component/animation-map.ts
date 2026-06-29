@@ -51,12 +51,12 @@ export const SEQUENCE_STRUCTURE = {
   examples: {
     sequential: `[
       { animation: fadeIn },           // step 1
-      { target: 'icon', preset: 'scaleIn' },  // step 2 (after step 1)
+      { target: 'icon', animation: scaleIn() },  // step 2 (after step 1)
     ]`,
     parallel: `[
       [                                // parallel group
         { fn: 'animateDimension', animation: { height: { ease: poppy } } },
-        { children: '[role="option"]', animation: popIn, stagger: { delay: 30 } },
+        { children: '[role="option"]', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
       ],
     ]`,
   },
@@ -68,8 +68,7 @@ export const SEQUENCE_STRUCTURE = {
 
 export const STEP_FIELDS = {
   target: 'Slot name to animate. Defaults to the trigger slot if omitted.',
-  animation: 'Inline Animation config — per-property { from, to, ease, duration } objects. Top-level loop: true/number and alternate: true supported.',
-  preset: 'Named preset from PRESET_REGISTRY (scaleUp, scaleDown, fadeIn, etc.).',
+  animation: 'Inline Animation config — per-property { from, to, ease, duration } objects, or a motion builder / spread combination (e.g. { ...scaleIn(), ...fadeIn() }). Top-level loop: true/number and alternate: true supported.',
   fn: "'animateDimension' | 'animatePosition' — overrides default moveAnimate. Direction inferred from trigger or explicit `direction` on trigger.",
   children: 'CSS selector for stagger targets — implies staggerAnimate.',
   stagger: '{ delay?: number, from?: "first" | "last" | "center" } — timing for stagger.',
@@ -137,17 +136,27 @@ export const RUNTIME_FUNCTIONS = {
 } as const;
 
 // =============================================================================
-// Preset registry
+// Motions — self-explaining animation builders (from 'move'). The NAME says what
+// animates + which direction; the PARAMETER says how much (default, or required
+// for rotate); each carries its own default ease. Call to get an Animation
+// object; COMBINE by spreading into one object (popIn = { ...scaleIn(), ...fadeIn() }).
+// There is no `preset` string field — inline the motion in `animation`.
 // =============================================================================
 
-export const PRESET_REGISTRY = {
-  scaleUp: '{ scale: { to: 1.05, ease: snappy } }',
-  scaleDown: '{ scale: { to: 0.95, ease: snappy } }',
-  scaleIn: '{ scale: { from: 0.5, to: 1, ease: poppy } }',
-  fadeIn: '{ opacity: { from: 0, to: 1, duration: 200 } }',
-  fadeOut: '{ opacity: { to: 0, duration: 150 } }',
-  popIn: '{ scale: { from: 0.8, to: 1, ease: poppy }, opacity: { from: 0, to: 1 } }',
-  popOut: '{ scale: { to: 0.8, ease: snappy }, opacity: { to: 0 } }',
+export const MOTIONS = {
+  fadeIn: '() → { opacity: { from: 0, to: 1, ease: outQuart, duration: 200 } }',
+  fadeOut: '() → { opacity: { to: 0, ease: outQuart, duration: 150 } }',
+  slideUp: '(distance = 8) → { translateY: { from: distance, to: 0, ease: outQuart } }',
+  slideDown: '(distance = 8) → { translateY: { from: -distance, to: 0, ease: outQuart } }',
+  slideLeft: '(distance = 8) → { translateX: { from: distance, to: 0, ease: outQuart } }',
+  slideRight: '(distance = 8) → { translateX: { from: -distance, to: 0, ease: outQuart } }',
+  scaleIn: '(from = 0.9) → { scale: { from, to: 1, ease: poppy } }',
+  scaleOut: '(to = 0.9) → { scale: { from: 1, to, ease: outQuart, duration: 150 } }',
+  scaleUp: '(to = 1.04) → { scale: { to, ease: snappy } }   // hover',
+  scaleDown: '(to = 0.96) → { scale: { to, ease: snappy } }  // press',
+  rotate: '(from, to) → { rotate: { from, to, ease: outQuart, duration: 300 } }',
+  expand: '() → { height: { from: 0, to: "auto" }, opacity: { from: 0, to: 1 } }',
+  collapse: '() → { height: { from: "auto", to: 0 }, opacity: { from: 1, to: 0 } }',
 } as const;
 
 // =============================================================================
@@ -160,8 +169,8 @@ export const PATTERNS = {
     components: ['Button', 'ToggleButton', 'Pagination', 'DayCell', 'InputRange'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Root.hover', sequence: [{ preset: 'scaleUp' }] },
-  { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
+  { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
+  { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] },
 ];`,
     wiring: `
 const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations);
@@ -183,7 +192,7 @@ const STATES: AnimationState[] = [
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'checked', sequence: [{ target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: poppy } } }] },
   { trigger: 'unchecked', sequence: [{ target: 'indicator', animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: snappy } } }] },
-  { trigger: 'Root.press', sequence: [{ preset: 'scaleDown' }] },
+  { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] },
 ];`,
     wiring: `
 const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations);
@@ -198,11 +207,11 @@ const { handlers } = useAnimations(animConfig, refs, STATES);`,
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Content.enter', sequence: [[
     { fn: 'animateDimension', animation: { height: { ease: poppy } } },
-    { children: '[role="option"]', animation: popIn, stagger: { delay: 30 } },
+    { children: '[role="option"]', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
   ]] },
   { trigger: 'Content.exit', sequence: [[
     { fn: 'animateDimension', animation: { height: { ease: snappy } } },
-    { children: '[role="option"]', animation: popOut, stagger: { delay: 20, from: 'last' } },
+    { children: '[role="option"]', animation: { ...scaleOut(0.8), ...fadeOut() }, stagger: { delay: 20, from: 'last' } },
   ]] },
   { trigger: 'iconOpen', sequence: [{ target: 'Icon', animation: { rotate: { to: 180, ease: snappy } } }] },
   { trigger: 'iconClosed', sequence: [{ target: 'Icon', animation: { rotate: { to: 0, ease: snappy } } }] },
@@ -314,7 +323,7 @@ const mergedRef = useMergedRef(ref, splitRef); // merge with the factory ref
     components: ['Table', 'Timeline', 'Grid', 'Stack', 'FileUpload', 'ChatBubble'],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: popIn, stagger: { delay: 30 } }] },
+  { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }] },
 ];`,
   },
 
