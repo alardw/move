@@ -191,6 +191,7 @@ function MotionGallery() {
 // plays its enter sequence (scale + fade).
 function SequenceDemo() {
   return (
+    <Stack align="start" style={{ maxWidth: '22rem' }}>
     <Popover.Root>
       <Popover.Trigger asChild>
         <Button variant="primary">Show details</Button>
@@ -202,6 +203,7 @@ function SequenceDemo() {
         </Stack>
       </Popover.Content>
     </Popover.Root>
+    </Stack>
   );
 }
 
@@ -232,7 +234,7 @@ function SelectStaggerDemo() {
   }, [delay]);
 
   return (
-    <Stack gap="lg">
+    <Stack gap="lg" style={{ maxWidth: '22rem' }}>
       <Text size="sm" color="muted">
         Stagger delay: <Code>{delay}ms</Code> — open the select, drag, open again.
       </Text>
