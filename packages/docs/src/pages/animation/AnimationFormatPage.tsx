@@ -208,11 +208,11 @@ export function AnimationFormatPage() {
         <Section
           id="layers"
           title="The three layers"
-          lede="Springs give the feel, motions say what moves, sequences wire it to a moment — each layer builds on the one before."
+          lede="A spring or easing gives the feel, motions say what moves, sequences wire it to a moment — each layer builds on the one before."
         >
           <CodeBlock
             language="ts"
-            code={`// 1 · spring — the feel
+            code={`// 1 · the feel — a spring (poppy, snappy…) or an easing ('outQuart'…)
 poppy
 
 // 2 · motion — what moves, in that feel (a builder)
