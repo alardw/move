@@ -12,7 +12,10 @@
  * lacks, update THIS file, not just the spec.
  */
 
-import type { PreviewWidth } from '../components/types';
+/** Width key for a recipe's overview-card preview. The docs viewer maps these
+ *  to pixel widths; `'fit'` means fit-content. Kept local so recipes don't
+ *  depend on the docs app. */
+export type PreviewWidth = 'fit' | 'xs' | 'sm' | 'md' | 'lg' | 'full';
 
 // =============================================================================
 // Schema version — increment on breaking spec changes

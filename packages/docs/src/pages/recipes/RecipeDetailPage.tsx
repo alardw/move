@@ -9,7 +9,7 @@ import {
   TocRail,
   type TocItem,
 } from '../../components';
-import { getRecipe } from '../../content/recipes/registry';
+import { getRecipe } from '@move-recipes/registry';
 import { COMPONENT_CONTENT } from '../../content/components';
 
 /** PascalCase Move name → component-docs slug (e.g. 'InputText' → 'input-text'). */

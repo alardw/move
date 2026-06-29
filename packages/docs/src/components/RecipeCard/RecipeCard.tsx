@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Text, Badge } from 'move';
-import type { RecipeMeta } from '../../content/recipes/registry';
+import type { RecipeMeta } from '@move-recipes/registry';
 import { PREVIEW_WIDTHS } from '../../content/components/types';
 import styles from './RecipeCard.module.css';
 

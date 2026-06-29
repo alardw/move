@@ -18,7 +18,8 @@
     "noUncheckedSideEffectImports": true,
     "paths": {
       "move": ["../move/src/index.ts"],
-      "@move-specs/*": ["../move/src/components/*"]
+      "@move-specs/*": ["../move/src/components/*"],
+      "@move-recipes/*": ["../move/recipes/*"]
     }
   },
   "include": ["src"]

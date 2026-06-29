@@ -2,7 +2,7 @@ import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, InputText, ToggleGroup, LayoutGroup } from 'move';
 import { RecipeCard } from '../../components';
-import { RECIPES, RECIPE_GROUPS } from '../../content/recipes/registry';
+import { RECIPES, RECIPE_GROUPS } from '@move-recipes/registry';
 
 // Recipes are whole flows/layouts, not single primitives — give each card more
 // room than the components grid's 260px so the live preview isn't cramped.

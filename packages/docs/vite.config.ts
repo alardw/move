@@ -14,6 +14,9 @@ export default defineConfig({
       { find: 'move', replacement: path.resolve('../move/src/index.ts') },
       // Direct access to spec files for auto-generated API tables.
       { find: '@move-specs', replacement: path.resolve('../move/src/components') },
+      // Recipes live in the move package (shipped + vendored by `move recipes`);
+      // docs is just their viewer.
+      { find: '@move-recipes', replacement: path.resolve('../move/recipes') },
     ],
   },
 });
