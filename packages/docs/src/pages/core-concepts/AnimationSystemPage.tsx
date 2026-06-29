@@ -17,15 +17,19 @@ const BADGES = [
 const THE_MODEL: HighlightItem[] = [
   {
     icon: 'zap',
-    text: 'Triggers say when. Lifecycle, state change, deps change, even ancestor data-state — pick the moment, the system listens.',
+    text: 'When — a trigger names the moment: lifecycle, state change, deps change, even an ancestor data-state.',
   },
   {
-    icon: 'list-ordered',
-    text: 'Sequences say what. Parallel steps in one frame, serial steps across frames, all expressed as plain data.',
+    icon: 'crosshair',
+    text: 'Where — the target slot that responds.',
+  },
+  {
+    icon: 'move',
+    text: 'What — the motion: a fade, slide, pop or rotate, expressed as plain-data from → to. Steps run parallel in a frame or serial across frames.',
   },
   {
     icon: 'wind',
-    text: 'Springs say how. A small named set (snappy, quick, poppy, brisk, smooth) so you pick a feel, not numbers.',
+    text: 'How it feels — a spring (snappy, quick, poppy, brisk, smooth) or a plain easing when timing matters more than feel.',
   },
   {
     icon: 'accessibility',
@@ -44,22 +48,23 @@ const SUB_TOPICS: HighlightItem[] = [
     ),
   },
   {
+    icon: 'wind',
+    text: (
+      <>
+        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
+        — the named springs Move ships and when to reach for a plain easing.
+      </>
+    ),
+  },
+  {
     icon: 'zap',
     text: (
       <>
         <RouterLink to="/animation/motions-and-sequences">
           Motions &amp; sequences
         </RouterLink>{' '}
-        — the full vocabulary of when an animation fires and what plays.
-      </>
-    ),
-  },
-  {
-    icon: 'wind',
-    text: (
-      <>
-        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
-        — the named springs Move ships and when to reach for each.
+        — the motions you reach for, and the triggers and sequences that wire
+        them to a moment.
       </>
     ),
   },
@@ -67,9 +72,10 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'puzzle',
     text: (
       <>
-        <RouterLink to="/animation/patterns">See it in action</RouterLink> and the{' '}
+        <RouterLink to="/animation/patterns">Patterns</RouterLink> and the{' '}
         <RouterLink to="/animation/reference">hook reference</RouterLink> —
-        the recipes the components use, and the API for driving motion yourself.
+        the recipes shared across components, and the API for driving motion
+        yourself.
       </>
     ),
   },
@@ -104,8 +110,8 @@ export function AnimationSystemPage() {
         <Stack gap="sm">
           <Heading level={1}>Animation System</Heading>
           <Text color="muted" size="lg">
-            One animation engine for the whole library. Every component speaks
-            triggers, sequences, and springs — same vocabulary everywhere, so
+            One animation engine for the whole library. Every component is
+            described the same way — when, where, what, and how it feels — so
             motion never feels bolted on.
           </Text>
           <Stack direction="row" gap="xs" wrap>
@@ -121,7 +127,7 @@ export function AnimationSystemPage() {
         <Section
           id="the-model"
           title="The model"
-          lede="Three pieces, plain data. Anything Move animates goes through them."
+          lede="Four questions, plain data. Anything Move animates answers them."
         >
           <HighlightList items={THE_MODEL} />
         </Section>

@@ -10,7 +10,7 @@ import {
 } from '../../components';
 
 const TAGLINE =
-  'Every Move component animates through one system — the same triggers, sequences, and springs everywhere.';
+  'Every Move component animates through one system — a trigger fires a sequence of motions, each with a spring or easing for its feel. The same everywhere.';
 
 const BADGES = [
   { icon: 'sparkles', label: 'Built in' },
@@ -46,8 +46,8 @@ const DOORS: HighlightItem[] = [
         <RouterLink to="/animation/motions-and-sequences">
           Motions &amp; sequences
         </RouterLink>{' '}
-        — the two ideas the whole system rests on: when an animation fires,
-        and what plays when it does.
+        — the motions you reach for, and the triggers and sequences that wire
+        them to a moment.
       </>
     ),
   },
@@ -55,8 +55,8 @@ const DOORS: HighlightItem[] = [
     icon: 'puzzle',
     text: (
       <>
-        <RouterLink to="/animation/patterns">See it in action</RouterLink> —
-        the ready-made patterns the components are built from, live.
+        <RouterLink to="/animation/patterns">Patterns</RouterLink> — the recipes
+        shared across components, live.
       </>
     ),
   },
@@ -136,25 +136,30 @@ export function AnimationOverviewPage() {
         <Section
           id="one-system"
           title="One system"
-          lede="Three pieces, the same everywhere Move animates."
+          lede="Four questions, the same everywhere Move animates."
         >
           <Text>
             Every animation in Move is described the same way, so motion reads
-            as one product instead of a per-component grab bag.
+            as one product instead of a per-component grab bag. One config
+            answers four questions:
           </Text>
           <HighlightList
             items={[
               {
                 icon: 'zap',
-                text: 'Triggers say when. A mount, an unmount, a state change, a hover — the system watches for the moment.',
+                text: 'When — a trigger names the moment: a mount, an unmount, a state change, a hover.',
               },
               {
-                icon: 'list-ordered',
-                text: 'Sequences say what. The steps that play, in parallel within a frame or in order across frames.',
+                icon: 'crosshair',
+                text: 'Where — the target slot that responds.',
+              },
+              {
+                icon: 'move',
+                text: 'What — the motion: a fade, a slide, a pop, expressed as from → to.',
               },
               {
                 icon: 'wind',
-                text: 'Springs say how. A named feel like snappy or poppy, so you choose a personality, not a curve.',
+                text: 'How it feels — a spring like poppy, or a plain easing when timing matters more than feel.',
               },
             ]}
           />
