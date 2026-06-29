@@ -40,7 +40,6 @@ export const spec = {
     { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'primary'", moveSpecific: true, description: 'Visual style variant' },
     { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Button size' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions' },
-    { name: 'elevation', type: 'ElevationLevel', default: 'null', moveSpecific: true, description: 'Shadow elevation level' },
     { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render as child element via Radix Slot' },
     { name: 'fullWidth', type: 'boolean', moveSpecific: true, description: 'Stretch the button to fill its container width — for form submit actions, sidebar rows, and other full-width contexts.' },
     { name: 'type', type: 'string', default: "'button'", moveSpecific: false, description: 'HTML button type attribute' },
