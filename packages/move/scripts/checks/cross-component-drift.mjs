@@ -123,7 +123,7 @@ function loadSpec(file) {
       for (const decl of node.declarationList.declarations) {
         if (ts.isIdentifier(decl.name) && decl.name.text === 'spec' && decl.initializer) {
           let init = decl.initializer;
-          while (ts.isAsExpression(init) || ts.isParenthesizedExpression(init)) init = init.expression;
+          while (ts.isAsExpression(init) || ts.isParenthesizedExpression(init) || ts.isSatisfiesExpression(init)) init = init.expression;
           if (ts.isObjectLiteralExpression(init)) specObj = init;
         }
       }
