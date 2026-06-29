@@ -40,6 +40,14 @@ State: recipes are now spec-driven (each has `{Name}.spec.ts`; registry derives 
 - KPI stats moved out of `labels` into `SAMPLE_STATS` data (Overview recipes).
 - Placeholder data uniformly `SAMPLE_`-prefixed + `// Integration point:` marked; `integrationPoint.kind` (`data`/`handler`/`navigation`/`asset`) + `shape` added to the spec type; detail page renders spec-derived sections (Built with / Included / Integration points / Labels).
 
+## Ship validation as `move check` — remaining (2026-06-29)
+
+Shipped so far: the type-safety migration (strict props, 65 components), `check:strict-props` + `check:recipe-spec-drift` guards, a broadened pre-commit, and a **config-driven, consumer-facing `move check`** (CLI in `bin/cli.mjs`; checks in the published `checks/` dir; roots from `move.config.json`). Currently `move check` ships `strict-props` + `recipe-purity`. Docs at `/ai/validation`.
+
+Remaining:
+- **Port the rest of the consumer-facing checks** to config-driven `checks/` + add to the `move check` registry: `spec-drift`, `recipe-spec-drift`, `component-conformance`, `css-tokens` (against the consumer's theme). Keep Move-internal checks (`family-*`, `cross-component-drift`, `spec-tokens`) in `scripts/checks/` only. Nuance: `recipe-spec-drift` for consumers should check only spec-backed recipes (don't require every `.tsx` to have a `.spec.ts`, so hand-written recipes/templates don't false-positive).
+- **Scaffolding:** `app-setup` / `create-move-app` should drop a `move.config.json`, a `check` npm script (`move check`), a pre-commit hook running it, and a CI workflow template — so every new Move app gets the gates for free.
+
 ## Default-enforcement (close the AI-picks-small drift)
 
 AI generators (Claude included) lean toward the small/quiet end of every variant axis when not anchored. The spec's documented defaults are the counter-weight; today they aren't enforced.
