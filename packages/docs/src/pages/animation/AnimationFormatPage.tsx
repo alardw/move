@@ -17,6 +17,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#format', label: 'Overview' },
+  { href: '#layers', label: 'The three layers' },
   { href: '#property-format', label: 'The property format' },
   { href: '#motions', label: 'Motions' },
 ];
@@ -139,6 +140,34 @@ export function AnimationFormatPage() {
             ))}
           </Stack>
         </Stack>
+
+        <Section
+          id="layers"
+          title="The three layers"
+          lede="Springs give the feel, motions say what moves, sequences wire it to a moment — each layer builds on the one before."
+        >
+          <CodeBlock
+            language="ts"
+            code={`// 1 · spring — the feel
+poppy
+
+// 2 · motion — what moves, in that feel (a builder)
+scaleIn()   // { scale: { from: 0.9, to: 1, ease: poppy } }
+
+// 3 · sequence — motions wired to a moment
+{
+  trigger: 'Content.enter',
+  sequence: [
+    { target: 'Content', animation: { ...scaleIn(), ...fadeIn() } },
+  ],
+}`}
+          />
+          <Text color="muted">
+            <RouterLink to="/animation/springs">Springs</RouterLink> and{' '}
+            <RouterLink to="/animation/triggers-and-sequences">sequences</RouterLink>{' '}
+            each have their own page; motions live here.
+          </Text>
+        </Section>
 
         <Section
           id="property-format"
