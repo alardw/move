@@ -86,56 +86,66 @@ function DrawerDemo() {
 const DEMOS: { motions: string; code: string; caption: string; render: () => ReactNode }[] = [
   {
     motions: 'scaleUp · scaleDown',
-    code: `{ trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },   // scale → 1.04
-{ trigger: 'Root.press', sequence: [{ animation: scaleDown() }] }, // scale → 0.96`,
+    code: `[
+  { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },   // scale → 1.04
+  { trigger: 'Root.press', sequence: [{ animation: scaleDown() }] }, // scale → 0.96
+]`,
     caption: 'Hover and press — the button grows, then dips.',
     render: () => <Button variant="primary">Hover &amp; press me</Button>,
   },
   {
     motions: 'rotate · expand · collapse',
-    code: `{ trigger: 'open', sequence: [
-  { target: 'Content', animation: expand() },
-  { target: 'Icon',    animation: rotate(0, 180) },
-]},
-{ trigger: 'closed', sequence: [
-  { target: 'Content', animation: collapse() },
-  { target: 'Icon',    animation: rotate(180, 0) },
-]}`,
+    code: `[
+  { trigger: 'open', sequence: [
+    { target: 'Content', animation: expand() },
+    { target: 'Icon',    animation: rotate(0, 180) },
+  ]},
+  { trigger: 'closed', sequence: [
+    { target: 'Content', animation: collapse() },
+    { target: 'Icon',    animation: rotate(180, 0) },
+  ]},
+]`,
     caption: 'Toggle — the caret rotates as the panel expands.',
     render: () => <CollapsibleDemo />,
   },
   {
     motions: 'scaleIn · slideUp · fadeIn',
-    code: `{
-  trigger: 'Content.enter',
-  sequence: [
-    { target: 'Content', animation: { ...scaleIn(0.88), ...slideUp(6), ...fadeIn() } },
-  ],
-}`,
+    code: `[
+  {
+    trigger: 'Content.enter',
+    sequence: [
+      { target: 'Content', animation: { ...scaleIn(0.88), ...slideUp(6), ...fadeIn() } },
+    ],
+  },
+]`,
     caption: 'Hover — the tooltip pops in.',
     render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip>,
   },
   {
     motions: 'scaleIn · fadeIn (stagger)',
-    code: `{
-  trigger: 'open',
-  sequence: [
-    { target: 'List', children: '[role="option"]',
-      animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
-  ],
-}`,
+    code: `[
+  {
+    trigger: 'open',
+    sequence: [
+      { target: 'List', children: '[role="option"]',
+        animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
+    ],
+  },
+]`,
     caption: 'Open — the options pop in.',
     render: () => <SelectDemo />,
   },
   {
     motions: 'slideLeft · fadeIn',
-    code: `{
-  trigger: 'Content.enter',
-  sequence: [
-    { target: 'Content', animation: slideLeft() },
-    { target: 'Overlay', animation: fadeIn() },
-  ],
-}`,
+    code: `[
+  {
+    trigger: 'Content.enter',
+    sequence: [
+      { target: 'Content', animation: slideLeft() },
+      { target: 'Overlay', animation: fadeIn() },
+    ],
+  },
+]`,
     caption: 'Open — the drawer slides in, the overlay fades.',
     render: () => <DrawerDemo />,
   },
@@ -261,6 +271,15 @@ scaleIn()   // { scale: { from: 0.9, to: 1, ease: poppy } }
             into one object — they touch different properties, so they run
             together. Each one is the move a real component already makes —
             interact to see it in context:
+          </Text>
+          <Text color="muted">
+            Every motion carries its own default <Code>ease</Code>, so the calls
+            omit it: the fades, slides and <Code>rotate</Code> use{' '}
+            <Code>outQuart</Code> (<Code>rotate</Code> over 300ms); the scale-pops
+            (<Code>scaleIn</Code>/<Code>scaleOut</Code>) use <Code>poppy</Code>;
+            the <Code>scaleUp</Code>/<Code>scaleDown</Code> micro-interactions use{' '}
+            <Code>snappy</Code>. Pass a property object instead of the builder to
+            override one.
           </Text>
           <MotionGallery />
         </Section>
