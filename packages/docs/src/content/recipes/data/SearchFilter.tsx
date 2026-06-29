@@ -115,7 +115,7 @@ export default function SearchFilter({ labels }: { labels?: Partial<Labels> }) {
           iconLeft={<Icon name="search" size="sm" />}
           value={search}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-          style={{ flex: 1 }}
+          width="100%"
         />
         <Button variant="secondary" onClick={openDialog}>
           <Icon name="sliders-horizontal" size="sm" />

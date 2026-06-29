@@ -6,7 +6,7 @@ export default function WithFormSample() {
       <Popover.Trigger asChild>
         <Button>Quick reply</Button>
       </Popover.Trigger>
-      <Popover.Content sideOffset={8} style={{ width: 320 }}>
+      <Popover.Content sideOffset={8}>
         <Stack gap="md">
           <FormField.Root>
             <FormField.Label><Label htmlFor="reply-subject">Subject</Label></FormField.Label>
