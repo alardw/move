@@ -124,6 +124,18 @@ export function AnimationReferencePage() {
           title="Runtime functions"
           lede="The low-level executors a step can call."
         >
+          <Text>
+            Rarely needed — <Code>useAnimations</Code> calls these for you. Import
+            one directly only behind a declared Tier-2 capability (e.g. Carousel's
+            scroll API, ChatBubble's measure-then-animate).
+          </Text>
+          <CodeBlock
+            language="ts"
+            code={`moveAnimate(el, animation, cancelRef?)
+animateDimension(el, prop, direction, cancelRef, config?)   // prop: 'height'|'width', direction: 'enter'|'exit'
+animatePosition(indicator, animation, cancelRef, options?)  // resolves $slot.x / $slot.width
+staggerAnimate(container, selector, animation, stagger, cancelRef, direction?)`}
+          />
           <HighlightList items={RUNTIME} />
         </Section>
 
@@ -147,6 +159,12 @@ export function AnimationReferencePage() {
           title="Utilities"
           lede="Smaller helpers for specific jobs."
         >
+          <CodeBlock
+            language="ts"
+            code={`usePositionTracker({ containerRef, activeSelector?, track?, disabled? })  // → { indicatorRef }
+useMorphHeight({ key, containerRef, innerRef, duration?, ease?, fadeDuration?, fadeDelay? })
+prefersReducedMotion()  // → boolean`}
+          />
           <HighlightList items={UTILITIES} />
         </Section>
 
