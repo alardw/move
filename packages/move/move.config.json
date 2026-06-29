@@ -1,0 +1,8 @@
+{
+  "check": {
+    "components": "src/components",
+    "infrastructure": "src/infrastructure",
+    "recipes": ["../docs/src/content/recipes", "skills/references/recipes/composite"],
+    "samples": ["../docs/src/content/components"]
+  }
+}
