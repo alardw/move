@@ -4,7 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import {
   Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
   Button, Collapsible, Tooltip, Select, Drawer,
-  InputRange, ToggleGroup, Alert, Popover, Checkbox, poppy,
+  InputRange, Popover, poppy,
 } from 'move';
 import type { AnimationTrigger } from 'move';
 import {
@@ -220,25 +220,6 @@ function MotionGallery() {
 // Triggers & sequences — live concept demos.
 // =============================================================================
 
-// Real components firing two of the trigger kinds — hover/press a Button (event)
-// and toggle a Checkbox (state) to feel "a trigger names a moment".
-function TriggerDemo() {
-  return (
-    <Stack direction="row" gap="xl" wrap align="start">
-      <Stack gap="xs" align="start">
-        <Badge variant="soft"><Icon name="mouse-pointer-click" />Event</Badge>
-        <Button variant="primary">Hover &amp; press me</Button>
-        <Text size="sm" color="muted">Fires on interaction.</Text>
-      </Stack>
-      <Stack gap="xs" align="start">
-        <Badge variant="soft"><Icon name="toggle-left" />State</Badge>
-        <Checkbox defaultChecked>Toggle me</Checkbox>
-        <Text size="sm" color="muted">Fires when the value changes.</Text>
-      </Stack>
-    </Stack>
-  );
-}
-
 // The sequence above, on a real component: open the Popover and its Content slot
 // plays its enter sequence (scale + fade).
 function SequenceDemo() {
@@ -254,42 +235,6 @@ function SequenceDemo() {
         </Stack>
       </Popover.Content>
     </Popover.Root>
-  );
-}
-
-// A real Alert — two steps in one Root.enter sequence: the alert scales in, and
-// its icon does a bouncy pulse to draw the eye. Together = the pulse rides along
-// with the entrance; In order = the alert lands first, THEN the icon highlights.
-function ParallelSerialDemo() {
-  const [mode, setMode] = useState('parallel');
-  const [play, setPlay] = useState(0);
-
-  const animations = useMemo<AnimationTrigger[]>(() => {
-    // Uniform fixed duration so the step's promise resolves only when the
-    // entrance is visually DONE — otherwise (a spring scale + a 200ms opacity)
-    // the step "completes" early and the serial pulse overlaps the still-running
-    // entrance, making "in order" look identical to "together".
-    const enter = { target: 'Root', animation: { opacity: { from: 0, to: 1, duration: 380 }, scale: { from: 0.88, to: 1, ease: 'outBack', duration: 380 } } };
-    const iconPulse = { target: 'Icon', animation: { scale: { from: 1, to: 1.5, ease: poppy, duration: 260 }, loop: 1, alternate: true } };
-    return [{ trigger: 'Root.enter', sequence: mode === 'parallel' ? [[enter, iconPulse]] : [enter, iconPulse] }];
-  }, [mode]);
-
-  return (
-    <Stack gap="lg">
-      <Stack direction="row" gap="md" align="center" wrap>
-        <ToggleGroup.Root value={mode} onValueChange={(v: string) => { if (v) { setMode(v); setPlay((p) => p + 1); } }} variant="secondary" size="sm">
-          <ToggleGroup.Item value="parallel">Together</ToggleGroup.Item>
-          <ToggleGroup.Item value="serial">In order</ToggleGroup.Item>
-        </ToggleGroup.Root>
-        <Button variant="secondary" size="sm" onClick={() => setPlay((p) => p + 1)}>
-          <Icon name="play" /> Replay
-        </Button>
-      </Stack>
-      {/* key remounts the Alert, so its Root.enter sequence fires fresh each replay */}
-      <Alert key={play} variant="success" icon="check" title="Changes published" animations={animations}>
-        Your edits are now live.
-      </Alert>
-    </Stack>
   );
 }
 
@@ -464,7 +409,6 @@ export function MotionsAndSequencesPage() {
             kinds, and most components only use two or three.
           </Text>
           <HighlightList items={TRIGGER_TYPES} />
-          <TriggerDemo />
         </Section>
 
         <Section
@@ -519,7 +463,6 @@ sequence: [
   { target: 'Icon', animation: { scale: { to: 1.4, ease: poppy }, loop: 1, alternate: true } },
 ]`}
           />
-          <ParallelSerialDemo />
         </Section>
 
         <Section
