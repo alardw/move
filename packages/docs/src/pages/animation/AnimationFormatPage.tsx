@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
+  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Table,
   Button, Collapsible, Tooltip, Select, Drawer,
 } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
@@ -86,6 +86,21 @@ const DEMOS: { motions: string; caption: string; render: () => ReactNode }[] = [
   { motions: 'scaleIn · slideUp · fadeIn', caption: 'Hover — the tooltip pops in.', render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip> },
   { motions: 'scaleIn · fadeIn (stagger)', caption: 'Open — the options pop in.', render: () => <SelectDemo /> },
   { motions: 'slide · fadeIn', caption: 'Open — the drawer slides in, the overlay fades.', render: () => <DrawerDemo /> },
+];
+
+// Each motion's signature and the animation object it returns — the definition
+// behind the feel shown in the gallery.
+const MOTION_API: { sig: string; returns: string }[] = [
+  { sig: 'fadeIn()', returns: 'opacity 0 → 1 · outQuart 200ms' },
+  { sig: 'fadeOut()', returns: 'opacity → 0 · outQuart 150ms' },
+  { sig: 'slideUp(distance = 8)', returns: 'translateY distance → 0 · outQuart' },
+  { sig: 'slideDown / slideLeft / slideRight(distance = 8)', returns: 'translate from that side → 0 · outQuart' },
+  { sig: 'scaleIn(from = 0.9)', returns: 'scale from → 1 · poppy' },
+  { sig: 'scaleOut(to = 0.9)', returns: 'scale 1 → to · outQuart 150ms' },
+  { sig: 'scaleUp(to = 1.04)', returns: 'scale → to · snappy (hover)' },
+  { sig: 'scaleDown(to = 0.96)', returns: 'scale → to · snappy (press)' },
+  { sig: 'rotate(from, to)', returns: 'rotate from → to° · outQuart 300ms' },
+  { sig: 'expand() / collapse()', returns: 'height 0 ↔ auto + fade · outQuart' },
 ];
 
 function MotionGallery() {
@@ -218,6 +233,23 @@ rotate(0, 180) // { rotate: { from: 0, to: 180 } } — a flip
 // combine by spreading into one object — they run together
 { ...scaleIn(), ...fadeIn() }   // a pop-in: scale + fade`}
           />
+          <Text>Every motion, and the animation it returns:</Text>
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>Motion</Table.Head>
+                <Table.Head>Returns</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {MOTION_API.map((m) => (
+                <Table.Row key={m.sig}>
+                  <Table.Cell><Code>{m.sig}</Code></Table.Cell>
+                  <Table.Cell><Text size="sm" color="muted">{m.returns}</Text></Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
         </Section>
       </Stack>
       <TocRail items={TOC} />
