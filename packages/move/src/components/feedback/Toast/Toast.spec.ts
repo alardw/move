@@ -15,7 +15,7 @@ export const spec = {
   families: {
     behavior:  ["notification"],
     state:     ["controlled-open"],
-    animation: ["scale-fade"],
+    animation: ["pop"],
     a11y:      ["none"],
   },
 

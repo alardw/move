@@ -21,7 +21,7 @@ import {
 
 const COMPONENTS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'src', 'components');
 const REQUIRED_DISCLOSURE_FLAGS = ['animatesOpen', 'animatesClose', 'keyboardToggle', 'multipleOpen'];
-const ALLOWED_ANIMATIONS = new Set(['height-morph', 'slide-in', 'fade']);
+const ALLOWED_ANIMATIONS = new Set(['expand', 'slide', 'fade']);
 
 function check(component) {
   const errors = [];

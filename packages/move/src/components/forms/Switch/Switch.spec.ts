@@ -14,7 +14,7 @@ export const spec = {
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],
-    animation: ["spring-transform"],
+    animation: ["toggle"],
     a11y:      ["none"],
   },
 

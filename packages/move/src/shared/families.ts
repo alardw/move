@@ -70,23 +70,25 @@ export type StateFamily = typeof STATE_FAMILIES[number];
 
 // ─── Animation pattern ───────────────────────────────────────────────
 
+// Animation families — aligned with the pattern vocabulary (interactive, pop,
+// slide, expand, toggle, loop, …) so specs, docs, and code share one naming.
 export const ANIMATION_FAMILIES = [
   /** Pure opacity fade in/out. */
   'fade',
-  /** Scale + fade — most popups. */
-  'scale-fade',
+  /** Scale + fade — most popups (scaleIn + fadeIn). */
+  'pop',
   /** Slide from an edge — drawers, sheets. */
-  'slide-in',
-  /** Animated height (and usually opacity) — accordions, expand. */
-  'height-morph',
+  'slide',
+  /** Animated height (and usually opacity) — accordions, expand/collapse. */
+  'expand',
   /** Children stagger in sequence. */
   'stagger',
-  /** Spring-driven transform — switch thumb, etc. */
-  'spring-transform',
+  /** Spring-driven transform — switch/checkbox thumb, etc. */
+  'toggle',
   /** Looping animation — loaders, skeletons. */
-  'continuous-loop',
+  'loop',
   /** Hover / press scale used by interactive controls. */
-  'hover-press',
+  'interactive',
   /** No animation. */
   'none',
 ] as const;

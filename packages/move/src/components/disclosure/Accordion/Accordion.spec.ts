@@ -14,7 +14,7 @@ export const spec = {
   families: {
     behavior:  ['disclosure'],
     state:     ['controlled-value'],  // value identifies which item(s) are open
-    animation: ['height-morph'],
+    animation: ['expand'],
     a11y:      ['disclosure'],
   },
   behavior: {

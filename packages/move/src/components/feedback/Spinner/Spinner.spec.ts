@@ -14,7 +14,7 @@ export const spec = {
   families: {
     behavior:  ["loading"],
     state:     ["stateless"],
-    animation: ["continuous-loop"],
+    animation: ["loop"],
     a11y:      ["none"],
   },
 

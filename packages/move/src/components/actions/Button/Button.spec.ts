@@ -14,7 +14,7 @@ export const spec = {
   families: {
     behavior:  ["display"],
     state:     ["stateless"],
-    animation: ["hover-press"],
+    animation: ["interactive"],
     a11y:      ["none"],
   },
 

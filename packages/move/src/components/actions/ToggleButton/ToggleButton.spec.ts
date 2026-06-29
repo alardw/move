@@ -15,7 +15,7 @@ export const spec = {
   families: {
     behavior:  ["form-input"],
     state:     ["controlled-value"],
-    animation: ["hover-press"],
+    animation: ["interactive"],
     a11y:      ["none"],
   },
 

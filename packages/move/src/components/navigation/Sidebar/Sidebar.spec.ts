@@ -17,7 +17,7 @@ export const spec = {
     // responsive mode rather than a different a11y pattern.
     behavior:  ['disclosure', 'navigation'],
     state:     ['controlled-open'],   // collapsed/expanded state
-    animation: ['slide-in', 'stagger'],
+    animation: ['slide', 'stagger'],
     a11y:      ['disclosure'],
   },
   behavior: {
