@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'scroll-area',
+  synonyms: ['scrollbar', 'overflow', 'scroll container', 'scrollable', 'scroller'],
   name: 'ScrollArea',
   tagline: 'A custom-scrollbar wrapper around native overflow — quiet by default, visible on hover, polished on every platform.',
   categories: ['layout'],

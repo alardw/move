@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger',
-
-  synonyms: ['dropdown', 'picker', 'choose', 'native select', 'combobox', 'options'],
   animationPatterns: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],

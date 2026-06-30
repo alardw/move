@@ -10,8 +10,6 @@ export const spec = {
   category: 'navigation',
   description:
     'Multi-step progress indicator with numbered/icon indicators, horizontal/vertical orientation, clickable steps, and status-driven styling',
-
-  synonyms: ['wizard', 'steps', 'progress steps', 'step indicator'],
   families: {
     behavior: ['navigation'],
     state: ['controlled-index'],

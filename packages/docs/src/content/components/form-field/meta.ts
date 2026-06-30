@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'form-field',
+  synonyms: ['form row', 'field group', 'label group', 'form control', 'input wrapper'],
   name: 'FormField',
   tagline: 'A compound layout wrapper for form fields — handles label / control / description placement so your forms align without manual flex tweaks.',
   categories: ['forms'],

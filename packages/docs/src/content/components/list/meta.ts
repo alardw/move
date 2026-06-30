@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'list',
+  synonyms: ['rows', 'items', 'list view', 'menu list', 'listview', 'ul'],
   name: 'List',
   tagline: 'A structured list with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
   categories: ['data-display'],

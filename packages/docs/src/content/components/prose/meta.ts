@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'prose',
+  synonyms: ['markdown', 'long form', 'article', 'body copy', 'rich text'],
   name: 'Prose',
   tagline: 'Wrap long-form content for readable defaults — headings, paragraphs, lists, code, blockquotes, all spaced and styled with no extra typography work.',
   categories: ['typography'],

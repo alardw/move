@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'switch',
+  synonyms: ['toggle', 'on off', 'toggle switch'],
   preview: { width: 'fit' },
   name: 'Switch',
   tagline: 'An immediate-action toggle — animated thumb, three sizes, real `role="switch"` semantics.',

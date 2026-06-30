@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'chat-bubble',
+  synonyms: ['message', 'chat', 'speech bubble', 'comment bubble', 'conversation', 'im'],
   name: 'ChatBubble',
   tagline: 'A conversation bubble with avatar, tail, and placement-aware corners — for chat UIs, AI assistants, and anything that wants to look like a message thread.',
   categories: ['data-display'],

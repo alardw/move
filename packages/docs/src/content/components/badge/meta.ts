@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'badge',
+  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
   preview: { width: 'fit' },
   name: 'Badge',
   tagline: 'A small, glanceable label — pill-shaped, opinionated about colour, and quiet enough to live next to text without shouting over it.',

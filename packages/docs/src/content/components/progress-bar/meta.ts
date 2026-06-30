@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'progress-bar',
+  synonyms: ['progress', 'meter', 'completion bar', 'linear progress', 'loading bar', 'percent'],
   name: 'ProgressBar',
   tagline: 'A horizontal progress indicator — determinate (with %) or indeterminate (striped), tokenised for variant and size.',
   categories: ['feedback'],

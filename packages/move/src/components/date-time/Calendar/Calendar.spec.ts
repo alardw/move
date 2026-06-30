@@ -10,8 +10,6 @@ export const spec = {
   category: 'date-time',
   description:
     'Date selection grid supporting single, range, and multiple selection modes with event display, keyboard navigation, and locale-aware formatting',
-
-  synonyms: ['date picker grid', 'datepicker', 'month grid', 'date grid', 'schedule'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'align',
+  synonyms: ['toolbar', 'header bar', 'distribute', 'app bar', 'layout', 'flex', 'row', 'justify'],
   preview: { width: 'full' },
   name: 'Align',
   tagline: 'A three-slot bar — Start, Center, End — for app headers, page titles, dialog footers, and any toolbar that wants its centre to stay centred.',

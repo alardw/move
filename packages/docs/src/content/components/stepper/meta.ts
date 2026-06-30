@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'stepper',
+  synonyms: ['wizard', 'steps', 'progress steps', 'step indicator'],
   name: 'Stepper',
   tagline: 'A progress indicator for multi-step flows — numbered steps, completion state, optional click-to-jump, horizontal or vertical.',
   categories: ['navigation'],

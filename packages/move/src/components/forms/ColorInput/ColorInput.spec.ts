@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
-
-  synonyms: ['color field', 'colour input', 'hex picker', 'swatch input'],
   animationPatterns: ['popupSurface'],
   families: {
     behavior: ['popup-anchored'],

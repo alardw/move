@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'divider',
+  synonyms: ['separator', 'rule', 'hr', 'line'],
   name: 'Divider',
   tagline: 'A simple separator with optional inline content — horizontal or vertical, solid, dashed, or dotted, with the line drawn entirely from CSS pseudo-elements.',
   categories: ['layout'],

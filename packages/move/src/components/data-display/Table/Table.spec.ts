@@ -10,16 +10,6 @@ export const spec = {
   category: 'data-display',
   description:
     'Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.',
-
-  synonyms: [
-    'grid',
-    'data table',
-    'rows columns',
-    'data grid',
-    'datagrid',
-    'datatable',
-    'spreadsheet',
-  ],
   animationPatterns: ['listReveal'],
   families: {
     behavior: ['data-row'],

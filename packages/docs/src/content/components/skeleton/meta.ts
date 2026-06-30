@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'skeleton',
+  synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder', 'ghost'],
   name: 'Skeleton',
   tagline: 'Layout-shaped loading placeholders — Circle, Rectangle, Rounded, Text — with pulse or wave animation.',
   categories: ['feedback'],

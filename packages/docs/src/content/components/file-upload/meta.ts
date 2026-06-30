@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'file-upload',
+  synonyms: ['file input', 'upload', 'dropzone', 'attach', 'file picker', 'drag and drop'],
   preview: { width: 'fit' },
   name: 'FileUpload',
   tagline: 'Drag-and-drop file upload with previews, per-file progress, an aggregate progress bar, and a pluggable upload adapter — UI is yours, network is yours.',

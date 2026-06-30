@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system',
-
-  synonyms: ['file input', 'upload', 'dropzone', 'attach', 'file picker', 'drag and drop'],
   animationPatterns: ['listReveal'],
   families: {
     behavior: ['form-input'],

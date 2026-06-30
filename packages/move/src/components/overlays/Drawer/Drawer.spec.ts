@@ -11,16 +11,6 @@ export const spec = {
   preview: { staged: true, bare: true, width: 'lg' as const },
   description:
     'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
-
-  synonyms: [
-    'sheet',
-    'side panel',
-    'offcanvas',
-    'side sheet',
-    'slide-in',
-    'off-canvas',
-    'slide-over',
-  ],
   animationPatterns: ['sidePanel'],
   families: {
     behavior: ['modal-overlay'],

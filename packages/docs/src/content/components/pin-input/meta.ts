@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'pin-input',
+  synonyms: ['otp', '2fa', 'verification code', 'one-time code', 'pin code', 'mfa'],
   preview: { width: 'fit' },
   name: 'PinInput',
   tagline: 'A multi-cell pin/OTP input that auto-advances, supports paste-distribution, and masks like a password when you ask it to.',

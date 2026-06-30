@@ -10,8 +10,6 @@ export const spec = {
   category: 'layout',
   description:
     'Presentational container with header, title, description, body, and footer sections for grouping related content',
-
-  synonyms: ['tile', 'panel', 'container', 'surface'],
   families: {
     behavior: ['layout'],
     state: ['stateless'],

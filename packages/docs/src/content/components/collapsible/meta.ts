@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'collapsible',
+  synonyms: ['expander', 'show more', 'disclosure', 'reveal', 'accordion'],
   preview: { width: 'xs' },
   name: 'Collapsible',
   tagline: 'A single show/hide region with a measured-height animation, an auto-rotating chevron, and a real button under the trigger.',

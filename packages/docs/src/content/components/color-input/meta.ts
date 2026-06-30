@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'color-input',
+  synonyms: ['color field', 'colour input', 'hex picker', 'swatch input'],
   preview: { width: 'fit' },
   name: 'ColorInput',
   tagline: 'A text input with a colour swatch trigger — type a value, click the swatch to drop into a full picker, or grab a colour off the screen with the eye-dropper.',

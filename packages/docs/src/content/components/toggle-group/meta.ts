@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'toggle-group',
+  synonyms: ['segmented control', 'tab-like group', 'button group', 'toggle'],
   name: 'ToggleGroup',
   tagline: 'A row of connected toggle buttons — single or multi select, with variant and size set once on the Root.',
   categories: ['actions'],

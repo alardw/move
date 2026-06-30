@@ -10,8 +10,6 @@ export const spec = {
   category: 'typography',
   description:
     'Rich-text container that styles child HTML elements (headings, paragraphs, lists, code, tables) with consistent typography',
-
-  synonyms: ['markdown', 'long form', 'article', 'body copy', 'rich text'],
   families: {
     behavior: ['typography'],
     state: ['stateless'],

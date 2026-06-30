@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'carousel',
+  synonyms: ['slider', 'gallery', 'slideshow', 'image rotator', 'swiper'],
   name: 'Carousel',
   tagline: 'A scroll-snap carousel with drag, autoplay, loops, and built-in triggers — composable, but you can ship a working one with two props.',
   categories: ['media'],

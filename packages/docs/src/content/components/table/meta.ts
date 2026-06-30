@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'table',
+  synonyms: [ 'grid', 'data table', 'rows columns', 'data grid', 'datagrid', 'datatable', 'spreadsheet', ],
   name: 'Table',
   tagline: 'Rows and columns with the frame, density, and responsive behavior you pick.',
   categories: ['data-display'],

@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'grid',
+  synonyms: ['layout grid', 'columns', 'simple grid', 'masonry', 'gallery', 'image grid'],
   name: 'Grid',
   tagline: 'A CSS grid layout primitive — equal columns, span-based, or auto-fit, with a Cell sub-component for per-item placement.',
   categories: ['layout'],

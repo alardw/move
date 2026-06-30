@@ -10,8 +10,6 @@ export const spec = {
   category: 'navigation',
   description:
     'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
-
-  synonyms: ['tabbed', 'segmented', 'tab bar', 'tab list', 'tabbar', 'sections'],
   animationPatterns: ['slidingIndicator'],
   families: {
     behavior: ['navigation'],

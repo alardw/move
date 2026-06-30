@@ -27,6 +27,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'pagination',
+  synonyms: ['pages', 'paging', 'page nav', 'page navigation', 'pager', 'next previous'],
   name: 'Pagination',
   tagline: 'A page navigator with prev/next, numbered buttons, ellipsis collapse, and a sliding active indicator.',
   categories: ['navigation'],

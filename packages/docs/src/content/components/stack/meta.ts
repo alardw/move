@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'stack',
+  synonyms: ['flex', 'column', 'row', 'flex layout'],
   name: 'Stack',
   tagline: 'A flexbox layout primitive — direction, gap, padding, align, justify, wrap, flex — driven by tokens, no CSS required.',
   categories: ['layout'],

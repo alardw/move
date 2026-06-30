@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'audio-player',
+  synonyms: ['audio', 'sound', 'mp3', 'podcast', 'audio control', 'media', 'player'],
   name: 'AudioPlayer',
   tagline: 'A horizontal audio bar with everything you’d expect — play, scrub, volume, speed, subtitles, source switching. Keyboard works the way you’d hope.',
   categories: ['media'],

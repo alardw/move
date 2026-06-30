@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'calendar-view',
+  synonyms: [ 'agenda', 'schedule', 'planner', 'event calendar', 'timeline calendar', 'events', 'week view', 'month view', ],
   name: 'CalendarView',
   tagline: 'A full month/week/day/agenda calendar with a real time grid, events that span days, an all-day row, and built-in controls for navigation and view switching.',
   categories: ['date-time'],

@@ -10,8 +10,6 @@ export const spec = {
   category: 'layout',
   description:
     'Scrollable content container with customizable scrollbar styling, optional sticky header and footer',
-
-  synonyms: ['scrollbar', 'overflow', 'scroll container', 'scrollable', 'scroller'],
   families: {
     behavior: ['layout'],
     state: ['stateless'],

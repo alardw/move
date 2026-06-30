@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'feedback',
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',
-
-  synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder', 'ghost'],
   animationPatterns: ['loader'],
   families: {
     behavior: ['loading'],

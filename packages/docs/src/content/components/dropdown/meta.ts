@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'dropdown',
+  synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu', 'actions'],
   name: 'Dropdown',
   tagline: 'A context menu with items, groups, sub-menus, and toggleable checkbox/radio entries — animated, keyboard-driven, ARIA-correct.',
   categories: ['overlays'],

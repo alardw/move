@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'select',
+  synonyms: ['dropdown', 'picker', 'choose', 'native select', 'combobox', 'options'],
   preview: { width: 'fit' },
   name: 'Select',
   tagline: 'Choose from a list with a little zzzing.',

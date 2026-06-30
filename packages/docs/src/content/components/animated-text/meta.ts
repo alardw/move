@@ -37,6 +37,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'animated-text',
+  synonyms: ['split text', 'text reveal', 'animated heading', 'stagger text', 'text animation'],
   name: 'AnimatedText',
   tagline:
     'Reveal text with a staggered per-character, per-word, or per-line entrance — on mount, on scroll, or on hover.',

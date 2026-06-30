@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Multi-slot PIN/OTP code input with single hidden input, visual slot rendering, grouping, mask support, and caret animation',
-
-  synonyms: ['otp', '2fa', 'verification code', 'one-time code', 'pin code', 'mfa'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

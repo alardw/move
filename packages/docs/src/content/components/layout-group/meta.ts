@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'layout-group',
+  synonyms: [ 'flip', 'animated list', 'auto animate', 'reorder', 'layout transition', 'filter group', ],
   name: 'LayoutGroup',
   tagline:
     'Animate a list or grid as it changes — children glide to their new positions when you filter, sort, or reorder, and fade in or out as they are added or removed.',

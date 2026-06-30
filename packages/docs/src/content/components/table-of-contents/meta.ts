@@ -19,6 +19,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'table-of-contents',
+  synonyms: ['toc', 'on this page', 'page nav', 'page outline', 'anchors'],
   name: 'TableOfContents',
   tagline: 'A scroll-aware page rail that highlights the active section as you scroll — useful on long docs and articles.',
   categories: ['navigation'],

@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'sidebar',
+  synonyms: ['side nav', 'navigation rail', 'app rail', 'app shell', 'side menu'],
   name: 'Sidebar',
   tagline: 'A collapsible navigation aside that does the right thing on every screen — full labels on desktop, icons-only when collapsed, an overlay sheet on mobile.',
   categories: ['navigation'],

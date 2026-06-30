@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'forms',
   description: 'Text label for form fields with required asterisk indicator and size variants',
-
-  synonyms: ['caption', 'field label', 'form label'],
   families: {
     behavior: ['typography'],
     state: ['stateless'],

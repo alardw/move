@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'card',
+  synonyms: ['tile', 'panel', 'container', 'surface'],
   preview: { bare: true, width: 'md' },
   name: 'Card',
   tagline: 'A framed container for content that belongs together — with a Header for the title, a Body for the meat, and a Footer that already knows about start/end action splits.',

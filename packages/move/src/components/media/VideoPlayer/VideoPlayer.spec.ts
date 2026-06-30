@@ -10,8 +10,6 @@ export const spec = {
   category: 'media',
   description:
     'Custom HTML5 video player with glassmorphism controls bar, progress scrubbing, volume, subtitles, playback speed, quality switching, fullscreen, and auto-hiding controls',
-
-  synonyms: ['video', 'media player', 'mp4', 'film', 'stream'],
   families: {
     behavior: ['media'],
     state: ['controlled-value'],

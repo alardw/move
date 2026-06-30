@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
-
-  synonyms: ['tickbox', 'toggle', 'option', 'check'],
   animationPatterns: ['toggle'],
   families: {
     behavior: ['form-input'],

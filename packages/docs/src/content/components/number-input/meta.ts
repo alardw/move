@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'number-input',
+  synonyms: ['number field', 'numeric', 'spinner input', 'stepper input', 'quantity', 'spinbutton'],
   preview: { width: 'fit' },
   name: 'NumberInput',
   tagline: 'A numeric input with stepper buttons, hold-to-repeat, min/max clamping, and pluggable format/parse.',

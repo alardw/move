@@ -10,14 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Password-strength indicator: a segmented meter + label, with an optional requirements checklist. Scoring-agnostic — controlled score, a custom estimate function, or a built-in length/character-class heuristic.',
-
-  synonyms: [
-    'password meter',
-    'strength meter',
-    'password strength bar',
-    'strength indicator',
-    'password quality',
-  ],
   animationPatterns: [],
   families: {
     behavior: ['display'],

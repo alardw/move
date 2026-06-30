@@ -11,8 +11,6 @@ export const spec = {
   preview: { mock: true, bare: true, width: 'md' as const },
   description:
     'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
-
-  synonyms: ['notification', 'snackbar', 'flash message', 'alert toast'],
   families: {
     behavior: ['notification'],
     state: ['controlled-open'],

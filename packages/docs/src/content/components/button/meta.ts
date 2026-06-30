@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'button',
+  synonyms: ['cta', 'action', 'submit', 'icon button', 'btn'],
   preview: { width: 'fit' },
   name: 'Button',
   tagline: 'The workhorse click target — variants, sizes, and a snappy hover/press animation that respects how wide the button actually is.',

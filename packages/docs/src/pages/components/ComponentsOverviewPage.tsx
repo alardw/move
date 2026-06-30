@@ -34,7 +34,7 @@ export function ComponentsOverviewPage() {
       if (category !== 'All' && !catsOf(c).includes(category)) return false;
       if (animated && !isAnimated(c)) return false;
       if (!q) return true;
-      const aliases = (c.spec.synonyms as string[] | undefined) ?? [];
+      const aliases = c.meta.synonyms ?? [];
       return (
         c.meta.name.toLowerCase().includes(q) ||
         c.meta.tagline.toLowerCase().includes(q) ||

@@ -10,8 +10,6 @@ export const spec = {
   category: 'data-display',
   description:
     'Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation',
-
-  synonyms: ['log', 'history', 'feed', 'activity feed', 'steps'],
   animationPatterns: ['listReveal'],
   families: {
     behavior: ['data-row'],

@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'interactive' as const,
   category: 'actions',
   description: 'Clickable interactive element with variant, size, and animation support',
-
-  synonyms: ['cta', 'action', 'submit', 'icon button', 'btn'],
   animationPatterns: ['press'],
   families: {
     behavior: ['display'],

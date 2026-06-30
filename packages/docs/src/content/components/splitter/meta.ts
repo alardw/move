@@ -27,6 +27,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'splitter',
+  synonyms: ['resizer', 'pane split', 'panes', 'resizable panels', 'split pane', 'divider'],
   name: 'Splitter',
   tagline: 'A resizable two-or-more panel layout with draggable gutters, keyboard resize, and responsive collapse.',
   categories: ['layout'],

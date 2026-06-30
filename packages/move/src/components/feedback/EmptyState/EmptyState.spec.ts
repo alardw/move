@@ -10,8 +10,6 @@ export const spec = {
   category: 'feedback',
   description:
     'Centered placeholder for empty views with icon, title, description, and optional action',
-
-  synonyms: ['placeholder', 'no results', 'nothing here', 'zero state', 'no data', 'blank'],
   families: {
     behavior: ['loading'],
     state: ['stateless'],

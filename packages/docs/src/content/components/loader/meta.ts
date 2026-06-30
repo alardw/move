@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'loader',
+  synonyms: ['spinner', 'loading', 'wait', 'progress indicator', 'busy indicator'],
   preview: { width: 'fit' },
   name: 'Loader',
   tagline: 'An indeterminate loading indicator — three sizes, theme-aware colour, GPU-friendly loop.',

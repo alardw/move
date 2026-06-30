@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'rich-text-editor',
+  synonyms: ['wysiwyg', 'editor', 'markdown editor', 'text editor', 'formatting', 'prose'],
   name: 'RichTextEditor',
   tagline: 'A rich-text editing surface with a configurable, tokenised toolbar and a plain-text paste fallback.',
   categories: ['forms'],

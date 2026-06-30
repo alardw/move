@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'display' as const,
   category: 'data-display',
   description: 'User avatar with image, fallback, and size options',
-
-  synonyms: ['profile picture', 'user image', 'portrait', 'user icon', 'gravatar', 'initials'],
   families: {
     behavior: ['display'],
     state: ['stateless'],

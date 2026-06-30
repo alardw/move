@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'accordion',
+  synonyms: ['expander', 'collapsible group', 'faq', 'disclosure list', 'collapse'],
   preview: { width: 'xs' },
   name: 'Accordion',
   tagline: 'Collapsible sections for FAQs, settings panels, and anything that shouldn’t be visible all at once.',

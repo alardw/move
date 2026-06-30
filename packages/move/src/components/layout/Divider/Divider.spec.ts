@@ -10,8 +10,6 @@ export const spec = {
   category: 'layout',
   description:
     'Visual separator for content sections with optional inline label, orientation, line style, and alignment',
-
-  synonyms: ['separator', 'rule', 'hr', 'line'],
   families: {
     behavior: ['display'],
     state: ['stateless'],

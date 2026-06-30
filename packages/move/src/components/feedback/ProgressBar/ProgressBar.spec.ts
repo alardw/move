@@ -10,8 +10,6 @@ export const spec = {
   category: 'feedback',
   description:
     'Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes',
-
-  synonyms: ['progress', 'meter', 'completion bar', 'linear progress', 'loading bar', 'percent'],
   families: {
     behavior: ['loading'],
     state: ['stateless'],

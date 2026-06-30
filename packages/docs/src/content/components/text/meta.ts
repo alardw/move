@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'text',
+  synonyms: ['paragraph', 'body', 'copy', 'typography'],
   name: 'Text',
   tagline: 'A typography primitive for body copy — size, weight, colour, alignment, and a polymorphic `as`.',
   categories: ['typography'],

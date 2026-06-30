@@ -457,9 +457,6 @@ export interface ComponentSpec {
   /** Brief one-line description */
   description: string;
 
-  /** Search synonyms / aliases (e.g. Dialog → 'modal', 'popup') for docs search */
-  synonyms?: string[];
-
   /** Built-in icon names this component renders internally (via useResolvedIcon /
    *  <Icon name>). The docs icon-usage table derives from this; check:icon-usage
    *  keeps it in sync with the source. Omit when the component renders no icons. */

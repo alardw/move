@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'label',
+  synonyms: ['caption', 'field label', 'form label'],
   preview: { width: 'fit' },
   name: 'Label',
   tagline: 'A real form label with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',

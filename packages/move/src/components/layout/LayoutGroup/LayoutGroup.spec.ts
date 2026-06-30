@@ -10,15 +10,6 @@ export const spec = {
   category: 'layout',
   description:
     'Container that FLIP-animates its direct children to their new positions when the set or order changes (filter, sort, reorder, add, remove)',
-
-  synonyms: [
-    'flip',
-    'animated list',
-    'auto animate',
-    'reorder',
-    'layout transition',
-    'filter group',
-  ],
   families: {
     behavior: ['layout', 'motion'],
     state: ['stateless'],

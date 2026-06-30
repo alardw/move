@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'drawer',
+  synonyms: [ 'sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in', 'off-canvas', 'slide-over', ],
   name: 'Drawer',
   tagline: 'A slide-in panel from any edge — perfect for filters, detail views, multi-step flows. Modal by default, bottom-sheet on mobile, full keyboard contract.',
   categories: ['overlays'],

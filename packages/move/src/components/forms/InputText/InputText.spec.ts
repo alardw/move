@@ -10,8 +10,6 @@ export const spec = {
   category: 'forms',
   description:
     'Single-line text input with outlined/filled variants, icon slots, and configurable size',
-
-  synonyms: ['text field', 'text input', 'string input', 'input', 'textfield', 'textbox'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

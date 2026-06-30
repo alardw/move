@@ -11,8 +11,6 @@ export const spec = {
   preview: { staged: true, bare: true, width: 'sm' as const },
   description:
     'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
-
-  synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu', 'actions'],
   animationPatterns: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],

@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'dialog',
+  synonyms: ['modal', 'popup', 'lightbox', 'overlay', 'alert dialog'],
   name: 'Dialog',
   tagline: 'A modal panel for confirmations, forms, and any flow that deserves the user’s undivided attention — with a spring entrance and a real focus trap.',
   categories: ['overlays'],

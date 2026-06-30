@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'layout',
   description: 'Horizontal bar with start/center/end distribution using CSS grid',
-
-  synonyms: ['toolbar', 'header bar', 'distribute', 'app bar', 'layout', 'flex', 'row', 'justify'],
   families: {
     behavior: ['layout'],
     state: ['stateless'],

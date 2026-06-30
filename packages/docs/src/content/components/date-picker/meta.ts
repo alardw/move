@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'date-picker',
+  synonyms: ['date', 'calendar input', 'date field', 'date select', 'datepicker', 'schedule'],
   preview: { width: 'fit' },
   name: 'DatePicker',
   tagline: 'A date input with a popover calendar — single date, range, or multi-select, with optional time picker, sensible localisation, and a real keyboard contract.',

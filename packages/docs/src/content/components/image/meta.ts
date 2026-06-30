@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'image',
+  synonyms: ['picture', 'photo', 'media', 'img'],
   name: 'Image',
   tagline: 'A wrapped image with aspect ratio, object-fit, radius, fallback, a blurred backdrop fill, and an overlay slot.',
   categories: ['media'],

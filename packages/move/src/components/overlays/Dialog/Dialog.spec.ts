@@ -10,8 +10,6 @@ export const spec = {
   category: 'overlays',
   description:
     'Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout',
-
-  synonyms: ['modal', 'popup', 'lightbox', 'overlay', 'alert dialog'],
   families: {
     behavior: ['modal-overlay'],
     state: ['controlled-open'],

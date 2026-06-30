@@ -10,8 +10,6 @@ export const spec = {
   category: 'typography',
   description:
     'Reveals text with a staggered per-character, per-word, or per-line entrance animation (anime.js splitText)',
-
-  synonyms: ['split text', 'text reveal', 'animated heading', 'stagger text', 'text animation'],
   families: {
     behavior: ['typography', 'motion'],
     state: ['stateless'],

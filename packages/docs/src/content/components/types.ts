@@ -62,6 +62,9 @@ export interface ComponentPreview {
 export interface ComponentMeta {
   /** Route slug, e.g. "select". */
   slug: string;
+  /** Search synonyms / aliases for docs search. Document/discovery metadata —
+   *  moved here from the component spec, which now holds substance only. */
+  synonyms: string[];
   /** Display name used in headings and breadcrumbs. */
   name: string;
   /** Short descriptor shown under the page title. */

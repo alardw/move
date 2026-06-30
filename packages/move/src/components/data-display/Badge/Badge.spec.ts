@@ -9,8 +9,6 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'data-display',
   description: 'Inline status label with variant and size options',
-
-  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
   families: {
     behavior: ['display'],
     state: ['stateless'],

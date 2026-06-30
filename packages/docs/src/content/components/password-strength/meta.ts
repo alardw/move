@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'password-strength',
+  synonyms: [ 'password meter', 'strength meter', 'password strength bar', 'strength indicator', 'password quality', ],
   preview: { width: 'fit' },
   name: 'PasswordStrength',
   tagline:

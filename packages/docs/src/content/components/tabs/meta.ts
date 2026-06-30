@@ -28,6 +28,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'tabs',
+  synonyms: ['tabbed', 'segmented', 'tab bar', 'tab list', 'tabbar', 'sections'],
   name: 'Tabs',
   tagline: 'Switch between sibling views with a sliding indicator, two variants, and Radix-backed keyboard navigation.',
   categories: ['navigation'],

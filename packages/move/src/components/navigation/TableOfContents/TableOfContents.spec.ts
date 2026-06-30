@@ -9,8 +9,6 @@ export const spec = {
   category: 'navigation',
   description:
     'Right-rail table of contents with scroll-spy active-state tracking, indented nesting, and smooth-scroll anchor navigation.',
-
-  synonyms: ['toc', 'on this page', 'page nav', 'page outline', 'anchors'],
   animationPatterns: ['slidingIndicator'],
   families: {
     behavior: ['navigation'],

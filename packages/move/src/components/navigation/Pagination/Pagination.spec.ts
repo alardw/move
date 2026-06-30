@@ -10,8 +10,6 @@ export const spec = {
   category: 'navigation',
   description:
     'Page navigation control with numbered buttons, prev/next triggers, sliding active indicator, and staggered spring entrance animation',
-
-  synonyms: ['pages', 'paging', 'page nav', 'page navigation', 'pager', 'next previous'],
   animationPatterns: ['press'],
   families: {
     behavior: ['navigation'],

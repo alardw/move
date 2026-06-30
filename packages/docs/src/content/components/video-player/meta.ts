@@ -27,6 +27,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'video-player',
+  synonyms: ['video', 'media player', 'mp4', 'film', 'stream'],
   name: 'VideoPlayer',
   tagline: 'A video player with the controls you’d expect — play, scrub, fullscreen, quality switching, subtitles, speed — and a real keyboard contract.',
   categories: ['media'],

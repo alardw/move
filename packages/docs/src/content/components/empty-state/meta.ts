@@ -32,6 +32,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentMeta = {
   slug: 'empty-state',
+  synonyms: ['placeholder', 'no results', 'nothing here', 'zero state', 'no data', 'blank'],
   preview: { width: 'sm' },
   name: 'EmptyState',
   tagline: 'A friendly "nothing here yet" placeholder — icon, title, description, optional call-to-action, all centered and tokenised.',
