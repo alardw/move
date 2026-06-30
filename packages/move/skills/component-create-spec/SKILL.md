@@ -103,7 +103,7 @@ Read these files for class defaults and available options:
 
 ### Step 2b — Automatic default assignment
 
-Defaults are assigned automatically using rule-based conventions. No interactive review gate.
+Defaults are assigned automatically using rule-based conventions.
 
 For every defaultable prop (booleans, enums/unions, string/number props with runtime impact, behavior props like `closable`, `disabled`, `multiple`, `asChild`), assign a concrete default value using this precedence:
 
@@ -121,11 +121,6 @@ Default value representation policy:
 - Never write `undefined` as a default value.
 - Use explicit concrete values (`'md'`, `true`, `false`, `0`, etc.).
 - Use `null` for intentional "no value".
-
-Write a `defaultReview` audit block into the spec:
-- `status: 'approved'`
-- `decisionSource: 'rule-based'`
-- `overrides: {}` (user can override later)
 
 ### Step 3 — Apply class defaults
 
@@ -218,11 +213,6 @@ export const spec = {
   name: '{Name}',
   componentClass: '{class}' as const,
   // ... all fields
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;
 ```
 
@@ -234,7 +224,7 @@ Note: Every spec MUST end with `satisfies ComponentSpec` and import the type fro
 
 1. **Auto-detect mode** — check for existing source before asking the user anything
 2. **Extract mode: present for confirmation** — show the extracted spec and let the user correct before writing
-2a. **Automatic defaults** — apply rule-based defaults without interactive review; user can override later
+2a. **Automatic defaults** — apply rule-based defaults; user can override later
 2b. **No implicit undefined defaults** — never write `undefined` as a default; use explicit value, `null`, or omit the key
 3. **Create mode: never guess critical decisions** — ask the user if componentClass, category, slots, props, controlledProps, or dismissBehavior are unclear
 4. **All token values must reference semantic tokens** — `var(--move-*)` from `references/component/tokens-semantic.ts`
@@ -249,8 +239,7 @@ Note: Every spec MUST end with `satisfies ComponentSpec` and import the type fro
 10a. **Undefined extracted size is not a default** — if extraction yields `size: undefined` (or no size key), apply baseline size fallback rules
 11. **Typography size baseline** — for typography components, choose `'base'` as default size unless extracted/user override differs
 12. **Form field variant baseline** — for form text/input-like fields, choose `'outlined'` as default variant unless extracted/user override differs
-13. **Default review audit required** — every spec must include `defaultReview` block with `decisionSource: 'rule-based'`
-14. **`undefined` is not a default value** — defaults must be explicit concrete values, `null`, or omitted key
-15. **Complete default coverage required** — every defaultable prop must get a default via rule-based assignment
-16. **Composable children must be marked** — set `childrenKind: 'composition'` for structural children to avoid text-control misgeneration
-17. **Record internal icons in `iconsUsed`** — list every built-in icon name the source renders (`useResolvedIcon('…')` / `<Icon name>`). The `/customize/icons` usage table derives from it and `check:icon-usage` enforces it matches the source. Omit the field when the component renders no icons.
+13. **`undefined` is not a default value** — defaults must be explicit concrete values, `null`, or omitted key
+14. **Complete default coverage required** — every defaultable prop must get a default via rule-based assignment
+15. **Composable children must be marked** — set `childrenKind: 'composition'` for structural children to avoid text-control misgeneration
+16. **Record internal icons in `iconsUsed`** — list every built-in icon name the source renders (`useResolvedIcon('…')` / `<Icon name>`). The `/customize/icons` usage table derives from it and `check:icon-usage` enforces it matches the source. Omit the field when the component renders no icons.

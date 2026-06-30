@@ -99,10 +99,6 @@ If no source found → **create mode**:
   assert (a rendered state, an interaction result), not a vague goal.
 - **Integration points are explicit:** anything a real app must replace (API
   calls, data sources, navigation targets) is named, not buried in the source.
-- **Default copy review:** set `defaultReview` to
-  `{ status: 'approved', decisionSource: 'rule-based' }` (or `'user'` if the
-  user dictated copy). This is the rigor gate — generation/validation fail when
-  it is missing.
 
 ### Step 4 — Write the spec file
 
@@ -127,7 +123,6 @@ export const spec = {
   integrationPoints: [/* { id, description } */],
   labels: [/* { key, default, description } */],
   preview: { width: 'full' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;
 ```
 
@@ -150,10 +145,8 @@ recipe needs a field the schema lacks, update `spec-type.ts`, not just the spec.
 6. **Behaviors must be testable** — each one drives a generated test.
 7. **Integration points must be explicit** — name every place real data or
    handlers plug in.
-8. **`defaultReview` is required** — the copy-review gate; generation fails
-   without it.
-9. **Spec must satisfy RecipeSpec** — output must type-check against the
+8. **Spec must satisfy RecipeSpec** — output must type-check against the
    interface.
-10. **Deterministic output** — same inputs produce the same spec.
-11. **Co-locate the spec** — `{Name}.spec.ts` beside `{Name}.tsx`, mirroring
+9. **Deterministic output** — same inputs produce the same spec.
+10. **Co-locate the spec** — `{Name}.spec.ts` beside `{Name}.tsx`, mirroring
     components.

@@ -57,7 +57,6 @@ from its spec or breaks purity must not ship.
 | B2 | `labels` parity — `defaultLabels` keys match `spec.labels[].key` exactly (no missing, no extra) |
 | B3 | `behaviors` coverage — every `spec.behaviors[]` entry is implemented in the source AND has a test in `{Name}.test.tsx` |
 | B4 | `integrationPoints` present — every `spec.integrationPoints[]` entry appears as an explicit `// Integration point:` stub |
-| B5 | `defaultReview.status === 'approved'` |
 
 #### C. Registry
 
@@ -76,7 +75,7 @@ from its spec or breaks purity must not ship.
 
 ### Step 3 — Severity and gating
 
-- **BLOCKER:** A1, A2, A4, B1, B2, B3, B4, B5, C1, C2, D2, D3.
+- **BLOCKER:** A1, A2, A4, B1, B2, B3, B4, C1, C2, D2, D3.
 - **HIGH:** A3, A5, A6, A7, D1.
 - **MEDIUM:** everything else.
 

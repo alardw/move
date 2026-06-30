@@ -1,14 +1,14 @@
 ---
 name: recipe-generate-all
-description: "Run the full recipe pipeline: source, docs, test, validate. Requires an approved spec."
+description: "Run the full recipe pipeline: source, docs, test, validate. Requires a spec."
 user-invocable: true
 argument-hint: "[RecipeName]"
 ---
 
 # Recipe Generate All — Full Recipe Generation Pipeline
 
-Run all recipe generation skills in sequence. Requires an existing, approved
-spec. This skill only orchestrates — each sub-skill's SKILL.md governs its output.
+Run all recipe generation skills in sequence. Requires an existing spec. This
+skill only orchestrates — each sub-skill's SKILL.md governs its output.
 
 ---
 
@@ -21,8 +21,8 @@ spec. This skill only orchestrates — each sub-skill's SKILL.md governs its out
 - `registry.ts` — registered (overview card + detail route)
 - `{Name}.test.tsx` — tests from spec behaviors
 
-**REFUSES if:** `{Name}.spec.ts` does not exist, or its `defaultReview.status`
-is not `'approved'`. Run `/recipe-create-spec {Name}` first.
+**REFUSES if:** `{Name}.spec.ts` does not exist. Run
+`/recipe-create-spec {Name}` first.
 
 ---
 
@@ -30,9 +30,8 @@ is not `'approved'`. Run `/recipe-create-spec {Name}` first.
 
 Run in order — each step reads files produced by earlier ones.
 
-**Pre-check:** Read `{Name}.spec.ts`. If missing, or
-`defaultReview.status !== 'approved'`, stop and refuse with instructions to run
-`/recipe-create-spec {Name}` and complete the copy review.
+**Pre-check:** Read `{Name}.spec.ts`. If missing, stop and refuse with
+instructions to run `/recipe-create-spec {Name}` first.
 
 ### Step 1 — `/recipe-generate-source {Name}`
 Emits `{Name}.tsx` from the spec (only Move components, all labels + behaviors +
@@ -59,7 +58,7 @@ report it as a generation failure.
 ## Rules
 
 1. **Run in order** — each step depends on the previous step's output.
-2. **Spec must already exist and be approved** — this skill never creates or
+2. **Spec must already exist** — this skill never creates or
    edits the spec.
 3. **Stop on failure** — any step failure (especially a validate BLOCKER) halts
    the pipeline.

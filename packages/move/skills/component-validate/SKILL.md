@@ -56,12 +56,11 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | A13 | Animation defaults match spec triggers | Trigger-sequence pairs from spec are wired via useAnimations + resolveAnimationsConfig |
 | A14 | Spec behavior contracts preserved | controlledProps, dismissBehavior, renderContracts are implemented |
 | A15 | Spec prop parity | No spec prop silently dropped from generated public API |
-| A16 | Default parity with spec | Runtime defaults in source match approved spec defaults |
-| A17 | Default review audit present | Spec schema v5+ includes approved `defaultReview` block |
-| A18 | No approved `undefined` defaults | Approved defaults are explicit values, `null`, or omitted keys |
-| A19 | Defaultable prop coverage complete | Every defaultable prop has an explicit reviewed decision |
-| A20 | Icons resolve through the resolver | Default/decorative icons render via `useResolvedIcon(name, size)` or `<Icon name>`, never a hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner, Loader) and Radix Arrow SVGs. |
-| A21 | Dismissable lifecycle uses the shared hook | Any animated open/close (popups, overlays, popup-inputs, one-shot dismissables) drives its lifecycle via `useDismissable` + `useDismissableExit`, NEVER a hand-rolled `isClosing` `useState` + `runExit().then(onCloseComplete)`. **FAIL** on a `runExit().then(` call in component source (also caught by `check:dismissable-lifecycle`). The hook owns non-hanging exit, `open()` (no-op while closing) vs `reopen()`, and re-enter-on-cancel. |
+| A16 | Default parity with spec | Runtime defaults in source match spec defaults |
+| A17 | No `undefined` defaults | Defaults are explicit values, `null`, or omitted keys |
+| A18 | Defaultable prop coverage complete | Every defaultable prop has an explicit default value |
+| A19 | Icons resolve through the resolver | Default/decorative icons render via `useResolvedIcon(name, size)` or `<Icon name>`, never a hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner, Loader) and Radix Arrow SVGs. |
+| A20 | Dismissable lifecycle uses the shared hook | Any animated open/close (popups, overlays, popup-inputs, one-shot dismissables) drives its lifecycle via `useDismissable` + `useDismissableExit`, NEVER a hand-rolled `isClosing` `useState` + `runExit().then(onCloseComplete)`. **FAIL** on a `runExit().then(` call in component source (also caught by `check:dismissable-lifecycle`). The hook owns non-hanging exit, `open()` (no-op while closing) vs `reopen()`, and re-enter-on-cancel. |
 
 #### B. CSS Module (`{Name}.module.css`)
 
@@ -122,14 +121,13 @@ Also validate that:
 - Source defaults object matches spec default decisions
 - Spec animation trigger-sequence pairs match generated source (useAnimations + resolveAnimationsConfig wiring)
 - Spec behavior contracts match generated source (`controlledProps`, `dismissBehavior`, `renderContracts`)
-- Spec default-review audit exists and is approved (`defaultReview.status === 'approved'`)
-- Approved defaults do not use `undefined` literals
-- Defaultable props are all covered by the review decision set (no skipped booleans like `closable`)
+- Defaults do not use `undefined` literals
+- Defaultable props all have an explicit default value (no skipped booleans like `closable`)
 
 ### Step 3b — Validation severity and gating
 
 Severity:
-- **BLOCKER:** A13, A14, A15, A16, A17, A18, A19, B7, C1, C2, E1, G2
+- **BLOCKER:** A13, A14, A15, A16, A17, A18, B7, C1, C2, E1, G2
 - **HIGH:** D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13
 - **MEDIUM:** all other failures
 

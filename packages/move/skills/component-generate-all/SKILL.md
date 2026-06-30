@@ -35,10 +35,6 @@ Run these skills in order. Each step must complete before the next begins, becau
 ### Step 1 — `/component-generate-source {Name}`
 Generates `.tsx`, `.module.css`, `index.ts`, `use{Name}.ts` (if applicable), updates `src/index.ts`.
 
-Pre-check before Step 1:
-- Read `{Name}.spec.ts` and verify `defaultReview.status === 'approved'`.
-- If missing, stop immediately and refuse generation with instruction to re-run `/component-create-spec {Name}` and complete default review.
-
 ### Step 2 — `/component-generate-meta {Name}`
 Generates `.meta.ts` from the component source.
 
@@ -81,5 +77,4 @@ Skip this step if no original exists.
 2a. **Validate is a hard gate** — BLOCKER findings from `/component-validate` are treated as step failure
 3. **Follow each skill's own rules** — this skill only orchestrates; each sub-skill's SKILL.md governs its output
 4. **Spec must already exist** — this skill does not generate or modify specs
-5. **Default review must be approved** — refuse pipeline when spec lacks approved `defaultReview`
-6. **No hand-edited generated artifacts** — component/test/meta output files must be produced by generation skills, not manual patching
+5. **No hand-edited generated artifacts** — component/test/meta output files must be produced by generation skills, not manual patching

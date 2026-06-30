@@ -24,9 +24,8 @@ the spec declares MUST appear in the output.
 **Output:** `packages/move/recipes/{groupSlug}/{Name}.tsx` written to
 disk (a default-export React component).
 
-**REFUSES if:** `{Name}.spec.ts` does not exist beside the recipe, or
-`spec.defaultReview.status !== 'approved'`. Tell the user to run
-`/recipe-create-spec {Name}` first.
+**REFUSES if:** `{Name}.spec.ts` does not exist beside the recipe. Tell the
+user to run `/recipe-create-spec {Name}` first.
 
 ---
 
@@ -36,10 +35,7 @@ disk (a default-export React component).
 
 Find `packages/move/recipes/**/{Name}.spec.ts`. If not found, REFUSE.
 
-Read the `RecipeSpec`. Verify `defaultReview.status === 'approved'` — if not,
-REFUSE and tell the user to complete the spec's copy review.
-
-Pull the contracts the output must honor:
+Read the `RecipeSpec`. Pull the contracts the output must honor:
 - `composition` — the ONLY Move components allowed in the output.
 - `labels` — every user-facing string.
 - `behaviors` — acceptance criteria that must be implemented.
@@ -156,17 +152,16 @@ edit:
 ## Rules
 
 1. **REFUSE without spec** — never generate without `{Name}.spec.ts`.
-2. **REFUSE without approved defaultReview** — the copy-review gate.
-3. **Only `spec.composition` components** — the output may import no UI beyond
+2. **Only `spec.composition` components** — the output may import no UI beyond
    that list (the validate allow-list). No raw HTML, no inline styles, no CSS.
-4. **Every `spec.labels[]` key wired** — all user-facing copy through `t.{key}`;
+3. **Every `spec.labels[]` key wired** — all user-facing copy through `t.{key}`;
    no hardcoded strings.
-5. **Every `spec.behaviors[]` implemented** — a missing behavior is a failure.
-6. **Every `spec.integrationPoints[]` marked** — explicit `// Integration point:`
+4. **Every `spec.behaviors[]` implemented** — a missing behavior is a failure.
+5. **Every `spec.integrationPoints[]` marked** — explicit `// Integration point:`
    stubs, greppable, replaceable.
-7. **Follow `references/recipes/rules.md` exactly** — FormField, Icon, boolean
+6. **Follow `references/recipes/rules.md` exactly** — FormField, Icon, boolean
    attrs, re-animate-on-data-change.
-8. **Default export** — recipes are default-export components taking only
+7. **Default export** — recipes are default-export components taking only
    `{ labels?: Partial<Labels> }`.
-9. **Provenance header** — `// Generated from {Name}.spec.ts (schemaVersion: N)`.
-10. **Deterministic output** — same spec produces the same recipe.
+8. **Provenance header** — `// Generated from {Name}.spec.ts (schemaVersion: N)`.
+9. **Deterministic output** — same spec produces the same recipe.
