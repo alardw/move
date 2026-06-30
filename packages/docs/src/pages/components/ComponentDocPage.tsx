@@ -74,8 +74,8 @@ export function ComponentDocPage() {
     ...(meta.related.length > 0 ? [{ href: '#related', label: 'Related' }] : []),
     ...(meta.importCode ? [{ href: '#installation', label: 'Installation' }] : []),
     ...(genericSamples.length > 0 ? [{ href: '#samples', label: meta.samplesTitle ?? 'Samples' }] : []),
-    ...(meta.keyboard.length > 0 ? [{ href: '#accessibility', label: 'Accessibility' }] : []),
     ...(integrationPoints.length > 0 ? [{ href: '#integrations', label: 'Integrations' }] : []),
+    ...(meta.keyboard.length > 0 ? [{ href: '#accessibility', label: 'Accessibility' }] : []),
     ...(showApi ? [{ href: '#api', label: 'API' }] : []),
     ...(spec.tokens ? [{ href: '#design-tokens', label: 'Design tokens' }] : []),
   ];
@@ -154,16 +154,6 @@ export function ComponentDocPage() {
           </Section>
         )}
 
-        {meta.keyboard.length > 0 && (
-          <Section
-            id="accessibility"
-            title="Accessibility"
-            lede={meta.accessibilityLede}
-          >
-            <KeyboardTable rows={meta.keyboard} />
-          </Section>
-        )}
-
         {integrationPoints.length > 0 ? (
           <Section
             id="integrations"
@@ -216,6 +206,16 @@ export function ComponentDocPage() {
             </Stack>
           </Section>
         ) : null}
+
+        {meta.keyboard.length > 0 && (
+          <Section
+            id="accessibility"
+            title="Accessibility"
+            lede={meta.accessibilityLede}
+          >
+            <KeyboardTable rows={meta.keyboard} />
+          </Section>
+        )}
 
         {showApi ? (
           <Section id="api" title="API" lede="Every prop for every sub-component.">
