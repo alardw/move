@@ -21,7 +21,7 @@ the spec declares MUST appear in the output.
 
 **Input:** A recipe name (e.g. "SignIn", "FilterableDataTable").
 
-**Output:** `packages/docs/src/content/recipes/{groupSlug}/{Name}.tsx` written to
+**Output:** `packages/move/recipes/{groupSlug}/{Name}.tsx` written to
 disk (a default-export React component).
 
 **REFUSES if:** `{Name}.spec.ts` does not exist beside the recipe, or
@@ -34,7 +34,7 @@ disk (a default-export React component).
 
 ### Step 1 — Locate and read the spec
 
-Find `packages/docs/src/content/recipes/**/{Name}.spec.ts`. If not found, REFUSE.
+Find `packages/move/recipes/**/{Name}.spec.ts`. If not found, REFUSE.
 
 Read the `RecipeSpec`. Verify `defaultReview.status === 'approved'` — if not,
 REFUSE and tell the user to complete the spec's copy review.

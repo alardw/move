@@ -21,7 +21,7 @@ Move components it uses.
 
 **Input:** A recipe name (e.g. "SignIn").
 
-**Output:** `packages/docs/src/content/recipes/{groupSlug}/{Name}.test.tsx`
+**Output:** `packages/move/recipes/{groupSlug}/{Name}.test.tsx`
 written next to the recipe.
 
 ---
@@ -81,7 +81,7 @@ describe('{Name}', () => {
 ### Step 4 — Write and run
 
 Write the file, then run it with the docs package's test runner
-(`cd packages/docs && npx vitest run src/content/recipes/{groupSlug}/{Name}.test.tsx`).
+(`cd packages/move && npx vitest run recipes/{groupSlug}/{Name}.test.tsx`).
 If the docs package has no test runner configured, report that as a blocking
 prerequisite (the recipe pipeline needs one) rather than silently skipping.
 

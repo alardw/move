@@ -24,7 +24,7 @@ data table with search, sort, and pagination").
 
 **Output:**
 - `{Name}.analysis.md` written next to where the recipe will live
-  (`packages/docs/src/content/recipes/{groupSlug}/{Name}.analysis.md`).
+  (`packages/move/recipes/{groupSlug}/{Name}.analysis.md`).
 - Stdout summary of the recommended composition and behaviors.
 
 ---

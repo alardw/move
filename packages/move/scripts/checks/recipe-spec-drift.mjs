@@ -2,7 +2,7 @@
 /**
  * Recipe spec ↔ source sync linter (the recipe sibling of spec-drift.mjs).
  *
- * Recipes are spec-driven: each `packages/docs/src/content/recipes/<group>/<Name>.spec.ts`
+ * Recipes are spec-driven: each `packages/move/recipes/<group>/<Name>.spec.ts`
  * (`satisfies RecipeSpec`) is the source of truth for its `<Name>.tsx`. This
  * check enforces that the two don't drift on the deterministic contracts:
  *
@@ -25,7 +25,7 @@ import ts from 'typescript';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = join(HERE, '..', '..', '..', '..');
-const RECIPES = join(REPO, 'packages/docs/src/content/recipes');
+const RECIPES = join(HERE, '..', '..', 'recipes');
 
 const parse = (file) =>
   ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);

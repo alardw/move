@@ -23,7 +23,7 @@ consumes recipe source directly, the spec must be rigorous and complete.
 **Input:** A recipe name (e.g. "SignIn", "FilterableDataTable") and, in create
 mode, its group/category and a brief.
 
-**Output:** `packages/docs/src/content/recipes/{groupSlug}/{Name}.spec.ts`
+**Output:** `packages/move/recipes/{groupSlug}/{Name}.spec.ts`
 written to disk, ending in `satisfies RecipeSpec`.
 
 The spec is co-located with the recipe source (`{Name}.tsx`), mirroring how
@@ -37,7 +37,7 @@ Auto-detect based on whether recipe source exists.
 
 ### Extract mode (source exists)
 
-Look for `packages/docs/src/content/recipes/**/{Name}.tsx`. If found → **extract
+Look for `packages/move/recipes/**/{Name}.tsx`. If found → **extract
 mode**:
 - Read `{Name}.tsx` and its `registry.ts` entry.
 - Mechanically extract: `name`, `slug`, `group`, `groupSlug`, `title`,
@@ -69,11 +69,11 @@ If no source found → **create mode**:
 
 | File | Purpose |
 |------|---------|
-| `packages/docs/src/content/recipes/spec-type.ts` (canonical) | `RecipeSpec` type — specs `satisfies` it |
+| `packages/move/recipes/spec-type.ts` (canonical) | `RecipeSpec` type — specs `satisfies` it |
 | `references/recipes/rules.md` | Golden rules: only Move components, no custom CSS, i18n via `labels`, FormField usage, etc. |
 | `references/recipes/composite/` | Existing recipe patterns to learn API usage and structure from |
 | `references/app/composition-rules.md` | Available layout components and their props |
-| `packages/docs/src/content/recipes/registry.ts` | Existing groups and the `RecipePreview` shape |
+| `packages/move/recipes/registry.ts` | Existing groups and the `RecipePreview` shape |
 
 ### Step 2 — Gather decisions
 
@@ -106,7 +106,7 @@ If no source found → **create mode**:
 
 ### Step 4 — Write the spec file
 
-Write to `packages/docs/src/content/recipes/{groupSlug}/{Name}.spec.ts`:
+Write to `packages/move/recipes/{groupSlug}/{Name}.spec.ts`:
 
 ```ts
 // {Name}.spec.ts — Recipe specification
@@ -132,7 +132,7 @@ export const spec = {
 ```
 
 Note: the spec MUST end with `satisfies RecipeSpec` and import the type from the
-canonical `packages/docs/src/content/recipes/spec-type.ts` (one level up). If a
+canonical `packages/move/recipes/spec-type.ts` (one level up). If a
 recipe needs a field the schema lacks, update `spec-type.ts`, not just the spec.
 
 ---

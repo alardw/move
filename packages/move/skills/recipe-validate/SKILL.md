@@ -30,10 +30,10 @@ from its spec or breaks purity must not ship.
 
 ### Step 1 — Read files
 
-1. `packages/docs/src/content/recipes/{groupSlug}/{Name}.spec.ts` — the contract.
+1. `packages/move/recipes/{groupSlug}/{Name}.spec.ts` — the contract.
 2. `{Name}.tsx` — the recipe source.
 3. `{Name}.test.tsx` — the test (if present).
-4. `packages/docs/src/content/recipes/registry.ts` — the registry entry.
+4. `packages/move/recipes/registry.ts` — the registry entry.
 5. `references/recipes/rules.md` — the golden rules.
 
 ### Step 2 — Run validation rules

@@ -12,7 +12,7 @@ detail page. **REFUSES without an existing spec and recipe source.**
 
 The docs app is **content-driven**: recipes share ONE overview template
 (`RecipesOverviewPage`) and ONE detail template (`RecipeDetailPage`). A recipe
-"page" is just an entry in `packages/docs/src/content/recipes/registry.ts`. The
+"page" is just an entry in `packages/move/recipes/registry.ts`. The
 entry's metadata is **derived from the spec** — never hand-authored.
 
 ---
@@ -22,7 +22,7 @@ entry's metadata is **derived from the spec** — never hand-authored.
 **Input:** A recipe name (e.g. "SignIn").
 
 **Output:** an entry added to (or updated in)
-`packages/docs/src/content/recipes/registry.ts`:
+`packages/move/recipes/registry.ts`:
 - `import` of the recipe component and its `?raw` source.
 - an entry in the `RECIPES` array, with `slug`, `group`, `groupSlug`, `title`,
   `description`, `synonyms`, `Component`, `source`, `preview` — all derived from
@@ -37,9 +37,9 @@ entry's metadata is **derived from the spec** — never hand-authored.
 
 ### Step 1 — Read inputs
 
-1. `packages/docs/src/content/recipes/{groupSlug}/{Name}.spec.ts` — the source of
+1. `packages/move/recipes/{groupSlug}/{Name}.spec.ts` — the source of
    truth for all registry metadata.
-2. `packages/docs/src/content/recipes/registry.ts` — the `RecipeMeta` shape and
+2. `packages/move/recipes/registry.ts` — the `RecipeMeta` shape and
    existing entries (match their style and grouping).
 
 ### Step 2 — Ensure the registry supports `synonyms`
