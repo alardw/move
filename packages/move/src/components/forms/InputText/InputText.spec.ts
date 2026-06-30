@@ -311,10 +311,4 @@ export const spec = {
       'Value is read from native input element',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

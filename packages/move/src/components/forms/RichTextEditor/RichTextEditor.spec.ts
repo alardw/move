@@ -551,10 +551,4 @@ export const spec = {
       'Control disabled state uses native disabled attribute',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

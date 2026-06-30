@@ -21,21 +21,40 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'onSubmit', kind: 'handler', description: 'Request a password-reset link for the entered email.' },
+    {
+      id: 'onSubmit',
+      kind: 'handler',
+      description: 'Request a password-reset link for the entered email.',
+    },
     { id: 'backToSignIn', kind: 'navigation', description: 'Navigate back to the sign-in screen.' },
   ],
   labels: [
     { key: 'title', default: 'Forgot password?', description: 'Card heading.' },
-    { key: 'description', default: "Enter your email and we'll send you a link to reset your password.", description: 'Sub-heading.' },
+    {
+      key: 'description',
+      default: "Enter your email and we'll send you a link to reset your password.",
+      description: 'Sub-heading.',
+    },
     { key: 'emailLabel', default: 'Email', description: 'Email field label.' },
-    { key: 'emailPlaceholder', default: 'you@example.com', description: 'Email field placeholder.' },
+    {
+      key: 'emailPlaceholder',
+      default: 'you@example.com',
+      description: 'Email field placeholder.',
+    },
     { key: 'submit', default: 'Send reset link', description: 'Submit button text.' },
     { key: 'backToSignIn', default: 'Back to sign in', description: 'Footer link text.' },
     { key: 'confirmTitle', default: 'Check your email', description: 'Confirmation heading.' },
-    { key: 'confirmSentTo', default: 'We sent a password reset link to', description: 'Confirmation lead-in (followed by the email).' },
-    { key: 'confirmHint', default: "Didn't receive the email? Check your spam folder or try another email address.", description: 'Confirmation hint.' },
+    {
+      key: 'confirmSentTo',
+      default: 'We sent a password reset link to',
+      description: 'Confirmation lead-in (followed by the email).',
+    },
+    {
+      key: 'confirmHint',
+      default: "Didn't receive the email? Check your spam folder or try another email address.",
+      description: 'Confirmation hint.',
+    },
     { key: 'tryAnother', default: 'Try another email', description: 'Return-to-form button text.' },
   ],
   preview: { bare: true, width: 'md' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

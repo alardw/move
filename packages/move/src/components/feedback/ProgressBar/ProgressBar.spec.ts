@@ -196,10 +196,4 @@ export const spec = {
       'Indeterminate animation disabled via prefers-reduced-motion media query',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

@@ -373,10 +373,4 @@ export const spec = {
       'Pulse and wave animations respect prefersReducedMotion',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

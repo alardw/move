@@ -377,9 +377,4 @@ export const spec = {
   },
 
   iconsUsed: ['chevron-right'],
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

@@ -211,10 +211,4 @@ export const spec = {
       'CSS overrides grid-template-columns to 1fr when data-collapsed is set',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

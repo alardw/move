@@ -200,10 +200,4 @@ export const spec = {
       'Reduced motion: dots skip animation entirely',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

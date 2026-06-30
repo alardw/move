@@ -575,9 +575,4 @@ export const spec = {
     'volume-2',
     'volume-x',
   ],
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

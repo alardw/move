@@ -407,10 +407,4 @@ export const spec = {
       'Animation disabled when item is disabled',
     ] as string[],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

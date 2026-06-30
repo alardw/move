@@ -236,10 +236,4 @@ export const spec = {
       'Root sets data-animated after the reveal completes',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

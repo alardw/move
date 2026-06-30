@@ -189,10 +189,4 @@ export const spec = {
     ],
     animation: ['Fades in on mount via CSS @keyframes (cssAnimation capability)'],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

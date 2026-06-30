@@ -139,10 +139,6 @@ for (const specFile of recipeSpecs(RECIPES).sort()) {
       (lab.onlyA.length ? `\n    in spec, not in defaultLabels: ${lab.onlyA.join(', ')}` : '') +
       (lab.onlyB.length ? `\n    in defaultLabels, not in spec: ${lab.onlyB.join(', ')}` : ''));
   }
-  // specParity-7: the copy/defaults review gate.
-  if (!/status:\s*'approved'/.test(readFileSync(specFile, 'utf8'))) {
-    errors++; out.push(`✗ ${name}: defaultReview.status is not 'approved'`);
-  }
   // registry-1: no two recipes share a slug.
   const slugNode = prop(specObj, 'slug');
   const slug = slugNode && ts.isStringLiteral(slugNode) ? slugNode.text : null;

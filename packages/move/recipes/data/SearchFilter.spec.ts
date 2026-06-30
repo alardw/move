@@ -15,7 +15,17 @@ export const spec = {
   title: 'Search & filter',
   description: 'Search input with a filter dialog and active filter chips over a live list.',
   synonyms: ['search', 'filter', 'chips', 'facets', 'query'],
-  composition: ['Stack', 'InputText', 'Button', 'Badge', 'Dialog', 'Checkbox', 'FormField', 'Icon', 'List'],
+  composition: [
+    'Stack',
+    'InputText',
+    'Button',
+    'Badge',
+    'Dialog',
+    'Checkbox',
+    'FormField',
+    'Icon',
+    'List',
+  ],
   behaviors: [
     'Search input filters the list live by name and email.',
     'A Filters dialog presents grouped checkboxes (Status, Department). Filters combine AND across groups and OR within a group.',
@@ -27,8 +37,16 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'data', kind: 'data', description: 'Provide the real records to search/filter (replaces SAMPLE_DATA).' },
-    { id: 'filterOptions', kind: 'data', description: 'Provide the available filter facets (replaces SAMPLE_FILTER_OPTIONS).' },
+    {
+      id: 'data',
+      kind: 'data',
+      description: 'Provide the real records to search/filter (replaces SAMPLE_DATA).',
+    },
+    {
+      id: 'filterOptions',
+      kind: 'data',
+      description: 'Provide the available filter facets (replaces SAMPLE_FILTER_OPTIONS).',
+    },
   ],
   labels: [
     { key: 'searchPlaceholder', default: 'Search...', description: 'Search input placeholder.' },
@@ -38,8 +56,11 @@ export const spec = {
     { key: 'cancel', default: 'Cancel', description: 'Dialog cancel button.' },
     { key: 'apply', default: 'Apply', description: 'Dialog apply button.' },
     { key: 'noResultsTitle', default: 'No results', description: 'Empty-state title.' },
-    { key: 'noResultsDescription', default: 'Try adjusting your search or filters.', description: 'Empty-state description.' },
+    {
+      key: 'noResultsDescription',
+      default: 'Try adjusting your search or filters.',
+      description: 'Empty-state description.',
+    },
   ],
   preview: { width: 'lg' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

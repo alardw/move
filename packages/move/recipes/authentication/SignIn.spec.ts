@@ -9,8 +9,7 @@ export const spec = {
   group: 'Authentication',
   groupSlug: 'authentication',
   title: 'Sign in',
-  description:
-    'Email + password login with a remember-me toggle and a forgot-password link.',
+  description: 'Email + password login with a remember-me toggle and a forgot-password link.',
   synonyms: ['login', 'log in', 'signin', 'sign on', 'credentials', 'authentication'],
   composition: [
     'Stack',
@@ -31,20 +30,43 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'onSubmit', kind: 'handler', description: 'Authenticate the email + password against the auth API.' },
-    { id: 'remember', kind: 'handler', description: 'Persist the session when remember-me is checked.' },
-    { id: 'forgotPassword', kind: 'navigation', description: 'Navigate to the forgot-password flow.' },
+    {
+      id: 'onSubmit',
+      kind: 'handler',
+      description: 'Authenticate the email + password against the auth API.',
+    },
+    {
+      id: 'remember',
+      kind: 'handler',
+      description: 'Persist the session when remember-me is checked.',
+    },
+    {
+      id: 'forgotPassword',
+      kind: 'navigation',
+      description: 'Navigate to the forgot-password flow.',
+    },
   ],
   labels: [
     { key: 'title', default: 'Sign in', description: 'Card heading.' },
     { key: 'emailLabel', default: 'Email', description: 'Email field label.' },
-    { key: 'emailPlaceholder', default: 'you@example.com', description: 'Email field placeholder.' },
+    {
+      key: 'emailPlaceholder',
+      default: 'you@example.com',
+      description: 'Email field placeholder.',
+    },
     { key: 'passwordLabel', default: 'Password', description: 'Password field label.' },
-    { key: 'passwordPlaceholder', default: 'Enter your password', description: 'Password field placeholder.' },
+    {
+      key: 'passwordPlaceholder',
+      default: 'Enter your password',
+      description: 'Password field placeholder.',
+    },
     { key: 'rememberMe', default: 'Remember me', description: 'Remember-me checkbox label.' },
-    { key: 'forgotPassword', default: 'Forgot password?', description: 'Forgot-password link text.' },
+    {
+      key: 'forgotPassword',
+      default: 'Forgot password?',
+      description: 'Forgot-password link text.',
+    },
     { key: 'submit', default: 'Sign in', description: 'Submit button text.' },
   ],
   preview: { bare: true, width: 'md' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

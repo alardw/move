@@ -190,10 +190,4 @@ export const spec = {
       'Root has aria-orientation matching orientation prop',
     ] as string[],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

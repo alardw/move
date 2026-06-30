@@ -439,10 +439,4 @@ export const spec = {
       'Swatch buttons have aria-label with color value',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

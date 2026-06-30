@@ -207,10 +207,4 @@ export const spec = {
       'When disabled or prefers-reduced-motion, applies the final layout instantly',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

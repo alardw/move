@@ -21,20 +21,43 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'onVerify', kind: 'handler', description: 'Validate the entered TOTP code server-side (demo accepts "000000").' },
+    {
+      id: 'onVerify',
+      kind: 'handler',
+      description: 'Validate the entered TOTP code server-side (demo accepts "000000").',
+    },
     { id: 'backupLink', kind: 'navigation', description: 'Switch to backup-code entry.' },
     { id: 'back', kind: 'navigation', description: 'Navigate back to the sign-in screen.' },
   ],
   labels: [
     { key: 'title', default: 'Two-factor authentication', description: 'Card heading.' },
-    { key: 'description', default: 'Enter the 6-digit code from your authenticator app to continue.', description: 'Sub-heading.' },
-    { key: 'invalidCode', default: 'Invalid verification code. Please try again.', description: 'Invalid-code error.' },
-    { key: 'backupLink', default: 'Use a backup code instead', description: 'Backup-code link text.' },
+    {
+      key: 'description',
+      default: 'Enter the 6-digit code from your authenticator app to continue.',
+      description: 'Sub-heading.',
+    },
+    {
+      key: 'invalidCode',
+      default: 'Invalid verification code. Please try again.',
+      description: 'Invalid-code error.',
+    },
+    {
+      key: 'backupLink',
+      default: 'Use a backup code instead',
+      description: 'Backup-code link text.',
+    },
     { key: 'back', default: 'Back to sign in', description: 'Back button text.' },
     { key: 'submit', default: 'Verify', description: 'Submit button text.' },
-    { key: 'successTitle', default: 'Verified', description: 'Success confirmation badge shown after a valid code.' },
-    { key: 'successDescription', default: 'Taking you to your account…', description: 'Success confirmation detail.' },
+    {
+      key: 'successTitle',
+      default: 'Verified',
+      description: 'Success confirmation badge shown after a valid code.',
+    },
+    {
+      key: 'successDescription',
+      default: 'Taking you to your account…',
+      description: 'Success confirmation detail.',
+    },
   ],
   preview: { bare: true, width: 'md' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

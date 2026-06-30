@@ -513,9 +513,4 @@ export const spec = {
   },
 
   iconsUsed: ['check'],
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

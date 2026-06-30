@@ -159,10 +159,4 @@ export const spec = {
       'Falls back to plain children when highlighter returns null',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

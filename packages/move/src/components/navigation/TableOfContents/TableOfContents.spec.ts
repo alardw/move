@@ -216,10 +216,4 @@ export const spec = {
       'Active Item has aria-current="location"',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

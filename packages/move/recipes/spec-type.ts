@@ -95,14 +95,6 @@ export interface RecipePreview {
   image?: string;
 }
 
-/** Explicit sign-off that the proposed copy/label defaults were reviewed. */
-export interface RecipeDefaultReview {
-  status: 'approved';
-  decisionSource: 'rule-based' | 'user';
-  /** Optional notes on overrides or open questions. */
-  notes?: string;
-}
-
 export interface RecipeSpec {
   schemaVersion: typeof RECIPE_SCHEMA_VERSION;
   /** PascalCase component/file name, e.g. 'SignIn'. */
@@ -130,6 +122,4 @@ export interface RecipeSpec {
   labels: RecipeLabel[];
   /** How the recipe renders in the overview card. */
   preview: RecipePreview;
-  /** Explicit default-copy review gate. */
-  defaultReview: RecipeDefaultReview;
 }

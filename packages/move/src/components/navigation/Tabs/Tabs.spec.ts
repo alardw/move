@@ -387,10 +387,4 @@ export const spec = {
       'Indicator snaps on first render without animation',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

@@ -28,17 +28,41 @@ export const spec = {
     { key: 'title', default: 'Reset password', description: 'Card heading.' },
     { key: 'description', default: 'Enter your new password below.', description: 'Sub-heading.' },
     { key: 'newPasswordLabel', default: 'New password', description: 'New-password field label.' },
-    { key: 'newPasswordPlaceholder', default: 'At least 8 characters', description: 'New-password placeholder.' },
-    { key: 'newPasswordHint', default: 'Must be at least 8 characters', description: 'New-password hint.' },
+    {
+      key: 'newPasswordPlaceholder',
+      default: 'At least 8 characters',
+      description: 'New-password placeholder.',
+    },
+    {
+      key: 'newPasswordHint',
+      default: 'Must be at least 8 characters',
+      description: 'New-password hint.',
+    },
     { key: 'confirmLabel', default: 'Confirm password', description: 'Confirm field label.' },
-    { key: 'confirmPlaceholder', default: 'Repeat your password', description: 'Confirm field placeholder.' },
-    { key: 'mismatchError', default: 'Passwords do not match', description: 'Confirm mismatch error.' },
+    {
+      key: 'confirmPlaceholder',
+      default: 'Repeat your password',
+      description: 'Confirm field placeholder.',
+    },
+    {
+      key: 'mismatchError',
+      default: 'Passwords do not match',
+      description: 'Confirm mismatch error.',
+    },
     { key: 'submit', default: 'Reset password', description: 'Submit button text.' },
     { key: 'backToSignIn', default: 'Back to sign in', description: 'Footer link text.' },
     { key: 'successTitle', default: 'Password reset', description: 'Success heading.' },
-    { key: 'successDescription', default: 'Your password has been successfully reset. You can now sign in with your new password.', description: 'Success body.' },
-    { key: 'successAction', default: 'Back to sign in', description: 'Success action button text.' },
+    {
+      key: 'successDescription',
+      default:
+        'Your password has been successfully reset. You can now sign in with your new password.',
+      description: 'Success body.',
+    },
+    {
+      key: 'successAction',
+      default: 'Back to sign in',
+      description: 'Success action button text.',
+    },
   ],
   preview: { bare: true, width: 'md' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

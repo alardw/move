@@ -200,9 +200,4 @@ export const spec = {
   },
 
   iconsUsed: ['circle-check', 'circle-x', 'info', 'triangle-alert', 'x'],
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

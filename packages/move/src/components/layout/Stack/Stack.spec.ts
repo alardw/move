@@ -240,10 +240,4 @@ export const spec = {
       'stagger prop injects a Root.enter children-stagger; animations={false} disables it',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

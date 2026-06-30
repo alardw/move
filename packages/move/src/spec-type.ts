@@ -308,16 +308,6 @@ export interface DemoSpec {
   referenceImages?: DemoReferenceImage[];
 }
 
-/** Audit trail for required interactive default review */
-export interface DefaultReview {
-  /** Must be approved before spec write */
-  status: 'approved';
-  /** How approval happened */
-  decisionSource: 'user-confirmed' | 'accept-all' | 'rule-based';
-  /** Explicit per-prop overrides accepted by user */
-  overrides?: Record<string, string>;
-}
-
 // =============================================================================
 // Sub-component definition (for compound components)
 // =============================================================================
@@ -554,9 +544,6 @@ export interface ComponentSpec {
 
   /** Children semantics hint: text content vs structural composition */
   childrenKind?: 'text' | 'composition';
-
-  /** Required audit record that defaults were interactively reviewed */
-  defaultReview: DefaultReview;
 
   /** Optional explicit demo contract (controls + samples + bindings) */
   demo?: DemoSpec;

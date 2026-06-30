@@ -641,10 +641,4 @@ export const spec = {
       'animations={false} disables dropdown animation',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

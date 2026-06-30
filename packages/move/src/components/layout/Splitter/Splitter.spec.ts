@@ -285,10 +285,4 @@ export const spec = {
       'Gutter is keyboard-focusable',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

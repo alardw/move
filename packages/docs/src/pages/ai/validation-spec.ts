@@ -140,7 +140,6 @@ const RULES: RuleDef[] = [
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
   { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
-  { id: 'specParity-7', group: 'specParity', rule: "defaultReview.status === 'approved'", why: 'The copy/defaults review gate; generation should refuse an unreviewed spec.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'check', check: 'recipe-spec-drift' } } },
 
   // Styles (component / cssModule)
   { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('gap') },

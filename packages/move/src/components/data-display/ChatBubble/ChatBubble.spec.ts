@@ -304,10 +304,4 @@ export const spec = {
       'Root respects animations={false} to disable animation',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

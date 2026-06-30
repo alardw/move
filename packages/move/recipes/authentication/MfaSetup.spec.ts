@@ -21,27 +21,75 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'qrCode', kind: 'asset', description: 'Provide the real TOTP provisioning QR image (replaces the demo /qr-demo.svg).' },
-    { id: 'backupCodes', kind: 'data', description: 'Generate and supply real one-time backup codes (replaces the demo set).' },
-    { id: 'onVerify', kind: 'handler', description: 'Validate the entered TOTP code server-side and activate MFA (demo accepts any 6 digits).' },
+    {
+      id: 'qrCode',
+      kind: 'asset',
+      description: 'Provide the real TOTP provisioning QR image (replaces the demo /qr-demo.svg).',
+    },
+    {
+      id: 'backupCodes',
+      kind: 'data',
+      description: 'Generate and supply real one-time backup codes (replaces the demo set).',
+    },
+    {
+      id: 'onVerify',
+      kind: 'handler',
+      description:
+        'Validate the entered TOTP code server-side and activate MFA (demo accepts any 6 digits).',
+    },
     { id: 'onCancel', kind: 'handler', description: 'Dismiss setup without enrolling.' },
   ],
   labels: [
     { key: 'title', default: 'Set up two-factor authentication', description: 'Card heading.' },
-    { key: 'stepLabel', default: 'Step {n} of {total}', description: 'Step indicator badge.', params: ['n', 'total'] },
-    { key: 'scanDescription', default: 'Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.).', description: 'Scan-step instruction.' },
-    { key: 'qrAlt', default: 'Scan this QR code with your authenticator app', description: 'QR image alt text.' },
+    {
+      key: 'stepLabel',
+      default: 'Step {n} of {total}',
+      description: 'Step indicator badge.',
+      params: ['n', 'total'],
+    },
+    {
+      key: 'scanDescription',
+      default:
+        'Scan the QR code below with your authenticator app (Google Authenticator, Authy, etc.).',
+      description: 'Scan-step instruction.',
+    },
+    {
+      key: 'qrAlt',
+      default: 'Scan this QR code with your authenticator app',
+      description: 'QR image alt text.',
+    },
     { key: 'backupTitle', default: 'Backup codes', description: 'Backup-codes heading.' },
-    { key: 'backupDescription', default: 'Save these codes in a safe place. You can use them to sign in if you lose access to your authenticator app.', description: 'Backup-codes hint.' },
-    { key: 'verifyDescription', default: 'Enter the 6-digit code shown in your authenticator app to verify setup.', description: 'Verify-step instruction.' },
-    { key: 'invalidCode', default: 'Invalid code. Please try again.', description: 'Invalid-code error.' },
+    {
+      key: 'backupDescription',
+      default:
+        'Save these codes in a safe place. You can use them to sign in if you lose access to your authenticator app.',
+      description: 'Backup-codes hint.',
+    },
+    {
+      key: 'verifyDescription',
+      default: 'Enter the 6-digit code shown in your authenticator app to verify setup.',
+      description: 'Verify-step instruction.',
+    },
+    {
+      key: 'invalidCode',
+      default: 'Invalid code. Please try again.',
+      description: 'Invalid-code error.',
+    },
     { key: 'cancel', default: 'Cancel', description: 'Cancel button text.' },
     { key: 'continue', default: 'Continue', description: 'Advance-to-verify button text.' },
     { key: 'back', default: 'Back', description: 'Return-to-scan button text.' },
     { key: 'submit', default: 'Verify & activate', description: 'Verify submit button text.' },
-    { key: 'successTitle', default: 'Two-factor authentication enabled', description: 'Success confirmation heading shown after a valid code.' },
-    { key: 'successDescription', default: 'You will be asked for a code from your authenticator app the next time you sign in.', description: 'Success confirmation detail.' },
+    {
+      key: 'successTitle',
+      default: 'Two-factor authentication enabled',
+      description: 'Success confirmation heading shown after a valid code.',
+    },
+    {
+      key: 'successDescription',
+      default:
+        'You will be asked for a code from your authenticator app the next time you sign in.',
+      description: 'Success confirmation detail.',
+    },
   ],
   preview: { bare: true, width: 'md' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

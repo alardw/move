@@ -160,12 +160,11 @@ function rewriteSpec(specText, icons) {
     return next === specText ? null : next;
   }
 
-  // Insert immediately before the `defaultReview:` anchor (present in every spec).
-  const anchor = specText.match(/^([ \t]*)defaultReview:/m);
-  if (!anchor) {
-    throw new Error('no `defaultReview:` anchor to insert iconsUsed before');
+  // Insert as the last property, before the `} satisfies` closing (every spec has it).
+  if (!/^\} satisfies\b/m.test(specText)) {
+    throw new Error('no `} satisfies` anchor to insert iconsUsed before');
   }
-  return specText.replace(/^([ \t]*)defaultReview:/m, `${line}\n\n$1defaultReview:`);
+  return specText.replace(/^(\} satisfies\b)/m, `${line}\n$1`);
 }
 
 // ──────────────────────────────────────────────────────────────────────────────

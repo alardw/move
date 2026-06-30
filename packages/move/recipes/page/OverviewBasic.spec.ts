@@ -11,7 +11,19 @@ export const spec = {
   title: 'Overview page',
   description: 'Dashboard overview with KPI stat cards and a recent-activity feed.',
   synonyms: ['dashboard', 'overview', 'kpi', 'stats', 'metrics', 'home'],
-  composition: ['Stack', 'Grid', 'Card', 'Heading', 'Text', 'Badge', 'Button', 'Icon', 'Avatar', 'List', 'Table'],
+  composition: [
+    'Stack',
+    'Grid',
+    'Card',
+    'Heading',
+    'Text',
+    'Badge',
+    'Button',
+    'Icon',
+    'Avatar',
+    'List',
+    'Table',
+  ],
   behaviors: [
     'KPI stat cards in a responsive 4-column grid that collapses below 640px.',
     'A 3-column grid pairs a recent-activity table (2/3) with a top-performers list (1/3), collapsing below 768px.',
@@ -19,9 +31,21 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'stats', kind: 'data', description: 'Provide the real KPI figures (replaces SAMPLE_STATS).' },
-    { id: 'activities', kind: 'data', description: 'Provide the real activity feed (replaces SAMPLE_ACTIVITIES).' },
-    { id: 'performers', kind: 'data', description: 'Provide the real top performers (replaces SAMPLE_PERFORMERS).' },
+    {
+      id: 'stats',
+      kind: 'data',
+      description: 'Provide the real KPI figures (replaces SAMPLE_STATS).',
+    },
+    {
+      id: 'activities',
+      kind: 'data',
+      description: 'Provide the real activity feed (replaces SAMPLE_ACTIVITIES).',
+    },
+    {
+      id: 'performers',
+      kind: 'data',
+      description: 'Provide the real top performers (replaces SAMPLE_PERFORMERS).',
+    },
     { id: 'onViewAll', kind: 'handler', description: 'Handle the "view all" action.' },
   ],
   labels: [
@@ -31,5 +55,4 @@ export const spec = {
     { key: 'viewAll', default: 'View all', description: 'View-all button text.' },
   ],
   preview: { width: 'full' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

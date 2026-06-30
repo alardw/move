@@ -341,10 +341,4 @@ export const spec = {
       'Each sub-component spreads HTML attributes',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

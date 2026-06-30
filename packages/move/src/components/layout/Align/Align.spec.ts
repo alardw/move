@@ -175,10 +175,4 @@ export const spec = {
       'Forwards ref to root element',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

@@ -564,10 +564,4 @@ export const spec = {
       'Reduced motion sets opacity to 1 and clears transform immediately',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

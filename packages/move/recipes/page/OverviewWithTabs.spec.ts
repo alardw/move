@@ -23,18 +23,37 @@ export const spec = {
     'All user-facing copy is supplied through the labels prop (i18n).',
   ],
   integrationPoints: [
-    { id: 'stats', kind: 'data', description: 'Provide the real KPI figures (replaces SAMPLE_STATS).' },
-    { id: 'analyticsContent', kind: 'data', description: 'Replace the analytics placeholder with real charts.' },
-    { id: 'reportsContent', kind: 'data', description: 'Replace the reports placeholder with real exports.' },
+    {
+      id: 'stats',
+      kind: 'data',
+      description: 'Provide the real KPI figures (replaces SAMPLE_STATS).',
+    },
+    {
+      id: 'analyticsContent',
+      kind: 'data',
+      description: 'Replace the analytics placeholder with real charts.',
+    },
+    {
+      id: 'reportsContent',
+      kind: 'data',
+      description: 'Replace the reports placeholder with real exports.',
+    },
   ],
   labels: [
     { key: 'title', default: 'Dashboard', description: 'Page title.' },
     { key: 'overview', default: 'Overview', description: 'Overview tab label.' },
     { key: 'analytics', default: 'Analytics', description: 'Analytics tab label.' },
     { key: 'reports', default: 'Reports', description: 'Reports tab label.' },
-    { key: 'analyticsPlaceholder', default: 'Charts and analytics content', description: 'Analytics tab placeholder.' },
-    { key: 'reportsPlaceholder', default: 'Reports and exports content', description: 'Reports tab placeholder.' },
+    {
+      key: 'analyticsPlaceholder',
+      default: 'Charts and analytics content',
+      description: 'Analytics tab placeholder.',
+    },
+    {
+      key: 'reportsPlaceholder',
+      default: 'Reports and exports content',
+      description: 'Reports tab placeholder.',
+    },
   ],
   preview: { width: 'full' },
-  defaultReview: { status: 'approved', decisionSource: 'rule-based' },
 } satisfies RecipeSpec;

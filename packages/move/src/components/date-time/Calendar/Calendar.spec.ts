@@ -441,10 +441,4 @@ export const spec = {
       'aria-live="polite" on nav container',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

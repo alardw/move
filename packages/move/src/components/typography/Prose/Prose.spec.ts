@@ -132,10 +132,4 @@ export const spec = {
       'Spreads HTML attributes',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

@@ -347,10 +347,4 @@ export const spec = {
       'Input disabled attribute forwarded when disabled',
     ] as string[],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'accept-all' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

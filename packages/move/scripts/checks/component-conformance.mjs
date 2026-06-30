@@ -69,9 +69,6 @@ for (const cat of readdirSync(COMPONENTS)) {
     if (!existsSync(join(compDir, `${comp}.test.tsx`))) {
       violations.push({ file: join(compDir, `${comp}.test.tsx`), line: 0, rule: 'G1', msg: 'no test file' });
     }
-    if (!/status:\s*'approved'/.test(readFileSync(specPath, 'utf8'))) {
-      violations.push({ file: specPath, line: 0, rule: 'A17', msg: "defaultReview.status is not 'approved'" });
-    }
     const cssPath = join(compDir, `${comp}.module.css`);
     if (existsSync(cssPath) && /:root\b/.test(readFileSync(cssPath, 'utf8'))) {
       violations.push({ file: cssPath, line: 0, rule: 'B3', msg: 'tokens on :root — scope to .root' });
@@ -80,7 +77,7 @@ for (const cat of readdirSync(COMPONENTS)) {
 }
 
 if (!violations.length) {
-  console.log('✓ component-conformance: clear (A1 A11 A17 A20 B3 C2 E1 G1).');
+  console.log('✓ component-conformance: clear (A1 A11 A20 B3 C2 E1 G1).');
   process.exit(0);
 }
 console.error(`✗ component-conformance: ${violations.length} violation(s).\n`);

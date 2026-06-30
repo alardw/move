@@ -281,10 +281,4 @@ export const spec = {
       'All sub-components forward data-padded attribute',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;

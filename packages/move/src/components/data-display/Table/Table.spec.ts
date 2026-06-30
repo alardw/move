@@ -729,10 +729,4 @@ export const spec = {
       'Reduced motion preference skips animations.',
     ],
   },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'user-confirmed' as const,
-    overrides: {},
-  },
 } satisfies ComponentSpec;
