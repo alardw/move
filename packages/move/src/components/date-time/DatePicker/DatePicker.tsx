@@ -82,10 +82,14 @@ const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
   },
   {
     trigger: 'Content.exit',
+    // Quick container fade only — NO per-cell exit stagger. A long staggered
+    // exit keeps isClosing (and Radix's dismiss layer) alive for hundreds of ms,
+    // which froze cells mid-stagger on rapid reopen and made a sibling popup's
+    // first click get eaten by this one still closing. Same rule Select/TimeField
+    // follow: the container fades, it never staggers out.
     sequence: [[
       { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
       { target: 'ContentInner', animation: { scale: { to: 0.95, duration: 150 } } },
-      { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.exit },
     ]],
   },
 ];
@@ -972,20 +976,15 @@ const DatePickerContentInner = React.forwardRef<HTMLDivElement, DatePickerConten
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    const { runExit, pauseAll } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
     useDismissableExit({
       isClosing: dpCtx?.isClosing ?? false,
       epoch: dpCtx?.epoch ?? 0,
       onExitDone: dpCtx?.onExitDone ?? (() => {}),
       runExit,
+      runEnter,
       pauseAll,
-      // A cancelled close leaves the content half-faded — clear the exit's
-      // inline styles so it snaps back to fully visible.
-      resnap: () => {
-        if (contentRef.current) contentRef.current.style.opacity = '';
-        if (innerRef.current) innerRef.current.style.transform = '';
-      },
     });
 
     const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);

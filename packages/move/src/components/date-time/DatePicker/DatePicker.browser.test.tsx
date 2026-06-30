@@ -34,9 +34,11 @@ function DP() {
       </DatePicker.Trigger>
       <DatePicker.Content>
         <div role="grid">
-          <div role="gridcell">1</div>
-          <div role="gridcell">2</div>
-          <div role="gridcell">3</div>
+          {/* A full grid's worth of cells so the stagger is long enough to
+              still be mid-flight when we interrupt it. */}
+          {Array.from({ length: 28 }, (_, i) => (
+            <div key={i} role="gridcell">{i + 1}</div>
+          ))}
         </div>
       </DatePicker.Content>
     </DatePicker.Root>
@@ -81,5 +83,32 @@ describe('DatePicker — open/close/reopen (real browser)', () => {
     // Give the (cancelled) exit + any deferred close ample time to (not) fire.
     await sleep(500);
     expect(gridPresent()).toBe(true);
+
+    // …and the gridcells must NOT be left frozen half-faded mid-stagger — the
+    // close-cancel must re-run the enter so every cell ends fully visible.
+    const cells = [...document.querySelectorAll('[role="gridcell"]')];
+    expect(cells.length).toBe(28);
+    const allVisible = await waitFor(() =>
+      cells.every((c) => Number(getComputedStyle(c).opacity) > 0.9),
+    );
+    expect(allVisible).toBe(true);
+  });
+
+  it('INVARIANT: a sibling calendar opens on the FIRST click after another closed', async () => {
+    render(<><DP /><DP /></>);
+    const btns = [...document.querySelectorAll('button')].filter(
+      (b) => b.getAttribute('aria-label') === 'Open calendar',
+    );
+    expect(btns.length).toBe(2);
+
+    // Open #1, then close it fully (Escape — not by clicking #2).
+    btns[0].click();
+    expect(await waitFor(gridPresent)).toBe(true);
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(await waitFor(() => !gridPresent())).toBe(true);
+
+    // A single click on #2 must open it (no "needs 2 clicks" sibling lockout).
+    btns[1].click();
+    expect(await waitFor(gridPresent)).toBe(true);
   });
 });

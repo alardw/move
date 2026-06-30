@@ -120,11 +120,13 @@ export interface DismissableExitOptions {
   onExitDone: (epoch: number) => void;
   /** From useAnimations — runs the Content.exit sequence; always resolves. */
   runExit: () => Promise<void>;
-  /** From useAnimations — pauses active animations (used to halt a cancelled exit). */
+  /** From useAnimations — re-runs the Content.enter sequence to restore the
+   *  visible state when a close is cancelled (reopened mid-exit). Re-entering
+   *  animates the container AND its staggered children back, so a half-played
+   *  stagger can't be left frozen. */
+  runEnter: () => Promise<void>;
+  /** From useAnimations — pauses active animations (halts the cancelled exit). */
   pauseAll: () => void;
-  /** Restore the content to fully-visible after a cancelled close (clear the
-   *  inline styles the exit animation set). */
-  resnap?: () => void;
 }
 
 export function useDismissableExit({
@@ -132,22 +134,23 @@ export function useDismissableExit({
   epoch,
   onExitDone,
   runExit,
+  runEnter,
   pauseAll,
-  resnap,
 }: DismissableExitOptions): void {
   const wasClosing = useRef(false);
   // Keep latest callbacks without re-running the exit effect on every render.
-  const latest = useRef({ onExitDone, runExit, pauseAll, resnap });
-  latest.current = { onExitDone, runExit, pauseAll, resnap };
+  const latest = useRef({ onExitDone, runExit, runEnter, pauseAll });
+  latest.current = { onExitDone, runExit, runEnter, pauseAll };
 
   useEffect(() => {
     if (!isClosing) {
       if (wasClosing.current) {
-        // The close was cancelled (reopened mid-exit): stop the exit and
-        // restore the visible state instead of leaving it half-faded.
+        // The close was cancelled (reopened mid-exit): stop the exit and re-run
+        // the enter so the container AND its staggered children animate back to
+        // visible instead of freezing half-faded.
         wasClosing.current = false;
         latest.current.pauseAll();
-        latest.current.resnap?.();
+        latest.current.runEnter();
       }
       return;
     }

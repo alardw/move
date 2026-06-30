@@ -513,17 +513,15 @@ const TimeFieldDropdownInner: React.FC<TimeFieldDropdownProps> = ({
     Content: contentRef as React.RefObject<HTMLElement | null>,
   }), []);
 
-  const { runExit, pauseAll } = useAnimations(contentConfig, contentRefs);
+  const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
   useDismissableExit({
     isClosing: ctx.isClosing,
     epoch: ctx.epoch,
     onExitDone: ctx.onExitDone,
     runExit,
+    runEnter,
     pauseAll,
-    resnap: () => {
-      if (contentRef.current) contentRef.current.style.opacity = '';
-    },
   });
 
   const handlePointerDownOutside = (e: Event) => {

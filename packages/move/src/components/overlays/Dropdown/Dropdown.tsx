@@ -5,7 +5,7 @@ import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { useAnimations, resolveAnimationsConfig, staggerItems, quick, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
@@ -56,7 +56,8 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
 
 interface DropdownContextValue {
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   close: () => void;
   animConfig: AnimationTrigger[] | null;
 }
@@ -85,37 +86,20 @@ export interface DropdownRootProps extends Omit<React.ComponentPropsWithoutRef<t
 const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, animations: animationsProp, ...props }) => {
   const animConfig = resolveAnimationsConfig(DEFAULT_DROPDOWN_ANIMATIONS, animationsProp);
 
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isControlled) {
-        setUncontrolledOpen(true);
-      }
-      onOpenChange?.(true);
-    }
-    // Ignore close requests from Radix — we handle closing via close()
-  }, [isControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isControlled) {
-      setUncontrolledOpen(false);
-    }
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openFn();
+  }, [openFn]);
 
   return (
-    <DropdownContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animConfig }}>
-      <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} {...props} />
+    <DropdownContext.Provider value={{ isClosing, epoch, onExitDone, close, animConfig }}>
+      <RadixDropdownMenu.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} {...props} />
     </DropdownContext.Provider>
   );
 };
@@ -197,7 +181,7 @@ interface DropdownContentInnerProps {
 
 const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInnerProps>(
   function DropdownContentInner(props, ref) {
-    const { isClosing, onCloseComplete, close, animConfig } = useDropdownContext();
+    const { isClosing, epoch, onExitDone, close, animConfig } = useDropdownContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -215,13 +199,16 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
     // first menuitem). We don't override it because a menu has no "current
     // value" — starting from the first item is the right UX. The previous
     // post-animation focus dispatch was redundant and caused a focus flash.
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!contentConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({
+      isClosing,
+      epoch,
+      onExitDone,
+      runExit,
+      runEnter,
+      pauseAll,
+    });
 
     const handlePointerDownOutside = (e: Event) => {
       props.onPointerDownOutside?.(e);

@@ -10,6 +10,7 @@ import {
   useAnimations,
   resolveAnimationsConfig, extractSteps,
   staggerItems, quick, poppy,
+  useDismissable, useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
@@ -74,7 +75,8 @@ interface SelectContextValue {
   onValueChange: (value: string) => void;
   open: boolean;
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   close: () => void;
   registerLabel: (value: string, label: React.ReactNode) => void;
   getLabel: (value: string) => React.ReactNode | undefined;
@@ -145,9 +147,13 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const animConfig = resolveAnimationsConfig(DEFAULT_SELECT_ANIMATIONS, animationsProp);
 
   const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
   const [triggerWidth, setTriggerWidth] = React.useState(200);
+
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
+  const open = isOpen;
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const labelMapRef = React.useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = React.useState(0);
@@ -159,9 +165,6 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const isValueControlled = controlledValue !== undefined;
   const value = isValueControlled ? controlledValue : uncontrolledValue;
 
-  const isOpenControlled = controlledOpen !== undefined;
-  const open = isOpenControlled ? controlledOpen : uncontrolledOpen;
-
   const handleValueChange = React.useCallback((newValue: string) => {
     if (!isValueControlled) {
       setUncontrolledValue(newValue);
@@ -170,21 +173,10 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   }, [isValueControlled, onValueChange]);
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isOpenControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-  }, [isOpenControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isOpenControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isOpenControlled, onOpenChange]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openFn();
+  }, [openFn]);
 
   const registerLabel = React.useCallback((itemValue: string, label: React.ReactNode) => {
     const prev = labelMapRef.current.get(itemValue);
@@ -199,7 +191,7 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   }, []);
 
   return (
-    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, open: !!open, isClosing, onCloseComplete: handleCloseComplete, close, registerLabel, getLabel, animConfig, triggerWidth, setTriggerWidth, triggerRef }}>
+    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, open: !!open, isClosing, epoch, onExitDone, close, registerLabel, getLabel, animConfig, triggerWidth, setTriggerWidth, triggerRef }}>
       <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={false}>
         {children}
       </RadixDropdownMenu.Root>
@@ -441,7 +433,7 @@ interface SelectContentInnerProps {
 
 const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerProps>(
   function SelectContentInner(props, ref) {
-    const { isClosing, onCloseComplete, close, animConfig, triggerWidth } = useSelectContext();
+    const { isClosing, epoch, onExitDone, close, animConfig, triggerWidth } = useSelectContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -501,14 +493,16 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
 
     // Enter/exit via useAnimations orchestrator. Focus is already placed
     // by the useLayoutEffect above, so nothing to do on animation end.
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    // Exit animation
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!contentConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({
+      isClosing,
+      epoch,
+      onExitDone,
+      runExit,
+      runEnter,
+      pauseAll,
+    });
 
     const handlePointerDownOutside = (e: Event) => {
       props.onPointerDownOutside?.(e);

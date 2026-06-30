@@ -389,6 +389,7 @@ export interface UseAnimationsReturn {
   handlers: HandlerMap;
   /** Imperatively run all exit sequences (for close/dismiss animations) */
   runExit: () => Promise<void>;
+  runEnter: () => Promise<void>;
   /** Pause all active animations */
   pauseAll: () => void;
   /** Resume all paused animations */
@@ -846,6 +847,39 @@ export function useAnimations(
     return Promise.all(exitPromises).then(() => {});
   }, [config, refs]);
 
+  // Re-run the lifecycle ENTER sequences on demand. Used to restore a popup to
+  // its visible state when a close is cancelled mid-exit — re-entering animates
+  // the container AND its staggered children back, so callers don't have to
+  // enumerate every element the exit touched.
+  const runEnterSequences = useCallback(() => {
+    if (!config) return Promise.resolve();
+
+    const enterPromises: Promise<void>[] = [];
+
+    for (const triggerConfig of config) {
+      if (triggerConfig.sequence === false || triggerConfig.deps) continue;
+      const parsed = parseTrigger(triggerConfig.trigger);
+
+      if (parsed.type === 'lifecycle' && parsed.phase === 'enter' && parsed.slot) {
+        enterPromises.push(
+          executeSequence(
+            triggerConfig.sequence as SequenceItem[],
+            refs,
+            cancelRefs.current,
+            parsed.slot,
+            triggerConfig.vars,
+            'enter',
+            activeAnims.current,
+            triggerAnims.current,
+            triggerConfig.trigger,
+          ).then(() => triggerConfig.onComplete?.()),
+        );
+      }
+    }
+
+    return Promise.all(enterPromises).then(() => {});
+  }, [config, refs]);
+
   // Pause/resume controls
   const pauseAll = useCallback(() => {
     for (const anim of activeAnims.current) {
@@ -866,5 +900,5 @@ export function useAnimations(
   const exitRef = useRef(runExitSequences);
   exitRef.current = runExitSequences;
 
-  return { handlers, runExit: runExitSequences, pauseAll, resumeAll, getAnimation };
+  return { handlers, runExit: runExitSequences, runEnter: runEnterSequences, pauseAll, resumeAll, getAnimation };
 }
