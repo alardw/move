@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 /**
- * Recipe spec ↔ source sync linter (the recipe sibling of spec-drift.mjs).
+ * composition-spec-drift — the CompositionSpec ↔ source SUBSTANCE drift (the
+ * recipe sibling of spec-drift.mjs).
  *
  * Recipes are spec-driven: each `packages/move/recipes/<group>/<Name>.spec.ts`
  * (`satisfies CompositionSpec`) is the source of truth for its `<Name>.tsx`. This
- * check enforces that the two don't drift on the deterministic contracts:
+ * check enforces the deterministic SUBSTANCE contracts (the document-side
+ * contracts — slugs, synonyms, registration — live in recipe-document-drift):
  *
  *   1. Every recipe `.tsx` has a sibling `.spec.ts` (and vice versa).
  *   2. composition parity — `spec.composition` exactly matches the value
@@ -12,11 +14,12 @@
  *      declared, and every declared component is actually imported).
  *   3. labels parity — `spec.labels[].key` exactly matches the `defaultLabels`
  *      object keys in the source.
+ *   4. a sibling `.test.tsx` exists — without one the logic is unverified.
  *
  * (Behaviour coverage / integration-point wiring stay with the manual
  * `recipe-validate` skill — they aren't deterministically checkable here.)
  *
- * Exit 0 = all recipes in sync; 1 = drift found.
+ * Exit 0 = all compositions in sync; 1 = drift found.
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname, basename, relative } from 'node:path';
@@ -111,7 +114,8 @@ const setEq = (a, b) => {
 
 let errors = 0;
 const out = [];
-for (const specFile of recipeSpecs(RECIPES).sort()) {
+const specs = recipeSpecs(RECIPES).sort();
+for (const specFile of specs) {
   const srcFile = specFile.replace(/\.spec\.ts$/, '.tsx');
   const name = basename(specFile, '.spec.ts');
   if (!existsSync(srcFile)) {
@@ -144,15 +148,6 @@ for (const specFile of recipeSpecs(RECIPES).sort()) {
   }
 }
 
-// registry-1: no two recipes share a slug. Slugs live on the registry entries
-// now (publishing is a registry concern), not in the spec.
-const registrySrc = readFileSync(join(RECIPES, 'registry.ts'), 'utf8');
-const slugSeen = new Map();
-for (const m of registrySrc.matchAll(/^\s*slug:\s*'([^']+)'/gm)) {
-  if (slugSeen.has(m[1])) { errors++; out.push(`✗ duplicate recipe slug '${m[1]}' in registry.ts`); }
-  else slugSeen.set(m[1], true);
-}
-
 // every recipe source should also have a spec
 function recipeSources(dir, out = []) {
   for (const entry of readdirSync(dir)) {
@@ -169,9 +164,9 @@ for (const src of recipeSources(RECIPES)) {
 }
 
 if (errors > 0) {
-  console.error('✗ recipe-spec-drift: recipe spec ↔ source out of sync.\n');
+  console.error('✗ composition-spec-drift: composition spec ↔ source out of sync.\n');
   console.error(out.join('\n'));
   console.error(`\n${errors} drift error(s).`);
   process.exit(1);
 }
-console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, tests, unique slugs).');
+console.log(`✓ composition-spec-drift: ${specs.length} compositions in sync (composition, labels, tests).`);

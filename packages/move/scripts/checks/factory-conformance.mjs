@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Factory-shape conformance (AST) — the structural rules a grep can't safely
- * check, reasoning over the TypeScript tree like recipe-spec-drift / spec-drift.
+ * check, reasoning over the TypeScript tree like composition-spec-drift / spec-drift.
  *
  * For every `withMoveComponent({...})` call (so compound components with several
  * factories in one file each validate independently):

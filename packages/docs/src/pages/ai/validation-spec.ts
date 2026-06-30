@@ -138,8 +138,8 @@ const RULES: RuleDef[] = [
   { id: 'specParity-2', group: 'specParity', rule: 'Behavior contracts preserved (controlled, dismiss)', why: 'controlledProps/dismissBehavior are easy to drop in a rewrite; the check keeps source honest to the declared behaviour.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-3', group: 'specParity', rule: 'Prop parity — none silently dropped', why: 'A spec prop missing from the source shrinks the public API without anyone noticing.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
-  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
-  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
+  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'gap' } } },
+  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'gap' } } },
   { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
@@ -182,11 +182,11 @@ const RULES: RuleDef[] = [
   { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'gap' } } },
 
   // Registry (recipe / registered)
-  { id: 'registry-1', group: 'registry', rule: 'Registered once, no duplicate slug', why: 'A duplicate slug collides the route and the overview card.', enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' } } },
-  { id: 'registry-2', group: 'registry', rule: 'Registry entry fields match the spec', why: 'The card/title/synonyms come from the registry; drift from the spec mislabels it.', enforcement: { recipe: { status: 'gap' } } },
+  { id: 'registry-1', group: 'registry', rule: 'Registered once, no duplicate slug', why: 'A duplicate slug collides the route and the overview card.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },
+  { id: 'registry-2', group: 'registry', rule: 'Registry entry is a complete RecipeDocument', why: 'The card/title/synonyms are authored on the registry entry; a missing slug, synonym, or registration leaves the recipe unrouted or unfindable.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },
 
   // Unit tests (all with logic)
-  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'check', check: 'recipe-spec-drift' } } },
+  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
 
   // Accessibility tests (all rendered)
   { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('gap') },
@@ -203,8 +203,8 @@ const RULES: RuleDef[] = [
   { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('gap') },
 
   // Documentation & discoverability (component + recipe / published)
-  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'doc-coverage' }, recipe: { status: 'check', check: 'doc-coverage' } } },
-  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'doc-synonyms' }, recipe: { status: 'check', check: 'doc-synonyms' } } },
+  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'component-document-drift' }, recipe: { status: 'check', check: 'recipe-document-drift' } } },
+  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'component-document-drift' }, recipe: { status: 'check', check: 'recipe-document-drift' } } },
 ];
 
 export const VALIDATION: ValidationSpec = {

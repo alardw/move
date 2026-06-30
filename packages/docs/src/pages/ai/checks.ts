@@ -52,10 +52,10 @@ export const CHECKS: CheckDoc[] = [
       'Spec ↔ source ↔ docs stay in sync — the slots, props, and defaults a spec declares match the component and its generated docs.',
   },
   {
-    name: 'recipe-spec-drift',
+    name: 'composition-spec-drift',
     appliesTo: 'recipe',
     enforces:
-      'The recipe sibling of spec-drift — a recipe’s composition, labels, and behaviours match its spec.',
+      'The recipe sibling of spec-drift — a composition’s imports, labels, and test match its CompositionSpec (the substance ↔ source drift).',
   },
   {
     name: 'component-conformance',
@@ -149,14 +149,14 @@ export const CHECKS: CheckDoc[] = [
     enforces: "Every spec integration point resolves — its contract is exported from the public barrel and any fixture/sample exists, so the docs Integrations panel can't dangle.",
   },
   {
-    name: 'doc-synonyms',
-    appliesTo: 'component',
-    enforces: 'Every published document (component meta, recipe registry entry) declares ≥1 search synonym, so it’s findable under the name people already use.',
+    name: 'recipe-document-drift',
+    appliesTo: 'recipe',
+    enforces: 'Every recipe’s RecipeDocument (its registry entry) is in sync — a unique slug, ≥1 search synonym, and the spec is registered — so nothing ships undocumented or unfindable.',
   },
   {
-    name: 'doc-coverage',
+    name: 'component-document-drift',
     appliesTo: 'component',
-    enforces: 'Every published artifact has a doc page with live samples — a component content folder (meta + ≥1 sample) or a recipe registry entry — so nothing ships undocumented.',
+    enforces: 'Every component’s ComponentDocument (its content folder) is in sync — ≥1 search synonym and a doc page with live samples — so nothing ships undocumented or unfindable.',
   },
   {
     name: 'data-attrs',
