@@ -22,6 +22,7 @@ export type {
   GlobalSlotProps,
   CxFn,
   SpFn,
+  SlotFn,
   SetupContext,
   SetupReturn,
   MoveComponentOptions,

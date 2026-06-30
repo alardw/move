@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../actions/Button';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
 import { useAudioPlayer } from './useAudioPlayer';
@@ -151,7 +151,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     'radius', 'size',
   ],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<AudioPlayerLabels>) };
 
     const player = useAudioPlayer({
@@ -186,12 +186,12 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     const audioTracksProp = props.audioTracks as AudioTrack[] | undefined;
 
     // Resolved icons
-    const playIcon = useResolvedIcon('play', 18);
-    const pauseIcon = useResolvedIcon('pause', 18);
-    const volume2Icon = useResolvedIcon('volume-2', 18);
-    const volumeXIcon = useResolvedIcon('volume-x', 18);
-    const captionsIcon = useResolvedIcon('captions', 18);
-    const settingsIcon = useResolvedIcon('settings', 18);
+    const playIcon = useIcon('play', 18);
+    const pauseIcon = useIcon('pause', 18);
+    const volume2Icon = useIcon('unmute', 18);
+    const volumeXIcon = useIcon('mute', 18);
+    const captionsIcon = useIcon('captions', 18);
+    const settingsIcon = useIcon('settings', 18);
 
     // Settings menu
     const [settingsMenuOpen, setSettingsMenuOpen] = React.useState(false);
@@ -375,7 +375,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
 
             {/* Subtitle overlay */}
             {player.activeCue && (
-              <div className={cx('subtitleOverlay')}>
+              <div {...slot('subtitleOverlay')}>
                 {player.activeCue.text}
               </div>
             )}
@@ -384,7 +384,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             <Button
               variant="ghost"
               size="sm"
-              className={cx('playButton')}
+              {...slot('playButton')}
               onClick={player.togglePlay}
               aria-label={player.playing ? labels.pause : labels.play}
 
@@ -407,7 +407,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
 
             {/* Time */}
             {showTime && (
-              <span className={cx('time')}>
+              <span {...slot('time')}>
                 {formatTime(player.currentTime)} / {formatTime(player.duration)}
               </span>
             )}
@@ -417,7 +417,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
               <Button
                 variant="ghost"
                 size="sm"
-                className={cx('subtitleButton')}
+                {...slot('subtitleButton')}
                 data-active={player.activeSubtitleIndex >= 0}
                 onClick={handleSubtitleToggle}
                 aria-label={labels.subtitles}
@@ -439,7 +439,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cx('settingsButton')}
+                    {...slot('settingsButton')}
                     aria-label={labels.settings}
                   >
                     {settingsIcon}
@@ -454,7 +454,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={cx('volumeButton')}
+                  {...slot('volumeButton')}
                   onClick={player.toggleMute}
                   aria-label={player.muted ? labels.unmute : labels.mute}
 
@@ -462,7 +462,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                   {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
                 </Button>
                 <div
-                  className={cx('volumeSlider')}
+                  {...slot('volumeSlider')}
                   onMouseDown={handleVolumeMouseDown}
                 >
                   <div className={styles.volumeTrack}>

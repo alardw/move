@@ -1,6 +1,7 @@
 import * as React from 'react';
 import type {
   MoveComponentOptions,
+  SlotProps,
   SlotPropsMap,
   SetupContext,
   SetupReturn,
@@ -84,6 +85,13 @@ export function withMoveComponent<
       // 5. Build cx() and sp()
       const cx = createCx<TSlots>(styles);
       const sp = createSp<TSlots>(globalSP, instanceSP);
+      const slot = (
+        name: TSlots,
+        ...extra: (string | false | null | undefined)[]
+      ): SlotProps => {
+        const { className, style, ...rest } = sp(name);
+        return { ...rest, className: cx(name, ...extra, className), style };
+      };
 
       // 6. Separate attrs from Move-specific props
       const attrs: Record<string, unknown> = { 'data-move': name };
@@ -100,6 +108,7 @@ export function withMoveComponent<
         internalRef: internalRef as React.RefObject<TRef | null>,
         cx,
         sp,
+        slot,
         attrs,
       };
 

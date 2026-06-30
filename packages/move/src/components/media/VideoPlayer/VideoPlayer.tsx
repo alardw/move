@@ -5,7 +5,7 @@ import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../actions/Button';
 import { Popover } from '../../overlays/Popover';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
 import { useVideoPlayer } from './useVideoPlayer';
@@ -171,7 +171,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     'radius', 'aspectRatio', 'width', 'height',
   ],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<VideoPlayerLabels>) };
 
     const player = useVideoPlayer({
@@ -209,14 +209,14 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     const poster = props.poster as string | undefined;
 
     // Resolved icons
-    const playIcon = useResolvedIcon('play', 18);
-    const pauseIcon = useResolvedIcon('pause', 18);
-    const volume2Icon = useResolvedIcon('volume-2', 18);
-    const volumeXIcon = useResolvedIcon('volume-x', 18);
-    const captionsIcon = useResolvedIcon('captions', 18);
-    const maximizeIcon = useResolvedIcon('maximize', 18);
-    const minimizeIcon = useResolvedIcon('minimize', 18);
-    const settingsIcon = useResolvedIcon('settings', 18);
+    const playIcon = useIcon('play', 18);
+    const pauseIcon = useIcon('pause', 18);
+    const volume2Icon = useIcon('unmute', 18);
+    const volumeXIcon = useIcon('mute', 18);
+    const captionsIcon = useIcon('captions', 18);
+    const maximizeIcon = useIcon('enterFullscreen', 18);
+    const minimizeIcon = useIcon('exitFullscreen', 18);
+    const settingsIcon = useIcon('settings', 18);
 
     // Controls auto-hide
     const [controlsVisible, setControlsVisible] = React.useState(true);
@@ -497,7 +497,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
 
             {/* Subtitle overlay */}
             {player.activeCue && (
-              <div className={cx('subtitleOverlay')}>
+              <div {...slot('subtitleOverlay')}>
                 {player.activeCue.text}
               </div>
             )}
@@ -526,7 +526,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 <Button
                   variant="ghost"
                   size="sm"
-                  className={cx('playButton')}
+                  {...slot('playButton')}
                   onClick={player.togglePlay}
                   aria-label={player.playing ? labels.pause : labels.play}
 
@@ -536,7 +536,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
 
                 {/* Time */}
                 {showTime && (
-                  <span className={cx('time')}>
+                  <span {...slot('time')}>
                     {formatTime(player.currentTime)} / {formatTime(player.duration)}
                   </span>
                 )}
@@ -557,7 +557,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cx('settingsButton')}
+                        {...slot('settingsButton')}
                         aria-label={labels.settings}
                       >
                         {settingsIcon}
@@ -573,7 +573,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       <Button
                         variant="ghost"
                         size="sm"
-                        className={cx('subtitleButton')}
+                        {...slot('subtitleButton')}
                         data-active={player.activeSubtitleIndex >= 0}
                         aria-label={labels.subtitles}
 
@@ -623,7 +623,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={cx('volumeButton')}
+                      {...slot('volumeButton')}
                       onClick={player.toggleMute}
                       aria-label={player.muted ? labels.unmute : labels.mute}
 
@@ -631,7 +631,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
                     </Button>
                     <div
-                      className={cx('volumeSlider')}
+                      {...slot('volumeSlider')}
                       onMouseDown={handleVolumeMouseDown}
                     >
                       <div className={styles.volumeTrack}>
@@ -646,7 +646,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                   <Button
                     variant="ghost"
                     size="sm"
-                    className={cx('fullscreenButton')}
+                    {...slot('fullscreenButton')}
                     onClick={player.toggleFullscreen}
                     aria-label={player.isFullscreen ? labels.exitFullscreen : labels.fullscreen}
 

@@ -14,7 +14,7 @@ import {
 import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../overlays/Tooltip';
 import { Button } from '../../actions/Button';
-import { Icon } from '../../../infrastructure/Icon';
+import { Icon, useIcon } from '../../../infrastructure/Icon';
 import type { SlotPropsMap } from '../../../engine';
 import { useSidebar } from './useSidebar';
 import type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
@@ -329,9 +329,10 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
   slots: ['header', 'mobileClose'] as const,
   moveProps: ['collapsedChildren', 'labels'],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<SidebarLabels>) };
     const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
+    const closeIcon = useIcon('close', 16);
     const scrollCtx = React.useContext(SidebarScrollContext);
     const showCollapsed = collapsed && !isMobile;
 
@@ -356,8 +357,8 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
               ? props.collapsedChildren
               : props.children}
             {isMobile && (
-              <Button variant="ghost" size="sm" onClick={handleClose} aria-label={labels.close} className={cx('mobileClose')}>
-                <Icon name="x" />
+              <Button variant="ghost" size="sm" onClick={handleClose} aria-label={labels.close} {...slot('mobileClose')}>
+                {closeIcon}
               </Button>
             )}
           </div>
@@ -744,20 +745,20 @@ export interface SidebarTriggerProps extends React.HTMLAttributes<HTMLElement> {
   /** When to show: 'desktop' (collapse only), 'mobile' (open/close only), 'both' (default). */
   visibility?: 'desktop' | 'mobile' | 'both';
   asChild?: boolean;
-  sp?: SlotPropsMap<'trigger' | 'triggerIcon' | 'triggerLabel'>;
+  sp?: SlotPropsMap<'trigger' | 'itemIcon' | 'itemLabel'>;
 }
 
 const SidebarTrigger = withMoveComponent<
-  'trigger' | 'triggerIcon' | 'triggerLabel' | 'itemIcon' | 'itemLabel',
+  'trigger' | 'itemIcon' | 'itemLabel',
   SidebarTriggerProps,
   HTMLButtonElement
 >({
   name: 'SidebarTrigger',
   styles,
-  slots: ['trigger', 'triggerIcon', 'triggerLabel', 'itemIcon', 'itemLabel'] as const,
+  slots: ['trigger', 'itemIcon', 'itemLabel'] as const,
   moveProps: ['icon', 'tooltip', 'visibility', 'asChild'],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const { toggleCollapsed, toggleMobileOpen, isMobile } = useSidebarContext();
     const visibility = (props.visibility as string) || 'both';
     // Show the tooltip whenever the consumer set one. (Original
@@ -790,29 +791,15 @@ const SidebarTrigger = withMoveComponent<
         const triggerSp = sp('trigger');
         const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
 
-        const iconSp = sp('triggerIcon');
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
-
-        const labelSp = sp('triggerLabel');
-        const { className: labelSpClass, style: labelSpStyle, ...labelSpRest } = labelSp as Record<string, unknown>;
-
         const content = (
           <>
             {props.icon && (
-              <span
-                {...iconSpRest}
-                className={cx('itemIcon', iconSpClass as string | undefined)}
-                style={iconSpStyle as React.CSSProperties}
-              >
+              <span {...slot('itemIcon')}>
                 {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon as React.ReactNode}
               </span>
             )}
             {props.children != null && (
-              <span
-                {...labelSpRest}
-                className={cx('itemLabel', labelSpClass as string | undefined)}
-                style={labelSpStyle as React.CSSProperties}
-              >
+              <span {...slot('itemLabel')}>
                 {props.children}
               </span>
             )}

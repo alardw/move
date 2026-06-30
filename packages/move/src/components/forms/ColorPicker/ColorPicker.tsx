@@ -162,7 +162,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     'labels', 'readOnly',
   ],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ColorPickerLabels>) };
 
     const hookOptions: UseColorPickerOptions = {
@@ -494,7 +494,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
               {isHexFormat ? (
                 <input
                   type="text"
-                  className={cx('channelInput')}
+                  {...slot('channelInput')}
                   data-channel="hex"
                   value={isHexFocused ? hexText : cp.hexString}
                   onChange={handleHexChange}
@@ -511,7 +511,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     key={ch.label}
                     type="text"
                     inputMode="numeric"
-                    className={cx('channelInput')}
+                    {...slot('channelInput')}
                     data-channel={ch.label.toLowerCase()}
                     value={focusedChannel === i ? channelTexts[i] : String(ch.value)}
                     onChange={(e) => handleChannelChange(i, e.target.value)}
@@ -531,7 +531,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   <input
                     type="text"
                     inputMode="numeric"
-                    className={cx('alphaInput')}
+                    {...slot('alphaInput')}
                     value={isAlphaFocused ? alphaText : String(Math.round(cp.hsv.a * 100))}
                     onChange={handleAlphaChange}
                     onFocus={handleAlphaFocus}

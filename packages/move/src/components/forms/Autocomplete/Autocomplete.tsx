@@ -5,12 +5,13 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import { useAnimations, resolveAnimationsConfig, extractSteps, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
+import type { AsyncResource } from '../../../adapters';
 import styles from './Autocomplete.module.css';
 
 // =============================================================================
@@ -54,11 +55,14 @@ export interface AutocompleteLabels {
   clearAll: string;
   /** Tag remove button accessible label template; `{value}` is replaced with the tag value */
   removeTag: string;
+  /** RetryTrigger accessible label */
+  retry: string;
 }
 
 const DEFAULT_LABELS: AutocompleteLabels = {
   clearAll: 'Clear all',
   removeTag: 'Remove {value}',
+  retry: 'Retry',
 };
 
 // =============================================================================
@@ -104,6 +108,10 @@ export interface AutocompleteRootProps {
   defaultInputValue?: string;
   onInputValueChange?: (value: string) => void;
   loading?: boolean;
+  /** Async data source for the options list. When set, drives loading/error
+   *  state (superseding `loading`) and feeds RetryTrigger via `retry`. The data
+   *  payload is not consumed — options are still rendered as Item children. */
+  resource?: AsyncResource<unknown>;
   animations?: AnimationTrigger[] | false;
   closeOnSelect?: boolean;
   openOnFocus?: boolean;
@@ -195,7 +203,7 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
   defaults: { size: 'md' as AutocompleteTriggerSize, variant: 'outlined' as AutocompleteTriggerVariant },
   moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const ac = useAutocompleteContext();
     const { inputRef, isOpen, isClosing, setTriggerWidth } = ac;
     const moveState = isOpen && !isClosing ? 'open' : 'closed';
@@ -255,9 +263,9 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
               {...(props.invalid ? { 'data-invalid': '' } : {})}
               onClick={handleClick}
             >
-              <div className={cx('triggerContent')}>{contentChildren}</div>
+              <div {...slot('triggerContent')}>{contentChildren}</div>
               {actionChildren.length > 0 && (
-                <div className={cx('triggerActions')}>{actionChildren}</div>
+                <div {...slot('triggerActions')}>{actionChildren}</div>
               )}
             </div>
           </RadixPopover.Anchor>
@@ -489,7 +497,7 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
-    const resolvedX = useResolvedIcon('x', 16);
+    const resolvedX = useIcon('clear', 16);
 
     const handleRemove = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -549,7 +557,7 @@ const AutocompleteIcon = withMoveComponent<'icon', AutocompleteIconProps, HTMLSp
   slots: ['icon'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const resolvedChevron = useResolvedIcon('chevron-down', 16);
+    const resolvedChevron = useIcon('expand', 16);
     const iconRef = React.useRef<HTMLSpanElement>(null);
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
     const { animConfig } = useAutocompleteContext();
@@ -616,7 +624,7 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
-    const resolvedX = useResolvedIcon('x', 14);
+    const resolvedX = useIcon('clear', 14);
 
     const handleClick = (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -838,7 +846,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     const ac = useAutocompleteContext();
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
-    const resolvedCheck = useResolvedIcon('check', 14);
+    const resolvedCheck = useIcon('selected', 14);
     const itemValue = props.value as string;
     const isDisabled = props.disabled as boolean;
     const isSelected = ac.isSelected(itemValue);
@@ -972,7 +980,7 @@ const AutocompleteItemIndicator = withMoveComponent<'itemIndicator', Autocomplet
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
     const itemCtx = React.useContext(AutocompleteItemContext);
-    const resolvedCheck = useResolvedIcon('check', 14);
+    const resolvedCheck = useIcon('selected', 14);
     const isSelected = itemCtx ? ac.isSelected(itemCtx.value) : false;
 
     return {
@@ -1098,7 +1106,7 @@ const AutocompleteEmpty = withMoveComponent<'empty', AutocompleteEmptyProps, HTM
 
     return {
       render() {
-        if (ac.loading) return null;
+        if (ac.loading || ac.hasError) return null;
         const visible = ac.getVisibleItems();
         if (visible.length > 0) return null;
 
@@ -1160,6 +1168,100 @@ const AutocompleteLoading = withMoveComponent<'loading', AutocompleteLoadingProp
           >
             {props.children}
           </div>
+        );
+      },
+    };
+  },
+});
+
+// =============================================================================
+// Error
+// =============================================================================
+
+export interface AutocompleteErrorProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  sp?: SlotPropsMap<'error'>;
+}
+
+const AutocompleteError = withMoveComponent<'error', AutocompleteErrorProps, HTMLDivElement>({
+  name: 'AutocompleteError',
+  styles,
+  slots: ['error'] as const,
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const ac = useAutocompleteContext();
+
+    return {
+      render() {
+        if (!ac.hasError) return null;
+
+        const errorSp = sp('error');
+        const { className: spClass, style: spStyle, ...spRest } = errorSp as Record<string, unknown>;
+        return (
+          <div
+            {...attrs}
+            {...spRest}
+            ref={ref}
+            role="alert"
+            aria-live="assertive"
+            className={cx('error', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </div>
+        );
+      },
+    };
+  },
+});
+
+// =============================================================================
+// RetryTrigger
+// =============================================================================
+
+export interface AutocompleteRetryTriggerProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  sp?: SlotPropsMap<'retryTrigger'>;
+}
+
+const AutocompleteRetryTrigger = withMoveComponent<'retryTrigger', AutocompleteRetryTriggerProps, HTMLButtonElement>({
+  name: 'AutocompleteRetryTrigger',
+  styles,
+  slots: ['retryTrigger'] as const,
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const ac = useAutocompleteContext();
+
+    const handleClick = (e: React.MouseEvent) => {
+      e.stopPropagation();
+      ac.retry?.();
+    };
+
+    return {
+      render() {
+        // Only meaningful in the error state, and only when the resource supplied
+        // a retry callback.
+        if (!ac.hasError || !ac.retry) return null;
+
+        const retrySp = sp('retryTrigger');
+        const { className: spClass, style: spStyle, ...spRest } = retrySp as Record<string, unknown>;
+        return (
+          <button
+            {...attrs}
+            {...spRest}
+            ref={ref}
+            type="button"
+            aria-label={ac.labels.retry}
+            className={cx('retryTrigger', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            onClick={handleClick}
+          >
+            {props.children}
+          </button>
         );
       },
     };
@@ -1249,5 +1351,7 @@ export const Autocomplete = {
   GroupLabel: AutocompleteGroupLabel,
   Empty: AutocompleteEmpty,
   Loading: AutocompleteLoading,
+  Error: AutocompleteError,
+  RetryTrigger: AutocompleteRetryTrigger,
   Separator: AutocompleteSeparator,
 };

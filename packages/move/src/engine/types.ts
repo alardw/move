@@ -35,6 +35,15 @@ export type SpFn<TSlots extends string> = (
   localProps?: SlotProps
 ) => SlotProps;
 
+/** cx + sp combined for one element. Spread the result on a slotted node and the
+ *  part is fully slot-props-themeable: the module class is merged with the
+ *  consumer's className, and their style + any extra attrs are applied. The one
+ *  obvious way to render a themeable slot — `<div {...slot('header')} />`. */
+export type SlotFn<TSlots extends string> = (
+  slot: TSlots,
+  ...extra: (string | false | null | undefined)[]
+) => SlotProps;
+
 /** Context passed to every setup() function */
 export interface SetupContext<
   TSlots extends string,
@@ -51,6 +60,8 @@ export interface SetupContext<
   cx: CxFn<TSlots>;
   /** Slot-props merge function */
   sp: SpFn<TSlots>;
+  /** cx + sp combined — spread on a slotted element to make the part themeable */
+  slot: SlotFn<TSlots>;
   /** HTML attributes (user props minus Move-specific keys) */
   attrs: Record<string, unknown>;
 }
