@@ -1,12 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Autocomplete } from 'move';
+import { useCallback, useEffect, useState } from 'react';
+import { Autocomplete, asyncResource } from 'move';
+import { fakeAsyncSource } from '../../../../fixtures/asyncSource';
 
-// A rough sketch of "hit an API as the user types": debounce the
-// input, flip `loading` on while the request is out, swap results
-// when it lands. This sample fakes the request with a timeout so the
-// story is visible without a server.
-
-const ALL_PEOPLE = [
+const PEOPLE = [
   { value: '1', label: 'Ada Lovelace' },
   { value: '2', label: 'Alan Turing' },
   { value: '3', label: 'Grace Hopper' },
@@ -17,40 +13,47 @@ const ALL_PEOPLE = [
   { value: '8', label: 'Margaret Hamilton' },
 ];
 
-function fakeSearch(query: string): Promise<typeof ALL_PEOPLE> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const q = query.toLowerCase();
-      resolve(q ? ALL_PEOPLE.filter((p) => p.label.toLowerCase().includes(q)) : ALL_PEOPLE);
-    }, 450); // deliberate lag so the loading state is visible
-  });
-}
+type Person = (typeof PEOPLE)[number];
+
+// ── Stand-in for your data layer ──────────────────────────────────────────────
+// In a real app this is your fetch / React Query / SWR call. Here it's a fake
+// that fails ~40% of the time so the error + retry path is visible. Delete it and
+// drop in your real request — the Move wiring below doesn't change.
+const search = fakeAsyncSource<Person>({
+  data: PEOPLE,
+  failRate: 0.4,
+  filter: (p, q) => p.label.toLowerCase().includes(q.toLowerCase()),
+});
 
 export default function AsyncSample() {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState(ALL_PEOPLE);
-  const [loading, setLoading] = useState(false);
+  const [state, setState] = useState<{ data?: Person[]; error?: Error; isLoading: boolean }>({
+    isLoading: false,
+  });
 
-  // Debounce the query so we don't fire on every keystroke.
-  const debounced = useDebounced(query, 180);
+  // Run the request; aborts any in-flight one so a stale result can't overwrite a
+  // newer query. (React Query / SWR do this for you — shown by hand here.)
+  const run = useCallback((q: string) => {
+    const ctrl = new AbortController();
+    setState((s) => ({ ...s, isLoading: true, error: undefined }));
+    search(q, ctrl.signal)
+      .then((data) => setState({ data, isLoading: false }))
+      .catch((error: Error) => {
+        if (error.name !== 'AbortError') setState({ error, isLoading: false });
+      });
+    return () => ctrl.abort();
+  }, []);
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    fakeSearch(debounced).then((rows) => {
-      if (cancelled) return;
-      setResults(rows);
-      setLoading(false);
-    });
-    return () => { cancelled = true; };
-  }, [debounced]);
+  useEffect(() => run(query), [query, run]);
+
+  // The one Move-specific line: collapse your data-layer state onto the contract.
+  const resource = asyncResource.from({ ...state, refetch: () => run(query) });
 
   return (
     <Autocomplete.Root
+      resource={resource}
       onInputValueChange={setQuery}
-      loading={loading}
-      // The server is doing the filtering; tell the client filter to
-      // stand down, otherwise it would narrow our results further.
+      // The server does the filtering; stand the client filter down.
       filterFn={() => true}
     >
       <Autocomplete.Trigger>
@@ -60,7 +63,11 @@ export default function AsyncSample() {
       </Autocomplete.Trigger>
       <Autocomplete.Content>
         <Autocomplete.Loading>Searching…</Autocomplete.Loading>
-        {results.map((p) => (
+        <Autocomplete.Error>
+          Couldn’t reach the server.
+          <Autocomplete.RetryTrigger>Try again</Autocomplete.RetryTrigger>
+        </Autocomplete.Error>
+        {(state.data ?? []).map((p) => (
           <Autocomplete.Item key={p.value} value={p.value}>
             {p.label}
           </Autocomplete.Item>
@@ -69,13 +76,4 @@ export default function AsyncSample() {
       </Autocomplete.Content>
     </Autocomplete.Root>
   );
-}
-
-function useDebounced<T>(value: T, delayMs: number): T {
-  const [debounced, setDebounced] = useState(value);
-  useEffect(() => {
-    const id = window.setTimeout(() => setDebounced(value), delayMs);
-    return () => window.clearTimeout(id);
-  }, [value, delayMs]);
-  return useMemo(() => debounced, [debounced]);
 }
