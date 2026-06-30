@@ -1219,4 +1219,15 @@ export const spec = {
   },
 
   iconsUsed: ['check', 'chevron-down', 'x'],
+  integrationPoints: [
+    {
+      id: 'resource',
+      kind: 'data' as const,
+      contract: 'AsyncResource<unknown>',
+      default: 'required' as const,
+      fixture: 'fakeAsyncSource',
+      description:
+        'Async source for the options list — drives the loading, error, and retry states.',
+    },
+  ],
 } satisfies ComponentSpec;

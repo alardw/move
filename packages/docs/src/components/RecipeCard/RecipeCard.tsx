@@ -21,6 +21,7 @@ export interface RecipeCardProps {
 export function RecipeCard({ recipe }: RecipeCardProps) {
   const { Component } = recipe;
   const preview = recipe.preview ?? {};
+  const hasIntegration = (recipe.spec?.integrationPoints?.length ?? 0) > 0;
   // Recipes are mostly full flows/layouts → default to the widest panel.
   const width = preview.width ?? 'full';
   const bare = preview.bare ?? false;
@@ -70,7 +71,12 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
           >
             <Text weight="medium">{recipe.title}</Text>
           </RouterLink>
-          <Badge variant="soft" size="sm">{recipe.group}</Badge>
+          <Stack direction="row" gap="xs" align="center">
+            {hasIntegration && (
+              <Badge variant="soft" size="sm" color="info">Integration</Badge>
+            )}
+            <Badge variant="soft" size="sm">{recipe.group}</Badge>
+          </Stack>
         </Stack>
         <Text size="sm" color="muted">{recipe.description}</Text>
       </Stack>

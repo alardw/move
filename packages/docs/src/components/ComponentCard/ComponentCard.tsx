@@ -30,6 +30,9 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   const cat = TAXONOMY_BY_ID[meta.categories?.[0] ?? ''];
   const category = cat?.label ?? 'Component';
   const icon = cat?.icon ?? 'box';
+  // "Bring your own X": the component declares typed integration points (adapters).
+  const hasIntegration =
+    ((content.spec?.integrationPoints as unknown[] | undefined)?.length ?? 0) > 0;
   const previewImage = image ?? metaPreview.image;
   const sample = metaPreview.sample
     ? samples?.find((s) => s.id === metaPreview.sample)
@@ -90,7 +93,12 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
           <RouterLink to={`/components/${meta.slug}`} className={styles.titleLink}>
             <Text weight="medium">{meta.name}</Text>
           </RouterLink>
-          <Badge variant="soft" size="sm">{category}</Badge>
+          <Stack direction="row" gap="xs" align="center">
+            {hasIntegration && (
+              <Badge variant="soft" size="sm" color="info">Integration</Badge>
+            )}
+            <Badge variant="soft" size="sm">{category}</Badge>
+          </Stack>
         </Stack>
         <Text size="sm" color="muted">{meta.tagline}</Text>
       </Stack>

@@ -414,6 +414,30 @@ export const ANIMATION_PATTERNS = [
 ] as const;
 export type AnimationPattern = (typeof ANIMATION_PATTERNS)[number];
 
+/** A typed seam where the consumer brings their own data, service, or library —
+ *  an adapter bridges this **port** to their integration. The `contract` names a
+ *  real TS type (in `src/adapters` or co-located) the consumer's value is checked
+ *  against — same as a prop's `type` string names a real type. See the Adapters
+ *  concept page. */
+export interface IntegrationPoint {
+  /** The prop the consumer wires it through (e.g. 'resource', 'adapter', 'estimate'). */
+  id: string;
+  /** Drives the default + fixture story: brought-in data, an out-of-process
+   *  service, an in-process library, or a static asset/URL. */
+  kind: 'data' | 'service' | 'library' | 'asset';
+  /** The typed PORT an adapter must satisfy — a TS type NAME, resolved from
+   *  `src/adapters` (cross-cutting) or co-located (e.g. 'AsyncResource<unknown>'). */
+  contract: string;
+  /** Zero-config behavior when nothing is wired: a built-in default, an inert
+   *  no-op (renders a "not configured" affordance), or genuinely required. */
+  default: 'builtin' | 'noop' | 'required';
+  /** Docs/dev fixture (by name) that drives the live sample — a fake provider,
+   *  never shipped in the bundle. */
+  fixture?: string;
+  /** One line: what the consumer brings. */
+  description: string;
+}
+
 export interface ComponentSpec {
   /** Schema version — always SPEC_SCHEMA_VERSION */
   schemaVersion: typeof SPEC_SCHEMA_VERSION;
@@ -437,6 +461,11 @@ export interface ComponentSpec {
    *  <Icon name>). The docs icon-usage table derives from this; check:icon-usage
    *  keeps it in sync with the source. Omit when the component renders no icons. */
   iconsUsed?: string[];
+
+  /** Typed seams where the consumer brings their own data/service/library via an
+   *  adapter. Surfaced in the docs "Integrations" panel + overview cards. Omit
+   *  when the component has none. */
+  integrationPoints?: IntegrationPoint[];
 
   /** Component-family memberships (behavior/state/...) used by cross-component checks */
   families?: Record<string, string[]>;
