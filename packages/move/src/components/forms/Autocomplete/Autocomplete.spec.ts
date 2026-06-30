@@ -1118,7 +1118,11 @@ export const spec = {
       default: 'Remove {value}',
       description: 'Tag remove button accessible label template',
     },
-    { key: 'retry', default: 'Retry', description: 'RetryTrigger accessible label' },
+    {
+      key: 'retry',
+      default: 'Retry',
+      description: 'RetryTrigger default text (shown when no children given)',
+    },
   ],
 
   childrenKind: 'composition' as const,

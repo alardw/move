@@ -515,7 +515,7 @@ describe('resource (async)', () => {
     renderWithResource(asyncResource.error(new Error('boom'), () => {}));
     await user.click(screen.getByRole('combobox'));
     expect(screen.getByRole('alert')).toHaveTextContent('Failed to load');
-    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Try again' })).toBeInTheDocument();
     expect(screen.queryByText('No results')).not.toBeInTheDocument();
   });
 
@@ -524,7 +524,7 @@ describe('resource (async)', () => {
     const retry = vi.fn();
     renderWithResource(asyncResource.error(new Error('boom'), retry));
     await user.click(screen.getByRole('combobox'));
-    await user.click(screen.getByRole('button', { name: 'Retry' }));
+    await user.click(screen.getByRole('button', { name: 'Try again' }));
     expect(retry).toHaveBeenCalledTimes(1);
   });
 
@@ -533,7 +533,7 @@ describe('resource (async)', () => {
     renderWithResource(asyncResource.error(new Error('boom')));
     await user.click(screen.getByRole('combobox'));
     expect(screen.getByRole('alert')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Try again' })).not.toBeInTheDocument();
   });
 
   it('renders options and no loading/error on success', async () => {

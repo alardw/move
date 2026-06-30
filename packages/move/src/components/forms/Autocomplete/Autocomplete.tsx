@@ -75,7 +75,7 @@ export interface AutocompleteLabels {
   clearAll: string;
   /** Tag remove button accessible label template; `{value}` is replaced with the tag value */
   removeTag: string;
-  /** RetryTrigger accessible label */
+  /** RetryTrigger default text, shown when no children are given (also its accessible name) */
   retry: string;
 }
 
@@ -1415,12 +1415,11 @@ const AutocompleteRetryTrigger = withMoveComponent<
             {...spRest}
             ref={ref}
             type="button"
-            aria-label={ac.labels.retry}
             className={cx('retryTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
           >
-            {props.children}
+            {props.children ?? ac.labels.retry}
           </button>
         );
       },
