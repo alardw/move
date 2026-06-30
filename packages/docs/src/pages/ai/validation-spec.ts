@@ -204,7 +204,7 @@ const RULES: RuleDef[] = [
 
   // Documentation & discoverability (component + recipe / published)
   { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'gap' }, recipe: { status: 'gap' } } },
-  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'gap' }, recipe: { status: 'gap' } } },
+  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'doc-synonyms' }, recipe: { status: 'check', check: 'doc-synonyms' } } },
 ];
 
 export const VALIDATION: ValidationSpec = {

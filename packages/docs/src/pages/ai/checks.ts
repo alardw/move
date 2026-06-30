@@ -148,4 +148,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: "Every spec integration point resolves — its contract is exported from the public barrel and any fixture/sample exists, so the docs Integrations panel can't dangle.",
   },
+  {
+    name: 'doc-synonyms',
+    appliesTo: 'component',
+    enforces: 'Every published document (component meta, recipe registry entry) declares ≥1 search synonym, so it’s findable under the name people already use.',
+  },
 ];
