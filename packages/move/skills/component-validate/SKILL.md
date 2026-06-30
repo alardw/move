@@ -62,6 +62,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | A18 | No approved `undefined` defaults | Approved defaults are explicit values, `null`, or omitted keys |
 | A19 | Defaultable prop coverage complete | Every defaultable prop has an explicit reviewed decision |
 | A20 | Icons resolve through the resolver | Default/decorative icons render via `useResolvedIcon(name, size)` or `<Icon name>`, never a hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner, Loader) and Radix Arrow SVGs. |
+| A21 | Dismissable lifecycle uses the shared hook | Any animated open/close (popups, overlays, popup-inputs, one-shot dismissables) drives its lifecycle via `useDismissable` + `useDismissableExit`, NEVER a hand-rolled `isClosing` `useState` + `runExit().then(onCloseComplete)`. **FAIL** on a `runExit().then(` call in component source (also caught by `check:dismissable-lifecycle`). The hook owns non-hanging exit, `open()` (no-op while closing) vs `reopen()`, and re-enter-on-cancel. |
 
 #### B. CSS Module (`{Name}.module.css`)
 
