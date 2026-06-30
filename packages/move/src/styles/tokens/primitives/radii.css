@@ -5,12 +5,12 @@
 
 :root {
   --move-radius-0: 0;
-  --move-radius-1: 0.125rem;  /* 2px */
-  --move-radius-2: 0.25rem;   /* 4px */
-  --move-radius-3: 0.375rem;  /* 6px */
-  --move-radius-4: 0.5rem;    /* 8px */
-  --move-radius-6: 0.75rem;   /* 12px */
-  --move-radius-8: 1rem;      /* 16px */
-  --move-radius-12: 1.5rem;   /* 24px */
+  --move-radius-1: 0.125rem; /* 2px */
+  --move-radius-2: 0.25rem; /* 4px */
+  --move-radius-3: 0.375rem; /* 6px */
+  --move-radius-4: 0.5rem; /* 8px */
+  --move-radius-6: 0.75rem; /* 12px */
+  --move-radius-8: 1rem; /* 16px */
+  --move-radius-12: 1.5rem; /* 24px */
   --move-radius-full: 9999px;
 }

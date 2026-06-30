@@ -97,7 +97,9 @@
   border-radius: var(--move-pagination-item-radius);
   cursor: pointer;
   user-select: none;
-  transition: color 150ms, background-color 150ms;
+  transition:
+    color 150ms,
+    background-color 150ms;
 }
 
 .item:hover {
@@ -149,7 +151,9 @@
   border-radius: var(--move-pagination-item-radius);
   cursor: pointer;
   user-select: none;
-  transition: color 150ms, background-color 150ms;
+  transition:
+    color 150ms,
+    background-color 150ms;
 }
 
 .prev:hover:not(:disabled),

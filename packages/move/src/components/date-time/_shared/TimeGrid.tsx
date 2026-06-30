@@ -36,7 +36,7 @@ function computeEventPositions(
   startHour: number,
   _endHour: number,
   slotHeight: number = 48,
-  slotInterval: number = 60
+  slotInterval: number = 60,
 ): PositionedEvent[] {
   const sorted = [...events]
     .filter((e) => !e.allDay)
@@ -56,7 +56,7 @@ function computeEventPositions(
   });
 
   // Group into overlapping clusters
-  const clusters: typeof entries[] = [];
+  const clusters: (typeof entries)[] = [];
   for (const entry of entries) {
     const lastCluster = clusters[clusters.length - 1];
     if (lastCluster) {
@@ -89,7 +89,11 @@ function computeEventPositions(
   }
 
   return entries.map(({ event, top, height, column, totalColumns }) => ({
-    event, top, height, column, totalColumns,
+    event,
+    top,
+    height,
+    column,
+    totalColumns,
   }));
 }
 
@@ -109,7 +113,7 @@ export function TimeGrid({
 }: TimeGridProps) {
   const slots = React.useMemo(
     () => getTimeSlots(startHour, endHour, slotInterval),
-    [startHour, endHour, slotInterval]
+    [startHour, endHour, slotInterval],
   );
 
   const dayEvents = React.useMemo(() => {
@@ -143,15 +147,17 @@ export function TimeGrid({
   return (
     <div
       className={`${styles.timeGrid} ${className ?? ''}`}
-      style={slotHeightProp ? { '--move-calendar-timegrid-slot-height': slotHeightProp } as React.CSSProperties : undefined}
+      style={
+        slotHeightProp
+          ? ({ '--move-calendar-timegrid-slot-height': slotHeightProp } as React.CSSProperties)
+          : undefined
+      }
     >
       {/* Column headers */}
       {showHeaders && dates.length > 1 && (
         <>
           <div />
-          <div
-            style={{ display: 'grid', gridTemplateColumns: `repeat(${dates.length}, 1fr)` }}
-          >
+          <div style={{ display: 'grid', gridTemplateColumns: `repeat(${dates.length}, 1fr)` }}>
             {dates.map((date, i) => (
               <div
                 key={i}
@@ -192,7 +198,13 @@ export function TimeGrid({
                 const dayEvts = dayEvents[di];
                 const isFirst = si === 0;
                 const positioned = isFirst
-                  ? computeEventPositions(dayEvts.events, startHour, endHour, slotHeight, slotInterval)
+                  ? computeEventPositions(
+                      dayEvts.events,
+                      startHour,
+                      endHour,
+                      slotHeight,
+                      slotInterval,
+                    )
                   : [];
 
                 const handleSlotClick = onSlotClick
@@ -211,44 +223,47 @@ export function TimeGrid({
                     {...(onSlotClick ? { 'data-clickable': '' } : {})}
                   >
                     {/* Now indicator */}
-                    {isFirst && checkIsToday(date) && (
+                    {isFirst &&
+                      checkIsToday(date) &&
                       (() => {
-                        const minutesSinceStart = (now.getHours() - startHour) * 60 + now.getMinutes();
+                        const minutesSinceStart =
+                          (now.getHours() - startHour) * 60 + now.getMinutes();
                         const topPx = minutesSinceStart * (slotHeight / slotInterval);
-                        const totalHeight = ((endHour - startHour) * 60 / slotInterval) * slotHeight;
+                        const totalHeight =
+                          (((endHour - startHour) * 60) / slotInterval) * slotHeight;
                         if (topPx >= 0 && topPx <= totalHeight) {
                           return <div className={styles.nowIndicator} style={{ top: topPx }} />;
                         }
                         return null;
-                      })()
-                    )}
+                      })()}
                     {/* Events (only rendered in first slot row, absolutely positioned) */}
-                    {isFirst && positioned.map((pe) => {
-                      const width = `${100 / pe.totalColumns}%`;
-                      const left = `${(pe.column / pe.totalColumns) * 100}%`;
-                      return (
-                        <div
-                          key={pe.event.id}
-                          className={styles.positionedEvent}
-                          style={{
-                            top: pe.top + 2,
-                            height: pe.height - 4,
-                            width,
-                            left,
-                          }}
-                        >
-                          <EventSlot
-                            event={pe.event}
-                            locale={locale}
-                            view="time"
-                            isCompact={pe.height < 30}
-                            renderEvent={renderEvent}
-                            onClick={onEventClick}
-                            style={{ height: '100%' }}
-                          />
-                        </div>
-                      );
-                    })}
+                    {isFirst &&
+                      positioned.map((pe) => {
+                        const width = `${100 / pe.totalColumns}%`;
+                        const left = `${(pe.column / pe.totalColumns) * 100}%`;
+                        return (
+                          <div
+                            key={pe.event.id}
+                            className={styles.positionedEvent}
+                            style={{
+                              top: pe.top + 2,
+                              height: pe.height - 4,
+                              width,
+                              left,
+                            }}
+                          >
+                            <EventSlot
+                              event={pe.event}
+                              locale={locale}
+                              view="time"
+                              isCompact={pe.height < 30}
+                              renderEvent={renderEvent}
+                              onClick={onEventClick}
+                              style={{ height: '100%' }}
+                            />
+                          </div>
+                        );
+                      })}
                   </div>
                 );
               })}

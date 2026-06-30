@@ -91,11 +91,7 @@ export function useIconContext() {
 export function IconProvider({ children, resolver, fallback }: IconProviderProps) {
   const value = React.useMemo(() => ({ resolver, fallback }), [resolver, fallback]);
 
-  return (
-    <IconContext.Provider value={value}>
-      {children}
-    </IconContext.Provider>
-  );
+  return <IconContext.Provider value={value}>{children}</IconContext.Provider>;
 }
 
 IconProvider.displayName = 'IconProvider';

@@ -4,7 +4,13 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  quick,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
@@ -52,22 +58,26 @@ export interface PopoverRootProps {
 const DEFAULT_POPOVER_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
-    sequence: [{
-      animation: {
-        // Same recipe as the tooltip: subtle scale + quick spring (not bouncy).
-        opacity: { from: 0, to: 1, ease: quick },
-        scale: { from: 0.88, to: 1, ease: quick },
+    sequence: [
+      {
+        animation: {
+          // Same recipe as the tooltip: subtle scale + quick spring (not bouncy).
+          opacity: { from: 0, to: 1, ease: quick },
+          scale: { from: 0.88, to: 1, ease: quick },
+        },
       },
-    }],
+    ],
   },
   {
     trigger: 'Content.exit',
-    sequence: [{
-      animation: {
-        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
-        scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 200 },
+    sequence: [
+      {
+        animation: {
+          opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
+          scale: { from: 1, to: 0.95, ease: 'outQuart', duration: 200 },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -85,16 +95,21 @@ const PopoverRoot: React.FC<PopoverRootProps> = ({
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen: open, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-    // animation drives it (useDismissable).
-    if (newOpen) openFn();
-  }, [openFn]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+      // animation drives it (useDismissable).
+      if (newOpen) openFn();
+    },
+    [openFn],
+  );
 
   const animConfig = resolveAnimationsConfig(DEFAULT_POPOVER_ANIMATIONS, animationsProp);
 
   return (
-    <PopoverContext.Provider value={{ isClosing, epoch, onExitDone, close, animConfig, closeOnScroll }}>
+    <PopoverContext.Provider
+      value={{ isClosing, epoch, onExitDone, close, animConfig, closeOnScroll }}
+    >
       <RadixPopover.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixPopover.Root>
@@ -125,7 +140,11 @@ const PopoverTrigger = withMoveComponent<'trigger', PopoverTriggerProps, HTMLBut
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <RadixPopover.Trigger
             {...attrs}
@@ -165,7 +184,11 @@ const PopoverAnchor = withMoveComponent<'anchor', PopoverAnchorProps, HTMLDivEle
     return {
       render() {
         const anchorSp = sp('anchor');
-        const { className: spClass, style: spStyle, ...spRest } = anchorSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = anchorSp as Record<string, unknown>;
         return (
           <RadixPopover.Anchor
             {...attrs}
@@ -231,18 +254,31 @@ const PopoverContentInner: React.FC<{
 
   return (
     <div ref={innerRef} {...rest} className={className} style={style}>
-      <SurfaceProvider value={surface}>
-        {children}
-      </SurfaceProvider>
+      <SurfaceProvider value={surface}>{children}</SurfaceProvider>
     </div>
   );
 };
 
-const PopoverContent = withMoveComponent<'content' | 'contentInner', PopoverContentProps, HTMLDivElement>({
+const PopoverContent = withMoveComponent<
+  'content' | 'contentInner',
+  PopoverContentProps,
+  HTMLDivElement
+>({
   name: 'PopoverContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside', 'onOpenAutoFocus', 'onCloseAutoFocus'],
+  moveProps: [
+    'side',
+    'sideOffset',
+    'align',
+    'alignOffset',
+    'container',
+    'onPointerDownOutside',
+    'onEscapeKeyDown',
+    'onInteractOutside',
+    'onOpenAutoFocus',
+    'onCloseAutoFocus',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { close, closeOnScroll } = usePopoverContext();
@@ -289,8 +325,16 @@ const PopoverContent = withMoveComponent<'content' | 'contentInner', PopoverCont
       render() {
         const contentSp = sp('content');
         const innerSp = sp('contentInner');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
+        const {
+          className: innerSpClass,
+          style: innerSpStyle,
+          ...innerSpRest
+        } = innerSp as Record<string, unknown>;
 
         return (
           <RadixPopover.Portal container={props.container as HTMLElement | undefined}>
@@ -304,7 +348,11 @@ const PopoverContent = withMoveComponent<'content' | 'contentInner', PopoverCont
               alignOffset={props.alignOffset as number}
               data-surface={surface}
               className={cx('content', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...props.style,
+                ...(layer > 0 ? { zIndex: layer + 1 } : {}),
+                ...(spStyle as React.CSSProperties),
+              }}
               onPointerDownOutside={handlePointerDownOutside}
               onEscapeKeyDown={handleEscapeKeyDown}
               onInteractOutside={handleInteractOutside}
@@ -349,7 +397,11 @@ const PopoverArrow = withMoveComponent<'arrow', PopoverArrowProps, HTMLElement>(
     return {
       render() {
         const arrowSp = sp('arrow');
-        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = arrowSp as Record<string, unknown>;
         return (
           <RadixPopover.Arrow
             {...attrs}
@@ -407,17 +459,15 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
     return {
       render() {
         const closeSp = sp('close');
-        const { className: spClass, style: spStyle, ...spRest } = closeSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = closeSp as Record<string, unknown>;
 
         if (props.asChild) {
           return (
-            <RadixPopover.Close
-              {...attrs}
-              {...spRest}
-              ref={ref}
-              asChild
-              onClick={handleClick}
-            >
+            <RadixPopover.Close {...attrs} {...spRest} ref={ref} asChild onClick={handleClick}>
               {props.children}
             </RadixPopover.Close>
           );

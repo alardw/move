@@ -11,7 +11,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const nav = screen.getByRole('navigation', { name: 'Pagination' });
       expect(nav).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} data-testid="pg">
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const nav = screen.getByTestId('pg');
       expect(nav).toHaveAttribute('data-size', 'md');
@@ -33,7 +33,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} size="lg" variant="outline" data-testid="pg">
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const nav = screen.getByTestId('pg');
       expect(nav).toHaveAttribute('data-size', 'lg');
@@ -45,7 +45,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} ref={ref}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLElement);
       expect(ref.current?.tagName).toBe('NAV');
@@ -55,7 +55,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} data-testid="pg" className="custom">
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByTestId('pg').className).toContain('custom');
     });
@@ -64,7 +64,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} data-testid="pg" style={{ marginTop: '10px' }}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByTestId('pg')).toHaveStyle({ marginTop: '10px' });
     });
@@ -73,7 +73,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={10} data-testid="pg" id="my-pagination">
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByTestId('pg')).toHaveAttribute('id', 'my-pagination');
     });
@@ -85,7 +85,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={5} defaultPage={1}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       // With total=5, all pages should be shown
       for (let i = 1; i <= 5; i++) {
@@ -97,7 +97,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={20} defaultPage={10}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       // With total=20 and page=10, there should be dots
       const nav = screen.getByRole('navigation', { name: 'Pagination' });
@@ -109,7 +109,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const activeBtn = screen.getByRole('button', { name: 'Go to page 3' });
       expect(activeBtn).toHaveAttribute('data-state', 'active');
@@ -120,7 +120,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={3} defaultPage={1}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to page 1' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Go to page 2' })).toBeInTheDocument();
@@ -132,7 +132,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={5} defaultPage={1} onChange={onChange}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Go to page 3' }));
       expect(onChange).toHaveBeenCalledWith(3);
@@ -142,7 +142,7 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={5} defaultPage={1}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const nav = screen.getByRole('navigation', { name: 'Pagination' });
       const indicator = nav.querySelector('[aria-hidden="true"]:not(li):not(svg)');
@@ -157,7 +157,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.PrevTrigger />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to previous page' })).toBeInTheDocument();
     });
@@ -167,7 +167,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={1}>
           <Pagination.PrevTrigger />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to previous page' })).toBeDisabled();
     });
@@ -177,7 +177,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.PrevTrigger />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to previous page' })).not.toBeDisabled();
     });
@@ -188,7 +188,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3} onChange={onChange}>
           <Pagination.PrevTrigger />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Go to previous page' }));
       expect(onChange).toHaveBeenCalledWith(2);
@@ -199,7 +199,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.PrevTrigger />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const btn = screen.getByRole('button', { name: 'Go to previous page' });
       const svg = btn.querySelector('svg');
@@ -212,7 +212,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.PrevTrigger ref={ref} />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
@@ -220,9 +220,13 @@ describe('Pagination', () => {
     it('forwards className and style', () => {
       render(
         <Pagination.Root total={5} defaultPage={3}>
-          <Pagination.PrevTrigger data-testid="prev" className="custom" style={{ padding: '4px' }} />
+          <Pagination.PrevTrigger
+            data-testid="prev"
+            className="custom"
+            style={{ padding: '4px' }}
+          />
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const el = screen.getByTestId('prev');
       expect(el.className).toContain('custom');
@@ -237,7 +241,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to next page' })).toBeInTheDocument();
     });
@@ -247,7 +251,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={5}>
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to next page' })).toBeDisabled();
     });
@@ -257,7 +261,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('button', { name: 'Go to next page' })).not.toBeDisabled();
     });
@@ -268,7 +272,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3} onChange={onChange}>
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       fireEvent.click(screen.getByRole('button', { name: 'Go to next page' }));
       expect(onChange).toHaveBeenCalledWith(4);
@@ -279,7 +283,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       const btn = screen.getByRole('button', { name: 'Go to next page' });
       const svg = btn.querySelector('svg');
@@ -292,7 +296,7 @@ describe('Pagination', () => {
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
           <Pagination.NextTrigger ref={ref} />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
@@ -301,8 +305,12 @@ describe('Pagination', () => {
       render(
         <Pagination.Root total={5} defaultPage={3}>
           <Pagination.Items />
-          <Pagination.NextTrigger data-testid="next" className="custom" style={{ padding: '4px' }} />
-        </Pagination.Root>
+          <Pagination.NextTrigger
+            data-testid="next"
+            className="custom"
+            style={{ padding: '4px' }}
+          />
+        </Pagination.Root>,
       );
       const el = screen.getByTestId('next');
       expect(el.className).toContain('custom');
@@ -316,16 +324,22 @@ describe('Pagination', () => {
       const { rerender } = render(
         <Pagination.Root total={5} page={2}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
-      expect(screen.getByRole('button', { name: 'Go to page 2' })).toHaveAttribute('data-state', 'active');
+      expect(screen.getByRole('button', { name: 'Go to page 2' })).toHaveAttribute(
+        'data-state',
+        'active',
+      );
 
       rerender(
         <Pagination.Root total={5} page={4}>
           <Pagination.Items />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
-      expect(screen.getByRole('button', { name: 'Go to page 4' })).toHaveAttribute('data-state', 'active');
+      expect(screen.getByRole('button', { name: 'Go to page 4' })).toHaveAttribute(
+        'data-state',
+        'active',
+      );
     });
   });
 
@@ -346,7 +360,7 @@ describe('Pagination', () => {
           <Pagination.PrevTrigger />
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
       expect(screen.getByRole('navigation', { name: 'Pages' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Previous' })).toBeInTheDocument();
@@ -363,7 +377,7 @@ describe('Pagination', () => {
           <Pagination.PrevTrigger />
           <Pagination.Items />
           <Pagination.NextTrigger />
-        </Pagination.Root>
+        </Pagination.Root>,
       );
 
       expect(screen.getByRole('navigation', { name: 'Pagination' })).toBeInTheDocument();

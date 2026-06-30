@@ -71,16 +71,10 @@ export function AgendaView({
         return (
           <div key={date.toISOString()} className={styles.dayGroup}>
             <div className={styles.dayHeader}>
-              <span
-                className={styles.dayHeaderDate}
-                {...(today ? { 'data-today': '' } : {})}
-              >
+              <span className={styles.dayHeaderDate} {...(today ? { 'data-today': '' } : {})}>
                 {date.getDate()}
               </span>
-              <span
-                className={styles.dayHeaderDay}
-                {...(today ? { 'data-today': '' } : {})}
-              >
+              <span className={styles.dayHeaderDay} {...(today ? { 'data-today': '' } : {})}>
                 {weekdayFormatter.format(date)}, {monthDayFormatter.format(date)}
               </span>
             </div>

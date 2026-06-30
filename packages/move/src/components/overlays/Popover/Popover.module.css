@@ -86,7 +86,8 @@
   border-radius: var(--move-popover-close-radius);
   color: var(--move-popover-close-fg);
   cursor: pointer;
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
     color var(--move-transition-fast) var(--move-ease-default);
 }
 

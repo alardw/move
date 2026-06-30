@@ -25,12 +25,8 @@ export function PresenceChild({
       },
       initial,
     }),
-    [isPresent, initial]
+    [isPresent, initial],
   );
 
-  return (
-    <PresenceContext.Provider value={context}>
-      {children}
-    </PresenceContext.Provider>
-  );
+  return <PresenceContext.Provider value={context}>{children}</PresenceContext.Provider>;
 }

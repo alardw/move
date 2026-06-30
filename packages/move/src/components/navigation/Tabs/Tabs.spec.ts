@@ -8,24 +8,46 @@ export const spec = {
   name: 'Tabs',
   componentClass: 'disclosure' as const,
   category: 'navigation',
-  description: 'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
+  description:
+    'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
 
   synonyms: ['tabbed', 'segmented', 'tab bar', 'tab list', 'tabbar', 'sections'],
   animationPatterns: ['slidingIndicator'],
   families: {
-    behavior:  ["navigation"],
-    state:     ["controlled-value"],
-    a11y:      ["tablist"],
+    behavior: ['navigation'],
+    state: ['controlled-value'],
+    a11y: ['tablist'],
   },
 
   compound: true,
   rootElement: 'RadixTabs.Root',
   slots: [
-    { name: 'root', element: 'RadixTabs.Root', description: 'Root container managing tab state via Radix Tabs.Root' },
-    { name: 'list', element: 'RadixTabs.List', description: 'Tab trigger list container with variant and size styling' },
-    { name: 'indicator', element: 'div', description: 'Sliding underline indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger' },
-    { name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button that activates its panel' },
-    { name: 'content', element: 'RadixTabs.Content', description: 'Tab panel content associated with a trigger value' },
+    {
+      name: 'root',
+      element: 'RadixTabs.Root',
+      description: 'Root container managing tab state via Radix Tabs.Root',
+    },
+    {
+      name: 'list',
+      element: 'RadixTabs.List',
+      description: 'Tab trigger list container with variant and size styling',
+    },
+    {
+      name: 'indicator',
+      element: 'div',
+      description:
+        'Sliding underline indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger',
+    },
+    {
+      name: 'trigger',
+      element: 'RadixTabs.Trigger',
+      description: 'Individual tab button that activates its panel',
+    },
+    {
+      name: 'content',
+      element: 'RadixTabs.Content',
+      description: 'Tab panel content associated with a trigger value',
+    },
   ],
 
   subComponents: [
@@ -33,15 +55,55 @@ export const spec = {
       name: 'Root',
       slots: [{ name: 'root', element: 'RadixTabs.Root', description: 'Root container' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Tab list and content elements' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Tab list and content elements',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'defaultValue', type: 'string', moveSpecific: true, description: 'Initial active tab value (uncontrolled)' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Controlled active tab value' },
-        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when active tab changes' },
-        { name: 'orientation', type: "'horizontal' | 'vertical'", moveSpecific: true, description: 'Orientation of tab list' },
-        { name: 'dir', type: "'ltr' | 'rtl'", moveSpecific: true, description: 'Text direction for keyboard navigation' },
-        { name: 'activationMode', type: "'automatic' | 'manual'", moveSpecific: true, description: 'Whether tabs activate on focus (automatic) or on click (manual)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'defaultValue',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Initial active tab value (uncontrolled)',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Controlled active tab value',
+        },
+        {
+          name: 'onValueChange',
+          type: '(value: string) => void',
+          moveSpecific: true,
+          description: 'Called when active tab changes',
+        },
+        {
+          name: 'orientation',
+          type: "'horizontal' | 'vertical'",
+          moveSpecific: true,
+          description: 'Orientation of tab list',
+        },
+        {
+          name: 'dir',
+          type: "'ltr' | 'rtl'",
+          moveSpecific: true,
+          description: 'Text direction for keyboard navigation',
+        },
+        {
+          name: 'activationMode',
+          type: "'automatic' | 'manual'",
+          moveSpecific: true,
+          description: 'Whether tabs activate on focus (automatic) or on click (manual)',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Tabs.Root',
@@ -54,13 +116,45 @@ export const spec = {
         { name: 'indicator', element: 'div', description: 'Sliding underline indicator' },
       ],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Tab trigger elements' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Tab trigger elements',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'loop', type: 'boolean', moveSpecific: true, description: 'Whether keyboard navigation loops around' },
-        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Tab size affecting padding and font size' },
-        { name: 'variant', type: "'underline' | 'pills' | 'outline'", default: "'underline'", moveSpecific: true, description: 'Visual style variant' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Pass false to disable sliding indicator animation' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'loop',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Whether keyboard navigation loops around',
+        },
+        {
+          name: 'size',
+          typeRef: 'Size',
+          default: "'md'",
+          moveSpecific: true,
+          description: 'Tab size affecting padding and font size',
+        },
+        {
+          name: 'variant',
+          type: "'underline' | 'pills' | 'outline'",
+          default: "'underline'",
+          moveSpecific: true,
+          description: 'Visual style variant',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Pass false to disable sliding indicator animation',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Tabs.List',
@@ -68,13 +162,35 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button' }],
+      slots: [
+        { name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button' },
+      ],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Tab label content' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Tab label content',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Unique value associating trigger with content' },
-        { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disable the tab trigger' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Unique value associating trigger with content',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Disable the tab trigger',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Tabs.Trigger',
@@ -84,11 +200,31 @@ export const spec = {
       name: 'Content',
       slots: [{ name: 'content', element: 'RadixTabs.Content', description: 'Tab content panel' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Panel content' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Panel content',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Value matching the trigger to show this content' },
-        { name: 'forceMount', type: 'true', moveSpecific: true, description: 'Force mount content even when inactive' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Value matching the trigger to show this content',
+        },
+        {
+          name: 'forceMount',
+          type: 'true',
+          moveSpecific: true,
+          description: 'Force mount content even when inactive',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Tabs.Content',
@@ -138,19 +274,59 @@ export const spec = {
   animations: [],
 
   renderContracts: [
-    { id: 'indicator-underline-only', description: 'Sliding indicator is only rendered when variant is underline (default). Pills and outline variants do not render the indicator element.' },
-    { id: 'indicator-tracks-width', description: 'The usePositionTracker hook runs with track: "width" — it matches the underline to the active trigger horizontally (offsetLeft + offsetWidth), re-measuring on resize and font load.' },
-    { id: 'content-tabindex-minus-one', description: 'Content panel sets tabIndex={-1} to prevent it from being a tab stop while allowing programmatic focus.' },
-    { id: 'size-via-data-attr', description: 'Size is set as data-size on List, and triggers inherit sizing via CSS descendant selectors (.list[data-size] .trigger).' },
-    { id: 'variant-via-data-attr', description: 'Variant is set as data-variant on List, and triggers inherit variant styling via CSS descendant selectors.' },
+    {
+      id: 'indicator-underline-only',
+      description:
+        'Sliding indicator is only rendered when variant is underline (default). Pills and outline variants do not render the indicator element.',
+    },
+    {
+      id: 'indicator-tracks-width',
+      description:
+        'The usePositionTracker hook runs with track: "width" — it matches the underline to the active trigger horizontally (offsetLeft + offsetWidth), re-measuring on resize and font load.',
+    },
+    {
+      id: 'content-tabindex-minus-one',
+      description:
+        'Content panel sets tabIndex={-1} to prevent it from being a tab stop while allowing programmatic focus.',
+    },
+    {
+      id: 'size-via-data-attr',
+      description:
+        'Size is set as data-size on List, and triggers inherit sizing via CSS descendant selectors (.list[data-size] .trigger).',
+    },
+    {
+      id: 'variant-via-data-attr',
+      description:
+        'Variant is set as data-variant on List, and triggers inherit variant styling via CSS descendant selectors.',
+    },
   ],
 
   tokens: [
-    { name: '--move-tabs-border', value: 'var(--move-border-base)', description: 'Border color for underline and outline variants' },
-    { name: '--move-tabs-trigger-fg', value: 'var(--move-fg-muted)', description: 'Inactive trigger text color' },
-    { name: '--move-tabs-trigger-fg-active', value: 'var(--move-fg-base)', description: 'Active trigger text color' },
-    { name: '--move-tabs-trigger-bg-hover', value: 'var(--move-surface-hover)', description: 'Trigger hover background color' },
-    { name: '--move-tabs-indicator', value: 'var(--move-primary)', description: 'Sliding indicator color for underline variant' },
+    {
+      name: '--move-tabs-border',
+      value: 'var(--move-border-base)',
+      description: 'Border color for underline and outline variants',
+    },
+    {
+      name: '--move-tabs-trigger-fg',
+      value: 'var(--move-fg-muted)',
+      description: 'Inactive trigger text color',
+    },
+    {
+      name: '--move-tabs-trigger-fg-active',
+      value: 'var(--move-fg-base)',
+      description: 'Active trigger text color',
+    },
+    {
+      name: '--move-tabs-trigger-bg-hover',
+      value: 'var(--move-surface-hover)',
+      description: 'Trigger hover background color',
+    },
+    {
+      name: '--move-tabs-indicator',
+      value: 'var(--move-primary)',
+      description: 'Sliding indicator color for underline variant',
+    },
   ],
 
   variants: {

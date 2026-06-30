@@ -3,13 +3,8 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef, useControlledState } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import {
-  useAnimations,
-  resolveAnimationsConfig,
-} from '../../../animation';
-import type {
-  AnimationTrigger,
-} from '../../../animation';
+import { useAnimations, resolveAnimationsConfig } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import styles from './Table.module.css';
 
 // ============================================================================
@@ -19,15 +14,17 @@ import styles from './Table.module.css';
 const DEFAULT_TABLE_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Body.enter',
-    sequence: [{
-      target: 'Body',
-      children: 'tr',
-      stagger: { delay: 40 },
-      animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+    sequence: [
+      {
+        target: 'Body',
+        children: 'tr',
+        stagger: { delay: 40 },
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+          translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -68,7 +65,8 @@ function extractText(node: React.ReactNode): string {
   if (node == null || typeof node === 'boolean') return '';
   if (typeof node === 'string' || typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(extractText).join('');
-  if (React.isValidElement(node)) return extractText((node.props as { children?: React.ReactNode }).children);
+  if (React.isValidElement(node))
+    return extractText((node.props as { children?: React.ReactNode }).children);
   return '';
 }
 
@@ -266,7 +264,11 @@ const TableHeader = withMoveComponent<'header', TableHeaderProps, HTMLTableSecti
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
         return (
           <thead
             {...attrs}
@@ -304,9 +306,12 @@ const TableBody = withMoveComponent<'body', TableBodyProps, HTMLTableSectionElem
     const bodyRef = React.useRef<HTMLTableSectionElement>(null);
     const mergedRef = useMergedRef<HTMLTableSectionElement>(ref, bodyRef);
 
-    const bodyRefs = React.useMemo(() => ({
-      Body: bodyRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const bodyRefs = React.useMemo(
+      () => ({
+        Body: bodyRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(tableCtx?.animConfig ?? null, bodyRefs);
 
@@ -352,7 +357,11 @@ const TableFooter = withMoveComponent<'footer', TableFooterProps, HTMLTableSecti
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
         return (
           <tfoot
             {...attrs}
@@ -396,7 +405,8 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
 
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, selected, interactive, animations: animationsProp } = props;
-    const onClick = props.onClick as ((e: React.MouseEvent<HTMLTableRowElement>) => void) | undefined;
+    const onClick = props.onClick as
+      ((e: React.MouseEvent<HTMLTableRowElement>) => void) | undefined;
     const tableCtx = React.useContext(TableContext);
     const inBody = React.useContext(TableBodyContext);
 
@@ -405,11 +415,18 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
 
     // Row-level event animations (hover/press) — users opt in via animations prop
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [];
-    const animConfig = (animationsProp as AnimationTrigger[] | false | undefined) === false
-      ? null
-      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp as AnimationTrigger[] | undefined);
+    const animConfig =
+      (animationsProp as AnimationTrigger[] | false | undefined) === false
+        ? null
+        : resolveAnimationsConfig(
+            DEFAULT_ANIMATIONS,
+            animationsProp as AnimationTrigger[] | undefined,
+          );
 
-    const rowRefs = React.useMemo(() => ({ Row: rowRef as React.RefObject<HTMLElement | null> }), []);
+    const rowRefs = React.useMemo(
+      () => ({ Row: rowRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
     const { handlers } = useAnimations(animConfig, rowRefs);
 
     return {
@@ -479,7 +496,10 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
 
 export type TableAlign = 'start' | 'center' | 'end';
 
-export interface TableHeadProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, 'align'> {
+export interface TableHeadProps extends Omit<
+  React.ThHTMLAttributes<HTMLTableCellElement>,
+  'align'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -527,7 +547,9 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
             data-sortable={sortable ? '' : undefined}
             data-sorted={sorted || undefined}
             data-align={align as string | undefined}
-            aria-sort={sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined}
+            aria-sort={
+              sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined
+            }
             onClick={sortable ? handleClick : undefined}
             onKeyDown={sortable ? handleKeyDown : undefined}
             tabIndex={sortable ? 0 : undefined}
@@ -552,7 +574,10 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
 // Cell
 // ============================================================================
 
-export interface TableCellProps extends Omit<React.TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
+export interface TableCellProps extends Omit<
+  React.TdHTMLAttributes<HTMLTableCellElement>,
+  'align'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -577,14 +602,15 @@ const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement
         const { className: spClass, style: spStyle, ...spRest } = cellSp as Record<string, unknown>;
 
         const description = props.description as React.ReactNode;
-        const content = description != null
-          ? (
+        const content =
+          description != null ? (
             <div className={styles.cellStack}>
               <div className={styles.cellPrimary}>{props.children}</div>
               <div className={styles.cellDescription}>{description}</div>
             </div>
-          )
-          : props.children;
+          ) : (
+            props.children
+          );
 
         return (
           <td
@@ -623,7 +649,11 @@ const TableCaption = withMoveComponent<'caption', TableCaptionProps, HTMLTableCa
     return {
       render() {
         const captionSp = sp('caption');
-        const { className: spClass, style: spStyle, ...spRest } = captionSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = captionSp as Record<string, unknown>;
         return (
           <caption
             {...attrs}
@@ -685,7 +715,11 @@ const TableGroup = withMoveComponent<'group', TableGroupProps, HTMLTableSectionE
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
 
         return (
           // Each Group is its own <tbody> so rows don't interleave with
@@ -726,7 +760,11 @@ export interface TableGroupHeaderProps extends React.HTMLAttributes<HTMLElement>
   sp?: SlotPropsMap<'groupHeader'>;
 }
 
-const TableGroupHeader = withMoveComponent<'groupHeader', TableGroupHeaderProps, HTMLTableRowElement>({
+const TableGroupHeader = withMoveComponent<
+  'groupHeader',
+  TableGroupHeaderProps,
+  HTMLTableRowElement
+>({
   name: 'TableGroupHeader',
   styles,
   slots: ['groupHeader'] as const,
@@ -767,7 +805,12 @@ const TableGroupHeader = withMoveComponent<'groupHeader', TableGroupHeaderProps,
             {...attrs}
             {...spRest}
             ref={ref}
-            className={cx('groupHeader', styles.row, props.className, spClass as string | undefined)}
+            className={cx(
+              'groupHeader',
+              styles.row,
+              props.className,
+              spClass as string | undefined,
+            )}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             role={collapsible ? 'button' : undefined}
             tabIndex={collapsible ? 0 : undefined}

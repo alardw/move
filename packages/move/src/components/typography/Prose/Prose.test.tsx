@@ -27,7 +27,7 @@ describe('Prose', () => {
       render(
         <Prose className="custom" style={{ marginTop: '10px' }} data-testid="prose">
           Content
-        </Prose>
+        </Prose>,
       );
       const el = screen.getByTestId('prose');
       expect(el).toHaveClass('custom');
@@ -38,7 +38,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose" aria-label="prose-section">
           Content
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByTestId('prose')).toHaveAttribute('aria-label', 'prose-section');
     });
@@ -55,7 +55,7 @@ describe('Prose', () => {
       render(
         <Prose size={size} data-testid="prose">
           Content
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByTestId('prose')).toHaveAttribute('data-size', size);
     });
@@ -72,7 +72,7 @@ describe('Prose', () => {
           <h4>Heading 4</h4>
           <h5>Heading 5</h5>
           <h6>Heading 6</h6>
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByText('Heading 1').tagName).toBe('H1');
       expect(screen.getByText('Heading 2').tagName).toBe('H2');
@@ -86,7 +86,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose">
           <p>A paragraph</p>
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByText('A paragraph').tagName).toBe('P');
     });
@@ -95,7 +95,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose">
           <a href="#">A link</a>
-        </Prose>
+        </Prose>,
       );
       const link = screen.getByText('A link');
       expect(link.tagName).toBe('A');
@@ -105,9 +105,13 @@ describe('Prose', () => {
     it('styles unordered and ordered lists', () => {
       render(
         <Prose data-testid="prose">
-          <ul><li>Unordered item</li></ul>
-          <ol><li>Ordered item</li></ol>
-        </Prose>
+          <ul>
+            <li>Unordered item</li>
+          </ul>
+          <ol>
+            <li>Ordered item</li>
+          </ol>
+        </Prose>,
       );
       expect(screen.getByText('Unordered item').tagName).toBe('LI');
       expect(screen.getByText('Ordered item').tagName).toBe('LI');
@@ -117,7 +121,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose">
           <blockquote>A quote</blockquote>
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByText('A quote').tagName).toBe('BLOCKQUOTE');
     });
@@ -126,7 +130,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose">
           <code>const x = 1</code>
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByText('const x = 1').tagName).toBe('CODE');
     });
@@ -134,8 +138,10 @@ describe('Prose', () => {
     it('styles pre blocks', () => {
       render(
         <Prose data-testid="prose">
-          <pre><code>{'console.log("hello")'}</code></pre>
-        </Prose>
+          <pre>
+            <code>{'console.log("hello")'}</code>
+          </pre>
+        </Prose>,
       );
       const pre = screen.getByTestId('prose').querySelector('pre');
       expect(pre).toBeInTheDocument();
@@ -145,7 +151,7 @@ describe('Prose', () => {
       render(
         <Prose data-testid="prose">
           <hr />
-        </Prose>
+        </Prose>,
       );
       const hr = screen.getByTestId('prose').querySelector('hr');
       expect(hr).toBeInTheDocument();
@@ -156,13 +162,17 @@ describe('Prose', () => {
         <Prose data-testid="prose">
           <table>
             <thead>
-              <tr><th>Header</th></tr>
+              <tr>
+                <th>Header</th>
+              </tr>
             </thead>
             <tbody>
-              <tr><td>Cell</td></tr>
+              <tr>
+                <td>Cell</td>
+              </tr>
             </tbody>
           </table>
-        </Prose>
+        </Prose>,
       );
       const table = screen.getByTestId('prose').querySelector('table');
       expect(table).toBeInTheDocument();
@@ -177,7 +187,7 @@ describe('Prose', () => {
       render(
         <Prose sp={{ root: { className: 'sp-root' } }} data-testid="prose">
           Content
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByTestId('prose')).toHaveClass('sp-root');
     });
@@ -186,7 +196,7 @@ describe('Prose', () => {
       render(
         <Prose sp={{ root: { style: { marginTop: '5px' } } }} data-testid="prose">
           Content
-        </Prose>
+        </Prose>,
       );
       expect(screen.getByTestId('prose')).toHaveStyle({ marginTop: '5px' });
     });

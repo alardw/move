@@ -5,7 +5,15 @@ import { useRef, useCallback } from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
-import { useAnimations, resolveAnimationsConfig, scaleIn, scaleOut, fadeIn, fadeOut, scaleDown } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  scaleIn,
+  scaleOut,
+  fadeIn,
+  fadeOut,
+  scaleDown,
+} from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Checkbox.module.css';
@@ -68,7 +76,7 @@ const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
     >
       {children}
     </div>
-  )
+  ),
 );
 CheckboxGroup.displayName = 'Checkbox.Group';
 
@@ -76,12 +84,29 @@ CheckboxGroup.displayName = 'Checkbox.Group';
 // Checkbox component
 // =============================================================================
 
-const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonElement, { Group: typeof CheckboxGroup }>({
+const CheckboxRoot = withMoveComponent<
+  CheckboxSlots,
+  CheckboxProps,
+  HTMLButtonElement,
+  { Group: typeof CheckboxGroup }
+>({
   name: 'Checkbox',
   styles,
   slots: ['root', 'indicator', 'icon'] as const,
   defaults: { icon: 'check', disabled: false },
-  moveProps: ['checked', 'defaultChecked', 'indeterminate', 'onCheckedChange', 'icon', 'animations', 'size', 'invalid', 'name', 'value', 'required'],
+  moveProps: [
+    'checked',
+    'defaultChecked',
+    'indeterminate',
+    'onCheckedChange',
+    'icon',
+    'animations',
+    'size',
+    'invalid',
+    'name',
+    'value',
+    'required',
+  ],
   subComponents: { Group: CheckboxGroup },
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -130,15 +155,21 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
       { name: 'unchecked', slot: 'Root', source: 'data-state', value: 'unchecked' },
     ];
 
-    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp as AnimationTrigger[] | false | undefined);
+    const animConfig = resolveAnimationsConfig(
+      DEFAULT_ANIMATIONS,
+      animationsProp as AnimationTrigger[] | false | undefined,
+    );
 
     const indicatorRef = useRef<HTMLSpanElement>(null);
     const rootRef = useRef<HTMLButtonElement>(null);
 
-    const refs = React.useMemo(() => ({
-      Root: rootRef as React.RefObject<HTMLElement | null>,
-      indicator: indicatorRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const refs = React.useMemo(
+      () => ({
+        Root: rootRef as React.RefObject<HTMLElement | null>,
+        indicator: indicatorRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(animConfig, refs, STATES);
 
@@ -175,9 +206,21 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
         const indicatorSp = sp('indicator');
         const iconSp = sp('icon');
 
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
-        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
+        const {
+          className: indSpClass,
+          style: indSpStyle,
+          ...indSpRest
+        } = indicatorSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
 
         const dataState = checkbox.indeterminate
           ? 'indeterminate'
@@ -225,7 +268,16 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
                   style={iconSpStyle as React.CSSProperties}
                 >
                   {resolvedIcon || (
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="3"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
                       <polyline points="20 6 9 17 4 12" />
                     </svg>
                   )}
@@ -236,7 +288,7 @@ const CheckboxRoot = withMoveComponent<CheckboxSlots, CheckboxProps, HTMLButtonE
               <input
                 type="hidden"
                 name={name as string}
-                value={checkbox.checked ? (value as string ?? 'on') : ''}
+                value={checkbox.checked ? ((value as string) ?? 'on') : ''}
               />
             )}
             {children}

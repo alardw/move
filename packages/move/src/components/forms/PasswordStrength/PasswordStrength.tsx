@@ -124,7 +124,11 @@ function zoneForLevel(level: number, levels: number): StrengthZone | undefined {
 // Root
 // =============================================================================
 
-const PasswordStrengthRoot = withMoveComponent<PasswordStrengthSlots, PasswordStrengthProps, HTMLDivElement>({
+const PasswordStrengthRoot = withMoveComponent<
+  PasswordStrengthSlots,
+  PasswordStrengthProps,
+  HTMLDivElement
+>({
   name: 'PasswordStrength',
   styles,
   slots: ['root', 'track', 'segment', 'label'] as const,
@@ -133,7 +137,10 @@ const PasswordStrengthRoot = withMoveComponent<PasswordStrengthSlots, PasswordSt
 
   setup({ props, ref, cx, sp, attrs }) {
     const levels = props.levels as number;
-    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PasswordStrengthLabels> | undefined) };
+    const labels = {
+      ...DEFAULT_LABELS,
+      ...(props.labels as Partial<PasswordStrengthLabels> | undefined),
+    };
 
     // Resolve strength: controlled score → estimate(value) → built-in heuristic.
     let level: number;
@@ -156,11 +163,23 @@ const PasswordStrengthRoot = withMoveComponent<PasswordStrengthSlots, PasswordSt
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const trackSp = sp('track');
-        const { className: trackSpClass, style: trackSpStyle, ...trackSpRest } = trackSp as Record<string, unknown>;
+        const {
+          className: trackSpClass,
+          style: trackSpStyle,
+          ...trackSpRest
+        } = trackSp as Record<string, unknown>;
         const segmentSp = sp('segment');
-        const { className: segSpClass, style: segSpStyle, ...segSpRest } = segmentSp as Record<string, unknown>;
+        const {
+          className: segSpClass,
+          style: segSpStyle,
+          ...segSpRest
+        } = segmentSp as Record<string, unknown>;
         const labelSp = sp('label');
-        const { className: labelSpClass, style: labelSpStyle, ...labelSpRest } = labelSp as Record<string, unknown>;
+        const {
+          className: labelSpClass,
+          style: labelSpStyle,
+          ...labelSpRest
+        } = labelSp as Record<string, unknown>;
 
         return (
           <div
@@ -215,27 +234,50 @@ const PasswordStrengthRoot = withMoveComponent<PasswordStrengthSlots, PasswordSt
 // Requirements
 // =============================================================================
 
-const Requirements = withMoveComponent<RequirementsSlots, PasswordStrengthRequirementsProps, HTMLUListElement>({
+const Requirements = withMoveComponent<
+  RequirementsSlots,
+  PasswordStrengthRequirementsProps,
+  HTMLUListElement
+>({
   name: 'PasswordStrengthRequirements',
   styles,
   slots: ['requirements', 'requirement', 'requirementIcon', 'requirementLabel'] as const,
   moveProps: ['requirements', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PasswordStrengthLabels> | undefined) };
+    const labels = {
+      ...DEFAULT_LABELS,
+      ...(props.labels as Partial<PasswordStrengthLabels> | undefined),
+    };
     const checkIcon = useIcon('valid', 16);
     const xIcon = useIcon('invalid', 16);
 
     return {
       render() {
         const listSp = sp('requirements');
-        const { className: listSpClass, style: listSpStyle, ...listSpRest } = listSp as Record<string, unknown>;
+        const {
+          className: listSpClass,
+          style: listSpStyle,
+          ...listSpRest
+        } = listSp as Record<string, unknown>;
         const reqSp = sp('requirement');
-        const { className: reqSpClass, style: reqSpStyle, ...reqSpRest } = reqSp as Record<string, unknown>;
+        const {
+          className: reqSpClass,
+          style: reqSpStyle,
+          ...reqSpRest
+        } = reqSp as Record<string, unknown>;
         const iconSp = sp('requirementIcon');
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
         const reqLabelSp = sp('requirementLabel');
-        const { className: reqLabelSpClass, style: reqLabelSpStyle, ...reqLabelSpRest } = reqLabelSp as Record<string, unknown>;
+        const {
+          className: reqLabelSpClass,
+          style: reqLabelSpStyle,
+          ...reqLabelSpRest
+        } = reqLabelSp as Record<string, unknown>;
 
         const requirements = (props.requirements as PasswordRequirement[] | undefined) ?? [];
 
@@ -245,7 +287,10 @@ const Requirements = withMoveComponent<RequirementsSlots, PasswordStrengthRequir
             {...listSpRest}
             ref={ref}
             className={cx('requirements', props.className, listSpClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(listSpStyle as React.CSSProperties) }}
+            style={{
+              ...(props.style as React.CSSProperties),
+              ...(listSpStyle as React.CSSProperties),
+            }}
           >
             {requirements.map((req, i) => (
               <li

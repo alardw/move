@@ -106,7 +106,18 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
   styles,
   slots: ['root'] as const,
   defaults: { gap: 'md' as GridGap, stagger: false as GridStagger },
-  moveProps: ['cols', 'rows', 'columns', 'minChildWidth', 'rowGap', 'columnGap', 'padding', 'collapseBelow', 'stagger', 'animations'],
+  moveProps: [
+    'cols',
+    'rows',
+    'columns',
+    'minChildWidth',
+    'rowGap',
+    'columnGap',
+    'padding',
+    'collapseBelow',
+    'stagger',
+    'animations',
+  ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
@@ -166,12 +177,14 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
             data-row-gap={props.rowGap as string | undefined}
             data-column-gap={props.columnGap as string | undefined}
             data-padding={props.padding as string | undefined}
-            style={{
-              '--_grid-template': getGridTemplate(props as GridProps),
-              '--_grid-rows': rows ? `repeat(${rows}, 1fr)` : undefined,
-              ...(props.style as React.CSSProperties),
-              ...(spStyle as React.CSSProperties),
-            } as React.CSSProperties}
+            style={
+              {
+                '--_grid-template': getGridTemplate(props as GridProps),
+                '--_grid-rows': rows ? `repeat(${rows}, 1fr)` : undefined,
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              } as React.CSSProperties
+            }
           >
             {props.children}
           </div>

@@ -9,7 +9,11 @@ describe('List', () => {
   // === Root ===
   describe('List (Root)', () => {
     it('renders as ul with list role', () => {
-      render(<List data-testid="list"><List.Item>Item 1</List.Item></List>);
+      render(
+        <List data-testid="list">
+          <List.Item>Item 1</List.Item>
+        </List>,
+      );
       const el = screen.getByTestId('list');
       expect(el).toBeInTheDocument();
       expect(el.tagName).toBe('UL');
@@ -17,7 +21,11 @@ describe('List', () => {
     });
 
     it('defaults to size=md, dividers=true, separator=true, density=default, hover=false', () => {
-      render(<List data-testid="list" animations={false}><List.Item>Item 1</List.Item></List>);
+      render(
+        <List data-testid="list" animations={false}>
+          <List.Item>Item 1</List.Item>
+        </List>,
+      );
       const el = screen.getByTestId('list');
       expect(el).toHaveAttribute('data-size', 'md');
       expect(el).toHaveAttribute('data-density', 'default');
@@ -28,45 +36,63 @@ describe('List', () => {
 
     it('applies data-size attribute', () => {
       const { rerender } = render(
-        <List data-testid="list" size="sm" animations={false}><List.Item>Item</List.Item></List>
+        <List data-testid="list" size="sm" animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveAttribute('data-size', 'sm');
 
       rerender(
-        <List data-testid="list" size="lg" animations={false}><List.Item>Item</List.Item></List>
+        <List data-testid="list" size="lg" animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveAttribute('data-size', 'lg');
     });
 
     it('applies data-density attribute', () => {
       render(
-        <List data-testid="list" density="compact" animations={false}><List.Item>Item</List.Item></List>
+        <List data-testid="list" density="compact" animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveAttribute('data-density', 'compact');
     });
 
     it('applies data-hover when hover=true', () => {
       render(
-        <List data-testid="list" hover animations={false}><List.Item>Item</List.Item></List>
+        <List data-testid="list" hover animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveAttribute('data-hover', '');
     });
 
     it('hides dividers when dividers=false', () => {
       render(
-        <List data-testid="list" dividers={false} animations={false}><List.Item>Item</List.Item></List>
+        <List data-testid="list" dividers={false} animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('list')).not.toHaveAttribute('data-dividers');
     });
 
     it('forwards ref', () => {
       const ref = createRef<HTMLUListElement>();
-      render(<List ref={ref} animations={false}><List.Item>Item</List.Item></List>);
+      render(
+        <List ref={ref} animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
+      );
       expect(ref.current).toBeInstanceOf(HTMLUListElement);
     });
 
     it('forwards className', () => {
-      render(<List data-testid="list" className="custom" animations={false}><List.Item>Item</List.Item></List>);
+      render(
+        <List data-testid="list" className="custom" animations={false}>
+          <List.Item>Item</List.Item>
+        </List>,
+      );
       expect(screen.getByTestId('list').className).toContain('custom');
     });
 
@@ -74,7 +100,7 @@ describe('List', () => {
       render(
         <List data-testid="list" animations={false} style={{ marginTop: '10px' }}>
           <List.Item>Item</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveStyle({ marginTop: '10px' });
     });
@@ -83,7 +109,7 @@ describe('List', () => {
       render(
         <List data-testid="list" aria-label="Users" animations={false}>
           <List.Item>Item</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveAttribute('aria-label', 'Users');
     });
@@ -93,7 +119,9 @@ describe('List', () => {
   describe('List.Item', () => {
     it('renders as li by default', () => {
       render(
-        <List animations={false}><List.Item data-testid="item">Item</List.Item></List>
+        <List animations={false}>
+          <List.Item data-testid="item">Item</List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item').tagName).toBe('LI');
     });
@@ -101,8 +129,10 @@ describe('List', () => {
     it('renders as anchor when href is provided', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" href="/users/1">User</List.Item>
-        </List>
+          <List.Item data-testid="item" href="/users/1">
+            User
+          </List.Item>
+        </List>,
       );
       const el = screen.getByTestId('item');
       expect(el.tagName).toBe('A');
@@ -112,8 +142,10 @@ describe('List', () => {
     it('renders as button when as="button"', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" as="button">Action</List.Item>
-        </List>
+          <List.Item data-testid="item" as="button">
+            Action
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item').tagName).toBe('BUTTON');
     });
@@ -121,8 +153,10 @@ describe('List', () => {
     it('sets data-interactive when href is present', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" href="/test">Link</List.Item>
-        </List>
+          <List.Item data-testid="item" href="/test">
+            Link
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-interactive', '');
     });
@@ -130,8 +164,10 @@ describe('List', () => {
     it('sets data-interactive when onClick is present', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" onClick={() => {}}>Clickable</List.Item>
-        </List>
+          <List.Item data-testid="item" onClick={() => {}}>
+            Clickable
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-interactive', '');
     });
@@ -140,7 +176,7 @@ describe('List', () => {
       render(
         <List animations={false}>
           <List.Item data-testid="item">Plain</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('item')).not.toHaveAttribute('data-interactive');
     });
@@ -148,8 +184,10 @@ describe('List', () => {
     it('applies data-active when active=true', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" active>Item</List.Item>
-        </List>
+          <List.Item data-testid="item" active>
+            Item
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-active', '');
     });
@@ -157,8 +195,10 @@ describe('List', () => {
     it('applies data-disabled when disabled=true', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" disabled>Item</List.Item>
-        </List>
+          <List.Item data-testid="item" disabled>
+            Item
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-disabled', '');
     });
@@ -166,8 +206,10 @@ describe('List', () => {
     it('does not attach href when disabled', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" href="/test" disabled>Link</List.Item>
-        </List>
+          <List.Item data-testid="item" href="/test" disabled>
+            Link
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).not.toHaveAttribute('href');
     });
@@ -176,8 +218,10 @@ describe('List', () => {
       const handleClick = vi.fn();
       render(
         <List animations={false}>
-          <List.Item data-testid="item" onClick={handleClick} disabled>Click</List.Item>
-        </List>
+          <List.Item data-testid="item" onClick={handleClick} disabled>
+            Click
+          </List.Item>
+        </List>,
       );
       // pointer-events: none in CSS prevents click, but also onClick is not attached
       expect(screen.getByTestId('item')).toHaveAttribute('data-disabled', '');
@@ -188,8 +232,10 @@ describe('List', () => {
       const handleClick = vi.fn();
       render(
         <List animations={false}>
-          <List.Item data-testid="item" onClick={handleClick}>Click</List.Item>
-        </List>
+          <List.Item data-testid="item" onClick={handleClick}>
+            Click
+          </List.Item>
+        </List>,
       );
       await user.click(screen.getByTestId('item'));
       expect(handleClick).toHaveBeenCalledTimes(1);
@@ -198,7 +244,9 @@ describe('List', () => {
     it('forwards ref', () => {
       const ref = createRef<HTMLLIElement>();
       render(
-        <List animations={false}><List.Item ref={ref}>Item</List.Item></List>
+        <List animations={false}>
+          <List.Item ref={ref}>Item</List.Item>
+        </List>,
       );
       expect(ref.current).toBeInstanceOf(HTMLLIElement);
     });
@@ -206,8 +254,10 @@ describe('List', () => {
     it('forwards className', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" className="custom">Item</List.Item>
-        </List>
+          <List.Item data-testid="item" className="custom">
+            Item
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item').className).toContain('custom');
     });
@@ -215,8 +265,10 @@ describe('List', () => {
     it('forwards style', () => {
       render(
         <List animations={false}>
-          <List.Item data-testid="item" style={{ marginTop: '10px' }}>Item</List.Item>
-        </List>
+          <List.Item data-testid="item" style={{ marginTop: '10px' }}>
+            Item
+          </List.Item>
+        </List>,
       );
       expect(screen.getByTestId('item')).toHaveStyle({ marginTop: '10px' });
     });
@@ -228,9 +280,11 @@ describe('List', () => {
       render(
         <List animations={false}>
           <List.Item>
-            <List.Leading data-testid="leading"><span>Avatar</span></List.Leading>
+            <List.Leading data-testid="leading">
+              <span>Avatar</span>
+            </List.Leading>
           </List.Item>
-        </List>
+        </List>,
       );
       const el = screen.getByTestId('leading');
       expect(el).toBeInTheDocument();
@@ -248,7 +302,7 @@ describe('List', () => {
               <List.Title>Name</List.Title>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('content')).toBeInTheDocument();
       expect(screen.getByText('Name')).toBeInTheDocument();
@@ -265,7 +319,7 @@ describe('List', () => {
               <List.Title data-testid="title">Jane Cooper</List.Title>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       const el = screen.getByTestId('title');
       expect(el.tagName).toBe('DIV');
@@ -283,7 +337,7 @@ describe('List', () => {
               <List.Description data-testid="desc">Email</List.Description>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', 'none');
     });
@@ -293,10 +347,12 @@ describe('List', () => {
         <List animations={false}>
           <List.Item>
             <List.Content>
-              <List.Description data-testid="desc" lines={2}>Description</List.Description>
+              <List.Description data-testid="desc" lines={2}>
+                Description
+              </List.Description>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', '2');
     });
@@ -306,10 +362,12 @@ describe('List', () => {
         <List animations={false}>
           <List.Item>
             <List.Content>
-              <List.Description data-testid="desc" lines={3}>Description</List.Description>
+              <List.Description data-testid="desc" lines={3}>
+                Description
+              </List.Description>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', '3');
     });
@@ -319,10 +377,12 @@ describe('List', () => {
         <List animations={false}>
           <List.Item>
             <List.Content>
-              <List.Description data-testid="desc" lines="none">Full text</List.Description>
+              <List.Description data-testid="desc" lines="none">
+                Full text
+              </List.Description>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('desc')).toHaveAttribute('data-lines', 'none');
     });
@@ -334,9 +394,11 @@ describe('List', () => {
       render(
         <List animations={false}>
           <List.Item>
-            <List.Trailing data-testid="trailing"><span>Badge</span></List.Trailing>
+            <List.Trailing data-testid="trailing">
+              <span>Badge</span>
+            </List.Trailing>
           </List.Item>
-        </List>
+        </List>,
       );
       const el = screen.getByTestId('trailing');
       expect(el).toBeInTheDocument();
@@ -352,7 +414,7 @@ describe('List', () => {
           <List.Item data-testid="item-0">Item 1</List.Item>
           <List.Item data-testid="item-1">Item 2</List.Item>
           <List.Item data-testid="item-2">Item 3</List.Item>
-        </List>
+        </List>,
       );
       const separators = container.querySelectorAll('li[role="separator"]');
       // 2 separators between 3 items
@@ -364,7 +426,7 @@ describe('List', () => {
         <List animations={false} separator={false}>
           <List.Item>Item 1</List.Item>
           <List.Item>Item 2</List.Item>
-        </List>
+        </List>,
       );
       const separators = container.querySelectorAll('li[role="separator"]');
       expect(separators.length).toBe(0);
@@ -375,7 +437,7 @@ describe('List', () => {
         <List data-testid="list" animations={false} separator dividers>
           <List.Item>Item 1</List.Item>
           <List.Item>Item 2</List.Item>
-        </List>
+        </List>,
       );
       // data-dividers should NOT be set when separator is active
       expect(screen.getByTestId('list')).not.toHaveAttribute('data-dividers');
@@ -388,21 +450,27 @@ describe('List', () => {
       render(
         <List data-testid="list" animations={false}>
           <List.Item data-testid="item-0">
-            <List.Leading><span>A</span></List.Leading>
+            <List.Leading>
+              <span>A</span>
+            </List.Leading>
             <List.Content>
               <List.Title>Jane Cooper</List.Title>
               <List.Description>jane@example.com</List.Description>
             </List.Content>
-            <List.Trailing><span>Active</span></List.Trailing>
+            <List.Trailing>
+              <span>Active</span>
+            </List.Trailing>
           </List.Item>
           <List.Item data-testid="item-1">
-            <List.Leading><span>B</span></List.Leading>
+            <List.Leading>
+              <span>B</span>
+            </List.Leading>
             <List.Content>
               <List.Title>John Doe</List.Title>
               <List.Description>john@example.com</List.Description>
             </List.Content>
           </List.Item>
-        </List>
+        </List>,
       );
 
       expect(screen.getByTestId('list')).toBeInTheDocument();
@@ -420,7 +488,7 @@ describe('List', () => {
       render(
         <List data-testid="list" animations={false}>
           <List.Item data-testid="item">Item</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('list')).toBeInTheDocument();
       expect(screen.getByTestId('item')).toBeInTheDocument();
@@ -433,7 +501,7 @@ describe('List', () => {
       render(
         <List data-testid="list" animations={false} sp={{ root: { className: 'sp-root' } }}>
           <List.Item>Item</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('list').className).toContain('sp-root');
     });
@@ -442,7 +510,7 @@ describe('List', () => {
       render(
         <List data-testid="list" animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>
           <List.Item>Item</List.Item>
-        </List>
+        </List>,
       );
       expect(screen.getByTestId('list')).toHaveStyle({ marginTop: '5px' });
     });

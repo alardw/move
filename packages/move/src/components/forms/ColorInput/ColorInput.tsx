@@ -71,7 +71,6 @@ export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
 
 const ICON_SIZE_MAP: Record<string, number> = { sm: 14, md: 16, lg: 18 };
 
-
 // ============================================================================
 // EyeDropper type
 // ============================================================================
@@ -90,8 +89,14 @@ declare global {
 // A shrinking box makes Radix re-measure and flip the popup below the trigger
 // (an ugly flash on close when it opened above). Same rule as Select/Autocomplete.
 const DEFAULT_COLORINPUT_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Content.enter', sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }] },
-  { trigger: 'Content.exit', sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }] },
+  {
+    trigger: 'Content.enter',
+    sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }],
+  },
+  {
+    trigger: 'Content.exit',
+    sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }],
+  },
 ];
 
 // Inner lives BELOW the Portal so it mounts/unmounts per open — that is what makes
@@ -134,10 +139,24 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     closeOnColorSwatchClick: true,
   },
   moveProps: [
-    'variant', 'size', 'format', 'value', 'defaultValue', 'onValueChange', 'onChangeEnd',
-    'onFormatChange', 'formatOptions',
-    'swatches', 'swatchesPerRow', 'withPicker', 'withEyeDropper',
-    'closeOnColorSwatchClick', 'invalid', 'width', 'readOnly', 'labels',
+    'variant',
+    'size',
+    'format',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'onChangeEnd',
+    'onFormatChange',
+    'formatOptions',
+    'swatches',
+    'swatchesPerRow',
+    'withPicker',
+    'withEyeDropper',
+    'closeOnColorSwatchClick',
+    'invalid',
+    'width',
+    'readOnly',
+    'labels',
   ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
@@ -149,9 +168,12 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     const [inputText, setInputText] = React.useState('');
     const [isInputFocused, setIsInputFocused] = React.useState(false);
 
-    const handleOpenChange = React.useCallback((newOpen: boolean) => {
-      if (newOpen) openFn();
-    }, [openFn]);
+    const handleOpenChange = React.useCallback(
+      (newOpen: boolean) => {
+        if (newOpen) openFn();
+      },
+      [openFn],
+    );
 
     // Close the popup on viewport changes — scroll (any ancestor) or
     // resize. Without this the popover floats away from the trigger
@@ -186,45 +208,60 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     const onValueChange = props.onValueChange as ((v: string) => void) | undefined;
     const onChangeEnd = props.onChangeEnd as ((v: string) => void) | undefined;
 
-    const handleValueChange = React.useCallback((value: string) => {
-      if (!isControlled) setInternalValue(value);
-      onValueChange?.(value);
-    }, [isControlled, onValueChange]);
+    const handleValueChange = React.useCallback(
+      (value: string) => {
+        if (!isControlled) setInternalValue(value);
+        onValueChange?.(value);
+      },
+      [isControlled, onValueChange],
+    );
 
-    const handleChangeEnd = React.useCallback((value: string) => {
-      onChangeEnd?.(value);
-    }, [onChangeEnd]);
+    const handleChangeEnd = React.useCallback(
+      (value: string) => {
+        onChangeEnd?.(value);
+      },
+      [onChangeEnd],
+    );
 
     // Input field handlers
-    const handleInputFocus = React.useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-      setIsInputFocused(true);
-      setInputText(currentValue);
-      (props.onFocus as React.FocusEventHandler<HTMLInputElement> | undefined)?.(e);
-    }, [currentValue, props.onFocus]);
+    const handleInputFocus = React.useCallback(
+      (e: React.FocusEvent<HTMLInputElement>) => {
+        setIsInputFocused(true);
+        setInputText(currentValue);
+        (props.onFocus as React.FocusEventHandler<HTMLInputElement> | undefined)?.(e);
+      },
+      [currentValue, props.onFocus],
+    );
 
-    const handleInputBlur = React.useCallback((e: React.FocusEvent<HTMLInputElement>) => {
-      setIsInputFocused(false);
-      if (isValidColor(inputText)) {
-        const parsed = parseColor(inputText)!;
-        const formatted = formatColor(parsed, format);
-        handleValueChange(formatted);
-        handleChangeEnd(formatted);
-      }
-      (props.onBlur as React.FocusEventHandler<HTMLInputElement> | undefined)?.(e);
-    }, [inputText, format, handleValueChange, handleChangeEnd, props.onBlur]);
+    const handleInputBlur = React.useCallback(
+      (e: React.FocusEvent<HTMLInputElement>) => {
+        setIsInputFocused(false);
+        if (isValidColor(inputText)) {
+          const parsed = parseColor(inputText)!;
+          const formatted = formatColor(parsed, format);
+          handleValueChange(formatted);
+          handleChangeEnd(formatted);
+        }
+        (props.onBlur as React.FocusEventHandler<HTMLInputElement> | undefined)?.(e);
+      },
+      [inputText, format, handleValueChange, handleChangeEnd, props.onBlur],
+    );
 
     const handleInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(e.target.value);
     }, []);
 
-    const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        (e.target as HTMLInputElement).blur();
-      } else if (e.key === 'ArrowDown' && !isOpen) {
-        e.preventDefault();
-        openFn();
-      }
-    }, [isOpen, openFn]);
+    const handleInputKeyDown = React.useCallback(
+      (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          (e.target as HTMLInputElement).blur();
+        } else if (e.key === 'ArrowDown' && !isOpen) {
+          e.preventDefault();
+          openFn();
+        }
+      },
+      [isOpen, openFn],
+    );
 
     // Swatch click toggles popover
     const handleSwatchClick = React.useCallback(() => {
@@ -239,27 +276,39 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     }, [props.disabled, props.readOnly, isOpen, isClosing, close, openFn]);
 
     // Dismiss handlers
-    const handlePointerDownOutside = React.useCallback((e: any) => {
-      const target = e.detail?.originalEvent?.target;
-      if (target && internalRef.current?.contains(target as Node)) {
-        e.preventDefault();
-        return;
-      }
-      if (!e.defaultPrevented) close();
-    }, [close, internalRef]);
+    const handlePointerDownOutside = React.useCallback(
+      (e: any) => {
+        const target = e.detail?.originalEvent?.target;
+        if (target && internalRef.current?.contains(target as Node)) {
+          e.preventDefault();
+          return;
+        }
+        if (!e.defaultPrevented) close();
+      },
+      [close, internalRef],
+    );
 
-    const handleEscapeKeyDown = React.useCallback((e: KeyboardEvent) => {
-      if (!e.defaultPrevented) close();
-    }, [close]);
+    const handleEscapeKeyDown = React.useCallback(
+      (e: KeyboardEvent) => {
+        if (!e.defaultPrevented) close();
+      },
+      [close],
+    );
 
     // Picker value change from popover
-    const handlePickerChange = React.useCallback((value: string) => {
-      handleValueChange(value);
-    }, [handleValueChange]);
+    const handlePickerChange = React.useCallback(
+      (value: string) => {
+        handleValueChange(value);
+      },
+      [handleValueChange],
+    );
 
-    const handlePickerChangeEnd = React.useCallback((value: string) => {
-      handleChangeEnd(value);
-    }, [handleChangeEnd]);
+    const handlePickerChangeEnd = React.useCallback(
+      (value: string) => {
+        handleChangeEnd(value);
+      },
+      [handleChangeEnd],
+    );
 
     // EyeDropper
     const handleEyeDropper = React.useCallback(async () => {
@@ -285,15 +334,35 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
         const swatchSp = sp('swatch');
-        const { className: swatchSpClass, style: swatchSpStyle, ...swatchSpRest } = swatchSp as Record<string, unknown>;
+        const {
+          className: swatchSpClass,
+          style: swatchSpStyle,
+          ...swatchSpRest
+        } = swatchSp as Record<string, unknown>;
         const inputSpVal = sp('input');
-        const { className: inputSpClass, style: inputSpStyle, ...inputSpRest } = inputSpVal as Record<string, unknown>;
+        const {
+          className: inputSpClass,
+          style: inputSpStyle,
+          ...inputSpRest
+        } = inputSpVal as Record<string, unknown>;
         const contentSp = sp('content');
-        const { className: contentSpClass, style: contentSpStyle, ...contentSpRest } = contentSp as Record<string, unknown>;
+        const {
+          className: contentSpClass,
+          style: contentSpStyle,
+          ...contentSpRest
+        } = contentSp as Record<string, unknown>;
         const contentInnerSp = sp('contentInner');
-        const { className: contentInnerSpClass, style: contentInnerSpStyle, ...contentInnerSpRest } = contentInnerSp as Record<string, unknown>;
+        const {
+          className: contentInnerSpClass,
+          style: contentInnerSpStyle,
+          ...contentInnerSpRest
+        } = contentInnerSp as Record<string, unknown>;
 
         const variant = props.variant as string;
         const sizeVal = props.size as string;
@@ -302,7 +371,8 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
         const readOnly = props.readOnly as boolean | undefined;
         const width = props.width as React.CSSProperties['width'] | undefined;
         const withEyeDropper = props.withEyeDropper as boolean | undefined;
-        const showEyeDropper = withEyeDropper && typeof window !== 'undefined' && !!window.EyeDropper;
+        const showEyeDropper =
+          withEyeDropper && typeof window !== 'undefined' && !!window.EyeDropper;
 
         return (
           <RadixPopover.Root open={isOpen || isClosing} onOpenChange={handleOpenChange}>
@@ -311,7 +381,11 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                 {...attrs}
                 {...rootSpRest}
                 ref={ref}
-                className={cx('root', props.className as string | undefined, rootSpClass as string | undefined)}
+                className={cx(
+                  'root',
+                  props.className as string | undefined,
+                  rootSpClass as string | undefined,
+                )}
                 style={{
                   width,
                   ...(props.style as React.CSSProperties),

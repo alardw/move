@@ -11,7 +11,14 @@ export const spec = {
   description:
     'Container that FLIP-animates its direct children to their new positions when the set or order changes (filter, sort, reorder, add, remove)',
 
-  synonyms: ['flip', 'animated list', 'auto animate', 'reorder', 'layout transition', 'filter group'],
+  synonyms: [
+    'flip',
+    'animated list',
+    'auto animate',
+    'reorder',
+    'layout transition',
+    'filter group',
+  ],
   families: {
     behavior: ['layout', 'motion'],
     state: ['stateless'],
@@ -21,21 +28,95 @@ export const spec = {
   compound: false,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Container whose direct children are FLIP-animated when they reorder, filter, add, or remove' },
+    {
+      name: 'root',
+      element: 'div',
+      description:
+        'Container whose direct children are FLIP-animated when they reorder, filter, add, or remove',
+    },
   ],
 
   props: [
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Items to lay out. Each needs a stable React key so the FLIP engine can track it across reorders.' },
-    { name: 'as', type: "'div' | 'ul' | 'ol' | 'section'", default: "'div'", moveSpecific: true, description: 'Semantic container element to render.' },
-    { name: 'asChild', type: 'boolean', default: 'false', moveSpecific: true, description: 'Render onto the single child element (e.g. wrap a `Stack` or `Grid`) via Radix Slot, so that component provides the layout while LayoutGroup FLIP-animates its children. The wrapped element becomes the tracked container.' },
-    { name: 'enter', type: "'fade' | 'scale' | 'fade-scale' | 'none'", default: "'fade-scale'", moveSpecific: true, description: 'Entrance animation for newly added children.' },
-    { name: 'exit', type: "'fade' | 'scale' | 'fade-scale' | 'none'", default: "'fade-scale'", moveSpecific: true, description: 'Exit animation for removed children (the node is briefly retained to animate out, then unmounted).' },
-    { name: 'duration', type: 'number', default: '350', moveSpecific: true, description: 'Duration in ms of the position move and enter/exit animations.' },
-    { name: 'stagger', type: 'number', default: '0', moveSpecific: true, description: 'Delay in ms between children for the one-time `initial` mount reveal. Ongoing changes (moves, entrances, exits) stay synchronized so filtering reads as one coherent reflow rather than a top-to-bottom cascade. 0 disables staggering.' },
-    { name: 'initial', type: 'boolean', default: 'false', moveSpecific: true, description: 'Also play the enter animation (staggered) for the children present at mount — a one-time entrance reveal on load.' },
-    { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Opt out of animation — children jump straight to their final layout. Also implied by prefers-reduced-motion.' },
-    { name: 'className', type: 'string', moveSpecific: false, description: 'Class applied to the root.' },
-    { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline style applied to the root.' },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description:
+        'Items to lay out. Each needs a stable React key so the FLIP engine can track it across reorders.',
+    },
+    {
+      name: 'as',
+      type: "'div' | 'ul' | 'ol' | 'section'",
+      default: "'div'",
+      moveSpecific: true,
+      description: 'Semantic container element to render.',
+    },
+    {
+      name: 'asChild',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Render onto the single child element (e.g. wrap a `Stack` or `Grid`) via Radix Slot, so that component provides the layout while LayoutGroup FLIP-animates its children. The wrapped element becomes the tracked container.',
+    },
+    {
+      name: 'enter',
+      type: "'fade' | 'scale' | 'fade-scale' | 'none'",
+      default: "'fade-scale'",
+      moveSpecific: true,
+      description: 'Entrance animation for newly added children.',
+    },
+    {
+      name: 'exit',
+      type: "'fade' | 'scale' | 'fade-scale' | 'none'",
+      default: "'fade-scale'",
+      moveSpecific: true,
+      description:
+        'Exit animation for removed children (the node is briefly retained to animate out, then unmounted).',
+    },
+    {
+      name: 'duration',
+      type: 'number',
+      default: '350',
+      moveSpecific: true,
+      description: 'Duration in ms of the position move and enter/exit animations.',
+    },
+    {
+      name: 'stagger',
+      type: 'number',
+      default: '0',
+      moveSpecific: true,
+      description:
+        'Delay in ms between children for the one-time `initial` mount reveal. Ongoing changes (moves, entrances, exits) stay synchronized so filtering reads as one coherent reflow rather than a top-to-bottom cascade. 0 disables staggering.',
+    },
+    {
+      name: 'initial',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Also play the enter animation (staggered) for the children present at mount — a one-time entrance reveal on load.',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Opt out of animation — children jump straight to their final layout. Also implied by prefers-reduced-motion.',
+    },
+    {
+      name: 'className',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Class applied to the root.',
+    },
+    {
+      name: 'style',
+      type: 'React.CSSProperties',
+      moveSpecific: false,
+      description: 'Inline style applied to the root.',
+    },
   ],
 
   anatomy: {
@@ -79,15 +160,18 @@ export const spec = {
     },
     {
       id: 'reduced-motion-or-disabled',
-      description: 'When `disabled` is set or prefers-reduced-motion: reduce, no FLIP runs — children appear directly at their final layout.',
+      description:
+        'When `disabled` is set or prefers-reduced-motion: reduce, no FLIP runs — children appear directly at their final layout.',
     },
     {
       id: 'a11y-visual-only',
-      description: 'Animations are purely visual (CSS transforms); the primitive never moves focus. Source order and tab order follow the real DOM (React-controlled). Children that are mid-exit are marked aria-hidden so assistive tech ignores the leaving copy.',
+      description:
+        'Animations are purely visual (CSS transforms); the primitive never moves focus. Source order and tab order follow the real DOM (React-controlled). Children that are mid-exit are marked aria-hidden so assistive tech ignores the leaving copy.',
     },
     {
       id: 'stable-keys',
-      description: 'Children must have stable React keys; the engine tracks elements across reorders by DOM identity, so unkeyed/index-keyed children will mis-track.',
+      description:
+        'Children must have stable React keys; the engine tracks elements across reorders by DOM identity, so unkeyed/index-keyed children will mis-track.',
     },
     {
       id: 'polymorphic',
@@ -95,7 +179,8 @@ export const spec = {
     },
     {
       id: 'as-child',
-      description: 'With `asChild`, renders via Radix Slot onto the single child element (e.g. a `Stack` or `Grid`), merging ref + data attributes — so the wrapped component provides the flex/grid layout while LayoutGroup tracks and FLIP-animates that element\'s children.',
+      description:
+        "With `asChild`, renders via Radix Slot onto the single child element (e.g. a `Stack` or `Grid`), merging ref + data attributes — so the wrapped component provides the flex/grid layout while LayoutGroup tracks and FLIP-animates that element's children.",
     },
   ],
 

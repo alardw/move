@@ -110,15 +110,18 @@ const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement
       onResizeEnd?.(panelSizes);
     }, [onResizeEnd, panelSizes]);
 
-    const contextValue = React.useMemo<SplitterContextValue>(() => ({
-      layout,
-      effectiveLayout,
-      isCollapsed,
-      panelSizes,
-      setPanelSize,
-      registerPanel,
-      gutterSize,
-    }), [layout, effectiveLayout, isCollapsed, panelSizes, setPanelSize, registerPanel, gutterSize]);
+    const contextValue = React.useMemo<SplitterContextValue>(
+      () => ({
+        layout,
+        effectiveLayout,
+        isCollapsed,
+        panelSizes,
+        setPanelSize,
+        registerPanel,
+        gutterSize,
+      }),
+      [layout, effectiveLayout, isCollapsed, panelSizes, setPanelSize, registerPanel, gutterSize],
+    );
 
     return {
       render() {
@@ -133,11 +136,7 @@ const SplitterRoot = withMoveComponent<'root', SplitterRootProps, HTMLDivElement
           elements.push(child);
           if (i < children.length - 1) {
             elements.push(
-              <SplitterGutter
-                key={`gutter-${i}`}
-                index={i}
-                onResizeEnd={handleResizeEnd}
-              />
+              <SplitterGutter key={`gutter-${i}`} index={i} onResizeEnd={handleResizeEnd} />,
             );
           }
         });
@@ -172,100 +171,112 @@ interface SplitterGutterProps {
 }
 
 const SplitterGutter: React.FC<SplitterGutterProps> = ({ index, onResizeEnd }) => {
-  const { effectiveLayout: layout, isCollapsed, panelSizes, setPanelSize, gutterSize } = useSplitterContext();
+  const {
+    effectiveLayout: layout,
+    isCollapsed,
+    panelSizes,
+    setPanelSize,
+    gutterSize,
+  } = useSplitterContext();
   const gutterRef = React.useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = React.useState(false);
 
-  const handleMouseDown = React.useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-
-    const startPos = layout === 'horizontal' ? e.clientX : e.clientY;
-    const startSizes = [...panelSizes];
-
-    const parentEl = gutterRef.current?.parentElement;
-    if (!parentEl) return;
-
-    const parentRect = parentEl.getBoundingClientRect();
-    const totalSize = layout === 'horizontal' ? parentRect.width : parentRect.height;
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      const currentPos = layout === 'horizontal' ? moveEvent.clientX : moveEvent.clientY;
-      const delta = currentPos - startPos;
-      const deltaPercent = (delta / totalSize) * 100;
-
-      const newSize1 = Math.max(5, startSizes[index] + deltaPercent);
-      const newSize2 = Math.max(5, startSizes[index + 1] - deltaPercent);
-
-      // Only update if both panels stay above minimum
-      if (newSize1 >= 5 && newSize2 >= 5) {
-        setPanelSize(index, newSize1);
-        setPanelSize(index + 1, newSize2);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      onResizeEnd();
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  }, [layout, panelSizes, setPanelSize, index, onResizeEnd]);
-
-  const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
-    const step = 2; // Percentage step for keyboard navigation
-    let handled = false;
-
-    if (layout === 'horizontal') {
-      if (e.key === 'ArrowLeft') {
-        const newSize1 = Math.max(5, panelSizes[index] - step);
-        const newSize2 = panelSizes[index + 1] + step;
-        setPanelSize(index, newSize1);
-        setPanelSize(index + 1, newSize2);
-        handled = true;
-      } else if (e.key === 'ArrowRight') {
-        const newSize1 = panelSizes[index] + step;
-        const newSize2 = Math.max(5, panelSizes[index + 1] - step);
-        setPanelSize(index, newSize1);
-        setPanelSize(index + 1, newSize2);
-        handled = true;
-      }
-    } else {
-      if (e.key === 'ArrowUp') {
-        const newSize1 = Math.max(5, panelSizes[index] - step);
-        const newSize2 = panelSizes[index + 1] + step;
-        setPanelSize(index, newSize1);
-        setPanelSize(index + 1, newSize2);
-        handled = true;
-      } else if (e.key === 'ArrowDown') {
-        const newSize1 = panelSizes[index] + step;
-        const newSize2 = Math.max(5, panelSizes[index + 1] - step);
-        setPanelSize(index, newSize1);
-        setPanelSize(index + 1, newSize2);
-        handled = true;
-      }
-    }
-
-    if (e.key === 'Home') {
-      // Minimize first panel
-      setPanelSize(index, 5);
-      setPanelSize(index + 1, panelSizes[index] + panelSizes[index + 1] - 5);
-      handled = true;
-    } else if (e.key === 'End') {
-      // Maximize first panel
-      setPanelSize(index, panelSizes[index] + panelSizes[index + 1] - 5);
-      setPanelSize(index + 1, 5);
-      handled = true;
-    }
-
-    if (handled) {
+  const handleMouseDown = React.useCallback(
+    (e: React.MouseEvent) => {
       e.preventDefault();
-      onResizeEnd();
-    }
-  }, [layout, panelSizes, setPanelSize, index, onResizeEnd]);
+      setIsDragging(true);
+
+      const startPos = layout === 'horizontal' ? e.clientX : e.clientY;
+      const startSizes = [...panelSizes];
+
+      const parentEl = gutterRef.current?.parentElement;
+      if (!parentEl) return;
+
+      const parentRect = parentEl.getBoundingClientRect();
+      const totalSize = layout === 'horizontal' ? parentRect.width : parentRect.height;
+
+      const handleMouseMove = (moveEvent: MouseEvent) => {
+        const currentPos = layout === 'horizontal' ? moveEvent.clientX : moveEvent.clientY;
+        const delta = currentPos - startPos;
+        const deltaPercent = (delta / totalSize) * 100;
+
+        const newSize1 = Math.max(5, startSizes[index] + deltaPercent);
+        const newSize2 = Math.max(5, startSizes[index + 1] - deltaPercent);
+
+        // Only update if both panels stay above minimum
+        if (newSize1 >= 5 && newSize2 >= 5) {
+          setPanelSize(index, newSize1);
+          setPanelSize(index + 1, newSize2);
+        }
+      };
+
+      const handleMouseUp = () => {
+        setIsDragging(false);
+        onResizeEnd();
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    },
+    [layout, panelSizes, setPanelSize, index, onResizeEnd],
+  );
+
+  const handleKeyDown = React.useCallback(
+    (e: React.KeyboardEvent) => {
+      const step = 2; // Percentage step for keyboard navigation
+      let handled = false;
+
+      if (layout === 'horizontal') {
+        if (e.key === 'ArrowLeft') {
+          const newSize1 = Math.max(5, panelSizes[index] - step);
+          const newSize2 = panelSizes[index + 1] + step;
+          setPanelSize(index, newSize1);
+          setPanelSize(index + 1, newSize2);
+          handled = true;
+        } else if (e.key === 'ArrowRight') {
+          const newSize1 = panelSizes[index] + step;
+          const newSize2 = Math.max(5, panelSizes[index + 1] - step);
+          setPanelSize(index, newSize1);
+          setPanelSize(index + 1, newSize2);
+          handled = true;
+        }
+      } else {
+        if (e.key === 'ArrowUp') {
+          const newSize1 = Math.max(5, panelSizes[index] - step);
+          const newSize2 = panelSizes[index + 1] + step;
+          setPanelSize(index, newSize1);
+          setPanelSize(index + 1, newSize2);
+          handled = true;
+        } else if (e.key === 'ArrowDown') {
+          const newSize1 = panelSizes[index] + step;
+          const newSize2 = Math.max(5, panelSizes[index + 1] - step);
+          setPanelSize(index, newSize1);
+          setPanelSize(index + 1, newSize2);
+          handled = true;
+        }
+      }
+
+      if (e.key === 'Home') {
+        // Minimize first panel
+        setPanelSize(index, 5);
+        setPanelSize(index + 1, panelSizes[index] + panelSizes[index + 1] - 5);
+        handled = true;
+      } else if (e.key === 'End') {
+        // Maximize first panel
+        setPanelSize(index, panelSizes[index] + panelSizes[index + 1] - 5);
+        setPanelSize(index + 1, 5);
+        handled = true;
+      }
+
+      if (handled) {
+        e.preventDefault();
+        onResizeEnd();
+      }
+    },
+    [layout, panelSizes, setPanelSize, index, onResizeEnd],
+  );
 
   // Hide gutter when collapsed (stacked layout doesn't need resizing)
   if (isCollapsed) {
@@ -313,7 +324,12 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
   moveProps: ['size', 'minSize'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { effectiveLayout: layout, isCollapsed, panelSizes, registerPanel } = useSplitterContext();
+    const {
+      effectiveLayout: layout,
+      isCollapsed,
+      panelSizes,
+      registerPanel,
+    } = useSplitterContext();
     const indexRef = React.useRef<number>(-1);
     const panelRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef(ref, panelRef);
@@ -323,17 +339,15 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
       const el = panelRef.current;
       if (!el || !el.parentElement) return;
 
-      const siblings = Array.from(el.parentElement.children).filter(
-        (child) => child.classList.contains(styles.panel)
+      const siblings = Array.from(el.parentElement.children).filter((child) =>
+        child.classList.contains(styles.panel),
       );
       const idx = siblings.indexOf(el);
       indexRef.current = idx;
 
       // Calculate initial size
       const siblingCount = siblings.length;
-      const initialSize = props.size !== undefined
-        ? (props.size as number)
-        : 100 / siblingCount;
+      const initialSize = props.size !== undefined ? (props.size as number) : 100 / siblingCount;
 
       registerPanel(idx, props.minSize as number, initialSize);
     }, [registerPanel, props.size, props.minSize]);
@@ -343,7 +357,11 @@ const SplitterPanel = withMoveComponent<'panel', SplitterPanelProps, HTMLDivElem
     return {
       render() {
         const panelSp = sp('panel');
-        const { className: spClass, style: spStyle, ...spRest } = panelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = panelSp as Record<string, unknown>;
 
         // When collapsed, panels stack with auto height; otherwise use percentage sizes
         const sizeStyle = isCollapsed

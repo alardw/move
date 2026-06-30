@@ -9,7 +9,7 @@ describe('Switch', () => {
     render(
       <Switch.Root {...props}>
         <Switch.Thumb />
-      </Switch.Root>
+      </Switch.Root>,
     );
 
   // === Rendering ===
@@ -37,7 +37,7 @@ describe('Switch', () => {
       render(
         <Switch.Root ref={ref as any}>
           <Switch.Thumb />
-        </Switch.Root>
+        </Switch.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
@@ -138,7 +138,7 @@ describe('Switch', () => {
           <Switch.Root name="notifications" value="on">
             <Switch.Thumb />
           </Switch.Root>
-        </form>
+        </form>,
       );
       const hiddenInput = container.querySelector('input[name="notifications"]');
       expect(hiddenInput).toBeInTheDocument();

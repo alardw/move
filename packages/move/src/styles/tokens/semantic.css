@@ -86,19 +86,32 @@
    * -soft-bg: subtle tinted background
    * Defaults are dark-theme values; light theme overrides.
    * ============================================ */
-  --move-gray-text: var(--move-gray-300);       --move-gray-soft-bg: var(--move-gray-800);
-  --move-red-text: var(--move-red-400);         --move-red-soft-bg: var(--move-red-950);
-  --move-pink-text: var(--move-pink-300);       --move-pink-soft-bg: var(--move-pink-950);
-  --move-grape-text: var(--move-grape-300);     --move-grape-soft-bg: var(--move-grape-950);
-  --move-violet-text: var(--move-violet-200);   --move-violet-soft-bg: var(--move-violet-950);
-  --move-indigo-text: var(--move-indigo-300);   --move-indigo-soft-bg: var(--move-indigo-950);
-  --move-blue-text: var(--move-blue-300);       --move-blue-soft-bg: var(--move-blue-950);
-  --move-cyan-text: var(--move-cyan-400);       --move-cyan-soft-bg: var(--move-cyan-950);
-  --move-teal-text: var(--move-teal-400);       --move-teal-soft-bg: var(--move-teal-950);
-  --move-green-text: var(--move-green-400);     --move-green-soft-bg: var(--move-green-950);
-  --move-lime-text: var(--move-lime-400);       --move-lime-soft-bg: var(--move-lime-950);
-  --move-yellow-text: var(--move-yellow-400);   --move-yellow-soft-bg: var(--move-yellow-950);
-  --move-orange-text: var(--move-orange-300);   --move-orange-soft-bg: var(--move-orange-950);
+  --move-gray-text: var(--move-gray-300);
+  --move-gray-soft-bg: var(--move-gray-800);
+  --move-red-text: var(--move-red-400);
+  --move-red-soft-bg: var(--move-red-950);
+  --move-pink-text: var(--move-pink-300);
+  --move-pink-soft-bg: var(--move-pink-950);
+  --move-grape-text: var(--move-grape-300);
+  --move-grape-soft-bg: var(--move-grape-950);
+  --move-violet-text: var(--move-violet-200);
+  --move-violet-soft-bg: var(--move-violet-950);
+  --move-indigo-text: var(--move-indigo-300);
+  --move-indigo-soft-bg: var(--move-indigo-950);
+  --move-blue-text: var(--move-blue-300);
+  --move-blue-soft-bg: var(--move-blue-950);
+  --move-cyan-text: var(--move-cyan-400);
+  --move-cyan-soft-bg: var(--move-cyan-950);
+  --move-teal-text: var(--move-teal-400);
+  --move-teal-soft-bg: var(--move-teal-950);
+  --move-green-text: var(--move-green-400);
+  --move-green-soft-bg: var(--move-green-950);
+  --move-lime-text: var(--move-lime-400);
+  --move-lime-soft-bg: var(--move-lime-950);
+  --move-yellow-text: var(--move-yellow-400);
+  --move-yellow-soft-bg: var(--move-yellow-950);
+  --move-orange-text: var(--move-orange-300);
+  --move-orange-soft-bg: var(--move-orange-950);
 
   /* ============================================
    * Selection (browser text selection)
@@ -167,7 +180,6 @@
   --move-size-base: var(--move-text-base);
   --move-size-lg: var(--move-text-lg);
   --move-size-xl: var(--move-text-xl);
-
 
   /* ============================================
    * Scrollbar

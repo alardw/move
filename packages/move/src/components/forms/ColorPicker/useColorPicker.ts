@@ -52,12 +52,7 @@ const DEFAULT_HSV: HsvColor = { h: 0, s: 100, v: 100, a: 1 };
 // ============================================================================
 
 export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPickerReturn {
-  const {
-    format = 'hex',
-    onValueChange,
-    onChangeEnd,
-    onFormatChange,
-  } = options;
+  const { format = 'hex', onValueChange, onChangeEnd, onFormatChange } = options;
 
   const isControlled = options.value !== undefined;
 
@@ -106,72 +101,90 @@ export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPic
     onValueChangeRef.current?.(formatted);
   }, []);
 
-  const setHue = useCallback((h: number) => {
-    setInternalHsv(prev => {
-      const current = controlledHsv ?? prev;
-      const newHsv = { ...current, h: Math.max(0, Math.min(360, h)) };
-      const formatted = formatColor(newHsv, formatRef.current);
-      onValueChangeRef.current?.(formatted);
-      return newHsv;
-    });
-  }, [controlledHsv]);
+  const setHue = useCallback(
+    (h: number) => {
+      setInternalHsv((prev) => {
+        const current = controlledHsv ?? prev;
+        const newHsv = { ...current, h: Math.max(0, Math.min(360, h)) };
+        const formatted = formatColor(newHsv, formatRef.current);
+        onValueChangeRef.current?.(formatted);
+        return newHsv;
+      });
+    },
+    [controlledHsv],
+  );
 
-  const setSaturationValue = useCallback((s: number, v: number) => {
-    setInternalHsv(prev => {
-      const current = controlledHsv ?? prev;
-      const newHsv = {
-        ...current,
-        s: Math.max(0, Math.min(100, s)),
-        v: Math.max(0, Math.min(100, v)),
-      };
-      const formatted = formatColor(newHsv, formatRef.current);
-      onValueChangeRef.current?.(formatted);
-      return newHsv;
-    });
-  }, [controlledHsv]);
+  const setSaturationValue = useCallback(
+    (s: number, v: number) => {
+      setInternalHsv((prev) => {
+        const current = controlledHsv ?? prev;
+        const newHsv = {
+          ...current,
+          s: Math.max(0, Math.min(100, s)),
+          v: Math.max(0, Math.min(100, v)),
+        };
+        const formatted = formatColor(newHsv, formatRef.current);
+        onValueChangeRef.current?.(formatted);
+        return newHsv;
+      });
+    },
+    [controlledHsv],
+  );
 
-  const setAlpha = useCallback((a: number) => {
-    setInternalHsv(prev => {
-      const current = controlledHsv ?? prev;
-      const newHsv = { ...current, a: Math.max(0, Math.min(1, a)) };
-      const formatted = formatColor(newHsv, formatRef.current);
-      onValueChangeRef.current?.(formatted);
-      return newHsv;
-    });
-  }, [controlledHsv]);
+  const setAlpha = useCallback(
+    (a: number) => {
+      setInternalHsv((prev) => {
+        const current = controlledHsv ?? prev;
+        const newHsv = { ...current, a: Math.max(0, Math.min(1, a)) };
+        const formatted = formatColor(newHsv, formatRef.current);
+        onValueChangeRef.current?.(formatted);
+        return newHsv;
+      });
+    },
+    [controlledHsv],
+  );
 
-  const setFromString = useCallback((colorString: string) => {
-    const parsed = parseColor(colorString);
-    if (parsed) {
-      update(parsed);
-    }
-  }, [update]);
+  const setFromString = useCallback(
+    (colorString: string) => {
+      const parsed = parseColor(colorString);
+      if (parsed) {
+        update(parsed);
+      }
+    },
+    [update],
+  );
 
-  const setChannel = useCallback((index: number, val: number) => {
-    setInternalHsv(prev => {
-      const current = controlledHsv ?? prev;
-      const newHsv = setChannelFromInput(current, formatRef.current, index, val);
-      const formatted = formatColor(newHsv, formatRef.current);
-      onValueChangeRef.current?.(formatted);
-      return newHsv;
-    });
-  }, [controlledHsv]);
+  const setChannel = useCallback(
+    (index: number, val: number) => {
+      setInternalHsv((prev) => {
+        const current = controlledHsv ?? prev;
+        const newHsv = setChannelFromInput(current, formatRef.current, index, val);
+        const formatted = formatColor(newHsv, formatRef.current);
+        onValueChangeRef.current?.(formatted);
+        return newHsv;
+      });
+    },
+    [controlledHsv],
+  );
 
-  const setActiveFormat = useCallback((newFormat: ColorFormat) => {
-    setInternalFormat(newFormat);
-    formatRef.current = newFormat;
-    onFormatChangeRef.current?.(newFormat);
-    // Re-emit value in the new format
-    setInternalHsv(prev => {
-      const current = controlledHsv ?? prev;
-      const formatted = formatColor(current, newFormat);
-      onValueChangeRef.current?.(formatted);
-      return current;
-    });
-  }, [controlledHsv]);
+  const setActiveFormat = useCallback(
+    (newFormat: ColorFormat) => {
+      setInternalFormat(newFormat);
+      formatRef.current = newFormat;
+      onFormatChangeRef.current?.(newFormat);
+      // Re-emit value in the new format
+      setInternalHsv((prev) => {
+        const current = controlledHsv ?? prev;
+        const formatted = formatColor(current, newFormat);
+        onValueChangeRef.current?.(formatted);
+        return current;
+      });
+    },
+    [controlledHsv],
+  );
 
   const commitChange = useCallback(() => {
-    setInternalHsv(prev => {
+    setInternalHsv((prev) => {
       const current = controlledHsv ?? prev;
       const formatted = formatColor(current, formatRef.current);
       onChangeEndRef.current?.(formatted);

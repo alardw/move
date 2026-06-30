@@ -14,7 +14,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const root = screen.getByRole('list');
       expect(root).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const root = screen.getByTestId('stepper');
       expect(root).toHaveAttribute('data-orientation', 'horizontal');
@@ -42,7 +42,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const root = screen.getByTestId('stepper');
       expect(root).toHaveAttribute('data-orientation', 'vertical');
@@ -57,7 +57,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -69,7 +69,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('stepper').className).toContain('custom');
     });
@@ -81,7 +81,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('stepper')).toHaveStyle({ marginTop: '10px' });
     });
@@ -93,7 +93,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('stepper')).toHaveAttribute('id', 'my-stepper');
     });
@@ -108,7 +108,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const step = screen.getByTestId('step');
       expect(step).toBeInTheDocument();
@@ -130,7 +130,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 3</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step0')).toHaveAttribute('data-status', 'complete');
       expect(screen.getByTestId('step1')).toHaveAttribute('data-status', 'complete');
@@ -151,7 +151,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 3</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step1')).toHaveAttribute('data-status', 'active');
     });
@@ -167,7 +167,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step1')).toHaveAttribute('data-status', 'wait');
     });
@@ -183,7 +183,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step0')).toHaveAttribute('data-status', 'error');
     });
@@ -196,7 +196,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step0')).toHaveAttribute('data-clickable', 'true');
     });
@@ -209,7 +209,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('step0')).toHaveAttribute('tabindex', '0');
     });
@@ -226,7 +226,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       fireEvent.click(screen.getByTestId('step1'));
       expect(onStepClick).toHaveBeenCalledWith(1);
@@ -240,7 +240,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -252,7 +252,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const step = screen.getByTestId('step');
       expect(step.className).toContain('custom');
@@ -269,7 +269,7 @@ describe('Stepper', () => {
             <Stepper.Indicator data-testid="ind" />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('ind')).toHaveTextContent('1');
     });
@@ -281,7 +281,7 @@ describe('Stepper', () => {
             <Stepper.Indicator data-testid="ind" />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('ind')).toHaveAttribute('aria-hidden', 'true');
     });
@@ -297,7 +297,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       // When complete, the indicator should not show number 1
       const ind = screen.getByTestId('ind');
@@ -311,7 +311,7 @@ describe('Stepper', () => {
             <Stepper.Indicator data-testid="ind" icon={<span data-testid="custom-icon">*</span>} />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
     });
@@ -325,7 +325,7 @@ describe('Stepper', () => {
             </Stepper.Indicator>
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('child-content')).toBeInTheDocument();
     });
@@ -338,7 +338,7 @@ describe('Stepper', () => {
             <Stepper.Indicator ref={ref} />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -350,7 +350,7 @@ describe('Stepper', () => {
             <Stepper.Indicator data-testid="ind" className="custom" style={{ padding: '2px' }} />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const ind = screen.getByTestId('ind');
       expect(ind.className).toContain('custom');
@@ -367,7 +367,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>My Title</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByText('My Title')).toBeInTheDocument();
     });
@@ -380,7 +380,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title ref={ref}>Title</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -390,9 +390,15 @@ describe('Stepper', () => {
         <Stepper active={0}>
           <Stepper.Step>
             <Stepper.Indicator />
-            <Stepper.Title data-testid="title" className="custom" style={{ color: 'rgb(255, 0, 0)' }}>Title</Stepper.Title>
+            <Stepper.Title
+              data-testid="title"
+              className="custom"
+              style={{ color: 'rgb(255, 0, 0)' }}
+            >
+              Title
+            </Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const title = screen.getByTestId('title');
       expect(title.className).toContain('custom');
@@ -410,7 +416,7 @@ describe('Stepper', () => {
             <Stepper.Title>Title</Stepper.Title>
             <Stepper.Description>My description</Stepper.Description>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByText('My description')).toBeInTheDocument();
     });
@@ -424,7 +430,7 @@ describe('Stepper', () => {
             <Stepper.Title>Title</Stepper.Title>
             <Stepper.Description ref={ref}>Desc</Stepper.Description>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -435,9 +441,11 @@ describe('Stepper', () => {
           <Stepper.Step>
             <Stepper.Indicator />
             <Stepper.Title>Title</Stepper.Title>
-            <Stepper.Description data-testid="desc" className="custom" style={{ fontSize: '12px' }}>Desc</Stepper.Description>
+            <Stepper.Description data-testid="desc" className="custom" style={{ fontSize: '12px' }}>
+              Desc
+            </Stepper.Description>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const desc = screen.getByTestId('desc');
       expect(desc.className).toContain('custom');
@@ -451,7 +459,7 @@ describe('Stepper', () => {
       render(
         <Stepper.Completed>
           <div data-testid="completed">All done!</div>
-        </Stepper.Completed>
+        </Stepper.Completed>,
       );
       expect(screen.getByTestId('completed')).toBeInTheDocument();
       expect(screen.getByText('All done!')).toBeInTheDocument();
@@ -468,7 +476,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       fireEvent.keyDown(screen.getByTestId('step0'), { key: 'Enter' });
       expect(onStepClick).toHaveBeenCalledWith(0);
@@ -482,7 +490,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 1</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       fireEvent.keyDown(screen.getByTestId('step0'), { key: ' ' });
       expect(onStepClick).toHaveBeenCalledWith(0);
@@ -502,7 +510,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const root = screen.getByRole('list');
       const separators = root.querySelectorAll('[aria-hidden="true"][data-side]');
@@ -524,7 +532,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 3</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       const root = screen.getByRole('list');
       const completeSeps = root.querySelectorAll('[data-complete="true"]');
@@ -552,7 +560,7 @@ describe('Stepper', () => {
             <Stepper.Title>Review</Stepper.Title>
             <Stepper.Description>Confirm everything</Stepper.Description>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
 
       expect(screen.getByRole('list')).toBeInTheDocument();
@@ -573,7 +581,7 @@ describe('Stepper', () => {
             <Stepper.Indicator />
             <Stepper.Title>Step 2</Stepper.Title>
           </Stepper.Step>
-        </Stepper>
+        </Stepper>,
       );
       expect(screen.getByTestId('stepper')).toHaveAttribute('data-orientation', 'vertical');
     });

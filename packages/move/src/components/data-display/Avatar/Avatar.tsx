@@ -56,7 +56,11 @@ const AvatarGroup = withMoveComponent<'group', AvatarGroupProps, HTMLDivElement>
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
 
         // Overlap is pure CSS (negative margin on .group children).
         return (
@@ -96,10 +100,16 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
   moveProps: ['size', 'color', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const animConfig = resolveAnimationsConfig([], props.animations as AnimationTrigger[] | false | undefined);
+    const animConfig = resolveAnimationsConfig(
+      [],
+      props.animations as AnimationTrigger[] | false | undefined,
+    );
 
     const contentRef = React.useRef<HTMLSpanElement>(null);
-    const refs = React.useMemo(() => ({ Root: contentRef as React.RefObject<HTMLElement | null> }), []);
+    const refs = React.useMemo(
+      () => ({ Root: contentRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
     useAnimations(animConfig, refs);
 
     const mergedRef = useMergedRef(ref, contentRef);
@@ -119,9 +129,12 @@ const AvatarRoot = withMoveComponent<'root', AvatarRootProps, HTMLSpanElement>({
               {...spRest}
               ref={mergedRef}
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
               data-size={props.size as string}
-              data-color={props.color as string || undefined}
+              data-color={(props.color as string) || undefined}
               data-status={status}
             >
               {props.children}
@@ -154,15 +167,22 @@ const AvatarImage = withMoveComponent<'image', AvatarImageProps, HTMLImageElemen
   setup({ props, ref, cx, sp, attrs }) {
     const { setStatus } = React.useContext(AvatarStatusContext);
 
-    const handleStatusChange = React.useCallback((s: AvatarStatus) => {
-      setStatus(s);
-      (props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange'])?.(s);
-    }, [setStatus, props.onLoadingStatusChange]);
+    const handleStatusChange = React.useCallback(
+      (s: AvatarStatus) => {
+        setStatus(s);
+        (props.onLoadingStatusChange as AvatarImageProps['onLoadingStatusChange'])?.(s);
+      },
+      [setStatus, props.onLoadingStatusChange],
+    );
 
     return {
       render() {
         const imageSp = sp('image');
-        const { className: spClass, style: spStyle, ...spRest } = imageSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = imageSp as Record<string, unknown>;
 
         return (
           <RadixAvatar.Image
@@ -208,7 +228,11 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
     return {
       render() {
         const fallbackSp = sp('fallback');
-        const { className: spClass, style: spStyle, ...spRest } = fallbackSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = fallbackSp as Record<string, unknown>;
 
         return (
           <RadixAvatar.Fallback

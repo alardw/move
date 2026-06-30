@@ -4,12 +4,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 import type { CalendarEvent, CalendarViewMode, RenderEvent } from '../_shared/types';
-import {
-  addDays,
-  addMonths,
-  getWeekRange,
-  getLocaleFirstDay,
-} from '../_shared/dateUtils';
+import { addDays, addMonths, getWeekRange, getLocaleFirstDay } from '../_shared/dateUtils';
 
 export interface CalendarViewLabels {
   today?: string;
@@ -90,9 +85,7 @@ export interface UseCalendarViewReturn {
   goToNext: () => void;
 }
 
-export function useCalendarView(
-  options: UseCalendarViewOptions = {}
-): UseCalendarViewReturn {
+export function useCalendarView(options: UseCalendarViewOptions = {}): UseCalendarViewReturn {
   const {
     events = [],
     locale = 'en-US',
@@ -111,10 +104,7 @@ export function useCalendarView(
     labels: labelsProp,
   } = options;
 
-  const labels = useMemo(
-    () => ({ ...DEFAULT_LABELS, ...labelsProp }),
-    [labelsProp]
-  );
+  const labels = useMemo(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
 
   const weekStartsOn = weekStartsOnProp ?? getLocaleFirstDay(locale);
 

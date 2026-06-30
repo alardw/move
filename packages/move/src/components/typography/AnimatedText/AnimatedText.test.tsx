@@ -39,14 +39,24 @@ describe('AnimatedText', () => {
 
     it('renders as the specified element via as prop', () => {
       const { rerender } = render(
-        <AnimatedText as="p" data-testid="t">{TEXT}</AnimatedText>,
+        <AnimatedText as="p" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
       );
       expect(screen.getByTestId('t').tagName).toBe('P');
 
-      rerender(<AnimatedText as="h1" data-testid="t">{TEXT}</AnimatedText>);
+      rerender(
+        <AnimatedText as="h1" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
+      );
       expect(screen.getByTestId('t').tagName).toBe('H1');
 
-      rerender(<AnimatedText as="div" data-testid="t">{TEXT}</AnimatedText>);
+      rerender(
+        <AnimatedText as="div" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
+      );
       expect(screen.getByTestId('t').tagName).toBe('DIV');
     });
 
@@ -88,7 +98,9 @@ describe('AnimatedText', () => {
     it('reflects the by prop via data-by', () => {
       for (const by of ['character', 'word', 'line'] as const) {
         const { unmount } = render(
-          <AnimatedText by={by} data-testid="t">{TEXT}</AnimatedText>,
+          <AnimatedText by={by} data-testid="t">
+            {TEXT}
+          </AnimatedText>,
         );
         expect(screen.getByTestId('t')).toHaveAttribute('data-by', by);
         unmount();
@@ -98,7 +110,9 @@ describe('AnimatedText', () => {
     it('reflects the effect prop via data-effect', () => {
       for (const effect of ['fade', 'slideUp', 'blurUp', 'scale'] as const) {
         const { unmount } = render(
-          <AnimatedText effect={effect} data-testid="t">{TEXT}</AnimatedText>,
+          <AnimatedText effect={effect} data-testid="t">
+            {TEXT}
+          </AnimatedText>,
         );
         expect(screen.getByTestId('t')).toHaveAttribute('data-effect', effect);
         unmount();
@@ -108,23 +122,29 @@ describe('AnimatedText', () => {
 
   describe('splitting', () => {
     it('splits text into segments and marks them aria-hidden', () => {
-      render(<AnimatedText by="word" data-testid="t">{TEXT}</AnimatedText>);
+      render(
+        <AnimatedText by="word" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
+      );
       const el = screen.getByTestId('t');
       const hidden = el.querySelectorAll('[aria-hidden="true"]');
       expect(hidden.length).toBeGreaterThan(0);
     });
 
     it('keeps an accessible copy of the full text for screen readers', () => {
-      render(<AnimatedText by="character" data-testid="t">{TEXT}</AnimatedText>);
+      render(
+        <AnimatedText by="character" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
+      );
       // The visible characters are split, but the full sentence is still
       // findable as a single accessible node.
       expect(screen.getByText(TEXT)).toBeInTheDocument();
     });
 
     it('re-renders with new text when children change', () => {
-      const { rerender } = render(
-        <AnimatedText data-testid="t">{TEXT}</AnimatedText>,
-      );
+      const { rerender } = render(<AnimatedText data-testid="t">{TEXT}</AnimatedText>);
       rerender(<AnimatedText data-testid="t">Goodbye now</AnimatedText>);
       expect(screen.getByTestId('t').textContent).toContain('Goodbye now');
       expect(screen.getByTestId('t').textContent).not.toContain('Hello');
@@ -154,7 +174,9 @@ describe('AnimatedText', () => {
     it('renders text immediately without splitting and marks data-animated', async () => {
       mockReducedMotion(true);
       render(
-        <AnimatedText trigger="mount" data-testid="t">{TEXT}</AnimatedText>,
+        <AnimatedText trigger="mount" data-testid="t">
+          {TEXT}
+        </AnimatedText>,
       );
       const el = screen.getByTestId('t');
       await waitFor(() => expect(el).toHaveAttribute('data-animated'));

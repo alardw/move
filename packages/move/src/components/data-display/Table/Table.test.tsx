@@ -7,7 +7,15 @@ describe('Table', () => {
   // === Table Root ===
   describe('Table (Root)', () => {
     it('renders as a table element inside a scroll wrapper', () => {
-      render(<Table data-testid="table"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       const el = screen.getByTestId('table');
       expect(el).toBeInTheDocument();
       expect(el.tagName).toBe('TABLE');
@@ -15,45 +23,117 @@ describe('Table', () => {
     });
 
     it('defaults to variant=lines and size=md', () => {
-      render(<Table data-testid="table"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       const el = screen.getByTestId('table');
       expect(el).toHaveAttribute('data-variant', 'lines');
       expect(el).toHaveAttribute('data-size', 'md');
     });
 
     it('applies data-variant for surface and bordered', () => {
-      const { rerender } = render(<Table data-testid="table" variant="surface"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      const { rerender } = render(
+        <Table data-testid="table" variant="surface">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-variant', 'surface');
 
-      rerender(<Table data-testid="table" variant="bordered"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      rerender(
+        <Table data-testid="table" variant="bordered">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-variant', 'bordered');
     });
 
     it('applies data-size attribute', () => {
-      const { rerender } = render(<Table data-testid="table" size="sm"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      const { rerender } = render(
+        <Table data-testid="table" size="sm">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-size', 'sm');
 
-      rerender(<Table data-testid="table" size="lg"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      rerender(
+        <Table data-testid="table" size="lg">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-size', 'lg');
     });
 
     it('applies data-striped modifier attribute', () => {
-      render(<Table data-testid="table" striped><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table" striped>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-striped');
     });
 
     it('applies data-hoverable when hoverable=true', () => {
-      render(<Table data-testid="table" hoverable><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table" hoverable>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-hoverable');
     });
 
     it('applies data-sticky-header when stickyHeader=true', () => {
-      render(<Table data-testid="table" stickyHeader><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table" stickyHeader>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveAttribute('data-sticky-header');
     });
 
     it('renders a scroll wrapper with data-responsive', () => {
-      const { container } = render(<Table><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      const { container } = render(
+        <Table>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       const wrapper = container.querySelector('[data-responsive]');
       expect(wrapper).toBeInTheDocument();
       expect(wrapper).toHaveAttribute('data-responsive', 'scroll');
@@ -61,22 +141,54 @@ describe('Table', () => {
 
     it('forwards ref to the table element', () => {
       const ref = createRef<HTMLTableElement>();
-      render(<Table ref={ref}><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table ref={ref}>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(ref.current).toBeInstanceOf(HTMLTableElement);
     });
 
     it('forwards className', () => {
-      render(<Table data-testid="table" className="custom"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table" className="custom">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<Table data-testid="table" animations={false} style={{ marginTop: '10px' }}><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="table" animations={false} style={{ marginTop: '10px' }}>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('table')).toHaveStyle({ marginTop: '10px' });
     });
 
     it('spreads HTML attributes on the table', () => {
-      render(<Table data-testid="my-table" aria-label="Users"><tbody><tr><td>Cell</td></tr></tbody></Table>);
+      render(
+        <Table data-testid="my-table" aria-label="Users">
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </Table>,
+      );
       expect(screen.getByTestId('my-table')).toHaveAttribute('aria-label', 'Users');
     });
   });
@@ -85,7 +197,13 @@ describe('Table', () => {
   describe('Table.Header', () => {
     it('renders as thead element', () => {
       render(
-        <table><Table.Header data-testid="header"><tr><th>Col</th></tr></Table.Header></table>,
+        <table>
+          <Table.Header data-testid="header">
+            <tr>
+              <th>Col</th>
+            </tr>
+          </Table.Header>
+        </table>,
       );
       const el = screen.getByTestId('header');
       expect(el.tagName).toBe('THEAD');
@@ -102,7 +220,9 @@ describe('Table', () => {
             style={{ background: 'rgb(255, 0, 0)' }}
             aria-label="Header"
           >
-            <tr><th>Col</th></tr>
+            <tr>
+              <th>Col</th>
+            </tr>
           </Table.Header>
         </table>,
       );
@@ -118,14 +238,28 @@ describe('Table', () => {
   describe('Table.Body', () => {
     it('renders as tbody element', () => {
       render(
-        <table><Table.Body data-testid="body"><tr><td>Cell</td></tr></Table.Body></table>,
+        <table>
+          <Table.Body data-testid="body">
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </Table.Body>
+        </table>,
       );
       expect(screen.getByTestId('body').tagName).toBe('TBODY');
     });
 
     it('forwards ref', () => {
       const ref = createRef<HTMLTableSectionElement>();
-      render(<table><Table.Body ref={ref}><tr><td>Cell</td></tr></Table.Body></table>);
+      render(
+        <table>
+          <Table.Body ref={ref}>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </Table.Body>
+        </table>,
+      );
       expect(ref.current).toBeInstanceOf(HTMLTableSectionElement);
     });
   });
@@ -134,7 +268,13 @@ describe('Table', () => {
   describe('Table.Footer', () => {
     it('renders as tfoot element', () => {
       render(
-        <table><Table.Footer data-testid="footer"><tr><td>Footer</td></tr></Table.Footer></table>,
+        <table>
+          <Table.Footer data-testid="footer">
+            <tr>
+              <td>Footer</td>
+            </tr>
+          </Table.Footer>
+        </table>,
       );
       expect(screen.getByTestId('footer').tagName).toBe('TFOOT');
     });
@@ -144,21 +284,39 @@ describe('Table', () => {
   describe('Table.Row', () => {
     it('renders as tr element', () => {
       render(
-        <table><tbody><Table.Row data-testid="row"><td>Cell</td></Table.Row></tbody></table>,
+        <table>
+          <tbody>
+            <Table.Row data-testid="row">
+              <td>Cell</td>
+            </Table.Row>
+          </tbody>
+        </table>,
       );
       expect(screen.getByTestId('row').tagName).toBe('TR');
     });
 
     it('renders data-state="selected" when selected=true', () => {
       render(
-        <table><tbody><Table.Row data-testid="row" selected><td>Cell</td></Table.Row></tbody></table>,
+        <table>
+          <tbody>
+            <Table.Row data-testid="row" selected>
+              <td>Cell</td>
+            </Table.Row>
+          </tbody>
+        </table>,
       );
       expect(screen.getByTestId('row')).toHaveAttribute('data-state', 'selected');
     });
 
     it('omits data-state when not selected', () => {
       render(
-        <table><tbody><Table.Row data-testid="row"><td>Cell</td></Table.Row></tbody></table>,
+        <table>
+          <tbody>
+            <Table.Row data-testid="row">
+              <td>Cell</td>
+            </Table.Row>
+          </tbody>
+        </table>,
       );
       expect(screen.getByTestId('row')).not.toHaveAttribute('data-state');
     });
@@ -168,27 +326,57 @@ describe('Table', () => {
   describe('Table.Head', () => {
     it('renders as th element', () => {
       render(
-        <table><thead><tr><Table.Head data-testid="head">Col</Table.Head></tr></thead></table>,
+        <table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head">Col</Table.Head>
+            </tr>
+          </thead>
+        </table>,
       );
       expect(screen.getByTestId('head').tagName).toBe('TH');
     });
 
     it('renders sort icon and aria-sort when sortable/sorted', () => {
       const { rerender } = render(
-        <table><thead><tr><Table.Head data-testid="head" sortable sorted="asc">Col</Table.Head></tr></thead></table>,
+        <table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" sortable sorted="asc">
+                Col
+              </Table.Head>
+            </tr>
+          </thead>
+        </table>,
       );
       expect(screen.getByTestId('head')).toHaveAttribute('aria-sort', 'ascending');
       expect(screen.getByTestId('head').querySelector('[aria-hidden="true"]')).toBeInTheDocument();
 
       rerender(
-        <table><thead><tr><Table.Head data-testid="head" sortable sorted="desc">Col</Table.Head></tr></thead></table>,
+        <table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" sortable sorted="desc">
+                Col
+              </Table.Head>
+            </tr>
+          </thead>
+        </table>,
       );
       expect(screen.getByTestId('head')).toHaveAttribute('aria-sort', 'descending');
     });
 
     it('is focusable and has role=columnheader when sortable', () => {
       render(
-        <table><thead><tr><Table.Head data-testid="head" sortable>Col</Table.Head></tr></thead></table>,
+        <table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" sortable>
+                Col
+              </Table.Head>
+            </tr>
+          </thead>
+        </table>,
       );
       const el = screen.getByTestId('head');
       expect(el).toHaveAttribute('tabindex', '0');
@@ -200,7 +388,15 @@ describe('Table', () => {
     it('triggers onSort on Enter, Space, and click', () => {
       const onSort = vi.fn();
       render(
-        <table><thead><tr><Table.Head data-testid="head" sortable onSort={onSort}>Col</Table.Head></tr></thead></table>,
+        <table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" sortable onSort={onSort}>
+                Col
+              </Table.Head>
+            </tr>
+          </thead>
+        </table>,
       );
       const el = screen.getByTestId('head');
       fireEvent.keyDown(el, { key: 'Enter' });
@@ -214,7 +410,13 @@ describe('Table', () => {
   describe('Table.Cell', () => {
     it('renders as td element', () => {
       render(
-        <table><tbody><tr><Table.Cell data-testid="cell">Value</Table.Cell></tr></tbody></table>,
+        <table>
+          <tbody>
+            <tr>
+              <Table.Cell data-testid="cell">Value</Table.Cell>
+            </tr>
+          </tbody>
+        </table>,
       );
       expect(screen.getByTestId('cell').tagName).toBe('TD');
     });
@@ -224,7 +426,14 @@ describe('Table', () => {
   describe('Table.Caption', () => {
     it('renders as caption element', () => {
       render(
-        <table><Table.Caption data-testid="caption">Description</Table.Caption><tbody><tr><td>Cell</td></tr></tbody></table>,
+        <table>
+          <Table.Caption data-testid="caption">Description</Table.Caption>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </table>,
       );
       expect(screen.getByTestId('caption').tagName).toBe('CAPTION');
     });
@@ -283,7 +492,9 @@ describe('Table', () => {
         <Table animations={false}>
           <Table.Group data-testid="group">
             <Table.GroupHeader>Group 1</Table.GroupHeader>
-            <Table.Row><Table.Cell>A</Table.Cell></Table.Row>
+            <Table.Row>
+              <Table.Cell>A</Table.Cell>
+            </Table.Row>
           </Table.Group>
         </Table>,
       );
@@ -297,7 +508,9 @@ describe('Table', () => {
         <Table animations={false}>
           <Table.Group data-testid="group">
             <Table.GroupHeader data-testid="gh">Group 1</Table.GroupHeader>
-            <Table.Row><Table.Cell>A</Table.Cell></Table.Row>
+            <Table.Row>
+              <Table.Cell>A</Table.Cell>
+            </Table.Row>
           </Table.Group>
         </Table>,
       );
@@ -322,7 +535,9 @@ describe('Table', () => {
         <Table animations={false}>
           <Table.Group open={true} onOpenChange={onOpenChange}>
             <Table.GroupHeader data-testid="gh">Group 1</Table.GroupHeader>
-            <Table.Row><Table.Cell>A</Table.Cell></Table.Row>
+            <Table.Row>
+              <Table.Cell>A</Table.Cell>
+            </Table.Row>
           </Table.Group>
         </Table>,
       );
@@ -374,7 +589,11 @@ describe('Table', () => {
     it('merges sp className on root', () => {
       render(
         <Table data-testid="table" sp={{ root: { className: 'sp-root' } }}>
-          <tbody><tr><td>Cell</td></tr></tbody>
+          <tbody>
+            <tr>
+              <td>Cell</td>
+            </tr>
+          </tbody>
         </Table>,
       );
       expect(screen.getByTestId('table').className).toContain('sp-root');

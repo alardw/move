@@ -1,17 +1,17 @@
 // Generated from ScrollArea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { META_SCHEMA_VERSION } from "@/meta-schema";
-import type { ComponentMeta } from "@/meta-schema";
+import { META_SCHEMA_VERSION } from '@/meta-schema';
+import type { ComponentMeta } from '@/meta-schema';
 
 export const scrollAreaMeta = {
   schemaVersion: META_SCHEMA_VERSION,
 
-  name: "ScrollArea",
+  name: 'ScrollArea',
 
-  kind: "compound",
+  kind: 'compound',
 
-  anatomy: ["Root", "Header", "Content", "Footer"],
+  anatomy: ['Root', 'Header', 'Content', 'Footer'],
 
-  slots: ["root", "header", "content", "footer"],
+  slots: ['root', 'header', 'content', 'footer'],
 
   controlled: {
     pattern: null,
@@ -19,5 +19,5 @@ export const scrollAreaMeta = {
 
   variants: {},
 
-  intent: ["display"],
+  intent: ['display'],
 } satisfies ComponentMeta;

@@ -45,7 +45,9 @@ export interface UseTableSelectionReturn {
  * body. It doesn't render anything — the consumer composes the
  * checkbox column with Move's existing `<Checkbox>` inside a cell.
  */
-export function useTableSelection<T>(options: UseTableSelectionOptions<T>): UseTableSelectionReturn {
+export function useTableSelection<T>(
+  options: UseTableSelectionOptions<T>,
+): UseTableSelectionReturn {
   const { items, getKey, value, defaultValue, onChange } = options;
 
   const [raw, setRaw] = useControlledState<string[]>({
@@ -63,14 +65,17 @@ export function useTableSelection<T>(options: UseTableSelectionOptions<T>): UseT
   const isAllSelected = allKeys.length > 0 && allKeys.every((k) => selected.has(k));
   const isSomeSelected = !isAllSelected && allKeys.some((k) => selected.has(k));
 
-  const toggle = React.useCallback((key: string) => {
-    setRaw((prev) => {
-      const next = new Set(prev);
-      if (next.has(key)) next.delete(key);
-      else next.add(key);
-      return Array.from(next);
-    });
-  }, [setRaw]);
+  const toggle = React.useCallback(
+    (key: string) => {
+      setRaw((prev) => {
+        const next = new Set(prev);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        return Array.from(next);
+      });
+    },
+    [setRaw],
+  );
 
   const toggleAll = React.useCallback(() => {
     setRaw((prev) => {

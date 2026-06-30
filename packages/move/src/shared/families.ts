@@ -51,7 +51,7 @@ export const BEHAVIOR_FAMILIES = [
   'display',
 ] as const;
 
-export type BehaviorFamily = typeof BEHAVIOR_FAMILIES[number];
+export type BehaviorFamily = (typeof BEHAVIOR_FAMILIES)[number];
 
 // ─── State shape ─────────────────────────────────────────────────────
 
@@ -66,7 +66,7 @@ export const STATE_FAMILIES = [
   'stateless',
 ] as const;
 
-export type StateFamily = typeof STATE_FAMILIES[number];
+export type StateFamily = (typeof STATE_FAMILIES)[number];
 
 // Animation classification moved to the spec's `animationPatterns` field
 // (ANIMATION_PATTERNS in spec-type.ts). The old families.animation axis was
@@ -86,14 +86,14 @@ export const A11Y_FAMILIES = [
   'none',
 ] as const;
 
-export type A11yFamily = typeof A11Y_FAMILIES[number];
+export type A11yFamily = (typeof A11Y_FAMILIES)[number];
 
 // ─── Composite ───────────────────────────────────────────────────────
 
 export interface ComponentFamilies {
-  behavior:  BehaviorFamily[];
-  state:     StateFamily[];
-  a11y:      A11yFamily[];
+  behavior: BehaviorFamily[];
+  state: StateFamily[];
+  a11y: A11yFamily[];
 }
 
 // ─── Behavior contracts (per behavior family) ────────────────────────

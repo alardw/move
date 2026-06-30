@@ -26,10 +26,18 @@ describe('Card', () => {
     });
 
     it('applies variant via data-variant attribute', () => {
-      const { rerender } = render(<Card.Root data-testid="card" variant="elevated">Content</Card.Root>);
+      const { rerender } = render(
+        <Card.Root data-testid="card" variant="elevated">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveAttribute('data-variant', 'elevated');
 
-      rerender(<Card.Root data-testid="card" variant="ghost">Content</Card.Root>);
+      rerender(
+        <Card.Root data-testid="card" variant="ghost">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveAttribute('data-variant', 'ghost');
     });
 
@@ -39,10 +47,18 @@ describe('Card', () => {
     });
 
     it('applies size via data-size attribute', () => {
-      const { rerender } = render(<Card.Root data-testid="card" size="sm">Content</Card.Root>);
+      const { rerender } = render(
+        <Card.Root data-testid="card" size="sm">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveAttribute('data-size', 'sm');
 
-      rerender(<Card.Root data-testid="card" size="lg">Content</Card.Root>);
+      rerender(
+        <Card.Root data-testid="card" size="lg">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveAttribute('data-size', 'lg');
     });
 
@@ -52,17 +68,29 @@ describe('Card', () => {
     });
 
     it('forwards className', () => {
-      render(<Card.Root data-testid="card" className="custom">Content</Card.Root>);
+      render(
+        <Card.Root data-testid="card" className="custom">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<Card.Root data-testid="card" style={{ marginTop: '10px' }}>Content</Card.Root>);
+      render(
+        <Card.Root data-testid="card" style={{ marginTop: '10px' }}>
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveStyle({ marginTop: '10px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<Card.Root data-testid="my-card" aria-label="My Card">Content</Card.Root>);
+      render(
+        <Card.Root data-testid="my-card" aria-label="My Card">
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('my-card')).toHaveAttribute('aria-label', 'My Card');
     });
 
@@ -72,12 +100,20 @@ describe('Card', () => {
     });
 
     it('merges sp className on root', () => {
-      render(<Card.Root data-testid="card" sp={{ root: { className: 'sp-root' } }}>Content</Card.Root>);
+      render(
+        <Card.Root data-testid="card" sp={{ root: { className: 'sp-root' } }}>
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card').className).toContain('sp-root');
     });
 
     it('merges sp style on root', () => {
-      render(<Card.Root data-testid="card" sp={{ root: { style: { marginTop: '5px' } } }}>Content</Card.Root>);
+      render(
+        <Card.Root data-testid="card" sp={{ root: { style: { marginTop: '5px' } } }}>
+          Content
+        </Card.Root>,
+      );
       expect(screen.getByTestId('card')).toHaveStyle({ marginTop: '5px' });
     });
   });
@@ -98,14 +134,22 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.Header data-testid="header" className="custom" style={{ padding: '8px' }}>Content</Card.Header>);
+      render(
+        <Card.Header data-testid="header" className="custom" style={{ padding: '8px' }}>
+          Content
+        </Card.Header>,
+      );
       const el = screen.getByTestId('header');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ padding: '8px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<Card.Header data-testid="header" aria-label="Header">Content</Card.Header>);
+      render(
+        <Card.Header data-testid="header" aria-label="Header">
+          Content
+        </Card.Header>,
+      );
       expect(screen.getByTestId('header')).toHaveAttribute('aria-label', 'Header');
     });
   });
@@ -126,14 +170,22 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.Title data-testid="title" className="custom" style={{ color: 'rgb(255, 0, 0)' }}>Title</Card.Title>);
+      render(
+        <Card.Title data-testid="title" className="custom" style={{ color: 'rgb(255, 0, 0)' }}>
+          Title
+        </Card.Title>,
+      );
       const el = screen.getByTestId('title');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<Card.Title data-testid="title" id="card-title">Title</Card.Title>);
+      render(
+        <Card.Title data-testid="title" id="card-title">
+          Title
+        </Card.Title>,
+      );
       expect(screen.getByTestId('title')).toHaveAttribute('id', 'card-title');
     });
   });
@@ -154,7 +206,11 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.Description data-testid="desc" className="custom" style={{ fontSize: '12px' }}>Description</Card.Description>);
+      render(
+        <Card.Description data-testid="desc" className="custom" style={{ fontSize: '12px' }}>
+          Description
+        </Card.Description>,
+      );
       const el = screen.getByTestId('desc');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ fontSize: '12px' });
@@ -177,7 +233,11 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.Body data-testid="body" className="custom" style={{ padding: '16px' }}>Body</Card.Body>);
+      render(
+        <Card.Body data-testid="body" className="custom" style={{ padding: '16px' }}>
+          Body
+        </Card.Body>,
+      );
       const el = screen.getByTestId('body');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ padding: '16px' });
@@ -200,7 +260,11 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.Footer data-testid="footer" className="custom" style={{ padding: '20px' }}>Footer</Card.Footer>);
+      render(
+        <Card.Footer data-testid="footer" className="custom" style={{ padding: '20px' }}>
+          Footer
+        </Card.Footer>,
+      );
       const el = screen.getByTestId('footer');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ padding: '20px' });
@@ -223,7 +287,11 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.FooterStart data-testid="fs" className="custom" style={{ gap: '4px' }}>Start</Card.FooterStart>);
+      render(
+        <Card.FooterStart data-testid="fs" className="custom" style={{ gap: '4px' }}>
+          Start
+        </Card.FooterStart>,
+      );
       const el = screen.getByTestId('fs');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ gap: '4px' });
@@ -246,7 +314,11 @@ describe('Card', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Card.FooterEnd data-testid="fe" className="custom" style={{ marginLeft: 'auto' }}>End</Card.FooterEnd>);
+      render(
+        <Card.FooterEnd data-testid="fe" className="custom" style={{ marginLeft: 'auto' }}>
+          End
+        </Card.FooterEnd>,
+      );
       const el = screen.getByTestId('fe');
       expect(el.className).toContain('custom');
       expect(el).toHaveStyle({ marginLeft: 'auto' });
@@ -267,7 +339,7 @@ describe('Card', () => {
             <Card.FooterStart data-testid="fs">Left</Card.FooterStart>
             <Card.FooterEnd data-testid="fe">Right</Card.FooterEnd>
           </Card.Footer>
-        </Card.Root>
+        </Card.Root>,
       );
 
       expect(screen.getByTestId('card')).toBeInTheDocument();

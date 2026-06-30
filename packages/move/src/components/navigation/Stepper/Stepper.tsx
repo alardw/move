@@ -91,10 +91,14 @@ const StepperRoot = withMoveComponent<'root', StepperRootProps, HTMLDivElement>(
     // Inject index and isLast into Step children via context
     let stepIndex = 0;
     const enrichedChildren = React.Children.map(children, (child) => {
-      if (React.isValidElement(child) && (child.type as any)?._moveComponentName === 'StepperStep') {
+      if (
+        React.isValidElement(child) &&
+        (child.type as any)?._moveComponentName === 'StepperStep'
+      ) {
         const idx = stepIndex++;
-        const status: StepStatus = (child.props as any).status
-          || (idx < (active as number) ? 'complete' : idx === (active as number) ? 'active' : 'wait');
+        const status: StepStatus =
+          (child.props as any).status ||
+          (idx < (active as number) ? 'complete' : idx === (active as number) ? 'active' : 'wait');
         return (
           <StepItemContext.Provider value={{ index: idx, status, isLast: idx === totalSteps - 1 }}>
             {child}
@@ -179,8 +183,8 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
 
         for (const part of parts) {
           if (
-            React.isValidElement(part)
-            && (part.type as { _moveComponentName?: string })._moveComponentName === 'StepperIndicator'
+            React.isValidElement(part) &&
+            (part.type as { _moveComponentName?: string })._moveComponentName === 'StepperIndicator'
           ) {
             indicatorParts.push(part);
             continue;
@@ -206,15 +210,10 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
               <div className={styles.rail}>
                 {indicatorParts[0] ?? <StepperIndicator />}
                 {!itemCtx.isLast && (
-                  <StepperSeparatorInternal
-                    side="end"
-                    complete={itemCtx.status === 'complete'}
-                  />
+                  <StepperSeparatorInternal side="end" complete={itemCtx.status === 'complete'} />
                 )}
               </div>
-              <div className={styles.content}>
-                {contentParts}
-              </div>
+              <div className={styles.content}>{contentParts}</div>
             </div>
           );
         }
@@ -234,17 +233,11 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
             tabIndex={isClickable ? 0 : undefined}
           >
             {itemCtx.index > 0 && (
-              <StepperSeparatorInternal
-                side="start"
-                complete={itemCtx.status !== 'wait'}
-              />
+              <StepperSeparatorInternal side="start" complete={itemCtx.status !== 'wait'} />
             )}
             {children}
             {!itemCtx.isLast && (
-              <StepperSeparatorInternal
-                side="end"
-                complete={itemCtx.status === 'complete'}
-              />
+              <StepperSeparatorInternal side="end" complete={itemCtx.status === 'complete'} />
             )}
           </div>
         );
@@ -294,7 +287,11 @@ const StepperIndicator = withMoveComponent<'indicator', StepperIndicatorProps, H
     return {
       render() {
         const indicatorSp = sp('indicator');
-        const { className: spClass, style: spStyle, ...spRest } = indicatorSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = indicatorSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -333,7 +330,11 @@ const StepperTitle = withMoveComponent<'title', StepperTitleProps, HTMLDivElemen
     return {
       render() {
         const titleSp = sp('title');
-        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = titleSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -361,7 +362,11 @@ export interface StepperDescriptionProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'description'>;
 }
 
-const StepperDescription = withMoveComponent<'description', StepperDescriptionProps, HTMLDivElement>({
+const StepperDescription = withMoveComponent<
+  'description',
+  StepperDescriptionProps,
+  HTMLDivElement
+>({
   name: 'StepperDescription',
   styles,
   slots: ['description'] as const,
@@ -426,7 +431,13 @@ const StepperSeparator = withMoveComponent<'separator', StepperSeparatorProps, H
 });
 
 // Internal separator auto-rendered by Step
-function StepperSeparatorInternal({ side, complete }: { side: 'start' | 'end'; complete: boolean }) {
+function StepperSeparatorInternal({
+  side,
+  complete,
+}: {
+  side: 'start' | 'end';
+  complete: boolean;
+}) {
   return (
     <div
       aria-hidden="true"

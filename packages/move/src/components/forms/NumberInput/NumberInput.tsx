@@ -14,7 +14,8 @@ import styles from './NumberInput.module.css';
 
 export type NumberInputVariant = 'outlined' | 'filled';
 export type NumberInputSize = 'sm' | 'md' | 'lg';
-export type NumberInputSlots = 'root' | 'input' | 'iconLeft' | 'controls' | 'increment' | 'decrement';
+export type NumberInputSlots =
+  'root' | 'input' | 'iconLeft' | 'controls' | 'increment' | 'decrement';
 
 export interface NumberInputLabels {
   /** Aria label for the increment button */
@@ -91,12 +92,28 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     hideControls: false,
   },
   moveProps: [
-    'variant', 'size', 'value', 'defaultValue', 'onValueChange',
-    'min', 'max', 'step', 'shiftStep', 'clampBehavior',
-    'allowDecimal', 'decimalScale', 'allowNegative',
-    'hideControls', 'invalid', 'width', 'iconLeft',
-    'prefix', 'suffix', 'labels',
-    'formatValue', 'parseValue',
+    'variant',
+    'size',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'min',
+    'max',
+    'step',
+    'shiftStep',
+    'clampBehavior',
+    'allowDecimal',
+    'decimalScale',
+    'allowNegative',
+    'hideControls',
+    'invalid',
+    'width',
+    'iconLeft',
+    'prefix',
+    'suffix',
+    'labels',
+    'formatValue',
+    'parseValue',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -109,7 +126,8 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     const hookOptions: UseNumberInputOptions = {
       value: props.value as number | string | undefined,
       defaultValue: props.defaultValue as number | string | undefined,
-      onValueChange: props.onValueChange as ((v: number | undefined, d: string) => void) | undefined,
+      onValueChange: props.onValueChange as
+        ((v: number | undefined, d: string) => void) | undefined,
       min: props.min as number | undefined,
       max: props.max as number | undefined,
       step: props.step as number,
@@ -165,17 +183,41 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
         const inputSp = sp('input');
-        const { className: inputSpClass, style: inputSpStyle, ...inputSpRest } = inputSp as Record<string, unknown>;
+        const {
+          className: inputSpClass,
+          style: inputSpStyle,
+          ...inputSpRest
+        } = inputSp as Record<string, unknown>;
         const iconLeftSp = sp('iconLeft');
-        const { className: ilSpClass, style: ilSpStyle, ...ilSpRest } = iconLeftSp as Record<string, unknown>;
+        const {
+          className: ilSpClass,
+          style: ilSpStyle,
+          ...ilSpRest
+        } = iconLeftSp as Record<string, unknown>;
         const controlsSp = sp('controls');
-        const { className: ctrlSpClass, style: ctrlSpStyle, ...ctrlSpRest } = controlsSp as Record<string, unknown>;
+        const {
+          className: ctrlSpClass,
+          style: ctrlSpStyle,
+          ...ctrlSpRest
+        } = controlsSp as Record<string, unknown>;
         const incrementSp = sp('increment');
-        const { className: incSpClass, style: incSpStyle, ...incSpRest } = incrementSp as Record<string, unknown>;
+        const {
+          className: incSpClass,
+          style: incSpStyle,
+          ...incSpRest
+        } = incrementSp as Record<string, unknown>;
         const decrementSp = sp('decrement');
-        const { className: decSpClass, style: decSpStyle, ...decSpRest } = decrementSp as Record<string, unknown>;
+        const {
+          className: decSpClass,
+          style: decSpStyle,
+          ...decSpRest
+        } = decrementSp as Record<string, unknown>;
 
         const variant = props.variant as string;
         const sizeVal = props.size as string;

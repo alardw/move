@@ -44,19 +44,35 @@ function Svg({ width, height, children }: BuiltinSvgProps) {
 // ---------------------------------------------------------------------------
 
 function ChevronLeft({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><path d="m15 18-6-6 6-6" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <path d="m15 18-6-6 6-6" />
+    </Svg>
+  );
 }
 
 function ChevronRight({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><path d="m9 18 6-6-6-6" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <path d="m9 18 6-6-6-6" />
+    </Svg>
+  );
 }
 
 function ChevronUp({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><path d="m18 15-6-6-6 6" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <path d="m18 15-6-6-6 6" />
+    </Svg>
+  );
 }
 
 function ChevronDown({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><path d="m6 9 6 6 6-6" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <path d="m6 9 6 6 6-6" />
+    </Svg>
+  );
 }
 
 function X({ width, height }: { width: number | string; height: number | string }) {
@@ -69,7 +85,11 @@ function X({ width, height }: { width: number | string; height: number | string 
 }
 
 function Check({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><polyline points="20 6 9 17 4 12" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <polyline points="20 6 9 17 4 12" />
+    </Svg>
+  );
 }
 
 function Calendar({ width, height }: { width: number | string; height: number | string }) {
@@ -165,7 +185,11 @@ function FileIcon({ width, height }: { width: number | string; height: number | 
 }
 
 function Play({ width, height }: { width: number | string; height: number | string }) {
-  return <Svg width={width} height={height}><polygon points="6 3 20 12 6 21 6 3" /></Svg>;
+  return (
+    <Svg width={width} height={height}>
+      <polygon points="6 3 20 12 6 21 6 3" />
+    </Svg>
+  );
 }
 
 function Pause({ width, height }: { width: number | string; height: number | string }) {
@@ -251,7 +275,10 @@ function Pipette({ width, height }: { width: number | string; height: number | s
 // Registry
 // ---------------------------------------------------------------------------
 
-type BuiltinIconComponent = React.ComponentType<{ width: number | string; height: number | string }>;
+type BuiltinIconComponent = React.ComponentType<{
+  width: number | string;
+  height: number | string;
+}>;
 
 export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'chevron-left': ChevronLeft,

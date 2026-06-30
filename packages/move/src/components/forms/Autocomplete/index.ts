@@ -22,4 +22,8 @@ export type {
   AutocompleteSeparatorProps,
 } from './Autocomplete';
 export { useAutocomplete } from './useAutocomplete';
-export type { UseAutocompleteOptions, UseAutocompleteReturn, RegisteredItem } from './useAutocomplete';
+export type {
+  UseAutocompleteOptions,
+  UseAutocompleteReturn,
+  RegisteredItem,
+} from './useAutocomplete';

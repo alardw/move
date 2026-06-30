@@ -72,7 +72,13 @@ export interface UseAutocompleteReturn {
   highlightedValue: string | null;
 
   // Item registry
-  registerItem: (value: string, label: React.ReactNode, textContent: string, disabled: boolean, ref: React.RefObject<HTMLElement | null>) => void;
+  registerItem: (
+    value: string,
+    label: React.ReactNode,
+    textContent: string,
+    disabled: boolean,
+    ref: React.RefObject<HTMLElement | null>,
+  ) => void;
   unregisterItem: (value: string) => void;
   primeLabelCache: (value: string, label: React.ReactNode) => void;
   getLabel: (value: string) => React.ReactNode | undefined;
@@ -200,8 +206,12 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   useEffect(() => {
     if (!isOpen || typeof window === 'undefined') return;
     let armed = false;
-    const armTimer = window.setTimeout(() => { armed = true; }, 150);
-    const onViewportChange = () => { if (armed) setIsOpen(false); };
+    const armTimer = window.setTimeout(() => {
+      armed = true;
+    }, 150);
+    const onViewportChange = () => {
+      if (armed) setIsOpen(false);
+    };
     window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
     window.addEventListener('resize', onViewportChange);
     return () => {
@@ -222,25 +232,33 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   const labelCacheRef = useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = useState(0);
 
-  const registerItem = useCallback((
-    value: string,
-    label: React.ReactNode,
-    textContent: string,
-    disabled: boolean,
-    ref: React.RefObject<HTMLElement | null>,
-  ) => {
-    labelCacheRef.current.set(value, label);
-    const prev = itemMapRef.current.get(value);
-    if (!prev || prev.label !== label || prev.disabled !== disabled || prev.textContent !== textContent) {
-      itemMapRef.current.set(value, { value, label, textContent, disabled, ref });
-      forceUpdate(n => n + 1);
-    }
-  }, []);
+  const registerItem = useCallback(
+    (
+      value: string,
+      label: React.ReactNode,
+      textContent: string,
+      disabled: boolean,
+      ref: React.RefObject<HTMLElement | null>,
+    ) => {
+      labelCacheRef.current.set(value, label);
+      const prev = itemMapRef.current.get(value);
+      if (
+        !prev ||
+        prev.label !== label ||
+        prev.disabled !== disabled ||
+        prev.textContent !== textContent
+      ) {
+        itemMapRef.current.set(value, { value, label, textContent, disabled, ref });
+        forceUpdate((n) => n + 1);
+      }
+    },
+    [],
+  );
 
   const unregisterItem = useCallback((value: string) => {
     if (itemMapRef.current.has(value)) {
       itemMapRef.current.delete(value);
-      forceUpdate(n => n + 1);
+      forceUpdate((n) => n + 1);
     }
   }, []);
 
@@ -297,38 +315,47 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   // Selection
   // -------------------------------------------------------------------------
 
-  const onSelect = useCallback((value: string) => {
-    if (multiple) {
-      setSelectedValues((prev) => {
-        if (prev.includes(value)) {
-          return prev.filter(v => v !== value);
+  const onSelect = useCallback(
+    (value: string) => {
+      if (multiple) {
+        setSelectedValues((prev) => {
+          if (prev.includes(value)) {
+            return prev.filter((v) => v !== value);
+          }
+          return [...prev, value];
+        });
+        setInputValue('');
+      } else {
+        setSelectedValues([value]);
+        const item = itemMapRef.current.get(value);
+        if (item) {
+          setInputValue(item.textContent);
         }
-        return [...prev, value];
-      });
-      setInputValue('');
-    } else {
-      setSelectedValues([value]);
-      const item = itemMapRef.current.get(value);
-      if (item) {
-        setInputValue(item.textContent);
       }
-    }
-    if (closeOnSelect) {
-      // Prefer the animated close (sets isClosing → plays the exit) over an
-      // instant setIsOpen(false), so selecting matches outside-click/Escape.
-      if (requestClose) requestClose();
-      else setIsOpen(false);
-      setHighlightedIndex(-1);
-    }
-  }, [multiple, closeOnSelect, setSelectedValues, setInputValue, setIsOpen, requestClose]);
+      if (closeOnSelect) {
+        // Prefer the animated close (sets isClosing → plays the exit) over an
+        // instant setIsOpen(false), so selecting matches outside-click/Escape.
+        if (requestClose) requestClose();
+        else setIsOpen(false);
+        setHighlightedIndex(-1);
+      }
+    },
+    [multiple, closeOnSelect, setSelectedValues, setInputValue, setIsOpen, requestClose],
+  );
 
-  const onDeselect = useCallback((value: string) => {
-    setSelectedValues((prev) => prev.filter(v => v !== value));
-  }, [setSelectedValues]);
+  const onDeselect = useCallback(
+    (value: string) => {
+      setSelectedValues((prev) => prev.filter((v) => v !== value));
+    },
+    [setSelectedValues],
+  );
 
-  const isSelected = useCallback((value: string) => {
-    return selectedValues.includes(value);
-  }, [selectedValues]);
+  const isSelected = useCallback(
+    (value: string) => {
+      return selectedValues.includes(value);
+    },
+    [selectedValues],
+  );
 
   const clearAll = useCallback(() => {
     setSelectedValues([]);
@@ -340,13 +367,16 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   // Input value change handler
   // -------------------------------------------------------------------------
 
-  const handleInputValueChange = useCallback((value: string) => {
-    setInputValue(value);
-    setBypassFilter(false);
-    if (!isOpen) {
-      open();
-    }
-  }, [setInputValue, isOpen, open]);
+  const handleInputValueChange = useCallback(
+    (value: string) => {
+      setInputValue(value);
+      setBypassFilter(false);
+      if (!isOpen) {
+        open();
+      }
+    },
+    [setInputValue, isOpen, open],
+  );
 
   // -------------------------------------------------------------------------
   // IDs

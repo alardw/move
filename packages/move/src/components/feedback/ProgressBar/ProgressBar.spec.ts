@@ -8,38 +8,78 @@ export const spec = {
   name: 'ProgressBar',
   componentClass: 'presentational' as const,
   category: 'feedback',
-  description: 'Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes',
+  description:
+    'Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes',
 
   synonyms: ['progress', 'meter', 'completion bar', 'linear progress', 'loading bar', 'percent'],
   families: {
-    behavior:  ["loading"],
-    state:     ["stateless"],
-    a11y:      ["progressbar"],
+    behavior: ['loading'],
+    state: ['stateless'],
+    a11y: ['progressbar'],
   },
 
   compound: false,
   rootElement: 'Progress.Root',
   slots: [
-    { name: 'root', element: 'Progress.Root', description: 'Radix Progress root with track background and overflow hidden' },
-    { name: 'indicator', element: 'Progress.Indicator', description: 'Fill bar that translates via transform to show progress percentage' },
+    {
+      name: 'root',
+      element: 'Progress.Root',
+      description: 'Radix Progress root with track background and overflow hidden',
+    },
+    {
+      name: 'indicator',
+      element: 'Progress.Indicator',
+      description: 'Fill bar that translates via transform to show progress percentage',
+    },
   ],
 
   props: [
-    { name: 'value', type: 'number | null', moveSpecific: true, description: 'Current progress value; null for indeterminate state' },
-    { name: 'max', type: 'number', default: '100', moveSpecific: true, description: 'Maximum value for progress calculation' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Bar height' },
-    { name: 'variant', type: "'default' | 'success' | 'warning' | 'error'", default: "'default'", moveSpecific: true, description: 'Indicator color variant' },
-    { name: 'getValueLabel', type: '(value: number, max: number) => string', moveSpecific: true, description: 'Custom accessible value label function passed to Radix' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Optional children content' },
+    {
+      name: 'value',
+      type: 'number | null',
+      moveSpecific: true,
+      description: 'Current progress value; null for indeterminate state',
+    },
+    {
+      name: 'max',
+      type: 'number',
+      default: '100',
+      moveSpecific: true,
+      description: 'Maximum value for progress calculation',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Bar height',
+    },
+    {
+      name: 'variant',
+      type: "'default' | 'success' | 'warning' | 'error'",
+      default: "'default'",
+      moveSpecific: true,
+      description: 'Indicator color variant',
+    },
+    {
+      name: 'getValueLabel',
+      type: '(value: number, max: number) => string',
+      moveSpecific: true,
+      description: 'Custom accessible value label function passed to Radix',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Optional children content',
+    },
   ],
 
   anatomy: {
     slot: 'root',
     dataAttributes: ['data-size', 'data-variant', 'data-state'],
     ariaAttributes: ['role', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax', 'aria-valuetext'],
-    children: [
-      { slot: 'indicator' },
-    ],
+    children: [{ slot: 'indicator' }],
   },
 
   controlled: null,
@@ -52,19 +92,58 @@ export const spec = {
   animations: [],
 
   renderContracts: [
-    { id: 'radix-progress', description: 'Root renders as Radix Progress.Root which provides role="progressbar" and aria-value* attributes automatically' },
-    { id: 'indicator-transform', description: 'Indicator translateX is set imperatively via useEffect: translateX(-(100 - percentage)%)' },
-    { id: 'indeterminate-css', description: 'When value is null, Radix sets data-state="indeterminate" and CSS @keyframes handles the sliding animation' },
-    { id: 'indeterminate-reset', description: 'When value is null, indicator transform is cleared to allow CSS animation to take over' },
-    { id: 'css-transition', description: 'Indicator uses CSS transition (300ms cubic-bezier) for smooth value changes; transition is disabled during indeterminate' },
-    { id: 'reduced-motion', description: 'CSS @media (prefers-reduced-motion: reduce) disables indeterminate animation' },
+    {
+      id: 'radix-progress',
+      description:
+        'Root renders as Radix Progress.Root which provides role="progressbar" and aria-value* attributes automatically',
+    },
+    {
+      id: 'indicator-transform',
+      description:
+        'Indicator translateX is set imperatively via useEffect: translateX(-(100 - percentage)%)',
+    },
+    {
+      id: 'indeterminate-css',
+      description:
+        'When value is null, Radix sets data-state="indeterminate" and CSS @keyframes handles the sliding animation',
+    },
+    {
+      id: 'indeterminate-reset',
+      description:
+        'When value is null, indicator transform is cleared to allow CSS animation to take over',
+    },
+    {
+      id: 'css-transition',
+      description:
+        'Indicator uses CSS transition (300ms cubic-bezier) for smooth value changes; transition is disabled during indeterminate',
+    },
+    {
+      id: 'reduced-motion',
+      description: 'CSS @media (prefers-reduced-motion: reduce) disables indeterminate animation',
+    },
   ],
 
   tokens: [
-    { name: '--move-progress-height', value: 'var(--move-space-2)', description: 'Track and indicator height (varies by size)' },
-    { name: '--move-progress-bg', value: 'var(--move-bg-muted)', description: 'Track background color' },
-    { name: '--move-progress-indicator-bg', value: 'var(--move-primary)', description: 'Indicator fill color (varies by variant)' },
-    { name: '--move-progress-radius', value: 'var(--move-rounded-full)', description: 'Border radius for track and indicator' },
+    {
+      name: '--move-progress-height',
+      value: 'var(--move-space-2)',
+      description: 'Track and indicator height (varies by size)',
+    },
+    {
+      name: '--move-progress-bg',
+      value: 'var(--move-bg-muted)',
+      description: 'Track background color',
+    },
+    {
+      name: '--move-progress-indicator-bg',
+      value: 'var(--move-primary)',
+      description: 'Indicator fill color (varies by variant)',
+    },
+    {
+      name: '--move-progress-radius',
+      value: 'var(--move-rounded-full)',
+      description: 'Border radius for track and indicator',
+    },
   ],
 
   variants: {
@@ -73,7 +152,11 @@ export const spec = {
   sizes: ['sm', 'md', 'lg'] as string[],
 
   labels: [
-    { key: 'label', default: 'Progress', description: 'Accessible name for the progress bar, applied as aria-label' },
+    {
+      key: 'label',
+      default: 'Progress',
+      description: 'Accessible name for the progress bar, applied as aria-label',
+    },
   ],
 
   radixPrimitive: 'Progress',

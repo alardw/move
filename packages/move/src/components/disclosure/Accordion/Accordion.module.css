@@ -100,7 +100,8 @@
   border: none;
   cursor: pointer;
   outline: none;
-  transition: background-color var(--move-accordion-transition-duration) var(--move-accordion-transition-easing);
+  transition: background-color var(--move-accordion-transition-duration)
+    var(--move-accordion-transition-easing);
   will-change: transform;
 }
 

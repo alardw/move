@@ -38,8 +38,23 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
   name: 'Textarea',
   styles,
   slots: ['root', 'textarea'] as const,
-  defaults: { variant: 'outlined' as TextareaVariant, size: 'md' as TextareaSize, rows: 3, resize: 'vertical' },
-  moveProps: ['variant', 'size', 'invalid', 'autoSize', 'minRows', 'maxRows', 'rows', 'resize', 'width'],
+  defaults: {
+    variant: 'outlined' as TextareaVariant,
+    size: 'md' as TextareaSize,
+    rows: 3,
+    resize: 'vertical',
+  },
+  moveProps: [
+    'variant',
+    'size',
+    'invalid',
+    'autoSize',
+    'minRows',
+    'maxRows',
+    'rows',
+    'resize',
+    'width',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
@@ -99,16 +114,24 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const textareaSp = sp('textarea');
-        const { className: taSpClass, style: taSpStyle, ...taSpRest } = textareaSp as Record<string, unknown>;
+        const {
+          className: taSpClass,
+          style: taSpStyle,
+          ...taSpRest
+        } = textareaSp as Record<string, unknown>;
 
-        const resizeValue = props.autoSize ? 'none' : props.resize as string;
+        const resizeValue = props.autoSize ? 'none' : (props.resize as string);
 
         return (
           <div
             {...spRest}
             ref={rootRef}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...props.style,
+              ...(props.width != null ? { width: props.width } : {}),
+              ...(spStyle as React.CSSProperties),
+            }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
@@ -121,8 +144,15 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
               {...taSpRest}
               ref={mergedRef}
               className={cx('textarea', taSpClass as string | undefined)}
-              style={{ resize: resizeValue as React.CSSProperties['resize'], ...(taSpStyle as React.CSSProperties) }}
-              rows={props.autoSize ? (props.minRows as number | undefined) ?? (props.rows as number) : (props.rows as number)}
+              style={{
+                resize: resizeValue as React.CSSProperties['resize'],
+                ...(taSpStyle as React.CSSProperties),
+              }}
+              rows={
+                props.autoSize
+                  ? ((props.minRows as number | undefined) ?? (props.rows as number))
+                  : (props.rows as number)
+              }
               disabled={props.disabled as boolean}
               onInput={handleInput}
             />

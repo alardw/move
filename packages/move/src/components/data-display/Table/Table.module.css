@@ -311,13 +311,19 @@
 
 /* Per-column alignment — applies to both Head and Cell. */
 .cell[data-align='start'],
-.head[data-align='start'] { text-align: start; }
+.head[data-align='start'] {
+  text-align: start;
+}
 
 .cell[data-align='center'],
-.head[data-align='center'] { text-align: center; }
+.head[data-align='center'] {
+  text-align: center;
+}
 
 .cell[data-align='end'],
-.head[data-align='end'] { text-align: end; }
+.head[data-align='end'] {
+  text-align: end;
+}
 
 /* Two-line cell content: primary (inherits cell color) stacked over a
    muted description. Triggered by the `description` prop on Cell. */

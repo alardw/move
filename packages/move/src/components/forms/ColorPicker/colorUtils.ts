@@ -48,13 +48,34 @@ export function hsvToRgb(h: number, s: number, v: number): { r: number; g: numbe
   const X = C * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = V - C;
 
-  let r = 0, g = 0, b = 0;
-  if (h < 60)       { r = C; g = X; b = 0; }
-  else if (h < 120) { r = X; g = C; b = 0; }
-  else if (h < 180) { r = 0; g = C; b = X; }
-  else if (h < 240) { r = 0; g = X; b = C; }
-  else if (h < 300) { r = X; g = 0; b = C; }
-  else              { r = C; g = 0; b = X; }
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (h < 60) {
+    r = C;
+    g = X;
+    b = 0;
+  } else if (h < 120) {
+    r = X;
+    g = C;
+    b = 0;
+  } else if (h < 180) {
+    r = 0;
+    g = C;
+    b = X;
+  } else if (h < 240) {
+    r = 0;
+    g = X;
+    b = C;
+  } else if (h < 300) {
+    r = X;
+    g = 0;
+    b = C;
+  } else {
+    r = C;
+    g = 0;
+    b = X;
+  }
 
   return {
     r: Math.round((r + m) * 255),
@@ -90,7 +111,9 @@ export function rgbToHsv(r: number, g: number, b: number): { h: number; s: numbe
 // ============================================================================
 
 function toHex2(n: number): string {
-  return Math.round(Math.max(0, Math.min(255, n))).toString(16).padStart(2, '0');
+  return Math.round(Math.max(0, Math.min(255, n)))
+    .toString(16)
+    .padStart(2, '0');
 }
 
 export function rgbToHex(r: number, g: number, b: number): string {
@@ -156,13 +179,34 @@ export function hslToRgb(h: number, s: number, l: number): { r: number; g: numbe
   const X = C * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = L - C / 2;
 
-  let r = 0, g = 0, b = 0;
-  if (h < 60)       { r = C; g = X; b = 0; }
-  else if (h < 120) { r = X; g = C; b = 0; }
-  else if (h < 180) { r = 0; g = C; b = X; }
-  else if (h < 240) { r = 0; g = X; b = C; }
-  else if (h < 300) { r = X; g = 0; b = C; }
-  else              { r = C; g = 0; b = X; }
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (h < 60) {
+    r = C;
+    g = X;
+    b = 0;
+  } else if (h < 120) {
+    r = X;
+    g = C;
+    b = 0;
+  } else if (h < 180) {
+    r = 0;
+    g = C;
+    b = X;
+  } else if (h < 240) {
+    r = 0;
+    g = X;
+    b = C;
+  } else if (h < 300) {
+    r = X;
+    g = 0;
+    b = C;
+  } else {
+    r = C;
+    g = 0;
+    b = X;
+  }
 
   return {
     r: Math.round((r + m) * 255),
@@ -176,7 +220,8 @@ export function hslToRgb(h: number, s: number, l: number): { r: number; g: numbe
 // ============================================================================
 
 const RGB_RE = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*([\d.]+))?\s*\)$/i;
-const HSL_RE = /^hsla?\(\s*(\d{1,3})\s*,\s*(\d{1,3})%?\s*,\s*(\d{1,3})%?\s*(?:,\s*([\d.]+))?\s*\)$/i;
+const HSL_RE =
+  /^hsla?\(\s*(\d{1,3})\s*,\s*(\d{1,3})%?\s*,\s*(\d{1,3})%?\s*(?:,\s*([\d.]+))?\s*\)$/i;
 
 export function parseColor(value: string): HsvColor | null {
   const trimmed = value.trim();

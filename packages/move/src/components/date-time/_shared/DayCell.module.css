@@ -44,7 +44,9 @@
   border: 0;
   padding: 0;
   background: transparent;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 /* When the Calendar.Root has events, grow the row so the event dots
@@ -118,7 +120,10 @@
 }
 
 .dayCell[data-state='in-range']:hover:not([data-disabled]) {
-  background-color: var(--move-primary-subtle-hover, color-mix(in srgb, var(--move-primary-subtle) 80%, var(--move-primary) 20%));
+  background-color: var(
+    --move-primary-subtle-hover,
+    color-mix(in srgb, var(--move-primary-subtle) 80%, var(--move-primary) 20%)
+  );
 }
 
 .dayCell[data-state='in-range'] {

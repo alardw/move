@@ -4,8 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { InputRange } from './InputRange';
 
 describe('InputRange', () => {
-  const renderSlider = (props: Record<string, unknown> = {}) =>
-    render(<InputRange {...props} />);
+  const renderSlider = (props: Record<string, unknown> = {}) => render(<InputRange {...props} />);
 
   // === Rendering ===
   describe('rendering', () => {

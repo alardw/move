@@ -31,19 +31,84 @@
 }
 
 /* Colors — override active/complete indicator and separator */
-.root[data-color='gray']    { --move-stepper-indicator-bg-complete: var(--move-gray-600);   --move-stepper-indicator-fg-active: var(--move-gray-500);   --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-gray-500); }
-.root[data-color='red']     { --move-stepper-indicator-bg-complete: var(--move-red-800);    --move-stepper-indicator-fg-active: var(--move-red-600);    --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-red-600); }
-.root[data-color='pink']    { --move-stepper-indicator-bg-complete: var(--move-pink-700);   --move-stepper-indicator-fg-active: var(--move-pink-600);   --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-pink-600); }
-.root[data-color='grape']   { --move-stepper-indicator-bg-complete: var(--move-grape-700);  --move-stepper-indicator-fg-active: var(--move-grape-600);  --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-grape-600); }
-.root[data-color='violet']  { --move-stepper-indicator-bg-complete: var(--move-violet-600); --move-stepper-indicator-fg-active: var(--move-violet-500); --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-violet-500); }
-.root[data-color='indigo']  { --move-stepper-indicator-bg-complete: var(--move-indigo-700); --move-stepper-indicator-fg-active: var(--move-indigo-600); --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-indigo-600); }
-.root[data-color='blue']    { --move-stepper-indicator-bg-complete: var(--move-blue-800);   --move-stepper-indicator-fg-active: var(--move-blue-600);   --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-blue-600); }
-.root[data-color='cyan']    { --move-stepper-indicator-bg-complete: var(--move-cyan-900);   --move-stepper-indicator-fg-active: var(--move-cyan-600);   --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-cyan-600); }
-.root[data-color='teal']    { --move-stepper-indicator-bg-complete: var(--move-teal-900);   --move-stepper-indicator-fg-active: var(--move-teal-600);   --move-stepper-indicator-fg-complete: var(--move-white);  --move-stepper-separator-color-complete: var(--move-teal-600); }
-.root[data-color='green']   { --move-stepper-indicator-bg-complete: var(--move-green-600);  --move-stepper-indicator-fg-active: var(--move-green-600);  --move-stepper-indicator-fg-complete: var(--move-black);  --move-stepper-separator-color-complete: var(--move-green-600); }
-.root[data-color='lime']    { --move-stepper-indicator-bg-complete: var(--move-lime-600);   --move-stepper-indicator-fg-active: var(--move-lime-600);   --move-stepper-indicator-fg-complete: var(--move-black);  --move-stepper-separator-color-complete: var(--move-lime-600); }
-.root[data-color='yellow']  { --move-stepper-indicator-bg-complete: var(--move-yellow-600); --move-stepper-indicator-fg-active: var(--move-yellow-600); --move-stepper-indicator-fg-complete: var(--move-black);  --move-stepper-separator-color-complete: var(--move-yellow-600); }
-.root[data-color='orange']  { --move-stepper-indicator-bg-complete: var(--move-orange-600); --move-stepper-indicator-fg-active: var(--move-orange-600); --move-stepper-indicator-fg-complete: var(--move-black);  --move-stepper-separator-color-complete: var(--move-orange-600); }
+.root[data-color='gray'] {
+  --move-stepper-indicator-bg-complete: var(--move-gray-600);
+  --move-stepper-indicator-fg-active: var(--move-gray-500);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-gray-500);
+}
+.root[data-color='red'] {
+  --move-stepper-indicator-bg-complete: var(--move-red-800);
+  --move-stepper-indicator-fg-active: var(--move-red-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-red-600);
+}
+.root[data-color='pink'] {
+  --move-stepper-indicator-bg-complete: var(--move-pink-700);
+  --move-stepper-indicator-fg-active: var(--move-pink-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-pink-600);
+}
+.root[data-color='grape'] {
+  --move-stepper-indicator-bg-complete: var(--move-grape-700);
+  --move-stepper-indicator-fg-active: var(--move-grape-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-grape-600);
+}
+.root[data-color='violet'] {
+  --move-stepper-indicator-bg-complete: var(--move-violet-600);
+  --move-stepper-indicator-fg-active: var(--move-violet-500);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-violet-500);
+}
+.root[data-color='indigo'] {
+  --move-stepper-indicator-bg-complete: var(--move-indigo-700);
+  --move-stepper-indicator-fg-active: var(--move-indigo-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-indigo-600);
+}
+.root[data-color='blue'] {
+  --move-stepper-indicator-bg-complete: var(--move-blue-800);
+  --move-stepper-indicator-fg-active: var(--move-blue-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-blue-600);
+}
+.root[data-color='cyan'] {
+  --move-stepper-indicator-bg-complete: var(--move-cyan-900);
+  --move-stepper-indicator-fg-active: var(--move-cyan-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-cyan-600);
+}
+.root[data-color='teal'] {
+  --move-stepper-indicator-bg-complete: var(--move-teal-900);
+  --move-stepper-indicator-fg-active: var(--move-teal-600);
+  --move-stepper-indicator-fg-complete: var(--move-white);
+  --move-stepper-separator-color-complete: var(--move-teal-600);
+}
+.root[data-color='green'] {
+  --move-stepper-indicator-bg-complete: var(--move-green-600);
+  --move-stepper-indicator-fg-active: var(--move-green-600);
+  --move-stepper-indicator-fg-complete: var(--move-black);
+  --move-stepper-separator-color-complete: var(--move-green-600);
+}
+.root[data-color='lime'] {
+  --move-stepper-indicator-bg-complete: var(--move-lime-600);
+  --move-stepper-indicator-fg-active: var(--move-lime-600);
+  --move-stepper-indicator-fg-complete: var(--move-black);
+  --move-stepper-separator-color-complete: var(--move-lime-600);
+}
+.root[data-color='yellow'] {
+  --move-stepper-indicator-bg-complete: var(--move-yellow-600);
+  --move-stepper-indicator-fg-active: var(--move-yellow-600);
+  --move-stepper-indicator-fg-complete: var(--move-black);
+  --move-stepper-separator-color-complete: var(--move-yellow-600);
+}
+.root[data-color='orange'] {
+  --move-stepper-indicator-bg-complete: var(--move-orange-600);
+  --move-stepper-indicator-fg-active: var(--move-orange-600);
+  --move-stepper-indicator-fg-complete: var(--move-black);
+  --move-stepper-separator-color-complete: var(--move-orange-600);
+}
 
 /* Also update active indicator border to use the color */
 .root[data-color] .step[data-status='active'] .indicator {
@@ -138,7 +203,10 @@
   background-color: var(--move-stepper-indicator-bg);
   color: var(--move-stepper-indicator-fg);
   border: var(--move-stepper-separator-thickness) solid var(--move-stepper-indicator-border);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .step[data-status='active'] .indicator {

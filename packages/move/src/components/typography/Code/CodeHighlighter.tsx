@@ -4,7 +4,10 @@ import * as React from 'react';
 
 export type HighlightResult = React.ReactNode | string;
 
-export type CodeHighlighterFn = (code: string, language: string) => HighlightResult | Promise<HighlightResult>;
+export type CodeHighlighterFn = (
+  code: string,
+  language: string,
+) => HighlightResult | Promise<HighlightResult>;
 
 export interface CodeHighlighterProviderProps {
   children: React.ReactNode;
@@ -56,9 +59,7 @@ export function CodeHighlighterProvider({ children, highlighter }: CodeHighlight
   const value = React.useMemo(() => ({ highlighter }), [highlighter]);
 
   return (
-    <CodeHighlighterContext.Provider value={value}>
-      {children}
-    </CodeHighlighterContext.Provider>
+    <CodeHighlighterContext.Provider value={value}>{children}</CodeHighlighterContext.Provider>
   );
 }
 

@@ -27,10 +27,13 @@ export interface UsePositionTrackerReturn {
   update: () => void;
 }
 
-export function usePositionTracker(
-  options: UsePositionTrackerOptions
-): UsePositionTrackerReturn {
-  const { containerRef, activeSelector = '[data-state="active"], [data-state="on"]', track = 'both', disabled = false } = options;
+export function usePositionTracker(options: UsePositionTrackerOptions): UsePositionTrackerReturn {
+  const {
+    containerRef,
+    activeSelector = '[data-state="active"], [data-state="on"]',
+    track = 'both',
+    disabled = false,
+  } = options;
 
   const indicatorRef = useRef<HTMLDivElement>(null);
   const isFirstRun = useRef(true);
@@ -107,7 +110,10 @@ export function usePositionTracker(
     window.addEventListener('resize', update);
     window.addEventListener('orientationchange', update);
 
-    const fonts = (typeof document !== 'undefined' ? (document as Document & { fonts?: FontFaceSet }).fonts : undefined);
+    const fonts =
+      typeof document !== 'undefined'
+        ? (document as Document & { fonts?: FontFaceSet }).fonts
+        : undefined;
     void fonts?.ready.then(update).catch(() => undefined);
 
     return () => {

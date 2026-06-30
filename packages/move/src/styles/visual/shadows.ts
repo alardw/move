@@ -42,19 +42,13 @@ function generateShadowLayers(
     opacity?: number;
     oomph?: number;
     crispy?: number;
-  } = {}
+  } = {},
 ): ShadowLayer[] {
-  const {
-    opacity: totalOpacity = 0.35,
-    oomph = 0.5,
-    crispy = 0.5,
-  } = options;
+  const { opacity: totalOpacity = 0.35, oomph = 0.5, crispy = 0.5 } = options;
 
   // Layer count scales with elevation:
   // sm (1) → 1 layer, md (2) → 3, lg (3) → 4, xl (5) → 5
-  const layerCount = elevation === 1
-    ? 1
-    : Math.max(3, Math.min(7, 1 + elevation));
+  const layerCount = elevation === 1 ? 1 : Math.max(3, Math.min(7, 1 + elevation));
 
   const clampedOomph = Math.max(0, Math.min(1, oomph));
   const clampedCrispy = Math.max(0, Math.min(1, crispy));
@@ -78,7 +72,7 @@ function generateShadowLayers(
     const size = Math.pow(2, i) * reach;
 
     result.push({
-      offsetX: size * 0.5,  // X offset is half of Y (light from above)
+      offsetX: size * 0.5, // X offset is half of Y (light from above)
       offsetY: size,
       blur: size * blurRatio,
       spread: 0,
@@ -92,11 +86,7 @@ function generateShadowLayers(
 /**
  * Convert shadow layers to CSS box-shadow string
  */
-function layersToCSS(
-  layers: ShadowLayer[],
-  color: string,
-  angle: number
-): string {
+function layersToCSS(layers: ShadowLayer[], color: string, angle: number): string {
   const { x, y } = angleToOffset(angle);
 
   return layers
@@ -136,14 +126,7 @@ function layersToCSS(
  * ```
  */
 export function createShadow(options: CreateShadowOptions): string {
-  const {
-    elevation,
-    color = DEFAULT_SHADOW_COLOR,
-    angle = 135,
-    opacity,
-    oomph,
-    crispy,
-  } = options;
+  const { elevation, color = DEFAULT_SHADOW_COLOR, angle = 135, opacity, oomph, crispy } = options;
 
   const shadowLayers = generateShadowLayers(elevation, {
     opacity,

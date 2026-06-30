@@ -25,12 +25,7 @@ export interface CalendarConstraints {
 
 export type SelectionMode = 'single' | 'range' | 'multiple';
 
-export type DayState =
-  | 'selected'
-  | 'range-start'
-  | 'range-end'
-  | 'in-range'
-  | 'default';
+export type DayState = 'selected' | 'range-start' | 'range-end' | 'in-range' | 'default';
 
 export interface DayCellData {
   date: Date;
@@ -42,14 +37,11 @@ export interface DayCellData {
   events: CalendarEvent[];
 }
 
-export type RenderDayCell = (
-  date: Date,
-  data: DayCellData
-) => React.ReactNode;
+export type RenderDayCell = (date: Date, data: DayCellData) => React.ReactNode;
 
 export type RenderEvent = (
   event: CalendarEvent,
-  context: { view?: string; isCompact?: boolean; isMultiDay?: boolean }
+  context: { view?: string; isCompact?: boolean; isMultiDay?: boolean },
 ) => React.ReactNode;
 
 export type CalendarViewMode = 'day' | 'week' | 'month' | 'agenda';

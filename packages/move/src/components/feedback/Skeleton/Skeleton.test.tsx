@@ -11,7 +11,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root loading={true} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toBeInTheDocument();
     });
@@ -20,7 +20,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root loading={false} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.queryByTestId('root')).not.toBeInTheDocument();
     });
@@ -29,7 +29,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toBeInTheDocument();
     });
@@ -38,7 +38,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('aria-busy', 'true');
     });
@@ -47,7 +47,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('aria-live', 'polite');
     });
@@ -56,7 +56,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root animation="wave" data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-animation', 'wave');
     });
@@ -65,7 +65,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-animation', 'pulse');
     });
@@ -74,7 +74,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root animation={false} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).not.toHaveAttribute('data-animation');
     });
@@ -84,7 +84,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root ref={ref}>
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -93,7 +93,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root className="custom" data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root').className).toContain('custom');
     });
@@ -102,7 +102,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root style={{ marginTop: '10px' }} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveStyle({ marginTop: '10px' });
     });
@@ -111,7 +111,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root data-testid="root" data-custom="yes">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-custom', 'yes');
     });
@@ -123,7 +123,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('circle')).toBeInTheDocument();
     });
@@ -132,7 +132,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('circle');
       expect(el).toHaveStyle({ width: '40px', height: '40px' });
@@ -142,7 +142,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle size={60} data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('circle');
       expect(el).toHaveStyle({ width: '60px', height: '60px' });
@@ -152,7 +152,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle size="3rem" data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('circle');
       expect(el).toHaveStyle({ width: '3rem', height: '3rem' });
@@ -163,7 +163,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle ref={ref} />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -172,7 +172,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle className="custom" data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('circle').className).toContain('custom');
     });
@@ -181,7 +181,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle style={{ marginLeft: '8px' }} data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('circle')).toHaveStyle({ marginLeft: '8px' });
     });
@@ -190,7 +190,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle data-testid="circle" data-custom="yes" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('circle')).toHaveAttribute('data-custom', 'yes');
     });
@@ -202,7 +202,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle data-testid="rect" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rect')).toBeInTheDocument();
     });
@@ -211,7 +211,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle data-testid="rect" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('rect');
       expect(el).toHaveStyle({ width: '100%', height: '1rem' });
@@ -221,7 +221,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle width={200} height={50} data-testid="rect" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('rect');
       expect(el).toHaveStyle({ width: '200px', height: '50px' });
@@ -232,7 +232,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle ref={ref} />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -241,7 +241,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle className="custom" data-testid="rect" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rect').className).toContain('custom');
     });
@@ -250,7 +250,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rectangle data-testid="rect" data-custom="yes" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rect')).toHaveAttribute('data-custom', 'yes');
     });
@@ -262,7 +262,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded data-testid="rounded" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rounded')).toBeInTheDocument();
     });
@@ -271,7 +271,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded data-testid="rounded" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('rounded');
       expect(el).toHaveStyle({ width: '100%', height: '1rem' });
@@ -281,7 +281,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded data-testid="rounded" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('rounded');
       expect(el).toHaveStyle({ borderRadius: 'var(--move-skeleton-radius)' });
@@ -291,7 +291,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded radius="12px" data-testid="rounded" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('rounded');
       expect(el).toHaveStyle({ borderRadius: '12px' });
@@ -302,7 +302,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded ref={ref} />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -311,7 +311,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded className="custom" data-testid="rounded" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rounded').className).toContain('custom');
     });
@@ -320,7 +320,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Rounded data-testid="rounded" data-custom="yes" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('rounded')).toHaveAttribute('data-custom', 'yes');
     });
@@ -332,7 +332,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('text')).toBeInTheDocument();
     });
@@ -341,7 +341,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('text');
       expect(el.children).toHaveLength(3);
@@ -351,7 +351,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text lines={5} data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('text');
       expect(el.children).toHaveLength(5);
@@ -361,7 +361,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text lines={3} data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('text');
       const lastLine = el.children[2] as HTMLElement;
@@ -372,7 +372,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text lines={1} data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('text');
       const firstLine = el.children[0] as HTMLElement;
@@ -383,7 +383,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text lines={2} lastLineWidth="40%" data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       const el = screen.getByTestId('text');
       const lastLine = el.children[1] as HTMLElement;
@@ -394,7 +394,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text spacing="1rem" data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('text')).toHaveStyle({ gap: '1rem' });
     });
@@ -404,7 +404,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text ref={ref} />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -413,7 +413,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text className="custom" data-testid="text" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('text').className).toContain('custom');
     });
@@ -422,7 +422,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Text data-testid="text" data-custom="yes" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('text')).toHaveAttribute('data-custom', 'yes');
     });
@@ -434,7 +434,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root sp={{ root: { className: 'sp-root' } }} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root').className).toContain('sp-root');
     });
@@ -443,7 +443,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root sp={{ root: { style: { marginTop: '5px' } } }} data-testid="root">
           <Skeleton.Circle />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('root')).toHaveStyle({ marginTop: '5px' });
     });
@@ -452,7 +452,7 @@ describe('Skeleton', () => {
       render(
         <Skeleton.Root>
           <Skeleton.Circle sp={{ circle: { className: 'sp-circle' } }} data-testid="circle" />
-        </Skeleton.Root>
+        </Skeleton.Root>,
       );
       expect(screen.getByTestId('circle').className).toContain('sp-circle');
     });

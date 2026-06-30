@@ -8,14 +8,15 @@ export const spec = {
   name: 'ColorInput',
   componentClass: 'input_popup' as const,
   category: 'forms',
-  description: 'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
+  description:
+    'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
 
   synonyms: ['color field', 'colour input', 'hex picker', 'swatch input'],
   animationPatterns: ['popupSurface'],
   families: {
-    behavior:  ['popup-anchored'],
-    state:     ['controlled-value', 'controlled-open'],
-    a11y:      ['dialog'],
+    behavior: ['popup-anchored'],
+    state: ['controlled-value', 'controlled-open'],
+    a11y: ['dialog'],
   },
   behavior: {
     popup: {
@@ -29,65 +30,187 @@ export const spec = {
   compound: false,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'InputText-style wrapper containing swatch, input, and optional eye dropper' },
-    { name: 'swatch', element: 'div', description: 'Color preview square that toggles popover on click' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'InputText-style wrapper containing swatch, input, and optional eye dropper',
+    },
+    {
+      name: 'swatch',
+      element: 'div',
+      description: 'Color preview square that toggles popover on click',
+    },
     { name: 'input', element: 'input', description: 'Text input for typing/editing color values' },
-    { name: 'content', element: 'div', description: 'Radix Popover.Content popup container with enter/exit animation' },
-    { name: 'contentInner', element: 'div', description: 'Inner wrapper for the embedded ColorPicker' },
+    {
+      name: 'content',
+      element: 'div',
+      description: 'Radix Popover.Content popup container with enter/exit animation',
+    },
+    {
+      name: 'contentInner',
+      element: 'div',
+      description: 'Inner wrapper for the embedded ColorPicker',
+    },
   ],
 
   subComponents: undefined,
 
   props: [
     // Appearance
-    { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Input variant' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
-    { name: 'width', type: 'React.CSSProperties[\'width\']', moveSpecific: true, description: 'Explicit width override' },
+    {
+      name: 'variant',
+      type: "'outlined' | 'filled'",
+      default: "'outlined'",
+      moveSpecific: true,
+      description: 'Input variant',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Input size',
+    },
+    {
+      name: 'width',
+      type: "React.CSSProperties['width']",
+      moveSpecific: true,
+      description: 'Explicit width override',
+    },
     // Value
-    { name: 'format', type: 'ColorFormat', default: "'hex'", moveSpecific: true, description: 'Active color format (hex, hexa, rgb, rgba, hsl, hsla)' },
+    {
+      name: 'format',
+      type: 'ColorFormat',
+      default: "'hex'",
+      moveSpecific: true,
+      description: 'Active color format (hex, hexa, rgb, rgba, hsl, hsla)',
+    },
     { name: 'value', type: 'string', moveSpecific: true, description: 'Controlled color value' },
-    { name: 'defaultValue', type: 'string', moveSpecific: true, description: 'Default color value (uncontrolled)' },
-    { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called on every color change (during drag)' },
-    { name: 'onChangeEnd', type: '(value: string) => void', moveSpecific: true, description: 'Called when interaction ends (drag release, blur)' },
-    { name: 'onFormatChange', type: '(format: ColorFormat) => void', moveSpecific: true, description: 'Called when format changes in picker' },
-    { name: 'formatOptions', type: 'BaseColorFormat[]', moveSpecific: true, description: 'Available base formats in picker selector' },
+    {
+      name: 'defaultValue',
+      type: 'string',
+      moveSpecific: true,
+      description: 'Default color value (uncontrolled)',
+    },
+    {
+      name: 'onValueChange',
+      type: '(value: string) => void',
+      moveSpecific: true,
+      description: 'Called on every color change (during drag)',
+    },
+    {
+      name: 'onChangeEnd',
+      type: '(value: string) => void',
+      moveSpecific: true,
+      description: 'Called when interaction ends (drag release, blur)',
+    },
+    {
+      name: 'onFormatChange',
+      type: '(format: ColorFormat) => void',
+      moveSpecific: true,
+      description: 'Called when format changes in picker',
+    },
+    {
+      name: 'formatOptions',
+      type: 'BaseColorFormat[]',
+      moveSpecific: true,
+      description: 'Available base formats in picker selector',
+    },
     // Picker config
-    { name: 'swatches', type: 'string[]', moveSpecific: true, description: 'Preset color swatches in picker' },
-    { name: 'swatchesPerRow', type: 'number', default: '7', moveSpecific: true, description: 'Number of swatches per row' },
-    { name: 'withPicker', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show saturation/hue/alpha picker area' },
-    { name: 'withEyeDropper', type: 'boolean', moveSpecific: true, description: 'Show eye dropper button (browser support required)' },
-    { name: 'closeOnColorSwatchClick', type: 'boolean', default: 'true', moveSpecific: true, description: 'Close popover after swatch click in picker' },
+    {
+      name: 'swatches',
+      type: 'string[]',
+      moveSpecific: true,
+      description: 'Preset color swatches in picker',
+    },
+    {
+      name: 'swatchesPerRow',
+      type: 'number',
+      default: '7',
+      moveSpecific: true,
+      description: 'Number of swatches per row',
+    },
+    {
+      name: 'withPicker',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show saturation/hue/alpha picker area',
+    },
+    {
+      name: 'withEyeDropper',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Show eye dropper button (browser support required)',
+    },
+    {
+      name: 'closeOnColorSwatchClick',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Close popover after swatch click in picker',
+    },
     // State
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'readOnly', type: 'boolean', moveSpecific: true, description: 'Read-only state' },
     // Form
-    { name: 'placeholder', type: 'string', moveSpecific: false, description: 'Input placeholder text' },
+    {
+      name: 'placeholder',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Input placeholder text',
+    },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form field name' },
     { name: 'id', type: 'string', moveSpecific: false, description: 'Input element id' },
     { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required state' },
     { name: 'autoFocus', type: 'boolean', moveSpecific: false, description: 'Auto-focus on mount' },
-    { name: 'onFocus', type: 'React.FocusEventHandler<HTMLInputElement>', moveSpecific: false, description: 'Input focus handler' },
-    { name: 'onBlur', type: 'React.FocusEventHandler<HTMLInputElement>', moveSpecific: false, description: 'Input blur handler' },
+    {
+      name: 'onFocus',
+      type: 'React.FocusEventHandler<HTMLInputElement>',
+      moveSpecific: false,
+      description: 'Input focus handler',
+    },
+    {
+      name: 'onBlur',
+      type: 'React.FocusEventHandler<HTMLInputElement>',
+      moveSpecific: false,
+      description: 'Input blur handler',
+    },
     // Labels
-    { name: 'labels', type: 'Partial<ColorInputLabels>', moveSpecific: true, description: 'Accessible label overrides' },
+    {
+      name: 'labels',
+      type: 'Partial<ColorInputLabels>',
+      moveSpecific: true,
+      description: 'Accessible label overrides',
+    },
     // Standard
     { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-    { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+    {
+      name: 'style',
+      type: 'React.CSSProperties',
+      moveSpecific: false,
+      description: 'Inline styles',
+    },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-variant', 'data-size', 'data-format', 'data-invalid', 'data-disabled', 'data-readonly'],
+    dataAttributes: [
+      'data-variant',
+      'data-size',
+      'data-format',
+      'data-invalid',
+      'data-disabled',
+      'data-readonly',
+    ],
     children: [
       { slot: 'swatch' },
       { slot: 'input' },
       {
         slot: 'content',
         dataAttributes: ['data-side', 'data-align'],
-        children: [
-          { slot: 'contentInner' },
-        ],
+        children: [{ slot: 'contentInner' }],
       },
     ],
   },
@@ -107,42 +230,139 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   renderContracts: [
-    { id: 'root-wraps-radix-popover', description: 'Root wraps in Radix Popover.Root with open state coordinated via isClosing for exit animation' },
-    { id: 'root-renders-anchor', description: 'Root element renders as Radix Popover.Anchor with asChild' },
-    { id: 'swatch-toggles-popover', description: 'Swatch click toggles popover open/close (close triggers exit animation)' },
-    { id: 'swatch-bg-reflects-value', description: 'Swatch backgroundColor is set inline to currentValue' },
-    { id: 'input-focus-snapshot', description: 'Input snapshots current value on focus, edits locally, validates+commits on blur' },
-    { id: 'input-blur-validates', description: 'On blur, input validates text via isValidColor, parses, formats in active format, and calls handleValueChange+handleChangeEnd' },
+    {
+      id: 'root-wraps-radix-popover',
+      description:
+        'Root wraps in Radix Popover.Root with open state coordinated via isClosing for exit animation',
+    },
+    {
+      id: 'root-renders-anchor',
+      description: 'Root element renders as Radix Popover.Anchor with asChild',
+    },
+    {
+      id: 'swatch-toggles-popover',
+      description: 'Swatch click toggles popover open/close (close triggers exit animation)',
+    },
+    {
+      id: 'swatch-bg-reflects-value',
+      description: 'Swatch backgroundColor is set inline to currentValue',
+    },
+    {
+      id: 'input-focus-snapshot',
+      description:
+        'Input snapshots current value on focus, edits locally, validates+commits on blur',
+    },
+    {
+      id: 'input-blur-validates',
+      description:
+        'On blur, input validates text via isValidColor, parses, formats in active format, and calls handleValueChange+handleChangeEnd',
+    },
     { id: 'input-arrowdown-opens', description: 'ArrowDown on input opens popover when closed' },
     { id: 'input-enter-blurs', description: 'Enter key on input triggers blur to commit value' },
-    { id: 'content-fade-only', description: 'Content only fades (opacity) on open/close — never a size-changing animation, so Radix cannot re-flip the popup below the trigger (the close flash)' },
-    { id: 'content-embeds-colorpicker', description: 'Content inner renders ColorPicker component with forwarded picker props (format, swatches, withPicker, size)' },
-    { id: 'content-prevents-autofocus', description: 'Content prevents auto-focus on open to keep focus on input' },
-    { id: 'dismiss-outside-root', description: 'Pointer down outside root triggers animated close; inside root is ignored (swatch handles toggle)' },
-    { id: 'format-aware-width', description: 'Root width varies by format (hex, hexa, rgb, hsl, rgba, hsla) via CSS custom property per data-format' },
-    { id: 'eyedropper-integration', description: 'Eye dropper button uses EyeDropper API when available; parses result, formats in current format, calls value+changeEnd handlers' },
-    { id: 'input-mono-font', description: 'Input uses monospace font family (font-mono with font-body fallback)' },
+    {
+      id: 'content-fade-only',
+      description:
+        'Content only fades (opacity) on open/close — never a size-changing animation, so Radix cannot re-flip the popup below the trigger (the close flash)',
+    },
+    {
+      id: 'content-embeds-colorpicker',
+      description:
+        'Content inner renders ColorPicker component with forwarded picker props (format, swatches, withPicker, size)',
+    },
+    {
+      id: 'content-prevents-autofocus',
+      description: 'Content prevents auto-focus on open to keep focus on input',
+    },
+    {
+      id: 'dismiss-outside-root',
+      description:
+        'Pointer down outside root triggers animated close; inside root is ignored (swatch handles toggle)',
+    },
+    {
+      id: 'format-aware-width',
+      description:
+        'Root width varies by format (hex, hexa, rgb, hsl, rgba, hsla) via CSS custom property per data-format',
+    },
+    {
+      id: 'eyedropper-integration',
+      description:
+        'Eye dropper button uses EyeDropper API when available; parses result, formats in current format, calls value+changeEnd handlers',
+    },
+    {
+      id: 'input-mono-font',
+      description: 'Input uses monospace font family (font-mono with font-body fallback)',
+    },
   ],
 
   animations: [
-    { trigger: 'Content.enter', sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }] },
-    { trigger: 'Content.exit', sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }] },
+    {
+      trigger: 'Content.enter',
+      sequence: [{ target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } }],
+    },
+    {
+      trigger: 'Content.exit',
+      sequence: [{ target: 'Content', animation: { opacity: { to: 0, duration: 150 } } }],
+    },
   ],
 
   tokens: [
     // Root tokens
-    { name: '--move-colorinput-bg', value: 'var(--move-bg-subtle)', description: 'Root background color' },
-    { name: '--move-colorinput-border', value: 'var(--move-border-base)', description: 'Root border color' },
-    { name: '--move-colorinput-border-hover', value: 'var(--move-border-emphasis)', description: 'Root border color on hover' },
-    { name: '--move-colorinput-border-focus', value: 'var(--move-primary)', description: 'Root border color on focus-within' },
-    { name: '--move-colorinput-radius', value: 'var(--move-rounded-md)', description: 'Root border radius' },
-    { name: '--move-colorinput-padding-x', value: 'var(--move-spacing-sm)', description: 'Root horizontal padding' },
-    { name: '--move-colorinput-padding-y', value: 'var(--move-spacing-xs)', description: 'Root vertical padding' },
+    {
+      name: '--move-colorinput-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Root background color',
+    },
+    {
+      name: '--move-colorinput-border',
+      value: 'var(--move-border-base)',
+      description: 'Root border color',
+    },
+    {
+      name: '--move-colorinput-border-hover',
+      value: 'var(--move-border-emphasis)',
+      description: 'Root border color on hover',
+    },
+    {
+      name: '--move-colorinput-border-focus',
+      value: 'var(--move-primary)',
+      description: 'Root border color on focus-within',
+    },
+    {
+      name: '--move-colorinput-radius',
+      value: 'var(--move-rounded-md)',
+      description: 'Root border radius',
+    },
+    {
+      name: '--move-colorinput-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Root horizontal padding',
+    },
+    {
+      name: '--move-colorinput-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Root vertical padding',
+    },
     { name: '--move-colorinput-fg', value: 'var(--move-fg-base)', description: 'Input text color' },
-    { name: '--move-colorinput-placeholder', value: 'var(--move-fg-muted)', description: 'Input placeholder color' },
-    { name: '--move-colorinput-height', value: 'var(--move-control-height-md)', description: 'Root height' },
-    { name: '--move-colorinput-swatch-size', value: '20px', description: 'Color swatch preview size' },
-    { name: '--move-colorinput-width', value: '132px', description: 'Default root width (varies by format and size)' },
+    {
+      name: '--move-colorinput-placeholder',
+      value: 'var(--move-fg-muted)',
+      description: 'Input placeholder color',
+    },
+    {
+      name: '--move-colorinput-height',
+      value: 'var(--move-control-height-md)',
+      description: 'Root height',
+    },
+    {
+      name: '--move-colorinput-swatch-size',
+      value: '20px',
+      description: 'Color swatch preview size',
+    },
+    {
+      name: '--move-colorinput-width',
+      value: '132px',
+      description: 'Default root width (varies by format and size)',
+    },
   ],
 
   variants: {
@@ -152,7 +372,11 @@ export const spec = {
 
   labels: [
     { key: 'swatch', default: 'Open color picker', description: 'Swatch button accessible label' },
-    { key: 'eyeDropper', default: 'Pick color from screen', description: 'Eye dropper button accessible label' },
+    {
+      key: 'eyeDropper',
+      default: 'Pick color from screen',
+      description: 'Eye dropper button accessible label',
+    },
   ],
 
   childrenKind: undefined,

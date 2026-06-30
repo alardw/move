@@ -38,9 +38,7 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
             className={cx('root', props.className, spClass as string | undefined)}
             style={{ ...inlineStyle, ...(spStyle as React.CSSProperties) } as React.CSSProperties}
           >
-            <div className={styles.inner}>
-              {props.children}
-            </div>
+            <div className={styles.inner}>{props.children}</div>
           </div>
         );
       },
@@ -67,7 +65,11 @@ const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLDivEl
     return {
       render() {
         const labelSp = sp('label');
-        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = labelSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -103,7 +105,11 @@ const FormFieldField = withMoveComponent<'field', FormFieldFieldProps, HTMLDivEl
     return {
       render() {
         const fieldSp = sp('field');
-        const { className: spClass, style: spStyle, ...spRest } = fieldSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = fieldSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -131,7 +137,11 @@ export interface FormFieldDescriptionProps extends React.HTMLAttributes<HTMLElem
   error?: boolean;
 }
 
-const FormFieldDescription = withMoveComponent<'description', FormFieldDescriptionProps, HTMLDivElement>({
+const FormFieldDescription = withMoveComponent<
+  'description',
+  FormFieldDescriptionProps,
+  HTMLDivElement
+>({
   name: 'FormFieldDescription',
   styles,
   slots: ['description'] as const,

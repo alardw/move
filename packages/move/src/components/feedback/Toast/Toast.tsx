@@ -3,16 +3,18 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
-import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick, useDismissableExit } from '../../../animation';
+import {
+  Presence,
+  usePresence,
+  useAnimations,
+  resolveAnimationsConfig,
+  quick,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import type { IconRole } from '../../../infrastructure/Icon';
-import {
-  useToastStore,
-  removeToast,
-  type ToastState,
-  type ToastPosition,
-} from './store';
+import { useToastStore, removeToast, type ToastState, type ToastPosition } from './store';
 import styles from './Toast.module.css';
 
 // =============================================================================
@@ -71,20 +73,30 @@ const DEFAULT_TOAST_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Item.enter',
     sequence: [
-      { target: 'Item', animation: {
-        translateY: { from: 16, to: 0, ease: quick, duration: 250 },
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 250 },
-      } },
+      {
+        target: 'Item',
+        animation: {
+          translateY: { from: 16, to: 0, ease: quick, duration: 250 },
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 250 },
+        },
+      },
     ],
   },
   {
     trigger: 'Wrapper.exit',
     sequence: [
-      { target: 'Item', animation: {
-        translateY: { from: 0, to: 16, ease: 'outQuart', duration: 200 },
-        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 200 },
-      } },
-      { target: 'Wrapper', fn: 'animateDimension', animation: { height: { ease: 'inOutQuart', duration: 300 } } },
+      {
+        target: 'Item',
+        animation: {
+          translateY: { from: 0, to: 16, ease: 'outQuart', duration: 200 },
+          opacity: { from: 1, to: 0, ease: 'outQuart', duration: 200 },
+        },
+      },
+      {
+        target: 'Wrapper',
+        fn: 'animateDimension',
+        animation: { height: { ease: 'inOutQuart', duration: 300 } },
+      },
     ],
   },
 ];
@@ -105,10 +117,13 @@ function ToastItem({ toast }: { toast: ToastState }) {
 
   const isClosing = !isPresent;
 
-  const refs = React.useMemo(() => ({
-    Wrapper: wrapperRef as React.RefObject<HTMLElement | null>,
-    Item: itemRef as React.RefObject<HTMLElement | null>,
-  }), []);
+  const refs = React.useMemo(
+    () => ({
+      Wrapper: wrapperRef as React.RefObject<HTMLElement | null>,
+      Item: itemRef as React.RefObject<HTMLElement | null>,
+    }),
+    [],
+  );
   const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs);
 
   // Exit — run exit sequences then signal safe to remove. One-shot (no reopen),
@@ -128,20 +143,30 @@ function ToastItem({ toast }: { toast: ToastState }) {
 
   const progressConfig: AnimationTrigger[] | null = React.useMemo(() => {
     if (!isPresent || toastDuration <= 0) return null;
-    return [{
-      trigger: 'Progress.enter',
-      sequence: [{
-        target: 'Progress',
-        animation: { scaleX: { from: 1, to: 0, ease: 'linear', duration: toastDuration } },
-      }],
-    }];
+    return [
+      {
+        trigger: 'Progress.enter',
+        sequence: [
+          {
+            target: 'Progress',
+            animation: { scaleX: { from: 1, to: 0, ease: 'linear', duration: toastDuration } },
+          },
+        ],
+      },
+    ];
   }, [isPresent, toastId, toastDuration]);
 
-  const progressRefs = React.useMemo(() => ({
-    Progress: progressRef as React.RefObject<HTMLElement | null>,
-  }), []);
+  const progressRefs = React.useMemo(
+    () => ({
+      Progress: progressRef as React.RefObject<HTMLElement | null>,
+    }),
+    [],
+  );
 
-  const { pauseAll: pauseProgress, resumeAll: resumeProgress } = useAnimations(progressConfig, progressRefs);
+  const { pauseAll: pauseProgress, resumeAll: resumeProgress } = useAnimations(
+    progressConfig,
+    progressRefs,
+  );
 
   // Auto-dismiss is a pause-aware timer (NOT the progress animation's completion),
   // so the toast does not disappear while the countdown is paused. The progress
@@ -152,7 +177,10 @@ function ToastItem({ toast }: { toast: ToastState }) {
 
     let remaining = toastDuration;
     let startedAt = Date.now();
-    let timer: ReturnType<typeof setTimeout> | null = setTimeout(() => removeToast(toastId), remaining);
+    let timer: ReturnType<typeof setTimeout> | null = setTimeout(
+      () => removeToast(toastId),
+      remaining,
+    );
 
     const pause = () => {
       pauseProgress();
@@ -203,9 +231,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
         )}
         <div className={styles.content}>
           <div className={styles.message}>{toast.message}</div>
-          {toast.description && (
-            <div className={styles.description}>{toast.description}</div>
-          )}
+          {toast.description && <div className={styles.description}>{toast.description}</div>}
         </div>
         {isPresent && (
           <button
@@ -239,11 +265,7 @@ const POSITIONS: ToastPosition[] = [
   'bottom-center',
 ];
 
-const ToastViewport = withMoveComponent<
-  'viewport',
-  ToastViewportProps,
-  HTMLDivElement
->({
+const ToastViewport = withMoveComponent<'viewport', ToastViewportProps, HTMLDivElement>({
   name: 'ToastViewport',
   styles,
   slots: ['viewport'] as const,
@@ -255,10 +277,11 @@ const ToastViewport = withMoveComponent<
     // Resolve animations prop (memoize to avoid re-triggering enter animations)
     const animationsProp = props.animations;
     const animConfig = React.useMemo(
-      () => resolveAnimationsConfig(
-        DEFAULT_TOAST_ANIMATIONS,
-        animationsProp as AnimationTrigger[] | false | undefined,
-      ),
+      () =>
+        resolveAnimationsConfig(
+          DEFAULT_TOAST_ANIMATIONS,
+          animationsProp as AnimationTrigger[] | false | undefined,
+        ),
       [animationsProp],
     );
 
@@ -276,35 +299,42 @@ const ToastViewport = withMoveComponent<
     return {
       render() {
         const viewportSp = sp('viewport');
-        const { className: spClass, style: spStyle, ...spRest } = viewportSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = viewportSp as Record<string, unknown>;
 
         return createPortal(
           <ToastCloseLabelContext.Provider value={labels.close}>
-          <ToastAnimateContext.Provider value={animConfig}>
-            <div
-              {...attrs}
-              {...spRest}
-              ref={ref}
-              className={cx('viewport', props.className as string | undefined, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-            >
-              {POSITIONS.map((pos) => (
-                <div
-                  key={pos}
-                  className={styles.positionContainer}
-                  data-position={pos}
-                >
-                  <Presence>
-                    {(grouped.get(pos) ?? []).map((t) => (
-                      <ToastItem key={t.id} toast={t} />
-                    ))}
-                  </Presence>
-                </div>
-              ))}
-            </div>
-          </ToastAnimateContext.Provider>
+            <ToastAnimateContext.Provider value={animConfig}>
+              <div
+                {...attrs}
+                {...spRest}
+                ref={ref}
+                className={cx(
+                  'viewport',
+                  props.className as string | undefined,
+                  spClass as string | undefined,
+                )}
+                style={{
+                  ...(props.style as React.CSSProperties),
+                  ...(spStyle as React.CSSProperties),
+                }}
+              >
+                {POSITIONS.map((pos) => (
+                  <div key={pos} className={styles.positionContainer} data-position={pos}>
+                    <Presence>
+                      {(grouped.get(pos) ?? []).map((t) => (
+                        <ToastItem key={t.id} toast={t} />
+                      ))}
+                    </Presence>
+                  </div>
+                ))}
+              </div>
+            </ToastAnimateContext.Provider>
           </ToastCloseLabelContext.Provider>,
-          document.body
+          document.body,
         );
       },
     };

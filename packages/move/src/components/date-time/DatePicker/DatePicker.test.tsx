@@ -4,19 +4,22 @@ import { describe, it, expect, vi } from 'vitest';
 import { DatePicker } from './DatePicker';
 
 // Helper: minimal DatePicker composition
-const renderDatePicker = (rootProps: Record<string, any> = {}, inputProps: Record<string, any> = {}) => {
+const renderDatePicker = (
+  rootProps: Record<string, any> = {},
+  inputProps: Record<string, any> = {},
+) => {
   return render(
     <DatePicker.Root {...rootProps}>
       <DatePicker.Trigger>
         <DatePicker.Input {...inputProps} />
       </DatePicker.Trigger>
-        <DatePicker.Content data-testid="content">
-          <div role="grid">
-            <div role="gridcell">1</div>
-            <div role="gridcell">2</div>
-            <div role="gridcell">3</div>
-          </div>
-        </DatePicker.Content>
+      <DatePicker.Content data-testid="content">
+        <div role="grid">
+          <div role="gridcell">1</div>
+          <div role="gridcell">2</div>
+          <div role="gridcell">3</div>
+        </div>
+      </DatePicker.Content>
     </DatePicker.Root>,
   );
 };
@@ -153,10 +156,10 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-                <DatePicker.Content>
-              <span data-testid="calendar">Calendar</span>
-            </DatePicker.Content>
-            </DatePicker.Root>,
+          <DatePicker.Content>
+            <span data-testid="calendar">Calendar</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
       );
       expect(screen.getByTestId('calendar')).toBeInTheDocument();
     });
@@ -167,10 +170,14 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-                <DatePicker.Content className="content-class" style={{ maxWidth: '300px' }} data-testid="content">
-              <span>Cal</span>
-            </DatePicker.Content>
-            </DatePicker.Root>,
+          <DatePicker.Content
+            className="content-class"
+            style={{ maxWidth: '300px' }}
+            data-testid="content"
+          >
+            <span>Cal</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
       );
       const content = screen.getByTestId('content');
       expect(content).toHaveClass('content-class');
@@ -186,10 +193,10 @@ describe('DatePicker', () => {
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
-                <DatePicker.Content data-testid="content">
-              <span>Cal</span>
-            </DatePicker.Content>
-            </DatePicker.Root>,
+          <DatePicker.Content data-testid="content">
+            <span>Cal</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
       );
       expect(screen.getByTestId('content')).toBeInTheDocument();
     });

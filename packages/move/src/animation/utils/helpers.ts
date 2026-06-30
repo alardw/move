@@ -13,7 +13,7 @@ export function prefersReducedMotion(): boolean {
  */
 export function mergeAnimateConfig<T extends Record<string, unknown>>(
   defaults: T,
-  overrides?: Record<string, unknown>
+  overrides?: Record<string, unknown>,
 ): T {
   if (!overrides) return defaults;
 
@@ -29,9 +29,7 @@ export function mergeAnimateConfig<T extends Record<string, unknown>>(
  * For plain values, passes them through.
  * Returns params with duration: 0.
  */
-export function toEndValues(
-  animation: Animation
-): Record<string, unknown> & { duration: number } {
+export function toEndValues(animation: Animation): Record<string, unknown> & { duration: number } {
   const result: Record<string, unknown> = {};
 
   for (const [key, value] of Object.entries(animation)) {

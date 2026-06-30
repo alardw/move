@@ -10,7 +10,7 @@ const renderCollapsible = (props: Record<string, any> = {}) => {
       <Collapsible.Trigger>Toggle</Collapsible.Trigger>
       <Collapsible.Icon />
       <Collapsible.Content>Content here</Collapsible.Content>
-    </Collapsible.Root>
+    </Collapsible.Root>,
   );
 };
 
@@ -112,9 +112,11 @@ describe('Collapsible', () => {
       const { container } = render(
         <Collapsible.Root>
           <Collapsible.Trigger>Toggle</Collapsible.Trigger>
-          <Collapsible.Icon><span data-testid="custom-icon">X</span></Collapsible.Icon>
+          <Collapsible.Icon>
+            <span data-testid="custom-icon">X</span>
+          </Collapsible.Icon>
           <Collapsible.Content>Content</Collapsible.Content>
-        </Collapsible.Root>
+        </Collapsible.Root>,
       );
       expect(screen.getByTestId('custom-icon')).toBeInTheDocument();
     });

@@ -14,12 +14,12 @@ export interface UseControlledStateOptions<T> {
  * Returns [currentValue, setValue, isControlled].
  */
 export function useControlledState<T>(
-  options: UseControlledStateOptions<T>
+  options: UseControlledStateOptions<T>,
 ): [T, (value: T | ((prev: T) => T)) => void, boolean] {
   const { value: controlledValue, defaultValue, onChange } = options;
   const isControlled = controlledValue !== undefined;
   const [internalValue, setInternalValue] = useState<T>(
-    controlledValue ?? defaultValue ?? (undefined as unknown as T)
+    controlledValue ?? defaultValue ?? (undefined as unknown as T),
   );
 
   // Keep callback ref stable
@@ -33,16 +33,14 @@ export function useControlledState<T>(
   const setValue = useCallback(
     (nextValue: T | ((prev: T) => T)) => {
       const resolved =
-        typeof nextValue === 'function'
-          ? (nextValue as (prev: T) => T)(currentValue)
-          : nextValue;
+        typeof nextValue === 'function' ? (nextValue as (prev: T) => T)(currentValue) : nextValue;
 
       if (!isControlled) {
         setInternalValue(resolved);
       }
       onChangeRef.current?.(resolved);
     },
-    [currentValue, isControlled]
+    [currentValue, isControlled],
   );
 
   return [currentValue, setValue, isControlled];

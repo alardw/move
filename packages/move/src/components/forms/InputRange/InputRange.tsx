@@ -50,8 +50,19 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
   styles,
   slots: ['root', 'track', 'range', 'thumb', 'value'] as const,
   moveProps: [
-    'min', 'max', 'step', 'value', 'defaultValue', 'onValueChange',
-    'size', 'invalid', 'orientation', 'width', 'showValue', 'formatValue', 'animations',
+    'min',
+    'max',
+    'step',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'size',
+    'invalid',
+    'orientation',
+    'width',
+    'showValue',
+    'formatValue',
+    'animations',
   ],
   defaults: {
     min: 0,
@@ -72,9 +83,13 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
       { trigger: 'Thumb.hover', sequence: [{ animation: scaleUp() }] },
       { trigger: 'Thumb.press', sequence: [{ animation: scaleDown() }] },
     ];
-    const animConfig = (props.animations as AnimationTrigger[] | false | undefined) === false
-      ? null
-      : resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | undefined);
+    const animConfig =
+      (props.animations as AnimationTrigger[] | false | undefined) === false
+        ? null
+        : resolveAnimationsConfig(
+            DEFAULT_ANIMATIONS,
+            props.animations as AnimationTrigger[] | undefined,
+          );
 
     const thumbElRef = React.useRef<HTMLElement | null>(null);
     const thumbRefs = React.useMemo(() => ({ Thumb: thumbElRef }), []);
@@ -86,28 +101,53 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const trackSp = sp('track');
-        const { className: trackSpClass, style: trackSpStyle, ...trackSpRest } = trackSp as Record<string, unknown>;
+        const {
+          className: trackSpClass,
+          style: trackSpStyle,
+          ...trackSpRest
+        } = trackSp as Record<string, unknown>;
 
         const rangeSp = sp('range');
-        const { className: rangeSpClass, style: rangeSpStyle, ...rangeSpRest } = rangeSp as Record<string, unknown>;
+        const {
+          className: rangeSpClass,
+          style: rangeSpStyle,
+          ...rangeSpRest
+        } = rangeSp as Record<string, unknown>;
 
         const thumbSp = sp('thumb');
-        const { className: thumbSpClass, style: thumbSpStyle, ...thumbSpRest } = thumbSp as Record<string, unknown>;
+        const {
+          className: thumbSpClass,
+          style: thumbSpStyle,
+          ...thumbSpRest
+        } = thumbSp as Record<string, unknown>;
 
         const valueSp = sp('value');
-        const { className: valueSpClass, style: valueSpStyle, ...valueSpRest } = valueSp as Record<string, unknown>;
+        const {
+          className: valueSpClass,
+          style: valueSpStyle,
+          ...valueSpRest
+        } = valueSp as Record<string, unknown>;
 
         const showValue = props.showValue as boolean | undefined;
-        const format = (props.formatValue as ((v: number) => string) | undefined) ?? defaultFormatValue;
+        const format =
+          (props.formatValue as ((v: number) => string) | undefined) ?? defaultFormatValue;
         const isRange = values.length > 1;
         const orientation = props.orientation as string;
 
         const rootStyle: React.CSSProperties = {
           ...(showValue ? {} : props.style),
-          ...(showValue ? {} : props.width ? { width: props.width as React.CSSProperties['width'] } : {}),
+          ...(showValue
+            ? {}
+            : props.width
+              ? { width: props.width as React.CSSProperties['width'] }
+              : {}),
           ...(rootSpStyle as React.CSSProperties),
         };
 
@@ -136,7 +176,11 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
             name={props.name as string}
             data-size={props.size as string}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
-            className={cx('root', showValue ? undefined : props.className, rootSpClass as string | undefined)}
+            className={cx(
+              'root',
+              showValue ? undefined : props.className,
+              rootSpClass as string | undefined,
+            )}
             style={rootStyle}
           >
             <Slider.Track
@@ -157,10 +201,18 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
                 {...(i === 0 ? { ref: mergedThumbRef } : {})}
                 className={cx('thumb', thumbSpClass as string | undefined)}
                 style={thumbSpStyle as React.CSSProperties}
-                onMouseEnter={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseEnter?.(); }}
-                onMouseLeave={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseLeave?.(); }}
-                onMouseDown={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseDown?.(); }}
-                onMouseUp={() => { if (!isDisabled && i === 0) handlers.Thumb?.onMouseUp?.(); }}
+                onMouseEnter={() => {
+                  if (!isDisabled && i === 0) handlers.Thumb?.onMouseEnter?.();
+                }}
+                onMouseLeave={() => {
+                  if (!isDisabled && i === 0) handlers.Thumb?.onMouseLeave?.();
+                }}
+                onMouseDown={() => {
+                  if (!isDisabled && i === 0) handlers.Thumb?.onMouseDown?.();
+                }}
+                onMouseUp={() => {
+                  if (!isDisabled && i === 0) handlers.Thumb?.onMouseUp?.();
+                }}
               />
             ))}
           </Slider.Root>

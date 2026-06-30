@@ -12,9 +12,9 @@ export const spec = {
 
   synonyms: ['profile picture', 'user image', 'portrait', 'user icon', 'gravatar', 'initials'],
   families: {
-    behavior:  ["display"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['display'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: true,
@@ -30,21 +30,46 @@ export const spec = {
         { name: 'group', element: 'div', description: 'Inline-flex container for stacked avatars' },
       ],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Root children' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Avatar.Root children',
+        },
       ],
       usesFactory: true,
       description: 'Container for an overlapping avatar group',
     },
     {
       name: 'Root',
-      slots: [
-        { name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root element' },
-      ],
+      slots: [{ name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root element' }],
       props: [
-        { name: 'size', typeRef: 'SizeWithXL', default: "'md'", moveSpecific: true, description: 'Avatar size' },
-        { name: 'color', typeRef: 'Color', moveSpecific: true, description: 'Tints the fallback bg/fg using the named Open Color palette.' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Optional declarative animation config — none by default (the mount fade is CSS)' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Avatar.Image and Avatar.Fallback' },
+        {
+          name: 'size',
+          typeRef: 'SizeWithXL',
+          default: "'md'",
+          moveSpecific: true,
+          description: 'Avatar size',
+        },
+        {
+          name: 'color',
+          typeRef: 'Color',
+          moveSpecific: true,
+          description: 'Tints the fallback bg/fg using the named Open Color palette.',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description:
+            'Optional declarative animation config — none by default (the mount fade is CSS)',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Avatar.Image and Avatar.Fallback',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Avatar.Root',
@@ -52,13 +77,16 @@ export const spec = {
     },
     {
       name: 'Image',
-      slots: [
-        { name: 'image', element: 'RadixAvatar.Image', description: 'Avatar image element' },
-      ],
+      slots: [{ name: 'image', element: 'RadixAvatar.Image', description: 'Avatar image element' }],
       props: [
         { name: 'src', type: 'string', moveSpecific: false, description: 'Image source URL' },
         { name: 'alt', type: 'string', moveSpecific: false, description: 'Image alt text' },
-        { name: 'onLoadingStatusChange', type: "(status: 'idle' | 'loading' | 'loaded' | 'error') => void", moveSpecific: true, description: 'Loading status callback' },
+        {
+          name: 'onLoadingStatusChange',
+          type: "(status: 'idle' | 'loading' | 'loaded' | 'error') => void",
+          moveSpecific: true,
+          description: 'Loading status callback',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Avatar.Image',
@@ -67,11 +95,25 @@ export const spec = {
     {
       name: 'Fallback',
       slots: [
-        { name: 'fallback', element: 'RadixAvatar.Fallback', description: 'Fallback content when image fails or loads' },
+        {
+          name: 'fallback',
+          element: 'RadixAvatar.Fallback',
+          description: 'Fallback content when image fails or loads',
+        },
       ],
       props: [
-        { name: 'delayMs', type: 'number', moveSpecific: true, description: 'Delay before showing fallback' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Fallback content (initials, icon)' },
+        {
+          name: 'delayMs',
+          type: 'number',
+          moveSpecific: true,
+          description: 'Delay before showing fallback',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Fallback content (initials, icon)',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Avatar.Fallback',
@@ -84,10 +126,7 @@ export const spec = {
   anatomy: {
     slot: 'root',
     dataAttributes: ['data-size'],
-    children: [
-      { slot: 'image' },
-      { slot: 'fallback' },
-    ],
+    children: [{ slot: 'image' }, { slot: 'fallback' }],
   },
 
   controlled: null,
@@ -100,11 +139,31 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-avatar-size', value: 'var(--move-space-10)', description: 'Avatar size (width and height)' },
-    { name: '--move-avatar-radius', value: 'var(--move-rounded-full)', description: 'Border radius' },
-    { name: '--move-avatar-bg', value: 'var(--move-primary)', description: 'Fallback background color' },
-    { name: '--move-avatar-fg', value: 'var(--move-primary-fg)', description: 'Fallback text color' },
-    { name: '--move-avatar-border', value: 'var(--move-border-base)', description: 'Border color in group' },
+    {
+      name: '--move-avatar-size',
+      value: 'var(--move-space-10)',
+      description: 'Avatar size (width and height)',
+    },
+    {
+      name: '--move-avatar-radius',
+      value: 'var(--move-rounded-full)',
+      description: 'Border radius',
+    },
+    {
+      name: '--move-avatar-bg',
+      value: 'var(--move-primary)',
+      description: 'Fallback background color',
+    },
+    {
+      name: '--move-avatar-fg',
+      value: 'var(--move-primary-fg)',
+      description: 'Fallback text color',
+    },
+    {
+      name: '--move-avatar-border',
+      value: 'var(--move-border-base)',
+      description: 'Border color in group',
+    },
   ],
 
   variants: {},
@@ -128,9 +187,7 @@ export const spec = {
       'Group avatars overlap with negative margin',
       'Forwards ref to root element',
     ],
-    animation: [
-      'Fades in on mount via CSS @keyframes (cssAnimation capability)',
-    ],
+    animation: ['Fades in on mount via CSS @keyframes (cssAnimation capability)'],
   },
 
   defaultReview: {

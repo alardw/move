@@ -25,7 +25,7 @@ const renderAccordion = (props: Record<string, any> = {}) => {
         </Accordion.Header>
         <Accordion.Content>Content 3</Accordion.Content>
       </Accordion.Item>
-    </Accordion.Root>
+    </Accordion.Root>,
   );
 };
 
@@ -74,7 +74,9 @@ describe('Accordion', () => {
       const { container } = renderAccordion();
       const items = container.querySelectorAll('[data-state]');
       // Items should be closed initially (triggers + items)
-      const itemDivs = Array.from(items).filter(el => el.tagName === 'DIV' && el.hasAttribute('data-state'));
+      const itemDivs = Array.from(items).filter(
+        (el) => el.tagName === 'DIV' && el.hasAttribute('data-state'),
+      );
       expect(itemDivs.length).toBeGreaterThan(0);
       expect(itemDivs[0]).toHaveAttribute('data-state', 'closed');
     });

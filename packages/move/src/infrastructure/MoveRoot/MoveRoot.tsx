@@ -72,9 +72,7 @@ export function MoveRoot({
 
   let content = (
     <ThemeProvider theme={theme} asWrapper={false}>
-      <TooltipProvider>
-        {children}
-      </TooltipProvider>
+      <TooltipProvider>{children}</TooltipProvider>
     </ThemeProvider>
   );
 

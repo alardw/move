@@ -63,8 +63,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
     // real DOM. Future re-renders silently fail to update the displayed
     // month — picking a new month from the dropdown wouldn't refresh
     // the trigger's label. Probe is detached so React never sees it.
-    const chrome =
-      trigger.getBoundingClientRect().width - value.getBoundingClientRect().width;
+    const chrome = trigger.getBoundingClientRect().width - value.getBoundingClientRect().width;
 
     const computed = window.getComputedStyle(value);
     const probe = document.createElement('span');
@@ -99,7 +98,12 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
       <Button
         variant="ghost"
         size="sm"
-        animations={[{ trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }] }]}
+        animations={[
+          {
+            trigger: 'Root.press',
+            sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }],
+          },
+        ]}
         onClick={goToPrevMonth}
         aria-label={labels.previousMonth}
         className={styles.navButton}
@@ -109,11 +113,12 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
       </Button>
 
       <div className={styles.navLabels}>
-        <Select.Root
-          value={String(displayMonth.getMonth())}
-          onValueChange={handleMonthChange}
-        >
-          <Select.Trigger ref={monthTriggerRef} width="auto" style={{ minWidth: monthMinWidth, gap: '0.25rem', paddingInline: '0.5rem' }}>
+        <Select.Root value={String(displayMonth.getMonth())} onValueChange={handleMonthChange}>
+          <Select.Trigger
+            ref={monthTriggerRef}
+            width="auto"
+            style={{ minWidth: monthMinWidth, gap: '0.25rem', paddingInline: '0.5rem' }}
+          >
             <Select.Value ref={monthValueRef}>{monthName}</Select.Value>
             <Select.Icon />
           </Select.Trigger>
@@ -126,11 +131,11 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
           </Select.Content>
         </Select.Root>
 
-        <Select.Root
-          value={String(year)}
-          onValueChange={handleYearChange}
-        >
-          <Select.Trigger width="auto" style={{ minWidth: 0, gap: '0.25rem', paddingInline: '0.5rem' }}>
+        <Select.Root value={String(year)} onValueChange={handleYearChange}>
+          <Select.Trigger
+            width="auto"
+            style={{ minWidth: 0, gap: '0.25rem', paddingInline: '0.5rem' }}
+          >
             <Select.Value>{year}</Select.Value>
             <Select.Icon />
           </Select.Trigger>
@@ -147,7 +152,12 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
       <Button
         variant="ghost"
         size="sm"
-        animations={[{ trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }] }]}
+        animations={[
+          {
+            trigger: 'Root.press',
+            sequence: [{ animation: { scale: { to: 0.85, ease: snappy } } }],
+          },
+        ]}
         onClick={goToNextMonth}
         aria-label={labels.nextMonth}
         className={styles.navButton}

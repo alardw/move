@@ -10,12 +10,14 @@ const renderTabs = (rootProps: Record<string, any> = {}, listProps: Record<strin
       <Tabs.List {...listProps}>
         <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
         <Tabs.Trigger value="tab2">Tab 2</Tabs.Trigger>
-        <Tabs.Trigger value="tab3" disabled>Tab 3</Tabs.Trigger>
+        <Tabs.Trigger value="tab3" disabled>
+          Tab 3
+        </Tabs.Trigger>
       </Tabs.List>
       <Tabs.Content value="tab1">Content 1</Tabs.Content>
       <Tabs.Content value="tab2">Content 2</Tabs.Content>
       <Tabs.Content value="tab3">Content 3</Tabs.Content>
-    </Tabs.Root>
+    </Tabs.Root>,
   );
 };
 
@@ -100,10 +102,12 @@ describe('Tabs', () => {
       render(
         <Tabs.Root defaultValue="t1">
           <Tabs.List>
-            <Tabs.Trigger value="t1" className="custom-trigger">T1</Tabs.Trigger>
+            <Tabs.Trigger value="t1" className="custom-trigger">
+              T1
+            </Tabs.Trigger>
           </Tabs.List>
           <Tabs.Content value="t1">C1</Tabs.Content>
-        </Tabs.Root>
+        </Tabs.Root>,
       );
       expect(screen.getByRole('tab', { name: 'T1' }).className).toContain('custom-trigger');
     });
@@ -132,8 +136,10 @@ describe('Tabs', () => {
           <Tabs.List>
             <Tabs.Trigger value="t1">T1</Tabs.Trigger>
           </Tabs.List>
-          <Tabs.Content value="t1" className="custom-content">C1</Tabs.Content>
-        </Tabs.Root>
+          <Tabs.Content value="t1" className="custom-content">
+            C1
+          </Tabs.Content>
+        </Tabs.Root>,
       );
       expect(screen.getByRole('tabpanel').className).toContain('custom-content');
     });
@@ -151,7 +157,7 @@ describe('Tabs', () => {
           </Tabs.List>
           <Tabs.Content value="tab1">Content 1</Tabs.Content>
           <Tabs.Content value="tab2">Content 2</Tabs.Content>
-        </Tabs.Root>
+        </Tabs.Root>,
       );
       expect(screen.getByRole('tab', { name: 'Tab 2' })).toHaveAttribute('aria-selected', 'true');
     });

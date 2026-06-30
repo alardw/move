@@ -44,29 +44,38 @@ export interface ButtonGroupProps extends React.HTMLAttributes<HTMLElement> {
   style?: React.CSSProperties;
 }
 
-const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>(
-  (props, ref) => {
-    const { children, className, style, ...rest } = props as ButtonGroupProps & Record<string, unknown>;
-    return (
-      <div
-        ref={ref}
-        role="group"
-        className={className}
-        style={{ display: 'inline-flex', gap: 'var(--move-spacing-sm)', ...style }}
-        {...(rest as React.HTMLAttributes<HTMLDivElement>)}
-      >
-        {children}
-      </div>
-    );
-  }
-);
+const ButtonGroup = React.forwardRef<HTMLDivElement, ButtonGroupProps>((props, ref) => {
+  const { children, className, style, ...rest } = props as ButtonGroupProps &
+    Record<string, unknown>;
+  return (
+    <div
+      ref={ref}
+      role="group"
+      className={className}
+      style={{ display: 'inline-flex', gap: 'var(--move-spacing-sm)', ...style }}
+      {...(rest as React.HTMLAttributes<HTMLDivElement>)}
+    >
+      {children}
+    </div>
+  );
+});
 ButtonGroup.displayName = 'Button.Group';
 
-const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { Group: typeof ButtonGroup }>({
+const ButtonRoot = withMoveComponent<
+  'root',
+  ButtonProps,
+  HTMLButtonElement,
+  { Group: typeof ButtonGroup }
+>({
   name: 'Button',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'primary' as ButtonVariant, size: 'md' as ButtonSize, asChild: false, type: 'button' },
+  defaults: {
+    variant: 'primary' as ButtonVariant,
+    size: 'md' as ButtonSize,
+    asChild: false,
+    type: 'button',
+  },
   moveProps: ['animations', 'asChild', 'fullWidth'],
   subComponents: { Group: ButtonGroup },
 
@@ -107,10 +116,19 @@ const ButtonRoot = withMoveComponent<'root', ButtonProps, HTMLButtonElement, { G
       return () => ro.disconnect();
     }, []);
 
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = React.useMemo(() => [
-      { trigger: 'Root.hover', sequence: [{ animation: { scale: { to: scaleVals.up, ease: snappy } } }] },
-      { trigger: 'Root.press', sequence: [{ animation: { scale: { to: scaleVals.down, ease: snappy } } }] },
-    ], [scaleVals]);
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = React.useMemo(
+      () => [
+        {
+          trigger: 'Root.hover',
+          sequence: [{ animation: { scale: { to: scaleVals.up, ease: snappy } } }],
+        },
+        {
+          trigger: 'Root.press',
+          sequence: [{ animation: { scale: { to: scaleVals.down, ease: snappy } } }],
+        },
+      ],
+      [scaleVals],
+    );
 
     const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
     const refs = React.useMemo(() => ({ Root: btnRef }), []);

@@ -5,10 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { Dropdown } from './Dropdown';
 
 // Helper: render a basic dropdown in open state
-function renderDropdown(
-  ui?: React.ReactElement,
-  { open = true }: { open?: boolean } = {}
-) {
+function renderDropdown(ui?: React.ReactElement, { open = true }: { open?: boolean } = {}) {
   return render(
     ui ?? (
       <Dropdown.Root open={open} animations={false}>
@@ -16,12 +13,12 @@ function renderDropdown(
           <button data-testid="trigger">Open</button>
         </Dropdown.Trigger>
         <Dropdown.Content>
-            <Dropdown.Item data-testid="item-1">Item 1</Dropdown.Item>
-            <Dropdown.Item data-testid="item-2">Item 2</Dropdown.Item>
-            <Dropdown.Item data-testid="item-3">Item 3</Dropdown.Item>
-          </Dropdown.Content>
+          <Dropdown.Item data-testid="item-1">Item 1</Dropdown.Item>
+          <Dropdown.Item data-testid="item-2">Item 2</Dropdown.Item>
+          <Dropdown.Item data-testid="item-3">Item 3</Dropdown.Item>
+        </Dropdown.Content>
       </Dropdown.Root>
-    )
+    ),
   );
 }
 
@@ -39,10 +36,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menu')).toBeInTheDocument();
@@ -55,10 +52,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menu')).toBeInTheDocument();
@@ -73,10 +70,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild data-testid="trigger">
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await user.click(screen.getByTestId('trigger'));
       await waitFor(() => {
@@ -98,10 +95,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger className="custom-trigger" style={{ marginLeft: '12px' }}>
             <span>Open</span>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       // Radix Trigger renders a <button> with the className/style from factory
       // The trigger container is aria-hidden when open, so use hidden: true
@@ -135,10 +132,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content className="custom-content" style={{ padding: '20px' }}>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content className="custom-content" style={{ padding: '20px' }}>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const menu = screen.getByRole('menu');
@@ -172,12 +169,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item className="custom-item" style={{ fontWeight: 'bold' }}>
-                Styled Item
-              </Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item className="custom-item" style={{ fontWeight: 'bold' }}>
+              Styled Item
+            </Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const item = screen.getByRole('menuitem');
@@ -192,10 +189,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item disabled>Disabled</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item disabled>Disabled</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const item = screen.getByRole('menuitem');
@@ -212,12 +209,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Group>
-                <Dropdown.Item>Grouped Item</Dropdown.Item>
-              </Dropdown.Group>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Group>
+              <Dropdown.Item>Grouped Item</Dropdown.Item>
+            </Dropdown.Group>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('group')).toBeInTheDocument();
@@ -230,12 +227,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Group className="custom-group" style={{ margin: '4px' }}>
-                <Dropdown.Item>Item</Dropdown.Item>
-              </Dropdown.Group>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Group className="custom-group" style={{ margin: '4px' }}>
+              <Dropdown.Item>Item</Dropdown.Item>
+            </Dropdown.Group>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const group = screen.getByRole('group');
@@ -253,11 +250,11 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Label>Actions</Dropdown.Label>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Label>Actions</Dropdown.Label>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByText('Actions')).toBeInTheDocument();
@@ -270,13 +267,13 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Label className="custom-label" style={{ marginTop: '10px' }}>
-                Section
-              </Dropdown.Label>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Label className="custom-label" style={{ marginTop: '10px' }}>
+              Section
+            </Dropdown.Label>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const label = screen.getByText('Section');
@@ -294,12 +291,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem checked={false} onCheckedChange={() => {}}>
-                Toggle
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem checked={false} onCheckedChange={() => {}}>
+              Toggle
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menuitemcheckbox')).toBeInTheDocument();
@@ -312,12 +309,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
-                Checked
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
+              Checked
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const checkbox = screen.getByRole('menuitemcheckbox');
@@ -333,12 +330,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem checked={false} onCheckedChange={onCheckedChange}>
-                Toggle
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem checked={false} onCheckedChange={onCheckedChange}>
+              Toggle
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menuitemcheckbox')).toBeInTheDocument();
@@ -353,17 +350,17 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem
-                checked={false}
-                onCheckedChange={() => {}}
-                className="custom-checkbox"
-                style={{ fontStyle: 'italic' }}
-              >
-                Item
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem
+              checked={false}
+              onCheckedChange={() => {}}
+              className="custom-checkbox"
+              style={{ fontStyle: 'italic' }}
+            >
+              Item
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const checkbox = screen.getByRole('menuitemcheckbox');
@@ -381,13 +378,13 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
-                <Dropdown.RadioItem value="a">Option A</Dropdown.RadioItem>
-                <Dropdown.RadioItem value="b">Option B</Dropdown.RadioItem>
-              </Dropdown.RadioGroup>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
+              <Dropdown.RadioItem value="a">Option A</Dropdown.RadioItem>
+              <Dropdown.RadioItem value="b">Option B</Dropdown.RadioItem>
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('group')).toBeInTheDocument();
@@ -402,17 +399,17 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.RadioGroup
-                value="a"
-                onValueChange={() => {}}
-                className="custom-radio-group"
-                style={{ padding: '8px' }}
-              >
-                <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
-              </Dropdown.RadioGroup>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.RadioGroup
+              value="a"
+              onValueChange={() => {}}
+              className="custom-radio-group"
+              style={{ padding: '8px' }}
+            >
+              <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const group = screen.getByRole('group');
@@ -427,18 +424,18 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
-                <Dropdown.RadioItem
-                  value="a"
-                  className="custom-radio-item"
-                  style={{ fontWeight: 'bold' }}
-                >
-                  A
-                </Dropdown.RadioItem>
-              </Dropdown.RadioGroup>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
+              <Dropdown.RadioItem
+                value="a"
+                className="custom-radio-item"
+                style={{ fontWeight: 'bold' }}
+              >
+                A
+              </Dropdown.RadioItem>
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const item = screen.getByRole('menuitemradio');
@@ -456,12 +453,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Above</Dropdown.Item>
-              <Dropdown.Separator data-testid="sep" />
-              <Dropdown.Item>Below</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Above</Dropdown.Item>
+            <Dropdown.Separator data-testid="sep" />
+            <Dropdown.Item>Below</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('separator')).toBeInTheDocument();
@@ -474,12 +471,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Above</Dropdown.Item>
-              <Dropdown.Separator className="custom-sep" style={{ height: '2px' }} />
-              <Dropdown.Item>Below</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Above</Dropdown.Item>
+            <Dropdown.Separator className="custom-sep" style={{ height: '2px' }} />
+            <Dropdown.Item>Below</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const sep = screen.getByRole('separator');
@@ -511,10 +508,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       // Radix sets aria-expanded on the trigger button; container is aria-hidden when open
       const trigger = screen.getByRole('button', { name: 'Open', hidden: true });
@@ -527,10 +524,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger>
             <span>Open</span>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       const trigger = screen.getByRole('button', { name: 'Open', hidden: true });
       expect(trigger).toHaveAttribute('aria-haspopup');
@@ -542,12 +539,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
-                Check
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
+              Check
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const checkbox = screen.getByRole('menuitemcheckbox');
@@ -561,12 +558,12 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
-                <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
-              </Dropdown.RadioGroup>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.RadioGroup value="a" onValueChange={() => {}}>
+              <Dropdown.RadioItem value="a">A</Dropdown.RadioItem>
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menuitemradio')).toBeInTheDocument();
@@ -579,10 +576,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item disabled>Disabled</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item disabled>Disabled</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const item = screen.getByRole('menuitem');
@@ -599,10 +596,10 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.Item>Item</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.Item>Item</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         expect(screen.getByRole('menu')).toBeInTheDocument();
@@ -618,16 +615,16 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button data-testid="trigger">Actions</button>
           </Dropdown.Trigger>
-            <Dropdown.Content sideOffset={4}>
-              <Dropdown.Label>File</Dropdown.Label>
-              <Dropdown.Group>
-                <Dropdown.Item>New</Dropdown.Item>
-                <Dropdown.Item>Open</Dropdown.Item>
-              </Dropdown.Group>
-              <Dropdown.Separator />
-              <Dropdown.Item disabled>Disabled Action</Dropdown.Item>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content sideOffset={4}>
+            <Dropdown.Label>File</Dropdown.Label>
+            <Dropdown.Group>
+              <Dropdown.Item>New</Dropdown.Item>
+              <Dropdown.Item>Open</Dropdown.Item>
+            </Dropdown.Group>
+            <Dropdown.Separator />
+            <Dropdown.Item disabled>Disabled Action</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();
       await waitFor(() => {
@@ -637,7 +634,9 @@ describe('Dropdown', () => {
         expect(screen.getByText('Open')).toBeInTheDocument();
         expect(screen.getByRole('separator')).toBeInTheDocument();
         // Text is wrapped in .itemText span for truncation; data-disabled lives on the Item div.
-        expect(screen.getByText('Disabled Action').closest('[role="menuitem"]')).toHaveAttribute('data-disabled');
+        expect(screen.getByText('Disabled Action').closest('[role="menuitem"]')).toHaveAttribute(
+          'data-disabled',
+        );
       });
     });
 
@@ -647,15 +646,15 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
-                Show Toolbar
-              </Dropdown.CheckboxItem>
-              <Dropdown.CheckboxItem checked={false} onCheckedChange={() => {}}>
-                Show Statusbar
-              </Dropdown.CheckboxItem>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.CheckboxItem checked={true} onCheckedChange={() => {}}>
+              Show Toolbar
+            </Dropdown.CheckboxItem>
+            <Dropdown.CheckboxItem checked={false} onCheckedChange={() => {}}>
+              Show Statusbar
+            </Dropdown.CheckboxItem>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const checkboxes = screen.getAllByRole('menuitemcheckbox');
@@ -671,14 +670,14 @@ describe('Dropdown', () => {
           <Dropdown.Trigger asChild>
             <button>Open</button>
           </Dropdown.Trigger>
-            <Dropdown.Content>
-              <Dropdown.RadioGroup value="light" onValueChange={() => {}}>
-                <Dropdown.RadioItem value="light">Light</Dropdown.RadioItem>
-                <Dropdown.RadioItem value="dark">Dark</Dropdown.RadioItem>
-                <Dropdown.RadioItem value="system">System</Dropdown.RadioItem>
-              </Dropdown.RadioGroup>
-            </Dropdown.Content>
-        </Dropdown.Root>
+          <Dropdown.Content>
+            <Dropdown.RadioGroup value="light" onValueChange={() => {}}>
+              <Dropdown.RadioItem value="light">Light</Dropdown.RadioItem>
+              <Dropdown.RadioItem value="dark">Dark</Dropdown.RadioItem>
+              <Dropdown.RadioItem value="system">System</Dropdown.RadioItem>
+            </Dropdown.RadioGroup>
+          </Dropdown.Content>
+        </Dropdown.Root>,
       );
       await waitFor(() => {
         const radios = screen.getAllByRole('menuitemradio');

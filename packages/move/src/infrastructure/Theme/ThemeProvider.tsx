@@ -73,7 +73,7 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
         theme,
         animation: theme.animation,
       }),
-      [theme]
+      [theme],
     );
 
     // Top-level provider: apply tokens to :root so CSS var() works everywhere.
@@ -98,11 +98,7 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
     }, [theme, asWrapper]);
 
     if (!asWrapper) {
-      return (
-        <ThemeContext.Provider value={contextValue}>
-          {children}
-        </ThemeContext.Provider>
-      );
+      return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
     }
 
     return (
@@ -122,7 +118,7 @@ export const ThemeProvider = React.forwardRef<HTMLDivElement, ThemeProviderProps
         </div>
       </ThemeContext.Provider>
     );
-  }
+  },
 );
 
 ThemeProvider.displayName = 'ThemeProvider';

@@ -65,7 +65,9 @@
    Activation (Enter/Space → onClick) is wired in the component. */
 .root[data-interactive] {
   cursor: pointer;
-  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+  transition:
+    transform 160ms ease-out,
+    box-shadow 160ms ease-out;
 }
 
 .root[data-interactive]:hover {
@@ -115,15 +117,33 @@
 }
 
 /* Position */
-.root[data-position='center'] .img { object-position: center; }
-.root[data-position='top'] .img { object-position: top; }
-.root[data-position='bottom'] .img { object-position: bottom; }
-.root[data-position='left'] .img { object-position: left; }
-.root[data-position='right'] .img { object-position: right; }
-.root[data-position='top left'] .img { object-position: top left; }
-.root[data-position='top right'] .img { object-position: top right; }
-.root[data-position='bottom left'] .img { object-position: bottom left; }
-.root[data-position='bottom right'] .img { object-position: bottom right; }
+.root[data-position='center'] .img {
+  object-position: center;
+}
+.root[data-position='top'] .img {
+  object-position: top;
+}
+.root[data-position='bottom'] .img {
+  object-position: bottom;
+}
+.root[data-position='left'] .img {
+  object-position: left;
+}
+.root[data-position='right'] .img {
+  object-position: right;
+}
+.root[data-position='top left'] .img {
+  object-position: top left;
+}
+.root[data-position='top right'] .img {
+  object-position: top right;
+}
+.root[data-position='bottom left'] .img {
+  object-position: bottom left;
+}
+.root[data-position='bottom right'] .img {
+  object-position: bottom right;
+}
 
 /* Action overlay */
 .action {

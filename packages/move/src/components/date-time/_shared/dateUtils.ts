@@ -8,23 +8,66 @@ import type { CalendarConstraints } from './types';
 // ============================================================================
 
 const FIRST_DAY_MAP: Record<string, number> = {
-  US: 0, CA: 0, JP: 0, BR: 0, MX: 0,
-  GB: 1, DE: 1, FR: 1, ES: 1, IT: 1, NL: 1, SE: 1, NO: 1, DK: 1, FI: 1,
-  PL: 1, CZ: 1, SK: 1, HU: 1, RO: 1, BG: 1, HR: 1, SI: 1, RS: 1,
-  RU: 1, UA: 1, BY: 1, LT: 1, LV: 1, EE: 1,
-  CN: 1, KR: 1, IN: 1, TW: 1, TH: 1, VN: 1,
-  AU: 1, NZ: 1, ZA: 1,
-  SA: 6, AE: 6, QA: 6, KW: 6, BH: 6, OM: 6,
-  IR: 6, AF: 6,
+  US: 0,
+  CA: 0,
+  JP: 0,
+  BR: 0,
+  MX: 0,
+  GB: 1,
+  DE: 1,
+  FR: 1,
+  ES: 1,
+  IT: 1,
+  NL: 1,
+  SE: 1,
+  NO: 1,
+  DK: 1,
+  FI: 1,
+  PL: 1,
+  CZ: 1,
+  SK: 1,
+  HU: 1,
+  RO: 1,
+  BG: 1,
+  HR: 1,
+  SI: 1,
+  RS: 1,
+  RU: 1,
+  UA: 1,
+  BY: 1,
+  LT: 1,
+  LV: 1,
+  EE: 1,
+  CN: 1,
+  KR: 1,
+  IN: 1,
+  TW: 1,
+  TH: 1,
+  VN: 1,
+  AU: 1,
+  NZ: 1,
+  ZA: 1,
+  SA: 6,
+  AE: 6,
+  QA: 6,
+  KW: 6,
+  BH: 6,
+  OM: 6,
+  IR: 6,
+  AF: 6,
   IL: 0,
-  EG: 6, DZ: 6, MA: 6, TN: 6, LY: 6,
+  EG: 6,
+  DZ: 6,
+  MA: 6,
+  TN: 6,
+  LY: 6,
 };
 
 export function getLocaleFirstDay(locale: string): number {
   try {
     const loc = new Intl.Locale(locale);
-    if ('getWeekInfo' in loc) return ((loc as any).getWeekInfo().firstDay) % 7;
-    if ('weekInfo' in loc) return ((loc as any).weekInfo.firstDay) % 7;
+    if ('getWeekInfo' in loc) return (loc as any).getWeekInfo().firstDay % 7;
+    if ('weekInfo' in loc) return (loc as any).weekInfo.firstDay % 7;
   } catch {
     // fallback
   }
@@ -52,10 +95,7 @@ export function isSameDay(a: Date, b: Date): boolean {
 }
 
 export function isSameMonth(date: Date, ref: Date): boolean {
-  return (
-    date.getFullYear() === ref.getFullYear() &&
-    date.getMonth() === ref.getMonth()
-  );
+  return date.getFullYear() === ref.getFullYear() && date.getMonth() === ref.getMonth();
 }
 
 export function isToday(date: Date): boolean {
@@ -112,7 +152,7 @@ export function getMonthGrid(
   year: number,
   month: number,
   weekStartsOn: number,
-  fixedWeeks = false
+  fixedWeeks = false,
 ): Date[][] {
   const firstDay = new Date(year, month, 1);
   const startDow = firstDay.getDay();
@@ -135,10 +175,7 @@ export function getMonthGrid(
   return weeks;
 }
 
-export function getWeekRange(
-  date: Date,
-  weekStartsOn: number
-): { start: Date; end: Date } {
+export function getWeekRange(date: Date, weekStartsOn: number): { start: Date; end: Date } {
   const dow = date.getDay();
   const offset = (dow - weekStartsOn + 7) % 7;
   const start = addDays(startOfDay(date), -offset);
@@ -153,7 +190,7 @@ export function getWeekRange(
 export function getWeekDayNames(
   locale: string,
   format: 'long' | 'short' | 'narrow' = 'short',
-  weekStartsOn: number = 0
+  weekStartsOn: number = 0,
 ): string[] {
   const formatter = new Intl.DateTimeFormat(locale, { weekday: format });
   const names: string[] = [];
@@ -181,12 +218,9 @@ export function formatMonth(date: Date, locale: string): string {
 export function formatDate(
   date: Date,
   locale: string,
-  options?: Intl.DateTimeFormatOptions
+  options?: Intl.DateTimeFormatOptions,
 ): string {
-  return new Intl.DateTimeFormat(
-    locale,
-    options ?? { dateStyle: 'short' }
-  ).format(date);
+  return new Intl.DateTimeFormat(locale, options ?? { dateStyle: 'short' }).format(date);
 }
 
 export function formatTime(date: Date, locale: string): string {
@@ -196,14 +230,9 @@ export function formatTime(date: Date, locale: string): string {
   }).format(date);
 }
 
-export function getMonthNames(
-  locale: string,
-  format: 'long' | 'short' = 'long'
-): string[] {
+export function getMonthNames(locale: string, format: 'long' | 'short' = 'long'): string[] {
   const formatter = new Intl.DateTimeFormat(locale, { month: format });
-  return Array.from({ length: 12 }, (_, i) =>
-    formatter.format(new Date(2026, i, 1))
-  );
+  return Array.from({ length: 12 }, (_, i) => formatter.format(new Date(2026, i, 1)));
 }
 
 // ============================================================================
@@ -213,7 +242,7 @@ export function getMonthNames(
 export function getTimeSlots(
   startHour: number = 0,
   endHour: number = 24,
-  intervalMinutes: number = 60
+  intervalMinutes: number = 60,
 ): Date[] {
   const slots: Date[] = [];
   const base = new Date(2026, 0, 1);
@@ -231,10 +260,7 @@ export function getTimeSlots(
 // Constraints
 // ============================================================================
 
-export function isDateDisabled(
-  date: Date,
-  constraints?: CalendarConstraints
-): boolean {
+export function isDateDisabled(date: Date, constraints?: CalendarConstraints): boolean {
   if (!constraints) return false;
   const d = startOfDay(date);
 
@@ -273,9 +299,7 @@ function detectLocaleOrder(locale: string): { order: DatePartOrder; separator: s
 
   const key = types.slice(0, 3).join('-');
   const order: DatePartOrder =
-    key === 'day-month-year' ? 'dmy' :
-    key === 'year-month-day' ? 'ymd' :
-    'mdy';
+    key === 'day-month-year' ? 'dmy' : key === 'year-month-day' ? 'ymd' : 'mdy';
 
   return { order, separator: sep };
 }
@@ -327,11 +351,7 @@ export function parseDate(text: string, locale: string): Date | null {
 
   const date = new Date(year, month - 1, day);
   // Verify the date didn't overflow (e.g. Feb 30 -> Mar 2)
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
     return null;
   }
 

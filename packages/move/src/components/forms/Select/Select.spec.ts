@@ -8,14 +8,15 @@ export const spec = {
   name: 'Select',
   componentClass: 'input_popup' as const,
   category: 'forms',
-  description: 'Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger',
+  description:
+    'Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger',
 
   synonyms: ['dropdown', 'picker', 'choose', 'native select', 'combobox', 'options'],
   animationPatterns: ['popupMenu'],
   families: {
-    behavior:  ['popup-anchored'],
-    state:     ['controlled-value', 'controlled-open'],
-    a11y:      ['listbox'],
+    behavior: ['popup-anchored'],
+    state: ['controlled-value', 'controlled-open'],
+    a11y: ['listbox'],
   },
   behavior: {
     popup: {
@@ -30,9 +31,21 @@ export const spec = {
   rootElement: 'div',
   slots: [
     { name: 'trigger', element: 'button', description: 'Button that opens the select dropdown' },
-    { name: 'value', element: 'span', description: 'Display of the currently selected value or placeholder' },
-    { name: 'icon', element: 'span', description: 'Chevron indicator icon with open/close rotation animation' },
-    { name: 'content', element: 'div', description: 'Dropdown popup container with enter/exit animation' },
+    {
+      name: 'value',
+      element: 'span',
+      description: 'Display of the currently selected value or placeholder',
+    },
+    {
+      name: 'icon',
+      element: 'span',
+      description: 'Chevron indicator icon with open/close rotation animation',
+    },
+    {
+      name: 'content',
+      element: 'div',
+      description: 'Dropdown popup container with enter/exit animation',
+    },
     { name: 'contentInner', element: 'div', description: 'Scrollable inner container for items' },
     { name: 'viewport', element: 'div', description: 'Structural viewport wrapper for items' },
     { name: 'item', element: 'div', description: 'Selectable item within the dropdown' },
@@ -46,57 +59,164 @@ export const spec = {
       name: 'Root',
       slots: [],
       props: [
-        { name: 'value', type: 'string', moveSpecific: false, description: 'Controlled selected value' },
-        { name: 'defaultValue', type: 'string', moveSpecific: false, description: 'Default selected value (uncontrolled)' },
-        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: false, description: 'Called when selected value changes' },
-        { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
-        { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Default open state (uncontrolled)' },
-        { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, advanced: true, description: 'Animation config or false to disable' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Select sub-components' },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: false,
+          description: 'Controlled selected value',
+        },
+        {
+          name: 'defaultValue',
+          type: 'string',
+          moveSpecific: false,
+          description: 'Default selected value (uncontrolled)',
+        },
+        {
+          name: 'onValueChange',
+          type: '(value: string) => void',
+          moveSpecific: false,
+          description: 'Called when selected value changes',
+        },
+        {
+          name: 'open',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Controlled open state',
+        },
+        {
+          name: 'defaultOpen',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Default open state (uncontrolled)',
+        },
+        {
+          name: 'onOpenChange',
+          type: '(open: boolean) => void',
+          moveSpecific: false,
+          description: 'Called when open state changes',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          advanced: true,
+          description: 'Animation config or false to disable',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Select sub-components',
+        },
       ],
       usesFactory: false,
       radixPrimitive: 'DropdownMenu.Root',
-      description: 'Stateful root that manages value, open/close, animation context, and label registry via SelectContext',
+      description:
+        'Stateful root that manages value, open/close, animation context, and label registry via SelectContext',
     },
     {
       name: 'Trigger',
       slots: [{ name: 'trigger', element: 'button', description: 'Trigger button element' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger content (typically Value + Icon)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Trigger content (typically Value + Icon)',
+        },
         { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
         { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
-        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Trigger size' },
-        { name: 'variant', type: "'outlined' | 'filled'", default: "'outlined'", moveSpecific: true, description: 'Visual variant' },
-        { name: 'width', type: "React.CSSProperties['width']", moveSpecific: true, description: 'Custom width override' },
-        { name: 'minWidth', type: "React.CSSProperties['minWidth']", moveSpecific: true, description: 'Minimum width override (token default: 10rem)' },
-        { name: 'maxWidth', type: "React.CSSProperties['maxWidth']", moveSpecific: true, description: 'Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)' },
+        {
+          name: 'size',
+          typeRef: 'Size',
+          default: "'md'",
+          moveSpecific: true,
+          description: 'Trigger size',
+        },
+        {
+          name: 'variant',
+          type: "'outlined' | 'filled'",
+          default: "'outlined'",
+          moveSpecific: true,
+          description: 'Visual variant',
+        },
+        {
+          name: 'width',
+          type: "React.CSSProperties['width']",
+          moveSpecific: true,
+          description: 'Custom width override',
+        },
+        {
+          name: 'minWidth',
+          type: "React.CSSProperties['minWidth']",
+          moveSpecific: true,
+          description: 'Minimum width override (token default: 10rem)',
+        },
+        {
+          name: 'maxWidth',
+          type: "React.CSSProperties['maxWidth']",
+          moveSpecific: true,
+          description:
+            'Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Trigger',
-      description: 'Button trigger wrapping Radix DropdownMenu.Trigger with size/variant/invalid data attributes. Defaults to min-width 10rem / max-width 30rem; override per-instance with minWidth/maxWidth props or globally via tokens.',
+      description:
+        'Button trigger wrapping Radix DropdownMenu.Trigger with size/variant/invalid data attributes. Defaults to min-width 10rem / max-width 30rem; override per-instance with minWidth/maxWidth props or globally via tokens.',
     },
     {
       name: 'Value',
       slots: [{ name: 'value', element: 'span', description: 'Value display span' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'placeholder', type: 'string', moveSpecific: true, description: 'Text shown when no value selected' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom render override for selected value' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'placeholder',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Text shown when no value selected',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom render override for selected value',
+        },
       ],
       usesFactory: true,
-      description: 'Displays selected value label from label registry or placeholder when empty; sets data-placeholder when no value',
+      description:
+        'Displays selected value label from label registry or placeholder when empty; sets data-placeholder when no value',
     },
     {
       name: 'Icon',
       slots: [{ name: 'icon', element: 'span', description: 'Chevron icon container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom icon content (defaults to chevron-down)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom icon content (defaults to chevron-down)',
+        },
       ],
       usesFactory: true,
       description: 'Chevron icon that rotates 180deg on open via MutationObserver on data-state',
@@ -109,29 +229,100 @@ export const spec = {
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Content children (Viewport, Items, etc.)' },
-        { name: 'sideOffset', type: 'number', default: '4', moveSpecific: false, description: 'Distance from trigger in px' },
-        { name: 'align', type: "'start' | 'center' | 'end'", moveSpecific: false, description: 'Alignment along the trigger axis' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, advanced: true, description: 'Custom portal mount target. Defaults to document.body.' },
-        { name: 'width', type: "React.CSSProperties['width']", moveSpecific: true, description: 'Custom width override — by default matches trigger width' },
-        { name: 'minWidth', type: "React.CSSProperties['minWidth']", moveSpecific: true, description: 'Minimum width override (token default: 10rem)' },
-        { name: 'maxWidth', type: "React.CSSProperties['maxWidth']", moveSpecific: true, description: 'Maximum width override (token default: 30rem)' },
-        { name: 'onPointerDownOutside', type: '(e: Event) => void', moveSpecific: false, advanced: true, description: 'Pointer down outside handler' },
-        { name: 'onEscapeKeyDown', type: '(e: KeyboardEvent) => void', moveSpecific: false, advanced: true, description: 'Escape key handler' },
-        { name: 'onInteractOutside', type: '(e: Event) => void', moveSpecific: false, advanced: true, description: 'Interact outside handler' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Content children (Viewport, Items, etc.)',
+        },
+        {
+          name: 'sideOffset',
+          type: 'number',
+          default: '4',
+          moveSpecific: false,
+          description: 'Distance from trigger in px',
+        },
+        {
+          name: 'align',
+          type: "'start' | 'center' | 'end'",
+          moveSpecific: false,
+          description: 'Alignment along the trigger axis',
+        },
+        {
+          name: 'container',
+          type: 'HTMLElement',
+          moveSpecific: false,
+          advanced: true,
+          description: 'Custom portal mount target. Defaults to document.body.',
+        },
+        {
+          name: 'width',
+          type: "React.CSSProperties['width']",
+          moveSpecific: true,
+          description: 'Custom width override — by default matches trigger width',
+        },
+        {
+          name: 'minWidth',
+          type: "React.CSSProperties['minWidth']",
+          moveSpecific: true,
+          description: 'Minimum width override (token default: 10rem)',
+        },
+        {
+          name: 'maxWidth',
+          type: "React.CSSProperties['maxWidth']",
+          moveSpecific: true,
+          description: 'Maximum width override (token default: 30rem)',
+        },
+        {
+          name: 'onPointerDownOutside',
+          type: '(e: Event) => void',
+          moveSpecific: false,
+          advanced: true,
+          description: 'Pointer down outside handler',
+        },
+        {
+          name: 'onEscapeKeyDown',
+          type: '(e: KeyboardEvent) => void',
+          moveSpecific: false,
+          advanced: true,
+          description: 'Escape key handler',
+        },
+        {
+          name: 'onInteractOutside',
+          type: '(e: Event) => void',
+          moveSpecific: false,
+          advanced: true,
+          description: 'Interact outside handler',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Content',
-      description: 'Animated popup content. Defaults to matching trigger width (var(--radix-dropdown-menu-trigger-width)) with min/max-width clamping. Tall content scrolls via max-height; items truncate with ellipsis. Height animation, stagger enter, scroll-to-selected on open.',
+      description:
+        'Animated popup content. Defaults to matching trigger width (var(--radix-dropdown-menu-trigger-width)) with min/max-width clamping. Tall content scrolls via max-height; items truncate with ellipsis. Height animation, stagger enter, scroll-to-selected on open.',
     },
     {
       name: 'Viewport',
       slots: [{ name: 'viewport', element: 'div', description: 'Viewport wrapper' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Items and groups' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Items and groups',
+        },
       ],
       usesFactory: true,
       description: 'Structural viewport wrapper for select items',
@@ -141,24 +332,60 @@ export const spec = {
       slots: [{ name: 'item', element: 'div', description: 'Selectable item' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Item content' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Value to select when chosen' },
-        { name: 'label', type: 'React.ReactNode', moveSpecific: true, description: 'Display label registered in SelectValue (defaults to children)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Item content',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Value to select when chosen',
+        },
+        {
+          name: 'label',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Display label registered in SelectValue (defaults to children)',
+        },
         { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
-        { name: 'onSelect', type: '(e: Event) => void', moveSpecific: false, description: 'Called when item is selected' },
+        {
+          name: 'onSelect',
+          type: '(e: Event) => void',
+          moveSpecific: false,
+          description: 'Called when item is selected',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Item',
-      description: 'Selectable item with spring hover animation, selected highlight, and label registration. Long labels truncate with ellipsis (white-space: nowrap, overflow: hidden, text-overflow: ellipsis) — they are clipped by the Content max-width bound.',
+      description:
+        'Selectable item with spring hover animation, selected highlight, and label registration. Long labels truncate with ellipsis (white-space: nowrap, overflow: hidden, text-overflow: ellipsis) — they are clipped by the Content max-width bound.',
     },
     {
       name: 'Group',
       slots: [{ name: 'group', element: 'div', description: 'Group container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Group label and items' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Group label and items',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Group',
@@ -169,8 +396,18 @@ export const spec = {
       slots: [{ name: 'label', element: 'div', description: 'Group label text' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label text' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Label',
@@ -181,7 +418,12 @@ export const spec = {
       slots: [{ name: 'separator', element: 'div', description: 'Visual divider' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Separator',
@@ -190,14 +432,49 @@ export const spec = {
   ],
 
   props: [
-    { name: 'value', type: 'string', moveSpecific: false, description: 'Controlled selected value' },
-    { name: 'defaultValue', type: 'string', moveSpecific: false, description: 'Default selected value (uncontrolled)' },
-    { name: 'onValueChange', type: '(value: string) => void', moveSpecific: false, description: 'Called when selected value changes' },
+    {
+      name: 'value',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Controlled selected value',
+    },
+    {
+      name: 'defaultValue',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Default selected value (uncontrolled)',
+    },
+    {
+      name: 'onValueChange',
+      type: '(value: string) => void',
+      moveSpecific: false,
+      description: 'Called when selected value changes',
+    },
     { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
-    { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Default open state (uncontrolled)' },
-    { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Select sub-components' },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      moveSpecific: false,
+      description: 'Default open state (uncontrolled)',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      moveSpecific: false,
+      description: 'Called when open state changes',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Animation config or false to disable',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Select sub-components',
+    },
   ],
 
   anatomy: {
@@ -207,7 +484,15 @@ export const spec = {
       {
         slot: 'contentInner',
         children: [
-          { slot: 'viewport', children: [{ slot: 'item', dataAttributes: ['data-selected', 'data-highlighted', 'data-disabled'] }] },
+          {
+            slot: 'viewport',
+            children: [
+              {
+                slot: 'item',
+                dataAttributes: ['data-selected', 'data-highlighted', 'data-disabled'],
+              },
+            ],
+          },
         ],
       },
     ],
@@ -227,29 +512,87 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   animations: [
-    { trigger: 'open', sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
-      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
-      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
-    ]] },
-    { trigger: 'closed', sequence: [[
-      { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
-      { target: 'ContentInner', children: '[role="option"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
-      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
-    ]] },
+    {
+      trigger: 'open',
+      sequence: [
+        [
+          { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+          {
+            target: 'ContentInner',
+            children: '[role="option"]',
+            animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+            stagger: { delay: 30 },
+          },
+          { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+        ],
+      ],
+    },
+    {
+      trigger: 'closed',
+      sequence: [
+        [
+          { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+          {
+            target: 'ContentInner',
+            children: '[role="option"]',
+            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
+            stagger: { delay: 20, from: 'last' },
+          },
+          { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+        ],
+      ],
+    },
   ],
 
   renderContracts: [
-    { id: 'root-manages-animation-close', description: 'Root intercepts close from Radix and coordinates via isClosing state to allow exit animation before unmount' },
-    { id: 'root-label-registry', description: 'Root maintains a label map (value -> ReactNode) via registerLabel/getLabel so SelectValue can display the label for the current value' },
-    { id: 'content-height-animation', description: 'Content uses animateDimension for height reveal from 0 on open' },
-    { id: 'content-scroll-to-selected', description: 'Content scrolls to selected item (data-selected) before enter animation' },
-    { id: 'content-focus-selected-on-open', description: 'Content focuses the selected item on open complete, or dispatches ArrowDown if none selected' },
-    { id: 'trigger-move-state', description: 'Trigger sets data-move-state="open"|"closed" reflecting true animation state (closed during exit, unlike Radix data-state which stays open)' },
-    { id: 'icon-rotation-animation', description: 'Icon observes data-move-state on Trigger ancestor via MutationObserver and animates rotation to 180deg on open, 0deg on close' },
-    { id: 'item-spring-hover', description: 'Item uses spring animation to scale to 1.02 on mouse enter and back to 1 on mouse leave' },
-    { id: 'item-registers-label', description: 'Item registers its label (or children) in the SelectContext label map on mount/update' },
-    { id: 'item-select-closes', description: 'Item selection calls onValueChange, fires onSelect callback, and triggers animated close' },
+    {
+      id: 'root-manages-animation-close',
+      description:
+        'Root intercepts close from Radix and coordinates via isClosing state to allow exit animation before unmount',
+    },
+    {
+      id: 'root-label-registry',
+      description:
+        'Root maintains a label map (value -> ReactNode) via registerLabel/getLabel so SelectValue can display the label for the current value',
+    },
+    {
+      id: 'content-height-animation',
+      description: 'Content uses animateDimension for height reveal from 0 on open',
+    },
+    {
+      id: 'content-scroll-to-selected',
+      description: 'Content scrolls to selected item (data-selected) before enter animation',
+    },
+    {
+      id: 'content-focus-selected-on-open',
+      description:
+        'Content focuses the selected item on open complete, or dispatches ArrowDown if none selected',
+    },
+    {
+      id: 'trigger-move-state',
+      description:
+        'Trigger sets data-move-state="open"|"closed" reflecting true animation state (closed during exit, unlike Radix data-state which stays open)',
+    },
+    {
+      id: 'icon-rotation-animation',
+      description:
+        'Icon observes data-move-state on Trigger ancestor via MutationObserver and animates rotation to 180deg on open, 0deg on close',
+    },
+    {
+      id: 'item-spring-hover',
+      description:
+        'Item uses spring animation to scale to 1.02 on mouse enter and back to 1 on mouse leave',
+    },
+    {
+      id: 'item-registers-label',
+      description:
+        'Item registers its label (or children) in the SelectContext label map on mount/update',
+    },
+    {
+      id: 'item-select-closes',
+      description:
+        'Item selection calls onValueChange, fires onSelect callback, and triggers animated close',
+    },
   ],
 
   surface: {
@@ -259,41 +602,161 @@ export const spec = {
 
   tokens: [
     // Trigger tokens
-    { name: '--move-select-trigger-bg', value: 'var(--move-bg-subtle)', description: 'Trigger background color' },
-    { name: '--move-select-trigger-border', value: 'var(--move-border-base)', description: 'Trigger border color' },
-    { name: '--move-select-trigger-radius', value: 'var(--move-rounded-md)', description: 'Trigger border radius' },
-    { name: '--move-select-trigger-padding-x', value: 'var(--move-spacing-sm)', description: 'Trigger horizontal padding' },
-    { name: '--move-select-trigger-padding-y', value: 'var(--move-spacing-xs)', description: 'Trigger vertical padding' },
-    { name: '--move-select-trigger-font-size', value: 'var(--move-size-sm)', description: 'Trigger font size' },
-    { name: '--move-select-trigger-fg', value: 'var(--move-fg-base)', description: 'Trigger text color' },
-    { name: '--move-select-trigger-height', value: 'var(--move-control-height-md)', description: 'Trigger height' },
-    { name: '--move-select-trigger-min-width', value: '10rem', description: 'Trigger minimum width' },
-    { name: '--move-select-trigger-max-width', value: 'none', description: 'Trigger maximum width — prevents absurdly wide selects in stretched parents' },
+    {
+      name: '--move-select-trigger-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Trigger background color',
+    },
+    {
+      name: '--move-select-trigger-border',
+      value: 'var(--move-border-base)',
+      description: 'Trigger border color',
+    },
+    {
+      name: '--move-select-trigger-radius',
+      value: 'var(--move-rounded-md)',
+      description: 'Trigger border radius',
+    },
+    {
+      name: '--move-select-trigger-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Trigger horizontal padding',
+    },
+    {
+      name: '--move-select-trigger-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Trigger vertical padding',
+    },
+    {
+      name: '--move-select-trigger-font-size',
+      value: 'var(--move-size-sm)',
+      description: 'Trigger font size',
+    },
+    {
+      name: '--move-select-trigger-fg',
+      value: 'var(--move-fg-base)',
+      description: 'Trigger text color',
+    },
+    {
+      name: '--move-select-trigger-height',
+      value: 'var(--move-control-height-md)',
+      description: 'Trigger height',
+    },
+    {
+      name: '--move-select-trigger-min-width',
+      value: '10rem',
+      description: 'Trigger minimum width',
+    },
+    {
+      name: '--move-select-trigger-max-width',
+      value: 'none',
+      description: 'Trigger maximum width — prevents absurdly wide selects in stretched parents',
+    },
     // Content tokens
-    { name: '--move-select-content-bg', value: 'var(--move-bg-subtle)', description: 'Content background color' },
-    { name: '--move-select-content-border', value: 'var(--move-border-base)', description: 'Content border color' },
-    { name: '--move-select-content-radius', value: 'var(--move-rounded-lg)', description: 'Content border radius' },
-    { name: '--move-select-content-shadow', value: 'var(--move-shadow-overlay)', description: 'Content box shadow' },
-    { name: '--move-select-content-padding', value: 'var(--move-spacing-xs)', description: 'Content inner padding' },
-    { name: '--move-select-content-min-width', value: '10rem', description: 'Content minimum width (floor when matching trigger)' },
-    { name: '--move-select-content-max-width', value: 'none', description: 'Content maximum width (cap when matching trigger)' },
+    {
+      name: '--move-select-content-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Content background color',
+    },
+    {
+      name: '--move-select-content-border',
+      value: 'var(--move-border-base)',
+      description: 'Content border color',
+    },
+    {
+      name: '--move-select-content-radius',
+      value: 'var(--move-rounded-lg)',
+      description: 'Content border radius',
+    },
+    {
+      name: '--move-select-content-shadow',
+      value: 'var(--move-shadow-overlay)',
+      description: 'Content box shadow',
+    },
+    {
+      name: '--move-select-content-padding',
+      value: 'var(--move-spacing-xs)',
+      description: 'Content inner padding',
+    },
+    {
+      name: '--move-select-content-min-width',
+      value: '10rem',
+      description: 'Content minimum width (floor when matching trigger)',
+    },
+    {
+      name: '--move-select-content-max-width',
+      value: 'none',
+      description: 'Content maximum width (cap when matching trigger)',
+    },
     // Item tokens
-    { name: '--move-select-item-radius', value: 'var(--move-rounded-md)', description: 'Item border radius' },
-    { name: '--move-select-item-padding-x', value: 'var(--move-spacing-sm)', description: 'Item horizontal padding' },
-    { name: '--move-select-item-padding-y', value: 'var(--move-spacing-xs)', description: 'Item vertical padding' },
+    {
+      name: '--move-select-item-radius',
+      value: 'var(--move-rounded-md)',
+      description: 'Item border radius',
+    },
+    {
+      name: '--move-select-item-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Item horizontal padding',
+    },
+    {
+      name: '--move-select-item-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Item vertical padding',
+    },
     { name: '--move-select-item-fg', value: 'var(--move-fg-base)', description: 'Item text color' },
-    { name: '--move-select-item-fg-disabled', value: 'var(--move-fg-subtle)', description: 'Item disabled text color' },
-    { name: '--move-select-item-bg-highlight', value: 'var(--move-bg-muted)', description: 'Item highlighted background' },
-    { name: '--move-select-item-font-size', value: 'var(--move-size-sm)', description: 'Item font size' },
+    {
+      name: '--move-select-item-fg-disabled',
+      value: 'var(--move-fg-subtle)',
+      description: 'Item disabled text color',
+    },
+    {
+      name: '--move-select-item-bg-highlight',
+      value: 'var(--move-bg-muted)',
+      description: 'Item highlighted background',
+    },
+    {
+      name: '--move-select-item-font-size',
+      value: 'var(--move-size-sm)',
+      description: 'Item font size',
+    },
     // Label tokens
-    { name: '--move-select-label-padding-x', value: 'var(--move-spacing-sm)', description: 'Label horizontal padding' },
-    { name: '--move-select-label-padding-y', value: 'var(--move-spacing-xs)', description: 'Label vertical padding' },
-    { name: '--move-select-label-font-size', value: 'var(--move-size-xs)', description: 'Label font size' },
-    { name: '--move-select-label-fg', value: 'var(--move-fg-subtle)', description: 'Label text color' },
-    { name: '--move-select-label-font-weight', value: 'var(--move-weight-semibold)', description: 'Label font weight' },
+    {
+      name: '--move-select-label-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Label horizontal padding',
+    },
+    {
+      name: '--move-select-label-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Label vertical padding',
+    },
+    {
+      name: '--move-select-label-font-size',
+      value: 'var(--move-size-xs)',
+      description: 'Label font size',
+    },
+    {
+      name: '--move-select-label-fg',
+      value: 'var(--move-fg-subtle)',
+      description: 'Label text color',
+    },
+    {
+      name: '--move-select-label-font-weight',
+      value: 'var(--move-weight-semibold)',
+      description: 'Label font weight',
+    },
     // Separator tokens
-    { name: '--move-select-separator-color', value: 'var(--move-border-base)', description: 'Separator line color' },
-    { name: '--move-select-separator-margin', value: 'var(--move-spacing-xs)', description: 'Separator vertical margin' },
+    {
+      name: '--move-select-separator-color',
+      value: 'var(--move-border-base)',
+      description: 'Separator line color',
+    },
+    {
+      name: '--move-select-separator-margin',
+      value: 'var(--move-spacing-xs)',
+      description: 'Separator vertical margin',
+    },
   ],
 
   variants: {
@@ -360,9 +823,7 @@ export const spec = {
       'Disabled items have data-disabled attribute',
       'Icon has aria-hidden=true',
     ] as string[],
-    form: [
-      'Hidden input participates in form submission via name prop',
-    ] as string[],
+    form: ['Hidden input participates in form submission via name prop'] as string[],
     animation: [
       'Content enter animation: opacity [0,1] + scale [0.5,1] with outQuart easing',
       'Content exit animation: opacity [1,0] + scale [1,0.95] with outQuart easing, 200ms',

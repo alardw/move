@@ -82,8 +82,19 @@ export type GapWithXL2 = Gap | '2xl' | '3xl';
 
 /** The 14 named color palettes (Open Color + Move gray). */
 export type Color =
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+  | 'gray'
+  | 'red'
+  | 'pink'
+  | 'grape'
+  | 'violet'
+  | 'indigo'
+  | 'blue'
+  | 'cyan'
+  | 'teal'
+  | 'green'
+  | 'lime'
+  | 'yellow'
+  | 'orange';
 
 // ─── Radius ──────────────────────────────────────────────────────────
 //

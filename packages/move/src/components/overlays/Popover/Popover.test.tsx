@@ -16,9 +16,9 @@ function renderPopover(
         <button>Open</button>
       </Popover.Trigger>
       <Popover.Content data-testid="content" {...contentProps}>
-          {children ?? 'Popover body'}
-          <Popover.Close data-testid="close" />
-        </Popover.Content>
+        {children ?? 'Popover body'}
+        <Popover.Close data-testid="close" />
+      </Popover.Content>
     </Popover.Root>,
   );
 }
@@ -74,7 +74,12 @@ describe('Popover', () => {
     it('forwards className and style', () => {
       render(
         <Popover.Root>
-          <Popover.Trigger asChild className="custom-trigger" style={{ color: 'red' }} data-testid="trigger">
+          <Popover.Trigger
+            asChild
+            className="custom-trigger"
+            style={{ color: 'red' }}
+            data-testid="trigger"
+          >
             <button>Open</button>
           </Popover.Trigger>
           <Popover.Content>Content</Popover.Content>
@@ -155,10 +160,12 @@ describe('Popover', () => {
     it('uses custom labels.close for aria-label', async () => {
       render(
         <Popover.Root open>
-          <Popover.Trigger asChild><button>Open</button></Popover.Trigger>
+          <Popover.Trigger asChild>
+            <button>Open</button>
+          </Popover.Trigger>
           <Popover.Content>
-              <Popover.Close labels={{ close: 'Dismiss' }} data-testid="close" />
-            </Popover.Content>
+            <Popover.Close labels={{ close: 'Dismiss' }} data-testid="close" />
+          </Popover.Content>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -169,12 +176,14 @@ describe('Popover', () => {
     it('renders custom children instead of default icon', async () => {
       render(
         <Popover.Root open>
-          <Popover.Trigger asChild><button>Open</button></Popover.Trigger>
+          <Popover.Trigger asChild>
+            <button>Open</button>
+          </Popover.Trigger>
           <Popover.Content>
-              <Popover.Close data-testid="close">
-                <span data-testid="custom-icon">X</span>
-              </Popover.Close>
-            </Popover.Content>
+            <Popover.Close data-testid="close">
+              <span data-testid="custom-icon">X</span>
+            </Popover.Close>
+          </Popover.Content>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -188,11 +197,13 @@ describe('Popover', () => {
     it('renders arrow element inside content', async () => {
       render(
         <Popover.Root open>
-          <Popover.Trigger asChild><button>Open</button></Popover.Trigger>
-            <Popover.Content data-testid="content">
-              <Popover.Arrow data-testid="arrow" />
-              Body
-            </Popover.Content>
+          <Popover.Trigger asChild>
+            <button>Open</button>
+          </Popover.Trigger>
+          <Popover.Content data-testid="content">
+            <Popover.Arrow data-testid="arrow" />
+            Body
+          </Popover.Content>
         </Popover.Root>,
       );
       await waitFor(() => {
@@ -209,7 +220,9 @@ describe('Popover', () => {
           <Popover.Anchor data-testid="anchor">
             <span>Anchor element</span>
           </Popover.Anchor>
-          <Popover.Trigger asChild><button>Open</button></Popover.Trigger>
+          <Popover.Trigger asChild>
+            <button>Open</button>
+          </Popover.Trigger>
           <Popover.Content>Body</Popover.Content>
         </Popover.Root>,
       );
@@ -255,11 +268,11 @@ describe('Popover', () => {
           <Popover.Trigger asChild>
             <button data-testid="trigger">Open Popover</button>
           </Popover.Trigger>
-            <Popover.Content side="bottom" sideOffset={8} data-testid="content">
-              <Popover.Arrow />
-              <div>Popover panel content</div>
-              <Popover.Close data-testid="close" />
-            </Popover.Content>
+          <Popover.Content side="bottom" sideOffset={8} data-testid="content">
+            <Popover.Arrow />
+            <div>Popover panel content</div>
+            <Popover.Close data-testid="close" />
+          </Popover.Content>
         </Popover.Root>,
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();

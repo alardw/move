@@ -4,10 +4,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import {
-  useAnimations,
-  resolveAnimationsConfig,
-} from '../../../animation';
+import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { Radius } from '../../../shared/types';
 import styles from './List.module.css';
@@ -19,15 +16,17 @@ import styles from './List.module.css';
 const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Root.enter',
-    sequence: [{
-      target: 'Root',
-      children: `.${styles.item}`,
-      stagger: { delay: 60 },
-      animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+    sequence: [
+      {
+        target: 'Root',
+        children: `.${styles.item}`,
+        stagger: { delay: 60 },
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+          translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -86,7 +85,16 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
     hover: false,
     radius: 'sm' as ListRadius,
   },
-  moveProps: ['size', 'dividers', 'separator', 'density', 'hover', 'radius', 'animations', 'animateKey'],
+  moveProps: [
+    'size',
+    'dividers',
+    'separator',
+    'density',
+    'hover',
+    'radius',
+    'animations',
+    'animateKey',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const rootRef = React.useRef<HTMLUListElement>(null);
@@ -102,7 +110,7 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
       if (!base || animateKey === undefined) return base;
 
       // Find the enter trigger's animation to reuse for deps-based replay
-      const enterTrigger = base.find(t => t.trigger === 'Root.enter');
+      const enterTrigger = base.find((t) => t.trigger === 'Root.enter');
       if (!enterTrigger) return base;
 
       return [
@@ -115,9 +123,12 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
       ];
     }, [props.animations, animateKey]);
 
-    const rootRefs = React.useMemo(() => ({
-      Root: rootRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const rootRefs = React.useMemo(
+      () => ({
+        Root: rootRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(animConfig, rootRefs);
 
@@ -140,17 +151,28 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
               ref={mergedRef}
               role="list"
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
               data-size={props.size as string}
               data-density={props.density as string}
               data-radius={props.radius as string}
-              data-dividers={(props.dividers && !props.separator) ? '' : undefined}
+              data-dividers={props.dividers && !props.separator ? '' : undefined}
               data-hover={props.hover ? '' : undefined}
             >
               {props.separator
                 ? React.Children.toArray(props.children).reduce<React.ReactNode[]>(
                     (acc, child, i) => {
-                      if (i > 0) acc.push(<li key={`sep-${i}`} role="separator" aria-hidden className={styles.separator} />);
+                      if (i > 0)
+                        acc.push(
+                          <li
+                            key={`sep-${i}`}
+                            role="separator"
+                            aria-hidden
+                            className={styles.separator}
+                          />,
+                        );
                       acc.push(child);
                       return acc;
                     },
@@ -209,7 +231,8 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
         // Determine rendered element
         const Element = href ? 'a' : asProp || 'li';
         const interactiveProp = props.interactive as boolean | undefined;
-        const isInteractive = interactiveProp ?? !!(href || onClick || asProp === 'a' || asProp === 'button');
+        const isInteractive =
+          interactiveProp ?? !!(href || onClick || asProp === 'a' || asProp === 'button');
 
         const elementProps: Record<string, unknown> = {
           ...attrs,
@@ -234,11 +257,7 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
           elementProps.disabled = true;
         }
 
-        return React.createElement(
-          Element,
-          elementProps,
-          props.children,
-        );
+        return React.createElement(Element, elementProps, props.children);
       },
     };
   },
@@ -264,7 +283,11 @@ const ListLeading = withMoveComponent<'leading', ListLeadingProps, HTMLDivElemen
     return {
       render() {
         const leadingSp = sp('leading');
-        const { className: spClass, style: spStyle, ...spRest } = leadingSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = leadingSp as Record<string, unknown>;
 
         return (
           <div
@@ -302,7 +325,11 @@ const ListContent = withMoveComponent<'content', ListContentProps, HTMLDivElemen
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
 
         return (
           <div
@@ -340,7 +367,11 @@ const ListTitle = withMoveComponent<'title', ListTitleProps, HTMLDivElement>({
     return {
       render() {
         const titleSp = sp('title');
-        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = titleSp as Record<string, unknown>;
 
         return (
           <div
@@ -423,7 +454,11 @@ const ListTrailing = withMoveComponent<'trailing', ListTrailingProps, HTMLDivEle
     return {
       render() {
         const trailingSp = sp('trailing');
-        const { className: spClass, style: spStyle, ...spRest } = trailingSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = trailingSp as Record<string, unknown>;
 
         return (
           <div

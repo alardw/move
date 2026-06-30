@@ -55,19 +55,32 @@ export interface ThemeTokens {
   '--move-info-fg': string;
 
   // Palette — per-color text & soft-bg overrides
-  '--move-gray-text': string;       '--move-gray-soft-bg': string;
-  '--move-red-text': string;        '--move-red-soft-bg': string;
-  '--move-pink-text': string;       '--move-pink-soft-bg': string;
-  '--move-grape-text': string;      '--move-grape-soft-bg': string;
-  '--move-violet-text': string;     '--move-violet-soft-bg': string;
-  '--move-indigo-text': string;     '--move-indigo-soft-bg': string;
-  '--move-blue-text': string;       '--move-blue-soft-bg': string;
-  '--move-cyan-text': string;       '--move-cyan-soft-bg': string;
-  '--move-teal-text': string;       '--move-teal-soft-bg': string;
-  '--move-green-text': string;      '--move-green-soft-bg': string;
-  '--move-lime-text': string;       '--move-lime-soft-bg': string;
-  '--move-yellow-text': string;     '--move-yellow-soft-bg': string;
-  '--move-orange-text': string;     '--move-orange-soft-bg': string;
+  '--move-gray-text': string;
+  '--move-gray-soft-bg': string;
+  '--move-red-text': string;
+  '--move-red-soft-bg': string;
+  '--move-pink-text': string;
+  '--move-pink-soft-bg': string;
+  '--move-grape-text': string;
+  '--move-grape-soft-bg': string;
+  '--move-violet-text': string;
+  '--move-violet-soft-bg': string;
+  '--move-indigo-text': string;
+  '--move-indigo-soft-bg': string;
+  '--move-blue-text': string;
+  '--move-blue-soft-bg': string;
+  '--move-cyan-text': string;
+  '--move-cyan-soft-bg': string;
+  '--move-teal-text': string;
+  '--move-teal-soft-bg': string;
+  '--move-green-text': string;
+  '--move-green-soft-bg': string;
+  '--move-lime-text': string;
+  '--move-lime-soft-bg': string;
+  '--move-yellow-text': string;
+  '--move-yellow-soft-bg': string;
+  '--move-orange-text': string;
+  '--move-orange-soft-bg': string;
 
   // Focus
   '--move-focus-ring-color': string;

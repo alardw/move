@@ -73,7 +73,11 @@ const AlignStart = withMoveComponent<'start', AlignSectionProps, HTMLDivElement>
     return {
       render() {
         const startSp = sp('start');
-        const { className: spClass, style: spStyle, ...spRest } = startSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = startSp as Record<string, unknown>;
 
         return (
           <div
@@ -101,7 +105,11 @@ const AlignCenter = withMoveComponent<'center', AlignSectionProps, HTMLDivElemen
     return {
       render() {
         const centerSp = sp('center');
-        const { className: spClass, style: spStyle, ...spRest } = centerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = centerSp as Record<string, unknown>;
 
         return (
           <div

@@ -28,7 +28,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton className="custom" style={{ marginTop: '10px' }} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       const el = screen.getByTestId('tb');
       expect(el).toHaveClass('custom');
@@ -39,7 +39,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton data-testid="tb" aria-label="bold">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('aria-label', 'bold');
     });
@@ -66,10 +66,10 @@ describe('ToggleButton', () => {
         render(
           <ToggleButton variant={variant} data-testid="tb">
             Toggle
-          </ToggleButton>
+          </ToggleButton>,
         );
         expect(screen.getByTestId('tb')).toHaveAttribute('data-variant', variant);
-      }
+      },
     );
   });
 
@@ -79,7 +79,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton size={size} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('data-size', size);
     });
@@ -91,7 +91,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton disabled data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toBeDisabled();
     });
@@ -103,7 +103,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton pressed data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('data-state', 'on');
     });
@@ -112,7 +112,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton pressed={false} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('data-state', 'off');
     });
@@ -121,7 +121,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton defaultPressed={false} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       const el = screen.getByTestId('tb');
       expect(el).toHaveAttribute('data-state', 'off');
@@ -135,14 +135,14 @@ describe('ToggleButton', () => {
       const { rerender } = render(
         <ToggleButton pressed={false} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('data-state', 'off');
 
       rerender(
         <ToggleButton pressed={true} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('data-state', 'on');
     });
@@ -152,7 +152,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton onPressedChange={onPressedChange} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       fireEvent.click(screen.getByTestId('tb'));
       expect(onPressedChange).toHaveBeenCalledWith(true);
@@ -165,14 +165,14 @@ describe('ToggleButton', () => {
       const { rerender } = render(
         <ToggleButton pressed={true} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('aria-pressed', 'true');
 
       rerender(
         <ToggleButton pressed={false} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveAttribute('aria-pressed', 'false');
     });
@@ -184,7 +184,7 @@ describe('ToggleButton', () => {
       render(
         <ToggleButton sp={{ root: { className: 'sp-root' } }} data-testid="tb">
           Toggle
-        </ToggleButton>
+        </ToggleButton>,
       );
       expect(screen.getByTestId('tb')).toHaveClass('sp-root');
     });

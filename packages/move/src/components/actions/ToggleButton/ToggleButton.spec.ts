@@ -14,9 +14,9 @@ export const spec = {
   synonyms: ['toggle', 'pressed button', 'icon toggle', 'switch'],
   animationPatterns: ['press'],
   families: {
-    behavior:  ["form-input"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['form-input'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: false,
@@ -26,14 +26,57 @@ export const spec = {
   ],
 
   props: [
-    { name: 'pressed', type: 'boolean', moveSpecific: true, description: 'Controlled pressed state' },
-    { name: 'defaultPressed', type: 'boolean', moveSpecific: true, description: 'Initial pressed state (uncontrolled)' },
-    { name: 'onPressedChange', type: '(pressed: boolean) => void', moveSpecific: true, description: 'Called when pressed state changes' },
-    { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
-    { name: 'variant', type: "'primary' | 'secondary' | 'ghost' | 'danger'", default: "'secondary'", moveSpecific: true, description: 'Visual style variant (inherits Button variants)' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Button size' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for hover/press interactions, or false to disable' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Button content' },
+    {
+      name: 'pressed',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Controlled pressed state',
+    },
+    {
+      name: 'defaultPressed',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Initial pressed state (uncontrolled)',
+    },
+    {
+      name: 'onPressedChange',
+      type: '(pressed: boolean) => void',
+      moveSpecific: true,
+      description: 'Called when pressed state changes',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Disabled state',
+    },
+    {
+      name: 'variant',
+      type: "'primary' | 'secondary' | 'ghost' | 'danger'",
+      default: "'secondary'",
+      moveSpecific: true,
+      description: 'Visual style variant (inherits Button variants)',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Button size',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Animation config for hover/press interactions, or false to disable',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Button content',
+    },
   ],
 
   anatomy: {
@@ -59,10 +102,25 @@ export const spec = {
   ],
 
   renderContracts: [
-    { id: 'composes-button-styles', description: 'Root slot composes Button.module.css root class for shared sizing, typography, border-radius, and variant styling' },
-    { id: 'radix-toggle-controlled', description: 'Forwards pressed, defaultPressed, onPressedChange to Radix Toggle.Root only when defined (avoids uncontrolled->controlled warnings)' },
-    { id: 'on-state-primary', description: 'When data-state="on", background overrides to --move-primary with --move-primary-fg text, regardless of variant' },
-    { id: 'animations-false-disables', description: 'When animations={false}, all animation triggers are disabled' },
+    {
+      id: 'composes-button-styles',
+      description:
+        'Root slot composes Button.module.css root class for shared sizing, typography, border-radius, and variant styling',
+    },
+    {
+      id: 'radix-toggle-controlled',
+      description:
+        'Forwards pressed, defaultPressed, onPressedChange to Radix Toggle.Root only when defined (avoids uncontrolled->controlled warnings)',
+    },
+    {
+      id: 'on-state-primary',
+      description:
+        'When data-state="on", background overrides to --move-primary with --move-primary-fg text, regardless of variant',
+    },
+    {
+      id: 'animations-false-disables',
+      description: 'When animations={false}, all animation triggers are disabled',
+    },
   ],
 
   tokens: [
@@ -104,10 +162,7 @@ export const spec = {
       'Calls onPressedChange when toggled',
       'On state applies primary background regardless of variant',
     ],
-    keyboard: [
-      'Space toggles pressed state',
-      'Enter toggles pressed state',
-    ],
+    keyboard: ['Space toggles pressed state', 'Enter toggles pressed state'],
     aria: [
       'aria-pressed reflects pressed state via Radix Toggle',
       'aria-disabled set when disabled',

@@ -6,7 +6,13 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, staggerItems, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  staggerItems,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
@@ -101,17 +107,21 @@ export interface TimeFieldRootProps {
 const DEFAULT_TIMEFIELD_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.enter },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.enter },
+      ],
+    ],
   },
   {
     trigger: 'Content.exit',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.exit },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        { children: 'button', stagger: staggerItems.stagger, animation: staggerItems.exit },
+      ],
+    ],
   },
 ];
 
@@ -155,10 +165,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     disabled,
   });
 
-  const segmentOrder = React.useMemo(
-    () => tf.segments.map((s) => s.type),
-    [tf.segments],
-  );
+  const segmentOrder = React.useMemo(() => tf.segments.map((s) => s.type), [tf.segments]);
 
   const focusSegment = React.useCallback((segment: string) => {
     const el = segmentRefs.current.get(segment);
@@ -185,11 +192,14 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     [segmentOrder, focusSegment],
   );
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-    // animation drives it (useDismissable).
-    if (newOpen) openDropdown();
-  }, [openDropdown]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+      // animation drives it (useDismissable).
+      if (newOpen) openDropdown();
+    },
+    [openDropdown],
+  );
 
   const ctx: TimeFieldContextValue = {
     tf,
@@ -214,7 +224,9 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
   // Auto-render when no children
   const hasChildren = React.Children.count(children) > 0;
 
-  const content = hasChildren ? children : (
+  const content = hasChildren ? (
+    children
+  ) : (
     <>
       {tf.segments.map((seg, i) => (
         <React.Fragment key={seg.type}>
@@ -248,9 +260,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     return (
       <TimeFieldContext.Provider value={ctx}>
         <RadixPopover.Root open={isOpen || isClosing} onOpenChange={handleOpenChange}>
-          <RadixPopover.Anchor asChild>
-            {rootEl}
-          </RadixPopover.Anchor>
+          <RadixPopover.Anchor asChild>{rootEl}</RadixPopover.Anchor>
           <TimeFieldDropdown>
             {segmentOrder
               .filter((s) => s !== 'period')
@@ -264,11 +274,7 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     );
   }
 
-  return (
-    <TimeFieldContext.Provider value={ctx}>
-      {rootEl}
-    </TimeFieldContext.Provider>
-  );
+  return <TimeFieldContext.Provider value={ctx}>{rootEl}</TimeFieldContext.Provider>;
 };
 TimeFieldRoot.displayName = 'TimeField';
 
@@ -290,7 +296,17 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
   moveProps: ['segment'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, segmentRefs, focusNext, focusPrev, disabled, withDropdown, openDropdown, isOpen, labels } = useTimeFieldContext();
+    const {
+      tf,
+      segmentRefs,
+      focusNext,
+      focusPrev,
+      disabled,
+      withDropdown,
+      openDropdown,
+      isOpen,
+      labels,
+    } = useTimeFieldContext();
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
     const segType = props.segment as SegmentType;
@@ -298,7 +314,9 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
     // Register ref
     React.useEffect(() => {
       segmentRefs.current.set(segType, inputRef.current);
-      return () => { segmentRefs.current.delete(segType); };
+      return () => {
+        segmentRefs.current.delete(segType);
+      };
     }, [segType, segmentRefs]);
 
     const segInfo = tf.segments.find((s) => s.type === segType);
@@ -314,7 +332,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
         e.preventDefault();
         isOpen ? tf.increment(segType) : tf.decrement(segType);
         if (withDropdown && !isOpen) openDropdown();
-      } else if (e.key === 'ArrowRight' || e.key === 'Tab' && !e.shiftKey) {
+      } else if (e.key === 'ArrowRight' || (e.key === 'Tab' && !e.shiftKey)) {
         // Let Tab pass through naturally if it's the last segment
         const segOrder = tf.segments.map((s) => s.type);
         const idx = segOrder.indexOf(segType);
@@ -322,7 +340,7 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
           e.preventDefault();
           focusNext(segType);
         }
-      } else if (e.key === 'ArrowLeft' || e.key === 'Tab' && e.shiftKey) {
+      } else if (e.key === 'ArrowLeft' || (e.key === 'Tab' && e.shiftKey)) {
         const segOrder = tf.segments.map((s) => s.type);
         const idx = segOrder.indexOf(segType);
         if (idx > 0) {
@@ -383,32 +401,38 @@ export interface TimeFieldSeparatorProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'separator'>;
 }
 
-const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProps, HTMLSpanElement>({
-  name: 'TimeFieldSeparator',
-  styles,
-  slots: ['separator'] as const,
+const TimeFieldSeparator = withMoveComponent<'separator', TimeFieldSeparatorProps, HTMLSpanElement>(
+  {
+    name: 'TimeFieldSeparator',
+    styles,
+    slots: ['separator'] as const,
 
-  setup({ props, ref, cx, sp, attrs }) {
-    return {
-      render() {
-        const sepSp = sp('separator');
-        const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
-        return (
-          <span
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            className={cx('separator', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            aria-hidden="true"
-          >
-            {props.children ?? ':'}
-          </span>
-        );
-      },
-    };
+    setup({ props, ref, cx, sp, attrs }) {
+      return {
+        render() {
+          const sepSp = sp('separator');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = sepSp as Record<string, unknown>;
+          return (
+            <span
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              className={cx('separator', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              aria-hidden="true"
+            >
+              {props.children ?? ':'}
+            </span>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // Period
@@ -426,14 +450,17 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
   slots: ['period'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown, labels } = useTimeFieldContext();
+    const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown, labels } =
+      useTimeFieldContext();
     const btnRef = React.useRef<HTMLButtonElement>(null);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef);
 
     // Register ref
     React.useEffect(() => {
       segmentRefs.current.set('period', btnRef.current);
-      return () => { segmentRefs.current.delete('period'); };
+      return () => {
+        segmentRefs.current.delete('period');
+      };
     }, [segmentRefs]);
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -457,7 +484,11 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
     return {
       render() {
         const periodSp = sp('period');
-        const { className: spClass, style: spStyle, ...spRest } = periodSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = periodSp as Record<string, unknown>;
         return (
           <button
             {...attrs}
@@ -506,12 +537,19 @@ const TimeFieldDropdownInner: React.FC<TimeFieldDropdownProps> = ({
 
   const contentRef = React.useRef<HTMLDivElement>(null);
 
-  const contentConfig = React.useMemo(() =>
-    ctx.animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
-    [ctx.animConfig]);
-  const contentRefs = React.useMemo(() => ({
-    Content: contentRef as React.RefObject<HTMLElement | null>,
-  }), []);
+  const contentConfig = React.useMemo(
+    () =>
+      ctx.animConfig?.filter(
+        (t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit',
+      ) ?? null,
+    [ctx.animConfig],
+  );
+  const contentRefs = React.useMemo(
+    () => ({
+      Content: contentRef as React.RefObject<HTMLElement | null>,
+    }),
+    [],
+  );
 
   const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
@@ -567,7 +605,11 @@ export interface TimeFieldDropdownColumnProps extends React.HTMLAttributes<HTMLE
   sp?: SlotPropsMap<'dropdownColumn'>;
 }
 
-const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDropdownColumnProps, HTMLDivElement>({
+const TimeFieldDropdownColumn = withMoveComponent<
+  'dropdownColumn',
+  TimeFieldDropdownColumnProps,
+  HTMLDivElement
+>({
   name: 'TimeFieldDropdownColumn',
   styles,
   slots: ['dropdownColumn'] as const,
@@ -619,7 +661,7 @@ const TimeFieldDropdownColumn = withMoveComponent<'dropdownColumn', TimeFieldDro
       } else if (segType === 'hour') {
         if (tf.hourCycle === 12) {
           const h12 = parseInt(itemValue, 10);
-          const h24 = tf.period === 'AM' ? (h12 === 12 ? 0 : h12) : (h12 === 12 ? 12 : h12 + 12);
+          const h24 = tf.period === 'AM' ? (h12 === 12 ? 0 : h12) : h12 === 12 ? 12 : h12 + 12;
           tf.setHours(h24);
         } else {
           tf.setHours(parseInt(itemValue, 10));

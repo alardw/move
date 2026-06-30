@@ -8,14 +8,15 @@ export const spec = {
   name: 'Grid',
   componentClass: 'presentational' as const,
   category: 'layout',
-  description: 'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
+  description:
+    'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
 
   synonyms: ['layout grid', 'columns', 'simple grid', 'masonry', 'gallery', 'image grid'],
   animationPatterns: ['layoutReveal'],
   families: {
-    behavior:  ["layout"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['layout'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: true,
@@ -32,10 +33,25 @@ export const spec = {
       props: [
         { name: 'span', type: 'number', moveSpecific: true, description: 'Column span' },
         { name: 'rowSpan', type: 'number', moveSpecific: true, description: 'Row span' },
-        { name: 'offset', type: 'number', moveSpecific: true, description: 'Columns to skip before this cell' },
+        {
+          name: 'offset',
+          type: 'number',
+          moveSpecific: true,
+          description: 'Columns to skip before this cell',
+        },
         { name: 'order', type: 'number', moveSpecific: true, description: 'Visual order' },
-        { name: 'align', type: "'start' | 'center' | 'end' | 'stretch'", moveSpecific: true, description: 'Self-alignment within the grid cell' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Cell content' },
+        {
+          name: 'align',
+          type: "'start' | 'center' | 'end' | 'stretch'",
+          moveSpecific: true,
+          description: 'Self-alignment within the grid cell',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Cell content',
+        },
       ],
       usesFactory: true,
       description: 'Grid cell with column span, row span, offset, and order control',
@@ -43,25 +59,72 @@ export const spec = {
   ],
 
   props: [
-    { name: 'cols', type: 'number', moveSpecific: true, description: 'Equal-width columns (shorthand for repeat(N, 1fr))' },
-    { name: 'rows', type: 'number', moveSpecific: true, description: 'Equal-height rows (shorthand for repeat(N, 1fr))' },
-    { name: 'columns', type: 'number', moveSpecific: true, description: 'Total columns for span-based mode (default 12)' },
-    { name: 'minChildWidth', type: 'string', moveSpecific: true, description: 'Auto-fit: minimum child width before wrapping (e.g. "200px")' },
-    { name: 'gap', typeRef: 'Gap', default: "'md'", moveSpecific: true, description: 'Gap between grid items' },
+    {
+      name: 'cols',
+      type: 'number',
+      moveSpecific: true,
+      description: 'Equal-width columns (shorthand for repeat(N, 1fr))',
+    },
+    {
+      name: 'rows',
+      type: 'number',
+      moveSpecific: true,
+      description: 'Equal-height rows (shorthand for repeat(N, 1fr))',
+    },
+    {
+      name: 'columns',
+      type: 'number',
+      moveSpecific: true,
+      description: 'Total columns for span-based mode (default 12)',
+    },
+    {
+      name: 'minChildWidth',
+      type: 'string',
+      moveSpecific: true,
+      description: 'Auto-fit: minimum child width before wrapping (e.g. "200px")',
+    },
+    {
+      name: 'gap',
+      typeRef: 'Gap',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Gap between grid items',
+    },
     { name: 'rowGap', typeRef: 'Gap', moveSpecific: true, description: 'Row gap override' },
     { name: 'columnGap', typeRef: 'Gap', moveSpecific: true, description: 'Column gap override' },
-    { name: 'collapseBelow', type: 'string', moveSpecific: true, description: 'Container width (px) below which grid collapses to 1 column' },
-    { name: 'stagger', type: "boolean | { delay?: number; from?: 'first' | 'last' | 'center' }", default: 'false', moveSpecific: true, description: "Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default. Disable or override via the `animations` prop. (Replaces the former ImageGroup gallery component — use `<Grid stagger>` with `Image` children.)" },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Override or disable the entrance stagger animation (only relevant when `stagger` is set).' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Grid.Cell children' },
+    {
+      name: 'collapseBelow',
+      type: 'string',
+      moveSpecific: true,
+      description: 'Container width (px) below which grid collapses to 1 column',
+    },
+    {
+      name: 'stagger',
+      type: "boolean | { delay?: number; from?: 'first' | 'last' | 'center' }",
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default. Disable or override via the `animations` prop. (Replaces the former ImageGroup gallery component — use `<Grid stagger>` with `Image` children.)',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description:
+        'Override or disable the entrance stagger animation (only relevant when `stagger` is set).',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Grid.Cell children',
+    },
   ],
 
   anatomy: {
     slot: 'root',
     dataAttributes: [],
-    children: [
-      { slot: 'cell' },
-    ],
+    children: [{ slot: 'cell' }],
   },
 
   controlled: null,
@@ -83,23 +146,28 @@ export const spec = {
   renderContracts: [
     {
       id: 'inline-style-layout',
-      description: 'Grid uses inline styles (not data-attributes) for layout: --_grid-template, --_grid-rows, gap, rowGap, columnGap are set via inline style. GAP_MAP resolves named gaps (xs/sm/md/lg/xl/none) to spacing token CSS custom properties.',
+      description:
+        'Grid uses inline styles (not data-attributes) for layout: --_grid-template, --_grid-rows, gap, rowGap, columnGap are set via inline style. GAP_MAP resolves named gaps (xs/sm/md/lg/xl/none) to spacing token CSS custom properties.',
     },
     {
       id: 'cell-inline-style-placement',
-      description: 'Cell uses inline styles for gridColumn, gridRow, order, and alignSelf. span+offset combines to gridColumn: "offset+1 / span N".',
+      description:
+        'Cell uses inline styles for gridColumn, gridRow, order, and alignSelf. span+offset combines to gridColumn: "offset+1 / span N".',
     },
     {
       id: 'grid-template-resolution',
-      description: 'Grid template resolves in priority order: minChildWidth -> repeat(auto-fill, minmax(W, 1fr)), cols -> repeat(N, 1fr), columns -> repeat(N, 1fr), fallback -> repeat(12, 1fr)',
+      description:
+        'Grid template resolves in priority order: minChildWidth -> repeat(auto-fill, minmax(W, 1fr)), cols -> repeat(N, 1fr), columns -> repeat(N, 1fr), fallback -> repeat(12, 1fr)',
     },
     {
       id: 'collapse-below-resize-observer',
-      description: 'When collapseBelow is set, a ResizeObserver watches the root element and sets/removes data-collapsed attribute when width crosses the threshold',
+      description:
+        'When collapseBelow is set, a ResizeObserver watches the root element and sets/removes data-collapsed attribute when width crosses the threshold',
     },
     {
       id: 'stagger-opt-in',
-      description: "When the `stagger` prop is set, a Root.enter trigger animates direct children (`:scope > *`) with a staggered fade+rise (opacity 0→1, translateY 8→0, outQuart ~200ms) via useAnimations + resolveAnimationsConfig — the same declarative children-stagger pattern as List/Table/Timeline. When the prop is absent, no animation config is built and no animation wiring runs. Consumers can pass `animations={false}` to disable or an AnimationTrigger[] to override.",
+      description:
+        'When the `stagger` prop is set, a Root.enter trigger animates direct children (`:scope > *`) with a staggered fade+rise (opacity 0→1, translateY 8→0, outQuart ~200ms) via useAnimations + resolveAnimationsConfig — the same declarative children-stagger pattern as List/Table/Timeline. When the prop is absent, no animation config is built and no animation wiring runs. Consumers can pass `animations={false}` to disable or an AnimationTrigger[] to override.',
     },
   ],
 

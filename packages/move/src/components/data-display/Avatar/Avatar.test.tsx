@@ -159,7 +159,9 @@ describe('Avatar', () => {
     it('merges className on Group', () => {
       render(
         <Avatar.Group className="group-custom" data-testid="group">
-          <Avatar.Root><Avatar.Fallback>A</Avatar.Fallback></Avatar.Root>
+          <Avatar.Root>
+            <Avatar.Fallback>A</Avatar.Fallback>
+          </Avatar.Root>
         </Avatar.Group>,
       );
       expect(screen.getByTestId('group').className).toContain('group-custom');
@@ -180,7 +182,9 @@ describe('Avatar', () => {
     it('merges sp className on Group', () => {
       render(
         <Avatar.Group sp={{ group: { className: 'sp-group' } }} data-testid="group">
-          <Avatar.Root><Avatar.Fallback>A</Avatar.Fallback></Avatar.Root>
+          <Avatar.Root>
+            <Avatar.Fallback>A</Avatar.Fallback>
+          </Avatar.Root>
         </Avatar.Group>,
       );
       expect(screen.getByTestId('group').className).toContain('sp-group');
@@ -202,7 +206,12 @@ describe('Avatar', () => {
     it('accepts custom animations config', () => {
       render(
         <Avatar.Root
-          animations={[{ trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1, ease: 'outQuart' } } }] }]}
+          animations={[
+            {
+              trigger: 'Root.enter',
+              sequence: [{ animation: { opacity: { from: 0, to: 1, ease: 'outQuart' } } }],
+            },
+          ]}
           data-testid="avatar"
         >
           <Avatar.Fallback>AB</Avatar.Fallback>

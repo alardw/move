@@ -32,17 +32,18 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
   styles,
   slots: ['root'] as const,
   defaults: { variant: 'secondary', size: 'md' },
-  moveProps: ['pressed', 'defaultPressed', 'onPressedChange', 'disabled', 'variant', 'size', 'animations'],
+  moveProps: [
+    'pressed',
+    'defaultPressed',
+    'onPressedChange',
+    'disabled',
+    'variant',
+    'size',
+    'animations',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const {
-      variant,
-      size,
-      animations: animationsProp,
-      className,
-      style,
-      children,
-    } = props;
+    const { variant, size, animations: animationsProp, className, style, children } = props;
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       { trigger: 'Root.hover', sequence: [{ animation: scaleUp() }] },
@@ -64,7 +65,8 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
         const toggleProps: Record<string, unknown> = {};
         if (props.pressed !== undefined) toggleProps.pressed = props.pressed;
         if (props.defaultPressed !== undefined) toggleProps.defaultPressed = props.defaultPressed;
-        if (props.onPressedChange !== undefined) toggleProps.onPressedChange = props.onPressedChange;
+        if (props.onPressedChange !== undefined)
+          toggleProps.onPressedChange = props.onPressedChange;
 
         return (
           <RadixToggle.Root
@@ -77,12 +79,24 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
-            onMouseEnter={() => { if (!isDisabled) handlers.Root?.onMouseEnter?.(); }}
-            onMouseLeave={() => { if (!isDisabled) handlers.Root?.onMouseLeave?.(); }}
-            onMouseDown={() => { if (!isDisabled) handlers.Root?.onMouseDown?.(); }}
-            onMouseUp={() => { if (!isDisabled) handlers.Root?.onMouseUp?.(); }}
-            onKeyDown={(e: React.KeyboardEvent) => { if (!isDisabled) handlers.Root?.onKeyDown?.(e); }}
-            onKeyUp={(e: React.KeyboardEvent) => { if (!isDisabled) handlers.Root?.onKeyUp?.(e); }}
+            onMouseEnter={() => {
+              if (!isDisabled) handlers.Root?.onMouseEnter?.();
+            }}
+            onMouseLeave={() => {
+              if (!isDisabled) handlers.Root?.onMouseLeave?.();
+            }}
+            onMouseDown={() => {
+              if (!isDisabled) handlers.Root?.onMouseDown?.();
+            }}
+            onMouseUp={() => {
+              if (!isDisabled) handlers.Root?.onMouseUp?.();
+            }}
+            onKeyDown={(e: React.KeyboardEvent) => {
+              if (!isDisabled) handlers.Root?.onKeyDown?.(e);
+            }}
+            onKeyUp={(e: React.KeyboardEvent) => {
+              if (!isDisabled) handlers.Root?.onKeyUp?.(e);
+            }}
           >
             {children}
           </RadixToggle.Root>

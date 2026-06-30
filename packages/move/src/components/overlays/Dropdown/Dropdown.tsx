@@ -5,7 +5,15 @@ import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
-import { useAnimations, resolveAnimationsConfig, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  staggerItems,
+  quick,
+  poppy,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
@@ -17,7 +25,11 @@ import styles from './Dropdown.module.css';
 function wrapTextChildren(children: React.ReactNode, textClass: string): React.ReactNode {
   const wrapped = React.Children.map(children, (child, i) => {
     if (typeof child === 'string' || typeof child === 'number') {
-      return <span key={i} className={textClass}>{child}</span>;
+      return (
+        <span key={i} className={textClass}>
+          {child}
+        </span>
+      );
     }
     return child;
   });
@@ -32,17 +44,31 @@ function wrapTextChildren(children: React.ReactNode, textClass: string): React.R
 const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.enter },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        {
+          target: 'ContentInner',
+          children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+          stagger: staggerItems.stagger,
+          animation: staggerItems.enter,
+        },
+      ],
+    ],
   },
   {
     trigger: 'Content.exit',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { target: 'ContentInner', children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]', stagger: staggerItems.stagger, animation: staggerItems.exit },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        {
+          target: 'ContentInner',
+          children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+          stagger: staggerItems.stagger,
+          animation: staggerItems.exit,
+        },
+      ],
+    ],
   },
   {
     trigger: 'Item.hover',
@@ -76,14 +102,23 @@ function useDropdownContext() {
 // Root (stateful FC — manages open/close state + animation context)
 // ============================================================================
 
-export interface DropdownRootProps extends Omit<React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Root>, 'open' | 'onOpenChange'> {
+export interface DropdownRootProps extends Omit<
+  React.ComponentPropsWithoutRef<typeof RadixDropdownMenu.Root>,
+  'open' | 'onOpenChange'
+> {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
   animations?: AnimationTrigger[] | false;
 }
 
-const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defaultOpen, onOpenChange, animations: animationsProp, ...props }) => {
+const DropdownRoot: React.FC<DropdownRootProps> = ({
+  open: controlledOpen,
+  defaultOpen,
+  onOpenChange,
+  animations: animationsProp,
+  ...props
+}) => {
   const animConfig = resolveAnimationsConfig(DEFAULT_DROPDOWN_ANIMATIONS, animationsProp);
 
   // Interruptible open/close lifecycle (open cancels an in-flight close;
@@ -91,15 +126,22 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({ open: controlledOpen, defau
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-    // animation drives it (useDismissable).
-    if (newOpen) openFn();
-  }, [openFn]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+      // animation drives it (useDismissable).
+      if (newOpen) openFn();
+    },
+    [openFn],
+  );
 
   return (
     <DropdownContext.Provider value={{ isClosing, epoch, onExitDone, close, animConfig }}>
-      <RadixDropdownMenu.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} {...props} />
+      <RadixDropdownMenu.Root
+        open={isOpen || isClosing}
+        onOpenChange={handleOpenChange}
+        {...props}
+      />
     </DropdownContext.Provider>
   );
 };
@@ -127,7 +169,11 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Trigger
             {...attrs}
@@ -187,13 +233,19 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
     const innerRef = React.useRef<HTMLDivElement>(null);
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    const contentConfig = React.useMemo(() =>
-      animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
-      [animConfig]);
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentConfig = React.useMemo(
+      () =>
+        animConfig?.filter((t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ??
+        null,
+      [animConfig],
+    );
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+        ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     // Radix DropdownMenu handles focus-on-open natively (auto-focuses the
     // first menuitem). We don't override it because a menu has no "current
@@ -233,7 +285,11 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
         sideOffset={props.sideOffset as number}
         align={props.align}
         className={props.contentCx('content', props.className, spClass as string | undefined)}
-        style={{ ...props.style, ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
+        style={{
+          ...props.style,
+          ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
+          ...(spStyle as React.CSSProperties),
+        }}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
         onInteractOutside={handleInteractOutside}
@@ -251,12 +307,23 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
   },
 );
 
-const DropdownContent = withMoveComponent<'content' | 'contentInner', DropdownContentProps, HTMLDivElement>({
+const DropdownContent = withMoveComponent<
+  'content' | 'contentInner',
+  DropdownContentProps,
+  HTMLDivElement
+>({
   name: 'DropdownContent',
   styles,
   slots: ['content', 'contentInner'] as const,
   defaults: { sideOffset: 6 },
-  moveProps: ['sideOffset', 'align', 'container', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+  moveProps: [
+    'sideOffset',
+    'align',
+    'container',
+    'onPointerDownOutside',
+    'onEscapeKeyDown',
+    'onInteractOutside',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const layer = useLayer();
@@ -309,7 +376,11 @@ const DropdownArrow = withMoveComponent<'arrow', DropdownArrowProps, HTMLElement
     return {
       render() {
         const arrowSp = sp('arrow');
-        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = arrowSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Arrow
             {...attrs}
@@ -362,9 +433,12 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
       return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
     }, [animConfig]);
 
-    const itemRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const itemRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(itemConfig, itemRefs);
 
@@ -413,7 +487,11 @@ const DropdownGroup = withMoveComponent<'group', DropdownGroupProps, HTMLDivElem
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Group
             {...attrs}
@@ -450,7 +528,11 @@ const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElem
     return {
       render() {
         const labelSp = sp('label');
-        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = labelSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Label
             {...attrs}
@@ -471,7 +553,10 @@ const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElem
 // CheckboxItem
 // ============================================================================
 
-export interface DropdownCheckboxItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
+export interface DropdownCheckboxItemProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'onSelect'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -518,15 +603,34 @@ const DropdownCheckboxItem = withMoveComponent<
           trigger: 'indicator-check',
           deps: [checked],
           sequence: checked
-            ? [{ target: 'Indicator', animation: { opacity: { from: 0, to: 1 }, scale: { from: 0.5, to: 1, ease: poppy } } }]
-            : [{ target: 'Indicator', animation: { opacity: { from: 1, to: 0, duration: 150, ease: 'outQuad' }, scale: { from: 1, to: 0.5, duration: 150, ease: 'outQuad' } } }],
+            ? [
+                {
+                  target: 'Indicator',
+                  animation: {
+                    opacity: { from: 0, to: 1 },
+                    scale: { from: 0.5, to: 1, ease: poppy },
+                  },
+                },
+              ]
+            : [
+                {
+                  target: 'Indicator',
+                  animation: {
+                    opacity: { from: 1, to: 0, duration: 150, ease: 'outQuad' },
+                    scale: { from: 1, to: 0.5, duration: 150, ease: 'outQuad' },
+                  },
+                },
+              ],
         },
       ];
     }, [checked, animConfig]);
 
-    const indicatorRefs = React.useMemo(() => ({
-      Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const indicatorRefs = React.useMemo(
+      () => ({
+        Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(indicatorConfig, indicatorRefs);
 
@@ -543,20 +647,35 @@ const DropdownCheckboxItem = withMoveComponent<
       return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
     }, [animConfig]);
 
-    const itemRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const itemRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(itemConfig, itemRefs);
 
     return {
       render() {
         const checkboxSp = sp('checkboxItem');
-        const { className: spClass, style: spStyle, ...spRest } = checkboxSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = checkboxSp as Record<string, unknown>;
         const indicatorSp = sp('checkboxIndicator');
-        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const {
+          className: indSpClass,
+          style: indSpStyle,
+          ...indSpRest
+        } = indicatorSp as Record<string, unknown>;
         const labelSp = sp('checkboxLabel');
-        const { className: lblSpClass, style: lblSpStyle, ...lblSpRest } = labelSp as Record<string, unknown>;
+        const {
+          className: lblSpClass,
+          style: lblSpStyle,
+          ...lblSpRest
+        } = labelSp as Record<string, unknown>;
 
         return (
           <RadixDropdownMenu.CheckboxItem
@@ -607,40 +726,49 @@ export interface DropdownRadioGroupProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'radioGroup'>;
 }
 
-const DropdownRadioGroup = withMoveComponent<'radioGroup', DropdownRadioGroupProps, HTMLDivElement>({
-  name: 'DropdownRadioGroup',
-  styles,
-  slots: ['radioGroup'] as const,
-  moveProps: ['value', 'onValueChange'],
+const DropdownRadioGroup = withMoveComponent<'radioGroup', DropdownRadioGroupProps, HTMLDivElement>(
+  {
+    name: 'DropdownRadioGroup',
+    styles,
+    slots: ['radioGroup'] as const,
+    moveProps: ['value', 'onValueChange'],
 
-  setup({ props, ref, cx, sp, attrs }) {
-    return {
-      render() {
-        const groupSp = sp('radioGroup');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
-        return (
-          <RadixDropdownMenu.RadioGroup
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            value={props.value as string}
-            onValueChange={props.onValueChange as (value: string) => void}
-            className={cx('radioGroup', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixDropdownMenu.RadioGroup>
-        );
-      },
-    };
+    setup({ props, ref, cx, sp, attrs }) {
+      return {
+        render() {
+          const groupSp = sp('radioGroup');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = groupSp as Record<string, unknown>;
+          return (
+            <RadixDropdownMenu.RadioGroup
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              value={props.value as string}
+              onValueChange={props.onValueChange as (value: string) => void}
+              className={cx('radioGroup', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </RadixDropdownMenu.RadioGroup>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // RadioItem
 // ============================================================================
 
-export interface DropdownRadioItemProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onSelect'> {
+export interface DropdownRadioItemProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'onSelect'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -675,9 +803,12 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
       return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
     }, [animConfig]);
 
-    const itemRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const itemRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(itemConfig, itemRefs);
 
@@ -717,7 +848,11 @@ export interface DropdownItemIndicatorProps extends React.HTMLAttributes<HTMLEle
   sp?: SlotPropsMap<'itemIndicator'>;
 }
 
-const DropdownItemIndicator = withMoveComponent<'itemIndicator', DropdownItemIndicatorProps, HTMLSpanElement>({
+const DropdownItemIndicator = withMoveComponent<
+  'itemIndicator',
+  DropdownItemIndicatorProps,
+  HTMLSpanElement
+>({
   name: 'DropdownItemIndicator',
   styles,
   slots: ['itemIndicator'] as const,
@@ -788,9 +923,7 @@ export interface DropdownSubProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const DropdownSub: React.FC<DropdownSubProps> = (props) => (
-  <RadixDropdownMenu.Sub {...props} />
-);
+const DropdownSub: React.FC<DropdownSubProps> = (props) => <RadixDropdownMenu.Sub {...props} />;
 DropdownSub.displayName = 'Dropdown.Sub';
 
 // ============================================================================
@@ -805,33 +938,39 @@ export interface DropdownSubTriggerProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'subTrigger'>;
 }
 
-const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerProps, HTMLDivElement>({
-  name: 'DropdownSubTrigger',
-  styles,
-  slots: ['subTrigger'] as const,
-  moveProps: ['disabled'],
+const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerProps, HTMLDivElement>(
+  {
+    name: 'DropdownSubTrigger',
+    styles,
+    slots: ['subTrigger'] as const,
+    moveProps: ['disabled'],
 
-  setup({ props, ref, cx, sp, attrs }) {
-    return {
-      render() {
-        const subSp = sp('subTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = subSp as Record<string, unknown>;
-        return (
-          <RadixDropdownMenu.SubTrigger
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            disabled={props.disabled as boolean}
-            className={cx('subTrigger', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixDropdownMenu.SubTrigger>
-        );
-      },
-    };
+    setup({ props, ref, cx, sp, attrs }) {
+      return {
+        render() {
+          const subSp = sp('subTrigger');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = subSp as Record<string, unknown>;
+          return (
+            <RadixDropdownMenu.SubTrigger
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              disabled={props.disabled as boolean}
+              className={cx('subTrigger', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </RadixDropdownMenu.SubTrigger>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // SubContent
@@ -845,35 +984,45 @@ export interface DropdownSubContentProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'subContent'>;
 }
 
-const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentProps, HTMLDivElement>({
-  name: 'DropdownSubContent',
-  styles,
-  slots: ['subContent'] as const,
-  moveProps: ['sideOffset'],
+const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentProps, HTMLDivElement>(
+  {
+    name: 'DropdownSubContent',
+    styles,
+    slots: ['subContent'] as const,
+    moveProps: ['sideOffset'],
 
-  setup({ props, ref, cx, sp, attrs }) {
-    const layer = useLayer();
+    setup({ props, ref, cx, sp, attrs }) {
+      const layer = useLayer();
 
-    return {
-      render() {
-        const subSp = sp('subContent');
-        const { className: spClass, style: spStyle, ...spRest } = subSp as Record<string, unknown>;
-        return (
-          <RadixDropdownMenu.SubContent
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            sideOffset={props.sideOffset as number}
-            className={cx('subContent', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(layer > 0 ? { zIndex: layer + 1 } : {}), ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </RadixDropdownMenu.SubContent>
-        );
-      },
-    };
+      return {
+        render() {
+          const subSp = sp('subContent');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = subSp as Record<string, unknown>;
+          return (
+            <RadixDropdownMenu.SubContent
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              sideOffset={props.sideOffset as number}
+              className={cx('subContent', props.className, spClass as string | undefined)}
+              style={{
+                ...props.style,
+                ...(layer > 0 ? { zIndex: layer + 1 } : {}),
+                ...(spStyle as React.CSSProperties),
+              }}
+            >
+              {props.children}
+            </RadixDropdownMenu.SubContent>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // Export

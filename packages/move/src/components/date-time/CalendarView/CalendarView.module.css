@@ -47,7 +47,9 @@
   background: var(--move-bg-base);
   color: var(--move-fg-muted);
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .navButton:hover {
@@ -72,7 +74,6 @@
 .todayButton:hover {
   background-color: var(--move-bg-muted);
 }
-
 
 .body {
   flex: 1;

@@ -53,7 +53,11 @@ export interface TableOfContentsRootProps extends React.HTMLAttributes<HTMLEleme
   sp?: SlotPropsMap<'root'>;
 }
 
-const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfContentsRootProps, HTMLElement>({
+const TableOfContentsRoot = withMoveComponent<
+  'root' | 'indicator',
+  TableOfContentsRootProps,
+  HTMLElement
+>({
   name: 'TableOfContentsRoot',
   styles,
   slots: ['root', 'indicator'] as const,
@@ -135,7 +139,9 @@ const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfConte
       window.addEventListener('resize', computeActive);
 
       return () => {
-        window.removeEventListener('scroll', computeActive, { capture: true } as EventListenerOptions);
+        window.removeEventListener('scroll', computeActive, {
+          capture: true,
+        } as EventListenerOptions);
         window.removeEventListener('resize', computeActive);
       };
     }, [registrationVersion, offset]);
@@ -164,7 +170,11 @@ const TableOfContentsRoot = withMoveComponent<'root' | 'indicator', TableOfConte
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const indicatorSp = sp('indicator');
-        const { className: indClass, style: indStyle, ...indRest } = indicatorSp as Record<string, unknown>;
+        const {
+          className: indClass,
+          style: indStyle,
+          ...indRest
+        } = indicatorSp as Record<string, unknown>;
         return (
           <TableOfContentsContext.Provider value={ctx}>
             <nav

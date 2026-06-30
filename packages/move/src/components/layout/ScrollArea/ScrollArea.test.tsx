@@ -21,17 +21,29 @@ describe('ScrollArea', () => {
     });
 
     it('forwards className', () => {
-      render(<ScrollArea.Root data-testid="root" className="custom">Content</ScrollArea.Root>);
+      render(
+        <ScrollArea.Root data-testid="root" className="custom">
+          Content
+        </ScrollArea.Root>,
+      );
       expect(screen.getByTestId('root').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<ScrollArea.Root data-testid="root" style={{ marginTop: '10px' }}>Content</ScrollArea.Root>);
+      render(
+        <ScrollArea.Root data-testid="root" style={{ marginTop: '10px' }}>
+          Content
+        </ScrollArea.Root>,
+      );
       expect(screen.getByTestId('root')).toHaveStyle({ marginTop: '10px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<ScrollArea.Root data-testid="root" aria-label="Scroll area">Content</ScrollArea.Root>);
+      render(
+        <ScrollArea.Root data-testid="root" aria-label="Scroll area">
+          Content
+        </ScrollArea.Root>,
+      );
       expect(screen.getByTestId('root')).toHaveAttribute('aria-label', 'Scroll area');
     });
 
@@ -41,12 +53,20 @@ describe('ScrollArea', () => {
     });
 
     it('merges sp className on root', () => {
-      render(<ScrollArea.Root data-testid="root" sp={{ root: { className: 'sp-root' } }}>Content</ScrollArea.Root>);
+      render(
+        <ScrollArea.Root data-testid="root" sp={{ root: { className: 'sp-root' } }}>
+          Content
+        </ScrollArea.Root>,
+      );
       expect(screen.getByTestId('root').className).toContain('sp-root');
     });
 
     it('merges sp style on root', () => {
-      render(<ScrollArea.Root data-testid="root" sp={{ root: { style: { marginTop: '5px' } } }}>Content</ScrollArea.Root>);
+      render(
+        <ScrollArea.Root data-testid="root" sp={{ root: { style: { marginTop: '5px' } } }}>
+          Content
+        </ScrollArea.Root>,
+      );
       expect(screen.getByTestId('root')).toHaveStyle({ marginTop: '5px' });
     });
   });
@@ -72,22 +92,38 @@ describe('ScrollArea', () => {
     });
 
     it('sets data-padded=false when padded=false', () => {
-      render(<ScrollArea.Header data-testid="header" padded={false}>Header</ScrollArea.Header>);
+      render(
+        <ScrollArea.Header data-testid="header" padded={false}>
+          Header
+        </ScrollArea.Header>,
+      );
       expect(screen.getByTestId('header')).toHaveAttribute('data-padded', 'false');
     });
 
     it('forwards className', () => {
-      render(<ScrollArea.Header data-testid="header" className="custom">Header</ScrollArea.Header>);
+      render(
+        <ScrollArea.Header data-testid="header" className="custom">
+          Header
+        </ScrollArea.Header>,
+      );
       expect(screen.getByTestId('header').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<ScrollArea.Header data-testid="header" style={{ padding: '8px' }}>Header</ScrollArea.Header>);
+      render(
+        <ScrollArea.Header data-testid="header" style={{ padding: '8px' }}>
+          Header
+        </ScrollArea.Header>,
+      );
       expect(screen.getByTestId('header')).toHaveStyle({ padding: '8px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<ScrollArea.Header data-testid="header" aria-label="Header">Content</ScrollArea.Header>);
+      render(
+        <ScrollArea.Header data-testid="header" aria-label="Header">
+          Content
+        </ScrollArea.Header>,
+      );
       expect(screen.getByTestId('header')).toHaveAttribute('aria-label', 'Header');
     });
   });
@@ -113,22 +149,38 @@ describe('ScrollArea', () => {
     });
 
     it('sets data-padded=true when padded=true', () => {
-      render(<ScrollArea.Content data-testid="content" padded>Content</ScrollArea.Content>);
+      render(
+        <ScrollArea.Content data-testid="content" padded>
+          Content
+        </ScrollArea.Content>,
+      );
       expect(screen.getByTestId('content')).toHaveAttribute('data-padded', 'true');
     });
 
     it('forwards className', () => {
-      render(<ScrollArea.Content data-testid="content" className="custom">Content</ScrollArea.Content>);
+      render(
+        <ScrollArea.Content data-testid="content" className="custom">
+          Content
+        </ScrollArea.Content>,
+      );
       expect(screen.getByTestId('content').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<ScrollArea.Content data-testid="content" style={{ padding: '16px' }}>Content</ScrollArea.Content>);
+      render(
+        <ScrollArea.Content data-testid="content" style={{ padding: '16px' }}>
+          Content
+        </ScrollArea.Content>,
+      );
       expect(screen.getByTestId('content')).toHaveStyle({ padding: '16px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<ScrollArea.Content data-testid="content" aria-label="Scrollable content">Content</ScrollArea.Content>);
+      render(
+        <ScrollArea.Content data-testid="content" aria-label="Scrollable content">
+          Content
+        </ScrollArea.Content>,
+      );
       expect(screen.getByTestId('content')).toHaveAttribute('aria-label', 'Scrollable content');
     });
   });
@@ -154,22 +206,38 @@ describe('ScrollArea', () => {
     });
 
     it('sets data-padded=false when padded=false', () => {
-      render(<ScrollArea.Footer data-testid="footer" padded={false}>Footer</ScrollArea.Footer>);
+      render(
+        <ScrollArea.Footer data-testid="footer" padded={false}>
+          Footer
+        </ScrollArea.Footer>,
+      );
       expect(screen.getByTestId('footer')).toHaveAttribute('data-padded', 'false');
     });
 
     it('forwards className', () => {
-      render(<ScrollArea.Footer data-testid="footer" className="custom">Footer</ScrollArea.Footer>);
+      render(
+        <ScrollArea.Footer data-testid="footer" className="custom">
+          Footer
+        </ScrollArea.Footer>,
+      );
       expect(screen.getByTestId('footer').className).toContain('custom');
     });
 
     it('forwards style', () => {
-      render(<ScrollArea.Footer data-testid="footer" style={{ padding: '12px' }}>Footer</ScrollArea.Footer>);
+      render(
+        <ScrollArea.Footer data-testid="footer" style={{ padding: '12px' }}>
+          Footer
+        </ScrollArea.Footer>,
+      );
       expect(screen.getByTestId('footer')).toHaveStyle({ padding: '12px' });
     });
 
     it('spreads HTML attributes', () => {
-      render(<ScrollArea.Footer data-testid="footer" aria-label="Footer">Content</ScrollArea.Footer>);
+      render(
+        <ScrollArea.Footer data-testid="footer" aria-label="Footer">
+          Content
+        </ScrollArea.Footer>,
+      );
       expect(screen.getByTestId('footer')).toHaveAttribute('aria-label', 'Footer');
     });
   });
@@ -182,7 +250,7 @@ describe('ScrollArea', () => {
           <ScrollArea.Header data-testid="header">Header text</ScrollArea.Header>
           <ScrollArea.Content data-testid="content">Scrollable content</ScrollArea.Content>
           <ScrollArea.Footer data-testid="footer">Footer text</ScrollArea.Footer>
-        </ScrollArea.Root>
+        </ScrollArea.Root>,
       );
 
       expect(screen.getByTestId('root')).toBeInTheDocument();
@@ -202,7 +270,7 @@ describe('ScrollArea', () => {
       render(
         <ScrollArea.Root data-testid="root">
           <ScrollArea.Content data-testid="content">Only content</ScrollArea.Content>
-        </ScrollArea.Root>
+        </ScrollArea.Root>,
       );
 
       expect(screen.getByTestId('root')).toBeInTheDocument();

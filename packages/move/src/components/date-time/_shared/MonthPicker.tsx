@@ -13,7 +13,12 @@ export interface MonthPickerProps {
   ariaLabel?: string;
 }
 
-export function MonthPicker({ locale, selectedMonth, onSelect, ariaLabel = 'Select month' }: MonthPickerProps) {
+export function MonthPicker({
+  locale,
+  selectedMonth,
+  onSelect,
+  ariaLabel = 'Select month',
+}: MonthPickerProps) {
   const months = React.useMemo(() => getMonthNames(locale, 'short'), [locale]);
 
   return (

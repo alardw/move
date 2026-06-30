@@ -56,7 +56,14 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
   styles,
   slots: ['root', 'list'] as const,
   defaults: { size: 'md', itemsBeforeCollapse: 1, itemsAfterCollapse: 1 },
-  moveProps: ['separator', 'maxItems', 'itemsBeforeCollapse', 'itemsAfterCollapse', 'size', 'labels'],
+  moveProps: [
+    'separator',
+    'maxItems',
+    'itemsBeforeCollapse',
+    'itemsAfterCollapse',
+    'size',
+    'labels',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<BreadcrumbLabels>) };
@@ -81,7 +88,11 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
         const rootSp = sp('root');
         const listSp = sp('list');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
-        const { className: listSpClass, style: listSpStyle, ...listSpRest } = listSp as Record<string, unknown>;
+        const {
+          className: listSpClass,
+          style: listSpStyle,
+          ...listSpRest
+        } = listSp as Record<string, unknown>;
 
         // Collect Item children for separator injection & collapsing
         const items = React.Children.toArray(children);
@@ -104,9 +115,7 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
         const withSeparators: React.ReactNode[] = [];
         visibleItems.forEach((item, i) => {
           if (i > 0) {
-            withSeparators.push(
-              <BreadcrumbSeparator key={`__sep-${i}__`} />
-            );
+            withSeparators.push(<BreadcrumbSeparator key={`__sep-${i}__`} />);
           }
           withSeparators.push(item);
         });
@@ -268,35 +277,41 @@ export interface BreadcrumbSeparatorProps extends React.HTMLAttributes<HTMLEleme
   sp?: SlotPropsMap<'separator'>;
 }
 
-const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorProps, HTMLLIElement>({
-  name: 'BreadcrumbSeparator',
-  styles,
-  slots: ['separator'] as const,
+const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorProps, HTMLLIElement>(
+  {
+    name: 'BreadcrumbSeparator',
+    styles,
+    slots: ['separator'] as const,
 
-  setup({ props, ref, cx, sp, attrs }) {
-    const context = useBreadcrumbContext();
+    setup({ props, ref, cx, sp, attrs }) {
+      const context = useBreadcrumbContext();
 
-    return {
-      render() {
-        const sepSp = sp('separator');
-        const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
-        return (
-          <li
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            role="presentation"
-            aria-hidden="true"
-            className={cx('separator', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children ?? context.separator}
-          </li>
-        );
-      },
-    };
+      return {
+        render() {
+          const sepSp = sp('separator');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = sepSp as Record<string, unknown>;
+          return (
+            <li
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              role="presentation"
+              aria-hidden="true"
+              className={cx('separator', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children ?? context.separator}
+            </li>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // Ellipsis
@@ -318,7 +333,11 @@ const BreadcrumbEllipsis = withMoveComponent<'ellipsis', BreadcrumbEllipsisProps
     return {
       render() {
         const ellipsisSp = sp('ellipsis');
-        const { className: spClass, style: spStyle, ...spRest } = ellipsisSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = ellipsisSp as Record<string, unknown>;
         return (
           <li
             {...attrs}

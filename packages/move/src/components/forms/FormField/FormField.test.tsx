@@ -10,7 +10,7 @@ describe('FormField', () => {
       const { container } = render(
         <FormField.Root data-testid="root">
           <FormField.Field>content</FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       const root = screen.getByTestId('root');
       expect(root.tagName).toBe('DIV');
@@ -22,7 +22,7 @@ describe('FormField', () => {
       render(
         <FormField.Root data-testid="root" labelWidth="12rem">
           <FormField.Field>content</FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       const root = screen.getByTestId('root');
       expect(root.style.getPropertyValue('--move-formfield-label-width')).toBe('12rem');
@@ -32,7 +32,7 @@ describe('FormField', () => {
       render(
         <FormField.Root data-testid="root" className="custom" style={{ margin: 8 }}>
           <FormField.Field>content</FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       const root = screen.getByTestId('root');
       expect(root.className).toContain('custom');
@@ -44,7 +44,7 @@ describe('FormField', () => {
       render(
         <FormField.Root ref={ref as any}>
           <FormField.Field>content</FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -56,7 +56,7 @@ describe('FormField', () => {
       render(
         <FormField.Root>
           <FormField.Label>My Label</FormField.Label>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(screen.getByText('My Label')).toBeInTheDocument();
     });
@@ -64,8 +64,10 @@ describe('FormField', () => {
     it('forwards className and style on Label', () => {
       render(
         <FormField.Root>
-          <FormField.Label className="label-class" style={{ color: 'blue' }}>Label</FormField.Label>
-        </FormField.Root>
+          <FormField.Label className="label-class" style={{ color: 'blue' }}>
+            Label
+          </FormField.Label>
+        </FormField.Root>,
       );
       const el = screen.getByText('Label');
       expect(el.className).toContain('label-class');
@@ -77,7 +79,7 @@ describe('FormField', () => {
       render(
         <FormField.Root>
           <FormField.Label ref={ref as any}>Label</FormField.Label>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -91,7 +93,7 @@ describe('FormField', () => {
           <FormField.Field>
             <input placeholder="test" />
           </FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(screen.getByPlaceholderText('test')).toBeInTheDocument();
     });
@@ -102,7 +104,7 @@ describe('FormField', () => {
           <FormField.Field className="field-class" style={{ padding: 4 }} data-testid="field">
             content
           </FormField.Field>
-        </FormField.Root>
+        </FormField.Root>,
       );
       const el = screen.getByTestId('field');
       expect(el.className).toContain('field-class');
@@ -116,7 +118,7 @@ describe('FormField', () => {
       render(
         <FormField.Root>
           <FormField.Description>Hint text</FormField.Description>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(screen.getByText('Hint text')).toBeInTheDocument();
     });
@@ -124,8 +126,10 @@ describe('FormField', () => {
     it('sets data-error when error=true', () => {
       render(
         <FormField.Root>
-          <FormField.Description error data-testid="desc">Error message</FormField.Description>
-        </FormField.Root>
+          <FormField.Description error data-testid="desc">
+            Error message
+          </FormField.Description>
+        </FormField.Root>,
       );
       expect(screen.getByTestId('desc')).toHaveAttribute('data-error');
     });
@@ -134,7 +138,7 @@ describe('FormField', () => {
       render(
         <FormField.Root>
           <FormField.Description data-testid="desc">Hint</FormField.Description>
-        </FormField.Root>
+        </FormField.Root>,
       );
       expect(screen.getByTestId('desc')).not.toHaveAttribute('data-error');
     });
@@ -145,7 +149,7 @@ describe('FormField', () => {
           <FormField.Description className="desc-class" style={{ fontSize: 12 }} data-testid="desc">
             Hint
           </FormField.Description>
-        </FormField.Root>
+        </FormField.Root>,
       );
       const el = screen.getByTestId('desc');
       expect(el.className).toContain('desc-class');

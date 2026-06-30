@@ -5,10 +5,21 @@ import type { Animation, StaggerConfig } from './types';
 
 /** anime.js transform shorthands — these compose into a single `transform`. */
 const TRANSFORM_PROPS = new Set([
-  'translateX', 'translateY', 'translateZ',
-  'rotate', 'rotateX', 'rotateY', 'rotateZ',
-  'scale', 'scaleX', 'scaleY', 'scaleZ',
-  'skew', 'skewX', 'skewY', 'perspective',
+  'translateX',
+  'translateY',
+  'translateZ',
+  'rotate',
+  'rotateX',
+  'rotateY',
+  'rotateZ',
+  'scale',
+  'scaleX',
+  'scaleY',
+  'scaleZ',
+  'skew',
+  'skewX',
+  'skewY',
+  'perspective',
 ]);
 
 /** Add a default unit to a numeric transform value (matches anime.js). */
@@ -30,7 +41,15 @@ function transformUnit(prop: string, value: unknown): string {
 function seedFromState(el: HTMLElement, params: Animation): void {
   const transforms: string[] = [];
   for (const [key, value] of Object.entries(params)) {
-    if (key === 'delay' || key === 'stagger' || key === 'ease' || key === 'duration' || key === 'loop' || key === 'alternate') continue;
+    if (
+      key === 'delay' ||
+      key === 'stagger' ||
+      key === 'ease' ||
+      key === 'duration' ||
+      key === 'loop' ||
+      key === 'alternate'
+    )
+      continue;
     if (typeof value === 'object' && value !== null && 'from' in value) {
       const from = (value as { from: unknown }).from;
       if (TRANSFORM_PROPS.has(key)) {

@@ -30,7 +30,11 @@ export const Label = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabe
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const asteriskSp = sp('asterisk');
-        const { className: astSpClass, style: astSpStyle, ...astSpRest } = asteriskSp as Record<string, unknown>;
+        const {
+          className: astSpClass,
+          style: astSpStyle,
+          ...astSpRest
+        } = asteriskSp as Record<string, unknown>;
 
         return (
           <RadixLabel.Root

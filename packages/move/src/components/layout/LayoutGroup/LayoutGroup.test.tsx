@@ -26,13 +26,25 @@ describe('LayoutGroup', () => {
     });
 
     it('renders as the specified element via as prop', () => {
-      const { rerender } = render(<LayoutGroup as="ul" data-testid="lg">x</LayoutGroup>);
+      const { rerender } = render(
+        <LayoutGroup as="ul" data-testid="lg">
+          x
+        </LayoutGroup>,
+      );
       expect(screen.getByTestId('lg').tagName).toBe('UL');
 
-      rerender(<LayoutGroup as="ol" data-testid="lg">x</LayoutGroup>);
+      rerender(
+        <LayoutGroup as="ol" data-testid="lg">
+          x
+        </LayoutGroup>,
+      );
       expect(screen.getByTestId('lg').tagName).toBe('OL');
 
-      rerender(<LayoutGroup as="section" data-testid="lg">x</LayoutGroup>);
+      rerender(
+        <LayoutGroup as="section" data-testid="lg">
+          x
+        </LayoutGroup>,
+      );
       expect(screen.getByTestId('lg').tagName).toBe('SECTION');
     });
 
@@ -54,7 +66,11 @@ describe('LayoutGroup', () => {
     });
 
     it('spreads HTML attributes', () => {
-      render(<LayoutGroup data-testid="lg" aria-label="grid">x</LayoutGroup>);
+      render(
+        <LayoutGroup data-testid="lg" aria-label="grid">
+          x
+        </LayoutGroup>,
+      );
       expect(screen.getByTestId('lg')).toHaveAttribute('aria-label', 'grid');
     });
   });
@@ -68,7 +84,11 @@ describe('LayoutGroup', () => {
     });
 
     it('reflects enter and exit props', () => {
-      render(<LayoutGroup enter="fade" exit="none" data-testid="lg">x</LayoutGroup>);
+      render(
+        <LayoutGroup enter="fade" exit="none" data-testid="lg">
+          x
+        </LayoutGroup>,
+      );
       const el = screen.getByTestId('lg');
       expect(el).toHaveAttribute('data-enter', 'fade');
       expect(el).toHaveAttribute('data-exit', 'none');

@@ -7,7 +7,16 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
-import { useAnimations, resolveAnimationsConfig, extractSteps, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  extractSteps,
+  staggerItems,
+  quick,
+  poppy,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
@@ -20,31 +29,42 @@ import styles from './Autocomplete.module.css';
 
 // Per-item scale deltas (pixel-based). Container (Content) only fades; item
 // stagger carries the reveal. See Select for rationale.
-const SCALE_INSET_PX = 16;        // per-item fade-in offset
-const SCALE_HOVER_PX = 4;         // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
+const SCALE_INSET_PX = 16; // per-item fade-in offset
+const SCALE_HOVER_PX = 4; // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
 
 const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'open',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
-      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        {
+          target: 'ContentInner',
+          children: '[role="option"]',
+          stagger: staggerItems.stagger,
+          animation: {
+            scale: { from: '$scaleFrom', to: 1, ease: poppy },
+            opacity: { from: 0, to: 1 },
+          },
+        },
+        { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+      ],
+    ],
   },
   {
     trigger: 'closed',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+      ],
+    ],
   },
   {
     trigger: 'Item.hover',
     sequence: [{ animation: { scale: { to: '$scaleHover', ease: quick } } }],
   },
 ];
-
 
 // =============================================================================
 // Labels (i18n)
@@ -167,7 +187,12 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
         labels,
       }}
     >
-      <RadixPopover.Root open={radixOpen} onOpenChange={() => { /* Controlled externally */ }}>
+      <RadixPopover.Root
+        open={radixOpen}
+        onOpenChange={() => {
+          /* Controlled externally */
+        }}
+      >
         {children}
       </RadixPopover.Root>
     </AutocompleteContext.Provider>
@@ -196,11 +221,18 @@ export interface AutocompleteTriggerProps extends React.HTMLAttributes<HTMLEleme
 
 const ACTION_NAMES = new Set(['AutocompleteIcon', 'AutocompleteClearTrigger']);
 
-const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'triggerActions', AutocompleteTriggerProps, HTMLDivElement>({
+const AutocompleteTrigger = withMoveComponent<
+  'trigger' | 'triggerContent' | 'triggerActions',
+  AutocompleteTriggerProps,
+  HTMLDivElement
+>({
   name: 'AutocompleteTrigger',
   styles,
   slots: ['trigger', 'triggerContent', 'triggerActions'] as const,
-  defaults: { size: 'md' as AutocompleteTriggerSize, variant: 'outlined' as AutocompleteTriggerVariant },
+  defaults: {
+    size: 'md' as AutocompleteTriggerSize,
+    variant: 'outlined' as AutocompleteTriggerVariant,
+  },
   moveProps: ['invalid', 'disabled', 'width', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
@@ -232,7 +264,11 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
 
         // Split children into content (tags, input) and actions (clear, icon)
         const contentChildren: React.ReactNode[] = [];
@@ -258,15 +294,17 @@ const AutocompleteTrigger = withMoveComponent<'trigger' | 'triggerContent' | 'tr
               data-variant={props.variant}
               data-move-state={moveState}
               className={cx('trigger', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...props.style,
+                ...(props.width != null ? { width: props.width } : {}),
+                ...(spStyle as React.CSSProperties),
+              }}
               {...(props.disabled ? { 'data-disabled': '' } : {})}
               {...(props.invalid ? { 'data-invalid': '' } : {})}
               onClick={handleClick}
             >
               <div {...slot('triggerContent')}>{contentChildren}</div>
-              {actionChildren.length > 0 && (
-                <div {...slot('triggerActions')}>{actionChildren}</div>
-              )}
+              {actionChildren.length > 0 && <div {...slot('triggerActions')}>{actionChildren}</div>}
             </div>
           </RadixPopover.Anchor>
         );
@@ -295,7 +333,10 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
 
   setup({ props, ref, cx, sp, attrs }) {
     const ac = useAutocompleteContext();
-    const mergedRef = useMergedRef<HTMLInputElement>(ref, ac.inputRef as React.Ref<HTMLInputElement>);
+    const mergedRef = useMergedRef<HTMLInputElement>(
+      ref,
+      ac.inputRef as React.Ref<HTMLInputElement>,
+    );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       ac.onInputValueChange(e.target.value);
@@ -397,7 +438,11 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
     return {
       render() {
         const inputSp = sp('input');
-        const { className: spClass, style: spStyle, ...spRest } = inputSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = inputSp as Record<string, unknown>;
 
         const activeDescendant = ac.highlightedValue
           ? ac.getItemId(ac.highlightedValue)
@@ -452,7 +497,11 @@ const AutocompleteTagList = withMoveComponent<'tagList', AutocompleteTagListProp
     return {
       render() {
         const tagListSp = sp('tagList');
-        const { className: spClass, style: spStyle, ...spRest } = tagListSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = tagListSp as Record<string, unknown>;
 
         if (!ac.multiple || ac.selectedValues.length === 0) return null;
 
@@ -489,7 +538,11 @@ export interface AutocompleteTagProps extends React.HTMLAttributes<HTMLElement> 
   sp?: SlotPropsMap<'tag' | 'tagRemove'>;
 }
 
-const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagProps, HTMLSpanElement>({
+const AutocompleteTag = withMoveComponent<
+  'tag' | 'tagRemove',
+  AutocompleteTagProps,
+  HTMLSpanElement
+>({
   name: 'AutocompleteTag',
   styles,
   slots: ['tag', 'tagRemove'] as const,
@@ -510,8 +563,13 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
         const tagSp = sp('tag');
         const { className: spClass, style: spStyle, ...spRest } = tagSp as Record<string, unknown>;
         const removeSp = sp('tagRemove');
-        const { className: removeSpClass, style: removeSpStyle, ...removeSpRest } = removeSp as Record<string, unknown>;
-        const titleText = typeof props.children === 'string' ? props.children : (props.value as string);
+        const {
+          className: removeSpClass,
+          style: removeSpStyle,
+          ...removeSpRest
+        } = removeSp as Record<string, unknown>;
+        const titleText =
+          typeof props.children === 'string' ? props.children : (props.value as string);
 
         return (
           <span
@@ -521,7 +579,9 @@ const AutocompleteTag = withMoveComponent<'tag' | 'tagRemove', AutocompleteTagPr
             className={cx('tag', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            <span className={styles.tagText} title={titleText}>{props.children}</span>
+            <span className={styles.tagText} title={titleText}>
+              {props.children}
+            </span>
             <button
               {...removeSpRest}
               type="button"
@@ -564,24 +624,50 @@ const AutocompleteIcon = withMoveComponent<'icon', AutocompleteIconProps, HTMLSp
 
     // Icon rotation — extract Icon steps from open/closed triggers, run via state triggers
     // Trigger always sets data-move-state="open"|"closed" reflecting true state (incl. during exit)
-    const iconStates: AnimationState[] = React.useMemo(() => [
-      { name: 'open', slot: 'Icon', source: 'data-move-state', value: 'open', closest: '[data-move-state]', initial: false },
-      { name: 'closed', slot: 'Icon', source: 'data-move-state', value: 'closed', closest: '[data-move-state]', initial: false },
-    ], []);
+    const iconStates: AnimationState[] = React.useMemo(
+      () => [
+        {
+          name: 'open',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'open',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+        {
+          name: 'closed',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'closed',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+      ],
+      [],
+    );
 
     const iconConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!animConfig) return null;
-      const openSteps = extractSteps(animConfig.find(t => t.trigger === 'open'), ['Icon']);
-      const closedSteps = extractSteps(animConfig.find(t => t.trigger === 'closed'), ['Icon']);
+      const openSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'open'),
+        ['Icon'],
+      );
+      const closedSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'closed'),
+        ['Icon'],
+      );
       const result: AnimationTrigger[] = [];
       if (openSteps) result.push({ trigger: 'open', sequence: openSteps });
       if (closedSteps) result.push({ trigger: 'closed', sequence: closedSteps });
       return result.length > 0 ? result : null;
     }, [animConfig]);
 
-    const iconRefs = React.useMemo(() => ({
-      Icon: iconRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const iconRefs = React.useMemo(
+      () => ({
+        Icon: iconRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(iconConfig, iconRefs, iconStates);
 
@@ -617,7 +703,11 @@ export interface AutocompleteClearTriggerProps extends React.HTMLAttributes<HTML
   sp?: SlotPropsMap<'clearTrigger'>;
 }
 
-const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteClearTriggerProps, HTMLButtonElement>({
+const AutocompleteClearTrigger = withMoveComponent<
+  'clearTrigger',
+  AutocompleteClearTriggerProps,
+  HTMLButtonElement
+>({
   name: 'AutocompleteClearTrigger',
   styles,
   slots: ['clearTrigger'] as const,
@@ -636,7 +726,11 @@ const AutocompleteClearTrigger = withMoveComponent<'clearTrigger', AutocompleteC
         if (ac.selectedValues.length === 0 && !ac.inputValue) return null;
 
         const clearSp = sp('clearTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = clearSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = clearSp as Record<string, unknown>;
         return (
           <button
             {...attrs}
@@ -703,18 +797,29 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
 
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!ac.animConfig) return null;
-      const openSteps = extractSteps(ac.animConfig.find(t => t.trigger === 'open'), ['Content', 'ContentInner']);
-      const closedSteps = extractSteps(ac.animConfig.find(t => t.trigger === 'closed'), ['Content', 'ContentInner']);
+      const openSteps = extractSteps(
+        ac.animConfig.find((t) => t.trigger === 'open'),
+        ['Content', 'ContentInner'],
+      );
+      const closedSteps = extractSteps(
+        ac.animConfig.find((t) => t.trigger === 'closed'),
+        ['Content', 'ContentInner'],
+      );
       const result: AnimationTrigger[] = [];
-      if (openSteps) result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
-      if (closedSteps) result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
+      if (openSteps)
+        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
+      if (closedSteps)
+        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
       return result.length > 0 ? result : null;
     }, [ac.animConfig, scaleFrom]);
 
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+        ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
@@ -731,8 +836,7 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
       const target = e.target as Node;
       const trigger = (contentRef.current as HTMLElement | null)
         ?.closest('[data-radix-popper-content-wrapper]')
-        ?.parentElement
-        ?.querySelector('[data-radix-popover-anchor]');
+        ?.parentElement?.querySelector('[data-radix-popover-anchor]');
       if (trigger?.contains(target)) {
         e.preventDefault();
         return;
@@ -740,8 +844,12 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
       if (!e.defaultPrevented) ac.close();
     };
 
-    const handleOpenAutoFocus = (e: Event) => { e.preventDefault(); };
-    const handleCloseAutoFocus = (e: Event) => { e.preventDefault(); };
+    const handleOpenAutoFocus = (e: Event) => {
+      e.preventDefault();
+    };
+    const handleCloseAutoFocus = (e: Event) => {
+      e.preventDefault();
+    };
 
     const { className: spClass, style: spStyle, ...spRest } = props.contentSp;
     const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
@@ -759,7 +867,9 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
           ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
           ...(spStyle as React.CSSProperties),
           // Default to matching trigger width; props override per-instance.
-          width: (props.width as React.CSSProperties['width'] | undefined) ?? 'var(--radix-popover-trigger-width)',
+          width:
+            (props.width as React.CSSProperties['width'] | undefined) ??
+            'var(--radix-popover-trigger-width)',
           ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
           ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
         }}
@@ -784,7 +894,11 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
   },
 );
 
-const AutocompleteContent = withMoveComponent<'content' | 'contentInner', AutocompleteContentProps, HTMLDivElement>({
+const AutocompleteContent = withMoveComponent<
+  'content' | 'contentInner',
+  AutocompleteContentProps,
+  HTMLDivElement
+>({
   name: 'AutocompleteContent',
   styles,
   slots: ['content', 'contentInner'] as const,
@@ -866,12 +980,16 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
 
     // Check if highlighted
     const visibleItems = ac.getVisibleItems();
-    const myVisibleIndex = visibleItems.findIndex(v => v.value === itemValue);
+    const myVisibleIndex = visibleItems.findIndex((v) => v.value === itemValue);
     const isHighlighted = myVisibleIndex === ac.highlightedIndex;
 
     // Scroll into view when highlighted
     React.useEffect(() => {
-      if (isHighlighted && itemRef.current && typeof itemRef.current.scrollIntoView === 'function') {
+      if (
+        isHighlighted &&
+        itemRef.current &&
+        typeof itemRef.current.scrollIntoView === 'function'
+      ) {
         itemRef.current.scrollIntoView({ block: 'nearest' });
       }
     }, [isHighlighted]);
@@ -884,9 +1002,12 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
       return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
     }, [ac.animConfig, scaleHover]);
 
-    const itemRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const itemRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(itemConfig, itemRefs);
 
@@ -935,7 +1056,10 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
               <span
                 className={styles.itemIndicator}
                 aria-hidden="true"
-                style={{ visibility: isSelected ? 'visible' : 'hidden', color: isSelected ? 'var(--move-primary)' : undefined }}
+                style={{
+                  visibility: isSelected ? 'visible' : 'hidden',
+                  color: isSelected ? 'var(--move-primary)' : undefined,
+                }}
               >
                 {resolvedCheck}
               </span>
@@ -972,7 +1096,11 @@ export interface AutocompleteItemIndicatorProps extends React.HTMLAttributes<HTM
   sp?: SlotPropsMap<'itemIndicator'>;
 }
 
-const AutocompleteItemIndicator = withMoveComponent<'itemIndicator', AutocompleteItemIndicatorProps, HTMLSpanElement>({
+const AutocompleteItemIndicator = withMoveComponent<
+  'itemIndicator',
+  AutocompleteItemIndicatorProps,
+  HTMLSpanElement
+>({
   name: 'AutocompleteItemIndicator',
   styles,
   slots: ['itemIndicator'] as const,
@@ -1030,7 +1158,11 @@ const AutocompleteGroup = withMoveComponent<'group', AutocompleteGroupProps, HTM
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -1059,7 +1191,11 @@ export interface AutocompleteGroupLabelProps extends React.HTMLAttributes<HTMLEl
   sp?: SlotPropsMap<'groupLabel'>;
 }
 
-const AutocompleteGroupLabel = withMoveComponent<'groupLabel', AutocompleteGroupLabelProps, HTMLDivElement>({
+const AutocompleteGroupLabel = withMoveComponent<
+  'groupLabel',
+  AutocompleteGroupLabelProps,
+  HTMLDivElement
+>({
   name: 'AutocompleteGroupLabel',
   styles,
   slots: ['groupLabel'] as const,
@@ -1068,7 +1204,11 @@ const AutocompleteGroupLabel = withMoveComponent<'groupLabel', AutocompleteGroup
     return {
       render() {
         const labelSp = sp('groupLabel');
-        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = labelSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -1111,7 +1251,11 @@ const AutocompleteEmpty = withMoveComponent<'empty', AutocompleteEmptyProps, HTM
         if (visible.length > 0) return null;
 
         const emptySp = sp('empty');
-        const { className: spClass, style: spStyle, ...spRest } = emptySp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = emptySp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -1154,7 +1298,11 @@ const AutocompleteLoading = withMoveComponent<'loading', AutocompleteLoadingProp
         if (!ac.loading) return null;
 
         const loadingSp = sp('loading');
-        const { className: spClass, style: spStyle, ...spRest } = loadingSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = loadingSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -1198,7 +1346,11 @@ const AutocompleteError = withMoveComponent<'error', AutocompleteErrorProps, HTM
         if (!ac.hasError) return null;
 
         const errorSp = sp('error');
-        const { className: spClass, style: spStyle, ...spRest } = errorSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = errorSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -1228,7 +1380,11 @@ export interface AutocompleteRetryTriggerProps extends React.HTMLAttributes<HTML
   sp?: SlotPropsMap<'retryTrigger'>;
 }
 
-const AutocompleteRetryTrigger = withMoveComponent<'retryTrigger', AutocompleteRetryTriggerProps, HTMLButtonElement>({
+const AutocompleteRetryTrigger = withMoveComponent<
+  'retryTrigger',
+  AutocompleteRetryTriggerProps,
+  HTMLButtonElement
+>({
   name: 'AutocompleteRetryTrigger',
   styles,
   slots: ['retryTrigger'] as const,
@@ -1248,7 +1404,11 @@ const AutocompleteRetryTrigger = withMoveComponent<'retryTrigger', AutocompleteR
         if (!ac.hasError || !ac.retry) return null;
 
         const retrySp = sp('retryTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = retrySp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = retrySp as Record<string, unknown>;
         return (
           <button
             {...attrs}
@@ -1278,7 +1438,11 @@ export interface AutocompleteSeparatorProps extends React.HTMLAttributes<HTMLEle
   sp?: SlotPropsMap<'separator'>;
 }
 
-const AutocompleteSeparator = withMoveComponent<'separator', AutocompleteSeparatorProps, HTMLDivElement>({
+const AutocompleteSeparator = withMoveComponent<
+  'separator',
+  AutocompleteSeparatorProps,
+  HTMLDivElement
+>({
   name: 'AutocompleteSeparator',
   styles,
   slots: ['separator'] as const,

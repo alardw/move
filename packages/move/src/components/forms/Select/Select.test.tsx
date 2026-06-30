@@ -4,12 +4,14 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Select } from './Select';
 
-const renderSelect = (props: {
-  rootProps?: Record<string, unknown>;
-  triggerProps?: Record<string, unknown>;
-  items?: { value: string; label: string; disabled?: boolean }[];
-  placeholder?: string;
-} = {}) => {
+const renderSelect = (
+  props: {
+    rootProps?: Record<string, unknown>;
+    triggerProps?: Record<string, unknown>;
+    items?: { value: string; label: string; disabled?: boolean }[];
+    placeholder?: string;
+  } = {},
+) => {
   const {
     rootProps = {},
     triggerProps = {},
@@ -27,15 +29,15 @@ const renderSelect = (props: {
         <Select.Icon />
       </Select.Trigger>
       <Select.Content>
-          <Select.Viewport>
-            {items.map((item) => (
-              <Select.Item key={item.value} value={item.value} disabled={item.disabled}>
-                {item.label}
-              </Select.Item>
-            ))}
-          </Select.Viewport>
-        </Select.Content>
-    </Select.Root>
+        <Select.Viewport>
+          {items.map((item) => (
+            <Select.Item key={item.value} value={item.value} disabled={item.disabled}>
+              {item.label}
+            </Select.Item>
+          ))}
+        </Select.Viewport>
+      </Select.Content>
+    </Select.Root>,
   );
 };
 
@@ -191,7 +193,7 @@ describe('Select', () => {
       renderSelect({ rootProps: { value: 'apple', onValueChange: () => {} } });
       await user.click(screen.getByRole('button'));
       const items = screen.getAllByRole('menuitem');
-      const appleItem = items.find(el => el.textContent === 'Apple');
+      const appleItem = items.find((el) => el.textContent === 'Apple');
       expect(appleItem).toHaveAttribute('data-selected');
     });
   });
@@ -206,15 +208,15 @@ describe('Select', () => {
             <Select.Value placeholder="Select..." />
             <Select.Icon />
           </Select.Trigger>
-            <Select.Content>
-              <Select.Viewport>
-                <Select.Group>
-                  <Select.Label>Fruits</Select.Label>
-                  <Select.Item value="apple">Apple</Select.Item>
-                </Select.Group>
-              </Select.Viewport>
-            </Select.Content>
-        </Select.Root>
+          <Select.Content>
+            <Select.Viewport>
+              <Select.Group>
+                <Select.Label>Fruits</Select.Label>
+                <Select.Item value="apple">Apple</Select.Item>
+              </Select.Group>
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Root>,
       );
       await user.click(screen.getByRole('button'));
       expect(screen.getByText('Fruits')).toBeInTheDocument();
@@ -228,14 +230,14 @@ describe('Select', () => {
             <Select.Value placeholder="Select..." />
             <Select.Icon />
           </Select.Trigger>
-            <Select.Content>
-              <Select.Viewport>
-                <Select.Item value="a">A</Select.Item>
-                <Select.Separator />
-                <Select.Item value="b">B</Select.Item>
-              </Select.Viewport>
-            </Select.Content>
-        </Select.Root>
+          <Select.Content>
+            <Select.Viewport>
+              <Select.Item value="a">A</Select.Item>
+              <Select.Separator />
+              <Select.Item value="b">B</Select.Item>
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Root>,
       );
       await user.click(screen.getByRole('button'));
       // Separator is in the portal (document.body), not in container
@@ -266,13 +268,13 @@ describe('Select', () => {
               <Select.Value placeholder="Pick" />
               <Select.Icon />
             </Select.Trigger>
-              <Select.Content>
-                <Select.Viewport>
-                  <Select.Item value="a">A</Select.Item>
-                </Select.Viewport>
-              </Select.Content>
+            <Select.Content>
+              <Select.Viewport>
+                <Select.Item value="a">A</Select.Item>
+              </Select.Viewport>
+            </Select.Content>
           </Select.Root>
-        </LayerProvider>
+        </LayerProvider>,
       );
       await user.click(screen.getByRole('button'));
       const content = document.body.querySelector('[class*="content"]') as HTMLElement;

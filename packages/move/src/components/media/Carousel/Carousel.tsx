@@ -5,7 +5,12 @@ import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useCarousel } from './useCarousel';
-import type { UseCarouselOptions, CarouselOrientation, CarouselAlign, CarouselAnimate } from './useCarousel';
+import type {
+  UseCarouselOptions,
+  CarouselOrientation,
+  CarouselAlign,
+  CarouselAnimate,
+} from './useCarousel';
 import styles from './Carousel.module.css';
 
 // =============================================================================
@@ -173,7 +178,8 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
   };
 
   const showAutoTriggers = showTriggers && triggerPlacement !== 'none';
-  const showIndicatorSidesLayout = triggerPlacement === 'indicator-sides' && (showTriggers || showIndicators);
+  const showIndicatorSidesLayout =
+    triggerPlacement === 'indicator-sides' && (showTriggers || showIndicators);
 
   const renderTriggerPair = () => (
     <>
@@ -202,23 +208,27 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
           {children}
 
           {showAutoTriggers && triggerPlacement === 'overlay' && (
-            <div className={styles.overlayNav}>
-              {renderTriggerPair()}
-            </div>
+            <div className={styles.overlayNav}>{renderTriggerPair()}</div>
           )}
 
-          {showIndicators && indicatorPlacement === 'inside-bottom' && !showIndicatorSidesLayout && (
-            <div className={styles.insideIndicators}>
-              <CarouselIndicatorGroup />
-            </div>
-          )}
+          {showIndicators &&
+            indicatorPlacement === 'inside-bottom' &&
+            !showIndicatorSidesLayout && (
+              <div className={styles.insideIndicators}>
+                <CarouselIndicatorGroup />
+              </div>
+            )}
         </div>
 
         {showIndicatorSidesLayout && (
           <div className={styles.indicatorSides} data-align={triggerAlign}>
-            {showTriggers ? <CarouselPrevTrigger size={triggerSize} variant={triggerVariant} /> : null}
+            {showTriggers ? (
+              <CarouselPrevTrigger size={triggerSize} variant={triggerVariant} />
+            ) : null}
             {showIndicators ? <CarouselIndicatorGroup /> : null}
-            {showTriggers ? <CarouselNextTrigger size={triggerSize} variant={triggerVariant} /> : null}
+            {showTriggers ? (
+              <CarouselNextTrigger size={triggerSize} variant={triggerVariant} />
+            ) : null}
           </div>
         )}
 
@@ -261,7 +271,8 @@ const CarouselViewport = withMoveComponent<'viewport', CarouselViewportProps, HT
       (node: HTMLDivElement | null) => {
         (viewportRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         if (typeof ref === 'function') ref(node);
-        else if (ref && typeof ref === 'object') (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        else if (ref && typeof ref === 'object')
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       },
       [ref, viewportRef],
     );
@@ -269,7 +280,11 @@ const CarouselViewport = withMoveComponent<'viewport', CarouselViewportProps, HT
     return {
       render() {
         const viewportSp = sp('viewport');
-        const { className: spClass, style: spStyle, ...spRest } = viewportSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = viewportSp as Record<string, unknown>;
 
         return (
           <div
@@ -323,7 +338,11 @@ const CarouselSlide = withMoveComponent<'slide', CarouselSlideProps, HTMLDivElem
     return {
       render() {
         const slideSp = sp('slide');
-        const { className: spClass, style: spStyle, ...spRest } = slideSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = slideSp as Record<string, unknown>;
 
         return (
           <div
@@ -359,7 +378,11 @@ export interface CarouselPrevTriggerProps extends React.HTMLAttributes<HTMLEleme
   sp?: SlotPropsMap<'prevTrigger'>;
 }
 
-const CarouselPrevTrigger = withMoveComponent<'prevTrigger', CarouselPrevTriggerProps, HTMLButtonElement>({
+const CarouselPrevTrigger = withMoveComponent<
+  'prevTrigger',
+  CarouselPrevTriggerProps,
+  HTMLButtonElement
+>({
   name: 'CarouselPrevTrigger',
   styles,
   slots: ['prevTrigger'] as const,
@@ -371,7 +394,11 @@ const CarouselPrevTrigger = withMoveComponent<'prevTrigger', CarouselPrevTrigger
     return {
       render() {
         const triggerSp = sp('prevTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
         return (
@@ -415,7 +442,11 @@ export interface CarouselNextTriggerProps extends React.HTMLAttributes<HTMLEleme
   sp?: SlotPropsMap<'nextTrigger'>;
 }
 
-const CarouselNextTrigger = withMoveComponent<'nextTrigger', CarouselNextTriggerProps, HTMLButtonElement>({
+const CarouselNextTrigger = withMoveComponent<
+  'nextTrigger',
+  CarouselNextTriggerProps,
+  HTMLButtonElement
+>({
   name: 'CarouselNextTrigger',
   styles,
   slots: ['nextTrigger'] as const,
@@ -427,7 +458,11 @@ const CarouselNextTrigger = withMoveComponent<'nextTrigger', CarouselNextTrigger
     return {
       render() {
         const triggerSp = sp('nextTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
         return (
@@ -469,7 +504,11 @@ export interface CarouselIndicatorGroupProps extends React.HTMLAttributes<HTMLEl
   sp?: SlotPropsMap<'indicatorGroup'>;
 }
 
-const CarouselIndicatorGroup = withMoveComponent<'indicatorGroup', CarouselIndicatorGroupProps, HTMLDivElement>({
+const CarouselIndicatorGroup = withMoveComponent<
+  'indicatorGroup',
+  CarouselIndicatorGroupProps,
+  HTMLDivElement
+>({
   name: 'CarouselIndicatorGroup',
   styles,
   slots: ['indicatorGroup'] as const,
@@ -480,19 +519,25 @@ const CarouselIndicatorGroup = withMoveComponent<'indicatorGroup', CarouselIndic
     return {
       render() {
         const groupSp = sp('indicatorGroup');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
 
         // If children provided, render them; otherwise generate indicators automatically
-        const content = props.children || Array.from({ length: pageCount }, (_, i) => (
-          <button
-            key={i}
-            type="button"
-            className={styles.indicator}
-            data-active={i === page || undefined}
-            aria-label={`Go to slide ${i + 1}`}
-            onClick={() => scrollToPage(i)}
-          />
-        ));
+        const content =
+          props.children ||
+          Array.from({ length: pageCount }, (_, i) => (
+            <button
+              key={i}
+              type="button"
+              className={styles.indicator}
+              data-active={i === page || undefined}
+              aria-label={`Go to slide ${i + 1}`}
+              onClick={() => scrollToPage(i)}
+            />
+          ));
 
         return (
           <div
@@ -525,46 +570,52 @@ export interface CarouselIndicatorProps extends React.HTMLAttributes<HTMLElement
   sp?: SlotPropsMap<'indicator'>;
 }
 
-const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps, HTMLButtonElement>({
-  name: 'CarouselIndicator',
-  styles,
-  slots: ['indicator'] as const,
-  moveProps: ['index'],
+const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps, HTMLButtonElement>(
+  {
+    name: 'CarouselIndicator',
+    styles,
+    slots: ['indicator'] as const,
+    moveProps: ['index'],
 
-  setup({ props, ref, cx, sp, attrs }) {
-    const { page, scrollToPage } = useCarouselContext();
-    const index = props.index as number;
+    setup({ props, ref, cx, sp, attrs }) {
+      const { page, scrollToPage } = useCarouselContext();
+      const index = props.index as number;
 
-    return {
-      render() {
-        const indicatorSp = sp('indicator');
-        const { className: spClass, style: spStyle, ...spRest } = indicatorSp as Record<string, unknown>;
-        const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
+      return {
+        render() {
+          const indicatorSp = sp('indicator');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = indicatorSp as Record<string, unknown>;
+          const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
-        return (
-          <button
-            {...restAttrs}
-            {...spRest}
-            ref={ref}
-            type="button"
-            role="tab"
-            aria-selected={page === index}
-            aria-label={`Go to slide ${index + 1}`}
-            data-active={page === index || undefined}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              scrollToPage(index);
-              (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
-            className={cx('indicator', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {props.children}
-          </button>
-        );
-      },
-    };
+          return (
+            <button
+              {...restAttrs}
+              {...spRest}
+              ref={ref}
+              type="button"
+              role="tab"
+              aria-selected={page === index}
+              aria-label={`Go to slide ${index + 1}`}
+              data-active={page === index || undefined}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                scrollToPage(index);
+                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+              }}
+              className={cx('indicator', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {props.children}
+            </button>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // =============================================================================
 // Export

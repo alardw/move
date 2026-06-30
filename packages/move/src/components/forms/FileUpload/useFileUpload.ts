@@ -76,7 +76,7 @@ interface InputProps {
 function normalizeAccept(accept?: string | string[]): string[] {
   if (!accept) return [];
   const list = Array.isArray(accept) ? accept : accept.split(',');
-  return list.map(s => s.trim().toLowerCase()).filter(Boolean);
+  return list.map((s) => s.trim().toLowerCase()).filter(Boolean);
 }
 
 function isFileAccepted(file: File, acceptList: string[]): boolean {
@@ -85,7 +85,7 @@ function isFileAccepted(file: File, acceptList: string[]): boolean {
   const fileName = file.name.toLowerCase();
   const mimeType = file.type.toLowerCase();
 
-  return acceptList.some(entry => {
+  return acceptList.some((entry) => {
     // Extension match: .pdf, .jpg, etc.
     if (entry.startsWith('.')) {
       return fileName.endsWith(entry);
@@ -105,11 +105,11 @@ function isItemTypeAccepted(type: string, acceptList: string[]): boolean {
   if (acceptList.length === 0) return true;
 
   // During drag we only have MIME types, not file names — skip extension checks
-  const mimeOnly = acceptList.filter(e => !e.startsWith('.'));
+  const mimeOnly = acceptList.filter((e) => !e.startsWith('.'));
   if (mimeOnly.length === 0) return true; // can't validate extensions during drag
 
   const lower = type.toLowerCase();
-  return mimeOnly.some(entry => {
+  return mimeOnly.some((entry) => {
     if (entry.endsWith('/*')) {
       return lower.startsWith(entry.slice(0, -1));
     }
@@ -159,11 +159,17 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       const errors: FileError[] = [];
 
       if (!isFileAccepted(file, acceptList)) {
-        errors.push({ code: 'file-invalid-type', message: `File type "${file.type || 'unknown'}" is not accepted` });
+        errors.push({
+          code: 'file-invalid-type',
+          message: `File type "${file.type || 'unknown'}" is not accepted`,
+        });
       }
 
       if (maxSize && file.size > maxSize) {
-        errors.push({ code: 'file-too-large', message: `File is ${formatFileSize(file.size)}, max is ${formatFileSize(maxSize)}` });
+        errors.push({
+          code: 'file-too-large',
+          message: `File is ${formatFileSize(file.size)}, max is ${formatFileSize(maxSize)}`,
+        });
       }
 
       if (validate) {
@@ -176,7 +182,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       return errors;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [acceptList.join(','), maxSize, validate]
+    [acceptList.join(','), maxSize, validate],
   );
 
   const addFiles = useCallback(
@@ -223,14 +229,14 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         onFileReject?.(rejected);
       }
     },
-    [disabled, multiple, validateFile, maxFiles, files.length, setFiles, onFileReject]
+    [disabled, multiple, validateFile, maxFiles, files.length, setFiles, onFileReject],
   );
 
   const removeFile = useCallback(
     (file: File) => {
       setFiles((prev) => prev.filter((f) => f !== file));
     },
-    [setFiles]
+    [setFiles],
   );
 
   const clearFiles = useCallback(() => {
@@ -256,7 +262,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
           // Best-effort type checking during drag
           const items = Array.from(e.dataTransfer.items);
           const hasRejected = items.some(
-            (item) => item.kind === 'file' && !isItemTypeAccepted(item.type, acceptList)
+            (item) => item.kind === 'file' && !isItemTypeAccepted(item.type, acceptList),
           );
           setIsDragReject(hasRejected);
         }
@@ -295,7 +301,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [disabled, isDragReject, acceptList.join(','), addFiles]
+    [disabled, isDragReject, acceptList.join(','), addFiles],
   );
 
   const getInputProps = useCallback(
@@ -315,7 +321,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         e.target.value = '';
       },
     }),
-    [acceptString, multiple, addFiles]
+    [acceptString, multiple, addFiles],
   );
 
   return {

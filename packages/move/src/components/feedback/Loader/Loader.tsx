@@ -113,21 +113,23 @@ export const Loader = withMoveComponent<
         const dot = dots[i];
 
         const dp = { t: 0 };
-        anims.push(animate(dp, {
-          t: [0, 1],
-          duration: 500,
-          delay: delays[i],
-          alternate: true,
-          loop: true,
-          ease: 'out(2)',
-          onRender: () => {
-            const t = dp.t;
-            const squish = Math.min(t / 0.3, 1);
-            const sx = 1.3 - 0.3 * squish;
-            const sy = 0.6 + 0.4 * squish;
-            dot.style.transform = `translateY(${-travel * t}px) scaleX(${sx}) scaleY(${sy})`;
-          },
-        }));
+        anims.push(
+          animate(dp, {
+            t: [0, 1],
+            duration: 500,
+            delay: delays[i],
+            alternate: true,
+            loop: true,
+            ease: 'out(2)',
+            onRender: () => {
+              const t = dp.t;
+              const squish = Math.min(t / 0.3, 1);
+              const sx = 1.3 - 0.3 * squish;
+              const sy = 0.6 + 0.4 * squish;
+              dot.style.transform = `translateY(${-travel * t}px) scaleX(${sx}) scaleY(${sy})`;
+            },
+          }),
+        );
       }
 
       return () => {
@@ -142,7 +144,11 @@ export const Loader = withMoveComponent<
 
         if (props.variant === 'dots') {
           const dotSp = sp('dot');
-          const { className: dotSpClass, style: dotSpStyle, ...dotSpRest } = dotSp as Record<string, unknown>;
+          const {
+            className: dotSpClass,
+            style: dotSpStyle,
+            ...dotSpRest
+          } = dotSp as Record<string, unknown>;
 
           return (
             <div
@@ -162,7 +168,9 @@ export const Loader = withMoveComponent<
                 <span
                   key={`dot-${i}`}
                   {...dotSpRest}
-                  ref={(el) => { dotsRef.current[i] = el; }}
+                  ref={(el) => {
+                    dotsRef.current[i] = el;
+                  }}
                   className={cx('dot', dotSpClass as string | undefined)}
                   style={dotSpStyle as React.CSSProperties}
                 />
@@ -173,9 +181,17 @@ export const Loader = withMoveComponent<
 
         // Spinner variant
         const svgSp = sp('svg');
-        const { className: svgSpClass, style: svgSpStyle, ...svgSpRest } = svgSp as Record<string, unknown>;
+        const {
+          className: svgSpClass,
+          style: svgSpStyle,
+          ...svgSpRest
+        } = svgSp as Record<string, unknown>;
         const circleSp = sp('circle');
-        const { className: circleSpClass, style: circleSpStyle, ...circleSpRest } = circleSp as Record<string, unknown>;
+        const {
+          className: circleSpClass,
+          style: circleSpStyle,
+          ...circleSpRest
+        } = circleSp as Record<string, unknown>;
 
         return (
           <div

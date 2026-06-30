@@ -15,8 +15,16 @@ export type ImageFit = 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
 /** Re-exported for backwards-compatible imports. Prefer `Radius` from
  *  `'move'` directly going forward. */
 export type ImageRadius = Radius;
-export type ImagePosition = 'center' | 'top' | 'bottom' | 'left' | 'right'
-  | 'top left' | 'top right' | 'bottom left' | 'bottom right';
+export type ImagePosition =
+  | 'center'
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'top left'
+  | 'top right'
+  | 'bottom left'
+  | 'bottom right';
 type ImageSlots = 'root' | 'backdrop' | 'img' | 'fallback' | 'action';
 
 /** Describes one responsive image variant with its intrinsic pixel width. */
@@ -66,8 +74,22 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
   slots: ['root', 'backdrop', 'img', 'fallback', 'action'] as const,
   defaults: { fit: 'cover', radius: 'none', position: 'center', backdrop: false },
   moveProps: [
-    'src', 'sources', 'alt', 'fallbackSrc', 'fit', 'backdrop', 'radius', 'position',
-    'aspectRatio', 'width', 'height', 'loading', 'action', 'interactive', 'onLoad', 'onError',
+    'src',
+    'sources',
+    'alt',
+    'fallbackSrc',
+    'fit',
+    'backdrop',
+    'radius',
+    'position',
+    'aspectRatio',
+    'width',
+    'height',
+    'loading',
+    'action',
+    'interactive',
+    'onLoad',
+    'onError',
   ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
@@ -136,19 +158,39 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const backdropSp = sp('backdrop');
-        const { className: bdSpClass, style: bdSpStyle, ...bdSpRest } = backdropSp as Record<string, unknown>;
+        const {
+          className: bdSpClass,
+          style: bdSpStyle,
+          ...bdSpRest
+        } = backdropSp as Record<string, unknown>;
 
         const imgSp = sp('img');
-        const { className: imgSpClass, style: imgSpStyle, ...imgSpRest } = imgSp as Record<string, unknown>;
+        const {
+          className: imgSpClass,
+          style: imgSpStyle,
+          ...imgSpRest
+        } = imgSp as Record<string, unknown>;
 
         const fallbackSp = sp('fallback');
-        const { className: fbSpClass, style: fbSpStyle, ...fbSpRest } = fallbackSp as Record<string, unknown>;
+        const {
+          className: fbSpClass,
+          style: fbSpStyle,
+          ...fbSpRest
+        } = fallbackSp as Record<string, unknown>;
 
         const actionSp = sp('action');
-        const { className: actionSpClass, style: actionSpStyle, ...actionSpRest } = actionSp as Record<string, unknown>;
+        const {
+          className: actionSpClass,
+          style: actionSpStyle,
+          ...actionSpRest
+        } = actionSp as Record<string, unknown>;
 
         const width = props.width as string | number | undefined;
         const height = props.height as string | number | undefined;
@@ -159,8 +201,12 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
         const showBackdrop = !!props.backdrop && !showFallback && !!effectiveSrc;
 
         const rootStyle: React.CSSProperties = {
-          ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : undefined),
-          ...(height != null ? { height: typeof height === 'number' ? `${height}px` : height } : undefined),
+          ...(width != null
+            ? { width: typeof width === 'number' ? `${width}px` : width }
+            : undefined),
+          ...(height != null
+            ? { height: typeof height === 'number' ? `${height}px` : height }
+            : undefined),
           ...(aspectRatio ? { aspectRatio } : undefined),
           ...props.style,
           ...(rootSpStyle as React.CSSProperties),
@@ -170,7 +216,8 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
         // explicit `interactive` prop OR an onClick implies the tile
         // should respond to click + keyboard activation. data-interactive
         // hooks the cursor / hover / focus styling.
-        const userOnClick = props.onClick as ((e: React.MouseEvent<HTMLDivElement>) => void) | undefined;
+        const userOnClick = props.onClick as
+          ((e: React.MouseEvent<HTMLDivElement>) => void) | undefined;
         const isInteractive = !!(props.interactive || userOnClick);
         const interactiveAttrs = isInteractive
           ? {

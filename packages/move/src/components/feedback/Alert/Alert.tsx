@@ -21,21 +21,25 @@ const DEFAULT_LABELS: AlertLabels = {
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Root.enter',
-    sequence: [{
-      animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        y: { from: -8, to: 0, ease: 'outQuart', duration: 200 },
+    sequence: [
+      {
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+          y: { from: -8, to: 0, ease: 'outQuart', duration: 200 },
+        },
       },
-    }],
+    ],
   },
   {
     trigger: 'Root.exit',
-    sequence: [{
-      animation: {
-        opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
-        y: { from: 0, to: -8, ease: 'outQuart', duration: 150 },
+    sequence: [
+      {
+        animation: {
+          opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 },
+          y: { from: 0, to: -8, ease: 'outQuart', duration: 150 },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -53,11 +57,20 @@ export interface AlertProps extends Omit<React.HTMLAttributes<HTMLElement>, 'tit
   children?: React.ReactNode;
 }
 
-export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | 'description' | 'close', AlertProps, HTMLDivElement>({
+export const Alert = withMoveComponent<
+  'root' | 'icon' | 'content' | 'title' | 'description' | 'close',
+  AlertProps,
+  HTMLDivElement
+>({
   name: 'Alert',
   styles,
   slots: ['root', 'icon', 'content', 'title', 'description', 'close'] as const,
-  defaults: { variant: 'info' as AlertVariant, size: 'md' as AlertSize, icon: true, closable: false },
+  defaults: {
+    variant: 'info' as AlertVariant,
+    size: 'md' as AlertSize,
+    icon: true,
+    closable: false,
+  },
   moveProps: ['title', 'onClose', 'animations', 'labels'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -74,12 +87,18 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
 
     const contentRef = React.useRef<HTMLDivElement>(null);
 
-    const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, props.animations as AnimationTrigger[] | false | undefined);
+    const animConfig = resolveAnimationsConfig(
+      DEFAULT_ANIMATIONS,
+      props.animations as AnimationTrigger[] | false | undefined,
+    );
     const iconRef = React.useRef<HTMLSpanElement>(null);
-    const refs = React.useMemo(() => ({
-      Root: contentRef as React.RefObject<HTMLElement | null>,
-      Icon: iconRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const refs = React.useMemo(
+      () => ({
+        Root: contentRef as React.RefObject<HTMLElement | null>,
+        Icon: iconRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
     const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs);
 
     // Exit — one-shot dismiss (no reopen), but route through the shared hook so
@@ -99,7 +118,8 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
     const iconProp = props.icon;
     const roleIcon = useIcon(`status.${variant}`, 18);
     const explicitIcon = useResolvedIcon(typeof iconProp === 'string' ? iconProp : '', 18);
-    const resolvedIcon = iconProp === false ? null : typeof iconProp === 'string' ? explicitIcon : roleIcon;
+    const resolvedIcon =
+      iconProp === false ? null : typeof iconProp === 'string' ? explicitIcon : roleIcon;
     const closeIcon = useIcon('close', 14);
 
     const handleClose = React.useCallback(() => {
@@ -120,19 +140,39 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const iconSp = sp('icon');
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
 
         const contentSp = sp('content');
-        const { className: contentSpClass, style: contentSpStyle, ...contentSpRest } = contentSp as Record<string, unknown>;
+        const {
+          className: contentSpClass,
+          style: contentSpStyle,
+          ...contentSpRest
+        } = contentSp as Record<string, unknown>;
 
         const titleSp = sp('title');
-        const { className: titleSpClass, style: titleSpStyle, ...titleSpRest } = titleSp as Record<string, unknown>;
+        const {
+          className: titleSpClass,
+          style: titleSpStyle,
+          ...titleSpRest
+        } = titleSp as Record<string, unknown>;
 
         const descSp = sp('description');
-        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descSp as Record<string, unknown>;
+        const {
+          className: descSpClass,
+          style: descSpStyle,
+          ...descSpRest
+        } = descSp as Record<string, unknown>;
 
         const closeSp = sp('close');
-        const { className: closeSpClass, style: closeSpStyle, ...closeSpRest } = closeSp as Record<string, unknown>;
+        const {
+          className: closeSpClass,
+          style: closeSpStyle,
+          ...closeSpRest
+        } = closeSp as Record<string, unknown>;
 
         return (
           <div

@@ -3,11 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import {
-  useAnimations,
-  resolveAnimationsConfig,
-  quick,
-} from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { Color, Size } from '../../../shared/types';
 import styles from './Timeline.module.css';
@@ -32,16 +28,18 @@ export type TimelineLineVariant = 'solid' | 'dashed' | 'dotted';
 const DEFAULT_TIMELINE_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Root.enter',
-    sequence: [{
-      target: 'Root',
-      children: `.${styles.item}`,
-      stagger: { delay: 80 },
-      animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        translateY: { from: 12, to: 0, ease: 'outQuart', duration: 200 },
-        scale: { from: 0.95, to: 1, ease: quick },
+    sequence: [
+      {
+        target: 'Root',
+        children: `.${styles.item}`,
+        stagger: { delay: 80 },
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+          translateY: { from: 12, to: 0, ease: 'outQuart', duration: 200 },
+          scale: { from: 0.95, to: 1, ease: quick },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -103,15 +101,20 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
       props.animations as AnimationTrigger[] | false | undefined,
     );
 
-    const rootRefs = React.useMemo(() => ({
-      Root: rootRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const rootRefs = React.useMemo(
+      () => ({
+        Root: rootRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(animConfig, rootRefs);
 
     const getItemIndex = React.useCallback(() => indexRef.current++, []);
 
-    React.useEffect(() => { indexRef.current = 0; });
+    React.useEffect(() => {
+      indexRef.current = 0;
+    });
 
     const ctx: TimelineContextValue = {
       active: props.active as number,
@@ -187,7 +190,8 @@ const TimelineItem = withMoveComponent<TimelineItemSlots, TimelineItemProps, HTM
         const align = ctx?.align ?? 'left';
         const reverseActive = ctx?.reverseActive ?? false;
         const itemColor = (props.color as TimelineColor) || ctx?.color || 'indigo';
-        const itemLineVariant = (props.lineVariant as TimelineLineVariant) || ctx?.lineVariant || 'solid';
+        const itemLineVariant =
+          (props.lineVariant as TimelineLineVariant) || ctx?.lineVariant || 'solid';
 
         // Determine state
         let state: 'completed' | 'active' | 'inactive';
@@ -204,24 +208,43 @@ const TimelineItem = withMoveComponent<TimelineItemSlots, TimelineItemProps, HTM
         }
 
         // Determine content side for alternate layout
-        const contentSide = align === 'alternate'
-          ? (index % 2 === 0 ? 'right' : 'left')
-          : undefined;
+        const contentSide =
+          align === 'alternate' ? (index % 2 === 0 ? 'right' : 'left') : undefined;
 
         const bullet = props.bullet as React.ReactNode;
         const title = props.title as React.ReactNode;
         const hasBulletContent = bullet != null;
 
         const itemSp = sp('item');
-        const { className: iSpClass, style: iSpStyle, ...iSpRest } = itemSp as Record<string, unknown>;
+        const {
+          className: iSpClass,
+          style: iSpStyle,
+          ...iSpRest
+        } = itemSp as Record<string, unknown>;
         const bulletSp = sp('bullet');
-        const { className: bSpClass, style: bSpStyle, ...bSpRest } = bulletSp as Record<string, unknown>;
+        const {
+          className: bSpClass,
+          style: bSpStyle,
+          ...bSpRest
+        } = bulletSp as Record<string, unknown>;
         const lineSp = sp('line');
-        const { className: lSpClass, style: lSpStyle, ...lSpRest } = lineSp as Record<string, unknown>;
+        const {
+          className: lSpClass,
+          style: lSpStyle,
+          ...lSpRest
+        } = lineSp as Record<string, unknown>;
         const contentSp = sp('content');
-        const { className: cSpClass, style: cSpStyle, ...cSpRest } = contentSp as Record<string, unknown>;
+        const {
+          className: cSpClass,
+          style: cSpStyle,
+          ...cSpRest
+        } = contentSp as Record<string, unknown>;
         const titleSp = sp('title');
-        const { className: tSpClass, style: tSpStyle, ...tSpRest } = titleSp as Record<string, unknown>;
+        const {
+          className: tSpClass,
+          style: tSpStyle,
+          ...tSpRest
+        } = titleSp as Record<string, unknown>;
 
         return (
           <div

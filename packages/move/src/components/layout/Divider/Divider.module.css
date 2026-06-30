@@ -37,12 +37,24 @@
 /* Outer gap. Default `md` is set in the base token above; specific
    gap values override it here. Vertical dividers swap axes in the
    .root[data-orientation='vertical'] rule below. */
-.root[data-gap='none'] { --move-divider-margin: 0; }
-.root[data-gap='xs']   { --move-divider-margin: var(--move-spacing-xs) 0; }
-.root[data-gap='sm']   { --move-divider-margin: var(--move-spacing-sm) 0; }
-.root[data-gap='md']   { --move-divider-margin: var(--move-spacing-md) 0; }
-.root[data-gap='lg']   { --move-divider-margin: var(--move-spacing-lg) 0; }
-.root[data-gap='xl']   { --move-divider-margin: var(--move-spacing-xl) 0; }
+.root[data-gap='none'] {
+  --move-divider-margin: 0;
+}
+.root[data-gap='xs'] {
+  --move-divider-margin: var(--move-spacing-xs) 0;
+}
+.root[data-gap='sm'] {
+  --move-divider-margin: var(--move-spacing-sm) 0;
+}
+.root[data-gap='md'] {
+  --move-divider-margin: var(--move-spacing-md) 0;
+}
+.root[data-gap='lg'] {
+  --move-divider-margin: var(--move-spacing-lg) 0;
+}
+.root[data-gap='xl'] {
+  --move-divider-margin: var(--move-spacing-xl) 0;
+}
 
 /* Horizontal (default) */
 .root[data-orientation='horizontal'],
@@ -77,12 +89,24 @@
   width: auto;
 }
 
-.root[data-orientation='vertical'][data-gap='none'] { margin: 0; }
-.root[data-orientation='vertical'][data-gap='xs']   { margin: 0 var(--move-spacing-xs); }
-.root[data-orientation='vertical'][data-gap='sm']   { margin: 0 var(--move-spacing-sm); }
-.root[data-orientation='vertical'][data-gap='md']   { margin: 0 var(--move-spacing-md); }
-.root[data-orientation='vertical'][data-gap='lg']   { margin: 0 var(--move-spacing-lg); }
-.root[data-orientation='vertical'][data-gap='xl']   { margin: 0 var(--move-spacing-xl); }
+.root[data-orientation='vertical'][data-gap='none'] {
+  margin: 0;
+}
+.root[data-orientation='vertical'][data-gap='xs'] {
+  margin: 0 var(--move-spacing-xs);
+}
+.root[data-orientation='vertical'][data-gap='sm'] {
+  margin: 0 var(--move-spacing-sm);
+}
+.root[data-orientation='vertical'][data-gap='md'] {
+  margin: 0 var(--move-spacing-md);
+}
+.root[data-orientation='vertical'][data-gap='lg'] {
+  margin: 0 var(--move-spacing-lg);
+}
+.root[data-orientation='vertical'][data-gap='xl'] {
+  margin: 0 var(--move-spacing-xl);
+}
 
 .root[data-orientation='vertical']::before,
 .root[data-orientation='vertical']::after {

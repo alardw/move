@@ -191,7 +191,8 @@
   border-radius: var(--move-rounded-sm);
   color: var(--move-fg-muted);
   cursor: pointer;
-  transition: color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    color var(--move-transition-fast) var(--move-ease-default),
     background var(--move-transition-fast) var(--move-ease-default);
 }
 

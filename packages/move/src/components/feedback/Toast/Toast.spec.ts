@@ -9,24 +9,41 @@ export const spec = {
   componentClass: 'overlay_popup' as const,
   category: 'feedback',
   preview: { mock: true, bare: true, width: 'md' as const },
-  description: 'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
+  description:
+    'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
 
   synonyms: ['notification', 'snackbar', 'flash message', 'alert toast'],
   families: {
-    behavior:  ["notification"],
-    state:     ["controlled-open"],
-    a11y:      ["none"],
+    behavior: ['notification'],
+    state: ['controlled-open'],
+    a11y: ['none'],
   },
 
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'viewport', element: 'div', description: 'Fixed full-screen container portaled to document.body' },
-    { name: 'positionContainer', element: 'div', description: 'Position-specific container (top-right, bottom-left, etc.)' },
-    { name: 'itemWrapper', element: 'div', description: 'Wrapper for height animation during enter/exit' },
+    {
+      name: 'viewport',
+      element: 'div',
+      description: 'Fixed full-screen container portaled to document.body',
+    },
+    {
+      name: 'positionContainer',
+      element: 'div',
+      description: 'Position-specific container (top-right, bottom-left, etc.)',
+    },
+    {
+      name: 'itemWrapper',
+      element: 'div',
+      description: 'Wrapper for height animation during enter/exit',
+    },
     { name: 'item', element: 'div', description: 'Individual toast card with variant styling' },
     { name: 'icon', element: 'span', description: 'Variant icon (info, success, warning, error)' },
-    { name: 'content', element: 'div', description: 'Content area containing message and description' },
+    {
+      name: 'content',
+      element: 'div',
+      description: 'Content area containing message and description',
+    },
     { name: 'message', element: 'div', description: 'Primary toast message text' },
     { name: 'description', element: 'div', description: 'Optional secondary description text' },
     { name: 'closeButton', element: 'button', description: 'Close/dismiss button with X icon' },
@@ -39,13 +56,34 @@ export const spec = {
       slots: [{ name: 'viewport', element: 'div', description: 'Viewport container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'position', type: 'ToastPosition', moveSpecific: true, description: 'Default position for toasts (overridden per-toast by store)' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable all toast animations' },
-        { name: 'labels', type: 'Partial<ToastLabels>', moveSpecific: true, description: 'i18n labels object for accessible strings (close)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'position',
+          type: 'ToastPosition',
+          moveSpecific: true,
+          description: 'Default position for toasts (overridden per-toast by store)',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Animation config or false to disable all toast animations',
+        },
+        {
+          name: 'labels',
+          type: 'Partial<ToastLabels>',
+          moveSpecific: true,
+          description: 'i18n labels object for accessible strings (close)',
+        },
       ],
       usesFactory: true,
-      description: 'Portaled viewport that renders all active toasts grouped by position, provides animation and label context',
+      description:
+        'Portaled viewport that renders all active toasts grouped by position, provides animation and label context',
     },
   ],
 
@@ -69,10 +107,7 @@ export const spec = {
                   { slot: 'icon', dataAttributes: ['data-variant'] },
                   {
                     slot: 'content',
-                    children: [
-                      { slot: 'message' },
-                      { slot: 'description' },
-                    ],
+                    children: [{ slot: 'message' }, { slot: 'description' }],
                   },
                   { slot: 'closeButton' },
                   { slot: 'progressBar' },
@@ -96,36 +131,124 @@ export const spec = {
   surface: null,
 
   animations: [
-    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -20, to: 0, ease: 'poppy' } } }] },
-    { trigger: 'Root.exit', sequence: [{ animation: { opacity: { to: 0 }, y: { to: -20, ease: 'snappy' } } }] },
+    {
+      trigger: 'Root.enter',
+      sequence: [
+        { animation: { opacity: { from: 0, to: 1 }, y: { from: -20, to: 0, ease: 'poppy' } } },
+      ],
+    },
+    {
+      trigger: 'Root.exit',
+      sequence: [{ animation: { opacity: { to: 0 }, y: { to: -20, ease: 'snappy' } } }],
+    },
   ],
 
   renderContracts: [
-    { id: 'imperative-store', description: 'Toasts are created via imperative toast() function from store.ts, not via React props; Viewport subscribes to store via useSyncExternalStore' },
-    { id: 'position-grouping', description: 'Viewport renders 6 position containers (top-right, top-left, top-center, bottom-right, bottom-left, bottom-center); toasts are grouped by their position' },
-    { id: 'presence-animation', description: 'Each position container wraps toasts in Presence component; ToastItem uses usePresence for enter/exit lifecycle' },
-    { id: 'dual-element-animation', description: 'Enter animation runs on both itemWrapper (height expand) and item (slide+fade) in parallel; exit runs both in parallel then calls safeToRemove' },
-    { id: 'auto-dismiss-progress', description: 'Progress bar animates scaleX from 1 to 0 over toast.duration; completion triggers removeToast; pauses on hover/focusin and resumes on leave/focusout' },
-    { id: 'max-per-position', description: 'Store enforces max toasts per position (default 5); excess oldest toasts are auto-removed on add' },
+    {
+      id: 'imperative-store',
+      description:
+        'Toasts are created via imperative toast() function from store.ts, not via React props; Viewport subscribes to store via useSyncExternalStore',
+    },
+    {
+      id: 'position-grouping',
+      description:
+        'Viewport renders 6 position containers (top-right, top-left, top-center, bottom-right, bottom-left, bottom-center); toasts are grouped by their position',
+    },
+    {
+      id: 'presence-animation',
+      description:
+        'Each position container wraps toasts in Presence component; ToastItem uses usePresence for enter/exit lifecycle',
+    },
+    {
+      id: 'dual-element-animation',
+      description:
+        'Enter animation runs on both itemWrapper (height expand) and item (slide+fade) in parallel; exit runs both in parallel then calls safeToRemove',
+    },
+    {
+      id: 'auto-dismiss-progress',
+      description:
+        'Progress bar animates scaleX from 1 to 0 over toast.duration; completion triggers removeToast; pauses on hover/focusin and resumes on leave/focusout',
+    },
+    {
+      id: 'max-per-position',
+      description:
+        'Store enforces max toasts per position (default 5); excess oldest toasts are auto-removed on add',
+    },
     { id: 'viewport-portaled', description: 'Viewport renders via createPortal to document.body' },
-    { id: 'viewport-portaled-font', description: 'Toast items declare font-family: var(--move-font-body) for portal font isolation' },
-    { id: 'variant-icons', description: 'Non-default variants render an icon via useResolvedIcon: info=info, success=circle-check, warning=triangle-alert, error=circle-x' },
-    { id: 'animate-context', description: 'Viewport provides LayerAnimate config (or null for disabled) via ToastAnimateContext; ToastItem reads it to control animations' },
-    { id: 'close-label-context', description: 'Viewport provides closeLabel string via ToastCloseLabelContext for accessible close button labels' },
-    { id: 'bottom-positions-reversed', description: 'Bottom position containers use flex-direction: column-reverse so newest toasts appear at the bottom edge' },
+    {
+      id: 'viewport-portaled-font',
+      description:
+        'Toast items declare font-family: var(--move-font-body) for portal font isolation',
+    },
+    {
+      id: 'variant-icons',
+      description:
+        'Non-default variants render an icon via useResolvedIcon: info=info, success=circle-check, warning=triangle-alert, error=circle-x',
+    },
+    {
+      id: 'animate-context',
+      description:
+        'Viewport provides LayerAnimate config (or null for disabled) via ToastAnimateContext; ToastItem reads it to control animations',
+    },
+    {
+      id: 'close-label-context',
+      description:
+        'Viewport provides closeLabel string via ToastCloseLabelContext for accessible close button labels',
+    },
+    {
+      id: 'bottom-positions-reversed',
+      description:
+        'Bottom position containers use flex-direction: column-reverse so newest toasts appear at the bottom edge',
+    },
   ],
 
   tokens: [
-    { name: '--move-toast-viewport-spacing', value: 'var(--move-spacing-lg)', description: 'Viewport edge spacing (padding)' },
-    { name: '--move-toast-viewport-z', value: 'var(--move-layer-toast)', description: 'Viewport z-index' },
-    { name: '--move-toast-bg', value: 'var(--move-bg-subtle)', description: 'Toast item background' },
+    {
+      name: '--move-toast-viewport-spacing',
+      value: 'var(--move-spacing-lg)',
+      description: 'Viewport edge spacing (padding)',
+    },
+    {
+      name: '--move-toast-viewport-z',
+      value: 'var(--move-layer-toast)',
+      description: 'Viewport z-index',
+    },
+    {
+      name: '--move-toast-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Toast item background',
+    },
     { name: '--move-toast-fg', value: 'var(--move-fg-base)', description: 'Toast item text color' },
-    { name: '--move-toast-border', value: 'var(--move-border-base)', description: 'Toast item border color' },
-    { name: '--move-toast-radius', value: 'var(--move-rounded-lg)', description: 'Toast item border radius' },
-    { name: '--move-toast-shadow', value: 'var(--move-shadow-elevated)', description: 'Toast item box shadow' },
-    { name: '--move-toast-padding-x', value: 'var(--move-spacing-md)', description: 'Toast item horizontal padding' },
-    { name: '--move-toast-padding-y', value: 'var(--move-spacing-sm)', description: 'Toast item vertical padding' },
-    { name: '--move-toast-accent', value: 'var(--move-border-muted)', description: 'Toast accent color (progress bar, set per variant)' },
+    {
+      name: '--move-toast-border',
+      value: 'var(--move-border-base)',
+      description: 'Toast item border color',
+    },
+    {
+      name: '--move-toast-radius',
+      value: 'var(--move-rounded-lg)',
+      description: 'Toast item border radius',
+    },
+    {
+      name: '--move-toast-shadow',
+      value: 'var(--move-shadow-elevated)',
+      description: 'Toast item box shadow',
+    },
+    {
+      name: '--move-toast-padding-x',
+      value: 'var(--move-spacing-md)',
+      description: 'Toast item horizontal padding',
+    },
+    {
+      name: '--move-toast-padding-y',
+      value: 'var(--move-spacing-sm)',
+      description: 'Toast item vertical padding',
+    },
+    {
+      name: '--move-toast-accent',
+      value: 'var(--move-border-muted)',
+      description: 'Toast accent color (progress bar, set per variant)',
+    },
     { name: '--move-toast-width', value: '360px', description: 'Toast item width' },
   ],
 
@@ -135,7 +258,11 @@ export const spec = {
   sizes: [] as string[],
 
   labels: [
-    { key: 'close', default: 'Close notification', description: 'Accessible label for toast close buttons' },
+    {
+      key: 'close',
+      default: 'Close notification',
+      description: 'Accessible label for toast close buttons',
+    },
   ],
 
   hasHook: true,

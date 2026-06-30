@@ -64,11 +64,15 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
 
         const isBlock = !!props.block;
         const content =
-          highlighted != null
-            ? typeof highlighted === 'string'
-              ? <code dangerouslySetInnerHTML={{ __html: highlighted }} />
-              : <code>{highlighted}</code>
-            : <code>{props.children}</code>;
+          highlighted != null ? (
+            typeof highlighted === 'string' ? (
+              <code dangerouslySetInnerHTML={{ __html: highlighted }} />
+            ) : (
+              <code>{highlighted}</code>
+            )
+          ) : (
+            <code>{props.children}</code>
+          );
 
         if (isBlock) {
           return (
@@ -77,7 +81,10 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
               {...spRest}
               ref={ref as React.Ref<HTMLPreElement>}
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
               data-variant={props.variant as string}
               data-size={props.size as string}
               data-block=""
@@ -99,9 +106,7 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
             data-size={props.size as string}
             data-language={language}
           >
-            {highlighted != null
-              ? highlighted
-              : props.children}
+            {highlighted != null ? highlighted : props.children}
           </code>
         );
       },

@@ -13,7 +13,8 @@ function nodeText(node: React.ReactNode): string {
   if (node == null || node === false) return '';
   if (typeof node === 'string' || typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(nodeText).join('');
-  if (React.isValidElement(node)) return nodeText((node.props as { children?: React.ReactNode }).children);
+  if (React.isValidElement(node))
+    return nodeText((node.props as { children?: React.ReactNode }).children);
   return '';
 }
 
@@ -70,7 +71,19 @@ export const AnimatedText = withMoveComponent<'root', AnimatedTextProps, HTMLEle
     delay: 0,
     duration: 600,
   },
-  moveProps: ['as', 'asChild', 'size', 'weight', 'by', 'effect', 'trigger', 'once', 'stagger', 'delay', 'duration'],
+  moveProps: [
+    'as',
+    'asChild',
+    'size',
+    'weight',
+    'by',
+    'effect',
+    'trigger',
+    'once',
+    'stagger',
+    'delay',
+    'duration',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const asChild = !!props.asChild;
@@ -100,7 +113,7 @@ export const AnimatedText = withMoveComponent<'root', AnimatedTextProps, HTMLEle
         // With asChild, Slot merges our ref/className/data-attrs onto the wrapped
         // element (e.g. a Heading), and splitText runs on that element — so it
         // keeps the wrapped component's typography.
-        const Comp = (asChild ? Slot.Root : (props.as || 'span')) as React.ElementType;
+        const Comp = (asChild ? Slot.Root : props.as || 'span') as React.ElementType;
 
         return (
           // Keyed on the text so a content change remounts cleanly instead of

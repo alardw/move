@@ -30,7 +30,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Help text">
           <button data-testid="trigger">Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();
     });
@@ -39,7 +39,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Help text" open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="My tooltip label" open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         const tooltip = findTooltip();
@@ -62,7 +62,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Tip">
           <button data-testid="my-btn">Click</button>
-        </Tooltip>
+        </Tooltip>,
       );
       const trigger = screen.getByTestId('my-btn');
       expect(trigger.tagName).toBe('BUTTON');
@@ -72,7 +72,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="With arrow" open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="No arrow" arrow={false} open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -100,7 +100,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Offset test" open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -112,7 +112,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Bottom" side="bottom" open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       expect(screen.getByText('Hover')).toBeInTheDocument();
     });
@@ -122,7 +122,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="Controlled" open onOpenChange={onOpenChange}>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
     });
@@ -131,7 +131,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="No anim" animations={false} open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -148,10 +148,8 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-            <Tooltip.Content sideOffset={4}>
-              Content
-            </Tooltip.Content>
-        </Tooltip.Root>
+          <Tooltip.Content sideOffset={4}>Content</Tooltip.Content>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         const tooltip = findTooltip();
@@ -166,7 +164,7 @@ describe('Tooltip', () => {
             <button>T</button>
           </Tooltip.Trigger>
           <Tooltip.Content>Content</Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         const tooltip = findTooltip();
@@ -180,8 +178,8 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-            <Tooltip.Content align="start">Content</Tooltip.Content>
-        </Tooltip.Root>
+          <Tooltip.Content align="start">Content</Tooltip.Content>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         const tooltip = findTooltip();
@@ -196,7 +194,7 @@ describe('Tooltip', () => {
             <button>T</button>
           </Tooltip.Trigger>
           <Tooltip.Content>Portaled</Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         expect(screen.getAllByRole('tooltip').length).toBeGreaterThan(0);
@@ -212,10 +210,10 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button>T</button>
           </Tooltip.Trigger>
-            <Tooltip.Content className="custom-content" style={{ padding: '20px' }}>
-              Styled
-            </Tooltip.Content>
-        </Tooltip.Root>
+          <Tooltip.Content className="custom-content" style={{ padding: '20px' }}>
+            Styled
+          </Tooltip.Content>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         const tooltip = findTooltip();
@@ -231,10 +229,12 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip.Root>
           <Tooltip.Trigger asChild>
-            <button className="custom-trigger" style={{ color: 'red' }} data-testid="trigger-btn">T</button>
+            <button className="custom-trigger" style={{ color: 'red' }} data-testid="trigger-btn">
+              T
+            </button>
           </Tooltip.Trigger>
           <Tooltip.Content>Content</Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root>,
       );
       const triggerBtn = screen.getByTestId('trigger-btn');
       expect(triggerBtn).toHaveClass('custom-trigger');
@@ -251,7 +251,7 @@ describe('Tooltip', () => {
             <button>T</button>
           </Tooltip.Trigger>
           <Tooltip.Content>Accessible tooltip</Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root>,
       );
       await waitFor(() => {
         expect(screen.getAllByRole('tooltip').length).toBeGreaterThan(0);
@@ -265,7 +265,7 @@ describe('Tooltip', () => {
             <button data-testid="trigger">T</button>
           </Tooltip.Trigger>
           <Tooltip.Content>Tooltip text</Tooltip.Content>
-        </Tooltip.Root>
+        </Tooltip.Root>,
       );
       const trigger = screen.getByTestId('trigger');
       expect(trigger).toHaveAttribute('aria-describedby');
@@ -283,7 +283,7 @@ describe('Tooltip', () => {
           <Tooltip label="Second">
             <button>B</button>
           </Tooltip>
-        </Tooltip.Provider>
+        </Tooltip.Provider>,
       );
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
     });
@@ -295,7 +295,7 @@ describe('Tooltip', () => {
       renderTooltip(
         <Tooltip label="No anim" animations={false} open>
           <button>Hover</button>
-        </Tooltip>
+        </Tooltip>,
       );
       await waitFor(() => {
         expect(screen.getByRole('tooltip')).toBeInTheDocument();
@@ -311,11 +311,11 @@ describe('Tooltip', () => {
           <Tooltip.Trigger asChild>
             <button data-testid="trigger">Hover</button>
           </Tooltip.Trigger>
-            <Tooltip.Content side="top" sideOffset={6}>
-              <Tooltip.Arrow />
-              Compound tooltip
-            </Tooltip.Content>
-        </Tooltip.Root>
+          <Tooltip.Content side="top" sideOffset={6}>
+            <Tooltip.Arrow />
+            Compound tooltip
+          </Tooltip.Content>
+        </Tooltip.Root>,
       );
       expect(screen.getByTestId('trigger')).toBeInTheDocument();
       await waitFor(() => {

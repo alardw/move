@@ -17,8 +17,15 @@ import styles from './ColorPicker.module.css';
 
 export type ColorPickerSize = 'sm' | 'md' | 'lg';
 export type ColorPickerSlots =
-  'root' | 'saturation' | 'hue' | 'alpha' | 'swatches' |
-  'inputRow' | 'formatSelect' | 'channelInput' | 'alphaInput';
+  | 'root'
+  | 'saturation'
+  | 'hue'
+  | 'alpha'
+  | 'swatches'
+  | 'inputRow'
+  | 'formatSelect'
+  | 'channelInput'
+  | 'alphaInput';
 
 export interface ColorPickerLabels {
   /** Saturation area accessible label */
@@ -90,18 +97,19 @@ export interface ColorPickerProps extends React.HTMLAttributes<HTMLElement> {
 const DEFAULT_FORMAT_OPTIONS: BaseColorFormat[] = ['hex', 'rgb', 'hsl'];
 
 const CHANNEL_LABEL_KEYS: Record<string, keyof ColorPickerLabels> = {
-  R: 'red', G: 'green', B: 'blue',
-  H: 'hueChannel', S: 'saturationChannel', L: 'lightness',
+  R: 'red',
+  G: 'green',
+  B: 'blue',
+  H: 'hueChannel',
+  S: 'saturationChannel',
+  L: 'lightness',
 };
 
 // ============================================================================
 // Drag helper
 // ============================================================================
 
-function useDrag(
-  onMove: (x: number, y: number) => void,
-  onEnd?: () => void,
-) {
+function useDrag(onMove: (x: number, y: number) => void, onEnd?: () => void) {
   const onMoveRef = React.useRef(onMove);
   onMoveRef.current = onMove;
   const onEndRef = React.useRef(onEnd);
@@ -146,8 +154,15 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
   name: 'ColorPicker',
   styles,
   slots: [
-    'root', 'saturation', 'hue', 'alpha', 'swatches',
-    'inputRow', 'formatSelect', 'channelInput', 'alphaInput',
+    'root',
+    'saturation',
+    'hue',
+    'alpha',
+    'swatches',
+    'inputRow',
+    'formatSelect',
+    'channelInput',
+    'alphaInput',
   ] as const,
   defaults: {
     format: 'hex' as ColorFormat,
@@ -156,10 +171,19 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     swatchesPerRow: 7,
   },
   moveProps: [
-    'format', 'value', 'defaultValue', 'onValueChange', 'onChangeEnd',
-    'onFormatChange', 'formatOptions',
-    'swatches', 'swatchesPerRow', 'withPicker', 'fullWidth',
-    'labels', 'readOnly',
+    'format',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'onChangeEnd',
+    'onFormatChange',
+    'formatOptions',
+    'swatches',
+    'swatchesPerRow',
+    'withPicker',
+    'fullWidth',
+    'labels',
+    'readOnly',
   ],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
@@ -178,34 +202,46 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
 
     // Saturation area drag
     const saturationDrag = useDrag(
-      React.useCallback((x: number, y: number) => {
-        cp.setSaturationValue(x * 100, (1 - y) * 100);
-      }, [cp]),
+      React.useCallback(
+        (x: number, y: number) => {
+          cp.setSaturationValue(x * 100, (1 - y) * 100);
+        },
+        [cp],
+      ),
       cp.commitChange,
     );
 
     // Hue slider drag — clamp to 359 to prevent wrapping (360° === 0°)
     const hueDrag = useDrag(
-      React.useCallback((x: number) => {
-        cp.setHue(Math.min(x * 360, 359));
-      }, [cp]),
+      React.useCallback(
+        (x: number) => {
+          cp.setHue(Math.min(x * 360, 359));
+        },
+        [cp],
+      ),
       cp.commitChange,
     );
 
     // Alpha slider drag
     const alphaDrag = useDrag(
-      React.useCallback((x: number) => {
-        cp.setAlpha(x);
-      }, [cp]),
+      React.useCallback(
+        (x: number) => {
+          cp.setAlpha(x);
+        },
+        [cp],
+      ),
       cp.commitChange,
     );
 
     // Format change handler
-    const handleFormatChange = React.useCallback((value: string) => {
-      const base = value as BaseColorFormat;
-      const newFormat = formatWithAlpha(base, cp.showAlpha);
-      cp.setActiveFormat(newFormat);
-    }, [cp]);
+    const handleFormatChange = React.useCallback(
+      (value: string) => {
+        const base = value as BaseColorFormat;
+        const newFormat = formatWithAlpha(base, cp.showAlpha);
+        cp.setActiveFormat(newFormat);
+      },
+      [cp],
+    );
 
     // Hex input state
     const [hexText, setHexText] = React.useState('');
@@ -233,31 +269,40 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     const [focusedChannel, setFocusedChannel] = React.useState<number | null>(null);
     const [channelTexts, setChannelTexts] = React.useState<string[]>([]);
 
-    const handleChannelFocus = React.useCallback((index: number) => {
-      setFocusedChannel(index);
-      setChannelTexts(cp.channels.map(ch => String(ch.value)));
-    }, [cp.channels]);
+    const handleChannelFocus = React.useCallback(
+      (index: number) => {
+        setFocusedChannel(index);
+        setChannelTexts(cp.channels.map((ch) => String(ch.value)));
+      },
+      [cp.channels],
+    );
 
-    const handleChannelBlur = React.useCallback((index: number) => {
-      setFocusedChannel(null);
-      const num = parseInt(channelTexts[index], 10);
-      if (!isNaN(num)) {
-        cp.setChannel(index, num);
-        cp.commitChange();
-      }
-    }, [channelTexts, cp]);
+    const handleChannelBlur = React.useCallback(
+      (index: number) => {
+        setFocusedChannel(null);
+        const num = parseInt(channelTexts[index], 10);
+        if (!isNaN(num)) {
+          cp.setChannel(index, num);
+          cp.commitChange();
+        }
+      },
+      [channelTexts, cp],
+    );
 
-    const handleChannelChange = React.useCallback((index: number, text: string) => {
-      setChannelTexts(prev => {
-        const next = [...prev];
-        next[index] = text;
-        return next;
-      });
-      const num = parseInt(text, 10);
-      if (!isNaN(num)) {
-        cp.setChannel(index, num);
-      }
-    }, [cp]);
+    const handleChannelChange = React.useCallback(
+      (index: number, text: string) => {
+        setChannelTexts((prev) => {
+          const next = [...prev];
+          next[index] = text;
+          return next;
+        });
+        const num = parseInt(text, 10);
+        if (!isNaN(num)) {
+          cp.setChannel(index, num);
+        }
+      },
+      [cp],
+    );
 
     // Alpha text input state
     const [alphaText, setAlphaText] = React.useState('');
@@ -277,13 +322,16 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
       }
     }, [alphaText, cp]);
 
-    const handleAlphaChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      setAlphaText(e.target.value);
-      const num = parseInt(e.target.value, 10);
-      if (!isNaN(num)) {
-        cp.setAlpha(Math.max(0, Math.min(100, num)) / 100);
-      }
-    }, [cp]);
+    const handleAlphaChange = React.useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        setAlphaText(e.target.value);
+        const num = parseInt(e.target.value, 10);
+        if (!isNaN(num)) {
+          cp.setAlpha(Math.max(0, Math.min(100, num)) / 100);
+        }
+      },
+      [cp],
+    );
 
     // Shared key handler for all inputs (Enter to blur, Arrow up/down to nudge)
     const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -300,7 +348,8 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         if (!isNaN(current)) {
           const newVal = current + delta;
           const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-            window.HTMLInputElement.prototype, 'value',
+            window.HTMLInputElement.prototype,
+            'value',
           )?.set;
           nativeInputValueSetter?.call(input, String(newVal));
           input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -311,19 +360,47 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
         const satSp = sp('saturation');
-        const { className: satSpClass, style: satSpStyle, ...satSpRest } = satSp as Record<string, unknown>;
+        const {
+          className: satSpClass,
+          style: satSpStyle,
+          ...satSpRest
+        } = satSp as Record<string, unknown>;
         const hueSp = sp('hue');
-        const { className: hueSpClass, style: hueSpStyle, ...hueSpRest } = hueSp as Record<string, unknown>;
+        const {
+          className: hueSpClass,
+          style: hueSpStyle,
+          ...hueSpRest
+        } = hueSp as Record<string, unknown>;
         const alphaSp = sp('alpha');
-        const { className: alphaSpClass, style: alphaSpStyle, ...alphaSpRest } = alphaSp as Record<string, unknown>;
+        const {
+          className: alphaSpClass,
+          style: alphaSpStyle,
+          ...alphaSpRest
+        } = alphaSp as Record<string, unknown>;
         const swatchesSp = sp('swatches');
-        const { className: swatchesSpClass, style: swatchesSpStyle, ...swatchesSpRest } = swatchesSp as Record<string, unknown>;
+        const {
+          className: swatchesSpClass,
+          style: swatchesSpStyle,
+          ...swatchesSpRest
+        } = swatchesSp as Record<string, unknown>;
         const inputRowSp = sp('inputRow');
-        const { className: inputRowSpClass, style: inputRowSpStyle, ...inputRowSpRest } = inputRowSp as Record<string, unknown>;
+        const {
+          className: inputRowSpClass,
+          style: inputRowSpStyle,
+          ...inputRowSpRest
+        } = inputRowSp as Record<string, unknown>;
         const formatSelectSp = sp('formatSelect');
-        const { className: formatSelectSpClass, style: formatSelectSpStyle, ...formatSelectSpRest } = formatSelectSp as Record<string, unknown>;
+        const {
+          className: formatSelectSpClass,
+          style: formatSelectSpStyle,
+          ...formatSelectSpRest
+        } = formatSelectSp as Record<string, unknown>;
 
         const size = props.size as string;
         const disabled = props.disabled as boolean | undefined;
@@ -332,7 +409,8 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         const fullWidth = props.fullWidth as boolean | undefined;
         const swatches = props.swatches as string[] | undefined;
         const swatchesPerRow = props.swatchesPerRow as number;
-        const formatOptions = (props.formatOptions as BaseColorFormat[] | undefined) || DEFAULT_FORMAT_OPTIONS;
+        const formatOptions =
+          (props.formatOptions as BaseColorFormat[] | undefined) || DEFAULT_FORMAT_OPTIONS;
 
         // Compute display values
         const pureHueRgb = hsvToRgb(cp.hsv.h, 100, 100);
@@ -346,7 +424,11 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
             {...attrs}
             {...rootSpRest}
             ref={ref}
-            className={cx('root', props.className as string | undefined, rootSpClass as string | undefined)}
+            className={cx(
+              'root',
+              props.className as string | undefined,
+              rootSpClass as string | undefined,
+            )}
             style={{
               ...(props.style as React.CSSProperties),
               ...(rootSpStyle as React.CSSProperties),
@@ -422,10 +504,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                         background: `linear-gradient(to right, transparent, ${currentHex})`,
                       }}
                     />
-                    <div
-                      className={styles.sliderThumb}
-                      style={{ left: `${cp.hsv.a * 100}%` }}
-                    />
+                    <div className={styles.sliderThumb} style={{ left: `${cp.hsv.a * 100}%` }} />
                   </div>
                 )}
               </>
@@ -481,7 +560,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                 </Select.Trigger>
                 <Select.Content>
                   <Select.Viewport>
-                    {formatOptions.map(f => (
+                    {formatOptions.map((f) => (
                       <Select.Item key={f} value={f}>
                         {f.toUpperCase()}
                       </Select.Item>
@@ -500,7 +579,9 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   onChange={handleHexChange}
                   onFocus={handleHexFocus}
                   onBlur={handleHexBlur}
-                  onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
+                  }}
                   disabled={disabled}
                   readOnly={readOnly}
                   aria-label={labels.hex}
@@ -520,7 +601,9 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     onKeyDown={handleInputKeyDown}
                     disabled={disabled}
                     readOnly={readOnly}
-                    aria-label={CHANNEL_LABEL_KEYS[ch.label] ? labels[CHANNEL_LABEL_KEYS[ch.label]] : ch.label}
+                    aria-label={
+                      CHANNEL_LABEL_KEYS[ch.label] ? labels[CHANNEL_LABEL_KEYS[ch.label]] : ch.label
+                    }
                   />
                 ))
               )}

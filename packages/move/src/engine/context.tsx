@@ -36,11 +36,7 @@ export interface MoveProviderProps {
  */
 export function MoveProvider({ children, slotProps = {} }: MoveProviderProps) {
   const value = useMemo(() => ({ slotProps }), [slotProps]);
-  return (
-    <MoveContext.Provider value={value}>
-      {children}
-    </MoveContext.Provider>
-  );
+  return <MoveContext.Provider value={value}>{children}</MoveContext.Provider>;
 }
 
 MoveProvider.displayName = 'MoveProvider';
@@ -53,7 +49,7 @@ MoveProvider.displayName = 'MoveProvider';
  * Get global slot-props overrides for a specific component
  */
 export function useMoveContext<TSlots extends string>(
-  componentName: string
+  componentName: string,
 ): { globalSP: SlotPropsMap<TSlots> } {
   const { slotProps } = useContext(MoveContext);
   return {

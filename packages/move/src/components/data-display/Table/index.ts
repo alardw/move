@@ -16,7 +16,4 @@ export type {
   TableGroupHeaderProps,
 } from './Table';
 export { useTableSelection } from './useTableSelection';
-export type {
-  UseTableSelectionOptions,
-  UseTableSelectionReturn,
-} from './useTableSelection';
+export type { UseTableSelectionOptions, UseTableSelectionReturn } from './useTableSelection';

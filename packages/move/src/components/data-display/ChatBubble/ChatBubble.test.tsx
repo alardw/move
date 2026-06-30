@@ -12,7 +12,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-placement', 'start');
     });
@@ -23,7 +23,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-placement', 'start');
     });
@@ -34,7 +34,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-placement', 'end');
     });
@@ -46,7 +46,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -57,7 +57,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       const el = screen.getByTestId('root');
       expect(el).toHaveClass('custom');
@@ -73,7 +73,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container variant="primary" data-testid="container">
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('container')).toHaveAttribute('data-variant', 'primary');
     });
@@ -84,7 +84,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container data-testid="container">
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('container')).toHaveAttribute('data-variant', 'neutral');
     });
@@ -95,7 +95,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container tail data-testid="container">
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('container')).toHaveAttribute('data-tail');
     });
@@ -106,7 +106,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container data-testid="container">
             <ChatBubble.Content>Hello</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByTestId('container')).toHaveAttribute('data-placement', 'end');
     });
@@ -118,7 +118,7 @@ describe('ChatBubble', () => {
       render(
         <ChatBubble.Root>
           <ChatBubble.Avatar>AV</ChatBubble.Avatar>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByText('AV')).toBeInTheDocument();
     });
@@ -132,7 +132,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Header>Sender Name</ChatBubble.Header>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByText('Sender Name')).toBeInTheDocument();
     });
@@ -146,7 +146,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Content>Message body</ChatBubble.Content>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByText('Message body')).toBeInTheDocument();
     });
@@ -160,7 +160,7 @@ describe('ChatBubble', () => {
           <ChatBubble.Container>
             <ChatBubble.Footer>2:30 PM</ChatBubble.Footer>
           </ChatBubble.Container>
-        </ChatBubble.Root>
+        </ChatBubble.Root>,
       );
       expect(screen.getByText('2:30 PM')).toBeInTheDocument();
     });

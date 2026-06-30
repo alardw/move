@@ -26,17 +26,33 @@ export type SpringPreset = keyof typeof springs;
 // Standard easings
 export const easings = [
   'linear',
-  'inQuad', 'outQuad', 'inOutQuad',
-  'inCubic', 'outCubic', 'inOutCubic',
-  'inQuart', 'outQuart', 'inOutQuart',
-  'inExpo', 'outExpo', 'inOutExpo',
-  'inCirc', 'outCirc', 'inOutCirc',
-  'inBack', 'outBack', 'inOutBack',
-  'inElastic', 'outElastic', 'inOutElastic',
-  'inBounce', 'outBounce', 'inOutBounce',
+  'inQuad',
+  'outQuad',
+  'inOutQuad',
+  'inCubic',
+  'outCubic',
+  'inOutCubic',
+  'inQuart',
+  'outQuart',
+  'inOutQuart',
+  'inExpo',
+  'outExpo',
+  'inOutExpo',
+  'inCirc',
+  'outCirc',
+  'inOutCirc',
+  'inBack',
+  'outBack',
+  'inOutBack',
+  'inElastic',
+  'outElastic',
+  'inOutElastic',
+  'inBounce',
+  'outBounce',
+  'inOutBounce',
 ] as const;
 
-export type Easing = typeof easings[number];
+export type Easing = (typeof easings)[number];
 
 export type AnimationPreset = 'none' | SpringPreset | Easing;
 

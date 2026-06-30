@@ -32,7 +32,11 @@ export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
   onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
 }
 
-export const InputText = withMoveComponent<'root' | 'input' | 'iconLeft' | 'iconRight', InputTextProps, HTMLInputElement>({
+export const InputText = withMoveComponent<
+  'root' | 'input' | 'iconLeft' | 'iconRight',
+  InputTextProps,
+  HTMLInputElement
+>({
   name: 'InputText',
   styles,
   slots: ['root', 'input', 'iconLeft', 'iconRight'] as const,
@@ -52,17 +56,33 @@ export const InputText = withMoveComponent<'root' | 'input' | 'iconLeft' | 'icon
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const inputSp = sp('input');
-        const { className: inSpClass, style: inSpStyle, ...inSpRest } = inputSp as Record<string, unknown>;
+        const {
+          className: inSpClass,
+          style: inSpStyle,
+          ...inSpRest
+        } = inputSp as Record<string, unknown>;
         const leftSp = sp('iconLeft');
-        const { className: leftSpClass, style: leftSpStyle, ...leftSpRest } = leftSp as Record<string, unknown>;
+        const {
+          className: leftSpClass,
+          style: leftSpStyle,
+          ...leftSpRest
+        } = leftSp as Record<string, unknown>;
         const rightSp = sp('iconRight');
-        const { className: rightSpClass, style: rightSpStyle, ...rightSpRest } = rightSp as Record<string, unknown>;
+        const {
+          className: rightSpClass,
+          style: rightSpStyle,
+          ...rightSpRest
+        } = rightSp as Record<string, unknown>;
 
         return (
           <div
             {...spRest}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width } : {}), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...props.style,
+              ...(props.width != null ? { width: props.width } : {}),
+              ...(spStyle as React.CSSProperties),
+            }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}

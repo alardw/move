@@ -27,7 +27,11 @@ export const Link = withMoveComponent<'root', LinkProps, HTMLAnchorElement>({
   name: 'Link',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'default' as LinkVariant, underline: 'hover' as LinkUnderline, asChild: false },
+  defaults: {
+    variant: 'default' as LinkVariant,
+    underline: 'hover' as LinkUnderline,
+    asChild: false,
+  },
   moveProps: ['size', 'external'],
 
   setup({ props, ref, cx, sp, attrs }) {

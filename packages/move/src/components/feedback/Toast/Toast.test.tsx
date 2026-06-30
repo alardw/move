@@ -35,7 +35,13 @@ vi.mock('../../../animation', async () => {
     usePresence,
     useIsPresent,
     prefersReducedMotion: vi.fn(() => true), // Skip animations in tests
-    useAnimations: vi.fn(() => ({ handlers: {}, runExit: () => Promise.resolve(), runEnter: () => Promise.resolve(), pauseAll: vi.fn(), resumeAll: vi.fn() })),
+    useAnimations: vi.fn(() => ({
+      handlers: {},
+      runExit: () => Promise.resolve(),
+      runEnter: () => Promise.resolve(),
+      pauseAll: vi.fn(),
+      resumeAll: vi.fn(),
+    })),
     useDismissableExit: vi.fn(),
     resolveAnimationsConfig: vi.fn((defaults: unknown) => defaults),
     quick: [1, 0.5, 0, 1],
@@ -135,16 +141,26 @@ describe('Toast', () => {
         expect(item).toBeInTheDocument();
 
         // Part-way through the countdown, hover to pause it.
-        act(() => { vi.advanceTimersByTime(400); });
-        act(() => { fireEvent.mouseEnter(item); });
+        act(() => {
+          vi.advanceTimersByTime(400);
+        });
+        act(() => {
+          fireEvent.mouseEnter(item);
+        });
 
         // Well past the original duration — must NOT dismiss while hovered.
-        act(() => { vi.advanceTimersByTime(2000); });
+        act(() => {
+          vi.advanceTimersByTime(2000);
+        });
         expect(screen.getByText('Hover me')).toBeInTheDocument();
 
         // Leaving resumes the remaining ~600ms; it then dismisses.
-        act(() => { fireEvent.mouseLeave(item); });
-        act(() => { vi.advanceTimersByTime(700); });
+        act(() => {
+          fireEvent.mouseLeave(item);
+        });
+        act(() => {
+          vi.advanceTimersByTime(700);
+        });
         expect(screen.queryByText('Hover me')).not.toBeInTheDocument();
       } finally {
         vi.useRealTimers();
@@ -170,7 +186,14 @@ describe('Toast', () => {
   describe('viewport', () => {
     it('renders 6 position containers', () => {
       const { container } = render(<Toast.Viewport />);
-      const positions = ['top-right', 'top-left', 'top-center', 'bottom-right', 'bottom-left', 'bottom-center'];
+      const positions = [
+        'top-right',
+        'top-left',
+        'top-center',
+        'bottom-right',
+        'bottom-left',
+        'bottom-center',
+      ];
       for (const pos of positions) {
         const el = container.querySelector(`[data-position="${pos}"]`);
         expect(el).toBeInTheDocument();
@@ -310,7 +333,10 @@ describe('Toast', () => {
       await act(async () => {
         toast('Test');
       });
-      expect(screen.getByRole('button', { name: 'Close it' })).toHaveAttribute('aria-label', 'Close it');
+      expect(screen.getByRole('button', { name: 'Close it' })).toHaveAttribute(
+        'aria-label',
+        'Close it',
+      );
     });
   });
 

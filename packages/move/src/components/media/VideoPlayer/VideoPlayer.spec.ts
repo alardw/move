@@ -8,66 +8,262 @@ export const spec = {
   name: 'VideoPlayer',
   componentClass: 'interactive' as const,
   category: 'media',
-  description: 'Custom HTML5 video player with glassmorphism controls bar, progress scrubbing, volume, subtitles, playback speed, quality switching, fullscreen, and auto-hiding controls',
+  description:
+    'Custom HTML5 video player with glassmorphism controls bar, progress scrubbing, volume, subtitles, playback speed, quality switching, fullscreen, and auto-hiding controls',
 
   synonyms: ['video', 'media player', 'mp4', 'film', 'stream'],
   families: {
-    behavior:  ["media"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['media'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: false,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Outer container with sizing, radius, fullscreen state, and controls-hidden state' },
-    { name: 'video', element: 'div', description: 'Video wrapper div containing the native <video> element; handles click-to-play and double-click-to-fullscreen' },
-    { name: 'controls', element: 'div', description: 'Glassmorphism controls bar positioned absolute at the bottom with backdrop blur' },
-    { name: 'playButton', element: 'button', description: 'Play/pause toggle button rendered via Button component' },
-    { name: 'progress', element: 'div', description: 'Progress bar container with track, buffered, fill, and draggable thumb' },
+    {
+      name: 'root',
+      element: 'div',
+      description:
+        'Outer container with sizing, radius, fullscreen state, and controls-hidden state',
+    },
+    {
+      name: 'video',
+      element: 'div',
+      description:
+        'Video wrapper div containing the native <video> element; handles click-to-play and double-click-to-fullscreen',
+    },
+    {
+      name: 'controls',
+      element: 'div',
+      description:
+        'Glassmorphism controls bar positioned absolute at the bottom with backdrop blur',
+    },
+    {
+      name: 'playButton',
+      element: 'button',
+      description: 'Play/pause toggle button rendered via Button component',
+    },
+    {
+      name: 'progress',
+      element: 'div',
+      description: 'Progress bar container with track, buffered, fill, and draggable thumb',
+    },
     { name: 'time', element: 'span', description: 'Time display showing current time / duration' },
-    { name: 'volumeButton', element: 'button', description: 'Mute/unmute toggle button rendered via Button component' },
+    {
+      name: 'volumeButton',
+      element: 'button',
+      description: 'Mute/unmute toggle button rendered via Button component',
+    },
     { name: 'volumeSlider', element: 'div', description: 'Volume slider with track and fill' },
-    { name: 'settingsButton', element: 'button', description: 'Settings menu trigger button rendered via Button component' },
-    { name: 'subtitleButton', element: 'button', description: 'Subtitle menu trigger button rendered via Button component' },
-    { name: 'fullscreenButton', element: 'button', description: 'Fullscreen toggle button rendered via Button component' },
-    { name: 'subtitleOverlay', element: 'div', description: 'Subtitle cue text overlay positioned above controls bar with responsive font size' },
+    {
+      name: 'settingsButton',
+      element: 'button',
+      description: 'Settings menu trigger button rendered via Button component',
+    },
+    {
+      name: 'subtitleButton',
+      element: 'button',
+      description: 'Subtitle menu trigger button rendered via Button component',
+    },
+    {
+      name: 'fullscreenButton',
+      element: 'button',
+      description: 'Fullscreen toggle button rendered via Button component',
+    },
+    {
+      name: 'subtitleOverlay',
+      element: 'div',
+      description:
+        'Subtitle cue text overlay positioned above controls bar with responsive font size',
+    },
   ],
 
   props: [
     { name: 'src', type: 'string', moveSpecific: true, description: 'Video source URL' },
-    { name: 'poster', type: 'string', moveSpecific: true, description: 'Poster image URL shown before playback' },
-    { name: 'provider', type: 'VideoPlayerProvider', moveSpecific: true, description: 'Custom media provider (e.g. HLS.js adapter) with setup/destroy lifecycle' },
-    { name: 'subtitles', type: 'SubtitleTrack[]', moveSpecific: true, description: 'Array of subtitle/caption tracks (VTT files)' },
-    { name: 'autoPlay', type: 'boolean', moveSpecific: true, description: 'Start playback automatically' },
+    {
+      name: 'poster',
+      type: 'string',
+      moveSpecific: true,
+      description: 'Poster image URL shown before playback',
+    },
+    {
+      name: 'provider',
+      type: 'VideoPlayerProvider',
+      moveSpecific: true,
+      description: 'Custom media provider (e.g. HLS.js adapter) with setup/destroy lifecycle',
+    },
+    {
+      name: 'subtitles',
+      type: 'SubtitleTrack[]',
+      moveSpecific: true,
+      description: 'Array of subtitle/caption tracks (VTT files)',
+    },
+    {
+      name: 'autoPlay',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Start playback automatically',
+    },
     { name: 'muted', type: 'boolean', moveSpecific: true, description: 'Start muted' },
     { name: 'loop', type: 'boolean', moveSpecific: true, description: 'Loop playback' },
-    { name: 'playbackRate', type: 'number', moveSpecific: true, description: 'Controlled playback speed' },
-    { name: 'onPlaybackRateChange', type: '(rate: number) => void', moveSpecific: true, description: 'Called when playback rate changes' },
-    { name: 'playing', type: 'boolean', moveSpecific: true, description: 'Controlled playing state' },
-    { name: 'onPlayingChange', type: '(playing: boolean) => void', moveSpecific: true, description: 'Called when playing state changes' },
+    {
+      name: 'playbackRate',
+      type: 'number',
+      moveSpecific: true,
+      description: 'Controlled playback speed',
+    },
+    {
+      name: 'onPlaybackRateChange',
+      type: '(rate: number) => void',
+      moveSpecific: true,
+      description: 'Called when playback rate changes',
+    },
+    {
+      name: 'playing',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Controlled playing state',
+    },
+    {
+      name: 'onPlayingChange',
+      type: '(playing: boolean) => void',
+      moveSpecific: true,
+      description: 'Called when playing state changes',
+    },
     { name: 'volume', type: 'number', moveSpecific: true, description: 'Controlled volume (0-1)' },
-    { name: 'onVolumeChange', type: '(volume: number) => void', moveSpecific: true, description: 'Called when volume changes' },
-    { name: 'currentTime', type: 'number', moveSpecific: true, description: 'Controlled current playback time in seconds' },
-    { name: 'onTimeChange', type: '(time: number) => void', moveSpecific: true, description: 'Called when current time changes' },
-    { name: 'onEnded', type: '() => void', moveSpecific: true, description: 'Called when playback ends' },
-    { name: 'onError', type: '(error: MediaError | null) => void', moveSpecific: true, description: 'Called on playback error' },
-    { name: 'onReady', type: '() => void', moveSpecific: true, description: 'Called when video metadata is loaded and ready' },
-    { name: 'qualities', type: 'QualityOption[]', moveSpecific: true, description: 'Array of quality options for source switching' },
-    { name: 'audioTracks', type: 'AudioTrack[]', moveSpecific: true, description: 'Array of audio track options for source switching' },
-    { name: 'onQualityChange', type: '(quality: QualityOption) => void', moveSpecific: true, description: 'Called when quality is changed' },
-    { name: 'onAudioTrackChange', type: '(track: AudioTrack) => void', moveSpecific: true, description: 'Called when audio track is changed' },
-    { name: 'showSettings', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show the settings menu button' },
-    { name: 'showVolume', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show volume button and slider' },
-    { name: 'showSubtitles', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show the subtitles menu button (only if subtitles are provided)' },
-    { name: 'showFullscreen', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show the fullscreen toggle button' },
-    { name: 'showTime', type: 'boolean', default: 'true', moveSpecific: true, description: 'Show the time display' },
-    { name: 'labels', type: 'Partial<VideoPlayerLabels>', moveSpecific: true, description: 'i18n labels for the player controls' },
-    { name: 'radius', type: "'none' | 'sm' | 'md' | 'lg'", default: "'none'", moveSpecific: true, description: 'Border radius of the player container' },
-    { name: 'aspectRatio', type: 'string', moveSpecific: true, description: 'CSS aspect-ratio value applied to the root' },
-    { name: 'width', type: 'string | number', moveSpecific: true, description: 'Width of the player (number treated as px)' },
-    { name: 'height', type: 'string | number', moveSpecific: true, description: 'Height of the player (number treated as px)' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Additional content rendered inside the player container' },
+    {
+      name: 'onVolumeChange',
+      type: '(volume: number) => void',
+      moveSpecific: true,
+      description: 'Called when volume changes',
+    },
+    {
+      name: 'currentTime',
+      type: 'number',
+      moveSpecific: true,
+      description: 'Controlled current playback time in seconds',
+    },
+    {
+      name: 'onTimeChange',
+      type: '(time: number) => void',
+      moveSpecific: true,
+      description: 'Called when current time changes',
+    },
+    {
+      name: 'onEnded',
+      type: '() => void',
+      moveSpecific: true,
+      description: 'Called when playback ends',
+    },
+    {
+      name: 'onError',
+      type: '(error: MediaError | null) => void',
+      moveSpecific: true,
+      description: 'Called on playback error',
+    },
+    {
+      name: 'onReady',
+      type: '() => void',
+      moveSpecific: true,
+      description: 'Called when video metadata is loaded and ready',
+    },
+    {
+      name: 'qualities',
+      type: 'QualityOption[]',
+      moveSpecific: true,
+      description: 'Array of quality options for source switching',
+    },
+    {
+      name: 'audioTracks',
+      type: 'AudioTrack[]',
+      moveSpecific: true,
+      description: 'Array of audio track options for source switching',
+    },
+    {
+      name: 'onQualityChange',
+      type: '(quality: QualityOption) => void',
+      moveSpecific: true,
+      description: 'Called when quality is changed',
+    },
+    {
+      name: 'onAudioTrackChange',
+      type: '(track: AudioTrack) => void',
+      moveSpecific: true,
+      description: 'Called when audio track is changed',
+    },
+    {
+      name: 'showSettings',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show the settings menu button',
+    },
+    {
+      name: 'showVolume',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show volume button and slider',
+    },
+    {
+      name: 'showSubtitles',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show the subtitles menu button (only if subtitles are provided)',
+    },
+    {
+      name: 'showFullscreen',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show the fullscreen toggle button',
+    },
+    {
+      name: 'showTime',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Show the time display',
+    },
+    {
+      name: 'labels',
+      type: 'Partial<VideoPlayerLabels>',
+      moveSpecific: true,
+      description: 'i18n labels for the player controls',
+    },
+    {
+      name: 'radius',
+      type: "'none' | 'sm' | 'md' | 'lg'",
+      default: "'none'",
+      moveSpecific: true,
+      description: 'Border radius of the player container',
+    },
+    {
+      name: 'aspectRatio',
+      type: 'string',
+      moveSpecific: true,
+      description: 'CSS aspect-ratio value applied to the root',
+    },
+    {
+      name: 'width',
+      type: 'string | number',
+      moveSpecific: true,
+      description: 'Width of the player (number treated as px)',
+    },
+    {
+      name: 'height',
+      type: 'string | number',
+      moveSpecific: true,
+      description: 'Height of the player (number treated as px)',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Additional content rendered inside the player container',
+    },
   ],
 
   anatomy: {
@@ -107,20 +303,76 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-videoplayer-bg', value: 'var(--move-gray-950)', description: 'Player root background color' },
-    { name: '--move-videoplayer-controls-bg', value: 'rgba(0, 0, 0, 0.65)', description: 'Controls bar background color' },
-    { name: '--move-videoplayer-controls-blur', value: '12px', description: 'Controls bar backdrop blur amount' },
-    { name: '--move-videoplayer-controls-fg', value: 'var(--move-white)', description: 'Controls bar icon/text color' },
-    { name: '--move-videoplayer-controls-fg-muted', value: 'rgba(255, 255, 255, 0.6)', description: 'Muted foreground color for time display' },
-    { name: '--move-videoplayer-progress-track', value: 'rgba(255, 255, 255, 0.2)', description: 'Progress bar track background' },
-    { name: '--move-videoplayer-progress-buffered', value: 'rgba(255, 255, 255, 0.3)', description: 'Buffered progress indicator color' },
-    { name: '--move-videoplayer-progress-fill', value: 'var(--move-white)', description: 'Progress bar fill color' },
-    { name: '--move-videoplayer-progress-thumb', value: 'var(--move-white)', description: 'Progress bar thumb color' },
-    { name: '--move-videoplayer-subtitle-bg', value: 'rgba(0, 0, 0, 0.7)', description: 'Subtitle overlay background' },
-    { name: '--move-videoplayer-subtitle-fg', value: 'var(--move-white)', description: 'Subtitle overlay text color' },
-    { name: '--move-videoplayer-controls-hover', value: 'rgba(255, 255, 255, 0.1)', description: 'Control button hover background' },
-    { name: '--move-videoplayer-controls-active-bg', value: 'var(--move-primary, #3b82f6)', description: 'Active subtitle button background' },
-    { name: '--move-videoplayer-controls-active-fg', value: 'var(--move-white)', description: 'Active subtitle button foreground' },
+    {
+      name: '--move-videoplayer-bg',
+      value: 'var(--move-gray-950)',
+      description: 'Player root background color',
+    },
+    {
+      name: '--move-videoplayer-controls-bg',
+      value: 'rgba(0, 0, 0, 0.65)',
+      description: 'Controls bar background color',
+    },
+    {
+      name: '--move-videoplayer-controls-blur',
+      value: '12px',
+      description: 'Controls bar backdrop blur amount',
+    },
+    {
+      name: '--move-videoplayer-controls-fg',
+      value: 'var(--move-white)',
+      description: 'Controls bar icon/text color',
+    },
+    {
+      name: '--move-videoplayer-controls-fg-muted',
+      value: 'rgba(255, 255, 255, 0.6)',
+      description: 'Muted foreground color for time display',
+    },
+    {
+      name: '--move-videoplayer-progress-track',
+      value: 'rgba(255, 255, 255, 0.2)',
+      description: 'Progress bar track background',
+    },
+    {
+      name: '--move-videoplayer-progress-buffered',
+      value: 'rgba(255, 255, 255, 0.3)',
+      description: 'Buffered progress indicator color',
+    },
+    {
+      name: '--move-videoplayer-progress-fill',
+      value: 'var(--move-white)',
+      description: 'Progress bar fill color',
+    },
+    {
+      name: '--move-videoplayer-progress-thumb',
+      value: 'var(--move-white)',
+      description: 'Progress bar thumb color',
+    },
+    {
+      name: '--move-videoplayer-subtitle-bg',
+      value: 'rgba(0, 0, 0, 0.7)',
+      description: 'Subtitle overlay background',
+    },
+    {
+      name: '--move-videoplayer-subtitle-fg',
+      value: 'var(--move-white)',
+      description: 'Subtitle overlay text color',
+    },
+    {
+      name: '--move-videoplayer-controls-hover',
+      value: 'rgba(255, 255, 255, 0.1)',
+      description: 'Control button hover background',
+    },
+    {
+      name: '--move-videoplayer-controls-active-bg',
+      value: 'var(--move-primary, #3b82f6)',
+      description: 'Active subtitle button background',
+    },
+    {
+      name: '--move-videoplayer-controls-active-fg',
+      value: 'var(--move-white)',
+      description: 'Active subtitle button foreground',
+    },
   ],
 
   variants: {
@@ -133,32 +385,115 @@ export const spec = {
     { key: 'pause', default: 'Pause', description: 'Aria label for the pause button' },
     { key: 'mute', default: 'Mute', description: 'Aria label for the mute button' },
     { key: 'unmute', default: 'Unmute', description: 'Aria label for the unmute button' },
-    { key: 'fullscreen', default: 'Fullscreen', description: 'Aria label for the fullscreen button' },
-    { key: 'exitFullscreen', default: 'Exit fullscreen', description: 'Aria label for the exit fullscreen button' },
+    {
+      key: 'fullscreen',
+      default: 'Fullscreen',
+      description: 'Aria label for the fullscreen button',
+    },
+    {
+      key: 'exitFullscreen',
+      default: 'Exit fullscreen',
+      description: 'Aria label for the exit fullscreen button',
+    },
     { key: 'settings', default: 'Settings', description: 'Aria label for the settings button' },
     { key: 'subtitles', default: 'Subtitles', description: 'Aria label for the subtitles button' },
-    { key: 'subtitlesOff', default: 'Off', description: 'Label for the "Off" option in the subtitle menu' },
+    {
+      key: 'subtitlesOff',
+      default: 'Off',
+      description: 'Label for the "Off" option in the subtitle menu',
+    },
   ],
 
   renderContracts: [
-    { id: 'video-element', description: 'A native <video> element is rendered inside the video slot wrapper with playsInline and preload="metadata"; poster is passed as attribute' },
-    { id: 'provider-lifecycle', description: 'When provider is supplied, provider.setup(video, src) is called on mount/src change, and provider.destroy() on cleanup; otherwise video.src is set directly' },
-    { id: 'controls-auto-hide', description: 'Controls bar auto-hides after 3 seconds of inactivity when playing; shows on mouse move, keyboard input, or pause; uses data-controls-hidden attribute' },
-    { id: 'controls-menu-close-on-hide', description: 'Settings and subtitle menus close when controls auto-hide' },
-    { id: 'video-click-toggle', description: 'Single click on video toggles play/pause; double click toggles fullscreen (250ms click timer debounce)' },
-    { id: 'progress-drag', description: 'Progress bar supports click-to-seek and drag-to-scrub via mousedown + document mousemove/mouseup pattern' },
-    { id: 'volume-drag', description: 'Volume slider supports click-to-set and drag-to-adjust via same mousedown pattern' },
-    { id: 'subtitle-popover-menu', description: 'Subtitle button opens a Popover menu listing all subtitle tracks plus an "Off" option; selecting a track updates activeSubtitleIndex' },
-    { id: 'subtitle-overlay-responsive', description: 'Subtitle overlay font size is responsive, scaled between 14px and 28px based on player width (3.5% ratio) via ResizeObserver setting --_subtitle-size CSS variable' },
-    { id: 'subtitle-overlay-position', description: 'Subtitle overlay drops lower (bottom: 16px) when controls are hidden via data-controls-hidden' },
-    { id: 'settings-menu-composition', description: 'Settings button opens a PlayerSettingsMenu with speed, quality, and audio track categories' },
-    { id: 'fullscreen-via-container', description: 'Fullscreen is toggled via Fullscreen API on the root container element (not the video element); data-fullscreen tracks state' },
-    { id: 'radius-split', description: 'Video slot gets top border-radius, controls slot gets bottom border-radius; both reset to 0 in fullscreen' },
-    { id: 'show-controls-conditional', description: 'showSettings, showSubtitles (requires subtitles prop), showVolume, showFullscreen, and showTime conditionally render their respective controls' },
-    { id: 'keyboard-shortcuts', description: 'Space/k toggles play, m toggles mute, f toggles fullscreen, ArrowLeft/Right seeks +/-5s, ArrowUp/Down adjusts volume +/-5%' },
-    { id: 'sizing-style', description: 'Width, height, and aspectRatio are applied as inline styles on root; number values converted to px strings' },
-    { id: 'button-composition', description: 'All control buttons are rendered using the Button component with variant="ghost" size="sm"' },
-    { id: 'merged-refs', description: 'Root ref is merged with containerRef from useVideoPlayer for fullscreen API access' },
+    {
+      id: 'video-element',
+      description:
+        'A native <video> element is rendered inside the video slot wrapper with playsInline and preload="metadata"; poster is passed as attribute',
+    },
+    {
+      id: 'provider-lifecycle',
+      description:
+        'When provider is supplied, provider.setup(video, src) is called on mount/src change, and provider.destroy() on cleanup; otherwise video.src is set directly',
+    },
+    {
+      id: 'controls-auto-hide',
+      description:
+        'Controls bar auto-hides after 3 seconds of inactivity when playing; shows on mouse move, keyboard input, or pause; uses data-controls-hidden attribute',
+    },
+    {
+      id: 'controls-menu-close-on-hide',
+      description: 'Settings and subtitle menus close when controls auto-hide',
+    },
+    {
+      id: 'video-click-toggle',
+      description:
+        'Single click on video toggles play/pause; double click toggles fullscreen (250ms click timer debounce)',
+    },
+    {
+      id: 'progress-drag',
+      description:
+        'Progress bar supports click-to-seek and drag-to-scrub via mousedown + document mousemove/mouseup pattern',
+    },
+    {
+      id: 'volume-drag',
+      description:
+        'Volume slider supports click-to-set and drag-to-adjust via same mousedown pattern',
+    },
+    {
+      id: 'subtitle-popover-menu',
+      description:
+        'Subtitle button opens a Popover menu listing all subtitle tracks plus an "Off" option; selecting a track updates activeSubtitleIndex',
+    },
+    {
+      id: 'subtitle-overlay-responsive',
+      description:
+        'Subtitle overlay font size is responsive, scaled between 14px and 28px based on player width (3.5% ratio) via ResizeObserver setting --_subtitle-size CSS variable',
+    },
+    {
+      id: 'subtitle-overlay-position',
+      description:
+        'Subtitle overlay drops lower (bottom: 16px) when controls are hidden via data-controls-hidden',
+    },
+    {
+      id: 'settings-menu-composition',
+      description:
+        'Settings button opens a PlayerSettingsMenu with speed, quality, and audio track categories',
+    },
+    {
+      id: 'fullscreen-via-container',
+      description:
+        'Fullscreen is toggled via Fullscreen API on the root container element (not the video element); data-fullscreen tracks state',
+    },
+    {
+      id: 'radius-split',
+      description:
+        'Video slot gets top border-radius, controls slot gets bottom border-radius; both reset to 0 in fullscreen',
+    },
+    {
+      id: 'show-controls-conditional',
+      description:
+        'showSettings, showSubtitles (requires subtitles prop), showVolume, showFullscreen, and showTime conditionally render their respective controls',
+    },
+    {
+      id: 'keyboard-shortcuts',
+      description:
+        'Space/k toggles play, m toggles mute, f toggles fullscreen, ArrowLeft/Right seeks +/-5s, ArrowUp/Down adjusts volume +/-5%',
+    },
+    {
+      id: 'sizing-style',
+      description:
+        'Width, height, and aspectRatio are applied as inline styles on root; number values converted to px strings',
+    },
+    {
+      id: 'button-composition',
+      description:
+        'All control buttons are rendered using the Button component with variant="ghost" size="sm"',
+    },
+    {
+      id: 'merged-refs',
+      description:
+        'Root ref is merged with containerRef from useVideoPlayer for fullscreen API access',
+    },
   ],
 
   hasHook: true,
@@ -230,7 +565,16 @@ export const spec = {
     ],
   },
 
-  iconsUsed: ['captions', 'maximize', 'minimize', 'pause', 'play', 'settings', 'volume-2', 'volume-x'],
+  iconsUsed: [
+    'captions',
+    'maximize',
+    'minimize',
+    'pause',
+    'play',
+    'settings',
+    'volume-2',
+    'volume-x',
+  ],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'user-confirmed' as const,

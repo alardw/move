@@ -196,7 +196,9 @@ describe('ColorInput', () => {
       const swatch = container.querySelector('[role="button"]') as HTMLElement;
       await user.click(swatch);
       // ColorPicker renders sliders inside popover content
-      expect(document.body.querySelector('[data-radix-popper-content-wrapper]')).toBeInTheDocument();
+      expect(
+        document.body.querySelector('[data-radix-popper-content-wrapper]'),
+      ).toBeInTheDocument();
     });
 
     it('disabled prevents swatch click', async () => {
@@ -204,7 +206,9 @@ describe('ColorInput', () => {
       const { container } = render(<ColorInput disabled />);
       const swatch = container.querySelector('[role="button"]') as HTMLElement;
       await user.click(swatch);
-      expect(document.body.querySelector('[data-radix-popper-content-wrapper]')).not.toBeInTheDocument();
+      expect(
+        document.body.querySelector('[data-radix-popper-content-wrapper]'),
+      ).not.toBeInTheDocument();
     });
   });
 

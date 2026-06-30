@@ -44,9 +44,12 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
-        const maxWidth = props.maxWidth != null
-          ? typeof props.maxWidth === 'number' ? `${props.maxWidth}px` : props.maxWidth
-          : undefined;
+        const maxWidth =
+          props.maxWidth != null
+            ? typeof props.maxWidth === 'number'
+              ? `${props.maxWidth}px`
+              : props.maxWidth
+            : undefined;
 
         return (
           <SurfaceProvider value={surface}>
@@ -58,7 +61,13 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
               data-size={props.size as string}
               data-surface={surface}
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ '--move-card-max-width': maxWidth, ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) } as React.CSSProperties}
+              style={
+                {
+                  '--move-card-max-width': maxWidth,
+                  ...(props.style as React.CSSProperties),
+                  ...(spStyle as React.CSSProperties),
+                } as React.CSSProperties
+              }
             >
               {props.children}
             </div>
@@ -89,7 +98,11 @@ const CardHeader = withMoveComponent<'header', CardHeaderProps, HTMLDivElement>(
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
 
         return (
           <div
@@ -127,7 +140,11 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
     return {
       render() {
         const titleSp = sp('title');
-        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = titleSp as Record<string, unknown>;
 
         return (
           <h3
@@ -241,7 +258,11 @@ const CardFooter = withMoveComponent<'footer', CardFooterProps, HTMLDivElement>(
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
 
         return (
           <div
@@ -279,7 +300,11 @@ const CardFooterStart = withMoveComponent<'footerStart', CardFooterStartProps, H
     return {
       render() {
         const footerStartSp = sp('footerStart');
-        const { className: spClass, style: spStyle, ...spRest } = footerStartSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerStartSp as Record<string, unknown>;
 
         return (
           <div
@@ -317,7 +342,11 @@ const CardFooterEnd = withMoveComponent<'footerEnd', CardFooterEndProps, HTMLDiv
     return {
       render() {
         const footerEndSp = sp('footerEnd');
-        const { className: spClass, style: spStyle, ...spRest } = footerEndSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerEndSp as Record<string, unknown>;
 
         return (
           <div

@@ -37,20 +37,12 @@ export function withMoveComponent<
   TRef extends Element = HTMLElement,
   TSubs extends Record<string, React.ComponentType<any>> = Record<string, never>,
 >(
-  options: MoveComponentOptions<TSlots, TProps, TRef, TSubs>
+  options: MoveComponentOptions<TSlots, TProps, TRef, TSubs>,
 ): React.ForwardRefExoticComponent<
-  React.PropsWithoutRef<TProps & { sp?: SlotPropsMap<TSlots> }> &
-    React.RefAttributes<TRef>
+  React.PropsWithoutRef<TProps & { sp?: SlotPropsMap<TSlots> }> & React.RefAttributes<TRef>
 > &
   TSubs {
-  const {
-    name,
-    styles,
-    defaults,
-    moveProps = [],
-    subComponents,
-    setup,
-  } = options;
+  const { name, styles, defaults, moveProps = [], subComponents, setup } = options;
 
   // Build the set of keys to strip from attrs
   const stripKeys = new Set<string>([
@@ -85,10 +77,7 @@ export function withMoveComponent<
       // 5. Build cx() and sp()
       const cx = createCx<TSlots>(styles);
       const sp = createSp<TSlots>(globalSP, instanceSP);
-      const slot = (
-        name: TSlots,
-        ...extra: (string | false | null | undefined)[]
-      ): SlotProps => {
+      const slot = (name: TSlots, ...extra: (string | false | null | undefined)[]): SlotProps => {
         const { className, style, ...rest } = sp(name);
         return { ...rest, className: cx(name, ...extra, className), style };
       };
@@ -117,7 +106,7 @@ export function withMoveComponent<
 
       // 9. Render
       return <>{result.render()}</>;
-    }
+    },
   );
 
   Component.displayName = name;

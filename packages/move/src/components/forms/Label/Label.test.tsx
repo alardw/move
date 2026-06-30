@@ -24,7 +24,11 @@ describe('Label', () => {
     });
 
     it('forwards className and style', () => {
-      render(<Label className="custom" style={{ color: 'red' }}>Name</Label>);
+      render(
+        <Label className="custom" style={{ color: 'red' }}>
+          Name
+        </Label>,
+      );
       const el = screen.getByText('Name');
       expect(el.className).toContain('custom');
       expect(el.style.color).toBe('red');

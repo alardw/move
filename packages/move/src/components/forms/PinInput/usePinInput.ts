@@ -97,27 +97,33 @@ export function usePinInput(options: UsePinInputOptions = {}): UsePinInputReturn
         onCompleteRef.current?.(filtered);
       }
     },
-    [type, length, setValueRaw]
+    [type, length, setValueRaw],
   );
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setValue(e.target.value);
     },
-    [setValue]
+    [setValue],
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.metaKey || e.ctrlKey) return;
-      if (e.key === 'Backspace' || e.key === 'Delete' || e.key === 'ArrowLeft' || e.key === 'ArrowRight' || e.key === 'Tab') {
+      if (
+        e.key === 'Backspace' ||
+        e.key === 'Delete' ||
+        e.key === 'ArrowLeft' ||
+        e.key === 'ArrowRight' ||
+        e.key === 'Tab'
+      ) {
         return;
       }
       if (e.key.length === 1 && !validateChar(e.key, type)) {
         e.preventDefault();
       }
     },
-    [type]
+    [type],
   );
 
   const handleFocus = useCallback(() => {
@@ -136,7 +142,7 @@ export function usePinInput(options: UsePinInputOptions = {}): UsePinInputReturn
       const pasted = e.clipboardData.getData('text/plain');
       setValue(pasted);
     },
-    [setValue]
+    [setValue],
   );
 
   const focus = useCallback(() => {
@@ -150,17 +156,17 @@ export function usePinInput(options: UsePinInputOptions = {}): UsePinInputReturn
       if (mask) return '\u2022';
       return ch;
     },
-    [value, mask, placeholder]
+    [value, mask, placeholder],
   );
 
   const isSlotFilled = useCallback(
     (index: number): boolean => index < value.length,
-    [value.length]
+    [value.length],
   );
 
   const isSlotActive = useCallback(
     (index: number): boolean => isFocused && index === Math.min(value.length, length - 1),
-    [isFocused, value.length, length]
+    [isFocused, value.length, length],
   );
 
   const inputMode: 'numeric' | 'text' = type === 'number' ? 'numeric' : 'text';

@@ -116,7 +116,9 @@
   border-radius: var(--move-rte-control-radius);
   color: var(--move-rte-control-fg);
   cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 .control:hover:not(:disabled) {
@@ -184,23 +186,23 @@
 
 /* ── Task lists (TipTap) ── */
 
-.content :global(ul[data-type="taskList"]) {
+.content :global(ul[data-type='taskList']) {
   list-style: none;
   padding-left: 0;
 }
 
-.content :global(ul[data-type="taskList"]) li {
+.content :global(ul[data-type='taskList']) li {
   display: flex;
   align-items: flex-start;
   gap: var(--move-spacing-xs);
 }
 
-.content :global(ul[data-type="taskList"]) li > label {
+.content :global(ul[data-type='taskList']) li > label {
   flex-shrink: 0;
   margin-top: 0.25em;
 }
 
-.content :global(ul[data-type="taskList"]) li > div {
+.content :global(ul[data-type='taskList']) li > div {
   flex: 1;
 }
 
@@ -213,7 +215,15 @@
 
 /* ── Nested list style cycling ── */
 
-.content ul ul { list-style-type: circle; }
-.content ul ul ul { list-style-type: square; }
-.content ol ol { list-style-type: lower-alpha; }
-.content ol ol ol { list-style-type: lower-roman; }
+.content ul ul {
+  list-style-type: circle;
+}
+.content ul ul ul {
+  list-style-type: square;
+}
+.content ol ol {
+  list-style-type: lower-alpha;
+}
+.content ol ol ol {
+  list-style-type: lower-roman;
+}

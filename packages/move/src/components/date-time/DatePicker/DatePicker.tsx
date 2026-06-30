@@ -24,7 +24,14 @@ import {
   isBefore,
   startOfDay,
 } from '../../date-time/_shared/dateUtils';
-import { useAnimations, resolveAnimationsConfig, staggerItems, quick, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  staggerItems,
+  quick,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useMergedRef } from '../../../engine';
 import { InputText } from '../../forms/InputText';
@@ -74,11 +81,18 @@ const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
     // Shell only fades (Radix owns its transform). The scale lives on the inner
     // box; the gridcells stagger on top. All parallel (nested array).
     trigger: 'Content.enter',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { target: 'ContentInner', animation: { scale: { from: 0.95, to: 1, ease: quick } } },
-      { target: 'ContentInner', children: '[role="gridcell"]', stagger: { delay: 15 }, animation: staggerItems.enter },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        { target: 'ContentInner', animation: { scale: { from: 0.95, to: 1, ease: quick } } },
+        {
+          target: 'ContentInner',
+          children: '[role="gridcell"]',
+          stagger: { delay: 15 },
+          animation: staggerItems.enter,
+        },
+      ],
+    ],
   },
   {
     trigger: 'Content.exit',
@@ -87,10 +101,12 @@ const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
     // which froze cells mid-stagger on rapid reopen and made a sibling popup's
     // first click get eaten by this one still closing. Same rule Select/TimeField
     // follow: the container fades, it never staggers out.
-    sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { target: 'ContentInner', animation: { scale: { to: 0.95, duration: 150 } } },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        { target: 'ContentInner', animation: { scale: { to: 0.95, duration: 150 } } },
+      ],
+    ],
   },
 ];
 
@@ -224,10 +240,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   const timeHourCycle =
     (typeof showTimeProp === 'object' ? showTimeProp.hourCycle : undefined) ?? 24;
 
-  const labels = React.useMemo(
-    () => ({ ...DEFAULT_LABELS, ...labelsProp }),
-    [labelsProp],
-  );
+  const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
   const rangeLabels = rangeLabelsOverride ?? {
     from: labels.selectStartDate,
     to: labels.selectEndDate,
@@ -383,7 +396,15 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
         }
       }
     },
-    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue, close],
+    [
+      originalOnSelect,
+      closeOnSelect,
+      mode,
+      calendar.value,
+      activeField,
+      calendarSetRangeValue,
+      close,
+    ],
   );
 
   const calendarCtx = React.useMemo(
@@ -416,13 +437,16 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     };
   }, [isOpen, isClosing, close]);
 
-  const focusCalendar = React.useCallback((cancelClose = false) => {
-    // cancelClose=true only for an explicit icon re-click (cancels an in-flight
-    // close so a rapid re-click reopens). Focus-driven opens pass nothing, so
-    // they can't cancel a deliberate close-on-select.
-    (cancelClose ? reopen : openPopover)();
-    setShouldFocusCalendar(true);
-  }, [openPopover, reopen]);
+  const focusCalendar = React.useCallback(
+    (cancelClose = false) => {
+      // cancelClose=true only for an explicit icon re-click (cancels an in-flight
+      // close so a rapid re-click reopens). Focus-driven opens pass nothing, so
+      // they can't cancel a deliberate close-on-select.
+      (cancelClose ? reopen : openPopover)();
+      setShouldFocusCalendar(true);
+    },
+    [openPopover, reopen],
+  );
 
   const clearFocusRequest = React.useCallback(() => {
     setShouldFocusCalendar(false);
@@ -880,11 +904,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
   );
 
   return (
-    <div
-      className={`${styles.rangeWrapper} ${className ?? ''}`}
-      style={style}
-      data-size={size}
-    >
+    <div className={`${styles.rangeWrapper} ${className ?? ''}`} style={style} data-size={size}>
       <InputText
         ref={dpCtx?.fromInputRef as React.RefObject<HTMLInputElement>}
         value={fromText}
@@ -937,11 +957,7 @@ export interface DatePickerIconProps {
 const DatePickerIcon: React.FC<DatePickerIconProps> = ({ className, children }) => {
   const calendarIcon = useIcon('calendar', 16);
 
-  return (
-    <span className={`${styles.icon} ${className ?? ''}`}>
-      {children ?? calendarIcon}
-    </span>
-  );
+  return <span className={`${styles.icon} ${className ?? ''}`}>{children ?? calendarIcon}</span>;
 };
 DatePickerIcon.displayName = 'DatePicker.Icon';
 
@@ -962,98 +978,110 @@ export interface DatePickerContentProps {
   [key: string]: unknown;
 }
 
-const DatePickerContentInner = React.forwardRef<HTMLDivElement, DatePickerContentProps & { layer: number }>(
-  function DatePickerContentInner({ children, className, style, sideOffset = 4, align = 'start', layer: rawLayer, ...rest }, forwardedRef) {
-    const layer = rawLayer as number;
-    const dpCtx = React.useContext(DatePickerContext);
-    const animConfig = dpCtx?.animConfig ?? null;
+const DatePickerContentInner = React.forwardRef<
+  HTMLDivElement,
+  DatePickerContentProps & { layer: number }
+>(function DatePickerContentInner(
+  { children, className, style, sideOffset = 4, align = 'start', layer: rawLayer, ...rest },
+  forwardedRef,
+) {
+  const layer = rawLayer as number;
+  const dpCtx = React.useContext(DatePickerContext);
+  const animConfig = dpCtx?.animConfig ?? null;
 
-    const contentRef = React.useRef<HTMLDivElement>(null);
-    const innerRef = React.useRef<HTMLDivElement>(null);
+  const contentRef = React.useRef<HTMLDivElement>(null);
+  const innerRef = React.useRef<HTMLDivElement>(null);
 
-    const contentConfig = React.useMemo(() =>
-      animConfig?.filter(t => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ?? null,
-      [animConfig]);
-    const contentRefs = React.useMemo(() => ({
+  const contentConfig = React.useMemo(
+    () =>
+      animConfig?.filter((t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ??
+      null,
+    [animConfig],
+  );
+  const contentRefs = React.useMemo(
+    () => ({
       Content: contentRef as React.RefObject<HTMLElement | null>,
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    }),
+    [],
+  );
 
-    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
+  const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    useDismissableExit({
-      isClosing: dpCtx?.isClosing ?? false,
-      epoch: dpCtx?.epoch ?? 0,
-      onExitDone: dpCtx?.onExitDone ?? (() => {}),
-      runExit,
-      runEnter,
-      pauseAll,
-    });
+  useDismissableExit({
+    isClosing: dpCtx?.isClosing ?? false,
+    epoch: dpCtx?.epoch ?? 0,
+    onExitDone: dpCtx?.onExitDone ?? (() => {}),
+    runExit,
+    runEnter,
+    pauseAll,
+  });
 
-    const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
+  const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
-    React.useEffect(() => {
-      if (dpCtx?.shouldFocusCalendar && contentRef.current) {
-        contentRef.current.focus();
-        dpCtx.clearFocusRequest();
-      }
-    }, [dpCtx?.shouldFocusCalendar]); // eslint-disable-line react-hooks/exhaustive-deps
+  React.useEffect(() => {
+    if (dpCtx?.shouldFocusCalendar && contentRef.current) {
+      contentRef.current.focus();
+      dpCtx.clearFocusRequest();
+    }
+  }, [dpCtx?.shouldFocusCalendar]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const handlePointerDownOutside = (e: Event) => {
-      const target = e.target as Node;
-      if (dpCtx?.anchorRef.current?.contains(target)) {
-        e.preventDefault();
-        return;
-      }
-      if (!e.defaultPrevented) dpCtx?.close();
-    };
+  const handlePointerDownOutside = (e: Event) => {
+    const target = e.target as Node;
+    if (dpCtx?.anchorRef.current?.contains(target)) {
+      e.preventDefault();
+      return;
+    }
+    if (!e.defaultPrevented) dpCtx?.close();
+  };
 
-    const handleEscapeKeyDown = (e: KeyboardEvent) => {
-      if (!e.defaultPrevented) dpCtx?.close();
-    };
+  const handleEscapeKeyDown = (e: KeyboardEvent) => {
+    if (!e.defaultPrevented) dpCtx?.close();
+  };
 
-    return (
-      <RadixPopover.Content
-        {...rest}
-        ref={mergedRef}
-        sideOffset={sideOffset as number}
-        align={align as 'start' | 'center' | 'end'}
-        className={`${styles.content} ${className ?? ''}`}
-        style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
-        onPointerDownOutside={handlePointerDownOutside}
-        onEscapeKeyDown={handleEscapeKeyDown}
-        onOpenAutoFocus={(e) => e.preventDefault()}
-        onCloseAutoFocus={(e) => e.preventDefault()}
-      >
-        <div ref={innerRef} className={styles.contentInner}>
-          {dpCtx?.mode === 'range' && dpCtx.activeField && (
-            <div className={styles.rangeInstruction}>
-              {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
-            </div>
-          )}
-          {(children ?? (
+  return (
+    <RadixPopover.Content
+      {...rest}
+      ref={mergedRef}
+      sideOffset={sideOffset as number}
+      align={align as 'start' | 'center' | 'end'}
+      className={`${styles.content} ${className ?? ''}`}
+      style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
+      onPointerDownOutside={handlePointerDownOutside}
+      onEscapeKeyDown={handleEscapeKeyDown}
+      onOpenAutoFocus={(e) => e.preventDefault()}
+      onCloseAutoFocus={(e) => e.preventDefault()}
+    >
+      <div ref={innerRef} className={styles.contentInner}>
+        {dpCtx?.mode === 'range' && dpCtx.activeField && (
+          <div className={styles.rangeInstruction}>
+            {dpCtx.activeField === 'from' ? dpCtx.rangeLabels.from : dpCtx.rangeLabels.to}
+          </div>
+        )}
+        {
+          (children ?? (
             <>
               <CalendarNav />
               <MonthGrid />
             </>
-          )) as React.ReactNode}
-          {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
-            <div className={styles.datePickerTime}>
-              <span className={styles.datePickerTimeLabel}>Time</span>
-              <TimeField
-                value={dpCtx.timeValue}
-                onValueChange={dpCtx.onTimeChange}
-                granularity="minute"
-                hourCycle={dpCtx.timeHourCycle}
-                size="sm"
-              />
-            </div>
-          )}
-        </div>
-      </RadixPopover.Content>
-    );
-  },
-);
+          )) as React.ReactNode
+        }
+        {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
+          <div className={styles.datePickerTime}>
+            <span className={styles.datePickerTimeLabel}>Time</span>
+            <TimeField
+              value={dpCtx.timeValue}
+              onValueChange={dpCtx.onTimeChange}
+              granularity="minute"
+              hourCycle={dpCtx.timeHourCycle}
+              size="sm"
+            />
+          </div>
+        )}
+      </div>
+    </RadixPopover.Content>
+  );
+});
 
 const DatePickerContent = React.forwardRef<HTMLDivElement, DatePickerContentProps>(
   ({ container, ...rest }, forwardedRef) => {

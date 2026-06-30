@@ -12,7 +12,7 @@ function mergeClassNames(...classes: (string | false | null | undefined)[]): str
  */
 function mergeStyles(
   a?: React.CSSProperties,
-  b?: React.CSSProperties
+  b?: React.CSSProperties,
 ): React.CSSProperties | undefined {
   if (!a && !b) return undefined;
   if (!a) return b;
@@ -54,9 +54,7 @@ export function mergeSlotProps(...sources: (SlotProps | undefined)[]): SlotProps
 /**
  * Create a cx() function that resolves CSS Module class for a slot + extras
  */
-export function createCx<TSlots extends string>(
-  styles?: Record<string, string>
-): CxFn<TSlots> {
+export function createCx<TSlots extends string>(styles?: Record<string, string>): CxFn<TSlots> {
   return (slot, ...extra) => {
     const moduleClass = styles?.[slot] ?? '';
     return mergeClassNames(moduleClass, ...extra);
@@ -68,13 +66,9 @@ export function createCx<TSlots extends string>(
  */
 export function createSp<TSlots extends string>(
   globalSP?: SlotPropsMap<TSlots>,
-  instanceSP?: SlotPropsMap<TSlots>
+  instanceSP?: SlotPropsMap<TSlots>,
 ): SpFn<TSlots> {
   return (slot, localProps?) => {
-    return mergeSlotProps(
-      globalSP?.[slot],
-      instanceSP?.[slot],
-      localProps
-    );
+    return mergeSlotProps(globalSP?.[slot], instanceSP?.[slot], localProps);
   };
 }

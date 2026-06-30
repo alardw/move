@@ -12,7 +12,7 @@ describe('Splitter', () => {
         <Splitter.Root data-testid="root">
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const el = screen.getByTestId('root');
       expect(el).toBeInTheDocument();
@@ -25,7 +25,7 @@ describe('Splitter', () => {
         <Splitter.Root data-testid="root">
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-layout', 'horizontal');
     });
@@ -35,7 +35,7 @@ describe('Splitter', () => {
         <Splitter.Root data-testid="root" layout="vertical">
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('data-layout', 'vertical');
     });
@@ -46,7 +46,7 @@ describe('Splitter', () => {
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
           <Splitter.Panel>C</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const separators = screen.getAllByRole('separator');
       expect(separators).toHaveLength(2);
@@ -56,7 +56,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root data-testid="root" className="custom" style={{ marginTop: '10px' }}>
           <Splitter.Panel>A</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const el = screen.getByTestId('root');
       expect(el.className).toContain('custom');
@@ -68,7 +68,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root ref={ref}>
           <Splitter.Panel>A</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -77,7 +77,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root data-testid="root" aria-label="Splitter">
           <Splitter.Panel>A</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(screen.getByTestId('root')).toHaveAttribute('aria-label', 'Splitter');
     });
@@ -88,9 +88,11 @@ describe('Splitter', () => {
     it('renders with percentage width in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel" size={30}>A</Splitter.Panel>
+          <Splitter.Panel data-testid="panel" size={30}>
+            A
+          </Splitter.Panel>
           <Splitter.Panel size={70}>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const panel = screen.getByTestId('panel');
       expect(panel).toHaveStyle({ width: '30%' });
@@ -99,9 +101,11 @@ describe('Splitter', () => {
     it('renders with percentage height in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel" size={40}>A</Splitter.Panel>
+          <Splitter.Panel data-testid="panel" size={40}>
+            A
+          </Splitter.Panel>
           <Splitter.Panel size={60}>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const panel = screen.getByTestId('panel');
       expect(panel).toHaveStyle({ height: '40%' });
@@ -112,7 +116,7 @@ describe('Splitter', () => {
         <Splitter.Root>
           <Splitter.Panel data-testid="panel-a">A</Splitter.Panel>
           <Splitter.Panel data-testid="panel-b">B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const panelA = screen.getByTestId('panel-a');
       expect(panelA).toHaveStyle({ width: '50%' });
@@ -122,7 +126,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root>
           <Splitter.Panel>Panel Content</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(screen.getByText('Panel Content')).toBeInTheDocument();
     });
@@ -130,10 +134,14 @@ describe('Splitter', () => {
     it('forwards className and style', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel" className="custom-panel" style={{ background: 'rgb(0, 0, 255)' }}>
+          <Splitter.Panel
+            data-testid="panel"
+            className="custom-panel"
+            style={{ background: 'rgb(0, 0, 255)' }}
+          >
             A
           </Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const panel = screen.getByTestId('panel');
       expect(panel.className).toContain('custom-panel');
@@ -145,7 +153,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root>
           <Splitter.Panel ref={ref}>A</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -154,7 +162,7 @@ describe('Splitter', () => {
       render(
         <Splitter.Root layout="vertical">
           <Splitter.Panel data-testid="panel">A</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       expect(screen.getByTestId('panel')).toHaveAttribute('data-layout', 'vertical');
     });
@@ -167,7 +175,7 @@ describe('Splitter', () => {
         <Splitter.Root>
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       expect(gutter).toBeInTheDocument();
@@ -178,7 +186,7 @@ describe('Splitter', () => {
         <Splitter.Root layout="horizontal">
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       expect(gutter).toHaveAttribute('aria-orientation', 'vertical');
@@ -189,7 +197,7 @@ describe('Splitter', () => {
         <Splitter.Root layout="vertical">
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       expect(gutter).toHaveAttribute('aria-orientation', 'horizontal');
@@ -200,7 +208,7 @@ describe('Splitter', () => {
         <Splitter.Root>
           <Splitter.Panel size={30}>A</Splitter.Panel>
           <Splitter.Panel size={70}>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       expect(gutter).toHaveAttribute('aria-valuenow');
@@ -211,7 +219,7 @@ describe('Splitter', () => {
         <Splitter.Root>
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       expect(gutter).toHaveAttribute('tabindex', '0');
@@ -223,9 +231,13 @@ describe('Splitter', () => {
     it('ArrowRight increases panel before gutter in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'ArrowRight' });
@@ -236,9 +248,13 @@ describe('Splitter', () => {
     it('ArrowLeft decreases panel before gutter in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'ArrowLeft' });
@@ -249,9 +265,13 @@ describe('Splitter', () => {
     it('ArrowDown increases panel before gutter in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'ArrowDown' });
@@ -261,9 +281,13 @@ describe('Splitter', () => {
     it('ArrowUp decreases panel before gutter in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'ArrowUp' });
@@ -273,9 +297,13 @@ describe('Splitter', () => {
     it('Home minimizes the panel before the gutter', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'Home' });
@@ -285,9 +313,13 @@ describe('Splitter', () => {
     it('End maximizes the panel before the gutter', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={50}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={50}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'End' });
@@ -300,7 +332,7 @@ describe('Splitter', () => {
         <Splitter.Root onResizeEnd={onResizeEnd}>
           <Splitter.Panel size={50}>A</Splitter.Panel>
           <Splitter.Panel size={50}>B</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       fireEvent.keyDown(gutter, { key: 'ArrowRight' });
@@ -310,9 +342,13 @@ describe('Splitter', () => {
     it('keyboard resize respects minSize constraint', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={6}>A</Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={94}>B</Splitter.Panel>
-        </Splitter.Root>
+          <Splitter.Panel data-testid="panel-a" size={6}>
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="panel-b" size={94}>
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
       // ArrowLeft would try to shrink panel A to 4% (below minSize=5), but Math.max(5, ...) prevents it
@@ -328,7 +364,7 @@ describe('Splitter', () => {
         <Splitter.Root data-testid="root">
           <Splitter.Panel data-testid="left">Left</Splitter.Panel>
           <Splitter.Panel data-testid="right">Right</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
 
       expect(screen.getByTestId('root')).toBeInTheDocument();
@@ -345,7 +381,7 @@ describe('Splitter', () => {
           <Splitter.Panel>A</Splitter.Panel>
           <Splitter.Panel>B</Splitter.Panel>
           <Splitter.Panel>C</Splitter.Panel>
-        </Splitter.Root>
+        </Splitter.Root>,
       );
       const separators = screen.getAllByRole('separator');
       expect(separators).toHaveLength(2);

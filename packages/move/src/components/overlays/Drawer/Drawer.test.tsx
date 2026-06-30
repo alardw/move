@@ -5,7 +5,10 @@ import { describe, it, expect, vi } from 'vitest';
 import { Drawer } from './Drawer';
 
 // animations={false} → open/close is instant (no exit-animation hang in jsdom).
-function renderDrawer(rootProps: Record<string, unknown> = {}, contentProps: Record<string, unknown> = {}) {
+function renderDrawer(
+  rootProps: Record<string, unknown> = {},
+  contentProps: Record<string, unknown> = {},
+) {
   return render(
     <Drawer.Root animations={false} {...rootProps}>
       <Drawer.Trigger asChild>

@@ -77,19 +77,58 @@
 }
 
 /* Palette colors — override bg/fg via data-color (takes precedence over variant) */
-.container[data-color='gray']   { --move-chatbubble-bg: var(--move-gray-soft-bg);   --move-chatbubble-fg: var(--move-gray-text); }
-.container[data-color='red']    { --move-chatbubble-bg: var(--move-red-soft-bg);    --move-chatbubble-fg: var(--move-red-text); }
-.container[data-color='pink']   { --move-chatbubble-bg: var(--move-pink-soft-bg);   --move-chatbubble-fg: var(--move-pink-text); }
-.container[data-color='grape']  { --move-chatbubble-bg: var(--move-grape-soft-bg);  --move-chatbubble-fg: var(--move-grape-text); }
-.container[data-color='violet'] { --move-chatbubble-bg: var(--move-violet-soft-bg); --move-chatbubble-fg: var(--move-violet-text); }
-.container[data-color='indigo'] { --move-chatbubble-bg: var(--move-indigo-soft-bg); --move-chatbubble-fg: var(--move-indigo-text); }
-.container[data-color='blue']   { --move-chatbubble-bg: var(--move-blue-soft-bg);   --move-chatbubble-fg: var(--move-blue-text); }
-.container[data-color='cyan']   { --move-chatbubble-bg: var(--move-cyan-soft-bg);   --move-chatbubble-fg: var(--move-cyan-text); }
-.container[data-color='teal']   { --move-chatbubble-bg: var(--move-teal-soft-bg);   --move-chatbubble-fg: var(--move-teal-text); }
-.container[data-color='green']  { --move-chatbubble-bg: var(--move-green-soft-bg);  --move-chatbubble-fg: var(--move-green-text); }
-.container[data-color='lime']   { --move-chatbubble-bg: var(--move-lime-soft-bg);   --move-chatbubble-fg: var(--move-lime-text); }
-.container[data-color='yellow'] { --move-chatbubble-bg: var(--move-yellow-soft-bg); --move-chatbubble-fg: var(--move-yellow-text); }
-.container[data-color='orange'] { --move-chatbubble-bg: var(--move-orange-soft-bg); --move-chatbubble-fg: var(--move-orange-text); }
+.container[data-color='gray'] {
+  --move-chatbubble-bg: var(--move-gray-soft-bg);
+  --move-chatbubble-fg: var(--move-gray-text);
+}
+.container[data-color='red'] {
+  --move-chatbubble-bg: var(--move-red-soft-bg);
+  --move-chatbubble-fg: var(--move-red-text);
+}
+.container[data-color='pink'] {
+  --move-chatbubble-bg: var(--move-pink-soft-bg);
+  --move-chatbubble-fg: var(--move-pink-text);
+}
+.container[data-color='grape'] {
+  --move-chatbubble-bg: var(--move-grape-soft-bg);
+  --move-chatbubble-fg: var(--move-grape-text);
+}
+.container[data-color='violet'] {
+  --move-chatbubble-bg: var(--move-violet-soft-bg);
+  --move-chatbubble-fg: var(--move-violet-text);
+}
+.container[data-color='indigo'] {
+  --move-chatbubble-bg: var(--move-indigo-soft-bg);
+  --move-chatbubble-fg: var(--move-indigo-text);
+}
+.container[data-color='blue'] {
+  --move-chatbubble-bg: var(--move-blue-soft-bg);
+  --move-chatbubble-fg: var(--move-blue-text);
+}
+.container[data-color='cyan'] {
+  --move-chatbubble-bg: var(--move-cyan-soft-bg);
+  --move-chatbubble-fg: var(--move-cyan-text);
+}
+.container[data-color='teal'] {
+  --move-chatbubble-bg: var(--move-teal-soft-bg);
+  --move-chatbubble-fg: var(--move-teal-text);
+}
+.container[data-color='green'] {
+  --move-chatbubble-bg: var(--move-green-soft-bg);
+  --move-chatbubble-fg: var(--move-green-text);
+}
+.container[data-color='lime'] {
+  --move-chatbubble-bg: var(--move-lime-soft-bg);
+  --move-chatbubble-fg: var(--move-lime-text);
+}
+.container[data-color='yellow'] {
+  --move-chatbubble-bg: var(--move-yellow-soft-bg);
+  --move-chatbubble-fg: var(--move-yellow-text);
+}
+.container[data-color='orange'] {
+  --move-chatbubble-bg: var(--move-orange-soft-bg);
+  --move-chatbubble-fg: var(--move-orange-text);
+}
 
 /* Tail — square off the corner closest to the avatar */
 .container[data-tail][data-placement='start'],

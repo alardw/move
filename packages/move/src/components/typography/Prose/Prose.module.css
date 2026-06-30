@@ -46,12 +46,25 @@
   margin-bottom: 0.5em;
 }
 
-.root h1 { font-size: var(--move-text-4xl); margin-top: 0; }
-.root h2 { font-size: var(--move-text-3xl); }
-.root h3 { font-size: var(--move-text-2xl); }
-.root h4 { font-size: var(--move-text-xl); }
-.root h5 { font-size: var(--move-text-lg); }
-.root h6 { font-size: var(--move-text-base); }
+.root h1 {
+  font-size: var(--move-text-4xl);
+  margin-top: 0;
+}
+.root h2 {
+  font-size: var(--move-text-3xl);
+}
+.root h3 {
+  font-size: var(--move-text-2xl);
+}
+.root h4 {
+  font-size: var(--move-text-xl);
+}
+.root h5 {
+  font-size: var(--move-text-lg);
+}
+.root h6 {
+  font-size: var(--move-text-base);
+}
 
 .root > h1:first-child,
 .root > h2:first-child,

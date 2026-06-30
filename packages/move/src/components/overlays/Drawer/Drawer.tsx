@@ -5,7 +5,13 @@ import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, snappy, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  snappy,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -74,31 +80,39 @@ function getDefaultAnimations(position: DrawerPosition): AnimationTrigger[] {
   return [
     {
       trigger: 'Content.enter',
-      sequence: [{
-        animation: isHorizontal
-          ? { translateX: { from, to: '0%', ease: snappy } }
-          : { translateY: { from, to: '0%', ease: snappy } },
-      }],
+      sequence: [
+        {
+          animation: isHorizontal
+            ? { translateX: { from, to: '0%', ease: snappy } }
+            : { translateY: { from, to: '0%', ease: snappy } },
+        },
+      ],
     },
     {
       trigger: 'Content.exit',
-      sequence: [{
-        animation: isHorizontal
-          ? { translateX: { to: from, ease: snappy, duration: 200 } }
-          : { translateY: { to: from, ease: snappy, duration: 200 } },
-      }],
+      sequence: [
+        {
+          animation: isHorizontal
+            ? { translateX: { to: from, ease: snappy, duration: 200 } }
+            : { translateY: { to: from, ease: snappy, duration: 200 } },
+        },
+      ],
     },
     {
       trigger: 'Overlay.enter',
-      sequence: [{
-        animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
-      }],
+      sequence: [
+        {
+          animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
+        },
+      ],
     },
     {
       trigger: 'Overlay.exit',
-      sequence: [{
-        animation: { opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 } },
-      }],
+      sequence: [
+        {
+          animation: { opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 } },
+        },
+      ],
     },
   ];
 }
@@ -138,17 +152,25 @@ const DrawerRoot: React.FC<DrawerRootProps> = ({
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-    // animation drives it (useDismissable).
-    if (newOpen) openFn();
-  }, [openFn]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+      // animation drives it (useDismissable).
+      if (newOpen) openFn();
+    },
+    [openFn],
+  );
 
-  const defaultAnims = React.useMemo(() => getDefaultAnimations(effectivePosition), [effectivePosition]);
+  const defaultAnims = React.useMemo(
+    () => getDefaultAnimations(effectivePosition),
+    [effectivePosition],
+  );
   const animConfig = resolveAnimationsConfig(defaultAnims, animationsProp);
 
   return (
-    <DrawerContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition }}>
+    <DrawerContext.Provider
+      value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition }}
+    >
       <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
@@ -179,7 +201,11 @@ const DrawerTrigger = withMoveComponent<'trigger', DrawerTriggerProps, HTMLButto
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <RadixDialog.Trigger
             {...attrs}
@@ -206,9 +232,7 @@ export interface DrawerPortalProps {
   container?: HTMLElement;
 }
 
-const DrawerPortal: React.FC<DrawerPortalProps> = (props) => (
-  <RadixDialog.Portal {...props} />
-);
+const DrawerPortal: React.FC<DrawerPortalProps> = (props) => <RadixDialog.Portal {...props} />;
 DrawerPortal.displayName = 'Drawer.Portal';
 
 // ============================================================================
@@ -234,9 +258,12 @@ const DrawerOverlay = withMoveComponent<'overlay', DrawerOverlayProps, HTMLDivEl
       return animConfig.filter((t) => t.trigger.startsWith('Overlay.'));
     }, [animConfig]);
 
-    const overlayRefs = React.useMemo(() => ({
-      Overlay: internalRef as React.RefObject<HTMLElement | null>,
-    }), [internalRef]);
+    const overlayRefs = React.useMemo(
+      () => ({
+        Overlay: internalRef as React.RefObject<HTMLElement | null>,
+      }),
+      [internalRef],
+    );
 
     const { runExit, runEnter, pauseAll } = useAnimations(overlayConfig, overlayRefs);
 
@@ -247,7 +274,11 @@ const DrawerOverlay = withMoveComponent<'overlay', DrawerOverlayProps, HTMLDivEl
     return {
       render() {
         const overlaySp = sp('overlay');
-        const { className: spClass, style: spStyle, ...spRest } = overlaySp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = overlaySp as Record<string, unknown>;
         return (
           <RadixDialog.Overlay
             {...attrs}
@@ -282,11 +313,18 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
   name: 'DrawerContent',
   styles,
   slots: ['content'] as const,
-  moveProps: ['size', 'onOpenAutoFocus', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+  moveProps: [
+    'size',
+    'onOpenAutoFocus',
+    'onPointerDownOutside',
+    'onEscapeKeyDown',
+    'onInteractOutside',
+  ],
   defaults: { size: 'md' },
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, close, epoch, onExitDone, animConfig, effectivePosition } = useDrawerContext();
+    const { isClosing, close, epoch, onExitDone, animConfig, effectivePosition } =
+      useDrawerContext();
     const isBottomSheet = effectivePosition === 'bottom';
     const surface = useSurfaceFlip();
 
@@ -295,9 +333,12 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
       return animConfig.filter((t) => t.trigger.startsWith('Content.'));
     }, [animConfig]);
 
-    const contentRefs = React.useMemo(() => ({
-      Content: internalRef as React.RefObject<HTMLElement | null>,
-    }), [internalRef]);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: internalRef as React.RefObject<HTMLElement | null>,
+      }),
+      [internalRef],
+    );
 
     const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
@@ -324,7 +365,11 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
         return (
           <RadixDialog.Content
             {...attrs}
@@ -377,7 +422,11 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -452,7 +501,11 @@ const DrawerFooter = withMoveComponent<'footer', DrawerFooterProps, HTMLDivEleme
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -489,7 +542,11 @@ const DrawerTitle = withMoveComponent<'title', DrawerTitleProps, HTMLHeadingElem
     return {
       render() {
         const titleSp = sp('title');
-        const { className: spClass, style: spStyle, ...spRest } = titleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = titleSp as Record<string, unknown>;
         return (
           <RadixDialog.Title
             {...attrs}
@@ -577,7 +634,11 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
     return {
       render() {
         const closeSp = sp('close');
-        const { className: spClass, style: spStyle, ...spRest } = closeSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = closeSp as Record<string, unknown>;
         return (
           <RadixDialog.Close
             {...attrs}
@@ -585,7 +646,11 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
             ref={ref}
             asChild={props.asChild as boolean}
             onClick={handleClick}
-            className={props.asChild ? props.className : cx('close', props.className, spClass as string | undefined)}
+            className={
+              props.asChild
+                ? props.className
+                : cx('close', props.className, spClass as string | undefined)
+            }
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children ?? closeIcon}
@@ -615,7 +680,11 @@ const DrawerHandle = withMoveComponent<'handle', DrawerHandleProps, HTMLDivEleme
     return {
       render() {
         const handleSp = sp('handle');
-        const { className: spClass, style: spStyle, ...spRest } = handleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = handleSp as Record<string, unknown>;
         return (
           <div
             {...attrs}

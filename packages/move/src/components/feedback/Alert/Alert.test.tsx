@@ -29,7 +29,11 @@ describe('Alert', () => {
     });
 
     it('passes style to root', () => {
-      render(<Alert animations={false} style={{ marginTop: '10px' }}>Content</Alert>);
+      render(
+        <Alert animations={false} style={{ marginTop: '10px' }}>
+          Content
+        </Alert>,
+      );
       expect(screen.getByRole('alert')).toHaveStyle({ marginTop: '10px' });
     });
 
@@ -122,13 +126,21 @@ describe('Alert', () => {
 
     it('calls onClose when close button clicked', () => {
       const onClose = vi.fn();
-      render(<Alert closable onClose={onClose} animations={false}>Content</Alert>);
+      render(
+        <Alert closable onClose={onClose} animations={false}>
+          Content
+        </Alert>,
+      );
       fireEvent.click(screen.getByRole('button', { name: 'Close alert' }));
       expect(onClose).toHaveBeenCalledTimes(1);
     });
 
     it('hides after close when animations=false', () => {
-      render(<Alert closable animations={false}>Content</Alert>);
+      render(
+        <Alert closable animations={false}>
+          Content
+        </Alert>,
+      );
       fireEvent.click(screen.getByRole('button', { name: 'Close alert' }));
       expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     });
@@ -154,7 +166,11 @@ describe('Alert', () => {
     });
 
     it('supports custom close label via labels prop', () => {
-      render(<Alert closable labels={{ close: 'Dismiss' }}>Content</Alert>);
+      render(
+        <Alert closable labels={{ close: 'Dismiss' }}>
+          Content
+        </Alert>,
+      );
       expect(screen.getByRole('button', { name: 'Dismiss' })).toBeInTheDocument();
     });
   });
@@ -175,7 +191,11 @@ describe('Alert', () => {
     });
 
     it('merges sp style on root', () => {
-      render(<Alert animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>Content</Alert>);
+      render(
+        <Alert animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>
+          Content
+        </Alert>,
+      );
       expect(screen.getByRole('alert')).toHaveStyle({ marginTop: '5px' });
     });
   });

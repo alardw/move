@@ -28,7 +28,7 @@ export function MonthGrid({ className }: MonthGridProps) {
 
   const weekDayNames = React.useMemo(
     () => getWeekDayNames(locale, 'short', weekStartsOn),
-    [locale, weekStartsOn]
+    [locale, weekStartsOn],
   );
 
   const months = React.useMemo(() => {
@@ -101,14 +101,14 @@ export function MonthGrid({ className }: MonthGridProps) {
   };
 
   return (
-    <div
-      className={`${numberOfMonths > 1 ? styles.monthsContainer : ''} ${className ?? ''}`}
-    >
+    <div className={`${numberOfMonths > 1 ? styles.monthsContainer : ''} ${className ?? ''}`}>
       {months.map((m) => (
         <div
           key={`${m.date.getFullYear()}-${m.date.getMonth()}`}
           role="grid"
-          aria-label={new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(m.date)}
+          aria-label={new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
+            m.date,
+          )}
           className={styles.grid}
           onKeyDown={handleGridKeyDown}
         >
@@ -134,9 +134,7 @@ export function MonthGrid({ className }: MonthGridProps) {
               role="row"
               {...(showWeekNumbers ? { 'data-has-week-numbers': '' } : {})}
             >
-              {showWeekNumbers && (
-                <div className={styles.weekNumber}>{getWeekNumber(week[0])}</div>
-              )}
+              {showWeekNumbers && <div className={styles.weekNumber}>{getWeekNumber(week[0])}</div>}
               {week.map((day, di) => (
                 <DayCell key={di} date={day} referenceMonth={m.date} />
               ))}

@@ -13,14 +13,16 @@ const defaultItems: { value: string; label: string; disabled?: boolean }[] = [
   { value: 'cherry', label: 'Cherry' },
 ];
 
-const renderAutocomplete = (props: {
-  rootProps?: Record<string, unknown>;
-  triggerProps?: Record<string, unknown>;
-  items?: { value: string; label: string; disabled?: boolean }[];
-  placeholder?: string;
-  showClear?: boolean;
-  showEmpty?: boolean;
-} = {}) => {
+const renderAutocomplete = (
+  props: {
+    rootProps?: Record<string, unknown>;
+    triggerProps?: Record<string, unknown>;
+    items?: { value: string; label: string; disabled?: boolean }[];
+    placeholder?: string;
+    showClear?: boolean;
+    showEmpty?: boolean;
+  } = {},
+) => {
   const {
     rootProps = {},
     triggerProps = {},
@@ -38,14 +40,14 @@ const renderAutocomplete = (props: {
         <Autocomplete.Icon />
       </Autocomplete.Trigger>
       <Autocomplete.Content>
-          {items.map((item) => (
-            <Autocomplete.Item key={item.value} value={item.value} disabled={item.disabled}>
-              {item.label}
-            </Autocomplete.Item>
-          ))}
-          {showEmpty && <Autocomplete.Empty>No results</Autocomplete.Empty>}
-        </Autocomplete.Content>
-    </Autocomplete.Root>
+        {items.map((item) => (
+          <Autocomplete.Item key={item.value} value={item.value} disabled={item.disabled}>
+            {item.label}
+          </Autocomplete.Item>
+        ))}
+        {showEmpty && <Autocomplete.Empty>No results</Autocomplete.Empty>}
+      </Autocomplete.Content>
+    </Autocomplete.Root>,
   );
 };
 
@@ -270,7 +272,7 @@ describe('Autocomplete', () => {
       renderAutocomplete({ rootProps: { value: 'apple', onValueChange: () => {} } });
       await user.click(screen.getByRole('combobox'));
       const items = screen.getAllByRole('option');
-      const apple = items.find(el => el.textContent?.includes('Apple'));
+      const apple = items.find((el) => el.textContent?.includes('Apple'));
       expect(apple).toHaveAttribute('aria-selected', 'true');
     });
 
@@ -279,7 +281,7 @@ describe('Autocomplete', () => {
       renderAutocomplete({ rootProps: { value: 'apple', onValueChange: () => {} } });
       await user.click(screen.getByRole('combobox'));
       const items = screen.getAllByRole('option');
-      const apple = items.find(el => el.textContent?.includes('Apple'));
+      const apple = items.find((el) => el.textContent?.includes('Apple'));
       expect(apple).toHaveAttribute('data-selected');
     });
   });
@@ -345,13 +347,13 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-            <Autocomplete.Content>
-              <Autocomplete.Group>
-                <Autocomplete.GroupLabel>Fruits</Autocomplete.GroupLabel>
-                <Autocomplete.Item value="apple">Apple</Autocomplete.Item>
-              </Autocomplete.Group>
-            </Autocomplete.Content>
-        </Autocomplete.Root>
+          <Autocomplete.Content>
+            <Autocomplete.Group>
+              <Autocomplete.GroupLabel>Fruits</Autocomplete.GroupLabel>
+              <Autocomplete.Item value="apple">Apple</Autocomplete.Item>
+            </Autocomplete.Group>
+          </Autocomplete.Content>
+        </Autocomplete.Root>,
       );
       await user.click(screen.getByRole('combobox'));
       expect(screen.getByRole('group')).toBeInTheDocument();
@@ -366,12 +368,12 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-            <Autocomplete.Content>
-              <Autocomplete.Item value="a">A</Autocomplete.Item>
-              <Autocomplete.Separator />
-              <Autocomplete.Item value="b">B</Autocomplete.Item>
-            </Autocomplete.Content>
-        </Autocomplete.Root>
+          <Autocomplete.Content>
+            <Autocomplete.Item value="a">A</Autocomplete.Item>
+            <Autocomplete.Separator />
+            <Autocomplete.Item value="b">B</Autocomplete.Item>
+          </Autocomplete.Content>
+        </Autocomplete.Root>,
       );
       await user.click(screen.getByRole('combobox'));
       expect(document.body.querySelector('[role="separator"]')).toBeInTheDocument();
@@ -388,11 +390,11 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-            <Autocomplete.Content>
-              <Autocomplete.Loading>Loading...</Autocomplete.Loading>
-              <Autocomplete.Empty>No results</Autocomplete.Empty>
-            </Autocomplete.Content>
-        </Autocomplete.Root>
+          <Autocomplete.Content>
+            <Autocomplete.Loading>Loading...</Autocomplete.Loading>
+            <Autocomplete.Empty>No results</Autocomplete.Empty>
+          </Autocomplete.Content>
+        </Autocomplete.Root>,
       );
       await user.click(screen.getByRole('combobox'));
       expect(screen.getByText('Loading...')).toBeInTheDocument();
@@ -407,10 +409,10 @@ describe('Autocomplete', () => {
             <Autocomplete.Input placeholder="Search..." />
             <Autocomplete.Icon />
           </Autocomplete.Trigger>
-            <Autocomplete.Content>
-              <Autocomplete.Loading>Loading...</Autocomplete.Loading>
-            </Autocomplete.Content>
-        </Autocomplete.Root>
+          <Autocomplete.Content>
+            <Autocomplete.Loading>Loading...</Autocomplete.Loading>
+          </Autocomplete.Content>
+        </Autocomplete.Root>,
       );
       await user.click(screen.getByRole('combobox'));
       const loading = screen.getByText('Loading...');
@@ -466,7 +468,9 @@ describe('Autocomplete', () => {
 
     it('tag remove button uses labels.removeTag override with value substitution', async () => {
       const user = userEvent.setup();
-      renderAutocomplete({ rootProps: { multiple: true, labels: { removeTag: 'Delete {value}' } } });
+      renderAutocomplete({
+        rootProps: { multiple: true, labels: { removeTag: 'Delete {value}' } },
+      });
       await user.click(screen.getByRole('combobox'));
       await user.click(screen.getByText('Apple'));
       expect(document.body.querySelector('[aria-label="Delete apple"]')).toBeInTheDocument();
@@ -553,9 +557,7 @@ describe('resource (async)', () => {
 describe('useAutocomplete — close-on-select animation', () => {
   it('onSelect routes the close through the animated requestClose (not an instant close)', () => {
     const requestClose = vi.fn();
-    const { result } = renderHook(() =>
-      useAutocomplete({ requestClose, closeOnSelect: true }),
-    );
+    const { result } = renderHook(() => useAutocomplete({ requestClose, closeOnSelect: true }));
     act(() => result.current.onSelect('alpha'));
     // Selecting must request the animated close — same path as Escape/outside —
     // rather than snapping shut via setIsOpen(false).

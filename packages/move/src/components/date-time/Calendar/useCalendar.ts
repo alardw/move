@@ -61,9 +61,7 @@ export interface UseCalendarMultipleOptions extends UseCalendarBaseOptions {
 }
 
 export type UseCalendarOptions =
-  | UseCalendarSingleOptions
-  | UseCalendarRangeOptions
-  | UseCalendarMultipleOptions;
+  UseCalendarSingleOptions | UseCalendarRangeOptions | UseCalendarMultipleOptions;
 
 export interface UseCalendarReturn extends CalendarContextValue {}
 
@@ -86,10 +84,7 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
     labels: labelsProp,
   } = options;
 
-  const labels = useMemo(
-    () => ({ ...DEFAULT_CALENDAR_LABELS, ...labelsProp }),
-    [labelsProp]
-  );
+  const labels = useMemo(() => ({ ...DEFAULT_CALENDAR_LABELS, ...labelsProp }), [labelsProp]);
 
   const mode: SelectionMode = options.mode ?? 'single';
 
@@ -97,8 +92,14 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
 
   // ---- Display month state ----
   const initialDisplayMonth = (() => {
-    if (mode === 'single' && options.value) return new Date((options.value as Date).getFullYear(), (options.value as Date).getMonth(), 1);
-    if (mode === 'single' && options.defaultValue) return new Date((options.defaultValue as Date).getFullYear(), (options.defaultValue as Date).getMonth(), 1);
+    if (mode === 'single' && options.value)
+      return new Date((options.value as Date).getFullYear(), (options.value as Date).getMonth(), 1);
+    if (mode === 'single' && options.defaultValue)
+      return new Date(
+        (options.defaultValue as Date).getFullYear(),
+        (options.defaultValue as Date).getMonth(),
+        1,
+      );
     if (mode === 'range' && (options as UseCalendarRangeOptions).value?.from) {
       const from = (options as UseCalendarRangeOptions).value!.from;
       return new Date(from.getFullYear(), from.getMonth(), 1);
@@ -113,20 +114,24 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
   // ---- Selection state ----
   const [singleValue, setSingleValue] = useControlledState<Date | null>({
     value: mode === 'single' ? (options as UseCalendarSingleOptions).value : undefined,
-    defaultValue: mode === 'single' ? ((options as UseCalendarSingleOptions).defaultValue ?? null) : null,
+    defaultValue:
+      mode === 'single' ? ((options as UseCalendarSingleOptions).defaultValue ?? null) : null,
     onChange: mode === 'single' ? (options as UseCalendarSingleOptions).onValueChange : undefined,
   });
 
   const [rangeValue, setRangeValue] = useControlledState<DateRange | null>({
     value: mode === 'range' ? (options as UseCalendarRangeOptions).value : undefined,
-    defaultValue: mode === 'range' ? ((options as UseCalendarRangeOptions).defaultValue ?? null) : null,
+    defaultValue:
+      mode === 'range' ? ((options as UseCalendarRangeOptions).defaultValue ?? null) : null,
     onChange: mode === 'range' ? (options as UseCalendarRangeOptions).onValueChange : undefined,
   });
 
   const [multipleValue, setMultipleValue] = useControlledState<Date[]>({
     value: mode === 'multiple' ? (options as UseCalendarMultipleOptions).value : undefined,
-    defaultValue: mode === 'multiple' ? ((options as UseCalendarMultipleOptions).defaultValue ?? []) : [],
-    onChange: mode === 'multiple' ? (options as UseCalendarMultipleOptions).onValueChange : undefined,
+    defaultValue:
+      mode === 'multiple' ? ((options as UseCalendarMultipleOptions).defaultValue ?? []) : [],
+    onChange:
+      mode === 'multiple' ? (options as UseCalendarMultipleOptions).onValueChange : undefined,
   });
 
   // ---- Focus state ----
@@ -169,7 +174,7 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
         });
       }
     },
-    [mode, constraints, setSingleValue, setRangeValue, setMultipleValue]
+    [mode, constraints, setSingleValue, setRangeValue, setMultipleValue],
   );
 
   // ---- Events helper ----
@@ -177,7 +182,7 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
     (date: Date): CalendarEvent[] => {
       return events.filter((evt) => isSameDay(evt.start, date));
     },
-    [events]
+    [events],
   );
 
   return {

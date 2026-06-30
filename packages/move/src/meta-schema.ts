@@ -9,10 +9,7 @@ export const META_SCHEMA_VERSION = 1 as const;
 /**
  * Structural classification of a component.
  */
-export type ComponentKind =
-  | "primitive"
-  | "compound"
-  | "composite";
+export type ComponentKind = 'primitive' | 'compound' | 'composite';
 
 /**
  * Canonical controlled state patterns supported by Move.
@@ -27,11 +24,7 @@ export type ComponentKind =
  * - defaultOpen
  * - onOpenChange
  */
-export type ControlledPattern =
-  | "open"
-  | "value"
-  | "checked"
-  | null;
+export type ControlledPattern = 'open' | 'value' | 'checked' | null;
 
 /**
  * Functional intent classification.
@@ -39,14 +32,14 @@ export type ControlledPattern =
  * Must not encode domain/business logic.
  */
 export type ComponentIntent =
-  | "trigger"
-  | "input"
-  | "selection"
-  | "disclosure"
-  | "layout"
-  | "display"
-  | "feedback"
-  | "interactive";
+  | 'trigger'
+  | 'input'
+  | 'selection'
+  | 'disclosure'
+  | 'layout'
+  | 'display'
+  | 'feedback'
+  | 'interactive';
 
 /**
  * Declarative structural contract for a Move component.

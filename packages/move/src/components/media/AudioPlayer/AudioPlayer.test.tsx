@@ -125,14 +125,14 @@ describe('AudioPlayer', () => {
   describe('slot props', () => {
     it('merges sp className on root', () => {
       const { container } = render(
-        <AudioPlayer src="test.mp3" sp={{ root: { className: 'sp-root' } }} />
+        <AudioPlayer src="test.mp3" sp={{ root: { className: 'sp-root' } }} />,
       );
       expect(container.firstChild).toHaveClass('sp-root');
     });
 
     it('merges sp style on root', () => {
       const { container } = render(
-        <AudioPlayer src="test.mp3" sp={{ root: { style: { marginTop: '5px' } } }} />
+        <AudioPlayer src="test.mp3" sp={{ root: { style: { marginTop: '5px' } } }} />,
       );
       expect(container.firstChild).toHaveStyle({ marginTop: '5px' });
     });

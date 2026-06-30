@@ -27,7 +27,7 @@ describe('Button', () => {
       render(
         <Button className="custom" style={{ marginTop: '10px' }} data-testid="btn">
           Btn
-        </Button>
+        </Button>,
       );
       const el = screen.getByTestId('btn');
       expect(el).toHaveClass('custom');
@@ -38,7 +38,7 @@ describe('Button', () => {
       render(
         <Button data-testid="btn" aria-label="action">
           Btn
-        </Button>
+        </Button>,
       );
       expect(screen.getByTestId('btn')).toHaveAttribute('aria-label', 'action');
     });
@@ -70,10 +70,10 @@ describe('Button', () => {
         render(
           <Button variant={variant} data-testid="btn">
             Btn
-          </Button>
+          </Button>,
         );
         expect(screen.getByTestId('btn')).toHaveAttribute('data-variant', variant);
-      }
+      },
     );
   });
 
@@ -83,7 +83,7 @@ describe('Button', () => {
       render(
         <Button size={size} data-testid="btn">
           Btn
-        </Button>
+        </Button>,
       );
       expect(screen.getByTestId('btn')).toHaveAttribute('data-size', size);
     });
@@ -95,7 +95,7 @@ describe('Button', () => {
       render(
         <Button disabled data-testid="btn">
           Btn
-        </Button>
+        </Button>,
       );
       expect(screen.getByTestId('btn')).toBeDisabled();
     });
@@ -107,7 +107,7 @@ describe('Button', () => {
       render(
         <Button sp={{ root: { className: 'sp-root' } }} data-testid="btn">
           Btn
-        </Button>
+        </Button>,
       );
       expect(screen.getByTestId('btn')).toHaveClass('sp-root');
     });
@@ -120,7 +120,7 @@ describe('Button', () => {
         <Button.Group data-testid="group">
           <Button>A</Button>
           <Button>B</Button>
-        </Button.Group>
+        </Button.Group>,
       );
       expect(screen.getByTestId('group')).toHaveAttribute('role', 'group');
     });

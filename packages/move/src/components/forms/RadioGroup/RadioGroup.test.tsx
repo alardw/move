@@ -11,7 +11,7 @@ describe('RadioGroup', () => {
         <RadioGroup.Item value="a">Option A</RadioGroup.Item>
         <RadioGroup.Item value="b">Option B</RadioGroup.Item>
         <RadioGroup.Item value="c">Option C</RadioGroup.Item>
-      </RadioGroup.Root>
+      </RadioGroup.Root>,
     );
 
   // === Rendering ===
@@ -45,7 +45,7 @@ describe('RadioGroup', () => {
       render(
         <RadioGroup.Root ref={ref as any}>
           <RadioGroup.Item value="a">A</RadioGroup.Item>
-        </RadioGroup.Root>
+        </RadioGroup.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -163,7 +163,7 @@ describe('RadioGroup', () => {
             <RadioGroup.Item value="a">A</RadioGroup.Item>
             <RadioGroup.Item value="b">B</RadioGroup.Item>
           </RadioGroup.Root>
-        </form>
+        </form>,
       );
       const hiddenInput = container.querySelector('input[name="choice"]');
       expect(hiddenInput).toBeInTheDocument();

@@ -45,7 +45,19 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
   name: 'SwitchRoot',
   styles,
   slots: ['root'] as const,
-  moveProps: ['checked', 'defaultChecked', 'onCheckedChange', 'disabled', 'invalid', 'label', 'size', 'animations', 'required', 'name', 'value'],
+  moveProps: [
+    'checked',
+    'defaultChecked',
+    'onCheckedChange',
+    'disabled',
+    'invalid',
+    'label',
+    'size',
+    'animations',
+    'required',
+    'name',
+    'value',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const thumbRef = useRef<HTMLSpanElement>(null);
@@ -56,13 +68,17 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
       const root = el.closest('[role="switch"]') as HTMLElement | null;
       if (!root) return 0;
       const rootStyle = getComputedStyle(root);
-      const contentWidth = root.clientWidth - parseFloat(rootStyle.paddingLeft) - parseFloat(rootStyle.paddingRight);
+      const contentWidth =
+        root.clientWidth - parseFloat(rootStyle.paddingLeft) - parseFloat(rootStyle.paddingRight);
       const thumbWidth = el.getBoundingClientRect().width;
       return contentWidth - thumbWidth;
     }
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Root.press', sequence: [{ target: 'Thumb', animation: { scale: { to: 0.85, ease: snappy } } }] },
+      {
+        trigger: 'Root.press',
+        sequence: [{ target: 'Thumb', animation: { scale: { to: 0.85, ease: snappy } } }],
+      },
       {
         trigger: 'checked',
         vars: (el: HTMLElement) => ({ dist: measureDist(el) }),
@@ -80,14 +96,29 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
     );
 
     const states: AnimationState[] = [
-      { name: 'checked', slot: 'Thumb', source: 'data-state', value: 'checked', closest: '[role="switch"]' },
-      { name: 'unchecked', slot: 'Thumb', source: 'data-state', value: 'unchecked', closest: '[role="switch"]' },
+      {
+        name: 'checked',
+        slot: 'Thumb',
+        source: 'data-state',
+        value: 'checked',
+        closest: '[role="switch"]',
+      },
+      {
+        name: 'unchecked',
+        slot: 'Thumb',
+        source: 'data-state',
+        value: 'unchecked',
+        closest: '[role="switch"]',
+      },
     ];
 
-    const animRefs = React.useMemo(() => ({
-      Root: rootRef as React.RefObject<HTMLElement | null>,
-      Thumb: thumbRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const animRefs = React.useMemo(
+      () => ({
+        Root: rootRef as React.RefObject<HTMLElement | null>,
+        Thumb: thumbRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
     const { handlers } = useAnimations(animConfig, animRefs, states);
     const isDisabled = !!props.disabled;
 
@@ -134,9 +165,15 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
               {...(props.invalid ? { 'data-invalid': '' } : {})}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-              onMouseDown={() => { if (!isDisabled) handlers.Root?.onMouseDown?.(); }}
-              onMouseUp={() => { if (!isDisabled) handlers.Root?.onMouseUp?.(); }}
-              onMouseLeave={() => { if (!isDisabled) handlers.Root?.onMouseLeave?.(); }}
+              onMouseDown={() => {
+                if (!isDisabled) handlers.Root?.onMouseDown?.();
+              }}
+              onMouseUp={() => {
+                if (!isDisabled) handlers.Root?.onMouseUp?.();
+              }}
+              onMouseLeave={() => {
+                if (!isDisabled) handlers.Root?.onMouseLeave?.();
+              }}
             >
               {props.children}
             </RadixSwitch.Root>
@@ -189,7 +226,11 @@ const SwitchThumb = withMoveComponent<'thumb', SwitchThumbProps, HTMLSpanElement
     return {
       render() {
         const thumbSp = sp('thumb');
-        const { className: spClass, style: spStyle, ...spRest } = thumbSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = thumbSp as Record<string, unknown>;
         return (
           <RadixSwitch.Thumb
             {...attrs}

@@ -32,19 +32,43 @@
 }
 
 /* Radius */
-.root[data-radius='none'] { border-radius: var(--move-rounded-none); }
-.root[data-radius='sm'] { border-radius: var(--move-rounded-sm); }
-.root[data-radius='md'] { border-radius: var(--move-rounded-md); padding-inline: 18px; }
-.root[data-radius='lg'] { border-radius: var(--move-rounded-lg); padding-inline: 20px; }
-.root[data-radius='full'] { border-radius: 999px; padding-inline: 24px; }
+.root[data-radius='none'] {
+  border-radius: var(--move-rounded-none);
+}
+.root[data-radius='sm'] {
+  border-radius: var(--move-rounded-sm);
+}
+.root[data-radius='md'] {
+  border-radius: var(--move-rounded-md);
+  padding-inline: 18px;
+}
+.root[data-radius='lg'] {
+  border-radius: var(--move-rounded-lg);
+  padding-inline: 20px;
+}
+.root[data-radius='full'] {
+  border-radius: 999px;
+  padding-inline: 24px;
+}
 
 /* Size */
-.root[data-size='sm'] { padding-block: 6px; gap: 6px; }
-.root[data-size='md'] { padding-block: 8px; gap: 8px; }
-.root[data-size='lg'] { padding-block: 12px; gap: 12px; }
+.root[data-size='sm'] {
+  padding-block: 6px;
+  gap: 6px;
+}
+.root[data-size='md'] {
+  padding-block: 8px;
+  gap: 8px;
+}
+.root[data-size='lg'] {
+  padding-block: 12px;
+  gap: 12px;
+}
 
 /* Hidden audio element */
-.audio { display: none; }
+.audio {
+  display: none;
+}
 
 /* Control buttons — override Move Button styles for audio player context */
 .playButton,
@@ -155,8 +179,12 @@
   flex-shrink: 0;
 }
 
-.root[data-size='sm'] .time { font-size: 12px; }
-.root[data-size='lg'] .time { font-size: 14px; }
+.root[data-size='sm'] .time {
+  font-size: 12px;
+}
+.root[data-size='lg'] .time {
+  font-size: 14px;
+}
 
 /* Volume slider */
 .volumeSlider {

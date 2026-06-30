@@ -12,7 +12,7 @@ function renderCarousel(rootProps: Record<string, unknown> = {}, slideCount = 3)
           <Carousel.Slide key={i}>Slide {i + 1}</Carousel.Slide>
         ))}
       </Carousel.Viewport>
-    </Carousel.Root>
+    </Carousel.Root>,
   );
 }
 
@@ -85,7 +85,7 @@ describe('Carousel', () => {
           <Carousel.Viewport className="custom-viewport">
             <Carousel.Slide>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const viewport = container.querySelector('[aria-live]');
       expect(viewport).toHaveClass('custom-viewport');
@@ -97,7 +97,7 @@ describe('Carousel', () => {
           <Carousel.Viewport style={{ padding: '5px' }}>
             <Carousel.Slide>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const viewport = container.querySelector('[aria-live]');
       expect(viewport).toHaveStyle({ padding: '5px' });
@@ -110,7 +110,7 @@ describe('Carousel', () => {
           <Carousel.Viewport ref={ref}>
             <Carousel.Slide>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -122,7 +122,7 @@ describe('Carousel', () => {
       renderCarousel();
       const slides = screen.getAllByRole('group');
       expect(slides.length).toBe(3);
-      slides.forEach(slide => {
+      slides.forEach((slide) => {
         expect(slide).toHaveAttribute('aria-roledescription', 'slide');
       });
     });
@@ -134,7 +134,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       // With 2 slides and 1 per view, there should be 2 indicator buttons
       const indicators = container.querySelectorAll('[role="tablist"] button');
@@ -147,7 +147,7 @@ describe('Carousel', () => {
           <Carousel.Viewport>
             <Carousel.Slide className="custom-slide">Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const slide = screen.getByRole('group');
       expect(slide).toHaveClass('custom-slide');
@@ -159,7 +159,7 @@ describe('Carousel', () => {
           <Carousel.Viewport>
             <Carousel.Slide style={{ background: 'red' }}>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const slide = screen.getByRole('group');
       expect(slide).toHaveStyle({ background: 'red' });
@@ -172,7 +172,7 @@ describe('Carousel', () => {
           <Carousel.Viewport>
             <Carousel.Slide ref={ref}>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -183,7 +183,7 @@ describe('Carousel', () => {
           <Carousel.Viewport>
             <Carousel.Slide>Slide 1</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const slide = screen.getByRole('group');
       expect(slide).toHaveAttribute('data-orientation', 'vertical');
@@ -200,7 +200,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.PrevTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Previous slide')).toBeInTheDocument();
     });
@@ -213,7 +213,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.PrevTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Previous slide')).toBeDisabled();
     });
@@ -227,7 +227,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.PrevTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       fireEvent.click(screen.getByLabelText('Previous slide'));
       expect(onChange).toHaveBeenCalledWith(0);
@@ -244,7 +244,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Next slide')).toBeInTheDocument();
     });
@@ -257,7 +257,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Next slide')).toBeDisabled();
     });
@@ -271,7 +271,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       fireEvent.click(screen.getByLabelText('Next slide'));
       expect(onChange).toHaveBeenCalledWith(1);
@@ -287,7 +287,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByRole('tablist')).toBeInTheDocument();
     });
@@ -299,7 +299,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Slide indicators')).toBeInTheDocument();
     });
@@ -312,7 +312,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
             <Carousel.Slide>Slide 3</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const indicators = container.querySelectorAll('[role="tablist"] button');
       expect(indicators.length).toBe(3);
@@ -332,7 +332,7 @@ describe('Carousel', () => {
             <Carousel.Indicator index={0} />
             <Carousel.Indicator index={1} />
           </Carousel.IndicatorGroup>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const tabs = screen.getAllByRole('tab');
       expect(tabs.length).toBe(2);
@@ -351,7 +351,7 @@ describe('Carousel', () => {
             <Carousel.Indicator index={0} />
             <Carousel.Indicator index={1} />
           </Carousel.IndicatorGroup>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const tabs = screen.getAllByRole('tab');
       expect(tabs[0]).not.toHaveAttribute('data-active');
@@ -370,7 +370,7 @@ describe('Carousel', () => {
             <Carousel.Indicator index={0} />
             <Carousel.Indicator index={1} />
           </Carousel.IndicatorGroup>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       fireEvent.click(screen.getAllByRole('tab')[1]);
       expect(onChange).toHaveBeenCalledWith(1);
@@ -390,7 +390,7 @@ describe('Carousel', () => {
             <Carousel.Indicator index={0} />
             <Carousel.Indicator index={1} />
           </Carousel.IndicatorGroup>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       const tabs = screen.getAllByRole('tab');
       expect(tabs[1]).toHaveAttribute('aria-selected', 'true');
@@ -405,7 +405,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       fireEvent.click(screen.getByLabelText('Next slide'));
       expect(onPageChange).toHaveBeenCalledWith(1);
@@ -423,7 +423,7 @@ describe('Carousel', () => {
           </Carousel.Viewport>
           <Carousel.PrevTrigger />
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       // With loop, even at page 0, prev should be enabled
       expect(screen.getByLabelText('Previous slide')).not.toBeDisabled();
@@ -440,7 +440,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByLabelText('Previous slide')).toBeInTheDocument();
       expect(screen.getByLabelText('Next slide')).toBeInTheDocument();
@@ -453,7 +453,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 1</Carousel.Slide>
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       expect(screen.getByRole('tablist')).toBeInTheDocument();
     });
@@ -471,7 +471,7 @@ describe('Carousel', () => {
             <Carousel.Slide>Slide 2</Carousel.Slide>
           </Carousel.Viewport>
           <Carousel.NextTrigger />
-        </Carousel.Root>
+        </Carousel.Root>,
       );
       fireEvent.click(screen.getByLabelText('Next slide'));
       expect(onChange).toHaveBeenCalledWith(1);

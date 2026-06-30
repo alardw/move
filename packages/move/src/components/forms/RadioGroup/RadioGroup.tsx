@@ -91,8 +91,27 @@ export interface RadioGroupItemProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const DEFAULT_RADIO_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'checked', sequence: [{ target: 'Indicator', animation: { scale: { from: 0.5, to: 1, ease: poppy }, opacity: { from: 0, to: 1, duration: 150 } } }] },
-  { trigger: 'unchecked', sequence: [{ target: 'Indicator', animation: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } } }] },
+  {
+    trigger: 'checked',
+    sequence: [
+      {
+        target: 'Indicator',
+        animation: {
+          scale: { from: 0.5, to: 1, ease: poppy },
+          opacity: { from: 0, to: 1, duration: 150 },
+        },
+      },
+    ],
+  },
+  {
+    trigger: 'unchecked',
+    sequence: [
+      {
+        target: 'Indicator',
+        animation: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } },
+      },
+    ],
+  },
   { trigger: 'Item.press', sequence: [{ animation: { scale: { to: 0.9, ease: snappy } } }] },
 ];
 
@@ -101,7 +120,11 @@ const RADIO_STATES: AnimationState[] = [
   { name: 'unchecked', slot: 'Item', source: 'data-state', value: 'unchecked' },
 ];
 
-const RadioGroupItem = withMoveComponent<'item' | 'indicator' | 'dot', RadioGroupItemProps, HTMLButtonElement>({
+const RadioGroupItem = withMoveComponent<
+  'item' | 'indicator' | 'dot',
+  RadioGroupItemProps,
+  HTMLButtonElement
+>({
   name: 'RadioGroupItem',
   styles,
   slots: ['item', 'indicator', 'dot'] as const,
@@ -117,10 +140,13 @@ const RadioGroupItem = withMoveComponent<'item' | 'indicator' | 'dot', RadioGrou
     const indicatorRef = useRef<HTMLSpanElement>(null);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, itemRef);
 
-    const refs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-      Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const refs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+        Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(animConfig, refs, RADIO_STATES);
     const isDisabled = !!props.disabled;
@@ -136,17 +162,35 @@ const RadioGroupItem = withMoveComponent<'item' | 'indicator' | 'dot', RadioGrou
         const indicatorSp = sp('indicator');
         const dotSp = sp('dot');
 
-        const { className: itemSpClass, style: itemSpStyle, ...itemSpRest } = itemSp as Record<string, unknown>;
-        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
-        const { className: dotSpClass, style: dotSpStyle, ...dotSpRest } = dotSp as Record<string, unknown>;
+        const {
+          className: itemSpClass,
+          style: itemSpStyle,
+          ...itemSpRest
+        } = itemSp as Record<string, unknown>;
+        const {
+          className: indSpClass,
+          style: indSpStyle,
+          ...indSpRest
+        } = indicatorSp as Record<string, unknown>;
+        const {
+          className: dotSpClass,
+          style: dotSpStyle,
+          ...dotSpRest
+        } = dotSp as Record<string, unknown>;
 
         return (
           <span
             className={styles.wrapper}
             onClick={handleWrapperClick}
-            onMouseDown={() => { if (!isDisabled) handlers.Item?.onMouseDown?.(); }}
-            onMouseUp={() => { if (!isDisabled) handlers.Item?.onMouseUp?.(); }}
-            onMouseLeave={() => { if (!isDisabled) handlers.Item?.onMouseLeave?.(); }}
+            onMouseDown={() => {
+              if (!isDisabled) handlers.Item?.onMouseDown?.();
+            }}
+            onMouseUp={() => {
+              if (!isDisabled) handlers.Item?.onMouseUp?.();
+            }}
+            onMouseLeave={() => {
+              if (!isDisabled) handlers.Item?.onMouseLeave?.();
+            }}
           >
             <RadixRadioGroup.Item
               {...attrs}

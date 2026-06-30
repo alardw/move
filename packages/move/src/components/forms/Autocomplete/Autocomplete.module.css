@@ -274,7 +274,10 @@
   --move-autocomplete-content-padding: var(--move-spacing-xs);
   --move-autocomplete-content-min-width: 10rem;
   --move-autocomplete-content-max-width: none;
-  --move-autocomplete-content-max-height: min(var(--radix-popover-content-available-height, 20rem), 20rem);
+  --move-autocomplete-content-max-height: min(
+    var(--radix-popover-content-available-height, 20rem),
+    20rem
+  );
 
   overflow: hidden;
   will-change: height, transform;
@@ -402,7 +405,8 @@
   --move-autocomplete-groupLabel-fg: var(--move-fg-muted);
   --move-autocomplete-groupLabel-font-weight: var(--move-weight-semibold);
 
-  padding: var(--move-autocomplete-groupLabel-padding-y) var(--move-autocomplete-groupLabel-padding-x);
+  padding: var(--move-autocomplete-groupLabel-padding-y)
+    var(--move-autocomplete-groupLabel-padding-x);
   font-family: var(--move-font-body);
   font-size: var(--move-autocomplete-groupLabel-font-size);
   font-weight: var(--move-autocomplete-groupLabel-font-weight);

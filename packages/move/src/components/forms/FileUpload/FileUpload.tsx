@@ -17,11 +17,7 @@ import type {
 } from './types';
 import { useIcon } from '../../../infrastructure/Icon';
 import { ProgressBar } from '../../feedback/ProgressBar/ProgressBar';
-import {
-  prefersReducedMotion,
-  useAnimations,
-  resolveAnimationsConfig,
-} from '../../../animation';
+import { prefersReducedMotion, useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import styles from './FileUpload.module.css';
 
@@ -52,15 +48,17 @@ const DEFAULT_LABELS: FileUploadLabels = {
 const DEFAULT_FILEUPLOAD_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'ItemGroup.enter',
-    sequence: [{
-      target: 'ItemGroup',
-      children: 'li',
-      stagger: { delay: 50 },
-      animation: {
-        opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-        translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+    sequence: [
+      {
+        target: 'ItemGroup',
+        children: 'li',
+        stagger: { delay: 50 },
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+          translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -120,7 +118,10 @@ function useFileUploadItemContext() {
 export type FileUploadSize = 'sm' | 'md' | 'lg';
 export type FileUploadVariant = 'default' | 'compact';
 
-export interface FileUploadRootProps extends Omit<React.HTMLAttributes<HTMLElement>, 'defaultValue'> {
+export interface FileUploadRootProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'defaultValue'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -248,12 +249,26 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
   slots: ['root'] as const,
   defaults: { multiple: true, size: 'md', variant: 'default' },
   moveProps: [
-    'accept', 'maxSize', 'maxFiles', 'multiple', 'disabled',
-    'value', 'defaultValue', 'onFilesChange', 'onFileReject', 'validate',
-    'size', 'variant',
-    'adapter', 'autoUpload', 'concurrency',
-    'onUploadComplete', 'onUploadError', 'onAllComplete',
-    'removeOnComplete', 'labels',
+    'accept',
+    'maxSize',
+    'maxFiles',
+    'multiple',
+    'disabled',
+    'value',
+    'defaultValue',
+    'onFilesChange',
+    'onFileReject',
+    'validate',
+    'size',
+    'variant',
+    'adapter',
+    'autoUpload',
+    'concurrency',
+    'onUploadComplete',
+    'onUploadError',
+    'onAllComplete',
+    'removeOnComplete',
+    'labels',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -272,7 +287,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
             onUploadError: props.onUploadError as UseUploadManagerOptions['onUploadError'],
             onAllComplete: props.onAllComplete as UseUploadManagerOptions['onAllComplete'],
           }
-        : null
+        : null,
     );
 
     // Stable ref so callbacks created before useFileUpload can reach the manager
@@ -280,7 +295,9 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
     managerRef.current = uploadManager;
 
     // Ref the user's onFilesChange so our stable wrapper always calls the latest
-    const userOnFilesChangeRef = React.useRef(props.onFilesChange as UseFileUploadOptions['onFilesChange']);
+    const userOnFilesChangeRef = React.useRef(
+      props.onFilesChange as UseFileUploadOptions['onFilesChange'],
+    );
     userOnFilesChangeRef.current = props.onFilesChange as UseFileUploadOptions['onFilesChange'];
 
     // Stable onFilesChange that detects additions and forwards to user callback
@@ -305,10 +322,13 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
     });
 
     // Wrapped removeFile/clearFiles that also untrack from upload manager
-    const removeFile = React.useCallback((file: File) => {
-      managerRef.current.untrackFile(file);
-      upload.removeFile(file);
-    }, [upload.removeFile]);
+    const removeFile = React.useCallback(
+      (file: File) => {
+        managerRef.current.untrackFile(file);
+        upload.removeFile(file);
+      },
+      [upload.removeFile],
+    );
 
     const clearFiles = React.useCallback(() => {
       managerRef.current.untrackAll();
@@ -323,7 +343,12 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
 
     // Auto-remove delay (resolved once, passed to Items via context)
     const removeOnCompleteProp = props.removeOnComplete as boolean | number | undefined;
-    const removeDelay = removeOnCompleteProp === true ? 2000 : (typeof removeOnCompleteProp === 'number' ? removeOnCompleteProp : 0);
+    const removeDelay =
+      removeOnCompleteProp === true
+        ? 2000
+        : typeof removeOnCompleteProp === 'number'
+          ? removeOnCompleteProp
+          : 0;
 
     const contextValue: FileUploadContextValue = {
       files: upload.files,
@@ -355,8 +380,13 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
 
     // Build input props once for the embedded hidden input
     const acceptList = props.accept
-      ? (Array.isArray(props.accept) ? (props.accept as string[]) : (props.accept as string).split(','))
-          .map((s: string) => s.trim()).filter(Boolean).join(',')
+      ? (Array.isArray(props.accept)
+          ? (props.accept as string[])
+          : (props.accept as string).split(',')
+        )
+          .map((s: string) => s.trim())
+          .filter(Boolean)
+          .join(',')
       : undefined;
 
     return {
@@ -413,7 +443,11 @@ const FileUploadDropzone = withMoveComponent<'dropzone', FileUploadDropzoneProps
     return {
       render() {
         const dropzoneSp = sp('dropzone');
-        const { className: spClass, style: spStyle, ...spRest } = dropzoneSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = dropzoneSp as Record<string, unknown>;
         const dzProps = context.getDropzoneProps();
         return (
           <div
@@ -454,7 +488,11 @@ const FileUploadTrigger = withMoveComponent<'trigger', FileUploadTriggerProps, H
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <Slot.Root
             {...attrs}
@@ -479,7 +517,11 @@ const FileUploadTrigger = withMoveComponent<'trigger', FileUploadTriggerProps, H
 // ItemGroup
 // =============================================================================
 
-const FileUploadItemGroup = withMoveComponent<'itemGroup', FileUploadItemGroupProps, HTMLUListElement>({
+const FileUploadItemGroup = withMoveComponent<
+  'itemGroup',
+  FileUploadItemGroupProps,
+  HTMLUListElement
+>({
   name: 'FileUploadItemGroup',
   styles,
   slots: ['itemGroup'] as const,
@@ -489,16 +531,23 @@ const FileUploadItemGroup = withMoveComponent<'itemGroup', FileUploadItemGroupPr
     const groupRef = React.useRef<HTMLUListElement>(null);
     const mergedRef = useMergedRef<HTMLUListElement>(ref, groupRef);
 
-    const groupRefs = React.useMemo(() => ({
-      ItemGroup: groupRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const groupRefs = React.useMemo(
+      () => ({
+        ItemGroup: groupRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(context.animConfig ?? null, groupRefs);
 
     return {
       render() {
         const groupSp = sp('itemGroup');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
         return (
           <ul
             {...attrs}
@@ -556,20 +605,30 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
     // Exit animation via useAnimations with deps
     const exitConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!exitReady) return null;
-      return [{
-        trigger: 'item-exit',
-        deps: [exitReady],
-        sequence: [{
-          target: 'Item',
-          animation: { opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' }, scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' } },
-        }],
-        onComplete: () => removeFileRef.current(file),
-      }];
+      return [
+        {
+          trigger: 'item-exit',
+          deps: [exitReady],
+          sequence: [
+            {
+              target: 'Item',
+              animation: {
+                opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' },
+                scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' },
+              },
+            },
+          ],
+          onComplete: () => removeFileRef.current(file),
+        },
+      ];
     }, [exitReady, file]);
 
-    const exitRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const exitRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(exitConfig, exitRefs);
 
@@ -600,7 +659,11 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
 // ItemPreview
 // =============================================================================
 
-const FileUploadItemPreview = withMoveComponent<'itemPreview', FileUploadItemPreviewProps, HTMLDivElement>({
+const FileUploadItemPreview = withMoveComponent<
+  'itemPreview',
+  FileUploadItemPreviewProps,
+  HTMLDivElement
+>({
   name: 'FileUploadItemPreview',
   styles,
   slots: ['itemPreview'] as const,
@@ -625,7 +688,11 @@ const FileUploadItemPreview = withMoveComponent<'itemPreview', FileUploadItemPre
     return {
       render() {
         const previewSp = sp('itemPreview');
-        const { className: spClass, style: spStyle, ...spRest } = previewSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = previewSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -715,7 +782,11 @@ const FileUploadItemSize = withMoveComponent<'itemSize', FileUploadItemSizeProps
 // ItemDelete
 // =============================================================================
 
-const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDeleteProps, HTMLButtonElement>({
+const FileUploadItemDelete = withMoveComponent<
+  'itemDelete',
+  FileUploadItemDeleteProps,
+  HTMLButtonElement
+>({
   name: 'FileUploadItemDelete',
   styles,
   slots: ['itemDelete'] as const,
@@ -730,14 +801,23 @@ const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDelet
     return {
       render() {
         const deleteSp = sp('itemDelete');
-        const { className: spClass, style: spStyle, ...spRest } = deleteSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = deleteSp as Record<string, unknown>;
 
         // Show check icon for completed uploads
         if (entry?.status === 'complete') {
           return (
             <span
               ref={ref as React.Ref<HTMLSpanElement>}
-              className={cx('itemDelete', 'itemComplete', props.className, spClass as string | undefined)}
+              className={cx(
+                'itemDelete',
+                'itemComplete',
+                props.className,
+                spClass as string | undefined,
+              )}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               aria-label={labels.uploadComplete}
             >
@@ -777,7 +857,11 @@ const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDelet
 // ClearTrigger
 // =============================================================================
 
-const FileUploadClearTrigger = withMoveComponent<'clearTrigger', FileUploadClearTriggerProps, HTMLElement>({
+const FileUploadClearTrigger = withMoveComponent<
+  'clearTrigger',
+  FileUploadClearTriggerProps,
+  HTMLElement
+>({
   name: 'FileUploadClearTrigger',
   styles,
   slots: ['clearTrigger'] as const,
@@ -788,12 +872,18 @@ const FileUploadClearTrigger = withMoveComponent<'clearTrigger', FileUploadClear
     return {
       render() {
         const clearSp = sp('clearTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = clearSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = clearSp as Record<string, unknown>;
         return (
           <Slot.Root
             {...attrs}
             {...spRest}
-            {...{ disabled: context.disabled || context.files.length === 0 } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+            {...({
+              disabled: context.disabled || context.files.length === 0,
+            } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             ref={ref}
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -814,7 +904,11 @@ const FileUploadClearTrigger = withMoveComponent<'clearTrigger', FileUploadClear
 // ItemProgress
 // =============================================================================
 
-const FileUploadItemProgress = withMoveComponent<'itemProgress', FileUploadItemProgressProps, HTMLDivElement>({
+const FileUploadItemProgress = withMoveComponent<
+  'itemProgress',
+  FileUploadItemProgressProps,
+  HTMLDivElement
+>({
   name: 'FileUploadItemProgress',
   styles,
   slots: ['itemProgress'] as const,
@@ -827,7 +921,11 @@ const FileUploadItemProgress = withMoveComponent<'itemProgress', FileUploadItemP
         if (!entry || entry.status === 'pending' || entry.status === 'complete') return null;
 
         const progressSp = sp('itemProgress');
-        const { className: spClass, style: spStyle, ...spRest } = progressSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = progressSp as Record<string, unknown>;
 
         return (
           <div
@@ -854,7 +952,11 @@ const FileUploadItemProgress = withMoveComponent<'itemProgress', FileUploadItemP
 // ItemStatus
 // =============================================================================
 
-const FileUploadItemStatus = withMoveComponent<'itemStatus', FileUploadItemStatusProps, HTMLSpanElement>({
+const FileUploadItemStatus = withMoveComponent<
+  'itemStatus',
+  FileUploadItemStatusProps,
+  HTMLSpanElement
+>({
   name: 'FileUploadItemStatus',
   styles,
   slots: ['itemStatus'] as const,
@@ -867,7 +969,11 @@ const FileUploadItemStatus = withMoveComponent<'itemStatus', FileUploadItemStatu
         if (!entry || entry.status === 'pending') return null;
 
         const statusSp = sp('itemStatus');
-        const { className: spClass, style: spStyle, ...spRest } = statusSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = statusSp as Record<string, unknown>;
 
         let label: string;
         if (entry.status === 'uploading') label = `${entry.progress.percent}%`;
@@ -895,7 +1001,11 @@ const FileUploadItemStatus = withMoveComponent<'itemStatus', FileUploadItemStatu
 // TotalProgress
 // =============================================================================
 
-const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTotalProgressProps, HTMLDivElement>({
+const FileUploadTotalProgress = withMoveComponent<
+  'totalProgress',
+  FileUploadTotalProgressProps,
+  HTMLDivElement
+>({
   name: 'FileUploadTotalProgress',
   styles,
   slots: ['totalProgress'] as const,
@@ -910,7 +1020,10 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
     const [visible, setVisible] = React.useState(false);
     const [fading, setFading] = React.useState(false);
 
-    const isActive = !!(context.aggregate && (context.aggregate.isUploading || context.aggregate.isComplete));
+    const isActive = !!(
+      context.aggregate &&
+      (context.aggregate.isUploading || context.aggregate.isComplete)
+    );
 
     React.useEffect(() => {
       if (isActive) {
@@ -935,20 +1048,30 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
     // Fade-out animation via useAnimations with deps
     const fadeConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!fading) return null;
-      return [{
-        trigger: 'fade-out',
-        deps: [fading],
-        sequence: [{
-          target: 'TotalProgress',
-          animation: { opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' }, scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' } },
-        }],
-        onComplete: () => setVisible(false),
-      }];
+      return [
+        {
+          trigger: 'fade-out',
+          deps: [fading],
+          sequence: [
+            {
+              target: 'TotalProgress',
+              animation: {
+                opacity: { from: 1, to: 0, duration: 600, ease: 'inOutCubic' },
+                scale: { from: 1, to: 0.97, duration: 600, ease: 'inOutCubic' },
+              },
+            },
+          ],
+          onComplete: () => setVisible(false),
+        },
+      ];
     }, [fading]);
 
-    const fadeRefs = React.useMemo(() => ({
-      TotalProgress: elRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const fadeRefs = React.useMemo(
+      () => ({
+        TotalProgress: elRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(fadeConfig, fadeRefs);
 
@@ -958,7 +1081,11 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
 
         const agg = context.aggregate!;
         const totalSp = sp('totalProgress');
-        const { className: spClass, style: spStyle, ...spRest } = totalSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = totalSp as Record<string, unknown>;
 
         return (
           <div
@@ -990,7 +1117,11 @@ const FileUploadTotalProgress = withMoveComponent<'totalProgress', FileUploadTot
 // UploadTrigger
 // =============================================================================
 
-const FileUploadUploadTrigger = withMoveComponent<'uploadTrigger', FileUploadUploadTriggerProps, HTMLElement>({
+const FileUploadUploadTrigger = withMoveComponent<
+  'uploadTrigger',
+  FileUploadUploadTriggerProps,
+  HTMLElement
+>({
   name: 'FileUploadUploadTrigger',
   styles,
   slots: ['uploadTrigger'] as const,
@@ -1001,7 +1132,11 @@ const FileUploadUploadTrigger = withMoveComponent<'uploadTrigger', FileUploadUpl
     return {
       render() {
         const triggerSp = sp('uploadTrigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
 
         const hasPending = (context.aggregate?.counts.pending ?? 0) > 0;
         const isUploading = context.aggregate?.isUploading ?? false;
@@ -1010,7 +1145,9 @@ const FileUploadUploadTrigger = withMoveComponent<'uploadTrigger', FileUploadUpl
           <Slot.Root
             {...attrs}
             {...spRest}
-            {...{ disabled: context.disabled || !hasPending || isUploading } as React.ButtonHTMLAttributes<HTMLButtonElement>}
+            {...({
+              disabled: context.disabled || !hasPending || isUploading,
+            } as React.ButtonHTMLAttributes<HTMLButtonElement>)}
             ref={ref}
             className={cx('uploadTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}

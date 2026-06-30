@@ -8,22 +8,36 @@ export const spec = {
   name: 'Checkbox',
   componentClass: 'input_toggle' as const,
   category: 'forms',
-  description: 'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
+  description:
+    'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
 
   synonyms: ['tickbox', 'toggle', 'option', 'check'],
   animationPatterns: ['toggle'],
   families: {
-    behavior:  ["form-input"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['form-input'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: false,
   rootElement: 'button',
   slots: [
-    { name: 'root', element: 'button', description: 'Native button element with role="checkbox" that handles click and keyboard interaction' },
-    { name: 'indicator', element: 'span', description: 'Container for the check/indeterminate icon, target of toggle animation' },
-    { name: 'icon', element: 'span', description: 'Inner icon element that renders the check SVG or resolved icon' },
+    {
+      name: 'root',
+      element: 'button',
+      description:
+        'Native button element with role="checkbox" that handles click and keyboard interaction',
+    },
+    {
+      name: 'indicator',
+      element: 'span',
+      description: 'Container for the check/indeterminate icon, target of toggle animation',
+    },
+    {
+      name: 'icon',
+      element: 'span',
+      description: 'Inner icon element that renders the check SVG or resolved icon',
+    },
   ],
 
   subComponents: [
@@ -31,27 +45,96 @@ export const spec = {
       name: 'Group',
       slots: [],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Checkbox items' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Checkbox items',
+        },
       ],
       usesFactory: false,
-      description: 'Layout container for grouping multiple checkboxes with role="group" and vertical flex layout',
+      description:
+        'Layout container for grouping multiple checkboxes with role="group" and vertical flex layout',
     },
   ],
 
   props: [
-    { name: 'checked', type: 'boolean', moveSpecific: true, description: 'Controlled checked state' },
-    { name: 'defaultChecked', type: 'boolean', moveSpecific: true, description: 'Default checked state for uncontrolled mode' },
-    { name: 'indeterminate', type: 'boolean', moveSpecific: true, description: 'Indeterminate (mixed) state' },
-    { name: 'onCheckedChange', type: '(checked: boolean) => void', moveSpecific: true, description: 'Called when checked state changes' },
-    { name: 'icon', type: 'string', default: "'check'", moveSpecific: true, description: 'Icon name for the check indicator (resolved via useResolvedIcon)' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of the checkbox' },
-    { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Whether the checkbox is disabled' },
-    { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Whether the checkbox is in an invalid state' },
-    { name: 'name', type: 'string', moveSpecific: true, description: 'Name for form submission (renders hidden input)' },
+    {
+      name: 'checked',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Controlled checked state',
+    },
+    {
+      name: 'defaultChecked',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Default checked state for uncontrolled mode',
+    },
+    {
+      name: 'indeterminate',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Indeterminate (mixed) state',
+    },
+    {
+      name: 'onCheckedChange',
+      type: '(checked: boolean) => void',
+      moveSpecific: true,
+      description: 'Called when checked state changes',
+    },
+    {
+      name: 'icon',
+      type: 'string',
+      default: "'check'",
+      moveSpecific: true,
+      description: 'Icon name for the check indicator (resolved via useResolvedIcon)',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Toggle animation config or false to disable',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Size of the checkbox',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Whether the checkbox is disabled',
+    },
+    {
+      name: 'invalid',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Whether the checkbox is in an invalid state',
+    },
+    {
+      name: 'name',
+      type: 'string',
+      moveSpecific: true,
+      description: 'Name for form submission (renders hidden input)',
+    },
     { name: 'value', type: 'string', moveSpecific: true, description: 'Value for form submission' },
-    { name: 'required', type: 'boolean', moveSpecific: true, description: 'Required for form validation' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label content rendered beside the checkbox' },
+    {
+      name: 'required',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Required for form validation',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Label content rendered beside the checkbox',
+    },
   ],
 
   anatomy: {
@@ -61,9 +144,7 @@ export const spec = {
     children: [
       {
         slot: 'indicator',
-        children: [
-          { slot: 'icon' },
-        ],
+        children: [{ slot: 'icon' }],
       },
     ],
   },
@@ -85,8 +166,21 @@ export const spec = {
   ],
 
   animations: [
-    { trigger: 'checked', sequence: [{ target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } }] },
-    { trigger: 'unchecked', sequence: [{ target: 'indicator', animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } } }] },
+    {
+      trigger: 'checked',
+      sequence: [
+        { target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } },
+      ],
+    },
+    {
+      trigger: 'unchecked',
+      sequence: [
+        {
+          target: 'indicator',
+          animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } },
+        },
+      ],
+    },
     { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
@@ -94,13 +188,41 @@ export const spec = {
     { name: '--move-checkbox-size', value: '1.5rem', description: 'Overall checkbox box size' },
     { name: '--move-checkbox-icon-size', value: '1.0625rem', description: 'Check icon size' },
     { name: '--move-checkbox-radius', value: '0.25rem', description: 'Checkbox border radius' },
-    { name: '--move-checkbox-bg', value: 'var(--move-bg-muted)', description: 'Unchecked background color' },
-    { name: '--move-checkbox-bg-hover', value: 'var(--move-bg-emphasis)', description: 'Unchecked hover background color' },
-    { name: '--move-checkbox-bg-checked', value: 'var(--move-primary)', description: 'Checked background color' },
-    { name: '--move-checkbox-bg-checked-hover', value: 'var(--move-primary-hover)', description: 'Checked hover background color' },
-    { name: '--move-checkbox-border', value: 'var(--move-border-base)', description: 'Border color' },
-    { name: '--move-checkbox-border-hover', value: 'var(--move-border-emphasis)', description: 'Hover border color' },
-    { name: '--move-checkbox-fg', value: 'var(--move-primary-fg)', description: 'Check icon color (foreground on checked bg)' },
+    {
+      name: '--move-checkbox-bg',
+      value: 'var(--move-bg-muted)',
+      description: 'Unchecked background color',
+    },
+    {
+      name: '--move-checkbox-bg-hover',
+      value: 'var(--move-bg-emphasis)',
+      description: 'Unchecked hover background color',
+    },
+    {
+      name: '--move-checkbox-bg-checked',
+      value: 'var(--move-primary)',
+      description: 'Checked background color',
+    },
+    {
+      name: '--move-checkbox-bg-checked-hover',
+      value: 'var(--move-primary-hover)',
+      description: 'Checked hover background color',
+    },
+    {
+      name: '--move-checkbox-border',
+      value: 'var(--move-border-base)',
+      description: 'Border color',
+    },
+    {
+      name: '--move-checkbox-border-hover',
+      value: 'var(--move-border-emphasis)',
+      description: 'Hover border color',
+    },
+    {
+      name: '--move-checkbox-fg',
+      value: 'var(--move-primary-fg)',
+      description: 'Check icon color (foreground on checked bg)',
+    },
   ],
 
   variants: {},
@@ -110,15 +232,48 @@ export const spec = {
   childrenKind: 'text' as const,
 
   renderContracts: [
-    { id: 'wrapper-label', description: 'Root button is wrapped in a <label> element that includes the checkbox and children text' },
-    { id: 'press-handlers-on-wrapper', description: 'Press animation handlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the wrapper label via useAnimations' },
-    { id: 'hidden-input-form', description: 'When name prop is provided, a hidden input is rendered for form submission with value "on" when checked' },
-    { id: 'data-state-tristate', description: 'data-state is one of "checked", "unchecked", or "indeterminate"' },
-    { id: 'aria-checked-mixed', description: 'aria-checked is "mixed" when indeterminate, otherwise boolean checked value' },
-    { id: 'size-data-attr-skip-md', description: 'data-size is only rendered for sm and lg; md is the default and omitted' },
-    { id: 'useCheckbox-hook', description: 'Uses useCheckbox headless hook for controlled/uncontrolled checked state management' },
-    { id: 'toggle-animation-wiring', description: 'useAnimations observes data-state on Root; fires checked/unchecked state triggers to animate indicator slot' },
-    { id: 'icon-resolution', description: 'icon prop is resolved via useResolvedIcon; falls back to built-in SVG checkmark when icon provider is not available' },
+    {
+      id: 'wrapper-label',
+      description:
+        'Root button is wrapped in a <label> element that includes the checkbox and children text',
+    },
+    {
+      id: 'press-handlers-on-wrapper',
+      description:
+        'Press animation handlers (onMouseDown, onMouseUp, onMouseLeave) are attached to the wrapper label via useAnimations',
+    },
+    {
+      id: 'hidden-input-form',
+      description:
+        'When name prop is provided, a hidden input is rendered for form submission with value "on" when checked',
+    },
+    {
+      id: 'data-state-tristate',
+      description: 'data-state is one of "checked", "unchecked", or "indeterminate"',
+    },
+    {
+      id: 'aria-checked-mixed',
+      description: 'aria-checked is "mixed" when indeterminate, otherwise boolean checked value',
+    },
+    {
+      id: 'size-data-attr-skip-md',
+      description: 'data-size is only rendered for sm and lg; md is the default and omitted',
+    },
+    {
+      id: 'useCheckbox-hook',
+      description:
+        'Uses useCheckbox headless hook for controlled/uncontrolled checked state management',
+    },
+    {
+      id: 'toggle-animation-wiring',
+      description:
+        'useAnimations observes data-state on Root; fires checked/unchecked state triggers to animate indicator slot',
+    },
+    {
+      id: 'icon-resolution',
+      description:
+        'icon prop is resolved via useResolvedIcon; falls back to built-in SVG checkmark when icon provider is not available',
+    },
     { id: 'keyboard-toggle', description: 'Space and Enter keys trigger toggle via handleKeyDown' },
   ],
 
@@ -155,10 +310,7 @@ export const spec = {
       'aria-checked is "mixed" when indeterminate',
       'Focus ring visible on focus-visible',
     ],
-    keyboard: [
-      'Space key toggles checked state',
-      'Enter key toggles checked state',
-    ],
+    keyboard: ['Space key toggles checked state', 'Enter key toggles checked state'],
     form: [
       'Hidden input participates in form submission via name attribute',
       'Hidden input value reflects checked state',

@@ -35,8 +35,10 @@ export function useInputRange(options: UseInputRangeOptions = {}): UseInputRange
   });
 
   const handleSetValues = useCallback(
-    (next: number[]) => { setValues(next); },
-    [setValues]
+    (next: number[]) => {
+      setValues(next);
+    },
+    [setValues],
   );
 
   return { values, setValues: handleSetValues };

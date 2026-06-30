@@ -16,11 +16,7 @@ export interface DayCellProps {
   className?: string;
 }
 
-function getDayState(
-  date: Date,
-  mode: string,
-  value: Date | DateRange | Date[] | null
-): DayState {
+function getDayState(date: Date, mode: string, value: Date | DateRange | Date[] | null): DayState {
   if (!value) return 'default';
 
   if (mode === 'single') {
@@ -125,9 +121,15 @@ export const DayCell = React.memo(function DayCell({
         className={`${styles.dayCell} ${className ?? ''}`}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        onMouseDown={() => { if (!disabled) handlers.Root?.onMouseDown?.(); }}
-        onMouseUp={() => { if (!disabled) handlers.Root?.onMouseUp?.(); }}
-        onMouseLeave={() => { if (!disabled) handlers.Root?.onMouseLeave?.(); }}
+        onMouseDown={() => {
+          if (!disabled) handlers.Root?.onMouseDown?.();
+        }}
+        onMouseUp={() => {
+          if (!disabled) handlers.Root?.onMouseUp?.();
+        }}
+        onMouseLeave={() => {
+          if (!disabled) handlers.Root?.onMouseLeave?.();
+        }}
         onFocus={() => setFocusedDate(date)}
       >
         {renderDayCell(date, cellData)}
@@ -151,9 +153,15 @@ export const DayCell = React.memo(function DayCell({
       className={`${styles.dayCell} ${className ?? ''}`}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      onMouseDown={() => { if (!disabled) handlers.Root?.onMouseDown?.(); }}
-      onMouseUp={() => { if (!disabled) handlers.Root?.onMouseUp?.(); }}
-      onMouseLeave={() => { if (!disabled) handlers.Root?.onMouseLeave?.(); }}
+      onMouseDown={() => {
+        if (!disabled) handlers.Root?.onMouseDown?.();
+      }}
+      onMouseUp={() => {
+        if (!disabled) handlers.Root?.onMouseUp?.();
+      }}
+      onMouseLeave={() => {
+        if (!disabled) handlers.Root?.onMouseLeave?.();
+      }}
       onFocus={() => setFocusedDate(date)}
     >
       <span className={styles.dayNumber}>{date.getDate()}</span>
@@ -164,7 +172,8 @@ export const DayCell = React.memo(function DayCell({
               key={evt.id}
               className={styles.dayEventDot}
               style={
-                evt.color && !['primary', 'success', 'warning', 'danger', 'info'].includes(evt.color)
+                evt.color &&
+                !['primary', 'success', 'warning', 'danger', 'info'].includes(evt.color)
                   ? { backgroundColor: evt.color }
                   : undefined
               }

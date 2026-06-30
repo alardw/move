@@ -11,23 +11,53 @@ export const spec = {
   description:
     'Full-featured calendar view supporting day, week, month, and agenda modes with event display, time grid, locale-aware formatting, and view switching',
 
-  synonyms: ['agenda', 'schedule', 'planner', 'event calendar', 'timeline calendar', 'events', 'week view', 'month view'],
+  synonyms: [
+    'agenda',
+    'schedule',
+    'planner',
+    'event calendar',
+    'timeline calendar',
+    'events',
+    'week view',
+    'month view',
+  ],
   families: {
-    behavior:  ["display"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['display'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'CalendarView context container that wraps Header and Body' },
-    { name: 'header', element: 'div', description: 'Toolbar area for Nav, Title, Today and ViewSwitcher composition' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'CalendarView context container that wraps Header and Body',
+    },
+    {
+      name: 'header',
+      element: 'div',
+      description: 'Toolbar area for Nav, Title, Today and ViewSwitcher composition',
+    },
     { name: 'nav', element: 'div', description: 'Previous/next navigation button group' },
-    { name: 'title', element: 'h2', description: 'Localized title heading announcing current view and date range' },
+    {
+      name: 'title',
+      element: 'h2',
+      description: 'Localized title heading announcing current view and date range',
+    },
     { name: 'today', element: 'button', description: 'Button that resets the date to today' },
-    { name: 'viewSwitcher', element: 'div', description: 'ToggleGroup for switching between day/week/month/agenda views' },
-    { name: 'body', element: 'div', description: 'Container that renders the active view (DayView, WeekView, MonthView, or AgendaView)' },
+    {
+      name: 'viewSwitcher',
+      element: 'div',
+      description: 'ToggleGroup for switching between day/week/month/agenda views',
+    },
+    {
+      name: 'body',
+      element: 'div',
+      description:
+        'Container that renders the active view (DayView, WeekView, MonthView, or AgendaView)',
+    },
   ],
 
   subComponents: [
@@ -35,44 +65,182 @@ export const spec = {
       name: 'Root',
       slots: [{ name: 'root', element: 'div', description: 'CalendarView context container' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'CalendarView.Header and CalendarView.Body composition' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'CalendarView.Header and CalendarView.Body composition',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'view', typeRef: 'CalendarViewMode', moveSpecific: true, description: 'Controlled current view (day | week | month | agenda)' },
-        { name: 'defaultView', typeRef: 'CalendarViewMode', default: "'month'", moveSpecific: true, description: 'Initial view when uncontrolled' },
-        { name: 'onViewChange', type: '(view: CalendarViewMode) => void', moveSpecific: true, description: 'Called when the view changes' },
-        { name: 'date', type: 'Date', moveSpecific: true, description: 'Controlled focus date driving the displayed range' },
-        { name: 'defaultDate', type: 'Date', default: 'new Date()', moveSpecific: true, description: 'Initial focus date when uncontrolled' },
-        { name: 'onDateChange', type: '(date: Date) => void', moveSpecific: true, description: 'Called when the focus date changes' },
-        { name: 'events', typeRef: 'CalendarEvent[]', default: '[]', moveSpecific: true, description: 'List of events to display across views' },
-        { name: 'locale', type: 'string', default: "'en-US'", moveSpecific: true, description: 'BCP-47 locale tag for date and time formatting' },
-        { name: 'weekStartsOn', type: 'number', moveSpecific: true, description: 'First day of week (0=Sunday, 1=Monday); defaults from locale' },
-        { name: 'startHour', type: 'number', default: '0', moveSpecific: true, description: 'First hour shown in day/week time grid (0-23)' },
-        { name: 'endHour', type: 'number', default: '24', moveSpecific: true, description: 'Last hour shown in day/week time grid (1-24)' },
-        { name: 'slotHeight', type: 'string', moveSpecific: true, description: 'CSS height for each time slot row in the day/week time grid' },
-        { name: 'slotInterval', type: '30 | 60', default: '60', moveSpecific: true, description: 'Time slot granularity in minutes' },
-        { name: 'maxEventsPerCell', type: 'number', default: '3', moveSpecific: true, description: 'Maximum visible events per month cell before overflow popover' },
-        { name: 'renderEvent', typeRef: 'RenderEvent', moveSpecific: true, description: 'Custom renderer for an event chip' },
-        { name: 'onEventClick', type: '(event: CalendarEvent, e: React.MouseEvent) => void', moveSpecific: true, description: 'Called when an event chip is clicked' },
-        { name: 'onSlotClick', type: '(date: Date, e: React.MouseEvent) => void', moveSpecific: true, description: 'Called when an empty time slot is clicked (day/week views)' },
-        { name: 'onDayClick', type: '(date: Date, e: React.MouseEvent) => void', moveSpecific: true, description: 'Called when a day cell is clicked (month view); navigates to day view by default' },
-        { name: 'onAllDayClick', type: '(date: Date, e: React.MouseEvent) => void', moveSpecific: true, description: 'Called when an empty all-day slot is clicked (day/week views)' },
-        { name: 'showAllDay', type: 'boolean', default: 'false', moveSpecific: true, description: 'Always show the all-day section in day/week views' },
-        { name: 'labels', typeRef: 'CalendarViewLabels', moveSpecific: true, description: 'Localizable strings for nav, today, view switcher, all-day, empty agenda, and overflow' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'view',
+          typeRef: 'CalendarViewMode',
+          moveSpecific: true,
+          description: 'Controlled current view (day | week | month | agenda)',
+        },
+        {
+          name: 'defaultView',
+          typeRef: 'CalendarViewMode',
+          default: "'month'",
+          moveSpecific: true,
+          description: 'Initial view when uncontrolled',
+        },
+        {
+          name: 'onViewChange',
+          type: '(view: CalendarViewMode) => void',
+          moveSpecific: true,
+          description: 'Called when the view changes',
+        },
+        {
+          name: 'date',
+          type: 'Date',
+          moveSpecific: true,
+          description: 'Controlled focus date driving the displayed range',
+        },
+        {
+          name: 'defaultDate',
+          type: 'Date',
+          default: 'new Date()',
+          moveSpecific: true,
+          description: 'Initial focus date when uncontrolled',
+        },
+        {
+          name: 'onDateChange',
+          type: '(date: Date) => void',
+          moveSpecific: true,
+          description: 'Called when the focus date changes',
+        },
+        {
+          name: 'events',
+          typeRef: 'CalendarEvent[]',
+          default: '[]',
+          moveSpecific: true,
+          description: 'List of events to display across views',
+        },
+        {
+          name: 'locale',
+          type: 'string',
+          default: "'en-US'",
+          moveSpecific: true,
+          description: 'BCP-47 locale tag for date and time formatting',
+        },
+        {
+          name: 'weekStartsOn',
+          type: 'number',
+          moveSpecific: true,
+          description: 'First day of week (0=Sunday, 1=Monday); defaults from locale',
+        },
+        {
+          name: 'startHour',
+          type: 'number',
+          default: '0',
+          moveSpecific: true,
+          description: 'First hour shown in day/week time grid (0-23)',
+        },
+        {
+          name: 'endHour',
+          type: 'number',
+          default: '24',
+          moveSpecific: true,
+          description: 'Last hour shown in day/week time grid (1-24)',
+        },
+        {
+          name: 'slotHeight',
+          type: 'string',
+          moveSpecific: true,
+          description: 'CSS height for each time slot row in the day/week time grid',
+        },
+        {
+          name: 'slotInterval',
+          type: '30 | 60',
+          default: '60',
+          moveSpecific: true,
+          description: 'Time slot granularity in minutes',
+        },
+        {
+          name: 'maxEventsPerCell',
+          type: 'number',
+          default: '3',
+          moveSpecific: true,
+          description: 'Maximum visible events per month cell before overflow popover',
+        },
+        {
+          name: 'renderEvent',
+          typeRef: 'RenderEvent',
+          moveSpecific: true,
+          description: 'Custom renderer for an event chip',
+        },
+        {
+          name: 'onEventClick',
+          type: '(event: CalendarEvent, e: React.MouseEvent) => void',
+          moveSpecific: true,
+          description: 'Called when an event chip is clicked',
+        },
+        {
+          name: 'onSlotClick',
+          type: '(date: Date, e: React.MouseEvent) => void',
+          moveSpecific: true,
+          description: 'Called when an empty time slot is clicked (day/week views)',
+        },
+        {
+          name: 'onDayClick',
+          type: '(date: Date, e: React.MouseEvent) => void',
+          moveSpecific: true,
+          description:
+            'Called when a day cell is clicked (month view); navigates to day view by default',
+        },
+        {
+          name: 'onAllDayClick',
+          type: '(date: Date, e: React.MouseEvent) => void',
+          moveSpecific: true,
+          description: 'Called when an empty all-day slot is clicked (day/week views)',
+        },
+        {
+          name: 'showAllDay',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Always show the all-day section in day/week views',
+        },
+        {
+          name: 'labels',
+          typeRef: 'CalendarViewLabels',
+          moveSpecific: true,
+          description:
+            'Localizable strings for nav, today, view switcher, all-day, empty agenda, and overflow',
+        },
       ],
       usesFactory: false,
-      description: 'Stateful root that creates CalendarViewContext via useCalendarView and renders children',
+      description:
+        'Stateful root that creates CalendarViewContext via useCalendarView and renders children',
     },
     {
       name: 'Header',
       slots: [{ name: 'header', element: 'div', description: 'Toolbar area' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Header composition (Nav, Title, Today, ViewSwitcher)' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Header composition (Nav, Title, Today, ViewSwitcher)',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: false,
-      description: 'Flex toolbar slot that composes navigation, title, today and view-switcher controls',
+      description:
+        'Flex toolbar slot that composes navigation, title, today and view-switcher controls',
     },
     {
       name: 'Nav',
@@ -81,7 +249,8 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
       ],
       usesFactory: false,
-      description: 'Button.Group with previous/next chevron buttons that read goToPrev/goToNext from CalendarViewContext',
+      description:
+        'Button.Group with previous/next chevron buttons that read goToPrev/goToNext from CalendarViewContext',
     },
     {
       name: 'Title',
@@ -90,13 +259,19 @@ export const spec = {
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
       ],
       usesFactory: false,
-      description: 'h2 element with aria-live="polite" announcing the computed title from CalendarViewContext',
+      description:
+        'h2 element with aria-live="polite" announcing the computed title from CalendarViewContext',
     },
     {
       name: 'Today',
       slots: [{ name: 'today', element: 'button', description: 'Today button' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom button label; defaults to labels.today' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom button label; defaults to labels.today',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
       ],
       usesFactory: false,
@@ -107,20 +282,33 @@ export const spec = {
       slots: [{ name: 'viewSwitcher', element: 'div', description: 'View switcher toggle group' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'views', typeRef: 'CalendarViewMode[]', default: "['day', 'week', 'month', 'agenda']", moveSpecific: true, description: 'Subset of views to expose in the switcher' },
+        {
+          name: 'views',
+          typeRef: 'CalendarViewMode[]',
+          default: "['day', 'week', 'month', 'agenda']",
+          moveSpecific: true,
+          description: 'Subset of views to expose in the switcher',
+        },
       ],
       usesFactory: false,
-      description: 'ToggleGroup that reads view/setView from context and switches between day/week/month/agenda',
+      description:
+        'ToggleGroup that reads view/setView from context and switches between day/week/month/agenda',
     },
     {
       name: 'Body',
       slots: [{ name: 'body', element: 'div', description: 'Active view container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: false,
-      description: 'Conditionally renders DayView, WeekView, MonthView, or AgendaView based on the current view, forwarding context props',
+      description:
+        'Conditionally renders DayView, WeekView, MonthView, or AgendaView based on the current view, forwarding context props',
     },
   ],
 
@@ -158,20 +346,76 @@ export const spec = {
   animations: [],
 
   renderContracts: [
-    { id: 'root-provides-context', description: 'Root provides CalendarViewContext consumed by Header, Nav, Title, Today, ViewSwitcher, and Body' },
-    { id: 'root-delegates-to-hook', description: 'Root delegates all state management (view, date, navigation) to the useCalendarView hook' },
-    { id: 'nav-uses-button-group', description: 'Nav uses Button.Group with chevron icons for prev/next navigation; reads goToPrev, goToNext, labels from CalendarViewContext' },
-    { id: 'title-aria-live', description: 'Title reads computed title string from context and renders as h2 with aria-live="polite" for view/date change announcements' },
-    { id: 'today-button', description: 'Today reads goToToday and labels.today from context; renders as Button and uses children when provided' },
-    { id: 'view-switcher-toggle-group', description: 'ViewSwitcher uses ToggleGroup.Root/Item to switch between view modes; reads view, setView, labels from CalendarViewContext' },
-    { id: 'view-switcher-default-views', description: 'ViewSwitcher defaults to all four views (day, week, month, agenda) and respects a custom views prop subset' },
-    { id: 'body-conditional-rendering', description: 'Body conditionally renders DayView, WeekView, MonthView, or AgendaView based on current view; passes all relevant props from context to the active view sub-component' },
-    { id: 'month-view-day-click', description: 'MonthView day click navigates to day view (calls setDate with clicked date and setView("day"))' },
-    { id: 'month-view-overflow-popover', description: 'MonthView shows overflow popover via Radix Popover when events exceed maxEventsPerCell' },
-    { id: 'time-grid-views', description: 'DayView/WeekView render TimeGrid for timed events and a separate all-day section when showAllDay is true or all-day events exist' },
-    { id: 'agenda-grouping', description: 'AgendaView groups events by day and shows the empty message (labels.noEvents) when no events fall within the period' },
-    { id: 'use-controlled-state', description: 'useCalendarView uses useControlledState for both view and date so either can be controlled or uncontrolled independently' },
-    { id: 'navigation-step-by-view', description: 'Navigation adapts to view: day +/-1 day, week +/-7 days, month/agenda +/-1 month' },
+    {
+      id: 'root-provides-context',
+      description:
+        'Root provides CalendarViewContext consumed by Header, Nav, Title, Today, ViewSwitcher, and Body',
+    },
+    {
+      id: 'root-delegates-to-hook',
+      description:
+        'Root delegates all state management (view, date, navigation) to the useCalendarView hook',
+    },
+    {
+      id: 'nav-uses-button-group',
+      description:
+        'Nav uses Button.Group with chevron icons for prev/next navigation; reads goToPrev, goToNext, labels from CalendarViewContext',
+    },
+    {
+      id: 'title-aria-live',
+      description:
+        'Title reads computed title string from context and renders as h2 with aria-live="polite" for view/date change announcements',
+    },
+    {
+      id: 'today-button',
+      description:
+        'Today reads goToToday and labels.today from context; renders as Button and uses children when provided',
+    },
+    {
+      id: 'view-switcher-toggle-group',
+      description:
+        'ViewSwitcher uses ToggleGroup.Root/Item to switch between view modes; reads view, setView, labels from CalendarViewContext',
+    },
+    {
+      id: 'view-switcher-default-views',
+      description:
+        'ViewSwitcher defaults to all four views (day, week, month, agenda) and respects a custom views prop subset',
+    },
+    {
+      id: 'body-conditional-rendering',
+      description:
+        'Body conditionally renders DayView, WeekView, MonthView, or AgendaView based on current view; passes all relevant props from context to the active view sub-component',
+    },
+    {
+      id: 'month-view-day-click',
+      description:
+        'MonthView day click navigates to day view (calls setDate with clicked date and setView("day"))',
+    },
+    {
+      id: 'month-view-overflow-popover',
+      description:
+        'MonthView shows overflow popover via Radix Popover when events exceed maxEventsPerCell',
+    },
+    {
+      id: 'time-grid-views',
+      description:
+        'DayView/WeekView render TimeGrid for timed events and a separate all-day section when showAllDay is true or all-day events exist',
+    },
+    {
+      id: 'agenda-grouping',
+      description:
+        'AgendaView groups events by day and shows the empty message (labels.noEvents) when no events fall within the period',
+    },
+    {
+      id: 'use-controlled-state',
+      description:
+        'useCalendarView uses useControlledState for both view and date so either can be controlled or uncontrolled independently',
+    },
+    {
+      id: 'navigation-step-by-view',
+      description:
+        'Navigation adapts to view: day +/-1 day, week +/-7 days, month/agenda +/-1 month',
+    },
   ],
 
   tokens: [
@@ -188,16 +432,44 @@ export const spec = {
 
   labels: [
     { key: 'today', default: 'Today', description: 'Label for the Today button' },
-    { key: 'previous', default: 'Previous', description: 'Aria label for the previous-period nav button' },
+    {
+      key: 'previous',
+      default: 'Previous',
+      description: 'Aria label for the previous-period nav button',
+    },
     { key: 'next', default: 'Next', description: 'Aria label for the next-period nav button' },
-    { key: 'calendarView', default: 'Calendar view', description: 'Aria label for the view switcher' },
+    {
+      key: 'calendarView',
+      default: 'Calendar view',
+      description: 'Aria label for the view switcher',
+    },
     { key: 'day', default: 'Day', description: 'Label for the day view in the view switcher' },
     { key: 'week', default: 'Week', description: 'Label for the week view in the view switcher' },
-    { key: 'month', default: 'Month', description: 'Label for the month view in the view switcher' },
-    { key: 'agenda', default: 'Agenda', description: 'Label for the agenda view in the view switcher' },
-    { key: 'allDay', default: 'All day', description: 'Label for the all-day section in day/week views' },
-    { key: 'noEvents', default: 'No events in this period', description: 'Empty-state message in agenda view' },
-    { key: 'more', default: '(count) => `+${count} more`', description: 'Function returning the overflow label for month-view event cells' },
+    {
+      key: 'month',
+      default: 'Month',
+      description: 'Label for the month view in the view switcher',
+    },
+    {
+      key: 'agenda',
+      default: 'Agenda',
+      description: 'Label for the agenda view in the view switcher',
+    },
+    {
+      key: 'allDay',
+      default: 'All day',
+      description: 'Label for the all-day section in day/week views',
+    },
+    {
+      key: 'noEvents',
+      default: 'No events in this period',
+      description: 'Empty-state message in agenda view',
+    },
+    {
+      key: 'more',
+      default: '(count) => `+${count} more`',
+      description: 'Function returning the overflow label for month-view event cells',
+    },
   ],
 
   radixPrimitive: null,

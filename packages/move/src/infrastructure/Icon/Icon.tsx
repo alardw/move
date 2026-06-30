@@ -48,9 +48,7 @@ export function Icon({
         return <>{context.fallback}</>;
       }
       if (!context) {
-        console.warn(
-          'Icon: No IconProvider found. Wrap your app in <IconProvider resolver={...}>'
-        );
+        console.warn('Icon: No IconProvider found. Wrap your app in <IconProvider resolver={...}>');
       } else {
         console.warn(`Icon: Could not resolve icon "${name}"`);
       }
@@ -91,9 +89,7 @@ export function Icon({
   // Check if resolved is a component (function or ForwardRef/memo object)
   const isComponent =
     typeof resolved === 'function' ||
-    (typeof resolved === 'object' &&
-      resolved !== null &&
-      '$$typeof' in resolved);
+    (typeof resolved === 'object' && resolved !== null && '$$typeof' in resolved);
 
   if (isComponent) {
     const IconComponent = resolved as React.ComponentType<any>;

@@ -49,7 +49,10 @@ export function parseVTT(content: string): VTTCue[] {
 
     const startTime = parseTimestamp(tsParts[0]);
     const endTime = parseTimestamp(tsParts[1].trim().split(/\s+/)[0]);
-    const text = lines.slice(tsLineIdx + 1).join('\n').trim();
+    const text = lines
+      .slice(tsLineIdx + 1)
+      .join('\n')
+      .trim();
 
     if (text) {
       cues.push({ id, startTime, endTime, text });

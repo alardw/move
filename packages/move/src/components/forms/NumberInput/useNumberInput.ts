@@ -114,10 +114,14 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
   }
 
   const [displayValue, setDisplayValue] = useControlledState<string>({
-    value: options.value !== undefined ? formatNumber(toNumber(options.value), decimalScale, formatValueFn) : undefined,
-    defaultValue: options.defaultValue !== undefined
-      ? formatNumber(toNumber(options.defaultValue), decimalScale, formatValueFn)
-      : '',
+    value:
+      options.value !== undefined
+        ? formatNumber(toNumber(options.value), decimalScale, formatValueFn)
+        : undefined,
+    defaultValue:
+      options.defaultValue !== undefined
+        ? formatNumber(toNumber(options.defaultValue), decimalScale, formatValueFn)
+        : '',
     onChange: undefined,
   });
 
@@ -126,117 +130,165 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
 
   const numericValue = parseNumber(stripAffixes(displayValue), parseValueFn);
 
-  const fireChange = useCallback((num: number | undefined, display: string) => {
-    setDisplayValue(display);
-    onValueChangeRef.current?.(num, display);
-  }, [setDisplayValue]);
+  const fireChange = useCallback(
+    (num: number | undefined, display: string) => {
+      setDisplayValue(display);
+      onValueChangeRef.current?.(num, display);
+    },
+    [setDisplayValue],
+  );
 
-  const setValue = useCallback((v: number | undefined) => {
-    if (v === undefined) {
-      fireChange(undefined, '');
-      return;
-    }
-    const clamped = clamp(v, min, max);
-    const display = formatNumber(clamped, decimalScale, formatValueFn);
-    fireChange(clamped, display);
-  }, [min, max, decimalScale, formatValueFn, fireChange]);
-
-  const adjust = useCallback((delta: number) => {
-    if (disabled || readOnly) return;
-    const current = numericValue ?? min ?? 0;
-    let next = current + delta;
-    next = clamp(next, min, max);
-    next = applyDecimalScale(next, decimalScale);
-    const display = formatNumber(next, decimalScale, formatValueFn);
-    fireChange(next, display);
-  }, [disabled, readOnly, numericValue, min, max, decimalScale, formatValueFn, fireChange]);
-
-  const increment = useCallback((shift?: boolean) => {
-    adjust(shift ? effectiveShiftStep : step);
-  }, [adjust, step, effectiveShiftStep]);
-
-  const decrement = useCallback((shift?: boolean) => {
-    adjust(shift ? -effectiveShiftStep : -step);
-  }, [adjust, step, effectiveShiftStep]);
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    if (disabled || readOnly) return;
-    let raw = e.target.value;
-    raw = stripAffixes(raw);
-
-    let filtered = '';
-    let hasDecimal = false;
-    for (let i = 0; i < raw.length; i++) {
-      const ch = raw[i];
-      if (ch === '-') {
-        if (i === 0 && allowNegative) filtered += ch;
-      } else if (ch === '.') {
-        if (!hasDecimal && allowDecimal) {
-          filtered += ch;
-          hasDecimal = true;
-        }
-      } else if (/\d/.test(ch)) {
-        filtered += ch;
-      }
-    }
-
-    const num = parseNumber(filtered, parseValueFn);
-
-    if (clampBehavior === 'strict' && num !== undefined) {
-      const clamped = clamp(num, min, max);
-      if (clamped !== num) {
-        const display = formatNumber(clamped, decimalScale, formatValueFn);
-        fireChange(clamped, display);
-        return;
-      }
-    }
-
-    if (filtered === displayValue) {
-      const input = e.target;
-      const resetValue = filtered !== ''
-        ? (prefix || '') + filtered + (suffix || '')
-        : '';
-      requestAnimationFrame(() => {
-        input.value = resetValue;
-      });
-      return;
-    }
-
-    fireChange(num, filtered);
-  }, [disabled, readOnly, allowNegative, allowDecimal, clampBehavior, min, max, decimalScale, formatValueFn, parseValueFn, fireChange, prefix, suffix, displayValue]);
-
-  const handleBlur = useCallback((_e: React.FocusEvent<HTMLInputElement>) => {
-    if (clampBehavior === 'none') return;
-
-    const raw = stripAffixes(displayValue);
-    let num = parseNumber(raw, parseValueFn);
-
-    if (num === undefined) {
-      if (raw === '' || raw === '-') {
+  const setValue = useCallback(
+    (v: number | undefined) => {
+      if (v === undefined) {
         fireChange(undefined, '');
         return;
       }
-    }
+      const clamped = clamp(v, min, max);
+      const display = formatNumber(clamped, decimalScale, formatValueFn);
+      fireChange(clamped, display);
+    },
+    [min, max, decimalScale, formatValueFn, fireChange],
+  );
 
-    if (num !== undefined) {
-      num = clamp(num, min, max);
-      num = applyDecimalScale(num, decimalScale);
-      const display = formatNumber(num, decimalScale, formatValueFn);
-      fireChange(num, display);
-    }
-  }, [clampBehavior, displayValue, min, max, decimalScale, formatValueFn, parseValueFn, fireChange, prefix, suffix]);
+  const adjust = useCallback(
+    (delta: number) => {
+      if (disabled || readOnly) return;
+      const current = numericValue ?? min ?? 0;
+      let next = current + delta;
+      next = clamp(next, min, max);
+      next = applyDecimalScale(next, decimalScale);
+      const display = formatNumber(next, decimalScale, formatValueFn);
+      fireChange(next, display);
+    },
+    [disabled, readOnly, numericValue, min, max, decimalScale, formatValueFn, fireChange],
+  );
 
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (disabled || readOnly) return;
+  const increment = useCallback(
+    (shift?: boolean) => {
+      adjust(shift ? effectiveShiftStep : step);
+    },
+    [adjust, step, effectiveShiftStep],
+  );
 
-    if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      increment(e.shiftKey);
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      decrement(e.shiftKey);
-    }
-  }, [disabled, readOnly, increment, decrement]);
+  const decrement = useCallback(
+    (shift?: boolean) => {
+      adjust(shift ? -effectiveShiftStep : -step);
+    },
+    [adjust, step, effectiveShiftStep],
+  );
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (disabled || readOnly) return;
+      let raw = e.target.value;
+      raw = stripAffixes(raw);
+
+      let filtered = '';
+      let hasDecimal = false;
+      for (let i = 0; i < raw.length; i++) {
+        const ch = raw[i];
+        if (ch === '-') {
+          if (i === 0 && allowNegative) filtered += ch;
+        } else if (ch === '.') {
+          if (!hasDecimal && allowDecimal) {
+            filtered += ch;
+            hasDecimal = true;
+          }
+        } else if (/\d/.test(ch)) {
+          filtered += ch;
+        }
+      }
+
+      const num = parseNumber(filtered, parseValueFn);
+
+      if (clampBehavior === 'strict' && num !== undefined) {
+        const clamped = clamp(num, min, max);
+        if (clamped !== num) {
+          const display = formatNumber(clamped, decimalScale, formatValueFn);
+          fireChange(clamped, display);
+          return;
+        }
+      }
+
+      if (filtered === displayValue) {
+        const input = e.target;
+        const resetValue = filtered !== '' ? (prefix || '') + filtered + (suffix || '') : '';
+        requestAnimationFrame(() => {
+          input.value = resetValue;
+        });
+        return;
+      }
+
+      fireChange(num, filtered);
+    },
+    [
+      disabled,
+      readOnly,
+      allowNegative,
+      allowDecimal,
+      clampBehavior,
+      min,
+      max,
+      decimalScale,
+      formatValueFn,
+      parseValueFn,
+      fireChange,
+      prefix,
+      suffix,
+      displayValue,
+    ],
+  );
+
+  const handleBlur = useCallback(
+    (_e: React.FocusEvent<HTMLInputElement>) => {
+      if (clampBehavior === 'none') return;
+
+      const raw = stripAffixes(displayValue);
+      let num = parseNumber(raw, parseValueFn);
+
+      if (num === undefined) {
+        if (raw === '' || raw === '-') {
+          fireChange(undefined, '');
+          return;
+        }
+      }
+
+      if (num !== undefined) {
+        num = clamp(num, min, max);
+        num = applyDecimalScale(num, decimalScale);
+        const display = formatNumber(num, decimalScale, formatValueFn);
+        fireChange(num, display);
+      }
+    },
+    [
+      clampBehavior,
+      displayValue,
+      min,
+      max,
+      decimalScale,
+      formatValueFn,
+      parseValueFn,
+      fireChange,
+      prefix,
+      suffix,
+    ],
+  );
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (disabled || readOnly) return;
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        increment(e.shiftKey);
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        decrement(e.shiftKey);
+      }
+    },
+    [disabled, readOnly, increment, decrement],
+  );
 
   let finalDisplay = displayValue;
   if (finalDisplay !== '' && prefix) finalDisplay = prefix + finalDisplay;

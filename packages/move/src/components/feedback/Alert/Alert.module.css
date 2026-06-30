@@ -116,7 +116,8 @@
   border-radius: var(--move-alert-close-radius);
   color: var(--move-alert-close-fg);
   cursor: pointer;
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
     color var(--move-transition-fast) var(--move-ease-default);
 }
 

@@ -49,7 +49,7 @@ function computeRange(
   totalPages: number,
   currentPage: number,
   siblings: number,
-  boundaries: number
+  boundaries: number,
 ): (number | 'dots')[] {
   if (totalPages <= 0) return [];
 
@@ -64,14 +64,8 @@ function computeRange(
   const leftBoundary = createRange(1, boundaries);
   const rightBoundary = createRange(totalPages - boundaries + 1, totalPages);
 
-  const siblingStart = Math.max(
-    boundaries + 1,
-    currentPage - siblings
-  );
-  const siblingEnd = Math.min(
-    totalPages - boundaries,
-    currentPage + siblings
-  );
+  const siblingStart = Math.max(boundaries + 1, currentPage - siblings);
+  const siblingEnd = Math.min(totalPages - boundaries, currentPage + siblings);
 
   const showLeftDots = siblingStart > boundaries + 2;
   const showRightDots = siblingEnd < totalPages - boundaries - 1;
@@ -114,11 +108,7 @@ function computeRange(
 }
 
 export function usePagination(options: UsePaginationOptions): UsePaginationReturn {
-  const {
-    total,
-    siblings = 1,
-    boundaries = 1,
-  } = options;
+  const { total, siblings = 1, boundaries = 1 } = options;
 
   const totalPages = Math.max(1, total);
 
@@ -135,7 +125,7 @@ export function usePagination(options: UsePaginationOptions): UsePaginationRetur
       const clamped = Math.max(1, Math.min(newPage, totalPages));
       setPageRaw(clamped);
     },
-    [totalPages, setPageRaw]
+    [totalPages, setPageRaw],
   );
 
   const next = useCallback(() => setPage(clampedPage + 1), [clampedPage, setPage]);
@@ -145,7 +135,7 @@ export function usePagination(options: UsePaginationOptions): UsePaginationRetur
 
   const range = useMemo(
     () => computeRange(totalPages, clampedPage, siblings, boundaries),
-    [totalPages, clampedPage, siblings, boundaries]
+    [totalPages, clampedPage, siblings, boundaries],
   );
 
   return {

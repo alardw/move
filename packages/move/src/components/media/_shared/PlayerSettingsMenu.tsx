@@ -57,9 +57,7 @@ export function PlayerSettingsMenu({
 
   return (
     <Popover.Root open={open} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>
-        {trigger}
-      </Popover.Trigger>
+      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
       <Popover.Content
         side={side}
         align={align}
@@ -70,61 +68,62 @@ export function PlayerSettingsMenu({
         sp={{ contentInner: { className: styles.menu } }}
         onOpenAutoFocus={(e: Event) => e.preventDefault()}
       >
-          {!activeCat ? (
-            // Main view — list of categories
-            categories.map((cat) => {
-              const activeLabel = cat.options.find((o) => o.value === cat.activeValue)?.label ?? cat.activeValue;
+        {!activeCat ? (
+          // Main view — list of categories
+          categories.map((cat) => {
+            const activeLabel =
+              cat.options.find((o) => o.value === cat.activeValue)?.label ?? cat.activeValue;
 
-              if (cat.options.length <= 1) {
-                // Single option — non-clickable indicator
-                return (
-                  <div key={cat.id} className={styles.indicatorRow}>
-                    <span className={styles.categoryLabel}>{cat.label}</span>
-                    <span className={styles.categoryValue}>{activeLabel}</span>
-                  </div>
-                );
-              }
-
+            if (cat.options.length <= 1) {
+              // Single option — non-clickable indicator
               return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  className={styles.categoryRow}
-                  onClick={() => setActiveCategory(cat.id)}
-                >
+                <div key={cat.id} className={styles.indicatorRow}>
                   <span className={styles.categoryLabel}>{cat.label}</span>
                   <span className={styles.categoryValue}>{activeLabel}</span>
-                  <span className={styles.categoryChevron}>{chevronRightIcon}</span>
-                </button>
+                </div>
               );
-            })
-          ) : (
-            // Sub-view — options for the active category
-            <>
+            }
+
+            return (
               <button
+                key={cat.id}
                 type="button"
-                className={styles.backRow}
-                onClick={() => setActiveCategory(null)}
+                className={styles.categoryRow}
+                onClick={() => setActiveCategory(cat.id)}
               >
-                <span className={styles.backChevron}>{chevronLeftIcon}</span>
-                <span className={styles.backLabel}>{activeCat.label}</span>
+                <span className={styles.categoryLabel}>{cat.label}</span>
+                <span className={styles.categoryValue}>{activeLabel}</span>
+                <span className={styles.categoryChevron}>{chevronRightIcon}</span>
               </button>
-              {activeCat.options.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={styles.optionRow}
-                  data-active={opt.value === activeCat.activeValue}
-                  onClick={() => {
-                    activeCat.onChange(opt.value);
-                    onOpenChange(false);
-                  }}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </>
-          )}
+            );
+          })
+        ) : (
+          // Sub-view — options for the active category
+          <>
+            <button
+              type="button"
+              className={styles.backRow}
+              onClick={() => setActiveCategory(null)}
+            >
+              <span className={styles.backChevron}>{chevronLeftIcon}</span>
+              <span className={styles.backLabel}>{activeCat.label}</span>
+            </button>
+            {activeCat.options.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={styles.optionRow}
+                data-active={opt.value === activeCat.activeValue}
+                onClick={() => {
+                  activeCat.onChange(opt.value);
+                  onOpenChange(false);
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </>
+        )}
       </Popover.Content>
     </Popover.Root>
   );

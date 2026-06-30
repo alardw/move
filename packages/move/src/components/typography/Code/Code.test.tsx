@@ -14,7 +14,11 @@ describe('Code', () => {
     });
 
     it('renders as <pre> wrapping <code> when block=true', () => {
-      render(<Code block data-testid="code">snippet</Code>);
+      render(
+        <Code block data-testid="code">
+          snippet
+        </Code>,
+      );
       const el = screen.getByTestId('code');
       expect(el.tagName).toBe('PRE');
       expect(el.querySelector('code')).not.toBeNull();
@@ -36,7 +40,7 @@ describe('Code', () => {
       render(
         <Code className="custom-class" style={{ marginTop: '10px' }} data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       const el = screen.getByTestId('code');
       expect(el).toHaveClass('custom-class');
@@ -47,7 +51,7 @@ describe('Code', () => {
       render(
         <Code data-testid="code" aria-label="code snippet">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveAttribute('aria-label', 'code snippet');
     });
@@ -64,22 +68,19 @@ describe('Code', () => {
       render(
         <Code variant="outline" data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveAttribute('data-variant', 'outline');
     });
 
-    it.each(['subtle', 'outline', 'ghost'] as const)(
-      'supports variant=%s',
-      (variant) => {
-        render(
-          <Code variant={variant} data-testid="code">
-            code
-          </Code>
-        );
-        expect(screen.getByTestId('code')).toHaveAttribute('data-variant', variant);
-      }
-    );
+    it.each(['subtle', 'outline', 'ghost'] as const)('supports variant=%s', (variant) => {
+      render(
+        <Code variant={variant} data-testid="code">
+          code
+        </Code>,
+      );
+      expect(screen.getByTestId('code')).toHaveAttribute('data-variant', variant);
+    });
   });
 
   // === Sizes ===
@@ -93,7 +94,7 @@ describe('Code', () => {
       render(
         <Code size="lg" data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveAttribute('data-size', 'lg');
     });
@@ -102,7 +103,7 @@ describe('Code', () => {
       render(
         <Code size={size} data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveAttribute('data-size', size);
     });
@@ -111,7 +112,11 @@ describe('Code', () => {
   // === Data attributes ===
   describe('data attributes', () => {
     it('sets data-block attribute when block=true', () => {
-      render(<Code block data-testid="code">code</Code>);
+      render(
+        <Code block data-testid="code">
+          code
+        </Code>,
+      );
       expect(screen.getByTestId('code')).toHaveAttribute('data-block');
     });
 
@@ -124,7 +129,7 @@ describe('Code', () => {
       render(
         <Code language="tsx" data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveAttribute('data-language', 'tsx');
     });
@@ -141,7 +146,7 @@ describe('Code', () => {
       render(
         <Code sp={{ root: { className: 'sp-root' } }} data-testid="code">
           code
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveClass('sp-root');
     });
@@ -153,22 +158,20 @@ describe('Code', () => {
       render(
         <Code language="tsx" data-testid="code">
           const x = 1;
-        </Code>
+        </Code>,
       );
       expect(screen.getByTestId('code')).toHaveTextContent('const x = 1;');
     });
 
     it('highlights code when CodeHighlighterProvider and language are set', () => {
-      const highlighter = vi.fn(
-        (code: string, _lang: string) => `<span class="hl">${code}</span>`
-      );
+      const highlighter = vi.fn((code: string, _lang: string) => `<span class="hl">${code}</span>`);
 
       render(
         <CodeHighlighterProvider highlighter={highlighter}>
           <Code block language="tsx" data-testid="code">
             const x = 1;
           </Code>
-        </CodeHighlighterProvider>
+        </CodeHighlighterProvider>,
       );
 
       expect(highlighter).toHaveBeenCalledWith('const x = 1;', 'tsx');
@@ -176,7 +179,7 @@ describe('Code', () => {
 
     it('handles async highlighter functions', async () => {
       const highlighter = vi.fn(
-        async (code: string, _lang: string) => `<span class="hl">${code}</span>`
+        async (code: string, _lang: string) => `<span class="hl">${code}</span>`,
       );
 
       render(
@@ -184,7 +187,7 @@ describe('Code', () => {
           <Code block language="tsx" data-testid="code">
             const x = 1;
           </Code>
-        </CodeHighlighterProvider>
+        </CodeHighlighterProvider>,
       );
 
       expect(highlighter).toHaveBeenCalledWith('const x = 1;', 'tsx');
@@ -203,7 +206,7 @@ describe('Code', () => {
           <Code language="tsx" data-testid="code">
             const x = 1;
           </Code>
-        </CodeHighlighterProvider>
+        </CodeHighlighterProvider>,
       );
 
       expect(screen.getByTestId('code')).toHaveTextContent('const x = 1;');

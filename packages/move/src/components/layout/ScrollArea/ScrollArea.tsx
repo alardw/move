@@ -72,7 +72,11 @@ const ScrollAreaHeader = withMoveComponent<'header', ScrollAreaHeaderProps, HTML
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -114,7 +118,11 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -156,7 +164,11 @@ const ScrollAreaFooter = withMoveComponent<'footer', ScrollAreaFooterProps, HTML
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}

@@ -78,7 +78,12 @@ export {
 // =============================================================================
 
 export { usePositionTracker, useSlidingIndicator } from './utils/usePositionTracker';
-export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingIndicatorOptions, UseSlidingIndicatorReturn } from './utils/usePositionTracker';
+export type {
+  UsePositionTrackerOptions,
+  UsePositionTrackerReturn,
+  UseSlidingIndicatorOptions,
+  UseSlidingIndicatorReturn,
+} from './utils/usePositionTracker';
 
 // =============================================================================
 // Morph height
@@ -104,11 +109,7 @@ export type {
 } from './useSplitText';
 
 export { useAutoLayout } from './useAutoLayout';
-export type {
-  UseAutoLayoutOptions,
-  UseAutoLayoutReturn,
-  LayoutEnterExit,
-} from './useAutoLayout';
+export type { UseAutoLayoutOptions, UseAutoLayoutReturn, LayoutEnterExit } from './useAutoLayout';
 
 // =============================================================================
 // Presence system

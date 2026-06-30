@@ -11,7 +11,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       const el = screen.getByTestId('tg');
       expect(el).toBeInTheDocument();
@@ -22,7 +22,7 @@ describe('ToggleGroup', () => {
         <ToggleGroup.Root defaultValue="a">
           <ToggleGroup.Item value="a">Alpha</ToggleGroup.Item>
           <ToggleGroup.Item value="b">Beta</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByText('Alpha')).toBeInTheDocument();
       expect(screen.getByText('Beta')).toBeInTheDocument();
@@ -33,16 +33,21 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root ref={ref} defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
 
     it('forwards className and style', () => {
       render(
-        <ToggleGroup.Root className="custom" style={{ marginTop: '10px' }} data-testid="tg" defaultValue="a">
+        <ToggleGroup.Root
+          className="custom"
+          style={{ marginTop: '10px' }}
+          data-testid="tg"
+          defaultValue="a"
+        >
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       const el = screen.getByTestId('tg');
       expect(el).toHaveClass('custom');
@@ -52,8 +57,10 @@ describe('ToggleGroup', () => {
     it('defaults to variant=secondary', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       // Variant is passed to items via context
       expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'secondary');
@@ -62,8 +69,10 @@ describe('ToggleGroup', () => {
     it('defaults to size=md', () => {
       render(
         <ToggleGroup.Root data-testid="tg" defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveAttribute('data-size', 'md');
       expect(screen.getByTestId('item')).toHaveAttribute('data-size', 'md');
@@ -73,7 +82,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root orientation="vertical" data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveAttribute('data-orientation', 'vertical');
     });
@@ -82,7 +91,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveAttribute('data-orientation', 'horizontal');
     });
@@ -91,7 +100,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root size="lg" data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveAttribute('data-size', 'lg');
     });
@@ -100,9 +109,13 @@ describe('ToggleGroup', () => {
       const onValueChange = vi.fn();
       render(
         <ToggleGroup.Root defaultValue="a" onValueChange={onValueChange}>
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       // Click item "a" which is already active — Radix fires "" for deselect
       fireEvent.click(screen.getByTestId('item-a'));
@@ -114,8 +127,10 @@ describe('ToggleGroup', () => {
     it('provides size and variant to Items via context', () => {
       render(
         <ToggleGroup.Root size="lg" variant="primary" defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'primary');
       expect(screen.getByTestId('item')).toHaveAttribute('data-size', 'lg');
@@ -125,7 +140,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       const indicator = screen.getByTestId('tg').querySelector('[aria-hidden="true"]');
       expect(indicator).toBeInTheDocument();
@@ -135,7 +150,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root data-testid="tg" aria-label="format" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveAttribute('aria-label', 'format');
     });
@@ -146,8 +161,10 @@ describe('ToggleGroup', () => {
     it('renders as Radix ToggleGroup.Item', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       const el = screen.getByTestId('item');
       expect(el).toBeInTheDocument();
@@ -157,8 +174,10 @@ describe('ToggleGroup', () => {
     it('receives data-variant and data-size from context', () => {
       render(
         <ToggleGroup.Root size="sm" variant="danger" defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'danger');
       expect(screen.getByTestId('item')).toHaveAttribute('data-size', 'sm');
@@ -167,8 +186,10 @@ describe('ToggleGroup', () => {
     it('supports disabled prop', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" disabled data-testid="item">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" disabled data-testid="item">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item')).toBeDisabled();
     });
@@ -176,9 +197,13 @@ describe('ToggleGroup', () => {
     it('has data-state="on" when selected', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item-a')).toHaveAttribute('data-state', 'on');
     });
@@ -186,9 +211,13 @@ describe('ToggleGroup', () => {
     it('has data-state="off" when not selected', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item-b')).toHaveAttribute('data-state', 'off');
     });
@@ -197,8 +226,10 @@ describe('ToggleGroup', () => {
       const ref = createRef<HTMLButtonElement>();
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" ref={ref}>A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" ref={ref}>
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
@@ -206,10 +237,15 @@ describe('ToggleGroup', () => {
     it('forwards className and style on item', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" className="item-custom" style={{ marginTop: '5px' }} data-testid="item">
+          <ToggleGroup.Item
+            value="a"
+            className="item-custom"
+            style={{ marginTop: '5px' }}
+            data-testid="item"
+          >
             A
           </ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       const el = screen.getByTestId('item');
       expect(el).toHaveClass('item-custom');
@@ -219,8 +255,10 @@ describe('ToggleGroup', () => {
     it('spreads HTML attributes on item', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
-          <ToggleGroup.Item value="a" data-testid="item" aria-label="option-a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item" aria-label="option-a">
+            A
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('aria-label', 'option-a');
     });
@@ -231,9 +269,13 @@ describe('ToggleGroup', () => {
     it('controlled value prop selects the matching item', () => {
       render(
         <ToggleGroup.Root value="b">
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item-b')).toHaveAttribute('data-state', 'on');
       expect(screen.getByTestId('item-a')).toHaveAttribute('data-state', 'off');
@@ -243,9 +285,13 @@ describe('ToggleGroup', () => {
       const onValueChange = vi.fn();
       render(
         <ToggleGroup.Root defaultValue="a" onValueChange={onValueChange}>
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       fireEvent.click(screen.getByTestId('item-b'));
       expect(onValueChange).toHaveBeenCalledWith('b');
@@ -254,9 +300,13 @@ describe('ToggleGroup', () => {
     it('uncontrolled defaultValue sets initial selection', () => {
       render(
         <ToggleGroup.Root defaultValue="b">
-          <ToggleGroup.Item value="a" data-testid="item-a">A</ToggleGroup.Item>
-          <ToggleGroup.Item value="b" data-testid="item-b">B</ToggleGroup.Item>
-        </ToggleGroup.Root>
+          <ToggleGroup.Item value="a" data-testid="item-a">
+            A
+          </ToggleGroup.Item>
+          <ToggleGroup.Item value="b" data-testid="item-b">
+            B
+          </ToggleGroup.Item>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('item-b')).toHaveAttribute('data-state', 'on');
       expect(screen.getByTestId('item-a')).toHaveAttribute('data-state', 'off');
@@ -269,7 +319,7 @@ describe('ToggleGroup', () => {
       render(
         <ToggleGroup.Root sp={{ root: { className: 'sp-root' } }} data-testid="tg" defaultValue="a">
           <ToggleGroup.Item value="a">A</ToggleGroup.Item>
-        </ToggleGroup.Root>
+        </ToggleGroup.Root>,
       );
       expect(screen.getByTestId('tg')).toHaveClass('sp-root');
     });

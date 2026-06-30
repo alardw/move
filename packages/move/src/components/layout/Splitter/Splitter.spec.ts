@@ -8,21 +8,30 @@ export const spec = {
   name: 'Splitter',
   componentClass: 'interactive' as const,
   category: 'layout',
-  description: 'Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking',
+  description:
+    'Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking',
 
   synonyms: ['resizer', 'pane split', 'panes', 'resizable panels', 'split pane', 'divider'],
   families: {
-    behavior:  ["layout"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['layout'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Flex container that holds panels and auto-injected gutters' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'Flex container that holds panels and auto-injected gutters',
+    },
     { name: 'panel', element: 'div', description: 'Resizable panel section sized by percentage' },
-    { name: 'gutter', element: 'div', description: 'Internal draggable separator between panels (auto-injected by Root)' },
+    {
+      name: 'gutter',
+      element: 'div',
+      description: 'Internal draggable separator between panels (auto-injected by Root)',
+    },
   ],
 
   subComponents: [
@@ -30,26 +39,82 @@ export const spec = {
       name: 'Root',
       slots: [{ name: 'root', element: 'div', description: 'Splitter flex container' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Panel children (gutters are injected automatically between them)' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Panel children (gutters are injected automatically between them)',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'layout', type: "'horizontal' | 'vertical'", default: "'horizontal'", moveSpecific: true, description: 'Layout direction of the panels' },
-        { name: 'gutterSize', type: 'number', default: '4', moveSpecific: true, description: 'Size of the gutter/handle in pixels' },
-        { name: 'collapseBelow', type: 'number', moveSpecific: true, description: 'Container width in pixels below which horizontal layout collapses to vertical stacking' },
-        { name: 'onResizeEnd', type: '(sizes: number[]) => void', moveSpecific: true, description: 'Callback fired when panel resize completes, with current sizes as percentages' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'layout',
+          type: "'horizontal' | 'vertical'",
+          default: "'horizontal'",
+          moveSpecific: true,
+          description: 'Layout direction of the panels',
+        },
+        {
+          name: 'gutterSize',
+          type: 'number',
+          default: '4',
+          moveSpecific: true,
+          description: 'Size of the gutter/handle in pixels',
+        },
+        {
+          name: 'collapseBelow',
+          type: 'number',
+          moveSpecific: true,
+          description:
+            'Container width in pixels below which horizontal layout collapses to vertical stacking',
+        },
+        {
+          name: 'onResizeEnd',
+          type: '(sizes: number[]) => void',
+          moveSpecific: true,
+          description:
+            'Callback fired when panel resize completes, with current sizes as percentages',
+        },
       ],
       usesFactory: true,
-      description: 'Root container that manages panel sizes via context, injects gutters between children, and supports responsive collapse',
+      description:
+        'Root container that manages panel sizes via context, injects gutters between children, and supports responsive collapse',
     },
     {
       name: 'Panel',
       slots: [{ name: 'panel', element: 'div', description: 'Panel container' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Panel content' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Panel content',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'size', type: 'number', moveSpecific: true, description: 'Initial size as percentage (auto-distributed if not specified)' },
-        { name: 'minSize', type: 'number', default: '5', moveSpecific: true, description: 'Minimum size as percentage (prevents panel from collapsing below this)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'size',
+          type: 'number',
+          moveSpecific: true,
+          description: 'Initial size as percentage (auto-distributed if not specified)',
+        },
+        {
+          name: 'minSize',
+          type: 'number',
+          default: '5',
+          moveSpecific: true,
+          description: 'Minimum size as percentage (prevents panel from collapsing below this)',
+        },
       ],
       usesFactory: true,
       description: 'Individual resizable panel that registers its size with Root context',
@@ -87,24 +152,84 @@ export const spec = {
   animations: [],
 
   renderContracts: [
-    { id: 'auto-inject-gutters', description: 'Root automatically injects SplitterGutter components between each Panel child. Gutters are not user-facing sub-components.' },
-    { id: 'gutter-role-separator', description: 'Each gutter has role="separator" with aria-orientation perpendicular to layout (horizontal layout gets vertical separator).' },
-    { id: 'gutter-valuenow', description: 'Each gutter reports aria-valuenow as the rounded percentage size of the panel before it.' },
-    { id: 'gutter-focusable', description: 'Gutters have tabIndex=0 and are keyboard-operable with Arrow keys, Home, and End.' },
-    { id: 'gutter-hidden-collapsed', description: 'When isCollapsed is true (container width < collapseBelow), gutters return null and panels stack vertically.' },
-    { id: 'panel-size-percentage', description: 'Panel width (horizontal) or height (vertical) is set via inline style as percentage. Falls back to flex: 1 when size is not yet determined.' },
-    { id: 'panel-index-from-dom', description: 'Panel determines its index from its DOM position among siblings with the panel class, via useLayoutEffect.' },
-    { id: 'panel-auto-size', description: 'When size prop is not specified, panel initial size is auto-distributed as 100/panelCount percent.' },
-    { id: 'collapse-resize-observer', description: 'Root uses ResizeObserver on its container to detect when width falls below collapseBelow, switching to vertical layout.' },
-    { id: 'min-size-enforced', description: 'During drag and keyboard resize, both adjacent panels are constrained to not go below their minSize (default 5%).' },
-    { id: 'context-internal', description: 'Splitter uses an internal SplitterContext (not exposed) to share layout, sizes, and register/setPanelSize between Root, Panel, and Gutter.' },
-    { id: 'gutter-expanded-hit-area', description: 'Gutters have a ::before pseudo-element expanding the hit area by spacing-sm on each side for easier grabbing.' },
+    {
+      id: 'auto-inject-gutters',
+      description:
+        'Root automatically injects SplitterGutter components between each Panel child. Gutters are not user-facing sub-components.',
+    },
+    {
+      id: 'gutter-role-separator',
+      description:
+        'Each gutter has role="separator" with aria-orientation perpendicular to layout (horizontal layout gets vertical separator).',
+    },
+    {
+      id: 'gutter-valuenow',
+      description:
+        'Each gutter reports aria-valuenow as the rounded percentage size of the panel before it.',
+    },
+    {
+      id: 'gutter-focusable',
+      description:
+        'Gutters have tabIndex=0 and are keyboard-operable with Arrow keys, Home, and End.',
+    },
+    {
+      id: 'gutter-hidden-collapsed',
+      description:
+        'When isCollapsed is true (container width < collapseBelow), gutters return null and panels stack vertically.',
+    },
+    {
+      id: 'panel-size-percentage',
+      description:
+        'Panel width (horizontal) or height (vertical) is set via inline style as percentage. Falls back to flex: 1 when size is not yet determined.',
+    },
+    {
+      id: 'panel-index-from-dom',
+      description:
+        'Panel determines its index from its DOM position among siblings with the panel class, via useLayoutEffect.',
+    },
+    {
+      id: 'panel-auto-size',
+      description:
+        'When size prop is not specified, panel initial size is auto-distributed as 100/panelCount percent.',
+    },
+    {
+      id: 'collapse-resize-observer',
+      description:
+        'Root uses ResizeObserver on its container to detect when width falls below collapseBelow, switching to vertical layout.',
+    },
+    {
+      id: 'min-size-enforced',
+      description:
+        'During drag and keyboard resize, both adjacent panels are constrained to not go below their minSize (default 5%).',
+    },
+    {
+      id: 'context-internal',
+      description:
+        'Splitter uses an internal SplitterContext (not exposed) to share layout, sizes, and register/setPanelSize between Root, Panel, and Gutter.',
+    },
+    {
+      id: 'gutter-expanded-hit-area',
+      description:
+        'Gutters have a ::before pseudo-element expanding the hit area by spacing-sm on each side for easier grabbing.',
+    },
   ],
 
   tokens: [
-    { name: '--move-splitter-gutter-bg', value: 'var(--move-border-base)', description: 'Gutter default background color' },
-    { name: '--move-splitter-gutter-bg-hover', value: 'var(--move-border-emphasis)', description: 'Gutter background on hover' },
-    { name: '--move-splitter-gutter-bg-active', value: 'var(--move-primary)', description: 'Gutter background while dragging' },
+    {
+      name: '--move-splitter-gutter-bg',
+      value: 'var(--move-border-base)',
+      description: 'Gutter default background color',
+    },
+    {
+      name: '--move-splitter-gutter-bg-hover',
+      value: 'var(--move-border-emphasis)',
+      description: 'Gutter background on hover',
+    },
+    {
+      name: '--move-splitter-gutter-bg-active',
+      value: 'var(--move-primary)',
+      description: 'Gutter background while dragging',
+    },
   ],
 
   variants: {},

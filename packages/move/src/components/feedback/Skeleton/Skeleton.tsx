@@ -33,22 +33,29 @@ function useSkeletonPulse(ref: React.RefObject<HTMLElement | null>) {
 
   const pulseConfig: AnimationTrigger[] | null = React.useMemo(() => {
     if (animation !== 'pulse') return null;
-    return [{
-      trigger: 'Pulse.enter',
-      sequence: [{
-        target: 'Pulse',
-        animation: {
-          opacity: { from: 1, to: 0.4, duration: 750, ease: 'inOutQuad' },
-          loop: true,
-          alternate: true,
-        },
-      }],
-    }];
+    return [
+      {
+        trigger: 'Pulse.enter',
+        sequence: [
+          {
+            target: 'Pulse',
+            animation: {
+              opacity: { from: 1, to: 0.4, duration: 750, ease: 'inOutQuad' },
+              loop: true,
+              alternate: true,
+            },
+          },
+        ],
+      },
+    ];
   }, [animation]);
 
-  const pulseRefs = React.useMemo(() => ({
-    Pulse: ref as React.RefObject<HTMLElement | null>,
-  }), [ref]);
+  const pulseRefs = React.useMemo(
+    () => ({
+      Pulse: ref as React.RefObject<HTMLElement | null>,
+    }),
+    [ref],
+  );
 
   useAnimations(pulseConfig, pulseRefs);
 }
@@ -92,7 +99,9 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
           el.style.setProperty('--move-skeleton-wave-x', `${proxy.v}%`);
         },
       });
-      return () => { anim.pause(); };
+      return () => {
+        anim.pause();
+      };
     }, [animation, internalRef]);
 
     return {
@@ -108,7 +117,11 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
               {...attrs}
               {...spRest}
               ref={ref}
-              className={cx('root', props.className as string | undefined, spClass as string | undefined)}
+              className={cx(
+                'root',
+                props.className as string | undefined,
+                spClass as string | undefined,
+              )}
               style={{
                 ...(props.style as React.CSSProperties),
                 ...(spStyle as React.CSSProperties),
@@ -150,7 +163,11 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
     return {
       render() {
         const circleSp = sp('circle');
-        const { className: spClass, style: spStyle, ...spRest } = circleSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = circleSp as Record<string, unknown>;
 
         const s = typeof props.size === 'number' ? `${props.size}px` : props.size;
 
@@ -248,7 +265,11 @@ const SkeletonRounded = withMoveComponent<'rounded', SkeletonRoundedProps, HTMLD
     return {
       render() {
         const roundedSp = sp('rounded');
-        const { className: spClass, style: spStyle, ...spRest } = roundedSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = roundedSp as Record<string, unknown>;
 
         const w = typeof props.width === 'number' ? `${props.width}px` : props.width;
         const h = typeof props.height === 'number' ? `${props.height}px` : props.height;
@@ -307,7 +328,11 @@ const SkeletonText = withMoveComponent<'text' | 'line', SkeletonTextProps, HTMLD
         const textSp = sp('text');
         const { className: spClass, style: spStyle, ...spRest } = textSp as Record<string, unknown>;
         const lineSp = sp('line');
-        const { className: lineSpClass, style: lineSpStyle, ...lineSpRest } = lineSp as Record<string, unknown>;
+        const {
+          className: lineSpClass,
+          style: lineSpStyle,
+          ...lineSpRest
+        } = lineSp as Record<string, unknown>;
 
         const count = props.lines as number;
         const lineElements = Array.from({ length: count }, (_, i) => {

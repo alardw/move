@@ -56,11 +56,9 @@ const TabsRoot = withMoveComponent<'root', TabsRootProps, HTMLDivElement>({
       },
     });
 
-    const orientation = (props.orientation as 'horizontal' | 'vertical' | undefined) ?? 'horizontal';
-    const ctx = React.useMemo(
-      () => ({ value, orientation }),
-      [value, orientation],
-    );
+    const orientation =
+      (props.orientation as 'horizontal' | 'vertical' | undefined) ?? 'horizontal';
+    const ctx = React.useMemo(() => ({ value, orientation }), [value, orientation]);
 
     return {
       render() {
@@ -136,7 +134,11 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
         const listSp = sp('list');
         const { className: spClass, style: spStyle, ...spRest } = listSp as Record<string, unknown>;
         const indicatorSp = sp('indicator');
-        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const {
+          className: indSpClass,
+          style: indSpStyle,
+          ...indSpRest
+        } = indicatorSp as Record<string, unknown>;
 
         return (
           <RadixTabs.List
@@ -188,7 +190,11 @@ const TabsTrigger = withMoveComponent<'trigger', TabsTriggerProps, HTMLButtonEle
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
 
         return (
           <RadixTabs.Trigger
@@ -243,15 +249,17 @@ const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElemen
       return [
         {
           trigger: 'Inner.enter',
-          sequence: [{
-            target: 'Inner',
-            children: '> *',
-            stagger: { delay: 30 },
-            animation: {
-              opacity: { from: 0, to: 1, ease: 'outQuart', duration: 240, delay: 80 },
-              translateY: { from: 6, to: 0, ease: 'outQuart', duration: 240, delay: 80 },
+          sequence: [
+            {
+              target: 'Inner',
+              children: '> *',
+              stagger: { delay: 30 },
+              animation: {
+                opacity: { from: 0, to: 1, ease: 'outQuart', duration: 240, delay: 80 },
+                translateY: { from: 6, to: 0, ease: 'outQuart', duration: 240, delay: 80 },
+              },
             },
-          }],
+          ],
         },
       ];
     }, [isVertical, isActive]);
@@ -266,7 +274,11 @@ const TabsContent = withMoveComponent<'content', TabsContentProps, HTMLDivElemen
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
 
         return (
           <RadixTabs.Content

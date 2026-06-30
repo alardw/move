@@ -12,9 +12,7 @@ export interface SlotProps {
 }
 
 /** Instance-level slot-props overrides keyed by slot name */
-export type SlotPropsMap<TSlots extends string = string> = Partial<
-  Record<TSlots, SlotProps>
->;
+export type SlotPropsMap<TSlots extends string = string> = Partial<Record<TSlots, SlotProps>>;
 
 /** Global slot-props keyed by component name, then slot name */
 export type GlobalSlotProps = Record<string, SlotPropsMap>;
@@ -30,10 +28,7 @@ export type CxFn<TSlots extends string> = (
 ) => string;
 
 /** Merges global + instance slot-props + local props for a slot */
-export type SpFn<TSlots extends string> = (
-  slot: TSlots,
-  localProps?: SlotProps
-) => SlotProps;
+export type SpFn<TSlots extends string> = (slot: TSlots, localProps?: SlotProps) => SlotProps;
 
 /** cx + sp combined for one element. Spread the result on a slotted node and the
  *  part is fully slot-props-themeable: the module class is merged with the
@@ -45,11 +40,7 @@ export type SlotFn<TSlots extends string> = (
 ) => SlotProps;
 
 /** Context passed to every setup() function */
-export interface SetupContext<
-  TSlots extends string,
-  TProps extends object,
-  TRef,
-> {
+export interface SetupContext<TSlots extends string, TProps extends object, TRef> {
   /** Resolved props (defaults merged with user props, Move-specific keys removed) */
   props: TProps;
   /** Forwarded ref from React.forwardRef */

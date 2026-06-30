@@ -39,17 +39,17 @@ export function MonthView({
 }: MonthViewProps) {
   const grid = React.useMemo(
     () => getMonthGrid(date.getFullYear(), date.getMonth(), weekStartsOn),
-    [date, weekStartsOn]
+    [date, weekStartsOn],
   );
 
   const weekDayNames = React.useMemo(
     () => getWeekDayNames(locale, 'short', weekStartsOn),
-    [locale, weekStartsOn]
+    [locale, weekStartsOn],
   );
 
   const getEventsForDate = React.useCallback(
     (d: Date) => events.filter((e) => isSameDay(e.start, d)),
-    [events]
+    [events],
   );
 
   return (
@@ -79,10 +79,7 @@ export function MonthView({
                 {...(outside ? { 'data-outside': '' } : {})}
                 onClick={(e) => onDayClick?.(day, e)}
               >
-                <span
-                  className={styles.dayNumber}
-                  {...(today ? { 'data-today': '' } : {})}
-                >
+                <span className={styles.dayNumber} {...(today ? { 'data-today': '' } : {})}>
                   {day.getDate()}
                 </span>
                 <div className={styles.dayEvents}>
@@ -98,10 +95,7 @@ export function MonthView({
                     />
                   ))}
                   {overflowCount > 0 && (
-                    <button
-                      className={styles.moreButton}
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <button className={styles.moreButton} onClick={(e) => e.stopPropagation()}>
                       {moreLabel(overflowCount)}
                     </button>
                   )}

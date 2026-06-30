@@ -300,7 +300,11 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
 
   // Fetch and parse active subtitle track
   useEffect(() => {
-    if (!stableSubtitles || activeSubtitleIndex < 0 || activeSubtitleIndex >= stableSubtitles.length) {
+    if (
+      !stableSubtitles ||
+      activeSubtitleIndex < 0 ||
+      activeSubtitleIndex >= stableSubtitles.length
+    ) {
       setParsedCues([]);
       return;
     }
@@ -319,15 +323,15 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
         if (!cancelled) setParsedCues([]);
       });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [stableSubtitles, activeSubtitleIndex]);
 
   // Derive active cue synchronously — no useEffect lag
   const activeCue = useMemo(() => {
     if (parsedCues.length === 0) return null;
-    return parsedCues.find(
-      (c) => currentTime >= c.startTime && currentTime <= c.endTime,
-    ) ?? null;
+    return parsedCues.find((c) => currentTime >= c.startTime && currentTime <= c.endTime) ?? null;
   }, [currentTime, parsedCues]);
 
   // ---- Source switching ----
@@ -358,41 +362,55 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
   }, []);
 
   // Quality switching
-  const setActiveQualityIndex = useCallback((index: number) => {
-    if (!qualities || index < 0 || index >= qualities.length) return;
-    setActiveQualityIndexState(index);
-    switchSource(qualities[index].src);
-    onQualityChangeRef.current?.(qualities[index]);
-  }, [qualities, switchSource]);
+  const setActiveQualityIndex = useCallback(
+    (index: number) => {
+      if (!qualities || index < 0 || index >= qualities.length) return;
+      setActiveQualityIndexState(index);
+      switchSource(qualities[index].src);
+      onQualityChangeRef.current?.(qualities[index]);
+    },
+    [qualities, switchSource],
+  );
 
   // Audio track switching
-  const setActiveAudioTrackIndex = useCallback((index: number) => {
-    if (!audioTracks || index < 0 || index >= audioTracks.length) return;
-    setActiveAudioTrackIndexState(index);
-    switchSource(audioTracks[index].src);
-    onAudioTrackChangeRef.current?.(audioTracks[index]);
-  }, [audioTracks, switchSource]);
+  const setActiveAudioTrackIndex = useCallback(
+    (index: number) => {
+      if (!audioTracks || index < 0 || index >= audioTracks.length) return;
+      setActiveAudioTrackIndexState(index);
+      switchSource(audioTracks[index].src);
+      onAudioTrackChangeRef.current?.(audioTracks[index]);
+    },
+    [audioTracks, switchSource],
+  );
 
   // Actions
   const togglePlay = useCallback(() => {
     setPlaying(!playing);
   }, [playing, setPlaying]);
 
-  const seek = useCallback((time: number) => {
-    const video = videoRef.current;
-    if (video) {
-      isSeeking.current = true;
-      video.currentTime = time;
-      setCurrentTime(time);
-      requestAnimationFrame(() => { isSeeking.current = false; });
-    }
-  }, [setCurrentTime]);
+  const seek = useCallback(
+    (time: number) => {
+      const video = videoRef.current;
+      if (video) {
+        isSeeking.current = true;
+        video.currentTime = time;
+        setCurrentTime(time);
+        requestAnimationFrame(() => {
+          isSeeking.current = false;
+        });
+      }
+    },
+    [setCurrentTime],
+  );
 
-  const setVolume = useCallback((vol: number) => {
-    const clamped = Math.max(0, Math.min(1, vol));
-    setVolumeState(clamped);
-    if (clamped > 0 && muted) setMuted(false);
-  }, [setVolumeState, muted]);
+  const setVolume = useCallback(
+    (vol: number) => {
+      const clamped = Math.max(0, Math.min(1, vol));
+      setVolumeState(clamped);
+      if (clamped > 0 && muted) setMuted(false);
+    },
+    [setVolumeState, muted],
+  );
 
   const toggleMute = useCallback(() => {
     setMuted((prev) => !prev);
@@ -409,9 +427,12 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
     }
   }, []);
 
-  const setPlaybackRate = useCallback((rate: number) => {
-    setPlaybackRateState(rate);
-  }, [setPlaybackRateState]);
+  const setPlaybackRate = useCallback(
+    (rate: number) => {
+      setPlaybackRateState(rate);
+    },
+    [setPlaybackRateState],
+  );
 
   return {
     videoRef,

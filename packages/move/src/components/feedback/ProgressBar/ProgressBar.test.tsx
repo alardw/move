@@ -19,7 +19,12 @@ describe('ProgressBar', () => {
 
     it('forwards className and style', () => {
       render(
-        <ProgressBar className="custom" style={{ marginTop: '10px' }} data-testid="pb" value={50} />
+        <ProgressBar
+          className="custom"
+          style={{ marginTop: '10px' }}
+          data-testid="pb"
+          value={50}
+        />,
       );
       const el = screen.getByRole('progressbar');
       expect(el).toHaveClass('custom');
@@ -79,7 +84,7 @@ describe('ProgressBar', () => {
           value={50}
           max={100}
           getValueLabel={(value: number, max: number) => `${value} of ${max} items`}
-        />
+        />,
       );
       const el = screen.getByRole('progressbar');
       expect(el).toHaveAttribute('aria-valuetext', '50 of 100 items');
@@ -101,7 +106,7 @@ describe('ProgressBar', () => {
       (variant) => {
         render(<ProgressBar variant={variant} value={50} />);
         expect(screen.getByRole('progressbar')).toHaveAttribute('data-variant', variant);
-      }
+      },
     );
   });
 
@@ -151,9 +156,7 @@ describe('ProgressBar', () => {
   // === Slot props ===
   describe('slot props', () => {
     it('merges sp className on root', () => {
-      render(
-        <ProgressBar sp={{ root: { className: 'sp-root' } }} value={50} />
-      );
+      render(<ProgressBar sp={{ root: { className: 'sp-root' } }} value={50} />);
       expect(screen.getByRole('progressbar')).toHaveClass('sp-root');
     });
   });

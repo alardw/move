@@ -70,9 +70,11 @@
   flex-direction: column;
   flex-shrink: 0;
   align-self: stretch;
-  margin: calc(-1 * var(--move-numberinput-padding-y)) calc(-1 * var(--move-numberinput-padding-x)) calc(-1 * var(--move-numberinput-padding-y)) 0;
+  margin: calc(-1 * var(--move-numberinput-padding-y)) calc(-1 * var(--move-numberinput-padding-x))
+    calc(-1 * var(--move-numberinput-padding-y)) 0;
   border-left: 1px solid var(--move-numberinput-border);
-  border-radius: 0 calc(var(--move-numberinput-radius) - 1px) calc(var(--move-numberinput-radius) - 1px) 0;
+  border-radius: 0 calc(var(--move-numberinput-radius) - 1px)
+    calc(var(--move-numberinput-radius) - 1px) 0;
   overflow: hidden;
 }
 
@@ -86,8 +88,9 @@
   padding: 0 var(--move-spacing-xs);
   cursor: pointer;
   color: var(--move-numberinput-icon-color);
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
-              color var(--move-transition-fast) var(--move-ease-default);
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
+    color var(--move-transition-fast) var(--move-ease-default);
 }
 
 .increment:hover,

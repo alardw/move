@@ -11,59 +11,59 @@
 
 export const ICON_ROLES = {
   // ── Disclosure ──────────────────────────────────────────────────────────
-  expand:        'chevron-down',   // Accordion, Collapsible, Select, Autocomplete (open a panel/menu)
+  expand: 'chevron-down', // Accordion, Collapsible, Select, Autocomplete (open a panel/menu)
 
   // ── Stepper buttons ─────────────────────────────────────────────────────
-  increment:     'chevron-up',     // NumberInput
-  decrement:     'chevron-down',   // NumberInput
+  increment: 'chevron-up', // NumberInput
+  decrement: 'chevron-down', // NumberInput
 
   // ── Sequential navigation ───────────────────────────────────────────────
-  previous:      'chevron-left',   // Pagination, CalendarView, Carousel (horizontal), media players
-  next:          'chevron-right',  // Pagination, CalendarView, Carousel (horizontal), media players
-  separator:     'chevron-right',  // Breadcrumb
+  previous: 'chevron-left', // Pagination, CalendarView, Carousel (horizontal), media players
+  next: 'chevron-right', // Pagination, CalendarView, Carousel (horizontal), media players
+  separator: 'chevron-right', // Breadcrumb
   // NOTE: a vertical Carousel flips previous→chevron-up / next→chevron-down.
   //       Open question: orientation-aware roles, or let the component pick.
 
   // ── Selection ───────────────────────────────────────────────────────────
-  selected:      'check',          // Select, Dropdown, Autocomplete (chosen option)
-  complete:      'check',          // Stepper (completed step)
+  selected: 'check', // Select, Dropdown, Autocomplete (chosen option)
+  complete: 'check', // Stepper (completed step)
 
   // ── Validation indicators ───────────────────────────────────────────────
-  valid:         'check',          // PasswordStrength requirement met; inline field validity
-  invalid:       'x',              // PasswordStrength requirement unmet
+  valid: 'check', // PasswordStrength requirement met; inline field validity
+  invalid: 'x', // PasswordStrength requirement unmet
 
   // ── Dismissal (all default to 'x', kept DISTINCT so each is themeable) ───
-  close:         'x',              // Dialog, Drawer, Popover, Sidebar, Toast, Alert
-  clear:         'x',              // Autocomplete (clear the input)
-  remove:        'x',              // FileUpload (remove a file)
+  close: 'x', // Dialog, Drawer, Popover, Sidebar, Toast, Alert
+  clear: 'x', // Autocomplete (clear the input)
+  remove: 'x', // FileUpload (remove a file)
 
   // ── Status / feedback ───────────────────────────────────────────────────
   status: {
-    info:        'info',           // Alert, Toast
-    success:     'circle-check',   // Alert, Toast, FileUpload
-    warning:     'triangle-alert', // Alert, Toast
-    danger:      'circle-x',       // Alert, Toast
+    info: 'info', // Alert, Toast
+    success: 'circle-check', // Alert, Toast, FileUpload
+    warning: 'triangle-alert', // Alert, Toast
+    danger: 'circle-x', // Alert, Toast
   },
 
   // ── Password visibility ─────────────────────────────────────────────────
-  passwordShow:  'eye',            // Password
-  passwordHide:  'eye-off',        // Password
+  passwordShow: 'eye', // Password
+  passwordHide: 'eye-off', // Password
 
   // ── Media transport (Audio/Video player) ────────────────────────────────
-  play:          'play',
-  pause:         'pause',
-  mute:          'volume-x',
-  unmute:        'volume-2',
-  captions:      'captions',
-  settings:      'settings',
+  play: 'play',
+  pause: 'pause',
+  mute: 'volume-x',
+  unmute: 'volume-2',
+  captions: 'captions',
+  settings: 'settings',
   enterFullscreen: 'maximize',
-  exitFullscreen:  'minimize',
+  exitFullscreen: 'minimize',
 
   // ── Misc affordances ────────────────────────────────────────────────────
-  calendar:      'calendar',       // DatePicker (open the calendar)
-  eyedropper:    'pipette',        // ColorInput (pick a colour)
-  file:          'file',           // FileUpload (file row)
-  imageError:    'image-off',      // Image (broken/failed image)
+  calendar: 'calendar', // DatePicker (open the calendar)
+  eyedropper: 'pipette', // ColorInput (pick a colour)
+  file: 'file', // FileUpload (file row)
+  imageError: 'image-off', // Image (broken/failed image)
 } as const;
 
 export type IconRoleStatus = `status.${keyof (typeof ICON_ROLES)['status']}`;

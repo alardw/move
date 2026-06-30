@@ -11,49 +11,61 @@ describe('RichTextEditor', () => {
       const { container } = render(
         <RichTextEditor.Root>
           <RichTextEditor.Content>content</RichTextEditor.Content>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toBeInTheDocument();
     });
 
     it('defaults to data-variant=outline', () => {
       const { container } = render(
-        <RichTextEditor.Root><div /></RichTextEditor.Root>
+        <RichTextEditor.Root>
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toHaveAttribute('data-variant', 'outline');
     });
 
     it('defaults to data-size=md', () => {
       const { container } = render(
-        <RichTextEditor.Root><div /></RichTextEditor.Root>
+        <RichTextEditor.Root>
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toHaveAttribute('data-size', 'md');
     });
 
     it('applies custom variant', () => {
       const { container } = render(
-        <RichTextEditor.Root variant="subtle"><div /></RichTextEditor.Root>
+        <RichTextEditor.Root variant="subtle">
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toHaveAttribute('data-variant', 'subtle');
     });
 
     it('applies custom size', () => {
       const { container } = render(
-        <RichTextEditor.Root size="lg"><div /></RichTextEditor.Root>
+        <RichTextEditor.Root size="lg">
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toHaveAttribute('data-size', 'lg');
     });
 
     it('forwards className', () => {
       const { container } = render(
-        <RichTextEditor.Root className="custom"><div /></RichTextEditor.Root>
+        <RichTextEditor.Root className="custom">
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild?.className).toContain('custom');
     });
 
     it('forwards style', () => {
       const { container } = render(
-        <RichTextEditor.Root style={{ margin: '10px' }}><div /></RichTextEditor.Root>
+        <RichTextEditor.Root style={{ margin: '10px' }}>
+          <div />
+        </RichTextEditor.Root>,
       );
       expect(container.firstElementChild).toHaveStyle({ margin: '10px' });
     });
@@ -67,7 +79,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('toolbar')).toBeInTheDocument();
     });
@@ -78,7 +90,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('toolbar')).toHaveAttribute('aria-label', 'Text formatting');
     });
@@ -89,7 +101,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar labels={{ toolbar: 'Custom label' }}>
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('toolbar')).toHaveAttribute('aria-label', 'Custom label');
     });
@@ -100,7 +112,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar sticky>
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('toolbar')).toHaveAttribute('data-sticky');
     });
@@ -111,7 +123,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar className="tb-custom">
             <RichTextEditor.Control>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('toolbar').className).toContain('tb-custom');
     });
@@ -127,7 +139,7 @@ describe('RichTextEditor', () => {
               <RichTextEditor.Control>B</RichTextEditor.Control>
             </RichTextEditor.ControlGroup>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('group')).toBeInTheDocument();
     });
@@ -140,7 +152,7 @@ describe('RichTextEditor', () => {
               <RichTextEditor.Control>B</RichTextEditor.Control>
             </RichTextEditor.ControlGroup>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('group').className).toContain('cg-custom');
     });
@@ -154,7 +166,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control>Bold</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       const btn = screen.getByRole('button', { name: 'Bold' });
       expect(btn).toHaveAttribute('type', 'button');
@@ -167,7 +179,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control defaultActive={false}>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       const btn = screen.getByRole('button', { name: 'B' });
       expect(btn).not.toHaveAttribute('data-active');
@@ -181,7 +193,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control active={true}>B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('button', { name: 'B' })).toHaveAttribute('data-active');
     });
@@ -192,9 +204,11 @@ describe('RichTextEditor', () => {
       render(
         <RichTextEditor.Root>
           <RichTextEditor.Toolbar>
-            <RichTextEditor.Control defaultActive={false} onActiveChange={onChange}>B</RichTextEditor.Control>
+            <RichTextEditor.Control defaultActive={false} onActiveChange={onChange}>
+              B
+            </RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       await user.click(screen.getByRole('button', { name: 'B' }));
       expect(onChange).toHaveBeenCalledWith(true);
@@ -206,9 +220,11 @@ describe('RichTextEditor', () => {
       render(
         <RichTextEditor.Root>
           <RichTextEditor.Toolbar>
-            <RichTextEditor.Control disabled onActiveChange={onChange}>B</RichTextEditor.Control>
+            <RichTextEditor.Control disabled onActiveChange={onChange}>
+              B
+            </RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       await user.click(screen.getByRole('button', { name: 'B' }));
       expect(onChange).not.toHaveBeenCalled();
@@ -220,7 +236,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Control className="ctrl-custom">B</RichTextEditor.Control>
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('button', { name: 'B' }).className).toContain('ctrl-custom');
     });
@@ -234,7 +250,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Separator />
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('separator')).toBeInTheDocument();
     });
@@ -245,7 +261,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Toolbar>
             <RichTextEditor.Separator />
           </RichTextEditor.Toolbar>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByRole('separator')).toHaveAttribute('aria-orientation', 'vertical');
     });
@@ -259,7 +275,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Content>
             <p>Hello editor</p>
           </RichTextEditor.Content>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       expect(screen.getByText('Hello editor')).toBeInTheDocument();
     });
@@ -270,7 +286,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Content minHeight="300px">
             <p>content</p>
           </RichTextEditor.Content>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       // Content is the second child of root (after potential toolbar)
       const contentEl = container.querySelector('[class*="content"]') as HTMLElement;
@@ -283,7 +299,7 @@ describe('RichTextEditor', () => {
           <RichTextEditor.Content className="cnt-custom">
             <p>content</p>
           </RichTextEditor.Content>
-        </RichTextEditor.Root>
+        </RichTextEditor.Root>,
       );
       const contentEl = container.querySelector('[class*="content"]') as HTMLElement;
       expect(contentEl.className).toContain('cnt-custom');

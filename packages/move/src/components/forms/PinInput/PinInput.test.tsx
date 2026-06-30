@@ -5,8 +5,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { PinInput } from './PinInput';
 
 describe('PinInput', () => {
-  const renderPin = (props: Record<string, unknown> = {}) =>
-    render(<PinInput {...props} />);
+  const renderPin = (props: Record<string, unknown> = {}) => render(<PinInput {...props} />);
 
   // === Rendering ===
   describe('rendering', () => {

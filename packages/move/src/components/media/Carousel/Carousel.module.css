@@ -187,7 +187,11 @@
    ============================================================================= */
 
 .slide {
-  flex: 0 0 calc((100% - (var(--move-carousel-slides-per-view, 1) - 1) * var(--move-carousel-gap)) / var(--move-carousel-slides-per-view, 1));
+  flex: 0 0
+    calc(
+      (100% - (var(--move-carousel-slides-per-view, 1) - 1) * var(--move-carousel-gap)) /
+        var(--move-carousel-slides-per-view, 1)
+    );
   min-width: 0;
   scroll-snap-align: start;
 }
@@ -223,7 +227,9 @@
   box-shadow: var(--move-carousel-trigger-shadow);
   cursor: pointer;
   padding: 0;
-  transition: background-color 150ms ease, opacity 150ms ease;
+  transition:
+    background-color 150ms ease,
+    opacity 150ms ease;
 }
 
 /* Vertical orientation reuses the horizontal previous/next chevrons, rotated
@@ -320,7 +326,10 @@
   height: var(--move-carousel-indicator-size);
   border-radius: var(--move-rounded-full);
   background-color: var(--move-carousel-indicator-bg);
-  transition: background-color 150ms ease, transform 150ms ease, opacity 150ms ease;
+  transition:
+    background-color 150ms ease,
+    transform 150ms ease,
+    opacity 150ms ease;
 }
 
 .indicator[data-active]::before {

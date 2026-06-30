@@ -8,25 +8,42 @@ export const spec = {
   name: 'TimeField',
   componentClass: 'input_plain' as const,
   category: 'date-time',
-  description: 'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
+  description:
+    'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
 
   synonyms: ['time input', 'clock input', 'time picker', 'hour minute'],
   animationPatterns: ['popupMenu'],
   families: {
-    behavior:  ["form-input"],
-    state:     ["controlled-value"],
-    a11y:      ["none"],
+    behavior: ['form-input'],
+    state: ['controlled-value'],
+    a11y: ['none'],
   },
 
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Outer wrapper with input-like styling, anchors dropdown popover' },
-    { name: 'segment', element: 'input', description: 'Individual time segment input (hour, minute, second) with spinbutton role' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'Outer wrapper with input-like styling, anchors dropdown popover',
+    },
+    {
+      name: 'segment',
+      element: 'input',
+      description: 'Individual time segment input (hour, minute, second) with spinbutton role',
+    },
     { name: 'separator', element: 'span', description: 'Colon separator between segments' },
     { name: 'period', element: 'button', description: 'AM/PM toggle button for 12h mode' },
-    { name: 'dropdown', element: 'div', description: 'Radix Popover.Content dropdown with scrollable columns' },
-    { name: 'dropdownColumn', element: 'div', description: 'Scrollable column of selectable time values' },
+    {
+      name: 'dropdown',
+      element: 'div',
+      description: 'Radix Popover.Content dropdown with scrollable columns',
+    },
+    {
+      name: 'dropdownColumn',
+      element: 'div',
+      description: 'Scrollable column of selectable time values',
+    },
   ],
 
   subComponents: [
@@ -34,45 +51,155 @@ export const spec = {
       name: 'Root',
       slots: [{ name: 'root', element: 'div', description: 'Outer wrapper' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom segment layout or auto-rendered segments' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom segment layout or auto-rendered segments',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Controlled time value in 24h format (HH, HH:mm, HH:mm:ss)' },
-        { name: 'defaultValue', type: 'string', moveSpecific: true, description: 'Default time value (uncontrolled)' },
-        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when time value changes' },
-        { name: 'granularity', type: "'hour' | 'minute' | 'second'", default: "'minute'", moveSpecific: true, description: 'Which segments to show' },
-        { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: '12 or 24 hour display cycle' },
-        { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show dropdown column picker on ArrowDown' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for dropdown enter/exit' },
-        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
-        { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
-        { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
-        { name: 'min', type: 'string', moveSpecific: true, description: 'Minimum time constraint (24h format)' },
-        { name: 'max', type: 'string', moveSpecific: true, description: 'Maximum time constraint (24h format)' },
-        { name: 'step', type: 'number', default: '1', moveSpecific: true, description: 'Arrow key increment in seconds' },
-        { name: 'labels', type: 'Partial<TimeFieldLabels>', moveSpecific: true, description: 'Override aria-label strings for segments and period' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Controlled time value in 24h format (HH, HH:mm, HH:mm:ss)',
+        },
+        {
+          name: 'defaultValue',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Default time value (uncontrolled)',
+        },
+        {
+          name: 'onValueChange',
+          type: '(value: string) => void',
+          moveSpecific: true,
+          description: 'Called when time value changes',
+        },
+        {
+          name: 'granularity',
+          type: "'hour' | 'minute' | 'second'",
+          default: "'minute'",
+          moveSpecific: true,
+          description: 'Which segments to show',
+        },
+        {
+          name: 'hourCycle',
+          type: '12 | 24',
+          default: '24',
+          moveSpecific: true,
+          description: '12 or 24 hour display cycle',
+        },
+        {
+          name: 'withDropdown',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Show dropdown column picker on ArrowDown',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Animation config for dropdown enter/exit',
+        },
+        {
+          name: 'size',
+          typeRef: 'Size',
+          default: "'md'",
+          moveSpecific: true,
+          description: 'Input size',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Disabled state',
+        },
+        {
+          name: 'invalid',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Invalid state',
+        },
+        {
+          name: 'min',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Minimum time constraint (24h format)',
+        },
+        {
+          name: 'max',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Maximum time constraint (24h format)',
+        },
+        {
+          name: 'step',
+          type: 'number',
+          default: '1',
+          moveSpecific: true,
+          description: 'Arrow key increment in seconds',
+        },
+        {
+          name: 'labels',
+          type: 'Partial<TimeFieldLabels>',
+          moveSpecific: true,
+          description: 'Override aria-label strings for segments and period',
+        },
       ],
       usesFactory: false,
-      description: 'Stateful root that provides TimeFieldContext, renders segments auto or via children, optionally wraps in Radix Popover for dropdown mode',
+      description:
+        'Stateful root that provides TimeFieldContext, renders segments auto or via children, optionally wraps in Radix Popover for dropdown mode',
     },
     {
       name: 'Segment',
       slots: [{ name: 'segment', element: 'input', description: 'Time segment input' }],
       props: [
-        { name: 'segment', type: "SegmentType", moveSpecific: true, description: 'Which segment this renders (hour, minute, second)' },
+        {
+          name: 'segment',
+          type: 'SegmentType',
+          moveSpecific: true,
+          description: 'Which segment this renders (hour, minute, second)',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
-      description: 'Individual segment input with spinbutton role, digit typing with auto-advance, and arrow key increment/decrement',
+      description:
+        'Individual segment input with spinbutton role, digit typing with auto-advance, and arrow key increment/decrement',
     },
     {
       name: 'Separator',
       slots: [{ name: 'separator', element: 'span', description: 'Colon separator' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', default: "':'", moveSpecific: false, description: 'Separator content' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          default: "':'",
+          moveSpecific: false,
+          description: 'Separator content',
+        },
       ],
       usesFactory: true,
       description: 'Visual separator between segments, defaults to colon, has aria-hidden',
@@ -82,67 +209,166 @@ export const spec = {
       slots: [{ name: 'period', element: 'button', description: 'AM/PM toggle' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
-      description: 'AM/PM toggle button with spinbutton role, responds to ArrowUp/Down and A/P key typing',
+      description:
+        'AM/PM toggle button with spinbutton role, responds to ArrowUp/Down and A/P key typing',
     },
     {
       name: 'Dropdown',
       slots: [{ name: 'dropdown', element: 'div', description: 'Dropdown popover' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'DropdownColumn elements' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'DropdownColumn elements',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: false,
-      description: 'Animated Radix Popover.Content containing scrollable columns for time selection',
+      description:
+        'Animated Radix Popover.Content containing scrollable columns for time selection',
     },
     {
       name: 'DropdownColumn',
       slots: [{ name: 'dropdownColumn', element: 'div', description: 'Scrollable column' }],
       props: [
-        { name: 'segment', type: "SegmentType | 'period'", moveSpecific: true, description: 'Which segment this column represents' },
+        {
+          name: 'segment',
+          type: "SegmentType | 'period'",
+          moveSpecific: true,
+          description: 'Which segment this column represents',
+        },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
-      description: 'Scrollable column of selectable values for a time segment, auto-scrolls to selected on open',
+      description:
+        'Scrollable column of selectable values for a time segment, auto-scrolls to selected on open',
     },
   ],
 
   props: [
     { name: 'value', type: 'string', moveSpecific: true, description: 'Controlled time value' },
     { name: 'defaultValue', type: 'string', moveSpecific: true, description: 'Default time value' },
-    { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Value change handler' },
-    { name: 'granularity', type: "'hour' | 'minute' | 'second'", default: "'minute'", moveSpecific: true, description: 'Visible segments' },
-    { name: 'hourCycle', type: '12 | 24', default: '24', moveSpecific: true, description: 'Hour display cycle' },
-    { name: 'withDropdown', type: 'boolean', default: 'false', moveSpecific: true, description: 'Enable dropdown picker' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Dropdown animation config' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Input size' },
-    { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disabled state' },
-    { name: 'invalid', type: 'boolean', default: 'false', moveSpecific: true, description: 'Invalid state' },
+    {
+      name: 'onValueChange',
+      type: '(value: string) => void',
+      moveSpecific: true,
+      description: 'Value change handler',
+    },
+    {
+      name: 'granularity',
+      type: "'hour' | 'minute' | 'second'",
+      default: "'minute'",
+      moveSpecific: true,
+      description: 'Visible segments',
+    },
+    {
+      name: 'hourCycle',
+      type: '12 | 24',
+      default: '24',
+      moveSpecific: true,
+      description: 'Hour display cycle',
+    },
+    {
+      name: 'withDropdown',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Enable dropdown picker',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Dropdown animation config',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Input size',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Disabled state',
+    },
+    {
+      name: 'invalid',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Invalid state',
+    },
     { name: 'min', type: 'string', moveSpecific: true, description: 'Min time constraint' },
     { name: 'max', type: 'string', moveSpecific: true, description: 'Max time constraint' },
-    { name: 'step', type: 'number', default: '1', moveSpecific: true, description: 'Increment step' },
-    { name: 'labels', type: 'Partial<TimeFieldLabels>', moveSpecific: true, description: 'Override aria-label strings for segments and period' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom segment layout' },
+    {
+      name: 'step',
+      type: 'number',
+      default: '1',
+      moveSpecific: true,
+      description: 'Increment step',
+    },
+    {
+      name: 'labels',
+      type: 'Partial<TimeFieldLabels>',
+      moveSpecific: true,
+      description: 'Override aria-label strings for segments and period',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Custom segment layout',
+    },
     { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-    { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+    {
+      name: 'style',
+      type: 'React.CSSProperties',
+      moveSpecific: false,
+      description: 'Inline styles',
+    },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-size', 'data-granularity', 'data-hourcycle', 'data-disabled', 'data-invalid'],
+    dataAttributes: [
+      'data-size',
+      'data-granularity',
+      'data-hourcycle',
+      'data-disabled',
+      'data-invalid',
+    ],
     children: [
       { slot: 'segment', dataAttributes: ['data-segment'] },
       { slot: 'separator' },
       { slot: 'period', dataAttributes: ['data-segment'] },
       {
         slot: 'dropdown',
-        children: [
-          { slot: 'dropdownColumn', dataAttributes: ['data-segment'] },
-        ],
+        children: [{ slot: 'dropdownColumn', dataAttributes: ['data-segment'] }],
       },
     ],
   },
@@ -160,49 +386,170 @@ export const spec = {
   asChild: false,
 
   renderContracts: [
-    { id: 'root-provides-context', description: 'Root provides TimeFieldContext with useTimeField return, segment refs, focus navigation, dropdown state, and animation config' },
-    { id: 'auto-render-segments', description: 'When no children provided, Root auto-renders segments based on granularity and hourCycle with separators between numeric segments' },
-    { id: 'dropdown-mode-wraps-popover', description: 'When withDropdown=true, Root wraps in Radix Popover.Root with Anchor on the root element' },
-    { id: 'dropdown-auto-columns', description: 'When withDropdown=true, Root auto-renders DropdownColumn for each segment plus period (if 12h)' },
-    { id: 'segment-registers-ref', description: 'Each Segment registers its DOM ref in segmentRefs map for focus management' },
-    { id: 'segment-digit-typing', description: 'Segment handles digit typing with two-digit buffering and auto-advance to next segment when full' },
-    { id: 'segment-arrow-direction-flip', description: 'When dropdown is open, ArrowUp decrements and ArrowDown increments (flipped from closed behavior)' },
+    {
+      id: 'root-provides-context',
+      description:
+        'Root provides TimeFieldContext with useTimeField return, segment refs, focus navigation, dropdown state, and animation config',
+    },
+    {
+      id: 'auto-render-segments',
+      description:
+        'When no children provided, Root auto-renders segments based on granularity and hourCycle with separators between numeric segments',
+    },
+    {
+      id: 'dropdown-mode-wraps-popover',
+      description:
+        'When withDropdown=true, Root wraps in Radix Popover.Root with Anchor on the root element',
+    },
+    {
+      id: 'dropdown-auto-columns',
+      description:
+        'When withDropdown=true, Root auto-renders DropdownColumn for each segment plus period (if 12h)',
+    },
+    {
+      id: 'segment-registers-ref',
+      description: 'Each Segment registers its DOM ref in segmentRefs map for focus management',
+    },
+    {
+      id: 'segment-digit-typing',
+      description:
+        'Segment handles digit typing with two-digit buffering and auto-advance to next segment when full',
+    },
+    {
+      id: 'segment-arrow-direction-flip',
+      description:
+        'When dropdown is open, ArrowUp decrements and ArrowDown increments (flipped from closed behavior)',
+    },
     { id: 'period-typing', description: 'Period responds to A key for AM and P key for PM' },
-    { id: 'dropdown-scroll-to-selected', description: 'DropdownColumn scrolls selected item into view on open using requestAnimationFrame' },
-    { id: 'dropdown-item-click', description: 'DropdownColumn item click sets the corresponding segment value (handles 12h/24h conversion for hours)' },
-    { id: 'value-always-24h', description: 'Internal value is always stored in 24h format regardless of hourCycle display setting' },
-    { id: 'segment-focus-navigation', description: 'ArrowRight/Tab advances to next segment, ArrowLeft/Shift+Tab goes to previous segment' },
+    {
+      id: 'dropdown-scroll-to-selected',
+      description:
+        'DropdownColumn scrolls selected item into view on open using requestAnimationFrame',
+    },
+    {
+      id: 'dropdown-item-click',
+      description:
+        'DropdownColumn item click sets the corresponding segment value (handles 12h/24h conversion for hours)',
+    },
+    {
+      id: 'value-always-24h',
+      description:
+        'Internal value is always stored in 24h format regardless of hourCycle display setting',
+    },
+    {
+      id: 'segment-focus-navigation',
+      description:
+        'ArrowRight/Tab advances to next segment, ArrowLeft/Shift+Tab goes to previous segment',
+    },
   ],
 
   animations: [
-    { trigger: 'Content.enter', sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { children: 'button', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
-    ]] },
-    { trigger: 'Content.exit', sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { children: 'button', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
-    ]] },
+    {
+      trigger: 'Content.enter',
+      sequence: [
+        [
+          { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+          {
+            children: 'button',
+            animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+            stagger: { delay: 30 },
+          },
+        ],
+      ],
+    },
+    {
+      trigger: 'Content.exit',
+      sequence: [
+        [
+          { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+          {
+            children: 'button',
+            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
+            stagger: { delay: 20, from: 'last' },
+          },
+        ],
+      ],
+    },
   ],
 
   tokens: [
     // Root tokens
-    { name: '--move-timefield-bg', value: 'var(--move-bg-subtle)', description: 'Root background color' },
-    { name: '--move-timefield-border', value: 'var(--move-border-base)', description: 'Root border color' },
-    { name: '--move-timefield-border-hover', value: 'var(--move-border-emphasis)', description: 'Root border color on hover' },
-    { name: '--move-timefield-border-focus', value: 'var(--move-primary)', description: 'Root border color on focus-within' },
-    { name: '--move-timefield-radius', value: 'var(--move-rounded-md)', description: 'Root border radius' },
-    { name: '--move-timefield-padding-x', value: 'var(--move-spacing-sm)', description: 'Root horizontal padding' },
-    { name: '--move-timefield-padding-y', value: 'var(--move-spacing-xs)', description: 'Root vertical padding' },
-    { name: '--move-timefield-fg', value: 'var(--move-fg-base)', description: 'Segment text color' },
-    { name: '--move-timefield-placeholder', value: 'var(--move-fg-muted)', description: 'Separator text color' },
-    { name: '--move-timefield-height', value: 'var(--move-control-height-md)', description: 'Root height' },
+    {
+      name: '--move-timefield-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Root background color',
+    },
+    {
+      name: '--move-timefield-border',
+      value: 'var(--move-border-base)',
+      description: 'Root border color',
+    },
+    {
+      name: '--move-timefield-border-hover',
+      value: 'var(--move-border-emphasis)',
+      description: 'Root border color on hover',
+    },
+    {
+      name: '--move-timefield-border-focus',
+      value: 'var(--move-primary)',
+      description: 'Root border color on focus-within',
+    },
+    {
+      name: '--move-timefield-radius',
+      value: 'var(--move-rounded-md)',
+      description: 'Root border radius',
+    },
+    {
+      name: '--move-timefield-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Root horizontal padding',
+    },
+    {
+      name: '--move-timefield-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Root vertical padding',
+    },
+    {
+      name: '--move-timefield-fg',
+      value: 'var(--move-fg-base)',
+      description: 'Segment text color',
+    },
+    {
+      name: '--move-timefield-placeholder',
+      value: 'var(--move-fg-muted)',
+      description: 'Separator text color',
+    },
+    {
+      name: '--move-timefield-height',
+      value: 'var(--move-control-height-md)',
+      description: 'Root height',
+    },
     // Dropdown tokens
-    { name: '--move-timefield-dropdown-bg', value: 'var(--move-bg-subtle)', description: 'Dropdown background' },
-    { name: '--move-timefield-dropdown-border', value: 'var(--move-border-base)', description: 'Dropdown border color' },
-    { name: '--move-timefield-dropdown-radius', value: 'var(--move-rounded-lg)', description: 'Dropdown border radius' },
-    { name: '--move-timefield-dropdown-shadow', value: 'var(--move-shadow-overlay)', description: 'Dropdown box shadow' },
-    { name: '--move-timefield-dropdown-padding', value: 'var(--move-spacing-xs)', description: 'Dropdown padding' },
+    {
+      name: '--move-timefield-dropdown-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Dropdown background',
+    },
+    {
+      name: '--move-timefield-dropdown-border',
+      value: 'var(--move-border-base)',
+      description: 'Dropdown border color',
+    },
+    {
+      name: '--move-timefield-dropdown-radius',
+      value: 'var(--move-rounded-lg)',
+      description: 'Dropdown border radius',
+    },
+    {
+      name: '--move-timefield-dropdown-shadow',
+      value: 'var(--move-shadow-overlay)',
+      description: 'Dropdown box shadow',
+    },
+    {
+      name: '--move-timefield-dropdown-padding',
+      value: 'var(--move-spacing-xs)',
+      description: 'Dropdown padding',
+    },
   ],
 
   variants: {},

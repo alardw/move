@@ -181,7 +181,7 @@ export function Presence({
         initial={initial && !isInitialRender.current}
       >
         {cloneElement(state.element)}
-      </PresenceChild>
+      </PresenceChild>,
     );
   });
 

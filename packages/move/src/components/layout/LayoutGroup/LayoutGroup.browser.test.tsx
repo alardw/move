@@ -8,7 +8,10 @@ import { LayoutGroup } from './LayoutGroup';
 
 afterEach(cleanup);
 
-const microtasks = async () => { await Promise.resolve(); await Promise.resolve(); };
+const microtasks = async () => {
+  await Promise.resolve();
+  await Promise.resolve();
+};
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 const near = (a: number, b: number, eps = 3) => Math.abs(a - b) <= eps;
 
@@ -16,7 +19,11 @@ function List({ order, ...rest }: { order: string[] } & Record<string, unknown>)
   return (
     <LayoutGroup duration={300} {...rest}>
       {order.map((id) => (
-        <div key={id} data-id={id} style={{ height: '40px', background: '#ddd', marginBottom: '8px' }}>
+        <div
+          key={id}
+          data-id={id}
+          style={{ height: '40px', background: '#ddd', marginBottom: '8px' }}
+        >
           {id}
         </div>
       ))}
@@ -55,7 +62,7 @@ describe('useAutoLayout — FLIP invariants (real browser)', () => {
     await sleep(600); // well past duration (300ms)
 
     expect(el(root, 'c').style.transform).toBe(''); // cleaned up
-    expect(top(root, 'c')).toBeLessThan(cOldTop);    // c actually moved up to the top
+    expect(top(root, 'c')).toBeLessThan(cOldTop); // c actually moved up to the top
   });
 
   it('INVARIANT: a reorder keeps every child (none mistaken for an exit) at its new position', async () => {
@@ -84,7 +91,7 @@ describe('useAutoLayout — FLIP invariants (real browser)', () => {
     await microtasks();
 
     expect(el(root, 'a').style.transform).toBe(''); // no FLIP transform
-    expect(top(root, 'a')).toBeGreaterThan(aOld);    // already at its new (bottom) spot
+    expect(top(root, 'a')).toBeGreaterThan(aOld); // already at its new (bottom) spot
   });
 
   it('INVARIANT: initial reveals children hidden→visible on mount (opt-in only)', async () => {

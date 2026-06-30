@@ -8,22 +8,24 @@ import { Dialog } from './Dialog';
  * Helper: render a standard Dialog compound structure with sensible defaults.
  * The dialog is rendered open by default for tests that inspect content.
  */
-function renderDialog(props: {
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
-  animations?: false;
-  contentProps?: Record<string, unknown>;
-  overlayProps?: Record<string, unknown>;
-  triggerProps?: Record<string, unknown>;
-  titleProps?: Record<string, unknown>;
-  descriptionProps?: Record<string, unknown>;
-  closeProps?: Record<string, unknown>;
-  headerProps?: Record<string, unknown>;
-  bodyProps?: Record<string, unknown>;
-  footerProps?: Record<string, unknown>;
-} = {}) {
+function renderDialog(
+  props: {
+    open?: boolean;
+    defaultOpen?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+    animations?: false;
+    contentProps?: Record<string, unknown>;
+    overlayProps?: Record<string, unknown>;
+    triggerProps?: Record<string, unknown>;
+    titleProps?: Record<string, unknown>;
+    descriptionProps?: Record<string, unknown>;
+    closeProps?: Record<string, unknown>;
+    headerProps?: Record<string, unknown>;
+    bodyProps?: Record<string, unknown>;
+    footerProps?: Record<string, unknown>;
+  } = {},
+) {
   const {
     open,
     defaultOpen,
@@ -55,8 +57,12 @@ function renderDialog(props: {
         <Dialog.Overlay data-testid="overlay" {...overlayProps} />
         <Dialog.Content size={size} data-testid="content" {...contentProps}>
           <Dialog.Header data-testid="header" closable={false} {...headerProps}>
-            <Dialog.Title data-testid="title" {...titleProps}>Dialog Title</Dialog.Title>
-            <Dialog.Close data-testid="close" {...closeProps}>X</Dialog.Close>
+            <Dialog.Title data-testid="title" {...titleProps}>
+              Dialog Title
+            </Dialog.Title>
+            <Dialog.Close data-testid="close" {...closeProps}>
+              X
+            </Dialog.Close>
           </Dialog.Header>
           <Dialog.Body data-testid="body" {...bodyProps}>
             <p>Dialog body content</p>
@@ -74,7 +80,7 @@ function renderDialog(props: {
           </Dialog.Footer>
         </Dialog.Content>
       </Dialog.Portal>
-    </Dialog.Root>
+    </Dialog.Root>,
   );
 }
 
@@ -148,7 +154,7 @@ describe('Dialog', () => {
               <Dialog.Close data-testid="close">X</Dialog.Close>
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root>
+        </Dialog.Root>,
       );
 
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -164,7 +170,7 @@ describe('Dialog', () => {
               <Dialog.Close data-testid="close">X</Dialog.Close>
             </Dialog.Content>
           </Dialog.Portal>
-        </Dialog.Root>
+        </Dialog.Root>,
       );
 
       await waitFor(() => {

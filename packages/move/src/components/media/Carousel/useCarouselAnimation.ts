@@ -29,15 +29,16 @@ const defaultConfig = {
 };
 
 export function useCarouselAnimate(
-  options: UseCarouselAnimateOptions = {}
+  options: UseCarouselAnimateOptions = {},
 ): UseCarouselAnimateReturn {
   const { animations: animationsProp } = options;
   const animRef = useRef<JSAnimation | null>(null);
 
   const configRef = useRef<typeof defaultConfig>(defaultConfig);
-  configRef.current = animationsProp === false
-    ? {} as typeof defaultConfig
-    : { ...defaultConfig, ...animationsProp };
+  configRef.current =
+    animationsProp === false
+      ? ({} as typeof defaultConfig)
+      : { ...defaultConfig, ...animationsProp };
 
   const cancel = useCallback(() => {
     if (animRef.current) {
@@ -46,49 +47,56 @@ export function useCarouselAnimate(
     }
   }, []);
 
-  const animateScroll = useCallback(({
-    viewport,
-    axis,
-    from,
-    to,
-    onComplete,
-  }: {
-    viewport: HTMLElement;
-    axis: 'scrollLeft' | 'scrollTop';
-    from: number;
-    to: number;
-    onComplete?: () => void;
-  }) => {
-    const enter = configRef.current.enter;
-    if (!enter || prefersReducedMotion()) {
-      viewport[axis] = to;
-      onComplete?.();
-      return;
-    }
-
-    cancel();
-
-    const ease = ((enter as Record<string, unknown>).ease ?? 'outQuart') as string;
-
-    // Dynamic duration based on scroll distance if not specified
-    let duration = (enter as Record<string, unknown>).duration as number | undefined;
-    if (duration === undefined) {
-      const distance = Math.abs(to - from);
-      const span = axis === 'scrollLeft' ? viewport.clientWidth : viewport.clientHeight;
-      const ratio = span > 0 ? distance / span : 1;
-      duration = Math.round(Math.max(150, Math.min(300, 150 + ratio * 110)));
-    }
-
-    moveAnimate(viewport, {
-      [axis]: [from, to],
-      ease,
-      duration,
-      onComplete: () => {
-        animRef.current = null;
+  const animateScroll = useCallback(
+    ({
+      viewport,
+      axis,
+      from,
+      to,
+      onComplete,
+    }: {
+      viewport: HTMLElement;
+      axis: 'scrollLeft' | 'scrollTop';
+      from: number;
+      to: number;
+      onComplete?: () => void;
+    }) => {
+      const enter = configRef.current.enter;
+      if (!enter || prefersReducedMotion()) {
+        viewport[axis] = to;
         onComplete?.();
-      },
-    }, animRef);
-  }, [cancel]);
+        return;
+      }
+
+      cancel();
+
+      const ease = ((enter as Record<string, unknown>).ease ?? 'outQuart') as string;
+
+      // Dynamic duration based on scroll distance if not specified
+      let duration = (enter as Record<string, unknown>).duration as number | undefined;
+      if (duration === undefined) {
+        const distance = Math.abs(to - from);
+        const span = axis === 'scrollLeft' ? viewport.clientWidth : viewport.clientHeight;
+        const ratio = span > 0 ? distance / span : 1;
+        duration = Math.round(Math.max(150, Math.min(300, 150 + ratio * 110)));
+      }
+
+      moveAnimate(
+        viewport,
+        {
+          [axis]: [from, to],
+          ease,
+          duration,
+          onComplete: () => {
+            animRef.current = null;
+            onComplete?.();
+          },
+        },
+        animRef,
+      );
+    },
+    [cancel],
+  );
 
   useEffect(() => cancel, [cancel]);
 

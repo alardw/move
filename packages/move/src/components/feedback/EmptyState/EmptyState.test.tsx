@@ -22,7 +22,7 @@ describe('EmptyState', () => {
       render(
         <EmptyState className="custom" style={{ marginTop: '10px' }} data-testid="empty">
           Content
-        </EmptyState>
+        </EmptyState>,
       );
       const el = screen.getByTestId('empty');
       expect(el).toHaveClass('custom');
@@ -30,7 +30,11 @@ describe('EmptyState', () => {
     });
 
     it('spreads HTML attributes', () => {
-      render(<EmptyState data-testid="empty" aria-label="empty state">Content</EmptyState>);
+      render(
+        <EmptyState data-testid="empty" aria-label="empty state">
+          Content
+        </EmptyState>,
+      );
       expect(screen.getByTestId('empty')).toHaveAttribute('aria-label', 'empty state');
     });
 
@@ -38,7 +42,7 @@ describe('EmptyState', () => {
       render(
         <EmptyState title="Title" data-testid="empty">
           <span data-testid="child">Extra</span>
-        </EmptyState>
+        </EmptyState>,
       );
       expect(screen.getByTestId('child')).toBeInTheDocument();
     });
@@ -96,9 +100,7 @@ describe('EmptyState', () => {
   // === Action ===
   describe('action', () => {
     it('renders action when action prop is provided', () => {
-      render(
-        <EmptyState action={<button>Add</button>} data-testid="empty" />
-      );
+      render(<EmptyState action={<button>Add</button>} data-testid="empty" />);
       expect(screen.getByText('Add')).toBeInTheDocument();
     });
 
@@ -131,16 +133,12 @@ describe('EmptyState', () => {
   // === Slot props ===
   describe('slot props', () => {
     it('merges sp className on root', () => {
-      render(
-        <EmptyState sp={{ root: { className: 'sp-root' } }} data-testid="empty" />
-      );
+      render(<EmptyState sp={{ root: { className: 'sp-root' } }} data-testid="empty" />);
       expect(screen.getByTestId('empty')).toHaveClass('sp-root');
     });
 
     it('merges sp style on root', () => {
-      render(
-        <EmptyState sp={{ root: { style: { marginTop: '5px' } } }} data-testid="empty" />
-      );
+      render(<EmptyState sp={{ root: { style: { marginTop: '5px' } } }} data-testid="empty" />);
       expect(screen.getByTestId('empty')).toHaveStyle({ marginTop: '5px' });
     });
   });

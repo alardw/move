@@ -8,36 +8,91 @@ export const spec = {
   name: 'Heading',
   componentClass: 'presentational' as const,
   category: 'typography',
-  description: 'Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control',
+  description:
+    'Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control',
 
   synonyms: ['title', 'h1', 'h2', 'header', 'page title'],
   families: {
-    behavior:  ["typography"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['typography'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: false,
   rootElement: 'h2',
   slots: [
-    { name: 'root', element: 'h1-h6', description: 'Heading element rendered as h1-h6 based on level prop' },
+    {
+      name: 'root',
+      element: 'h1-h6',
+      description: 'Heading element rendered as h1-h6 based on level prop',
+    },
   ],
 
   props: [
-    { name: 'level', type: '1 | 2 | 3 | 4 | 5 | 6', default: '2', moveSpecific: true, description: 'Heading level (determines HTML element h1-h6)' },
-    { name: 'weight', type: "'medium' | 'semibold' | 'bold'", moveSpecific: true, description: 'Font weight' },
-    { name: 'color', type: "'base' | 'muted' | 'subtle'", default: "'base'", moveSpecific: true, description: 'Text color' },
-    { name: 'tracking', type: "'tight' | 'normal'", default: "'tight'", moveSpecific: true, description: 'Letter spacing' },
-    { name: 'align', type: "'left' | 'center' | 'right'", moveSpecific: true, description: 'Text alignment (only set when provided)' },
-    { name: 'truncate', type: 'boolean', moveSpecific: true, description: 'Enable text truncation with ellipsis' },
+    {
+      name: 'level',
+      type: '1 | 2 | 3 | 4 | 5 | 6',
+      default: '2',
+      moveSpecific: true,
+      description: 'Heading level (determines HTML element h1-h6)',
+    },
+    {
+      name: 'weight',
+      type: "'medium' | 'semibold' | 'bold'",
+      moveSpecific: true,
+      description: 'Font weight',
+    },
+    {
+      name: 'color',
+      type: "'base' | 'muted' | 'subtle'",
+      default: "'base'",
+      moveSpecific: true,
+      description: 'Text color',
+    },
+    {
+      name: 'tracking',
+      type: "'tight' | 'normal'",
+      default: "'tight'",
+      moveSpecific: true,
+      description: 'Letter spacing',
+    },
+    {
+      name: 'align',
+      type: "'left' | 'center' | 'right'",
+      moveSpecific: true,
+      description: 'Text alignment (only set when provided)',
+    },
+    {
+      name: 'truncate',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Enable text truncation with ellipsis',
+    },
     { name: 'className', type: 'string', moveSpecific: false, description: 'Additional CSS class' },
-    { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Heading text content' },
+    {
+      name: 'style',
+      type: 'React.CSSProperties',
+      moveSpecific: false,
+      description: 'Inline styles',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Heading text content',
+    },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-size', 'data-weight', 'data-color', 'data-tracking', 'data-align', 'data-truncate'],
+    dataAttributes: [
+      'data-size',
+      'data-weight',
+      'data-color',
+      'data-tracking',
+      'data-align',
+      'data-truncate',
+    ],
   },
 
   controlled: null,
@@ -49,9 +104,21 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-heading-color-base', value: 'var(--move-fg-base)', description: 'Text color for color=base' },
-    { name: '--move-heading-color-muted', value: 'var(--move-fg-muted)', description: 'Text color for color=muted' },
-    { name: '--move-heading-color-subtle', value: 'var(--move-fg-subtle)', description: 'Text color for color=subtle' },
+    {
+      name: '--move-heading-color-base',
+      value: 'var(--move-fg-base)',
+      description: 'Text color for color=base',
+    },
+    {
+      name: '--move-heading-color-muted',
+      value: 'var(--move-fg-muted)',
+      description: 'Text color for color=muted',
+    },
+    {
+      name: '--move-heading-color-subtle',
+      value: 'var(--move-fg-subtle)',
+      description: 'Text color for color=subtle',
+    },
   ],
 
   variants: {
@@ -68,19 +135,23 @@ export const spec = {
   renderContracts: [
     {
       id: 'level-to-element',
-      description: 'The level prop determines the rendered HTML element: level=1 -> h1, level=2 -> h2, ... level=6 -> h6. Default level is 2.',
+      description:
+        'The level prop determines the rendered HTML element: level=1 -> h1, level=2 -> h2, ... level=6 -> h6. Default level is 2.',
     },
     {
       id: 'level-to-size-mapping',
-      description: 'Size is always derived from level via levelToSize map: 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base',
+      description:
+        'Size is always derived from level via levelToSize map: 1->4xl, 2->3xl, 3->2xl, 4->xl, 5->lg, 6->base',
     },
     {
       id: 'data-align-conditional',
-      description: 'data-align is only set when align prop is explicitly provided; omitted otherwise',
+      description:
+        'data-align is only set when align prop is explicitly provided; omitted otherwise',
     },
     {
       id: 'data-truncate-boolean',
-      description: 'data-truncate is set as empty string attribute when truncate=true; omitted when false/undefined',
+      description:
+        'data-truncate is set as empty string attribute when truncate=true; omitted when false/undefined',
     },
   ],
 

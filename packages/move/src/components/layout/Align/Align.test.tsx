@@ -12,7 +12,7 @@ describe('Align', () => {
           <Align.Start>Start</Align.Start>
           <Align.Center>Center</Align.Center>
           <Align.End>End</Align.End>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toBeInTheDocument();
     });
@@ -22,7 +22,7 @@ describe('Align', () => {
       render(
         <Align ref={ref}>
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -31,7 +31,7 @@ describe('Align', () => {
       render(
         <Align className="custom" style={{ marginTop: '10px' }} data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       const el = screen.getByTestId('align');
       expect(el).toHaveClass('custom');
@@ -42,7 +42,7 @@ describe('Align', () => {
       render(
         <Align data-testid="align" aria-label="toolbar">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('aria-label', 'toolbar');
     });
@@ -54,7 +54,7 @@ describe('Align', () => {
       render(
         <Align data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('data-gap', 'md');
     });
@@ -63,7 +63,7 @@ describe('Align', () => {
       render(
         <Align gap="lg" data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('data-gap', 'lg');
     });
@@ -72,7 +72,7 @@ describe('Align', () => {
       render(
         <Align gap="none" data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('data-gap', 'none');
     });
@@ -84,7 +84,7 @@ describe('Align', () => {
       render(
         <Align data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('data-align', 'center');
     });
@@ -93,7 +93,7 @@ describe('Align', () => {
       render(
         <Align align="start" data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveAttribute('data-align', 'start');
     });
@@ -105,7 +105,7 @@ describe('Align', () => {
       render(
         <Align>
           <Align.Start>Start content</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByText('Start content')).toBeInTheDocument();
     });
@@ -114,7 +114,7 @@ describe('Align', () => {
       render(
         <Align>
           <Align.Center>Center content</Align.Center>
-        </Align>
+        </Align>,
       );
       expect(screen.getByText('Center content')).toBeInTheDocument();
     });
@@ -123,7 +123,7 @@ describe('Align', () => {
       render(
         <Align>
           <Align.End>End content</Align.End>
-        </Align>
+        </Align>,
       );
       expect(screen.getByText('End content')).toBeInTheDocument();
     });
@@ -135,7 +135,7 @@ describe('Align', () => {
       render(
         <Align sp={{ root: { className: 'sp-root' } }} data-testid="align">
           <Align.Start>Start</Align.Start>
-        </Align>
+        </Align>,
       );
       expect(screen.getByTestId('align')).toHaveClass('sp-root');
     });

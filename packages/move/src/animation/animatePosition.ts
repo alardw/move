@@ -13,10 +13,7 @@ interface SlotMeasurement {
 /**
  * Measure position and size of a target element relative to a container.
  */
-function measureSlot(
-  container: HTMLElement,
-  target: HTMLElement,
-): SlotMeasurement {
+function measureSlot(container: HTMLElement, target: HTMLElement): SlotMeasurement {
   // Layout coordinates (offsetLeft/Top/Width/Height) — unaffected by a CSS
   // transform on an ancestor, unlike getBoundingClientRect. Walk the
   // offsetParent chain up to the container so the indicator stays aligned even
@@ -45,10 +42,7 @@ function measureSlot(
  * Supports:
  * - `$slotName.x`, `$slotName.y`, `$slotName.width`, `$slotName.height`
  */
-function resolveSlotRef(
-  expr: string,
-  slots: Record<string, SlotMeasurement>,
-): number | undefined {
+function resolveSlotRef(expr: string, slots: Record<string, SlotMeasurement>): number | undefined {
   const match = expr.match(/^\$(\w+)\.(x|y|width|height)$/);
   if (!match) return undefined;
 
@@ -62,10 +56,7 @@ function resolveSlotRef(
 /**
  * Resolve a `$var` expression against a vars context.
  */
-function resolveVar(
-  expr: string,
-  vars: Record<string, unknown>,
-): unknown | undefined {
+function resolveVar(expr: string, vars: Record<string, unknown>): unknown | undefined {
   if (!expr.startsWith('$')) return undefined;
   const varName = expr.slice(1);
   return vars[varName];

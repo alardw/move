@@ -6,10 +6,7 @@ import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useCollapsible } from './useCollapsible';
-import {
-  expandContent,
-  useAnimations,
-} from '../../../animation';
+import { expandContent, useAnimations } from '../../../animation';
 import type { Animation, AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Collapsible.module.css';
@@ -77,9 +74,13 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
 
     // Animation config — uses expandContent preset as default
     const userAnims = animationsProp as { open?: Animation; close?: Animation } | false | undefined;
-    const config: { open?: Animation; close?: Animation } = userAnims === false
-      ? {}
-      : { open: userAnims?.open ?? expandContent.open, close: userAnims?.close ?? expandContent.close };
+    const config: { open?: Animation; close?: Animation } =
+      userAnims === false
+        ? {}
+        : {
+            open: userAnims?.open ?? expandContent.open,
+            close: userAnims?.close ?? expandContent.close,
+          };
 
     // Track open/close transitions synchronously during render
     const isClosingRef = React.useRef(false);
@@ -100,12 +101,12 @@ const CollapsibleRoot = withMoveComponent<'root', CollapsibleRootProps, HTMLDivE
 
     const onOpenComplete = React.useCallback(() => {
       isOpeningRef.current = false;
-      forceRender(c => c + 1);
+      forceRender((c) => c + 1);
     }, []);
 
     const onCloseComplete = React.useCallback(() => {
       isClosingRef.current = false;
-      forceRender(c => c + 1);
+      forceRender((c) => c + 1);
     }, []);
 
     const contextValue: CollapsibleContextValue = {
@@ -155,43 +156,49 @@ export interface CollapsibleTriggerProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'trigger'>;
 }
 
-const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps, HTMLButtonElement>({
-  name: 'CollapsibleTrigger',
-  styles,
-  slots: ['trigger'] as const,
-  moveProps: ['asChild'],
+const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps, HTMLButtonElement>(
+  {
+    name: 'CollapsibleTrigger',
+    styles,
+    slots: ['trigger'] as const,
+    moveProps: ['asChild'],
 
-  setup({ props, ref, cx, sp, attrs }) {
-    const { className, style, children, asChild } = props;
-    const context = useCollapsibleContext();
+    setup({ props, ref, cx, sp, attrs }) {
+      const { className, style, children, asChild } = props;
+      const context = useCollapsibleContext();
 
-    return {
-      render() {
-        const Comp = asChild ? Slot.Root : 'button';
-        const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+      return {
+        render() {
+          const Comp = asChild ? Slot.Root : 'button';
+          const triggerSp = sp('trigger');
+          const {
+            className: spClass,
+            style: spStyle,
+            ...spRest
+          } = triggerSp as Record<string, unknown>;
 
-        return (
-          <Comp
-            {...attrs}
-            {...spRest}
-            ref={ref}
-            type={asChild ? undefined : 'button'}
-            className={cx('trigger', className, spClass as string | undefined)}
-            style={{ ...style, ...(spStyle as React.CSSProperties) }}
-            data-state={context.open ? 'open' : 'closed'}
-            data-disabled={context.disabled || undefined}
-            disabled={context.disabled || undefined}
-            aria-expanded={context.open}
-            onClick={() => context.toggle()}
-          >
-            {children}
-          </Comp>
-        );
-      },
-    };
+          return (
+            <Comp
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              type={asChild ? undefined : 'button'}
+              className={cx('trigger', className, spClass as string | undefined)}
+              style={{ ...style, ...(spStyle as React.CSSProperties) }}
+              data-state={context.open ? 'open' : 'closed'}
+              data-disabled={context.disabled || undefined}
+              disabled={context.disabled || undefined}
+              aria-expanded={context.open}
+              onClick={() => context.toggle()}
+            >
+              {children}
+            </Comp>
+          );
+        },
+      };
+    },
   },
-});
+);
 
 // ============================================================================
 // Icon — auto-rotating chevron, place anywhere inside Root
@@ -218,15 +225,47 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
 
     // Icon rotation durations synced to content animation
-    const closeDuration = context.contentAnimate?.close ? ((context.contentAnimate.close.height as any)?.duration || 300) : 0;
-    const openDuration = context.contentAnimate?.open ? ((context.contentAnimate.open.height as any)?.duration || 400) : 0;
+    const closeDuration = context.contentAnimate?.close
+      ? (context.contentAnimate.close.height as any)?.duration || 300
+      : 0;
+    const openDuration = context.contentAnimate?.open
+      ? (context.contentAnimate.open.height as any)?.duration || 400
+      : 0;
 
-    const iconConfig: AnimationTrigger[] = React.useMemo(() => [
-      { trigger: 'icon-open', deps: [context.isOpening], sequence: context.isOpening ? [{ target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } } }] : false },
-      { trigger: 'icon-close', deps: [context.isClosing], sequence: context.isClosing ? [{ target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } } }] : false },
-    ], [context.isOpening, context.isClosing, openDuration, closeDuration]);
+    const iconConfig: AnimationTrigger[] = React.useMemo(
+      () => [
+        {
+          trigger: 'icon-open',
+          deps: [context.isOpening],
+          sequence: context.isOpening
+            ? [
+                {
+                  target: 'Icon',
+                  animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } },
+                },
+              ]
+            : false,
+        },
+        {
+          trigger: 'icon-close',
+          deps: [context.isClosing],
+          sequence: context.isClosing
+            ? [
+                {
+                  target: 'Icon',
+                  animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } },
+                },
+              ]
+            : false,
+        },
+      ],
+      [context.isOpening, context.isClosing, openDuration, closeDuration],
+    );
 
-    const iconRefs = React.useMemo(() => ({ Icon: iconRef as React.RefObject<HTMLElement | null> }), []);
+    const iconRefs = React.useMemo(
+      () => ({ Icon: iconRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
     useAnimations(iconConfig, iconRefs);
 
     // Set initial rotation on mount (no animation)
@@ -271,7 +310,11 @@ export interface CollapsibleContentProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const CollapsibleContent = withMoveComponent<'content' | 'contentInner', CollapsibleContentProps, HTMLDivElement>({
+const CollapsibleContent = withMoveComponent<
+  'content' | 'contentInner',
+  CollapsibleContentProps,
+  HTMLDivElement
+>({
   name: 'CollapsibleContent',
   styles,
   slots: ['content', 'contentInner'] as const,
@@ -288,8 +331,8 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
     const config = context.contentAnimate;
 
     // Compute opacity timing from height animation config
-    const enterHeightDuration = config.open ? ((config.open.height as any)?.duration || 400) : 400;
-    const exitHeightDuration = config.close ? ((config.close.height as any)?.duration || 300) : 300;
+    const enterHeightDuration = config.open ? (config.open.height as any)?.duration || 400 : 400;
+    const exitHeightDuration = config.close ? (config.close.height as any)?.duration || 300 : 300;
 
     // No-animation fallback — immediately set styles when no config
     React.useEffect(() => {
@@ -323,30 +366,72 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
         {
           trigger: 'content-open',
           deps: [context.isOpening],
-          sequence: context.isOpening && config.open ? [[
-            { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
-            { target: 'ContentInner', animation: { opacity: { from: 0, to: 1, ease: 'linear', duration: enterHeightDuration - 150 }, delay: 150 } },
-          ]] : false,
+          sequence:
+            context.isOpening && config.open
+              ? [
+                  [
+                    { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
+                    {
+                      target: 'ContentInner',
+                      animation: {
+                        opacity: {
+                          from: 0,
+                          to: 1,
+                          ease: 'linear',
+                          duration: enterHeightDuration - 150,
+                        },
+                        delay: 150,
+                      },
+                    },
+                  ],
+                ]
+              : false,
           onComplete: () => context.onOpenComplete(),
           direction: 'enter' as const,
         },
         {
           trigger: 'content-close',
           deps: [context.isClosing],
-          sequence: context.isClosing && config.close ? [[
-            { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
-            { target: 'ContentInner', animation: { opacity: { from: 1, to: 0, ease: 'linear', duration: Math.round(exitHeightDuration * 0.4) } } },
-          ]] : false,
+          sequence:
+            context.isClosing && config.close
+              ? [
+                  [
+                    { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
+                    {
+                      target: 'ContentInner',
+                      animation: {
+                        opacity: {
+                          from: 1,
+                          to: 0,
+                          ease: 'linear',
+                          duration: Math.round(exitHeightDuration * 0.4),
+                        },
+                      },
+                    },
+                  ],
+                ]
+              : false,
           onComplete: () => context.onCloseComplete(),
           direction: 'exit' as const,
         },
       ];
-    }, [context.isOpening, context.isClosing, config.open, config.close, hasAnimConfig, enterHeightDuration, exitHeightDuration]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [
+      context.isOpening,
+      context.isClosing,
+      config.open,
+      config.close,
+      hasAnimConfig,
+      enterHeightDuration,
+      exitHeightDuration,
+    ]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+        ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(contentConfig, contentRefs);
 
@@ -374,8 +459,16 @@ const CollapsibleContent = withMoveComponent<'content' | 'contentInner', Collaps
 
         const contentSp = sp('content');
         const innerSp = sp('contentInner');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
+        const {
+          className: innerSpClass,
+          style: innerSpStyle,
+          ...innerSpRest
+        } = innerSp as Record<string, unknown>;
 
         return (
           <div

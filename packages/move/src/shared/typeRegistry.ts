@@ -11,23 +11,34 @@
 
 export const CANONICAL_TYPES = {
   // Controls scale (md-anchored)
-  Size:        ['sm', 'md', 'lg'] as const,
-  SizeWithXS:  ['xs', 'sm', 'md', 'lg'] as const,
-  SizeWithXL:  ['xs', 'sm', 'md', 'lg', 'xl'] as const,
-  SizeFull:    ['xs', 'sm', 'md', 'lg', 'xl', 'full'] as const,
+  Size: ['sm', 'md', 'lg'] as const,
+  SizeWithXS: ['xs', 'sm', 'md', 'lg'] as const,
+  SizeWithXL: ['xs', 'sm', 'md', 'lg', 'xl'] as const,
+  SizeFull: ['xs', 'sm', 'md', 'lg', 'xl', 'full'] as const,
 
   // Typography scale (base-anchored)
   TypographySize: ['xs', 'sm', 'base', 'lg', 'xl'] as const,
-  DisplaySize:    ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'] as const,
+  DisplaySize: ['xs', 'sm', 'base', 'lg', 'xl', '2xl', '3xl', '4xl'] as const,
 
   // Spacing scale (used by `gap`, `padding`)
-  Gap:         ['xs', 'sm', 'md', 'lg', 'xl', 'none'] as const,
-  GapWithXL2:  ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'none'] as const,
+  Gap: ['xs', 'sm', 'md', 'lg', 'xl', 'none'] as const,
+  GapWithXL2: ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'none'] as const,
 
   // Color palette (Open Color + Move gray)
   Color: [
-    'gray', 'red', 'pink', 'grape', 'violet', 'indigo',
-    'blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange',
+    'gray',
+    'red',
+    'pink',
+    'grape',
+    'violet',
+    'indigo',
+    'blue',
+    'cyan',
+    'teal',
+    'green',
+    'lime',
+    'yellow',
+    'orange',
   ] as const,
 
   // Border-radius scale for media surfaces

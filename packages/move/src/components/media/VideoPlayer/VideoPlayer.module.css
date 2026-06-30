@@ -36,13 +36,27 @@
    between the controls' curve and the root's outer curve. clip-path
    only affects in-flow descendants, so portaled tooltips and menus
    render outside the clip and stay visible. */
-.root[data-radius='none'] { border-radius: var(--move-rounded-none); }
-.root[data-radius='sm']   { border-radius: var(--move-rounded-sm);   clip-path: inset(0 round var(--move-rounded-sm)); }
-.root[data-radius='md']   { border-radius: var(--move-rounded-md);   clip-path: inset(0 round var(--move-rounded-md)); }
-.root[data-radius='lg']   { border-radius: var(--move-rounded-lg);   clip-path: inset(0 round var(--move-rounded-lg)); }
+.root[data-radius='none'] {
+  border-radius: var(--move-rounded-none);
+}
+.root[data-radius='sm'] {
+  border-radius: var(--move-rounded-sm);
+  clip-path: inset(0 round var(--move-rounded-sm));
+}
+.root[data-radius='md'] {
+  border-radius: var(--move-rounded-md);
+  clip-path: inset(0 round var(--move-rounded-md));
+}
+.root[data-radius='lg'] {
+  border-radius: var(--move-rounded-lg);
+  clip-path: inset(0 round var(--move-rounded-lg));
+}
 
 /* Fullscreen override radius */
-.root[data-fullscreen='true'] { border-radius: 0; clip-path: none; }
+.root[data-fullscreen='true'] {
+  border-radius: 0;
+  clip-path: none;
+}
 
 /* Video wrapper */
 .video {

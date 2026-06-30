@@ -35,7 +35,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <div data-testid="child">hello</div>
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('child')).toBeInTheDocument();
     });
@@ -44,7 +44,7 @@ describe('CalendarView', () => {
       const { container } = render(
         <CalendarView.Root className="custom" style={{ maxWidth: '800px' }}>
           <div>content</div>
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       const root = container.firstElementChild!;
       expect(root).toHaveClass('custom');
@@ -55,7 +55,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('month-view')).toBeInTheDocument();
     });
@@ -64,7 +64,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.Title />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       // The title should contain the current month name
       const titleEl = screen.getByRole('heading', { level: 2 });
@@ -80,7 +80,7 @@ describe('CalendarView', () => {
           <CalendarView.Header>
             <span data-testid="header-child">Header content</span>
           </CalendarView.Header>
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('header-child')).toBeInTheDocument();
     });
@@ -92,7 +92,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.Nav />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByLabelText('Previous')).toBeInTheDocument();
       expect(screen.getByLabelText('Next')).toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('CalendarView', () => {
         <CalendarView.Root defaultDate={REF_DATE} onDateChange={onDateChange}>
           <CalendarView.Nav />
           <CalendarView.Title />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       const titleBefore = screen.getByRole('heading', { level: 2 }).textContent;
       fireEvent.click(screen.getByLabelText('Previous'));
@@ -118,7 +118,7 @@ describe('CalendarView', () => {
         <CalendarView.Root defaultDate={REF_DATE} onDateChange={onDateChange}>
           <CalendarView.Nav />
           <CalendarView.Title />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       const titleBefore = screen.getByRole('heading', { level: 2 }).textContent;
       fireEvent.click(screen.getByLabelText('Next'));
@@ -133,7 +133,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.Title />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       const h2 = screen.getByRole('heading', { level: 2 });
       expect(h2).toHaveAttribute('aria-live', 'polite');
@@ -143,7 +143,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultDate={REF_DATE} defaultView="month">
           <CalendarView.Title />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       const h2 = screen.getByRole('heading', { level: 2 });
       // Should contain "March" and "2026" for month view
@@ -158,7 +158,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.Today />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByText('Today')).toBeInTheDocument();
     });
@@ -166,12 +166,9 @@ describe('CalendarView', () => {
     it('calls goToToday on click', () => {
       const onDateChange = vi.fn();
       render(
-        <CalendarView.Root
-          defaultDate={new Date(2020, 0, 1)}
-          onDateChange={onDateChange}
-        >
+        <CalendarView.Root defaultDate={new Date(2020, 0, 1)} onDateChange={onDateChange}>
           <CalendarView.Today />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       fireEvent.click(screen.getByText('Today'));
       expect(onDateChange).toHaveBeenCalledTimes(1);
@@ -184,7 +181,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.ViewSwitcher />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByText('Day')).toBeInTheDocument();
       expect(screen.getByText('Week')).toBeInTheDocument();
@@ -196,7 +193,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root>
           <CalendarView.ViewSwitcher views={['day', 'month']} />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByText('Day')).toBeInTheDocument();
       expect(screen.getByText('Month')).toBeInTheDocument();
@@ -211,7 +208,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultView="month" defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('month-view')).toBeInTheDocument();
     });
@@ -220,7 +217,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultView="day" defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('day-view')).toBeInTheDocument();
     });
@@ -229,7 +226,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultView="week" defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('week-view')).toBeInTheDocument();
     });
@@ -238,7 +235,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultView="agenda" defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('agenda-view')).toBeInTheDocument();
     });
@@ -250,7 +247,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root defaultView="agenda" defaultDate={REF_DATE} events={[]}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByText('No events in this period')).toBeInTheDocument();
     });
@@ -262,7 +259,7 @@ describe('CalendarView', () => {
       render(
         <CalendarView.Root view="day" defaultDate={REF_DATE}>
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByTestId('day-view')).toBeInTheDocument();
     });
@@ -273,7 +270,7 @@ describe('CalendarView', () => {
         <CalendarView.Root defaultView="month" onViewChange={onViewChange} defaultDate={REF_DATE}>
           <CalendarView.ViewSwitcher />
           <CalendarView.Body />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       fireEvent.click(screen.getByText('Day'));
       expect(onViewChange).toHaveBeenCalledWith('day');
@@ -287,7 +284,7 @@ describe('CalendarView', () => {
         <CalendarView.Root labels={{ today: 'Vandaag', previous: 'Vorige', next: 'Volgende' }}>
           <CalendarView.Nav />
           <CalendarView.Today />
-        </CalendarView.Root>
+        </CalendarView.Root>,
       );
       expect(screen.getByText('Vandaag')).toBeInTheDocument();
       expect(screen.getByLabelText('Vorige')).toBeInTheDocument();

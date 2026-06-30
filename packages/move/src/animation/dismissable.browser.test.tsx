@@ -90,7 +90,10 @@ const CASES: Case[] = [
       </Popover.Root>
     ),
     trigger: () => byText('Open'),
-    open: () => !![...document.querySelectorAll('*')].find((e) => e.textContent === 'Popover body' && e.children.length === 0),
+    open: () =>
+      !![...document.querySelectorAll('*')].find(
+        (e) => e.textContent === 'Popover body' && e.children.length === 0,
+      ),
   },
   {
     name: 'Dialog',

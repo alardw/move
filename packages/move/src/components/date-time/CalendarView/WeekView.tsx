@@ -47,11 +47,11 @@ export function WeekView({
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(start, i));
 
   const allDayEvents = events.filter(
-    (e) => e.allDay && weekDates.some((d) => isSameDay(e.start, d))
+    (e) => e.allDay && weekDates.some((d) => isSameDay(e.start, d)),
   );
 
   const timedEvents = events.filter(
-    (e) => !e.allDay && weekDates.some((d) => isSameDay(e.start, d))
+    (e) => !e.allDay && weekDates.some((d) => isSameDay(e.start, d)),
   );
 
   const showAllDaySection = showAllDay || allDayEvents.length > 0;
@@ -76,16 +76,15 @@ export function WeekView({
       {showAllDaySection && (
         <div className={styles.allDaySection}>
           <span className={styles.allDayLabel}>{allDayLabel}</span>
-          <div
-            className={styles.allDayGrid}
-            style={{ gridTemplateColumns: `repeat(${7}, 1fr)` }}
-          >
+          <div className={styles.allDayGrid} style={{ gridTemplateColumns: `repeat(${7}, 1fr)` }}>
             {weekDates.map((d, i) => {
               const evts = allDayEvents.filter((e) => isSameDay(e.start, d));
               return (
                 <div
                   key={i}
-                  className={evts.length === 0 && onAllDayClick ? styles.allDaySlotEmpty : undefined}
+                  className={
+                    evts.length === 0 && onAllDayClick ? styles.allDaySlotEmpty : undefined
+                  }
                   {...(evts.length === 0 && onAllDayClick
                     ? {
                         role: 'button',

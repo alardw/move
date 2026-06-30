@@ -39,11 +39,7 @@ export interface UseAccordionReturn {
 // =============================================================================
 
 export function useAccordion(options: UseAccordionOptions = {}): UseAccordionReturn {
-  const {
-    multiple = false,
-    collapsible = true,
-    selectOnFocus = false,
-  } = options;
+  const { multiple = false, collapsible = true, selectOnFocus = false } = options;
 
   const emptyValue = multiple ? [] : '';
 
@@ -60,7 +56,7 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
       }
       return value === itemValue;
     },
-    [value, multiple]
+    [value, multiple],
   );
 
   const updateValue = useCallback(
@@ -80,14 +76,14 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
         }
       }
     },
-    [value, multiple, collapsible, setValue]
+    [value, multiple, collapsible, setValue],
   );
 
   const onHeaderClick = useCallback(
     (itemValue: string) => {
       updateValue(itemValue);
     },
-    [updateValue]
+    [updateValue],
   );
 
   const getTriggers = (currentTarget: EventTarget): HTMLElement[] => {
@@ -143,7 +139,7 @@ export function useAccordion(options: UseAccordionOptions = {}): UseAccordionRet
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [updateValue, selectOnFocus]
+    [updateValue, selectOnFocus],
   );
 
   return {

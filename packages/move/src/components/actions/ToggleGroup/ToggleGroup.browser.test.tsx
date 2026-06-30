@@ -52,7 +52,7 @@ describe('ToggleGroup — sliding indicator invariants (real browser)', () => {
     const atC = rect(root.querySelector('[class*="indicator"]')!).left;
     const itemC = rect([...root.querySelectorAll('button')][2]);
 
-    expect(atC).toBeGreaterThan(atA);                 // moved right toward c
+    expect(atC).toBeGreaterThan(atA); // moved right toward c
     expect(Math.abs(atC - itemC.left)).toBeLessThanOrEqual(3); // landed under c
   });
 });

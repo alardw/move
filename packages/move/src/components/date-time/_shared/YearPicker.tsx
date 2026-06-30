@@ -12,16 +12,18 @@ export interface YearPickerProps {
   ariaLabel?: string;
 }
 
-export function YearPicker({ selectedYear, onSelect, range = 12, ariaLabel = 'Select year' }: YearPickerProps) {
+export function YearPicker({
+  selectedYear,
+  onSelect,
+  range = 12,
+  ariaLabel = 'Select year',
+}: YearPickerProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const selectedRef = React.useRef<HTMLButtonElement>(null);
 
   const startYear = selectedYear - range;
   const endYear = selectedYear + range;
-  const years = Array.from(
-    { length: endYear - startYear + 1 },
-    (_, i) => startYear + i
-  );
+  const years = Array.from({ length: endYear - startYear + 1 }, (_, i) => startYear + i);
 
   React.useEffect(() => {
     if (selectedRef.current && scrollRef.current) {
@@ -30,12 +32,7 @@ export function YearPicker({ selectedYear, onSelect, range = 12, ariaLabel = 'Se
   }, []);
 
   return (
-    <div
-      ref={scrollRef}
-      className={styles.yearPicker}
-      role="listbox"
-      aria-label={ariaLabel}
-    >
+    <div ref={scrollRef} className={styles.yearPicker} role="listbox" aria-label={ariaLabel}>
       {years.map((yr) => (
         <button
           key={yr}

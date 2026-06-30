@@ -64,7 +64,11 @@ describe('Stack', () => {
 
     it('forwards ref to root element', () => {
       const ref = { current: null } as React.RefObject<HTMLDivElement>;
-      render(<Stack ref={ref} data-testid="stack">Content</Stack>);
+      render(
+        <Stack ref={ref} data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
       expect(ref.current).toBe(screen.getByTestId('stack'));
     });
@@ -99,12 +103,16 @@ describe('Stack', () => {
 
     it('applies direction via data-direction attribute', () => {
       const { rerender } = render(
-        <Stack direction="row" data-testid="stack">Content</Stack>,
+        <Stack direction="row" data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-direction', 'row');
 
       rerender(
-        <Stack direction="column" data-testid="stack">Content</Stack>,
+        <Stack direction="column" data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-direction', 'column');
     });
@@ -119,14 +127,24 @@ describe('Stack', () => {
 
     it('applies gap via data-gap attribute', () => {
       const { rerender } = render(
-        <Stack gap="xs" data-testid="stack">Content</Stack>,
+        <Stack gap="xs" data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-gap', 'xs');
 
-      rerender(<Stack gap="lg" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack gap="lg" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-gap', 'lg');
 
-      rerender(<Stack gap="none" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack gap="none" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-gap', 'none');
     });
   });
@@ -140,17 +158,31 @@ describe('Stack', () => {
 
     it('applies align via data-align attribute', () => {
       const { rerender } = render(
-        <Stack align="center" data-testid="stack">Content</Stack>,
+        <Stack align="center" data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-align', 'center');
 
-      rerender(<Stack align="start" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack align="start" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-align', 'start');
 
-      rerender(<Stack align="end" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack align="end" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-align', 'end');
 
-      rerender(<Stack align="baseline" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack align="baseline" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-align', 'baseline');
     });
   });
@@ -164,17 +196,31 @@ describe('Stack', () => {
 
     it('applies justify via data-justify attribute', () => {
       const { rerender } = render(
-        <Stack justify="center" data-testid="stack">Content</Stack>,
+        <Stack justify="center" data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-justify', 'center');
 
-      rerender(<Stack justify="end" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack justify="end" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-justify', 'end');
 
-      rerender(<Stack justify="between" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack justify="between" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-justify', 'between');
 
-      rerender(<Stack justify="evenly" data-testid="stack">Content</Stack>);
+      rerender(
+        <Stack justify="evenly" data-testid="stack">
+          Content
+        </Stack>,
+      );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-justify', 'evenly');
     });
   });
@@ -188,14 +234,18 @@ describe('Stack', () => {
 
     it('applies data-wrap attribute when wrap=true', () => {
       render(
-        <Stack wrap data-testid="stack">Content</Stack>,
+        <Stack wrap data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).toHaveAttribute('data-wrap');
     });
 
     it('omits data-wrap when wrap is false', () => {
       render(
-        <Stack wrap={false} data-testid="stack">Content</Stack>,
+        <Stack wrap={false} data-testid="stack">
+          Content
+        </Stack>,
       );
       expect(screen.getByTestId('stack')).not.toHaveAttribute('data-wrap');
     });
@@ -205,7 +255,9 @@ describe('Stack', () => {
   describe('collapse', () => {
     it('sets data-collapsed when container width is below collapseBelow threshold', () => {
       render(
-        <Stack collapseBelow="600" data-testid="stack">Content</Stack>,
+        <Stack collapseBelow="600" data-testid="stack">
+          Content
+        </Stack>,
       );
       const el = screen.getByTestId('stack');
       expect(MockResizeObserver.instances).toHaveLength(1);
@@ -217,7 +269,9 @@ describe('Stack', () => {
 
     it('removes data-collapsed when container width is at or above collapseBelow threshold', () => {
       render(
-        <Stack collapseBelow="600" data-testid="stack">Content</Stack>,
+        <Stack collapseBelow="600" data-testid="stack">
+          Content
+        </Stack>,
       );
       const el = screen.getByTestId('stack');
 

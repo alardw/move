@@ -56,7 +56,8 @@
   justify-content: center;
   gap: var(--move-spacing-sm);
   padding: var(--move-fileupload-padding);
-  border: var(--move-fileupload-border-width) var(--move-fileupload-border-style) var(--move-fileupload-border-color);
+  border: var(--move-fileupload-border-width) var(--move-fileupload-border-style)
+    var(--move-fileupload-border-color);
   border-radius: var(--move-fileupload-border-radius);
   background-color: var(--move-fileupload-bg);
   color: var(--move-fileupload-fg);

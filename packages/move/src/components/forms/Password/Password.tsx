@@ -64,7 +64,19 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
   styles,
   slots: ['root', 'input', 'iconLeft', 'toggle', 'toggleIcon'] as const,
   defaults: { variant: 'outlined', size: 'md', defaultVisible: false },
-  moveProps: ['variant', 'size', 'invalid', 'iconLeft', 'showIcon', 'hideIcon', 'width', 'visible', 'defaultVisible', 'onVisibleChange', 'labels'],
+  moveProps: [
+    'variant',
+    'size',
+    'invalid',
+    'iconLeft',
+    'showIcon',
+    'hideIcon',
+    'width',
+    'visible',
+    'defaultVisible',
+    'onVisibleChange',
+    'labels',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -100,13 +112,29 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const inputSp = sp('input');
-        const { className: inSpClass, style: inSpStyle, ...inSpRest } = inputSp as Record<string, unknown>;
+        const {
+          className: inSpClass,
+          style: inSpStyle,
+          ...inSpRest
+        } = inputSp as Record<string, unknown>;
         const leftSp = sp('iconLeft');
-        const { className: leftSpClass, style: leftSpStyle, ...leftSpRest } = leftSp as Record<string, unknown>;
+        const {
+          className: leftSpClass,
+          style: leftSpStyle,
+          ...leftSpRest
+        } = leftSp as Record<string, unknown>;
         const toggleSp = sp('toggle');
-        const { className: toggleSpClass, style: toggleSpStyle, ...toggleSpRest } = toggleSp as Record<string, unknown>;
+        const {
+          className: toggleSpClass,
+          style: toggleSpStyle,
+          ...toggleSpRest
+        } = toggleSp as Record<string, unknown>;
         const toggleIconSp = sp('toggleIcon');
-        const { className: tiSpClass, style: tiSpStyle, ...tiSpRest } = toggleIconSp as Record<string, unknown>;
+        const {
+          className: tiSpClass,
+          style: tiSpStyle,
+          ...tiSpRest
+        } = toggleIconSp as Record<string, unknown>;
 
         const showIconNode = (props.showIcon as React.ReactNode) ?? defaultShowIcon;
         const hideIconNode = (props.hideIcon as React.ReactNode) ?? defaultHideIcon;
@@ -115,7 +143,13 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
           <div
             {...spRest}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(props.width != null ? { width: props.width as React.CSSProperties['width'] } : {}), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...props.style,
+              ...(props.width != null
+                ? { width: props.width as React.CSSProperties['width'] }
+                : {}),
+              ...(spStyle as React.CSSProperties),
+            }}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}

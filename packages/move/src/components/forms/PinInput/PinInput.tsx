@@ -55,9 +55,19 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
   slots: ['root', 'slot'] as const,
   defaults: { length: 4, size: 'md', type: 'number', oneTimeCode: true },
   moveProps: [
-    'length', 'value', 'defaultValue', 'onChange', 'onComplete',
-    'type', 'mask', 'placeholder', 'oneTimeCode', 'grouping',
-    'invalid', 'size', 'labels',
+    'length',
+    'value',
+    'defaultValue',
+    'onChange',
+    'onComplete',
+    'type',
+    'mask',
+    'placeholder',
+    'oneTimeCode',
+    'grouping',
+    'invalid',
+    'size',
+    'labels',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -95,7 +105,11 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const slotSp = sp('slot');
-        const { className: slotSpClass, style: slotSpStyle, ...slotSpRest } = slotSp as Record<string, unknown>;
+        const {
+          className: slotSpClass,
+          style: slotSpStyle,
+          ...slotSpRest
+        } = slotSp as Record<string, unknown>;
 
         let slotIndex = 0;
         const groupElements: React.ReactNode[] = [];
@@ -120,12 +134,8 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
                 {...(active ? { 'data-active': '' } : {})}
                 {...(showPlaceholder ? { 'data-placeholder': '' } : {})}
               >
-                {active && !filled ? (
-                  <div className={styles.caret} />
-                ) : (
-                  char
-                )}
-              </div>
+                {active && !filled ? <div className={styles.caret} /> : char}
+              </div>,
             );
             slotIndex++;
           }
@@ -133,14 +143,14 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
           groupElements.push(
             <div key={`group-${g}`} className={styles.group}>
               {slots}
-            </div>
+            </div>,
           );
 
           if (g < pin.groups.length - 1) {
             groupElements.push(
               <div key={`sep-${g}`} className={styles.separator} aria-hidden="true">
                 {'\u2013'}
-              </div>
+              </div>,
             );
           }
         }

@@ -8,9 +8,13 @@ import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import {
   useAnimations,
-  resolveAnimationsConfig, extractSteps,
-  staggerItems, quick, poppy,
-  useDismissable, useDismissableExit,
+  resolveAnimationsConfig,
+  extractSteps,
+  staggerItems,
+  quick,
+  poppy,
+  useDismissable,
+  useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
@@ -20,8 +24,8 @@ import styles from './Select.module.css';
 // Container (Content) no longer scales — item stagger carries the reveal feel;
 // adding a container scale on top produced inconsistent perceived motion
 // depending on item count (short lists made the solo container scale conspicuous).
-const SCALE_INSET_PX = 16;       // per-item fade-in offset
-const SCALE_HOVER_PX = 4;        // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
+const SCALE_INSET_PX = 16; // per-item fade-in offset
+const SCALE_HOVER_PX = 4; // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
 
 // Every visible dropdown row participates in the stagger: items, group
 // labels, and separators. Keeps the reveal cohesive when the menu is
@@ -36,7 +40,11 @@ const CHILDREN_SELECTOR = `[role="menuitem"], [class*="label"], [class*="separat
 function wrapTextChildren(children: React.ReactNode, textClass: string): React.ReactNode {
   const wrapped = React.Children.map(children, (child, i) => {
     if (typeof child === 'string' || typeof child === 'number') {
-      return <span key={i} className={textClass}>{child}</span>;
+      return (
+        <span key={i} className={textClass}>
+          {child}
+        </span>
+      );
     }
     return child;
   });
@@ -46,19 +54,39 @@ function wrapTextChildren(children: React.ReactNode, textClass: string): React.R
 const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'open',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-      { target: 'ContentInner', children: CHILDREN_SELECTOR, stagger: staggerItems.stagger, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
-      { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        {
+          target: 'ContentInner',
+          children: CHILDREN_SELECTOR,
+          stagger: staggerItems.stagger,
+          animation: {
+            scale: { from: '$scaleFrom', to: 1, ease: poppy },
+            opacity: { from: 0, to: 1 },
+          },
+        },
+        { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+      ],
+    ],
   },
   {
     trigger: 'closed',
-    sequence: [[
-      { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { target: 'ContentInner', children: CHILDREN_SELECTOR, stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
-      { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
-    ]],
+    sequence: [
+      [
+        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+        {
+          target: 'ContentInner',
+          children: CHILDREN_SELECTOR,
+          stagger: staggerItems.stagger,
+          animation: {
+            scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+            opacity: { to: 0, duration: 150 },
+          },
+        },
+        { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+      ],
+    ],
   },
   {
     trigger: 'Item.hover',
@@ -165,18 +193,24 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const isValueControlled = controlledValue !== undefined;
   const value = isValueControlled ? controlledValue : uncontrolledValue;
 
-  const handleValueChange = React.useCallback((newValue: string) => {
-    if (!isValueControlled) {
-      setUncontrolledValue(newValue);
-    }
-    onValueChange?.(newValue);
-  }, [isValueControlled, onValueChange]);
+  const handleValueChange = React.useCallback(
+    (newValue: string) => {
+      if (!isValueControlled) {
+        setUncontrolledValue(newValue);
+      }
+      onValueChange?.(newValue);
+    },
+    [isValueControlled, onValueChange],
+  );
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-    // animation drives it (useDismissable).
-    if (newOpen) openFn();
-  }, [openFn]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+      // animation drives it (useDismissable).
+      if (newOpen) openFn();
+    },
+    [openFn],
+  );
 
   const registerLabel = React.useCallback((itemValue: string, label: React.ReactNode) => {
     const prev = labelMapRef.current.get(itemValue);
@@ -191,8 +225,28 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   }, []);
 
   return (
-    <SelectContext.Provider value={{ value, onValueChange: handleValueChange, open: !!open, isClosing, epoch, onExitDone, close, registerLabel, getLabel, animConfig, triggerWidth, setTriggerWidth, triggerRef }}>
-      <RadixDropdownMenu.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={false}>
+    <SelectContext.Provider
+      value={{
+        value,
+        onValueChange: handleValueChange,
+        open: !!open,
+        isClosing,
+        epoch,
+        onExitDone,
+        close,
+        registerLabel,
+        getLabel,
+        animConfig,
+        triggerWidth,
+        setTriggerWidth,
+        triggerRef,
+      }}
+    >
+      <RadixDropdownMenu.Root
+        open={open || isClosing}
+        onOpenChange={handleOpenChange}
+        modal={false}
+      >
         {children}
       </RadixDropdownMenu.Root>
     </SelectContext.Provider>
@@ -245,7 +299,11 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Trigger
             {...attrs}
@@ -258,9 +316,15 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{
               ...props.style,
-              ...(props.width != null ? { width: props.width as React.CSSProperties['width'] } : {}),
-              ...(props.minWidth != null ? { minWidth: props.minWidth as React.CSSProperties['minWidth'] } : {}),
-              ...(props.maxWidth != null ? { maxWidth: props.maxWidth as React.CSSProperties['maxWidth'] } : {}),
+              ...(props.width != null
+                ? { width: props.width as React.CSSProperties['width'] }
+                : {}),
+              ...(props.minWidth != null
+                ? { minWidth: props.minWidth as React.CSSProperties['minWidth'] }
+                : {}),
+              ...(props.maxWidth != null
+                ? { maxWidth: props.maxWidth as React.CSSProperties['maxWidth'] }
+                : {}),
               ...(spStyle as React.CSSProperties),
             }}
             {...(props.disabled ? { 'data-disabled': '' } : {})}
@@ -298,10 +362,16 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
     return {
       render() {
         const valueSp = sp('value');
-        const { className: spClass, style: spStyle, ...spRest } = valueSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = valueSp as Record<string, unknown>;
         const showPlaceholder = value === undefined || value === '';
         const label = value !== undefined ? getLabel(value) : undefined;
-        const displayText = showPlaceholder ? (props.placeholder as string) : (props.children ?? label ?? value);
+        const displayText = showPlaceholder
+          ? (props.placeholder as string)
+          : (props.children ?? label ?? value);
         // Native tooltip — lets users see the full value when the trigger is too
         // narrow and the text gets ellipsized.
         const titleText = typeof displayText === 'string' ? displayText : undefined;
@@ -347,24 +417,50 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
 
     // Icon rotation — extract Icon steps from open/closed triggers, run via state triggers
     // Trigger always sets data-move-state="open"|"closed" reflecting true state (incl. during exit)
-    const iconStates: AnimationState[] = React.useMemo(() => [
-      { name: 'open', slot: 'Icon', source: 'data-move-state', value: 'open', closest: '[data-move-state]', initial: false },
-      { name: 'closed', slot: 'Icon', source: 'data-move-state', value: 'closed', closest: '[data-move-state]', initial: false },
-    ], []);
+    const iconStates: AnimationState[] = React.useMemo(
+      () => [
+        {
+          name: 'open',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'open',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+        {
+          name: 'closed',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'closed',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+      ],
+      [],
+    );
 
     const iconConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!animConfig) return null;
-      const openSteps = extractSteps(animConfig.find(t => t.trigger === 'open'), ['Icon']);
-      const closedSteps = extractSteps(animConfig.find(t => t.trigger === 'closed'), ['Icon']);
+      const openSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'open'),
+        ['Icon'],
+      );
+      const closedSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'closed'),
+        ['Icon'],
+      );
       const result: AnimationTrigger[] = [];
       if (openSteps) result.push({ trigger: 'open', sequence: openSteps });
       if (closedSteps) result.push({ trigger: 'closed', sequence: closedSteps });
       return result.length > 0 ? result : null;
     }, [animConfig]);
 
-    const iconRefs = React.useMemo(() => ({
-      Icon: iconRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const iconRefs = React.useMemo(
+      () => ({
+        Icon: iconRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(iconConfig, iconRefs, iconStates);
 
@@ -454,18 +550,29 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
 
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!animConfig) return null;
-      const openSteps = extractSteps(animConfig.find(t => t.trigger === 'open'), ['Content', 'ContentInner']);
-      const closedSteps = extractSteps(animConfig.find(t => t.trigger === 'closed'), ['Content', 'ContentInner']);
+      const openSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'open'),
+        ['Content', 'ContentInner'],
+      );
+      const closedSteps = extractSteps(
+        animConfig.find((t) => t.trigger === 'closed'),
+        ['Content', 'ContentInner'],
+      );
       const result: AnimationTrigger[] = [];
-      if (openSteps) result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
-      if (closedSteps) result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
+      if (openSteps)
+        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
+      if (closedSteps)
+        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
       return result.length > 0 ? result : null;
     }, [animConfig, scaleFrom]);
 
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+        ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     // Scroll + focus the selected item synchronously on mount — BEFORE the
     // animation runs and BEFORE Radix's default auto-focus lands on the
@@ -478,7 +585,9 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
       if (!content || !inner) return;
 
       const selected = inner.querySelector('[data-selected]') as HTMLElement | null;
-      const target = selected ?? (inner.querySelector('[role="menuitem"]:not([data-disabled])') as HTMLElement | null);
+      const target =
+        selected ??
+        (inner.querySelector('[role="menuitem"]:not([data-disabled])') as HTMLElement | null);
 
       if (selected) {
         inner.scrollTop = Math.max(
@@ -555,11 +664,25 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
   },
 );
 
-const SelectContent = withMoveComponent<'content' | 'contentInner', SelectContentProps, HTMLDivElement>({
+const SelectContent = withMoveComponent<
+  'content' | 'contentInner',
+  SelectContentProps,
+  HTMLDivElement
+>({
   name: 'SelectContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['sideOffset', 'align', 'container', 'width', 'minWidth', 'maxWidth', 'onPointerDownOutside', 'onEscapeKeyDown', 'onInteractOutside'],
+  moveProps: [
+    'sideOffset',
+    'align',
+    'container',
+    'width',
+    'minWidth',
+    'maxWidth',
+    'onPointerDownOutside',
+    'onEscapeKeyDown',
+    'onInteractOutside',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const layer = useLayer();
@@ -619,7 +742,11 @@ const SelectViewport = withMoveComponent<'viewport', SelectViewportProps, HTMLDi
     return {
       render() {
         const viewportSp = sp('viewport');
-        const { className: spClass, style: spStyle, ...spRest } = viewportSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = viewportSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -659,7 +786,8 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const { value, onValueChange, close, registerLabel, animConfig, triggerWidth } = useSelectContext();
+    const { value, onValueChange, close, registerLabel, animConfig, triggerWidth } =
+      useSelectContext();
     const isSelected = value === (props.value as string);
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
@@ -686,9 +814,12 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
       return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
     }, [animConfig, scaleHover]);
 
-    const itemRefs = React.useMemo(() => ({
-      Item: itemRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const itemRefs = React.useMemo(
+      () => ({
+        Item: itemRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     const { handlers } = useAnimations(itemConfig, itemRefs);
 
@@ -748,7 +879,11 @@ const SelectGroup = withMoveComponent<'group', SelectGroupProps, HTMLDivElement>
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Group
             {...attrs}
@@ -785,7 +920,11 @@ const SelectLabel = withMoveComponent<'label', SelectLabelProps, HTMLDivElement>
     return {
       render() {
         const labelSp = sp('label');
-        const { className: spClass, style: spStyle, ...spRest } = labelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = labelSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Label
             {...attrs}

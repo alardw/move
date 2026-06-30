@@ -49,14 +49,30 @@
 
 /* ── Weight — full 9-stop scale ── */
 
-.root[data-weight='thin']        { font-weight: var(--move-weight-thin); }
-.root[data-weight='extralight']  { font-weight: var(--move-weight-extralight); }
-.root[data-weight='light']       { font-weight: var(--move-weight-light); }
-.root[data-weight='normal']      { font-weight: var(--move-weight-normal); }
-.root[data-weight='medium']      { font-weight: var(--move-weight-medium); }
-.root[data-weight='semibold']    { font-weight: var(--move-weight-semibold); }
-.root[data-weight='extrabold']   { font-weight: var(--move-weight-extrabold); }
-.root[data-weight='black']       { font-weight: var(--move-weight-black); }
+.root[data-weight='thin'] {
+  font-weight: var(--move-weight-thin);
+}
+.root[data-weight='extralight'] {
+  font-weight: var(--move-weight-extralight);
+}
+.root[data-weight='light'] {
+  font-weight: var(--move-weight-light);
+}
+.root[data-weight='normal'] {
+  font-weight: var(--move-weight-normal);
+}
+.root[data-weight='medium'] {
+  font-weight: var(--move-weight-medium);
+}
+.root[data-weight='semibold'] {
+  font-weight: var(--move-weight-semibold);
+}
+.root[data-weight='extrabold'] {
+  font-weight: var(--move-weight-extrabold);
+}
+.root[data-weight='black'] {
+  font-weight: var(--move-weight-black);
+}
 
 .root[data-weight='bold'] {
   font-weight: var(--move-weight-bold);

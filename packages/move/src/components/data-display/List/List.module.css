@@ -40,11 +40,21 @@
 /* Radius — per-variant, sets the shared --move-list-radius var so item
    hover/active highlights inherit the same shape as the container.
    Same pattern AudioPlayer / VideoPlayer use. */
-.root[data-radius='none'] { --move-list-radius: var(--move-rounded-none); }
-.root[data-radius='sm']   { --move-list-radius: var(--move-rounded-sm); }
-.root[data-radius='md']   { --move-list-radius: var(--move-rounded-md); }
-.root[data-radius='lg']   { --move-list-radius: var(--move-rounded-lg); }
-.root[data-radius='full'] { --move-list-radius: var(--move-rounded-full); }
+.root[data-radius='none'] {
+  --move-list-radius: var(--move-rounded-none);
+}
+.root[data-radius='sm'] {
+  --move-list-radius: var(--move-rounded-sm);
+}
+.root[data-radius='md'] {
+  --move-list-radius: var(--move-rounded-md);
+}
+.root[data-radius='lg'] {
+  --move-list-radius: var(--move-rounded-lg);
+}
+.root[data-radius='full'] {
+  --move-list-radius: var(--move-rounded-full);
+}
 
 /* =========================================================================
  * Sizes
@@ -181,7 +191,7 @@
     padding-left: 0;
   }
 
-  .trailing [data-direction="column"] {
+  .trailing [data-direction='column'] {
     flex-direction: row;
     align-items: center;
   }
@@ -275,4 +285,3 @@
   margin-left: auto;
   gap: var(--move-spacing-sm);
 }
-

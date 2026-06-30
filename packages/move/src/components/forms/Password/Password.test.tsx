@@ -36,7 +36,10 @@ describe('Password', () => {
 
     it('HTML attrs spread to input element', () => {
       renderPassword({ 'aria-label': 'Password field' });
-      expect(screen.getByPlaceholderText('Enter password')).toHaveAttribute('aria-label', 'Password field');
+      expect(screen.getByPlaceholderText('Enter password')).toHaveAttribute(
+        'aria-label',
+        'Password field',
+      );
     });
   });
 
@@ -87,7 +90,7 @@ describe('Password', () => {
   describe('variants', () => {
     it('applies data-variant', () => {
       const { container } = renderPassword({ variant: 'filled' });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-variant', 'filled');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-variant', 'filled');
     });
   });
 
@@ -95,7 +98,7 @@ describe('Password', () => {
   describe('sizes', () => {
     it('applies data-size', () => {
       const { container } = renderPassword({ size: 'sm' });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-size', 'sm');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-size', 'sm');
     });
   });
 
@@ -103,17 +106,17 @@ describe('Password', () => {
   describe('states', () => {
     it('sets data-invalid when invalid=true', () => {
       const { container } = renderPassword({ invalid: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-invalid');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-invalid');
     });
 
     it('sets data-disabled when disabled', () => {
       const { container } = renderPassword({ disabled: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-disabled');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-disabled');
     });
 
     it('sets data-readonly when readOnly', () => {
       const { container } = renderPassword({ readOnly: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-readonly');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-readonly');
     });
 
     it('disabled toggle cannot be clicked', async () => {

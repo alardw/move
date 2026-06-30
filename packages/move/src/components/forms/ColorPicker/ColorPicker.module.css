@@ -80,8 +80,7 @@
   touch-action: none;
   user-select: none;
   background:
-    linear-gradient(to top, #000, transparent),
-    linear-gradient(to right, #fff, transparent);
+    linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, transparent);
   /* background-color is set inline as hsl(H, 100%, 50%) */
 }
 
@@ -151,7 +150,11 @@
     linear-gradient(45deg, transparent 75%, var(--move-bg-muted) 75%),
     linear-gradient(-45deg, transparent 75%, var(--move-bg-muted) 75%);
   background-size: 8px 8px;
-  background-position: 0 0, 0 4px, 4px -4px, -4px 0;
+  background-position:
+    0 0,
+    0 4px,
+    4px -4px,
+    -4px 0;
 }
 
 .alphaGradient {

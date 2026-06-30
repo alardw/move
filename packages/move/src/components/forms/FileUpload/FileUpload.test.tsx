@@ -41,8 +41,10 @@ describe('FileUpload', () => {
       const ref = { current: null } as React.RefObject<HTMLDivElement>;
       render(
         <FileUpload.Root ref={ref}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
-        </FileUpload.Root>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
+        </FileUpload.Root>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -107,7 +109,7 @@ describe('FileUpload', () => {
           <FileUpload.Dropzone className="dz-custom">
             <p>Drop</p>
           </FileUpload.Dropzone>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       const dz = container.querySelector('[role="presentation"]');
       expect(dz?.className).toContain('dz-custom');
@@ -125,9 +127,11 @@ describe('FileUpload', () => {
     it('renders as ul with role=list', () => {
       render(
         <FileUpload.Root>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup />
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByRole('list')).toBeInTheDocument();
       expect(screen.getByRole('list').tagName).toBe('UL');
@@ -140,13 +144,15 @@ describe('FileUpload', () => {
       const file = createFile('test.txt', 100, 'text/plain');
       render(
         <FileUpload.Root defaultValue={[file]}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemName />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       const items = screen.getAllByRole('listitem');
       expect(items.length).toBeGreaterThan(0);
@@ -159,13 +165,15 @@ describe('FileUpload', () => {
       const file = createFile('document.pdf', 1024, 'application/pdf');
       render(
         <FileUpload.Root defaultValue={[file]}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemName />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByText('document.pdf')).toBeInTheDocument();
     });
@@ -177,13 +185,15 @@ describe('FileUpload', () => {
       const file = createFile('big.bin', 2048, 'application/octet-stream');
       render(
         <FileUpload.Root defaultValue={[file]}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemSize />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByText('2 KB')).toBeInTheDocument();
     });
@@ -195,13 +205,15 @@ describe('FileUpload', () => {
       const file = createFile('photo.jpg', 500, 'image/jpeg');
       render(
         <FileUpload.Root defaultValue={[file]}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemDelete />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByLabelText('Remove photo.jpg')).toBeInTheDocument();
     });
@@ -210,13 +222,15 @@ describe('FileUpload', () => {
       const file = createFile('photo.jpg', 500, 'image/jpeg');
       render(
         <FileUpload.Root defaultValue={[file]} labels={{ removeFile: 'Verwijder {filename}' }}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemDelete />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByLabelText('Verwijder photo.jpg')).toBeInTheDocument();
     });
@@ -227,14 +241,16 @@ describe('FileUpload', () => {
       const onChange = vi.fn();
       render(
         <FileUpload.Root defaultValue={[file]} onFilesChange={onChange}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ItemGroup>
             <FileUpload.Item file={file}>
               <FileUpload.ItemName />
               <FileUpload.ItemDelete />
             </FileUpload.Item>
           </FileUpload.ItemGroup>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       await user.click(screen.getByLabelText('Remove photo.jpg'));
       expect(onChange).toHaveBeenCalledWith([]);
@@ -250,11 +266,13 @@ describe('FileUpload', () => {
       const onChange = vi.fn();
       render(
         <FileUpload.Root defaultValue={[file1, file2]} onFilesChange={onChange}>
-          <FileUpload.Dropzone><p>Drop</p></FileUpload.Dropzone>
+          <FileUpload.Dropzone>
+            <p>Drop</p>
+          </FileUpload.Dropzone>
           <FileUpload.ClearTrigger>
             <button>Clear All</button>
           </FileUpload.ClearTrigger>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       await user.click(screen.getByText('Clear All'));
       expect(onChange).toHaveBeenCalledWith([]);
@@ -271,7 +289,7 @@ describe('FileUpload', () => {
               <button>Browse</button>
             </FileUpload.Trigger>
           </FileUpload.Dropzone>
-        </FileUpload.Root>
+        </FileUpload.Root>,
       );
       expect(screen.getByText('Browse')).toBeInTheDocument();
     });
@@ -290,11 +308,9 @@ describe('FileUpload', () => {
         expect.arrayContaining([
           expect.objectContaining({
             file: bigFile,
-            errors: expect.arrayContaining([
-              expect.objectContaining({ code: 'file-too-large' }),
-            ]),
+            errors: expect.arrayContaining([expect.objectContaining({ code: 'file-too-large' })]),
           }),
-        ])
+        ]),
       );
     });
 
@@ -313,7 +329,7 @@ describe('FileUpload', () => {
               expect.objectContaining({ code: 'file-invalid-type' }),
             ]),
           }),
-        ])
+        ]),
       );
     });
 
@@ -328,11 +344,9 @@ describe('FileUpload', () => {
       expect(onReject).toHaveBeenCalledWith(
         expect.arrayContaining([
           expect.objectContaining({
-            errors: expect.arrayContaining([
-              expect.objectContaining({ code: 'too-many-files' }),
-            ]),
+            errors: expect.arrayContaining([expect.objectContaining({ code: 'too-many-files' })]),
           }),
-        ])
+        ]),
       );
     });
 

@@ -53,10 +53,18 @@ export const Divider = withMoveComponent<DividerSlots, DividerProps, HTMLDivElem
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const contentSp = sp('content');
-        const { className: contentSpClass, style: contentSpStyle, ...contentSpRest } = contentSp as Record<string, unknown>;
+        const {
+          className: contentSpClass,
+          style: contentSpStyle,
+          ...contentSpRest
+        } = contentSp as Record<string, unknown>;
 
         const hasContent = props.children != null;
 

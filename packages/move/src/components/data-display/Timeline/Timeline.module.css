@@ -174,19 +174,49 @@
  * Colors
  * ========================================================================= */
 
-.item[data-color='gray']    { --move-timeline-active-color: var(--move-gray-500); }
-.item[data-color='red']     { --move-timeline-active-color: var(--move-red-600); }
-.item[data-color='pink']    { --move-timeline-active-color: var(--move-pink-600); }
-.item[data-color='grape']   { --move-timeline-active-color: var(--move-grape-600); }
-.item[data-color='violet']  { --move-timeline-active-color: var(--move-violet-600); }
-.item[data-color='indigo']  { --move-timeline-active-color: var(--move-indigo-600); }
-.item[data-color='blue']    { --move-timeline-active-color: var(--move-blue-600); }
-.item[data-color='cyan']    { --move-timeline-active-color: var(--move-cyan-600); }
-.item[data-color='teal']    { --move-timeline-active-color: var(--move-teal-600); }
-.item[data-color='green']   { --move-timeline-active-color: var(--move-green-600);  --move-timeline-active-fg: var(--move-black); }
-.item[data-color='lime']    { --move-timeline-active-color: var(--move-lime-600);   --move-timeline-active-fg: var(--move-black); }
-.item[data-color='yellow']  { --move-timeline-active-color: var(--move-yellow-600); --move-timeline-active-fg: var(--move-black); }
-.item[data-color='orange']  { --move-timeline-active-color: var(--move-orange-600); --move-timeline-active-fg: var(--move-black); }
+.item[data-color='gray'] {
+  --move-timeline-active-color: var(--move-gray-500);
+}
+.item[data-color='red'] {
+  --move-timeline-active-color: var(--move-red-600);
+}
+.item[data-color='pink'] {
+  --move-timeline-active-color: var(--move-pink-600);
+}
+.item[data-color='grape'] {
+  --move-timeline-active-color: var(--move-grape-600);
+}
+.item[data-color='violet'] {
+  --move-timeline-active-color: var(--move-violet-600);
+}
+.item[data-color='indigo'] {
+  --move-timeline-active-color: var(--move-indigo-600);
+}
+.item[data-color='blue'] {
+  --move-timeline-active-color: var(--move-blue-600);
+}
+.item[data-color='cyan'] {
+  --move-timeline-active-color: var(--move-cyan-600);
+}
+.item[data-color='teal'] {
+  --move-timeline-active-color: var(--move-teal-600);
+}
+.item[data-color='green'] {
+  --move-timeline-active-color: var(--move-green-600);
+  --move-timeline-active-fg: var(--move-black);
+}
+.item[data-color='lime'] {
+  --move-timeline-active-color: var(--move-lime-600);
+  --move-timeline-active-fg: var(--move-black);
+}
+.item[data-color='yellow'] {
+  --move-timeline-active-color: var(--move-yellow-600);
+  --move-timeline-active-fg: var(--move-black);
+}
+.item[data-color='orange'] {
+  --move-timeline-active-color: var(--move-orange-600);
+  --move-timeline-active-fg: var(--move-black);
+}
 
 /* =========================================================================
  * States — Completed
@@ -234,7 +264,8 @@
   border-color: var(--move-timeline-active-color);
   background-color: var(--move-timeline-active-color);
   color: var(--move-timeline-active-fg, white);
-  box-shadow: 0 0 0 3px var(--move-timeline-bullet-bg),
+  box-shadow:
+    0 0 0 3px var(--move-timeline-bullet-bg),
     0 0 0 6px color-mix(in srgb, var(--move-timeline-active-color) 20%, transparent);
 }
 

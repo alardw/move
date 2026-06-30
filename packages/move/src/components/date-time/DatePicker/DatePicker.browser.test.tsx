@@ -37,7 +37,9 @@ function DP() {
           {/* A full grid's worth of cells so the stagger is long enough to
               still be mid-flight when we interrupt it. */}
           {Array.from({ length: 28 }, (_, i) => (
-            <div key={i} role="gridcell">{i + 1}</div>
+            <div key={i} role="gridcell">
+              {i + 1}
+            </div>
           ))}
         </div>
       </DatePicker.Content>
@@ -95,7 +97,12 @@ describe('DatePicker — open/close/reopen (real browser)', () => {
   });
 
   it('INVARIANT: a sibling calendar opens on the FIRST click after another closed', async () => {
-    render(<><DP /><DP /></>);
+    render(
+      <>
+        <DP />
+        <DP />
+      </>,
+    );
     const btns = [...document.querySelectorAll('button')].filter(
       (b) => b.getAttribute('aria-label') === 'Open calendar',
     );

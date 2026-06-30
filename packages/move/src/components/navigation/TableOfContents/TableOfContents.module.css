@@ -34,7 +34,9 @@
 .item {
   display: block;
   padding: var(--move-toc-item-padding-y) var(--move-toc-item-padding-x);
-  padding-left: calc(var(--move-toc-item-padding-x) + var(--_toc-depth, 0) * var(--move-toc-depth-indent));
+  padding-left: calc(
+    var(--move-toc-item-padding-x) + var(--_toc-depth, 0) * var(--move-toc-depth-indent)
+  );
   font-size: var(--move-toc-item-font-size);
   line-height: 1.4;
   color: var(--move-toc-item-fg);
@@ -42,9 +44,15 @@
   transition: color var(--move-transition-fast) var(--move-ease-default);
 }
 
-.item[data-depth='2'] { --_toc-depth: 1; }
-.item[data-depth='3'] { --_toc-depth: 2; }
-.item[data-depth='4'] { --_toc-depth: 3; }
+.item[data-depth='2'] {
+  --_toc-depth: 1;
+}
+.item[data-depth='3'] {
+  --_toc-depth: 2;
+}
+.item[data-depth='4'] {
+  --_toc-depth: 3;
+}
 
 .item:hover {
   color: var(--move-toc-item-fg-hover);

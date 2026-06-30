@@ -12,11 +12,7 @@ import {
   snappy,
   useAnimations,
 } from '../../../animation';
-import type {
-  Animation,
-  StaggerConfig,
-  AnimationTrigger,
-} from '../../../animation';
+import type { Animation, StaggerConfig, AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import type { Size } from '../../../shared/types';
@@ -112,7 +108,16 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
   styles: acStyles,
   slots: ['root'] as const,
   defaults: { type: 'single', collapsible: true, size: 'md', variant: 'default' },
-  moveProps: ['type', 'value', 'defaultValue', 'onValueChange', 'collapsible', 'size', 'variant', 'animations'],
+  moveProps: [
+    'type',
+    'value',
+    'defaultValue',
+    'onValueChange',
+    'collapsible',
+    'size',
+    'variant',
+    'animations',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const {
@@ -142,13 +147,20 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     const [, forceRender] = React.useState(0);
     const prevValueRef = React.useRef<string | string[] | undefined>(undefined);
 
-    const config = animationsProp === false
-      ? { enter: undefined, stagger: undefined, content: {} as { open?: Animation; close?: Animation } }
-      : (animationsProp as AccordionAnimateConfig | undefined) ?? defaultRootAnimation;
+    const config =
+      animationsProp === false
+        ? {
+            enter: undefined,
+            stagger: undefined,
+            content: {} as { open?: Animation; close?: Animation },
+          }
+        : ((animationsProp as AccordionAnimateConfig | undefined) ?? defaultRootAnimation);
 
     const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
 
-    React.useEffect(() => { itemIndexRef.current = 0; });
+    React.useEffect(() => {
+      itemIndexRef.current = 0;
+    });
 
     const prev = prevValueRef.current;
     const current = accordion.value;
@@ -156,11 +168,17 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       if (multiple) {
         const prevArr = Array.isArray(prev) ? prev : [];
         const currArr = Array.isArray(current) ? current : [];
-        const closing = prevArr.filter(v => !currArr.includes(v));
-        const opening = currArr.filter(v => !prevArr.includes(v));
+        const closing = prevArr.filter((v) => !currArr.includes(v));
+        const opening = currArr.filter((v) => !prevArr.includes(v));
 
-        closing.forEach(v => { animatingOutRef.current.add(v); animatingInRef.current.delete(v); });
-        opening.forEach(v => { animatingInRef.current.add(v); animatingOutRef.current.delete(v); });
+        closing.forEach((v) => {
+          animatingOutRef.current.add(v);
+          animatingInRef.current.delete(v);
+        });
+        opening.forEach((v) => {
+          animatingInRef.current.add(v);
+          animatingOutRef.current.delete(v);
+        });
       } else {
         const prevStr = typeof prev === 'string' ? prev : '';
         const currStr = typeof current === 'string' ? current : '';
@@ -182,12 +200,12 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
 
     const onExitComplete = React.useCallback((v: string) => {
       animatingOutRef.current.delete(v);
-      forceRender(c => c + 1);
+      forceRender((c) => c + 1);
     }, []);
 
     const onEnterComplete = React.useCallback((v: string) => {
       animatingInRef.current.delete(v);
-      forceRender(c => c + 1);
+      forceRender((c) => c + 1);
     }, []);
 
     const contextValue: AccordionContextValue = {
@@ -259,7 +277,8 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
       indexRef.current = context.getItemIndex();
     }
 
-    const isActive = context.isItemActive(value as string) || context.isAnimatingOut(value as string);
+    const isActive =
+      context.isItemActive(value as string) || context.isAnimatingOut(value as string);
 
     const mergedRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -273,13 +292,18 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
       return { itemScaleFrom };
     };
     const itemEnterConfig: AnimationTrigger[] | null = context.enterAnimation
-      ? [{
-          trigger: 'Item.enter',
-          sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }],
-          vars: computeItemVars,
-        }]
+      ? [
+          {
+            trigger: 'Item.enter',
+            sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }],
+            vars: computeItemVars,
+          },
+        ]
       : null;
-    const itemRefs = React.useMemo(() => ({ Item: itemRef as React.RefObject<HTMLElement | null> }), []);
+    const itemRefs = React.useMemo(
+      () => ({ Item: itemRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
     useAnimations(itemEnterConfig, itemRefs);
 
     return {
@@ -325,7 +349,11 @@ const AccordionHeader = withMoveComponent<'header', AccordionHeaderProps, HTMLDi
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -359,7 +387,11 @@ const DEFAULT_TRIGGER_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Trigger.hover', sequence: [{ animation: { scale: { to: 1.005, ease: snappy } } }] },
 ];
 
-const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerProps, HTMLButtonElement>({
+const AccordionTrigger = withMoveComponent<
+  'trigger' | 'icon',
+  AccordionTriggerProps,
+  HTMLButtonElement
+>({
   name: 'AccordionTrigger',
   styles: acStyles,
   slots: ['trigger', 'icon'] as const,
@@ -375,27 +407,63 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
 
-    const animConfig = (animationsProp as AnimationTrigger[] | false | undefined) === false
-      ? null
-      : resolveAnimationsConfig(DEFAULT_TRIGGER_ANIMATIONS, animationsProp as AnimationTrigger[] | undefined);
+    const animConfig =
+      (animationsProp as AnimationTrigger[] | false | undefined) === false
+        ? null
+        : resolveAnimationsConfig(
+            DEFAULT_TRIGGER_ANIMATIONS,
+            animationsProp as AnimationTrigger[] | undefined,
+          );
 
     const isClosing = context.isAnimatingOut(itemContext.value);
     const isOpening = context.isAnimatingIn(itemContext.value);
 
     // Icon rotation durations synced to content animation
-    const closeDuration = context.contentAnimate?.close ? ((context.contentAnimate.close.height as any)?.duration || 300) : 0;
-    const openDuration = context.contentAnimate?.open ? ((context.contentAnimate.open.height as any)?.duration || 400) : 0;
+    const closeDuration = context.contentAnimate?.close
+      ? (context.contentAnimate.close.height as any)?.duration || 300
+      : 0;
+    const openDuration = context.contentAnimate?.open
+      ? (context.contentAnimate.open.height as any)?.duration || 400
+      : 0;
 
     // Combined trigger + icon animation config
-    const iconConfig: AnimationTrigger[] = React.useMemo(() => [
-      { trigger: 'icon-open', deps: [isOpening], sequence: isOpening ? [{ target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } } }] : false },
-      { trigger: 'icon-close', deps: [isClosing], sequence: isClosing ? [{ target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } } }] : false },
-    ], [isOpening, isClosing, openDuration, closeDuration]);
+    const iconConfig: AnimationTrigger[] = React.useMemo(
+      () => [
+        {
+          trigger: 'icon-open',
+          deps: [isOpening],
+          sequence: isOpening
+            ? [
+                {
+                  target: 'Icon',
+                  animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } },
+                },
+              ]
+            : false,
+        },
+        {
+          trigger: 'icon-close',
+          deps: [isClosing],
+          sequence: isClosing
+            ? [
+                {
+                  target: 'Icon',
+                  animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } },
+                },
+              ]
+            : false,
+        },
+      ],
+      [isOpening, isClosing, openDuration, closeDuration],
+    );
 
-    const triggerRefs = React.useMemo(() => ({
-      Trigger: triggerRef as React.RefObject<HTMLElement | null>,
-      Icon: iconRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const triggerRefs = React.useMemo(
+      () => ({
+        Trigger: triggerRef as React.RefObject<HTMLElement | null>,
+        Icon: iconRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     // Merge trigger hover config with icon rotation config
     const mergedConfig = React.useMemo(() => {
@@ -419,8 +487,16 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
       render() {
         const triggerSp = sp('trigger');
         const iconSp = sp('icon');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
 
         return (
           <button
@@ -466,7 +542,11 @@ export interface AccordionContentProps extends React.HTMLAttributes<HTMLElement>
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-const AccordionContent = withMoveComponent<'content' | 'contentInner', AccordionContentProps, HTMLDivElement>({
+const AccordionContent = withMoveComponent<
+  'content' | 'contentInner',
+  AccordionContentProps,
+  HTMLDivElement
+>({
   name: 'AccordionContent',
   styles: acStyles,
   slots: ['content', 'contentInner'] as const,
@@ -486,8 +566,8 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
     const isAnimatingOut = context.isAnimatingOut(itemContext.value);
 
     // Compute opacity timing from height animation config
-    const enterHeightDuration = config.open ? ((config.open.height as any)?.duration || 400) : 400;
-    const exitHeightDuration = config.close ? ((config.close.height as any)?.duration || 300) : 300;
+    const enterHeightDuration = config.open ? (config.open.height as any)?.duration || 400 : 400;
+    const exitHeightDuration = config.close ? (config.close.height as any)?.duration || 300 : 300;
 
     // No-animation fallback — immediately set styles when no config
     React.useEffect(() => {
@@ -521,30 +601,73 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
         {
           trigger: 'content-open',
           deps: [isAnimatingIn],
-          sequence: isAnimatingIn && config.open ? [[
-            { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
-            { target: 'ContentInner', animation: { opacity: { from: 0, to: 1, ease: 'linear', duration: enterHeightDuration - 150 }, delay: 150 } },
-          ]] : false,
+          sequence:
+            isAnimatingIn && config.open
+              ? [
+                  [
+                    { target: 'Content', fn: 'animateDimension' as const, animation: config.open },
+                    {
+                      target: 'ContentInner',
+                      animation: {
+                        opacity: {
+                          from: 0,
+                          to: 1,
+                          ease: 'linear',
+                          duration: enterHeightDuration - 150,
+                        },
+                        delay: 150,
+                      },
+                    },
+                  ],
+                ]
+              : false,
           onComplete: () => context.onEnterComplete(itemContext.value),
           direction: 'enter' as const,
         },
         {
           trigger: 'content-close',
           deps: [isAnimatingOut],
-          sequence: isAnimatingOut && config.close ? [[
-            { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
-            { target: 'ContentInner', animation: { opacity: { from: 1, to: 0, ease: 'linear', duration: Math.round(exitHeightDuration * 0.4) } } },
-          ]] : false,
+          sequence:
+            isAnimatingOut && config.close
+              ? [
+                  [
+                    { target: 'Content', fn: 'animateDimension' as const, animation: config.close },
+                    {
+                      target: 'ContentInner',
+                      animation: {
+                        opacity: {
+                          from: 1,
+                          to: 0,
+                          ease: 'linear',
+                          duration: Math.round(exitHeightDuration * 0.4),
+                        },
+                      },
+                    },
+                  ],
+                ]
+              : false,
           onComplete: () => context.onExitComplete(itemContext.value),
           direction: 'exit' as const,
         },
       ];
-    }, [isAnimatingIn, isAnimatingOut, config.open, config.close, hasAnimConfig, enterHeightDuration, exitHeightDuration, itemContext.value]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [
+      isAnimatingIn,
+      isAnimatingOut,
+      config.open,
+      config.close,
+      hasAnimConfig,
+      enterHeightDuration,
+      exitHeightDuration,
+      itemContext.value,
+    ]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-      ContentInner: innerRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+        ContentInner: innerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(contentConfig, contentRefs);
 
@@ -570,8 +693,16 @@ const AccordionContent = withMoveComponent<'content' | 'contentInner', Accordion
 
         if (!shouldRender) return null;
 
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
+        const {
+          className: innerSpClass,
+          style: innerSpStyle,
+          ...innerSpRest
+        } = innerSp as Record<string, unknown>;
 
         return (
           <SurfaceProvider value={surface}>

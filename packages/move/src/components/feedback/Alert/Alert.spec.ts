@@ -8,13 +8,14 @@ export const spec = {
   name: 'Alert',
   componentClass: 'display' as const,
   category: 'feedback',
-  description: 'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
+  description:
+    'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
 
   synonyms: ['banner', 'notice', 'message', 'callout', 'inline alert', 'notification'],
   families: {
-    behavior:  ["display"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['display'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: false,
@@ -29,14 +30,53 @@ export const spec = {
   ],
 
   props: [
-    { name: 'variant', type: "'info' | 'success' | 'warning' | 'danger'", default: "'info'", moveSpecific: true, description: 'Color variant' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Alert size' },
-    { name: 'icon', type: 'string | boolean', default: 'true', moveSpecific: true, description: 'Icon name, true for default variant icon, false to hide' },
+    {
+      name: 'variant',
+      type: "'info' | 'success' | 'warning' | 'danger'",
+      default: "'info'",
+      moveSpecific: true,
+      description: 'Color variant',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Alert size',
+    },
+    {
+      name: 'icon',
+      type: 'string | boolean',
+      default: 'true',
+      moveSpecific: true,
+      description: 'Icon name, true for default variant icon, false to hide',
+    },
     { name: 'title', type: 'React.ReactNode', moveSpecific: true, description: 'Alert title' },
-    { name: 'closable', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show close button' },
-    { name: 'onClose', type: '() => void', moveSpecific: true, description: 'Called when close button is clicked' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Alert description content' },
+    {
+      name: 'closable',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Show close button',
+    },
+    {
+      name: 'onClose',
+      type: '() => void',
+      moveSpecific: true,
+      description: 'Called when close button is clicked',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Animation config or false to disable',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Alert description content',
+    },
   ],
 
   anatomy: {
@@ -47,10 +87,7 @@ export const spec = {
       { slot: 'icon', ariaAttributes: ['aria-hidden="true"'] },
       {
         slot: 'content',
-        children: [
-          { slot: 'title' },
-          { slot: 'description' },
-        ],
+        children: [{ slot: 'title' }, { slot: 'description' }],
       },
       { slot: 'close', ariaAttributes: ['aria-label'] },
     ],
@@ -65,23 +102,62 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   animations: [
-    { trigger: 'Root.enter', sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -8, to: 0 } } }] },
+    {
+      trigger: 'Root.enter',
+      sequence: [{ animation: { opacity: { from: 0, to: 1 }, y: { from: -8, to: 0 } } }],
+    },
     { trigger: 'Root.exit', sequence: [{ animation: { opacity: { to: 0 }, y: { to: -8 } } }] },
   ],
 
   tokens: [
     { name: '--move-alert-bg', value: 'var(--move-bg-subtle)', description: 'Alert background' },
     { name: '--move-alert-fg', value: 'var(--move-fg-base)', description: 'Alert text color' },
-    { name: '--move-alert-border', value: 'var(--move-border-base)', description: 'Alert border color' },
-    { name: '--move-alert-accent', value: 'var(--move-info)', description: 'Accent color (changes per variant)' },
+    {
+      name: '--move-alert-border',
+      value: 'var(--move-border-base)',
+      description: 'Alert border color',
+    },
+    {
+      name: '--move-alert-accent',
+      value: 'var(--move-info)',
+      description: 'Accent color (changes per variant)',
+    },
     { name: '--move-alert-radius', value: 'var(--move-rounded-lg)', description: 'Border radius' },
-    { name: '--move-alert-padding-x', value: 'var(--move-spacing-md)', description: 'Horizontal padding' },
-    { name: '--move-alert-padding-y', value: 'var(--move-spacing-sm)', description: 'Vertical padding' },
-    { name: '--move-alert-close-size', value: 'var(--move-space-5)', description: 'Close button size' },
-    { name: '--move-alert-close-radius', value: 'var(--move-rounded-sm)', description: 'Close button radius' },
-    { name: '--move-alert-close-fg', value: 'var(--move-fg-muted)', description: 'Close button color' },
-    { name: '--move-alert-close-fg-hover', value: 'var(--move-fg-base)', description: 'Close button hover color' },
-    { name: '--move-alert-close-bg-hover', value: 'var(--move-bg-muted)', description: 'Close button hover background' },
+    {
+      name: '--move-alert-padding-x',
+      value: 'var(--move-spacing-md)',
+      description: 'Horizontal padding',
+    },
+    {
+      name: '--move-alert-padding-y',
+      value: 'var(--move-spacing-sm)',
+      description: 'Vertical padding',
+    },
+    {
+      name: '--move-alert-close-size',
+      value: 'var(--move-space-5)',
+      description: 'Close button size',
+    },
+    {
+      name: '--move-alert-close-radius',
+      value: 'var(--move-rounded-sm)',
+      description: 'Close button radius',
+    },
+    {
+      name: '--move-alert-close-fg',
+      value: 'var(--move-fg-muted)',
+      description: 'Close button color',
+    },
+    {
+      name: '--move-alert-close-fg-hover',
+      value: 'var(--move-fg-base)',
+      description: 'Close button hover color',
+    },
+    {
+      name: '--move-alert-close-bg-hover',
+      value: 'var(--move-bg-muted)',
+      description: 'Close button hover background',
+    },
   ],
 
   variants: {
@@ -89,13 +165,12 @@ export const spec = {
   },
   sizes: ['sm', 'md', 'lg'],
 
-  labels: [
-    { key: 'close', default: 'Close alert', description: 'Close button aria-label' },
-  ],
+  labels: [{ key: 'close', default: 'Close alert', description: 'Close button aria-label' }],
   renderContracts: [
     {
       id: 'close-unmounts-after-exit',
-      description: 'Close action unmounts alert after exit lifecycle animation and then calls onClose',
+      description:
+        'Close action unmounts alert after exit lifecycle animation and then calls onClose',
     },
   ],
 
@@ -116,11 +191,7 @@ export const spec = {
       'Calls onClose when close button clicked',
       'Hides after close animation completes',
     ],
-    aria: [
-      'Has role=alert on root',
-      'Icon has aria-hidden=true',
-      'Close button has aria-label',
-    ],
+    aria: ['Has role=alert on root', 'Icon has aria-hidden=true', 'Close button has aria-label'],
     animation: [
       'Entrance animation plays on mount',
       'Exit animation plays on close',

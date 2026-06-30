@@ -6,9 +6,25 @@ import styles from './Badge.module.css';
 export type BadgeVariant = 'solid' | 'soft' | 'surface' | 'outline' | 'dot';
 export type BadgeSize = 'sm' | 'md' | 'lg';
 export type BadgeColor =
-  | 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'
-  | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo'
-  | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange';
+  | 'default'
+  | 'primary'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'info'
+  | 'gray'
+  | 'red'
+  | 'pink'
+  | 'grape'
+  | 'violet'
+  | 'indigo'
+  | 'blue'
+  | 'cyan'
+  | 'teal'
+  | 'green'
+  | 'lime'
+  | 'yellow'
+  | 'orange';
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLElement> {
   /** Visual style: solid fill, soft tint, surface (tint + border), outline, or dot indicator. */
@@ -36,7 +52,11 @@ export const Badge = withMoveComponent<'root', BadgeProps, HTMLSpanElement>({
   name: 'Badge',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'solid' as BadgeVariant, size: 'md' as BadgeSize, color: 'default' as BadgeColor },
+  defaults: {
+    variant: 'solid' as BadgeVariant,
+    size: 'md' as BadgeSize,
+    color: 'default' as BadgeColor,
+  },
   moveProps: ['color'],
 
   setup({ props, ref, cx, sp, attrs }) {

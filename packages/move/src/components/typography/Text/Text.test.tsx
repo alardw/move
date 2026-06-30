@@ -27,7 +27,7 @@ describe('Text', () => {
       render(
         <Text className="custom" style={{ marginTop: '10px' }} data-testid="text">
           Text
-        </Text>
+        </Text>,
       );
       const el = screen.getByTestId('text');
       expect(el).toHaveClass('custom');
@@ -38,7 +38,7 @@ describe('Text', () => {
       render(
         <Text data-testid="text" aria-label="description">
           Text
-        </Text>
+        </Text>,
       );
       expect(screen.getByTestId('text')).toHaveAttribute('aria-label', 'description');
     });
@@ -57,10 +57,10 @@ describe('Text', () => {
         render(
           <Text as={element} data-testid="text">
             Text
-          </Text>
+          </Text>,
         );
         expect(screen.getByTestId('text').tagName).toBe(element.toUpperCase());
-      }
+      },
     );
   });
 
@@ -90,10 +90,10 @@ describe('Text', () => {
         render(
           <Text size={size} data-testid="text">
             Text
-          </Text>
+          </Text>,
         );
         expect(screen.getByTestId('text')).toHaveAttribute('data-size', size);
-      }
+      },
     );
   });
 
@@ -105,10 +105,10 @@ describe('Text', () => {
         render(
           <Text weight={weight} data-testid="text">
             Text
-          </Text>
+          </Text>,
         );
         expect(screen.getByTestId('text')).toHaveAttribute('data-weight', weight);
-      }
+      },
     );
   });
 
@@ -120,10 +120,10 @@ describe('Text', () => {
         render(
           <Text color={color} data-testid="text">
             Text
-          </Text>
+          </Text>,
         );
         expect(screen.getByTestId('text')).toHaveAttribute('data-color', color);
-      }
+      },
     );
   });
 
@@ -133,7 +133,7 @@ describe('Text', () => {
       render(
         <Text align="center" data-testid="text">
           Text
-        </Text>
+        </Text>,
       );
       expect(screen.getByTestId('text')).toHaveAttribute('data-align', 'center');
     });
@@ -143,17 +143,14 @@ describe('Text', () => {
       expect(screen.getByTestId('text')).not.toHaveAttribute('data-align');
     });
 
-    it.each(['left', 'center', 'right'] as const)(
-      'supports align=%s',
-      (align) => {
-        render(
-          <Text align={align} data-testid="text">
-            Text
-          </Text>
-        );
-        expect(screen.getByTestId('text')).toHaveAttribute('data-align', align);
-      }
-    );
+    it.each(['left', 'center', 'right'] as const)('supports align=%s', (align) => {
+      render(
+        <Text align={align} data-testid="text">
+          Text
+        </Text>,
+      );
+      expect(screen.getByTestId('text')).toHaveAttribute('data-align', align);
+    });
   });
 
   // === Truncate ===
@@ -162,7 +159,7 @@ describe('Text', () => {
       render(
         <Text truncate data-testid="text">
           Text
-        </Text>
+        </Text>,
       );
       expect(screen.getByTestId('text')).toHaveAttribute('data-truncate');
     });
@@ -179,7 +176,7 @@ describe('Text', () => {
       render(
         <Text sp={{ root: { className: 'sp-root' } }} data-testid="text">
           Text
-        </Text>
+        </Text>,
       );
       expect(screen.getByTestId('text')).toHaveClass('sp-root');
     });

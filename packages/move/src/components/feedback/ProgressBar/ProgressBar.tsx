@@ -40,7 +40,11 @@ export interface ProgressBarProps extends React.HTMLAttributes<HTMLElement> {
 // ProgressBar
 // =============================================================================
 
-export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarProps, HTMLDivElement>({
+export const ProgressBar = withMoveComponent<
+  'root' | 'indicator',
+  ProgressBarProps,
+  HTMLDivElement
+>({
   name: 'ProgressBar',
   styles,
   slots: ['root', 'indicator'] as const,
@@ -73,7 +77,11 @@ export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarPr
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         const indicatorSp = sp('indicator');
-        const { className: indSpClass, style: indSpStyle, ...indSpRest } = indicatorSp as Record<string, unknown>;
+        const {
+          className: indSpClass,
+          style: indSpStyle,
+          ...indSpRest
+        } = indicatorSp as Record<string, unknown>;
 
         return (
           <RadixProgress.Root
@@ -83,7 +91,9 @@ export const ProgressBar = withMoveComponent<'root' | 'indicator', ProgressBarPr
             ref={ref}
             value={props.value as number | null | undefined}
             max={props.max as number}
-            getValueLabel={props.getValueLabel as ((value: number, max: number) => string) | undefined}
+            getValueLabel={
+              props.getValueLabel as ((value: number, max: number) => string) | undefined
+            }
             data-size={props.size}
             data-variant={props.variant}
             className={cx('root', props.className, spClass as string | undefined)}

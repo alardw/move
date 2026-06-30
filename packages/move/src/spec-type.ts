@@ -59,42 +59,39 @@ export type ComponentClass =
 
 /** Controlled/uncontrolled state pattern */
 export type ControlledPattern =
-  | 'open'      // open / defaultOpen / onOpenChange
-  | 'value'     // value / defaultValue / onValueChange
-  | 'checked'   // checked / defaultChecked / onCheckedChange
+  | 'open' // open / defaultOpen / onOpenChange
+  | 'value' // value / defaultValue / onValueChange
+  | 'checked' // checked / defaultChecked / onCheckedChange
   | null;
 
 /** Keyboard interaction pattern */
 export type KeyboardPattern =
-  | 'toggle'    // Space/Enter toggles
-  | 'linear'    // Arrow up/down navigates list
-  | 'roving'    // Arrow keys rove focus among items
+  | 'toggle' // Space/Enter toggles
+  | 'linear' // Arrow up/down navigates list
+  | 'roving' // Arrow keys rove focus among items
   | 'typeahead' // Typing filters/searches
-  | 'grid'      // Arrow keys in 2D grid
-  | 'none'      // No keyboard interaction
+  | 'grid' // Arrow keys in 2D grid
+  | 'none' // No keyboard interaction
   | null;
 
 /** Focus management pattern */
 export type FocusPattern =
-  | 'self'       // Component itself is focusable
-  | 'trap'       // Focus trapped within (overlays)
-  | 'roving'     // Focus roves among children
-  | 'delegated'  // Focus delegated to child input
-  | 'child'      // Focus a specific child element
-  | 'none'       // No focus management
+  | 'self' // Component itself is focusable
+  | 'trap' // Focus trapped within (overlays)
+  | 'roving' // Focus roves among children
+  | 'delegated' // Focus delegated to child input
+  | 'child' // Focus a specific child element
+  | 'none' // No focus management
   | null;
 
 /** Form integration type */
 export type FormType =
-  | 'native-name'   // Standard <input name="...">
-  | 'hidden-input'  // Hidden input for form submission
+  | 'native-name' // Standard <input name="...">
+  | 'hidden-input' // Hidden input for form submission
   | null;
 
 /** Dismiss/close semantics for components that can be closed (e.g. Alert, Toast) */
-export type DismissBehavior =
-  | 'none'
-  | 'hide'
-  | 'unmountAfterExit';
+export type DismissBehavior = 'none' | 'hide' | 'unmountAfterExit';
 
 // =============================================================================
 // Structural definitions
@@ -490,8 +487,7 @@ export interface ComponentSpec {
   /** Explicit controlled/uncontrolled prop mapping (if controlled != null). Either
    *  the flat single-prop form, or a keyed map for multi-controlled components. */
   controlledProps?:
-    | ControlledProps
-    | Record<string, { prop: string; defaultProp?: string; handler?: string }>;
+    ControlledProps | Record<string, { prop: string; defaultProp?: string; handler?: string }>;
 
   /** Keyboard interaction pattern */
   keyboard: KeyboardPattern;

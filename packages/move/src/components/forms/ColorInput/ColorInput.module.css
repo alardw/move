@@ -54,11 +54,21 @@
  * Format-aware widths — md (default)
  * ========================================================================= */
 
-.root[data-format='hexa'] { --move-colorinput-width: 148px; }
-.root[data-format='rgb']  { --move-colorinput-width: 196px; }
-.root[data-format='hsl']  { --move-colorinput-width: 208px; }
-.root[data-format='rgba'] { --move-colorinput-width: 248px; }
-.root[data-format='hsla'] { --move-colorinput-width: 260px; }
+.root[data-format='hexa'] {
+  --move-colorinput-width: 148px;
+}
+.root[data-format='rgb'] {
+  --move-colorinput-width: 196px;
+}
+.root[data-format='hsl'] {
+  --move-colorinput-width: 208px;
+}
+.root[data-format='rgba'] {
+  --move-colorinput-width: 248px;
+}
+.root[data-format='hsla'] {
+  --move-colorinput-width: 260px;
+}
 
 /* =========================================================================
  * Sizes
@@ -72,11 +82,21 @@
   --move-colorinput-width: 116px;
 }
 
-.root[data-size='sm'][data-format='hexa'] { --move-colorinput-width: 128px; }
-.root[data-size='sm'][data-format='rgb']  { --move-colorinput-width: 168px; }
-.root[data-size='sm'][data-format='hsl']  { --move-colorinput-width: 180px; }
-.root[data-size='sm'][data-format='rgba'] { --move-colorinput-width: 216px; }
-.root[data-size='sm'][data-format='hsla'] { --move-colorinput-width: 228px; }
+.root[data-size='sm'][data-format='hexa'] {
+  --move-colorinput-width: 128px;
+}
+.root[data-size='sm'][data-format='rgb'] {
+  --move-colorinput-width: 168px;
+}
+.root[data-size='sm'][data-format='hsl'] {
+  --move-colorinput-width: 180px;
+}
+.root[data-size='sm'][data-format='rgba'] {
+  --move-colorinput-width: 216px;
+}
+.root[data-size='sm'][data-format='hsla'] {
+  --move-colorinput-width: 228px;
+}
 
 .root[data-size='md'],
 .root:not([data-size]) {
@@ -91,11 +111,21 @@
   --move-colorinput-width: 152px;
 }
 
-.root[data-size='lg'][data-format='hexa'] { --move-colorinput-width: 172px; }
-.root[data-size='lg'][data-format='rgb']  { --move-colorinput-width: 228px; }
-.root[data-size='lg'][data-format='hsl']  { --move-colorinput-width: 240px; }
-.root[data-size='lg'][data-format='rgba'] { --move-colorinput-width: 284px; }
-.root[data-size='lg'][data-format='hsla'] { --move-colorinput-width: 300px; }
+.root[data-size='lg'][data-format='hexa'] {
+  --move-colorinput-width: 172px;
+}
+.root[data-size='lg'][data-format='rgb'] {
+  --move-colorinput-width: 228px;
+}
+.root[data-size='lg'][data-format='hsl'] {
+  --move-colorinput-width: 240px;
+}
+.root[data-size='lg'][data-format='rgba'] {
+  --move-colorinput-width: 284px;
+}
+.root[data-size='lg'][data-format='hsla'] {
+  --move-colorinput-width: 300px;
+}
 
 /* =========================================================================
  * Variants
@@ -228,14 +258,30 @@
 }
 
 /* Position-aware transform origin for scale animation */
-.content[data-side='bottom'] { transform-origin: top center; }
-.content[data-side='bottom'][data-align='start'] { transform-origin: top left; }
-.content[data-side='bottom'][data-align='end'] { transform-origin: top right; }
-.content[data-side='top'] { transform-origin: bottom center; }
-.content[data-side='top'][data-align='start'] { transform-origin: bottom left; }
-.content[data-side='top'][data-align='end'] { transform-origin: bottom right; }
-.content[data-side='left'] { transform-origin: right center; }
-.content[data-side='right'] { transform-origin: left center; }
+.content[data-side='bottom'] {
+  transform-origin: top center;
+}
+.content[data-side='bottom'][data-align='start'] {
+  transform-origin: top left;
+}
+.content[data-side='bottom'][data-align='end'] {
+  transform-origin: top right;
+}
+.content[data-side='top'] {
+  transform-origin: bottom center;
+}
+.content[data-side='top'][data-align='start'] {
+  transform-origin: bottom left;
+}
+.content[data-side='top'][data-align='end'] {
+  transform-origin: bottom right;
+}
+.content[data-side='left'] {
+  transform-origin: right center;
+}
+.content[data-side='right'] {
+  transform-origin: left center;
+}
 
 .contentInner {
   padding: var(--move-spacing-sm);

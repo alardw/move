@@ -69,11 +69,7 @@ export interface CalendarViewHeaderProps {
   style?: React.CSSProperties;
 }
 
-const CalendarViewHeader: React.FC<CalendarViewHeaderProps> = ({
-  children,
-  className,
-  style,
-}) => (
+const CalendarViewHeader: React.FC<CalendarViewHeaderProps> = ({ children, className, style }) => (
   <div className={`${styles.header} ${className ?? ''}`} style={style}>
     {children}
   </div>
@@ -95,20 +91,10 @@ const CalendarViewNav: React.FC<CalendarViewNavProps> = ({ className }) => {
 
   return (
     <Button.Group className={`${styles.nav} ${className ?? ''}`}>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={goToPrev}
-        aria-label={labels.previous}
-      >
+      <Button variant="secondary" size="sm" onClick={goToPrev} aria-label={labels.previous}>
         {prevIcon}
       </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        onClick={goToNext}
-        aria-label={labels.next}
-      >
+      <Button variant="secondary" size="sm" onClick={goToNext} aria-label={labels.next}>
         {nextIcon}
       </Button>
     </Button.Group>
@@ -143,18 +129,10 @@ export interface CalendarViewTodayProps {
   children?: React.ReactNode;
 }
 
-const CalendarViewToday: React.FC<CalendarViewTodayProps> = ({
-  className,
-  children,
-}) => {
+const CalendarViewToday: React.FC<CalendarViewTodayProps> = ({ className, children }) => {
   const { goToToday, labels } = useCalendarViewContext();
   return (
-    <Button
-      variant="secondary"
-      size="sm"
-      className={className}
-      onClick={goToToday}
-    >
+    <Button variant="secondary" size="sm" className={className} onClick={goToToday}>
       {children ?? labels.today}
     </Button>
   );
@@ -210,10 +188,7 @@ export interface CalendarViewBodyProps {
   style?: React.CSSProperties;
 }
 
-const CalendarViewBody: React.FC<CalendarViewBodyProps> = ({
-  className,
-  style,
-}) => {
+const CalendarViewBody: React.FC<CalendarViewBodyProps> = ({ className, style }) => {
   const {
     view,
     date,
@@ -242,7 +217,7 @@ const CalendarViewBody: React.FC<CalendarViewBodyProps> = ({
       setDate(clickedDate);
       setView('day');
     },
-    [onDayClick, setDate, setView]
+    [onDayClick, setDate, setView],
   );
 
   return (

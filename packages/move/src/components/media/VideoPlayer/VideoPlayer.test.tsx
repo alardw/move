@@ -126,7 +126,7 @@ describe('VideoPlayer', () => {
         <VideoPlayer
           src="test.mp4"
           subtitles={[{ src: 'test.vtt', label: 'English', language: 'en' }]}
-        />
+        />,
       );
       expect(screen.getByLabelText('Subtitles')).toBeInTheDocument();
     });
@@ -137,7 +137,7 @@ describe('VideoPlayer', () => {
           src="test.mp4"
           subtitles={[{ src: 'test.vtt', label: 'English', language: 'en' }]}
           showSubtitles={false}
-        />
+        />,
       );
       expect(screen.queryByLabelText('Subtitles')).not.toBeInTheDocument();
     });
@@ -193,7 +193,7 @@ describe('VideoPlayer', () => {
         <VideoPlayer
           src="test.mp4"
           subtitles={[{ src: 'test.vtt', label: 'English', language: 'en' }]}
-        />
+        />,
       );
       expect(screen.getByLabelText('Subtitles')).toBeInTheDocument();
     });
@@ -208,14 +208,14 @@ describe('VideoPlayer', () => {
   describe('slot props', () => {
     it('merges sp className on root', () => {
       const { container } = render(
-        <VideoPlayer src="test.mp4" sp={{ root: { className: 'sp-root' } }} />
+        <VideoPlayer src="test.mp4" sp={{ root: { className: 'sp-root' } }} />,
       );
       expect(container.firstChild).toHaveClass('sp-root');
     });
 
     it('merges sp style on root', () => {
       const { container } = render(
-        <VideoPlayer src="test.mp4" sp={{ root: { style: { marginTop: '5px' } } }} />
+        <VideoPlayer src="test.mp4" sp={{ root: { style: { marginTop: '5px' } } }} />,
       );
       expect(container.firstChild).toHaveStyle({ marginTop: '5px' });
     });

@@ -71,7 +71,7 @@ export const LayoutGroup = withMoveComponent<'root', LayoutGroupProps, HTMLEleme
         // With asChild, Slot merges our ref/className/data-attrs onto the wrapped
         // element (e.g. a Stack/Grid), which then provides the layout and is the
         // container useAutoLayout tracks.
-        const Comp = (props.asChild ? Slot.Root : (props.as || 'div')) as React.ElementType;
+        const Comp = (props.asChild ? Slot.Root : props.as || 'div') as React.ElementType;
 
         return (
           <Comp

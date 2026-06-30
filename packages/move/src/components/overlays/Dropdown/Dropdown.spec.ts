@@ -9,14 +9,15 @@ export const spec = {
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'sm' as const },
-  description: 'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
+  description:
+    'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
 
   synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu', 'actions'],
   animationPatterns: ['popupMenu'],
   families: {
-    behavior:  ['popup-anchored'],
-    state:     ['controlled-open'],
-    a11y:      ['menu'],
+    behavior: ['popup-anchored'],
+    state: ['controlled-open'],
+    a11y: ['menu'],
   },
   behavior: {
     popup: {
@@ -30,22 +31,82 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'trigger', element: 'RadixDropdownMenu.Trigger', description: 'Button that opens the dropdown menu' },
-    { name: 'content', element: 'RadixDropdownMenu.Content', description: 'Popup container with animated height and transform-origin' },
-    { name: 'contentInner', element: 'div', description: 'Inner scrollable container inside content for height animation' },
-    { name: 'arrow', element: 'RadixDropdownMenu.Arrow', description: 'Arrow pointing toward the trigger' },
-    { name: 'item', element: 'RadixDropdownMenu.Item', description: 'Clickable menu item with hover scale animation' },
-    { name: 'group', element: 'RadixDropdownMenu.Group', description: 'Structural group container for items' },
-    { name: 'label', element: 'RadixDropdownMenu.Label', description: 'Non-interactive label for a group' },
-    { name: 'checkboxItem', element: 'RadixDropdownMenu.CheckboxItem', description: 'Toggleable checkbox menu item' },
-    { name: 'checkboxIndicator', element: 'span', description: 'Visual indicator for checkbox state' },
+    {
+      name: 'trigger',
+      element: 'RadixDropdownMenu.Trigger',
+      description: 'Button that opens the dropdown menu',
+    },
+    {
+      name: 'content',
+      element: 'RadixDropdownMenu.Content',
+      description: 'Popup container with animated height and transform-origin',
+    },
+    {
+      name: 'contentInner',
+      element: 'div',
+      description: 'Inner scrollable container inside content for height animation',
+    },
+    {
+      name: 'arrow',
+      element: 'RadixDropdownMenu.Arrow',
+      description: 'Arrow pointing toward the trigger',
+    },
+    {
+      name: 'item',
+      element: 'RadixDropdownMenu.Item',
+      description: 'Clickable menu item with hover scale animation',
+    },
+    {
+      name: 'group',
+      element: 'RadixDropdownMenu.Group',
+      description: 'Structural group container for items',
+    },
+    {
+      name: 'label',
+      element: 'RadixDropdownMenu.Label',
+      description: 'Non-interactive label for a group',
+    },
+    {
+      name: 'checkboxItem',
+      element: 'RadixDropdownMenu.CheckboxItem',
+      description: 'Toggleable checkbox menu item',
+    },
+    {
+      name: 'checkboxIndicator',
+      element: 'span',
+      description: 'Visual indicator for checkbox state',
+    },
     { name: 'checkboxLabel', element: 'span', description: 'Text label for checkbox item' },
-    { name: 'radioGroup', element: 'RadixDropdownMenu.RadioGroup', description: 'Radio group container' },
-    { name: 'radioItem', element: 'RadixDropdownMenu.RadioItem', description: 'Radio option menu item' },
-    { name: 'itemIndicator', element: 'RadixDropdownMenu.ItemIndicator', description: 'Visual indicator for radio/checkbox selection' },
-    { name: 'separator', element: 'RadixDropdownMenu.Separator', description: 'Visual divider between groups' },
-    { name: 'subTrigger', element: 'RadixDropdownMenu.SubTrigger', description: 'Item that opens a sub-menu' },
-    { name: 'subContent', element: 'RadixDropdownMenu.SubContent', description: 'Sub-menu popup content' },
+    {
+      name: 'radioGroup',
+      element: 'RadixDropdownMenu.RadioGroup',
+      description: 'Radio group container',
+    },
+    {
+      name: 'radioItem',
+      element: 'RadixDropdownMenu.RadioItem',
+      description: 'Radio option menu item',
+    },
+    {
+      name: 'itemIndicator',
+      element: 'RadixDropdownMenu.ItemIndicator',
+      description: 'Visual indicator for radio/checkbox selection',
+    },
+    {
+      name: 'separator',
+      element: 'RadixDropdownMenu.Separator',
+      description: 'Visual divider between groups',
+    },
+    {
+      name: 'subTrigger',
+      element: 'RadixDropdownMenu.SubTrigger',
+      description: 'Item that opens a sub-menu',
+    },
+    {
+      name: 'subContent',
+      element: 'RadixDropdownMenu.SubContent',
+      description: 'Sub-menu popup content',
+    },
   ],
 
   subComponents: [
@@ -53,23 +114,66 @@ export const spec = {
       name: 'Root',
       slots: [],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Dropdown sub-components' },
-        { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
-        { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Initial open state (uncontrolled)' },
-        { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when open state changes' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config or false to disable' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Dropdown sub-components',
+        },
+        {
+          name: 'open',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Controlled open state',
+        },
+        {
+          name: 'defaultOpen',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Initial open state (uncontrolled)',
+        },
+        {
+          name: 'onOpenChange',
+          type: '(open: boolean) => void',
+          moveSpecific: false,
+          description: 'Called when open state changes',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Animation config or false to disable',
+        },
       ],
       usesFactory: false,
-      description: 'Stateful root that manages open/close state, animation context, and close-after-exit coordination',
+      description:
+        'Stateful root that manages open/close state, animation context, and close-after-exit coordination',
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'RadixDropdownMenu.Trigger', description: 'Trigger button' }],
+      slots: [
+        { name: 'trigger', element: 'RadixDropdownMenu.Trigger', description: 'Trigger button' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger content' },
-        { name: 'asChild', type: 'boolean', moveSpecific: true, description: 'Merge props onto child element instead of wrapping' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Trigger content',
+        },
+        {
+          name: 'asChild',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Merge props onto child element instead of wrapping',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Trigger',
@@ -78,30 +182,80 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'RadixDropdownMenu.Content', description: 'Menu content panel' },
+        {
+          name: 'content',
+          element: 'RadixDropdownMenu.Content',
+          description: 'Menu content panel',
+        },
         { name: 'contentInner', element: 'div', description: 'Inner scrollable container' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Menu items' },
-        { name: 'container', type: 'HTMLElement', moveSpecific: false, description: 'Custom portal mount target. Defaults to document.body.' },
-        { name: 'sideOffset', type: 'number', moveSpecific: true, description: 'Distance from trigger in px' },
-        { name: 'align', type: "'start' | 'center' | 'end'", moveSpecific: true, description: 'Alignment along the side axis' },
-        { name: 'onPointerDownOutside', type: '(e: Event) => void', moveSpecific: true, description: 'Called when pointer down outside content' },
-        { name: 'onEscapeKeyDown', type: '(e: KeyboardEvent) => void', moveSpecific: true, description: 'Called when escape key pressed' },
-        { name: 'onInteractOutside', type: '(e: Event) => void', moveSpecific: true, description: 'Called on any outside interaction' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Menu items',
+        },
+        {
+          name: 'container',
+          type: 'HTMLElement',
+          moveSpecific: false,
+          description: 'Custom portal mount target. Defaults to document.body.',
+        },
+        {
+          name: 'sideOffset',
+          type: 'number',
+          moveSpecific: true,
+          description: 'Distance from trigger in px',
+        },
+        {
+          name: 'align',
+          type: "'start' | 'center' | 'end'",
+          moveSpecific: true,
+          description: 'Alignment along the side axis',
+        },
+        {
+          name: 'onPointerDownOutside',
+          type: '(e: Event) => void',
+          moveSpecific: true,
+          description: 'Called when pointer down outside content',
+        },
+        {
+          name: 'onEscapeKeyDown',
+          type: '(e: KeyboardEvent) => void',
+          moveSpecific: true,
+          description: 'Called when escape key pressed',
+        },
+        {
+          name: 'onInteractOutside',
+          type: '(e: Event) => void',
+          moveSpecific: true,
+          description: 'Called on any outside interaction',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Content',
-      description: 'Positioned popup with animated height reveal, staggered item entrance, and scrollable inner container',
+      description:
+        'Positioned popup with animated height reveal, staggered item entrance, and scrollable inner container',
     },
     {
       name: 'Arrow',
       slots: [{ name: 'arrow', element: 'RadixDropdownMenu.Arrow', description: 'Arrow SVG' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Arrow',
@@ -112,22 +266,55 @@ export const spec = {
       slots: [{ name: 'item', element: 'RadixDropdownMenu.Item', description: 'Menu item' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Item content' },
-        { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether item is disabled' },
-        { name: 'onSelect', type: '(e: Event) => void', moveSpecific: true, description: 'Called when item is selected' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Item content',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Whether item is disabled',
+        },
+        {
+          name: 'onSelect',
+          type: '(e: Event) => void',
+          moveSpecific: true,
+          description: 'Called when item is selected',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Item',
-      description: 'Clickable menu item with hover spring scale animation and animated close on select',
+      description:
+        'Clickable menu item with hover spring scale animation and animated close on select',
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'RadixDropdownMenu.Group', description: 'Group container' }],
+      slots: [
+        { name: 'group', element: 'RadixDropdownMenu.Group', description: 'Group container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Group items' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Group items',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Group',
@@ -138,8 +325,18 @@ export const spec = {
       slots: [{ name: 'label', element: 'RadixDropdownMenu.Label', description: 'Group label' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label text' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Label',
@@ -148,32 +345,83 @@ export const spec = {
     {
       name: 'CheckboxItem',
       slots: [
-        { name: 'checkboxItem', element: 'RadixDropdownMenu.CheckboxItem', description: 'Checkbox item container' },
+        {
+          name: 'checkboxItem',
+          element: 'RadixDropdownMenu.CheckboxItem',
+          description: 'Checkbox item container',
+        },
         { name: 'checkboxIndicator', element: 'span', description: 'Check mark indicator' },
         { name: 'checkboxLabel', element: 'span', description: 'Checkbox label text' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Checkbox label content' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Checkbox label content',
+        },
         { name: 'checked', type: 'boolean', moveSpecific: true, description: 'Whether checked' },
         { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether disabled' },
-        { name: 'onCheckedChange', type: '(checked: boolean) => void', moveSpecific: true, description: 'Called when checked state changes' },
-        { name: 'onSelect', type: '(e: Event) => void', moveSpecific: true, description: 'Called when item is selected' },
+        {
+          name: 'onCheckedChange',
+          type: '(checked: boolean) => void',
+          moveSpecific: true,
+          description: 'Called when checked state changes',
+        },
+        {
+          name: 'onSelect',
+          type: '(e: Event) => void',
+          moveSpecific: true,
+          description: 'Called when item is selected',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.CheckboxItem',
-      description: 'Toggleable checkbox menu item with animated check indicator (does not close menu on select)',
+      description:
+        'Toggleable checkbox menu item with animated check indicator (does not close menu on select)',
     },
     {
       name: 'RadioGroup',
-      slots: [{ name: 'radioGroup', element: 'RadixDropdownMenu.RadioGroup', description: 'Radio group container' }],
+      slots: [
+        {
+          name: 'radioGroup',
+          element: 'RadixDropdownMenu.RadioGroup',
+          description: 'Radio group container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Radio items' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Current selected value' },
-        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when selection changes' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Radio items',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Current selected value',
+        },
+        {
+          name: 'onValueChange',
+          type: '(value: string) => void',
+          moveSpecific: true,
+          description: 'Called when selection changes',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.RadioGroup',
@@ -181,14 +429,31 @@ export const spec = {
     },
     {
       name: 'RadioItem',
-      slots: [{ name: 'radioItem', element: 'RadixDropdownMenu.RadioItem', description: 'Radio item' }],
+      slots: [
+        { name: 'radioItem', element: 'RadixDropdownMenu.RadioItem', description: 'Radio item' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Radio item content' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Radio item content',
+        },
         { name: 'value', type: 'string', moveSpecific: true, description: 'Radio item value' },
         { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether disabled' },
-        { name: 'onSelect', type: '(e: Event) => void', moveSpecific: true, description: 'Called when item is selected' },
+        {
+          name: 'onSelect',
+          type: '(e: Event) => void',
+          moveSpecific: true,
+          description: 'Called when item is selected',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.RadioItem',
@@ -196,11 +461,27 @@ export const spec = {
     },
     {
       name: 'ItemIndicator',
-      slots: [{ name: 'itemIndicator', element: 'RadixDropdownMenu.ItemIndicator', description: 'Item indicator' }],
+      slots: [
+        {
+          name: 'itemIndicator',
+          element: 'RadixDropdownMenu.ItemIndicator',
+          description: 'Item indicator',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Indicator content (icon)' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Indicator content (icon)',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.ItemIndicator',
@@ -208,10 +489,17 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'RadixDropdownMenu.Separator', description: 'Divider line' }],
+      slots: [
+        { name: 'separator', element: 'RadixDropdownMenu.Separator', description: 'Divider line' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Separator',
@@ -221,21 +509,57 @@ export const spec = {
       name: 'Sub',
       slots: [],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Sub-menu trigger and content' },
-        { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled sub-menu open state' },
-        { name: 'defaultOpen', type: 'boolean', moveSpecific: false, description: 'Initial sub-menu open state' },
-        { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: false, description: 'Called when sub-menu open state changes' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Sub-menu trigger and content',
+        },
+        {
+          name: 'open',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Controlled sub-menu open state',
+        },
+        {
+          name: 'defaultOpen',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Initial sub-menu open state',
+        },
+        {
+          name: 'onOpenChange',
+          type: '(open: boolean) => void',
+          moveSpecific: false,
+          description: 'Called when sub-menu open state changes',
+        },
       ],
       usesFactory: false,
       description: 'Wrapper for nested sub-menu (SubTrigger + SubContent)',
     },
     {
       name: 'SubTrigger',
-      slots: [{ name: 'subTrigger', element: 'RadixDropdownMenu.SubTrigger', description: 'Sub-menu trigger item' }],
+      slots: [
+        {
+          name: 'subTrigger',
+          element: 'RadixDropdownMenu.SubTrigger',
+          description: 'Sub-menu trigger item',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Sub-trigger content' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Sub-trigger content',
+        },
         { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether disabled' },
       ],
       usesFactory: true,
@@ -244,12 +568,33 @@ export const spec = {
     },
     {
       name: 'SubContent',
-      slots: [{ name: 'subContent', element: 'RadixDropdownMenu.SubContent', description: 'Sub-menu content panel' }],
+      slots: [
+        {
+          name: 'subContent',
+          element: 'RadixDropdownMenu.SubContent',
+          description: 'Sub-menu content panel',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Sub-menu items' },
-        { name: 'sideOffset', type: 'number', moveSpecific: true, description: 'Distance from sub-trigger in px' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Sub-menu items',
+        },
+        {
+          name: 'sideOffset',
+          type: 'number',
+          moveSpecific: true,
+          description: 'Distance from sub-trigger in px',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.SubContent',
@@ -269,23 +614,21 @@ export const spec = {
           { slot: 'label' },
           {
             slot: 'group',
-            children: [
-              { slot: 'item', dataAttributes: ['data-highlighted', 'data-disabled'] },
-            ],
+            children: [{ slot: 'item', dataAttributes: ['data-highlighted', 'data-disabled'] }],
           },
           { slot: 'separator' },
           {
             slot: 'checkboxItem',
             dataAttributes: ['data-state', 'data-highlighted', 'data-disabled'],
-            children: [
-              { slot: 'checkboxIndicator' },
-              { slot: 'checkboxLabel' },
-            ],
+            children: [{ slot: 'checkboxIndicator' }, { slot: 'checkboxLabel' }],
           },
           {
             slot: 'radioGroup',
             children: [
-              { slot: 'radioItem', dataAttributes: ['data-state', 'data-highlighted', 'data-disabled'] },
+              {
+                slot: 'radioItem',
+                dataAttributes: ['data-state', 'data-highlighted', 'data-disabled'],
+              },
             ],
           },
           {
@@ -317,53 +660,200 @@ export const spec = {
   },
 
   animations: [
-    { trigger: 'Content.enter', sequence: [[
-      { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
-      { children: '[role="menuitem"]', animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } }, stagger: { delay: 30 } },
-    ]] },
-    { trigger: 'Content.exit', sequence: [[
-      { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
-      { children: '[role="menuitem"]', animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } }, stagger: { delay: 20, from: 'last' } },
-    ]] },
+    {
+      trigger: 'Content.enter',
+      sequence: [
+        [
+          { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+          {
+            children: '[role="menuitem"]',
+            animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+            stagger: { delay: 30 },
+          },
+        ],
+      ],
+    },
+    {
+      trigger: 'Content.exit',
+      sequence: [
+        [
+          { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+          {
+            children: '[role="menuitem"]',
+            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
+            stagger: { delay: 20, from: 'last' },
+          },
+        ],
+      ],
+    },
   ],
 
   renderContracts: [
-    { id: 'animation-context', description: 'Root provides DropdownContext with isClosing, close(), onCloseComplete, and animation config to all sub-components' },
-    { id: 'close-after-exit', description: 'Item select and close events trigger isClosing state; Content exit animation calls onCloseComplete which unmounts' },
-    { id: 'radix-open-override', description: 'Root keeps Radix open during exit animation (open={open || isClosing}) and ignores Radix close requests' },
-    { id: 'content-portaled-font', description: 'Content is rendered in a portal and declares font-family: var(--move-font-body) for portal font isolation' },
-    { id: 'animated-height-reveal', description: 'Content uses animateDimension for height reveal from 0 on open' },
-    { id: 'staggered-items', description: 'Menu items (menuitem, menuitemcheckbox, menuitemradio roles) enter with staggered delay of 30ms' },
-    { id: 'item-hover-scale', description: 'Items animate scale to 1.02 on mouse enter and back to 1 on mouse leave using spring config' },
-    { id: 'checkbox-indicator-animation', description: 'CheckboxItem indicator animates scale+opacity on checked/unchecked state changes' },
-    { id: 'position-aware-transform-origin', description: 'Content transform-origin changes based on data-side attribute (top=bottom, left=right, right=left)' },
-    { id: 'auto-focus-first-item', description: 'Content dispatches ArrowDown keydown after open animation completes to focus first item' },
-    { id: 'escape-triggers-animated-close', description: 'Escape key and pointer-down-outside trigger animated close via context close()' },
-    { id: 'checkbox-does-not-close', description: 'CheckboxItem does not close the menu on select (allows multiple toggles)' },
+    {
+      id: 'animation-context',
+      description:
+        'Root provides DropdownContext with isClosing, close(), onCloseComplete, and animation config to all sub-components',
+    },
+    {
+      id: 'close-after-exit',
+      description:
+        'Item select and close events trigger isClosing state; Content exit animation calls onCloseComplete which unmounts',
+    },
+    {
+      id: 'radix-open-override',
+      description:
+        'Root keeps Radix open during exit animation (open={open || isClosing}) and ignores Radix close requests',
+    },
+    {
+      id: 'content-portaled-font',
+      description:
+        'Content is rendered in a portal and declares font-family: var(--move-font-body) for portal font isolation',
+    },
+    {
+      id: 'animated-height-reveal',
+      description: 'Content uses animateDimension for height reveal from 0 on open',
+    },
+    {
+      id: 'staggered-items',
+      description:
+        'Menu items (menuitem, menuitemcheckbox, menuitemradio roles) enter with staggered delay of 30ms',
+    },
+    {
+      id: 'item-hover-scale',
+      description:
+        'Items animate scale to 1.02 on mouse enter and back to 1 on mouse leave using spring config',
+    },
+    {
+      id: 'checkbox-indicator-animation',
+      description:
+        'CheckboxItem indicator animates scale+opacity on checked/unchecked state changes',
+    },
+    {
+      id: 'position-aware-transform-origin',
+      description:
+        'Content transform-origin changes based on data-side attribute (top=bottom, left=right, right=left)',
+    },
+    {
+      id: 'auto-focus-first-item',
+      description:
+        'Content dispatches ArrowDown keydown after open animation completes to focus first item',
+    },
+    {
+      id: 'escape-triggers-animated-close',
+      description: 'Escape key and pointer-down-outside trigger animated close via context close()',
+    },
+    {
+      id: 'checkbox-does-not-close',
+      description: 'CheckboxItem does not close the menu on select (allows multiple toggles)',
+    },
   ],
 
   tokens: [
-    { name: '--move-dropdown-content-bg', value: 'var(--move-bg-subtle)', description: 'Content panel background' },
-    { name: '--move-dropdown-content-border', value: 'var(--move-border-base)', description: 'Content panel border color' },
-    { name: '--move-dropdown-content-radius', value: 'var(--move-rounded-lg)', description: 'Content panel border radius' },
-    { name: '--move-dropdown-content-shadow', value: 'var(--move-shadow-overlay)', description: 'Content panel box shadow' },
-    { name: '--move-dropdown-content-padding', value: 'var(--move-spacing-xs)', description: 'Content panel padding' },
-    { name: '--move-dropdown-content-min-width', value: '12rem', description: 'Content minimum width' },
-    { name: '--move-dropdown-content-max-height', value: 'min(var(--radix-dropdown-menu-content-available-height, 50vh), 50vh)', description: 'Content maximum height' },
-    { name: '--move-dropdown-item-radius', value: 'var(--move-rounded-md)', description: 'Item border radius' },
-    { name: '--move-dropdown-item-padding-x', value: 'var(--move-spacing-sm)', description: 'Item horizontal padding' },
-    { name: '--move-dropdown-item-padding-y', value: 'var(--move-spacing-xs)', description: 'Item vertical padding' },
-    { name: '--move-dropdown-item-fg', value: 'var(--move-fg-base)', description: 'Item text color' },
-    { name: '--move-dropdown-item-fg-disabled', value: 'var(--move-fg-subtle)', description: 'Item text color when disabled' },
-    { name: '--move-dropdown-item-bg-highlight', value: 'var(--move-bg-muted)', description: 'Item background when highlighted' },
-    { name: '--move-dropdown-item-font-size', value: 'var(--move-size-sm)', description: 'Item font size' },
-    { name: '--move-dropdown-label-padding-x', value: 'var(--move-spacing-sm)', description: 'Label horizontal padding' },
-    { name: '--move-dropdown-label-padding-y', value: 'var(--move-spacing-xs)', description: 'Label vertical padding' },
-    { name: '--move-dropdown-label-font-size', value: 'var(--move-size-sm)', description: 'Label font size' },
-    { name: '--move-dropdown-label-fg', value: 'var(--move-fg-muted)', description: 'Label text color' },
-    { name: '--move-dropdown-label-font-weight', value: 'var(--move-weight-semibold)', description: 'Label font weight' },
-    { name: '--move-dropdown-separator-color', value: 'var(--move-border-base)', description: 'Separator line color' },
-    { name: '--move-dropdown-separator-margin', value: 'var(--move-spacing-xs)', description: 'Separator vertical margin' },
+    {
+      name: '--move-dropdown-content-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Content panel background',
+    },
+    {
+      name: '--move-dropdown-content-border',
+      value: 'var(--move-border-base)',
+      description: 'Content panel border color',
+    },
+    {
+      name: '--move-dropdown-content-radius',
+      value: 'var(--move-rounded-lg)',
+      description: 'Content panel border radius',
+    },
+    {
+      name: '--move-dropdown-content-shadow',
+      value: 'var(--move-shadow-overlay)',
+      description: 'Content panel box shadow',
+    },
+    {
+      name: '--move-dropdown-content-padding',
+      value: 'var(--move-spacing-xs)',
+      description: 'Content panel padding',
+    },
+    {
+      name: '--move-dropdown-content-min-width',
+      value: '12rem',
+      description: 'Content minimum width',
+    },
+    {
+      name: '--move-dropdown-content-max-height',
+      value: 'min(var(--radix-dropdown-menu-content-available-height, 50vh), 50vh)',
+      description: 'Content maximum height',
+    },
+    {
+      name: '--move-dropdown-item-radius',
+      value: 'var(--move-rounded-md)',
+      description: 'Item border radius',
+    },
+    {
+      name: '--move-dropdown-item-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Item horizontal padding',
+    },
+    {
+      name: '--move-dropdown-item-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Item vertical padding',
+    },
+    {
+      name: '--move-dropdown-item-fg',
+      value: 'var(--move-fg-base)',
+      description: 'Item text color',
+    },
+    {
+      name: '--move-dropdown-item-fg-disabled',
+      value: 'var(--move-fg-subtle)',
+      description: 'Item text color when disabled',
+    },
+    {
+      name: '--move-dropdown-item-bg-highlight',
+      value: 'var(--move-bg-muted)',
+      description: 'Item background when highlighted',
+    },
+    {
+      name: '--move-dropdown-item-font-size',
+      value: 'var(--move-size-sm)',
+      description: 'Item font size',
+    },
+    {
+      name: '--move-dropdown-label-padding-x',
+      value: 'var(--move-spacing-sm)',
+      description: 'Label horizontal padding',
+    },
+    {
+      name: '--move-dropdown-label-padding-y',
+      value: 'var(--move-spacing-xs)',
+      description: 'Label vertical padding',
+    },
+    {
+      name: '--move-dropdown-label-font-size',
+      value: 'var(--move-size-sm)',
+      description: 'Label font size',
+    },
+    {
+      name: '--move-dropdown-label-fg',
+      value: 'var(--move-fg-muted)',
+      description: 'Label text color',
+    },
+    {
+      name: '--move-dropdown-label-font-weight',
+      value: 'var(--move-weight-semibold)',
+      description: 'Label font weight',
+    },
+    {
+      name: '--move-dropdown-separator-color',
+      value: 'var(--move-border-base)',
+      description: 'Separator line color',
+    },
+    {
+      name: '--move-dropdown-separator-margin',
+      value: 'var(--move-spacing-xs)',
+      description: 'Separator vertical margin',
+    },
   ],
 
   variants: {},

@@ -12,32 +12,64 @@ export const spec = {
 
   synonyms: ['caption', 'field label', 'form label'],
   families: {
-    behavior:  ["typography"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['typography'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: false,
   rootElement: 'label',
   slots: [
-    { name: 'root', element: 'label', description: 'Radix Label.Root element that renders as a native label' },
-    { name: 'asterisk', element: 'span', description: 'Required field asterisk indicator (*), rendered when required=true' },
+    {
+      name: 'root',
+      element: 'label',
+      description: 'Radix Label.Root element that renders as a native label',
+    },
+    {
+      name: 'asterisk',
+      element: 'span',
+      description: 'Required field asterisk indicator (*), rendered when required=true',
+    },
   ],
 
   props: [
-    { name: 'htmlFor', type: 'string', moveSpecific: true, description: 'ID of the associated form element' },
-    { name: 'required', type: 'boolean', moveSpecific: true, description: 'Show required asterisk indicator' },
-    { name: 'disabled', type: 'boolean', moveSpecific: true, description: 'Whether the label appears in disabled styling' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Font size of the label' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label text content' },
+    {
+      name: 'htmlFor',
+      type: 'string',
+      moveSpecific: true,
+      description: 'ID of the associated form element',
+    },
+    {
+      name: 'required',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Show required asterisk indicator',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Whether the label appears in disabled styling',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Font size of the label',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Label text content',
+    },
   ],
 
   anatomy: {
     slot: 'root',
     dataAttributes: ['data-size', 'data-disabled'],
-    children: [
-      { slot: 'asterisk', ariaAttributes: ['aria-hidden'] },
-    ],
+    children: [{ slot: 'asterisk', ariaAttributes: ['aria-hidden'] }],
   },
 
   controlled: null,
@@ -49,10 +81,22 @@ export const spec = {
   animations: [],
 
   tokens: [
-    { name: '--move-label-font-size', value: 'inherit', description: 'Label font size (overridden per size)' },
-    { name: '--move-label-font-weight', value: 'var(--move-weight-medium)', description: 'Label font weight' },
+    {
+      name: '--move-label-font-size',
+      value: 'inherit',
+      description: 'Label font size (overridden per size)',
+    },
+    {
+      name: '--move-label-font-weight',
+      value: 'var(--move-weight-medium)',
+      description: 'Label font weight',
+    },
     { name: '--move-label-color', value: 'var(--move-fg-base)', description: 'Label text color' },
-    { name: '--move-label-disabled-color', value: 'var(--move-fg-muted)', description: 'Label text color when disabled' },
+    {
+      name: '--move-label-disabled-color',
+      value: 'var(--move-fg-muted)',
+      description: 'Label text color when disabled',
+    },
   ],
 
   variants: {},
@@ -62,11 +106,29 @@ export const spec = {
   childrenKind: 'text' as const,
 
   renderContracts: [
-    { id: 'radix-label-root', description: 'Renders as Radix Label.Root which provides native label element with click-to-focus behavior' },
-    { id: 'asterisk-conditional', description: 'Asterisk slot is only rendered when required=true' },
-    { id: 'asterisk-aria-hidden', description: 'Asterisk is marked aria-hidden="true" since required state is conveyed via the input' },
-    { id: 'disabled-conditional', description: 'data-disabled attribute is only set when disabled=true' },
-    { id: 'htmlfor-passthrough', description: 'htmlFor prop is passed directly to Radix Label.Root for native label-input association' },
+    {
+      id: 'radix-label-root',
+      description:
+        'Renders as Radix Label.Root which provides native label element with click-to-focus behavior',
+    },
+    {
+      id: 'asterisk-conditional',
+      description: 'Asterisk slot is only rendered when required=true',
+    },
+    {
+      id: 'asterisk-aria-hidden',
+      description:
+        'Asterisk is marked aria-hidden="true" since required state is conveyed via the input',
+    },
+    {
+      id: 'disabled-conditional',
+      description: 'data-disabled attribute is only set when disabled=true',
+    },
+    {
+      id: 'htmlfor-passthrough',
+      description:
+        'htmlFor prop is passed directly to Radix Label.Root for native label-input association',
+    },
   ],
 
   radixPrimitive: 'Label',

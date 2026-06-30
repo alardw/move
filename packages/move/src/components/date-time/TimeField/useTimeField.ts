@@ -83,7 +83,12 @@ function parseTimeString(str: string | undefined): { h: number; m: number; s: nu
   };
 }
 
-function formatTimeString(h: number, m: number, s: number, granularity: TimeFieldGranularity): string {
+function formatTimeString(
+  h: number,
+  m: number,
+  s: number,
+  granularity: TimeFieldGranularity,
+): string {
   const hh = String(h).padStart(2, '0');
   const mm = String(m).padStart(2, '0');
   const ss = String(s).padStart(2, '0');
@@ -109,7 +114,7 @@ function to24Hour(h12: number, period: 'AM' | 'PM'): number {
 
 function wrap(value: number, min: number, max: number, delta: number): number {
   const range = max - min + 1;
-  return ((value - min + delta) % range + range) % range + min;
+  return ((((value - min + delta) % range) + range) % range) + min;
 }
 
 /** Seconds since midnight for an h:m:s. */
@@ -127,12 +132,7 @@ function secondsToHMS(total: number): { h: number; m: number; s: number } {
 // ---------------------------------------------------------------------------
 
 export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldReturn {
-  const {
-    granularity = 'minute',
-    hourCycle = 24,
-    step = 1,
-    disabled = false,
-  } = options;
+  const { granularity = 'minute', hourCycle = 24, step = 1, disabled = false } = options;
 
   // Typing buffer per segment (for two-digit entry)
   const bufferRef = useRef<Record<string, string>>({});
@@ -169,18 +169,34 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
   // through updatePart, so clamping here enforces them for typing, increment/
   // decrement, AM/PM, and direct setters alike.
   const minSeconds = useMemo(
-    () => (options.min ? timeToSeconds(parseTimeString(options.min).h, parseTimeString(options.min).m, parseTimeString(options.min).s) : null),
+    () =>
+      options.min
+        ? timeToSeconds(
+            parseTimeString(options.min).h,
+            parseTimeString(options.min).m,
+            parseTimeString(options.min).s,
+          )
+        : null,
     [options.min],
   );
   const maxSeconds = useMemo(
-    () => (options.max ? timeToSeconds(parseTimeString(options.max).h, parseTimeString(options.max).m, parseTimeString(options.max).s) : null),
+    () =>
+      options.max
+        ? timeToSeconds(
+            parseTimeString(options.max).h,
+            parseTimeString(options.max).m,
+            parseTimeString(options.max).s,
+          )
+        : null,
     [options.max],
   );
 
   const updatePart = useCallback(
     (newH: number, newM: number, newS: number) => {
       if (disabled) return;
-      let h = newH, m = newM, s = newS;
+      let h = newH,
+        m = newM,
+        s = newS;
       const total = timeToSeconds(h, m, s);
       if (minSeconds != null && total < minSeconds) ({ h, m, s } = secondsToHMS(minSeconds));
       else if (maxSeconds != null && total > maxSeconds) ({ h, m, s } = secondsToHMS(maxSeconds));
@@ -189,9 +205,18 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
     [disabled, buildValue, setValueRaw, minSeconds, maxSeconds],
   );
 
-  const setHours = useCallback((h: number) => updatePart(clamp(h, 0, 23), minutes, seconds), [updatePart, minutes, seconds]);
-  const setMinutes = useCallback((m: number) => updatePart(hours, clamp(m, 0, 59), seconds), [updatePart, hours, seconds]);
-  const setSeconds = useCallback((s: number) => updatePart(hours, minutes, clamp(s, 0, 59)), [updatePart, hours, minutes]);
+  const setHours = useCallback(
+    (h: number) => updatePart(clamp(h, 0, 23), minutes, seconds),
+    [updatePart, minutes, seconds],
+  );
+  const setMinutes = useCallback(
+    (m: number) => updatePart(hours, clamp(m, 0, 59), seconds),
+    [updatePart, hours, seconds],
+  );
+  const setSeconds = useCallback(
+    (s: number) => updatePart(hours, minutes, clamp(s, 0, 59)),
+    [updatePart, hours, minutes],
+  );
 
   const setPeriod = useCallback(
     (p: 'AM' | 'PM') => {
@@ -217,7 +242,11 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
           updatePart(wrap(hours, minH, maxH, 1), minutes, seconds);
         }
       } else if (segment === 'minute') {
-        updatePart(hours, wrap(minutes, 0, 59, step >= 60 ? 1 : Math.max(1, Math.round(step))), seconds);
+        updatePart(
+          hours,
+          wrap(minutes, 0, 59, step >= 60 ? 1 : Math.max(1, Math.round(step))),
+          seconds,
+        );
       } else if (segment === 'second') {
         updatePart(hours, minutes, wrap(seconds, 0, 59, Math.max(1, Math.round(step))));
       } else if (segment === 'period') {
@@ -241,7 +270,11 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
           updatePart(wrap(hours, minH, maxH, -1), minutes, seconds);
         }
       } else if (segment === 'minute') {
-        updatePart(hours, wrap(minutes, 0, 59, -(step >= 60 ? 1 : Math.max(1, Math.round(step)))), seconds);
+        updatePart(
+          hours,
+          wrap(minutes, 0, 59, -(step >= 60 ? 1 : Math.max(1, Math.round(step)))),
+          seconds,
+        );
       } else if (segment === 'second') {
         updatePart(hours, minutes, wrap(seconds, 0, 59, -Math.max(1, Math.round(step))));
       } else if (segment === 'period') {
@@ -272,8 +305,14 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
       // Period segment: A→AM, P→PM
       if (segment === 'period') {
         const k = key.toUpperCase();
-        if (k === 'A') { setPeriod('AM'); return true; }
-        if (k === 'P') { setPeriod('PM'); return true; }
+        if (k === 'A') {
+          setPeriod('AM');
+          return true;
+        }
+        if (k === 'P') {
+          setPeriod('PM');
+          return true;
+        }
         return false;
       }
 

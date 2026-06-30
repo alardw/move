@@ -10,8 +10,10 @@ describe('Breadcrumb', () => {
     it('renders as nav element with aria-label="Breadcrumb"', () => {
       render(
         <Breadcrumb>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       expect(nav).toBeInTheDocument();
@@ -21,8 +23,10 @@ describe('Breadcrumb', () => {
     it('renders list as ol element', () => {
       render(
         <Breadcrumb>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       const ol = nav.querySelector('ol');
@@ -32,8 +36,10 @@ describe('Breadcrumb', () => {
     it('defaults to size=md', () => {
       render(
         <Breadcrumb data-testid="bc">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveAttribute('data-size', 'md');
     });
@@ -41,15 +47,19 @@ describe('Breadcrumb', () => {
     it('applies data-size attribute', () => {
       const { rerender } = render(
         <Breadcrumb data-testid="bc" size="sm">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveAttribute('data-size', 'sm');
 
       rerender(
         <Breadcrumb data-testid="bc" size="lg">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveAttribute('data-size', 'lg');
     });
@@ -58,8 +68,10 @@ describe('Breadcrumb', () => {
       const ref = createRef<HTMLElement>();
       render(
         <Breadcrumb ref={ref}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(ref.current).toBeInstanceOf(HTMLElement);
       expect(ref.current?.tagName).toBe('NAV');
@@ -68,8 +80,10 @@ describe('Breadcrumb', () => {
     it('forwards className', () => {
       render(
         <Breadcrumb data-testid="bc" className="custom">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc').className).toContain('custom');
     });
@@ -77,8 +91,10 @@ describe('Breadcrumb', () => {
     it('forwards style', () => {
       render(
         <Breadcrumb data-testid="bc" style={{ marginTop: '10px' }}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveStyle({ marginTop: '10px' });
     });
@@ -86,8 +102,10 @@ describe('Breadcrumb', () => {
     it('spreads HTML attributes', () => {
       render(
         <Breadcrumb data-testid="bc" id="my-bc">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveAttribute('id', 'my-bc');
     });
@@ -95,10 +113,16 @@ describe('Breadcrumb', () => {
     it('auto-injects separators between Item children', () => {
       render(
         <Breadcrumb>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/about">About</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>Current</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/about">About</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Current</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       const separators = nav.querySelectorAll('[role="presentation"][aria-hidden="true"]');
@@ -109,11 +133,19 @@ describe('Breadcrumb', () => {
     it('collapses items with Ellipsis when maxItems is exceeded', () => {
       render(
         <Breadcrumb maxItems={3} itemsBeforeCollapse={1} itemsAfterCollapse={1}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/a">A</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/b">B</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/c">C</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>D</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/a">A</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/b">B</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/c">C</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>D</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       // Should show A, ellipsis, D
       expect(screen.getByText('A')).toBeInTheDocument();
@@ -127,10 +159,16 @@ describe('Breadcrumb', () => {
     it('defaults to itemsBeforeCollapse=1 and itemsAfterCollapse=1', () => {
       render(
         <Breadcrumb maxItems={2}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/a">First</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/b">Second</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>Third</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/a">First</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/b">Second</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Third</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       // Default: 1 before, ellipsis, 1 after
       expect(screen.getByText('First')).toBeInTheDocument();
@@ -142,9 +180,13 @@ describe('Breadcrumb', () => {
     it('uses custom separator prop', () => {
       render(
         <Breadcrumb separator="/">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>Current</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Current</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       const separators = nav.querySelectorAll('[role="presentation"]');
@@ -155,8 +197,10 @@ describe('Breadcrumb', () => {
     it('merges sp className on root', () => {
       render(
         <Breadcrumb data-testid="bc" sp={{ root: { className: 'sp-root' } }}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc').className).toContain('sp-root');
     });
@@ -164,8 +208,10 @@ describe('Breadcrumb', () => {
     it('merges sp style on root', () => {
       render(
         <Breadcrumb data-testid="bc" sp={{ root: { style: { marginTop: '5px' } } }}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('bc')).toHaveStyle({ marginTop: '5px' });
     });
@@ -179,7 +225,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item data-testid="item">
             <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const item = screen.getByTestId('item');
       expect(item).toBeInTheDocument();
@@ -193,7 +239,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item ref={ref}>
             <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       expect(ref.current).toBeInstanceOf(HTMLLIElement);
     });
@@ -204,7 +250,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item data-testid="item" className="custom" style={{ padding: '4px' }}>
             <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const item = screen.getByTestId('item');
       expect(item.className).toContain('custom');
@@ -218,9 +264,11 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Link data-testid="link" href="/home">Home</Breadcrumb.Link>
+            <Breadcrumb.Link data-testid="link" href="/home">
+              Home
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const link = screen.getByTestId('link');
       expect(link.tagName).toBe('A');
@@ -231,9 +279,11 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Link ref={ref} href="/home">Home</Breadcrumb.Link>
+            <Breadcrumb.Link ref={ref} href="/home">
+              Home
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
     });
@@ -242,9 +292,16 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Link data-testid="link" className="custom" style={{ color: 'rgb(255, 0, 0)' }} href="/">Home</Breadcrumb.Link>
+            <Breadcrumb.Link
+              data-testid="link"
+              className="custom"
+              style={{ color: 'rgb(255, 0, 0)' }}
+              href="/"
+            >
+              Home
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const link = screen.getByTestId('link');
       expect(link.className).toContain('custom');
@@ -260,7 +317,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item>
             <Breadcrumb.Page data-testid="page">Current</Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const page = screen.getByTestId('page');
       expect(page.tagName).toBe('SPAN');
@@ -273,7 +330,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item>
             <Breadcrumb.Page data-testid="page">Current</Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('page')).toHaveAttribute('aria-disabled', 'true');
     });
@@ -284,7 +341,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item>
             <Breadcrumb.Page data-testid="page">Current</Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       expect(screen.getByTestId('page')).toHaveAttribute('role', 'link');
     });
@@ -296,7 +353,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item>
             <Breadcrumb.Page ref={ref}>Current</Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       expect(ref.current).toBeInstanceOf(HTMLSpanElement);
     });
@@ -305,9 +362,11 @@ describe('Breadcrumb', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Page data-testid="page" className="custom" style={{ fontWeight: 'bold' }}>Current</Breadcrumb.Page>
+            <Breadcrumb.Page data-testid="page" className="custom" style={{ fontWeight: 'bold' }}>
+              Current
+            </Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
       const page = screen.getByTestId('page');
       expect(page.className).toContain('custom');
@@ -320,9 +379,13 @@ describe('Breadcrumb', () => {
     it('renders as li with role="presentation" and aria-hidden="true"', () => {
       render(
         <Breadcrumb>
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>Current</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Current</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       const sep = nav.querySelector('[role="presentation"][aria-hidden="true"]');
@@ -333,9 +396,13 @@ describe('Breadcrumb', () => {
     it('uses context separator when no children provided', () => {
       render(
         <Breadcrumb separator="/">
-          <Breadcrumb.Item><Breadcrumb.Link href="/">Home</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>Current</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/">Home</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Current</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
       const sep = nav.querySelector('[role="presentation"]');
@@ -348,10 +415,16 @@ describe('Breadcrumb', () => {
     it('renders horizontal ellipsis character by default', () => {
       render(
         <Breadcrumb maxItems={2}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/a">A</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/b">B</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>C</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/a">A</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/b">B</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>C</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       expect(screen.getByText('\u2026')).toBeInTheDocument();
     });
@@ -359,10 +432,16 @@ describe('Breadcrumb', () => {
     it('has role="presentation"', () => {
       render(
         <Breadcrumb maxItems={2}>
-          <Breadcrumb.Item><Breadcrumb.Link href="/a">A</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Link href="/b">B</Breadcrumb.Link></Breadcrumb.Item>
-          <Breadcrumb.Item><Breadcrumb.Page>C</Breadcrumb.Page></Breadcrumb.Item>
-        </Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/a">A</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link href="/b">B</Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>C</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>,
       );
       const ellipsis = screen.getByText('\u2026');
       expect(ellipsis).toHaveAttribute('role', 'presentation');
@@ -383,7 +462,7 @@ describe('Breadcrumb', () => {
           <Breadcrumb.Item>
             <Breadcrumb.Page>Current Page</Breadcrumb.Page>
           </Breadcrumb.Item>
-        </Breadcrumb>
+        </Breadcrumb>,
       );
 
       expect(screen.getByRole('navigation', { name: 'Breadcrumb' })).toBeInTheDocument();

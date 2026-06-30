@@ -34,7 +34,9 @@ describe('Image', () => {
     });
 
     it('forwards style to root', () => {
-      const { container } = render(<Image src="test.jpg" alt="Test" style={{ marginTop: '10px' }} />);
+      const { container } = render(
+        <Image src="test.jpg" alt="Test" style={{ marginTop: '10px' }} />,
+      );
       expect(container.firstChild).toHaveStyle({ marginTop: '10px' });
     });
 
@@ -135,7 +137,7 @@ describe('Image', () => {
       const { container } = render(
         <Image src="bad.jpg" alt="Test">
           <span>Custom fallback</span>
-        </Image>
+        </Image>,
       );
       const img = screen.getByRole('img');
       fireEvent.error(img);
@@ -161,14 +163,14 @@ describe('Image', () => {
   describe('action overlay', () => {
     it('shows action overlay when action prop is provided', () => {
       const { container } = render(
-        <Image src="test.jpg" alt="Test" action={<button>Download</button>} />
+        <Image src="test.jpg" alt="Test" action={<button>Download</button>} />,
       );
       expect(container.querySelector('[class*="action"]')).toBeInTheDocument();
     });
 
     it('hides action overlay when image is in fallback state', () => {
       const { container } = render(
-        <Image src="bad.jpg" alt="Test" action={<button>Download</button>} />
+        <Image src="bad.jpg" alt="Test" action={<button>Download</button>} />,
       );
       fireEvent.error(screen.getByRole('img'));
       expect(container.querySelector('[class*="action"]')).not.toBeInTheDocument();
@@ -179,14 +181,14 @@ describe('Image', () => {
   describe('slot props', () => {
     it('merges sp className on root', () => {
       const { container } = render(
-        <Image src="test.jpg" alt="Test" sp={{ root: { className: 'sp-root' } }} />
+        <Image src="test.jpg" alt="Test" sp={{ root: { className: 'sp-root' } }} />,
       );
       expect(container.firstChild).toHaveClass('sp-root');
     });
 
     it('merges sp style on root', () => {
       const { container } = render(
-        <Image src="test.jpg" alt="Test" sp={{ root: { style: { marginTop: '5px' } } }} />
+        <Image src="test.jpg" alt="Test" sp={{ root: { style: { marginTop: '5px' } } }} />,
       );
       expect(container.firstChild).toHaveStyle({ marginTop: '5px' });
     });

@@ -30,7 +30,9 @@ describe('staggerEnter', () => {
   });
 
   it('honours delay, from, and children options', () => {
-    const step = (staggerEnter({ delay: 25, from: 'center', children: '.item' }).sequence as any[])[0];
+    const step = (
+      staggerEnter({ delay: 25, from: 'center', children: '.item' }).sequence as any[]
+    )[0];
     expect(step.stagger).toEqual({ delay: 25, from: 'center' });
     expect(step.children).toBe('.item');
   });

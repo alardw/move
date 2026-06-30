@@ -8,30 +8,71 @@ export const spec = {
   name: 'Loader',
   componentClass: 'presentational' as const,
   category: 'feedback',
-  description: 'Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations',
+  description:
+    'Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations',
 
   synonyms: ['spinner', 'loading', 'wait', 'progress indicator', 'busy indicator'],
   animationPatterns: ['loader'],
   families: {
-    behavior:  ["loading"],
-    state:     ["stateless"],
-    a11y:      ["none"],
+    behavior: ['loading'],
+    state: ['stateless'],
+    a11y: ['none'],
   },
 
   compound: false,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Outer container with role="progressbar", variant-dependent sizing' },
-    { name: 'svg', element: 'svg', description: 'SVG element for spinner variant with rotation animation' },
-    { name: 'circle', element: 'circle', description: 'SVG circle with stroke-dash animation for spinner variant' },
-    { name: 'dot', element: 'span', description: 'Bouncing dot element for dots variant (rendered 3 times)' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'Outer container with role="progressbar", variant-dependent sizing',
+    },
+    {
+      name: 'svg',
+      element: 'svg',
+      description: 'SVG element for spinner variant with rotation animation',
+    },
+    {
+      name: 'circle',
+      element: 'circle',
+      description: 'SVG circle with stroke-dash animation for spinner variant',
+    },
+    {
+      name: 'dot',
+      element: 'span',
+      description: 'Bouncing dot element for dots variant (rendered 3 times)',
+    },
   ],
 
   props: [
-    { name: 'variant', type: "'spinner' | 'dots'", default: "'spinner'", moveSpecific: true, description: 'Loading indicator style' },
-    { name: 'color', type: "'primary' | 'secondary' | 'current'", default: "'primary'", moveSpecific: true, description: 'Indicator color' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Indicator size' },
-    { name: 'strokeWidth', type: 'number', default: '3', moveSpecific: true, description: 'SVG stroke width for spinner variant' },
+    {
+      name: 'variant',
+      type: "'spinner' | 'dots'",
+      default: "'spinner'",
+      moveSpecific: true,
+      description: 'Loading indicator style',
+    },
+    {
+      name: 'color',
+      type: "'primary' | 'secondary' | 'current'",
+      default: "'primary'",
+      moveSpecific: true,
+      description: 'Indicator color',
+    },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Indicator size',
+    },
+    {
+      name: 'strokeWidth',
+      type: 'number',
+      default: '3',
+      moveSpecific: true,
+      description: 'SVG stroke width for spinner variant',
+    },
   ],
 
   anatomy: {
@@ -41,9 +82,7 @@ export const spec = {
     children: [
       {
         slot: 'svg',
-        children: [
-          { slot: 'circle' },
-        ],
+        children: [{ slot: 'circle' }],
       },
       { slot: 'dot' },
     ],
@@ -59,19 +98,54 @@ export const spec = {
   animations: [],
 
   renderContracts: [
-    { id: 'variant-spinner', description: 'When variant=spinner, renders svg+circle slots; dot slots are not rendered' },
-    { id: 'variant-dots', description: 'When variant=dots, renders 3 dot span elements; svg+circle slots are not rendered' },
+    {
+      id: 'variant-spinner',
+      description: 'When variant=spinner, renders svg+circle slots; dot slots are not rendered',
+    },
+    {
+      id: 'variant-dots',
+      description:
+        'When variant=dots, renders 3 dot span elements; svg+circle slots are not rendered',
+    },
     { id: 'dots-aria-label', description: 'Dots variant includes aria-label="Loading" on root' },
-    { id: 'anime-spinner', description: 'Spinner uses anime.js for SVG rotation (2s linear loop) and stroke-dasharray animation (1.5s inOutQuad loop)' },
-    { id: 'anime-dots', description: 'Dots use anime.js for bouncing translateY + squish scaleX/scaleY (500ms out(2) alternate loop, staggered delays)' },
-    { id: 'reduced-motion', description: 'Respects prefersReducedMotion: spinner shows static stroke-dasharray, dots skip animation' },
+    {
+      id: 'anime-spinner',
+      description:
+        'Spinner uses anime.js for SVG rotation (2s linear loop) and stroke-dasharray animation (1.5s inOutQuad loop)',
+    },
+    {
+      id: 'anime-dots',
+      description:
+        'Dots use anime.js for bouncing translateY + squish scaleX/scaleY (500ms out(2) alternate loop, staggered delays)',
+    },
+    {
+      id: 'reduced-motion',
+      description:
+        'Respects prefersReducedMotion: spinner shows static stroke-dasharray, dots skip animation',
+    },
   ],
 
   tokens: [
-    { name: '--move-loader-size', value: '48px', description: 'Spinner variant overall size (varies by size prop)' },
-    { name: '--move-loader-color', value: 'var(--move-primary)', description: 'Indicator color (varies by color prop)' },
-    { name: '--move-loader-dot-size', value: '8px', description: 'Dot diameter for dots variant (varies by size prop)' },
-    { name: '--move-loader-travel', value: '22px', description: 'Dot bounce travel distance (varies by size prop)' },
+    {
+      name: '--move-loader-size',
+      value: '48px',
+      description: 'Spinner variant overall size (varies by size prop)',
+    },
+    {
+      name: '--move-loader-color',
+      value: 'var(--move-primary)',
+      description: 'Indicator color (varies by color prop)',
+    },
+    {
+      name: '--move-loader-dot-size',
+      value: '8px',
+      description: 'Dot diameter for dots variant (varies by size prop)',
+    },
+    {
+      name: '--move-loader-travel',
+      value: '22px',
+      description: 'Dot bounce travel distance (varies by size prop)',
+    },
   ],
 
   variants: {
@@ -81,7 +155,11 @@ export const spec = {
   sizes: ['sm', 'md', 'lg'] as string[],
 
   labels: [
-    { key: 'loading', default: 'Loading', description: 'Accessible label announced while loading (dots variant)' },
+    {
+      key: 'loading',
+      default: 'Loading',
+      description: 'Accessible label announced while loading (dots variant)',
+    },
   ],
 
   hasHook: false,

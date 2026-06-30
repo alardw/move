@@ -137,7 +137,10 @@
   --move-select-content-padding: var(--move-spacing-xs);
   --move-select-content-min-width: 10rem;
   --move-select-content-max-width: none;
-  --move-select-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 20rem), 20rem);
+  --move-select-content-max-height: min(
+    var(--radix-dropdown-menu-content-available-height, 20rem),
+    20rem
+  );
 
   /* Match trigger width by default. No default max-width cap — set
      `--move-select-content-max-width` or pass `maxWidth` prop to constrain.

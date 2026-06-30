@@ -6,11 +6,7 @@ import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
-import {
-  useAnimations,
-  poppy,
-  smooth,
-} from '../../../animation';
+import { useAnimations, poppy, smooth } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../overlays/Tooltip';
 import { Button } from '../../actions/Button';
@@ -58,24 +54,28 @@ function getItemSelector() {
 const DEFAULT_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Overlay.enter',
-    sequence: [{
-      animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
-    }],
+    sequence: [
+      {
+        animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
+      },
+    ],
   },
 ];
 
 const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Content.enter',
-    sequence: [{
-      target: 'Content',
-      children: `.${styles.item}`,
-      stagger: { delay: SIDEBAR_STAGGER_DELAY },
-      animation: {
-        opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
-        scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
+    sequence: [
+      {
+        target: 'Content',
+        children: `.${styles.item}`,
+        stagger: { delay: SIDEBAR_STAGGER_DELAY },
+        animation: {
+          opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
+          scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -125,26 +125,17 @@ export interface SidebarProviderProps extends UseSidebarOptions {
   animations?: false;
 }
 
-const SidebarProvider: React.FC<SidebarProviderProps> = ({
-  children,
-  animations,
-  ...options
-}) => {
+const SidebarProvider: React.FC<SidebarProviderProps> = ({ children, animations, ...options }) => {
   const sidebar = useSidebar(options);
   const [scrollState, setScroll] = React.useState({
     scrolledFromTop: false,
     scrolledFromBottom: false,
   });
-  const scrollCtx = React.useMemo(
-    () => ({ ...scrollState, setScroll }),
-    [scrollState],
-  );
+  const scrollCtx = React.useMemo(() => ({ ...scrollState, setScroll }), [scrollState]);
   return (
     <SidebarContext.Provider value={sidebar}>
       <SidebarAnimateContext.Provider value={animations}>
-        <SidebarScrollContext.Provider value={scrollCtx}>
-          {children}
-        </SidebarScrollContext.Provider>
+        <SidebarScrollContext.Provider value={scrollCtx}>{children}</SidebarScrollContext.Provider>
       </SidebarAnimateContext.Provider>
     </SidebarContext.Provider>
   );
@@ -172,21 +163,33 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
     const overlayRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, overlayRef);
 
-    const overlayRefs = React.useMemo(() => ({
-      Overlay: overlayRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const overlayRefs = React.useMemo(
+      () => ({
+        Overlay: overlayRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
-    useAnimations(animDisabled === false ? false : DEFAULT_OVERLAY_ANIMATIONS, overlayRefs, undefined, {
-      onEnterComplete: () => {
-        const el = overlayRef.current;
-        if (el) el.style.opacity = '';
+    useAnimations(
+      animDisabled === false ? false : DEFAULT_OVERLAY_ANIMATIONS,
+      overlayRefs,
+      undefined,
+      {
+        onEnterComplete: () => {
+          const el = overlayRef.current;
+          if (el) el.style.opacity = '';
+        },
       },
-    });
+    );
 
     return {
       render() {
         const overlaySp = sp('overlay');
-        const { className: spClass, style: spStyle, ...spRest } = overlaySp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = overlaySp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -234,33 +237,42 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
     // Width animation via useAnimations with deps + dynamic vars
     const widthConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (animDisabled === false || isMobile) return null;
-      return [{
-        trigger: 'width-change',
-        deps: [collapsed],
-        sequence: [{
-          target: 'Root',
-          animation: { width: { to: '$targetWidth', ease: smooth } },
-        }],
-        vars: (el: HTMLElement) => {
-          const rootStyles = getComputedStyle(el);
-          const expandedWidth = rootStyles.getPropertyValue('--move-sidebar-width').trim() || '15rem';
-          const collapsedWidth = rootStyles.getPropertyValue('--move-sidebar-width-collapsed').trim() || '4rem';
-          const fromWidth = collapsed ? expandedWidth : collapsedWidth;
-          const targetWidth = collapsed ? collapsedWidth : expandedWidth;
-          // Snap to old width before animation
-          el.style.width = fromWidth;
-          return { targetWidth };
+      return [
+        {
+          trigger: 'width-change',
+          deps: [collapsed],
+          sequence: [
+            {
+              target: 'Root',
+              animation: { width: { to: '$targetWidth', ease: smooth } },
+            },
+          ],
+          vars: (el: HTMLElement) => {
+            const rootStyles = getComputedStyle(el);
+            const expandedWidth =
+              rootStyles.getPropertyValue('--move-sidebar-width').trim() || '15rem';
+            const collapsedWidth =
+              rootStyles.getPropertyValue('--move-sidebar-width-collapsed').trim() || '4rem';
+            const fromWidth = collapsed ? expandedWidth : collapsedWidth;
+            const targetWidth = collapsed ? collapsedWidth : expandedWidth;
+            // Snap to old width before animation
+            el.style.width = fromWidth;
+            return { targetWidth };
+          },
+          onComplete: () => {
+            const el = asideRef.current;
+            if (el) el.style.width = '';
+          },
         },
-        onComplete: () => {
-          const el = asideRef.current;
-          if (el) el.style.width = '';
-        },
-      }];
+      ];
     }, [collapsed, isMobile, animDisabled]);
 
-    const widthRefs = React.useMemo(() => ({
-      Root: asideRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const widthRefs = React.useMemo(
+      () => ({
+        Root: asideRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     useAnimations(widthConfig, widthRefs);
 
@@ -323,7 +335,11 @@ export interface SidebarHeaderProps extends React.HTMLAttributes<HTMLElement> {
   sp?: SlotPropsMap<'header' | 'mobileClose'>;
 }
 
-const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderProps, HTMLDivElement>({
+const SidebarHeader = withMoveComponent<
+  'header' | 'mobileClose',
+  SidebarHeaderProps,
+  HTMLDivElement
+>({
   name: 'SidebarHeader',
   styles,
   slots: ['header', 'mobileClose'] as const,
@@ -343,7 +359,11 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -357,7 +377,13 @@ const SidebarHeader = withMoveComponent<'header' | 'mobileClose', SidebarHeaderP
               ? props.collapsedChildren
               : props.children}
             {isMobile && (
-              <Button variant="ghost" size="sm" onClick={handleClose} aria-label={labels.close} {...slot('mobileClose')}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClose}
+                aria-label={labels.close}
+                {...slot('mobileClose')}
+              >
                 {closeIcon}
               </Button>
             )}
@@ -405,10 +431,7 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
       const update = () => {
         const fromTop = el.scrollTop > 0;
         const fromBottom = el.scrollTop + el.clientHeight < el.scrollHeight - 1;
-        if (
-          fromTop !== scrollCtx.scrolledFromTop ||
-          fromBottom !== scrollCtx.scrolledFromBottom
-        ) {
+        if (fromTop !== scrollCtx.scrolledFromTop || fromBottom !== scrollCtx.scrolledFromBottom) {
           scrollCtx.setScroll({ scrolledFromTop: fromTop, scrolledFromBottom: fromBottom });
         }
       };
@@ -422,9 +445,12 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
       };
     }, [scrollCtx]);
 
-    const contentRefs = React.useMemo(() => ({
-      Content: contentRef as React.RefObject<HTMLElement | null>,
-    }), []);
+    const contentRefs = React.useMemo(
+      () => ({
+        Content: contentRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
 
     // Compute $itemScaleFrom at animation time from the Content's measured
     // width — keeps the stagger scale at a fixed pixel delta regardless of
@@ -446,17 +472,24 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
       const collapseAnim: AnimationTrigger = {
         trigger: 'collapsed-change',
         deps: [collapsed],
-        sequence: [{
-          target: 'Content',
-          children: getItemSelector(),
-          stagger: { delay: COLLAPSE_STAGGER_DELAY },
-          animation: {
-            // Always drift in from the right on every toggle — keeps the
-            // motion direction consistent instead of mirroring per state.
-            translateX: { from: COLLAPSE_STAGGER_TRAVEL_PX, to: 0, ease: 'outQuart', duration: 360 },
-            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 260 },
+        sequence: [
+          {
+            target: 'Content',
+            children: getItemSelector(),
+            stagger: { delay: COLLAPSE_STAGGER_DELAY },
+            animation: {
+              // Always drift in from the right on every toggle — keeps the
+              // motion direction consistent instead of mirroring per state.
+              translateX: {
+                from: COLLAPSE_STAGGER_TRAVEL_PX,
+                to: 0,
+                ease: 'outQuart',
+                duration: 360,
+              },
+              opacity: { from: 0, to: 1, ease: 'outQuart', duration: 260 },
+            },
           },
-        }],
+        ],
       };
       return [...mountAnims, collapseAnim];
     }, [animDisabled, collapsed]);
@@ -466,7 +499,11 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -504,7 +541,11 @@ const SidebarFooter = withMoveComponent<'footer', SidebarFooterProps, HTMLDivEle
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -542,7 +583,11 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
     return {
       render() {
         const groupSp = sp('group');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -580,7 +625,11 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
     return {
       render() {
         const groupLabelSp = sp('groupLabel');
-        const { className: spClass, style: spStyle, ...spRest } = groupLabelSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupLabelSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -644,13 +693,25 @@ const SidebarItem = withMoveComponent<
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
 
         const iconSp = sp('itemIcon');
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
 
         const labelSp = sp('itemLabel');
-        const { className: labelSpClass, style: labelSpStyle, ...labelSpRest } = labelSp as Record<string, unknown>;
+        const {
+          className: labelSpClass,
+          style: labelSpStyle,
+          ...labelSpRest
+        } = labelSp as Record<string, unknown>;
 
         const badgeSp = sp('itemBadge');
-        const { className: badgeSpClass, style: badgeSpStyle, ...badgeSpRest } = badgeSp as Record<string, unknown>;
+        const {
+          className: badgeSpClass,
+          style: badgeSpStyle,
+          ...badgeSpRest
+        } = badgeSp as Record<string, unknown>;
 
         const innerContent = (child?: React.ReactNode) => (
           <>
@@ -660,7 +721,11 @@ const SidebarItem = withMoveComponent<
                 className={cx('itemIcon', iconSpClass as string | undefined)}
                 style={iconSpStyle as React.CSSProperties}
               >
-                {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon as React.ReactNode}
+                {typeof props.icon === 'string' ? (
+                  <Icon name={props.icon} />
+                ) : (
+                  (props.icon as React.ReactNode)
+                )}
               </span>
             )}
             <span
@@ -696,7 +761,12 @@ const SidebarItem = withMoveComponent<
               onClick: handleItemClick,
               'data-active': props.active || undefined,
               'data-disabled': props.disabled || undefined,
-              className: cx('item', props.className, child.props.className, spClass as string | undefined),
+              className: cx(
+                'item',
+                props.className,
+                child.props.className,
+                spClass as string | undefined,
+              ),
               style: { ...child.props.style, ...props.style, ...(spStyle as React.CSSProperties) },
             },
             innerContent(child.props.children),
@@ -789,20 +859,24 @@ const SidebarTrigger = withMoveComponent<
         if (visibility === 'mobile' && !isMobile) return null;
 
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
 
         const content = (
           <>
             {props.icon && (
               <span {...slot('itemIcon')}>
-                {typeof props.icon === 'string' ? <Icon name={props.icon} /> : props.icon as React.ReactNode}
+                {typeof props.icon === 'string' ? (
+                  <Icon name={props.icon} />
+                ) : (
+                  (props.icon as React.ReactNode)
+                )}
               </span>
             )}
-            {props.children != null && (
-              <span {...slot('itemLabel')}>
-                {props.children}
-              </span>
-            )}
+            {props.children != null && <span {...slot('itemLabel')}>{props.children}</span>}
           </>
         );
 

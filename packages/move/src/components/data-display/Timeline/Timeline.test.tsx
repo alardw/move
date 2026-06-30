@@ -8,14 +8,22 @@ describe('Timeline', () => {
   // === Timeline Root ===
   describe('Timeline (Root)', () => {
     it('renders as a div with flex column layout', () => {
-      render(<Timeline data-testid="timeline"><Timeline.Item>Step 1</Timeline.Item></Timeline>);
+      render(
+        <Timeline data-testid="timeline">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
+      );
       const el = screen.getByTestId('timeline');
       expect(el).toBeInTheDocument();
       expect(el.tagName).toBe('DIV');
     });
 
     it('defaults to active=-1, align=left, size=md', () => {
-      render(<Timeline data-testid="timeline"><Timeline.Item>Step 1</Timeline.Item></Timeline>);
+      render(
+        <Timeline data-testid="timeline">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
+      );
       const el = screen.getByTestId('timeline');
       expect(el).toHaveAttribute('data-align', 'left');
       expect(el).toHaveAttribute('data-size', 'md');
@@ -23,36 +31,52 @@ describe('Timeline', () => {
 
     it('applies data-align attribute', () => {
       const { rerender } = render(
-        <Timeline data-testid="timeline" align="right"><Timeline.Item>Step 1</Timeline.Item></Timeline>
+        <Timeline data-testid="timeline" align="right">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveAttribute('data-align', 'right');
 
       rerender(
-        <Timeline data-testid="timeline" align="alternate"><Timeline.Item>Step 1</Timeline.Item></Timeline>
+        <Timeline data-testid="timeline" align="alternate">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveAttribute('data-align', 'alternate');
     });
 
     it('applies data-size attribute', () => {
       const { rerender } = render(
-        <Timeline data-testid="timeline" size="sm"><Timeline.Item>Step 1</Timeline.Item></Timeline>
+        <Timeline data-testid="timeline" size="sm">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveAttribute('data-size', 'sm');
 
       rerender(
-        <Timeline data-testid="timeline" size="lg"><Timeline.Item>Step 1</Timeline.Item></Timeline>
+        <Timeline data-testid="timeline" size="lg">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveAttribute('data-size', 'lg');
     });
 
     it('forwards ref', () => {
       const ref = createRef<HTMLDivElement>();
-      render(<Timeline ref={ref}><Timeline.Item>Step 1</Timeline.Item></Timeline>);
+      render(
+        <Timeline ref={ref}>
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
+      );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
 
     it('forwards className', () => {
-      render(<Timeline data-testid="timeline" className="custom"><Timeline.Item>Step 1</Timeline.Item></Timeline>);
+      render(
+        <Timeline data-testid="timeline" className="custom">
+          <Timeline.Item>Step 1</Timeline.Item>
+        </Timeline>,
+      );
       expect(screen.getByTestId('timeline').className).toContain('custom');
     });
 
@@ -60,7 +84,7 @@ describe('Timeline', () => {
       render(
         <Timeline data-testid="timeline" animations={false} style={{ marginTop: '10px' }}>
           <Timeline.Item>Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveStyle({ marginTop: '10px' });
     });
@@ -69,7 +93,7 @@ describe('Timeline', () => {
       render(
         <Timeline data-testid="my-timeline" aria-label="Progress">
           <Timeline.Item>Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('my-timeline')).toHaveAttribute('aria-label', 'Progress');
     });
@@ -83,7 +107,7 @@ describe('Timeline', () => {
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-0')).toHaveAttribute('data-state', 'completed');
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-state', 'completed');
@@ -95,7 +119,7 @@ describe('Timeline', () => {
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-state', 'active');
     });
@@ -105,7 +129,7 @@ describe('Timeline', () => {
         <Timeline active={0} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-state', 'inactive');
     });
@@ -115,7 +139,7 @@ describe('Timeline', () => {
         <Timeline active={-1} animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-0')).toHaveAttribute('data-state', 'inactive');
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-state', 'inactive');
@@ -127,7 +151,7 @@ describe('Timeline', () => {
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-0')).toHaveAttribute('data-state', 'inactive');
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-state', 'active');
@@ -141,7 +165,7 @@ describe('Timeline', () => {
       render(
         <Timeline active={0} animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       const el = screen.getByTestId('item');
       expect(el).toHaveAttribute('data-state', 'active');
@@ -153,7 +177,7 @@ describe('Timeline', () => {
       render(
         <Timeline active={0} color="green" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'green');
     });
@@ -161,8 +185,10 @@ describe('Timeline', () => {
     it('can override color with its own color prop', () => {
       render(
         <Timeline active={0} color="indigo" animations={false}>
-          <Timeline.Item data-testid="item" color="red">Step 1</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" color="red">
+            Step 1
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-color', 'red');
     });
@@ -171,7 +197,7 @@ describe('Timeline', () => {
       render(
         <Timeline active={0} lineVariant="dashed" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-line-variant', 'dashed');
     });
@@ -179,8 +205,10 @@ describe('Timeline', () => {
     it('can override lineVariant with its own lineVariant prop', () => {
       render(
         <Timeline active={0} lineVariant="solid" animations={false}>
-          <Timeline.Item data-testid="item" lineVariant="dotted">Step 1</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" lineVariant="dotted">
+            Step 1
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('data-line-variant', 'dotted');
     });
@@ -191,8 +219,10 @@ describe('Timeline', () => {
     it('renders custom bullet content via bullet prop', () => {
       render(
         <Timeline animations={false}>
-          <Timeline.Item data-testid="item" bullet={<span data-testid="custom-bullet">!</span>}>Step</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" bullet={<span data-testid="custom-bullet">!</span>}>
+            Step
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('custom-bullet')).toBeInTheDocument();
     });
@@ -201,7 +231,7 @@ describe('Timeline', () => {
       const { container } = render(
         <Timeline animations={false}>
           <Timeline.Item bullet={<span>!</span>}>Step</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       const bullet = container.querySelector('[data-has-content]');
       expect(bullet).toBeInTheDocument();
@@ -211,7 +241,7 @@ describe('Timeline', () => {
       const { container } = render(
         <Timeline animations={false}>
           <Timeline.Item>Step</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       const bullet = container.querySelector('[data-has-content]');
       expect(bullet).not.toBeInTheDocument();
@@ -224,7 +254,7 @@ describe('Timeline', () => {
       render(
         <Timeline animations={false}>
           <Timeline.Item title="Step Title">Step content</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByText('Step Title')).toBeInTheDocument();
     });
@@ -233,7 +263,7 @@ describe('Timeline', () => {
       const { container } = render(
         <Timeline animations={false}>
           <Timeline.Item data-testid="item">Step content</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       // Title slot should not be present when no title prop
       const item = screen.getByTestId('item');
@@ -250,7 +280,7 @@ describe('Timeline', () => {
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
           <Timeline.Item data-testid="item-1">Step 2</Timeline.Item>
           <Timeline.Item data-testid="item-2">Step 3</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-0')).toHaveAttribute('data-content-side', 'right');
       expect(screen.getByTestId('item-1')).toHaveAttribute('data-content-side', 'left');
@@ -261,7 +291,7 @@ describe('Timeline', () => {
       render(
         <Timeline align="left" animations={false}>
           <Timeline.Item data-testid="item-0">Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('item-0')).not.toHaveAttribute('data-content-side');
     });
@@ -274,7 +304,7 @@ describe('Timeline', () => {
       render(
         <Timeline animations={false}>
           <Timeline.Item ref={ref}>Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
@@ -282,8 +312,10 @@ describe('Timeline', () => {
     it('forwards className', () => {
       render(
         <Timeline animations={false}>
-          <Timeline.Item data-testid="item" className="custom">Step 1</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" className="custom">
+            Step 1
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('item').className).toContain('custom');
     });
@@ -291,8 +323,10 @@ describe('Timeline', () => {
     it('forwards style', () => {
       render(
         <Timeline animations={false}>
-          <Timeline.Item data-testid="item" style={{ marginTop: '10px' }}>Step 1</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" style={{ marginTop: '10px' }}>
+            Step 1
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveStyle({ marginTop: '10px' });
     });
@@ -300,8 +334,10 @@ describe('Timeline', () => {
     it('spreads HTML attributes', () => {
       render(
         <Timeline animations={false}>
-          <Timeline.Item data-testid="item" aria-label="Step">Step 1</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item" aria-label="Step">
+            Step 1
+          </Timeline.Item>
+        </Timeline>,
       );
       expect(screen.getByTestId('item')).toHaveAttribute('aria-label', 'Step');
     });
@@ -313,7 +349,7 @@ describe('Timeline', () => {
       render(
         <Timeline data-testid="timeline" animations={false}>
           <Timeline.Item data-testid="item">Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toBeInTheDocument();
       expect(screen.getByTestId('item')).toBeInTheDocument();
@@ -325,10 +361,16 @@ describe('Timeline', () => {
     it('renders full timeline composition', () => {
       render(
         <Timeline data-testid="timeline" active={1} animations={false}>
-          <Timeline.Item data-testid="item-0" title="Completed">Done</Timeline.Item>
-          <Timeline.Item data-testid="item-1" title="Current" bullet={<span>2</span>}>In progress</Timeline.Item>
-          <Timeline.Item data-testid="item-2" title="Upcoming">Not started</Timeline.Item>
-        </Timeline>
+          <Timeline.Item data-testid="item-0" title="Completed">
+            Done
+          </Timeline.Item>
+          <Timeline.Item data-testid="item-1" title="Current" bullet={<span>2</span>}>
+            In progress
+          </Timeline.Item>
+          <Timeline.Item data-testid="item-2" title="Upcoming">
+            Not started
+          </Timeline.Item>
+        </Timeline>,
       );
 
       expect(screen.getByTestId('timeline')).toBeInTheDocument();
@@ -350,16 +392,20 @@ describe('Timeline', () => {
       render(
         <Timeline data-testid="timeline" sp={{ root: { className: 'sp-root' } }}>
           <Timeline.Item>Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline').className).toContain('sp-root');
     });
 
     it('merges sp style on root', () => {
       render(
-        <Timeline data-testid="timeline" animations={false} sp={{ root: { style: { marginTop: '5px' } } }}>
+        <Timeline
+          data-testid="timeline"
+          animations={false}
+          sp={{ root: { style: { marginTop: '5px' } } }}
+        >
           <Timeline.Item>Step 1</Timeline.Item>
-        </Timeline>
+        </Timeline>,
       );
       expect(screen.getByTestId('timeline')).toHaveStyle({ marginTop: '5px' });
     });

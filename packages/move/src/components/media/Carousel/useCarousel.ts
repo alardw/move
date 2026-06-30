@@ -147,7 +147,8 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
         from: currentPos,
         to: scrollPos,
         onComplete: () => {
-          viewport.style.scrollSnapType = previousSnapType || (isHorizontal ? 'x mandatory' : 'y mandatory');
+          viewport.style.scrollSnapType =
+            previousSnapType || (isHorizontal ? 'x mandatory' : 'y mandatory');
           isScrollingRef.current = false;
         },
       });

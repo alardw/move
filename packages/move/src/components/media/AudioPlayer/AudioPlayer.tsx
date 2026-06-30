@@ -57,7 +57,10 @@ type AudioPlayerSlots =
   | 'subtitleButton'
   | 'subtitleOverlay';
 
-export interface AudioPlayerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onError' | 'onVolumeChange'> {
+export interface AudioPlayerProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'onError' | 'onVolumeChange'
+> {
   src?: string;
 
   autoPlay?: boolean;
@@ -127,9 +130,15 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
   name: 'AudioPlayer',
   styles,
   slots: [
-    'root', 'playButton', 'progress', 'time',
-    'volumeButton', 'volumeSlider', 'settingsButton',
-    'subtitleButton', 'subtitleOverlay',
+    'root',
+    'playButton',
+    'progress',
+    'time',
+    'volumeButton',
+    'volumeSlider',
+    'settingsButton',
+    'subtitleButton',
+    'subtitleOverlay',
   ] as const,
   defaults: {
     radius: 'none',
@@ -141,14 +150,32 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
   },
   moveProps: [
     'src',
-    'autoPlay', 'muted', 'loop', 'playbackRate', 'onPlaybackRateChange',
-    'playing', 'onPlayingChange', 'volume', 'onVolumeChange',
-    'currentTime', 'onTimeChange',
-    'onEnded', 'onError', 'onReady',
-    'subtitles', 'qualities', 'audioTracks', 'onQualityChange', 'onAudioTrackChange',
-    'showSettings', 'showSubtitles', 'showVolume', 'showTime',
+    'autoPlay',
+    'muted',
+    'loop',
+    'playbackRate',
+    'onPlaybackRateChange',
+    'playing',
+    'onPlayingChange',
+    'volume',
+    'onVolumeChange',
+    'currentTime',
+    'onTimeChange',
+    'onEnded',
+    'onError',
+    'onReady',
+    'subtitles',
+    'qualities',
+    'audioTracks',
+    'onQualityChange',
+    'onAudioTrackChange',
+    'showSettings',
+    'showSubtitles',
+    'showVolume',
+    'showTime',
     'labels',
-    'radius', 'size',
+    'radius',
+    'size',
   ],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
@@ -232,7 +259,16 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       }
 
       return cats;
-    }, [player.playbackRate, player.activeQualityIndex, player.activeAudioTrackIndex, player.setPlaybackRate, player.setActiveQualityIndex, player.setActiveAudioTrackIndex, qualitiesProp, audioTracksProp]);
+    }, [
+      player.playbackRate,
+      player.activeQualityIndex,
+      player.activeAudioTrackIndex,
+      player.setPlaybackRate,
+      player.setActiveQualityIndex,
+      player.setActiveAudioTrackIndex,
+      qualitiesProp,
+      audioTracksProp,
+    ]);
 
     const hasSubtitles = subtitles && subtitles.length > 0;
     const showSubtitlesControl = showSubtitles && hasSubtitles;
@@ -298,7 +334,11 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     // Keyboard shortcuts
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent) => {
-        if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
+        if (
+          (e.target as HTMLElement).tagName === 'INPUT' ||
+          (e.target as HTMLElement).tagName === 'TEXTAREA'
+        )
+          return;
 
         switch (e.key) {
           case ' ':
@@ -345,10 +385,17 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const progressSp = sp('progress');
-        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<string, unknown>;
+        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<
+          string,
+          unknown
+        >;
 
         const progressPct = player.duration > 0 ? (player.currentTime / player.duration) * 100 : 0;
         const bufferedPct = player.duration > 0 ? (player.buffered / player.duration) * 100 : 0;
@@ -374,11 +421,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             />
 
             {/* Subtitle overlay */}
-            {player.activeCue && (
-              <div {...slot('subtitleOverlay')}>
-                {player.activeCue.text}
-              </div>
-            )}
+            {player.activeCue && <div {...slot('subtitleOverlay')}>{player.activeCue.text}</div>}
 
             {/* Play button */}
             <Button
@@ -387,7 +430,6 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
               {...slot('playButton')}
               onClick={player.togglePlay}
               aria-label={player.playing ? labels.pause : labels.play}
-
             >
               {player.playing ? pauseIcon : playIcon}
             </Button>
@@ -457,14 +499,10 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                   {...slot('volumeButton')}
                   onClick={player.toggleMute}
                   aria-label={player.muted ? labels.unmute : labels.mute}
-
                 >
                   {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
                 </Button>
-                <div
-                  {...slot('volumeSlider')}
-                  onMouseDown={handleVolumeMouseDown}
-                >
+                <div {...slot('volumeSlider')} onMouseDown={handleVolumeMouseDown}>
                   <div className={styles.volumeTrack}>
                     <div className={styles.volumeFill} style={{ width: `${volumePct}%` }} />
                   </div>

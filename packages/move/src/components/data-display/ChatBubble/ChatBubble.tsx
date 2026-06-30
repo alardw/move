@@ -102,7 +102,10 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
               ref={ref}
               data-placement={props.placement as string}
               className={cx('root', props.className, spClass as string | undefined)}
-              style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
             >
               {props.children}
             </div>
@@ -137,7 +140,11 @@ const ChatBubbleAvatar = withMoveComponent<'avatar', ChatBubbleAvatarProps, HTML
     return {
       render() {
         const avatarSp = sp('avatar');
-        const { className: spClass, style: spStyle, ...spRest } = avatarSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = avatarSp as Record<string, unknown>;
         const avatarSize = (props.size as ChatBubbleAvatarSize) ?? 'md';
 
         return (
@@ -174,7 +181,11 @@ export interface ChatBubbleContainerProps extends React.HTMLAttributes<HTMLEleme
   children?: React.ReactNode;
 }
 
-const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerProps, HTMLDivElement>({
+const ChatBubbleContainer = withMoveComponent<
+  'container',
+  ChatBubbleContainerProps,
+  HTMLDivElement
+>({
   name: 'ChatBubbleContainer',
   styles,
   slots: ['container'] as const,
@@ -187,7 +198,11 @@ const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerPr
     return {
       render() {
         const containerSp = sp('container');
-        const { className: spClass, style: spStyle, ...spRest } = containerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = containerSp as Record<string, unknown>;
 
         return (
           <div
@@ -195,7 +210,7 @@ const ChatBubbleContainer = withMoveComponent<'container', ChatBubbleContainerPr
             {...spRest}
             ref={ref}
             data-variant={props.color ? undefined : (props.variant as string)}
-            data-color={props.color as string || undefined}
+            data-color={(props.color as string) || undefined}
             data-placement={placement}
             data-tail={props.tail || undefined}
             className={cx('container', props.className, spClass as string | undefined)}
@@ -228,7 +243,11 @@ const ChatBubbleHeader = withMoveComponent<'header', ChatBubbleHeaderProps, HTML
     return {
       render() {
         const headerSp = sp('header');
-        const { className: spClass, style: spStyle, ...spRest } = headerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = headerSp as Record<string, unknown>;
 
         return (
           <div
@@ -265,7 +284,11 @@ const ChatBubbleContent = withMoveComponent<'content', ChatBubbleContentProps, H
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
 
         return (
           <div
@@ -302,7 +325,11 @@ const ChatBubbleFooter = withMoveComponent<'footer', ChatBubbleFooterProps, HTML
     return {
       render() {
         const footerSp = sp('footer');
-        const { className: spClass, style: spStyle, ...spRest } = footerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = footerSp as Record<string, unknown>;
 
         return (
           <div

@@ -158,8 +158,10 @@ describe('Checkbox', () => {
     it('renders hidden input when name prop is provided', () => {
       const { container } = render(
         <form>
-          <Checkbox name="agree" value="yes">Accept</Checkbox>
-        </form>
+          <Checkbox name="agree" value="yes">
+            Accept
+          </Checkbox>
+        </form>,
       );
       const hiddenInput = container.querySelector('input[name="agree"]');
       expect(hiddenInput).toBeInTheDocument();
@@ -169,8 +171,10 @@ describe('Checkbox', () => {
     it('hidden input value is empty when unchecked', () => {
       const { container } = render(
         <form>
-          <Checkbox name="agree" value="yes">Accept</Checkbox>
-        </form>
+          <Checkbox name="agree" value="yes">
+            Accept
+          </Checkbox>
+        </form>,
       );
       const hiddenInput = container.querySelector('input[name="agree"]') as HTMLInputElement;
       expect(hiddenInput.value).toBe('');
@@ -179,8 +183,10 @@ describe('Checkbox', () => {
     it('hidden input value reflects checked state', () => {
       const { container } = render(
         <form>
-          <Checkbox name="agree" value="yes" checked onCheckedChange={() => {}}>Accept</Checkbox>
-        </form>
+          <Checkbox name="agree" value="yes" checked onCheckedChange={() => {}}>
+            Accept
+          </Checkbox>
+        </form>,
       );
       const hiddenInput = container.querySelector('input[name="agree"]') as HTMLInputElement;
       expect(hiddenInput.value).toBe('yes');
@@ -203,7 +209,7 @@ describe('Checkbox', () => {
         <Checkbox.Group>
           <Checkbox>A</Checkbox>
           <Checkbox>B</Checkbox>
-        </Checkbox.Group>
+        </Checkbox.Group>,
       );
       expect(screen.getByRole('group')).toBeInTheDocument();
     });

@@ -13,7 +13,7 @@ describe('Calendar', () => {
       render(
         <Calendar.Root>
           <div data-testid="child">hello</div>
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       expect(screen.getByTestId('child')).toBeInTheDocument();
     });
@@ -23,7 +23,7 @@ describe('Calendar', () => {
         <Calendar.Root className="custom" style={{ maxWidth: '300px' }}>
           <Calendar.Nav />
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       const root = container.firstElementChild!;
       expect(root).toHaveClass('custom');
@@ -35,7 +35,7 @@ describe('Calendar', () => {
       render(
         <Calendar.Root onValueChange={onChange}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       // Click a day cell
       const cells = screen.getAllByRole('gridcell');
@@ -52,7 +52,7 @@ describe('Calendar', () => {
       render(
         <Calendar.Root locale="en-US">
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       const headers = screen.getAllByRole('columnheader');
       expect(headers.length).toBe(7);
@@ -62,7 +62,7 @@ describe('Calendar', () => {
       render(
         <Calendar.Root>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       const cells = screen.getAllByRole('gridcell');
       expect(cells.length).toBeGreaterThanOrEqual(28);
@@ -73,7 +73,7 @@ describe('Calendar', () => {
       render(
         <Calendar.Root numberOfMonths={2}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       const grids = screen.getAllByRole('grid');
       expect(grids.length).toBe(2);
@@ -86,11 +86,11 @@ describe('Calendar', () => {
       render(
         <Calendar.Root value={REF_DATE}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
-      const selected = screen.getAllByRole('gridcell').filter(
-        (cell) => cell.getAttribute('aria-selected') === 'true'
-      );
+      const selected = screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.getAttribute('aria-selected') === 'true');
       expect(selected.length).toBeGreaterThanOrEqual(1);
     });
 
@@ -98,11 +98,11 @@ describe('Calendar', () => {
       render(
         <Calendar.Root>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
-      const todayCells = screen.getAllByRole('gridcell').filter(
-        (cell) => cell.hasAttribute('data-today')
-      );
+      const todayCells = screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.hasAttribute('data-today'));
       // There should be exactly one today cell (unless today is not in the displayed month)
       expect(todayCells.length).toBeLessThanOrEqual(1);
     });
@@ -111,11 +111,11 @@ describe('Calendar', () => {
       render(
         <Calendar.Root>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
-      const outsideCells = screen.getAllByRole('gridcell').filter(
-        (cell) => cell.hasAttribute('data-outside')
-      );
+      const outsideCells = screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.hasAttribute('data-outside'));
       // There should be some outside cells at the beginning or end of the grid
       expect(outsideCells.length).toBeGreaterThanOrEqual(0);
     });
@@ -124,16 +124,13 @@ describe('Calendar', () => {
       const tomorrow = new Date(REF_DATE);
       tomorrow.setDate(tomorrow.getDate() + 1);
       render(
-        <Calendar.Root
-          value={REF_DATE}
-          constraints={{ disabledDates: [tomorrow] }}
-        >
+        <Calendar.Root value={REF_DATE} constraints={{ disabledDates: [tomorrow] }}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
-      const disabledCells = screen.getAllByRole('gridcell').filter(
-        (cell) => cell.hasAttribute('data-disabled')
-      );
+      const disabledCells = screen
+        .getAllByRole('gridcell')
+        .filter((cell) => cell.hasAttribute('data-disabled'));
       expect(disabledCells.length).toBeGreaterThanOrEqual(1);
     });
   });
@@ -145,15 +142,11 @@ describe('Calendar', () => {
       render(
         <Calendar.Root mode="range" value={range}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       const cells = screen.getAllByRole('gridcell');
-      const rangeStart = cells.filter(
-        (c) => c.getAttribute('data-state') === 'range-start'
-      );
-      const rangeEnd = cells.filter(
-        (c) => c.getAttribute('data-state') === 'range-end'
-      );
+      const rangeStart = cells.filter((c) => c.getAttribute('data-state') === 'range-start');
+      const rangeEnd = cells.filter((c) => c.getAttribute('data-state') === 'range-end');
       expect(rangeStart.length).toBe(1);
       expect(rangeEnd.length).toBe(1);
     });
@@ -166,7 +159,7 @@ describe('Calendar', () => {
         <Calendar.Root>
           <Calendar.Nav />
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       expect(screen.getByLabelText('Previous month')).toBeInTheDocument();
       expect(screen.getByLabelText('Next month')).toBeInTheDocument();
@@ -177,7 +170,7 @@ describe('Calendar', () => {
         <Calendar.Root value={new Date(2026, 0, 15)}>
           <Calendar.Nav />
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       // Check grid starts on January
       expect(screen.getByRole('grid').getAttribute('aria-label')).toContain('January');
@@ -197,13 +190,11 @@ describe('Calendar', () => {
       render(
         <Calendar.Root value={REF_DATE}>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       // Focus a cell first
       const cells = screen.getAllByRole('gridcell');
-      const selectedCell = cells.find(
-        (c) => c.getAttribute('aria-selected') === 'true'
-      );
+      const selectedCell = cells.find((c) => c.getAttribute('aria-selected') === 'true');
       if (selectedCell) {
         fireEvent.focus(selectedCell);
         fireEvent.keyDown(selectedCell.closest('[role="grid"]')!, { key: 'ArrowRight' });
@@ -219,7 +210,7 @@ describe('Calendar', () => {
         <Calendar.Root labels={{ previousMonth: 'Vorige maand', nextMonth: 'Volgende maand' }}>
           <Calendar.Nav />
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       expect(screen.getByLabelText('Vorige maand')).toBeInTheDocument();
       expect(screen.getByLabelText('Volgende maand')).toBeInTheDocument();
@@ -232,7 +223,7 @@ describe('Calendar', () => {
       const { container } = render(
         <Calendar.Root showWeekNumbers>
           <Calendar.Grid />
-        </Calendar.Root>
+        </Calendar.Root>,
       );
       // Week number rows should have the data attribute
       const weekNumberRows = container.querySelectorAll('[data-has-week-numbers]');

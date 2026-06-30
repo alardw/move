@@ -99,13 +99,25 @@
 }
 
 /* Size variants (width for left/right, height for top/bottom) */
-.content[data-size='xs'] { --move-drawer-content-width: 16rem; }
-.content[data-size='sm'] { --move-drawer-content-width: 20rem; }
+.content[data-size='xs'] {
+  --move-drawer-content-width: 16rem;
+}
+.content[data-size='sm'] {
+  --move-drawer-content-width: 20rem;
+}
 .content[data-size='md'],
-.content:not([data-size]) { --move-drawer-content-width: 24rem; }
-.content[data-size='lg'] { --move-drawer-content-width: 32rem; }
-.content[data-size='xl'] { --move-drawer-content-width: 40rem; }
-.content[data-size='full'] { --move-drawer-content-width: 100%; }
+.content:not([data-size]) {
+  --move-drawer-content-width: 24rem;
+}
+.content[data-size='lg'] {
+  --move-drawer-content-width: 32rem;
+}
+.content[data-size='xl'] {
+  --move-drawer-content-width: 40rem;
+}
+.content[data-size='full'] {
+  --move-drawer-content-width: 100%;
+}
 
 /* Responsive bottom-sheet overrides */
 .content[data-responsive] {
@@ -192,7 +204,8 @@
   border-radius: var(--move-drawer-close-radius);
   color: var(--move-drawer-close-fg);
   cursor: pointer;
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
     color var(--move-transition-fast) var(--move-ease-default);
 }
 

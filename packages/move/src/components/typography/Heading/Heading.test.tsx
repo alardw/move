@@ -13,27 +13,47 @@ describe('Heading', () => {
     });
 
     it('renders as h1 when level=1', () => {
-      render(<Heading level={1} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={1} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading').tagName).toBe('H1');
     });
 
     it('renders as h3 when level=3', () => {
-      render(<Heading level={3} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={3} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading').tagName).toBe('H3');
     });
 
     it('renders as h4 when level=4', () => {
-      render(<Heading level={4} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={4} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading').tagName).toBe('H4');
     });
 
     it('renders as h5 when level=5', () => {
-      render(<Heading level={5} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={5} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading').tagName).toBe('H5');
     });
 
     it('renders as h6 when level=6', () => {
-      render(<Heading level={6} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={6} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading').tagName).toBe('H6');
     });
 
@@ -52,7 +72,7 @@ describe('Heading', () => {
       render(
         <Heading className="custom" style={{ marginTop: '10px' }} data-testid="heading">
           Title
-        </Heading>
+        </Heading>,
       );
       const el = screen.getByTestId('heading');
       expect(el).toHaveClass('custom');
@@ -63,7 +83,7 @@ describe('Heading', () => {
       render(
         <Heading data-testid="heading" aria-label="main heading">
           Title
-        </Heading>
+        </Heading>,
       );
       expect(screen.getByTestId('heading')).toHaveAttribute('aria-label', 'main heading');
     });
@@ -72,32 +92,56 @@ describe('Heading', () => {
   // === Size ===
   describe('size', () => {
     it('derives size from level when size prop is not provided (level 1 -> 4xl)', () => {
-      render(<Heading level={1} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={1} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', '4xl');
     });
 
     it('derives size from level when size prop is not provided (level 2 -> 3xl)', () => {
-      render(<Heading level={2} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={2} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', '3xl');
     });
 
     it('derives size from level when size prop is not provided (level 3 -> 2xl)', () => {
-      render(<Heading level={3} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={3} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', '2xl');
     });
 
     it('derives size from level when size prop is not provided (level 4 -> xl)', () => {
-      render(<Heading level={4} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={4} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', 'xl');
     });
 
     it('derives size from level when size prop is not provided (level 5 -> lg)', () => {
-      render(<Heading level={5} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={5} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', 'lg');
     });
 
     it('derives size from level when size prop is not provided (level 6 -> base)', () => {
-      render(<Heading level={6} data-testid="heading">Title</Heading>);
+      render(
+        <Heading level={6} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-size', 'base');
     });
 
@@ -115,12 +159,20 @@ describe('Heading', () => {
     });
 
     it('applies weight via data-weight attribute', () => {
-      render(<Heading weight="semibold" data-testid="heading">Title</Heading>);
+      render(
+        <Heading weight="semibold" data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-weight', 'semibold');
     });
 
     it.each(['medium', 'semibold', 'bold'] as const)('supports weight=%s', (weight) => {
-      render(<Heading weight={weight} data-testid="heading">Title</Heading>);
+      render(
+        <Heading weight={weight} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-weight', weight);
     });
   });
@@ -133,12 +185,20 @@ describe('Heading', () => {
     });
 
     it('applies color via data-color attribute', () => {
-      render(<Heading color="muted" data-testid="heading">Title</Heading>);
+      render(
+        <Heading color="muted" data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-color', 'muted');
     });
 
     it.each(['base', 'muted', 'subtle'] as const)('supports color=%s', (color) => {
-      render(<Heading color={color} data-testid="heading">Title</Heading>);
+      render(
+        <Heading color={color} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-color', color);
     });
   });
@@ -151,7 +211,11 @@ describe('Heading', () => {
     });
 
     it('applies tracking via data-tracking attribute', () => {
-      render(<Heading tracking="normal" data-testid="heading">Title</Heading>);
+      render(
+        <Heading tracking="normal" data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-tracking', 'normal');
     });
   });
@@ -164,12 +228,20 @@ describe('Heading', () => {
     });
 
     it('applies data-align when align is provided', () => {
-      render(<Heading align="center" data-testid="heading">Title</Heading>);
+      render(
+        <Heading align="center" data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-align', 'center');
     });
 
     it.each(['left', 'center', 'right'] as const)('supports align=%s', (align) => {
-      render(<Heading align={align} data-testid="heading">Title</Heading>);
+      render(
+        <Heading align={align} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-align', align);
     });
   });
@@ -177,12 +249,20 @@ describe('Heading', () => {
   // === Truncate ===
   describe('truncate', () => {
     it('sets data-truncate when truncate=true', () => {
-      render(<Heading truncate data-testid="heading">Title</Heading>);
+      render(
+        <Heading truncate data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).toHaveAttribute('data-truncate');
     });
 
     it('omits data-truncate when truncate is false', () => {
-      render(<Heading truncate={false} data-testid="heading">Title</Heading>);
+      render(
+        <Heading truncate={false} data-testid="heading">
+          Title
+        </Heading>,
+      );
       expect(screen.getByTestId('heading')).not.toHaveAttribute('data-truncate');
     });
 
@@ -198,7 +278,7 @@ describe('Heading', () => {
       render(
         <Heading sp={{ root: { className: 'sp-root' } }} data-testid="heading">
           Title
-        </Heading>
+        </Heading>,
       );
       expect(screen.getByTestId('heading')).toHaveClass('sp-root');
     });
@@ -207,7 +287,7 @@ describe('Heading', () => {
       render(
         <Heading sp={{ root: { style: { color: 'red' } } }} data-testid="heading">
           Title
-        </Heading>
+        </Heading>,
       );
       expect(screen.getByTestId('heading')).toHaveStyle({ color: 'rgb(255, 0, 0)' });
     });

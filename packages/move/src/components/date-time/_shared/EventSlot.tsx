@@ -70,9 +70,7 @@ export function EventSlot({
       tabIndex={0}
     >
       {!event.allDay && !isCompact && (
-        <span className={styles.eventTime}>
-          {formatTime(event.start, locale)}
-        </span>
+        <span className={styles.eventTime}>{formatTime(event.start, locale)}</span>
       )}
       <span className={styles.eventTitle}>{event.title}</span>
     </div>

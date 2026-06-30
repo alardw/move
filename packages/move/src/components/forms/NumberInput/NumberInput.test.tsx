@@ -145,7 +145,7 @@ describe('NumberInput', () => {
   describe('variants', () => {
     it('applies data-variant', () => {
       const { container } = renderInput({ variant: 'filled' });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-variant', 'filled');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-variant', 'filled');
     });
   });
 
@@ -153,17 +153,17 @@ describe('NumberInput', () => {
   describe('states', () => {
     it('sets data-invalid', () => {
       const { container } = renderInput({ invalid: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-invalid');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-invalid');
     });
 
     it('sets data-disabled', () => {
       const { container } = renderInput({ disabled: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-disabled');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-disabled');
     });
 
     it('sets data-readonly', () => {
       const { container } = renderInput({ readOnly: true });
-      expect((container.firstChild as HTMLElement)).toHaveAttribute('data-readonly');
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-readonly');
     });
   });
 

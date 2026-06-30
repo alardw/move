@@ -1,15 +1,15 @@
 // Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { META_SCHEMA_VERSION } from "@/meta-schema";
-import type { ComponentMeta } from "@/meta-schema";
+import { META_SCHEMA_VERSION } from '@/meta-schema';
+import type { ComponentMeta } from '@/meta-schema';
 
 export const calendarViewMeta = {
   schemaVersion: META_SCHEMA_VERSION,
 
-  name: "CalendarView",
+  name: 'CalendarView',
 
-  kind: "compound",
+  kind: 'compound',
 
-  anatomy: ["Root", "Header", "Nav", "Title", "Today", "ViewSwitcher", "Body"],
+  anatomy: ['Root', 'Header', 'Nav', 'Title', 'Today', 'ViewSwitcher', 'Body'],
 
   slots: [],
 
@@ -20,6 +20,6 @@ export const calendarViewMeta = {
   variants: {},
 
   constraints: {
-    requiresParent: "CalendarView.Root",
+    requiresParent: 'CalendarView.Root',
   },
 } satisfies ComponentMeta;

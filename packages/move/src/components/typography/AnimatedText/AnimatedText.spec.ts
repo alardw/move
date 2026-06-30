@@ -34,33 +34,38 @@ export const spec = {
       name: 'children',
       type: 'React.ReactNode',
       moveSpecific: false,
-      description: 'The text to animate — a plain string, or (with `asChild`) a single element like `<Heading>` whose text content is split.',
+      description:
+        'The text to animate — a plain string, or (with `asChild`) a single element like `<Heading>` whose text content is split.',
     },
     {
       name: 'as',
       type: "'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'",
       default: "'span'",
       moveSpecific: true,
-      description: 'HTML element to render the container as. Typography is controlled by `size`/`weight`, not by the element — so the element is purely semantic.',
+      description:
+        'HTML element to render the container as. Typography is controlled by `size`/`weight`, not by the element — so the element is purely semantic.',
     },
     {
       name: 'asChild',
       type: 'boolean',
       default: 'false',
       moveSpecific: true,
-      description: 'Render onto the single child element (e.g. wrap a `Heading` or `Text`) via Radix Slot, instead of AnimatedText\'s own element — so the animated text keeps the wrapped component\'s typography. The child\'s text content is what gets split.',
+      description:
+        "Render onto the single child element (e.g. wrap a `Heading` or `Text`) via Radix Slot, instead of AnimatedText's own element — so the animated text keeps the wrapped component's typography. The child's text content is what gets split.",
     },
     {
       name: 'size',
       typeRef: 'DisplaySize',
       moveSpecific: true,
-      description: 'Optional font size from the Move typography scale. When omitted, the text inherits its surrounding typography (no data-size, no override).',
+      description:
+        'Optional font size from the Move typography scale. When omitted, the text inherits its surrounding typography (no data-size, no override).',
     },
     {
       name: 'weight',
       type: "'normal' | 'medium' | 'semibold' | 'bold'",
       moveSpecific: true,
-      description: 'Optional font weight from the Move typography scale. When omitted, the text inherits its surrounding weight (no data-weight, no override).',
+      description:
+        'Optional font weight from the Move typography scale. When omitted, the text inherits its surrounding weight (no data-weight, no override).',
     },
     {
       name: 'by',
@@ -82,14 +87,15 @@ export const spec = {
       default: "'inView'",
       moveSpecific: true,
       description:
-        "When the reveal runs: immediately on mount, when scrolled into view (IntersectionObserver), or on pointer hover",
+        'When the reveal runs: immediately on mount, when scrolled into view (IntersectionObserver), or on pointer hover',
     },
     {
       name: 'once',
       type: 'boolean',
       default: 'true',
       moveSpecific: true,
-      description: 'For inView/hover triggers, animate only the first time (do not re-run on re-entry)',
+      description:
+        'For inView/hover triggers, animate only the first time (do not re-run on re-entry)',
     },
     {
       name: 'stagger',
@@ -177,11 +183,13 @@ export const spec = {
     },
     {
       id: 'as-child',
-      description: 'With `asChild`, renders via Radix Slot onto the single child element (e.g. a `Heading`), merging ref + data attributes; splitText runs on that element and the child\'s text content is split — so the animation inherits the wrapped component\'s typography with no size/weight needed.',
+      description:
+        "With `asChild`, renders via Radix Slot onto the single child element (e.g. a `Heading`), merging ref + data attributes; splitText runs on that element and the child's text content is split — so the animation inherits the wrapped component's typography with no size/weight needed.",
     },
     {
       id: 'typography-tokens',
-      description: 'By default the text inherits its surrounding typography (no data-size/data-weight emitted). When `size`/`weight` are set they apply via data-size/data-weight (Move typography tokens), overriding any element default. The root always resets element margin to 0, so rendering as a heading or `<p>` does not add the browser default block margins.',
+      description:
+        'By default the text inherits its surrounding typography (no data-size/data-weight emitted). When `size`/`weight` are set they apply via data-size/data-weight (Move typography tokens), overriding any element default. The root always resets element margin to 0, so rendering as a heading or `<p>` does not add the browser default block margins.',
     },
     {
       id: 'no-layout-shift',

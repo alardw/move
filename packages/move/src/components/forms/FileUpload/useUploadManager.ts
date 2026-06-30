@@ -129,9 +129,7 @@ const INERT_RETURN: UseUploadManagerReturn = {
 // Hook
 // =============================================================================
 
-export function useUploadManager(
-  options: UseUploadManagerOptions | null
-): UseUploadManagerReturn {
+export function useUploadManager(options: UseUploadManagerOptions | null): UseUploadManagerReturn {
   // Version counter — bumped on status/progress changes to trigger re-render
   const [, bump] = useReducer((c: number) => c + 1, 0);
 
@@ -161,87 +159,90 @@ export function useUploadManager(
   const drainQueueRef = useRef<() => void>(noop);
 
   // --- startUpload: upload a single file ---
-  const startUpload = useCallback(async (file: File) => {
-    const adapter = adapterRef.current;
-    if (!adapter) return;
+  const startUpload = useCallback(
+    async (file: File) => {
+      const adapter = adapterRef.current;
+      if (!adapter) return;
 
-    const state = mapRef.current.get(file);
-    if (!state || state.status === 'uploading' || state.status === 'complete') return;
+      const state = mapRef.current.get(file);
+      if (!state || state.status === 'uploading' || state.status === 'complete') return;
 
-    const abortController = new AbortController();
-    state.status = 'uploading';
-    state.progress = { loaded: 0, total: file.size, percent: 0 };
-    state.error = null;
-    state.abortController = abortController;
-    activeCountRef.current++;
-    bump();
+      const abortController = new AbortController();
+      state.status = 'uploading';
+      state.progress = { loaded: 0, total: file.size, percent: 0 };
+      state.error = null;
+      state.abortController = abortController;
+      activeCountRef.current++;
+      bump();
 
-    try {
-      let lastProgressUpdate = 0;
-      const PROGRESS_THROTTLE = 200;
+      try {
+        let lastProgressUpdate = 0;
+        const PROGRESS_THROTTLE = 200;
 
-      const result = await adapter({
-        file,
-        onProgress: (progress: UploadProgress) => {
-          const now = Date.now();
-          if (progress.percent >= 100 || now - lastProgressUpdate >= PROGRESS_THROTTLE) {
-            lastProgressUpdate = now;
-            const s = mapRef.current.get(file);
-            if (s) {
-              s.progress = progress;
-              bump();
+        const result = await adapter({
+          file,
+          onProgress: (progress: UploadProgress) => {
+            const now = Date.now();
+            if (progress.percent >= 100 || now - lastProgressUpdate >= PROGRESS_THROTTLE) {
+              lastProgressUpdate = now;
+              const s = mapRef.current.get(file);
+              if (s) {
+                s.progress = progress;
+                bump();
+              }
             }
-          }
-        },
-        signal: abortController.signal,
-      });
+          },
+          signal: abortController.signal,
+        });
 
-      const s = mapRef.current.get(file);
-      if (s) {
-        s.status = 'complete';
-        s.progress = { loaded: file.size, total: file.size, percent: 100 };
-        s.result = result;
-        s.error = null;
-        s.abortController = null;
-        bump();
-        onUploadCompleteRef.current?.(buildEntry(file, s));
-      }
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error(String(err));
-      const isAbort = error.name === 'AbortError';
-      const s = mapRef.current.get(file);
-
-      if (isAbort) {
-        // On abort the caller handles cleanup (untrackFile / untrackAll).
-        // If the entry still exists, reset to pending.
+        const s = mapRef.current.get(file);
         if (s) {
-          s.status = 'pending';
+          s.status = 'complete';
+          s.progress = { loaded: file.size, total: file.size, percent: 100 };
+          s.result = result;
+          s.error = null;
           s.abortController = null;
+          bump();
+          onUploadCompleteRef.current?.(buildEntry(file, s));
         }
-      } else if (s) {
-        s.status = 'error';
-        s.error = error;
-        s.abortController = null;
-        bump();
-        onUploadErrorRef.current?.(buildEntry(file, s), error);
-      }
-    } finally {
-      activeCountRef.current--;
-      drainQueueRef.current();
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error(String(err));
+        const isAbort = error.name === 'AbortError';
+        const s = mapRef.current.get(file);
 
-      // Check if all tracked files are complete
-      setTimeout(() => {
-        const allEntries: FileUploadEntry[] = [];
-        for (const [f, s] of mapRef.current) {
-          allEntries.push(buildEntry(f, s));
+        if (isAbort) {
+          // On abort the caller handles cleanup (untrackFile / untrackAll).
+          // If the entry still exists, reset to pending.
+          if (s) {
+            s.status = 'pending';
+            s.abortController = null;
+          }
+        } else if (s) {
+          s.status = 'error';
+          s.error = error;
+          s.abortController = null;
+          bump();
+          onUploadErrorRef.current?.(buildEntry(file, s), error);
         }
-        const agg = computeAggregate(allEntries);
-        if (agg.isComplete && allEntries.length > 0) {
-          onAllCompleteRef.current?.(allEntries);
-        }
-      }, 0);
-    }
-  }, [bump]);
+      } finally {
+        activeCountRef.current--;
+        drainQueueRef.current();
+
+        // Check if all tracked files are complete
+        setTimeout(() => {
+          const allEntries: FileUploadEntry[] = [];
+          for (const [f, s] of mapRef.current) {
+            allEntries.push(buildEntry(f, s));
+          }
+          const agg = computeAggregate(allEntries);
+          if (agg.isComplete && allEntries.length > 0) {
+            onAllCompleteRef.current?.(allEntries);
+          }
+        }, 0);
+      }
+    },
+    [bump],
+  );
 
   // --- drainQueue: process queued files up to concurrency limit ---
   const drainQueue = useCallback(() => {
@@ -263,38 +264,44 @@ export function useUploadManager(
   // Event-driven tracking methods (called imperatively by Root)
   // =========================================================================
 
-  const trackFiles = useCallback((files: File[]) => {
-    let added = false;
-    for (const file of files) {
-      if (!mapRef.current.has(file)) {
-        mapRef.current.set(file, createTracking(file));
-        added = true;
+  const trackFiles = useCallback(
+    (files: File[]) => {
+      let added = false;
+      for (const file of files) {
+        if (!mapRef.current.has(file)) {
+          mapRef.current.set(file, createTracking(file));
+          added = true;
+        }
       }
-    }
-    if (!added) return;
+      if (!added) return;
 
-    bump();
+      bump();
 
-    if (autoUploadRef.current) {
-      const toQueue = files.filter((f) => {
-        const s = mapRef.current.get(f);
-        return s && s.status === 'pending' && !queueRef.current.includes(f);
-      });
-      if (toQueue.length > 0) {
-        queueRef.current.push(...toQueue);
-        drainQueueRef.current();
+      if (autoUploadRef.current) {
+        const toQueue = files.filter((f) => {
+          const s = mapRef.current.get(f);
+          return s && s.status === 'pending' && !queueRef.current.includes(f);
+        });
+        if (toQueue.length > 0) {
+          queueRef.current.push(...toQueue);
+          drainQueueRef.current();
+        }
       }
-    }
-  }, [bump]);
+    },
+    [bump],
+  );
 
-  const untrackFile = useCallback((file: File) => {
-    const state = mapRef.current.get(file);
-    if (!state) return;
-    state.abortController?.abort();
-    mapRef.current.delete(file);
-    queueRef.current = queueRef.current.filter((f) => f !== file);
-    bump();
-  }, [bump]);
+  const untrackFile = useCallback(
+    (file: File) => {
+      const state = mapRef.current.get(file);
+      if (!state) return;
+      state.abortController?.abort();
+      mapRef.current.delete(file);
+      queueRef.current = queueRef.current.filter((f) => f !== file);
+      bump();
+    },
+    [bump],
+  );
 
   const untrackAll = useCallback(() => {
     for (const [, state] of mapRef.current) {
@@ -333,17 +340,20 @@ export function useUploadManager(
     drainQueueRef.current();
   }, []);
 
-  const retryFile = useCallback((file: File) => {
-    const state = mapRef.current.get(file);
-    if (!state || state.status !== 'error') return;
+  const retryFile = useCallback(
+    (file: File) => {
+      const state = mapRef.current.get(file);
+      if (!state || state.status !== 'error') return;
 
-    state.status = 'pending';
-    state.error = null;
-    state.progress = { loaded: 0, total: file.size, percent: 0 };
-    queueRef.current.push(file);
-    bump();
-    drainQueueRef.current();
-  }, [bump]);
+      state.status = 'pending';
+      state.error = null;
+      state.progress = { loaded: 0, total: file.size, percent: 0 };
+      queueRef.current.push(file);
+      bump();
+      drainQueueRef.current();
+    },
+    [bump],
+  );
 
   const abortFile = useCallback((file: File) => {
     const state = mapRef.current.get(file);

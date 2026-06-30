@@ -24,31 +24,49 @@ export const fadeIn = (): Animation => ({ opacity: { from: 0, to: 1, ease: OUT, 
 export const fadeOut = (): Animation => ({ opacity: { to: 0, ease: OUT, duration: 150 } });
 
 /** translateY: enters from `distance` below → 0 */
-export const slideUp = (distance = 8): Animation => ({ translateY: { from: distance, to: 0, ease: OUT, duration: 200 } });
+export const slideUp = (distance = 8): Animation => ({
+  translateY: { from: distance, to: 0, ease: OUT, duration: 200 },
+});
 /** translateY: enters from `distance` above → 0 */
-export const slideDown = (distance = 8): Animation => ({ translateY: { from: -distance, to: 0, ease: OUT, duration: 200 } });
+export const slideDown = (distance = 8): Animation => ({
+  translateY: { from: -distance, to: 0, ease: OUT, duration: 200 },
+});
 /** translateX: enters from `distance` right → 0 */
-export const slideLeft = (distance = 8): Animation => ({ translateX: { from: distance, to: 0, ease: OUT, duration: 200 } });
+export const slideLeft = (distance = 8): Animation => ({
+  translateX: { from: distance, to: 0, ease: OUT, duration: 200 },
+});
 /** translateX: enters from `distance` left → 0 */
-export const slideRight = (distance = 8): Animation => ({ translateX: { from: -distance, to: 0, ease: OUT, duration: 200 } });
+export const slideRight = (distance = 8): Animation => ({
+  translateX: { from: -distance, to: 0, ease: OUT, duration: 200 },
+});
 
 /** scale: appears from `from` → 1 (bouncy) */
 export const scaleIn = (from = 0.9): Animation => ({ scale: { from, to: 1, ease: poppy } });
 /** scale: disappears 1 → `to` */
-export const scaleOut = (to = 0.9): Animation => ({ scale: { from: 1, to, ease: OUT, duration: 150 } });
+export const scaleOut = (to = 0.9): Animation => ({
+  scale: { from: 1, to, ease: OUT, duration: 150 },
+});
 /** scale: momentary grow, springs back (hover) */
 export const scaleUp = (to = 1.04): Animation => ({ scale: { to, ease: snappy } });
 /** scale: momentary shrink, springs back (press) */
 export const scaleDown = (to = 0.96): Animation => ({ scale: { to, ease: snappy } });
 
 /** rotate: `from` → `to` degrees (required — no universal default) */
-export const rotate = (from: number, to: number): Animation => ({ rotate: { from, to, ease: OUT, duration: 300 } });
+export const rotate = (from: number, to: number): Animation => ({
+  rotate: { from, to, ease: OUT, duration: 300 },
+});
 
 /** height 0 → auto + fade in (disclosure open). Height has no duration so
  * `animateDimension` derives one proportional to the measured content. */
-export const expand = (): Animation => ({ height: { from: 0, to: 'auto', ease: OUT }, opacity: { from: 0, to: 1, ease: OUT, duration: 250 } });
+export const expand = (): Animation => ({
+  height: { from: 0, to: 'auto', ease: OUT },
+  opacity: { from: 0, to: 1, ease: OUT, duration: 250 },
+});
 /** height auto → 0 + fade out (disclosure close) */
-export const collapse = (): Animation => ({ height: { from: 'auto', to: 0, ease: OUT }, opacity: { from: 1, to: 0, ease: OUT, duration: 150 } });
+export const collapse = (): Animation => ({
+  height: { from: 'auto', to: 0, ease: OUT },
+  opacity: { from: 1, to: 0, ease: OUT, duration: 150 },
+});
 
 // =============================================================================
 // Sequence helpers — event/over-time bundles composed FROM motions. Not motions

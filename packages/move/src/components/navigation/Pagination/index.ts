@@ -10,7 +10,4 @@ export type {
 } from './Pagination';
 
 export { usePagination } from './usePagination';
-export type {
-  UsePaginationOptions,
-  UsePaginationReturn,
-} from './usePagination';
+export type { UsePaginationOptions, UsePaginationReturn } from './usePagination';

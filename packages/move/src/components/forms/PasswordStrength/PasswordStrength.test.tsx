@@ -4,7 +4,8 @@ import { describe, it, expect } from 'vitest';
 import { PasswordStrength, estimatePasswordStrength } from './PasswordStrength';
 
 const getRoot = (container: HTMLElement) => container.firstChild as HTMLElement;
-const getSegments = (container: HTMLElement) => container.querySelectorAll('[data-size] > div > div');
+const getSegments = (container: HTMLElement) =>
+  container.querySelectorAll('[data-size] > div > div');
 
 describe('PasswordStrength', () => {
   // === Rendering ===
@@ -27,7 +28,9 @@ describe('PasswordStrength', () => {
     });
 
     it('forwards className and style on root', () => {
-      const { container } = render(<PasswordStrength score={1} className="custom" style={{ margin: 8 }} />);
+      const { container } = render(
+        <PasswordStrength score={1} className="custom" style={{ margin: 8 }} />,
+      );
       const root = getRoot(container);
       expect(root.className).toContain('custom');
       expect(root.style.margin).toBe('8px');
@@ -211,7 +214,11 @@ describe('PasswordStrength', () => {
 
     it('forwards className and style', () => {
       const { container } = render(
-        <PasswordStrength.Requirements requirements={reqs} className="custom" style={{ marginTop: 4 }} />,
+        <PasswordStrength.Requirements
+          requirements={reqs}
+          className="custom"
+          style={{ marginTop: 4 }}
+        />,
       );
       const root = container.firstChild as HTMLElement;
       expect(root.className).toContain('custom');

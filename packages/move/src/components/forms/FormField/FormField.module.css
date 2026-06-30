@@ -32,19 +32,19 @@
   }
 
   /* Per-control label alignment */
-  .inner:has(.field [role="checkbox"]) .label {
+  .inner:has(.field [role='checkbox']) .label {
     padding-top: 0.125rem;
   }
 
-  .inner:has(.field [role="switch"]) .label {
+  .inner:has(.field [role='switch']) .label {
     padding-top: 0.1875rem;
   }
 
-  .inner:has(.field [role="radiogroup"]) .label {
+  .inner:has(.field [role='radiogroup']) .label {
     padding-top: 0.125rem;
   }
 
-  .inner:has(.field [role="slider"]) .field {
+  .inner:has(.field [role='slider']) .field {
     min-height: 2.25rem;
     display: flex;
     align-items: center;

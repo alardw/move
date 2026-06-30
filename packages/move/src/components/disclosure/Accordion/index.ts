@@ -12,7 +12,4 @@ export type {
 } from './Accordion';
 
 export { useAccordion } from './useAccordion';
-export type {
-  UseAccordionOptions,
-  UseAccordionReturn,
-} from './useAccordion';
+export type { UseAccordionOptions, UseAccordionReturn } from './useAccordion';

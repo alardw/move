@@ -88,7 +88,11 @@ export interface RichTextEditorToolbarProps extends React.HTMLAttributes<HTMLEle
   sp?: SlotPropsMap<'toolbar'>;
 }
 
-const RichTextEditorToolbar = withMoveComponent<'toolbar', RichTextEditorToolbarProps, HTMLDivElement>({
+const RichTextEditorToolbar = withMoveComponent<
+  'toolbar',
+  RichTextEditorToolbarProps,
+  HTMLDivElement
+>({
   name: 'RichTextEditorToolbar',
   styles,
   slots: ['toolbar'] as const,
@@ -99,7 +103,11 @@ const RichTextEditorToolbar = withMoveComponent<'toolbar', RichTextEditorToolbar
     return {
       render() {
         const toolbarSp = sp('toolbar');
-        const { className: spClass, style: spStyle, ...spRest } = toolbarSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = toolbarSp as Record<string, unknown>;
         const stickyOffset = props.stickyOffset as number | undefined;
 
         return (
@@ -136,7 +144,11 @@ export interface RichTextEditorControlGroupProps extends React.HTMLAttributes<HT
   sp?: SlotPropsMap<'controlGroup'>;
 }
 
-const RichTextEditorControlGroup = withMoveComponent<'controlGroup', RichTextEditorControlGroupProps, HTMLDivElement>({
+const RichTextEditorControlGroup = withMoveComponent<
+  'controlGroup',
+  RichTextEditorControlGroupProps,
+  HTMLDivElement
+>({
   name: 'RichTextEditorControlGroup',
   styles,
   slots: ['controlGroup'] as const,
@@ -145,7 +157,11 @@ const RichTextEditorControlGroup = withMoveComponent<'controlGroup', RichTextEdi
     return {
       render() {
         const groupSp = sp('controlGroup');
-        const { className: spClass, style: spStyle, ...spRest } = groupSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = groupSp as Record<string, unknown>;
 
         return (
           <div
@@ -179,7 +195,11 @@ export interface RichTextEditorControlProps extends React.HTMLAttributes<HTMLEle
   sp?: SlotPropsMap<'control'>;
 }
 
-const RichTextEditorControl = withMoveComponent<'control', RichTextEditorControlProps, HTMLButtonElement>({
+const RichTextEditorControl = withMoveComponent<
+  'control',
+  RichTextEditorControlProps,
+  HTMLButtonElement
+>({
   name: 'RichTextEditorControl',
   styles,
   slots: ['control'] as const,
@@ -187,9 +207,10 @@ const RichTextEditorControl = withMoveComponent<'control', RichTextEditorControl
   moveProps: ['active', 'onActiveChange'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const hasActiveState = props.active !== undefined
-      || props.defaultActive !== undefined
-      || props.onActiveChange !== undefined;
+    const hasActiveState =
+      props.active !== undefined ||
+      props.defaultActive !== undefined ||
+      props.onActiveChange !== undefined;
 
     const [active, setActive] = useControlledState<boolean>({
       value: props.active as boolean | undefined,
@@ -200,7 +221,11 @@ const RichTextEditorControl = withMoveComponent<'control', RichTextEditorControl
     return {
       render() {
         const controlSp = sp('control');
-        const { className: spClass, style: spStyle, ...spRest } = controlSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = controlSp as Record<string, unknown>;
         const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
         const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -238,7 +263,11 @@ export interface RichTextEditorSeparatorProps extends React.HTMLAttributes<HTMLE
   sp?: SlotPropsMap<'separator'>;
 }
 
-const RichTextEditorSeparator = withMoveComponent<'separator', RichTextEditorSeparatorProps, HTMLDivElement>({
+const RichTextEditorSeparator = withMoveComponent<
+  'separator',
+  RichTextEditorSeparatorProps,
+  HTMLDivElement
+>({
   name: 'RichTextEditorSeparator',
   styles,
   slots: ['separator'] as const,
@@ -279,7 +308,11 @@ export interface RichTextEditorContentProps extends React.HTMLAttributes<HTMLEle
   sp?: SlotPropsMap<'content'>;
 }
 
-const RichTextEditorContent = withMoveComponent<'content', RichTextEditorContentProps, HTMLDivElement>({
+const RichTextEditorContent = withMoveComponent<
+  'content',
+  RichTextEditorContentProps,
+  HTMLDivElement
+>({
   name: 'RichTextEditorContent',
   styles,
   slots: ['content'] as const,
@@ -289,7 +322,11 @@ const RichTextEditorContent = withMoveComponent<'content', RichTextEditorContent
     return {
       render() {
         const contentSp = sp('content');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
         const minHeight = props.minHeight as React.CSSProperties['minHeight'] | undefined;
 
         return (

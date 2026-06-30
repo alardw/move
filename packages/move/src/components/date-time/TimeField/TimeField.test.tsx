@@ -188,17 +188,17 @@ describe('TimeField', () => {
   describe('Period', () => {
     it('renders with role=spinbutton', () => {
       render(<TimeField.Root hourCycle={12} />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'period'
-      );
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'period');
       expect(periodBtn).toBeInTheDocument();
     });
 
     it('has aria-valuenow 0 for AM, 1 for PM', () => {
       render(<TimeField.Root hourCycle={12} defaultValue="03:00" />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'period'
-      );
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'period');
       expect(periodBtn).toHaveAttribute('aria-valuenow', '0'); // AM
     });
 
@@ -206,9 +206,9 @@ describe('TimeField', () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       render(<TimeField.Root hourCycle={12} defaultValue="03:00" onValueChange={onChange} />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'period'
-      )!;
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'period')!;
       await user.click(periodBtn);
       await user.keyboard('{ArrowUp}');
       // AM → PM: 03:00 → 15:00
@@ -219,9 +219,9 @@ describe('TimeField', () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       render(<TimeField.Root hourCycle={12} defaultValue="15:00" onValueChange={onChange} />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'period'
-      )!;
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'period')!;
       await user.click(periodBtn);
       await user.keyboard('a');
       // PM → AM: 15:00 → 03:00
@@ -232,9 +232,9 @@ describe('TimeField', () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       render(<TimeField.Root hourCycle={12} defaultValue="03:00" onValueChange={onChange} />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'period'
-      )!;
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'period')!;
       await user.click(periodBtn);
       await user.keyboard('p');
       // AM → PM: 03:00 → 15:00
@@ -268,9 +268,9 @@ describe('TimeField', () => {
 
     it('overrides period aria-label via labels prop', () => {
       render(<TimeField.Root hourCycle={12} labels={{ period: 'dagdeel' }} />);
-      const periodBtn = screen.getAllByRole('spinbutton').find(
-        (el) => el.getAttribute('aria-label') === 'dagdeel'
-      );
+      const periodBtn = screen
+        .getAllByRole('spinbutton')
+        .find((el) => el.getAttribute('aria-label') === 'dagdeel');
       expect(periodBtn).toBeInTheDocument();
     });
   });

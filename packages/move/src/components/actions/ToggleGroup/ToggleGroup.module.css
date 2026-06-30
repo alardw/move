@@ -64,7 +64,9 @@
   composes: root from '../../actions/Button/Button.module.css';
   background-color: transparent !important;
   border: none !important;
-  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding)) !important;
+  border-radius: calc(
+    var(--move-toggle-group-radius) - var(--move-toggle-group-padding)
+  ) !important;
   box-shadow: none !important;
   font-weight: var(--move-weight-normal, 400);
   position: relative;
@@ -102,7 +104,9 @@
 /* Unselected: inset focus ring */
 .item[data-state='off']:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
-  outline-offset: calc(-1 * (var(--move-focus-ring-width, 2px) + var(--move-focus-ring-offset, 2px)));
+  outline-offset: calc(
+    -1 * (var(--move-focus-ring-width, 2px) + var(--move-focus-ring-offset, 2px))
+  );
   z-index: 2;
 }
 

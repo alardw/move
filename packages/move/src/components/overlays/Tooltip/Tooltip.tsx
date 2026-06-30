@@ -3,7 +3,13 @@
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  quick,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine';
 import styles from './Tooltip.module.css';
@@ -14,11 +20,16 @@ import styles from './Tooltip.module.css';
 
 function getSideOffset(side: string): { x: number; y: number } {
   switch (side) {
-    case 'top': return { x: 0, y: 6 };
-    case 'bottom': return { x: 0, y: -6 };
-    case 'left': return { x: 6, y: 0 };
-    case 'right': return { x: -6, y: 0 };
-    default: return { x: 0, y: 6 };
+    case 'top':
+      return { x: 0, y: 6 };
+    case 'bottom':
+      return { x: 0, y: -6 };
+    case 'left':
+      return { x: 6, y: 0 };
+    case 'right':
+      return { x: -6, y: 0 };
+    default:
+      return { x: 0, y: 6 };
   }
 }
 
@@ -39,24 +50,28 @@ const DEFAULT_TOOLTIP_ANIMATIONS: AnimationTrigger[] = [
       const offset = getSideOffset(side);
       return { offsetX: offset.x, offsetY: offset.y };
     },
-    sequence: [{
-      animation: {
-        opacity: { from: 0, to: 1, ease: quick },
-        scale: { from: 0.88, to: 1, ease: quick },
-        translateX: { from: '$offsetX', to: 0, ease: quick },
-        translateY: { from: '$offsetY', to: 0, ease: quick },
+    sequence: [
+      {
+        animation: {
+          opacity: { from: 0, to: 1, ease: quick },
+          scale: { from: 0.88, to: 1, ease: quick },
+          translateX: { from: '$offsetX', to: 0, ease: quick },
+          translateY: { from: '$offsetY', to: 0, ease: quick },
+        },
       },
-    }],
+    ],
   },
   {
     // Exit via the Move system (no CSS @keyframes).
     trigger: 'Content.exit',
-    sequence: [{
-      animation: {
-        opacity: { to: 0, duration: 120 },
-        scale: { to: 0.9, duration: 120, ease: 'outQuart' },
+    sequence: [
+      {
+        animation: {
+          opacity: { to: 0, duration: 120 },
+          scale: { to: 0.9, duration: 120, ease: 'outQuart' },
+        },
       },
-    }],
+    ],
   },
 ];
 
@@ -103,14 +118,17 @@ const TooltipRoot: React.FC<TooltipRootProps> = ({
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen: open, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
-  const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      openFn();
-    } else {
-      // Defer the real close so the Move exit animation can play first.
-      close();
-    }
-  }, [openFn, close]);
+  const handleOpenChange = React.useCallback(
+    (newOpen: boolean) => {
+      if (newOpen) {
+        openFn();
+      } else {
+        // Defer the real close so the Move exit animation can play first.
+        close();
+      }
+    },
+    [openFn, close],
+  );
 
   return (
     <TooltipContext.Provider value={{ isClosing, epoch, onExitDone }}>
@@ -144,7 +162,11 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
     return {
       render() {
         const triggerSp = sp('trigger');
-        const { className: spClass, style: spStyle, ...spRest } = triggerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = triggerSp as Record<string, unknown>;
         return (
           <RadixTooltip.Trigger
             {...attrs}
@@ -205,7 +227,11 @@ const TooltipContentInner: React.FC<{
     // Pass `animations` straight through: `|| undefined` would coerce `false`
     // (disable) into `undefined`, which resolveAnimationsConfig treats as "use
     // defaults" — so animations={false} silently did nothing.
-    () => resolveAnimationsConfig(DEFAULT_TOOLTIP_ANIMATIONS, animations as AnimationTrigger[] | false | undefined),
+    () =>
+      resolveAnimationsConfig(
+        DEFAULT_TOOLTIP_ANIMATIONS,
+        animations as AnimationTrigger[] | false | undefined,
+      ),
     [animations],
   );
   const refs = React.useMemo(
@@ -215,7 +241,10 @@ const TooltipContentInner: React.FC<{
   const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs, undefined, {
     onEnterComplete: () => {
       const el = innerRef.current;
-      if (el) { el.style.opacity = ''; el.style.transform = ''; }
+      if (el) {
+        el.style.opacity = '';
+        el.style.transform = '';
+      }
     },
   });
 
@@ -236,7 +265,11 @@ const TooltipContentInner: React.FC<{
   );
 };
 
-const TooltipContent = withMoveComponent<'content' | 'contentInner', TooltipContentProps, HTMLDivElement>({
+const TooltipContent = withMoveComponent<
+  'content' | 'contentInner',
+  TooltipContentProps,
+  HTMLDivElement
+>({
   name: 'TooltipContent',
   styles,
   slots: ['content', 'contentInner'] as const,
@@ -251,8 +284,16 @@ const TooltipContent = withMoveComponent<'content' | 'contentInner', TooltipCont
         const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
         const contentSp = sp('content');
         const innerSp = sp('contentInner');
-        const { className: spClass, style: spStyle, ...spRest } = contentSp as Record<string, unknown>;
-        const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = innerSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = contentSp as Record<string, unknown>;
+        const {
+          className: innerSpClass,
+          style: innerSpStyle,
+          ...innerSpRest
+        } = innerSp as Record<string, unknown>;
         return (
           <RadixTooltip.Portal container={props.container as HTMLElement | undefined}>
             <RadixTooltip.Content
@@ -304,7 +345,11 @@ const TooltipArrow = withMoveComponent<'arrow', TooltipArrowProps, HTMLElement>(
     return {
       render() {
         const arrowSp = sp('arrow');
-        const { className: spClass, style: spStyle, ...spRest } = arrowSp as Record<string, unknown>;
+        const {
+          className: spClass,
+          style: spStyle,
+          ...spRest
+        } = arrowSp as Record<string, unknown>;
         return (
           <RadixTooltip.Arrow
             {...attrs}

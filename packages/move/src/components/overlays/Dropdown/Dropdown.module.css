@@ -16,7 +16,10 @@
   --move-dropdown-content-shadow: var(--move-shadow-overlay);
   --move-dropdown-content-padding: var(--move-spacing-xs);
   --move-dropdown-content-min-width: 12rem;
-  --move-dropdown-content-max-height: min(var(--radix-dropdown-menu-content-available-height, 50vh), 50vh);
+  --move-dropdown-content-max-height: min(
+    var(--radix-dropdown-menu-content-available-height, 50vh),
+    50vh
+  );
 
   font-family: var(--move-font-body);
   overflow: hidden;
@@ -174,7 +177,8 @@
   border: 1px solid var(--move-border-base);
   color: var(--move-primary-fg);
   flex-shrink: 0;
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
     border-color var(--move-transition-fast) var(--move-ease-default);
 }
 

@@ -67,9 +67,7 @@ export const CalendarContext = React.createContext<CalendarContextValue | null>(
 export function useCalendarContext(): CalendarContextValue {
   const ctx = React.useContext(CalendarContext);
   if (!ctx) {
-    throw new Error(
-      'Calendar sub-components must be used within Calendar.Root or DatePicker.Root'
-    );
+    throw new Error('Calendar sub-components must be used within Calendar.Root or DatePicker.Root');
   }
   return ctx;
 }

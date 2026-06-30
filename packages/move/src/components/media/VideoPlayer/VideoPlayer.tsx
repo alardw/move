@@ -72,7 +72,10 @@ type VideoPlayerSlots =
   | 'fullscreenButton'
   | 'subtitleOverlay';
 
-export interface VideoPlayerProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onError' | 'onVolumeChange'> {
+export interface VideoPlayerProps extends Omit<
+  React.HTMLAttributes<HTMLElement>,
+  'onError' | 'onVolumeChange'
+> {
   src?: string;
   poster?: string;
   provider?: VideoPlayerProvider;
@@ -147,9 +150,18 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
   name: 'VideoPlayer',
   styles,
   slots: [
-    'root', 'video', 'controls', 'playButton', 'progress', 'time',
-    'volumeButton', 'volumeSlider', 'settingsButton', 'subtitleButton',
-    'fullscreenButton', 'subtitleOverlay',
+    'root',
+    'video',
+    'controls',
+    'playButton',
+    'progress',
+    'time',
+    'volumeButton',
+    'volumeSlider',
+    'settingsButton',
+    'subtitleButton',
+    'fullscreenButton',
+    'subtitleOverlay',
   ] as const,
   defaults: {
     radius: 'none',
@@ -160,15 +172,38 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     showTime: true,
   },
   moveProps: [
-    'src', 'poster', 'provider', 'subtitles',
-    'autoPlay', 'muted', 'loop', 'playbackRate', 'onPlaybackRateChange',
-    'playing', 'onPlayingChange', 'volume', 'onVolumeChange',
-    'currentTime', 'onTimeChange',
-    'onEnded', 'onError', 'onReady',
-    'qualities', 'audioTracks', 'onQualityChange', 'onAudioTrackChange',
-    'showSettings', 'showVolume', 'showSubtitles', 'showFullscreen', 'showTime',
+    'src',
+    'poster',
+    'provider',
+    'subtitles',
+    'autoPlay',
+    'muted',
+    'loop',
+    'playbackRate',
+    'onPlaybackRateChange',
+    'playing',
+    'onPlayingChange',
+    'volume',
+    'onVolumeChange',
+    'currentTime',
+    'onTimeChange',
+    'onEnded',
+    'onError',
+    'onReady',
+    'qualities',
+    'audioTracks',
+    'onQualityChange',
+    'onAudioTrackChange',
+    'showSettings',
+    'showVolume',
+    'showSubtitles',
+    'showFullscreen',
+    'showTime',
     'labels',
-    'radius', 'aspectRatio', 'width', 'height',
+    'radius',
+    'aspectRatio',
+    'width',
+    'height',
   ],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
@@ -292,7 +327,16 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       }
 
       return cats;
-    }, [player.playbackRate, player.activeQualityIndex, player.activeAudioTrackIndex, player.setPlaybackRate, player.setActiveQualityIndex, player.setActiveAudioTrackIndex, qualitiesProp, audioTracksProp]);
+    }, [
+      player.playbackRate,
+      player.activeQualityIndex,
+      player.activeAudioTrackIndex,
+      player.setPlaybackRate,
+      player.setActiveQualityIndex,
+      player.setActiveAudioTrackIndex,
+      qualitiesProp,
+      audioTracksProp,
+    ]);
 
     // Progress bar drag
     const handleProgressInteraction = React.useCallback(
@@ -355,7 +399,11 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     // Keyboard shortcuts
     const handleKeyDown = React.useCallback(
       (e: React.KeyboardEvent) => {
-        if ((e.target as HTMLElement).tagName === 'INPUT' || (e.target as HTMLElement).tagName === 'TEXTAREA') return;
+        if (
+          (e.target as HTMLElement).tagName === 'INPUT' ||
+          (e.target as HTMLElement).tagName === 'TEXTAREA'
+        )
+          return;
 
         switch (e.key) {
           case ' ':
@@ -417,7 +465,8 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
         rootElRef.current = node;
         (player.containerRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
         if (typeof ref === 'function') ref(node);
-        else if (ref && typeof ref === 'object') (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+        else if (ref && typeof ref === 'object')
+          (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
       },
       [ref, player.containerRef],
     );
@@ -437,16 +486,26 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const videoSp = sp('video');
         const { className: videoSpClass, ...videoSpRest } = videoSp as Record<string, unknown>;
 
         const controlsSp = sp('controls');
-        const { className: controlsSpClass, ...controlsSpRest } = controlsSp as Record<string, unknown>;
+        const { className: controlsSpClass, ...controlsSpRest } = controlsSp as Record<
+          string,
+          unknown
+        >;
 
         const progressSp = sp('progress');
-        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<string, unknown>;
+        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<
+          string,
+          unknown
+        >;
 
         const progressPct = player.duration > 0 ? (player.currentTime / player.duration) * 100 : 0;
         const bufferedPct = player.duration > 0 ? (player.buffered / player.duration) * 100 : 0;
@@ -460,8 +519,12 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
         const aspectRatio = props.aspectRatio as string | undefined;
 
         const rootStyle: React.CSSProperties = {
-          ...(width != null ? { width: typeof width === 'number' ? `${width}px` : width } : undefined),
-          ...(height != null ? { height: typeof height === 'number' ? `${height}px` : height } : undefined),
+          ...(width != null
+            ? { width: typeof width === 'number' ? `${width}px` : width }
+            : undefined),
+          ...(height != null
+            ? { height: typeof height === 'number' ? `${height}px` : height }
+            : undefined),
           ...(aspectRatio ? { aspectRatio } : undefined),
           ...props.style,
           ...(rootSpStyle as React.CSSProperties),
@@ -496,11 +559,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
             </div>
 
             {/* Subtitle overlay */}
-            {player.activeCue && (
-              <div {...slot('subtitleOverlay')}>
-                {player.activeCue.text}
-              </div>
-            )}
+            {player.activeCue && <div {...slot('subtitleOverlay')}>{player.activeCue.text}</div>}
 
             {/* Controls */}
             <div
@@ -529,7 +588,6 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                   {...slot('playButton')}
                   onClick={player.togglePlay}
                   aria-label={player.playing ? labels.pause : labels.play}
-
                 >
                   {player.playing ? pauseIcon : playIcon}
                 </Button>
@@ -576,7 +634,6 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                         {...slot('subtitleButton')}
                         data-active={player.activeSubtitleIndex >= 0}
                         aria-label={labels.subtitles}
-
                       >
                         {captionsIcon}
                       </Button>
@@ -626,14 +683,10 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       {...slot('volumeButton')}
                       onClick={player.toggleMute}
                       aria-label={player.muted ? labels.unmute : labels.mute}
-
                     >
                       {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
                     </Button>
-                    <div
-                      {...slot('volumeSlider')}
-                      onMouseDown={handleVolumeMouseDown}
-                    >
+                    <div {...slot('volumeSlider')} onMouseDown={handleVolumeMouseDown}>
                       <div className={styles.volumeTrack}>
                         <div className={styles.volumeFill} style={{ width: `${volumePct}%` }} />
                       </div>
@@ -649,7 +702,6 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                     {...slot('fullscreenButton')}
                     onClick={player.toggleFullscreen}
                     aria-label={player.isFullscreen ? labels.exitFullscreen : labels.fullscreen}
-
                   >
                     {player.isFullscreen ? minimizeIcon : maximizeIcon}
                   </Button>

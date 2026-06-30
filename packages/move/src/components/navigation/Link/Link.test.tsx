@@ -27,7 +27,7 @@ describe('Link', () => {
       render(
         <Link className="custom" style={{ marginTop: '10px' }} data-testid="link">
           Link
-        </Link>
+        </Link>,
       );
       const el = screen.getByTestId('link');
       expect(el).toHaveClass('custom');
@@ -38,7 +38,7 @@ describe('Link', () => {
       render(
         <Link data-testid="link" aria-label="home link" href="/home">
           Link
-        </Link>
+        </Link>,
       );
       const el = screen.getByTestId('link');
       expect(el).toHaveAttribute('aria-label', 'home link');
@@ -57,22 +57,19 @@ describe('Link', () => {
       render(
         <Link variant="muted" data-testid="link">
           Link
-        </Link>
+        </Link>,
       );
       expect(screen.getByTestId('link')).toHaveAttribute('data-variant', 'muted');
     });
 
-    it.each(['default', 'muted', 'subtle'] as const)(
-      'supports variant=%s',
-      (variant) => {
-        render(
-          <Link variant={variant} data-testid="link">
-            Link
-          </Link>
-        );
-        expect(screen.getByTestId('link')).toHaveAttribute('data-variant', variant);
-      }
-    );
+    it.each(['default', 'muted', 'subtle'] as const)('supports variant=%s', (variant) => {
+      render(
+        <Link variant={variant} data-testid="link">
+          Link
+        </Link>,
+      );
+      expect(screen.getByTestId('link')).toHaveAttribute('data-variant', variant);
+    });
   });
 
   // === Underline ===
@@ -86,22 +83,19 @@ describe('Link', () => {
       render(
         <Link underline="always" data-testid="link">
           Link
-        </Link>
+        </Link>,
       );
       expect(screen.getByTestId('link')).toHaveAttribute('data-underline', 'always');
     });
 
-    it.each(['always', 'hover', 'none'] as const)(
-      'supports underline=%s',
-      (underline) => {
-        render(
-          <Link underline={underline} data-testid="link">
-            Link
-          </Link>
-        );
-        expect(screen.getByTestId('link')).toHaveAttribute('data-underline', underline);
-      }
-    );
+    it.each(['always', 'hover', 'none'] as const)('supports underline=%s', (underline) => {
+      render(
+        <Link underline={underline} data-testid="link">
+          Link
+        </Link>,
+      );
+      expect(screen.getByTestId('link')).toHaveAttribute('data-underline', underline);
+    });
   });
 
   // === Size ===
@@ -110,7 +104,7 @@ describe('Link', () => {
       render(
         <Link size="lg" data-testid="link">
           Link
-        </Link>
+        </Link>,
       );
       expect(screen.getByTestId('link')).toHaveAttribute('data-size', 'lg');
     });
@@ -120,17 +114,14 @@ describe('Link', () => {
       expect(screen.getByTestId('link')).not.toHaveAttribute('data-size');
     });
 
-    it.each(['xs', 'sm', 'base', 'lg', 'xl'] as const)(
-      'supports size=%s',
-      (size) => {
-        render(
-          <Link size={size} data-testid="link">
-            Link
-          </Link>
-        );
-        expect(screen.getByTestId('link')).toHaveAttribute('data-size', size);
-      }
-    );
+    it.each(['xs', 'sm', 'base', 'lg', 'xl'] as const)('supports size=%s', (size) => {
+      render(
+        <Link size={size} data-testid="link">
+          Link
+        </Link>,
+      );
+      expect(screen.getByTestId('link')).toHaveAttribute('data-size', size);
+    });
   });
 
   // === External ===
@@ -139,7 +130,7 @@ describe('Link', () => {
       render(
         <Link external data-testid="link" href="https://example.com">
           External
-        </Link>
+        </Link>,
       );
       const el = screen.getByTestId('link');
       expect(el).toHaveAttribute('target', '_blank');
@@ -150,7 +141,7 @@ describe('Link', () => {
       render(
         <Link data-testid="link" href="/internal">
           Internal
-        </Link>
+        </Link>,
       );
       const el = screen.getByTestId('link');
       expect(el).not.toHaveAttribute('target');
@@ -164,7 +155,7 @@ describe('Link', () => {
       render(
         <Link asChild data-testid="link">
           <button type="button">Custom trigger</button>
-        </Link>
+        </Link>,
       );
       const el = screen.getByTestId('link');
       expect(el.tagName).toBe('BUTTON');
@@ -178,7 +169,7 @@ describe('Link', () => {
       render(
         <Link sp={{ root: { className: 'sp-root' } }} data-testid="link">
           Link
-        </Link>
+        </Link>,
       );
       expect(screen.getByTestId('link')).toHaveClass('sp-root');
     });

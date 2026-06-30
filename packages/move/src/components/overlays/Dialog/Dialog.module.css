@@ -64,10 +64,18 @@
   overflow: hidden;
 }
 
-.content[data-size='sm']   { --move-dialog-content-width: 24rem; }
-.content[data-size='lg']   { --move-dialog-content-width: 36rem; }
-.content[data-size='xl']   { --move-dialog-content-width: 48rem; }
-.content[data-size='full'] { --move-dialog-content-width: 90vw; }
+.content[data-size='sm'] {
+  --move-dialog-content-width: 24rem;
+}
+.content[data-size='lg'] {
+  --move-dialog-content-width: 36rem;
+}
+.content[data-size='xl'] {
+  --move-dialog-content-width: 48rem;
+}
+.content[data-size='full'] {
+  --move-dialog-content-width: 90vw;
+}
 
 .content:focus {
   outline: none;
@@ -105,7 +113,8 @@
   border-radius: var(--move-dialog-close-radius);
   color: var(--move-dialog-close-fg);
   cursor: pointer;
-  transition: background-color var(--move-transition-fast) var(--move-ease-default),
+  transition:
+    background-color var(--move-transition-fast) var(--move-ease-default),
     color var(--move-transition-fast) var(--move-ease-default);
 }
 

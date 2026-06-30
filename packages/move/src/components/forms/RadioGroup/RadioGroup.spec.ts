@@ -8,22 +8,31 @@ export const spec = {
   name: 'RadioGroup',
   componentClass: 'input_toggle' as const,
   category: 'forms',
-  description: 'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
+  description:
+    'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
 
   synonyms: ['radio', 'options', 'single select', 'radio buttons', 'choices'],
   animationPatterns: ['toggle'],
   families: {
-    behavior:  ["form-input"],
-    state:     ["controlled-value"],
-    a11y:      ["listbox"],
+    behavior: ['form-input'],
+    state: ['controlled-value'],
+    a11y: ['listbox'],
   },
 
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Radix RadioGroup.Root container with flex layout' },
+    {
+      name: 'root',
+      element: 'div',
+      description: 'Radix RadioGroup.Root container with flex layout',
+    },
     { name: 'item', element: 'button', description: 'Radix RadioGroup.Item radio button element' },
-    { name: 'indicator', element: 'span', description: 'Radix RadioGroup.Indicator containing the dot, force-mounted for animation' },
+    {
+      name: 'indicator',
+      element: 'span',
+      description: 'Radix RadioGroup.Indicator containing the dot, force-mounted for animation',
+    },
     { name: 'dot', element: 'span', description: 'Visual radio dot inside the indicator' },
   ],
 
@@ -33,22 +42,85 @@ export const spec = {
       slots: [{ name: 'root', element: 'div', description: 'RadioGroup root container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'RadioGroup.Item children' },
-        { name: 'value', type: 'string', moveSpecific: false, description: 'Controlled selected value' },
-        { name: 'defaultValue', type: 'string', moveSpecific: false, description: 'Default selected value (uncontrolled)' },
-        { name: 'onValueChange', type: '(value: string) => void', moveSpecific: false, description: 'Called when selected value changes' },
-        { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disable all radio items' },
-        { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name for hidden inputs' },
-        { name: 'required', type: 'boolean', moveSpecific: false, description: 'Mark all items as required' },
-        { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state applied to all items via data-invalid' },
-        { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Size of all radio items' },
-        { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", moveSpecific: false, description: 'Layout orientation' },
-        { name: 'loop', type: 'boolean', moveSpecific: false, description: 'Whether keyboard navigation loops' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'RadioGroup.Item children',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: false,
+          description: 'Controlled selected value',
+        },
+        {
+          name: 'defaultValue',
+          type: 'string',
+          moveSpecific: false,
+          description: 'Default selected value (uncontrolled)',
+        },
+        {
+          name: 'onValueChange',
+          type: '(value: string) => void',
+          moveSpecific: false,
+          description: 'Called when selected value changes',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Disable all radio items',
+        },
+        {
+          name: 'name',
+          type: 'string',
+          moveSpecific: false,
+          description: 'Form input name for hidden inputs',
+        },
+        {
+          name: 'required',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Mark all items as required',
+        },
+        {
+          name: 'invalid',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Invalid state applied to all items via data-invalid',
+        },
+        {
+          name: 'size',
+          typeRef: 'Size',
+          default: "'md'",
+          moveSpecific: true,
+          description: 'Size of all radio items',
+        },
+        {
+          name: 'orientation',
+          type: "'horizontal' | 'vertical'",
+          default: "'vertical'",
+          moveSpecific: false,
+          description: 'Layout orientation',
+        },
+        {
+          name: 'loop',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Whether keyboard navigation loops',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'RadioGroup.Root',
-      description: 'Root container wrapping Radix RadioGroup.Root with flex layout, size and invalid data attributes',
+      description:
+        'Root container wrapping Radix RadioGroup.Root with flex layout, size and invalid data attributes',
     },
     {
       name: 'Item',
@@ -59,30 +131,93 @@ export const spec = {
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
-        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Label content rendered next to radio' },
-        { name: 'value', type: 'string', moveSpecific: true, description: 'Value of this radio option' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label content rendered next to radio',
+        },
+        {
+          name: 'value',
+          type: 'string',
+          moveSpecific: true,
+          description: 'Value of this radio option',
+        },
         { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Toggle animation config or false to disable' },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Toggle animation config or false to disable',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'RadioGroup.Item',
-      description: 'Individual radio item with toggle animation on checked/unchecked state, wrapped in a clickable span',
+      description:
+        'Individual radio item with toggle animation on checked/unchecked state, wrapped in a clickable span',
     },
   ],
 
   props: [
-    { name: 'value', type: 'string', moveSpecific: false, description: 'Controlled selected value' },
-    { name: 'defaultValue', type: 'string', moveSpecific: false, description: 'Default selected value (uncontrolled)' },
-    { name: 'onValueChange', type: '(value: string) => void', moveSpecific: false, description: 'Called when selected value changes' },
-    { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disable all radio items' },
+    {
+      name: 'value',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Controlled selected value',
+    },
+    {
+      name: 'defaultValue',
+      type: 'string',
+      moveSpecific: false,
+      description: 'Default selected value (uncontrolled)',
+    },
+    {
+      name: 'onValueChange',
+      type: '(value: string) => void',
+      moveSpecific: false,
+      description: 'Called when selected value changes',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      moveSpecific: false,
+      description: 'Disable all radio items',
+    },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name' },
     { name: 'required', type: 'boolean', moveSpecific: false, description: 'Required state' },
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Radio item size' },
-    { name: 'orientation', type: "'horizontal' | 'vertical'", default: "'vertical'", moveSpecific: false, description: 'Layout orientation' },
-    { name: 'loop', type: 'boolean', moveSpecific: false, description: 'Whether keyboard navigation loops' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'RadioGroup.Item children' },
+    {
+      name: 'size',
+      typeRef: 'Size',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Radio item size',
+    },
+    {
+      name: 'orientation',
+      type: "'horizontal' | 'vertical'",
+      default: "'vertical'",
+      moveSpecific: false,
+      description: 'Layout orientation',
+    },
+    {
+      name: 'loop',
+      type: 'boolean',
+      moveSpecific: false,
+      description: 'Whether keyboard navigation loops',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'RadioGroup.Item children',
+    },
   ],
 
   anatomy: {
@@ -97,9 +232,7 @@ export const spec = {
           {
             slot: 'indicator',
             dataAttributes: ['data-state'],
-            children: [
-              { slot: 'dot' },
-            ],
+            children: [{ slot: 'dot' }],
           },
         ],
       },
@@ -123,30 +256,97 @@ export const spec = {
   ],
 
   animations: [
-    { trigger: 'checked', sequence: [{ target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } }] },
-    { trigger: 'unchecked', sequence: [{ target: 'indicator', animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } } }] },
+    {
+      trigger: 'checked',
+      sequence: [
+        { target: 'indicator', animation: { opacity: { to: 1 }, scale: { to: 1, ease: 'poppy' } } },
+      ],
+    },
+    {
+      trigger: 'unchecked',
+      sequence: [
+        {
+          target: 'indicator',
+          animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } },
+        },
+      ],
+    },
     { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
 
   renderContracts: [
-    { id: 'item-wrapper-click', description: 'Item is wrapped in a span.wrapper that forwards click to the hidden Radix RadioGroup.Item button (pointer-events:none on item)' },
-    { id: 'indicator-force-mount', description: 'RadioGroup.Indicator is force-mounted to enable exit animation when unchecked' },
-    { id: 'indicator-opacity-zero-unchecked', description: 'Indicator has opacity:0 when data-state=unchecked via CSS' },
-    { id: 'press-handlers-on-wrapper', description: 'Press animation handlers (onMouseDown/Up/Leave) are attached to wrapper span via Root.press trigger' },
-    { id: 'size-cascades-from-root', description: 'Size is set as data-size on Root and cascades to items via CSS descendant selectors' },
-    { id: 'invalid-cascades-from-root', description: 'Invalid is set as data-invalid on Root and cascades border/outline color changes to items' },
+    {
+      id: 'item-wrapper-click',
+      description:
+        'Item is wrapped in a span.wrapper that forwards click to the hidden Radix RadioGroup.Item button (pointer-events:none on item)',
+    },
+    {
+      id: 'indicator-force-mount',
+      description: 'RadioGroup.Indicator is force-mounted to enable exit animation when unchecked',
+    },
+    {
+      id: 'indicator-opacity-zero-unchecked',
+      description: 'Indicator has opacity:0 when data-state=unchecked via CSS',
+    },
+    {
+      id: 'press-handlers-on-wrapper',
+      description:
+        'Press animation handlers (onMouseDown/Up/Leave) are attached to wrapper span via Root.press trigger',
+    },
+    {
+      id: 'size-cascades-from-root',
+      description:
+        'Size is set as data-size on Root and cascades to items via CSS descendant selectors',
+    },
+    {
+      id: 'invalid-cascades-from-root',
+      description:
+        'Invalid is set as data-invalid on Root and cascades border/outline color changes to items',
+    },
   ],
 
   tokens: [
     { name: '--move-radio-size', value: '1.5rem', description: 'Radio button width and height' },
-    { name: '--move-radio-radius', value: 'var(--move-rounded-full)', description: 'Radio button border radius (always circle)' },
-    { name: '--move-radio-bg', value: 'var(--move-bg-muted)', description: 'Unchecked background color' },
-    { name: '--move-radio-bg-hover', value: 'var(--move-bg-emphasis)', description: 'Unchecked hover background color' },
-    { name: '--move-radio-bg-checked', value: 'var(--move-primary)', description: 'Checked background color' },
-    { name: '--move-radio-bg-checked-hover', value: 'var(--move-primary-hover)', description: 'Checked hover background color' },
-    { name: '--move-radio-border', value: 'var(--move-border-base)', description: 'Unchecked border color' },
-    { name: '--move-radio-border-hover', value: 'var(--move-border-emphasis)', description: 'Unchecked hover border color' },
-    { name: '--move-radio-fg', value: 'var(--move-primary-fg)', description: 'Dot foreground color' },
+    {
+      name: '--move-radio-radius',
+      value: 'var(--move-rounded-full)',
+      description: 'Radio button border radius (always circle)',
+    },
+    {
+      name: '--move-radio-bg',
+      value: 'var(--move-bg-muted)',
+      description: 'Unchecked background color',
+    },
+    {
+      name: '--move-radio-bg-hover',
+      value: 'var(--move-bg-emphasis)',
+      description: 'Unchecked hover background color',
+    },
+    {
+      name: '--move-radio-bg-checked',
+      value: 'var(--move-primary)',
+      description: 'Checked background color',
+    },
+    {
+      name: '--move-radio-bg-checked-hover',
+      value: 'var(--move-primary-hover)',
+      description: 'Checked hover background color',
+    },
+    {
+      name: '--move-radio-border',
+      value: 'var(--move-border-base)',
+      description: 'Unchecked border color',
+    },
+    {
+      name: '--move-radio-border-hover',
+      value: 'var(--move-border-emphasis)',
+      description: 'Unchecked hover border color',
+    },
+    {
+      name: '--move-radio-fg',
+      value: 'var(--move-primary-fg)',
+      description: 'Dot foreground color',
+    },
     { name: '--move-radio-dot-size', value: '0.5rem', description: 'Inner dot size' },
   ],
 

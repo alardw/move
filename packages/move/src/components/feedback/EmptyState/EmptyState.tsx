@@ -55,19 +55,39 @@ export const EmptyState = withMoveComponent<EmptyStateSlots, EmptyStateProps, HT
     return {
       render() {
         const rootSp = sp('root');
-        const { className: rootSpClass, style: rootSpStyle, ...rootSpRest } = rootSp as Record<string, unknown>;
+        const {
+          className: rootSpClass,
+          style: rootSpStyle,
+          ...rootSpRest
+        } = rootSp as Record<string, unknown>;
 
         const iconSp = sp('icon');
-        const { className: iconSpClass, style: iconSpStyle, ...iconSpRest } = iconSp as Record<string, unknown>;
+        const {
+          className: iconSpClass,
+          style: iconSpStyle,
+          ...iconSpRest
+        } = iconSp as Record<string, unknown>;
 
         const titleSp = sp('title');
-        const { className: titleSpClass, style: titleSpStyle, ...titleSpRest } = titleSp as Record<string, unknown>;
+        const {
+          className: titleSpClass,
+          style: titleSpStyle,
+          ...titleSpRest
+        } = titleSp as Record<string, unknown>;
 
         const descriptionSp = sp('description');
-        const { className: descSpClass, style: descSpStyle, ...descSpRest } = descriptionSp as Record<string, unknown>;
+        const {
+          className: descSpClass,
+          style: descSpStyle,
+          ...descSpRest
+        } = descriptionSp as Record<string, unknown>;
 
         const actionSp = sp('action');
-        const { className: actionSpClass, style: actionSpStyle, ...actionSpRest } = actionSp as Record<string, unknown>;
+        const {
+          className: actionSpClass,
+          style: actionSpStyle,
+          ...actionSpRest
+        } = actionSp as Record<string, unknown>;
 
         return (
           <div

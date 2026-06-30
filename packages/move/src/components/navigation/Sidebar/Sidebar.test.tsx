@@ -5,11 +5,7 @@ import { Sidebar } from './Sidebar';
 
 // Helper to wrap sub-components in Provider (all except Provider itself require context)
 function renderWithProvider(ui: React.ReactNode, providerProps: Record<string, unknown> = {}) {
-  return render(
-    <Sidebar.Provider {...providerProps}>
-      {ui}
-    </Sidebar.Provider>
-  );
+  return render(<Sidebar.Provider {...providerProps}>{ui}</Sidebar.Provider>);
 }
 
 describe('Sidebar', () => {
@@ -19,7 +15,7 @@ describe('Sidebar', () => {
       render(
         <Sidebar.Provider>
           <div data-testid="child">Hello</div>
-        </Sidebar.Provider>
+        </Sidebar.Provider>,
       );
       expect(screen.getByTestId('child')).toBeInTheDocument();
       expect(screen.getByText('Hello')).toBeInTheDocument();
@@ -41,10 +37,9 @@ describe('Sidebar', () => {
     });
 
     it('has data-collapsed=true when defaultCollapsed is true', () => {
-      renderWithProvider(
-        <Sidebar.Root data-testid="root">Content</Sidebar.Root>,
-        { defaultCollapsed: true }
-      );
+      renderWithProvider(<Sidebar.Root data-testid="root">Content</Sidebar.Root>, {
+        defaultCollapsed: true,
+      });
       expect(screen.getByTestId('root')).toHaveAttribute('data-collapsed', 'true');
     });
 
@@ -54,18 +49,28 @@ describe('Sidebar', () => {
     });
 
     it('has data-side=right when side=right', () => {
-      renderWithProvider(<Sidebar.Root data-testid="root" side="right">Content</Sidebar.Root>);
+      renderWithProvider(
+        <Sidebar.Root data-testid="root" side="right">
+          Content
+        </Sidebar.Root>,
+      );
       expect(screen.getByTestId('root')).toHaveAttribute('data-side', 'right');
     });
 
     it('forwards className', () => {
-      renderWithProvider(<Sidebar.Root data-testid="root" className="custom">Content</Sidebar.Root>);
+      renderWithProvider(
+        <Sidebar.Root data-testid="root" className="custom">
+          Content
+        </Sidebar.Root>,
+      );
       expect(screen.getByTestId('root').className).toContain('custom');
     });
 
     it('forwards style', () => {
       renderWithProvider(
-        <Sidebar.Root data-testid="root" style={{ marginTop: '10px' }}>Content</Sidebar.Root>
+        <Sidebar.Root data-testid="root" style={{ marginTop: '10px' }}>
+          Content
+        </Sidebar.Root>,
       );
       expect(screen.getByTestId('root')).toHaveStyle({ marginTop: '10px' });
     });
@@ -92,13 +97,10 @@ describe('Sidebar', () => {
 
     it('shows collapsedChildren when collapsed on desktop', () => {
       renderWithProvider(
-        <Sidebar.Header
-          data-testid="header"
-          collapsedChildren={<span>Collapsed</span>}
-        >
+        <Sidebar.Header data-testid="header" collapsedChildren={<span>Collapsed</span>}>
           <span>Expanded</span>
         </Sidebar.Header>,
-        { defaultCollapsed: true }
+        { defaultCollapsed: true },
       );
       expect(screen.getByText('Collapsed')).toBeInTheDocument();
       expect(screen.queryByText('Expanded')).not.toBeInTheDocument();
@@ -106,13 +108,10 @@ describe('Sidebar', () => {
 
     it('shows children when not collapsed', () => {
       renderWithProvider(
-        <Sidebar.Header
-          data-testid="header"
-          collapsedChildren={<span>Collapsed</span>}
-        >
+        <Sidebar.Header data-testid="header" collapsedChildren={<span>Collapsed</span>}>
           <span>Expanded</span>
         </Sidebar.Header>,
-        { defaultCollapsed: false }
+        { defaultCollapsed: false },
       );
       expect(screen.getByText('Expanded')).toBeInTheDocument();
       expect(screen.queryByText('Collapsed')).not.toBeInTheDocument();
@@ -122,7 +121,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Header data-testid="header" className="custom" style={{ padding: '8px' }}>
           Header
-        </Sidebar.Header>
+        </Sidebar.Header>,
       );
       const el = screen.getByTestId('header');
       expect(el.className).toContain('custom');
@@ -148,7 +147,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Content data-testid="content" className="custom" style={{ padding: '16px' }}>
           Content
-        </Sidebar.Content>
+        </Sidebar.Content>,
       );
       const el = screen.getByTestId('content');
       expect(el.className).toContain('custom');
@@ -174,7 +173,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Footer data-testid="footer" className="custom" style={{ padding: '12px' }}>
           Footer
-        </Sidebar.Footer>
+        </Sidebar.Footer>,
       );
       const el = screen.getByTestId('footer');
       expect(el.className).toContain('custom');
@@ -204,7 +203,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Group data-testid="group" className="custom" style={{ gap: '4px' }}>
           Items
-        </Sidebar.Group>
+        </Sidebar.Group>,
       );
       const el = screen.getByTestId('group');
       expect(el.className).toContain('custom');
@@ -228,24 +227,24 @@ describe('Sidebar', () => {
 
     it('renders icon when provided', () => {
       renderWithProvider(
-        <Sidebar.Item icon={<span data-testid="icon">IC</span>}>
-          Dashboard
-        </Sidebar.Item>
+        <Sidebar.Item icon={<span data-testid="icon">IC</span>}>Dashboard</Sidebar.Item>,
       );
       expect(screen.getByTestId('icon')).toBeInTheDocument();
     });
 
     it('renders badge when provided', () => {
       renderWithProvider(
-        <Sidebar.Item badge={<span data-testid="badge">3</span>}>
-          Messages
-        </Sidebar.Item>
+        <Sidebar.Item badge={<span data-testid="badge">3</span>}>Messages</Sidebar.Item>,
       );
       expect(screen.getByTestId('badge')).toBeInTheDocument();
     });
 
     it('sets data-active when active=true', () => {
-      renderWithProvider(<Sidebar.Item data-testid="item" active>Dashboard</Sidebar.Item>);
+      renderWithProvider(
+        <Sidebar.Item data-testid="item" active>
+          Dashboard
+        </Sidebar.Item>,
+      );
       expect(screen.getByTestId('item')).toHaveAttribute('data-active', 'true');
     });
 
@@ -255,7 +254,11 @@ describe('Sidebar', () => {
     });
 
     it('sets data-disabled when disabled=true', () => {
-      renderWithProvider(<Sidebar.Item data-testid="item" disabled>Dashboard</Sidebar.Item>);
+      renderWithProvider(
+        <Sidebar.Item data-testid="item" disabled>
+          Dashboard
+        </Sidebar.Item>,
+      );
       expect(screen.getByTestId('item')).toHaveAttribute('data-disabled', 'true');
     });
 
@@ -263,7 +266,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Item data-testid="item" className="custom" style={{ color: 'rgb(255, 0, 0)' }}>
           Dashboard
-        </Sidebar.Item>
+        </Sidebar.Item>,
       );
       const el = screen.getByTestId('item');
       expect(el.className).toContain('custom');
@@ -287,7 +290,7 @@ describe('Sidebar', () => {
           <Sidebar.Root data-testid="root">
             <Sidebar.Trigger data-testid="trigger">Toggle</Sidebar.Trigger>
           </Sidebar.Root>
-        </Sidebar.Provider>
+        </Sidebar.Provider>,
       );
 
       expect(screen.getByTestId('root')).toHaveAttribute('data-collapsed', 'false');
@@ -300,7 +303,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.Trigger data-testid="trigger" className="custom" style={{ padding: '4px' }}>
           Toggle
-        </Sidebar.Trigger>
+        </Sidebar.Trigger>,
       );
       const el = screen.getByTestId('trigger');
       expect(el.className).toContain('custom');
@@ -311,9 +314,7 @@ describe('Sidebar', () => {
   // === GroupLabel ===
   describe('GroupLabel', () => {
     it('renders as div element', () => {
-      renderWithProvider(
-        <Sidebar.GroupLabel data-testid="label">Navigation</Sidebar.GroupLabel>
-      );
+      renderWithProvider(<Sidebar.GroupLabel data-testid="label">Navigation</Sidebar.GroupLabel>);
       const el = screen.getByTestId('label');
       expect(el).toBeInTheDocument();
       expect(el.tagName).toBe('DIV');
@@ -328,7 +329,7 @@ describe('Sidebar', () => {
       renderWithProvider(
         <Sidebar.GroupLabel data-testid="label" className="custom" style={{ fontSize: '10px' }}>
           Navigation
-        </Sidebar.GroupLabel>
+        </Sidebar.GroupLabel>,
       );
       const el = screen.getByTestId('label');
       expect(el.className).toContain('custom');
@@ -349,7 +350,9 @@ describe('Sidebar', () => {
               <Sidebar.Group data-testid="group">
                 <Sidebar.GroupLabel>Navigation</Sidebar.GroupLabel>
                 <Sidebar.Item icon={<span>H</span>}>Home</Sidebar.Item>
-                <Sidebar.Item icon={<span>S</span>} active>Settings</Sidebar.Item>
+                <Sidebar.Item icon={<span>S</span>} active>
+                  Settings
+                </Sidebar.Item>
               </Sidebar.Group>
             </Sidebar.Content>
             <Sidebar.Footer data-testid="footer">
@@ -357,7 +360,7 @@ describe('Sidebar', () => {
             </Sidebar.Footer>
           </Sidebar.Root>
           <Sidebar.Trigger data-testid="trigger">Toggle</Sidebar.Trigger>
-        </Sidebar.Provider>
+        </Sidebar.Provider>,
       );
 
       expect(screen.getByTestId('root')).toBeInTheDocument();

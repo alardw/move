@@ -49,10 +49,14 @@ export interface UseAutoLayoutReturn {
 /** anime.js from→to params for the entrance of an added child. */
 function enterParams(mode: LayoutEnterExit): Record<string, unknown> {
   switch (mode) {
-    case 'fade': return { opacity: [0, 1] };
-    case 'scale': return { scale: [0.9, 1] };
-    case 'fade-scale': return { opacity: [0, 1], scale: [0.9, 1] };
-    default: return {};
+    case 'fade':
+      return { opacity: [0, 1] };
+    case 'scale':
+      return { scale: [0.9, 1] };
+    case 'fade-scale':
+      return { opacity: [0, 1], scale: [0.9, 1] };
+    default:
+      return {};
   }
 }
 
@@ -68,10 +72,14 @@ function seedEnter(el: HTMLElement, mode: LayoutEnterExit): void {
 /** anime.js from→to params for the exit of a removed child. */
 function exitParams(mode: LayoutEnterExit): Record<string, unknown> {
   switch (mode) {
-    case 'fade': return { opacity: [1, 0] };
-    case 'scale': return { scale: [1, 0.9] };
-    case 'fade-scale': return { opacity: [1, 0], scale: [1, 0.9] };
-    default: return {};
+    case 'fade':
+      return { opacity: [1, 0] };
+    case 'scale':
+      return { scale: [1, 0.9] };
+    case 'fade-scale':
+      return { opacity: [1, 0], scale: [1, 0.9] };
+    default:
+      return {};
   }
 }
 
@@ -98,7 +106,12 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
       for (const child of Array.from(container.children)) {
         if (animating.has(child)) continue;
         const r = child.getBoundingClientRect();
-        coords.set(child, { left: r.left - cr.left, top: r.top - cr.top, width: r.width, height: r.height });
+        coords.set(child, {
+          left: r.left - cr.left,
+          top: r.top - cr.top,
+          width: r.width,
+          height: r.height,
+        });
       }
     };
     measureAll();
@@ -109,7 +122,10 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
     const scheduleRefresh = () => {
       if (refreshQueued) return;
       refreshQueued = true;
-      refreshRaf = requestAnimationFrame(() => { refreshQueued = false; measureAll(); });
+      refreshRaf = requestAnimationFrame(() => {
+        refreshQueued = false;
+        measureAll();
+      });
     };
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(scheduleRefresh) : null;
     ro?.observe(container);
@@ -130,7 +146,12 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
             ease: 'outQuart',
             duration,
             delay: stagger ? i * stagger : 0,
-            onComplete: () => { el.style.transform = ''; el.style.opacity = ''; el.style.transition = ''; animating.delete(el); },
+            onComplete: () => {
+              el.style.transform = '';
+              el.style.opacity = '';
+              el.style.transition = '';
+              animating.delete(el);
+            },
           } as Parameters<typeof animate>[1]);
         });
       }
@@ -196,7 +217,12 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
       current.forEach((el) => {
         const prev = coords.get(el);
         const r = el.getBoundingClientRect();
-        const next = { left: r.left - cr.left, top: r.top - cr.top, width: r.width, height: r.height };
+        const next = {
+          left: r.left - cr.left,
+          top: r.top - cr.top,
+          width: r.width,
+          height: r.height,
+        };
         coords.set(el, next);
 
         if (!prev) {
@@ -214,7 +240,12 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
               duration,
               // Clear anime's inline styles on finish so the next run starts from
               // the element's natural CSS baseline (no accumulation between runs).
-              onComplete: () => { el.style.transform = ''; el.style.opacity = ''; el.style.transition = ''; animating.delete(el); },
+              onComplete: () => {
+                el.style.transform = '';
+                el.style.opacity = '';
+                el.style.transition = '';
+                animating.delete(el);
+              },
             } as Parameters<typeof animate>[1]);
           }
           return;
@@ -247,7 +278,11 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
             // Moves are synchronized (no per-index stagger) — staggering the FLIP
             // makes a filter look chaotic ("items flying around"). Stagger is for
             // entrances only.
-            onComplete: () => { el.style.transform = ''; el.style.transition = ''; animating.delete(el); },
+            onComplete: () => {
+              el.style.transform = '';
+              el.style.transition = '';
+              animating.delete(el);
+            },
           } as Parameters<typeof animate>[1]);
         }
       });

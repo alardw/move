@@ -145,7 +145,9 @@ describe('ColorPicker', () => {
 
     it('renders swatches when swatches prop provided', () => {
       render(<ColorPicker swatches={swatches} />);
-      const swatchButtons = screen.getAllByRole('button').filter(b => b.getAttribute('aria-label')?.startsWith('#'));
+      const swatchButtons = screen
+        .getAllByRole('button')
+        .filter((b) => b.getAttribute('aria-label')?.startsWith('#'));
       expect(swatchButtons).toHaveLength(3);
     });
 
@@ -157,7 +159,9 @@ describe('ColorPicker', () => {
 
     it('does not render swatches when prop not provided', () => {
       render(<ColorPicker />);
-      const swatchButtons = screen.queryAllByRole('button').filter(b => b.getAttribute('aria-label')?.startsWith('#'));
+      const swatchButtons = screen
+        .queryAllByRole('button')
+        .filter((b) => b.getAttribute('aria-label')?.startsWith('#'));
       expect(swatchButtons).toHaveLength(0);
     });
 
@@ -262,7 +266,6 @@ describe('ColorPicker', () => {
       render(<ColorPicker withPicker={false} />);
       expect(screen.getByLabelText('Color format')).toBeInTheDocument();
     });
-
   });
 
   // === Keyboard ===

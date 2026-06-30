@@ -103,7 +103,7 @@ describe('InputText', () => {
           placeholder="test"
           iconLeft={<span data-testid="left-icon">L</span>}
           iconRight={<span data-testid="right-icon">R</span>}
-        />
+        />,
       );
       const leftSlot = screen.getByTestId('left-icon').parentElement!;
       const rightSlot = screen.getByTestId('right-icon').parentElement!;
@@ -167,7 +167,7 @@ describe('InputText', () => {
         <>
           <label htmlFor="name-input">Name</label>
           <InputText id="name-input" placeholder="test" />
-        </>
+        </>,
       );
       expect(screen.getByLabelText('Name')).toBeInTheDocument();
     });
@@ -194,16 +194,14 @@ describe('InputText', () => {
   // === Slot props ===
   describe('slot props', () => {
     it('merges sp className on root', () => {
-      render(
-        <InputText placeholder="test" sp={{ root: { className: 'sp-root' } }} />
-      );
+      render(<InputText placeholder="test" sp={{ root: { className: 'sp-root' } }} />);
       const root = screen.getByPlaceholderText('test').closest('div')!;
       expect(root.className).toContain('sp-root');
     });
 
     it('merges sp style on root', () => {
       render(
-        <InputText placeholder="test" sp={{ root: { style: { border: '2px solid red' } } }} />
+        <InputText placeholder="test" sp={{ root: { style: { border: '2px solid red' } } }} />,
       );
       const root = screen.getByPlaceholderText('test').closest('div')!;
       expect(root.style.border).toBe('2px solid red');

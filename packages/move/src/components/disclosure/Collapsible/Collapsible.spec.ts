@@ -8,21 +8,22 @@ export const spec = {
   name: 'Collapsible',
   componentClass: 'disclosure' as const,
   category: 'disclosure',
-  description: 'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
+  description:
+    'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
 
   synonyms: ['expander', 'show more', 'disclosure', 'reveal', 'accordion'],
   animationPatterns: ['disclosure'],
   families: {
-    behavior:  ['disclosure'],
-    state:     ['controlled-open'],
-    a11y:      ['disclosure'],
+    behavior: ['disclosure'],
+    state: ['controlled-open'],
+    a11y: ['disclosure'],
   },
   behavior: {
     disclosure: {
       animatesOpen: true,
       animatesClose: true,
       keyboardToggle: true,
-      multipleOpen: false,             // single panel
+      multipleOpen: false, // single panel
     },
   },
 
@@ -30,10 +31,26 @@ export const spec = {
   rootElement: 'div',
   slots: [
     { name: 'root', element: 'div', description: 'Outer collapsible container with data-state' },
-    { name: 'trigger', element: 'button', description: 'Button (or Slot.Root with asChild) that toggles open/closed' },
-    { name: 'icon', element: 'span', description: 'Auto-rotating chevron indicator synchronized with content animation' },
-    { name: 'content', element: 'div', description: 'Collapsible content region with height animation' },
-    { name: 'contentInner', element: 'div', description: 'Inner content wrapper for opacity animation' },
+    {
+      name: 'trigger',
+      element: 'button',
+      description: 'Button (or Slot.Root with asChild) that toggles open/closed',
+    },
+    {
+      name: 'icon',
+      element: 'span',
+      description: 'Auto-rotating chevron indicator synchronized with content animation',
+    },
+    {
+      name: 'content',
+      element: 'div',
+      description: 'Collapsible content region with height animation',
+    },
+    {
+      name: 'contentInner',
+      element: 'div',
+      description: 'Inner content wrapper for opacity animation',
+    },
   ],
 
   subComponents: [
@@ -42,34 +59,79 @@ export const spec = {
       slots: [{ name: 'root', element: 'div', description: 'Outer container' }],
       props: [
         { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state' },
-        { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Default open state for uncontrolled mode' },
-        { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: true, description: 'Called when open state changes' },
-        { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disable the collapsible (prevents toggling)' },
-        { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Content animation config or false to disable' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger, icon, and content elements' },
+        {
+          name: 'defaultOpen',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Default open state for uncontrolled mode',
+        },
+        {
+          name: 'onOpenChange',
+          type: '(open: boolean) => void',
+          moveSpecific: true,
+          description: 'Called when open state changes',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Disable the collapsible (prevents toggling)',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Content animation config or false to disable',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Trigger, icon, and content elements',
+        },
       ],
       usesFactory: true,
-      description: 'Root container providing collapsible context (open state, animation config, disabled) to children',
+      description:
+        'Root container providing collapsible context (open state, animation config, disabled) to children',
     },
     {
       name: 'Trigger',
       slots: [{ name: 'trigger', element: 'button', description: 'Toggle button' }],
       props: [
-        { name: 'asChild', type: 'boolean', moveSpecific: true, description: 'Merge props onto child element via Radix Slot instead of wrapping in button' },
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger content' },
+        {
+          name: 'asChild',
+          type: 'boolean',
+          moveSpecific: true,
+          description:
+            'Merge props onto child element via Radix Slot instead of wrapping in button',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Trigger content',
+        },
       ],
       usesFactory: true,
       radixPrimitive: 'Slot',
-      description: 'Toggle button that calls context.toggle on click; supports asChild for custom trigger elements',
+      description:
+        'Toggle button that calls context.toggle on click; supports asChild for custom trigger elements',
     },
     {
       name: 'Icon',
       slots: [{ name: 'icon', element: 'span', description: 'Icon wrapper' }],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Custom icon replacing the default chevron' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom icon replacing the default chevron',
+        },
       ],
       usesFactory: true,
-      description: 'Auto-rotating chevron indicator that synchronizes rotation with content expand/collapse duration',
+      description:
+        'Auto-rotating chevron indicator that synchronizes rotation with content expand/collapse duration',
     },
     {
       name: 'Content',
@@ -78,7 +140,12 @@ export const spec = {
         { name: 'contentInner', element: 'div', description: 'Content inner (opacity animation)' },
       ],
       props: [
-        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Collapsible content' },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Collapsible content',
+        },
       ],
       usesFactory: true,
       description: 'Animated collapsible region with coordinated height and opacity transitions',
@@ -87,11 +154,37 @@ export const spec = {
 
   props: [
     { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state' },
-    { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Default open state for uncontrolled mode' },
-    { name: 'onOpenChange', type: '(open: boolean) => void', moveSpecific: true, description: 'Called when open state changes' },
-    { name: 'disabled', type: 'boolean', default: 'false', moveSpecific: true, description: 'Disable the collapsible' },
-    { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Content animation config or false to disable' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Trigger, icon, and content' },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Default open state for uncontrolled mode',
+    },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      moveSpecific: true,
+      description: 'Called when open state changes',
+    },
+    {
+      name: 'disabled',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description: 'Disable the collapsible',
+    },
+    {
+      name: 'animations',
+      type: 'AnimationTrigger[] | false',
+      moveSpecific: true,
+      description: 'Content animation config or false to disable',
+    },
+    {
+      name: 'children',
+      type: 'React.ReactNode',
+      moveSpecific: false,
+      description: 'Trigger, icon, and content',
+    },
   ],
 
   anatomy: {
@@ -108,9 +201,7 @@ export const spec = {
         slot: 'content',
         dataAttributes: ['data-state'],
         ariaAttributes: ['role=region'],
-        children: [
-          { slot: 'contentInner' },
-        ],
+        children: [{ slot: 'contentInner' }],
       },
     ],
   },
@@ -132,21 +223,68 @@ export const spec = {
   ],
 
   animations: [
-    { trigger: 'open', sequence: [{ target: 'content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } }] },
-    { trigger: 'close', sequence: [{ target: 'content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } }] },
+    {
+      trigger: 'open',
+      sequence: [
+        { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+      ],
+    },
+    {
+      trigger: 'close',
+      sequence: [
+        { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+      ],
+    },
   ],
 
   renderContracts: [
-    { id: 'context-provider', description: 'Root wraps children in CollapsibleContext.Provider to share open state, animation config, and disabled state' },
-    { id: 'trigger-as-child', description: 'When asChild=true, Trigger renders via Radix Slot.Root merging props onto the child element instead of wrapping in a button' },
-    { id: 'trigger-type-button', description: 'When asChild is not set, Trigger renders as button with type=button' },
-    { id: 'trigger-disabled', description: 'Trigger sets disabled and data-disabled when context.disabled is true' },
-    { id: 'icon-rotation-sync', description: 'Icon rotation is synchronized with content expand/collapse animation duration via anime.js' },
-    { id: 'icon-aria-hidden', description: 'Icon sets aria-hidden=true as it is a decorative indicator' },
-    { id: 'icon-default-chevron', description: 'Icon renders a default chevron-down via useResolvedIcon when no children are provided' },
-    { id: 'content-conditional-render', description: 'Content only renders when open or during close animation (unmounts when fully closed)' },
-    { id: 'content-height-opacity', description: 'Content expand animates height from 0 to scrollHeight with delayed opacity fade-in; collapse reverses with early opacity fade-out' },
-    { id: 'initial-state-mount', description: 'On mount, content sets height:0 and opacity:0 when closed, or height:auto and opacity:1 when open (no animation)' },
+    {
+      id: 'context-provider',
+      description:
+        'Root wraps children in CollapsibleContext.Provider to share open state, animation config, and disabled state',
+    },
+    {
+      id: 'trigger-as-child',
+      description:
+        'When asChild=true, Trigger renders via Radix Slot.Root merging props onto the child element instead of wrapping in a button',
+    },
+    {
+      id: 'trigger-type-button',
+      description: 'When asChild is not set, Trigger renders as button with type=button',
+    },
+    {
+      id: 'trigger-disabled',
+      description: 'Trigger sets disabled and data-disabled when context.disabled is true',
+    },
+    {
+      id: 'icon-rotation-sync',
+      description:
+        'Icon rotation is synchronized with content expand/collapse animation duration via anime.js',
+    },
+    {
+      id: 'icon-aria-hidden',
+      description: 'Icon sets aria-hidden=true as it is a decorative indicator',
+    },
+    {
+      id: 'icon-default-chevron',
+      description:
+        'Icon renders a default chevron-down via useResolvedIcon when no children are provided',
+    },
+    {
+      id: 'content-conditional-render',
+      description:
+        'Content only renders when open or during close animation (unmounts when fully closed)',
+    },
+    {
+      id: 'content-height-opacity',
+      description:
+        'Content expand animates height from 0 to scrollHeight with delayed opacity fade-in; collapse reverses with early opacity fade-out',
+    },
+    {
+      id: 'initial-state-mount',
+      description:
+        'On mount, content sets height:0 and opacity:0 when closed, or height:auto and opacity:1 when open (no animation)',
+    },
   ],
 
   tokens: [] as { name: string; value: string; description: string }[],

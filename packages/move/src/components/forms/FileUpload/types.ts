@@ -70,7 +70,7 @@ export interface FileUploadAdapterOptions {
  * It returns a result object on success, or throws on failure.
  */
 export type FileUploadAdapter = (
-  options: FileUploadAdapterOptions
+  options: FileUploadAdapterOptions,
 ) => Promise<FileUploadAdapterResult>;
 
 // =============================================================================

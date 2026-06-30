@@ -53,7 +53,10 @@ describe('Textarea', () => {
 
     it('defaults to variant=outlined', () => {
       render(<Textarea placeholder="test" />);
-      expect(screen.getByPlaceholderText('test').closest('div')!).toHaveAttribute('data-variant', 'outlined');
+      expect(screen.getByPlaceholderText('test').closest('div')!).toHaveAttribute(
+        'data-variant',
+        'outlined',
+      );
     });
   });
 
@@ -70,7 +73,10 @@ describe('Textarea', () => {
 
     it('defaults to size=md', () => {
       render(<Textarea placeholder="test" />);
-      expect(screen.getByPlaceholderText('test').closest('div')!).toHaveAttribute('data-size', 'md');
+      expect(screen.getByPlaceholderText('test').closest('div')!).toHaveAttribute(
+        'data-size',
+        'md',
+      );
     });
   });
 
@@ -156,7 +162,7 @@ describe('Textarea', () => {
         <>
           <label htmlFor="desc-input">Description</label>
           <Textarea id="desc-input" placeholder="test" />
-        </>
+        </>,
       );
       expect(screen.getByLabelText('Description')).toBeInTheDocument();
     });
