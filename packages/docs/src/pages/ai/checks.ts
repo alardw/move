@@ -143,4 +143,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: 'No native button/link sets aria-label while rendering its children — visible text and accessible name must not diverge (WCAG 2.5.3 Label-in-Name).',
   },
+  {
+    name: 'integration-points',
+    appliesTo: 'component',
+    enforces: "Every spec integration point resolves — its contract is exported from the public barrel and any fixture/sample exists, so the docs Integrations panel can't dangle.",
+  },
 ];

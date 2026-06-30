@@ -140,6 +140,7 @@ const RULES: RuleDef[] = [
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
   { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'recipe-spec-drift' }, composition: { status: 'gap' } } },
+  { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
   { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('gap') },
@@ -261,4 +262,32 @@ export function tallyFor(entity: EntityDef) {
   const counts: Record<Status, number> = { check: 0, gap: 0 };
   for (const g of groupsForEntity(entity)) for (const r of g.rules) counts[r.status]++;
   return counts;
+}
+
+/** An entity by key. */
+export function entityByKey(key: EntityKey) {
+  return VALIDATION.entities.find((e) => e.key === key)!;
+}
+
+/** One rule's resolved status for an entity, or null if the rule doesn't apply to
+ *  it (so a recipe-only rule renders as "—" in the Composition column). */
+export function statusFor(ruleId: string, entity: EntityDef): { status: Status; check?: string } | null {
+  const r = VALIDATION.rules.find((x) => x.id === ruleId);
+  if (!r) return null;
+  const g = VALIDATION.groups.find((x) => x.id === r.group);
+  if (!g || !hasAll(entity.traits, [...g.requires, ...(r.requires ?? [])])) return null;
+  return r.enforcement[entity.key] ?? null;
+}
+
+/** Composition gaps that recipe already enforces — i.e. a check proven on Move's
+ *  recipes that just needs to ship via `move check` to cover your compositions. */
+export function shipBacklog(): number {
+  const composition = entityByKey('composition');
+  let n = 0;
+  for (const { rules } of groupsForEntity(entityByKey('recipe'))) {
+    for (const r of rules) {
+      if (r.status === 'check' && statusFor(r.id, composition)?.status === 'gap') n++;
+    }
+  }
+  return n;
 }
