@@ -73,11 +73,17 @@ for (const cat of readdirSync(COMPONENTS)) {
     if (existsSync(cssPath) && /:root\b/.test(readFileSync(cssPath, 'utf8'))) {
       violations.push({ file: cssPath, line: 0, rule: 'B3', msg: 'tokens on :root — scope to .root' });
     }
+    // exports-3 (D1): a headless hook must be exported from the component's index.ts.
+    const hookPath = join(compDir, `use${comp}.ts`);
+    const compIndex = join(compDir, 'index.ts');
+    if (existsSync(hookPath) && existsSync(compIndex) && !new RegExp(`\\buse${comp}\\b`).test(readFileSync(compIndex, 'utf8'))) {
+      violations.push({ file: hookPath, line: 0, rule: 'D1', msg: `use${comp} hook not exported from index.ts` });
+    }
   }
 }
 
 if (!violations.length) {
-  console.log('✓ component-conformance: clear (A1 A11 A20 B3 C2 E1 G1).');
+  console.log('✓ component-conformance: clear (A1 A11 A20 B3 C2 D1 E1 G1).');
   process.exit(0);
 }
 console.error(`✗ component-conformance: ${violations.length} violation(s).\n`);

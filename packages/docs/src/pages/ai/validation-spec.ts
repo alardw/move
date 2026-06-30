@@ -144,7 +144,7 @@ const RULES: RuleDef[] = [
 
   // Styles (component / cssModule)
   { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('gap') },
-  { id: 'styles-2', group: 'styles', rule: 'Design tokens — no hard-coded values', why: 'Hard-coded colours/spacing escape the theme and break dark mode and rebranding.', enforcement: C('gap') },
+  { id: 'styles-2', group: 'styles', rule: 'Design tokens — no hard-coded values', why: 'Hard-coded colours/spacing escape the theme and break dark mode and rebranding.', enforcement: C('check', 'css-tokens') },
   { id: 'styles-3', group: 'styles', rule: 'Component tokens on .root, not :root', why: ':root leaks the token globally; on .root it’s scoped to the component.', enforcement: C('check', 'component-conformance') },
   { id: 'styles-4', group: 'styles', rule: 'Data-attribute selectors for variant/size/state', why: 'Keeps variant styling declarative and in CSS instead of branching in JS.', enforcement: C('gap') },
   { id: 'styles-5', group: 'styles', rule: 'CSS var naming --move-{component}-{property}', why: 'Predictable names are how consumers override a component’s tokens.', enforcement: C('gap') },
@@ -155,7 +155,7 @@ const RULES: RuleDef[] = [
   // Exports (component / libraryExport)
   { id: 'exports-1', group: 'exports', rule: 'index.ts exports the component + all types', why: 'A missing type export forces consumers to re-derive props or use any.', enforcement: C('gap') },
   { id: 'exports-2', group: 'exports', rule: 'Component added to src/index.ts', why: 'Not in the barrel = not importable at all.', enforcement: C('check', 'component-conformance') },
-  { id: 'exports-3', group: 'exports', rule: 'Headless hook exported, if one exists', why: 'The hook is the headless API; unexported, it can’t be used.', enforcement: C('gap') },
+  { id: 'exports-3', group: 'exports', rule: 'Headless hook exported, if one exists', why: 'The hook is the headless API; unexported, it can’t be used.', enforcement: C('check', 'component-conformance') },
 
   // File location (component / libraryExport)
   { id: 'fileLocation-1', group: 'fileLocation', rule: 'Component in a valid category folder', why: 'Category placement drives docs grouping and the registry.', enforcement: C('gap') },
