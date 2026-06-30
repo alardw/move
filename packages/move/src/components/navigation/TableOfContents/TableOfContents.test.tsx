@@ -17,7 +17,9 @@ describe('TableOfContents', () => {
     render(
       <TableOfContents.Root>
         <TableOfContents.Item href="#a">Item A</TableOfContents.Item>
-        <TableOfContents.Item href="#b" depth={2}>Item B</TableOfContents.Item>
+        <TableOfContents.Item href="#b" depth={2}>
+          Item B
+        </TableOfContents.Item>
       </TableOfContents.Root>,
     );
     const a = screen.getByRole('link', { name: 'Item A' });
@@ -28,19 +30,11 @@ describe('TableOfContents', () => {
   });
 
   it('throws when Item is used outside Root', () => {
-    const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
-      try {
-        return <>{children}</>;
-      } catch {
-        return null;
-      }
-    };
+    // The context guard throws synchronously during render, so render() rethrows
+    // it — no error boundary needed (a try/catch in a component body wouldn't
+    // catch a child's render error anyway).
     expect(() => {
-      render(
-        <ErrorBoundary>
-          <TableOfContents.Item href="#x">X</TableOfContents.Item>
-        </ErrorBoundary>,
-      );
+      render(<TableOfContents.Item href="#x">X</TableOfContents.Item>);
     }).toThrow(/TableOfContents.Item must be used within TableOfContents.Root/);
   });
 });

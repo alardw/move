@@ -4,10 +4,17 @@ import { moveAnimate } from './moveAnimate';
 import { animateDimension } from './animateDimension';
 import { animatePosition } from './animatePosition';
 import { staggerAnimate } from './staggerAnimate';
-import type { Animation, AnimationTrigger, AnimationStep, AnimationState, SequenceItem } from './types';
+import type {
+  Animation,
+  AnimationTrigger,
+  AnimationStep,
+  AnimationState,
+  SequenceItem,
+} from './types';
 
 type RefMap = Record<string, React.RefObject<HTMLElement | null>>;
-type HandlerMap = Record<string, Record<string, Function>>;
+// Event handlers of varied signatures (onMouseEnter, onPointerDown, …).
+type HandlerMap = Record<string, Record<string, (...args: any[]) => void>>;
 
 /**
  * Resolve vars — if a function, call with the target element; otherwise return as-is.
@@ -80,10 +87,7 @@ function isLooping(animation: Animation | undefined): boolean {
 /**
  * Wrap a JSAnimation promise and call step.onComplete when done.
  */
-function wrapStepPromise(
-  promise: Promise<void>,
-  step: AnimationStep,
-): Promise<void> {
+function wrapStepPromise(promise: Promise<void>, step: AnimationStep): Promise<void> {
   if (!step.onComplete) return promise;
   return promise.then(() => step.onComplete?.());
 }
@@ -176,7 +180,10 @@ function executeStep(
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
     return wrapStepPromise(
-      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 1000) + 100),
+      animToPromise(
+        anim,
+        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 1000) + 100,
+      ),
       step,
     );
   }
@@ -194,7 +201,10 @@ function executeStep(
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
     return wrapStepPromise(
-      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100),
+      animToPromise(
+        anim,
+        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100,
+      ),
       step,
     );
   }
@@ -225,7 +235,10 @@ function executeStep(
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
     return wrapStepPromise(
-      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100),
+      animToPromise(
+        anim,
+        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100,
+      ),
       step,
     );
   }
@@ -278,7 +291,17 @@ async function executeSequence(
             const target = step.target ?? defaultSlot;
             const el = refs[target]?.current;
             const resolved = resolveVars(vars, el);
-            return executeStep(step, refs, cancelRefs, defaultSlot, resolved, direction, activeAnims, triggerAnims, triggerName);
+            return executeStep(
+              step,
+              refs,
+              cancelRefs,
+              defaultSlot,
+              resolved,
+              direction,
+              activeAnims,
+              triggerAnims,
+              triggerName,
+            );
           }),
         );
       } else {
@@ -286,7 +309,17 @@ async function executeSequence(
         const target = item.target ?? defaultSlot;
         const el = refs[target]?.current;
         const resolved = resolveVars(vars, el);
-        await executeStep(item, refs, cancelRefs, defaultSlot, resolved, direction, activeAnims, triggerAnims, triggerName);
+        await executeStep(
+          item,
+          refs,
+          cancelRefs,
+          defaultSlot,
+          resolved,
+          direction,
+          activeAnims,
+          triggerAnims,
+          triggerName,
+        );
       }
     } catch (err) {
       console.warn('[useAnimations] Step failed:', err);
@@ -453,7 +486,17 @@ export function useAnimations(
           };
           result[slot].onMouseLeave = () => {
             const resetSeq = createResetSequence(triggerConfig.sequence as SequenceItem[]);
-            executeSequence(resetSeq, refs, cancelRefs.current, slot, vars, 'exit', activeAnims.current, triggerAnims.current, triggerConfig.trigger);
+            executeSequence(
+              resetSeq,
+              refs,
+              cancelRefs.current,
+              slot,
+              vars,
+              'exit',
+              activeAnims.current,
+              triggerAnims.current,
+              triggerConfig.trigger,
+            );
           };
         } else if (event === 'press') {
           // Find companion hover trigger for the same slot
@@ -489,7 +532,17 @@ export function useAnimations(
               );
             } else {
               const resetSeq = createResetSequence(triggerConfig.sequence as SequenceItem[]);
-              executeSequence(resetSeq, refs, cancelRefs.current, slot, vars, 'exit', activeAnims.current, triggerAnims.current, triggerConfig.trigger);
+              executeSequence(
+                resetSeq,
+                refs,
+                cancelRefs.current,
+                slot,
+                vars,
+                'exit',
+                activeAnims.current,
+                triggerAnims.current,
+                triggerConfig.trigger,
+              );
             }
           };
           result[slot].onKeyDown = (e: React.KeyboardEvent) => {
@@ -510,7 +563,17 @@ export function useAnimations(
           result[slot].onKeyUp = (e: React.KeyboardEvent) => {
             if (e.key === 'Enter' || e.key === ' ') {
               const resetSeq = createResetSequence(triggerConfig.sequence as SequenceItem[]);
-              executeSequence(resetSeq, refs, cancelRefs.current, slot, vars, 'exit', activeAnims.current, triggerAnims.current, triggerConfig.trigger);
+              executeSequence(
+                resetSeq,
+                refs,
+                cancelRefs.current,
+                slot,
+                vars,
+                'exit',
+                activeAnims.current,
+                triggerAnims.current,
+                triggerConfig.trigger,
+              );
             }
           };
         }
@@ -559,7 +622,8 @@ export function useAnimations(
                 const resetSeq = createResetSequence(triggerConfig.sequence as SequenceItem[]);
                 for (const item of resetSeq) {
                   const step = Array.isArray(item) ? item[0] : item;
-                  if (step.animation) moveAnimate(el, step.animation, cancelRef ?? { current: null });
+                  if (step.animation)
+                    moveAnimate(el, step.animation, cancelRef ?? { current: null });
                 }
               };
 
@@ -624,9 +688,7 @@ export function useAnimations(
       const slotEl = slotRef?.current;
       if (!slotEl) continue;
 
-      const observeEl = state.closest
-        ? slotEl.closest(state.closest)
-        : slotEl;
+      const observeEl = state.closest ? slotEl.closest(state.closest) : slotEl;
       if (!observeEl) continue;
 
       if (!observeGroups.has(observeEl)) {
@@ -646,7 +708,10 @@ export function useAnimations(
 
     // Helper: fire animation and record which element + trigger matched
     const fireWatcher = (watcher: Watcher, stateKey: string, matchedEl: Element) => {
-      animatedEntries.set(stateKey, { el: new WeakRef(matchedEl), trigger: watcher.triggerConfig.trigger });
+      animatedEntries.set(stateKey, {
+        el: new WeakRef(matchedEl),
+        trigger: watcher.triggerConfig.trigger,
+      });
       executeSequence(
         watcher.triggerConfig.sequence as SequenceItem[],
         refs,
@@ -789,8 +854,8 @@ export function useAnimations(
       }
 
       // Shallow compare
-      const changed = currentDeps.length !== prevDeps.length ||
-        currentDeps.some((dep, i) => dep !== prevDeps[i]);
+      const changed =
+        currentDeps.length !== prevDeps.length || currentDeps.some((dep, i) => dep !== prevDeps[i]);
 
       if (changed) {
         prevDepsRef.current.set(triggerConfig.trigger, [...currentDeps]);
@@ -900,5 +965,12 @@ export function useAnimations(
   const exitRef = useRef(runExitSequences);
   exitRef.current = runExitSequences;
 
-  return { handlers, runExit: runExitSequences, runEnter: runEnterSequences, pauseAll, resumeAll, getAnimation };
+  return {
+    handlers,
+    runExit: runExitSequences,
+    runEnter: runEnterSequences,
+    pauseAll,
+    resumeAll,
+    getAnimation,
+  };
 }
