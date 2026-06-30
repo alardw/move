@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
-import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon/useResolvedIcon';
 import {
@@ -115,14 +115,18 @@ function ToastItem({ toast }: { toast: ToastState }) {
     Wrapper: wrapperRef as React.RefObject<HTMLElement | null>,
     Item: itemRef as React.RefObject<HTMLElement | null>,
   }), []);
-  const { runExit } = useAnimations(animConfig, refs);
+  const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs);
 
-  // Exit — run exit sequences then signal safe to remove
-  React.useEffect(() => {
-    if (!isClosing) return;
-    if (!animConfig) { safeToRemove?.(); return; }
-    runExit().then(() => safeToRemove?.());
-  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Exit — run exit sequences then signal safe to remove. One-shot (no reopen),
+  // routed through the shared hook for a consistent, non-hanging close.
+  useDismissableExit({
+    isClosing,
+    epoch: 0,
+    onExitDone: () => safeToRemove?.(),
+    runExit,
+    runEnter,
+    pauseAll,
+  });
 
   // Auto-dismiss: countdown on progress bar via useAnimations, pause on hover
   const toastId = toast.id;

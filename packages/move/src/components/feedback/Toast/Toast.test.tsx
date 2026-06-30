@@ -35,7 +35,8 @@ vi.mock('../../../animation', async () => {
     usePresence,
     useIsPresent,
     prefersReducedMotion: vi.fn(() => true), // Skip animations in tests
-    useAnimations: vi.fn(() => ({ handlers: {}, runExit: () => Promise.resolve(), pauseAll: vi.fn(), resumeAll: vi.fn() })),
+    useAnimations: vi.fn(() => ({ handlers: {}, runExit: () => Promise.resolve(), runEnter: () => Promise.resolve(), pauseAll: vi.fn(), resumeAll: vi.fn() })),
+    useDismissableExit: vi.fn(),
     resolveAnimationsConfig: vi.fn((defaults: unknown) => defaults),
     quick: [1, 0.5, 0, 1],
     stiff: [1, 0.8, 0, 1],

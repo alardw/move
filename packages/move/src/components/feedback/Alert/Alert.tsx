@@ -2,7 +2,7 @@
 // Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9)
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import styles from './Alert.module.css';
@@ -87,14 +87,18 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
       Root: contentRef as React.RefObject<HTMLElement | null>,
       Icon: iconRef as React.RefObject<HTMLElement | null>,
     }), []);
-    const { runExit } = useAnimations(animConfig, refs);
+    const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs);
 
-    // Exit
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!animConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Exit — one-shot dismiss (no reopen), but route through the shared hook so
+    // the close is always non-hanging and stays one consistent pattern.
+    useDismissableExit({
+      isClosing,
+      epoch: 0,
+      onExitDone: () => onCloseComplete?.(),
+      runExit,
+      runEnter,
+      pauseAll,
+    });
 
     const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
 
