@@ -1,4 +1,4 @@
-import type { ComponentMeta } from '../types';
+import type { ComponentDocument } from '../types';
 import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 
@@ -22,7 +22,7 @@ const related: RelatedItem[] = [
   },
 ];
 
-export const meta: ComponentMeta = {
+export const meta: ComponentDocument = {
   slug: 'toggle-button',
   synonyms: ['toggle', 'pressed button', 'icon toggle', 'switch'],
   preview: { width: 'fit' },

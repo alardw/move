@@ -98,7 +98,7 @@ export interface RecipePreview {
 /**
  * A composition's SUBSTANCE — what it is, independent of how it's published. A
  * consumer's private composition is exactly this; a Move recipe is this plus a
- * `RecipeDoc` registry entry. The spec file (`Foo.spec.ts`) is a `CompositionSpec`.
+ * `RecipeDocument` registry entry. The spec file (`Foo.spec.ts`) is a `CompositionSpec`.
  */
 export interface CompositionSpec {
   schemaVersion: typeof RECIPE_SCHEMA_VERSION;
@@ -118,10 +118,11 @@ export interface CompositionSpec {
 }
 
 /**
- * The docs/discovery metadata common to anything Move PUBLISHES — a component or
- * a recipe: where it lives (slug/group), how it reads (title/description), and
- * how it's found (synonyms). The shared base of `RecipeDoc` and (step 3) a
- * `ComponentDoc`. A private composition has none. It lives on the registry/docs
+ * The docs/discovery metadata for a published artifact — where it lives
+ * (slug/group), how it reads (title/description), and how it's found (synonyms).
+ * The base of `RecipeDocument`. (`ComponentDocument` in the docs app captures the
+ * same kind of metadata but is a richer, multi-category type and doesn't share
+ * this base.) A private composition has none; it lives on the registry/docs
  * entry, never in the substance spec.
  */
 export interface DocumentSpec {
@@ -141,7 +142,7 @@ export interface DocumentSpec {
  * Publishes a composition as a recipe: the shared `DocumentSpec` plus the
  * recipe-specific bits. Lives on the registry entry (`registry.ts`).
  */
-export interface RecipeDoc extends DocumentSpec {
+export interface RecipeDocument extends DocumentSpec {
   /** How the recipe renders in the overview card. */
   preview: RecipePreview;
 }

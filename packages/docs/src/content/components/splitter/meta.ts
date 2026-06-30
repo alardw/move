@@ -1,4 +1,4 @@
-import type { ComponentMeta } from '../types';
+import type { ComponentDocument } from '../types';
 import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 
@@ -25,7 +25,7 @@ const related: RelatedItem[] = [
   },
 ];
 
-export const meta: ComponentMeta = {
+export const meta: ComponentDocument = {
   slug: 'splitter',
   synonyms: ['resizer', 'pane split', 'panes', 'resizable panels', 'split pane', 'divider'],
   name: 'Splitter',

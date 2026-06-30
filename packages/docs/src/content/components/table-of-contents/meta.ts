@@ -1,4 +1,4 @@
-import type { ComponentMeta } from '../types';
+import type { ComponentDocument } from '../types';
 import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 
@@ -17,7 +17,7 @@ const related: RelatedItem[] = [
   },
 ];
 
-export const meta: ComponentMeta = {
+export const meta: ComponentDocument = {
   slug: 'table-of-contents',
   synonyms: ['toc', 'on this page', 'page nav', 'page outline', 'anchors'],
   name: 'TableOfContents',

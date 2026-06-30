@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { CompositionSpec, RecipeDoc } from './spec-type';
+import type { CompositionSpec, RecipeDocument } from './spec-type';
 
 import SignIn from './authentication/SignIn';
 import SignInSrc from './authentication/SignIn.tsx?raw';
@@ -52,10 +52,10 @@ export type { RecipePreview } from './spec-type';
 /**
  * A recipe's registry entry: a published composition. It carries the composition
  * SUBSTANCE (`spec`), the live component + `?raw` source (which a spec can't
- * hold), and the `RecipeDoc` publishing metadata (slug/group/title/…). The doc
+ * hold), and the `RecipeDocument` publishing metadata (slug/group/title/…). The doc
  * fields are authored HERE — publishing is a registry concern, not spec data.
  */
-export interface RecipeMeta extends RecipeDoc {
+export interface RecipeMeta extends RecipeDocument {
   /** The live recipe component (rendered in the card preview and on the detail page). */
   Component: ComponentType<{ labels?: Record<string, string> }>;
   /** Recipe source, for the detail page's code view. */
@@ -69,7 +69,7 @@ function toMeta(
   spec: CompositionSpec,
   Component: ComponentType<{ labels?: Record<string, string> }>,
   source: string,
-  doc: RecipeDoc,
+  doc: RecipeDocument,
 ): RecipeMeta {
   return { ...doc, Component, source, spec };
 }

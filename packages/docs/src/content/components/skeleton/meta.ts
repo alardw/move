@@ -1,4 +1,4 @@
-import type { ComponentMeta } from '../types';
+import type { ComponentDocument } from '../types';
 import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 
@@ -26,7 +26,7 @@ const related: RelatedItem[] = [
   },
 ];
 
-export const meta: ComponentMeta = {
+export const meta: ComponentDocument = {
   slug: 'skeleton',
   synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder', 'ghost'],
   name: 'Skeleton',

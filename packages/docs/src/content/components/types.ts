@@ -59,7 +59,7 @@ export interface ComponentPreview {
   image?: string;
 }
 
-export interface ComponentMeta {
+export interface ComponentDocument {
   /** Route slug, e.g. "select". */
   slug: string;
   /** Search synonyms / aliases for docs search. Document/discovery metadata —
@@ -91,7 +91,7 @@ export interface ComponentMeta {
 }
 
 export interface ComponentContent {
-  meta: ComponentMeta;
+  meta: ComponentDocument;
   samples: ComponentSample[];
   /** Reference to the Move component spec — drives Props and Tokens tables.
    *  Shape is the loosely-typed `spec` exported from each component's

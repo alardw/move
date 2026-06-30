@@ -139,4 +139,4 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   'video-player': videoPlayer,
 };
 
-export type { ComponentContent, ComponentMeta, ComponentSample, KeyboardRow, ComponentBadge } from './types';
+export type { ComponentContent, ComponentDocument, ComponentSample, KeyboardRow, ComponentBadge } from './types';

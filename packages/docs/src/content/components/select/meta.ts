@@ -1,4 +1,4 @@
-import type { ComponentMeta } from '../types';
+import type { ComponentDocument } from '../types';
 import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 import { listboxKeyboard } from '../../keyboardMaps/listbox';
@@ -26,7 +26,7 @@ const related: RelatedItem[] = [
   },
 ];
 
-export const meta: ComponentMeta = {
+export const meta: ComponentDocument = {
   slug: 'select',
   synonyms: ['dropdown', 'picker', 'choose', 'native select', 'combobox', 'options'],
   preview: { width: 'fit' },
