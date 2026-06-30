@@ -138,6 +138,10 @@ for (const specFile of recipeSpecs(RECIPES).sort()) {
       (lab.onlyA.length ? `\n    in spec, not in defaultLabels: ${lab.onlyA.join(', ')}` : '') +
       (lab.onlyB.length ? `\n    in defaultLabels, not in spec: ${lab.onlyB.join(', ')}` : ''));
   }
+  // unit-1: every recipe has a test — without one the logic is unverified.
+  if (!existsSync(specFile.replace(/\.spec\.ts$/, '.test.tsx'))) {
+    errors++; out.push(`✗ ${name}: no test file (${name}.test.tsx)`);
+  }
 }
 
 // registry-1: no two recipes share a slug. Slugs live on the registry entries
@@ -170,4 +174,4 @@ if (errors > 0) {
   console.error(`\n${errors} drift error(s).`);
   process.exit(1);
 }
-console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, unique slugs).');
+console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, tests, unique slugs).');

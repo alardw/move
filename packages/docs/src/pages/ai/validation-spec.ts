@@ -128,7 +128,7 @@ const RULES: RuleDef[] = [
   { id: 'source-7', group: 'source', rule: 'Every slot is slotProps-themeable', why: 'Each slotted element must pull its slot props in — via slot() or sp(); miss it and any className/style/attr a consumer passes for that part is silently dropped.', enforcement: C('check', 'factory-conformance') },
   { id: 'source-8', group: 'source', rule: 'attrs + spRest spread on root', why: 'These carry the consumer’s id/aria-*/data-* and the slot’s styles onto the real element; without them those props vanish.', enforcement: C('gap') },
   { id: 'source-9', group: 'source', rule: 'ref forwarded to root', why: 'Focus, measurement, and portals need a handle on the real DOM node; a dropped ref breaks all three.', enforcement: C('check', 'factory-conformance') },
-  { id: 'source-10', group: 'source', rule: 'data-variant/size/state used', why: 'CSS targets these attributes for variant styling; missing them means the variant prop has no visual effect.', enforcement: C('gap') },
+  { id: 'source-10', group: 'source', rule: 'data-variant/size used', why: 'CSS targets these attributes for variant styling; missing them means the variant prop has no visual effect.', enforcement: C('check', 'data-attrs') },
   { id: 'source-11', group: 'source', rule: 'Imports use engine/, not ../core', why: 'Deep imports bypass the stable barrel and break when internals move.', enforcement: C('check', 'component-conformance') },
   { id: 'source-12', group: 'source', rule: 'No Move-internal props leak to the DOM', why: 'Undeclared internal props become invalid HTML attributes and React warnings.', enforcement: C('gap') },
   { id: 'source-13', group: 'source', rule: 'Dismissable lifecycle uses the shared hook', why: 'useDismissable owns non-hanging exit and re-open; a hand-rolled isClosing state leaks or locks the close animation.', enforcement: C('check', 'dismissable-lifecycle') },
@@ -186,7 +186,7 @@ const RULES: RuleDef[] = [
   { id: 'registry-2', group: 'registry', rule: 'Registry entry fields match the spec', why: 'The card/title/synonyms come from the registry; drift from the spec mislabels it.', enforcement: { recipe: { status: 'gap' } } },
 
   // Unit tests (all with logic)
-  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'gap' } } },
+  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'check', check: 'recipe-spec-drift' } } },
 
   // Accessibility tests (all rendered)
   { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('gap') },
