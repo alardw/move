@@ -35,7 +35,7 @@ const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
   styles,
   slots: ['root'] as const,
   defaults: { gap: 'md' as AlignGap, align: 'center' as AlignVertical },
-  moveProps: [],
+  moveProps: ['padding', 'flex'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {

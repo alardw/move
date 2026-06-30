@@ -386,6 +386,7 @@ const CarouselPrevTrigger = withMoveComponent<
   name: 'CarouselPrevTrigger',
   styles,
   slots: ['prevTrigger'] as const,
+  moveProps: ['size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollPrev, canScrollPrev, orientation } = useCarouselContext();
@@ -450,6 +451,7 @@ const CarouselNextTrigger = withMoveComponent<
   name: 'CarouselNextTrigger',
   styles,
   slots: ['nextTrigger'] as const,
+  moveProps: ['size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollNext, canScrollNext, orientation } = useCarouselContext();

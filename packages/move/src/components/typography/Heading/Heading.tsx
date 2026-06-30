@@ -53,7 +53,7 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
     color: 'base' as HeadingColor,
     tracking: 'tight' as HeadingTracking,
   },
-  moveProps: ['align', 'truncate'],
+  moveProps: ['align', 'truncate', 'weight'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {

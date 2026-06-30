@@ -367,6 +367,7 @@ const PaginationItems = withMoveComponent<
   name: 'PaginationItems',
   styles,
   slots: ['items', 'item', 'ellipsis', 'indicator'] as const,
+  moveProps: ['animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { range, page, setPage, labels } = usePaginationContext();

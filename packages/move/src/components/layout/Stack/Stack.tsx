@@ -66,7 +66,7 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
     wrap: false,
     stagger: false as StackStagger,
   },
-  moveProps: ['collapseBelow', 'fill', 'stagger', 'animations'],
+  moveProps: ['collapseBelow', 'fill', 'stagger', 'animations', 'padding', 'flex'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
