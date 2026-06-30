@@ -6,9 +6,13 @@
  * For every `withMoveComponent({...})` call (so compound components with several
  * factories in one file each validate independently):
  *
- *   source-7 — `sp()` is called for every declared slot.
+ *   source-4 — no inline default in a `const { x = … } = props` destructure
+ *              (defaults belong in the factory's `defaults` object).
  *   source-5 — the `slots` array and the slots actually used by `sp()`/`cx()`
  *              agree (no slot declared-but-unused, none used-but-undeclared).
+ *   source-6 — a slot's className goes through cx()/slot(), never raw styles.<slot>.
+ *   source-7 — every declared slot is slotProps-themeable (slot() or sp()).
+ *   source-9 — the render forwards a ref to the real node.
  *
  * Files that contain no `withMoveComponent` call (e.g. Calendar's bespoke build,
  * non-factory sub-files) are simply skipped — the rule doesn't apply.
@@ -110,11 +114,40 @@ for (const file of componentFiles()) {
     // source-7 (gate): every declared slot is themeable via slot()/sp().
     const noSp = slots.filter((s) => !sp.has(s));
     if (noSp.length) violations.push(`[source-7] ${rel}: slot(s) not slotProps-themeable — render with slot() or sp(): ${noSp.join(', ')}`);
+
+    const slotSet = new Set(slots);
+    let hasRef = false;
+    walk(call, (n) => {
+      // source-4 (gate): defaults belong in the factory's `defaults` object, not
+      // inline in a `const { x = … } = props` destructure (which bypasses it).
+      if (
+        ts.isVariableDeclaration(n) && n.initializer &&
+        ts.isIdentifier(n.initializer) && n.initializer.text === 'props' &&
+        n.name && ts.isObjectBindingPattern(n.name)
+      ) {
+        for (const el of n.name.elements) {
+          if (el.initializer) violations.push(`[source-4] ${rel}: inline default on props.${el.name.getText()} — move it to the factory's defaults object`);
+        }
+      }
+      // source-6 (gate): a slot's className must go through cx()/slot(), never a
+      // raw styles.<slot> (which drops the consumer's className for that part).
+      if (ts.isJsxAttribute(n) && n.name.getText() === 'className' && n.initializer && ts.isJsxExpression(n.initializer)) {
+        const e = n.initializer.expression;
+        if (e && ts.isPropertyAccessExpression(e) && ts.isIdentifier(e.expression) && e.expression.text === 'styles' && slotSet.has(e.name.text)) {
+          violations.push(`[source-6] ${rel}: className={styles.${e.name.text}} on a slot — use cx('${e.name.text}') or slot('${e.name.text}')`);
+        }
+      }
+      // source-9 (gate): ref reaches the real node — either a `ref=` JSX attribute
+      // or a forwarded `ref` in a spread props object (e.g. `{ ...attrs, ref }`).
+      if (ts.isJsxAttribute(n) && n.name.getText() === 'ref') hasRef = true;
+      if ((ts.isShorthandPropertyAssignment(n) || ts.isPropertyAssignment(n)) && n.name && n.name.getText() === 'ref') hasRef = true;
+    });
+    if (!hasRef) violations.push(`[source-9] ${rel}: render forwards no ref — focus, measurement, and portals need the real node`);
   }
 }
 
 if (!violations.length) {
-  console.log(`✓ factory-conformance: ${factories} factories — every slot declared, used, and slotProps-themeable (source-5, source-7).`);
+  console.log(`✓ factory-conformance: ${factories} factories — slots declared/used/themeable, defaults + slot classes + ref in place (source-4/5/6/7/9).`);
   process.exit(0);
 }
 console.error(`✗ factory-conformance: ${violations.length} issue(s).\n`);
