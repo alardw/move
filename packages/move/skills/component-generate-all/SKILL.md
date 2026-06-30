@@ -22,7 +22,6 @@ Run all generation skills for a component in sequence. Requires an existing spec
 - `use{Name}.ts` — headless hook (if spec declares `hasHook: true`)
 - `{Name}.meta.ts` — component metadata
 - `{Name}.test.tsx` — test file
-- `{Name}.report.md` — validation report
 - `src/index.ts` — updated with component exports
 
 **REFUSES if:** `{Name}.spec.ts` does not exist. Run `/component-create-spec {Name}` first.
@@ -56,7 +55,7 @@ automatically. Skip only if the docs app is absent.
 > hand (see repo `notes/TODO.md`).
 
 ### Step 5 — `/component-validate {Name}`
-Validates all generated files and writes `.report.md`.
+Validates all generated files (findings print to stdout; no `.report.md` is written).
 
 If `/component-validate` returns any BLOCKER failures, stop pipeline immediately and report them as generation failures (do not continue to acceptance).
 

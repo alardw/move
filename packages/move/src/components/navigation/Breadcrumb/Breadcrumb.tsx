@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { Icon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Breadcrumb.module.css';
 
 // ============================================================================
@@ -71,7 +71,8 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
       size,
     } = props;
 
-    const separatorNode = separator ?? <Icon name="chevron-right" size="xs" />;
+    const defaultSeparator = useIcon('separator', 14);
+    const separatorNode = separator ?? defaultSeparator;
 
     const contextValue: BreadcrumbContextValue = { separator: separatorNode };
 

@@ -17,6 +17,8 @@ export type {
   AutocompleteGroupLabelProps,
   AutocompleteEmptyProps,
   AutocompleteLoadingProps,
+  AutocompleteErrorProps,
+  AutocompleteRetryTriggerProps,
   AutocompleteSeparatorProps,
 } from './Autocomplete';
 export { useAutocomplete } from './useAutocomplete';

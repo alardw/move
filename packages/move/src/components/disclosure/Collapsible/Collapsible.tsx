@@ -11,7 +11,7 @@ import {
   useAnimations,
 } from '../../../animation';
 import type { Animation, AnimationTrigger } from '../../../animation';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Collapsible.module.css';
 
 // ============================================================================
@@ -212,7 +212,7 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children } = props;
     const context = useCollapsibleContext();
-    const resolvedChevron = useResolvedIcon('chevron-down', 15);
+    const resolvedChevron = useIcon('expand', 15);
     const iconRef = React.useRef<HTMLSpanElement | null>(null);
 
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);

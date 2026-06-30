@@ -233,6 +233,7 @@ export function AnimationPatternsPage() {
 
             <InlineDemo
               block
+              replay
               label={<Code>listReveal</Code>}
               blurb="Rows stagger in on mount."
             >
@@ -246,10 +247,11 @@ export function AnimationPatternsPage() {
 
             <InlineDemo
               block
+              replay
               label={<Code>layoutReveal</Code>}
               blurb="A layout container staggers its children in."
             >
-              <Stack direction="row" gap="sm" wrap>
+              <Stack direction="row" gap="sm" wrap stagger>
                 <Badge variant="soft">One</Badge>
                 <Badge variant="soft">Two</Badge>
                 <Badge variant="soft">Three</Badge>
@@ -261,7 +263,7 @@ export function AnimationPatternsPage() {
               label={<Code>loader</Code>}
               blurb="A continuous loop while work is pending."
             >
-              <Loader />
+              <Loader variant="dots" />
             </InlineDemo>
           </Stack>
         </Section>

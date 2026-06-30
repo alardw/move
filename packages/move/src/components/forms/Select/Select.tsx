@@ -5,7 +5,7 @@ import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import {
   useAnimations,
   resolveAnimationsConfig, extractSteps,
@@ -340,7 +340,7 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
   slots: ['icon'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const resolvedChevron = useResolvedIcon('chevron-down', 16);
+    const resolvedChevron = useIcon('expand', 16);
     const iconRef = React.useRef<HTMLSpanElement>(null);
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
     const { animConfig } = useSelectContext();

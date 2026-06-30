@@ -13,6 +13,7 @@ export type {
   GlobalSlotProps,
   CxFn,
   SpFn,
+  SlotFn,
   SetupContext,
   SetupReturn,
   MoveComponentOptions,
@@ -122,8 +123,8 @@ export { shadows, createShadow, createShadowPalette, shadowCSSVariables, createT
 export type { ShadowElevation, CreateShadowOptions, SurfaceLevel, ThemeShadowConfig, ThemeShadowTokens } from './styles/visual';
 
 // Icons
-export { Icon, IconProvider, useIconContext, useResolvedIcon } from './infrastructure/Icon';
-export type { IconComponentProps, IconProps, IconResolver, IconProviderProps } from './infrastructure/Icon';
+export { Icon, IconProvider, useIconContext, useResolvedIcon, useIcon, useIconRoles, IconRolesProvider, ICON_ROLES, roleIconName } from './infrastructure/Icon';
+export type { IconComponentProps, IconProps, IconResolver, IconProviderProps, IconRole, IconRoleStatus, IconRoleOverrides } from './infrastructure/Icon';
 
 // Components — generated via the /component-generate-source pipeline
 export { Alert } from './components/feedback/Alert';
@@ -202,9 +203,6 @@ export type { EmptyStateProps, EmptyStateSize } from './components/feedback/Empt
 export { Skeleton } from './components/feedback/Skeleton';
 export type { SkeletonAnimation, SkeletonRootProps, SkeletonCircleProps, SkeletonRectangleProps, SkeletonRoundedProps, SkeletonTextProps } from './components/feedback/Skeleton';
 
-export { Spinner } from './components/feedback/Spinner';
-export type { SpinnerProps, SpinnerSize, SpinnerVariant } from './components/feedback/Spinner';
-
 export { Loader } from './components/feedback/Loader';
 export type { LoaderProps, LoaderVariant, LoaderColor, LoaderSize } from './components/feedback/Loader';
 
@@ -237,6 +235,9 @@ export type { RadioGroupRootProps, RadioGroupItemProps, RadioGroupSize } from '.
 export { Password } from './components/forms/Password';
 export type { PasswordProps, PasswordVariant, PasswordSize, PasswordLabels } from './components/forms/Password';
 
+export { PasswordStrength, estimatePasswordStrength } from './components/forms/PasswordStrength';
+export type { PasswordStrengthProps, PasswordStrengthRequirementsProps, PasswordStrengthSize, PasswordStrengthLabels, PasswordRequirement } from './components/forms/PasswordStrength';
+
 export { NumberInput } from './components/forms/NumberInput';
 export type { NumberInputProps, NumberInputVariant, NumberInputSize } from './components/forms/NumberInput';
 export { useNumberInput } from './components/forms/NumberInput';
@@ -256,7 +257,7 @@ export { Select } from './components/forms/Select';
 export type { SelectRootProps, SelectTriggerProps, SelectTriggerSize, SelectTriggerVariant, SelectValueProps, SelectIconProps, SelectContentProps, SelectViewportProps, SelectItemProps, SelectGroupProps, SelectLabelProps, SelectSeparatorProps } from './components/forms/Select';
 
 export { Autocomplete } from './components/forms/Autocomplete';
-export type { AutocompleteRootProps, AutocompleteTriggerProps, AutocompleteTriggerSize, AutocompleteTriggerVariant, AutocompleteInputProps, AutocompleteTagListProps, AutocompleteTagProps, AutocompleteIconProps, AutocompleteClearTriggerProps, AutocompleteContentProps, AutocompleteItemProps, AutocompleteItemIndicatorProps, AutocompleteGroupProps, AutocompleteGroupLabelProps, AutocompleteEmptyProps, AutocompleteLoadingProps, AutocompleteSeparatorProps } from './components/forms/Autocomplete';
+export type { AutocompleteRootProps, AutocompleteTriggerProps, AutocompleteTriggerSize, AutocompleteTriggerVariant, AutocompleteInputProps, AutocompleteTagListProps, AutocompleteTagProps, AutocompleteIconProps, AutocompleteClearTriggerProps, AutocompleteContentProps, AutocompleteItemProps, AutocompleteItemIndicatorProps, AutocompleteGroupProps, AutocompleteGroupLabelProps, AutocompleteEmptyProps, AutocompleteLoadingProps, AutocompleteErrorProps, AutocompleteRetryTriggerProps, AutocompleteSeparatorProps } from './components/forms/Autocomplete';
 export { useAutocomplete } from './components/forms/Autocomplete';
 export type { UseAutocompleteOptions, UseAutocompleteReturn, RegisteredItem } from './components/forms/Autocomplete';
 
@@ -408,3 +409,9 @@ export type { CanonicalTypeName } from './shared/typeRegistry';
 // the real spec shape is `ComponentSpec` in `spec-type.ts`.)
 export { Z_LAYERS } from './shared/z-layers';
 export type { Z, ZKind, ZLayers } from './shared/z-layers';
+
+// Cross-cutting adapters — shared, typed contracts components inject (the
+// catalogue also re-exports IconResolver / CodeHighlighterFn, already exported
+// above). New here: AsyncResource for source-agnostic data components.
+export { asyncResource } from './adapters';
+export type { AsyncResource, AsyncStateInput } from './adapters';

@@ -40,6 +40,7 @@ import { content as loader } from './loader';
 import { content as numberInput } from './number-input';
 import { content as pagination } from './pagination';
 import { content as password } from './password';
+import { content as passwordStrength } from './password-strength';
 import { content as pinInput } from './pin-input';
 import { content as popover } from './popover';
 import { content as progressBar } from './progress-bar';
@@ -109,6 +110,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   'number-input': numberInput,
   pagination,
   password,
+  'password-strength': passwordStrength,
   'pin-input': pinInput,
   popover,
   'progress-bar': progressBar,

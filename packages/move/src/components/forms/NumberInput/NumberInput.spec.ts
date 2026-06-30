@@ -207,6 +207,7 @@ export const spec = {
     ] as string[],
   },
 
+  iconsUsed: ['chevron-down', 'chevron-up'],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'accept-all' as const,

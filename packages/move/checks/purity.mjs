@@ -1,23 +1,25 @@
 #!/usr/bin/env node
 /**
- * Recipe purity (consumer-facing; shipped, config-driven).
+ * Purity (consumer-facing; shipped, config-driven).
  *
- * Recipes (and docs samples) must be built ENTIRELY from Move components — no
- * raw HTML elements (`<div>`/`<span>`/`<p>`/…), no inline `style=` props. This
- * parses each source with the TypeScript compiler and flags both.
+ * Any Move-composed code — recipes, docs samples, and app sources — must be
+ * built ENTIRELY from Move components: no raw HTML elements
+ * (`<div>`/`<span>`/`<p>`/…), no inline `style=` props. This parses each source
+ * with the TypeScript compiler and flags both.
  *
- * Escape hatch: a line carrying `{/* recipe-purity-ignore: <reason> *​/}` (on
- * the line or the line above) is skipped — for the rare viewport sizing no Move
- * primitive expresses yet — so the exception stays visible and justified.
+ * Escape hatch: a `purity-ignore: <reason>` comment on a line (or the line
+ * above) skips it — for the rare sizing no Move primitive expresses yet — so the
+ * exception stays visible and justified. The legacy `recipe-purity-ignore`
+ * marker still works (it contains `purity-ignore`).
  *
- * Scans `config.recipes` (+ `config.samples` if set).
+ * Scans `config.recipes` + `config.samples` (and any app roots you configure).
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import ts from 'typescript';
 import { loadConfig } from './_config.mjs';
 
-const IGNORE_MARKER = 'recipe-purity-ignore';
+const IGNORE_MARKER = 'purity-ignore';
 
 function collectTsx(dir, out = []) {
   if (!existsSync(dir)) return out;
@@ -58,10 +60,10 @@ export function run(config) {
   }
 
   return {
-    name: 'recipe-purity',
+    name: 'purity',
     ok: violations.length === 0,
     summary: violations.length === 0
-      ? `${files.length} recipe/sample files are 100% Move components`
+      ? `${files.length} composed files are 100% Move components`
       : `${violations.length} violation(s) — raw HTML or inline styles (use Move components + props; mark unavoidable sizing with {/* ${IGNORE_MARKER}: … */})`,
     messages: violations,
   };
@@ -70,9 +72,9 @@ export function run(config) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const res = run(loadConfig());
   if (!res.ok) {
-    console.error(`✗ recipe-purity: ${res.summary}\n`);
+    console.error(`✗ purity: ${res.summary}\n`);
     console.error(res.messages.map((m) => `  ${m}`).join('\n'));
     process.exit(1);
   }
-  console.log(`✓ recipe-purity: ${res.summary}.`);
+  console.log(`✓ purity: ${res.summary}.`);
 }

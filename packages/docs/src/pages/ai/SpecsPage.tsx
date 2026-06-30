@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Card } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Card, Table } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -35,9 +35,49 @@ const WHY_IT_HOLDS: HighlightItem[] = [
 const TOC: TocItem[] = [
   { href: '#specs', label: 'Overview' },
   { href: '#loop', label: 'The loop' },
+  { href: '#anatomy', label: 'Anatomy' },
   { href: '#why-it-holds', label: 'Why it holds' },
   { href: '#next-steps', label: 'Next steps' },
 ];
+
+const COMPONENT_FILES: [string, string][] = [
+  ['{Name}.spec.ts', 'Source of truth — the typed contract; everything else derives from it'],
+  ['{Name}.tsx', 'The component, generated from the spec'],
+  ['{Name}.module.css', 'Token-driven styles — every value a design token'],
+  ['index.ts', 'Barrel exports'],
+  ['use{Name}.ts', 'Headless hook — only when the spec sets hasHook'],
+  ['{Name}.meta.ts', 'A light registry descriptor the docs import'],
+  ['{Name}.test.tsx', 'Generated tests'],
+  ['{Name}.analysis.md', 'Research notes (informational)'],
+];
+
+const RECIPE_FILES: [string, string][] = [
+  ['{Name}.spec.ts', 'Source of truth — composition, labels, behaviours, integration points'],
+  ['{Name}.tsx', 'The recipe — only Move components, a default export taking labels'],
+  ['{Name}.test.tsx', 'Generated tests'],
+  ['registry.ts entry', 'One line registering the overview card + route'],
+];
+
+function FileTable({ rows }: { rows: [string, string][] }) {
+  return (
+    <Table>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>File</Table.Head>
+          <Table.Head>Purpose</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map(([file, purpose]) => (
+          <Table.Row key={file}>
+            <Table.Cell><Code>{file}</Code></Table.Cell>
+            <Table.Cell><Text size="sm">{purpose}</Text></Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  );
+}
 
 export function SpecsPage() {
   return (
@@ -102,6 +142,23 @@ export function SpecsPage() {
                 )}
               </Fragment>
             ))}
+          </Stack>
+        </Section>
+
+        <Section
+          id="anatomy"
+          title="What the loop produces"
+          lede="The same loop runs for components and recipes — the spec is the source of truth; the rest is generated from it. A component is a styled factory; a recipe is a pure Move composition — so the files differ."
+        >
+          <Stack gap="lg">
+            <Stack gap="sm">
+              <Heading level={3}>A component</Heading>
+              <FileTable rows={COMPONENT_FILES} />
+            </Stack>
+            <Stack gap="sm">
+              <Heading level={3}>A recipe</Heading>
+              <FileTable rows={RECIPE_FILES} />
+            </Stack>
           </Stack>
         </Section>
 

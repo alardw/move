@@ -30,7 +30,7 @@ import { useMergedRef } from '../../../engine';
 import { InputText } from '../../forms/InputText';
 import { TimeField } from '../TimeField';
 import { Button } from '../../actions/Button';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './DatePicker.module.css';
 
@@ -577,7 +577,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
   style,
 }) => {
   const isSingleMode = mode === 'single';
-  const calendarIcon = useResolvedIcon('calendar', 16);
+  const calendarIcon = useIcon('calendar', 16);
 
   const formattedValue = React.useMemo(() => {
     if (!value) return '';
@@ -727,7 +727,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
   style,
 }) => {
   const pattern = getLocaleDatePattern(locale);
-  const calendarIcon = useResolvedIcon('calendar', 16);
+  const calendarIcon = useIcon('calendar', 16);
 
   const fromFormatted = React.useMemo(
     () => (value?.from ? formatDate(value.from, locale) : ''),
@@ -935,7 +935,7 @@ export interface DatePickerIconProps {
 }
 
 const DatePickerIcon: React.FC<DatePickerIconProps> = ({ className, children }) => {
-  const calendarIcon = useResolvedIcon('calendar', 16);
+  const calendarIcon = useIcon('calendar', 16);
 
   return (
     <span className={`${styles.icon} ${className ?? ''}`}>

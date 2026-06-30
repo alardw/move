@@ -17,7 +17,7 @@ import type {
   StaggerConfig,
   AnimationTrigger,
 } from '../../../animation';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import type { Size } from '../../../shared/types';
 import acStyles from './Accordion.module.css';
@@ -369,7 +369,7 @@ const AccordionTrigger = withMoveComponent<'trigger' | 'icon', AccordionTriggerP
     const { className, style, children, icon, animations: animationsProp } = props;
     const context = useAccordionContext();
     const itemContext = useAccordionItemContext();
-    const resolvedChevron = useResolvedIcon('chevron-down', 15);
+    const resolvedChevron = useIcon('expand', 15);
     const triggerRef = React.useRef<HTMLButtonElement | null>(null);
     const iconRef = React.useRef<HTMLSpanElement>(null);
 

@@ -1,6 +1,7 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Badge, Code, Table } from 'move';
 import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
+import { CHECKS, type CheckDoc } from './checks';
 
 const TOC: TocItem[] = [
   { href: '#validation', label: 'Overview' },
@@ -8,11 +9,6 @@ const TOC: TocItem[] = [
   { href: '#config', label: 'Configuration' },
   { href: '#running', label: 'Running it' },
   { href: '#ci', label: 'CI & pre-commit' },
-];
-
-const CHECKS: { name: string; enforces: string }[] = [
-  { name: 'strict-props', enforces: 'Component Props interfaces are strictly typed — no `extends Record<string, unknown>`, so invalid prop values and unknown props are rejected by the compiler.' },
-  { name: 'recipe-purity', enforces: 'Recipes and samples are built only from Move components — no raw HTML elements and no inline `style=` props.' },
 ];
 
 const CONFIG = `// move.config.json
@@ -29,6 +25,38 @@ const CI = `# .github/workflows/move-check.yml
 
 const HOOK = `# .githooks/pre-commit
 npx move check || exit 1`;
+
+const TARGET_LABEL: Record<CheckDoc['appliesTo'], string> = {
+  component: 'Component',
+  recipe: 'Recipe',
+  composition: 'Composition',
+  docs: 'Docs',
+};
+
+function ChecksTable({ rows, showTarget }: { rows: CheckDoc[]; showTarget?: boolean }) {
+  return (
+    <Table>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Check</Table.Head>
+          {showTarget && <Table.Head>Applies to</Table.Head>}
+          <Table.Head>Enforces</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((c) => (
+          <Table.Row key={c.name}>
+            <Table.Cell><Code>{c.title ?? c.name}</Code></Table.Cell>
+            {showTarget && (
+              <Table.Cell><Badge variant="soft">{TARGET_LABEL[c.appliesTo]}</Badge></Table.Cell>
+            )}
+            <Table.Cell><Text size="sm">{c.enforces}</Text></Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table>
+  );
+}
 
 export function ValidationPage() {
   return (
@@ -58,27 +86,32 @@ export function ValidationPage() {
           </Stack>
         </Stack>
 
-        <Section id="checks" title="The checks" lede="Deterministic gates that the TypeScript compiler can't catch on its own.">
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>Check</Table.Head>
-                <Table.Head>Enforces</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {CHECKS.map((c) => (
-                <Table.Row key={c.name}>
-                  <Table.Cell><Code>{c.name}</Code></Table.Cell>
-                  <Table.Cell><Text size="sm">{c.enforces}</Text></Table.Cell>
-                </Table.Row>
-              ))}
-            </Table.Body>
-          </Table>
+        <Section id="checks" title="The checks" lede="Deterministic gates the TypeScript compiler can't catch on its own. What's relevant scales with how you use Move — compose its components, or author your own with the pipeline.">
+          <Stack gap="lg">
+            <Stack gap="sm">
+              <Heading level={3}>Composing Move</Heading>
+              <Text size="sm" color="muted">
+                Purity gates for any composition of Move components — the pages and sections you
+                build. No spec needed, so they ship to you via <Code>move check</Code>; Move runs the
+                same gates on its own recipes and samples.
+              </Text>
+              <ChecksTable rows={CHECKS.filter((c) => c.shipped)} />
+            </Stack>
+            <Stack gap="sm">
+              <Heading level={3}>Authoring with the pipeline</Heading>
+              <Text size="sm" color="muted">
+                Contract gates for components and recipes built the Move way — the analyze → spec →
+                generate → validate loop. Move runs these on itself; adopt the pipeline
+                (<Code>npx move skills</Code>) and they apply to the components and recipes you author
+                too. The Applies-to column says whether each governs a component, a recipe, or the docs.
+              </Text>
+              <ChecksTable rows={CHECKS.filter((c) => !c.shipped)} showTarget />
+            </Stack>
+          </Stack>
           <Text size="sm" color="muted">
             The AI skills <Code>component-validate</Code> and <Code>recipe-validate</Code> cover the
-            judgment-based checks (behaviour coverage, label parity) during generation; <Code>move check</Code>{' '}
-            is the deterministic layer for CI.
+            judgment-based checks (behaviour coverage, label parity) during generation; these
+            deterministic gates are the layer for CI.
           </Text>
         </Section>
 

@@ -1,6 +1,6 @@
 ---
 name: component-validate
-description: "Validate component conformance, theme, spec drift. Writes report. Supports fix mode."
+description: "Validate component conformance, theme, spec drift. Reports to stdout. Supports fix mode."
 user-invocable: true
 argument-hint: "[ComponentName|all|theme|registry]"
 ---
@@ -21,8 +21,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 - Append `"fix"` to auto-fix failures (e.g. "Badge fix")
 
 **Output:**
-- `{Name}.report.md` written next to the component (for component validation)
-- Stdout summary of results
+- Stdout summary of results (no file is written — `.report.md` artifacts were removed; the live `check:all` checks are the enforced source of truth)
 
 ---
 
@@ -96,6 +95,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | E2 | Built-in icons use `useResolvedIcon` |
 | E3 | Essential icons have built-in fallbacks |
 | E4 | Fallback children for icon slots |
+| E5 | Icon usage recorded in spec | `spec.iconsUsed` lists exactly the built-in icons the source renders via `useResolvedIcon`/`<Icon name>`; the `/customize/icons` usage table derives from it. Enforced by `check:icon-usage` (in `check:all`). |
 
 #### F. Placement Consistency
 
@@ -137,12 +137,11 @@ Gate rule:
 - Any **BLOCKER** failure => overall status `FAIL` and generation pipeline must stop.
 - HIGH/MEDIUM failures are reported, but only HIGH marked as `needs-fix` in report summary.
 
-### Step 4 — Write report
+### Step 4 — Report results
 
-Write `src/components/{category}/{Name}/{Name}.report.md`:
+Print the validation summary to **stdout** — no `.report.md` file is written (those artifacts were removed; the live `check:all` checks are the enforced source of truth). Format:
 
 ```markdown
-<!-- Validated: {timestamp} | sourceHash: {hash} | specHash: {hash or 'none'} -->
 # {Name} — Validation Report
 
 | Rule | Status | Notes |

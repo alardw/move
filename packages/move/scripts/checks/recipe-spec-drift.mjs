@@ -111,6 +111,7 @@ const setEq = (a, b) => {
 
 let errors = 0;
 const out = [];
+const slugs = new Map(); // registry-1: detect duplicate recipe slugs
 for (const specFile of recipeSpecs(RECIPES).sort()) {
   const srcFile = specFile.replace(/\.spec\.ts$/, '.tsx');
   const name = basename(specFile, '.spec.ts');
@@ -138,6 +139,17 @@ for (const specFile of recipeSpecs(RECIPES).sort()) {
       (lab.onlyA.length ? `\n    in spec, not in defaultLabels: ${lab.onlyA.join(', ')}` : '') +
       (lab.onlyB.length ? `\n    in defaultLabels, not in spec: ${lab.onlyB.join(', ')}` : ''));
   }
+  // specParity-7: the copy/defaults review gate.
+  if (!/status:\s*'approved'/.test(readFileSync(specFile, 'utf8'))) {
+    errors++; out.push(`✗ ${name}: defaultReview.status is not 'approved'`);
+  }
+  // registry-1: no two recipes share a slug.
+  const slugNode = prop(specObj, 'slug');
+  const slug = slugNode && ts.isStringLiteral(slugNode) ? slugNode.text : null;
+  if (slug) {
+    if (slugs.has(slug)) { errors++; out.push(`✗ duplicate slug '${slug}' (${name} + ${slugs.get(slug)})`); }
+    else slugs.set(slug, name);
+  }
 }
 
 // every recipe source should also have a spec
@@ -161,4 +173,4 @@ if (errors > 0) {
   console.error(`\n${errors} drift error(s).`);
   process.exit(1);
 }
-console.log('✓ recipe-spec-drift: all recipes match their specs (composition + labels).');
+console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, review, unique slugs).');

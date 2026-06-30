@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Button, Toast, toast } from 'move';
 import {
   InlineDemo,
+  LifecycleIllustration,
   Section,
   TocRail,
   type TocItem,
@@ -18,7 +19,7 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#lifecycle', label: 'The lifecycle' },
-  { href: '#one-component', label: 'All three at once' },
+  { href: '#one-component', label: 'See it in action' },
   { href: '#enter', label: 'Enter' },
   { href: '#respond', label: 'Respond' },
   { href: '#exit', label: 'Exit' },
@@ -58,9 +59,11 @@ export function AnimationLifecyclePage() {
           </Stack>
         </Stack>
 
+        <LifecycleIllustration />
+
         <Section
           id="one-component"
-          title="All three at once"
+          title="See it in action"
           lede="A toast runs the whole lifecycle — send one and watch."
         >
           <Text>
@@ -70,7 +73,7 @@ export function AnimationLifecyclePage() {
           </Text>
           <InlineDemo blurb="Send a toast, then hover it before it clears.">
             <Stack direction="row" gap="sm">
-              <Button onClick={() => toast.success('Saved — your changes are live.')}>
+              <Button onClick={() => toast.info('That worked, now hover on me to stop the countdown!')}>
                 Send a toast
               </Button>
             </Stack>

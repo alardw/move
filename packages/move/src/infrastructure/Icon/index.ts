@@ -3,4 +3,8 @@ export type { IconComponentProps } from './Icon';
 export { IconProvider, useIconContext } from './IconProvider';
 export type { IconProps, IconResolver, IconProviderProps } from './IconProvider';
 export { useResolvedIcon } from './useResolvedIcon';
+export { useIcon, useIconRoles, IconRolesProvider } from './useIcon';
+export type { IconRoleOverrides } from './useIcon';
+export { ICON_ROLES, roleIconName } from './roles';
+export type { IconRole, IconRoleStatus } from './roles';
 export { BUILTIN_ICONS } from './builtinIcons';

@@ -5,7 +5,8 @@ import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
 import { Presence, usePresence, useAnimations, resolveAnimationsConfig, quick, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useResolvedIcon } from '../../../infrastructure/Icon/useResolvedIcon';
+import { useIcon } from '../../../infrastructure/Icon';
+import type { IconRole } from '../../../infrastructure/Icon';
 import {
   useToastStore,
   removeToast,
@@ -45,27 +46,20 @@ const ToastAnimateContext = React.createContext<AnimationTrigger[] | false | nul
 const ToastCloseLabelContext = React.createContext('Close notification');
 
 // =============================================================================
-// Variant icon mapping
+// Variant icon
 // =============================================================================
-
-const VARIANT_ICONS: Record<string, string> = {
-  info: 'info',
-  success: 'circle-check',
-  warning: 'triangle-alert',
-  error: 'circle-x',
-};
 
 const VARIANT_ICON_SIZE = 18;
 
 // =============================================================================
-// VariantIcon — resolved via IconProvider with built-in SVG fallback
+// VariantIcon — resolved by status role (built-in SVG fallback)
 // =============================================================================
 
 function VariantIcon({ variant }: { variant: string }) {
-  const iconName = VARIANT_ICONS[variant];
-  if (!iconName) return null;
-
-  const resolved = useResolvedIcon(iconName, VARIANT_ICON_SIZE);
+  // The Toast `error` variant maps to the shared `danger` status role.
+  const statusRole = variant === 'error' ? 'danger' : variant;
+  const resolved = useIcon(`status.${statusRole}` as IconRole, VARIANT_ICON_SIZE);
+  if (variant === 'default') return null;
   return resolved ? <>{resolved}</> : null;
 }
 
@@ -107,7 +101,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
   const [isPresent, safeToRemove] = usePresence();
   const animConfig = React.useContext(ToastAnimateContext);
   const closeLabel = React.useContext(ToastCloseLabelContext);
-  const closeIcon = useResolvedIcon('x', 14);
+  const closeIcon = useIcon('close', 14);
 
   const isClosing = !isPresent;
 
@@ -140,7 +134,6 @@ function ToastItem({ toast }: { toast: ToastState }) {
         target: 'Progress',
         animation: { scaleX: { from: 1, to: 0, ease: 'linear', duration: toastDuration } },
       }],
-      onComplete: () => removeToast(toastId),
     }];
   }, [isPresent, toastId, toastDuration]);
 
@@ -150,13 +143,32 @@ function ToastItem({ toast }: { toast: ToastState }) {
 
   const { pauseAll: pauseProgress, resumeAll: resumeProgress } = useAnimations(progressConfig, progressRefs);
 
-  // Pause/resume progress on hover/focus
+  // Auto-dismiss is a pause-aware timer (NOT the progress animation's completion),
+  // so the toast does not disappear while the countdown is paused. The progress
+  // bar is the visual companion — both pause/resume together on hover/focus.
   React.useEffect(() => {
     const el = itemRef.current;
     if (!el || !isPresent || toastDuration <= 0) return;
 
-    const pause = () => pauseProgress();
-    const resume = () => resumeProgress();
+    let remaining = toastDuration;
+    let startedAt = Date.now();
+    let timer: ReturnType<typeof setTimeout> | null = setTimeout(() => removeToast(toastId), remaining);
+
+    const pause = () => {
+      pauseProgress();
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+        remaining -= Date.now() - startedAt;
+      }
+    };
+    const resume = () => {
+      resumeProgress();
+      if (!timer && remaining > 0) {
+        startedAt = Date.now();
+        timer = setTimeout(() => removeToast(toastId), remaining);
+      }
+    };
 
     el.addEventListener('mouseenter', pause);
     el.addEventListener('mouseleave', resume);
@@ -164,12 +176,13 @@ function ToastItem({ toast }: { toast: ToastState }) {
     el.addEventListener('focusout', resume);
 
     return () => {
+      if (timer) clearTimeout(timer);
       el.removeEventListener('mouseenter', pause);
       el.removeEventListener('mouseleave', resume);
       el.removeEventListener('focusin', pause);
       el.removeEventListener('focusout', resume);
     };
-  }, [isPresent, toastDuration, pauseProgress, resumeProgress]);
+  }, [isPresent, toastDuration, toastId, pauseProgress, resumeProgress]);
 
   const hasIcon = toast.variant !== 'default';
 

@@ -96,6 +96,7 @@ Read these files for class defaults and available options:
 | renderContracts | Required passthrough/composition links (e.g. animate forwarded into sub-slot) |
 | labels | Hardcoded user-visible strings (aria-label values, button text, placeholder text) |
 | componentDeps | Other Move components used in source or expected in stories (e.g. Button, Icon) |
+| iconsUsed | Built-in icon names the source renders via `useResolvedIcon('…')` / `<Icon name>` — the `/customize/icons` usage table derives from this |
 | childrenKind / propRoles | Whether children/props are text content vs structural composition |
 
 **Create mode:** From user input + class defaults from `references/`.
@@ -252,3 +253,4 @@ Note: Every spec MUST end with `satisfies ComponentSpec` and import the type fro
 14. **`undefined` is not a default value** — defaults must be explicit concrete values, `null`, or omitted key
 15. **Complete default coverage required** — every defaultable prop must get a default via rule-based assignment
 16. **Composable children must be marked** — set `childrenKind: 'composition'` for structural children to avoid text-control misgeneration
+17. **Record internal icons in `iconsUsed`** — list every built-in icon name the source renders (`useResolvedIcon('…')` / `<Icon name>`). The `/customize/icons` usage table derives from it and `check:icon-usage` enforces it matches the source. Omit the field when the component renders no icons.

@@ -343,6 +343,7 @@ export const spec = {
     ],
   },
 
+  iconsUsed: ['x'],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'rule-based' as const,

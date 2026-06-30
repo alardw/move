@@ -11,7 +11,7 @@ import { WeekView } from './WeekView';
 import { MonthView } from './MonthView';
 import { AgendaView } from './AgendaView';
 import { Button } from '../../actions/Button';
-import { Icon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { ToggleGroup } from '../../actions/ToggleGroup';
 import styles from './CalendarView.module.css';
 
@@ -90,6 +90,8 @@ export interface CalendarViewNavProps {
 
 const CalendarViewNav: React.FC<CalendarViewNavProps> = ({ className }) => {
   const { goToPrev, goToNext, labels } = useCalendarViewContext();
+  const prevIcon = useIcon('previous', 16);
+  const nextIcon = useIcon('next', 16);
 
   return (
     <Button.Group className={`${styles.nav} ${className ?? ''}`}>
@@ -99,7 +101,7 @@ const CalendarViewNav: React.FC<CalendarViewNavProps> = ({ className }) => {
         onClick={goToPrev}
         aria-label={labels.previous}
       >
-        <Icon name="chevron-left" size="sm" />
+        {prevIcon}
       </Button>
       <Button
         variant="secondary"
@@ -107,7 +109,7 @@ const CalendarViewNav: React.FC<CalendarViewNavProps> = ({ className }) => {
         onClick={goToNext}
         aria-label={labels.next}
       >
-        <Icon name="chevron-right" size="sm" />
+        {nextIcon}
       </Button>
     </Button.Group>
   );

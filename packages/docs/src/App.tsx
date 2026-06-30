@@ -13,6 +13,7 @@ import { AIOverviewPage } from './pages/ai/AIOverviewPage';
 import { SkillsPage } from './pages/ai/SkillsPage';
 import { SpecsPage } from './pages/ai/SpecsPage';
 import { ValidationPage } from './pages/ai/ValidationPage';
+import { CoveragePage } from './pages/ai/CoveragePage';
 import { ComponentDocPage } from './pages/components/ComponentDocPage';
 import { ComponentsOverviewPage } from './pages/components/ComponentsOverviewPage';
 import { CoreConceptsOverviewPage } from './pages/core-concepts/CoreConceptsOverviewPage';
@@ -221,6 +222,7 @@ function App() {
                 <Route path="/ai/skills" element={<SkillsPage />} />
                 <Route path="/ai/specs" element={<SpecsPage />} />
                 <Route path="/ai/validation" element={<ValidationPage />} />
+                <Route path="/ai/coverage" element={<CoveragePage />} />
                 <Route path="/components" element={<ComponentsOverviewPage />} />
                 <Route path="/customize" element={<CustomizeOverviewPage />} />
                 <Route path="/customize/typography" element={<TypographyPage />} />

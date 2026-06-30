@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useAnimations, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
@@ -280,7 +280,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
 
     const size = (props.size as string) || 'md';
     const iconSize = ICON_SIZE_MAP[size] || 16;
-    const pipetteIcon = useResolvedIcon('pipette', iconSize);
+    const pipetteIcon = useIcon('eyedropper', iconSize);
 
     return {
       render() {

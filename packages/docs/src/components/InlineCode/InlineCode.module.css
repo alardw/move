@@ -10,6 +10,8 @@
   padding: 1px 6px;
   border-radius: var(--move-rounded-sm);
   background-color: var(--move-gray-soft-bg);
+  /* cap to the cell so a long signature wraps instead of widening the column */
+  max-width: 100%;
 }
 
 /* Type-shape tints use Badge's `solid` palette stops — saturated fill +
@@ -64,6 +66,10 @@
   background: transparent !important;
   font-family: inherit;
   font-size: inherit;
+  /* wrap long inline signatures (e.g. props-table type cells) at SPACES —
+     pre-wrap keeps the formatting but allows soft wraps; no overflow-wrap, so it
+     never breaks mid-token (which would collapse the column to one char wide) */
+  white-space: pre-wrap;
 }
 
 .root :global(code) {

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useResolvedIcon, useIcon } from '../../../infrastructure/Icon';
 import styles from './Alert.module.css';
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
@@ -16,13 +16,6 @@ export interface AlertLabels {
 
 const DEFAULT_LABELS: AlertLabels = {
   close: 'Close alert',
-};
-
-const VARIANT_ICONS: Record<AlertVariant, string> = {
-  info: 'info',
-  success: 'circle-check',
-  warning: 'triangle-alert',
-  danger: 'circle-x',
 };
 
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
@@ -102,11 +95,12 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
 
     const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
 
-    // Determine icon
+    // Determine icon: explicit `icon` name (or false) wins; otherwise the status role.
     const iconProp = props.icon;
-    const iconName = iconProp === false ? null : typeof iconProp === 'string' ? iconProp : VARIANT_ICONS[variant];
-    const resolvedIcon = useResolvedIcon(iconName || '', 18);
-    const closeIcon = useResolvedIcon('x', 14);
+    const roleIcon = useIcon(`status.${variant}`, 18);
+    const explicitIcon = useResolvedIcon(typeof iconProp === 'string' ? iconProp : '', 18);
+    const resolvedIcon = iconProp === false ? null : typeof iconProp === 'string' ? explicitIcon : roleIcon;
+    const closeIcon = useIcon('close', 14);
 
     const handleClose = React.useCallback(() => {
       if (isClosing) return;
@@ -152,7 +146,7 @@ export const Alert = withMoveComponent<'root' | 'icon' | 'content' | 'title' | '
             data-size={props.size as string}
             data-surface="subtle"
           >
-            {iconName && (
+            {iconProp !== false && (
               <span
                 {...iconSpRest}
                 ref={iconRef}

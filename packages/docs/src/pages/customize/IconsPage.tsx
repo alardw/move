@@ -8,6 +8,7 @@ import {
   TocRail,
   type TocItem,
 } from '../../components';
+import { COMPONENT_CONTENT } from '../../content/components';
 
 const BADGES = [
   { icon: 'shapes', label: 'Bring your own icons' },
@@ -97,33 +98,25 @@ const LAZY = `import { lazy } from 'react';
 export const iconResolver = (name: string) =>
   lazy(() => import(\`./icons/\${name}.tsx\`));`;
 
-// Which built-in name each component renders by default. Derived from the
-// component source; map any of these to re-skin those components.
-const INTERNAL_ICON_USAGE: { name: string; usedBy: string }[] = [
-  { name: 'calendar', usedBy: 'DatePicker' },
-  { name: 'captions', usedBy: 'AudioPlayer, VideoPlayer' },
-  { name: 'check', usedBy: 'Autocomplete, Checkbox, Dropdown, Stepper' },
-  { name: 'chevron-down', usedBy: 'Accordion, Autocomplete, Carousel, Collapsible, NumberInput, Select' },
-  { name: 'chevron-left', usedBy: 'CalendarView, Carousel, Pagination, media players' },
-  { name: 'chevron-right', usedBy: 'Breadcrumb, CalendarView, Carousel, Pagination, media players' },
-  { name: 'chevron-up', usedBy: 'Carousel, NumberInput' },
-  { name: 'circle-check', usedBy: 'Alert, FileUpload, Toast' },
-  { name: 'circle-x', usedBy: 'Alert, Toast' },
-  { name: 'eye', usedBy: 'Password' },
-  { name: 'eye-off', usedBy: 'Password' },
-  { name: 'file', usedBy: 'FileUpload' },
-  { name: 'image-off', usedBy: 'Image' },
-  { name: 'info', usedBy: 'Alert, Badge, Toast' },
-  { name: 'maximize', usedBy: 'VideoPlayer' },
-  { name: 'minimize', usedBy: 'VideoPlayer' },
-  { name: 'pause', usedBy: 'AudioPlayer, VideoPlayer' },
-  { name: 'pipette', usedBy: 'ColorInput' },
-  { name: 'play', usedBy: 'AudioPlayer, VideoPlayer' },
-  { name: 'settings', usedBy: 'AudioPlayer, VideoPlayer' },
-  { name: 'triangle-alert', usedBy: 'Alert, Toast' },
-  { name: 'volume-x', usedBy: 'AudioPlayer, VideoPlayer' },
-  { name: 'x', usedBy: 'Alert, Autocomplete, Dialog, Drawer, FileUpload, Popover, Sidebar, Toast' },
-];
+// Which built-in name each component renders by default. Derived from each
+// component's spec `iconsUsed` (kept in sync with the source by the move
+// `check:icon-usage` guardrail) — map any of these to re-skin those components.
+const INTERNAL_ICON_USAGE: { name: string; usedBy: string }[] = (() => {
+  const byIcon = new Map<string, Set<string>>();
+  for (const { spec, meta } of Object.values(COMPONENT_CONTENT)) {
+    const icons = (spec.iconsUsed as string[] | undefined) ?? [];
+    for (const icon of icons) {
+      if (!byIcon.has(icon)) byIcon.set(icon, new Set());
+      byIcon.get(icon)!.add(meta.name);
+    }
+  }
+  return [...byIcon.entries()]
+    .map(([name, comps]) => ({
+      name,
+      usedBy: [...comps].sort((a, b) => a.localeCompare(b)).join(', '),
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+})();
 
 const OVERRIDE_ALL = `import * as Phosphor from '@phosphor-icons/react';
 import type { ComponentType } from 'react';

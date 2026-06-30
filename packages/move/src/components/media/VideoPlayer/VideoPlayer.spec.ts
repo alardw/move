@@ -230,6 +230,7 @@ export const spec = {
     ],
   },
 
+  iconsUsed: ['captions', 'maximize', 'minimize', 'pause', 'play', 'settings', 'volume-2', 'volume-x'],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'user-confirmed' as const,

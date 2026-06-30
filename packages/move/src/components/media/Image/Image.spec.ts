@@ -144,6 +144,8 @@ export const spec = {
     ],
   },
 
+  iconsUsed: ['image-off'],
+
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'user-confirmed' as const,

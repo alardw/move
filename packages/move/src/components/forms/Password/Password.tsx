@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Password.module.css';
 
 // =============================================================================
@@ -92,8 +92,8 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
 
     // Default reveal/hide glyphs resolve through the icon resolver (fall back to
     // the built-in 'eye'/'eye-off'), so they re-skin with the app's icon set.
-    const defaultShowIcon = useResolvedIcon('eye', 16);
-    const defaultHideIcon = useResolvedIcon('eye-off', 16);
+    const defaultShowIcon = useIcon('passwordShow', 16);
+    const defaultHideIcon = useIcon('passwordHide', 16);
 
     return {
       render() {

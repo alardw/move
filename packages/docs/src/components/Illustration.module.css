@@ -1,0 +1,52 @@
+/* Generic styling for every docs illustration — owned here, not inline. */
+
+.root,
+.figure {
+  display: block;
+  width: 100%;
+  margin-inline: auto;
+  /* A custom `--il-max-width` (set via the style prop — the Move way for dynamic
+     values) wins; otherwise the semantic `data-width` variant applies. */
+  max-width: var(--il-max-width, var(--il-w, none));
+}
+
+.root {
+  height: auto;
+  font-family: var(--move-font-body);
+}
+
+.figure {
+  margin-block: 0;
+}
+
+/* Width variants (semantic, not arbitrary inline px) feed `--il-w`. */
+.root[data-width='normal'],
+.figure[data-width='normal'] { --il-w: 36rem; }
+
+.root[data-width='wide'],
+.figure[data-width='wide'] { --il-w: 48rem; }
+
+.root[data-width='full'],
+.figure[data-width='full'] { --il-w: none; }
+
+/* The svg fills the figure; the figure owns the cap. */
+.figure .root { max-width: none; }
+
+.caption {
+  margin-top: var(--move-spacing-sm);
+  text-align: center;
+  color: var(--move-fg-muted);
+  font-family: var(--move-font-body);
+  font-size: var(--move-text-sm);
+  line-height: 1.5;
+}
+
+/* Token-only palette for illustration children (global so SVG shapes can use
+   `class="il-*"` instead of hard-coded fills). */
+:global(.il-surface) { fill: var(--move-primary); }
+:global(.il-chip)    { fill: var(--move-bg-base); }
+:global(.il-stroke)  { fill: none; stroke: var(--move-border-base); }
+:global(.il-on)      { fill: var(--move-primary-fg); }
+:global(.il-text)    { fill: var(--move-fg-base); }
+:global(.il-muted)   { fill: var(--move-fg-muted); }
+:global(.il-accent)  { fill: var(--move-primary); }

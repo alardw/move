@@ -411,7 +411,7 @@
 }
 
 /* =========================================================================
- * Empty, Loading, Separator
+ * Empty, Loading, Error, RetryTrigger, Separator
  * ========================================================================= */
 
 .empty {
@@ -428,6 +428,41 @@
   font-size: var(--move-size-sm);
   color: var(--move-fg-muted);
   text-align: center;
+}
+
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--move-spacing-xs);
+  padding: var(--move-spacing-sm);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-error);
+  text-align: center;
+}
+
+.retryTrigger {
+  all: unset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  border-radius: var(--move-rounded-md);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  color: var(--move-fg-base);
+  background-color: var(--move-bg-muted);
+  cursor: pointer;
+}
+
+.retryTrigger:hover {
+  background-color: var(--move-bg-subtle);
+}
+
+.retryTrigger:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: 0px;
 }
 
 .separator {

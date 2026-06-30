@@ -3,6 +3,7 @@
 
 import { useState, useCallback, useRef, useId, useMemo, useEffect } from 'react';
 import { useControlledState } from '../../../engine';
+import type { AsyncResource } from '../../../adapters';
 
 // =============================================================================
 // Types
@@ -28,6 +29,10 @@ export interface UseAutocompleteOptions {
   defaultInputValue?: string;
   onInputValueChange?: (value: string) => void;
   loading?: boolean;
+  /** Async data source for the options list. When set, it drives loading/error
+   *  state (superseding the `loading` boolean) and exposes `retry` to RetryTrigger.
+   *  The data payload is not consumed — items are still rendered as children. */
+  resource?: AsyncResource<unknown>;
   closeOnSelect?: boolean;
   /** Animated close requested on select (set by the component to the dismissable
    *  close, so selecting an item plays the exit animation instead of snapping). */
@@ -75,6 +80,8 @@ export interface UseAutocompleteReturn {
 
   // Behavior
   loading: boolean;
+  hasError: boolean;
+  retry?: () => void;
   closeOnSelect: boolean;
   openOnFocus: boolean;
   filterFn: (inputValue: string, itemValue: string, itemLabel: string) => boolean;
@@ -101,11 +108,19 @@ function defaultFilter(inputValue: string, _itemValue: string, itemLabel: string
 export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutocompleteReturn {
   const {
     multiple = false,
-    loading = false,
+    loading: loadingProp = false,
+    resource,
     openOnFocus = true,
     allowCustomValue = false,
     filterFn = defaultFilter,
   } = options;
+
+  // A `resource` (AsyncResource) supersedes the bare `loading` boolean and is the
+  // only source of the error/retry state. Status-only: the data payload is unused
+  // (items render as children).
+  const loading = resource ? resource.status === 'loading' : loadingProp;
+  const hasError = resource?.status === 'error';
+  const retry = resource?.status === 'error' ? resource.retry : undefined;
 
   const closeOnSelect = options.closeOnSelect ?? !multiple;
   const requestClose = options.requestClose;
@@ -365,6 +380,8 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     getLabel,
     getVisibleItems,
     loading,
+    hasError,
+    retry,
     closeOnSelect,
     openOnFocus,
     filterFn,

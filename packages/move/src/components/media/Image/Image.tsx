@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { Icon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import type { Radius } from '../../../shared/types';
 import styles from './Image.module.css';
 
@@ -72,6 +72,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const [error, setError] = React.useState(false);
+    const fallbackErrorIcon = useIcon('imageError', 24);
     const sources = props.sources as ImageSource[] | undefined;
 
     // ---- Responsive source resolution ----
@@ -232,7 +233,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
                 className={cx('fallback', fbSpClass as string | undefined)}
                 style={fbSpStyle as React.CSSProperties}
               >
-                {props.children || <Icon name="image-off" size={24} />}
+                {props.children || fallbackErrorIcon}
               </div>
             )}
 

@@ -8,7 +8,7 @@ import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, snappy, useDismissable, useDismissableExit } from '../../../animation';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import type { AnimationTrigger } from '../../../animation';
 import styles from './Drawer.module.css';
 
@@ -567,7 +567,7 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
     const { close } = useDrawerContext();
     // Default close glyph resolves through the icon resolver (falls back to the
     // built-in 'x'), so it re-skins with the rest of the app's icons.
-    const closeIcon = useResolvedIcon('x', 16);
+    const closeIcon = useIcon('close', 16);
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();

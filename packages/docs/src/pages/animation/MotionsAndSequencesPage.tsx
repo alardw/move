@@ -8,6 +8,7 @@ import {
 } from 'move';
 import type { AnimationTrigger } from 'move';
 import {
+  AnimationAnatomy,
   CodeBlock,
   HighlightList,
   type HighlightItem,
@@ -291,28 +292,22 @@ export function MotionsAndSequencesPage() {
         <Section
           id="anatomy"
           title="Anatomy of an animation"
-          lede="One config, four questions — when, where, what, and how it feels — nested from the trigger down to the ease."
+          lede="One config, four questions — when, where, what, and how it feels — held in two containers: a sequence that orders the steps, and an animation that bundles them."
         >
+          <AnimationAnatomy />
           <CodeBlock
             language="ts"
-            code={`{ trigger: 'Content.enter',          // WHEN  — the event that fires it
-  sequence: [                          //   sequence: orders the steps
-    { target: 'Content',              // WHERE — which slot responds
-      animation: {                     //   animation: the object (bundles dimensions)
-        scale: { from: 0.9, to: 1,     // WHAT  — a dimension + from → to
-                 ease: poppy } } } ] }  // FEEL  — a spring or easing on it`}
+            code={`{ trigger: 'Content.enter',
+  sequence: [
+    { target: 'Content',
+      animation: {
+        scale: { from: 0.9, to: 1, ease: poppy } } } ] }`}
           />
-          <Text>
-            Read top to bottom, it answers four questions: when it fires (the
-            trigger), where it lands (the target), what moves (the dimension and
-            its from → to), and how it feels (a spring or easing). Between them sit
-            two containers — the <Code>sequence</Code> that orders steps and the{' '}
-            <Code>animation</Code> object that bundles dimensions.
-          </Text>
           <Text color="muted">
-            A <Code>motion</Code> is the builder for the what + feel —{' '}
-            <Code>scaleIn()</Code> returns that <Code>scale</Code> object; spread a
-            few into one animation. The feel vocabulary lives on{' '}
+            That innermost box — the what and feel — is the part you rarely hand-write: a{' '}
+            <Code>motion</Code> builds it. <Code>scaleIn()</Code> returns the same{' '}
+            <Code>scale</Code> + <Code>ease</Code> object shown above; spread a few into one
+            animation. The feel vocabulary (<Code>poppy</Code> and friends) lives on{' '}
             <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>.
           </Text>
         </Section>
@@ -364,7 +359,7 @@ export function MotionsAndSequencesPage() {
             code={`fadeIn()             → { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } }
 fadeOut()            → { opacity: { to: 0, ease: 'outQuart', duration: 150 } }
 slideUp(distance=8)  → { translateY: { from: distance, to: 0, ease: 'outQuart', duration: 200 } }
-slideDown · slideLeft · slideRight  → the same on the other axis / sign
+// slideDown · slideLeft · slideRight — the same on the other axis / sign
 scaleIn(from=0.9)    → { scale: { from, to: 1, ease: poppy } }      // spring — no duration
 scaleOut(to=0.9)     → { scale: { from: 1, to, ease: 'outQuart', duration: 150 } }
 scaleUp(to=1.04)     → { scale: { to, ease: snappy } }              // hover

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ThemeProvider } from '../Theme';
-import { IconProvider } from '../Icon';
+import { IconProvider, IconRolesProvider } from '../Icon';
 import { MoveProvider } from '../../engine';
 // Import the standalone TooltipProvider directly — going through the
 // Tooltip compound would pull in the animated Tooltip code (and the
@@ -12,14 +12,17 @@ import { TooltipProvider } from '../../components/overlays/Tooltip/TooltipProvid
 import { darkTheme } from '../../styles/themes/dark';
 import type { Theme } from '../../styles/themes/types';
 import type { IconResolver } from '../Icon/IconProvider';
+import type { IconRoleOverrides } from '../Icon';
 import type { GlobalSlotProps } from '../../engine/types';
 
 export interface MoveRootProps {
   children: React.ReactNode;
   /** Theme object — defaults to darkTheme */
   theme?: Theme;
-  /** Icon resolver function for your icon library */
+  /** Icon resolver function for your icon library (name → icon) */
   iconResolver?: IconResolver;
+  /** Semantic icon overrides keyed by role (e.g. `{ close: <X/>, expand: 'caret-down' }`) */
+  icons?: IconRoleOverrides;
   /** Global slot-props overrides keyed by component name */
   slotProps?: GlobalSlotProps;
 }
@@ -46,6 +49,7 @@ export function MoveRoot({
   children,
   theme = darkTheme,
   iconResolver,
+  icons,
   slotProps,
 }: MoveRootProps) {
   // ThemeProvider with asWrapper=false applies tokens to :root only (no extra div).
@@ -76,6 +80,10 @@ export function MoveRoot({
 
   if (iconResolver) {
     content = <IconProvider resolver={iconResolver}>{content}</IconProvider>;
+  }
+
+  if (icons) {
+    content = <IconRolesProvider icons={icons}>{content}</IconRolesProvider>;
   }
 
   if (slotProps) {

@@ -55,6 +55,8 @@ export const spec = {
     { name: 'groupLabel', element: 'div', description: 'Label heading for a group of items' },
     { name: 'empty', element: 'div', description: 'Empty state message shown when no items match filter' },
     { name: 'loading', element: 'div', description: 'Loading indicator shown when loading prop is true' },
+    { name: 'error', element: 'div', description: 'Error state message shown when the resource is in an error state' },
+    { name: 'retryTrigger', element: 'button', description: 'Button that re-runs the resource fetch, shown in the error state' },
     { name: 'separator', element: 'div', description: 'Visual separator between groups or items' },
   ],
 
@@ -74,12 +76,13 @@ export const spec = {
         { name: 'defaultInputValue', type: 'string', default: "''", moveSpecific: true, description: 'Default input text (uncontrolled)' },
         { name: 'onInputValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when input text changes' },
         { name: 'loading', type: 'boolean', default: 'false', moveSpecific: true, description: 'Show loading state in content' },
+        { name: 'resource', type: 'AsyncResource<unknown>', moveSpecific: true, description: 'Async data source driving loading/error state for the options list (supersedes loading; feeds RetryTrigger)' },
         { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for popup enter/exit' },
         { name: 'closeOnSelect', type: 'boolean', moveSpecific: true, description: 'Close popup after selection (defaults to true for single, false for multiple)' },
         { name: 'openOnFocus', type: 'boolean', default: 'true', moveSpecific: true, description: 'Open popup when input receives focus' },
         { name: 'allowCustomValue', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow input value that does not match any item' },
         { name: 'filterFn', type: '(inputValue: string, itemValue: string, itemLabel: string) => boolean', moveSpecific: true, description: 'Custom filter function for items' },
-        { name: 'labels', type: 'Partial<AutocompleteLabels>', moveSpecific: true, description: 'Accessible label overrides (clearAll, removeTag)' },
+        { name: 'labels', type: 'Partial<AutocompleteLabels>', moveSpecific: true, description: 'Accessible label overrides (clearAll, removeTag, retry)' },
         { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Autocomplete sub-components' },
       ],
       usesFactory: false,
@@ -258,6 +261,28 @@ export const spec = {
       description: 'Loading indicator shown when loading is true; has role="status" and aria-busy',
     },
     {
+      name: 'Error',
+      slots: [{ name: 'error', element: 'div', description: 'Error state' }],
+      props: [
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Error message content' },
+      ],
+      usesFactory: true,
+      description: 'Error message shown when the resource is in an error state; has role="alert"',
+    },
+    {
+      name: 'RetryTrigger',
+      slots: [{ name: 'retryTrigger', element: 'button', description: 'Retry button' }],
+      props: [
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        { name: 'style', type: 'React.CSSProperties', moveSpecific: false, description: 'Inline styles' },
+        { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Retry button content' },
+      ],
+      usesFactory: true,
+      description: 'Re-runs the resource fetch; rendered only in the error state when the resource supplies a retry callback',
+    },
+    {
       name: 'Separator',
       slots: [{ name: 'separator', element: 'div', description: 'Separator line' }],
       props: [
@@ -280,12 +305,13 @@ export const spec = {
     { name: 'inputValue', type: 'string', moveSpecific: true, description: 'Controlled input text value' },
     { name: 'onInputValueChange', type: '(value: string) => void', moveSpecific: true, description: 'Called when input text changes' },
     { name: 'loading', type: 'boolean', default: 'false', moveSpecific: true, description: 'Loading state' },
+    { name: 'resource', type: 'AsyncResource<unknown>', moveSpecific: true, description: 'Async data source driving loading/error state for the options list (supersedes loading; feeds RetryTrigger)' },
     { name: 'animations', type: 'AnimationTrigger[] | false', moveSpecific: true, description: 'Animation config for popup' },
     { name: 'closeOnSelect', type: 'boolean', moveSpecific: true, description: 'Close after selection' },
     { name: 'openOnFocus', type: 'boolean', default: 'true', moveSpecific: true, description: 'Open on input focus' },
     { name: 'allowCustomValue', type: 'boolean', default: 'false', moveSpecific: true, description: 'Allow custom input values' },
     { name: 'filterFn', type: '(inputValue: string, itemValue: string, itemLabel: string) => boolean', moveSpecific: true, description: 'Custom filter function' },
-    { name: 'labels', type: 'Partial<AutocompleteLabels>', moveSpecific: true, description: 'Accessible label overrides (clearAll, removeTag)' },
+    { name: 'labels', type: 'Partial<AutocompleteLabels>', moveSpecific: true, description: 'Accessible label overrides (clearAll, removeTag, retry)' },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Autocomplete sub-components' },
   ],
 
@@ -419,6 +445,7 @@ export const spec = {
   labels: [
     { key: 'clearAll', default: 'Clear all', description: 'ClearTrigger accessible label' },
     { key: 'removeTag', default: 'Remove {value}', description: 'Tag remove button accessible label template' },
+    { key: 'retry', default: 'Retry', description: 'RetryTrigger accessible label' },
   ],
 
   childrenKind: 'composition' as const,
@@ -514,6 +541,7 @@ export const spec = {
     ],
   },
 
+  iconsUsed: ['check', 'chevron-down', 'x'],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'accept-all' as const,

@@ -121,7 +121,7 @@ if (command === 'check') {
 
   const registry = {
     'strict-props': () => import('../checks/strict-props.mjs'),
-    'recipe-purity': () => import('../checks/recipe-purity.mjs'),
+    'purity': () => import('../checks/purity.mjs'),
   };
 
   const only = process.argv[3];

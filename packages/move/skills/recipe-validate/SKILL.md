@@ -1,6 +1,6 @@
 ---
 name: recipe-validate
-description: "Validate a recipe against its spec and the recipe golden rules. Writes report. Supports fix mode."
+description: "Validate a recipe against its spec and the recipe golden rules. Reports to stdout. Supports fix mode."
 user-invocable: true
 argument-hint: "[RecipeName|all] [fix]"
 ---
@@ -21,8 +21,7 @@ from its spec or breaks purity must not ship.
 - Append `"fix"` to auto-fix failures (e.g. "SignIn fix").
 
 **Output:**
-- `{Name}.report.md` written next to the recipe.
-- Stdout summary.
+- Stdout summary (no `.report.md` file is written).
 
 ---
 
@@ -83,11 +82,10 @@ from its spec or breaks purity must not ship.
 
 Any BLOCKER → overall `FAIL`; the pipeline must stop.
 
-### Step 4 — Write report
+### Step 4 — Report results
 
-Write `{Name}.report.md`:
+Print the validation summary to **stdout** — no `.report.md` file is written. Format:
 ```markdown
-<!-- Validated: {timestamp} | specHash: {hash or 'none'} -->
 # {Name} — Recipe Validation Report
 
 | Rule | Status | Notes |

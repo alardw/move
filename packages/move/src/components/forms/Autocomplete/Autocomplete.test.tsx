@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Autocomplete } from './Autocomplete';
 import { useAutocomplete } from './useAutocomplete';
+import { asyncResource } from '../../../adapters';
+import type { AsyncResource } from '../../../adapters';
 
 const defaultItems: { value: string; label: string; disabled?: boolean }[] = [
   { value: 'apple', label: 'Apple' },
@@ -469,6 +471,82 @@ describe('Autocomplete', () => {
       await user.click(screen.getByText('Apple'));
       expect(document.body.querySelector('[aria-label="Delete apple"]')).toBeInTheDocument();
     });
+  });
+});
+
+describe('resource (async)', () => {
+  const renderWithResource = (resource: AsyncResource<unknown>) =>
+    render(
+      <Autocomplete.Root resource={resource}>
+        <Autocomplete.Trigger>
+          <Autocomplete.Input placeholder="Search..." />
+          <Autocomplete.Icon />
+        </Autocomplete.Trigger>
+        <Autocomplete.Content>
+          <Autocomplete.Loading>Loading…</Autocomplete.Loading>
+          <Autocomplete.Empty>No results</Autocomplete.Empty>
+          <Autocomplete.Error>
+            Failed to load
+            <Autocomplete.RetryTrigger>Try again</Autocomplete.RetryTrigger>
+          </Autocomplete.Error>
+          {defaultItems.map((item) => (
+            <Autocomplete.Item key={item.value} value={item.value}>
+              {item.label}
+            </Autocomplete.Item>
+          ))}
+        </Autocomplete.Content>
+      </Autocomplete.Root>,
+    );
+
+  it('shows Loading and hides Empty while the resource is loading', async () => {
+    const user = userEvent.setup();
+    renderWithResource(asyncResource.loading());
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByText('Loading…')).toBeInTheDocument();
+    expect(screen.queryByText('No results')).not.toBeInTheDocument();
+  });
+
+  it('shows the Error slot + RetryTrigger and hides Empty on error', async () => {
+    const user = userEvent.setup();
+    renderWithResource(asyncResource.error(new Error('boom'), () => {}));
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('alert')).toHaveTextContent('Failed to load');
+    expect(screen.getByRole('button', { name: 'Retry' })).toBeInTheDocument();
+    expect(screen.queryByText('No results')).not.toBeInTheDocument();
+  });
+
+  it('RetryTrigger invokes the resource retry callback', async () => {
+    const user = userEvent.setup();
+    const retry = vi.fn();
+    renderWithResource(asyncResource.error(new Error('boom'), retry));
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByRole('button', { name: 'Retry' }));
+    expect(retry).toHaveBeenCalledTimes(1);
+  });
+
+  it('hides RetryTrigger when the resource supplies no retry callback', async () => {
+    const user = userEvent.setup();
+    renderWithResource(asyncResource.error(new Error('boom')));
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument();
+  });
+
+  it('renders options and no loading/error on success', async () => {
+    const user = userEvent.setup();
+    renderWithResource(asyncResource.success(defaultItems));
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getByText('Apple')).toBeInTheDocument();
+    expect(screen.queryByText('Loading…')).not.toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('resource loading supersedes the loading boolean', () => {
+    const { result } = renderHook(() =>
+      useAutocomplete({ loading: false, resource: asyncResource.loading() }),
+    );
+    expect(result.current.loading).toBe(true);
+    expect(result.current.hasError).toBe(false);
   });
 });
 

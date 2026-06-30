@@ -1,4 +1,5 @@
 export { AnimatedSubnav } from './AnimatedSubnav';
+export { AnimationAnatomy } from './AnimationAnatomy';
 export { AnimationPlayground } from './AnimationPlayground';
 export { CodeBlock } from './CodeBlock';
 export { ComponentCard } from './ComponentCard';
@@ -9,7 +10,10 @@ export { InlineCode } from './InlineCode';
 export { InlineDemo } from './InlineDemo';
 export { HighlightList } from './HighlightList';
 export type { HighlightItem } from './HighlightList';
+export { Illustration } from './Illustration';
+export type { IllustrationProps } from './Illustration';
 export { KeyboardTable } from './KeyboardTable';
+export { LifecycleIllustration } from './LifecycleIllustration';
 export { LogoMark } from './LogoMark';
 export { MoveBadge } from './MoveBadge';
 export { StagedOverlay } from './StagedOverlay';

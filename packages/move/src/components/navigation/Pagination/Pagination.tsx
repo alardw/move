@@ -7,7 +7,7 @@ import { scaleUp, scaleDown, scaleIn, fadeIn, brisk, useAnimations, usePositionT
 import type { AnimationTrigger } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Pagination.module.css';
 
 // =============================================================================
@@ -182,7 +182,7 @@ const PaginationPrevTrigger = withMoveComponent<'prev', PaginationPrevTriggerPro
     const { handlers } = useAnimations(animConfig, btnRefs);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
     const isDisabled = !canPrevious;
-    const defaultIcon = useResolvedIcon('chevron-left', 16);
+    const defaultIcon = useIcon('previous', 16);
 
     return {
       render() {
@@ -267,7 +267,7 @@ const PaginationNextTrigger = withMoveComponent<'next', PaginationNextTriggerPro
     const { handlers } = useAnimations(animConfig, btnRefs);
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>);
     const isDisabled = !canNext;
-    const defaultIcon = useResolvedIcon('chevron-right', 16);
+    const defaultIcon = useIcon('next', 16);
 
     return {
       render() {

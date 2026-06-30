@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useCarousel } from './useCarousel';
 import type { UseCarouselOptions, CarouselOrientation, CarouselAlign, CarouselAnimate } from './useCarousel';
 import styles from './Carousel.module.css';
@@ -366,8 +366,7 @@ const CarouselPrevTrigger = withMoveComponent<'prevTrigger', CarouselPrevTrigger
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollPrev, canScrollPrev, orientation } = useCarouselContext();
-    const iconName = orientation === 'horizontal' ? 'chevron-left' : 'chevron-up';
-    const fallbackIcon = useResolvedIcon(iconName, 18);
+    const fallbackIcon = useIcon('previous', 18);
 
     return {
       render() {
@@ -423,8 +422,7 @@ const CarouselNextTrigger = withMoveComponent<'nextTrigger', CarouselNextTrigger
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollNext, canScrollNext, orientation } = useCarouselContext();
-    const iconName = orientation === 'horizontal' ? 'chevron-right' : 'chevron-down';
-    const fallbackIcon = useResolvedIcon(iconName, 18);
+    const fallbackIcon = useIcon('next', 18);
 
     return {
       render() {

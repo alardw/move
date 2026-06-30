@@ -15,7 +15,7 @@ import type {
   UploadAggregateState,
   UseUploadManagerOptions,
 } from './types';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { ProgressBar } from '../../feedback/ProgressBar/ProgressBar';
 import {
   prefersReducedMotion,
@@ -608,7 +608,7 @@ const FileUploadItemPreview = withMoveComponent<'itemPreview', FileUploadItemPre
   setup({ props, ref, cx, sp, attrs }) {
     const { file } = useFileUploadItemContext();
     const isImage = file.type.startsWith('image/');
-    const fallbackFileIcon = useResolvedIcon('file', 16);
+    const fallbackFileIcon = useIcon('file', 16);
 
     const [objectUrl, setObjectUrl] = React.useState<string | null>(null);
 
@@ -724,8 +724,8 @@ const FileUploadItemDelete = withMoveComponent<'itemDelete', FileUploadItemDelet
     const context = useFileUploadContext();
     const { file, entry } = useFileUploadItemContext();
     const labels = context.labels;
-    const fallbackXIcon = useResolvedIcon('x', 14);
-    const checkIcon = useResolvedIcon('circle-check', 16);
+    const fallbackXIcon = useIcon('remove', 14);
+    const checkIcon = useIcon('status.success', 16);
 
     return {
       render() {

@@ -422,6 +422,7 @@ export const spec = {
     ],
   },
 
+  iconsUsed: ['circle-check', 'file', 'x'],
   defaultReview: {
     status: 'approved' as const,
     decisionSource: 'accept-all' as const,

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Popover } from '../../overlays/Popover';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './PlayerSettingsMenu.module.css';
 
 // =============================================================================
@@ -48,8 +48,8 @@ export function PlayerSettingsMenu({
   }, [open]);
 
   // Resolve through the icon resolver (falls back to the built-in chevrons).
-  const chevronRightIcon = useResolvedIcon('chevron-right', 14);
-  const chevronLeftIcon = useResolvedIcon('chevron-left', 14);
+  const chevronRightIcon = useIcon('next', 14);
+  const chevronLeftIcon = useIcon('previous', 14);
 
   if (categories.length === 0) return <>{trigger}</>;
 

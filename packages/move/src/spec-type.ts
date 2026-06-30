@@ -446,6 +446,11 @@ export interface ComponentSpec {
   /** Search synonyms / aliases (e.g. Dialog → 'modal', 'popup') for docs search */
   synonyms?: string[];
 
+  /** Built-in icon names this component renders internally (via useResolvedIcon /
+   *  <Icon name>). The docs icon-usage table derives from this; check:icon-usage
+   *  keeps it in sync with the source. Omit when the component renders no icons. */
+  iconsUsed?: string[];
+
   /** Component-family memberships (behavior/state/...) used by cross-component checks */
   families?: Record<string, string[]>;
 
@@ -528,7 +533,7 @@ export interface ComponentSpec {
    *   Carousel.
    * - `cssAnimation` — a continuous CSS `@keyframes` animation that isn't a
    *   discrete enter/exit (so it can't go through the trigger system): a spinner
-   *   rotation, indeterminate progress, a blinking caret. Spinner, ProgressBar,
+   *   rotation, indeterminate progress, a blinking caret. Loader, ProgressBar,
    *   PinInput, Avatar. (A discrete open/close animation via CSS @keyframes is NOT
    *   this — that belongs in `animations`; the check flags undeclared keyframes.)
    * - `textSplit` — split a text node into a variable number of generated

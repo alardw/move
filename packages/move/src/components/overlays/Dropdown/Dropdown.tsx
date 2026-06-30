@@ -4,7 +4,7 @@ import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useAnimations, resolveAnimationsConfig, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
@@ -495,7 +495,7 @@ const DropdownCheckboxItem = withMoveComponent<
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const indicatorRef = React.useRef<HTMLSpanElement>(null);
-    const resolvedCheck = useResolvedIcon('check', 14);
+    const resolvedCheck = useIcon('selected', 14);
     const { animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);

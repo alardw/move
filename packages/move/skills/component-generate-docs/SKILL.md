@@ -15,6 +15,10 @@ The docs app is **content-driven**: every component shares ONE page template
 The API/props table and design-tokens table are derived automatically from the
 component's `.spec.ts` — you never hand-write them. You only author the prose
 (`meta.ts`) and the live examples (`samples/*.tsx`), then register the slug.
+The `/customize/icons` usage table likewise derives from the spec's `iconsUsed`
+(the built-in icons the component renders) — never edit that table by hand; a
+component that uses icons just needs `iconsUsed` set in its spec (`check:icon-usage`
+enforces spec ↔ source).
 
 ---
 

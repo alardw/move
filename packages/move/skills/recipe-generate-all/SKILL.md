@@ -20,7 +20,6 @@ spec. This skill only orchestrates — each sub-skill's SKILL.md governs its out
 - `{Name}.tsx` — the recipe (only Move components)
 - `registry.ts` — registered (overview card + detail route)
 - `{Name}.test.tsx` — tests from spec behaviors
-- `{Name}.report.md` — validation report
 
 **REFUSES if:** `{Name}.spec.ts` does not exist, or its `defaultReview.status`
 is not `'approved'`. Run `/recipe-create-spec {Name}` first.
@@ -47,7 +46,7 @@ the spec.
 Generates `{Name}.test.tsx` from the spec's behaviors and integration points.
 
 ### Step 4 — `/recipe-validate {Name}`
-Validates purity + spec parity + registry + tests, writes `{Name}.report.md`.
+Validates purity + spec parity + registry + tests (findings print to stdout; no file).
 
 If `/recipe-validate` returns any BLOCKER, stop the pipeline immediately and
 report it as a generation failure.

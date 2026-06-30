@@ -6,7 +6,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, quick, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Popover.module.css';
@@ -397,7 +397,7 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
   setup({ props, ref, cx, sp, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PopoverLabels>) };
     const { close } = usePopoverContext();
-    const resolvedCloseIcon = useResolvedIcon('x', 14);
+    const resolvedCloseIcon = useIcon('close', 14);
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();

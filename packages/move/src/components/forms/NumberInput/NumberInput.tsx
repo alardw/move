@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useNumberInput } from './useNumberInput';
 import type { UseNumberInputOptions } from './useNumberInput';
 import styles from './NumberInput.module.css';
@@ -135,8 +135,8 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
 
     const size = (props.size as string) || 'md';
     const iconSize = ICON_SIZE_MAP[size] || 14;
-    const chevronUpIcon = useResolvedIcon('chevron-up', iconSize);
-    const chevronDownIcon = useResolvedIcon('chevron-down', iconSize);
+    const chevronUpIcon = useIcon('increment', iconSize);
+    const chevronDownIcon = useIcon('decrement', iconSize);
 
     const startHold = React.useCallback((action: () => void) => {
       action();

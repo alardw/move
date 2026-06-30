@@ -226,6 +226,13 @@
   transition: background-color 150ms ease, opacity 150ms ease;
 }
 
+/* Vertical orientation reuses the horizontal previous/next chevrons, rotated
+   90deg so they point up (prev) / down (next). */
+.prevTrigger[data-orientation='vertical'] > svg,
+.nextTrigger[data-orientation='vertical'] > svg {
+  transform: rotate(90deg);
+}
+
 .prevTrigger[data-size='sm'],
 .nextTrigger[data-size='sm'] {
   width: 30px;

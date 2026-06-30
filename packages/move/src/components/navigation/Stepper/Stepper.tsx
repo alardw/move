@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useResolvedIcon } from '../../../infrastructure/Icon';
+import { useIcon } from '../../../infrastructure/Icon';
 import type { Color, Size } from '../../../shared/types';
 import styles from './Stepper.module.css';
 
@@ -278,7 +278,7 @@ const StepperIndicator = withMoveComponent<'indicator', StepperIndicatorProps, H
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, icon, completedIcon } = props;
     const itemCtx = useStepItemContext();
-    const checkIcon = useResolvedIcon('check', 16);
+    const checkIcon = useIcon('complete', 16);
 
     let content: React.ReactNode;
     if (children) {

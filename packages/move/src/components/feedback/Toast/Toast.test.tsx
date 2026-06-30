@@ -124,6 +124,33 @@ describe('Toast', () => {
       expect(screen.queryByText('Dismissable')).not.toBeInTheDocument();
     });
 
+    it('hovering pauses auto-dismiss — toast stays while hovered, dismisses after leaving (regression)', () => {
+      vi.useFakeTimers();
+      try {
+        render(<Toast.Viewport />);
+        act(() => {
+          toast('Hover me', { duration: 1000 });
+        });
+        const item = screen.getByText('Hover me').closest('[data-variant]') as HTMLElement;
+        expect(item).toBeInTheDocument();
+
+        // Part-way through the countdown, hover to pause it.
+        act(() => { vi.advanceTimersByTime(400); });
+        act(() => { fireEvent.mouseEnter(item); });
+
+        // Well past the original duration — must NOT dismiss while hovered.
+        act(() => { vi.advanceTimersByTime(2000); });
+        expect(screen.getByText('Hover me')).toBeInTheDocument();
+
+        // Leaving resumes the remaining ~600ms; it then dismisses.
+        act(() => { fireEvent.mouseLeave(item); });
+        act(() => { vi.advanceTimersByTime(700); });
+        expect(screen.queryByText('Hover me')).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('toast.configure({ max }) sets max toasts per position', async () => {
       render(<Toast.Viewport />);
       toast.configure({ max: 2 });
