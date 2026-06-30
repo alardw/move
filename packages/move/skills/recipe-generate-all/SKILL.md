@@ -38,8 +38,9 @@ Emits `{Name}.tsx` from the spec (only Move components, all labels + behaviors +
 integration-point stubs).
 
 ### Step 2 — `/recipe-generate-docs {Name}`
-Registers the recipe in `registry.ts`, deriving metadata (incl. `synonyms`) from
-the spec.
+Registers the recipe in `registry.ts` via `toMeta(...)`, hand-authoring the
+`RecipeDocument` (slug/group/title/description/synonyms/preview) on the entry —
+these publishing fields are NOT in the spec.
 
 ### Step 3 — `/recipe-generate-test {Name}`
 Generates `{Name}.test.tsx` from the spec's behaviors and integration points.

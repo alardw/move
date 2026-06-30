@@ -27,7 +27,7 @@ enforces spec ↔ source).
 **Input:** A component name (e.g. "Badge", "AnimatedText").
 
 **Output:** written under `packages/docs/src/content/components/{slug}/`:
-- `meta.ts` — `ComponentMeta` (tagline, highlights, related, badges, importCode, a11y lede)
+- `meta.ts` — `ComponentDocument` (synonyms, tagline, highlights, related, badges, importCode, a11y lede)
 - `samples/*.tsx` — one default-export React component per example
 - `index.ts` — imports the spec + meta + samples (component and `?raw` source), exports `content`
 - one import line + one map entry added to `packages/docs/src/content/components/index.ts`
@@ -48,7 +48,7 @@ the component is not exported from `move` (`packages/move/src/index.ts`). Run
    category, props, tokens, variants, a11y contracts, and which axes to demo.
 2. `{Name}.meta.ts` and `{Name}.analysis.md` (if present) — source for tagline,
    highlights, and related components.
-3. `packages/docs/src/content/components/types.ts` — the `ComponentMeta` /
+3. `packages/docs/src/content/components/types.ts` — the `ComponentDocument` /
    `ComponentContent` / `ComponentSample` contract.
 4. An existing exemplar in the **same category** (e.g. `text/`, `badge/`) — match
    its meta shape, sample style, and `index.ts` wiring exactly.
@@ -63,8 +63,10 @@ the component is not exported from `move` (`packages/move/src/index.ts`). Run
 
 ### Step 3 — Write `meta.ts`
 
-`ComponentMeta` fields (see `types.ts`):
+`ComponentDocument` fields (see `types.ts`):
 - `slug`, `name`, `tagline` (one line, what it is — no design rationale).
+- `synonyms` — search aliases/discovery terms (what users might type to find it).
+  This is document/discovery metadata and lives HERE, not in the component spec.
 - `categories: [spec.category]`.
 - `badges` — trait chips only (NOT the category, which is derived). Use the
   established vocabulary, e.g. `{ icon: 'rabbit', label: 'Animated' }` for any

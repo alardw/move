@@ -63,7 +63,7 @@ from its spec or breaks purity must not ship.
 | # | Rule |
 |---|------|
 | C1 | Registered exactly once in `registry.ts`, no duplicate slug within its group |
-| C2 | Registry entry fields match the spec (slug, group, groupSlug, title, description, synonyms, preview) |
+| C2 | Registry entry carries a complete, hand-authored `RecipeDocument` — `slug`, `group`, `groupSlug`, `title`, `description`, `synonyms`, `preview` all present on the `toMeta` doc arg (these fields are NOT in the spec, so don't check them against it) |
 
 #### D. Tests & typecheck
 

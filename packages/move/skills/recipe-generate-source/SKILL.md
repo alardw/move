@@ -35,7 +35,7 @@ user to run `/recipe-create-spec {Name}` first.
 
 Find `packages/move/recipes/**/{Name}.spec.ts`. If not found, REFUSE.
 
-Read the `RecipeSpec`. Pull the contracts the output must honor:
+Read the `CompositionSpec`. Pull the contracts the output must honor:
 - `composition` — the ONLY Move components allowed in the output.
 - `labels` — every user-facing string.
 - `behaviors` — acceptance criteria that must be implemented.
