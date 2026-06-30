@@ -1,16 +1,10 @@
 // MfaSetup.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'MfaSetup',
-  slug: 'mfa-setup',
-  group: 'Authentication',
-  groupSlug: 'authentication',
-  title: 'MFA setup',
-  description: 'Enroll in two-factor auth: scan a QR code and confirm with a one-time code.',
-  synonyms: ['two-factor', '2fa', 'mfa', 'totp', 'authenticator', 'qr code', 'enroll'],
   composition: ['Card', 'Stack', 'Heading', 'Text', 'PinInput', 'Button', 'Code', 'Badge', 'Image'],
   behaviors: [
     'Renders inside a single Card surface (max-width 440) with a step badge.',
@@ -91,5 +85,4 @@ export const spec = {
       description: 'Success confirmation detail.',
     },
   ],
-  preview: { bare: true, width: 'md' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

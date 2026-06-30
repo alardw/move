@@ -1,16 +1,10 @@
 // AppSidebar.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'AppSidebar',
-  slug: 'app-sidebar',
-  group: 'Navigation',
-  groupSlug: 'navigation',
-  title: 'App sidebar',
-  description: 'Collapsible sidebar with mobile overlay, account dropdown, and i18n support.',
-  synonyms: ['sidebar', 'navigation', 'nav', 'app shell', 'drawer', 'menu'],
   composition: [
     'Sidebar',
     'useSidebarContext',
@@ -74,5 +68,4 @@ export const spec = {
     { key: 'signOut', default: 'Sign out', description: 'Account menu: sign out.' },
     { key: 'menu', default: 'Open menu', description: 'Mobile trigger aria-label.' },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

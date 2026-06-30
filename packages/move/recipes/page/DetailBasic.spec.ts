@@ -1,16 +1,10 @@
 // DetailBasic.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'DetailBasic',
-  slug: 'detail',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'Detail page',
-  description: 'Entity detail page with breadcrumbs, a description list, and a sidebar notes card.',
-  synonyms: ['detail page', 'entity', 'record', 'description list'],
   composition: [
     'Stack',
     'Heading',
@@ -84,5 +78,4 @@ export const spec = {
     },
     { key: 'activityTitle', default: 'Activity Log', description: 'Activity accordion title.' },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

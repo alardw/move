@@ -1,16 +1,10 @@
 // MfaVerify.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'MfaVerify',
-  slug: 'mfa-verify',
-  group: 'Authentication',
-  groupSlug: 'authentication',
-  title: 'MFA verify',
-  description: 'Enter a six-digit one-time code to complete two-factor sign-in.',
-  synonyms: ['two-factor', '2fa', 'mfa', 'otp', 'one-time code', 'verify', 'totp'],
   composition: ['Card', 'Stack', 'Heading', 'Text', 'PinInput', 'Button', 'Link', 'Badge'],
   behaviors: [
     'Renders inside a single Card surface (max-width 400).',
@@ -59,5 +53,4 @@ export const spec = {
       description: 'Success confirmation detail.',
     },
   ],
-  preview: { bare: true, width: 'md' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

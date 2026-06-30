@@ -1,16 +1,10 @@
 // ListSplitPane.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'ListSplitPane',
-  slug: 'list-split-pane',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'Split-pane list',
-  description: 'Master-detail inbox layout with a resizable split pane.',
-  synonyms: ['split pane', 'master detail', 'inbox', 'two pane', 'resizable'],
   composition: [
     'Stack',
     'Heading',
@@ -55,5 +49,4 @@ export const spec = {
     { key: 'forward', default: 'Forward', description: 'Forward action text.' },
     { key: 'archive', default: 'Archive', description: 'Archive action text.' },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

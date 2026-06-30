@@ -1,16 +1,10 @@
 // OverviewBasic.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'OverviewBasic',
-  slug: 'overview',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'Overview page',
-  description: 'Dashboard overview with KPI stat cards and a recent-activity feed.',
-  synonyms: ['dashboard', 'overview', 'kpi', 'stats', 'metrics', 'home'],
   composition: [
     'Stack',
     'Grid',
@@ -54,5 +48,4 @@ export const spec = {
     { key: 'topPerformers', default: 'Top Performers', description: 'Performers card title.' },
     { key: 'viewAll', default: 'View all', description: 'View-all button text.' },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

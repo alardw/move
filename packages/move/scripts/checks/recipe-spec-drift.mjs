@@ -3,7 +3,7 @@
  * Recipe spec ↔ source sync linter (the recipe sibling of spec-drift.mjs).
  *
  * Recipes are spec-driven: each `packages/move/recipes/<group>/<Name>.spec.ts`
- * (`satisfies RecipeSpec`) is the source of truth for its `<Name>.tsx`. This
+ * (`satisfies CompositionSpec`) is the source of truth for its `<Name>.tsx`. This
  * check enforces that the two don't drift on the deterministic contracts:
  *
  *   1. Every recipe `.tsx` has a sibling `.spec.ts` (and vice versa).
@@ -111,7 +111,6 @@ const setEq = (a, b) => {
 
 let errors = 0;
 const out = [];
-const slugs = new Map(); // registry-1: detect duplicate recipe slugs
 for (const specFile of recipeSpecs(RECIPES).sort()) {
   const srcFile = specFile.replace(/\.spec\.ts$/, '.tsx');
   const name = basename(specFile, '.spec.ts');
@@ -139,13 +138,15 @@ for (const specFile of recipeSpecs(RECIPES).sort()) {
       (lab.onlyA.length ? `\n    in spec, not in defaultLabels: ${lab.onlyA.join(', ')}` : '') +
       (lab.onlyB.length ? `\n    in defaultLabels, not in spec: ${lab.onlyB.join(', ')}` : ''));
   }
-  // registry-1: no two recipes share a slug.
-  const slugNode = prop(specObj, 'slug');
-  const slug = slugNode && ts.isStringLiteral(slugNode) ? slugNode.text : null;
-  if (slug) {
-    if (slugs.has(slug)) { errors++; out.push(`✗ duplicate slug '${slug}' (${name} + ${slugs.get(slug)})`); }
-    else slugs.set(slug, name);
-  }
+}
+
+// registry-1: no two recipes share a slug. Slugs live on the registry entries
+// now (publishing is a registry concern), not in the spec.
+const registrySrc = readFileSync(join(RECIPES, 'registry.ts'), 'utf8');
+const slugSeen = new Map();
+for (const m of registrySrc.matchAll(/^\s*slug:\s*'([^']+)'/gm)) {
+  if (slugSeen.has(m[1])) { errors++; out.push(`✗ duplicate recipe slug '${m[1]}' in registry.ts`); }
+  else slugSeen.set(m[1], true);
 }
 
 // every recipe source should also have a spec
@@ -169,4 +170,4 @@ if (errors > 0) {
   console.error(`\n${errors} drift error(s).`);
   process.exit(1);
 }
-console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, review, unique slugs).');
+console.log('✓ recipe-spec-drift: all recipes in sync (composition, labels, unique slugs).');

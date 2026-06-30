@@ -1,17 +1,10 @@
 // DetailWithTabs.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'DetailWithTabs',
-  slug: 'detail-with-tabs',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'Detail page with tabs',
-  description:
-    'Entity detail with tabbed sections for details, an activity timeline, and related items.',
-  synonyms: ['detail', 'tabs', 'tabbed', 'activity', 'timeline'],
   composition: [
     'Stack',
     'Heading',
@@ -67,5 +60,4 @@ export const spec = {
     { key: 'activity', default: 'Activity', description: 'Activity tab label.' },
     { key: 'related', default: 'Related', description: 'Related tab label.' },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

@@ -1,16 +1,10 @@
 // ResetPassword.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'ResetPassword',
-  slug: 'reset-password',
-  group: 'Authentication',
-  groupSlug: 'authentication',
-  title: 'Reset password',
-  description: 'Choose a new password with a confirmation field.',
-  synonyms: ['new password', 'change password', 'set password', 'reset'],
   composition: ['Card', 'Stack', 'Heading', 'Text', 'FormField', 'Password', 'Button', 'Link'],
   behaviors: [
     'Renders inside a single Card surface (max-width 400).',
@@ -64,5 +58,4 @@ export const spec = {
       description: 'Success action button text.',
     },
   ],
-  preview: { bare: true, width: 'md' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

@@ -1,16 +1,10 @@
 // SignIn.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'SignIn',
-  slug: 'sign-in',
-  group: 'Authentication',
-  groupSlug: 'authentication',
-  title: 'Sign in',
-  description: 'Email + password login with a remember-me toggle and a forgot-password link.',
-  synonyms: ['login', 'log in', 'signin', 'sign on', 'credentials', 'authentication'],
   composition: [
     'Stack',
     'Card',
@@ -68,5 +62,4 @@ export const spec = {
     },
     { key: 'submit', default: 'Sign in', description: 'Submit button text.' },
   ],
-  preview: { bare: true, width: 'md' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

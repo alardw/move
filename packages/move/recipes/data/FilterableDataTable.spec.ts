@@ -1,16 +1,10 @@
 // FilterableDataTable.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'FilterableDataTable',
-  slug: 'filterable-data-table',
-  group: 'Data',
-  groupSlug: 'data',
-  title: 'Filterable data table',
-  description: 'Full-featured data table with search, filters, sorting, and pagination.',
-  synonyms: ['data table', 'datagrid', 'grid', 'table', 'sort', 'filter', 'pagination', 'search'],
   composition: [
     'Table',
     'Stack',
@@ -91,5 +85,4 @@ export const spec = {
       params: ['from', 'to', 'total'],
     },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

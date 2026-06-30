@@ -7,7 +7,7 @@
  * use, but lighter: recipes own no design tokens, no animation bindings, and
  * no public component API beyond an i18n `labels` object.
  *
- * Every recipe spec must end with `satisfies RecipeSpec`; `tsc` then enforces
+ * Every composition spec must end with `satisfies CompositionSpec`; `tsc` then enforces
  * spec ↔ schema conformance. If a recipe legitimately needs a field the schema
  * lacks, update THIS file, not just the spec.
  */
@@ -95,10 +95,34 @@ export interface RecipePreview {
   image?: string;
 }
 
-export interface RecipeSpec {
+/**
+ * A composition's SUBSTANCE — what it is, independent of how it's published. A
+ * consumer's private composition is exactly this; a Move recipe is this plus a
+ * `RecipeDoc` registry entry. The spec file (`Foo.spec.ts`) is a `CompositionSpec`.
+ */
+export interface CompositionSpec {
   schemaVersion: typeof RECIPE_SCHEMA_VERSION;
   /** PascalCase component/file name, e.g. 'SignIn'. */
   name: string;
+  /** Move components the composition is built from — also the validate allow-list. */
+  composition: string[];
+  /**
+   * Acceptance criteria the source must implement — validation, loading,
+   * empty, error, responsive, a11y. Drives the generated tests.
+   */
+  behaviors: string[];
+  /** Every place a consumer plugs in real data or handlers. */
+  integrationPoints: RecipeIntegrationPoint[];
+  /** The i18n contract: keys + default copy the composition exposes via `labels`. */
+  labels: RecipeLabel[];
+}
+
+/**
+ * The docs/registry metadata that PUBLISHES a composition as a recipe — separate
+ * from the substance. Lives on the registry entry (`registry.ts`), not in the
+ * spec file. A private composition has none.
+ */
+export interface RecipeDoc {
   /** URL slug within its group, e.g. 'sign-in'. */
   slug: string;
   /** Display name of the group/category, e.g. 'Authentication'. */
@@ -109,17 +133,6 @@ export interface RecipeSpec {
   description: string;
   /** Search aliases — parity with the component spec's `synonyms`. */
   synonyms: string[];
-  /** Move components the recipe is built from — also the validate allow-list. */
-  composition: string[];
-  /**
-   * Acceptance criteria the source must implement — validation, loading,
-   * empty, error, responsive, a11y. Drives the generated tests.
-   */
-  behaviors: string[];
-  /** Every place a consumer plugs in real data or handlers. */
-  integrationPoints: RecipeIntegrationPoint[];
-  /** The i18n contract: keys + default copy the recipe exposes via `labels`. */
-  labels: RecipeLabel[];
   /** How the recipe renders in the overview card. */
   preview: RecipePreview;
 }

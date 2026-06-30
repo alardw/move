@@ -4,17 +4,11 @@
 // prop). The labels below are the INTENDED i18n contract; `recipe-validate`
 // will flag the source until it is retrofitted to use them.
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'SearchFilter',
-  slug: 'search-filter',
-  group: 'Data',
-  groupSlug: 'data',
-  title: 'Search & filter',
-  description: 'Search input with a filter dialog and active filter chips over a live list.',
-  synonyms: ['search', 'filter', 'chips', 'facets', 'query'],
   composition: [
     'Stack',
     'InputText',
@@ -62,5 +56,4 @@ export const spec = {
       description: 'Empty-state description.',
     },
   ],
-  preview: { width: 'lg' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

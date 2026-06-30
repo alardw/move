@@ -1,5 +1,5 @@
 import type { ComponentType } from 'react';
-import type { RecipeSpec, RecipePreview } from './spec-type';
+import type { CompositionSpec, RecipeDoc } from './spec-type';
 
 import SignIn from './authentication/SignIn';
 import SignInSrc from './authentication/SignIn.tsx?raw';
@@ -50,69 +50,160 @@ import { spec as overviewWithTabsSpec } from './page/OverviewWithTabs.spec';
 export type { RecipePreview } from './spec-type';
 
 /**
- * A recipe's registry entry. Metadata is DERIVED from the recipe's spec (the
- * source of truth) — never hand-authored here. The registry only adds the live
- * component and its `?raw` source, which a spec can't carry.
+ * A recipe's registry entry: a published composition. It carries the composition
+ * SUBSTANCE (`spec`), the live component + `?raw` source (which a spec can't
+ * hold), and the `RecipeDoc` publishing metadata (slug/group/title/…). The doc
+ * fields are authored HERE — publishing is a registry concern, not spec data.
  */
-export interface RecipeMeta {
-  /** URL slug within its group, e.g. 'sign-in'. */
-  slug: string;
-  /** Display name of the group, e.g. 'Authentication'. */
-  group: string;
-  /** URL slug of the group, e.g. 'authentication'. */
-  groupSlug: string;
-  title: string;
-  description: string;
-  /** Search aliases — parity with components' `spec.synonyms`. */
-  synonyms: string[];
+export interface RecipeMeta extends RecipeDoc {
   /** The live recipe component (rendered in the card preview and on the detail page). */
   Component: ComponentType<{ labels?: Record<string, string> }>;
   /** Recipe source, for the detail page's code view. */
   source: string;
-  /** How this recipe renders in the overview's preview card. */
-  preview: RecipePreview;
-  /** The recipe's full spec — drives the detail page's spec-derived sections. */
-  spec: RecipeSpec;
+  /** The composition substance — drives the detail page's spec-derived sections. */
+  spec: CompositionSpec;
 }
 
-/** Build a registry entry from a spec + its live component and raw source. */
+/** Build a registry entry from a composition spec + its component, source, and doc. */
 function toMeta(
-  spec: RecipeSpec,
+  spec: CompositionSpec,
   Component: ComponentType<{ labels?: Record<string, string> }>,
   source: string,
+  doc: RecipeDoc,
 ): RecipeMeta {
-  return {
-    slug: spec.slug,
-    group: spec.group,
-    groupSlug: spec.groupSlug,
-    title: spec.title,
-    description: spec.description,
-    synonyms: spec.synonyms,
-    preview: spec.preview,
-    Component,
-    source,
-    spec,
-  };
+  return { ...doc, Component, source, spec };
 }
 
 export const RECIPES: RecipeMeta[] = [
-  toMeta(signInSpec, SignIn, SignInSrc),
-  toMeta(forgotPasswordSpec, ForgotPassword, ForgotPasswordSrc),
-  toMeta(resetPasswordSpec, ResetPassword, ResetPasswordSrc),
-  toMeta(mfaSetupSpec, MfaSetup, MfaSetupSrc),
-  toMeta(mfaVerifySpec, MfaVerify, MfaVerifySrc),
+  toMeta(signInSpec, SignIn, SignInSrc, {
+    slug: 'sign-in',
+    group: 'Authentication',
+    groupSlug: 'authentication',
+    title: 'Sign in',
+    description: 'Email + password login with a remember-me toggle and a forgot-password link.',
+    synonyms: ['login', 'log in', 'signin', 'sign on', 'credentials', 'authentication'],
+    preview: { bare: true, width: 'md' },
+  }),
+  toMeta(forgotPasswordSpec, ForgotPassword, ForgotPasswordSrc, {
+    slug: 'forgot-password',
+    group: 'Authentication',
+    groupSlug: 'authentication',
+    title: 'Forgot password',
+    description: 'Request a password-reset link by email, with a back-to-sign-in link.',
+    synonyms: ['reset', 'recover', 'password recovery', 'forgot', 'email reset'],
+    preview: { bare: true, width: 'md' },
+  }),
+  toMeta(resetPasswordSpec, ResetPassword, ResetPasswordSrc, {
+    slug: 'reset-password',
+    group: 'Authentication',
+    groupSlug: 'authentication',
+    title: 'Reset password',
+    description: 'Choose a new password with a confirmation field.',
+    synonyms: ['new password', 'change password', 'set password', 'reset'],
+    preview: { bare: true, width: 'md' },
+  }),
+  toMeta(mfaSetupSpec, MfaSetup, MfaSetupSrc, {
+    slug: 'mfa-setup',
+    group: 'Authentication',
+    groupSlug: 'authentication',
+    title: 'MFA setup',
+    description: 'Enroll in two-factor auth: scan a QR code and confirm with a one-time code.',
+    synonyms: ['two-factor', '2fa', 'mfa', 'totp', 'authenticator', 'qr code', 'enroll'],
+    preview: { bare: true, width: 'md' },
+  }),
+  toMeta(mfaVerifySpec, MfaVerify, MfaVerifySrc, {
+    slug: 'mfa-verify',
+    group: 'Authentication',
+    groupSlug: 'authentication',
+    title: 'MFA verify',
+    description: 'Enter a six-digit one-time code to complete two-factor sign-in.',
+    synonyms: ['two-factor', '2fa', 'mfa', 'otp', 'one-time code', 'verify', 'totp'],
+    preview: { bare: true, width: 'md' },
+  }),
 
-  toMeta(searchFilterSpec, SearchFilter, SearchFilterSrc),
-  toMeta(filterableDataTableSpec, FilterableDataTable, FilterableDataTableSrc),
+  toMeta(searchFilterSpec, SearchFilter, SearchFilterSrc, {
+    slug: 'search-filter',
+    group: 'Data',
+    groupSlug: 'data',
+    title: 'Search & filter',
+    description: 'Search input with a filter dialog and active filter chips over a live list.',
+    synonyms: ['search', 'filter', 'chips', 'facets', 'query'],
+    preview: { width: 'lg' },
+  }),
+  toMeta(filterableDataTableSpec, FilterableDataTable, FilterableDataTableSrc, {
+    slug: 'filterable-data-table',
+    group: 'Data',
+    groupSlug: 'data',
+    title: 'Filterable data table',
+    description: 'Full-featured data table with search, filters, sorting, and pagination.',
+    synonyms: ['data table', 'datagrid', 'grid', 'table', 'sort', 'filter', 'pagination', 'search'],
+    preview: { width: 'full' },
+  }),
 
-  toMeta(appSidebarSpec, AppSidebar, AppSidebarSrc),
+  toMeta(appSidebarSpec, AppSidebar, AppSidebarSrc, {
+    slug: 'app-sidebar',
+    group: 'Navigation',
+    groupSlug: 'navigation',
+    title: 'App sidebar',
+    description: 'Collapsible sidebar with mobile overlay, account dropdown, and i18n support.',
+    synonyms: ['sidebar', 'navigation', 'nav', 'app shell', 'drawer', 'menu'],
+    preview: { width: 'full' },
+  }),
 
-  toMeta(detailBasicSpec, DetailBasic, DetailBasicSrc),
-  toMeta(detailWithTabsSpec, DetailWithTabs, DetailWithTabsSrc),
-  toMeta(listBasicSpec, ListBasic, ListBasicSrc),
-  toMeta(listSplitPaneSpec, ListSplitPane, ListSplitPaneSrc),
-  toMeta(overviewBasicSpec, OverviewBasic, OverviewBasicSrc),
-  toMeta(overviewWithTabsSpec, OverviewWithTabs, OverviewWithTabsSrc),
+  toMeta(detailBasicSpec, DetailBasic, DetailBasicSrc, {
+    slug: 'detail',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'Detail page',
+    description: 'Entity detail page with breadcrumbs, a description list, and a sidebar notes card.',
+    synonyms: ['detail page', 'entity', 'record', 'description list'],
+    preview: { width: 'full' },
+  }),
+  toMeta(detailWithTabsSpec, DetailWithTabs, DetailWithTabsSrc, {
+    slug: 'detail-with-tabs',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'Detail page with tabs',
+    description: 'Entity detail with tabbed sections for details, an activity timeline, and related items.',
+    synonyms: ['detail', 'tabs', 'tabbed', 'activity', 'timeline'],
+    preview: { width: 'full' },
+  }),
+  toMeta(listBasicSpec, ListBasic, ListBasicSrc, {
+    slug: 'list',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'List page',
+    description: 'Searchable data table with pagination and an empty state.',
+    synonyms: ['list page', 'data table', 'index', 'records', 'pagination'],
+    preview: { width: 'full' },
+  }),
+  toMeta(listSplitPaneSpec, ListSplitPane, ListSplitPaneSrc, {
+    slug: 'list-split-pane',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'Split-pane list',
+    description: 'Master-detail inbox layout with a resizable split pane.',
+    synonyms: ['split pane', 'master detail', 'inbox', 'two pane', 'resizable'],
+    preview: { width: 'full' },
+  }),
+  toMeta(overviewBasicSpec, OverviewBasic, OverviewBasicSrc, {
+    slug: 'overview',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'Overview page',
+    description: 'Dashboard overview with KPI stat cards and a recent-activity feed.',
+    synonyms: ['dashboard', 'overview', 'kpi', 'stats', 'metrics', 'home'],
+    preview: { width: 'full' },
+  }),
+  toMeta(overviewWithTabsSpec, OverviewWithTabs, OverviewWithTabsSrc, {
+    slug: 'overview-with-tabs',
+    group: 'Pages',
+    groupSlug: 'pages',
+    title: 'Overview with tabs',
+    description: 'Tabbed dashboard with overview stats, analytics, and reports sections.',
+    synonyms: ['dashboard', 'tabs', 'analytics', 'reports', 'stats'],
+    preview: { width: 'full' },
+  }),
 ];
 
 /** Group display names in display order. */

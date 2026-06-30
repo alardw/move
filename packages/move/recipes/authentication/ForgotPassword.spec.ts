@@ -1,16 +1,10 @@
 // ForgotPassword.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'ForgotPassword',
-  slug: 'forgot-password',
-  group: 'Authentication',
-  groupSlug: 'authentication',
-  title: 'Forgot password',
-  description: 'Request a password-reset link by email, with a back-to-sign-in link.',
-  synonyms: ['reset', 'recover', 'password recovery', 'forgot', 'email reset'],
   composition: ['Card', 'Stack', 'Heading', 'Text', 'FormField', 'InputText', 'Button', 'Link'],
   behaviors: [
     'Renders inside a single Card surface (max-width 400).',
@@ -56,5 +50,4 @@ export const spec = {
     },
     { key: 'tryAnother', default: 'Try another email', description: 'Return-to-form button text.' },
   ],
-  preview: { bare: true, width: 'md' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

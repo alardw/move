@@ -4,17 +4,11 @@
 // (the "Revenue" / "Recent Sales" card titles and their placeholder copy).
 // `recipe-validate` will flag those until they are moved into the labels below.
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'OverviewWithTabs',
-  slug: 'overview-with-tabs',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'Overview with tabs',
-  description: 'Tabbed dashboard with overview stats, analytics, and reports sections.',
-  synonyms: ['dashboard', 'tabs', 'analytics', 'reports', 'stats'],
   composition: ['Stack', 'Grid', 'Card', 'Heading', 'Text', 'Tabs', 'Icon'],
   behaviors: [
     'Tabs switch between Overview, Analytics, and Reports.',
@@ -55,5 +49,4 @@ export const spec = {
       description: 'Reports tab placeholder.',
     },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;

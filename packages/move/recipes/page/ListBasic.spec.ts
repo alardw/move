@@ -1,16 +1,10 @@
 // ListBasic.spec.ts — Recipe specification
 
-import type { RecipeSpec } from '../spec-type';
+import type { CompositionSpec } from '../spec-type';
 
 export const spec = {
   schemaVersion: 1,
   name: 'ListBasic',
-  slug: 'list',
-  group: 'Pages',
-  groupSlug: 'pages',
-  title: 'List page',
-  description: 'Searchable data table with pagination and an empty state.',
-  synonyms: ['list page', 'data table', 'index', 'records', 'pagination'],
   composition: [
     'Stack',
     'Heading',
@@ -63,5 +57,4 @@ export const spec = {
       description: 'Empty-state description.',
     },
   ],
-  preview: { width: 'full' },
-} satisfies RecipeSpec;
+} satisfies CompositionSpec;
