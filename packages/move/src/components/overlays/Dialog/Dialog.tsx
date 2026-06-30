@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, snappy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, snappy, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
@@ -18,7 +18,8 @@ import styles from './Dialog.module.css';
 interface DialogContextValue {
   isClosing: boolean;
   close: () => void;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
 }
 
@@ -86,35 +87,22 @@ const DialogRoot: React.FC<DialogRootProps> = ({
   animations: animationsProp,
   modal,
 }) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-    // Ignore close requests from Radix — we handle closing via close()
-  }, [isControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openFn();
+  }, [openFn]);
 
   const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
   return (
-    <DialogContext.Provider value={{ isClosing, close, onCloseComplete: handleCloseComplete, animConfig }}>
-      <RadixDialog.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
+    <DialogContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig }}>
+      <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
     </DialogContext.Provider>
@@ -192,7 +180,7 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
   slots: ['overlay'] as const,
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, animConfig } = useDialogContext();
+    const { isClosing, epoch, animConfig } = useDialogContext();
 
     // Filter triggers for this slot
     const overlayConfig = React.useMemo(() => {
@@ -204,13 +192,11 @@ const DialogOverlay = withMoveComponent<'overlay', DialogOverlayProps, HTMLDivEl
       Overlay: internalRef as React.RefObject<HTMLElement | null>,
     }), [internalRef]);
 
-    const { runExit } = useAnimations(overlayConfig, overlayRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(overlayConfig, overlayRefs);
 
-    // Exit (no onCloseComplete — Content drives close completion)
-    React.useEffect(() => {
-      if (!isClosing) return;
-      runExit();
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Animate the backdrop in/out; the Content slot drives close completion, so
+    // this exit must NOT confirm the close (no-op onExitDone).
+    useDismissableExit({ isClosing, epoch, onExitDone: () => {}, runExit, runEnter, pauseAll });
 
     return {
       render() {
@@ -256,7 +242,7 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
   defaults: { size: 'md' },
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, close, onCloseComplete, animConfig } = useDialogContext();
+    const { isClosing, close, epoch, onExitDone, animConfig } = useDialogContext();
     const surface = useSurfaceFlip();
 
     // Filter triggers for this slot
@@ -269,14 +255,9 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
       Content: internalRef as React.RefObject<HTMLElement | null>,
     }), [internalRef]);
 
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    // Exit
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!animConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
     const handleOpenAutoFocus = (event: Event) => {
       (props.onOpenAutoFocus as ((e: Event) => void) | undefined)?.(event);

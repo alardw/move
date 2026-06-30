@@ -39,8 +39,12 @@ export interface Dismissable {
   isOpen: boolean;
   /** True while the exit animation is playing. */
   isClosing: boolean;
-  /** Open, or cancel an in-flight close (reopen always wins). */
+  /** Incidental open — opens if closed, NO-OP while closing (won't cancel an
+   *  in-flight close like close-on-select). Use for focus-driven / Radix opens. */
   open: () => void;
+  /** Explicit reopen — cancels an in-flight close so a rapid trigger re-click
+   *  wins. Use only for a deliberate user open action. */
+  reopen: () => void;
   /** Begin closing (plays the exit animation). */
   close: () => void;
   /** Epoch token — bumped whenever an in-flight close is cancelled. Passed to
@@ -72,9 +76,21 @@ export function useDismissable(options: DismissableOptions = {}): Dismissable {
   isClosingRef.current = isClosing;
 
   const open = useCallback(() => {
+    // Incidental open: opens if fully closed, but a NO-OP while closing — an
+    // in-flight close (e.g. close-on-select) must not be cancelled by a stray
+    // focus/open. Use reopen() for an explicit re-click that should cancel.
+    if (isClosingRef.current) return;
+    if (!isOpenRef.current) {
+      if (!isControlled) setUncontrolledOpen(true);
+      onOpenChange?.(true);
+    }
+  }, [isControlled, onOpenChange]);
+
+  const reopen = useCallback(() => {
     if (isClosingRef.current) {
-      // Cancel the in-flight close: invalidate its deferred completion and drop
-      // back to plain "open". isOpen was never lowered, so the popup stays open.
+      // Explicit reopen (rapid trigger re-click): cancel the in-flight close —
+      // invalidate its deferred completion and drop back to "open". isOpen was
+      // never lowered, so the popup stays open.
       epochRef.current += 1;
       setEpoch(epochRef.current);
       setIsClosing(false);
@@ -101,7 +117,7 @@ export function useDismissable(options: DismissableOptions = {}): Dismissable {
     [isControlled, onOpenChange, onClosed],
   );
 
-  return { isOpen, isClosing, open, close, epoch, onExitDone };
+  return { isOpen, isClosing, open, reopen, close, epoch, onExitDone };
 }
 
 /**

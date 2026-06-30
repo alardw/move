@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, quick, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
@@ -17,7 +17,8 @@ import styles from './Popover.module.css';
 
 interface PopoverContextValue {
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   close: () => void;
   animConfig: AnimationTrigger[] | false | null;
   closeOnScroll: boolean;
@@ -79,34 +80,21 @@ const PopoverRoot: React.FC<PopoverRootProps> = ({
   closeOnScroll = false,
   modal,
 }) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen: open, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-    // Ignore close requests from Radix -- we handle closing via close()
-  }, [isControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openFn();
+  }, [openFn]);
 
   const animConfig = resolveAnimationsConfig(DEFAULT_POPOVER_ANIMATIONS, animationsProp);
 
   return (
-    <PopoverContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete, close, animConfig, closeOnScroll }}>
+    <PopoverContext.Provider value={{ isClosing, epoch, onExitDone, close, animConfig, closeOnScroll }}>
       <RadixPopover.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixPopover.Root>
@@ -231,19 +219,15 @@ const PopoverContentInner: React.FC<{
   rest?: Record<string, unknown>;
   children?: React.ReactNode;
 }> = ({ surface, className, style, rest, children }) => {
-  const { isClosing, onCloseComplete, animConfig } = usePopoverContext();
+  const { isClosing, epoch, onExitDone, animConfig } = usePopoverContext();
   const innerRef = React.useRef<HTMLDivElement>(null);
   const refs = React.useMemo(
     () => ({ Content: innerRef as React.RefObject<HTMLElement | null> }),
     [],
   );
-  const { runExit } = useAnimations(animConfig, refs);
+  const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs);
 
-  React.useEffect(() => {
-    if (!isClosing) return;
-    if (!animConfig) { onCloseComplete?.(); return; }
-    runExit().then(() => onCloseComplete?.());
-  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+  useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
   return (
     <div ref={innerRef} {...rest} className={className} style={style}>

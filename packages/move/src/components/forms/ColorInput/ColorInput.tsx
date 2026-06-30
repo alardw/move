@@ -6,7 +6,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
-import { useAnimations } from '../../../animation';
+import { useAnimations, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
@@ -100,21 +100,19 @@ const DEFAULT_COLORINPUT_ANIMATIONS: AnimationTrigger[] = [
 // null ref, so the reveal never played.
 const ColorInputDropdownInner: React.FC<{
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   contentProps: Record<string, unknown>;
   children?: React.ReactNode;
-}> = ({ isClosing, onCloseComplete, contentProps, children }) => {
+}> = ({ isClosing, epoch, onExitDone, contentProps, children }) => {
   const contentRef = React.useRef<HTMLDivElement>(null);
   const contentRefs = React.useMemo(
     () => ({ Content: contentRef as React.RefObject<HTMLElement | null> }),
     [],
   );
-  const { runExit } = useAnimations(DEFAULT_COLORINPUT_ANIMATIONS, contentRefs);
+  const { runExit, runEnter, pauseAll } = useAnimations(DEFAULT_COLORINPUT_ANIMATIONS, contentRefs);
 
-  React.useEffect(() => {
-    if (!isClosing) return;
-    runExit().then(() => onCloseComplete());
-  }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+  useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
   return (
     <RadixPopover.Content ref={contentRef} {...contentProps}>
@@ -144,26 +142,16 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ColorInputLabels>) };
-    const [open, setOpen] = React.useState(false);
-    const [isClosing, setIsClosing] = React.useState(false);
+    // Interruptible open/close lifecycle (open cancels an in-flight close;
+    // exit-completion is epoch-guarded). See useDismissable.
+    const dismissable = useDismissable();
+    const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
     const [inputText, setInputText] = React.useState('');
     const [isInputFocused, setIsInputFocused] = React.useState(false);
 
-    // Close with exit animation
-    const close = React.useCallback(() => {
-      setIsClosing(true);
-    }, []);
-
-    const handleCloseComplete = React.useCallback(() => {
-      setIsClosing(false);
-      setOpen(false);
-    }, []);
-
     const handleOpenChange = React.useCallback((newOpen: boolean) => {
-      if (newOpen) {
-        setOpen(true);
-      }
-    }, []);
+      if (newOpen) openFn();
+    }, [openFn]);
 
     // Close the popup on viewport changes — scroll (any ancestor) or
     // resize. Without this the popover floats away from the trigger
@@ -171,7 +159,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     // we catch scroll events on nested scroll containers, not just
     // window. passive: true so we don't block the scroll itself.
     React.useEffect(() => {
-      if (!open || isClosing || typeof window === 'undefined') return;
+      if (!isOpen || isClosing || typeof window === 'undefined') return;
       const onViewportChange = () => close();
       window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
       window.addEventListener('resize', onViewportChange);
@@ -179,7 +167,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
         window.removeEventListener('scroll', onViewportChange, { capture: true });
         window.removeEventListener('resize', onViewportChange);
       };
-    }, [open, isClosing, close]);
+    }, [isOpen, isClosing, close]);
 
     // Popup enter/exit animation runs in ColorInputDropdownInner (below the Portal).
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -232,21 +220,23 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         (e.target as HTMLInputElement).blur();
-      } else if (e.key === 'ArrowDown' && !open) {
+      } else if (e.key === 'ArrowDown' && !isOpen) {
         e.preventDefault();
-        setOpen(true);
+        openFn();
       }
-    }, [open]);
+    }, [isOpen, openFn]);
 
     // Swatch click toggles popover
     const handleSwatchClick = React.useCallback(() => {
       if (props.disabled || props.readOnly) return;
-      if (open && !isClosing) {
+      // Open when closed; openFn() mid-close cancels the exit so a click
+      // during the close animation reopens instead of being swallowed.
+      if (isOpen && !isClosing) {
         close();
-      } else if (!open && !isClosing) {
-        setOpen(true);
+      } else {
+        openFn();
       }
-    }, [props.disabled, props.readOnly, open, isClosing, close]);
+    }, [props.disabled, props.readOnly, isOpen, isClosing, close, openFn]);
 
     // Dismiss handlers
     const handlePointerDownOutside = React.useCallback((e: any) => {
@@ -315,7 +305,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
         const showEyeDropper = withEyeDropper && typeof window !== 'undefined' && !!window.EyeDropper;
 
         return (
-          <RadixPopover.Root open={open || isClosing} onOpenChange={handleOpenChange}>
+          <RadixPopover.Root open={isOpen || isClosing} onOpenChange={handleOpenChange}>
             <RadixPopover.Anchor asChild>
               <div
                 {...attrs}
@@ -384,7 +374,8 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
             <RadixPopover.Portal>
               <ColorInputDropdownInner
                 isClosing={isClosing}
-                onCloseComplete={handleCloseComplete}
+                epoch={epoch}
+                onExitDone={onExitDone}
                 contentProps={{
                   ...contentSpRest,
                   sideOffset: 4,

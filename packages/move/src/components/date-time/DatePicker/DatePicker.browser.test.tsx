@@ -111,4 +111,31 @@ describe('DatePicker — open/close/reopen (real browser)', () => {
     btns[1].click();
     expect(await waitFor(gridPresent)).toBe(true);
   });
+
+  it('INVARIANT: closes after selecting a date (close-on-select not cancelled)', async () => {
+    render(
+      <DatePicker.Root defaultValue={new Date(2026, 5, 15)}>
+        <DatePicker.Trigger>
+          <DatePicker.Input />
+        </DatePicker.Trigger>
+        <DatePicker.Content />
+      </DatePicker.Root>,
+    );
+    // Focus the input first (real flow — clicking a day then blurs it).
+    (document.querySelector('input') as HTMLElement)?.focus();
+    const btn = openButton();
+    expect(btn).toBeTruthy();
+    btn!.click();
+    expect(await waitFor(gridPresent)).toBe(true);
+
+    // Selecting a day must actually close — a spurious open() fired during the
+    // deliberate close-on-select must NOT cancel it.
+    const day = [...document.querySelectorAll('button[role="gridcell"]')].find(
+      (b) => b.textContent?.trim() === '20' && !(b as HTMLButtonElement).disabled,
+    ) as HTMLElement | undefined;
+    expect(day).toBeTruthy();
+    day!.click();
+
+    expect(await waitFor(() => !gridPresent(), 2000)).toBe(true);
+  });
 });

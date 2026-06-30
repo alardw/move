@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, snappy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, snappy, useDismissable, useDismissableExit } from '../../../animation';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
@@ -47,7 +47,8 @@ export type DrawerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 interface DrawerContextValue {
   isClosing: boolean;
   close: () => void;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
   effectivePosition: DrawerPosition;
 }
@@ -129,39 +130,26 @@ const DrawerRoot: React.FC<DrawerRootProps> = ({
   responsive = true,
   breakpoint = 768,
 }) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
-
   const isMobile = useMediaQuery(`(max-width: ${breakpoint - 1}px)`);
   const effectivePosition: DrawerPosition = responsive && isMobile ? 'bottom' : position;
 
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-    // Ignore close requests from Radix — we handle closing via close()
-  }, [isControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openFn();
+  }, [openFn]);
 
   const defaultAnims = React.useMemo(() => getDefaultAnimations(effectivePosition), [effectivePosition]);
   const animConfig = resolveAnimationsConfig(defaultAnims, animationsProp);
 
   return (
-    <DrawerContext.Provider value={{ isClosing, close, onCloseComplete: handleCloseComplete, animConfig, effectivePosition }}>
-      <RadixDialog.Root open={open || isClosing} onOpenChange={handleOpenChange} modal={modal}>
+    <DrawerContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition }}>
+      <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
     </DrawerContext.Provider>
@@ -239,7 +227,7 @@ const DrawerOverlay = withMoveComponent<'overlay', DrawerOverlayProps, HTMLDivEl
   slots: ['overlay'] as const,
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, animConfig } = useDrawerContext();
+    const { isClosing, epoch, animConfig } = useDrawerContext();
 
     const overlayConfig = React.useMemo(() => {
       if (!animConfig) return null;
@@ -250,12 +238,11 @@ const DrawerOverlay = withMoveComponent<'overlay', DrawerOverlayProps, HTMLDivEl
       Overlay: internalRef as React.RefObject<HTMLElement | null>,
     }), [internalRef]);
 
-    const { runExit } = useAnimations(overlayConfig, overlayRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(overlayConfig, overlayRefs);
 
-    React.useEffect(() => {
-      if (!isClosing) return;
-      runExit();
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    // Animate the backdrop in/out; the Content slot drives close completion, so
+    // this exit must NOT confirm the close (no-op onExitDone).
+    useDismissableExit({ isClosing, epoch, onExitDone: () => {}, runExit, runEnter, pauseAll });
 
     return {
       render() {
@@ -299,7 +286,7 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
   defaults: { size: 'md' },
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
-    const { isClosing, close, onCloseComplete, animConfig, effectivePosition } = useDrawerContext();
+    const { isClosing, close, epoch, onExitDone, animConfig, effectivePosition } = useDrawerContext();
     const isBottomSheet = effectivePosition === 'bottom';
     const surface = useSurfaceFlip();
 
@@ -312,13 +299,9 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
       Content: internalRef as React.RefObject<HTMLElement | null>,
     }), [internalRef]);
 
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    React.useEffect(() => {
-      if (!isClosing) return;
-      if (!animConfig) { onCloseComplete?.(); return; }
-      runExit().then(() => onCloseComplete?.());
-    }, [isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
     const handleOpenAutoFocus = (event: Event) => {
       (props.onOpenAutoFocus as ((e: Event) => void) | undefined)?.(event);

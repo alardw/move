@@ -104,7 +104,7 @@ interface DatePickerContextValue {
   epoch: number;
   onExitDone: (epoch: number) => void;
   openPopover: () => void;
-  focusCalendar: () => void;
+  focusCalendar: (cancelClose?: boolean) => void;
   mode: SelectionMode;
   anchorRef: React.RefObject<HTMLElement | null>;
   activeField: 'from' | 'to' | null;
@@ -249,7 +249,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
       if (mode === 'range') setActiveField(null);
     },
   });
-  const { isOpen, isClosing, epoch, onExitDone, open: openPopover, close } = dismissable;
+  const { isOpen, isClosing, epoch, onExitDone, open: openPopover, reopen, close } = dismissable;
   const anchorRef = React.useRef<HTMLElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const fromInputRef = React.useRef<HTMLInputElement>(null);
@@ -416,10 +416,13 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     };
   }, [isOpen, isClosing, close]);
 
-  const focusCalendar = React.useCallback(() => {
-    openPopover();
+  const focusCalendar = React.useCallback((cancelClose = false) => {
+    // cancelClose=true only for an explicit icon re-click (cancels an in-flight
+    // close so a rapid re-click reopens). Focus-driven opens pass nothing, so
+    // they can't cancel a deliberate close-on-select.
+    (cancelClose ? reopen : openPopover)();
     setShouldFocusCalendar(true);
-  }, [openPopover]);
+  }, [openPopover, reopen]);
 
   const clearFocusRequest = React.useCallback(() => {
     setShouldFocusCalendar(false);
@@ -655,7 +658,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
       if (dpCtx?.isOpen && !dpCtx?.isClosing) {
         dpCtx.close();
       } else {
-        dpCtx?.focusCalendar();
+        dpCtx?.focusCalendar(true);
       }
     },
     [dpCtx],
@@ -870,7 +873,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         dpCtx.close();
       } else {
         dpCtx?.setActiveField('from');
-        dpCtx?.focusCalendar();
+        dpCtx?.focusCalendar(true);
       }
     },
     [dpCtx],

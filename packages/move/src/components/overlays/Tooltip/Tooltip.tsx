@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, quick, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine';
 import styles from './Tooltip.module.css';
@@ -75,7 +75,8 @@ export type { TooltipProviderProps } from './TooltipProvider';
 
 interface TooltipContextValue {
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
 }
 const TooltipContext = React.createContext<TooltipContextValue | null>(null);
 const useTooltipContext = () => React.useContext(TooltipContext);
@@ -96,30 +97,23 @@ const TooltipRoot: React.FC<TooltipRootProps> = ({
   onOpenChange,
   ...rest
 }) => {
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
-  const isControlled = controlledOpen !== undefined;
-  const open = isControlled ? controlledOpen : uncontrolledOpen;
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable. Hover/focus open
+  // timing is still owned by Radix — we only defer the close for the exit.
+  const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
+  const { isOpen: open, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
     if (newOpen) {
-      setIsClosing(false);
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
+      openFn();
     } else {
       // Defer the real close so the Move exit animation can play first.
-      setIsClosing(true);
+      close();
     }
-  }, [isControlled, onOpenChange]);
-
-  const handleCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    if (!isControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange]);
+  }, [openFn, close]);
 
   return (
-    <TooltipContext.Provider value={{ isClosing, onCloseComplete: handleCloseComplete }}>
+    <TooltipContext.Provider value={{ isClosing, epoch, onExitDone }}>
       <RadixTooltip.Root {...rest} open={open || isClosing} onOpenChange={handleOpenChange}>
         {children}
       </RadixTooltip.Root>
@@ -218,7 +212,7 @@ const TooltipContentInner: React.FC<{
     () => ({ Content: innerRef as React.RefObject<HTMLElement | null> }),
     [],
   );
-  const { runExit } = useAnimations(animConfig, refs, undefined, {
+  const { runExit, runEnter, pauseAll } = useAnimations(animConfig, refs, undefined, {
     onEnterComplete: () => {
       const el = innerRef.current;
       if (el) { el.style.opacity = ''; el.style.transform = ''; }
@@ -226,11 +220,14 @@ const TooltipContentInner: React.FC<{
   });
 
   // Exit through the Move system, then let Radix unmount.
-  React.useEffect(() => {
-    if (!ctx?.isClosing) return;
-    if (!animConfig) { ctx.onCloseComplete(); return; }
-    runExit().then(() => ctx.onCloseComplete());
-  }, [ctx?.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+  useDismissableExit({
+    isClosing: ctx?.isClosing ?? false,
+    epoch: ctx?.epoch ?? 0,
+    onExitDone: ctx?.onExitDone ?? (() => {}),
+    runExit,
+    runEnter,
+    pauseAll,
+  });
 
   return (
     <div ref={innerRef} {...rest} className={className} style={style}>

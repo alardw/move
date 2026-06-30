@@ -7,7 +7,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useResolvedIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
-import { useAnimations, resolveAnimationsConfig, extractSteps, staggerItems, quick, poppy } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, extractSteps, staggerItems, quick, poppy, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
@@ -35,7 +35,6 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
     trigger: 'closed',
     sequence: [[
       { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-      { target: 'ContentInner', children: '[role="option"]', stagger: staggerItems.stagger, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
       { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
     ]],
   },
@@ -68,7 +67,8 @@ const DEFAULT_LABELS: AutocompleteLabels = {
 
 interface AutocompleteContextValue extends UseAutocompleteReturn {
   isClosing: boolean;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
   triggerWidth: number;
   setTriggerWidth: (w: number) => void;
@@ -130,24 +130,13 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   // descendants render, so TagList sees the cache populated on first paint.
   walkChildrenForLabels(children, ac.primeLabelCache);
 
-  // Animation closing state — decoupled from open state for exit animation
-  const [isClosing, setIsClosing] = React.useState(false);
   const [triggerWidth, setTriggerWidth] = React.useState(200);
 
-  // Wrap the close to trigger animation
-  const originalClose = ac.close;
-  const animatedClose = React.useCallback(() => {
-    if (animConfig) {
-      setIsClosing(true);
-    } else {
-      originalClose();
-    }
-  }, [animConfig, originalClose]);
-
-  const onCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    originalClose();
-  }, [originalClose]);
+  // Interruptible open/close lifecycle (exit-completion is epoch-guarded). The
+  // hook owns the open boolean, so dismissable runs in controlled mode and the
+  // confirmed close is delegated back to the hook via onClosed. See useDismissable.
+  const dismissable = useDismissable({ open: ac.isOpen, onClosed: ac.close });
+  const { isClosing, epoch, onExitDone, close } = dismissable;
 
   // Keep Radix Popover in sync
   const radixOpen = ac.isOpen || isClosing;
@@ -156,9 +145,10 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
     <AutocompleteContext.Provider
       value={{
         ...ac,
-        close: animatedClose,
+        close,
         isClosing,
-        onCloseComplete,
+        epoch,
+        onExitDone,
         animConfig,
         triggerWidth,
         setTriggerWidth,
@@ -714,13 +704,16 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    React.useEffect(() => {
-      if (!ac.isClosing) return;
-      if (!contentConfig) { ac.onCloseComplete?.(); return; }
-      runExit().then(() => ac.onCloseComplete?.());
-    }, [ac.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({
+      isClosing: ac.isClosing,
+      epoch: ac.epoch,
+      onExitDone: ac.onExitDone,
+      runExit,
+      runEnter,
+      pauseAll,
+    });
 
     const handlePointerDownOutside = (e: Event) => {
       const target = e.target as Node;
