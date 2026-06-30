@@ -153,4 +153,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: 'Every published document (component meta, recipe registry entry) declares ≥1 search synonym, so it’s findable under the name people already use.',
   },
+  {
+    name: 'doc-coverage',
+    appliesTo: 'component',
+    enforces: 'Every published artifact has a doc page with live samples — a component content folder (meta + ≥1 sample) or a recipe registry entry — so nothing ships undocumented.',
+  },
 ];

@@ -203,7 +203,7 @@ const RULES: RuleDef[] = [
   { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('gap') },
 
   // Documentation & discoverability (component + recipe / published)
-  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'gap' }, recipe: { status: 'gap' } } },
+  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'doc-coverage' }, recipe: { status: 'check', check: 'doc-coverage' } } },
   { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'doc-synonyms' }, recipe: { status: 'check', check: 'doc-synonyms' } } },
 ];
 
