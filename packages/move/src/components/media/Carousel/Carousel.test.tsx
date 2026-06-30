@@ -477,4 +477,23 @@ describe('Carousel', () => {
       expect(onChange).toHaveBeenCalledWith(1);
     });
   });
+
+  describe('autoplay pause/resume', () => {
+    it('re-arms autoplay after hover ends (pause then resume)', () => {
+      const setIntervalSpy = vi.spyOn(window, 'setInterval');
+      try {
+        const { container } = renderCarousel({ autoplay: 1000 });
+        const viewport = container.querySelector('[aria-live]') as HTMLElement;
+        // count only the autoplay interval (delay === 1000), ignore others
+        const armCount = () => setIntervalSpy.mock.calls.filter((c) => c[1] === 1000).length;
+        expect(armCount()).toBeGreaterThan(0); // armed on mount
+        const before = armCount();
+        fireEvent.mouseEnter(viewport); // pause — clears the interval
+        fireEvent.mouseLeave(viewport); // resume — must RE-ARM (was the bug: no resume)
+        expect(armCount()).toBeGreaterThan(before);
+      } finally {
+        setIntervalSpy.mockRestore();
+      }
+    });
+  });
 });

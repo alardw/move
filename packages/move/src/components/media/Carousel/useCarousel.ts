@@ -95,6 +95,7 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const isScrollingRef = useRef(false);
   const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
   const { animateScroll, cancel } = useCarouselAnimation({ animations: animationsConfig });
 
   // Page count based on slides and slidesPerView
@@ -214,9 +215,9 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
     };
   }, [orientation, slidesPerView, pageCount, setPage]);
 
-  // Autoplay
+  // Autoplay — gated by autoplayPaused so hover/focus can suspend AND resume it.
   useEffect(() => {
-    if (autoplay <= 0 || pageCount <= 1) return;
+    if (autoplay <= 0 || pageCount <= 1 || autoplayPaused) return;
 
     autoplayTimerRef.current = setInterval(() => {
       scrollToPage(loop ? page + 1 : Math.min(page + 1, pageCount - 1));
@@ -225,26 +226,27 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
     return () => {
       if (autoplayTimerRef.current) clearInterval(autoplayTimerRef.current);
     };
-  }, [autoplay, page, pageCount, loop, scrollToPage]);
+  }, [autoplay, page, pageCount, loop, scrollToPage, autoplayPaused]);
 
-  // Pause autoplay on hover/focus
+  // Pause autoplay on hover/focus, RESUME on leave/blur. (Without the resume
+  // listeners autoplay died permanently after the first hover.)
   useEffect(() => {
     const viewport = viewportRef.current;
     if (!viewport || autoplay <= 0) return;
 
-    const pause = () => {
-      if (autoplayTimerRef.current) {
-        clearInterval(autoplayTimerRef.current);
-        autoplayTimerRef.current = null;
-      }
-    };
+    const pause = () => setAutoplayPaused(true);
+    const resume = () => setAutoplayPaused(false);
 
     viewport.addEventListener('mouseenter', pause);
+    viewport.addEventListener('mouseleave', resume);
     viewport.addEventListener('focusin', pause);
+    viewport.addEventListener('focusout', resume);
 
     return () => {
       viewport.removeEventListener('mouseenter', pause);
+      viewport.removeEventListener('mouseleave', resume);
       viewport.removeEventListener('focusin', pause);
+      viewport.removeEventListener('focusout', resume);
     };
   }, [autoplay]);
 
