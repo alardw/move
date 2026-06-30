@@ -24,6 +24,7 @@ import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/core-concepts/HooksPage';
 import { SurfacesPage } from './pages/core-concepts/SurfacesPage';
 import { StackingPage } from './pages/core-concepts/StackingPage';
+import { AdaptersPage } from './pages/core-concepts/AdaptersPage';
 import { AnimationOverviewPage } from './pages/animation/AnimationOverviewPage';
 import { AnimationLifecyclePage } from './pages/animation/AnimationLifecyclePage';
 import { MotionsAndSequencesPage } from './pages/animation/MotionsAndSequencesPage';
@@ -209,6 +210,7 @@ function App() {
                 <Route path="/core-concepts/surfaces" element={<SurfacesPage />} />
                 <Route path="/core-concepts/stacking" element={<StackingPage />} />
                 <Route path="/core-concepts/hooks" element={<HooksPage />} />
+                <Route path="/core-concepts/adapters" element={<AdaptersPage />} />
                 <Route path="/animation" element={<AnimationOverviewPage />} />
                 <Route path="/animation/lifecycle" element={<AnimationLifecyclePage />} />
                 <Route path="/animation/motions-and-sequences" element={<MotionsAndSequencesPage />} />
