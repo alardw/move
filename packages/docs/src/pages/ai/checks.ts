@@ -138,4 +138,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'docs',
     enforces: 'Every `npm run` a git hook or CI workflow invokes resolves to a real package script — so renaming a script can’t silently break a gate.',
   },
+  {
+    name: 'aria-label-name',
+    appliesTo: 'component',
+    enforces: 'No native button/link sets aria-label while rendering its children — visible text and accessible name must not diverge (WCAG 2.5.3 Label-in-Name).',
+  },
 ];
