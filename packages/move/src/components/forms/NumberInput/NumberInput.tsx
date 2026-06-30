@@ -127,6 +127,11 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
     };
 
     const ni = useNumberInput(hookOptions);
+    // Live ref so the press-and-hold interval calls the LATEST increment/
+    // decrement (which reads the current value), not the one captured at
+    // pointer-down — otherwise holding re-applies the same step forever.
+    const niRef = React.useRef(ni);
+    niRef.current = ni;
 
     const size = (props.size as string) || 'md';
     const iconSize = ICON_SIZE_MAP[size] || 14;
@@ -257,7 +262,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
                   aria-label={labels.increment}
                   onPointerDown={(e) => {
                     e.preventDefault();
-                    startHold(() => ni.increment(e.shiftKey));
+                    startHold(() => niRef.current.increment(e.shiftKey));
                   }}
                   onPointerUp={stopHold}
                   onPointerLeave={stopHold}
@@ -274,7 +279,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
                   aria-label={labels.decrement}
                   onPointerDown={(e) => {
                     e.preventDefault();
-                    startHold(() => ni.decrement(e.shiftKey));
+                    startHold(() => niRef.current.decrement(e.shiftKey));
                   }}
                   onPointerUp={stopHold}
                   onPointerLeave={stopHold}

@@ -198,7 +198,10 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
 
       // Check maxFiles at the batch level
       if (maxFiles) {
-        const available = maxFiles - files.length;
+        // max(0, …): when already at/over the cap, available is <= 0 — splice
+        // from 0 so EVERY new file is rejected. A negative arg would count from
+        // the end and silently keep some past the limit.
+        const available = Math.max(0, maxFiles - files.length);
         const overLimit = accepted.splice(available);
         for (const file of overLimit) {
           rejected.push({

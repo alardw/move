@@ -1,8 +1,8 @@
 // Generated from Stepper.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRef } from 'react';
-import { Stepper } from './Stepper';
+import { Stepper, useStepper } from './Stepper';
 
 describe('Stepper', () => {
   // === Stepper.Root ===
@@ -577,5 +577,17 @@ describe('Stepper', () => {
       );
       expect(screen.getByTestId('stepper')).toHaveAttribute('data-orientation', 'vertical');
     });
+  });
+});
+
+describe('useStepper', () => {
+  it('goToNext clamps at the last step (count-1), never out of range', () => {
+    const { result } = renderHook(() => useStepper({ count: 3 }));
+    act(() => result.current.goToNext()); // 0 -> 1
+    act(() => result.current.goToNext()); // 1 -> 2 (last)
+    act(() => result.current.goToNext()); // stays 2 — must NOT advance to 3
+    act(() => result.current.goToNext());
+    expect(result.current.activeStep).toBe(2);
+    expect(result.current.isLast).toBe(true);
   });
 });

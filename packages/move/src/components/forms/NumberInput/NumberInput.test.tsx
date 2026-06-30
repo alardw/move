@@ -1,5 +1,5 @@
 // Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { NumberInput } from './NumberInput';
@@ -182,6 +182,28 @@ describe('NumberInput', () => {
       const { container } = renderInput();
       await user.click(container.firstChild as HTMLElement);
       expect(screen.getByRole('spinbutton')).toHaveFocus();
+    });
+  });
+
+  describe('press-and-hold', () => {
+    it('keeps incrementing past the first step (no stale-value freeze)', () => {
+      vi.useFakeTimers();
+      try {
+        render(<NumberInput defaultValue={5} />);
+        const inc = screen.getByLabelText('Increment');
+        fireEvent.pointerDown(inc); // immediate: 5 -> 6
+        act(() => vi.advanceTimersByTime(300)); // hold delay → repeat interval starts
+        // Separate acts so React re-renders between ticks (as real 50ms-apart
+        // intervals do) — the held action must read the freshly-incremented value.
+        act(() => vi.advanceTimersByTime(50)); // 6 -> 7
+        act(() => vi.advanceTimersByTime(50)); // 7 -> 8
+        act(() => vi.advanceTimersByTime(50)); // 8 -> 9
+        fireEvent.pointerUp(inc);
+        // Held repeat must advance, not re-apply 5+1 forever.
+        expect(screen.getByRole('spinbutton')).toHaveValue('9');
+      } finally {
+        vi.useRealTimers();
+      }
     });
   });
 });

@@ -362,3 +362,24 @@ describe('FileUpload', () => {
     });
   });
 });
+
+describe('FileUpload — maxFiles over-cap (regression)', () => {
+  it('rejects EVERY new file when already over maxFiles (negative available)', () => {
+    const onReject = vi.fn();
+    // Controlled value already over the cap (2 files, max 1).
+    const existing = [createFile('x.txt', 10, 'text/plain'), createFile('y.txt', 10, 'text/plain')];
+    const { container } = render(
+      <BasicUpload value={existing} maxFiles={1} multiple onFileReject={onReject} />,
+    );
+    const input = container.querySelector('input[type="file"]') as HTMLInputElement;
+    const incoming = [
+      createFile('a.txt', 10, 'text/plain'),
+      createFile('b.txt', 10, 'text/plain'),
+      createFile('c.txt', 10, 'text/plain'),
+    ];
+    fireEvent.change(input, { target: { files: incoming } });
+    // available = 1 - 2 = -1 → all 3 must be rejected, none slip past via splice(-1).
+    const rejected = onReject.mock.calls.flatMap((c) => c[0] as unknown[]);
+    expect(rejected).toHaveLength(3);
+  });
+});

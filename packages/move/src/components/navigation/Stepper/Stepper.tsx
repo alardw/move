@@ -473,7 +473,7 @@ export function useStepper({ initialStep = 0, count }: UseStepperOptions): UseSt
   return {
     activeStep,
     setActiveStep,
-    goToNext: () => setActiveStep((prev) => Math.min(prev + 1, count)),
+    goToNext: () => setActiveStep((prev) => Math.min(prev + 1, count - 1)),
     goToPrevious: () => setActiveStep((prev) => Math.max(prev - 1, 0)),
     isFirst: activeStep === 0,
     isLast: activeStep >= count - 1,
