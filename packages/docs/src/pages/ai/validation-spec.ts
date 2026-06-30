@@ -121,7 +121,7 @@ const RULES: RuleDef[] = [
   // Source & structure (component / factory)
   { id: 'source-1', group: 'source', rule: "'use client' at line 1", why: 'Marks the file as a client component so hooks and state render correctly; a server component would crash on them.', enforcement: C('check', 'component-conformance') },
   { id: 'source-2', group: 'source', rule: 'Props extend HTML attrs, not Record', why: 'Record accepts any prop and any value, so typos and wrong types pass silently; the real attrs let the compiler reject them.', enforcement: C('check', 'strict-props') },
-  { id: 'source-3', group: 'source', rule: 'Move-specific props in moveProps/defaults', why: 'Props the factory consumes must be declared, or they leak onto the DOM as invalid attributes.', enforcement: C('gap') },
+  { id: 'source-3', group: 'source', rule: 'Move-specific props in moveProps/defaults', why: 'Props the factory consumes must be declared, or they leak onto the DOM as invalid attributes.', enforcement: C('check', 'move-props') },
   { id: 'source-4', group: 'source', rule: 'Default values in the defaults object', why: 'The factory reads defaults from one place; inline defaults in destructuring bypass it and drift from the spec.', enforcement: C('check', 'factory-conformance') },
   { id: 'source-5', group: 'source', rule: 'slots array matches sp()/cx() calls', why: 'The slot list drives styling; a slot used but not declared (or vice-versa) means a part can’t be themed.', enforcement: C('check', 'factory-conformance') },
   { id: 'source-6', group: 'source', rule: 'cx() for every slotted className', why: 'cx() merges the slot class with the consumer’s className; a raw class drops the consumer’s styling for that part.', enforcement: C('check', 'factory-conformance') },

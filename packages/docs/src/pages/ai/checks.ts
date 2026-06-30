@@ -163,4 +163,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: 'When CSS styles by variant/size via [data-variant]/[data-size] selectors, the source actually sets that attribute — so the variant/size prop has a visual effect (source-10).',
   },
+  {
+    name: 'move-props',
+    appliesTo: 'component',
+    enforces: "Every spec prop marked moveSpecific is in its factory's moveProps/defaults, so the factory strips it instead of leaking it onto the DOM as an invalid attribute (source-3).",
+  },
 ];
