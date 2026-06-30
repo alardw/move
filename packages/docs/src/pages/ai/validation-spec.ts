@@ -138,8 +138,8 @@ const RULES: RuleDef[] = [
   { id: 'specParity-2', group: 'specParity', rule: 'Behavior contracts preserved (controlled, dismiss)', why: 'controlledProps/dismissBehavior are easy to drop in a rewrite; the check keeps source honest to the declared behaviour.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-3', group: 'specParity', rule: 'Prop parity — none silently dropped', why: 'A spec prop missing from the source shrinks the public API without anyone noticing.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
-  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'gap' } } },
-  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'gap' } } },
+  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'check', check: 'composition-spec-drift' } } },
+  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'check', check: 'composition-spec-drift' } } },
   { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
@@ -186,7 +186,7 @@ const RULES: RuleDef[] = [
   { id: 'registry-2', group: 'registry', rule: 'Registry entry is a complete RecipeDocument', why: 'The card/title/synonyms are authored on the registry entry; a missing slug, synonym, or registration leaves the recipe unrouted or unfindable.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },
 
   // Unit tests (all with logic)
-  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
+  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composition-spec-drift' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
 
   // Accessibility tests (all rendered)
   { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('gap') },

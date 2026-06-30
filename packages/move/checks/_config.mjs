@@ -23,6 +23,7 @@ const DEFAULTS = {
   components: 'src/components',
   infrastructure: null,
   recipes: 'src/recipes',
+  composites: 'src/composites',
   samples: null,
   theme: null,
 };
@@ -50,6 +51,7 @@ export function loadConfig(cwd = process.cwd()) {
     components: dirs(merged.components),
     infrastructure: dirs(merged.infrastructure),
     recipes: dirs(merged.recipes),
+    composites: dirs(merged.composites),
     samples: dirs(merged.samples),
     theme: themePath && existsSync(themePath) ? themePath : null,
   };

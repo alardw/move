@@ -49,7 +49,7 @@
     "check:component-conformance": "node scripts/checks/component-conformance.mjs",
     "check:spec-tokens": "node scripts/checks/spec-tokens.mjs",
     "check:strict-props": "node checks/strict-props.mjs",
-    "check:composition-spec-drift": "node scripts/checks/composition-spec-drift.mjs",
+    "check:composition-spec-drift": "node checks/composition-spec-drift.mjs",
     "check:animation-patterns": "node scripts/checks/animation-patterns.mjs",
     "check:dismissable-lifecycle": "node scripts/checks/dismissable-lifecycle.mjs",
     "check:icon-usage": "node scripts/checks/icon-usage.mjs",

@@ -53,9 +53,10 @@ export const CHECKS: CheckDoc[] = [
   },
   {
     name: 'composition-spec-drift',
-    appliesTo: 'recipe',
+    appliesTo: 'composition',
+    shipped: true,
     enforces:
-      'The recipe sibling of spec-drift — a composition’s imports, labels, and test match its CompositionSpec (the substance ↔ source drift).',
+      'A composition’s imports, labels, and test match its CompositionSpec (substance ↔ source). Move proves it on its recipes; you run it on your composites via `move check`.',
   },
   {
     name: 'component-conformance',
