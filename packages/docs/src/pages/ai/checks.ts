@@ -133,4 +133,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: 'The factory shape holds — a component’s declared slots are exactly the slots its sp()/cx() calls use (AST, not grep).',
   },
+  {
+    name: 'script-refs',
+    appliesTo: 'docs',
+    enforces: 'Every `npm run` a git hook or CI workflow invokes resolves to a real package script — so renaming a script can’t silently break a gate.',
+  },
 ];

@@ -32,7 +32,7 @@ for (const m of specSrc.matchAll(/\b(?:C|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) 
 // Enforced checks that guard a structural/family contract, not one coverage rule.
 const STRUCTURAL = new Set([
   'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
-  'animation-patterns', 'validation-docs', 'validation-spec',
+  'animation-patterns', 'validation-docs', 'validation-spec', 'script-refs',
 ]);
 
 const errors = [];
