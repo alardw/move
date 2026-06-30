@@ -54,6 +54,21 @@ export function run(config) {
         if (/^[a-z]/.test(tag)) record(node, 'raw-html', `<${tag}>`);
       }
       if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'style') record(node, 'inline-style', 'style=');
+      // purity-4: manual responsive — read layout off Move's responsive props
+      // (collapseBelow, …), not viewport math. Only width/height media queries
+      // count; feature queries (prefers-reduced-motion, prefers-color-scheme) are fine.
+      if (ts.isCallExpression(node) && /(?:^|\.)matchMedia$/.test(node.expression.getText(sf))) {
+        const arg = node.arguments[0];
+        const q = arg && (ts.isStringLiteral(arg) || ts.isNoSubstitutionTemplateLiteral(arg)) ? arg.text : '';
+        if (/width|height/i.test(q)) record(node, 'manual-responsive', `matchMedia(${q})`);
+      }
+      if (
+        ts.isPropertyAccessExpression(node) &&
+        node.expression.getText(sf) === 'window' &&
+        /^(inner|outer)(Width|Height)$/.test(node.name.getText(sf))
+      ) {
+        record(node, 'manual-responsive', node.getText(sf));
+      }
       ts.forEachChild(node, visit);
     };
     visit(sf);
@@ -64,7 +79,7 @@ export function run(config) {
     ok: violations.length === 0,
     summary: violations.length === 0
       ? `${files.length} composed files are 100% Move components`
-      : `${violations.length} violation(s) — raw HTML or inline styles (use Move components + props; mark unavoidable sizing with {/* ${IGNORE_MARKER}: … */})`,
+      : `${violations.length} violation(s) — raw HTML, inline styles, or manual responsive (use Move components + props; mark unavoidable sizing with {/* ${IGNORE_MARKER}: … */})`,
     messages: violations,
   };
 }
