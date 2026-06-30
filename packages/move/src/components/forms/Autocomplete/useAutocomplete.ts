@@ -29,6 +29,9 @@ export interface UseAutocompleteOptions {
   onInputValueChange?: (value: string) => void;
   loading?: boolean;
   closeOnSelect?: boolean;
+  /** Animated close requested on select (set by the component to the dismissable
+   *  close, so selecting an item plays the exit animation instead of snapping). */
+  requestClose?: () => void;
   openOnFocus?: boolean;
   allowCustomValue?: boolean;
   filterFn?: (inputValue: string, itemValue: string, itemLabel: string) => boolean;
@@ -105,6 +108,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   } = options;
 
   const closeOnSelect = options.closeOnSelect ?? !multiple;
+  const requestClose = options.requestClose;
 
   // -------------------------------------------------------------------------
   // Value state
@@ -295,10 +299,13 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
       }
     }
     if (closeOnSelect) {
-      setIsOpen(false);
+      // Prefer the animated close (sets isClosing → plays the exit) over an
+      // instant setIsOpen(false), so selecting matches outside-click/Escape.
+      if (requestClose) requestClose();
+      else setIsOpen(false);
       setHighlightedIndex(-1);
     }
-  }, [multiple, closeOnSelect, setSelectedValues, setInputValue, setIsOpen]);
+  }, [multiple, closeOnSelect, setSelectedValues, setInputValue, setIsOpen, requestClose]);
 
   const onDeselect = useCallback((value: string) => {
     setSelectedValues((prev) => prev.filter(v => v !== value));

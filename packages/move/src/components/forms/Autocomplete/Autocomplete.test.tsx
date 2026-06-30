@@ -1,8 +1,9 @@
 // Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, renderHook, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Autocomplete } from './Autocomplete';
+import { useAutocomplete } from './useAutocomplete';
 
 const defaultItems: { value: string; label: string; disabled?: boolean }[] = [
   { value: 'apple', label: 'Apple' },
@@ -192,7 +193,9 @@ describe('Autocomplete', () => {
       renderAutocomplete();
       await user.click(screen.getByRole('combobox'));
       await user.click(screen.getByText('Apple'));
-      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      // Selecting now plays the exit animation (same as Escape/outside), so the
+      // listbox unmounts after the close completes rather than instantly.
+      await waitFor(() => expect(screen.queryByRole('listbox')).not.toBeInTheDocument());
     });
   });
 
@@ -466,5 +469,18 @@ describe('Autocomplete', () => {
       await user.click(screen.getByText('Apple'));
       expect(document.body.querySelector('[aria-label="Delete apple"]')).toBeInTheDocument();
     });
+  });
+});
+
+describe('useAutocomplete — close-on-select animation', () => {
+  it('onSelect routes the close through the animated requestClose (not an instant close)', () => {
+    const requestClose = vi.fn();
+    const { result } = renderHook(() =>
+      useAutocomplete({ requestClose, closeOnSelect: true }),
+    );
+    act(() => result.current.onSelect('alpha'));
+    // Selecting must request the animated close — same path as Escape/outside —
+    // rather than snapping shut via setIsOpen(false).
+    expect(requestClose).toHaveBeenCalledTimes(1);
   });
 });

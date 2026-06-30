@@ -122,7 +122,10 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const animConfig = resolveAnimationsConfig(DEFAULT_AUTOCOMPLETE_ANIMATIONS, animationsProp);
 
-  const ac = useAutocomplete(hookOptions);
+  // Ref so the hook can request the ANIMATED close on select. dismissable is
+  // created below (it depends on ac.isOpen); the ref is populated right after.
+  const closeRef = React.useRef<() => void>(() => {});
+  const ac = useAutocomplete({ ...hookOptions, requestClose: () => closeRef.current() });
 
   // Items mount lazily inside Radix Popover.Content (unmounted while closed),
   // so on initial render the label cache is empty and tags fall back to raw
@@ -137,6 +140,7 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   // confirmed close is delegated back to the hook via onClosed. See useDismissable.
   const dismissable = useDismissable({ open: ac.isOpen, onClosed: ac.close });
   const { isClosing, epoch, onExitDone, close } = dismissable;
+  closeRef.current = close;
 
   // Keep Radix Popover in sync
   const radixOpen = ac.isOpen || isClosing;
