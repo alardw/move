@@ -1226,6 +1226,7 @@ export const spec = {
       contract: 'AsyncResource<unknown>',
       default: 'required' as const,
       fixture: 'fakeAsyncSource',
+      sample: 'async',
       description:
         'Async source for the options list — drives the loading, error, and retry states.',
     },

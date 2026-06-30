@@ -434,6 +434,9 @@ export interface IntegrationPoint {
   /** Docs/dev fixture (by name) that drives the live sample — a fake provider,
    *  never shipped in the bundle. */
   fixture?: string;
+  /** Docs sample id (from the component's content samples) that demonstrates this
+   *  point live against the fixture. Rendered in the Integrations panel. */
+  sample?: string;
   /** One line: what the consumer brings. */
   description: string;
 }

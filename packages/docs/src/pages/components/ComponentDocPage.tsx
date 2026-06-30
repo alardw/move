@@ -50,8 +50,20 @@ export function ComponentDocPage() {
 
   // Integration points (adapters) — typed seams the consumer wires. Derived from
   // the spec, same as the API table; see the Adapters concept page.
-  type IP = { id: string; kind: string; contract: string; default: string; description: string };
+  type IP = {
+    id: string;
+    kind: string;
+    contract: string;
+    default: string;
+    fixture?: string;
+    sample?: string;
+    description: string;
+  };
   const integrationPoints = (spec.integrationPoints as IP[] | undefined) ?? [];
+  // Samples that demonstrate an integration live (against a fixture) move into the
+  // Integrations panel, so they don't also appear in the generic Samples grid.
+  const integrationSampleIds = new Set(integrationPoints.map((p) => p.sample).filter(Boolean));
+  const genericSamples = samples.filter((s) => !integrationSampleIds.has(s.id));
 
   // TOC is derived from what we're actually about to render — a section
   // that's skipped (empty highlights, no spec.tokens, etc.) doesn't
@@ -61,7 +73,7 @@ export function ComponentDocPage() {
     ...(meta.highlights.length > 0 ? [{ href: '#highlights', label: 'Highlights' }] : []),
     ...(meta.related.length > 0 ? [{ href: '#related', label: 'Related' }] : []),
     ...(meta.importCode ? [{ href: '#installation', label: 'Installation' }] : []),
-    ...(samples.length > 0 ? [{ href: '#samples', label: meta.samplesTitle ?? 'Samples' }] : []),
+    ...(genericSamples.length > 0 ? [{ href: '#samples', label: meta.samplesTitle ?? 'Samples' }] : []),
     ...(meta.keyboard.length > 0 ? [{ href: '#accessibility', label: 'Accessibility' }] : []),
     ...(integrationPoints.length > 0 ? [{ href: '#integrations', label: 'Integrations' }] : []),
     ...(showApi ? [{ href: '#api', label: 'API' }] : []),
@@ -127,10 +139,10 @@ export function ComponentDocPage() {
           </Section>
         )}
 
-        {samples.length > 0 && (
+        {genericSamples.length > 0 && (
           <Section id="samples" title={meta.samplesTitle ?? 'Samples'}>
             <Grid cols={2} gap="lg" collapseBelow="900px">
-              {samples.map((sample) => {
+              {genericSamples.map((sample) => {
                 const SampleRender = sample.render;
                 return (
                   <Preview key={sample.id} title={sample.title} code={sample.code}>
@@ -158,28 +170,50 @@ export function ComponentDocPage() {
             title="Integrations"
             lede="Typed seams where you bring your own data, service, or library — an adapter bridges your integration to the prop below."
           >
-            <Table>
-              <Table.Header>
-                <Table.Row>
-                  <Table.Head>Prop</Table.Head>
-                  <Table.Head>Kind</Table.Head>
-                  <Table.Head>Contract</Table.Head>
-                  <Table.Head>Default</Table.Head>
-                  <Table.Head>What you bring</Table.Head>
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                {integrationPoints.map((p) => (
-                  <Table.Row key={p.id}>
-                    <Table.Cell><Code>{p.id}</Code></Table.Cell>
-                    <Table.Cell>{p.kind}</Table.Cell>
-                    <Table.Cell><Code>{p.contract}</Code></Table.Cell>
-                    <Table.Cell>{p.default}</Table.Cell>
-                    <Table.Cell>{p.description}</Table.Cell>
+            <Stack gap="lg">
+              <Table>
+                <Table.Header>
+                  <Table.Row>
+                    <Table.Head>Prop</Table.Head>
+                    <Table.Head>Kind</Table.Head>
+                    <Table.Head>Contract</Table.Head>
+                    <Table.Head>Default</Table.Head>
+                    <Table.Head>What you bring</Table.Head>
                   </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
+                </Table.Header>
+                <Table.Body>
+                  {integrationPoints.map((p) => (
+                    <Table.Row key={p.id}>
+                      <Table.Cell><Code>{p.id}</Code></Table.Cell>
+                      <Table.Cell>{p.kind}</Table.Cell>
+                      <Table.Cell><Code>{p.contract}</Code></Table.Cell>
+                      <Table.Cell>{p.default}</Table.Cell>
+                      <Table.Cell>{p.description}</Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+
+              {integrationPoints
+                .filter((p) => p.sample)
+                .map((p) => {
+                  const sample = samples.find((s) => s.id === p.sample);
+                  if (!sample) return null;
+                  const SampleRender = sample.render;
+                  return (
+                    <Stack key={p.id} gap="sm">
+                      <Text size="sm" color="muted">
+                        <Code>{p.id}</Code> running live against the{' '}
+                        {p.fixture ? <Code>{p.fixture}</Code> : 'demo'} fixture — a fake
+                        service standing in for your adapter. Swap in your real one for production.
+                      </Text>
+                      <Preview title={sample.title} code={sample.code}>
+                        <SampleRender />
+                      </Preview>
+                    </Stack>
+                  );
+                })}
+            </Stack>
           </Section>
         ) : null}
 
