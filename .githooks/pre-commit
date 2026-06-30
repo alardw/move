@@ -42,3 +42,27 @@ if printf '%s\n' "$staged" | grep -qE '^packages/docs/src/content/(recipes|compo
 
   echo "✓ recipe checks passed"
 fi
+
+# --- Move src: Prettier (auto-fix, re-stage) + ESLint on staged files only ---
+# Scoped to what's staged so the hook stays fast; whole-repo format/lint run in CI.
+staged_move=$(printf '%s\n' "$staged" | grep -E '^packages/move/src/.*\.(ts|tsx|css)$' || true)
+if [ -n "$staged_move" ]; then
+  echo "▶ pre-commit: formatting + linting staged Move source…"
+
+  # Auto-format staged files and re-stage them (lint-staged style). Paths are
+  # passed relative to the package so its .prettierrc / eslint.config.js apply.
+  rel=$(printf '%s\n' "$staged_move" | sed 's#^packages/move/##')
+  ( cd packages/move && printf '%s\n' "$rel" | xargs npx prettier --write ) || { echo "✗ prettier failed."; exit 1; }
+  printf '%s\n' "$staged_move" | xargs git add
+
+  # Lint staged TS/TSX — errors block the commit; complexity rules only warn.
+  rel_lint=$(printf '%s\n' "$rel" | grep -E '\.(ts|tsx)$' || true)
+  if [ -n "$rel_lint" ]; then
+    if ! ( cd packages/move && printf '%s\n' "$rel_lint" | xargs npx eslint ); then
+      echo "✗ eslint: staged Move source has lint errors (warnings are fine). Fix them."
+      exit 1
+    fi
+  fi
+
+  echo "✓ format + lint passed"
+fi

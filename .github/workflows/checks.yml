@@ -18,6 +18,10 @@ jobs:
       - run: npm ci
       - name: Typecheck (every spec satisfies ComponentSpec)
         run: npm run typecheck --workspace move
+      - name: Lint (errors fail; complexity rules warn)
+        run: npm run lint --workspace move
+      - name: Format check (Prettier)
+        run: npm run format:check --workspace move
       - name: Drift checks (spec ↔ source, cross-component, families)
         run: npm run check:all --workspace move
       - name: Tests

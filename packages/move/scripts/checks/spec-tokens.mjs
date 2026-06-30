@@ -32,7 +32,16 @@ function walk(dir, out = []) {
   }
   return out;
 }
-const norm = (v) => v.replace(/\s+/g, ' ').trim();
+// Collapse all whitespace, then drop spaces adjacent to parens/commas so that
+// Prettier wrapping a long CSS value across lines (e.g. `min(\n  a,\n  b\n)`)
+// compares equal to the single-line spec value — that whitespace is non-semantic.
+const norm = (v) =>
+  v
+    .replace(/\s+/g, ' ')
+    .replace(/\(\s+/g, '(')
+    .replace(/\s+\)/g, ')')
+    .replace(/\s*,\s*/g, ', ')
+    .trim();
 
 const problems = [];
 for (const specFile of walk(COMPONENTS).sort()) {
