@@ -112,6 +112,16 @@ function wrap(value: number, min: number, max: number, delta: number): number {
   return ((value - min + delta) % range + range) % range + min;
 }
 
+/** Seconds since midnight for an h:m:s. */
+function timeToSeconds(h: number, m: number, s: number): number {
+  return h * 3600 + m * 60 + s;
+}
+/** h:m:s from seconds since midnight (wrapped into a single day). */
+function secondsToHMS(total: number): { h: number; m: number; s: number } {
+  const t = ((Math.round(total) % 86400) + 86400) % 86400;
+  return { h: Math.floor(t / 3600), m: Math.floor((t % 3600) / 60), s: t % 60 };
+}
+
 // ---------------------------------------------------------------------------
 // Hook
 // ---------------------------------------------------------------------------
@@ -155,12 +165,28 @@ export function useTimeField(options: UseTimeFieldOptions = {}): UseTimeFieldRet
     [disabled, setValueRaw],
   );
 
+  // min/max time constraints, as seconds since midnight. Every change flows
+  // through updatePart, so clamping here enforces them for typing, increment/
+  // decrement, AM/PM, and direct setters alike.
+  const minSeconds = useMemo(
+    () => (options.min ? timeToSeconds(parseTimeString(options.min).h, parseTimeString(options.min).m, parseTimeString(options.min).s) : null),
+    [options.min],
+  );
+  const maxSeconds = useMemo(
+    () => (options.max ? timeToSeconds(parseTimeString(options.max).h, parseTimeString(options.max).m, parseTimeString(options.max).s) : null),
+    [options.max],
+  );
+
   const updatePart = useCallback(
     (newH: number, newM: number, newS: number) => {
       if (disabled) return;
-      setValueRaw(buildValue(newH, newM, newS));
+      let h = newH, m = newM, s = newS;
+      const total = timeToSeconds(h, m, s);
+      if (minSeconds != null && total < minSeconds) ({ h, m, s } = secondsToHMS(minSeconds));
+      else if (maxSeconds != null && total > maxSeconds) ({ h, m, s } = secondsToHMS(maxSeconds));
+      setValueRaw(buildValue(h, m, s));
     },
-    [disabled, buildValue, setValueRaw],
+    [disabled, buildValue, setValueRaw, minSeconds, maxSeconds],
   );
 
   const setHours = useCallback((h: number) => updatePart(clamp(h, 0, 23), minutes, seconds), [updatePart, minutes, seconds]);

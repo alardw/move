@@ -1,8 +1,9 @@
 // Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { render, screen } from '@testing-library/react';
+import { render, screen, renderHook, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { TimeField } from './TimeField';
+import { useTimeField } from './useTimeField';
 
 describe('TimeField', () => {
   // === Root ===
@@ -296,5 +297,25 @@ describe('TimeField', () => {
       const minSeg = screen.getAllByRole('spinbutton')[1];
       expect(minSeg).toHaveAttribute('value', '30');
     });
+  });
+});
+
+describe('useTimeField — min/max constraints', () => {
+  it('clamps to max: a change that would exceed max is pinned to max', () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useTimeField({ defaultValue: '16:30', max: '17:00', onValueChange: onChange }),
+    );
+    act(() => result.current.increment('hour')); // 16:30 -> 17:30 -> clamp to 17:00
+    expect(onChange).toHaveBeenLastCalledWith('17:00');
+  });
+
+  it('clamps to min: a change that would fall below min is pinned to min', () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useTimeField({ defaultValue: '09:30', min: '09:00', onValueChange: onChange }),
+    );
+    act(() => result.current.decrement('hour')); // 09:30 -> 08:30 -> clamp to 09:00
+    expect(onChange).toHaveBeenLastCalledWith('09:00');
   });
 });
