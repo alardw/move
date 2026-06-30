@@ -87,6 +87,9 @@ export type { UsePositionTrackerOptions, UsePositionTrackerReturn, UseSlidingInd
 export { useMorphHeight } from './useMorphHeight';
 export type { UseMorphHeightOptions } from './useMorphHeight';
 
+export { useDismissable, useDismissableExit } from './useDismissable';
+export type { Dismissable, DismissableOptions, DismissableExitOptions } from './useDismissable';
+
 // =============================================================================
 // Split text (Tier-2 textSplit capability)
 // =============================================================================

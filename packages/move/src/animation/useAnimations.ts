@@ -109,6 +109,31 @@ function trackAnimation(
 }
 
 /**
+ * Convert an anime.js animation to a completion promise — ALWAYS with a
+ * fallback timer (resolve is idempotent).
+ *
+ * Why always: we pause the prior animation when a new sequence supersedes it
+ * (see staggerAnimate). A paused/cancelled animation has NOT completed, so its
+ * `.then()` correctly never fires — but if we only awaited `.then()`, that
+ * orphaned promise would hang runExit()/enter sequencing forever (the popup
+ * "opens once, then nothing happens"). The fallback resolves by the animation's
+ * own duration so a stalled `.then()` can never lock the lifecycle.
+ */
+function animToPromise(anim: unknown, fallbackMs: number): Promise<void> {
+  return new Promise<void>((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    const a = anim as { then?: (cb: () => void) => void } | null | undefined;
+    a?.then?.(done);
+    setTimeout(done, fallbackMs);
+  });
+}
+
+/**
  * Execute a single animation step.
  */
 function executeStep(
@@ -150,13 +175,10 @@ function executeStep(
     if (activeAnims && triggerAnims && triggerName) {
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
-    return wrapStepPromise(new Promise<void>((resolve) => {
-      (anim as any).then?.(() => resolve());
-      if (!(anim as any).then) {
-        const dur = typeof (anim as any).duration === 'number' ? (anim as any).duration : 300;
-        setTimeout(resolve, dur + 50);
-      }
-    }), step);
+    return wrapStepPromise(
+      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 1000) + 100),
+      step,
+    );
   }
 
   // animateDimension path
@@ -171,10 +193,10 @@ function executeStep(
     if (activeAnims && triggerAnims && triggerName) {
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
-    return wrapStepPromise(new Promise<void>((resolve) => {
-      (anim as any).then?.(() => resolve());
-      if (!(anim as any).then) setTimeout(resolve, 350);
-    }), step);
+    return wrapStepPromise(
+      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100),
+      step,
+    );
   }
 
   // animatePosition path
@@ -202,10 +224,10 @@ function executeStep(
     if (activeAnims && triggerAnims && triggerName) {
       trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
-    return wrapStepPromise(new Promise<void>((resolve) => {
-      (anim as any).then?.(() => resolve());
-      if (!(anim as any).then) setTimeout(resolve, 350);
-    }), step);
+    return wrapStepPromise(
+      animToPromise(anim, (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100),
+      step,
+    );
   }
 
   // Default: moveAnimate
@@ -223,18 +245,13 @@ function executeStep(
   }
   // Looping animations never complete — resolve immediately
   if (isLooping(animation)) return Promise.resolve();
-  return wrapStepPromise(new Promise<void>((resolve) => {
-    (anim as any).then?.(() => resolve());
-    if (!(anim as any).then) {
-      let maxDur = 200;
-      for (const val of Object.values(animation)) {
-        if (typeof val === 'object' && val !== null && 'duration' in val) {
-          maxDur = Math.max(maxDur, (val as any).duration ?? 200);
-        }
-      }
-      setTimeout(resolve, maxDur + 50);
+  let maxDur = 200;
+  for (const val of Object.values(animation)) {
+    if (typeof val === 'object' && val !== null && 'duration' in val) {
+      maxDur = Math.max(maxDur, (val as any).duration ?? 200);
     }
-  }), step);
+  }
+  return wrapStepPromise(animToPromise(anim, maxDur + 100), step);
 }
 
 /**

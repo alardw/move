@@ -24,7 +24,7 @@ import {
   isBefore,
   startOfDay,
 } from '../../date-time/_shared/dateUtils';
-import { useAnimations, resolveAnimationsConfig, staggerItems, quick } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, quick, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useMergedRef } from '../../../engine';
 import { InputText } from '../../forms/InputText';
@@ -97,7 +97,8 @@ const DEFAULT_DATEPICKER_ANIMATIONS: AnimationTrigger[] = [
 interface DatePickerContextValue {
   isClosing: boolean;
   close: () => void;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   openPopover: () => void;
   focusCalendar: () => void;
   mode: SelectionMode;
@@ -230,10 +231,21 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
 
   const animConfig = resolveAnimationsConfig(DEFAULT_DATEPICKER_ANIMATIONS, animationsProp);
 
-  const [uncontrolledOpen, setUncontrolledOpen] = React.useState(defaultOpen ?? false);
-  const [isClosing, setIsClosing] = React.useState(false);
   const [activeField, setActiveField] = React.useState<'from' | 'to' | null>(null);
   const [shouldFocusCalendar, setShouldFocusCalendar] = React.useState(false);
+
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded so a reopened popup can't be closed by a
+  // superseded exit). See useDismissable.
+  const dismissable = useDismissable({
+    open: controlledOpen,
+    defaultOpen,
+    onOpenChange,
+    onClosed: () => {
+      if (mode === 'range') setActiveField(null);
+    },
+  });
+  const { isOpen, isClosing, epoch, onExitDone, open: openPopover, close } = dismissable;
   const anchorRef = React.useRef<HTMLElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
   const fromInputRef = React.useRef<HTMLInputElement>(null);
@@ -265,9 +277,6 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     },
     [mode, onValueChange],
   );
-
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : uncontrolledOpen;
 
   // Wrap onValueChange to inject time when showTime is active
   const wrappedOnValueChange = React.useMemo(() => {
@@ -350,7 +359,7 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
             calendarSetRangeValue({ from: startOfDay(date), to: undefined as any });
           }
           if (closeOnSelect) {
-            setTimeout(() => setIsClosing(true), 120);
+            setTimeout(() => close(), 120);
           }
           return;
         }
@@ -362,15 +371,15 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
       if (!closeOnSelect) return;
 
       if (mode === 'single') {
-        setTimeout(() => setIsClosing(true), 120);
+        setTimeout(() => close(), 120);
       } else if (mode === 'range') {
         const current = calendar.value as DateRange | null;
         if (current?.from && !current?.to) {
-          setTimeout(() => setIsClosing(true), 120);
+          setTimeout(() => close(), 120);
         }
       }
     },
-    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue],
+    [originalOnSelect, closeOnSelect, mode, calendar.value, activeField, calendarSetRangeValue, close],
   );
 
   const calendarCtx = React.useMemo(
@@ -380,27 +389,12 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
 
   const handleOpenChange = React.useCallback(
     (newOpen: boolean) => {
-      if (newOpen) {
-        if (!isControlled) setUncontrolledOpen(true);
-        onOpenChange?.(true);
-      }
-      // Ignore Radix close — we handle via animation
+      // Open (or cancel an in-flight close) via the lifecycle; ignore Radix's
+      // own close — we drive the exit animation ourselves.
+      if (newOpen) openPopover();
     },
-    [isControlled, onOpenChange],
+    [openPopover],
   );
-
-  const handleCloseComplete = React.useCallback(() => {
-    if (mode === 'range') {
-      setActiveField(null);
-    }
-    setIsClosing(false);
-    if (!isControlled) setUncontrolledOpen(false);
-    onOpenChange?.(false);
-  }, [isControlled, onOpenChange, mode]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
 
   // Close the popup on viewport changes — scroll (any ancestor) or
   // resize. Without this the popover floats away from the trigger
@@ -418,20 +412,10 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     };
   }, [isOpen, isClosing, close]);
 
-  const openPopover = React.useCallback(() => {
-    if (!isOpen && !isClosing) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
-  }, [isOpen, isClosing, isControlled, onOpenChange]);
-
   const focusCalendar = React.useCallback(() => {
-    if (!isOpen && !isClosing) {
-      if (!isControlled) setUncontrolledOpen(true);
-      onOpenChange?.(true);
-    }
+    openPopover();
     setShouldFocusCalendar(true);
-  }, [isOpen, isClosing, isControlled, onOpenChange]);
+  }, [openPopover]);
 
   const clearFocusRequest = React.useCallback(() => {
     setShouldFocusCalendar(false);
@@ -442,7 +426,8 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
       value={{
         isClosing,
         close,
-        onCloseComplete: handleCloseComplete,
+        epoch,
+        onExitDone,
         openPopover,
         focusCalendar,
         mode,
@@ -663,7 +648,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (dpCtx?.isOpen) {
+      if (dpCtx?.isOpen && !dpCtx?.isClosing) {
         dpCtx.close();
       } else {
         dpCtx?.focusCalendar();
@@ -877,7 +862,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (dpCtx?.isOpen) {
+      if (dpCtx?.isOpen && !dpCtx?.isClosing) {
         dpCtx.close();
       } else {
         dpCtx?.setActiveField('from');
@@ -987,13 +972,21 @@ const DatePickerContentInner = React.forwardRef<HTMLDivElement, DatePickerConten
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }), []);
 
-    const { runExit } = useAnimations(contentConfig, contentRefs);
+    const { runExit, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    React.useEffect(() => {
-      if (!dpCtx?.isClosing) return;
-      if (!contentConfig) { dpCtx?.onCloseComplete?.(); return; }
-      runExit().then(() => dpCtx?.onCloseComplete?.());
-    }, [dpCtx?.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+    useDismissableExit({
+      isClosing: dpCtx?.isClosing ?? false,
+      epoch: dpCtx?.epoch ?? 0,
+      onExitDone: dpCtx?.onExitDone ?? (() => {}),
+      runExit,
+      pauseAll,
+      // A cancelled close leaves the content half-faded — clear the exit's
+      // inline styles so it snaps back to fully visible.
+      resnap: () => {
+        if (contentRef.current) contentRef.current.style.opacity = '';
+        if (innerRef.current) innerRef.current.style.transform = '';
+      },
+    });
 
     const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
