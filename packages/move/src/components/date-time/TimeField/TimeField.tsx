@@ -6,7 +6,7 @@ import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, staggerItems } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, useDismissable, useDismissableExit } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
@@ -55,7 +55,8 @@ interface TimeFieldContextValue {
   isClosing: boolean;
   openDropdown: () => void;
   close: () => void;
-  onCloseComplete: () => void;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
   withDropdown: boolean;
   labels: TimeFieldLabels;
@@ -135,8 +136,10 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
 }) => {
   const labels = { ...DEFAULT_LABELS, ...labelsProp };
   const animConfig = resolveAnimationsConfig(DEFAULT_TIMEFIELD_ANIMATIONS, animationsProp);
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
+  // Interruptible open/close lifecycle (open cancels an in-flight close;
+  // exit-completion is epoch-guarded). See useDismissable.
+  const dismissable = useDismissable();
+  const { isOpen, isClosing, epoch, onExitDone, open: openDropdown, close } = dismissable;
   const segmentRefs = React.useRef<Map<string, HTMLElement | null>>(new Map());
   const anchorRef = React.useRef<HTMLDivElement>(null);
 
@@ -182,25 +185,11 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     [segmentOrder, focusSegment],
   );
 
-  const openDropdown = React.useCallback(() => {
-    if (!isOpen && !isClosing) setIsOpen(true);
-  }, [isOpen, isClosing]);
-
-  const close = React.useCallback(() => {
-    setIsClosing(true);
-  }, []);
-
-  const onCloseComplete = React.useCallback(() => {
-    setIsClosing(false);
-    setIsOpen(false);
-  }, []);
-
   const handleOpenChange = React.useCallback((newOpen: boolean) => {
-    if (newOpen) {
-      setIsOpen(true);
-    }
-    // Ignore close from Radix — we coordinate via animation
-  }, []);
+    // Open (or cancel an in-flight close); ignore Radix's own close — the exit
+    // animation drives it (useDismissable).
+    if (newOpen) openDropdown();
+  }, [openDropdown]);
 
   const ctx: TimeFieldContextValue = {
     tf,
@@ -215,7 +204,8 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     isClosing,
     openDropdown,
     close,
-    onCloseComplete,
+    epoch,
+    onExitDone,
     animConfig,
     withDropdown,
     labels,
@@ -523,13 +513,18 @@ const TimeFieldDropdownInner: React.FC<TimeFieldDropdownProps> = ({
     Content: contentRef as React.RefObject<HTMLElement | null>,
   }), []);
 
-  const { runExit } = useAnimations(contentConfig, contentRefs);
+  const { runExit, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-  React.useEffect(() => {
-    if (!ctx.isClosing) return;
-    if (!contentConfig) { ctx.onCloseComplete?.(); return; }
-    runExit().then(() => ctx.onCloseComplete?.());
-  }, [ctx.isClosing]); // eslint-disable-line react-hooks/exhaustive-deps
+  useDismissableExit({
+    isClosing: ctx.isClosing,
+    epoch: ctx.epoch,
+    onExitDone: ctx.onExitDone,
+    runExit,
+    pauseAll,
+    resnap: () => {
+      if (contentRef.current) contentRef.current.style.opacity = '';
+    },
+  });
 
   const handlePointerDownOutside = (e: Event) => {
     if (!e.defaultPrevented) ctx.close();
