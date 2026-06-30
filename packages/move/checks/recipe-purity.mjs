@@ -24,7 +24,9 @@ function collectTsx(dir, out = []) {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
     if (statSync(full).isDirectory()) collectTsx(full, out);
-    else if (entry.endsWith('.tsx')) out.push(full);
+    // Test files import vitest/testing-library — they aren't subject to the
+    // "only Move components" purity rule.
+    else if (entry.endsWith('.tsx') && !entry.endsWith('.test.tsx')) out.push(full);
   }
   return out;
 }

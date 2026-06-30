@@ -14,6 +14,8 @@ const defaultLabels = {
   continue: 'Continue',
   back: 'Back',
   submit: 'Verify & activate',
+  successTitle: 'Two-factor authentication enabled',
+  successDescription: 'You will be asked for a code from your authenticator app the next time you sign in.',
 };
 
 type Labels = typeof defaultLabels;
@@ -25,11 +27,15 @@ export default function MfaSetup({ labels }: { labels?: Partial<Labels> }) {
   const [step, setStep] = useState<'scan' | 'verify'>('scan');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
+  const [verified, setVerified] = useState(false);
 
   const handleVerify = (value: string) => {
     setError('');
-    if (value.length === 6) {
-      setStep('scan');
+    // Integration point: onVerify — validate `value` against your MFA backend
+    // and activate two-factor auth. The demo accepts any 6-digit code except the
+    // sentinel '000000', which it rejects to demonstrate the invalid-code state.
+    if (value.length === 6 && value !== '000000') {
+      setVerified(true); // success — confirm enrolment (NOT back to the scan step)
       setCode('');
     } else {
       setError(t.invalidCode);
@@ -60,6 +66,11 @@ export default function MfaSetup({ labels }: { labels?: Partial<Labels> }) {
               <Code block>{DEMO_BACKUP_CODES.join('\n')}</Code>
             </Stack>
           </Stack>
+        ) : verified ? (
+          <Stack gap="sm" align="center">
+            <Badge size="md" color="success" variant="soft">{t.successTitle}</Badge>
+            <Text align="center" color="muted" size="sm">{t.successDescription}</Text>
+          </Stack>
         ) : (
           <Stack gap="md" align="center">
             <Text align="center">{t.verifyDescription}</Text>
@@ -69,7 +80,6 @@ export default function MfaSetup({ labels }: { labels?: Partial<Labels> }) {
               grouping={[3, 3]}
               value={code}
               onChange={setCode}
-              onComplete={handleVerify}
             />
           </Stack>
         )}
@@ -78,14 +88,14 @@ export default function MfaSetup({ labels }: { labels?: Partial<Labels> }) {
         <Card.FooterStart>
           {step === 'scan' ? (
             <Button variant="ghost">{t.cancel}</Button>
-          ) : (
+          ) : verified ? null : (
             <Button variant="ghost" onClick={() => setStep('scan')}>{t.back}</Button>
           )}
         </Card.FooterStart>
         <Card.FooterEnd>
           {step === 'scan' ? (
             <Button onClick={() => setStep('verify')}>{t.continue}</Button>
-          ) : (
+          ) : verified ? null : (
             <Button disabled={code.length < 6} onClick={() => handleVerify(code)}>
               {t.submit}
             </Button>
