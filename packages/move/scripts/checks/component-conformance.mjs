@@ -63,6 +63,16 @@ for (const cat of readdirSync(COMPONENTS)) {
     const compDir = join(catDir, comp);
     const specPath = join(compDir, `${comp}.spec.ts`);
     if (!statSync(compDir).isDirectory() || !existsSync(specPath)) continue;
+    // fileLocation-1 (F1): spec.category matches the folder it lives in.
+    const catM = readFileSync(specPath, 'utf8').match(/category:\s*'([^']+)'/);
+    if (catM && catM[1] !== cat) {
+      violations.push({ file: specPath, line: 0, rule: 'F1', msg: `spec.category '${catM[1]}' != folder '${cat}'` });
+    }
+    // fileLocation-2 (F2): src/index.ts exports it from its real path.
+    const pathM = new RegExp(`from '(\\./components/[^']*/${comp})'`).exec(indexSrc);
+    if (pathM && pathM[1] !== `./components/${cat}/${comp}`) {
+      violations.push({ file: specPath, line: 0, rule: 'F2', msg: `src/index.ts path '${pathM[1]}' != './components/${cat}/${comp}'` });
+    }
     if (!new RegExp(`\\b${comp}\\b`).test(indexSrc)) {
       violations.push({ file: join(compDir, `${comp}.tsx`), line: 0, rule: 'C2', msg: 'not exported from src/index.ts' });
     }
@@ -79,11 +89,22 @@ for (const cat of readdirSync(COMPONENTS)) {
     if (existsSync(hookPath) && existsSync(compIndex) && !new RegExp(`\\buse${comp}\\b`).test(readFileSync(compIndex, 'utf8'))) {
       violations.push({ file: hookPath, line: 0, rule: 'D1', msg: `use${comp} hook not exported from index.ts` });
     }
+    // styles-1 (B4): every declared slot has a matching .{slot} class in the CSS.
+    const tsxPath = join(compDir, `${comp}.tsx`);
+    if (existsSync(tsxPath) && existsSync(cssPath)) {
+      const tsx = readFileSync(tsxPath, 'utf8');
+      const css = readFileSync(cssPath, 'utf8');
+      const slots = new Set();
+      for (const m of tsx.matchAll(/slots:\s*\[([^\]]*)\]/g))
+        for (const s of m[1].matchAll(/'([^']+)'/g)) slots.add(s[1]);
+      for (const slot of slots)
+        if (!new RegExp(`\\.${slot}\\b`).test(css)) violations.push({ file: cssPath, line: 0, rule: 'B4', msg: `slot '${slot}' has no .${slot} class` });
+    }
   }
 }
 
 if (!violations.length) {
-  console.log('✓ component-conformance: clear (A1 A11 A20 B3 C2 D1 E1 G1).');
+  console.log('✓ component-conformance: clear (A1 A11 A20 B3 B4 C2 D1 E1 F1 F2 G1).');
   process.exit(0);
 }
 console.error(`✗ component-conformance: ${violations.length} violation(s).\n`);

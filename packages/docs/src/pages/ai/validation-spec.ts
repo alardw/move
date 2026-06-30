@@ -143,7 +143,7 @@ const RULES: RuleDef[] = [
   { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
-  { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('gap') },
+  { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('check', 'component-conformance') },
   { id: 'styles-2', group: 'styles', rule: 'Design tokens — no hard-coded values', why: 'Hard-coded colours/spacing escape the theme and break dark mode and rebranding.', enforcement: C('check', 'css-tokens') },
   { id: 'styles-3', group: 'styles', rule: 'Component tokens on .root, not :root', why: ':root leaks the token globally; on .root it’s scoped to the component.', enforcement: C('check', 'component-conformance') },
   { id: 'styles-4', group: 'styles', rule: 'Data-attribute selectors for variant/size/state', why: 'Keeps variant styling declarative and in CSS instead of branching in JS.', enforcement: C('gap') },
@@ -158,8 +158,8 @@ const RULES: RuleDef[] = [
   { id: 'exports-3', group: 'exports', rule: 'Headless hook exported, if one exists', why: 'The hook is the headless API; unexported, it can’t be used.', enforcement: C('check', 'component-conformance') },
 
   // File location (component / libraryExport)
-  { id: 'fileLocation-1', group: 'fileLocation', rule: 'Component in a valid category folder', why: 'Category placement drives docs grouping and the registry.', enforcement: C('gap') },
-  { id: 'fileLocation-2', group: 'fileLocation', rule: 'src/index.ts path matches the location', why: 'A stale barrel path breaks the import after a move.', enforcement: C('gap') },
+  { id: 'fileLocation-1', group: 'fileLocation', rule: 'Component in a valid category folder', why: 'Category placement drives docs grouping and the registry.', enforcement: C('check', 'component-conformance') },
+  { id: 'fileLocation-2', group: 'fileLocation', rule: 'src/index.ts path matches the location', why: 'A stale barrel path breaks the import after a move.', enforcement: C('check', 'component-conformance') },
 
   // Purity & layout (composition + recipe / pureComposition)
   { id: 'purity-1', group: 'purity', rule: 'Only Move components; no raw HTML layout', why: 'Raw divs skip the tokens, a11y, and responsive behaviour Move components carry.', enforcement: { composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
