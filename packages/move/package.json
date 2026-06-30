@@ -59,9 +59,10 @@
     "check:script-refs": "node scripts/checks/script-refs.mjs",
     "check:aria-label-name": "node scripts/checks/aria-label-name.mjs",
     "check:integration-points": "node scripts/checks/integration-points.mjs",
+    "check:data-attrs": "node scripts/checks/data-attrs.mjs",
     "check:doc-synonyms": "node scripts/checks/doc-synonyms.mjs",
     "check:doc-coverage": "node scripts/checks/doc-coverage.mjs",
-    "check:all": "npm run check:spec-drift && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:recipe-spec-drift && npm run check:animation-patterns && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:validation-docs && npm run check:validation-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:doc-synonyms && npm run check:doc-coverage",
+    "check:all": "npm run check:spec-drift && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:recipe-spec-drift && npm run check:animation-patterns && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:validation-docs && npm run check:validation-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:doc-synonyms && npm run check:doc-coverage && npm run check:data-attrs",
     "spec-diff": "tsx scripts/spec-diff/cli.mjs diff",
     "spec-snapshot": "tsx scripts/spec-diff/cli.mjs snapshot --from src/components"
   },

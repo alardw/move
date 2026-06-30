@@ -158,4 +158,9 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces: 'Every published artifact has a doc page with live samples — a component content folder (meta + ≥1 sample) or a recipe registry entry — so nothing ships undocumented.',
   },
+  {
+    name: 'data-attrs',
+    appliesTo: 'component',
+    enforces: 'When CSS styles by variant/size via [data-variant]/[data-size] selectors, the source actually sets that attribute — so the variant/size prop has a visual effect (source-10).',
+  },
 ];
