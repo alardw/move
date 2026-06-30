@@ -77,7 +77,7 @@ const ENTITIES: EntityDef[] = [
   {
     key: 'composition',
     title: 'Composition',
-    blurb: 'What you build — composite, page, feature. Private app code, spec-driven.',
+    blurb: 'What you build — composite, page, feature. Spec-driven (the skill generates the CompositionSpec); validated on your own code by `move check`.',
     traits: ['spec', 'pureComposition', 'renders', 'logic'],
   },
   {
