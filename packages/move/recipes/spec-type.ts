@@ -118,11 +118,13 @@ export interface CompositionSpec {
 }
 
 /**
- * The docs/registry metadata that PUBLISHES a composition as a recipe — separate
- * from the substance. Lives on the registry entry (`registry.ts`), not in the
- * spec file. A private composition has none.
+ * The docs/discovery metadata common to anything Move PUBLISHES — a component or
+ * a recipe: where it lives (slug/group), how it reads (title/description), and
+ * how it's found (synonyms). The shared base of `RecipeDoc` and (step 3) a
+ * `ComponentDoc`. A private composition has none. It lives on the registry/docs
+ * entry, never in the substance spec.
  */
-export interface RecipeDoc {
+export interface DocumentSpec {
   /** URL slug within its group, e.g. 'sign-in'. */
   slug: string;
   /** Display name of the group/category, e.g. 'Authentication'. */
@@ -133,6 +135,13 @@ export interface RecipeDoc {
   description: string;
   /** Search aliases — parity with the component spec's `synonyms`. */
   synonyms: string[];
+}
+
+/**
+ * Publishes a composition as a recipe: the shared `DocumentSpec` plus the
+ * recipe-specific bits. Lives on the registry entry (`registry.ts`).
+ */
+export interface RecipeDoc extends DocumentSpec {
   /** How the recipe renders in the overview card. */
   preview: RecipePreview;
 }
