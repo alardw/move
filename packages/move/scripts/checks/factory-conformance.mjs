@@ -12,6 +12,8 @@
  *              agree (no slot declared-but-unused, none used-but-undeclared).
  *   source-6 — a slot's className goes through cx()/slot(), never raw styles.<slot>.
  *   source-7 — every declared slot is slotProps-themeable (slot() or sp()).
+ *   source-8 — the consumer's HTML attrs (id, aria-…, data-…) and the root slot's
+ *              leftover styles reach the real element (else they vanish).
  *   source-9 — the render forwards a ref to the real node.
  *
  * Files that contain no `withMoveComponent` call (e.g. Calendar's bespoke build,
@@ -57,6 +59,26 @@ function factoryCalls(sf) {
   return calls;
 }
 
+/** Peel `as T` / parens / `!` off an expression. */
+const unwrap = (e) => {
+  while (e && (ts.isAsExpression(e) || ts.isParenthesizedExpression(e) || ts.isNonNullExpression(e))) e = e.expression;
+  return e;
+};
+
+/** Is this a `sp(...)` / `slot(...)` call? (the slot-props sources.) */
+const isSpCall = (e) =>
+  e && ts.isCallExpression(e) && ts.isIdentifier(e.expression) && (e.expression.text === 'sp' || e.expression.text === 'slot');
+
+/** The `const <Name> = withMoveComponent(` this call is assigned to (for messages). */
+function factoryName(call) {
+  let n = call.parent;
+  while (n) {
+    if (ts.isVariableDeclaration(n) && n.name) return n.name.getText();
+    n = n.parent;
+  }
+  return '?';
+}
+
 /** The config object literal passed to a factory call (first arg). */
 const configOf = (call) =>
   call.arguments[0] && ts.isObjectLiteralExpression(call.arguments[0]) ? call.arguments[0] : null;
@@ -97,6 +119,48 @@ for (const file of componentFiles()) {
   for (const call of factoryCalls(sf)) {
     const config = configOf(call);
     if (!config) continue;
+
+    // source-8 (gate): the consumer's HTML attrs (id/aria-*/data-*) and the root
+    // slot's leftover styles must reach the real element. attrs may be forwarded
+    // three ways — spread `{...attrs}`, a rest-alias (`{ onClick, ...restAttrs } =
+    // attrs; {...restAttrs}`), or handed to a DOM-owning child (`attrs={attrs}`).
+    // A factory that delegates via `attrs={}` also delegates its slot styling to
+    // that child; otherwise the root slot's rest (`{...spRest}`) must be spread.
+    // Runs on EVERY factory, slotted or not — a slotless root still owns attrs.
+    const rel8 = relative(MOVE_ROOT, file);
+    const fname = factoryName(call);
+    const attrsAliases = new Set(['attrs']);
+    const spAliases = new Set();
+    walk(call, (n) => {
+      if (!ts.isVariableDeclaration(n) || !n.initializer) return;
+      const init = unwrap(n.initializer);
+      if (ts.isObjectBindingPattern(n.name)) {
+        const fromAttrs = ts.isIdentifier(init) && init.text === 'attrs';
+        const fromSp = isSpCall(init);
+        if (fromAttrs || fromSp)
+          for (const el of n.name.elements)
+            if (el.dotDotDotToken) (fromAttrs ? attrsAliases : spAliases).add(el.name.getText());
+      } else if (ts.isIdentifier(n.name) && ts.isIdentifier(init) && init.text === 'attrs') {
+        attrsAliases.add(n.name.getText());
+      }
+    });
+    const isAttrsAlias = (e) => e && ts.isIdentifier(e) && attrsAliases.has(e.text);
+    const isSpRest = (e) => (ts.isIdentifier(e) && (spAliases.has(e.text) || /[Ss]pRest$/.test(e.text))) || isSpCall(e);
+    let spreadsAttrs = false, delegatesAttrs = false, spreadsSpRest = false;
+    walk(call, (n) => {
+      if (ts.isJsxSpreadAttribute(n) || ts.isSpreadAssignment(n)) {
+        const e = unwrap(n.expression);
+        if (isAttrsAlias(e)) spreadsAttrs = true;
+        if (isSpRest(e)) spreadsSpRest = true;
+      }
+      if (ts.isJsxAttribute(n) && n.name.getText() === 'attrs' && n.initializer && ts.isJsxExpression(n.initializer) && isAttrsAlias(unwrap(n.initializer.expression)))
+        delegatesAttrs = true;
+    });
+    if (!spreadsAttrs && !delegatesAttrs)
+      violations.push(`[source-8] ${rel8}: ${fname} forwards no attrs — the consumer's id/aria-*/data-* vanish; spread {...attrs} on the root`);
+    else if (!spreadsSpRest && !delegatesAttrs)
+      violations.push(`[source-8] ${rel8}: ${fname} spreads no slot rest — the root slot's styles vanish; spread {...spRest} on the root`);
+
     const slots = slotsOf(config);
     if (slots.length === 0) continue; // nothing to relate
     factories++;
@@ -147,7 +211,7 @@ for (const file of componentFiles()) {
 }
 
 if (!violations.length) {
-  console.log(`✓ factory-conformance: ${factories} factories — slots declared/used/themeable, defaults + slot classes + ref in place (source-4/5/6/7/9).`);
+  console.log(`✓ factory-conformance: ${factories} factories — slots declared/used/themeable, defaults + slot classes + attrs/spRest + ref in place (source-4/5/6/7/8/9).`);
   process.exit(0);
 }
 console.error(`✗ factory-conformance: ${violations.length} issue(s).\n`);
