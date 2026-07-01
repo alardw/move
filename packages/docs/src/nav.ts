@@ -43,6 +43,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/core-concepts', label: 'Overview' },
       { to: '/core-concepts/how-move-works', label: 'How Move Works' },
       { to: '/core-concepts/component-contract', label: 'Component Contract' },
+      { to: '/core-concepts/composition-contract', label: 'Composition Contract' },
       { to: '/core-concepts/conformance-model', label: 'Conformance Model' },
       { to: '/core-concepts/animation-system', label: 'Animation System' },
       { to: '/core-concepts/theming-model', label: 'Theming Model' },

@@ -9,15 +9,15 @@ import {
 } from '../../components';
 
 const BADGES = [
-  { icon: 'blocks', label: 'Building blocks' },
+  { icon: 'blocks', label: 'Components' },
   { icon: 'bot', label: 'AI skills' },
   { icon: 'shield-check', label: 'Conformance checks' },
 ];
 
-const BLOCK_POINTS: HighlightItem[] = [
+const COMPONENT_POINTS: HighlightItem[] = [
   {
     icon: 'shield-check',
-    text: 'The hard parts are already inside — keyboard, focus handling, collision flipping, overflow. You place the block; the behavior comes with it.',
+    text: 'The hard parts are already inside — keyboard, focus handling, collision flipping, overflow. You place the component; the behavior comes with it.',
   },
   {
     icon: 'accessibility',
@@ -25,7 +25,7 @@ const BLOCK_POINTS: HighlightItem[] = [
   },
   {
     icon: 'life-buoy',
-    text: 'The un-happy path has building blocks of its own — EmptyState, Skeleton, Alert, inline field errors, Toast — so handling missing data, a wait, or a wrong input is composition, with the parts already there.',
+    text: 'The un-happy path has components of its own — EmptyState, Skeleton, Alert, inline field errors, Toast — so handling missing data, a wait, or a wrong input is composition, with the parts already there.',
   },
 ];
 
@@ -36,22 +36,22 @@ const SKILL_POINTS: HighlightItem[] = [
   },
   {
     icon: 'shield-check',
-    text: 'So what it produces is predictable: the same blocks, composed the same way, every time.',
+    text: 'So what it produces is predictable: the same components, composed the same way, every time.',
   },
 ];
 
 const CONFORMANCE_POINTS: HighlightItem[] = [
   {
+    icon: 'boxes',
+    text: 'Everything is a component or a composite — a component standard from Move or one you generate yourself, a composite your arrangement of them — and each is defined by one typed contract.',
+  },
+  {
     icon: 'refresh-cw',
-    text: 'Every block is generated from its contract and checked against it — so the library, the docs, and the AI never disagree.',
+    text: 'That one contract does four jobs: it builds the code, generates its tests, guides the AI that composes it, and checks the result.',
   },
   {
     icon: 'shield-check',
-    text: 'The same checks run on your project: as you and the AI add screens, they’re held to the same contracts.',
-  },
-  {
-    icon: 'check-check',
-    text: 'Kept in line automatically, not by anyone remembering to — so the tenth thing you build stays as coherent as the first.',
+    text: 'The same two contracts run on your project. As you and the AI add components and composites, they’re held to them automatically.',
   },
 ];
 
@@ -86,7 +86,7 @@ export function HowMoveWorksPage() {
         <Stack gap="sm">
           <Heading level={1}>How Move Works</Heading>
           <Text color="muted" size="lg">
-            Move is a framework with three parts — building blocks, AI skills that compose them, and conformance checks that keep it from drifting — tied together by one idea: a contract behind every block.
+            Move is a framework with three parts — components, AI skills that compose them, and conformance checks that keep them true — tied together by one idea: a contract behind every one.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((badge) => (
@@ -101,11 +101,11 @@ export function HowMoveWorksPage() {
         <Section
           id="building-blocks"
           title="The building blocks"
-          lede="A building block is a finished piece of behavior you compose — the whole thing done, edges and all."
+          lede="A component is a finished piece of behavior you compose — the whole thing done, edges and all."
         >
-          <HighlightList items={BLOCK_POINTS} />
+          <HighlightList items={COMPONENT_POINTS} />
           <Text>
-            Behind each block is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for what one carries.
+            Behind each component is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for what one carries.
           </Text>
         </Section>
 
@@ -115,7 +115,7 @@ export function HowMoveWorksPage() {
           lede="You don’t prompt into chaos. The assistant builds through skills."
         >
           <Text>
-            Ask for a settings page and the assistant follows a skill — reading each block’s contract, the same agreement Move used to build and test that block. It works from the manual the framework was made from, not a picture of it.
+            Ask for a settings page and the assistant follows a skill — reading each component’s contract, the same agreement Move used to build and test that component. It works from the manual the framework was made from, not a picture of it.
           </Text>
           <HighlightList items={SKILL_POINTS} />
           <Text>
@@ -132,7 +132,11 @@ export function HowMoveWorksPage() {
           <Card.Root>
             <Card.Body>
               <Text size="lg">
-                One contract per block — it builds the block, tests it, guides the AI, and checks your work. Automatically, no handwork.
+                One contract each — it builds the code, tests it, guides the AI, and checks your
+                work. Automatically, no handwork. And there are only two:{' '}
+                <RouterLink to="/core-concepts/component-contract">a component</RouterLink> or{' '}
+                <RouterLink to="/core-concepts/composition-contract">a composite</RouterLink>. That’s
+                the whole system.
               </Text>
             </Card.Body>
           </Card.Root>
@@ -147,7 +151,7 @@ export function HowMoveWorksPage() {
             You’re pointing AI at a real framework with the hard parts already solved — composition, motion, theming, and accessibility, all defined before you start. What it builds is a product that holds together.
           </Text>
           <Text>
-            From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every block satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
+            From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every component satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
           </Text>
 
           <Card.Root>

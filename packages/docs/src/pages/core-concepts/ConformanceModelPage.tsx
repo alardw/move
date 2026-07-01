@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Table, Card } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Table } from 'move';
 import { Section, TocRail, type TocItem, CodeBlock } from '../../components';
 
 /**
@@ -17,7 +17,6 @@ const TOC: TocItem[] = [
   { href: '#two-gates', label: 'Two kinds of gate' },
   { href: '#ratchet', label: 'The ratchet' },
   { href: '#axes', label: 'The two axes' },
-  { href: '#dogfood', label: 'Dogfooding' },
   { href: '#adopt', label: 'In your project' },
   { href: '#enforcement', label: 'Enforcement' },
   { href: '#next-steps', label: 'Next steps' },
@@ -226,26 +225,6 @@ export function ConformanceModelPage() {
               the same machinery.
             </Text>
           </Stack>
-        </Section>
-
-        <Section
-          id="dogfood"
-          title="Dogfooding"
-          lede="These docs are a Move app, held to the same gates they describe — no exceptions."
-        >
-          <Card.Root>
-            <Card.Body>
-              <Stack gap="sm">
-                <Text>
-                  The site you're reading is built entirely from Move components and runs both ratchets
-                  on itself in CI. The baselines above are <Text as="em">real</Text> — 265 hand-rolling findings and
-                  40 accessibility findings across every sample and recipe — the honest backlog of this
-                  app, ratcheting down as each one is fixed. If a gate is worth shipping to you, it's
-                  worth Move holding itself to first.
-                </Text>
-              </Stack>
-            </Card.Body>
-          </Card.Root>
         </Section>
 
         <Section

@@ -20,6 +20,7 @@ import { CoreConceptsOverviewPage } from './pages/core-concepts/CoreConceptsOver
 import { HowMoveWorksPage } from './pages/core-concepts/HowMoveWorksPage';
 import { ComponentContractPage } from './pages/core-concepts/ComponentContractPage';
 import { ConformanceModelPage } from './pages/core-concepts/ConformanceModelPage';
+import { CompositionContractPage } from './pages/core-concepts/CompositionContractPage';
 import { AnimationSystemPage } from './pages/core-concepts/AnimationSystemPage';
 import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/core-concepts/HooksPage';
@@ -207,6 +208,7 @@ function App() {
                 <Route path="/core-concepts/how-move-works" element={<HowMoveWorksPage />} />
                 <Route path="/core-concepts/component-contract" element={<ComponentContractPage />} />
                 <Route path="/core-concepts/conformance-model" element={<ConformanceModelPage />} />
+                <Route path="/core-concepts/composition-contract" element={<CompositionContractPage />} />
                 <Route path="/core-concepts/animation-system" element={<AnimationSystemPage />} />
                 <Route path="/core-concepts/theming-model" element={<ThemingModelPage />} />
                 <Route path="/core-concepts/surfaces" element={<SurfacesPage />} />
