@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Card, Code } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -120,6 +120,20 @@ export function HowMoveWorksPage() {
           <Text>
             From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every spec satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see the contract applied across the library.
           </Text>
+
+          <Card.Root>
+            <Card.Body>
+              <Stack gap="sm">
+                <Text size="lg">
+                  “Dogfooding caught me hand-rolling <Code>{'<strong>'}</Code> and styled tables in the
+                  very page that preaches ‘bring your own X.’ That’s the whole point working.”
+                </Text>
+                <Text size="sm" color="muted">
+                  — Claude Opus 4.8, the first time the audit ran against these docs
+                </Text>
+              </Stack>
+            </Card.Body>
+          </Card.Root>
         </Section>
       </Stack>
       <TocRail items={TOC} />
