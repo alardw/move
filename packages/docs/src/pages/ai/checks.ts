@@ -56,7 +56,7 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'composition',
     shipped: true,
     enforces:
-      'A composition’s imports, labels, and test match its CompositionSpec (substance ↔ source). Move proves it on its recipes; you run it on your composites via `move check`.',
+      'A composition’s imports, labels, and test match its CompositionSpec, and no user-facing string bypasses the labels object (substance ↔ source). Move proves it on its recipes; you run it on your composites via `move check`.',
   },
   {
     name: 'component-conformance',

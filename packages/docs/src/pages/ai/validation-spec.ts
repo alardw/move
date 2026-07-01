@@ -179,7 +179,7 @@ const RULES: RuleDef[] = [
   { id: 'icons-3', group: 'icons', rule: 'Every control that needs an icon has a built-in fallback', why: 'A core control whose icon isn’t in builtinIcons renders blank when the consumer’s set lacks it; checkable against the icons the source declares it uses.', requires: ['factory'], enforcement: C('check', 'icon-usage') },
 
   // i18n (all rendered)
-  { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'gap' } } },
+  { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composition-spec-drift' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
 
   // Registry (recipe / registered)
   { id: 'registry-1', group: 'registry', rule: 'Registered once, no duplicate slug', why: 'A duplicate slug collides the route and the overview card.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },

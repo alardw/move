@@ -9,7 +9,10 @@
  *
  *   1. composition parity — `spec.composition` ↔ the value imports from 'move';
  *   2. labels parity — `spec.labels[].key` ↔ the `defaultLabels` keys;
- *   3. a sibling `.test.tsx` exists — without one the logic is unverified.
+ *   3. i18n seam (i18n-1) — no user-facing string bypasses the labels object; the
+ *      deterministic proxy (matching component E1) is a hardcoded `aria-label`
+ *      literal, which should always come from the labels object;
+ *   4. a sibling `.test.tsx` exists — without one the logic is unverified.
  *
  * Move runs it on its recipes (the proving ground); you run it on your composites
  * (`move check`). Scans `config.recipes` + `config.composites`.
@@ -110,6 +113,18 @@ export function run(config) {
         (lab.onlyA.length ? ` — in spec, not in defaultLabels: ${lab.onlyA.join(', ')}` : '') +
         (lab.onlyB.length ? ` — in defaultLabels, not in spec: ${lab.onlyB.join(', ')}` : ''));
     }
+    // i18n seam (i18n-1): a hardcoded aria-label literal bypasses the labels
+    // object a consumer translates through — it should come from labels, never
+    // inline. Same deterministic proxy the component check (E1) uses.
+    walk(src, (n) => {
+      if (ts.isJsxAttribute(n) && n.name.getText() === 'aria-label' && n.initializer) {
+        const init = ts.isJsxExpression(n.initializer) ? n.initializer.expression : n.initializer;
+        if (init && ts.isStringLiteral(init)) {
+          const { line } = src.getLineAndCharacterOfPosition(n.getStart(src));
+          messages.push(`${relative(config.cwd, srcFile)}:${line + 1}: hardcoded aria-label "${init.text}" — source it from the labels object`);
+        }
+      }
+    });
     if (!existsSync(specFile.replace(/\.spec\.ts$/, '.test.tsx'))) {
       messages.push(`${relative(config.cwd, specFile)}: no test file (${name}.test.tsx)`);
     }
@@ -118,8 +133,8 @@ export function run(config) {
     name: 'composition-spec-drift',
     ok: messages.length === 0,
     summary: messages.length === 0
-      ? `${specs.length} compositions in sync (composition, labels, tests)`
-      : `${messages.length} drift issue(s) — composition/labels/test out of sync with the spec`,
+      ? `${specs.length} compositions in sync (composition, labels, i18n, tests)`
+      : `${messages.length} drift issue(s) — composition/labels/i18n/test out of sync with the spec`,
     messages,
   };
 }
