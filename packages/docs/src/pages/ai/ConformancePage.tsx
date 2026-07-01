@@ -71,7 +71,7 @@ export function ConformancePage() {
           <Heading level={1}>Conformance</Heading>
           <Text color="muted" size="lg">
             Conformance is the guarantee that your app stays true to the Move contract — composition,
-            design tokens, accessibility, and structure — checked by machine on every commit. Move
+            design tokens, accessibility, and structure — automatically checked on every commit. Move
             enforces it on itself and ships the same gates to you.
           </Text>
           <Stack direction="row" gap="xs" wrap>
