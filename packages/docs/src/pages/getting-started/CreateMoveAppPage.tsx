@@ -24,11 +24,11 @@ const WHAT_YOU_GET: HighlightItem[] = [
   },
   {
     icon: 'bot',
-    text: 'The Move skill set installed under .claude/skills so coding agents discover them automatically.',
+    text: 'The Move skill set installed under .claude/skills so coding agents discover them automatically — including /app-compose, which builds your pages and features into src/composites.',
   },
   {
     icon: 'shield-check',
-    text: 'A validator script wired into the project so the AI can\'t silently drift away from the design system.',
+    text: 'Conformance wired in: move check in your scripts and CI for the static gates, plus the accessibility ratchet test and its baseline — so neither you nor an agent can silently drift from the design system.',
   },
 ];
 

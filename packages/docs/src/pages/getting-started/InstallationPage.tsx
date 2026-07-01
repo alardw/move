@@ -151,7 +151,7 @@ export function App() {
 
 export function Hello() {
   return (
-    <Button onClick={() => alert('ship it')}>
+    <Button onClick={() => console.log('ship it')}>
       <Icon name="rocket" />
       Ship it
     </Button>
@@ -192,6 +192,17 @@ export function Hello() {
                     Peek at the <RouterLink to="/animation">Animation system</RouterLink> — all
                     Move components animate through it, and you can drive your own
                     with the same primitives.
+                  </>
+                ),
+              },
+              {
+                icon: 'shield-check',
+                text: (
+                  <>
+                    Build your screens as compositions with{' '}
+                    <RouterLink to="/ai/skills">/app-compose</RouterLink>, and keep them true to the
+                    system with the <RouterLink to="/core-concepts/conformance-model">conformance
+                    model</RouterLink> — one command plus a ratchet that only tightens.
                   </>
                 ),
               },

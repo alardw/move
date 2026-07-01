@@ -13,9 +13,7 @@ const TOC: TocItem[] = [
 const CONFIG = `// move.config.json
 {
   "check": {
-    "components": "src/components",
-    "recipes": "src/recipes",
-    "samples": "src/samples"
+    "composites": "src/composites"
   }
 }`;
 
@@ -89,11 +87,12 @@ export function ConformancePage() {
           <CodeBlock code={`npx move check`} />
         </Section>
 
-        <Section id="config" title="Configuration" lede="Point the checks at your source. All roots are optional and may be a string or a list; missing paths are skipped.">
+        <Section id="config" title="Configuration" lede="Point the checks at the code you compose. Roots may be a string or a list; a path that isn't there is skipped.">
           <CodeBlock code={CONFIG} />
           <Text size="sm" color="muted">
-            With no <Code>move.config.json</Code>, the defaults are <Code>src/components</Code> and{' '}
-            <Code>src/recipes</Code>.
+            With no <Code>move.config.json</Code>, Move looks in <Code>src/composites</Code> — where{' '}
+            <Code>/app-compose</Code> puts your pages, features, and composites. Author your own Move
+            components too? Add a <Code>components</Code> root and the pipeline gates cover those as well.
           </Text>
         </Section>
 
