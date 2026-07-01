@@ -7,7 +7,8 @@ Handoff for continuing in a fresh terminal. Branch: **dev**.
 Everything in Move is a **component** or a **composite** — that's the whole system.
 
 - A **component** is **standard** (Move ships it) or **custom** (you generate it via the pipeline). Same contract either way.
-- A **composite** is your composition of components — a screen, a feature, a shared piece. Move's **recipes are ready-made composites you start from** (inspiration to copy and adapt), same substance, same contract.
+- A **composite** is your composition of components — a screen, a feature, a shared piece. A **recipe is a pattern that acts as inspiration for consumer composites** — a Move-built composition you read and adapt into your own. Recipe and composite are both compositions, so both share the one `CompositionSpec` contract.
+  - **Only components have documentation.** A recipe is NOT "documented" and does not "add a document." The `DocumentSpec`/`RecipeDocument` types are Move-internal gallery-listing plumbing (slug/group/preview for the `/recipes` grid) — deliberately kept OUT of the Composition Contract page. Don't reintroduce a "Publishing" section framing a recipe as documented.
 - Each is governed by **one typed spec/contract** that does four jobs: builds the code, generates the tests, guides the AI, and checks your work.
   - Component → `ComponentSpec` (`packages/move/src/spec-type.ts`) → **Component Contract** page
   - Composite → `CompositionSpec` (`packages/move/recipes/spec-type.ts`) → **Composition Contract** page (new this thread)

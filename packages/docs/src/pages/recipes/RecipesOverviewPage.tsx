@@ -50,8 +50,8 @@ export function RecipesOverviewPage() {
         <Stack gap="sm">
           <Heading level={1}>Recipes</Heading>
           <Text color="muted" size="lg">
-            Ready-made patterns built entirely from Move components — whole flows
-            you can drop in and adapt.
+            Patterns built entirely from Move components — inspiration for your own
+            composites, to read and adapt into your app.
           </Text>
         </Stack>
 

@@ -22,7 +22,6 @@ const TOC: TocItem[] = [
   { href: '#behaviors', label: 'Behaviors' },
   { href: '#integration', label: 'Integration points' },
   { href: '#i18n', label: 'Internationalization' },
-  { href: '#publishing', label: 'Publishing' },
   { href: '#enforcement', label: 'Enforcement' },
   { href: '#next-steps', label: 'Next steps' },
 ];
@@ -154,7 +153,7 @@ const BEHAVIORS: FieldRow[] = [
 ];
 
 const INTEGRATION: FieldRow[] = [
-  { name: 'integrationPoints', type: 'RecipeIntegrationPoint[]', required: true, description: <>Every place a consumer plugs in real data or behavior — the seams between the ready-made composition and your app. Each is marked in source and badged in the docs so the wiring is explicit, never something to reverse-engineer from the JSX.</> },
+  { name: 'integrationPoints', type: 'RecipeIntegrationPoint[]', required: true, description: <>Every place a consumer plugs in real data or behavior — the seams between the composition and your app. Each is marked in source and badged in the docs so the wiring is explicit, never something to reverse-engineer from the JSX.</> },
 ];
 
 const INTEGRATION_POINT: FieldRow[] = [
@@ -183,15 +182,6 @@ const LABEL_DEF: FieldRow[] = [
   { name: 'default', type: 'string', required: true, description: <>Default copy. For a formatter label (see <Code>params</Code>), a representative template with <Code>{'{param}'}</Code> placeholders, e.g. <Code>Step {'{n}'} of {'{total}'}</Code>.</> },
   { name: 'description', type: 'string', required: true, description: 'What the string is for — guides translation and generation.' },
   { name: 'params', type: 'string[]', required: false, description: <>When present, the label is a formatter <Text as="em">function</Text> taking these params (e.g. <Code>[&apos;n&apos;, &apos;total&apos;]</Code> → <Code>(n, total) =&gt; string</Code>) instead of a plain string.</> },
-];
-
-const DOCUMENT_SPEC: FieldRow[] = [
-  { name: 'slug', type: 'string', required: true, description: <>URL slug within its group, e.g. <Code>sign-in</Code>.</> },
-  { name: 'group', type: 'string', required: true, description: <>Display name of the group, e.g. <Code>Authentication</Code>.</> },
-  { name: 'groupSlug', type: 'string', required: true, description: <>URL slug of the group, e.g. <Code>authentication</Code>.</> },
-  { name: 'title', type: 'string', required: true, description: 'Display title.' },
-  { name: 'description', type: 'string', required: true, description: 'One-line summary.' },
-  { name: 'synonyms', type: 'string[]', required: true, description: <>Search aliases — parity with the component spec&apos;s <Code>synonyms</Code>.</> },
 ];
 
 const CHECK_SCRIPTS: { name: string; what: React.ReactNode }[] = [
@@ -238,9 +228,9 @@ export function CompositionContractPage() {
           <Stack gap="sm">
             <Text>
               A composite is a composition of Move components — a screen, a feature, a shared piece.
-              Move&apos;s recipes are ready-made composites you start from: inspiration to copy and
-              adapt into your own. Both are the same substance, so both are described the same way —
-              a <Code>{`{Name}.spec.ts`}</Code> ending in <Code>satisfies CompositionSpec</Code>.{' '}
+              A recipe is a pattern that acts as inspiration for your composites: a Move-built
+              composition you read and adapt into your own. Both are compositions, so both share one
+              contract — a <Code>{`{Name}.spec.ts`}</Code> ending in <Code>satisfies CompositionSpec</Code>.{' '}
               <RouterLink to="/ai/skills">/app-compose</RouterLink> generates the source from that spec,
               and <Code>move check</Code> verifies the source stays true to it.
             </Text>
@@ -255,12 +245,13 @@ export function CompositionContractPage() {
         <Section
           id="lighter"
           title="Lighter than a component"
-          lede="A composition spec carries only what an arrangement needs — no tokens, no animation, no public prop API."
+          lede="A composition spec carries only what an arrangement needs — no design tokens, no animation bindings, no public prop API. Look and motion come from the components it composes."
         >
           <Text>
             A component owns design tokens, animation bindings, variants, sizes, and a public prop
-            surface. A composition owns none of that: it inherits look and motion from the components
-            it&apos;s built from. So its spec keeps just four substance fields — what it&apos;s{' '}
+            surface. A composition declares none of that in its spec: its look and motion come from the
+            components it&apos;s built from — including animated layout, when it composes something like{' '}
+            <Code>LayoutGroup</Code>. So the spec keeps just four substance fields — what its{' '}
             <Code>composition</Code> is, how it <Code>behaviors</Code>, where you wire it up
             (<Code>integrationPoints</Code>), and the copy it exposes (<Code>labels</Code>) — plus a
             name and optional <Code>scope</Code>.
@@ -306,28 +297,6 @@ export function CompositionContractPage() {
         >
           <FieldTable fields={LABELS} />
           <NestedType name="RecipeLabel" lede="One translatable string — a plain default, or a formatter function when params is set." fields={LABEL_DEF} />
-        </Section>
-
-        <Section
-          id="publishing"
-          title="Publishing"
-          lede="Substance is what a composition is; a document is how it's published. A private composite is pure substance; a Move recipe adds a document."
-        >
-          <Stack gap="sm">
-            <Text>
-              The fields above are the composition&apos;s <Text as="em">substance</Text> — true whether it&apos;s a
-              private screen in your app or a shipped Move recipe. Publishing it as a recipe adds a
-              separate <Code>DocumentSpec</Code>: the discovery metadata (slug, group, title, search
-              synonyms) that lives on the registry entry, never in the substance spec. A private
-              composition simply has no document.
-            </Text>
-            <NestedType name="DocumentSpec" lede="Discovery metadata for a published composition — where it lives, how it reads, how it's found." fields={DOCUMENT_SPEC} />
-            <Text size="sm" color="muted">
-              <Code>RecipeDocument</Code> extends <Code>DocumentSpec</Code> with a <Code>preview</Code>{' '}
-              (<Code>RecipePreview</Code>) describing how the recipe renders in the overview card — the
-              same preview model components use.
-            </Text>
-          </Stack>
         </Section>
 
         <Section
