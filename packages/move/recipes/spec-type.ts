@@ -104,6 +104,12 @@ export interface CompositionSpec {
   schemaVersion: typeof RECIPE_SCHEMA_VERSION;
   /** PascalCase component/file name, e.g. 'SignIn'. */
   name: string;
+  /**
+   * The composition's scale — all three are the same thing (a composition of Move
+   * components) at different sizes: a reusable piece, a route, or a multi-page
+   * feature. Drives what `app-compose` emits. Omit for a plain composite.
+   */
+  scope?: 'composite' | 'page' | 'feature';
   /** Move components the composition is built from — also the validate allow-list. */
   composition: string[];
   /**

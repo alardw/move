@@ -24,9 +24,7 @@ skills/
 
   # App skills — building with Move
   app-setup/               # Bootstrap MoveRoot + app shell
-  app-page/                # Generate a page/route component
-  app-composite/           # Generate an app-specific composed component
-  app-feature/             # Generate a cross-page feature
+  app-compose/             # Compose from a spec at any scale: composite, page, or feature
 ```
 
 ## Component Skills
@@ -75,11 +73,8 @@ For building applications with Move. All app skills enforce one rule:
 ```
 /app-setup       → MoveRoot + app shell (sidebar, top-nav, minimal)
     ↓
-/app-feature     → orchestrates pages + composites for a functional area
-    ↓
-/app-page        → individual route component
-    ↓
-/app-composite   → reusable app-specific component from core
+/app-compose     → a CompositionSpec at any scale (scope: feature | page | composite),
+                   built entirely from Move components
 ```
 
 ### Shell types
@@ -108,13 +103,13 @@ src/components/{category}/{Name}/
 ```
 src/
 ├── main.tsx              ← MoveRoot + shell (from /app-setup)
-├── composites/           ← shared UI (from /app-composite)
+├── composites/           ← shared UI (from /app-compose, scope: composite)
 │   ├── UserCard.tsx
 │   └── MetricsPanel.tsx
-├── pages/                ← routes (from /app-page)
+├── pages/                ← routes (from /app-compose, scope: page)
 │   ├── Dashboard.tsx
 │   └── Settings.tsx
-└── features/             ← cross-page (from /app-feature)
+└── features/             ← cross-page (from /app-compose, scope: feature)
     └── auth/
         ├── LoginPage.tsx
         └── SignupPage.tsx

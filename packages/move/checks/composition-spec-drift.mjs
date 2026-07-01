@@ -3,7 +3,7 @@
  * composition-spec-drift (consumer-facing; shipped, config-driven).
  *
  * A spec-driven composition — a Move recipe, or an app composite the
- * `app-composite` skill generated — has a `<Name>.spec.ts` (`satisfies
+ * `app-compose` skill generated — has a `<Name>.spec.ts` (`satisfies
  * CompositionSpec`) beside its `<Name>.tsx`. This enforces the SUBSTANCE
  * contracts (the document-side ones live in recipe-/component-document-drift):
  *

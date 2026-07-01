@@ -113,8 +113,8 @@ inside the system.
 Catalog of every skill that ships with Move. For each: what it does,
 when to invoke it, what input it expects, what it outputs. Library
 skills (`/analyze`, `/create-spec`, `/generate-source`, `/generate-all`,
-`/validate`) and app skills (`/app-setup`, `/app-page`,
-`/app-composite`, `/app-feature`). One short paragraph each, no walls
+`/validate`) and app skills (`/app-setup`, `/app-compose`).
+One short paragraph each, no walls
 of text.
 
 ### Specs

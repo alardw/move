@@ -62,16 +62,8 @@ const APP_SKILLS: HighlightItem[] = [
     text: '/app-setup — scaffold a complete Move app from scratch. Project files, MoveRoot, shell, routing, pages.',
   },
   {
-    icon: 'layout-template',
-    text: '/app-page — generate a page for a route, composed from Move components only. No custom CSS.',
-  },
-  {
     icon: 'blocks',
-    text: '/app-composite — generate an app-specific component built entirely from Move primitives.',
-  },
-  {
-    icon: 'package',
-    text: '/app-feature — generate a feature spanning multiple pages, composites, and routes.',
+    text: '/app-compose — compose from a CompositionSpec at any scale: a composite, a page that owns a route, or a whole feature (its scope says which). Built entirely from Move components.',
   },
 ];
 
