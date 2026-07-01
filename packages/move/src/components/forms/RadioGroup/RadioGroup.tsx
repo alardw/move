@@ -150,6 +150,9 @@ const RadioGroupItem = withMoveComponent<
 
     const { handlers } = useAnimations(animConfig, refs, RADIO_STATES);
     const isDisabled = !!props.disabled;
+    // Associate the radio control with its sibling label text (the children),
+    // otherwise the role="radio" button has no accessible name.
+    const labelId = React.useId();
 
     const handleWrapperClick = () => {
       if (isDisabled) return;
@@ -198,6 +201,7 @@ const RadioGroupItem = withMoveComponent<
               ref={mergedRef}
               value={props.value as string}
               disabled={props.disabled as boolean}
+              aria-labelledby={props.children != null ? labelId : undefined}
               className={cx('item', props.className, itemSpClass as string | undefined)}
               style={{ ...props.style, ...(itemSpStyle as React.CSSProperties) }}
             >
@@ -215,7 +219,7 @@ const RadioGroupItem = withMoveComponent<
                 />
               </RadixRadioGroup.Indicator>
             </RadixRadioGroup.Item>
-            {props.children}
+            {props.children != null && <span id={labelId}>{props.children}</span>}
           </span>
         );
       },

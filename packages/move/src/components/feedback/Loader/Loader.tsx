@@ -200,6 +200,7 @@ export const Loader = withMoveComponent<
             ref={ref}
             role="progressbar"
             aria-busy
+            aria-label={labels.loading}
             className={cx('root', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-variant="spinner"

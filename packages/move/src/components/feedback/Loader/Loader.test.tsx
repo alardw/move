@@ -42,8 +42,8 @@ describe('Loader', () => {
     });
 
     it('spreads HTML attributes', () => {
-      render(<Loader data-testid="loader" aria-label="test" />);
-      expect(screen.getByTestId('loader')).toHaveAttribute('aria-label', 'test');
+      render(<Loader data-testid="loader" title="loading indicator" />);
+      expect(screen.getByTestId('loader')).toHaveAttribute('title', 'loading indicator');
     });
   });
 

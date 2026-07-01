@@ -125,7 +125,7 @@ describe('Breadcrumb', () => {
         </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
-      const separators = nav.querySelectorAll('[role="presentation"][aria-hidden="true"]');
+      const separators = nav.querySelectorAll('li[aria-hidden="true"]');
       // 3 items = 2 separators
       expect(separators.length).toBe(2);
     });
@@ -189,7 +189,7 @@ describe('Breadcrumb', () => {
         </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
-      const separators = nav.querySelectorAll('[role="presentation"]');
+      const separators = nav.querySelectorAll('li[aria-hidden="true"]');
       expect(separators.length).toBe(1);
       expect(separators[0].textContent).toBe('/');
     });
@@ -376,7 +376,7 @@ describe('Breadcrumb', () => {
 
   // === Breadcrumb.Separator ===
   describe('Separator', () => {
-    it('renders as li with role="presentation" and aria-hidden="true"', () => {
+    it('renders separators as aria-hidden li', () => {
       render(
         <Breadcrumb>
           <Breadcrumb.Item>
@@ -388,7 +388,7 @@ describe('Breadcrumb', () => {
         </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
-      const sep = nav.querySelector('[role="presentation"][aria-hidden="true"]');
+      const sep = nav.querySelector('li[aria-hidden="true"]');
       expect(sep).toBeInTheDocument();
       expect(sep?.tagName).toBe('LI');
     });
@@ -405,7 +405,7 @@ describe('Breadcrumb', () => {
         </Breadcrumb>,
       );
       const nav = screen.getByRole('navigation', { name: 'Breadcrumb' });
-      const sep = nav.querySelector('[role="presentation"]');
+      const sep = nav.querySelector('li[aria-hidden="true"]');
       expect(sep?.textContent).toBe('/');
     });
   });
@@ -429,7 +429,7 @@ describe('Breadcrumb', () => {
       expect(screen.getByText('\u2026')).toBeInTheDocument();
     });
 
-    it('has role="presentation"', () => {
+    it('is aria-hidden (decorative)', () => {
       render(
         <Breadcrumb maxItems={2}>
           <Breadcrumb.Item>
@@ -444,7 +444,7 @@ describe('Breadcrumb', () => {
         </Breadcrumb>,
       );
       const ellipsis = screen.getByText('\u2026');
-      expect(ellipsis).toHaveAttribute('role', 'presentation');
+      expect(ellipsis).toHaveAttribute('aria-hidden', 'true');
     });
   });
 

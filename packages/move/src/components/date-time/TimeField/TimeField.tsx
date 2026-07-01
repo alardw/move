@@ -444,7 +444,7 @@ export interface TimeFieldPeriodProps extends React.HTMLAttributes<HTMLElement> 
   sp?: SlotPropsMap<'period'>;
 }
 
-const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLButtonElement>({
+const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLDivElement>({
   name: 'TimeFieldPeriod',
   styles,
   slots: ['period'] as const,
@@ -452,8 +452,8 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
   setup({ props, ref, cx, sp, attrs }) {
     const { tf, segmentRefs, focusPrev, disabled, withDropdown, openDropdown, labels } =
       useTimeFieldContext();
-    const btnRef = React.useRef<HTMLButtonElement>(null);
-    const mergedRef = useMergedRef<HTMLButtonElement>(ref, btnRef);
+    const btnRef = React.useRef<HTMLDivElement>(null);
+    const mergedRef = useMergedRef<HTMLDivElement>(ref, btnRef);
 
     // Register ref
     React.useEffect(() => {
@@ -490,23 +490,22 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLBu
           ...spRest
         } = periodSp as Record<string, unknown>;
         return (
-          <button
+          <div
             {...attrs}
             {...spRest}
             ref={mergedRef}
-            type="button"
             role="spinbutton"
             aria-label={labels.period}
             aria-valuenow={tf.period === 'AM' ? 0 : 1}
-            disabled={disabled}
-            tabIndex={0}
+            aria-disabled={disabled || undefined}
+            tabIndex={disabled ? -1 : 0}
             className={cx('period', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onKeyDown={handleKeyDown}
             data-segment="period"
           >
             {tf.period}
-          </button>
+          </div>
         );
       },
     };

@@ -299,7 +299,6 @@ const BreadcrumbSeparator = withMoveComponent<'separator', BreadcrumbSeparatorPr
               {...attrs}
               {...spRest}
               ref={ref}
-              role="presentation"
               aria-hidden="true"
               className={cx('separator', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -343,7 +342,7 @@ const BreadcrumbEllipsis = withMoveComponent<'ellipsis', BreadcrumbEllipsisProps
             {...attrs}
             {...spRest}
             ref={ref}
-            role="presentation"
+            aria-hidden="true"
             className={cx('ellipsis', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >

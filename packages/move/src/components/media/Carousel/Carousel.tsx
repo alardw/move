@@ -534,6 +534,8 @@ const CarouselIndicatorGroup = withMoveComponent<
             <button
               key={i}
               type="button"
+              role="tab"
+              aria-selected={i === page}
               className={styles.indicator}
               data-active={i === page || undefined}
               aria-label={`Go to slide ${i + 1}`}
