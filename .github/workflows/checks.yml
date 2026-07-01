@@ -43,6 +43,10 @@ jobs:
       # Ratchet mode: the baseline is the accepted debt; any NEW hand-rolling fails.
       - name: Conformance ratchet (no new hand-rolling above the baseline)
         run: npm run check:conformance --workspace docs
+      # Same ratchet, different axis: axe-core over every rendered sample + recipe.
+      # The baseline is the accepted a11y debt; any NEW violation above it fails.
+      - name: Accessibility ratchet (no new axe violations above the baseline)
+        run: npm run test:a11y --workspace docs
 
   browser:
     name: Move — browser invariants

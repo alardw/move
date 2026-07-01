@@ -1,0 +1,65 @@
+{
+  "align/basic": {
+    "button-name": 1
+  },
+  "align/two-slot": {
+    "button-name": 1
+  },
+  "color-input/basic": {
+    "label": 1
+  },
+  "color-input/formats": {
+    "label": 1
+  },
+  "color-input/sizes": {
+    "label": 6
+  },
+  "color-input/states": {
+    "label": 4
+  },
+  "color-input/swatches": {
+    "label": 1
+  },
+  "file-upload/basic": {
+    "label": 1
+  },
+  "file-upload/constraints": {
+    "label": 1
+  },
+  "form-field/label-width": {
+    "label": 3
+  },
+  "image/overlay": {
+    "nested-interactive": 3
+  },
+  "input-range/basic": {
+    "aria-input-field-name": 1
+  },
+  "input-range/step": {
+    "aria-input-field-name": 2
+  },
+  "input-text/states": {
+    "label": 4
+  },
+  "number-input/basic": {
+    "label": 1
+  },
+  "number-input/format": {
+    "label": 2
+  },
+  "password/basic": {
+    "label": 1
+  },
+  "recipe/pages/detail": {
+    "heading-order": 1
+  },
+  "recipe/pages/overview": {
+    "heading-order": 1
+  },
+  "recipe/pages/overview-with-tabs": {
+    "heading-order": 1
+  },
+  "tooltip/basic": {
+    "button-name": 3
+  }
+}
