@@ -2,7 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Badge, Code, Icon, Table } from 'move';
 import { Section, TocRail, type TocItem } from '../../components';
 import {
-  VALIDATION,
+  CONFORMANCE,
   groupsForEntity,
   tallyFor,
   entityByKey,
@@ -10,7 +10,7 @@ import {
   shipBacklog,
   type EntityDef,
   type Status,
-} from './validation-spec';
+} from './conformance-spec';
 
 const TOC: TocItem[] = [
   { href: '#coverage', label: 'Overview' },
@@ -233,7 +233,7 @@ export function CoveragePage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {VALIDATION.ambient.map((t) => (
+              {CONFORMANCE.ambient.map((t) => (
                 <Table.Row key={t.tool}>
                   <Table.Cell>
                     <Code>{t.tool}</Code>

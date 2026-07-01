@@ -28,7 +28,7 @@ const WHY_IT_HOLDS: HighlightItem[] = [
   },
   {
     icon: 'lock',
-    text: 'The spec is a contract, not a suggestion. It is enforced — generated code that drifts from it fails validation before it ships, so the description and the implementation stay honest with each other.',
+    text: 'The spec is a contract, not a suggestion. It is enforced — generated code that drifts from it fails conformance before it ships, so the description and the implementation stay honest with each other.',
   },
 ];
 

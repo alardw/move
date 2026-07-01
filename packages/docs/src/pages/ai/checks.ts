@@ -1,7 +1,7 @@
-// The catalog of Move's deterministic checks, rendered by ValidationPage.
+// The catalog of Move's deterministic checks, rendered by ConformancePage.
 //
-// SINGLE SOURCE OF TRUTH for the docs — kept honest by `check:validation-docs`
-// (packages/move/scripts/checks/validation-docs.mjs): every `check:*` script in
+// SINGLE SOURCE OF TRUTH for the docs — kept honest by `check:conformance-docs`
+// (packages/move/scripts/checks/conformance-docs.mjs): every `check:*` script in
 // packages/move/package.json must appear here as a `name`, and vice versa. Add a
 // check → document it here, or the build fails.
 //
@@ -120,12 +120,12 @@ export const CHECKS: CheckDoc[] = [
     enforces: 'Patterns shared across components — sizes, variants, token usage — stay consistent.',
   },
   {
-    name: 'validation-docs',
+    name: 'conformance-docs',
     appliesTo: 'docs',
     enforces: 'This page lists exactly the `check:*` scripts that exist — add a check, document it here, or the build fails.',
   },
   {
-    name: 'validation-spec',
+    name: 'conformance-spec',
     appliesTo: 'docs',
     enforces: 'The coverage spec stays in sync with the checks — every rule references a real `check:*`, and every enforced check is reflected as a rule or a known structural check.',
   },

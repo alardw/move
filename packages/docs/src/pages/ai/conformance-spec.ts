@@ -1,10 +1,10 @@
-// validation-spec.ts — the single source of truth for what Move validates.
+// conformance-spec.ts — the single source of truth for what Move validates.
 //
 // Rules are defined ONCE. Which entity a rule applies to is COMPUTED from traits
 // (a rule applies to an entity when the group's `requires` plus the rule's own
 // `requires` are all in that entity's traits). A rule's STATUS is per-entity —
 // the same law can be an enforced `check` for one entity and a `gap` for another.
-// The Coverage and Validation pages are views over this; a meta-check keeps the
+// The Coverage and Conformance pages are views over this; a meta-check keeps the
 // real `check:*` scripts in sync with it.
 
 export type Trait =
@@ -49,7 +49,7 @@ export interface RuleDef {
 
 /** An always-on tool that runs over the whole source, beneath the rule-by-rule
  *  coverage. `script` anchors it to a real package.json script so the docs can't
- *  claim a tool the repo doesn't actually run (guarded by check:validation-spec). */
+ *  claim a tool the repo doesn't actually run (guarded by check:conformance-spec). */
 export interface AmbientTool {
   tool: string;
   role: string;
@@ -57,7 +57,7 @@ export interface AmbientTool {
   script: string;
 }
 
-export interface ValidationSpec {
+export interface ConformanceSpec {
   entities: EntityDef[];
   groups: GroupDef[];
   rules: RuleDef[];
@@ -207,7 +207,7 @@ const RULES: RuleDef[] = [
   { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'component-document-drift' }, recipe: { status: 'check', check: 'recipe-document-drift' } } },
 ];
 
-export const VALIDATION: ValidationSpec = {
+export const CONFORMANCE: ConformanceSpec = {
   entities: ENTITIES,
   groups: GROUPS,
   rules: RULES,
@@ -245,10 +245,10 @@ const hasAll = (traits: Trait[], required: Trait[]) => required.every((t) => tra
 
 /** Groups (with their applicable rules + this entity's status) for one entity. */
 export function groupsForEntity(entity: EntityDef) {
-  return VALIDATION.groups
+  return CONFORMANCE.groups
     .filter((g) => hasAll(entity.traits, g.requires))
     .map((g) => {
-      const rules = VALIDATION.rules
+      const rules = CONFORMANCE.rules
         .filter((r) => r.group === g.id)
         .filter((r) => hasAll(entity.traits, [...g.requires, ...(r.requires ?? [])]))
         .filter((r) => r.enforcement[entity.key])
@@ -266,15 +266,15 @@ export function tallyFor(entity: EntityDef) {
 
 /** An entity by key. */
 export function entityByKey(key: EntityKey) {
-  return VALIDATION.entities.find((e) => e.key === key)!;
+  return CONFORMANCE.entities.find((e) => e.key === key)!;
 }
 
 /** One rule's resolved status for an entity, or null if the rule doesn't apply to
  *  it (so a recipe-only rule renders as "—" in the Composition column). */
 export function statusFor(ruleId: string, entity: EntityDef): { status: Status; check?: string } | null {
-  const r = VALIDATION.rules.find((x) => x.id === ruleId);
+  const r = CONFORMANCE.rules.find((x) => x.id === ruleId);
   if (!r) return null;
-  const g = VALIDATION.groups.find((x) => x.id === r.group);
+  const g = CONFORMANCE.groups.find((x) => x.id === r.group);
   if (!g || !hasAll(entity.traits, [...g.requires, ...(r.requires ?? [])])) return null;
   return r.enforcement[entity.key] ?? null;
 }

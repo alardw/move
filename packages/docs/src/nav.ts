@@ -72,7 +72,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/ai', label: 'Overview' },
       { to: '/ai/skills', label: 'Skills' },
       { to: '/ai/specs', label: 'Spec pipeline' },
-      { to: '/ai/validation', label: 'Validation' },
+      { to: '/ai/conformance', label: 'Conformance' },
       { to: '/ai/coverage', label: 'Coverage' },
     ],
   },

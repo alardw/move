@@ -58,7 +58,7 @@ function ChecksTable({ rows, showTarget }: { rows: CheckDoc[]; showTarget?: bool
   );
 }
 
-export function ValidationPage() {
+export function ConformancePage() {
   return (
     <Stack direction="row" gap="xl" align="stretch" id="validation">
       <Stack gap="xl" flex={1}>
@@ -70,12 +70,12 @@ export function ValidationPage() {
             <Breadcrumb.Link asChild><RouterLink to="/ai">AI</RouterLink></Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Validation</Breadcrumb.Page>
+            <Breadcrumb.Page>Conformance</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1}>Validation</Heading>
+          <Heading level={1}>Conformance</Heading>
           <Text color="muted" size="lg">
             The same quality gates Move uses on itself, runnable on your project with{' '}
             <Code>move check</Code>.

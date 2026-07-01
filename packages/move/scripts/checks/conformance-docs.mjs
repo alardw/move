@@ -1,9 +1,9 @@
-// Validation-docs sync.
+// Conformance-docs sync.
 //
-// The Validation page's catalog (packages/docs/src/pages/ai/checks.ts) must list
+// The Conformance page's catalog (packages/docs/src/pages/ai/checks.ts) must list
 // exactly the `check:*` scripts in package.json, and every `check:*` must be wired
 // into `check:all`. Add a check → document it here, or the build fails. This is
-// the guardrail that keeps /ai/validation from going stale the way the old
+// the guardrail that keeps /ai/conformance from going stale the way the old
 // .report.md files did.
 
 import { readFileSync } from 'node:fs';
@@ -45,10 +45,10 @@ for (const name of documented) {
 }
 
 if (errors.length) {
-  console.error('✗ validation-docs: docs and checks are out of sync');
+  console.error('✗ conformance-docs: docs and checks are out of sync');
   for (const e of errors) console.error(`  - ${e}`);
   console.error('  → reconcile packages/docs/src/pages/ai/checks.ts with the check:* scripts in package.json (and check:all)');
   process.exit(1);
 }
 
-console.log(`✓ validation-docs: ${documented.size} checks documented + wired into check:all`);
+console.log(`✓ conformance-docs: ${documented.size} checks documented + wired into check:all`);

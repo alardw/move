@@ -12,7 +12,7 @@ import { Placeholder } from './pages/Placeholder';
 import { AIOverviewPage } from './pages/ai/AIOverviewPage';
 import { SkillsPage } from './pages/ai/SkillsPage';
 import { SpecsPage } from './pages/ai/SpecsPage';
-import { ValidationPage } from './pages/ai/ValidationPage';
+import { ConformancePage } from './pages/ai/ConformancePage';
 import { CoveragePage } from './pages/ai/CoveragePage';
 import { ComponentDocPage } from './pages/components/ComponentDocPage';
 import { ComponentsOverviewPage } from './pages/components/ComponentsOverviewPage';
@@ -223,7 +223,7 @@ function App() {
                 <Route path="/ai" element={<AIOverviewPage />} />
                 <Route path="/ai/skills" element={<SkillsPage />} />
                 <Route path="/ai/specs" element={<SpecsPage />} />
-                <Route path="/ai/validation" element={<ValidationPage />} />
+                <Route path="/ai/conformance" element={<ConformancePage />} />
                 <Route path="/ai/coverage" element={<CoveragePage />} />
                 <Route path="/components" element={<ComponentsOverviewPage />} />
                 <Route path="/customize" element={<CustomizeOverviewPage />} />

@@ -1,6 +1,6 @@
-// Validation-spec ↔ checks sync.
+// Conformance-spec ↔ checks sync.
 //
-// The coverage spec (packages/docs/src/pages/ai/validation-spec.ts) is the source
+// The coverage spec (packages/docs/src/pages/ai/conformance-spec.ts) is the source
 // of truth for what we validate. This keeps it honest against the real checks:
 //   1. every `check` a rule references must be a real `check:*` script, and
 //   2. every enforced `check:*` must be reflected in the spec — as a rule's
@@ -14,7 +14,7 @@ import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(here, '../../package.json'), 'utf8'));
-const specSrc = readFileSync(join(here, '../../../docs/src/pages/ai/validation-spec.ts'), 'utf8');
+const specSrc = readFileSync(join(here, '../../../docs/src/pages/ai/conformance-spec.ts'), 'utf8');
 
 const real = new Set(
   Object.keys(pkg.scripts)
@@ -32,7 +32,7 @@ for (const m of specSrc.matchAll(/\b(?:C|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) 
 // Enforced checks that guard a structural/family contract, not one coverage rule.
 const STRUCTURAL = new Set([
   'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
-  'animation-patterns', 'validation-docs', 'validation-spec', 'script-refs',
+  'animation-patterns', 'conformance-docs', 'conformance-spec', 'script-refs',
 ]);
 
 const errors = [];
@@ -55,11 +55,11 @@ for (const c of real) {
 }
 
 if (errors.length) {
-  console.error('✗ validation-spec: the coverage spec is out of sync with the checks');
+  console.error('✗ conformance-spec: the coverage spec is out of sync with the checks');
   for (const e of errors) console.error(`  - ${e}`);
-  console.error('  → reconcile packages/docs/src/pages/ai/validation-spec.ts with the check:* scripts');
+  console.error('  → reconcile packages/docs/src/pages/ai/conformance-spec.ts with the check:* scripts');
   process.exit(1);
 }
 
 const structuralCount = [...real].filter((c) => STRUCTURAL.has(c)).length;
-console.log(`✓ validation-spec: ${referenced.size} rule-mapped checks + ${structuralCount} structural, all in sync`);
+console.log(`✓ conformance-spec: ${referenced.size} rule-mapped checks + ${structuralCount} structural, all in sync`);

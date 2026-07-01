@@ -11,7 +11,7 @@ import {
 const BADGES = [
   { icon: 'bot', label: 'Architecture-aware' },
   { icon: 'file-code', label: 'Spec-driven' },
-  { icon: 'wand-sparkles', label: 'Generation + validation' },
+  { icon: 'wand-sparkles', label: 'Generation + conformance' },
 ];
 
 const CAPABILITIES: HighlightItem[] = [
@@ -25,7 +25,7 @@ const CAPABILITIES: HighlightItem[] = [
   },
   {
     icon: 'scan-search',
-    text: 'Validation and metadata generation keep the system inspectable instead of relying on invisible prompt conventions.',
+    text: 'Conformance and metadata generation keep the system inspectable instead of relying on invisible prompt conventions.',
   },
 ];
 

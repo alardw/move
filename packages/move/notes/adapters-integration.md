@@ -84,7 +84,7 @@ contorting any:
   a fake default endpoint would be worse. DRM/VideoPlayer will be the same.
 
 **Validation rules** (new `integrationPoints` GroupDef + RuleDefs in
-`validation-spec.ts`, sibling to `icons`/`i18n`, `requires: ['renders']`):
+`conformance-spec.ts`, sibling to `icons`/`i18n`, `requires: ['renders']`):
 1. each `contract` is exported from `from`
 2. the generated prop exists and is typed to `contract`
 3. `default.strategy:'builtin'` ⇒ the named `export` exists
@@ -164,8 +164,8 @@ conversation but never persisted — regenerate it if needed.)
 
 ## How this connects to the validation/coverage work (also in flight)
 
-The validation system is now spec-driven (`packages/docs/src/pages/ai/validation-spec.ts`
-is the source of truth; `check:validation-spec` guards it). When component
+The validation system is now spec-driven (`packages/docs/src/pages/ai/conformance-spec.ts`
+is the source of truth; `check:conformance-spec` guards it). When component
 `integrationPoints` land, they likely become **a spec dimension + a coverage
 group** ("declared integration points have a typed contract + a default"). Keep
 the two threads aware of each other.
