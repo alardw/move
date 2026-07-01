@@ -1,0 +1,258 @@
+{
+  "App.tsx": {
+    "inline-style": 1
+  },
+  "components/AdvancedBadge/AdvancedBadge.module.css": {
+    "css-module": 1
+  },
+  "components/AdvancedBadge/AdvancedBadge.tsx": {
+    "raw-html": 1
+  },
+  "components/AnimatedSubnav/AnimatedSubnav.module.css": {
+    "css-module": 1
+  },
+  "components/AnimatedSubnav/AnimatedSubnav.tsx": {
+    "raw-html": 2
+  },
+  "components/AnimationAnatomy.tsx": {
+    "inline-style": 1,
+    "raw-html": 14
+  },
+  "components/AnimationPlayground/AnimationPlayground.module.css": {
+    "css-module": 1
+  },
+  "components/AnimationPlayground/AnimationPlayground.tsx": {
+    "inline-style": 1,
+    "raw-html": 14
+  },
+  "components/CodeBlock/CodeBlock.module.css": {
+    "css-module": 1
+  },
+  "components/CodeBlock/CodeBlock.tsx": {
+    "raw-html": 5
+  },
+  "components/ColorSwatch/ColorSwatch.module.css": {
+    "css-module": 1
+  },
+  "components/ColorSwatch/ColorSwatch.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "components/ComponentCard/ComponentCard.module.css": {
+    "css-module": 1
+  },
+  "components/ComponentCard/ComponentCard.tsx": {
+    "inline-style": 2,
+    "raw-html": 6
+  },
+  "components/HeroDemo/HeroDemo.module.css": {
+    "css-module": 1
+  },
+  "components/HeroDemo/HeroDemo.tsx": {
+    "raw-html": 1
+  },
+  "components/HighlightList/HighlightList.module.css": {
+    "css-module": 1
+  },
+  "components/Illustration.module.css": {
+    "css-module": 1
+  },
+  "components/Illustration.tsx": {
+    "inline-style": 2,
+    "raw-html": 5
+  },
+  "components/InlineCode/InlineCode.module.css": {
+    "css-module": 1
+  },
+  "components/InlineCode/InlineCode.tsx": {
+    "raw-html": 2
+  },
+  "components/KeyboardTable/KeyboardTable.tsx": {
+    "inline-style": 2
+  },
+  "components/LifecycleIllustration.tsx": {
+    "inline-style": 1,
+    "raw-html": 12
+  },
+  "components/LogoMark/LogoMark.module.css": {
+    "css-module": 1
+  },
+  "components/LogoMark/LogoMark.tsx": {
+    "raw-html": 7
+  },
+  "components/MoveBadge/MoveBadge.module.css": {
+    "css-module": 1
+  },
+  "components/MoveBadge/MoveBadge.tsx": {
+    "raw-html": 1
+  },
+  "components/Preview/Preview.module.css": {
+    "css-module": 1
+  },
+  "components/Preview/Preview.tsx": {
+    "raw-html": 3
+  },
+  "components/PropsTable/PropsTable.tsx": {
+    "inline-style": 4
+  },
+  "components/RecipeCard/RecipeCard.module.css": {
+    "css-module": 1
+  },
+  "components/RecipeCard/RecipeCard.tsx": {
+    "inline-style": 1,
+    "raw-html": 4
+  },
+  "components/StagedOverlay/StagedOverlay.module.css": {
+    "css-module": 1
+  },
+  "components/StagedOverlay/StagedOverlay.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "components/TocRail/TocRail.module.css": {
+    "css-module": 1
+  },
+  "components/TocRail/TocRail.tsx": {
+    "raw-html": 2
+  },
+  "components/TokensTable/TokensTable.tsx": {
+    "inline-style": 2
+  },
+  "content/components/animated-text/samples/granularity.tsx": {
+    "inline-style": 1
+  },
+  "content/components/avatar/samples/with-status.tsx": {
+    "inline-style": 2,
+    "raw-html": 2
+  },
+  "content/components/carousel/samples/_slide.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/carousel/samples/vertical.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/chat-bubble/samples/thread.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/checkbox/samples/indeterminate.tsx": {
+    "inline-style": 1
+  },
+  "content/components/code/samples/highlighter.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/collapsible/samples/as-child.tsx": {
+    "inline-style": 1
+  },
+  "content/components/collapsible/samples/basic.tsx": {
+    "inline-style": 1
+  },
+  "content/components/collapsible/samples/controlled.tsx": {
+    "inline-style": 1
+  },
+  "content/components/collapsible/samples/custom-icon.tsx": {
+    "inline-style": 2
+  },
+  "content/components/collapsible/samples/show-more.tsx": {
+    "inline-style": 1
+  },
+  "content/components/divider/samples/vertical.tsx": {
+    "inline-style": 1
+  },
+  "content/components/grid/samples/_tile.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/image/samples/object-fit.tsx": {
+    "inline-style": 1
+  },
+  "content/components/prose/samples/basic.tsx": {
+    "raw-html": 9
+  },
+  "content/components/rich-text-editor/samples/basic.tsx": {
+    "raw-html": 3
+  },
+  "content/components/scroll-area/samples/basic.tsx": {
+    "inline-style": 1
+  },
+  "content/components/sidebar/samples/basic.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/sidebar/samples/collapsed.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/sidebar/samples/links.tsx": {
+    "inline-style": 1,
+    "raw-html": 2
+  },
+  "content/components/sidebar/samples/right-side.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/sidebar/samples/with-badges.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "content/components/splitter/samples/basic.tsx": {
+    "inline-style": 3,
+    "raw-html": 1
+  },
+  "content/components/table/samples/selectable.tsx": {
+    "inline-style": 2
+  },
+  "content/components/toast/preview.tsx": {
+    "inline-style": 1,
+    "raw-html": 8
+  },
+  "pages/ai/CoveragePage.tsx": {
+    "raw-html": 4
+  },
+  "pages/animation/MotionsAndSequencesPage.tsx": {
+    "inline-style": 3,
+    "raw-html": 1
+  },
+  "pages/components/ComponentsOverviewPage.tsx": {
+    "inline-style": 2,
+    "raw-html": 2
+  },
+  "pages/core-concepts/AdaptersPage.tsx": {
+    "inline-style": 10,
+    "raw-html": 7
+  },
+  "pages/core-concepts/ComponentContractPage.tsx": {
+    "inline-style": 8
+  },
+  "pages/core-concepts/StackingPage.tsx": {
+    "inline-style": 10
+  },
+  "pages/core-concepts/SurfacesPage.tsx": {
+    "inline-style": 6
+  },
+  "pages/customize/IconsPage.tsx": {
+    "inline-style": 2
+  },
+  "pages/customize/InternationalizationPage.tsx": {
+    "inline-style": 4
+  },
+  "pages/getting-started/MoveRootPage.tsx": {
+    "inline-style": 8
+  },
+  "pages/getting-started/NextPage.tsx": {
+    "raw-html": 6
+  },
+  "pages/getting-started/VitePage.tsx": {
+    "raw-html": 3
+  },
+  "pages/recipes/RecipeDetailPage.tsx": {
+    "inline-style": 6
+  },
+  "pages/recipes/RecipesOverviewPage.tsx": {
+    "inline-style": 2,
+    "raw-html": 2
+  }
+}
