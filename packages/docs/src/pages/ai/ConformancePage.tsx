@@ -4,11 +4,10 @@ import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
 import { CHECKS, type CheckDoc } from './checks';
 
 const TOC: TocItem[] = [
-  { href: '#validation', label: 'Overview' },
-  { href: '#checks', label: 'The checks' },
+  { href: '#conformance', label: 'Overview' },
+  { href: '#running', label: 'One command' },
   { href: '#config', label: 'Configuration' },
-  { href: '#running', label: 'Running it' },
-  { href: '#ci', label: 'CI & pre-commit' },
+  { href: '#reference', label: 'Every gate' },
 ];
 
 const CONFIG = `// move.config.json
@@ -19,12 +18,6 @@ const CONFIG = `// move.config.json
     "samples": "src/samples"
   }
 }`;
-
-const CI = `# .github/workflows/move-check.yml
-- run: npx move check`;
-
-const HOOK = `# .githooks/pre-commit
-npx move check || exit 1`;
 
 const TARGET_LABEL: Record<CheckDoc['appliesTo'], string> = {
   component: 'Component',
@@ -77,8 +70,9 @@ export function ConformancePage() {
         <Stack gap="sm">
           <Heading level={1}>Conformance</Heading>
           <Text color="muted" size="lg">
-            The same quality gates Move uses on itself, runnable on your project with{' '}
-            <Code>move check</Code>.
+            Conformance is the guarantee that your app stays true to the Move contract — composition,
+            design tokens, accessibility, and structure — checked by machine on every commit. Move
+            enforces it on itself and ships the same gates to you.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft"><Code>move check</Code></Badge>
@@ -86,7 +80,24 @@ export function ConformancePage() {
           </Stack>
         </Stack>
 
-        <Section id="checks" title="The checks" lede="Deterministic gates the TypeScript compiler can't catch on its own. What's relevant scales with how you use Move — compose its components, or author your own with the pipeline.">
+        <Section id="running" title="One command" lede="One command checks your whole app.">
+          <Text>
+            <Code>move check</Code> runs every gate over your project and reports the result. Wire it
+            into your commit hook and CI, and conformance holds automatically — every commit and every
+            pull request stays true to the contract. The reference below lists every gate it runs.
+          </Text>
+          <CodeBlock code={`npx move check`} />
+        </Section>
+
+        <Section id="config" title="Configuration" lede="Point the checks at your source. All roots are optional and may be a string or a list; missing paths are skipped.">
+          <CodeBlock code={CONFIG} />
+          <Text size="sm" color="muted">
+            With no <Code>move.config.json</Code>, the defaults are <Code>src/components</Code> and{' '}
+            <Code>src/recipes</Code>.
+          </Text>
+        </Section>
+
+        <Section id="reference" title="Every gate" lede="The complete set move check runs — here for reference. What applies scales with how you use Move: compose its components, or author your own with the pipeline.">
           <Stack gap="lg">
             <Stack gap="sm">
               <Heading level={3}>Composing Move</Heading>
@@ -113,25 +124,6 @@ export function ConformancePage() {
             judgment-based checks (behaviour coverage, label parity) during generation; these
             deterministic gates are the layer for CI.
           </Text>
-        </Section>
-
-        <Section id="config" title="Configuration" lede="Point the checks at your source. All roots are optional and may be a string or a list; missing paths are skipped.">
-          <CodeBlock code={CONFIG} />
-          <Text size="sm" color="muted">
-            With no <Code>move.config.json</Code>, the defaults are <Code>src/components</Code> and{' '}
-            <Code>src/recipes</Code>.
-          </Text>
-        </Section>
-
-        <Section id="running" title="Running it">
-          <CodeBlock code={`npx move check            # all checks\nnpx move check strict-props   # one check`} />
-        </Section>
-
-        <Section id="ci" title="CI & pre-commit" lede="Run it where regressions get caught early.">
-          <Stack gap="md">
-            <CodeBlock code={CI} />
-            <CodeBlock code={HOOK} />
-          </Stack>
         </Section>
       </Stack>
       <TocRail items={TOC} />
