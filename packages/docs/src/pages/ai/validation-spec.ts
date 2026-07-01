@@ -174,7 +174,7 @@ const RULES: RuleDef[] = [
   { id: 'forms-3', group: 'forms', rule: 'Boolean DOM attrs via value || undefined', why: 'invalid="false" still sets the attribute; `|| undefined` removes it when off.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
 
   // Icons (all rendered)
-  { id: 'icons-1', group: 'icons', rule: 'Icons via the resolver, no inline svg / glyph', why: 'The resolver lets a consumer swap the whole icon set; an inline svg or unicode glyph is frozen and unstyled.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'gap' }, recipe: { status: 'gap' } } },
+  { id: 'icons-1', group: 'icons', rule: 'Icons via the resolver, no inline svg / glyph', why: 'The resolver lets a consumer swap the whole icon set; an inline svg or unicode glyph is frozen and unstyled.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
   { id: 'icons-2', group: 'icons', rule: 'Icon usage recorded in spec.iconsUsed', why: 'The /customize/icons table derives from it; drift means the docs lie about what to provide.', requires: ['factory'], enforcement: C('check', 'icon-usage') },
   { id: 'icons-3', group: 'icons', rule: 'Every control that needs an icon has a built-in fallback', why: 'A core control whose icon isn’t in builtinIcons renders blank when the consumer’s set lacks it; checkable against the icons the source declares it uses.', requires: ['factory'], enforcement: C('check', 'icon-usage') },
 

@@ -12,7 +12,9 @@
  * exception stays visible and justified. The legacy `recipe-purity-ignore`
  * marker still works (it contains `purity-ignore`).
  *
- * Scans `config.recipes` + `config.samples` (and any app roots you configure).
+ * Scans `config.recipes` + `config.composites` + `config.samples` (and any app
+ * roots you configure) — an inline `<svg>` is raw HTML, so this also enforces the
+ * svg half of the icons rule (icons-1) on composed code.
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -34,7 +36,7 @@ function collectTsx(dir, out = []) {
 }
 
 export function run(config) {
-  const roots = [...config.recipes, ...config.samples];
+  const roots = [...config.recipes, ...config.composites, ...config.samples];
   const files = [...new Set(roots.flatMap((r) => collectTsx(r)))].sort();
   const violations = [];
 

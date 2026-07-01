@@ -33,7 +33,7 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'composition',
     shipped: true,
     enforces:
-      'Composed code is built only from Move components — no raw HTML layout, no inline `style`, no custom CSS. Move runs it on its recipes; you run it on your app.',
+      'Composed code is built only from Move components — no raw HTML layout (an inline `<svg>` included), no inline `style`, no custom CSS. Move runs it on its recipes; you run it on your app.',
   },
   {
     name: 'strict-props',
