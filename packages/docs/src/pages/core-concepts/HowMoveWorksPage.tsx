@@ -9,49 +9,57 @@ import {
 } from '../../components';
 
 const BADGES = [
-  { icon: 'brain', label: 'Mental model' },
-  { icon: 'blocks', label: 'Typed contract' },
-  { icon: 'bot', label: 'AI-readable' },
+  { icon: 'blocks', label: 'Building blocks' },
+  { icon: 'bot', label: 'AI skills' },
+  { icon: 'shield-check', label: 'Conformance checks' },
 ];
 
-const CONTRACT_POINTS: HighlightItem[] = [
+const BLOCK_POINTS: HighlightItem[] = [
   {
-    icon: 'layout-template',
-    text: 'Each component declares its structure up front: slots, variants, defaults, and supported composition patterns.',
+    icon: 'shield-check',
+    text: 'The hard parts are already inside — keyboard, focus handling, collision flipping, overflow. You place the block; the behavior comes with it.',
   },
   {
-    icon: 'toggle-left',
-    text: 'Controlled and uncontrolled behaviors are explicit, so state wiring is predictable instead of inferred.',
+    icon: 'accessibility',
+    text: 'Accessibility and motion come as standard — the right semantics and focus behavior, WCAG-legible color, and consistent animation, light mode and dark.',
   },
   {
-    icon: 'sparkles',
-    text: 'Animation types are part of the component model, which keeps motion consistent across primitives and composites.',
-  },
-  {
-    icon: 'palette',
-    text: 'Visual changes resolve through tokens, which keeps theming attached to the same contract rather than hard-coded styles.',
+    icon: 'life-buoy',
+    text: 'The un-happy path has building blocks of its own — EmptyState, Skeleton, Alert, inline field errors, Toast — so handling missing data, a wait, or a wrong input is composition, with the parts already there.',
   },
 ];
 
-const AI_POINTS: HighlightItem[] = [
+const SKILL_POINTS: HighlightItem[] = [
   {
-    icon: 'file-code',
-    text: 'Specs describe the component in a form that docs, generation, validation, and AI tooling can all read.',
+    icon: 'git-branch',
+    text: 'A skill walks it through the build — describe, assemble, check — the same pipeline Move runs on itself.',
   },
   {
     icon: 'shield-check',
-    text: 'That shared source of truth narrows ambiguity: the assistant is generating into a system, not improvising from screenshots.',
+    text: 'So what it produces is predictable: the same blocks, composed the same way, every time.',
   },
+];
+
+const CONFORMANCE_POINTS: HighlightItem[] = [
   {
     icon: 'refresh-cw',
-    text: 'When the contract changes, the rest of the pipeline can be regenerated or checked against it to keep drift visible.',
+    text: 'Every block is generated from its contract and checked against it — so the library, the docs, and the AI never disagree.',
+  },
+  {
+    icon: 'shield-check',
+    text: 'The same checks run on your project: as you and the AI add screens, they’re held to the same contracts.',
+  },
+  {
+    icon: 'check-check',
+    text: 'Kept in line automatically, not by anyone remembering to — so the tenth thing you build stays as coherent as the first.',
   },
 ];
 
 const TOC: TocItem[] = [
   { href: '#how-move-works', label: 'Overview' },
-  { href: '#component-contract', label: 'Component contract' },
-  { href: '#ai-reads-specs', label: 'How AI reads specs' },
+  { href: '#building-blocks', label: 'Building blocks' },
+  { href: '#ai-skills', label: 'AI skills' },
+  { href: '#conformance', label: 'Conformance checks' },
   { href: '#why-it-matters', label: 'Why it matters' },
 ];
 
@@ -78,7 +86,7 @@ export function HowMoveWorksPage() {
         <Stack gap="sm">
           <Heading level={1}>How Move Works</Heading>
           <Text color="muted" size="lg">
-            Move works because the architecture is explicit. Components, motion, tokens, and AI all point at the same contract.
+            Move is a framework with three parts — building blocks, AI skills that compose them, and conformance checks that keep it from drifting — tied together by one idea: a contract behind every block.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((badge) => (
@@ -91,34 +99,55 @@ export function HowMoveWorksPage() {
         </Stack>
 
         <Section
-          id="component-contract"
-          title="The component contract"
-          lede="Move components are not just rendered output. They are typed structures with named surfaces that tooling can reason about."
+          id="building-blocks"
+          title="The building blocks"
+          lede="A building block is a finished piece of behavior you compose — the whole thing done, edges and all."
         >
-          <HighlightList items={CONTRACT_POINTS} />
+          <HighlightList items={BLOCK_POINTS} />
           <Text>
-            See the full <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for every field every spec carries — taxonomies, composition, lifecycle, tests, tooling, and how each is enforced.
+            Behind each block is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for what one carries.
           </Text>
         </Section>
 
         <Section
-          id="ai-reads-specs"
-          title="How AI reads specs"
-          lede="Move's AI layer is useful because it is grounded in the same source material used to generate and validate the library."
+          id="ai-skills"
+          title="AI skills compose them"
+          lede="You don’t prompt into chaos. The assistant builds through skills."
         >
-          <HighlightList items={AI_POINTS} />
+          <Text>
+            Ask for a settings page and the assistant follows a skill — reading each block’s contract, the same agreement Move used to build and test that block. It works from the manual the framework was made from, not a picture of it.
+          </Text>
+          <HighlightList items={SKILL_POINTS} />
+          <Text>
+            See the <RouterLink to="/ai/skills">skills</RouterLink> and the workflow they drive.
+          </Text>
+        </Section>
+
+        <Section
+          id="conformance"
+          title="Conformance keeps it honest"
+          lede="None of it is propped up by hand."
+        >
+          <HighlightList items={CONFORMANCE_POINTS} />
+          <Card.Root>
+            <Card.Body>
+              <Text size="lg">
+                One contract per block — it builds the block, tests it, guides the AI, and checks your work. Automatically, no handwork.
+              </Text>
+            </Card.Body>
+          </Card.Root>
         </Section>
 
         <Section
           id="why-it-matters"
           title="Why it matters"
-          lede="This is the core promise of the system."
+          lede="The core promise."
         >
           <Text>
-            You do not prompt into chaos. You prompt into a typed UI system where composition rules, motion behavior, and token boundaries are already defined.
+            You’re pointing AI at a real framework with the hard parts already solved — composition, motion, theming, and accessibility, all defined before you start. What it builds is a product that holds together.
           </Text>
           <Text>
-            From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every spec satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see the contract applied across the library.
+            From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every block satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
           </Text>
 
           <Card.Root>
