@@ -58,6 +58,15 @@ const BUILTIN_TYPES = new Set([
   'PointerEvent', 'TouchEvent', 'DragEvent', 'ClipboardEvent', 'WheelEvent',
 ]);
 
+// Root-interface props that legitimately do NOT appear in the spec's `props`
+// array: structural / HTML-passthrough props and the unified `labels` object
+// (modeled in the spec's dedicated `labels` field, not `props`). `asChild`/`as`
+// are structural too (spec tracks `asChild` as a top-level flag, not a prop).
+const TOP_LEVEL_NON_PROPS = new Set([
+  'sp', 'className', 'style', 'children', 'ref', 'key', 'labels', 'asChild', 'as',
+  'animations', // universal Move prop; spec models animation via the `animations` array
+]);
+
 // ──────────────────────────────────────────────────────────────────────────────
 // AST helpers
 // ──────────────────────────────────────────────────────────────────────────────
@@ -746,6 +755,46 @@ function checkComponent(componentDir) {
             `${prop}: spec type '${specType}' not reflected in source type '${srcType}'`,
           );
         }
+      }
+    }
+  }
+
+  // 2c. Top-level prop NAME parity (source → spec). 2b only checks types; a
+  //     source prop entirely absent from the spec's `props` slips through — this
+  //     is how Badge.color / Divider.gap / Grid.padding hid (present in source,
+  //     never added to the spec, so docs + the generated API omitted them).
+  //     Enumerate the root interface's own + locally-extended props (non-identifier
+  //     `extends` like React.HTMLAttributes isn't resolved, so DOM passthrough is
+  //     excluded automatically) and require each to appear in the spec's `props`.
+  //     Scope: SIMPLE components only — those whose props live in the spec's
+  //     top-level `props` and whose root interface is `<Name>Props`. Compound
+  //     components model root props under `subComponents[Root]`, which section 2
+  //     already checks in both directions; running here too would double-flag.
+  {
+    const hasRootSub = spec.subComponents.some((s) => s.name === 'Root');
+    const interfaceName = interfacePool[`${name}Props`] ? `${name}Props` : null;
+    if (interfaceName && !hasRootSub) {
+      const sourceProps = resolveAllProps(interfaceName, interfacePool);
+      const specTop = new Set(spec.topLevelProps ?? []);
+      // Controlled-state props (value/defaultValue/open/defaultOpen …) are
+      // documented in the spec's `controlledProps` field, not `props` — exclude.
+      const specText = readFileSync(specFile, 'utf8');
+      const controlled = new Set(
+        [...specText.matchAll(/(?:valueProp|defaultValueProp):\s*'([^']+)'/g)].map((m) => m[1]),
+      );
+      const isReactEventHandler = (p) => /^on[A-Z][a-zA-Z]+$/.test(p);
+      const realSourceProps = sourceProps.filter(
+        (p) =>
+          !TOP_LEVEL_NON_PROPS.has(p) &&
+          !controlled.has(p) &&
+          (!isReactEventHandler(p) || specTop.has(p)),
+      );
+      const inSourceNotSpec = realSourceProps.filter((p) => !specTop.has(p));
+      if (inSourceNotSpec.length) {
+        errors.push(
+          `root: prop(s) in source not in spec: ${inSourceNotSpec.join(', ')} — ` +
+            "add to the spec's `props` so docs + the generated API include them",
+        );
       }
     }
   }

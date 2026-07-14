@@ -1,16 +1,15 @@
 // Grid.spec.ts — Component specification
-// specHash: 796ba7e8
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Grid',
   componentClass: 'presentational' as const,
   category: 'layout',
   description:
     'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
-  animationPatterns: ['layoutReveal'],
+  choreographies: ['layoutReveal'],
   families: {
     behavior: ['layout'],
     state: ['stateless'],
@@ -90,6 +89,12 @@ export const spec = {
     },
     { name: 'rowGap', typeRef: 'Gap', moveSpecific: true, description: 'Row gap override' },
     { name: 'columnGap', typeRef: 'Gap', moveSpecific: true, description: 'Column gap override' },
+    {
+      name: 'padding',
+      typeRef: 'Gap',
+      moveSpecific: true,
+      description: 'Inner padding around grid content',
+    },
     {
       name: 'collapseBelow',
       type: 'string',

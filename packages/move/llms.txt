@@ -1,0 +1,2186 @@
+# move — Component API
+
+> Machine-readable API surface, generated from *.spec.ts. One section per component:
+> props, allowed values, defaults, and an example. Import components from 'move'.
+> 69 components. Version 0.1.50.
+
+## Accordion (disclosure)
+Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal
+Props:
+- type: 'single' | 'multiple' (default: single) — Whether one or many items can be open at once
+- value: string | string[] — Controlled value
+- defaultValue: string | string[] — Default value for uncontrolled mode
+- onValueChange: (value: string | string[]) => void — Called when value changes
+- collapsible: boolean (default: true) — Allow closing all items in single mode
+- size: 'sm' | 'md' | 'lg' (default: md) — Size affecting padding and font sizes
+- variant: 'default' | 'contained' | 'ghost' (default: default) — Visual style variant
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- children: React.ReactNode — Accordion items
+Accordion.Root props:
+- type: 'single' | 'multiple' (default: single) — Whether one or many items can be open at once
+- value: string | string[] — Controlled value (string for single, string[] for multiple)
+- defaultValue: string | string[] — Default value for uncontrolled mode
+- onValueChange: (value: string | string[]) => void — Called when value changes
+- collapsible: boolean (default: true) — Allow closing all items in single mode
+- size: 'sm' | 'md' | 'lg' (default: md) — Size affecting padding and font sizes
+- variant: 'default' | 'contained' | 'ghost' (default: default) — Visual style variant
+- animations: AnimationTrigger[] | false — Animation config for content expand/collapse, or false to disable
+- children: React.ReactNode — Accordion items
+Accordion.Item props:
+- value: string — Unique identifier for this item
+- children: React.ReactNode — Header and content elements
+Accordion.Header props:
+- children: React.ReactNode — Trigger element
+Accordion.Trigger props:
+- icon: React.ReactNode — Custom icon replacing the default chevron
+- animations: AnimationTrigger[] | false — Hover animation config for the trigger or false to disable
+- children: React.ReactNode — Trigger label text
+Accordion.Content props:
+- children: React.ReactNode — Expandable content
+Example: <Accordion type="single" variant="default">…</Accordion>
+
+## Alert (feedback)
+Dismissible alert banner with variant colors, icon, title, and enter/exit animation
+Props:
+- variant: 'info' | 'success' | 'warning' | 'danger' (default: info) — Color variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Alert size
+- icon: string | boolean (default: true) — Icon name, true for default variant icon, false to hide
+- title: React.ReactNode — Alert title
+- closable: boolean (default: false) — Show close button
+- onClose: () => void — Called when close button is clicked
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- children: React.ReactNode — Alert description content
+Example: <Alert variant="info">…</Alert>
+
+## Align (layout)
+Horizontal bar with start/center/end distribution using CSS grid
+Props:
+- gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Gap between items
+- align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' (default: center) — Vertical alignment of items
+- children: React.ReactNode — Align sections (Start, Center, End)
+Align.Root props:
+- gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Gap between items
+- align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' (default: center) — Vertical alignment of items
+- padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Padding around the bar.
+- flex: boolean — Use flex (instead of grid) when you need natural-width children rather than the 1fr/auto/1fr distribution.
+- children: React.ReactNode — Align sections (Start, Center, End)
+Align.Start props:
+- children: React.ReactNode — Start-aligned content.
+Align.Center props:
+- children: React.ReactNode — Centered content.
+Align.End props:
+- children: React.ReactNode — End-aligned content.
+Example: <Align gap="md" align="center">…</Align>
+
+## AnimatedText (typography)
+Reveals text with a staggered per-character, per-word, or per-line entrance animation (anime.js splitText)
+Props:
+- children: React.ReactNode — The text to animate — a plain string, or (with `asChild`) a single element like `<Heading>` whose text content is split.
+- as: 'span' | 'p' | 'div' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' (default: span) — HTML element to render the container as. Typography is controlled by `size`/`weight`, not by the element — so the element is purely semantic.
+- asChild: boolean (default: false) — Render onto the single child element (e.g. wrap a `Heading` or `Text`) via Radix Slot, instead of AnimatedText's own element — so the animated text keeps the wrapped component's typography. The child's text content is what gets split.
+- size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' — Optional font size from the Move typography scale. When omitted, the text inherits its surrounding typography (no data-size, no override).
+- weight: 'normal' | 'medium' | 'semibold' | 'bold' — Optional font weight from the Move typography scale. When omitted, the text inherits its surrounding weight (no data-weight, no override).
+- by: 'character' | 'word' | 'line' (default: word) — Granularity the text is split into before staggering
+- effect: 'fade' | 'slideUp' | 'blurUp' | 'scale' (default: fade) — Per-segment entrance animation
+- trigger: 'mount' | 'inView' | 'hover' (default: inView) — When the reveal runs: immediately on mount, when scrolled into view (IntersectionObserver), or on pointer hover
+- once: boolean (default: true) — For inView/hover triggers, animate only the first time (do not re-run on re-entry)
+- stagger: number (default: null) — Delay in ms between segments. When null, a sensible per-`by` default is used (~30 character / 60 word / 120 line).
+- delay: number (default: 0) — Delay in ms before the first segment animates
+- duration: number (default: 600) — Duration in ms of each segment animation
+Example: <AnimatedText as="span" weight="normal">…</AnimatedText>
+
+## AudioPlayer (media)
+Horizontal bar-style audio player with play/pause, progress scrubbing, volume control, subtitle overlay, playback speed, and settings menu
+Props:
+- src: string — Audio source URL
+- autoPlay: boolean — Start playback automatically
+- muted: boolean — Start muted
+- loop: boolean — Loop playback
+- playbackRate: number — Controlled playback speed
+- onPlaybackRateChange: (rate: number) => void — Called when playback rate changes
+- playing: boolean — Controlled playing state
+- onPlayingChange: (playing: boolean) => void — Called when playing state changes
+- volume: number — Controlled volume (0-1)
+- onVolumeChange: (volume: number) => void — Called when volume changes
+- currentTime: number — Controlled current playback time in seconds
+- onTimeChange: (time: number) => void — Called when current time changes
+- onEnded: () => void — Called when playback ends
+- onError: (error: MediaError | null) => void — Called on playback error
+- onReady: () => void — Called when audio metadata is loaded and ready
+- subtitles: SubtitleTrack[] — Array of subtitle/caption tracks (VTT files)
+- qualities: QualityOption[] — Array of quality options for source switching
+- audioTracks: AudioTrack[] — Array of audio track options for source switching
+- onQualityChange: (quality: QualityOption) => void — Called when quality is changed
+- onAudioTrackChange: (track: AudioTrack) => void — Called when audio track is changed
+- showSettings: boolean (default: true) — Show the settings menu button
+- showSubtitles: boolean (default: true) — Show the subtitles toggle button (only if subtitles are provided)
+- showVolume: boolean (default: true) — Show volume button and slider
+- showTime: boolean (default: true) — Show the time display
+- labels: Partial<AudioPlayerLabels> — i18n labels for the player controls
+- radius: 'none' | 'sm' | 'md' | 'lg' | 'full' (default: none) — Border radius of the player container
+- size: 'sm' | 'md' | 'lg' (default: md) — Size variant controlling padding, gap, and control button dimensions
+- children: React.ReactNode — Additional content rendered inside the player container
+Example: <AudioPlayer radius="none">…</AudioPlayer>
+
+## Autocomplete (forms)
+Searchable dropdown with single/multi-value support, tag management, keyboard navigation, and filtered option list
+Props:
+- value: string | string[] — Controlled selected value(s)
+- defaultValue: string | string[] — Default selected value(s) (uncontrolled)
+- onValueChange: (value: string | string[]) => void — Called when selected value changes
+- open: boolean — Controlled open state
+- defaultOpen: boolean (default: false) — Default open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- multiple: boolean (default: false) — Enable multi-select mode
+- inputValue: string — Controlled input text value
+- onInputValueChange: (value: string) => void — Called when input text changes
+- loading: boolean (default: false) — Loading state
+- resource: AsyncResource<unknown> — Async data source driving loading/error state for the options list (supersedes loading; feeds RetryTrigger)
+- animations: AnimationTrigger[] | false — Animation config for popup
+- closeOnSelect: boolean — Close after selection
+- openOnFocus: boolean (default: true) — Open on input focus
+- allowCustomValue: boolean (default: false) — Allow custom input values
+- filterFn: (inputValue: string, itemValue: string, itemLabel: string) => boolean — Custom filter function
+- labels: Partial<AutocompleteLabels> — Accessible label overrides (clearAll, removeTag, retry)
+- children: React.ReactNode — Autocomplete sub-components
+Autocomplete.Root props:
+- value: string | string[] — Controlled selected value(s)
+- defaultValue: string | string[] — Default selected value(s) (uncontrolled)
+- onValueChange: (value: string | string[]) => void — Called when selected value changes
+- open: boolean — Controlled open state
+- defaultOpen: boolean (default: false) — Default open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- multiple: boolean (default: false) — Enable multi-select with tags
+- inputValue: string — Controlled input text value
+- defaultInputValue: string (default: ) — Default input text (uncontrolled)
+- onInputValueChange: (value: string) => void — Called when input text changes
+- loading: boolean (default: false) — Show loading state in content
+- resource: AsyncResource<unknown> — Async data source driving loading/error state for the options list (supersedes loading; feeds RetryTrigger)
+- animations: AnimationTrigger[] | false — Animation config for popup enter/exit
+- closeOnSelect: boolean — Close popup after selection (defaults to true for single, false for multiple)
+- openOnFocus: boolean (default: true) — Open popup when input receives focus
+- allowCustomValue: boolean (default: false) — Allow input value that does not match any item
+- filterFn: (inputValue: string, itemValue: string, itemLabel: string) => boolean — Custom filter function for items
+- labels: Partial<AutocompleteLabels> — Accessible label overrides (clearAll, removeTag, retry)
+- children: React.ReactNode — Autocomplete sub-components
+Autocomplete.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Input, TagList, Icon, ClearTrigger
+- disabled: boolean — Disabled state
+- invalid: boolean — Invalid state
+- size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
+- variant: 'outlined' | 'filled' (default: outlined) — Trigger variant
+- width: React.CSSProperties['width'] — Explicit width override
+Autocomplete.Input props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- placeholder: string — Input placeholder text
+- disabled: boolean — Disabled state
+Autocomplete.TagList props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom tag elements or auto-generated
+Autocomplete.Tag props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Tag label content
+- value: string — Value this tag represents
+Autocomplete.Icon props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom icon content
+Autocomplete.ClearTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom icon content
+Autocomplete.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Items, groups, empty, loading
+- sideOffset: number (default: 4) — Offset from trigger
+- align: 'start' | 'center' | 'end' (default: start) — Alignment relative to trigger
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- width: string | number — Override the popover width.
+- minWidth: string | number — Minimum popover width.
+- maxWidth: string | number — Maximum popover width.
+Autocomplete.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item label content
+- value: string — Item value for selection
+- label: string — Text label for filtering (extracted from children if omitted)
+- disabled: boolean — Disabled state
+Autocomplete.ItemIndicator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom indicator icon
+Autocomplete.Group props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — GroupLabel and items
+Autocomplete.GroupLabel props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Label text
+Autocomplete.Empty props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Empty message content
+Autocomplete.Loading props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Loading indicator content
+Autocomplete.Error props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Error message content
+Autocomplete.RetryTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Retry button content
+Autocomplete.Separator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <Autocomplete>…</Autocomplete>
+
+## Avatar (data-display)
+User avatar with image, fallback, and size options
+Avatar.Group props:
+- children: React.ReactNode — Avatar.Root children
+Avatar.Root props:
+- size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' (default: md) — Avatar size
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' — Tints the fallback bg/fg using the named Open Color palette.
+- animations: AnimationTrigger[] | false — Optional declarative animation config — none by default (the mount fade is CSS)
+- children: React.ReactNode — Avatar.Image and Avatar.Fallback
+Avatar.Image props:
+- src: string — Image source URL
+- alt: string — Image alt text
+- onLoadingStatusChange: (status: 'idle' | 'loading' | 'loaded' | 'error') => void — Loading status callback
+Avatar.Fallback props:
+- delayMs: number — Delay before showing fallback
+- children: React.ReactNode — Fallback content (initials, icon)
+Example: <Avatar>…</Avatar>
+
+## Badge (data-display)
+Inline status label with variant and size options
+Props:
+- variant: 'solid' | 'soft' | 'surface' | 'outline' | 'dot' (default: solid) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Badge size
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' (default: gray) — Palette color role from the theme
+- children: React.ReactNode — Badge content
+Example: <Badge variant="solid" color="gray">…</Badge>
+
+## Breadcrumb (navigation)
+Navigation breadcrumb trail with auto-injected separators, collapsible overflow with ellipsis, and customizable separator content
+Props:
+- separator: React.ReactNode — Custom separator content
+- maxItems: number — Maximum visible items before collapsing
+- itemsBeforeCollapse: number (default: 1) — Items shown before ellipsis
+- itemsAfterCollapse: number (default: 1) — Items shown after ellipsis
+- size: 'sm' | 'md' | 'lg' (default: md) — Breadcrumb size
+- labels: Partial<BreadcrumbLabels> — Overridable user-facing strings
+- children: React.ReactNode — Breadcrumb.Item children
+Breadcrumb.Root props:
+- separator: React.ReactNode — Custom separator content (defaults to chevron-right icon)
+- maxItems: number — Maximum visible items before collapsing with ellipsis
+- itemsBeforeCollapse: number (default: 1) — Number of items to show before ellipsis when collapsed
+- itemsAfterCollapse: number (default: 1) — Number of items to show after ellipsis when collapsed
+- size: 'sm' | 'md' | 'lg' (default: md) — Breadcrumb size affecting font size and gap
+- labels: Partial<BreadcrumbLabels> — Overridable user-facing strings
+- children: React.ReactNode — Breadcrumb.Item children
+Breadcrumb.Item props:
+- children: React.ReactNode — Item content (Link or Page)
+Breadcrumb.Link props:
+- asChild: boolean (default: false) — Render as Slot to merge props onto child element (e.g. router Link)
+- children: React.ReactNode — Link content
+Breadcrumb.Page props:
+- children: React.ReactNode — Current page text
+Breadcrumb.Separator props:
+- children: React.ReactNode — Custom separator content (falls back to context separator)
+Breadcrumb.Ellipsis props:
+- children: React.ReactNode — Custom ellipsis content (defaults to horizontal ellipsis character)
+Example: <Breadcrumb>…</Breadcrumb>
+
+## Button (actions)
+Clickable interactive element with variant, size, and animation support
+Props:
+- variant: 'primary' | 'secondary' | 'ghost' | 'danger' (default: primary) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Button size
+- animations: AnimationTrigger[] | false — Animation config for hover/press interactions
+- asChild: boolean (default: false) — Render as child element via Radix Slot
+- fullWidth: boolean — Stretch the button to fill its container width — for form submit actions, sidebar rows, and other full-width contexts.
+- type: string (default: button) — HTML button type attribute
+- disabled: boolean (default: false) — Disabled state
+- children: React.ReactNode — Button content
+Button.Group props:
+- children: React.ReactNode — Button children
+Example: <Button variant="primary">…</Button>
+
+## Calendar (date-time)
+Date selection grid supporting single, range, and multiple selection modes with event display, keyboard navigation, and locale-aware formatting
+Calendar.Root props:
+- children: React.ReactNode — Calendar.Nav and Calendar.Grid (and any custom composition)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- mode: SelectionMode (default: single) — Selection mode: single date, date range, or multiple dates
+- value: Date | DateRange | Date[] | null — Controlled selected value (shape depends on mode)
+- defaultValue: Date | DateRange | Date[] | null — Initial selected value when uncontrolled
+- onValueChange: (value: any) => void — Called when the selection changes
+- events: CalendarEvent[] (default: []) — List of events to display on day cells
+- locale: string (default: en-US) — BCP-47 locale tag for date formatting and weekday order
+- weekStartsOn: number — First day of week (0=Sunday, 1=Monday); defaults from locale
+- constraints: CalendarConstraints — Min/max date and disabled-day predicate
+- numberOfMonths: number (default: 1) — Number of months to render side-by-side
+- showWeekNumbers: boolean (default: false) — Show ISO week number column on each grid
+- yearRange: number (default: 12) — Number of years on either side of the current year shown in the year picker
+- fixedWeeks: boolean (default: false) — Always render six week rows so the grid does not reflow as months change
+- renderDayCell: RenderDayCell — Custom renderer for day cell content
+- renderEvent: RenderEvent — Custom renderer for an event chip inside a day cell
+- labels: CalendarLabels — Localizable strings for nav buttons and pickers
+Calendar.Nav props:
+- className: string — CSS class name
+- sp: CalendarNavSp — Spacing prop forwarded to the shared CalendarNav layout
+Calendar.Grid props:
+- className: string — CSS class name
+Example: <Calendar>…</Calendar>
+
+## CalendarView (date-time)
+Full-featured calendar view supporting day, week, month, and agenda modes with event display, time grid, locale-aware formatting, and view switching
+CalendarView.Root props:
+- children: React.ReactNode — CalendarView.Header and CalendarView.Body composition
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- view: CalendarViewMode — Controlled current view (day | week | month | agenda)
+- defaultView: CalendarViewMode (default: month) — Initial view when uncontrolled
+- onViewChange: (view: CalendarViewMode) => void — Called when the view changes
+- date: Date — Controlled focus date driving the displayed range
+- defaultDate: Date (default: new Date()) — Initial focus date when uncontrolled
+- onDateChange: (date: Date) => void — Called when the focus date changes
+- events: CalendarEvent[] (default: []) — List of events to display across views
+- locale: string (default: en-US) — BCP-47 locale tag for date and time formatting
+- weekStartsOn: number — First day of week (0=Sunday, 1=Monday); defaults from locale
+- startHour: number (default: 0) — First hour shown in day/week time grid (0-23)
+- endHour: number (default: 24) — Last hour shown in day/week time grid (1-24)
+- slotHeight: string — CSS height for each time slot row in the day/week time grid
+- slotInterval: 30 | 60 (default: 60) — Time slot granularity in minutes
+- maxEventsPerCell: number (default: 3) — Maximum visible events per month cell before overflow popover
+- renderEvent: RenderEvent — Custom renderer for an event chip
+- onEventClick: (event: CalendarEvent, e: React.MouseEvent) => void — Called when an event chip is clicked
+- onSlotClick: (date: Date, e: React.MouseEvent) => void — Called when an empty time slot is clicked (day/week views)
+- onDayClick: (date: Date, e: React.MouseEvent) => void — Called when a day cell is clicked (month view); navigates to day view by default
+- onAllDayClick: (date: Date, e: React.MouseEvent) => void — Called when an empty all-day slot is clicked (day/week views)
+- showAllDay: boolean (default: false) — Always show the all-day section in day/week views
+- labels: CalendarViewLabels — Localizable strings for nav, today, view switcher, all-day, empty agenda, and overflow
+CalendarView.Header props:
+- children: React.ReactNode — Header composition (Nav, Title, Today, ViewSwitcher)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+CalendarView.Nav props:
+- className: string — CSS class name
+CalendarView.Title props:
+- className: string — CSS class name
+CalendarView.Today props:
+- children: React.ReactNode — Custom button label; defaults to labels.today
+- className: string — CSS class name
+CalendarView.ViewSwitcher props:
+- className: string — CSS class name
+- views: CalendarViewMode[] (default: ['day', 'week', 'month', 'agenda']) — Subset of views to expose in the switcher
+CalendarView.Body props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <CalendarView>…</CalendarView>
+
+## Card (layout)
+Presentational container with header, title, description, body, and footer sections for grouping related content
+Props:
+- variant: 'default' | 'elevated' | 'ghost' (default: default) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Card size
+- children: React.ReactNode — Card content sections
+Card.Root props:
+- variant: 'default' | 'elevated' | 'ghost' (default: default) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Card size controlling padding and title size
+- maxWidth: string | number — Cap the card width via the --move-card-max-width custom property.
+- children: React.ReactNode — Card content sections
+Card.Header props:
+- children: React.ReactNode — Title and description elements
+Card.Title props:
+- children: React.ReactNode — Title text
+Card.Description props:
+- children: React.ReactNode — Description text
+Card.Body props:
+- children: React.ReactNode — Main body content
+Card.Footer props:
+- children: React.ReactNode — Footer content
+Card.FooterStart props:
+- children: React.ReactNode — Left-aligned footer content
+Card.FooterEnd props:
+- children: React.ReactNode — Right-aligned footer content
+Example: <Card variant="default">…</Card>
+
+## Carousel (media)
+Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls
+Props:
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Scroll orientation
+- align: 'start' | 'center' | 'end' (default: start) — Snap alignment
+- slidesPerView: number (default: 1) — Slides visible at once
+- loop: boolean (default: false) — Loop back to start
+- autoplay: number (default: 0) — Auto-advance interval in ms
+- draggable: boolean (default: true) — Enable drag/swipe
+- animations: AnimationTrigger[] | false — Scroll animation config
+- page: number — Controlled active page
+- defaultPage: number — Initial page (uncontrolled)
+- onPageChange: (page: number) => void — Page change callback
+- children: React.ReactNode — Carousel content
+Carousel.Root props:
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Scroll orientation
+- align: 'start' | 'center' | 'end' (default: start) — Snap alignment for slides
+- slidesPerView: number (default: 1) — Number of slides visible at once
+- loop: boolean (default: false) — Loop back to start after last slide
+- autoplay: number (default: 0) — Auto-advance interval in ms (0 = off)
+- draggable: boolean (default: true) — Allow drag/swipe navigation
+- animations: AnimationTrigger[] | false — Slide transition animation config
+- page: number — Controlled active page (0-indexed)
+- defaultPage: number — Initial page when uncontrolled
+- onPageChange: (page: number) => void — Called when active page changes
+- showTriggers: boolean (default: false) — Render built-in prev/next trigger buttons
+- showIndicators: boolean (default: false) — Render built-in page indicator dots
+- triggerPlacement: 'none' | 'top' | 'bottom' | 'overlay' | 'indicator-sides' (default: top) — Placement strategy for built-in triggers
+- triggerAlign: 'start' | 'center' | 'end' (default: end) — Alignment for trigger row and indicator-sides layout
+- triggerSize: 'sm' | 'md' | 'lg' (default: md) — Size of built-in trigger buttons
+- triggerVariant: 'surface' | 'ghost' | 'solid' (default: surface) — Visual variant for built-in trigger buttons
+- overlayInset: string | number (default: var(--move-spacing-sm)) — Horizontal inset for overlay trigger placement
+- overlayOffsetY: string | number (default: 50%) — Vertical offset for overlay trigger placement
+- overlayHideUntilHover: boolean (default: false) — Hide overlay triggers until hover/focus
+- indicatorPlacement: 'inside-bottom' | 'below' (default: below) — Placement for built-in indicators
+- indicatorGap: string | number — Override indicator gap token
+- indicatorInset: string | number (default: var(--move-spacing-sm)) — Horizontal inset for inside-bottom indicators
+- children: React.ReactNode — Carousel sub-components (Viewport, IndicatorGroup, etc.)
+Carousel.Viewport props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Slide components
+Carousel.Slide props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Slide content
+Carousel.PrevTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom trigger content (default: chevron icon)
+- size: 'sm' | 'md' | 'lg' — Button size
+- variant: 'surface' | 'ghost' | 'solid' — Button visual variant
+Carousel.NextTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom trigger content (default: chevron icon)
+- size: 'sm' | 'md' | 'lg' — Button size
+- variant: 'surface' | 'ghost' | 'solid' — Button visual variant
+Carousel.IndicatorGroup props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom indicators (auto-generated if omitted)
+Carousel.Indicator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom indicator content
+- index: number — The page index this indicator targets
+Example: <Carousel orientation="horizontal" align="start">…</Carousel>
+
+## ChatBubble (data-display)
+Conversation bubble for chat UIs with avatar, placement, tail, and variant support
+Props:
+- placement: 'start' | 'end' (default: start) — Bubble alignment direction
+- animations: AnimationTrigger[] | false — Enter animation config
+- children: React.ReactNode — ChatBubble sub-components
+ChatBubble.Root props:
+- placement: 'start' | 'end' (default: start) — Bubble alignment (start=left, end=right)
+- animations: AnimationTrigger[] | false — Enter animation config
+- children: React.ReactNode — ChatBubble children
+ChatBubble.Avatar props:
+- src: string — Avatar image source
+- fallback: React.ReactNode — Fallback content when image unavailable
+- size: 'sm' | 'md' | 'lg' (default: md) — Avatar size
+- children: React.ReactNode — Custom avatar content (overrides src/fallback)
+ChatBubble.Container props:
+- variant: 'neutral' | 'primary' | 'success' | 'warning' | 'error' (default: neutral) — Bubble color variant
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' — Override bubble bg/fg via the named Open Color palette. Takes precedence over `variant` when set.
+- tail: boolean (default: false) — Show tail pointing toward avatar
+- children: React.ReactNode — Bubble content
+ChatBubble.Header props:
+- children: React.ReactNode — Header content
+ChatBubble.Content props:
+- children: React.ReactNode — Message content
+ChatBubble.Footer props:
+- children: React.ReactNode — Footer content
+Example: <ChatBubble placement="start">…</ChatBubble>
+
+## Checkbox (forms)
+Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input
+Props:
+- checked: boolean — Controlled checked state
+- defaultChecked: boolean — Default checked state for uncontrolled mode
+- indeterminate: boolean — Indeterminate (mixed) state
+- onCheckedChange: (checked: boolean) => void — Called when checked state changes
+- icon: string (default: check) — Icon name for the check indicator (resolved via useResolvedIcon)
+- animations: AnimationTrigger[] | false — Toggle animation config or false to disable
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of the checkbox
+- disabled: boolean (default: false) — Whether the checkbox is disabled
+- invalid: boolean — Whether the checkbox is in an invalid state
+- name: string — Name for form submission (renders hidden input)
+- value: string — Value for form submission
+- required: boolean — Required for form validation
+- children: React.ReactNode — Label content rendered beside the checkbox
+Checkbox.Group props:
+- children: React.ReactNode — Checkbox items
+Example: <Checkbox>…</Checkbox>
+
+## Code (typography)
+Inline or block code element with variant styling and optional syntax highlighting via CodeHighlighterProvider
+Props:
+- variant: 'subtle' | 'outline' | 'ghost' (default: subtle) — Visual style variant
+- size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' (default: sm) — Font size. Code now accepts the full TypographySize range; xl maps to text-lg in the body bundle.
+- block: boolean (default: false) — Render as block <pre> instead of inline <code>
+- language: string — Language for syntax highlighting (requires CodeHighlighterProvider)
+- className: string — Additional CSS class
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Code text content
+Example: <Code variant="subtle">…</Code>
+
+## Collapsible (disclosure)
+Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon
+Props:
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Default open state for uncontrolled mode
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- disabled: boolean (default: false) — Disable the collapsible
+- animations: AnimationTrigger[] | false — Content animation config or false to disable
+- children: React.ReactNode — Trigger, icon, and content
+Collapsible.Root props:
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Default open state for uncontrolled mode
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- disabled: boolean (default: false) — Disable the collapsible (prevents toggling)
+- animations: AnimationTrigger[] | false — Content animation config or false to disable
+- children: React.ReactNode — Trigger, icon, and content elements
+Collapsible.Trigger props:
+- asChild: boolean — Merge props onto child element via Radix Slot instead of wrapping in button
+- children: React.ReactNode — Trigger content
+Collapsible.Icon props:
+- children: React.ReactNode — Custom icon replacing the default chevron
+Collapsible.Content props:
+- children: React.ReactNode — Collapsible content
+Example: <Collapsible>…</Collapsible>
+
+## ColorInput (forms)
+Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper
+Props:
+- variant: 'outlined' | 'filled' (default: outlined) — Input variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+- width: React.CSSProperties['width'] — Explicit width override
+- format: ColorFormat (default: hex) — Active color format (hex, hexa, rgb, rgba, hsl, hsla)
+- value: string — Controlled color value
+- defaultValue: string — Default color value (uncontrolled)
+- onValueChange: (value: string) => void — Called on every color change (during drag)
+- onChangeEnd: (value: string) => void — Called when interaction ends (drag release, blur)
+- onFormatChange: (format: ColorFormat) => void — Called when format changes in picker
+- formatOptions: BaseColorFormat[] — Available base formats in picker selector
+- swatches: string[] — Preset color swatches in picker
+- swatchesPerRow: number (default: 7) — Number of swatches per row
+- withPicker: boolean (default: true) — Show saturation/hue/alpha picker area
+- withEyeDropper: boolean — Show eye dropper button (browser support required)
+- closeOnColorSwatchClick: boolean (default: true) — Close popover after swatch click in picker
+- invalid: boolean — Invalid state
+- disabled: boolean — Disabled state
+- readOnly: boolean — Read-only state
+- placeholder: string — Input placeholder text
+- name: string — Form field name
+- id: string — Input element id
+- required: boolean — Required state
+- autoFocus: boolean — Auto-focus on mount
+- onFocus: React.FocusEventHandler<HTMLInputElement> — Input focus handler
+- onBlur: React.FocusEventHandler<HTMLInputElement> — Input blur handler
+- labels: Partial<ColorInputLabels> — Accessible label overrides
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <ColorInput variant="outlined">…</ColorInput>
+
+## ColorPicker (forms)
+Standalone color picker with saturation/brightness area, hue and alpha sliders, color swatches, format selector, and per-channel inputs
+Props:
+- size: 'sm' | 'md' | 'lg' (default: md) — Picker size
+- fullWidth: boolean — Stretch to full container width
+- format: ColorFormat (default: hex) — Initial color format
+- value: string — Controlled color value
+- defaultValue: string — Default color value (uncontrolled)
+- onValueChange: (value: string) => void — Called on every color change (during drag)
+- onChangeEnd: (value: string) => void — Called when interaction ends (drag release, blur)
+- onFormatChange: (format: ColorFormat) => void — Called when format changes via selector
+- formatOptions: BaseColorFormat[] — Available base formats in selector (defaults to [hex, rgb, hsl])
+- swatches: string[] — Preset color swatch values
+- swatchesPerRow: number (default: 7) — Number of swatches per grid row
+- withPicker: boolean (default: true) — Show saturation/hue/alpha picker area
+- labels: Partial<ColorPickerLabels> — Accessible label overrides for picker controls
+- disabled: boolean — Disabled state
+- readOnly: boolean — Read-only state (pointer-events: none)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <ColorPicker>…</ColorPicker>
+
+## DatePicker (date-time)
+Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker
+Props:
+- animations: AnimationTrigger[] | false — Animation config for open/close transitions
+- open: boolean — Controlled open state
+- defaultOpen: boolean (default: false) — Default open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Open state change handler
+- closeOnSelect: boolean (default: true) — Close popover after date selection
+- mode: 'single' | 'range' | 'multiple' (default: single) — Date selection mode
+- value: Date | DateRange | Date[] | null — Controlled selected value
+- defaultValue: Date | DateRange | Date[] | null — Default selected value (uncontrolled)
+- onValueChange: (value: any) => void — Value change handler
+- events: CalendarEvent[] — Calendar events to display
+- locale: string — Locale for date formatting (BCP 47)
+- weekStartsOn: number — First day of week (0=Sun, 1=Mon, etc.)
+- constraints: CalendarConstraints — Date constraints (min, max, disabled dates)
+- numberOfMonths: number — Number of months to display simultaneously
+- showWeekNumbers: boolean (default: false) — Show ISO week numbers
+- yearRange: number — Year range for year picker navigation
+- fixedWeeks: boolean (default: false) — Always show 6 weeks per month
+- renderDayCell: RenderDayCell — Custom day cell renderer
+- renderEvent: RenderEvent — Custom event renderer
+- placeholder: string — Input placeholder text
+- rangeLabels: DatePickerRangeLabels — Custom labels for range from/to fields
+- labels: DatePickerLabels — Custom UI labels for accessibility and display
+- showTime: boolean | { hourCycle?: 12 | 24; placement?: 'inline' | 'popup' } (default: false) — Show time picker integration
+- children: React.ReactNode — DatePicker sub-components (Trigger, Input, Portal, Content)
+DatePicker.Trigger props:
+- children: React.ReactNode — Trigger content
+DatePicker.Input props:
+- placeholder: string — Input placeholder text
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+DatePicker.Icon props:
+- children: React.ReactNode — Custom icon content (defaults to calendar icon)
+DatePicker.Content props:
+- sideOffset: number (default: 4) — Offset from trigger
+- align: 'start' | 'center' | 'end' (default: start) — Alignment relative to trigger
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- children: React.ReactNode — Calendar content
+Example: <DatePicker mode="single">…</DatePicker>
+
+## Dialog (overlays)
+Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout
+Dialog.Root props:
+- children: React.ReactNode — Dialog sub-components
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Initial open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- modal: boolean — Whether to render as modal with backdrop
+Dialog.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Dialog.Overlay props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Dialog.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Dialog body content
+- size: 'sm' | 'md' | 'lg' | 'xl' | 'full' (default: md) — Dialog width preset
+- onOpenAutoFocus: (event: Event) => void — Called when content receives auto focus on open
+- onPointerDownOutside: (event: Event) => void — Called when pointer down outside content
+- onEscapeKeyDown: (event: KeyboardEvent) => void — Called when escape key pressed
+- onInteractOutside: (event: Event) => void — Called on any outside interaction
+Dialog.Header props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- closable: boolean (default: true) — Render the auto-close button on the right side of the header.
+- children: React.ReactNode — Header content (typically Title + Close)
+Dialog.Body props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Scrollable body content
+Dialog.Footer props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Footer content (typically action buttons)
+Dialog.FooterStart props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Left-side footer content
+Dialog.FooterEnd props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Right-side footer content
+Dialog.Title props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Title text
+Dialog.Description props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Description text
+Dialog.Close props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Close button content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Example: <Dialog>…</Dialog>
+
+## Divider (layout)
+Visual separator for content sections with optional inline label, orientation, line style, and alignment
+Props:
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Divider direction
+- type: 'solid' | 'dashed' | 'dotted' (default: solid) — Border line style
+- align: 'left' | 'center' | 'right' | 'top' | 'bottom' (default: center) — Position of inline content along the divider
+- size: 'sm' | 'md' | 'lg' (default: sm) — Line thickness
+- gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Outer gap (margin) around the divider
+- children: React.ReactNode — Optional inline content (text or element)
+Example: <Divider orientation="horizontal" type="solid">…</Divider>
+
+## Drawer (overlays)
+Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout
+Drawer.Root props:
+- children: React.ReactNode — Drawer sub-components
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Initial open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- modal: boolean (default: true) — Whether to render as modal with backdrop
+- position: 'left' | 'right' | 'top' | 'bottom' (default: right) — Edge the drawer slides in from. Lives on Root so the entire compound (overlay, content, animations) can react to the side.
+- responsive: boolean (default: true) — Auto-switch to a bottom sheet on mobile viewport.
+- breakpoint: number (default: 768) — Viewport width below which responsive mode activates (px).
+Drawer.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Drawer.Overlay props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Drawer.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Drawer body content
+- size: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full' (default: md) — Drawer width (left/right) or height (top/bottom). Position lives on Root.
+- onOpenAutoFocus: (event: Event) => void — Called when content receives auto focus on open
+- onPointerDownOutside: (event: Event) => void — Called when pointer down outside content
+- onEscapeKeyDown: (event: KeyboardEvent) => void — Called when escape key pressed
+- onInteractOutside: (event: Event) => void — Called on any outside interaction
+Drawer.Header props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- closable: boolean (default: true) — Render the auto-close button on the right side of the header.
+- children: React.ReactNode — Header content (typically Title + Close)
+Drawer.Body props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Scrollable body content
+Drawer.Footer props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Footer content (typically action buttons)
+Drawer.Title props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Title text
+Drawer.Description props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Description text
+Drawer.Close props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Close button content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Drawer.Handle props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <Drawer>…</Drawer>
+
+## Dropdown (overlays)
+Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu
+Dropdown.Root props:
+- children: React.ReactNode — Dropdown sub-components
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Initial open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+Dropdown.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Dropdown.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Menu items
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- sideOffset: number — Distance from trigger in px
+- align: 'start' | 'center' | 'end' — Alignment along the side axis
+- onPointerDownOutside: (e: Event) => void — Called when pointer down outside content
+- onEscapeKeyDown: (e: KeyboardEvent) => void — Called when escape key pressed
+- onInteractOutside: (e: Event) => void — Called on any outside interaction
+Dropdown.Arrow props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Dropdown.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item content
+- disabled: boolean — Whether item is disabled
+- onSelect: (e: Event) => void — Called when item is selected
+Dropdown.Group props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Group items
+Dropdown.Label props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Label text
+Dropdown.CheckboxItem props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Checkbox label content
+- checked: boolean — Whether checked
+- disabled: boolean — Whether disabled
+- onCheckedChange: (checked: boolean) => void — Called when checked state changes
+- onSelect: (e: Event) => void — Called when item is selected
+Dropdown.RadioGroup props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Radio items
+- value: string — Current selected value
+- onValueChange: (value: string) => void — Called when selection changes
+Dropdown.RadioItem props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Radio item content
+- value: string — Radio item value
+- disabled: boolean — Whether disabled
+- onSelect: (e: Event) => void — Called when item is selected
+Dropdown.ItemIndicator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Indicator content (icon)
+Dropdown.Separator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Dropdown.Sub props:
+- children: React.ReactNode — Sub-menu trigger and content
+- open: boolean — Controlled sub-menu open state
+- defaultOpen: boolean — Initial sub-menu open state
+- onOpenChange: (open: boolean) => void — Called when sub-menu open state changes
+Dropdown.SubTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Sub-trigger content
+- disabled: boolean — Whether disabled
+Dropdown.SubContent props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Sub-menu items
+- sideOffset: number — Distance from sub-trigger in px
+Example: <Dropdown>…</Dropdown>
+
+## EmptyState (feedback)
+Centered placeholder for empty views with icon, title, description, and optional action
+Props:
+- icon: string — Icon name to display above the title
+- title: React.ReactNode — Title text content
+- description: React.ReactNode — Description text content
+- action: React.ReactNode — Action content (e.g. button) rendered below description
+- size: 'sm' | 'md' | 'lg' (default: md) — Controls padding, gap, and typography sizes
+- children: React.ReactNode — Additional content rendered after structured slots
+Example: <EmptyState>…</EmptyState>
+
+## FileUpload (forms)
+Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system
+Props:
+- accept: string | string[] — Accepted file types — MIME types, extensions, or wildcards
+- maxSize: number — Maximum file size in bytes
+- maxFiles: number — Maximum number of files
+- multiple: boolean (default: true) — Allow multiple file selection
+- disabled: boolean — Disabled state
+- value: File[] — Controlled file list
+- defaultValue: File[] — Default file list (uncontrolled)
+- onFilesChange: (files: File[]) => void — Called when the file list changes
+- onFileReject: (rejections: FileRejection[]) => void — Called when files fail validation
+- validate: (file: File) => string | null — Custom per-file validation function
+- size: 'sm' | 'md' | 'lg' (default: md) — Component size
+- variant: 'default' | 'compact' (default: default) — Layout variant
+- adapter: FileUploadAdapter — Upload adapter function for server uploads
+- autoUpload: boolean (default: false) — Automatically start uploading when files are added
+- concurrency: number (default: 3) — Maximum concurrent uploads
+- removeOnComplete: boolean | number — Remove files from list after upload completes
+- children: React.ReactNode — Sub-components (Dropzone, Trigger, ItemGroup, etc.)
+FileUpload.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Sub-components (Dropzone, Trigger, ItemGroup, etc.)
+- accept: string | string[] — Accepted file types — MIME types, extensions, or wildcards
+- maxSize: number — Maximum file size in bytes
+- maxFiles: number — Maximum number of files
+- multiple: boolean (default: true) — Allow multiple file selection
+- disabled: boolean — Disabled state
+- value: File[] — Controlled file list
+- defaultValue: File[] — Default file list (uncontrolled)
+- onFilesChange: (files: File[]) => void — Called when the file list changes
+- onFileReject: (rejections: FileRejection[]) => void — Called when files fail validation
+- validate: (file: File) => string | null — Custom per-file validation function
+- size: 'sm' | 'md' | 'lg' (default: md) — Component size
+- variant: 'default' | 'compact' (default: default) — Layout variant
+- adapter: FileUploadAdapter — Upload adapter function for server uploads
+- autoUpload: boolean (default: false) — Automatically start uploading when files are added
+- concurrency: number (default: 3) — Maximum concurrent uploads
+- onUploadComplete: (entry: FileUploadEntry) => void — Called when a single file upload completes
+- onUploadError: (entry: FileUploadEntry, error: Error) => void — Called when a single file upload fails
+- onAllComplete: (entries: FileUploadEntry[]) => void — Called when all files have finished uploading
+- labels: Partial<FileUploadLabels> — Overridable user-facing strings
+- removeOnComplete: boolean | number — Remove files from list after upload completes; true = 2000ms delay, number = custom delay in ms
+FileUpload.Dropzone props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Dropzone content (instructions, icon, etc.)
+FileUpload.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content (e.g. Button)
+FileUpload.ItemGroup props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item components
+FileUpload.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item contents (Preview, Name, Size, Delete, etc.)
+- file: File — The File object this item represents
+FileUpload.ItemPreview props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom fallback icon for non-image files
+FileUpload.ItemName props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+FileUpload.ItemSize props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+FileUpload.ItemDelete props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom delete icon (defaults to X icon). Localize the default "Remove {filename}" announcement via the Root labels prop.
+FileUpload.ClearTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content (e.g. Button)
+FileUpload.ItemProgress props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+FileUpload.ItemStatus props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+FileUpload.TotalProgress props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- showLabel: boolean (default: false) — Show percentage label alongside progress bar
+FileUpload.UploadTrigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content (e.g. Button)
+Example: <FileUpload variant="default">…</FileUpload>
+
+## FormField (forms)
+Compound form layout wrapper that arranges label, field input, and description/error in a responsive grid
+Props:
+- labelWidth: string — Custom width for the label column in wide layout
+- children: React.ReactNode — FormField sub-components
+FormField.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — FormField sub-components (Label, Field, Description)
+- labelWidth: string — Custom width for the label column (sets --move-formfield-label-width)
+FormField.Label props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Label content (typically a Label component)
+FormField.Field props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Form control element (InputText, Checkbox, etc.)
+FormField.Description props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Description or error text
+- error: boolean — Whether to display as error text (red color)
+Example: <FormField>…</FormField>
+
+## Grid (layout)
+CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control
+Props:
+- cols: number — Equal-width columns (shorthand for repeat(N, 1fr))
+- rows: number — Equal-height rows (shorthand for repeat(N, 1fr))
+- columns: number — Total columns for span-based mode (default 12)
+- minChildWidth: string — Auto-fit: minimum child width before wrapping (e.g. "200px")
+- gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Gap between grid items
+- rowGap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Row gap override
+- columnGap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Column gap override
+- padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Inner padding around grid content
+- collapseBelow: string — Container width (px) below which grid collapses to 1 column
+- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center' } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default. Disable or override via the `animations` prop. (Replaces the former ImageGroup gallery component — use `<Grid stagger>` with `Image` children.)
+- animations: AnimationTrigger[] | false — Override or disable the entrance stagger animation (only relevant when `stagger` is set).
+- children: React.ReactNode — Grid.Cell children
+Grid.Cell props:
+- span: number — Column span
+- rowSpan: number — Row span
+- offset: number — Columns to skip before this cell
+- order: number — Visual order
+- align: 'start' | 'center' | 'end' | 'stretch' — Self-alignment within the grid cell
+- children: React.ReactNode — Cell content
+Example: <Grid gap="md" rowGap="xs">…</Grid>
+
+## Heading (typography)
+Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control
+Props:
+- level: 1 | 2 | 3 | 4 | 5 | 6 (default: 2) — Heading level (determines HTML element h1-h6)
+- weight: 'medium' | 'semibold' | 'bold' — Font weight
+- color: 'base' | 'muted' | 'subtle' (default: base) — Text color
+- tracking: 'tight' | 'normal' (default: tight) — Letter spacing
+- align: 'left' | 'center' | 'right' — Text alignment (only set when provided)
+- truncate: boolean — Enable text truncation with ellipsis
+- className: string — Additional CSS class
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Heading text content
+Example: <Heading weight="medium" color="base">…</Heading>
+
+## Image (media)
+Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support
+Props:
+- src: string — Image source URL
+- sources: ImageSource[] — Array of responsive image variants with intrinsic pixel widths for container-based resolution
+- alt: string — Alt text for the image
+- fallbackSrc: string — Fallback image URL displayed when the primary src fails
+- fit: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down' (default: cover) — CSS object-fit value for the img element
+- backdrop: boolean (default: false) — Fill letterbox bands with a blurred, scaled-up copy of the image behind it (the Apple Music / Spotify pattern). Most useful with `fit="contain"` on mixed aspect ratios; off by default.
+- radius: 'none' | 'sm' | 'md' | 'lg' | 'full' (default: none) — Border radius applied to the root container
+- position: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right' (default: center) — CSS object-position value for the img element
+- aspectRatio: string — CSS aspect-ratio value applied to the root container
+- width: string | number — Width of the root container (number treated as px)
+- height: string | number — Height of the root container (number treated as px)
+- loading: 'lazy' | 'eager' — Native loading attribute passed to the img element
+- action: React.ReactNode — Content rendered in the action overlay, revealed on hover or focus.
+- interactive: boolean — Make the image a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation. Defaults to true when `onClick` is set.
+- onClick: (event: React.MouseEvent<HTMLDivElement>) => void — Click handler on the wrapper.
+- onLoad: React.ReactEventHandler<HTMLImageElement> — Called when the image loads successfully
+- onError: React.ReactEventHandler<HTMLImageElement> — Called when the image fails to load
+- children: React.ReactNode — Custom fallback content rendered inside the fallback slot when image errors and no fallbackSrc is set
+Example: <Image fit="cover" radius="none">…</Image>
+
+## InputRange (forms)
+Slider/range input built on Radix Slider with single or dual thumb, optional value display, and thumb interaction animation
+Props:
+- min: number (default: 0) — Minimum slider value
+- max: number (default: 100) — Maximum slider value
+- step: number (default: 1) — Step increment
+- value: number | number[] — Controlled value (single number or array for range)
+- defaultValue: number | number[] — Default value (uncontrolled)
+- onValueChange: (value: number[]) => void — Called when value changes (always number[])
+- size: 'sm' | 'md' | 'lg' (default: md) — Slider size (affects track height and thumb size)
+- disabled: boolean — Disabled state
+- invalid: boolean — Invalid state — changes range/thumb to error color
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Slider orientation
+- width: React.CSSProperties['width'] — Custom width override
+- name: string — Form input name
+- showValue: boolean — Show value label(s) alongside slider
+- formatValue: (value: number) => string — Custom value formatter for display labels
+- animations: AnimationTrigger[] | false — Thumb interaction animation config or false to disable
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <InputRange orientation="horizontal">…</InputRange>
+
+## InputText (forms)
+Single-line text input with outlined/filled variants, icon slots, and configurable size
+Props:
+- variant: 'outlined' | 'filled' (default: outlined) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Size controlling height and font size
+- invalid: boolean — Whether the input is in an invalid/error state
+- iconLeft: React.ReactNode — Icon element rendered before the input
+- iconRight: React.ReactNode — Icon element rendered after the input
+- width: React.CSSProperties['width'] — Explicit width override for the root wrapper
+- disabled: boolean — Whether the input is disabled
+- readOnly: boolean — Whether the input is read-only
+- placeholder: string — Placeholder text
+- value: string — Controlled input value
+- defaultValue: string — Uncontrolled default input value
+- type: string (default: text) — HTML input type attribute
+- name: string — Form submission name
+- id: string — Element id for label association
+- required: boolean — Whether the input is required
+- autoFocus: boolean — Whether to auto-focus on mount
+- onChange: React.ChangeEventHandler<HTMLInputElement> — Change event handler
+- onFocus: React.FocusEventHandler<HTMLInputElement> — Focus event handler
+- onBlur: React.FocusEventHandler<HTMLInputElement> — Blur event handler
+- onKeyDown: React.KeyboardEventHandler<HTMLInputElement> — Keydown event handler
+Example: <InputText variant="outlined">…</InputText>
+
+## Label (forms)
+Text label for form fields with required asterisk indicator and size variants
+Props:
+- htmlFor: string — ID of the associated form element
+- required: boolean — Show required asterisk indicator
+- disabled: boolean — Whether the label appears in disabled styling
+- size: 'sm' | 'md' | 'lg' (default: md) — Font size of the label
+- children: React.ReactNode — Label text content
+Example: <Label>…</Label>
+
+## LayoutGroup (layout)
+Container that FLIP-animates its direct children to their new positions when the set or order changes (filter, sort, reorder, add, remove)
+Props:
+- children: React.ReactNode — Items to lay out. Each needs a stable React key so the FLIP engine can track it across reorders.
+- as: 'div' | 'ul' | 'ol' | 'section' (default: div) — Semantic container element to render.
+- asChild: boolean (default: false) — Render onto the single child element (e.g. wrap a `Stack` or `Grid`) via Radix Slot, so that component provides the layout while LayoutGroup FLIP-animates its children. The wrapped element becomes the tracked container.
+- enter: 'fade' | 'scale' | 'fade-scale' | 'none' (default: fade-scale) — Entrance animation for newly added children.
+- exit: 'fade' | 'scale' | 'fade-scale' | 'none' (default: fade-scale) — Exit animation for removed children (the node is briefly retained to animate out, then unmounted).
+- duration: number (default: 350) — Duration in ms of the position move and enter/exit animations.
+- stagger: number (default: 0) — Delay in ms between children for the one-time `initial` mount reveal. Ongoing changes (moves, entrances, exits) stay synchronized so filtering reads as one coherent reflow rather than a top-to-bottom cascade. 0 disables staggering.
+- initial: boolean (default: false) — Also play the enter animation (staggered) for the children present at mount — a one-time entrance reveal on load.
+- disabled: boolean (default: false) — Opt out of animation — children jump straight to their final layout. Also implied by prefers-reduced-motion.
+- className: string — Class applied to the root.
+- style: React.CSSProperties — Inline style applied to the root.
+Example: <LayoutGroup as="div" enter="fade-scale">…</LayoutGroup>
+
+## Link (navigation)
+Inline anchor element with variant colors, underline modes, optional size, and external link support
+Props:
+- variant: 'default' | 'muted' | 'subtle' (default: default) — Color variant
+- underline: 'always' | 'hover' | 'none' (default: always) — Underline behavior
+- size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' — Font size (optional, inherits when unset)
+- external: boolean — Opens in new tab with noopener noreferrer
+- asChild: boolean (default: false) — Render as child element via Radix Slot
+- children: React.ReactNode — Link content
+Example: <Link variant="default" underline="always">…</Link>
+
+## List (data-display)
+Stacked list with three-zone item layout (leading/content/trailing), responsive collapse, line clamping, dividers, density control, and optional Meta shorthand
+Props:
+- size: 'sm' | 'md' | 'lg' (default: md) — Controls padding, font size, gap
+- dividers: boolean (default: true) — Show dividers between items
+- density: 'compact' | 'default' | 'comfortable' (default: default) — Vertical padding scale
+- hover: boolean (default: false) — Enable hover highlight on items
+- animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
+- children: React.ReactNode — List.Item children
+List.Root props:
+- size: 'sm' | 'md' | 'lg' (default: md) — Controls padding, font size, gap, and avatar sizing rhythm
+- dividers: boolean (default: true) — Show dividers between items
+- density: 'compact' | 'default' | 'comfortable' (default: default) — Vertical padding scale for items
+- hover: boolean (default: false) — Enable hover highlight on items
+- radius: 'none' | 'sm' | 'md' | 'lg' | 'full' (default: sm) — Border radius applied to the list container and item hover/active highlights
+- separator: React.ReactNode — Custom separator rendered between items (replaces the default divider).
+- animateKey: string | number — Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced.
+- animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
+- children: React.ReactNode — List.Item children
+List.Item props:
+- as: 'li' | 'a' | 'button' (default: li) — Rendered element — use a/button for interactive rows
+- href: string — Link target — implies as="a"
+- onClick: () => void — Click handler.
+- interactive: boolean — Make the row a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation. Defaults to true when `href`, `onClick`, or `as="a"|"button"` is set.
+- active: boolean (default: false) — Visual active/selected state
+- disabled: boolean (default: false) — Dims item and prevents interaction
+- children: React.ReactNode — Leading, Content, Trailing, or Meta children
+List.Leading props:
+- children: React.ReactNode — Avatar, icon, checkbox, or other leading visual
+List.Content props:
+- children: React.ReactNode — Title, Description, and any additional content
+List.Title props:
+- children: React.ReactNode — Primary text content
+List.Description props:
+- lines: 1 | 2 | 3 | 'none' (default: none) — Number of visible lines before truncation (line-clamp). Defaults to none — opt into truncation explicitly.
+- children: React.ReactNode — Secondary text content
+List.Trailing props:
+- children: React.ReactNode — Badge, button, timestamp, menu, or other trailing content
+Example: <List density="default">…</List>
+
+## Loader (feedback)
+Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations
+Props:
+- variant: 'spinner' | 'dots' (default: spinner) — Loading indicator style
+- color: 'primary' | 'secondary' | 'current' (default: primary) — Indicator color
+- size: 'sm' | 'md' | 'lg' (default: md) — Indicator size
+- strokeWidth: number (default: 3) — SVG stroke width for spinner variant
+Example: <Loader variant="spinner" color="primary">…</Loader>
+
+## MarkerList (data-display)
+Nested marker list (semantic ul/ol) with a bullet, number, or icon marker per item, per-level markers that nested lists inherit by depth, and controllable indent — the marker-list family, distinct from the item-oriented ItemList
+Props:
+- ordered: boolean (default: false) — Ordered <ol> vs unordered <ul>.
+- marker: 'disc' | 'circle' | 'square' | 'decimal' | 'alpha' | 'roman' (default: null) — Marker style for this level (null derives disc/decimal from ordered).
+- markers: ('disc' | 'circle' | 'square' | 'decimal' | 'alpha' | 'roman')[] — Per-depth marker styles, inherited by nested lists.
+- icon: string (default: null) — Icon marker (by name) for all items at this level.
+- spacing: 'none' | 'xs' | 'sm' | 'md' | 'lg' (default: xs) — Vertical gap between items.
+- indent: 'none' | 'xs' | 'sm' | 'md' | 'lg' (default: md) — Indentation per nested level.
+- center: boolean (default: false) — Vertically center the marker (default: align to first line).
+- children: React.ReactNode — MarkerList.Item children.
+MarkerList.Root props:
+- ordered: boolean (default: false) — Render an ordered <ol> (numbered) instead of an unordered <ul> (bulleted).
+- marker: 'disc' | 'circle' | 'square' | 'decimal' | 'alpha' | 'roman' (default: null) — Marker style for this level. Bullets (disc/circle/square) for unordered, numbering (decimal/alpha/roman) for ordered. When null, derives disc (unordered) or decimal (ordered).
+- markers: ('disc' | 'circle' | 'square' | 'decimal' | 'alpha' | 'roman')[] — Per-depth marker styles (level 0, 1, 2…). Provided on the root and inherited via context by every nested MarkerList, which picks the entry for its own depth. `marker` overrides for a single level.
+- icon: string (default: null) — Use a resolved Icon (by name) as the marker for every item at this level, instead of a bullet/number. Overridable per item.
+- spacing: 'none' | 'xs' | 'sm' | 'md' | 'lg' (default: xs) — Vertical gap between items.
+- indent: 'none' | 'xs' | 'sm' | 'md' | 'lg' (default: md) — Indentation added per nested level.
+- center: boolean (default: false) — Vertically center each marker to its item. Default aligns the marker to the first line (correct for multi-line items).
+- children: React.ReactNode — MarkerList.Item children.
+MarkerList.Item props:
+- marker: 'disc' | 'circle' | 'square' | 'decimal' | 'alpha' | 'roman' (default: null) — Override this item's marker style.
+- icon: string (default: null) — Override this item's marker with a resolved Icon (by name).
+- children: React.ReactNode — Item content, and optionally a nested MarkerList.
+Example: <MarkerList marker="null" spacing="xs">…</MarkerList>
+
+## NumberInput (forms)
+Numeric input with increment/decrement stepper buttons, controlled/uncontrolled value, format/parse support, and hold-to-repeat
+Props:
+- variant: 'outlined' | 'filled' (default: outlined) — Visual variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+- value: number | string — Controlled numeric value
+- defaultValue: number | string — Default value (uncontrolled)
+- onValueChange: (value: number | undefined, displayValue: string) => void — Called when value changes with both numeric and display string
+- min: number — Minimum allowed value
+- max: number — Maximum allowed value
+- step: number (default: 1) — Increment/decrement step amount
+- shiftStep: number — Step amount when Shift key held (defaults to step * 10)
+- clampBehavior: 'blur' | 'strict' | 'none' (default: blur) — When to clamp value to min/max range
+- allowDecimal: boolean (default: true) — Allow decimal point in input
+- decimalScale: number — Number of decimal places to display
+- allowNegative: boolean (default: true) — Allow negative numbers
+- hideControls: boolean (default: false) — Hide increment/decrement buttons
+- invalid: boolean — Invalid state with error border styling
+- width: React.CSSProperties['width'] — Custom width override
+- iconLeft: React.ReactNode — Optional icon rendered before input
+- prefix: string — Prefix text prepended to display value (e.g. "$")
+- suffix: string — Suffix text appended to display value (e.g. "%")
+- labels: Partial<NumberInputLabels> — Override aria labels for stepper buttons
+- formatValue: (v: number) => string — Custom value formatter for display
+- parseValue: (s: string) => number | undefined — Custom value parser from display string
+- disabled: boolean — Disabled state
+- readOnly: boolean — Read-only state (hides controls)
+- placeholder: string — Input placeholder text
+- name: string — Form input name
+- id: string — Input element id
+- required: boolean — Required state
+- autoFocus: boolean — Auto-focus on mount
+- onChange: React.ChangeEventHandler<HTMLInputElement> — Input change handler
+- onFocus: React.FocusEventHandler<HTMLInputElement> — Input focus handler
+- onBlur: React.FocusEventHandler<HTMLInputElement> — Input blur handler
+- onKeyDown: React.KeyboardEventHandler<HTMLInputElement> — Input keydown handler
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <NumberInput variant="outlined" clampBehavior="blur">…</NumberInput>
+
+## Pagination (navigation)
+Page navigation control with numbered buttons, prev/next triggers, sliding active indicator, and staggered spring entrance animation
+Props:
+- total: number — Total number of pages
+- page: number — Controlled active page (1-based)
+- defaultPage: number — Initial page for uncontrolled mode
+- onChange: (page: number) => void — Called when active page changes
+- siblings: number (default: 1) — Pages shown on each side of active
+- boundaries: number (default: 1) — Pages pinned at start and end
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of pagination controls
+- variant: 'default' | 'outline' (default: default) — Visual variant
+- children: React.ReactNode — PrevTrigger, Items, NextTrigger
+Pagination.Root props:
+- total: number — Total number of pages
+- page: number — Controlled active page (1-based)
+- defaultPage: number — Initial page for uncontrolled mode (1-based)
+- onChange: (page: number) => void — Called when active page changes
+- siblings: number (default: 1) — Pages shown on each side of the active page
+- boundaries: number (default: 1) — Pages pinned at start and end of range
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of pagination controls
+- variant: 'default' | 'outline' (default: default) — Visual variant
+- labels: Partial<PaginationLabels> — Overridable user-facing strings
+- children: React.ReactNode — PrevTrigger, Items, NextTrigger
+Pagination.PrevTrigger props:
+- animations: AnimationTrigger[] | false — Interactive animation config or false to disable
+- children: React.ReactNode — Button content (defaults to left chevron SVG)
+Pagination.NextTrigger props:
+- animations: AnimationTrigger[] | false — Interactive animation config or false to disable
+- children: React.ReactNode — Button content (defaults to right chevron SVG)
+Pagination.Items props:
+- animations: AnimationTrigger[] | false — Interactive animation config or false to disable
+Example: <Pagination variant="default">…</Pagination>
+
+## Password (forms)
+Password input with visibility toggle button, outlined/filled variants, and optional left icon
+Props:
+- variant: 'outlined' | 'filled' (default: outlined) — Visual variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+- invalid: boolean — Invalid state with error border styling
+- iconLeft: React.ReactNode — Optional icon rendered before input
+- showIcon: React.ReactNode — Custom icon for show password state (defaults to eye icon)
+- hideIcon: React.ReactNode — Custom icon for hide password state (defaults to eye-off icon)
+- width: React.CSSProperties['width'] — Custom width override
+- visible: boolean — Controlled visibility state
+- defaultVisible: boolean (default: false) — Default visibility state (uncontrolled)
+- onVisibleChange: (visible: boolean) => void — Called when visibility toggles
+- disabled: boolean — Disabled state
+- readOnly: boolean — Read-only state
+- placeholder: string — Input placeholder text
+- value: string — Controlled input value
+- defaultValue: string — Default input value (uncontrolled)
+- name: string — Form input name
+- id: string — Input element id
+- required: boolean — Required state
+- autoFocus: boolean — Auto-focus on mount
+- onChange: React.ChangeEventHandler<HTMLInputElement> — Input change handler
+- onFocus: React.FocusEventHandler<HTMLInputElement> — Input focus handler
+- onBlur: React.FocusEventHandler<HTMLInputElement> — Input blur handler
+- onKeyDown: React.KeyboardEventHandler<HTMLInputElement> — Input keydown handler
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <Password variant="outlined">…</Password>
+
+## PasswordStrength (forms)
+Password-strength indicator: a segmented meter + label, with an optional requirements checklist. Scoring-agnostic — controlled score, a custom estimate function, or a built-in length/character-class heuristic.
+Props:
+- value: string — Password to score via the built-in heuristic or `estimate`. Ignored when `score` is set.
+- score: number — Controlled strength level index (0..levels-1; -1 = empty/too-short). Takes precedence over value/estimate.
+- estimate: (value: string) => number — Custom scorer over `value` returning a level index (e.g. wrap zxcvbn). Falls back to the built-in heuristic.
+- levels: number (default: 4) — Number of strength levels/segments. Match your estimator (e.g. 5 for zxcvbn 0–4); labels.levels length should match.
+- size: 'sm' | 'md' | 'lg' (default: md) — Meter size
+- showLabel: boolean (default: true) — Show the strength text label beneath the meter
+- labels: Partial<PasswordStrengthLabels> — Level names, empty-state text, and the aria-live announcement prefix
+- id: string — Element id (lets a password field point aria-describedby at the meter)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Optional PasswordStrength.Requirements rendered beneath the meter
+PasswordStrength.Requirements props:
+- requirements: { label: string; met: boolean }[] — Rules to display; the consumer computes `met` (keeps the component scoring-agnostic)
+- labels: Partial<PasswordStrengthLabels> — Accessible labels for the met / not-met states (met, unmet)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <PasswordStrength>…</PasswordStrength>
+
+## PinInput (forms)
+Multi-slot PIN/OTP code input with single hidden input, visual slot rendering, grouping, mask support, and caret animation
+Props:
+- length: number (default: 4) — Number of input slots
+- value: string — Controlled value string
+- defaultValue: string — Default value (uncontrolled)
+- onChange: (value: string) => void — Called when value changes
+- onComplete: (value: string) => void — Called when all slots are filled
+- type: 'number' | 'alphanumeric' | RegExp (default: number) — Character validation type
+- mask: boolean — Mask input like a password (shows bullet characters)
+- placeholder: string — Placeholder character per slot
+- oneTimeCode: boolean (default: true) — Enable autocomplete="one-time-code" for SMS autofill
+- grouping: number[] — Grouping pattern (e.g. [3,3] splits 6 into two groups with separator)
+- invalid: boolean — Invalid state with error border styling
+- size: 'sm' | 'md' | 'lg' (default: md) — Slot size
+- labels: Partial<PinInputLabels> — Accessible label overrides
+- disabled: boolean — Disabled state
+- name: string — Hidden input name for form submission
+- autoFocus: boolean — Auto-focus the input on mount
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <PinInput>…</PinInput>
+
+## Popover (overlays)
+Floating popup panel anchored to a trigger with close button, arrow, and optional close-on-scroll behavior
+Popover.Root props:
+- children: React.ReactNode — Popover sub-components
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Initial open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- closeOnScroll: boolean (default: false) — Close the popover when an ancestor element scrolls
+- modal: boolean — Whether to render as modal
+Popover.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Popover.Anchor props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Anchor content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Popover.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Popover body content
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- side: 'top' | 'right' | 'bottom' | 'left' — Preferred side relative to trigger
+- sideOffset: number — Distance from trigger in px
+- align: 'start' | 'center' | 'end' — Alignment along the side axis
+- alignOffset: number — Alignment offset in px
+- onPointerDownOutside: (e: Event) => void — Called when pointer down outside content
+- onEscapeKeyDown: (e: KeyboardEvent) => void — Called when escape key pressed
+- onInteractOutside: (e: Event) => void — Called on any outside interaction
+- onOpenAutoFocus: (e: Event) => void — Called when content receives auto focus on open
+- onCloseAutoFocus: (e: Event) => void — Called when focus returns to trigger on close
+Popover.Arrow props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- width: number — Arrow width in px
+- height: number — Arrow height in px
+Popover.Close props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Close button content (defaults to X icon)
+- asChild: boolean — Merge props onto child element instead of wrapping
+- labels: Partial<PopoverLabels> — Override default accessible labels
+Example: <Popover>…</Popover>
+
+## ProgressBar (feedback)
+Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes
+Props:
+- value: number | null — Current progress value; null for indeterminate state
+- max: number (default: 100) — Maximum value for progress calculation
+- size: 'sm' | 'md' | 'lg' (default: md) — Bar height
+- variant: 'default' | 'success' | 'warning' | 'error' (default: default) — Indicator color variant
+- getValueLabel: (value: number, max: number) => string — Custom accessible value label function passed to Radix
+- children: React.ReactNode — Optional children content
+Example: <ProgressBar variant="default">…</ProgressBar>
+
+## Prose (typography)
+Rich-text container that styles child HTML elements (headings, paragraphs, lists, code, tables) with consistent typography
+Props:
+- size: 'sm' | 'base' | 'lg' (default: base) — Base font size for prose content
+- children: React.ReactNode — HTML content to style
+Example: <Prose>…</Prose>
+
+## RadioGroup (forms)
+Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state
+Props:
+- value: string — Controlled selected value
+- defaultValue: string — Default selected value (uncontrolled)
+- onValueChange: (value: string) => void — Called when selected value changes
+- disabled: boolean — Disable all radio items
+- name: string — Form input name
+- required: boolean — Required state
+- invalid: boolean — Invalid state
+- size: 'sm' | 'md' | 'lg' (default: md) — Radio item size
+- orientation: 'horizontal' | 'vertical' (default: vertical) — Layout orientation
+- loop: boolean — Whether keyboard navigation loops
+- children: React.ReactNode — RadioGroup.Item children
+RadioGroup.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — RadioGroup.Item children
+- value: string — Controlled selected value
+- defaultValue: string — Default selected value (uncontrolled)
+- onValueChange: (value: string) => void — Called when selected value changes
+- disabled: boolean — Disable all radio items
+- name: string — Form input name for hidden inputs
+- required: boolean — Mark all items as required
+- invalid: boolean — Invalid state applied to all items via data-invalid
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of all radio items
+- orientation: 'horizontal' | 'vertical' (default: vertical) — Layout orientation
+- loop: boolean — Whether keyboard navigation loops
+RadioGroup.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Label content rendered next to radio
+- value: string — Value of this radio option
+- disabled: boolean — Disabled state
+- animations: AnimationTrigger[] | false — Toggle animation config or false to disable
+Example: <RadioGroup orientation="vertical">…</RadioGroup>
+
+## RichTextEditor (forms)
+Editor-agnostic rich text editor chrome with toolbar, control groups, formatting controls, and content area wrapping any editor engine (TipTap, Lexical, Plate, etc.)
+Props:
+- variant: 'outline' | 'subtle' (default: outline) — Visual variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Component size
+- children: React.ReactNode — Toolbar and Content sub-components
+RichTextEditor.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Toolbar and Content sub-components
+- variant: 'outline' | 'subtle' (default: outline) — Visual variant — outline has border, subtle is borderless
+- size: 'sm' | 'md' | 'lg' (default: md) — Component size affecting control size, toolbar padding, and content padding
+RichTextEditor.Toolbar props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — ControlGroup, Control, and Separator sub-components
+- sticky: boolean — Make toolbar sticky at the top of the scroll container
+- stickyOffset: number — Top offset for sticky positioning (px)
+- labels: Partial<RichTextEditorLabels> — i18n label overrides (toolbar aria-label)
+RichTextEditor.ControlGroup props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Control sub-components
+RichTextEditor.Control props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Control icon or label
+- active: boolean — Controlled active/pressed state
+- defaultActive: boolean (default: false) — Default active state (uncontrolled)
+- onActiveChange: (active: boolean) => void — Called when active state toggles
+- disabled: boolean — Disabled state
+RichTextEditor.Separator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+RichTextEditor.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Editor engine component (TipTap, Lexical, Plate, etc.)
+- minHeight: React.CSSProperties['minHeight'] — Minimum height for the content area
+- onFocus: React.FocusEventHandler<HTMLDivElement> — Focus event handler
+- onBlur: React.FocusEventHandler<HTMLDivElement> — Blur event handler
+Example: <RichTextEditor variant="outline">…</RichTextEditor>
+
+## ScrollArea (layout)
+Scrollable content container with customizable scrollbar styling, optional sticky header and footer
+ScrollArea.Root props:
+- children: React.ReactNode — Header, Content, and Footer elements
+- fill: boolean | 'screen' — Stretch to fill height. The Root already fills its parent (100%); set 'screen' to own the viewport height (100dvh) when it's the app-shell root with no sized ancestor.
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+ScrollArea.Header props:
+- children: React.ReactNode — Header content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- padded: boolean (default: true) — Whether to apply padding using the scroll area padding token
+ScrollArea.Content props:
+- children: React.ReactNode — Scrollable content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- padded: boolean (default: false) — Whether to apply padding using the scroll area padding token
+ScrollArea.Footer props:
+- children: React.ReactNode — Footer content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- padded: boolean (default: true) — Whether to apply padding using the scroll area padding token
+Example: <ScrollArea>…</ScrollArea>
+
+## Select (forms)
+Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger
+Props:
+- value: string — Controlled selected value
+- defaultValue: string — Default selected value (uncontrolled)
+- onValueChange: (value: string) => void — Called when selected value changes
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Default open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- children: React.ReactNode — Select sub-components
+Select.Root props:
+- value: string — Controlled selected value
+- defaultValue: string — Default selected value (uncontrolled)
+- onValueChange: (value: string) => void — Called when selected value changes
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Default open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- children: React.ReactNode — Select sub-components
+Select.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content (typically Value + Icon)
+- disabled: boolean — Disabled state
+- invalid: boolean — Invalid state
+- size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
+- variant: 'outlined' | 'filled' (default: outlined) — Visual variant
+- width: React.CSSProperties['width'] — Custom width override
+- minWidth: React.CSSProperties['minWidth'] — Minimum width override (token default: 10rem)
+- maxWidth: React.CSSProperties['maxWidth'] — Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)
+Select.Value props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- placeholder: string — Text shown when no value selected
+- children: React.ReactNode — Custom render override for selected value
+Select.Icon props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom icon content (defaults to chevron-down)
+Select.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Content children (Viewport, Items, etc.)
+- sideOffset: number (default: 4) — Distance from trigger in px
+- align: 'start' | 'center' | 'end' — Alignment along the trigger axis
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- width: React.CSSProperties['width'] — Custom width override — by default matches trigger width
+- minWidth: React.CSSProperties['minWidth'] — Minimum width override (token default: 10rem)
+- maxWidth: React.CSSProperties['maxWidth'] — Maximum width override (token default: 30rem)
+- onPointerDownOutside: (e: Event) => void — Pointer down outside handler
+- onEscapeKeyDown: (e: KeyboardEvent) => void — Escape key handler
+- onInteractOutside: (e: Event) => void — Interact outside handler
+Select.Viewport props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Items and groups
+Select.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item content
+- value: string — Value to select when chosen
+- label: React.ReactNode — Display label registered in SelectValue (defaults to children)
+- disabled: boolean — Disabled state
+- onSelect: (e: Event) => void — Called when item is selected
+Select.Group props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Group label and items
+Select.Label props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Label text
+Select.Separator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <Select>…</Select>
+
+## Sidebar (navigation)
+Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations
+Sidebar.Provider props:
+- children: React.ReactNode — App content including sidebar and main area
+- collapsed: boolean — Controlled collapsed state
+- defaultCollapsed: boolean (default: false) — Initial collapsed state (uncontrolled)
+- onCollapsedChange: (collapsed: boolean) => void — Called when collapsed state changes
+- mobileOpen: boolean — Controlled mobile open state
+- defaultMobileOpen: boolean (default: false) — Initial mobile open state (uncontrolled)
+- onMobileOpenChange: (open: boolean) => void — Called when mobile open state changes
+- breakpoint: number (default: 768) — Viewport width breakpoint for mobile mode
+- animations: AnimationTrigger[] | false — Animation config or false to disable all sidebar animations
+Sidebar.Root props:
+- children: React.ReactNode — Sidebar sections (Header, Content, Footer)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- side: 'left' | 'right' (default: left) — Which side the sidebar appears on
+Sidebar.Overlay props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.Header props:
+- children: React.ReactNode — Header content
+- labels: Partial<SidebarLabels> — Overridable user-facing strings
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- collapsedChildren: React.ReactNode — Alternative content shown when sidebar is collapsed (desktop only)
+Sidebar.Content props:
+- children: React.ReactNode — Navigation items and groups
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.Footer props:
+- children: React.ReactNode — Footer content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.Group props:
+- children: React.ReactNode — GroupLabel and Item children
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.GroupLabel props:
+- children: React.ReactNode — Label text
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.Item props:
+- children: React.ReactNode — Item label text content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- icon: React.ReactNode — Icon element rendered before label
+- badge: React.ReactNode — Badge element rendered after label
+- active: boolean — Whether this item is the active/selected item
+- disabled: boolean — Disable interaction
+- asChild: boolean — Merge props onto child element (e.g. an anchor tag) instead of rendering a button
+- tooltip: React.ReactNode — Tooltip content shown when sidebar is collapsed on desktop
+Sidebar.Trigger props:
+- children: React.ReactNode — Trigger content (typically a hamburger/collapse icon)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- asChild: boolean — Merge props onto child element instead of wrapping in button
+- icon: string | React.ReactNode — Icon to render — either a Lucide name (resolved via the icon resolver) or any ReactNode.
+- tooltip: string — Tooltip label shown on hover when the sidebar is collapsed.
+- visibility: 'desktop' | 'mobile' | 'always' (default: always) — When to render the trigger — desktop-only collapse handle, mobile-only menu, or always.
+Example: <Sidebar>…</Sidebar>
+
+## Skeleton (feedback)
+Compound placeholder shapes for loading states with pulse and wave animation modes
+Props:
+- loading: boolean (default: true) — Whether to render the skeleton (Root prop)
+- animation: 'pulse' | 'wave' | false (default: pulse) — Animation style (Root prop)
+- children: React.ReactNode — Shape sub-components (Root prop)
+Skeleton.Root props:
+- children: React.ReactNode — Shape sub-components to render
+- loading: boolean (default: true) — Whether to render skeleton (returns null when false)
+- animation: 'pulse' | 'wave' | false (default: pulse) — Animation style: pulse fades opacity, wave sweeps a highlight gradient
+Skeleton.Circle props:
+- size: number | string (default: 40) — Circle diameter (number for px, string for custom)
+Skeleton.Rectangle props:
+- width: number | string (default: 100%) — Rectangle width
+- height: number | string (default: 1rem) — Rectangle height
+Skeleton.Rounded props:
+- width: number | string (default: 100%) — Width of the rounded shape
+- height: number | string (default: 1rem) — Height of the rounded shape
+- radius: string (default: var(--move-skeleton-radius)) — Border radius value
+Skeleton.Text props:
+- lines: number (default: 3) — Number of text lines to render
+- spacing: string (default: var(--move-skeleton-text-spacing)) — Gap between lines
+- lineHeight: string (default: var(--move-skeleton-text-line-height)) — Height of each line
+- lastLineWidth: string (default: 60%) — Width of the last line (shorter for realism)
+Example: <Skeleton>…</Skeleton>
+
+## Splitter (layout)
+Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking
+Splitter.Root props:
+- children: React.ReactNode — Panel children (gutters are injected automatically between them)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- layout: 'horizontal' | 'vertical' (default: horizontal) — Layout direction of the panels
+- gutterSize: number (default: 4) — Size of the gutter/handle in pixels
+- collapseBelow: number — Container width in pixels below which horizontal layout collapses to vertical stacking
+- onResizeEnd: (sizes: number[]) => void — Callback fired when panel resize completes, with current sizes as percentages
+Splitter.Panel props:
+- children: React.ReactNode — Panel content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- size: number — Initial size as percentage (auto-distributed if not specified)
+- minSize: number (default: 5) — Minimum size as percentage (prevents panel from collapsing below this)
+Example: <Splitter>…</Splitter>
+
+## Stack (layout)
+Flex layout container for vertical or horizontal stacking with configurable gap, alignment, and responsive collapse
+Props:
+- direction: 'row' | 'column' (default: column) — Flex direction
+- gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Gap between children
+- padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'none' — Padding around the stack. Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.
+- align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' (default: stretch) — Cross-axis alignment (align-items)
+- justify: 'start' | 'center' | 'end' | 'between' | 'evenly' (default: start) — Main-axis alignment (justify-content)
+- wrap: boolean (default: false) — Allow children to wrap to next line
+- collapseBelow: string — Container width threshold (px) below which direction collapses to column
+- flex: 1 | 'auto' | 'none' — Flex sizing along the parent's main axis. 1 = grow to fill remaining space (with min-width:0 so wide children scroll instead of overflowing the row); 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size.
+- fill: boolean | 'screen' — Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height.
+- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center' } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.
+- animations: AnimationTrigger[] | false — Override or disable the entrance stagger animation (only relevant when `stagger` is set).
+- children: React.ReactNode — Child elements to lay out
+Example: <Stack direction="column" gap="md">…</Stack>
+
+## Stepper (navigation)
+Multi-step progress indicator with numbered/icon indicators, horizontal/vertical orientation, clickable steps, and status-driven styling
+Props:
+- active: number (default: 0) — Index of the active step (0-based)
+- onStepClick: (index: number) => void — Callback when a step is clicked
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Layout orientation
+- size: 'sm' | 'md' | 'lg' (default: md) — Stepper size
+- children: React.ReactNode — Stepper.Step children
+Stepper.Root props:
+- active: number (default: 0) — Index of the currently active step (0-based)
+- onStepClick: (index: number) => void — Callback when a step is clicked; enables clickable steps
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Layout orientation
+- size: 'sm' | 'md' | 'lg' (default: md) — Size affecting indicator, typography, and separator dimensions
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' — Indicator/active-state color from the named Open Color palette.
+- children: React.ReactNode — Stepper.Step children
+Stepper.Step props:
+- status: 'wait' | 'active' | 'complete' | 'error' — Override auto-derived status for this step
+- loading: boolean — Show loading state on this step
+- children: React.ReactNode — Indicator, Title, Description, or other content
+Stepper.Indicator props:
+- icon: React.ReactNode — Custom icon for the indicator
+- completedIcon: React.ReactNode — Custom icon for completed state (defaults to check icon)
+- children: React.ReactNode — Custom indicator content (overrides number/icon)
+Stepper.Title props:
+- children: React.ReactNode — Title text content
+Stepper.Description props:
+- children: React.ReactNode — Description text content
+Stepper.Completed props:
+- children: React.ReactNode — Content to show when all steps are completed
+Example: <Stepper orientation="horizontal">…</Stepper>
+
+## Switch (forms)
+Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label
+Props:
+- checked: boolean — Controlled checked state
+- defaultChecked: boolean — Default checked state for uncontrolled mode
+- onCheckedChange: (checked: boolean) => void — Called when checked state changes
+- disabled: boolean — Whether the switch is disabled
+- invalid: boolean — Whether the switch is in an invalid state
+- label: React.ReactNode — Optional label displayed beside the switch
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of the switch
+- animations: AnimationTrigger[] | false — Toggle animation config or false to disable
+- required: boolean — Required for form validation
+- name: string — Form submission name
+- value: string — Form submission value
+Switch.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Switch.Thumb element
+- checked: boolean — Controlled checked state
+- defaultChecked: boolean — Default checked state for uncontrolled mode
+- onCheckedChange: (checked: boolean) => void — Called when checked state changes
+- disabled: boolean — Whether the switch is disabled
+- invalid: boolean — Whether the switch is in an invalid state
+- label: React.ReactNode — Optional label text rendered beside the switch
+- size: 'sm' | 'md' | 'lg' (default: md) — Size of the switch
+- animations: AnimationTrigger[] | false — Toggle animation config or false to disable
+- required: boolean — Required for form validation
+- name: string — Form submission name
+- value: string — Form submission value
+Switch.Thumb props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <Switch>…</Switch>
+
+## Table (data-display)
+Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.
+Props:
+- variant: 'surface' | 'lines' | 'bordered' | 'ghost' (default: lines) — Visual frame variant.
+- size: 'sm' | 'md' | 'lg' (default: md) — Cell padding and font size.
+- striped: boolean — Zebra-stripe body rows.
+- hoverable: boolean — Tint rows on hover.
+- stickyHeader: boolean — Stick the header on scroll.
+- responsive: 'scroll' | 'stack' | 'none' (default: scroll) — Responsive strategy.
+- stackBelow: number (default: 640) — Stack-mode container breakpoint in px.
+- animations: AnimationTrigger[] | false — Row entrance animation config or false.
+- children: React.ReactNode — Table sections.
+Table.Root props:
+- variant: 'surface' | 'lines' | 'bordered' | 'ghost' (default: lines) — Visual frame: borderless with horizontal rules (lines, default), card-like (surface), full grid (bordered), or no chrome at all (ghost — use with `striped` for zebra-only).
+- size: 'sm' | 'md' | 'lg' (default: md) — Cell padding and font size.
+- striped: boolean — Zebra-stripe even rows in the body. Composes with any variant.
+- hoverable: boolean — Tint rows on hover.
+- stickyHeader: boolean — Stick the header to the top while the body scrolls.
+- responsive: 'scroll' | 'stack' | 'none' (default: scroll) — Responsive strategy: overflow-x scroll (default), flip to stacked cards below stackBelow, or none.
+- stackBelow: number (default: 640) — Container-width breakpoint in pixels below which stack mode activates. Only used when responsive="stack".
+- animations: AnimationTrigger[] | false — Staggered row entrance animation config or false to disable.
+- children: React.ReactNode — Table sections (Header, Body, Footer, Group).
+Table.Header props:
+- children: React.ReactNode — Header rows. Text inside Head cells is used as labels for stack mode.
+Table.Body props:
+- children: React.ReactNode — Body rows.
+Table.Footer props:
+- children: React.ReactNode — Footer rows.
+Table.Row props:
+- selected: boolean — Mark row as selected.
+- valign: 'start' | 'center' | 'end' — Vertical alignment of this row's cells (start = top, center = middle, end = bottom). Defaults to the browser's middle; start keeps neighbours aligned when one cell is multi-line.
+- interactive: boolean — Make the row a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation.
+- onClick: (event: React.MouseEvent<HTMLTableRowElement>) => void — Row click handler.
+- animations: AnimationTrigger[] | false — Row-level hover animation config or false to disable.
+- children: React.ReactNode — Row cells.
+Table.Head props:
+- sortable: boolean — Enable sort interaction on this column.
+- sorted: 'asc' | 'desc' | false — Current sort direction or false.
+- onSort: () => void — Callback when sort is triggered.
+- align: 'start' | 'center' | 'end' — Column alignment for the header label.
+- children: React.ReactNode — Header cell content.
+Table.Cell props:
+- align: 'start' | 'center' | 'end' — Cell alignment.
+- description: React.ReactNode — When set, the cell renders its children as a bold primary line with this muted description below.
+- children: React.ReactNode — Cell content.
+Table.Caption props:
+- children: React.ReactNode — Caption text.
+Table.Group props:
+- collapsible: boolean (default: true) — When false, the group renders as a static section — header has no chevron and is not clickable.
+- open: boolean — Controlled open state.
+- defaultOpen: boolean (default: true) — Initial open state when uncontrolled.
+- onOpenChange: (open: boolean) => void — Fires when the open state changes.
+- children: React.ReactNode — GroupHeader followed by Rows.
+Table.GroupHeader props:
+- colSpan: number — Number of columns the header spans. Inferred from Table.Header column count by default.
+- children: React.ReactNode — Group label.
+Example: <Table variant="lines" responsive="scroll">…</Table>
+
+## TableOfContents (navigation)
+Right-rail table of contents with scroll-spy active-state tracking, indented nesting, and smooth-scroll anchor navigation.
+TableOfContents.Root props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — TableOfContents.Item elements
+- offset: number (default: 80) — Top-of-viewport offset (in px) used to decide which heading is current
+- labels: Partial<TableOfContentsLabels> — Override accessible label strings
+TableOfContents.Item props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Item label
+- href: string — Anchor href — e.g. "#section-id"
+- depth: 1 | 2 | 3 | 4 (default: 1) — Nesting level; visually indents the item
+Example: <TableOfContents>…</TableOfContents>
+
+## Tabs (navigation)
+Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive
+Tabs.Root props:
+- children: React.ReactNode — Tab list and content elements
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- defaultValue: string — Initial active tab value (uncontrolled)
+- value: string — Controlled active tab value
+- onValueChange: (value: string) => void — Called when active tab changes
+- orientation: 'horizontal' | 'vertical' — Orientation of tab list
+- dir: 'ltr' | 'rtl' — Text direction for keyboard navigation
+- activationMode: 'automatic' | 'manual' — Whether tabs activate on focus (automatic) or on click (manual)
+Tabs.List props:
+- children: React.ReactNode — Tab trigger elements
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- loop: boolean — Whether keyboard navigation loops around
+- size: 'sm' | 'md' | 'lg' (default: md) — Tab size affecting padding and font size
+- variant: 'underline' | 'pills' | 'outline' (default: underline) — Visual style variant
+- animations: AnimationTrigger[] | false — Pass false to disable sliding indicator animation
+Tabs.Trigger props:
+- children: React.ReactNode — Tab label content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- value: string — Unique value associating trigger with content
+- disabled: boolean — Disable the tab trigger
+Tabs.Content props:
+- children: React.ReactNode — Panel content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- value: string — Value matching the trigger to show this content
+- forceMount: true — Force mount content even when inactive
+Example: <Tabs>…</Tabs>
+
+## Text (typography)
+Typography primitive with configurable element, size, weight, color, alignment, and truncation
+Props:
+- as: 'p' | 'span' | 'div' | 'em' | 'strong' | 'small' | 'del' (default: p) — HTML element to render as
+- size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' (default: base) — Font size
+- weight: 'normal' | 'medium' | 'semibold' | 'bold' (default: normal) — Font weight
+- color: 'base' | 'muted' | 'subtle' | 'primary' | 'success' | 'warning' | 'error' (default: base) — Text color
+- align: 'left' | 'center' | 'right' — Text alignment (optional)
+- truncate: boolean — Truncate text with ellipsis
+- children: React.ReactNode — Text content
+Example: <Text as="p" weight="normal">…</Text>
+
+## Textarea (forms)
+Multi-line text input with outlined/filled variants, auto-resize support, and configurable size
+Props:
+- variant: 'outlined' | 'filled' (default: outlined) — Visual style variant
+- size: 'sm' | 'md' | 'lg' (default: md) — Size controlling padding and font size
+- invalid: boolean — Whether the textarea is in an invalid/error state
+- autoSize: boolean — Automatically adjust height based on content
+- minRows: number — Minimum number of visible rows when autoSize is enabled
+- maxRows: number — Maximum number of visible rows when autoSize is enabled
+- rows: number (default: 3) — Number of visible text rows
+- resize: 'none' | 'vertical' | 'horizontal' | 'both' (default: vertical) — CSS resize behavior (overridden to none when autoSize is true)
+- width: React.CSSProperties['width'] — Explicit width override for the root wrapper
+- disabled: boolean — Whether the textarea is disabled
+- readOnly: boolean — Whether the textarea is read-only
+- placeholder: string — Placeholder text
+- value: string — Controlled textarea value
+- defaultValue: string — Uncontrolled default textarea value
+- name: string — Form submission name
+- id: string — Element id for label association
+- required: boolean — Whether the textarea is required
+- autoFocus: boolean — Whether to auto-focus on mount
+- onChange: React.ChangeEventHandler<HTMLTextAreaElement> — Change event handler
+- onFocus: React.FocusEventHandler<HTMLTextAreaElement> — Focus event handler
+- onBlur: React.FocusEventHandler<HTMLTextAreaElement> — Blur event handler
+- onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> — Keydown event handler
+Example: <Textarea variant="outlined" resize="vertical">…</Textarea>
+
+## TimeField (date-time)
+Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker
+Props:
+- value: string — Controlled time value
+- defaultValue: string — Default time value
+- onValueChange: (value: string) => void — Value change handler
+- granularity: 'hour' | 'minute' | 'second' (default: minute) — Visible segments
+- hourCycle: 12 | 24 (default: 24) — Hour display cycle
+- withDropdown: boolean (default: false) — Enable dropdown picker
+- animations: AnimationTrigger[] | false — Dropdown animation config
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+- disabled: boolean (default: false) — Disabled state
+- invalid: boolean (default: false) — Invalid state
+- min: string — Min time constraint
+- max: string — Max time constraint
+- step: number (default: 1) — Increment step
+- labels: Partial<TimeFieldLabels> — Override aria-label strings for segments and period
+- children: React.ReactNode — Custom segment layout
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+TimeField.Root props:
+- children: React.ReactNode — Custom segment layout or auto-rendered segments
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- value: string — Controlled time value in 24h format (HH, HH:mm, HH:mm:ss)
+- defaultValue: string — Default time value (uncontrolled)
+- onValueChange: (value: string) => void — Called when time value changes
+- granularity: 'hour' | 'minute' | 'second' (default: minute) — Which segments to show
+- hourCycle: 12 | 24 (default: 24) — 12 or 24 hour display cycle
+- withDropdown: boolean (default: false) — Show dropdown column picker on ArrowDown
+- animations: AnimationTrigger[] | false — Animation config for dropdown enter/exit
+- size: 'sm' | 'md' | 'lg' (default: md) — Input size
+- disabled: boolean (default: false) — Disabled state
+- invalid: boolean (default: false) — Invalid state
+- min: string — Minimum time constraint (24h format)
+- max: string — Maximum time constraint (24h format)
+- step: number (default: 1) — Arrow key increment in seconds
+- labels: Partial<TimeFieldLabels> — Override aria-label strings for segments and period
+TimeField.Segment props:
+- segment: SegmentType — Which segment this renders (hour, minute, second)
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+TimeField.Separator props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode (default: :) — Separator content
+TimeField.Period props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+TimeField.Dropdown props:
+- children: React.ReactNode — DropdownColumn elements
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+TimeField.DropdownColumn props:
+- segment: SegmentType | 'period' — Which segment this column represents
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Example: <TimeField granularity="minute">…</TimeField>
+
+## Timeline (data-display)
+Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation
+Props:
+- active: number (default: -1) — Index of the active step
+- align: 'left' | 'right' | 'alternate' (default: left) — Content alignment
+- size: 'sm' | 'md' | 'lg' (default: md) — Timeline size
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' (default: indigo) — Default color for active/completed items
+- lineVariant: 'solid' | 'dashed' | 'dotted' (default: solid) — Line style for connectors
+- reverseActive: boolean (default: false) — Reverse active direction
+- animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
+- children: React.ReactNode — Timeline.Item children
+Timeline.Root props:
+- active: number (default: -1) — Index of the active step (-1 for all inactive)
+- align: 'left' | 'right' | 'alternate' (default: left) — Content alignment relative to the timeline line
+- size: 'sm' | 'md' | 'lg' (default: md) — Timeline size affecting bullet, line width, and spacing
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' (default: indigo) — Default color for active/completed items
+- lineVariant: 'solid' | 'dashed' | 'dotted' (default: solid) — Line style for connectors
+- reverseActive: boolean (default: false) — Reverse active direction (items after active index are completed)
+- animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
+- children: React.ReactNode — Timeline.Item children
+Timeline.Item props:
+- bullet: React.ReactNode — Custom bullet content (icon, avatar, etc.)
+- title: React.ReactNode — Item title text
+- lineVariant: 'solid' | 'dashed' | 'dotted' — Override line variant for this item
+- color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' — Override color for this item
+- children: React.ReactNode — Item body content
+Example: <Timeline align="left" color="indigo">…</Timeline>
+
+## Toast (feedback)
+Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations
+Toast.Viewport props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- position: ToastPosition — Default position for toasts (overridden per-toast by store)
+- animations: AnimationTrigger[] | false — Animation config or false to disable all toast animations
+- labels: Partial<ToastLabels> — i18n labels object for accessible strings (close)
+Example: <Toast>…</Toast>
+
+## ToggleButton (actions)
+Toggle button that switches between pressed and unpressed states, composing Button base styles with Radix Toggle primitive
+Props:
+- pressed: boolean — Controlled pressed state
+- defaultPressed: boolean — Initial pressed state (uncontrolled)
+- onPressedChange: (pressed: boolean) => void — Called when pressed state changes
+- disabled: boolean (default: false) — Disabled state
+- variant: 'primary' | 'secondary' | 'ghost' | 'danger' (default: secondary) — Visual style variant (inherits Button variants)
+- size: 'sm' | 'md' | 'lg' (default: md) — Button size
+- animations: AnimationTrigger[] | false — Animation config for hover/press interactions, or false to disable
+- children: React.ReactNode — Button content
+Example: <ToggleButton variant="secondary">…</ToggleButton>
+
+## ToggleGroup (actions)
+Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive
+ToggleGroup.Root props:
+- children: React.ReactNode — ToggleGroup.Item elements
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- value: string — Controlled selected item value
+- defaultValue: string — Initial selected item value (uncontrolled)
+- onValueChange: (value: string) => void — Called when selection changes
+- orientation: 'horizontal' | 'vertical' (default: horizontal) — Layout orientation
+- disabled: boolean — Disable the entire group
+- loop: boolean (default: true) — Whether keyboard navigation loops around
+- size: 'sm' | 'md' | 'lg' (default: md) — Item size affecting padding and font size
+- variant: 'primary' | 'secondary' | 'ghost' | 'danger' (default: secondary) — Visual style variant inherited by items
+- animations: AnimationTrigger[] | false — Pass false to disable indicator animation
+ToggleGroup.Item props:
+- children: React.ReactNode — Item label content
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- value: string — Unique value for this item
+- disabled: boolean — Disable this specific item
+- animations: AnimationTrigger[] | false — Per-item animation overrides; defaults to no animation to avoid scale artifacts on connected items
+Example: <ToggleGroup>…</ToggleGroup>
+
+## Tooltip (overlays)
+Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning
+Props:
+- label: React.ReactNode — Tooltip text content
+- children: React.ReactElement — Trigger element (rendered via asChild)
+- side: 'top' | 'right' | 'bottom' | 'left' (default: top) — Preferred placement side
+- sideOffset: number (default: 6) — Distance from trigger in px
+- align: 'start' | 'center' | 'end' — Alignment along the side axis
+- arrow: boolean (default: true) — Show arrow pointing to trigger
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+- delayDuration: number — Delay before tooltip opens (ms)
+- open: boolean — Controlled open state
+- onOpenChange: (open: boolean) => void — Called when open state changes
+Tooltip.Provider props:
+- children: React.ReactNode — App or section content
+- delayDuration: number — Delay before first tooltip opens (ms)
+- skipDelayDuration: number — Delay before subsequent tooltips open (ms)
+- disableHoverableContent: boolean — Prevent tooltip content from staying open on hover
+Tooltip.Root props:
+- children: React.ReactNode — Trigger and content elements
+- open: boolean — Controlled open state
+- defaultOpen: boolean — Initial open state (uncontrolled)
+- onOpenChange: (open: boolean) => void — Called when open state changes
+- delayDuration: number — Delay before tooltip opens (ms)
+- disableHoverableContent: boolean — Prevent content from staying open on hover
+Tooltip.Trigger props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Trigger content
+- asChild: boolean — Merge props onto child element instead of wrapping
+Tooltip.Content props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Tooltip content
+- side: 'top' | 'right' | 'bottom' | 'left' (default: top) — Preferred side relative to trigger
+- sideOffset: number — Distance from trigger in px
+- align: 'start' | 'center' | 'end' (default: center) — Alignment along the side axis
+- alignOffset: number — Alignment offset in px
+- container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- animations: AnimationTrigger[] | false — Animation config or false to disable
+Tooltip.Arrow props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- width: number — Arrow width in px
+- height: number — Arrow height in px
+Example: <Tooltip side="top" align="start">…</Tooltip>
+
+## VideoPlayer (media)
+Custom HTML5 video player with glassmorphism controls bar, progress scrubbing, volume, subtitles, playback speed, quality switching, fullscreen, and auto-hiding controls
+Props:
+- src: string — Video source URL
+- poster: string — Poster image URL shown before playback
+- provider: VideoPlayerProvider — Custom media provider (e.g. HLS.js adapter) with setup/destroy lifecycle
+- subtitles: SubtitleTrack[] — Array of subtitle/caption tracks (VTT files)
+- autoPlay: boolean — Start playback automatically
+- muted: boolean — Start muted
+- loop: boolean — Loop playback
+- playbackRate: number — Controlled playback speed
+- onPlaybackRateChange: (rate: number) => void — Called when playback rate changes
+- playing: boolean — Controlled playing state
+- onPlayingChange: (playing: boolean) => void — Called when playing state changes
+- volume: number — Controlled volume (0-1)
+- onVolumeChange: (volume: number) => void — Called when volume changes
+- currentTime: number — Controlled current playback time in seconds
+- onTimeChange: (time: number) => void — Called when current time changes
+- onEnded: () => void — Called when playback ends
+- onError: (error: MediaError | null) => void — Called on playback error
+- onReady: () => void — Called when video metadata is loaded and ready
+- qualities: QualityOption[] — Array of quality options for source switching
+- audioTracks: AudioTrack[] — Array of audio track options for source switching
+- onQualityChange: (quality: QualityOption) => void — Called when quality is changed
+- onAudioTrackChange: (track: AudioTrack) => void — Called when audio track is changed
+- showSettings: boolean (default: true) — Show the settings menu button
+- showVolume: boolean (default: true) — Show volume button and slider
+- showSubtitles: boolean (default: true) — Show the subtitles menu button (only if subtitles are provided)
+- showFullscreen: boolean (default: true) — Show the fullscreen toggle button
+- showTime: boolean (default: true) — Show the time display
+- labels: Partial<VideoPlayerLabels> — i18n labels for the player controls
+- radius: 'none' | 'sm' | 'md' | 'lg' (default: none) — Border radius of the player container
+- aspectRatio: string — CSS aspect-ratio value applied to the root
+- width: string | number — Width of the player (number treated as px)
+- height: string | number — Height of the player (number treated as px)
+- children: React.ReactNode — Additional content rendered inside the player container
+Example: <VideoPlayer radius="none">…</VideoPlayer>

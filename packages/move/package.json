@@ -14,7 +14,8 @@
     },
     "./styles.css": "./dist/styles.css",
     "./system.css": "./dist/styles/system.css",
-    "./styles/*": "./dist/styles/*"
+    "./styles/*": "./dist/styles/*",
+    "./scaffold/*": "./scaffold/*"
   },
   "bin": {
     "move": "./bin/cli.mjs"
@@ -23,11 +24,15 @@
     "bin",
     "checks",
     "dist",
+    "llms.txt",
+    "move.api.json",
     "recipes",
+    "scaffold",
     "skills"
   ],
   "scripts": {
-    "build": "vite build",
+    "gen:api": "node scripts/generate-api.mjs",
+    "build": "node scripts/generate-api.mjs && vite build",
     "dev": "vite build --watch",
     "lint": "eslint src",
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
@@ -39,6 +44,8 @@
     "test:watch": "vitest",
     "test:browser": "vitest --config vitest.browser.config.ts run",
     "check:spec-drift": "node scripts/checks/spec-drift.mjs",
+    "check:barrel-completeness": "node scripts/checks/barrel-completeness.mjs",
+    "check:design-pattern-conformance": "vitest run patterns/design-patterns.validate.test.ts",
     "check:family-popup": "node scripts/checks/family-popup.mjs",
     "check:family-modal": "node scripts/checks/family-modal.mjs",
     "check:family-disclosure": "node scripts/checks/family-disclosure.mjs",
@@ -49,8 +56,8 @@
     "check:component-conformance": "node scripts/checks/component-conformance.mjs",
     "check:spec-tokens": "node scripts/checks/spec-tokens.mjs",
     "check:strict-props": "node checks/strict-props.mjs",
-    "check:composition-spec-drift": "node checks/composition-spec-drift.mjs",
-    "check:animation-patterns": "node scripts/checks/animation-patterns.mjs",
+    "check:composite-spec-drift": "node checks/composite-spec-drift.mjs",
+    "check:animation-choreography": "node scripts/checks/animation-choreography.mjs",
     "check:dismissable-lifecycle": "node scripts/checks/dismissable-lifecycle.mjs",
     "check:icon-usage": "node scripts/checks/icon-usage.mjs",
     "check:conformance-docs": "node scripts/checks/conformance-docs.mjs",
@@ -61,9 +68,8 @@
     "check:integration-points": "node scripts/checks/integration-points.mjs",
     "check:data-attrs": "node scripts/checks/data-attrs.mjs",
     "check:move-props": "node scripts/checks/move-props.mjs",
-    "check:recipe-document-drift": "node scripts/checks/recipe-document-drift.mjs",
     "check:component-document-drift": "node scripts/checks/component-document-drift.mjs",
-    "check:all": "npm run check:spec-drift && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:composition-spec-drift && npm run check:animation-patterns && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:conformance-docs && npm run check:conformance-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:recipe-document-drift && npm run check:component-document-drift && npm run check:data-attrs && npm run check:move-props",
+    "check:all": "npm run check:spec-drift && npm run check:barrel-completeness && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:composite-spec-drift && npm run check:animation-choreography && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:conformance-docs && npm run check:conformance-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:component-document-drift && npm run check:data-attrs && npm run check:move-props && npm run check:design-pattern-conformance",
     "spec-diff": "tsx scripts/spec-diff/cli.mjs diff",
     "spec-snapshot": "tsx scripts/spec-diff/cli.mjs snapshot --from src/components"
   },

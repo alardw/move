@@ -1,10 +1,9 @@
 // Divider.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Divider',
   componentClass: 'presentational' as const,
   category: 'layout',
@@ -59,6 +58,13 @@ export const spec = {
       default: "'sm'",
       moveSpecific: true,
       description: 'Line thickness',
+    },
+    {
+      name: 'gap',
+      typeRef: 'Gap',
+      default: "'md'",
+      moveSpecific: true,
+      description: 'Outer gap (margin) around the divider',
     },
     {
       name: 'children',
