@@ -27,6 +27,30 @@ export { useMergedRef } from './engine';
 export { useControlledState } from './engine';
 export type { UseControlledStateOptions } from './engine';
 
+// General-purpose hooks + their wrapper components
+export { useInView, useTruncate, Deferred } from './hooks';
+export type {
+  UseInViewOptions,
+  UseInViewReturn,
+  UseTruncateOptions,
+  UseTruncateReturn,
+  DeferredProps,
+} from './hooks';
+
+// Pipeline artifact specs (consumer-facing) — so `{name}.api.ts` / `{name}.adapter.ts` can `satisfies` them.
+export type {
+  ApiSpec,
+  ApiTransport,
+  ApiAuth,
+  ApiParam,
+  ApiEndpoint,
+  ApiField,
+  HttpMethod,
+  Configurable,
+} from './api-spec';
+export type { AdapterSpec, AdapterMapping, ApiRef } from './adapter-spec';
+export type { CompositeSpec, CompositeScope, CompositeLabel } from './composite-spec';
+
 // Animation system
 export {
   springs,
@@ -100,8 +124,30 @@ export type {
 } from './animation';
 
 // Themes
-export { darkTheme, lightTheme } from './styles/themes';
-export type { Theme, ThemeTokens, ThemeAnimation } from './styles/themes';
+export {
+  darkTheme,
+  lightTheme,
+  defineTheme,
+  describeTheme,
+  defineThemes,
+  describeThemes,
+  auditTheme,
+  hexToOklch,
+  hexToLinear,
+  oklchHex,
+  colorContrast,
+} from './styles/themes';
+export type {
+  Theme,
+  ThemeTokens,
+  ThemeAnimation,
+  ThemeSeed,
+  DescribeThemeResult,
+  AuditResult,
+  AuditRow,
+  AuditStatus,
+  LinRGB,
+} from './styles/themes';
 
 // ThemeProvider
 export { ThemeProvider, useTheme } from './infrastructure/Theme';
@@ -177,10 +223,16 @@ export type {
   AvatarFallbackProps,
   AvatarGroupProps,
   AvatarSize,
+  AvatarColor,
 } from './components/data-display/Avatar';
 
 export { Badge } from './components/data-display/Badge';
-export type { BadgeProps, BadgeVariant, BadgeSize } from './components/data-display/Badge';
+export type {
+  BadgeProps,
+  BadgeVariant,
+  BadgeSize,
+  BadgeColor,
+} from './components/data-display/Badge';
 
 export { Button } from './components/actions/Button';
 export type {
@@ -197,6 +249,7 @@ export type {
   ChatBubbleAvatarSize,
   ChatBubbleContainerProps,
   ChatBubbleVariant,
+  ChatBubbleColor,
   ChatBubbleHeaderProps,
   ChatBubbleContentProps,
   ChatBubbleFooterProps,
@@ -727,6 +780,7 @@ export type {
 export { Toast, toast } from './components/feedback/Toast';
 export type {
   ToastViewportProps,
+  ToastLabels,
   ToastState,
   ToastPosition,
   ToastVariant,
@@ -779,6 +833,14 @@ export type {
   ListTrailingProps,
 } from './components/data-display/List';
 
+export { MarkerList } from './components/data-display/MarkerList';
+export type {
+  Marker,
+  MarkerListSpacing,
+  MarkerListRootProps,
+  MarkerListItemProps,
+} from './components/data-display/MarkerList';
+
 export { ToggleButton } from './components/actions/ToggleButton';
 export type { ToggleButtonProps } from './components/actions/ToggleButton';
 
@@ -826,6 +888,7 @@ export type {
   StepperSize,
   StepperOrientation,
   StepStatus,
+  StepperColor,
 } from './components/navigation/Stepper';
 export { useStepper } from './components/navigation/Stepper';
 export type { UseStepperOptions, UseStepperReturn } from './components/navigation/Stepper';
@@ -866,9 +929,25 @@ export type {
   CarouselAlign,
   CarouselAnimate,
 } from './components/media/Carousel';
+export { useCarouselAnimation, useCarouselAnimate } from './components/media/Carousel';
+export type {
+  UseCarouselAnimateOptions,
+  UseCarouselAnimateReturn,
+  UseCarouselAnimationOptions,
+  UseCarouselAnimationReturn,
+} from './components/media/Carousel';
 
 export { VideoPlayer } from './components/media/VideoPlayer';
-export type { VideoPlayerProps } from './components/media/VideoPlayer';
+export type {
+  VideoPlayerProps,
+  VideoPlayerProvider,
+  VideoPlayerRadius,
+  SubtitleTrack,
+  UseVideoPlayerOptions,
+  UseVideoPlayerReturn,
+  VTTCue,
+} from './components/media/VideoPlayer';
+export { useVideoPlayer, parseVTT } from './components/media/VideoPlayer';
 
 // Canonical shared prop unions — use these instead of inlining
 // `'sm' | 'md' | 'lg'` style literal unions in component types.
@@ -884,8 +963,11 @@ export type {
   Gap,
   GapWithXL2,
   Color,
+  MoveColors,
   Radius,
+  Truncate,
 } from './shared/types';
+export { MOVE_COLORS } from './shared/color';
 export { CANONICAL_TYPES, resolveTypeRef, valuesForTypeRef } from './shared/typeRegistry';
 export type { CanonicalTypeName } from './shared/typeRegistry';
 
