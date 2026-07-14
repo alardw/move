@@ -1,4 +1,4 @@
-/* Generated from Avatar.spec.ts (schemaVersion: 5, specHash: c909e0e0) */
+/* Generated from Avatar.spec.ts */
 
 /* =============================================================================
    Avatar
@@ -70,6 +70,12 @@
 }
 
 /* Colors — solid backgrounds with WCAG-legible foreground */
+.root {
+  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
+     the built-in palettes below override by specificity. */
+  --move-avatar-bg: var(--move-accent-solid);
+  --move-avatar-fg: var(--move-accent-solid-fg);
+}
 .root[data-color='gray'] {
   --move-avatar-bg: var(--move-gray-600);
   --move-avatar-fg: var(--move-gray-fg-solid);

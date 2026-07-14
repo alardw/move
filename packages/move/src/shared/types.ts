@@ -73,28 +73,62 @@ export type Gap = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none';
  *  wide hero stacks). Strict superset of `Gap`. */
 export type GapWithXL2 = Gap | '2xl' | '3xl';
 
-// ─── Color palette ───────────────────────────────────────────────────
+// ─── Text truncation ─────────────────────────────────────────────────
 //
-// The Open Color palette names that drive every "color" prop on
-// components like Avatar, Badge, ChatBubble, Stepper, Timeline.
-// Sage and Primary were intentionally removed when the palette was
-// reduced to the 14-stop set; brand color is mapped to `'indigo'`.
+// Shared by the text primitives (Text, Heading, Code, Link, Label) and any
+// component that sets `data-truncate` on a text element. All values are pure
+// CSS via the global `[data-truncate]` utility (styles/truncate.css) — they
+// respond to available space with no measurement. `middle` (pinned-tail) and
+// measured strategies are a separate, opt-in layer.
 
-/** The 14 named color palettes (Open Color + Move gray). */
-export type Color =
-  | 'gray'
-  | 'red'
-  | 'pink'
-  | 'grape'
-  | 'violet'
-  | 'indigo'
-  | 'blue'
-  | 'cyan'
-  | 'teal'
-  | 'green'
-  | 'lime'
-  | 'yellow'
-  | 'orange';
+/** How to truncate overflowing text. `true` is an alias for `'end'`.
+ *  - `end`    — single line, ellipsis at the end (default).
+ *  - `start`  — single line, ellipsis at the start (keeps the tail visible).
+ *  - `clamp`  — wrap up to N lines (`lines` prop), then ellipsis.
+ *  - `middle` — single line, ellipsis in the middle with a pinned tail
+ *    (filename / hash); requires string children, else falls back to `end`. */
+export type Truncate = boolean | 'end' | 'start' | 'clamp' | 'middle';
+
+// ─── Color: the accent palette ───────────────────────────────────────
+//
+// The categorical palette that drives every `color` prop (Avatar, Badge,
+// ChatBubble, Stepper, Timeline). These are named palette *roles*, not raw
+// shade primitives — `color="green"` means "the green role", resolved by
+// the theme (which decides whether green reads as moss, vibrant, or soft).
+// Raw shades (`--move-green-600`) are implementation tokens and are never
+// a component value.
+//
+// The palette is THEME-OWNED. The library ships the 13 built-in palettes;
+// a consumer theme redefines the vocabulary by augmenting `MoveColors` from
+// the package entry — e.g. a brand with three greens:
+//
+//   declare module 'move' {
+//     interface MoveColors { sage: true; forest: true; mint: true }
+//   }
+
+/**
+ * The color palette registry. Keys are the accent names a `color` prop
+ * accepts. Augment this interface from `'move'` to add theme-specific colors.
+ */
+export interface MoveColors {
+  gray: true;
+  red: true;
+  pink: true;
+  grape: true;
+  violet: true;
+  indigo: true;
+  blue: true;
+  cyan: true;
+  teal: true;
+  green: true;
+  lime: true;
+  yellow: true;
+  orange: true;
+}
+
+/** A categorical color role from the theme's palette. Defaults to the 13
+ *  built-in palettes; theme-extensible via `MoveColors` augmentation. */
+export type Color = keyof MoveColors;
 
 // ─── Radius ──────────────────────────────────────────────────────────
 //

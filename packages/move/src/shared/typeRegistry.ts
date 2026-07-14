@@ -9,6 +9,8 @@
  * verifies both when it boots.
  */
 
+import { MOVE_COLORS } from './color';
+
 export const CANONICAL_TYPES = {
   // Controls scale (md-anchored)
   Size: ['sm', 'md', 'lg'] as const,
@@ -24,22 +26,10 @@ export const CANONICAL_TYPES = {
   Gap: ['xs', 'sm', 'md', 'lg', 'xl', 'none'] as const,
   GapWithXL2: ['xs', 'sm', 'md', 'lg', 'xl', '2xl', '3xl', 'none'] as const,
 
-  // Color palette (Open Color + Move gray)
-  Color: [
-    'gray',
-    'red',
-    'pink',
-    'grape',
-    'violet',
-    'indigo',
-    'blue',
-    'cyan',
-    'teal',
-    'green',
-    'lime',
-    'yellow',
-    'orange',
-  ] as const,
+  // Color palette (Open Color + Move gray) — the default built-in set.
+  // Consumer themes extend the type via `MoveColors` augmentation; this
+  // list stays the documented default. Single-sourced from MOVE_COLORS.
+  Color: MOVE_COLORS,
 
   // Border-radius scale for media surfaces
   Radius: ['none', 'sm', 'md', 'lg', 'full'] as const,

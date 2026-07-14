@@ -70,6 +70,17 @@
  * ============================================ */
 
 /* --- Per-color custom properties (theme-aware via -text / -soft-bg tokens) --- */
+.root {
+  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
+     the built-in palettes below override by specificity. */
+  --_solid: var(--move-accent-solid);
+  --_solid-fg: var(--move-accent-solid-fg);
+  --_subtle: var(--move-accent-soft);
+  --_subtle-fg: var(--move-accent-soft-fg);
+  --_border: var(--move-accent-border);
+  --_accent: var(--move-accent-soft-fg);
+  --_outline-border: var(--move-accent-border);
+}
 .root[data-color='gray'] {
   --_solid: var(--move-gray-600);
   --_solid-fg: var(--move-gray-fg-solid);
@@ -197,10 +208,14 @@
   color: var(--_solid-fg);
 }
 
-/* Soft — tinted background, no border */
+/* Soft — tinted background + a hairline of the palette's own darker tone. The
+   border delineates the badge against ANY surface (tinted or not), since the tone
+   is darker/more saturated than both the pale fill and pale surfaces — without
+   the full-strength edge of the `surface` variant. */
 .root[data-variant='soft'] {
   background-color: var(--_subtle);
   color: var(--_subtle-fg);
+  border-color: color-mix(in srgb, var(--_border) 35%, transparent);
 }
 
 /* Surface — tinted background + visible border */

@@ -8,7 +8,7 @@
   --move-stepper-indicator-bg-complete: var(--move-primary);
   --move-stepper-indicator-bg-error: var(--move-error);
   --move-stepper-indicator-fg: var(--move-fg-muted);
-  --move-stepper-indicator-fg-active: var(--move-primary);
+  --move-stepper-indicator-fg-active: var(--move-indigo-text);
   --move-stepper-indicator-fg-complete: var(--move-primary-fg);
   --move-stepper-indicator-fg-error: var(--move-error-fg, var(--move-primary-fg));
   --move-stepper-indicator-border: var(--move-border-base);
@@ -31,6 +31,14 @@
 }
 
 /* Colors — override active/complete indicator and separator */
+.root {
+  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
+     the built-in palettes below override by specificity. */
+  --move-stepper-indicator-bg-complete: var(--move-accent-solid);
+  --move-stepper-indicator-fg-active: var(--move-accent-soft-fg);
+  --move-stepper-indicator-fg-complete: var(--move-accent-solid-fg);
+  --move-stepper-separator-color-complete: var(--move-accent-solid);
+}
 .root[data-color='gray'] {
   --move-stepper-indicator-bg-complete: var(--move-gray-600);
   --move-stepper-indicator-fg-active: var(--move-gray-500);

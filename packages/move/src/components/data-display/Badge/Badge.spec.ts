@@ -1,10 +1,9 @@
 // Badge.spec.ts — Component specification
-// specHash: ddc033c4
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Badge',
   componentClass: 'presentational' as const,
   category: 'data-display',
@@ -33,6 +32,13 @@ export const spec = {
       default: "'md'",
       moveSpecific: true,
       description: 'Badge size',
+    },
+    {
+      name: 'color',
+      typeRef: 'Color',
+      default: "'gray'",
+      moveSpecific: true,
+      description: 'Palette color role from the theme',
     },
     {
       name: 'children',

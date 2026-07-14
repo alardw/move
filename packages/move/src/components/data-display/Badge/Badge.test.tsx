@@ -74,18 +74,9 @@ describe('Badge', () => {
 
   // === Colors ===
   describe('colors', () => {
-    it('defaults to color=gray (resolved from default)', () => {
+    it('defaults to color=gray', () => {
       render(<Badge data-testid="badge">Badge</Badge>);
       expect(screen.getByTestId('badge')).toHaveAttribute('data-color', 'gray');
-    });
-
-    it('resolves semantic color names to palettes', () => {
-      render(
-        <Badge color="primary" data-testid="badge">
-          Badge
-        </Badge>,
-      );
-      expect(screen.getByTestId('badge')).toHaveAttribute('data-color', 'indigo');
     });
 
     it('passes palette colors through directly', () => {
@@ -97,19 +88,8 @@ describe('Badge', () => {
       expect(screen.getByTestId('badge')).toHaveAttribute('data-color', 'violet');
     });
 
-    it.each(['default', 'primary', 'success', 'warning', 'danger', 'info'] as const)(
-      'supports semantic color=%s',
-      (color) => {
-        render(
-          <Badge color={color} data-testid="badge">
-            Badge
-          </Badge>,
-        );
-        expect(screen.getByTestId('badge')).toHaveAttribute('data-color');
-      },
-    );
-
     it.each([
+      'gray',
       'red',
       'pink',
       'grape',
@@ -136,7 +116,7 @@ describe('Badge', () => {
   describe('dot variant', () => {
     it('renders a dot indicator element', () => {
       const { container } = render(
-        <Badge variant="dot" color="success" data-testid="badge">
+        <Badge variant="dot" color="green" data-testid="badge">
           Active
         </Badge>,
       );
@@ -186,9 +166,9 @@ describe('Badge', () => {
       expect(el).toHaveAttribute('data-color', 'teal');
     });
 
-    it('supports soft + semantic color', () => {
+    it('supports soft + palette color', () => {
       render(
-        <Badge variant="soft" color="danger" data-testid="badge">
+        <Badge variant="soft" color="red" data-testid="badge">
           Badge
         </Badge>,
       );

@@ -1,4 +1,4 @@
-/* Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01) */
+/* Generated from ChatBubble.spec.ts */
 
 /* Root — flex row, placement controls direction */
 .root {
@@ -43,8 +43,8 @@
   flex-direction: column;
   max-width: var(--move-chatbubble-max-width);
   padding: var(--move-chatbubble-padding-y) var(--move-chatbubble-padding-x);
-  background-color: var(--move-chatbubble-bg);
-  color: var(--move-chatbubble-fg);
+  background-color: var(--move-chatbubble-bg, var(--move-accent-soft));
+  color: var(--move-chatbubble-fg, var(--move-accent-soft-fg));
   border-radius: var(--move-chatbubble-radius);
   font-family: var(--move-font-body);
   word-break: break-word;
