@@ -1,4 +1,4 @@
-/* Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from InputRange.spec.ts */
 
 .wrapper {
   display: flex;
@@ -90,7 +90,9 @@
   position: relative;
   flex-grow: 1;
   height: var(--move-range-track-height);
-  background-color: var(--move-range-track-bg);
+  /* `background` (not `background-color`) so the token can hold a gradient —
+     e.g. a hue/scale track. Solid colors still work unchanged. */
+  background: var(--move-range-track-bg);
   border-radius: var(--move-range-track-radius);
   overflow: hidden;
 }
@@ -103,7 +105,7 @@
 .range {
   position: absolute;
   height: 100%;
-  background-color: var(--move-range-range-bg);
+  background: var(--move-range-range-bg);
   border-radius: inherit;
 }
 

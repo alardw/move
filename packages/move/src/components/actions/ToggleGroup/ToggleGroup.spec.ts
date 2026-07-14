@@ -1,16 +1,15 @@
 // ToggleGroup.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'ToggleGroup',
   componentClass: 'interactive' as const,
   category: 'actions',
   description:
     'Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive',
-  animationPatterns: ['slidingIndicator'],
+  choreographies: ['slidingIndicator'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],
@@ -255,12 +254,12 @@ export const spec = {
     },
     {
       name: '--move-toggle-group-padding',
-      value: '3px',
+      value: 'var(--move-segment-padding)',
       description: 'Root inner padding (gap between edge and items)',
     },
     {
       name: '--move-toggle-group-indicator-bg',
-      value: 'var(--move-primary)',
+      value: 'var(--move-segment-indicator-bg)',
       description: 'Sliding indicator background',
     },
   ],

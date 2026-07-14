@@ -13,7 +13,8 @@
   overflow: hidden;
   width: 100%;
   height: var(--move-progress-height);
-  background-color: var(--move-progress-bg);
+  /* `background` (not `background-color`) so the track token can hold a gradient. */
+  background: var(--move-progress-bg);
   border-radius: var(--move-progress-radius);
 }
 
@@ -53,7 +54,7 @@
 .indicator {
   height: 100%;
   width: 100%;
-  background-color: var(--move-progress-indicator-bg);
+  background: var(--move-progress-indicator-bg);
   border-radius: inherit;
   will-change: transform;
   transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
