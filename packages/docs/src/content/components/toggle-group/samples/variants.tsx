@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { Icon, Stack, Text, ToggleGroup } from 'move';
 
-const variants = ['pills', 'underline'] as const;
+const variants = ['pills', 'underline', 'outline'] as const;
 
 export default function VariantsSample() {
   const [value, setValue] = useState<Record<string, string>>({
     pills: 'grid',
     underline: 'grid',
+    outline: 'grid',
   });
 
   return (

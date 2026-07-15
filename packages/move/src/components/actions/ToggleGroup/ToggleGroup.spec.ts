@@ -104,11 +104,11 @@ export const spec = {
         },
         {
           name: 'variant',
-          type: "'pills' | 'underline'",
+          type: "'pills' | 'underline' | 'outline'",
           default: "'pills'",
           moveSpecific: true,
           description:
-            'Visual appearance, shared with Tabs: a filled sliding pill, or a Pinterest-style underline filter bar. Inherited by items.',
+            'Visual appearance, shared with Tabs: a filled sliding pill, a Pinterest-style underline filter bar, or connected outlined segments. Inherited by items.',
         },
         {
           name: 'animations',
@@ -266,7 +266,7 @@ export const spec = {
   ],
 
   variants: {
-    variant: ['pills', 'underline'] as string[],
+    variant: ['pills', 'underline', 'outline'] as string[],
   },
   sizes: ['sm', 'md', 'lg'] as string[],
 

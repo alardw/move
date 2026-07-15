@@ -15,8 +15,9 @@ import type { ButtonSize } from '../../actions/Button';
 import styles from './ToggleGroup.module.css';
 
 /** Visual appearance, shared with Tabs so the two read as one vocabulary:
- *  a filled sliding pill, or a Pinterest-style underline filter bar. */
-export type ToggleGroupVariant = 'pills' | 'underline';
+ *  a filled sliding pill, a Pinterest-style underline filter bar, or
+ *  connected outlined segments. */
+export type ToggleGroupVariant = 'pills' | 'underline' | 'outline';
 
 // ============================================================================
 // Context
@@ -97,12 +98,13 @@ const ToggleGroupRoot = withMoveComponent<
     // --- Sliding indicator: shared usePositionTracker hook (the slidingIndicator
     // capability). The press-scale stays a declarative Root.press animation. ---
     // Pills fill the active item (track both axes); underline rides a bar under
-    // it (track width only) — the same split Tabs uses for its two variants.
+    // it (track width only) — the same split Tabs uses. Outline draws its active
+    // state with borders and has no sliding indicator, so the tracker is off.
     const { indicatorRef, update: updateIndicator } = usePositionTracker({
       containerRef: internalRef as React.RefObject<HTMLElement | null>,
       activeSelector: '[data-state="on"]',
       track: props.variant === 'underline' ? 'width' : 'both',
-      disabled: props.animations === false,
+      disabled: props.animations === false || props.variant === 'outline',
     });
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [

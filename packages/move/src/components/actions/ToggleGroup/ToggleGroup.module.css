@@ -37,6 +37,14 @@
   --move-toggle-group-selected-fg: var(--move-fg-base);
 }
 
+/* Outline — connected bordered segments; the active one is outlined in the
+   accent. No sliding indicator (borders carry the active state). Mirrors
+   Tabs[variant="outline"]. */
+.root[data-variant='outline'] {
+  gap: 0;
+  --move-toggle-group-selected-fg: var(--move-fg-base);
+}
+
 .root[data-orientation='vertical'] {
   flex-direction: column;
 }
@@ -74,6 +82,34 @@
   bottom: -1px;
   height: 2px;
   border-radius: 1px;
+}
+
+/* Outline — no sliding indicator; the item borders carry the active state. */
+.root[data-variant='outline'] .indicator {
+  display: none;
+}
+
+/* Outline items — connected 1px borders, ends rounded, active outlined in the
+   accent. !important overrides the transparent/borderless base .item rules. */
+.root[data-variant='outline'] .item {
+  border: 1px solid var(--move-border-base) !important;
+  border-radius: 0 !important;
+  margin-left: -1px;
+}
+
+.root[data-variant='outline'] .item:first-of-type {
+  margin-left: 0;
+  border-radius: var(--move-rounded-md) 0 0 var(--move-rounded-md) !important;
+}
+
+.root[data-variant='outline'] .item:last-of-type {
+  border-radius: 0 var(--move-rounded-md) var(--move-rounded-md) 0 !important;
+}
+
+.root[data-variant='outline'] .item[data-state='on'] {
+  background-color: var(--move-surface-hover) !important;
+  border-color: var(--move-primary) !important;
+  z-index: 1;
 }
 
 /* ---- Item ---- */
