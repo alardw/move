@@ -53,8 +53,16 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
   for (const f of readdirSync(dir)) {
     if (/\.module\.css$/.test(f)) css += read(join(dir, f)) + '\n';
   }
-  // Strip CSS comments so a "@keyframes" mention in a comment doesn't count.
-  const usesKeyframes = /@keyframes\s+[\w-]+\s*\{/.test(css.replace(/\/\*[\s\S]*?\*\//g, ''));
+  // Strip CSS comments so a "@keyframes"/"animation:" mention in a comment
+  // doesn't count.
+  const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, '');
+  // A component "uses a CSS keyframe animation" if it EITHER defines @keyframes
+  // OR applies one via the `animation` / `animation-name` property (which could
+  // reference a keyframe defined in a shared/global stylesheet). `transition`
+  // is NOT matched — CSS transitions for hover/focus state are always allowed.
+  const definesKeyframes = /@keyframes\s+[\w-]+\s*\{/.test(cssNoComments);
+  const appliesAnimation = /(?:^|[;{}\s])animation(?:-name)?\s*:/i.test(cssNoComments);
+  const usesKeyframes = definesKeyframes || appliesAnimation;
 
   const usesHook = /\b(usePositionTracker|useSlidingIndicator)\s*\(/.test(src);
   const usesSplitText = /\buseSplitText\s*\(/.test(src);
@@ -83,7 +91,7 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
   if (usesKeyframes && !declared.has('cssAnimation'))
     issues.push([
       'error',
-      "defines a CSS @keyframes animation but spec.animationCapabilities lacks 'cssAnimation' — a discrete open/close animation belongs in spec.animations (the Move system), not CSS keyframes; only continuous loops (spinner, indeterminate, caret) are 'cssAnimation'",
+      `uses a CSS keyframe animation (${definesKeyframes ? '@keyframes' : ''}${definesKeyframes && appliesAnimation ? ' + ' : ''}${appliesAnimation ? 'the animation property' : ''}) but spec.animationCapabilities lacks 'cssAnimation' — a discrete open/close/enter/exit animation belongs in spec.animations (the Move anime.js system via useAnimations), NOT CSS; only continuous loops (spinner, indeterminate, caret) are 'cssAnimation'. Use a CSS transition for simple hover/focus state.`,
     ]);
 
   if (usesAnimatePosition)
@@ -95,7 +103,7 @@ for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
   if (declared.has('slidingIndicator') && !usesHook && !usesAnimatePosition)
     issues.push(['warn', "declares 'slidingIndicator' but source uses neither the hook nor animatePosition"]);
   if (declared.has('cssAnimation') && !usesKeyframes)
-    issues.push(['warn', "declares 'cssAnimation' but the CSS has no @keyframes"]);
+    issues.push(['warn', "declares 'cssAnimation' but the CSS has no @keyframes or animation property"]);
   if (declared.has('textSplit') && !usesSplitText)
     issues.push(['warn', "declares 'textSplit' but source does not use the useSplitText hook"]);
   if (declared.has('layoutFlip') && !usesAutoLayout)
