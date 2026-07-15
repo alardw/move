@@ -478,17 +478,26 @@ export const spec = {
   formType: null,
   asChild: true,
 
+  // Mobile sheet enter/exit — the aside (Root) slides in/out from its side edge
+  // and the Overlay fades, coordinated with the Radix Dialog via useDismissable
+  // so the panel stays mounted through the exit. All via the Move anime.js
+  // system (useAnimations); Root confirms the close.
   animations: [
     {
       trigger: 'Overlay.enter',
       sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 200 } } }],
     },
-    { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 150 } } }] },
+    { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 200 } } }] },
     {
-      trigger: 'Content.enter',
-      sequence: [{ animation: { x: { from: '-100%', to: 0, ease: 'poppy' } } }],
+      trigger: 'Root.enter',
+      sequence: [{ target: 'Root', animation: { x: { from: '-100%', to: 0, ease: 'poppy' } } }],
     },
-    { trigger: 'Content.exit', sequence: [{ animation: { x: { to: '-100%', ease: 'snappy' } } }] },
+    {
+      trigger: 'Root.exit',
+      sequence: [
+        { target: 'Root', animation: { x: { to: '-100%', ease: 'snappy', duration: 220 } } },
+      ],
+    },
   ],
 
   renderContracts: [
@@ -710,8 +719,10 @@ export const spec = {
       'Root width animates with spring on collapse/expand',
       'Root width animation skips first render',
       'Root width animation disabled when animations=false',
-      'Overlay opacity entrance animation plays on mobile open',
-      'Overlay animation disabled when animations=false',
+      'Mobile sheet slides the aside in on open and out on close (Root.enter/exit)',
+      'Mobile close keeps the sheet mounted for the exit animation (useDismissable) then unmounts',
+      'Overlay opacity fades in on open and out on close',
+      'Overlay + sheet animations disabled when animations=false (instant)',
       'Content staggers item entrance with translateX and opacity',
       'Content stagger animation disabled when animations=false',
       'All animations respect prefersReducedMotion',

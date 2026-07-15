@@ -5,7 +5,14 @@ import { Slot, Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
-import { useAnimations, poppy, smooth } from '../../../animation';
+import {
+  useAnimations,
+  useDismissable,
+  useDismissableExit,
+  poppy,
+  snappy,
+  smooth,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../overlays/Tooltip';
 import { Button } from '../../actions/Button';
@@ -53,16 +60,43 @@ function getItemSelector() {
   return `.${styles.item}, [data-sidebar-animate]`;
 }
 
-const DEFAULT_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
+// Mobile sheet enter/exit — the whole thing runs through the Move anime.js
+// system (useAnimations), coordinated with Radix Dialog via useDismissable so
+// the panel stays mounted for the exit animation. NOT CSS keyframes.
+const MOBILE_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Overlay.enter',
-    sequence: [
-      {
-        animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } },
-      },
-    ],
+    sequence: [{ animation: { opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 } } }],
+  },
+  {
+    trigger: 'Overlay.exit',
+    sequence: [{ animation: { opacity: { to: 0, ease: 'outQuart', duration: 200 } } }],
   },
 ];
+
+/** Slides the aside in from / out to the off-screen edge for the given side. */
+function mobileRootAnimations(side: 'left' | 'right'): AnimationTrigger[] {
+  const off = side === 'right' ? '100%' : '-100%';
+  return [
+    {
+      trigger: 'Root.enter',
+      sequence: [{ target: 'Root', animation: { x: { from: off, to: 0, ease: poppy } } }],
+    },
+    {
+      trigger: 'Root.exit',
+      sequence: [{ target: 'Root', animation: { x: { to: off, ease: snappy, duration: 220 } } }],
+    },
+  ];
+}
+
+/** Shares the dismissable exit lifecycle with the overlay sub-component so its
+ *  fade runs in step with the aside slide. Only Root confirms the close. */
+interface SidebarMobileContextValue {
+  isClosing: boolean;
+  epoch: number;
+  overlayConfig: AnimationTrigger[] | null;
+}
+const SidebarMobileContext = React.createContext<SidebarMobileContextValue | null>(null);
 
 const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
   {
@@ -161,7 +195,7 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
 
   setup({ props, ref, cx, sp, attrs }) {
     const { setMobileOpen } = useSidebarContext();
-    const animDisabled = React.useContext(SidebarAnimateContext);
+    const mobile = React.useContext(SidebarMobileContext);
     const overlayRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, overlayRef);
 
@@ -172,17 +206,20 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
       [],
     );
 
-    useAnimations(
-      animDisabled === false ? false : DEFAULT_OVERLAY_ANIMATIONS,
+    const { runExit, runEnter, pauseAll } = useAnimations(
+      mobile?.overlayConfig ?? null,
       overlayRefs,
-      undefined,
-      {
-        onEnterComplete: () => {
-          const el = overlayRef.current;
-          if (el) el.style.opacity = '';
-        },
-      },
     );
+    // Fade out in step with the aside slide; Root owns the actual close, so the
+    // overlay's exit does not confirm it (no-op onExitDone).
+    useDismissableExit({
+      isClosing: mobile?.isClosing ?? false,
+      epoch: mobile?.epoch ?? 0,
+      onExitDone: () => {},
+      runExit,
+      runEnter,
+      pauseAll,
+    });
 
     return {
       render() {
@@ -280,6 +317,29 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
 
     useAnimations(widthConfig, widthRefs);
 
+    // Mobile sheet lifecycle — useDismissable keeps the Radix Dialog mounted
+    // while the exit animation plays (open = isOpen || isClosing), mirroring
+    // Drawer. The aside slide + overlay fade run through useAnimations (the Move
+    // anime.js system), NOT CSS. Root owns the close confirmation.
+    const { isOpen, isClosing, epoch, onExitDone } = useDismissable({
+      open: isMobile ? mobileOpen : false,
+    });
+    const animateMobile = isMobile && animDisabled !== false;
+    const mobileConfig = React.useMemo(
+      () => (animateMobile ? mobileRootAnimations(side as 'left' | 'right') : null),
+      [animateMobile, side],
+    );
+    const { runExit, runEnter, pauseAll } = useAnimations(mobileConfig, widthRefs);
+    useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
+    const mobileCtx = React.useMemo<SidebarMobileContextValue>(
+      () => ({
+        isClosing,
+        epoch,
+        overlayConfig: animateMobile ? MOBILE_OVERLAY_ANIMATIONS : null,
+      }),
+      [isClosing, epoch, animateMobile],
+    );
+
     return {
       render() {
         const rootSp = sp('root');
@@ -318,16 +378,28 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
           return (
             <SurfaceProvider value={surface}>
               <LayerProvider value={400}>
-                <RadixDialog.Root open={mobileOpen} onOpenChange={setMobileOpen} modal>
-                  <RadixDialog.Portal>
-                    <RadixDialog.Overlay asChild>
-                      <SidebarOverlay />
-                    </RadixDialog.Overlay>
-                    <RadixDialog.Content asChild aria-describedby={undefined}>
-                      {asideEl}
-                    </RadixDialog.Content>
-                  </RadixDialog.Portal>
-                </RadixDialog.Root>
+                <SidebarMobileContext.Provider value={mobileCtx}>
+                  {/* open stays true through isClosing so the exit animation
+                      plays before Radix unmounts; a Radix-initiated close
+                      (Escape / overlay) flips mobileOpen, which drives the
+                      dismissable exit. */}
+                  <RadixDialog.Root
+                    open={isOpen || isClosing}
+                    onOpenChange={(o) => {
+                      if (!o) setMobileOpen(false);
+                    }}
+                    modal
+                  >
+                    <RadixDialog.Portal>
+                      <RadixDialog.Overlay asChild>
+                        <SidebarOverlay />
+                      </RadixDialog.Overlay>
+                      <RadixDialog.Content asChild aria-describedby={undefined}>
+                        {asideEl}
+                      </RadixDialog.Content>
+                    </RadixDialog.Portal>
+                  </RadixDialog.Root>
+                </SidebarMobileContext.Provider>
               </LayerProvider>
             </SurfaceProvider>
           );
