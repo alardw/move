@@ -1,0 +1,107 @@
+/* Generated from MarkerList.spec.ts */
+
+.root {
+  /* Component tokens — scaled by data-spacing / data-indent below. Declared on
+     the root so nested lists inherit unless they set their own. */
+  --move-marker-list-gap: var(--move-spacing-xs);
+  --move-marker-list-indent: var(--move-spacing-md);
+  --move-marker-list-marker-gap: var(--move-spacing-sm);
+  --move-marker-list-marker-color: var(--move-fg-muted);
+  --move-marker-list-marker-size: var(--move-size-base);
+
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-marker-list-gap);
+}
+
+/* Ordered lists open a counter scope; each ol nests its own automatically. */
+.root[data-ordered] {
+  counter-reset: mkl;
+}
+
+/* Vertical gap between items (spacing prop) — xs is the token default. */
+.root[data-spacing='none'] {
+  --move-marker-list-gap: 0;
+}
+.root[data-spacing='sm'] {
+  --move-marker-list-gap: var(--move-spacing-sm);
+}
+.root[data-spacing='md'] {
+  --move-marker-list-gap: var(--move-spacing-md);
+}
+.root[data-spacing='lg'] {
+  --move-marker-list-gap: var(--move-spacing-lg);
+}
+
+/* Indent added to nested lists (indent prop) — md is the token default. */
+.root[data-indent='none'] {
+  --move-marker-list-indent: 0;
+}
+.root[data-indent='xs'] {
+  --move-marker-list-indent: var(--move-spacing-xs);
+}
+.root[data-indent='sm'] {
+  --move-marker-list-indent: var(--move-spacing-sm);
+}
+.root[data-indent='lg'] {
+  --move-marker-list-indent: var(--move-spacing-lg);
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline; /* marker sits on the first text line's baseline */
+  gap: var(--move-marker-list-marker-gap);
+}
+
+/* center=true vertically centers the marker to the whole item. */
+.root[data-center] > .item {
+  align-items: center;
+}
+
+/* Ordered items advance the counter. */
+.root[data-ordered] > .item {
+  counter-increment: mkl;
+}
+
+.marker {
+  flex: none;
+  min-width: 1.5em;
+  text-align: end;
+  color: var(--move-marker-list-marker-color);
+  font-size: var(--move-marker-list-marker-size);
+  line-height: var(--move-leading-normal, 1.5);
+  user-select: none;
+}
+
+/* Ordered numbering rendered from the CSS counter — no JS index threading. */
+.marker[data-marker='decimal']::before {
+  content: counter(mkl, decimal) '.';
+}
+.marker[data-marker='alpha']::before {
+  content: counter(mkl, lower-alpha) '.';
+}
+.marker[data-marker='roman']::before {
+  content: counter(mkl, lower-roman) '.';
+}
+
+/* Icon markers size to the marker font size. */
+.marker[data-icon] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* A nested MarkerList indents by the indent token (inherited via the CSS var). */
+.content > .root {
+  margin-block-start: var(--move-marker-list-gap);
+  padding-inline-start: var(--move-marker-list-indent);
+}
