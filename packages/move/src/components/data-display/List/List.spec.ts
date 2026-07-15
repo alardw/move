@@ -1,16 +1,15 @@
 // List.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'List',
   componentClass: 'display' as const,
   category: 'data-display',
   description:
     'Stacked list with three-zone item layout (leading/content/trailing), responsive collapse, line clamping, dividers, density control, and optional Meta shorthand',
-  animationPatterns: ['listReveal'],
+  choreographies: ['listReveal'],
   families: {
     behavior: ['data-row'],
     state: ['stateless'],
@@ -231,6 +230,20 @@ export const spec = {
       name: 'Title',
       slots: [{ name: 'title', element: 'p', description: 'Primary text' }],
       props: [
+        {
+          name: 'truncate',
+          typeRef: 'Truncate',
+          default: "'end'",
+          moveSpecific: true,
+          description:
+            "How the title truncates when it overflows (default 'end'; 'middle' for paths)",
+        },
+        {
+          name: 'lines',
+          type: 'number',
+          moveSpecific: true,
+          description: "Max lines for truncate='clamp'",
+        },
         {
           name: 'children',
           type: 'React.ReactNode',

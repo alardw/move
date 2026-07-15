@@ -42,6 +42,9 @@
   font-size: var(--move-tooltip-content-font-size);
   line-height: var(--move-leading-normal);
   max-width: var(--move-tooltip-content-max-width);
+  /* Wrap long unbreakable strings (file paths, URLs, hashes) within the box
+     instead of overflowing past the background. */
+  overflow-wrap: break-word;
   user-select: none;
   will-change: transform, opacity;
 }

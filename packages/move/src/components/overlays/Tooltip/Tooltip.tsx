@@ -1,5 +1,5 @@
 'use client';
-// Generated from Tooltip.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Tooltip.spec.ts
 import * as React from 'react';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
@@ -397,7 +397,7 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   label,
   children,
   side = 'top',
-  sideOffset = 6,
+  sideOffset = 4,
   align,
   arrow = true,
   animations: animationsProp,

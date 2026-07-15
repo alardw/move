@@ -1,10 +1,9 @@
 // Heading.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Heading',
   componentClass: 'presentational' as const,
   category: 'typography',
@@ -62,9 +61,21 @@ export const spec = {
     },
     {
       name: 'truncate',
+      typeRef: 'Truncate',
+      moveSpecific: true,
+      description: "Truncate overflowing text: true/'end', 'start', or 'clamp'",
+    },
+    {
+      name: 'lines',
+      type: 'number',
+      moveSpecific: true,
+      description: "Max lines for truncate='clamp' (default 2)",
+    },
+    {
+      name: 'tooltip',
       type: 'boolean',
       moveSpecific: true,
-      description: 'Enable text truncation with ellipsis',
+      description: 'With truncate, show full text in a tooltip when actually cut off',
     },
     { name: 'className', type: 'string', moveSpecific: false, description: 'Additional CSS class' },
     {

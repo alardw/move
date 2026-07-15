@@ -1,4 +1,4 @@
-/* Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Heading.spec.ts */
 
 .root {
   /* Component tokens */
@@ -7,7 +7,7 @@
   --move-heading-color-subtle: var(--move-fg-subtle);
 
   margin: 0;
-  font-family: var(--move-font-body, system-ui, sans-serif);
+  font-family: var(--move-font-heading, system-ui, sans-serif);
   line-height: var(--move-leading-tight);
 }
 
@@ -123,10 +123,5 @@
   text-align: right;
 }
 
-/* ── Truncate ── */
-
-.root[data-truncate] {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* Truncation is handled by the global `[data-truncate]` utility
+   (styles/truncate.css) — the component only sets the attribute. */

@@ -1,4 +1,4 @@
-// Generated from Tooltip.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Tooltip.spec.ts
 export { Tooltip } from './Tooltip';
 export type {
   TooltipSimpleProps,
@@ -8,3 +8,5 @@ export type {
   TooltipContentProps,
   TooltipArrowProps,
 } from './Tooltip';
+export { useTruncationTooltip } from './useTruncationTooltip';
+export type { TruncationTooltip } from './useTruncationTooltip';

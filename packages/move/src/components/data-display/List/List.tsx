@@ -1,12 +1,13 @@
 'use client';
-// Generated from List.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from List.spec.ts
 
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import type { Radius } from '../../../shared/types';
+import type { Radius, Truncate } from '../../../shared/types';
+import { resolveTruncate } from '../../../shared/truncate';
 import styles from './List.module.css';
 
 // ============================================================================
@@ -355,6 +356,11 @@ export interface ListTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  /** How the title truncates when it overflows. Defaults to `'end'` (the row
+   *  ellipsis). Use `'middle'` for paths/ids, `'start'`, `'clamp'`, or `false`. */
+  truncate?: Truncate;
+  /** Max lines for `truncate="clamp"`. */
+  lines?: number;
   sp?: SlotPropsMap<'title'>;
 }
 
@@ -362,6 +368,8 @@ const ListTitle = withMoveComponent<'title', ListTitleProps, HTMLDivElement>({
   name: 'ListTitle',
   styles,
   slots: ['title'] as const,
+  defaults: { truncate: 'end' as Truncate },
+  moveProps: ['truncate', 'lines'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -372,6 +380,11 @@ const ListTitle = withMoveComponent<'title', ListTitleProps, HTMLDivElement>({
           style: spStyle,
           ...spRest
         } = titleSp as Record<string, unknown>;
+        const trunc = resolveTruncate(
+          props.truncate as Truncate | undefined,
+          props.lines as number,
+          props.children,
+        );
 
         return (
           <div
@@ -379,9 +392,14 @@ const ListTitle = withMoveComponent<'title', ListTitleProps, HTMLDivElement>({
             {...spRest}
             ref={ref}
             className={cx('title', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...(props.style as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
+              ...trunc.style,
+            }}
+            {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
           >
-            {props.children}
+            {trunc.content}
           </div>
         );
       },

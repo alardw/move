@@ -3,7 +3,7 @@
   --move-text-color-base: var(--move-fg-base);
   --move-text-color-muted: var(--move-fg-muted);
   --move-text-color-subtle: var(--move-fg-subtle);
-  --move-text-color-primary: var(--move-primary);
+  --move-text-color-primary: var(--move-indigo-text);
   --move-text-color-success: var(--move-success);
   --move-text-color-warning: var(--move-warning);
   --move-text-color-error: var(--move-error);
@@ -105,10 +105,5 @@
   text-align: right;
 }
 
-/* -- Truncate -- */
-
-.root[data-truncate] {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
+/* Truncation is handled by the global `[data-truncate]` utility
+   (styles/truncate.css) — the component only sets the attribute. */

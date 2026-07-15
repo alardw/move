@@ -1,4 +1,4 @@
-// Generated from Code.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Code.spec.ts
 import { render, screen, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Code } from './Code';

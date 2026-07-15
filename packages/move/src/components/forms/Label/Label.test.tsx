@@ -1,4 +1,4 @@
-// Generated from Label.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Label.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Label } from './Label';

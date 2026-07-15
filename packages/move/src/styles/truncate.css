@@ -1,0 +1,62 @@
+/*
+ * Truncation utility — one source of truth for the CSS truncation strategies,
+ * keyed on the `data-truncate` attribute so every text primitive (Text, Heading,
+ * Code, Link, Label) and any composite can opt in by setting one attribute.
+ * Pure CSS: these respond to available space automatically, no measurement.
+ *
+ * `min-width: 0` is included so a truncated element that is a direct flex/grid
+ * child actually shrinks and ellipsizes instead of overflowing — the common
+ * footgun. Nested cases still need a shrinkable ancestor (a layout contract).
+ */
+
+/* End ellipsis — single line, cut at the end. `data-truncate=""` (from the
+   boolean `truncate` alias) resolves here too. */
+[data-truncate='end'],
+[data-truncate=''] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Start ellipsis — single line, cut at the start so the tail (filename,
+   last path segment) stays visible. The direction flip places the ellipsis
+   at the start; text-align keeps reading order left-aligned. */
+[data-truncate='start'] {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: rtl;
+  text-align: left;
+}
+
+/* Line clamp — wrap up to N lines then ellipsis. N comes from an inline
+   `--move-line-clamp` set by the component (defaults to 2). */
+[data-truncate='clamp'] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--move-line-clamp, 2);
+  line-clamp: var(--move-line-clamp, 2);
+  overflow: hidden;
+}
+
+/* Middle ellipsis — the head shrinks and ellipsizes while a pinned tail
+   (filename, hash suffix) stays fully visible. Pure CSS: the component splits
+   the string into a `head` + `tail` span; flex does the rest, no measurement. */
+[data-truncate='middle'] {
+  display: flex;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+[data-truncate='middle'] > [data-truncate-head] {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-truncate='middle'] > [data-truncate-tail] {
+  flex: 0 0 auto;
+}

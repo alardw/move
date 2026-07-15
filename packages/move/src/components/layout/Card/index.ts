@@ -1,4 +1,4 @@
-// Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Card.spec.ts
 export { Card } from './Card';
 export type {
   CardVariant,

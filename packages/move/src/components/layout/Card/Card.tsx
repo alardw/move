@@ -1,10 +1,11 @@
 'use client';
 import * as React from 'react';
-// Generated from Card.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Card.spec.ts
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
-import type { Size } from '../../../shared/types';
+import type { Size, Truncate } from '../../../shared/types';
+import { resolveTruncate } from '../../../shared/truncate';
 import styles from './Card.module.css';
 
 // =============================================================================
@@ -128,6 +129,10 @@ export interface CardTitleProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  /** Truncate the title when it overflows (opt-in — titles wrap by default). */
+  truncate?: Truncate;
+  /** Max lines for `truncate="clamp"`. */
+  lines?: number;
   sp?: SlotPropsMap<'title'>;
 }
 
@@ -135,6 +140,7 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
   name: 'CardTitle',
   styles,
   slots: ['title'] as const,
+  moveProps: ['truncate', 'lines'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -145,6 +151,11 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
           style: spStyle,
           ...spRest
         } = titleSp as Record<string, unknown>;
+        const trunc = resolveTruncate(
+          props.truncate as Truncate | undefined,
+          props.lines as number,
+          props.children,
+        );
 
         return (
           <h3
@@ -152,9 +163,14 @@ const CardTitle = withMoveComponent<'title', CardTitleProps, HTMLHeadingElement>
             {...spRest}
             ref={ref}
             className={cx('title', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...(props.style as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
+              ...trunc.style,
+            }}
+            {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
           >
-            {props.children}
+            {trunc.content}
           </h3>
         );
       },
@@ -170,6 +186,11 @@ export interface CardDescriptionProps extends React.HTMLAttributes<HTMLElement> 
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  /** Truncate the description when it overflows (opt-in; `'clamp'` with `lines`
+   *  is the common choice for a preview blurb). */
+  truncate?: Truncate;
+  /** Max lines for `truncate="clamp"`. */
+  lines?: number;
   sp?: SlotPropsMap<'description'>;
 }
 
@@ -177,12 +198,18 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
   name: 'CardDescription',
   styles,
   slots: ['description'] as const,
+  moveProps: ['truncate', 'lines'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
       render() {
         const descSp = sp('description');
         const { className: spClass, style: spStyle, ...spRest } = descSp as Record<string, unknown>;
+        const trunc = resolveTruncate(
+          props.truncate as Truncate | undefined,
+          props.lines as number,
+          props.children,
+        );
 
         return (
           <div
@@ -190,9 +217,14 @@ const CardDescription = withMoveComponent<'description', CardDescriptionProps, H
             {...spRest}
             ref={ref}
             className={cx('description', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
+            style={{
+              ...(props.style as React.CSSProperties),
+              ...(spStyle as React.CSSProperties),
+              ...trunc.style,
+            }}
+            {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
           >
-            {props.children}
+            {trunc.content}
           </div>
         );
       },

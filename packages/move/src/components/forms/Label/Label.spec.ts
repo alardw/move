@@ -1,10 +1,9 @@
 // Label.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Label',
   componentClass: 'presentational' as const,
   category: 'forms',
@@ -55,6 +54,24 @@ export const spec = {
       default: "'md'",
       moveSpecific: true,
       description: 'Font size of the label',
+    },
+    {
+      name: 'truncate',
+      typeRef: 'Truncate',
+      moveSpecific: true,
+      description: "Truncate overflowing text: true/'end', 'start', or 'clamp'",
+    },
+    {
+      name: 'lines',
+      type: 'number',
+      moveSpecific: true,
+      description: "Max lines for truncate='clamp' (default 2)",
+    },
+    {
+      name: 'tooltip',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'With truncate, show full text in a tooltip when actually cut off',
     },
     {
       name: 'children',

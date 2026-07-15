@@ -1,5 +1,5 @@
 'use client';
-// Generated from Code.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Code.spec.ts
 import * as React from 'react';
 
 export type HighlightResult = React.ReactNode | string;

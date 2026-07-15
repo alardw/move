@@ -1,10 +1,9 @@
 // Code.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Code',
   componentClass: 'presentational' as const,
   category: 'typography',
@@ -61,6 +60,25 @@ export const spec = {
       type: 'React.CSSProperties',
       moveSpecific: false,
       description: 'Inline styles',
+    },
+    {
+      name: 'truncate',
+      typeRef: 'Truncate',
+      moveSpecific: true,
+      description:
+        "Truncate overflowing inline code (ignored for block): true/'end', 'start', 'clamp'",
+    },
+    {
+      name: 'lines',
+      type: 'number',
+      moveSpecific: true,
+      description: "Max lines for truncate='clamp' (default 2)",
+    },
+    {
+      name: 'tooltip',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'With truncate, show full text in a tooltip when actually cut off',
     },
     {
       name: 'children',

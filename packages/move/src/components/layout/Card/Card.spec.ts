@@ -1,10 +1,9 @@
 // Card.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Card',
   componentClass: 'presentational' as const,
   category: 'layout',
@@ -96,6 +95,18 @@ export const spec = {
       slots: [{ name: 'title', element: 'h3', description: 'Heading element' }],
       props: [
         {
+          name: 'truncate',
+          typeRef: 'Truncate',
+          moveSpecific: true,
+          description: 'Truncate the title when it overflows (opt-in)',
+        },
+        {
+          name: 'lines',
+          type: 'number',
+          moveSpecific: true,
+          description: "Max lines for truncate='clamp'",
+        },
+        {
           name: 'children',
           type: 'React.ReactNode',
           moveSpecific: false,
@@ -109,6 +120,18 @@ export const spec = {
       name: 'Description',
       slots: [{ name: 'description', element: 'p', description: 'Description paragraph' }],
       props: [
+        {
+          name: 'truncate',
+          typeRef: 'Truncate',
+          moveSpecific: true,
+          description: 'Truncate the description when it overflows (opt-in)',
+        },
+        {
+          name: 'lines',
+          type: 'number',
+          moveSpecific: true,
+          description: "Max lines for truncate='clamp'",
+        },
         {
           name: 'children',
           type: 'React.ReactNode',

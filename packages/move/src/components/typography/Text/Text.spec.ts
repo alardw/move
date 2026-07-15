@@ -1,10 +1,9 @@
 // Text.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Text',
   componentClass: 'presentational' as const,
   category: 'typography',
@@ -63,9 +62,21 @@ export const spec = {
     },
     {
       name: 'truncate',
+      typeRef: 'Truncate',
+      moveSpecific: true,
+      description: "Truncate overflowing text: true/'end', 'start', or 'clamp'",
+    },
+    {
+      name: 'lines',
+      type: 'number',
+      moveSpecific: true,
+      description: "Max lines for truncate='clamp' (default 2)",
+    },
+    {
+      name: 'tooltip',
       type: 'boolean',
       moveSpecific: true,
-      description: 'Truncate text with ellipsis',
+      description: 'With truncate, show full text in a Move Tooltip when actually cut off',
     },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Text content' },
   ],
@@ -101,7 +112,7 @@ export const spec = {
     },
     {
       name: '--move-text-color-primary',
-      value: 'var(--move-primary)',
+      value: 'var(--move-indigo-text)',
       description: 'Primary text color',
     },
     {
@@ -141,7 +152,8 @@ export const spec = {
     },
     {
       id: 'truncate-conditional',
-      description: 'data-truncate is only rendered as a boolean attribute when truncate=true',
+      description:
+        "data-truncate carries the normalized mode ('end'/'start'/'clamp', with true→'end') and is omitted when truncate is falsy; the global [data-truncate] utility styles it. clamp sets an inline --move-line-clamp from lines.",
     },
   ],
 
@@ -164,7 +176,9 @@ export const spec = {
       'Defaults to color=base',
       'Applies align via data-align attribute when provided',
       'Omits data-align when align prop is not provided',
-      'Applies data-truncate attribute when truncate=true',
+      "Applies data-truncate='end' when truncate=true or 'end'",
+      "Applies data-truncate='start'/'clamp' for those modes",
+      "Sets --move-line-clamp from lines when truncate='clamp'",
       'Omits data-truncate when truncate is not provided',
       'Forwards className and style',
       'Forwards ref to root element',

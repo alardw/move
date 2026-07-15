@@ -233,9 +233,8 @@
   font-weight: var(--move-list-title-weight);
   color: var(--move-list-title-color);
   line-height: 1.4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Truncation is applied by the global [data-truncate] utility — ListTitle
+     sets data-truncate="end" by default (configurable via the `truncate` prop). */
 }
 
 /* =========================================================================

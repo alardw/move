@@ -1,9 +1,9 @@
-/* Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Link.spec.ts */
 
 .root {
   /* Component tokens — resolve in local scope */
-  --move-link-color-default: var(--move-primary);
-  --move-link-color-default-hover: var(--move-primary-hover);
+  --move-link-color-default: var(--move-link);
+  --move-link-color-default-hover: var(--move-link-hover);
   --move-link-color-muted: var(--move-fg-muted);
   --move-link-color-muted-hover: var(--move-fg-base);
   --move-link-color-subtle: var(--move-fg-subtle);

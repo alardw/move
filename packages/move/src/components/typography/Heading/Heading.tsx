@@ -1,8 +1,10 @@
 'use client';
 import * as React from 'react';
-// Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
-import { withMoveComponent } from '../../../engine';
-import type { DisplaySize } from '../../../shared/types';
+// Generated from Heading.spec.ts
+import { withMoveComponent, useMergedRef } from '../../../engine';
+import type { DisplaySize, Truncate } from '../../../shared/types';
+import { resolveTruncate } from '../../../shared/truncate';
+import { useTruncationTooltip } from '../../overlays/Tooltip';
 import styles from './Heading.module.css';
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
@@ -38,7 +40,12 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLElement> {
   color?: HeadingColor;
   tracking?: HeadingTracking;
   align?: HeadingAlign;
-  truncate?: boolean;
+  /** Truncate overflowing text: `true`/`'end'`, `'start'`, or `'clamp'`. */
+  truncate?: Truncate;
+  /** Max lines for `truncate="clamp"` (default 2). */
+  lines?: number;
+  /** With `truncate`, show the full text in a tooltip when it's cut off. */
+  tooltip?: boolean;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -53,9 +60,19 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
     color: 'base' as HeadingColor,
     tracking: 'tight' as HeadingTracking,
   },
-  moveProps: ['align', 'truncate', 'weight'],
+  moveProps: ['align', 'truncate', 'lines', 'tooltip', 'weight'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const trunc = resolveTruncate(
+      props.truncate as Truncate | undefined,
+      props.lines as number,
+      props.children,
+    );
+    const fullText = typeof props.children === 'string' ? props.children : undefined;
+    const wantTooltip = !!props.tooltip && !!trunc.mode && fullText !== undefined;
+    const { ref: truncRef, wrap } = useTruncationTooltip(wantTooltip, fullText);
+    const mergedRef = useMergedRef<HTMLElement>(ref, truncRef);
+
     return {
       render() {
         const rootSp = sp('root');
@@ -65,22 +82,22 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
         const resolvedSize = levelToSize[level as HeadingLevel];
         const Comp = `h${level}` as React.ElementType;
 
-        return (
+        return wrap(
           <Comp
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties), ...trunc.style }}
             data-size={resolvedSize}
             data-weight={props.weight}
             data-color={props.color}
             data-tracking={props.tracking}
             {...(props.align ? { 'data-align': props.align } : {})}
-            {...(props.truncate ? { 'data-truncate': '' } : {})}
+            {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
           >
-            {props.children}
-          </Comp>
+            {trunc.content}
+          </Comp>,
         );
       },
     };

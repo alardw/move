@@ -1,17 +1,16 @@
 // Tooltip.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Tooltip',
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'sm' as const },
   description:
     'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
-  animationPatterns: ['popupSurface'],
+  choreographies: ['popupSurface'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-open'],
@@ -258,7 +257,7 @@ export const spec = {
     {
       name: 'sideOffset',
       type: 'number',
-      default: '6',
+      default: '4',
       moveSpecific: false,
       description: 'Distance from trigger in px',
     },

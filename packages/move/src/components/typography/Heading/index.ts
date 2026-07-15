@@ -1,4 +1,4 @@
-// Generated from Heading.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Heading.spec.ts
 export { Heading } from './Heading';
 export type {
   HeadingProps,

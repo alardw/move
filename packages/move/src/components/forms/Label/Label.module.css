@@ -1,4 +1,4 @@
-/* Generated from Label.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Label.spec.ts */
 
 .root {
   /* Component tokens */
@@ -34,7 +34,7 @@
 }
 
 .asterisk {
-  color: var(--move-primary);
+  color: var(--move-indigo-text);
   font-size: 1.1em;
   margin-left: 0.2em;
 }

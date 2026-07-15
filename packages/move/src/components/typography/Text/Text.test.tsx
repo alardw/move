@@ -1,4 +1,4 @@
-// Generated from Text.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Text.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Text } from './Text';
@@ -155,18 +155,82 @@ describe('Text', () => {
 
   // === Truncate ===
   describe('truncate', () => {
-    it('applies data-truncate attribute when truncate=true', () => {
+    it("maps truncate=true to data-truncate='end' (back-compat)", () => {
       render(
         <Text truncate data-testid="text">
           Text
         </Text>,
       );
-      expect(screen.getByTestId('text')).toHaveAttribute('data-truncate');
+      expect(screen.getByTestId('text')).toHaveAttribute('data-truncate', 'end');
+    });
+
+    it("passes 'end' | 'start' | 'clamp' through to data-truncate", () => {
+      const { rerender } = render(
+        <Text truncate="start" data-testid="text">
+          Text
+        </Text>,
+      );
+      expect(screen.getByTestId('text')).toHaveAttribute('data-truncate', 'start');
+      rerender(
+        <Text truncate="clamp" data-testid="text">
+          Text
+        </Text>,
+      );
+      expect(screen.getByTestId('text')).toHaveAttribute('data-truncate', 'clamp');
+    });
+
+    it("splits string children into head + pinned tail for truncate='middle'", () => {
+      render(
+        <Text truncate="middle" data-testid="text">
+          /Users/alard/projects/move/src/index.ts
+        </Text>,
+      );
+      const el = screen.getByTestId('text');
+      expect(el).toHaveAttribute('data-truncate', 'middle');
+      expect(el.querySelector('[data-truncate-head]')?.textContent).toBe(
+        '/Users/alard/projects/move/src/',
+      );
+      expect(el.querySelector('[data-truncate-tail]')?.textContent).toBe('index.ts');
+    });
+
+    it("falls back to 'end' when truncate='middle' has non-string children", () => {
+      render(
+        <Text truncate="middle" data-testid="text">
+          <span>node</span>
+        </Text>,
+      );
+      const el = screen.getByTestId('text');
+      expect(el).toHaveAttribute('data-truncate', 'end');
+      expect(el.querySelector('[data-truncate-head]')).toBeNull();
+    });
+
+    it("sets --move-line-clamp from lines when truncate='clamp'", () => {
+      render(
+        <Text truncate="clamp" lines={3} data-testid="text">
+          Text
+        </Text>,
+      );
+      expect(screen.getByTestId('text').style.getPropertyValue('--move-line-clamp')).toBe('3');
     });
 
     it('omits data-truncate when truncate is not provided', () => {
       render(<Text data-testid="text">Text</Text>);
       expect(screen.getByTestId('text')).not.toHaveAttribute('data-truncate');
+    });
+
+    // The tooltip's show-only-when-cut-off behaviour needs real layout — it's
+    // validated in the browser. Here we just confirm it renders and doesn't
+    // break the element (jsdom reports 0 dims, so isTruncated stays false).
+    it('renders with truncate + tooltip without breaking', () => {
+      render(
+        <Text truncate tooltip data-testid="text">
+          A very long string that would be cut off
+        </Text>,
+      );
+      expect(screen.getByTestId('text')).toHaveTextContent(
+        'A very long string that would be cut off',
+      );
+      expect(screen.getByTestId('text')).toHaveAttribute('data-truncate', 'end');
     });
   });
 

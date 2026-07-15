@@ -1,4 +1,4 @@
-// Generated from Link.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Link.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Link } from './Link';
@@ -74,9 +74,9 @@ describe('Link', () => {
 
   // === Underline ===
   describe('underline', () => {
-    it('defaults to underline=hover', () => {
+    it('defaults to underline=always', () => {
       render(<Link data-testid="link">Link</Link>);
-      expect(screen.getByTestId('link')).toHaveAttribute('data-underline', 'hover');
+      expect(screen.getByTestId('link')).toHaveAttribute('data-underline', 'always');
     });
 
     it('applies underline via data-underline attribute', () => {

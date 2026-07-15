@@ -1,10 +1,9 @@
 // Link.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Link',
   componentClass: 'interactive' as const,
   category: 'navigation',
@@ -33,7 +32,7 @@ export const spec = {
     {
       name: 'underline',
       type: "'always' | 'hover' | 'none'",
-      default: "'hover'",
+      default: "'always'",
       moveSpecific: true,
       description: 'Underline behavior',
     },
@@ -56,6 +55,24 @@ export const spec = {
       moveSpecific: true,
       description: 'Render as child element via Radix Slot',
     },
+    {
+      name: 'truncate',
+      typeRef: 'Truncate',
+      moveSpecific: true,
+      description: "Truncate overflowing text: true/'end', 'start', or 'clamp'",
+    },
+    {
+      name: 'lines',
+      type: 'number',
+      moveSpecific: true,
+      description: "Max lines for truncate='clamp' (default 2)",
+    },
+    {
+      name: 'tooltip',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'With truncate, show full text in a tooltip when actually cut off',
+    },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Link content' },
   ],
 
@@ -75,12 +92,12 @@ export const spec = {
   tokens: [
     {
       name: '--move-link-color-default',
-      value: 'var(--move-primary)',
+      value: 'var(--move-link)',
       description: 'Default variant color',
     },
     {
       name: '--move-link-color-default-hover',
-      value: 'var(--move-primary-hover)',
+      value: 'var(--move-link-hover)',
       description: 'Default variant hover color',
     },
     {
@@ -138,7 +155,7 @@ export const spec = {
       'Applies variant via data-variant attribute',
       'Applies underline via data-underline attribute',
       'Defaults to variant=default',
-      'Defaults to underline=hover',
+      'Defaults to underline=always',
       'Applies size via data-size attribute when provided',
       'Omits data-size when size prop is not provided',
       'Adds target=_blank and rel=noopener noreferrer when external=true',
