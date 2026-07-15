@@ -263,6 +263,73 @@ export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
   sp?: SlotPropsMap<'root'>;
 }
 
+/**
+ * The mobile sheet's <aside>, extracted so it mounts/unmounts WITH the Radix
+ * Dialog.Content. useAnimations runs its lifecycle enter on mount, so the slide
+ * only fires when this element actually appears (the always-mounted SidebarRoot
+ * would fire it while the sheet is still closed and the aside is absent).
+ * Mirrors DrawerContent. Rendered via Content asChild, so it forwards Radix's
+ * ref + injected props (role, aria-*, data-state, onKeyDown, …) onto the aside.
+ */
+interface SidebarSheetProps {
+  side: 'left' | 'right';
+  animate: boolean;
+  isClosing: boolean;
+  epoch: number;
+  onExitDone: (epoch: number) => void;
+  titleLabel: string;
+  asideClassName?: string;
+  asideStyle?: React.CSSProperties;
+  asideAttrs: Record<string, unknown>;
+  children?: React.ReactNode;
+}
+const SidebarSheet = React.forwardRef<HTMLElement, SidebarSheetProps>(function SidebarSheet(
+  {
+    side,
+    animate,
+    isClosing,
+    epoch,
+    onExitDone,
+    titleLabel,
+    asideClassName,
+    asideStyle,
+    asideAttrs,
+    children,
+    ...radixProps
+  },
+  forwardedRef,
+) {
+  const asideRef = React.useRef<HTMLElement>(null);
+  const mergedRef = useMergedRef<HTMLElement>(forwardedRef, asideRef);
+  const config = React.useMemo(
+    () => (animate ? mobileRootAnimations(side) : null),
+    [animate, side],
+  );
+  const refs = React.useMemo(() => ({ Root: asideRef as React.RefObject<HTMLElement | null> }), []);
+  const { runExit, runEnter, pauseAll } = useAnimations(config, refs);
+  useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
+
+  const { style: radixStyle, ...radixRest } = radixProps as {
+    style?: React.CSSProperties;
+    [k: string]: unknown;
+  };
+  return (
+    <aside
+      ref={mergedRef}
+      {...asideAttrs}
+      {...radixRest}
+      className={asideClassName}
+      style={{ ...asideStyle, ...radixStyle }}
+    >
+      {/* Accessible name for the Radix Dialog. */}
+      <VisuallyHidden.Root asChild>
+        <RadixDialog.Title>{titleLabel}</RadixDialog.Title>
+      </VisuallyHidden.Root>
+      {children}
+    </aside>
+  );
+});
+
 const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
   name: 'SidebarRoot',
   styles,
@@ -329,12 +396,6 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
       open: isMobile ? mobileOpen : false,
     });
     const animateMobile = isMobile && animDisabled !== false;
-    const mobileConfig = React.useMemo(
-      () => (animateMobile ? mobileRootAnimations(side as 'left' | 'right') : null),
-      [animateMobile, side],
-    );
-    const { runExit, runEnter, pauseAll } = useAnimations(mobileConfig, widthRefs);
-    useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
     const mobileCtx = React.useMemo<SidebarMobileContextValue>(
       () => ({
         isClosing,
@@ -354,30 +415,10 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
           ...(props.labels as Partial<SidebarLabels> | undefined),
         };
 
-        const asideEl = (
-          <aside
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            data-collapsed={collapsed}
-            data-side={side}
-            data-mobile={isMobile || undefined}
-            data-surface={surface}
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          >
-            {/* Modal sheet needs an accessible name for Radix Dialog. */}
-            {isMobile && (
-              <VisuallyHidden.Root asChild>
-                <RadixDialog.Title>{labels.title}</RadixDialog.Title>
-              </VisuallyHidden.Root>
-            )}
-            {props.children}
-          </aside>
-        );
-
         // Mobile: modal sheet via Radix Dialog — focus trap, Escape, focus
-        // restore, aria-modal, and scroll-lock all come from the primitive.
+        // restore, aria-modal, and scroll-lock all come from the primitive. The
+        // aside lives in SidebarSheet so its slide-in fires when the sheet
+        // actually mounts (see SidebarSheet).
         if (isMobile) {
           return (
             <SurfaceProvider value={surface}>
@@ -399,7 +440,31 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
                         <SidebarOverlay />
                       </RadixDialog.Overlay>
                       <RadixDialog.Content asChild aria-describedby={undefined}>
-                        {asideEl}
+                        <SidebarSheet
+                          ref={mergedRef}
+                          side={side as 'left' | 'right'}
+                          animate={animateMobile}
+                          isClosing={isClosing}
+                          epoch={epoch}
+                          onExitDone={onExitDone}
+                          titleLabel={labels.title}
+                          asideClassName={cx(
+                            'root',
+                            props.className,
+                            spClass as string | undefined,
+                          )}
+                          asideStyle={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+                          asideAttrs={{
+                            ...attrs,
+                            ...spRest,
+                            'data-collapsed': collapsed,
+                            'data-side': side,
+                            'data-mobile': true,
+                            'data-surface': surface,
+                          }}
+                        >
+                          {props.children}
+                        </SidebarSheet>
                       </RadixDialog.Content>
                     </RadixDialog.Portal>
                   </RadixDialog.Root>
@@ -409,10 +474,23 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
           );
         }
 
-        // Desktop: plain aside
+        // Desktop: plain aside (landmark), width-animated on collapse.
         return (
           <SurfaceProvider value={surface}>
-            <LayerProvider value={0}>{asideEl}</LayerProvider>
+            <LayerProvider value={0}>
+              <aside
+                {...attrs}
+                {...spRest}
+                ref={mergedRef}
+                data-collapsed={collapsed}
+                data-side={side}
+                data-surface={surface}
+                className={cx('root', props.className, spClass as string | undefined)}
+                style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              >
+                {props.children}
+              </aside>
+            </LayerProvider>
           </SurfaceProvider>
         );
       },
