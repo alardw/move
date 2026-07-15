@@ -41,10 +41,14 @@
 
 .item {
   display: block;
-  /* Match the main Sidebar.Item text position: half-icon + item-gap past
-     the rail, +1px to undo the rail-overlap below. */
-  padding: var(--move-subnav-item-padding-y) calc(var(--move-sidebar-item-padding-x) + 0.625rem + 1px);
-  margin-left: -1px;
+  /* Indent the focusable box from the rail so its (inset) focus ring clears
+     the sliding indicator; the left padding is reduced by the same amount so
+     the item text still lines up with the parent Sidebar.Item. */
+  padding-block: var(--move-subnav-item-padding-y);
+  padding-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem - 6px);
+  padding-right: calc(var(--move-sidebar-item-padding-x) + 0.625rem + 1px);
+  margin-left: 6px;
+  border-radius: var(--move-rounded-md);
   font-size: var(--move-subnav-item-font-size);
   line-height: 1.4;
   color: var(--move-subnav-item-fg);
@@ -58,7 +62,8 @@
 
 .item:focus-visible {
   outline: var(--move-focus-ring);
-  outline-offset: var(--move-focus-ring-offset);
+  /* Inset so the ring isn't clipped by the sidebar's overflow (list-item convention). */
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }
 
 .item[data-active] {

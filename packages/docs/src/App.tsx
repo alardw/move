@@ -2,7 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import {
   MoveRoot,
-  defineTheme,
+  darkTheme,
+  lightTheme,
   Sidebar,
   Stack,
   Button,
@@ -91,25 +92,10 @@ const iconResolver = (name: string) => {
     null) as React.ComponentType | null;
 };
 
-// Dogfood: the docs wear stock Move, generated from one seed by the same engine
-// consumers use. Neutral gray + indigo — WCAG 2.2 AA guaranteed in both modes.
-// (Gottak stays: --move-font is set on :root in index.css; the theme is colour-only.)
-const MOVE_SEED = {
-  neutral: { hue: 250, chroma: 0.008 },
-  accent: { hue: 262 },
-  radius: 1,
-} as const;
-const lightTheme = defineTheme({
-  ...MOVE_SEED,
-  name: "light",
-  appearance: "light",
-});
-const darkTheme = defineTheme({
-  ...MOVE_SEED,
-  name: "dark",
-  appearance: "dark",
-});
-
+// Dogfood: the docs wear the EXACT stock Move themes the library ships —
+// darkTheme/lightTheme, generated from MOVE_SEED by the same engine consumers
+// use, WCAG 2.2 AA in both modes. (--move-font is set on :root in index.css;
+// the theme is colour-only.)
 const THEMES: Record<string, Theme> = { light: lightTheme, dark: darkTheme };
 const THEME_STORAGE_KEY = "docs-theme";
 
@@ -157,7 +143,7 @@ function ThemeToggle() {
  */
 function AppSidebar() {
   const { pathname } = useLocation();
-  const { collapsed, toggleCollapsed } = useSidebarContext();
+  const { collapsed, toggleCollapsed, isMobile } = useSidebarContext();
 
   const activeSectionKey =
     DOCS_NAV.find((s) =>
@@ -183,17 +169,21 @@ function AppSidebar() {
         }
       >
         <LogoMark />
-        <Tooltip label="Collapse" sideOffset={8}>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleCollapsed}
-            aria-label="Collapse sidebar"
-            style={{ marginLeft: "auto" }}
-          >
-            <Icon name="panel-left-close" />
-          </Button>
-        </Tooltip>
+        {/* Collapse is a desktop-only affordance — on mobile the sheet is
+            opened/closed, not collapsed (and it would steal initial focus). */}
+        {!isMobile && (
+          <Tooltip label="Collapse" sideOffset={8}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleCollapsed}
+              aria-label="Collapse sidebar"
+              style={{ marginLeft: "auto" }}
+            >
+              <Icon name="panel-left-close" />
+            </Button>
+          </Tooltip>
+        )}
       </Sidebar.Header>
       <Sidebar.Content>
         <Sidebar.Group>
@@ -201,17 +191,16 @@ function AppSidebar() {
             const isActive = activeSectionKey === section.key;
             return (
               <React.Fragment key={section.key}>
-                <NavLink to={section.items[0].to}>
-                  {() => (
-                    <Sidebar.Item
-                      icon={section.icon}
-                      active={isActive}
-                      tooltip={section.label}
-                    >
-                      {section.label}
-                    </Sidebar.Item>
-                  )}
-                </NavLink>
+                {/* asChild renders the item ONTO the NavLink anchor, so each
+                    nav item is a single focusable element (not <a><button>). */}
+                <Sidebar.Item
+                  asChild
+                  icon={section.icon}
+                  active={isActive}
+                  tooltip={section.label}
+                >
+                  <NavLink to={section.items[0].to}>{section.label}</NavLink>
+                </Sidebar.Item>
                 <Collapsible.Root open={isActive && !collapsed}>
                   <Collapsible.Content>
                     <AnimatedSubnav
