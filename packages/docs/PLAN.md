@@ -36,7 +36,7 @@ exactly one, and what its props mean (`theme`, `iconResolver`,
 icon-resolver-aware.
 
 ### Create Move App
-`npx create-move-app`: what shells are available (sidebar, blank),
+`npm create move`: what shells are available (sidebar, top-nav, minimal),
 what scripts/AI skills come pre-wired, and how the generated project
 differs from a hand-rolled Vite/Next setup. Includes the "I just want
 to start" path.

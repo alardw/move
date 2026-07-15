@@ -20,20 +20,19 @@ const BADGES = [
 
 const TOC: TocItem[] = [
   { href: '#overview', label: 'Overview' },
-  { href: '#scaffold', label: 'Scaffold with create-move-app' },
+  { href: '#scaffold', label: 'Scaffold with create-move' },
   { href: '#manual', label: 'Manual setup' },
   { href: '#config', label: 'Vite config' },
   { href: '#routing', label: 'Routing' },
   { href: '#next-steps', label: 'Next steps' },
 ];
 
-const SCAFFOLD = `npm create move-app@latest my-app
+const SCAFFOLD = `npm create move@latest my-app
 cd my-app
-npm install
 npm run dev
 `;
 
-const MANUAL_INSTALL = `npm install move animejs lucide-react
+const MANUAL_INSTALL = `npm install move animejs
 `;
 
 const MAIN_TSX = `// src/main.tsx
@@ -113,14 +112,14 @@ export function VitePage() {
         <Section
           id="overview"
           title="Overview"
-          lede="Two paths: scaffold a new app with create-move-app, or add Move to an existing Vite project."
+          lede="Two paths: scaffold a new app with create-move, or add Move to an existing Vite project."
         >
           <List.Root>
             <List.Item>
               <List.Leading><Icon name="rocket" /></List.Leading>
               <List.Content>
                 <List.Title>Scaffold</List.Title>
-                <List.Description><Code>npm create move-app@latest</Code> bootstraps a Vite + React + Move app with sensible defaults.</List.Description>
+                <List.Description><Code>npm create move@latest</Code> bootstraps a Vite + React + Move app with sensible defaults.</List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
@@ -152,7 +151,7 @@ export function VitePage() {
 
         <Section
           id="scaffold"
-          title="Scaffold with create-move-app"
+          title="Scaffold with create-move"
           lede="The fastest way to start. One command, zero choices."
         >
           <CodeBlock code={SCAFFOLD} language="bash" />
@@ -170,7 +169,7 @@ export function VitePage() {
             <Text><strong>1. Install dependencies.</strong></Text>
             <CodeBlock code={MANUAL_INSTALL} language="bash" />
             <Text>
-              <Code>animejs</Code> is a peer dependency for Move's animation engine. <Code>lucide-react</Code> is the recommended icon library — see <RouterLink to="/getting-started/move-root#wiring-icons">MoveRoot → Wiring icons</RouterLink> for the resolver helper.
+              <Code>animejs</Code> is a required peer for Move's animation engine. Icons are bring-your-own — point the resolver at whatever your app already uses (see <RouterLink to="/getting-started/move-root#wiring-icons">MoveRoot → Wiring icons</RouterLink>); if you don't have an icon set yet, <Code>npm install lucide-react</Code>.
             </Text>
             <Text><strong>2. Wire MoveRoot in <Code>src/main.tsx</Code>.</strong></Text>
             <CodeBlock code={MAIN_TSX} language="tsx" />

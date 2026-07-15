@@ -1,64 +1,91 @@
-import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
+import { Link as RouterLink } from "react-router-dom";
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from "move";
 import {
   HighlightList,
   type HighlightItem,
   Section,
   TocRail,
   type TocItem,
-} from '../../components';
+} from "../../components";
 
 const BADGES = [
-  { icon: 'palette', label: 'Token-first' },
-  { icon: 'wand-sparkles', label: 'Brand + locale' },
+  { icon: "wand-sparkles", label: "Two colors → full theme" },
+  { icon: "shield-check", label: "Accessible by default" },
+  { icon: "moon", label: "Light + dark" },
 ];
 
 const PICK_A_THEME: HighlightItem[] = [
   {
-    icon: 'moon',
-    text: 'Two themes ship by default: light and dark. Switch by passing a Theme to <MoveRoot theme={…}>.',
+    icon: "wand-sparkles",
+    text: (
+      <>
+        Give the <RouterLink to="/customize/theme">theme builder</RouterLink> a
+        neutral and an accent color and it builds the whole thing for you —
+        every surface, text tier, border, and state, in light and dark.
+      </>
+    ),
   },
   {
-    icon: 'swatch-book',
-    text: 'Authoring a new theme is editing one object: semantic tokens (bg, fg, border, primary, status colors) plus a shadow config. No source-scattered overrides.',
+    icon: "import",
+    text: (
+      <>
+        Already have a design system — Tailwind, Figma, Material? Bring it in:
+        its accent, gray, corner radius, and fonts go into the seed, and Move
+        reproduces the rest. See the{" "}
+        <RouterLink to="/customize/theme">theme builder</RouterLink>.
+      </>
+    ),
   },
   {
-    icon: 'shield-check',
-    text: 'A defineTheme() helper that expands a small seed (neutral palette, accent, status colors, font) into the full token set is planned — so you configure a handful of values instead of the whole surface.',
+    icon: "shield-check",
+    text: "Whatever colors you land on, the contrast is taken care of: text, links, buttons, and focus rings stay readable in both modes — WCAG 2.2 AA, guaranteed.",
+  },
+  {
+    icon: "sliders",
+    text: "Dial it in as far as you like — corner radius, separate heading and body fonts, how vivid the accent reads — then copy one call into your app.",
+  },
+  {
+    icon: "swatch-book",
+    text: "Light and dark come from the same seed, so flipping between them at runtime is just passing a different Theme to MoveRoot.",
   },
 ];
 
 const SECTIONS: HighlightItem[] = [
   {
-    icon: 'type',
+    icon: "type",
     text: (
       <>
-        <RouterLink to="/customize/typography">Typography</RouterLink> — set your font with one token, plus the size and weight scale.
+        <RouterLink to="/customize/typography">Typography</RouterLink> — set
+        your font with one token, plus the size and weight scale.
       </>
     ),
   },
   {
-    icon: 'shapes',
+    icon: "shapes",
     text: (
       <>
-        <RouterLink to="/customize/icons">Icons</RouterLink> — bring your own icon library through one resolver.
+        <RouterLink to="/customize/icons">Icons</RouterLink> — bring your own
+        icon library through one resolver.
       </>
     ),
   },
   {
-    icon: 'languages',
+    icon: "languages",
     text: (
       <>
-        <RouterLink to="/customize/internationalization">Internationalization</RouterLink> — override every built-in label for your locale.
+        <RouterLink to="/customize/internationalization">
+          Internationalization
+        </RouterLink>{" "}
+        — override every built-in label for your locale.
       </>
     ),
   },
 ];
 
 const TOC: TocItem[] = [
-  { href: '#make-it-your-own', label: 'Overview' },
-  { href: '#pick-a-theme', label: 'Picking a theme' },
-  { href: '#sections', label: 'In this section' },
+  { href: "#make-it-your-own", label: "Overview" },
+  { href: "#pick-a-theme", label: "Picking a theme" },
+  { href: "#sections", label: "In this section" },
 ];
 
 export function CustomizeOverviewPage() {
@@ -79,10 +106,11 @@ export function CustomizeOverviewPage() {
         <Stack gap="sm">
           <Heading level={1}>Make it your own</Heading>
           <Text color="muted" size="lg">
-            Move ships with sensible defaults; this is where you make it yours —
-            pick a theme and colors, set your font, swap in your icon library,
-            and localize the built-in labels. It’s all tokens and props, so
-            customization stays structural instead of scattered overrides.
+            Move looks good out of the box — and it’s yours to shape. Pick your
+            colors and let Move build the theme, choose your fonts, bring your
+            own icons, and speak your users’ language. It’s all tokens and
+            props, so your changes stay tidy instead of scattered across the
+            codebase.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -97,7 +125,7 @@ export function CustomizeOverviewPage() {
         <Section
           id="pick-a-theme"
           title="Picking a theme"
-          lede="The shortest path to a styled app."
+          lede="Two colors in, a whole accessible theme out."
         >
           <HighlightList items={PICK_A_THEME} />
         </Section>
@@ -105,15 +133,19 @@ export function CustomizeOverviewPage() {
         <Section
           id="sections"
           title="In this section"
-          lede="Each lever to make Move yours."
+          lede="The rest of the toolkit."
         >
           <Stack gap="md">
             <HighlightList items={SECTIONS} />
             <Text color="muted">
-              How the visual system works underneath — the token model,{' '}
-              <RouterLink to="/core-concepts/surfaces">surfaces</RouterLink>, and{' '}
-              <RouterLink to="/core-concepts/stacking">stacking</RouterLink> — lives in{' '}
-              <RouterLink to="/core-concepts/theming-model">Core Concepts</RouterLink>.
+              How the visual system works underneath — the{" "}
+              <RouterLink to="/core-concepts/theming-model">
+                token model
+              </RouterLink>{" "}
+              in Core Concepts, plus{" "}
+              <RouterLink to="/systems/surfaces">surfaces</RouterLink> and{" "}
+              <RouterLink to="/systems/stacking">stacking</RouterLink> under
+              Systems.
             </Text>
           </Stack>
         </Section>

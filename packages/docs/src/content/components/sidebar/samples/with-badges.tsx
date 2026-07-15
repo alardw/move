@@ -18,7 +18,7 @@ function HeaderToggle() {
  */
 export default function WithBadgesSample() {
   return (
-    // recipe-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
+    // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
     <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
       <Sidebar.Provider>
         <Sidebar.Root>

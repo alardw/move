@@ -8,8 +8,8 @@ export default function SizesSample() {
       {sizes.map((size) => (
         <Stack key={size} direction="row" gap="md" align="center">
           <Text size="sm" weight="medium">{size}</Text>
-          <ColorInput size={size} defaultValue="#7950f2" width="14rem" />
-          <ColorInput size={size} variant="filled" defaultValue="#12b886" width="14rem" />
+          <ColorInput aria-label={`Colour (size ${size}, outlined)`} size={size} defaultValue="#7950f2" width="14rem" />
+          <ColorInput aria-label={`Colour (size ${size}, filled)`} size={size} variant="filled" defaultValue="#12b886" width="14rem" />
         </Stack>
       ))}
     </Stack>

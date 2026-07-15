@@ -36,6 +36,7 @@ import { content as inputText } from './input-text';
 import { content as label } from './label';
 import { content as link } from './link';
 import { content as list } from './list';
+import { content as markerList } from './marker-list';
 import { content as loader } from './loader';
 import { content as numberInput } from './number-input';
 import { content as pagination } from './pagination';
@@ -106,6 +107,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   label,
   link,
   list,
+  'marker-list': markerList,
   loader,
   'number-input': numberInput,
   pagination,

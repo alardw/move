@@ -7,7 +7,7 @@
   --move-subnav-rail-color: var(--move-border-base);
   --move-subnav-item-fg: var(--move-fg-muted);
   --move-subnav-item-fg-hover: var(--move-fg-base);
-  --move-subnav-item-fg-active: var(--move-primary);
+  --move-subnav-item-fg-active: var(--move-link);
   --move-subnav-item-font-size: var(--move-size-sm);
   --move-subnav-item-padding-y: 6px;
 

@@ -46,16 +46,19 @@ const COMPONENT_FILES: [string, string][] = [
   ['{Name}.module.css', 'Token-driven styles — every value a design token'],
   ['index.ts', 'Barrel exports'],
   ['use{Name}.ts', 'Headless hook — only when the spec sets hasHook'],
-  ['{Name}.meta.ts', 'A light registry descriptor the docs import'],
   ['{Name}.test.tsx', 'Generated tests'],
   ['{Name}.analysis.md', 'Research notes (informational)'],
 ];
 
-const RECIPE_FILES: [string, string][] = [
+const COMPOSITE_FILES: [string, string][] = [
   ['{Name}.spec.ts', 'Source of truth — composition, labels, behaviours, integration points'],
-  ['{Name}.tsx', 'The recipe — only Move components, a default export taking labels'],
+  ['{Name}.tsx', 'The composite — only Move components, a default export taking labels'],
   ['{Name}.test.tsx', 'Generated tests'],
-  ['registry.ts entry', 'One line registering the overview card + route'],
+];
+
+const PATTERN_FILES: [string, string][] = [
+  ['{name}.ts', 'Source of truth — axes, skeleton, bindings, heuristics (satisfies DesignPatternSpec)'],
+  ['registry.ts entry', 'One line registering the slug, scale, and status'],
 ];
 
 function FileTable({ rows }: { rows: [string, string][] }) {
@@ -105,7 +108,7 @@ export function SpecsPage() {
             Every Move component is generated from a spec and checked back
             against it. This is the loop — and why source, metadata, and tests
             never drift from the description. For what a spec actually contains, see the{' '}
-            <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink>.
+            <RouterLink to="/contracts/component">Component Contract</RouterLink>.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -148,7 +151,7 @@ export function SpecsPage() {
         <Section
           id="anatomy"
           title="What the loop produces"
-          lede="The same loop runs for components and recipes — the spec is the source of truth; the rest is generated from it. A component is a styled factory; a recipe is a pure Move composition — so the files differ."
+          lede="The same loop runs for components, composites, and design patterns — the spec is the source of truth; the rest is generated from it. A component is a styled factory; a composite is a pure Move composition; a design pattern is a parameterized spec — so the files differ."
         >
           <Stack gap="lg">
             <Stack gap="sm">
@@ -156,8 +159,12 @@ export function SpecsPage() {
               <FileTable rows={COMPONENT_FILES} />
             </Stack>
             <Stack gap="sm">
-              <Heading level={3}>A recipe</Heading>
-              <FileTable rows={RECIPE_FILES} />
+              <Heading level={3}>A composite</Heading>
+              <FileTable rows={COMPOSITE_FILES} />
+            </Stack>
+            <Stack gap="sm">
+              <Heading level={3}>A design pattern</Heading>
+              <FileTable rows={PATTERN_FILES} />
             </Stack>
           </Stack>
         </Section>
@@ -177,7 +184,7 @@ export function SpecsPage() {
                 icon: 'file-code',
                 text: (
                   <>
-                    Read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the spec field by field, and how it’s enforced.
+                    Read the <RouterLink to="/contracts/component">Component Contract</RouterLink> for the spec field by field, and how it’s enforced.
                   </>
                 ),
               },

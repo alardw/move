@@ -105,7 +105,7 @@ export function HowMoveWorksPage() {
         >
           <HighlightList items={COMPONENT_POINTS} />
           <Text>
-            Behind each component is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for what one carries.
+            Behind each component is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/contracts/component">Component Contract</RouterLink> for what one carries.
           </Text>
         </Section>
 
@@ -134,8 +134,8 @@ export function HowMoveWorksPage() {
               <Text size="lg">
                 One contract each — it builds the code, tests it, guides the AI, and checks your
                 work. Automatically, no handwork. And there are only two:{' '}
-                <RouterLink to="/core-concepts/component-contract">a component</RouterLink> or{' '}
-                <RouterLink to="/core-concepts/composition-contract">a composite</RouterLink>. That’s
+                <RouterLink to="/contracts/component">a component</RouterLink> or{' '}
+                <RouterLink to="/contracts/composite">a composite</RouterLink>. That’s
                 the whole system.
               </Text>
             </Card.Body>
@@ -151,7 +151,7 @@ export function HowMoveWorksPage() {
             You’re pointing AI at a real framework with the hard parts already solved — composition, motion, theming, and accessibility, all defined before you start. What it builds is a product that holds together.
           </Text>
           <Text>
-            From here: read the <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> for the full shape every component satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
+            From here: read the <RouterLink to="/contracts/component">Component Contract</RouterLink> for the full shape every component satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
           </Text>
 
           <Card.Root>

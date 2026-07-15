@@ -19,8 +19,17 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     icon: 'type',
     text: (
       <>
-        Two tokens carry the fonts: <Code>--move-font</Code> (all text and UI)
-        and <Code>--move-font-mono</Code> (code). Set those.
+        <Code>--move-font</Code> carries all text and UI; <Code>--move-font-mono</Code>{' '}
+        carries code. Set those two and the whole app follows.
+      </>
+    ),
+  },
+  {
+    icon: 'heading',
+    text: (
+      <>
+        Headings default to the body font. Give display type its own face by setting{' '}
+        <Code>--move-font-heading</Code> — Heading and Prose headings pick it up.
       </>
     ),
   },
@@ -29,9 +38,9 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     text: (
       <>
         Components read the semantic <Code>--move-font-body</Code> /{' '}
-        <Code>--move-font-code</Code>, which point at those two — so setting{' '}
-        <Code>--move-font</Code> cascades everywhere. The name implies no style:
-        a serif is perfectly fine.
+        <Code>--move-font-heading</Code> / <Code>--move-font-code</Code>, which point at those
+        roots — so setting <Code>--move-font</Code> cascades everywhere. The name implies no
+        style: a serif is perfectly fine.
       </>
     ),
   },
@@ -43,8 +52,9 @@ const FONT_PRINCIPLE: HighlightItem[] = [
 
 const SET_TOKENS = `/* Set once on :root — every Move component follows. */
 :root {
-  --move-font: 'Inter', system-ui, sans-serif;    /* all text + UI — any family */
-  --move-font-mono: 'JetBrains Mono', monospace;  /* code */
+  --move-font: 'Inter', system-ui, sans-serif;         /* all text + UI — any family */
+  --move-font-mono: 'JetBrains Mono', monospace;       /* code */
+  --move-font-heading: 'Fraunces', Georgia, serif;     /* optional — headings only */
 }`;
 
 const LOAD_FONT = `/* Load a custom font, then point the token at it.

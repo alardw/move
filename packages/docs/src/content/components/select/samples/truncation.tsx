@@ -19,7 +19,7 @@ export default function TruncationSample() {
   const [value, setValue] = useState('Cherry tomato (technically a fruit, botanically speaking)');
   return (
     <Select.Root value={value} onValueChange={setValue}>
-      <Select.Trigger maxWidth={280}>
+      <Select.Trigger aria-label="Fruit" maxWidth={280}>
         <Select.Value />
         <Select.Icon />
       </Select.Trigger>

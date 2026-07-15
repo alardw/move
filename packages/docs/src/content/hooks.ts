@@ -1,0 +1,206 @@
+// Registry of the cross-cutting hooks Move ships (the ones documented on the
+// Hooks page). Component-headless hooks (useAccordion, useCalendar, …) are
+// documented on their component pages and intentionally NOT listed here.
+//
+// Completeness is enforced by src/hooks-registry.test.ts: every general-purpose
+// hook exported from `move` must appear below, and every entry below must still
+// be exported from `move`. Add an entry when you add a hook (the /hook-create
+// skill does this for you).
+
+export type HookCategory =
+  | "State & refs"
+  | "Animation & motion"
+  | "Viewport"
+  | "Theming & surfaces"
+  | "Icons"
+  | "Component context";
+
+export interface HookDoc {
+  /** Exact export name from `move`. */
+  name: string;
+  /** One-line call signature. */
+  signature: string;
+  /** One sentence: what it does / when to reach for it. */
+  summary: string;
+  category: HookCategory;
+  /** A paired wrapper component, if any (e.g. useInView → Deferred). */
+  companion?: string;
+  /** One sentence describing the companion component. */
+  companionSummary?: string;
+  /** Short usage example (shown as a code block). */
+  example?: string;
+}
+
+export const HOOKS_REGISTRY: HookDoc[] = [
+  // ── State & refs ────────────────────────────────────────────────
+  {
+    name: "useControlledState",
+    signature:
+      "useControlledState<T>({ value?, defaultValue?, onChange? }): [T, (v: T) => void, boolean]",
+    summary:
+      "The canonical controlled/uncontrolled state helper — accept value+onChange, defaultValue, or neither, with one implementation.",
+    category: "State & refs",
+  },
+  {
+    name: "useMergedRef",
+    signature: "useMergedRef<T>(...refs): React.RefCallback<T>",
+    summary:
+      "Combine a forwarded ref with an internal one so a component can both expose a ref to consumers and use it itself.",
+    category: "State & refs",
+  },
+  {
+    name: "useMoveContext",
+    signature: "useMoveContext<TSlots>(): MoveContextValue<TSlots>",
+    summary:
+      "Read the ambient Move component context (global slot props) — the plumbing behind the withMoveComponent factory.",
+    category: "State & refs",
+  },
+
+  // ── Viewport ────────────────────────────────────────────────────
+  {
+    name: "useInView",
+    signature:
+      "useInView<T>({ rootMargin?, threshold?, once? }): { ref, inView }",
+    summary:
+      "Report whether an element is at/near the viewport via IntersectionObserver — works inside nested scrollers, with an SSR/jsdom fallback.",
+    category: "Viewport",
+    companion: "Deferred",
+    companionSummary:
+      "Deferred is the wrapper over useInView: it mounts its children only once they scroll near the viewport, so a page full of heavy subtrees builds the visible handful on load and the rest as you scroll. Deferral is always opt-in — the children are genuinely absent until revealed.",
+    example: `<Deferred rootMargin="300px" style={{ position: 'absolute', inset: 0 }}>
+  <ExpensivePreview />
+</Deferred>`,
+  },
+  {
+    name: "useTruncate",
+    signature: "useTruncate({ enabled? }): { ref, isTruncated }",
+    summary:
+      "Report whether a text element is actually clipped by its truncate strategy (re-measured on resize) — so you can show a tooltip only when text is really cut off.",
+    category: "Viewport",
+  },
+
+  // ── Animation & motion ──────────────────────────────────────────
+  {
+    name: "useAnimations",
+    signature:
+      "useAnimations(config, refs, states?, options?): { handlers, runExit, … }",
+    summary:
+      "Wire a trigger + sequence config to a ref map. The hook every animated Move component uses internally; reach for it to build your own.",
+    category: "Animation & motion",
+  },
+  {
+    name: "usePositionTracker",
+    signature: "usePositionTracker(options): { ref, update }",
+    summary:
+      "Track an active element's position/size within a container and expose an imperative update — the primitive under sliding indicators.",
+    category: "Animation & motion",
+  },
+  {
+    name: "useSlidingIndicator",
+    signature:
+      "useSlidingIndicator({ containerRef, activeSelector, track }): { indicatorRef, update }",
+    summary:
+      "Position a sliding indicator element over the active item (tab underline, segmented-control pill), re-measuring on resize and font load.",
+    category: "Animation & motion",
+  },
+  {
+    name: "useMorphHeight",
+    signature: "useMorphHeight<K>({ key, … }): ref",
+    summary:
+      "Animate an element's height between two natural sizes when a key changes — the piece behind Preview's view toggle.",
+    category: "Animation & motion",
+  },
+  {
+    name: "usePresence",
+    signature: "usePresence(): [boolean, () => void]",
+    summary:
+      "Inside a Presence tree, read whether the current child is present and signal when its exit animation has finished.",
+    category: "Animation & motion",
+  },
+  {
+    name: "useIsPresent",
+    signature: "useIsPresent(): boolean",
+    summary:
+      "Read-only companion to usePresence — is this subtree currently present (not mid-exit)?",
+    category: "Animation & motion",
+  },
+
+  // ── Theming & surfaces ──────────────────────────────────────────
+  {
+    name: "useTheme",
+    signature: "useTheme(): ThemeContextValue",
+    summary:
+      "Read the active theme and switch it from anywhere inside a MoveRoot.",
+    category: "Theming & surfaces",
+  },
+  {
+    name: "useSurface",
+    signature: "useSurface(): SurfaceTone",
+    summary:
+      "Read the current surface tone so a component can adapt to the panel it sits on.",
+    category: "Theming & surfaces",
+  },
+  {
+    name: "useSurfaceFlip",
+    signature: "useSurfaceFlip(): SurfaceTone",
+    summary:
+      "Compute the flipped surface tone for nested surfaces (a card inside a card reads the alternate tone).",
+    category: "Theming & surfaces",
+  },
+  {
+    name: "useLayer",
+    signature: "useLayer(): number",
+    summary:
+      "Read the current stacking layer depth for correct z-index in nested overlays.",
+    category: "Theming & surfaces",
+  },
+
+  // ── Icons ───────────────────────────────────────────────────────
+  {
+    name: "useIcon",
+    signature: "useIcon(role: IconRole, size?): React.ReactNode | null",
+    summary:
+      'Resolve a semantic icon role (e.g. "expand", "close") through the active icon set to a renderable node.',
+    category: "Icons",
+  },
+  {
+    name: "useResolvedIcon",
+    signature:
+      "useResolvedIcon(name: string, size: number): React.ReactNode | null",
+    summary:
+      "Resolve a named icon through the consumer's iconResolver — how components render their built-in icons.",
+    category: "Icons",
+  },
+  {
+    name: "useIconContext",
+    signature: "useIconContext(): IconContextValue",
+    summary:
+      "Read the ambient icon configuration (resolver + role overrides) provided by MoveRoot.",
+    category: "Icons",
+  },
+  {
+    name: "useIconRoles",
+    signature: "useIconRoles(): IconRoleOverrides | null",
+    summary:
+      "Read the current semantic-role → icon-name overrides, for components that map roles themselves.",
+    category: "Icons",
+  },
+
+  // ── Component context ───────────────────────────────────────────
+  {
+    name: "useSidebarContext",
+    signature: "useSidebarContext(): { collapsed, toggleCollapsed, … }",
+    summary:
+      "Read or change the Sidebar's collapsed state from anywhere inside it — the toggle button, the active item, your own footer.",
+    category: "Component context",
+  },
+];
+
+export const HOOK_CATEGORY_ORDER: HookCategory[] = [
+  "State & refs",
+  "Viewport",
+  "Animation & motion",
+  "Theming & surfaces",
+  "Icons",
+  "Component context",
+];

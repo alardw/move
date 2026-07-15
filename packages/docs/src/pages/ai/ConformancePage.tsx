@@ -19,10 +19,15 @@ const CONFIG = `// move.config.json
 
 const TARGET_LABEL: Record<CheckDoc['appliesTo'], string> = {
   component: 'Component',
-  recipe: 'Recipe',
-  composition: 'Composition',
+  composition: 'Composite',
+  'design-pattern': 'Design Pattern',
   docs: 'Docs',
 };
+
+// Group the pipeline table by what each gate governs.
+const TARGET_ORDER: CheckDoc['appliesTo'][] = ['component', 'composition', 'design-pattern', 'docs'];
+const byTarget = (a: CheckDoc, b: CheckDoc) =>
+  TARGET_ORDER.indexOf(a.appliesTo) - TARGET_ORDER.indexOf(b.appliesTo);
 
 function ChecksTable({ rows, showTarget }: { rows: CheckDoc[]; showTarget?: boolean }) {
   return (
@@ -103,24 +108,24 @@ export function ConformancePage() {
               <Text size="sm" color="muted">
                 Purity gates for any composition of Move components — the pages and sections you
                 build. No spec needed, so they ship to you via <Code>move check</Code>; Move runs the
-                same gates on its own recipes and samples.
+                same gates on its own composites and samples.
               </Text>
               <ChecksTable rows={CHECKS.filter((c) => c.shipped)} />
             </Stack>
             <Stack gap="sm">
               <Heading level={3}>Authoring with the pipeline</Heading>
               <Text size="sm" color="muted">
-                Contract gates for components and recipes built the Move way — the analyze → spec →
-                generate → validate loop. Move runs these on itself; adopt the pipeline
-                (<Code>npx move skills</Code>) and they apply to the components and recipes you author
-                too. The Applies-to column says whether each governs a component, a recipe, or the docs.
+                Contract gates for components, composites, and design patterns built the Move way — the
+                analyze → spec → generate → validate loop. Move runs these on itself; adopt the pipeline
+                (<Code>npx move skills</Code>) and they apply to what you author too. The Applies-to
+                column says whether each governs a component, a composite, a design pattern, or the docs.
               </Text>
-              <ChecksTable rows={CHECKS.filter((c) => !c.shipped)} showTarget />
+              <ChecksTable rows={CHECKS.filter((c) => !c.shipped).sort(byTarget)} showTarget />
             </Stack>
           </Stack>
           <Text size="sm" color="muted">
-            The AI skills <Code>component-validate</Code> and <Code>recipe-validate</Code> cover the
-            judgment-based checks (behaviour coverage, label parity) during generation; these
+            The AI skills <Code>component-validate</Code> and <Code>design-pattern-validate</Code> cover
+            the judgment-based checks (behaviour coverage, label parity) during generation; these
             deterministic gates are the layer for CI.
           </Text>
         </Section>

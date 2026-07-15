@@ -24,7 +24,7 @@ export default function GroupsWithIconsSample() {
   const [value, setValue] = useState('pdf');
   return (
     <Select.Root value={value} onValueChange={setValue}>
-      <Select.Trigger>
+      <Select.Trigger aria-label="File type">
         <Select.Value placeholder="Pick a file type" />
         <Select.Icon />
       </Select.Trigger>

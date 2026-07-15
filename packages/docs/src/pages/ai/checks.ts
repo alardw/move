@@ -6,13 +6,13 @@
 // check → document it here, or the build fails.
 //
 // Two axes:
-//   appliesTo — what it governs: a component, a recipe, any composition, or the docs.
+//   appliesTo — what it governs: a component, a composite, a design pattern, or the docs.
 //   shipped   — runnable on a consumer's own project via `move check`.
 //
 // `name` is the `check:<name>` script (the sync key); `title` is an optional
 // friendlier display label.
 
-export type CheckTarget = 'component' | 'recipe' | 'composition' | 'docs';
+export type CheckTarget = 'component' | 'composition' | 'design-pattern' | 'docs';
 
 export interface CheckDoc {
   /** The `check:<name>` script — the sync key against package.json. */
@@ -33,7 +33,7 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'composition',
     shipped: true,
     enforces:
-      'Composed code is built only from Move components — no raw HTML layout (an inline `<svg>` included), no inline `style`, no custom CSS. Move runs it on its recipes; you run it on your app.',
+      'Composed code is built only from Move components — no raw HTML layout (an inline `<svg>` included), no inline `style`, no custom CSS. Move runs it on its own composites; you run it on your app.',
   },
   {
     name: 'strict-props',
@@ -52,11 +52,11 @@ export const CHECKS: CheckDoc[] = [
       'Spec ↔ source ↔ docs stay in sync — the slots, props, and defaults a spec declares match the component and its generated docs.',
   },
   {
-    name: 'composition-spec-drift',
+    name: 'composite-spec-drift',
     appliesTo: 'composition',
     shipped: true,
     enforces:
-      'A composition’s imports, labels, and test match its CompositionSpec, and no user-facing string bypasses the labels object (substance ↔ source). Move proves it on its recipes; you run it on your composites via `move check`.',
+      'A composite’s imports, labels, and test match its CompositeSpec, and no user-facing string bypasses the labels object (substance ↔ source). Move proves it on its own composites; you run it on yours via `move check`.',
   },
   {
     name: 'component-conformance',
@@ -88,10 +88,10 @@ export const CHECKS: CheckDoc[] = [
       'Any imperative (Tier-2) animation is declared in `spec.animationCapabilities` — no ad-hoc imperative animation.',
   },
   {
-    name: 'animation-patterns',
+    name: 'animation-choreography',
     appliesTo: 'component',
     enforces:
-      'A component’s declared `animationPatterns` stay consistent with the animation it actually uses.',
+      'A component’s declared `choreographies` stay consistent with the animation it actually uses.',
   },
   {
     name: 'dismissable-lifecycle',
@@ -150,9 +150,10 @@ export const CHECKS: CheckDoc[] = [
     enforces: "Every spec integration point resolves — its contract is exported from the public barrel and any fixture/sample exists, so the docs Integrations panel can't dangle.",
   },
   {
-    name: 'recipe-document-drift',
-    appliesTo: 'recipe',
-    enforces: 'Every recipe’s RecipeDocument (its registry entry) is in sync — a unique slug, ≥1 search synonym, and the spec is registered — so nothing ships undocumented or unfindable.',
+    name: 'design-pattern-conformance',
+    appliesTo: 'design-pattern',
+    enforces:
+      'Each DesignPatternSpec is well-formed (integrity) and complete (coverage): its skeleton is a single-rooted tree, every axis is owned by exactly one slot, every binding and heuristic resolves to a real slot/axis/value, and every axis value has a slot binding. The pattern-level counterpart of the component (spec-drift) and composite (composite-spec-drift) spec checks.',
   },
   {
     name: 'component-document-drift',

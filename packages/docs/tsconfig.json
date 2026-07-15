@@ -19,7 +19,9 @@
     "paths": {
       "move": ["../move/src/index.ts"],
       "@move-specs/*": ["../move/src/components/*"],
-      "@move-recipes/*": ["../move/recipes/*"]
+      "@move-recipes/*": ["../move/recipes/*"],
+      "@move-patterns/*": ["../move/patterns/*"],
+      "@move-scaffold/*": ["../move/scaffold/*"]
     }
   },
   "include": ["src"],

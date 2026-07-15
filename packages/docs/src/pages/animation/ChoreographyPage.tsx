@@ -47,20 +47,20 @@ function SelectDemo() {
 }
 
 const TAGLINE =
-  'Named recipes — a trigger and sequence paired for a recurring job — that Move components share. The top of the ladder: spring → motion → pattern.';
+  'Named patterns — a trigger and sequence paired for a recurring job — that Move components share. The top of the ladder: spring → motion → pattern.';
 
 const BADGES = [
-  { icon: 'puzzle', label: 'Shared recipes' },
+  { icon: 'puzzle', label: 'Shared patterns' },
   { icon: 'blocks', label: 'Across components' },
 ];
 
 const TOC: TocItem[] = [
   { href: '#patterns', label: 'Overview' },
-  { href: '#patterns-list', label: 'Shared recipes' },
+  { href: '#patterns-list', label: 'Shared patterns' },
   { href: '#motions', label: 'Built from motions' },
 ];
 
-export function AnimationPatternsPage() {
+export function ChoreographyPage() {
   return (
     <Stack direction="row" gap="xl" align="stretch" id="patterns">
       <Stack gap="xl" flex={1}>
@@ -95,8 +95,8 @@ export function AnimationPatternsPage() {
 
         <Section
           id="patterns-list"
-          title="Shared recipes"
-          lede="The recipes most components reach for."
+          title="Shared patterns"
+          lede="The patterns most components reach for."
         >
           <Text>
             A pattern is a trigger and sequence paired for a recurring job, named

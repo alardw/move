@@ -8,7 +8,7 @@ export default function SizesSample() {
     <Stack direction="row" gap="md" wrap>
       {sizes.map((size) => (
         <Select.Root key={size} defaultValue="Apple">
-          <Select.Trigger size={size}>
+          <Select.Trigger aria-label={`Fruit (size ${size})`} size={size}>
             <Select.Value />
             <Select.Icon />
           </Select.Trigger>

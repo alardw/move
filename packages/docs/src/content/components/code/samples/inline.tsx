@@ -8,7 +8,7 @@ export default function InlineSample() {
         <Code>ThemeProvider</Code> at the root of your app.
       </Text>
       <Text>
-        Run <Code>npx create-move-app</Code> to scaffold a new project, or install with{' '}
+        Run <Code>npm create move</Code> to scaffold a new project, or install with{' '}
         <Code>npm i move</Code> if you already have one.
       </Text>
       <Text>

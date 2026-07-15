@@ -462,7 +462,7 @@ sequence: [
           <SelectStaggerDemo />
           <Text color="muted">
             More of these running in real components on{' '}
-            <RouterLink to="/animation/patterns">See it in action</RouterLink>.
+            <RouterLink to="/animation/choreography">See it in action</RouterLink>.
           </Text>
         </Section>
       </Stack>

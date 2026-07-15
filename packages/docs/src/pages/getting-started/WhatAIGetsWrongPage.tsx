@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card, Table } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -136,6 +136,64 @@ const HOW_MOVE: HighlightItem[] = [
   },
 ];
 
+// The accessibility category made concrete: the specific, named WCAG failures AI
+// ships by default, each with the success criterion it breaks (linked to the criterion's
+// own WCAG Understanding page — the authoritative reference), and the Move mechanism that
+// removes it. a11y is threaded through the prose above — this is the itemized version,
+// because "inaccessible by default" is a list of particular, checkable failures, not a
+// vibe. The References section below backs the "AI ships these by default" claim.
+const WCAG_BASE = 'https://www.w3.org/WAI/WCAG22/Understanding/';
+const WCAG_FAILURES: { violation: string; wcag: string; ref: string; prevented: string }[] = [
+  {
+    violation: 'A div-with-onClick stands in for a button — no role, not focusable, no key handler. It works with a mouse and is invisible to a screen reader, unusable from the keyboard.',
+    wcag: '4.1.2 Name, Role, Value · 2.1.1 Keyboard',
+    ref: 'name-role-value.html',
+    prevented: 'Button, Select, and Dialog are real semantic controls with roles and key handling built in — there’s no happy-path div version to reach for.',
+  },
+  {
+    violation: 'Icon-only buttons and unlabeled inputs ship with no accessible name — a screen reader announces “button”, or nothing at all.',
+    wcag: '4.1.2 Name, Role, Value · 3.3.2 Labels or Instructions',
+    ref: 'name-role-value.html',
+    prevented: 'Names come through each component’s labels object, and FormField ties a real label to its control — the name isn’t an optional afterthought.',
+  },
+  {
+    violation: 'Muted gray on white, brand text on a brand fill, a placeholder doubling as a label — combinations that look fine in a preview and fail a contrast check.',
+    wcag: '1.4.3 Contrast (Minimum)',
+    ref: 'contrast-minimum.html',
+    prevented: 'Every color resolves to a WCAG-legible foreground token (fg-solid / fg-subtle), in light mode and dark — the off-token combination isn’t expressible.',
+  },
+  {
+    violation: 'outline: none with nothing to replace it — the keyboard user loses all trace of where they are on the page.',
+    wcag: '2.4.7 Focus Visible',
+    ref: 'focus-visible.html',
+    prevented: 'A token-based focus ring is part of every interactive component and survives theming.',
+  },
+  {
+    violation: 'An <img> with no alt text, or a decorative image not hidden from assistive tech — non-text content with no text alternative.',
+    wcag: '1.1.1 Non-text Content',
+    ref: 'non-text-content.html',
+    prevented: 'Image threads alt through as a first-class prop, so the alternative is part of using the component, not an extra step to remember.',
+  },
+  {
+    violation: 'Everything is a div: skipped heading levels, no landmarks, no structure for assistive tech to navigate by.',
+    wcag: '1.3.1 Info and Relationships · 2.4.1 Bypass Blocks',
+    ref: 'info-and-relationships.html',
+    prevented: 'Heading takes a level and layout resolves to semantic regions — the document structure is carried, not painted on.',
+  },
+  {
+    violation: 'A dialog opens but focus stays behind it; on close, focus is lost — no focus trap, no return to the trigger.',
+    wcag: '2.4.3 Focus Order · 2.1.2 No Keyboard Trap',
+    ref: 'focus-order.html',
+    prevented: 'Dialog moves focus in, keeps it inside while open, and returns it on close — as part of the component, not the caller’s job.',
+  },
+  {
+    violation: 'Toggles, tabs, and disclosures never expose their state — no aria-expanded, aria-selected, or aria-checked to match what the eye sees.',
+    wcag: '4.1.2 Name, Role, Value',
+    ref: 'name-role-value.html',
+    prevented: 'State-bearing components emit the matching ARIA state as they change, so the announced state can’t drift from the visual one.',
+  },
+];
+
 interface Source {
   href: string;
   title: string;
@@ -170,9 +228,38 @@ const TOC: TocItem[] = [
   { href: '#without-a-system', label: 'Without a system' },
   { href: '#component-library', label: 'A component library' },
   { href: '#design-system', label: 'A design system' },
+  { href: '#accessibility', label: 'The a11y failures, named' },
   { href: '#how-move-helps', label: 'How Move helps' },
+  { href: '#in-practice', label: 'Caught in the act' },
   { href: '#sources', label: 'References' },
   { href: '#next-steps', label: 'Next steps' },
+];
+
+// Real mistakes the AI made while building Move's example app — each stated as the
+// general failure, with the concrete example, and the guardrail that caught it (plus
+// why that guardrail works). All the same shape: reach for the generically-plausible
+// answer; be wrong in a Move-specific way.
+const IN_PRACTICE: { mistake: string; example: string; caught: string }[] = [
+  {
+    mistake: 'Uses a value from another design system instead of checking Move’s own vocabulary.',
+    example: 'Wrote variant="subtle" on a Button — Move’s variants are primary / secondary / ghost / danger.',
+    caught: 'Typecheck rejects the value that doesn’t exist. An oracle: it fails a wrong answer instantly.',
+  },
+  {
+    mistake: 'Assumes the generic-web implementation instead of checking what Move already ships.',
+    example: 'Reached for an <iframe> to embed a video — Move has a VideoPlayer with a provider seam.',
+    caught: 'A human noticed. The lesson is the gap: nothing forced a check of the inventory, so the assumption went unchallenged.',
+  },
+  {
+    mistake: 'Optimizes for generic taste over the component’s intended idiom.',
+    example: 'Put a ghost (see-through) button over a photo — invisible on a bright image; the sample uses a solid secondary for contrast.',
+    caught: 'The component’s sample. The type says a variant is possible; the sample says which one is right.',
+  },
+  {
+    mistake: 'Reads a prop’s type but not its sample, and reinvents a thinner version.',
+    example: 'Hand-rolled an image overlay from the signature — missing the documented tooltip-wrapped, hover-revealed action.',
+    caught: 'The sample again. Types are the vocabulary; samples are the grammar the vocabulary can’t carry.',
+  },
 ];
 
 export function WhatAIGetsWrongPage() {
@@ -253,11 +340,80 @@ export function WhatAIGetsWrongPage() {
         </Section>
 
         <Section
+          id="accessibility"
+          title="“Inaccessible by default” is a list, not a vibe"
+          lede="Accessibility runs through every section above; here it is as the concrete, named WCAG failures AI ships without a system — each with the success criterion it breaks and the mechanism that removes it."
+        >
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>The violation</Table.Head>
+                <Table.Head>WCAG</Table.Head>
+                <Table.Head>Why Move doesn’t have it</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {WCAG_FAILURES.map((f) => (
+                <Table.Row key={f.wcag}>
+                  <Table.Cell>
+                    <Text size="sm">{f.violation}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link href={`${WCAG_BASE}${f.ref}`} external>
+                      <Text size="sm">{f.wcag}</Text>
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text size="sm">{f.prevented}</Text>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Section>
+
+        <Section
           id="how-move-helps"
           title="How Move closes the gap"
           lede="Move moves these decisions out of the prompt and into the system, so the assistant can’t get them wrong by omission."
         >
           <HighlightList items={HOW_MOVE} />
+        </Section>
+
+        <Section
+          id="in-practice"
+          title="Caught in the act"
+          lede="Not hypothetical — these are real mistakes the AI made while building Move’s own example app: each stated generally, with the example that triggered it and the guardrail that caught it."
+        >
+          <Table.Root>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>The mistake</Table.Head>
+                <Table.Head>For example</Table.Head>
+                <Table.Head>What caught it</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {IN_PRACTICE.map((m) => (
+                <Table.Row key={m.example}>
+                  <Table.Cell>
+                    <Text size="sm">{m.mistake}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text size="sm">{m.example}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text size="sm">{m.caught}</Text>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+          <Text>
+            Every one happened where the AI had neither a forcing-function (something making it consult
+            Move) nor an oracle (a check that fails a wrong answer). The types, the checks, and the
+            samples are those guardrails — this page’s argument, seen live.
+          </Text>
         </Section>
 
         <Section id="sources" title="References">
@@ -296,7 +452,7 @@ export function WhatAIGetsWrongPage() {
                 icon: 'download',
                 text: (
                   <>
-                    Or jump straight to <RouterLink to="/getting-started/installation">Installation</RouterLink> and <Code>npm install move</Code>.
+                    Or jump straight in — <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink> scaffolds a project with <Code>npm create move</Code>. Adding Move to an app you already have? <RouterLink to="/getting-started/installation">Add to an existing app</RouterLink>.
                   </>
                 ),
               },

@@ -11,6 +11,7 @@ export default function FormatsSample() {
   return (
     <Stack gap="sm" align="start">
       <ColorInput
+        aria-label="Colour"
         value={value}
         onValueChange={setValue}
         format="rgba"

@@ -3,8 +3,8 @@ import { Password, Stack } from 'move';
 export default function BasicSample() {
   return (
     <Stack gap="md">
-      <Password placeholder="Enter your password" />
-      <Password defaultValue="prefilled-secret" />
+      <Password aria-label="Enter your password" placeholder="Enter your password" />
+      <Password aria-label="Password" defaultValue="prefilled-secret" />
     </Stack>
   );
 }

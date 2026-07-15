@@ -11,6 +11,9 @@ export interface HighlightItem {
  * pages to narrate what makes each component distinctive. Built on
  * Move's List compound so the ul/li semantics, Leading/Content slots,
  * and keyboard/focus behavior come from the library.
+ *
+ * Aliases (for searchers): bullet list, icon list, feature list, checklist,
+ * highlights list. The underlying library primitive is Move's `List`.
  */
 export function HighlightList({ items }: { items: HighlightItem[] }) {
   return (

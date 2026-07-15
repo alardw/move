@@ -145,7 +145,7 @@ export function OverviewPage() {
                 icon: 'download',
                 text: (
                   <>
-                    Then go to <RouterLink to="/getting-started/installation">Installation</RouterLink> to get a project rendering.
+                    Then <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink> to get a project rendering — or <RouterLink to="/getting-started/installation">add Move to an existing app</RouterLink>.
                   </>
                 ),
               },

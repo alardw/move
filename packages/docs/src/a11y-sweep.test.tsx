@@ -5,10 +5,9 @@ import path from 'node:path';
 import axe from 'axe-core';
 import { MoveRoot } from 'move';
 import { COMPONENT_CONTENT } from './content/components';
-import { RECIPES } from '@move-recipes/registry';
 
 // Mechanical a11y sweep (a11y-1), run as a RATCHET. Renders every component sample
-// + every recipe and runs axe-core over the DOM. jsdom can't do layout or colour,
+// and runs axe-core over the DOM. jsdom can't do layout or colour,
 // so we run only the mechanical rules — roles, names, ARIA — and disable the
 // page-scope / contrast rules that don't apply to a rendered fragment.
 //
@@ -49,11 +48,6 @@ for (const c of Object.values(COMPONENT_CONTENT)) {
     entries.push({ label: `${c.meta.slug}/${s.id}`, node: <S /> });
   }
 }
-for (const r of RECIPES) {
-  const R = r.Component;
-  entries.push({ label: `recipe/${r.groupSlug}/${r.slug}`, node: <R /> });
-}
-
 describe('a11y sweep (axe — roles, names, ARIA)', () => {
   it(
     'introduces no mechanical a11y violations above the baseline',

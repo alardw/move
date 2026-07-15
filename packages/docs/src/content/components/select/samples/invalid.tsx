@@ -5,7 +5,7 @@ const fruits = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 export default function InvalidSample() {
   return (
     <Select.Root>
-      <Select.Trigger invalid>
+      <Select.Trigger aria-label="Fruit" invalid>
         <Select.Value placeholder="Pick a fruit" />
         <Select.Icon />
       </Select.Trigger>

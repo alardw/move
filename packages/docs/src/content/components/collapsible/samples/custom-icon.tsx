@@ -11,7 +11,7 @@ export default function CustomIconSample() {
       <Collapsible.Root>
         <Stack gap="sm">
           <Collapsible.Trigger>
-            {/* recipe-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
+            {/* composite-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
             <Stack direction="row" gap="sm" align="center" justify="between" style={{ width: '100%' }}>
               <Text weight="medium">Arrow down ↔ up</Text>
               <Collapsible.Icon>
@@ -29,7 +29,7 @@ export default function CustomIconSample() {
       <Collapsible.Root>
         <Stack gap="sm">
           <Collapsible.Trigger>
-            {/* recipe-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
+            {/* composite-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
             <Stack direction="row" gap="sm" align="center" justify="between" style={{ width: '100%' }}>
               <Text weight="medium">Caret down ↔ up</Text>
               <Collapsible.Icon>

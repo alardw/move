@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { moveAnimate, type JSAnimation } from 'move';
+import { moveAnimate, prefersReducedMotion, type JSAnimation } from 'move';
 import styles from './LogoMark.module.css';
 
 const SWAP_INTERVAL_MS = 10000;
@@ -20,6 +20,8 @@ export function LogoMark() {
   const isFirstRender = useRef(true);
 
   useEffect(() => {
+    // Respect prefers-reduced-motion — no auto-morphing wordmark (WCAG 2.2.2).
+    if (prefersReducedMotion()) return;
     const id = window.setInterval(() => {
       setLetter((l) => (l === 'U' ? 'A' : 'U'));
     }, SWAP_INTERVAL_MS);

@@ -16,8 +16,15 @@ const BADGES = [
 
 const PILLARS: HighlightItem[] = [
   {
-    icon: 'blocks',
-    text: 'Component contracts define slots, variants, state patterns, and token hooks explicitly.',
+    icon: 'scroll-text',
+    text: (
+      <>
+        Every component, composite, and design pattern is a typed{' '}
+        <RouterLink to="/contracts">contract</RouterLink> — one spec that feeds the generators,
+        validators, docs, and AI skills. <RouterLink to="/contracts/conformance">Conformance</RouterLink>{' '}
+        checks fail the build the moment a spec and its code drift apart.
+      </>
+    ),
   },
   {
     icon: 'sparkles',

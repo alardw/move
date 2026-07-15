@@ -26,7 +26,7 @@ export default function ThreadSample() {
         return (
           <ChatBubble.Root key={i} placement={placement}>
             {prevSameSide ? (
-              // recipe-purity-ignore: fixed-width spacer reserving the avatar gutter for grouped bubbles; no Move width primitive
+              // composite-purity-ignore: fixed-width spacer reserving the avatar gutter for grouped bubbles; no Move width primitive
               <span style={{ width: 'var(--move-control-height-md)' }} aria-hidden />
             ) : (
               <ChatBubble.Avatar src={speaker.src} fallback={speaker.initials} />

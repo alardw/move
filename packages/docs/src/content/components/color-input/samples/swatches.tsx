@@ -17,6 +17,7 @@ export default function SwatchesSample() {
   return (
     <Stack gap="sm" align="start">
       <ColorInput
+        aria-label="Colour"
         value={value}
         onValueChange={setValue}
         swatches={brand}

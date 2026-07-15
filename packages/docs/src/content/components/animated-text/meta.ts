@@ -29,7 +29,7 @@ const related: RelatedItem[] = [
     reason: 'Pair AnimatedText’s `as="h1"` with Heading’s scale for animated titles.',
   },
   {
-    to: '/animation/patterns',
+    to: '/animation/choreography',
     name: 'Animation patterns',
     reason: 'How motion is composed across Move.',
   },

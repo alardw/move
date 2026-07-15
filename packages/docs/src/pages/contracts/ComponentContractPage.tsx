@@ -1,6 +1,9 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Table, Tooltip, Card } from 'move';
 import { Section, TocRail, type TocItem, InlineCode, CodeBlock } from '../../components';
+// The example IS the real Badge spec — imported as source so it can never drift from the
+// canonical file (which `satisfies ComponentSpec` and is typechecked by Move's build).
+import badgeSpecSource from '@move-specs/data-display/Badge/Badge.spec?raw';
 
 /**
  * Docs page describing the component spec — the canonical shape every
@@ -24,7 +27,7 @@ const TOC: TocItem[] = [
   { href: '#i18n', label: 'Internationalization' },
   { href: '#dependencies', label: 'Dependencies' },
   { href: '#testing', label: 'Testing' },
-  { href: '#review', label: 'Review' },
+  { href: '#docs-fields', label: 'Preview & demo' },
   { href: '#enforcement', label: 'Enforcement' },
   { href: '#next-steps', label: 'Next steps' },
 ];
@@ -36,84 +39,6 @@ interface FieldRow {
   description: React.ReactNode;
 }
 
-/** The real Badge spec, used as a worked example so readers can see the
- *  shape of a complete spec before walking through field tables. Badge is
- *  presentational with no behavior, so it shows the minimum surface. */
-const EXAMPLE_SPEC = `import type { ComponentSpec } from '../../../spec-type';
-
-export const spec = {
-  schemaVersion: 7 as const,
-  name: 'Badge',
-  componentClass: 'presentational' as const,
-  category: 'data-display',
-  description: 'Inline status label with variant and size options',
-
-  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
-  families: {
-    behavior:  ['display'],
-    state:     ['stateless'],
-    animation: ['none'],
-    a11y:      ['none'],
-  },
-
-  compound: false,
-  rootElement: 'span',
-  slots: [
-    { name: 'root', element: 'span', description: 'Badge container' },
-  ],
-
-  props: [
-    { name: 'variant', type: "'solid' | 'soft' | 'surface' | 'outline' | 'dot'", default: "'solid'", moveSpecific: true, description: 'Visual style variant' },
-    { name: 'size', typeRef: 'Size', default: "'md'", moveSpecific: true, description: 'Badge size' },
-    { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Badge content' },
-  ],
-
-  anatomy: {
-    slot: 'root',
-    dataAttributes: ['data-variant', 'data-size'],
-  },
-
-  controlled: null,
-  keyboard: null,
-  focus: null,
-  formType: null,
-  asChild: false,
-
-  animations: [],
-
-  tokens: [
-    { name: '--move-badge-radius', value: 'var(--move-rounded-full)', description: 'Border radius' },
-    { name: '--move-badge-font-weight', value: 'var(--move-weight-medium)', description: 'Font weight' },
-    // …
-  ],
-
-  variants: {
-    variant: ['solid', 'soft', 'surface', 'outline', 'dot'],
-  },
-  sizes: ['sm', 'md', 'lg'],
-
-  labels: [],
-
-  hasHook: false,
-  engineImports: ['withMoveComponent'],
-  componentDeps: [],
-
-  testing: {
-    behaviors: [
-      'Renders as span element',
-      'Applies variant via data-variant attribute',
-      'Defaults to variant=solid',
-      'Forwards ref to root element',
-    ],
-  },
-
-  defaultReview: {
-    status: 'approved' as const,
-    decisionSource: 'rule-based' as const,
-    overrides: {},
-  },
-} satisfies ComponentSpec;
-`;
 
 const GLOSSARY: Record<string, string> = {
   // componentClass
@@ -148,10 +73,6 @@ const GLOSSARY: Record<string, string> = {
   // dismissBehavior
   hide: 'The component stays mounted and is visually hidden when dismissed.',
   unmountAfterExit: 'The component unmounts once its exit animation completes.',
-  // decisionSource
-  'rule-based': "Auto-approved by the review pipeline's deterministic rules.",
-  'user-confirmed': 'A human reviewed each default and signed off.',
-  'accept-all': 'Bulk-approved during a migration; lower confidence than user-confirmed.',
   // animation capabilities
   slidingIndicator: 'Measure + track an active element, re-measuring on resize/fonts (usePositionTracker). Tabs, TableOfContents.',
   valueLoop: 'Animate a JS value/proxy in a loop, applied via a render callback (raw anime.js). Loader, Skeleton.',
@@ -226,12 +147,11 @@ function NestedType({ name, lede, fields }: { name: string; lede: React.ReactNod
 // ============================================================================
 
 const IDENTITY: FieldRow[] = [
-  { name: 'schemaVersion', type: '7', required: true, description: <>Schema version — always the pinned literal <Code>SPEC_SCHEMA_VERSION</Code> (<Code>7 as const</Code>). Bumped only on breaking schema changes, which ship with a migration over all specs.</> },
+  { name: 'schemaVersion', type: '1', required: true, description: <>Schema version — always the pinned literal <Code>SPEC_SCHEMA_VERSION</Code> (<Code>1 as const</Code>). Bumped only on breaking schema changes, which ship with a migration over all specs.</> },
   { name: 'name', type: 'string', required: true, description: 'Component display name (PascalCase). Matches the file basename and the runtime export.' },
   { name: 'componentClass', type: 'ComponentClass', required: true, description: <>Component class — determines template and default behaviors. One of <Term>presentational</Term>, <Term>interactive</Term>, <Term>input_toggle</Term>, <Term>input_popup</Term>, <Term>input_plain</Term>, <Term>disclosure</Term>, <Term>overlay_layer</Term>, <Term>overlay_popup</Term>, <Term>display</Term>, <Term>navigation</Term>.</> },
   { name: 'category', type: 'string', required: true, description: <>Source category folder (e.g. <Code>'form'</Code>, <Code>'overlay'</Code>, <Code>'data-display'</Code>).</> },
   { name: 'description', type: 'string', required: true, description: 'Brief one-line description.' },
-  { name: 'synonyms', type: 'string[]', required: false, description: <>Search synonyms / aliases (e.g. Dialog → <Code>'modal'</Code>, <Code>'popup'</Code>) for docs search.</> },
   { name: 'families', type: 'Record<string, string[]>', required: false, description: <>Component-family memberships (<Code>behavior</Code> / <Code>state</Code> / <Code>animation</Code> / <Code>a11y</Code>) used by the cross-component drift checks.</> },
 ];
 
@@ -363,16 +283,9 @@ const TESTING: FieldRow[] = [
   { name: 'collapse', type: 'string[]', required: false, description: 'Responsive-collapse tests.' },
 ];
 
-const REVIEW: FieldRow[] = [
-  { name: 'defaultReview', type: 'DefaultReview', required: true, description: 'Required audit record that defaults were interactively reviewed. Generation and validation fail when it is missing.' },
+const DOCS_FIELDS: FieldRow[] = [
   { name: 'preview', type: 'PreviewSpec', required: false, description: 'Optional docs preview-card behaviour (staged overlay, static mock, bare surface, panel width). Preview-only; never affects the shipped component.' },
   { name: 'demo', type: 'DemoSpec', required: false, description: 'Optional explicit demo contract (controls + samples + bindings).' },
-];
-
-const DEFAULT_REVIEW_FIELDS: FieldRow[] = [
-  { name: 'status', type: "'approved'", required: true, description: 'Must be approved before the spec is written.' },
-  { name: 'decisionSource', type: "'user-confirmed' | 'accept-all' | 'rule-based'", required: true, description: <>How approval happened. <Term>rule-based</Term>: auto-approved by deterministic rules. <Term>user-confirmed</Term>: a human reviewed each default. <Term>accept-all</Term>: bulk-approved during a migration.</> },
-  { name: 'overrides', type: 'Record<string, string>', required: false, description: 'Explicit per-prop overrides accepted by the user. Key = prop name, value = chosen default.' },
 ];
 
 const CHECK_SCRIPTS: { name: string; what: string }[] = [
@@ -397,7 +310,7 @@ export function ComponentContractPage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/core-concepts">Core Concepts</RouterLink>
+              <RouterLink to="/contracts">Contracts</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
@@ -435,7 +348,7 @@ export function ComponentContractPage() {
           title="A complete spec"
           lede="The real Badge spec, small enough to read end-to-end. Every section below corresponds to one block of fields you'll see here."
         >
-          <CodeBlock code={EXAMPLE_SPEC} language="tsx" />
+          <CodeBlock code={badgeSpecSource} language="tsx" />
         </Section>
 
         <Section
@@ -511,12 +424,8 @@ export function ComponentContractPage() {
           </Text>
         </Section>
 
-        <Section id="review" title="Review" lede="The audit record that the proposed defaults were signed off before the spec was written.">
-          <FieldTable fields={REVIEW} />
-          <Stack gap="sm">
-            <Heading level={3}><Code>defaultReview</Code> — fields</Heading>
-            <FieldTable fields={DEFAULT_REVIEW_FIELDS} />
-          </Stack>
+        <Section id="docs-fields" title="Preview & demo" lede="Optional, docs-only fields — they shape the documentation surface and never affect the shipped component.">
+          <FieldTable fields={DOCS_FIELDS} />
         </Section>
 
         <Section
@@ -560,8 +469,8 @@ export function ComponentContractPage() {
           <Stack gap="sm">
             <Text>Adjacent reading from the same contract:</Text>
             <Stack gap="xs">
-              <Text size="sm">• <RouterLink to="/core-concepts/surfaces">Surfaces</RouterLink> — the surface elevation system referenced by <Code>surface</Code>.</Text>
-              <Text size="sm">• <RouterLink to="/core-concepts/stacking">Stacking</RouterLink> — the z-layer hierarchy for overlays.</Text>
+              <Text size="sm">• <RouterLink to="/systems/surfaces">Surfaces</RouterLink> — the surface elevation system referenced by <Code>surface</Code>.</Text>
+              <Text size="sm">• <RouterLink to="/systems/stacking">Stacking</RouterLink> — the z-layer hierarchy for overlays.</Text>
               <Text size="sm">• <RouterLink to="/core-concepts/animation-system">Animation System</RouterLink> — how <Code>animations</Code> and <Code>states</Code> are consumed at runtime.</Text>
               <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — every spec rendered into a doc page.</Text>
             </Stack>

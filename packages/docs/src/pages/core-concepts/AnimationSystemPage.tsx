@@ -72,9 +72,9 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'puzzle',
     text: (
       <>
-        <RouterLink to="/animation/patterns">Patterns</RouterLink> and the{' '}
+        <RouterLink to="/animation/choreography">Choreography</RouterLink> and the{' '}
         <RouterLink to="/animation/reference">hook reference</RouterLink> —
-        the recipes shared across components, and the API for driving motion
+        the motions shared across components, and the API for driving motion
         yourself.
       </>
     ),

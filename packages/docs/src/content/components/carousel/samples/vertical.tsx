@@ -8,7 +8,7 @@ import { SlideTile } from './_slide';
  */
 export default function VerticalSample() {
   return (
-    // recipe-purity-ignore: fixed-height frame so the vertical carousel has somewhere to scroll; no Move height prop
+    // composite-purity-ignore: fixed-height frame so the vertical carousel has somewhere to scroll; no Move height prop
     <div style={{ height: 400 }}>
       <Carousel.Root orientation="vertical" showTriggers showIndicators triggerPlacement="overlay">
         <Carousel.Viewport>

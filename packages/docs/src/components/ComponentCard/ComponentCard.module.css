@@ -5,7 +5,10 @@
   border-radius: 12px;
   overflow: hidden;
   background: var(--move-bg-base);
-  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    transform 120ms ease;
 }
 
 .card:hover {
@@ -22,7 +25,7 @@
 }
 
 .titleLink::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -36,8 +39,19 @@
   pointer-events: none;
   border-bottom: 1px solid var(--move-border-base);
   background: var(--move-primary);
-  background-image: radial-gradient(120% 100% at 78% -10%, color-mix(in oklab, white 26%, transparent), transparent 60%);
+  background-image: radial-gradient(
+    120% 100% at 78% -10%,
+    color-mix(in oklab, white 26%, transparent),
+    transparent 60%
+  );
   /* No perspective: isometric is a PARALLEL projection (no vanishing point). */
+}
+
+/* Lazy-mount wrapper fills the frame so the tilt inside positions against it
+   exactly as it did against the frame, and so it has size to observe. */
+.deferred {
+  position: absolute;
+  inset: 0;
 }
 
 /* The live sample on a floating white panel, tilted into an isometric-ish
@@ -52,7 +66,10 @@
   height: auto;
   max-height: 360px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr); /* column fills the panel so width:100% samples follow it */
+  grid-template-columns: minmax(
+    0,
+    1fr
+  ); /* column fills the panel so width:100% samples follow it */
   place-items: center;
   overflow: hidden;
   padding: 24px;
@@ -126,7 +143,7 @@
   border-radius: 14px;
   background: var(--move-bg-base);
   box-shadow: 0 8px 20px -8px rgb(0 0 0 / 25%);
-  color: var(--move-primary);
+  color: var(--move-indigo-text);
 }
 
 .body {

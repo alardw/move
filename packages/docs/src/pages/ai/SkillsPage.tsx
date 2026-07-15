@@ -62,6 +62,14 @@ const APP_SKILLS: HighlightItem[] = [
     text: '/app-setup — scaffold a complete Move app from scratch. Project files, MoveRoot, shell, routing, pages.',
   },
   {
+    icon: 'palette',
+    text: '/app-theme — brand the app: generate a full light + dark theme from a couple of colors, import an existing token set (Tailwind, Radix, Material 3, Figma) by distilling it to a seed, set radius and fonts. Contrast stays WCAG AA, guaranteed.',
+  },
+  {
+    icon: 'scan-eye',
+    text: '/app-wcag-audit — check your app for the WCAG 2.2 A/AA items Move can’t own: alt text, page language, heading structure, skip links, form error wiring (aria-invalid + aria-describedby), labels, autocomplete, and contrast of any theme overrides. It skips what Move already handles.',
+  },
+  {
     icon: 'blocks',
     text: '/app-compose — compose from a CompositionSpec at any scale: a composite, a page that owns a route, or a whole feature (its scope says which). Built entirely from Move components.',
   },

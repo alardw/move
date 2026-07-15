@@ -1,0 +1,215 @@
+import { Link as RouterLink } from 'react-router-dom';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Table, type Color } from 'move';
+import { HighlightList, type HighlightItem, Section, TocRail, type TocItem } from '../../components';
+
+type Support = 'supports' | 'partial' | 'none' | 'na' | 'consumer';
+
+const SUPPORT: Record<Support, { label: string; color: Color }> = {
+  supports: { label: 'Supports', color: 'green' },
+  partial: { label: 'Partial', color: 'yellow' },
+  none: { label: 'Does not', color: 'red' },
+  na: { label: 'N/A', color: 'gray' },
+  consumer: { label: 'Yours', color: 'blue' },
+};
+
+interface Criterion {
+  sc: string;
+  name: string;
+  level: string;
+  support: Support;
+  note: React.ReactNode;
+}
+
+// WCAG 2.2, Levels A + AA. Scored against the current library — honest, not aspirational.
+// "Yours" = the library exposes the hooks but the consumer must supply the content/wiring.
+const PERCEIVABLE: Criterion[] = [
+  { sc: '1.1.1', name: 'Non-text Content', level: 'A', support: 'consumer', note: 'Icons default to aria-hidden; every component accepts aria-label. Alt text for images and meaningful icons is yours to supply.' },
+  { sc: '1.2.1–1.2.5', name: 'Time-based Media', level: 'A/AA', support: 'consumer', note: 'AudioPlayer/VideoPlayer are players with controls; captions, transcripts, and audio description are content you provide (e.g. <track>).' },
+  { sc: '1.3.1', name: 'Info & Relationships', level: 'A', support: 'partial', note: 'Radix components expose correct roles. Gaps: FormField.Label is a <div> (no association), Checkbox has no reliable accessible name, invalid state is not programmatic.' },
+  { sc: '1.3.2', name: 'Meaningful Sequence', level: 'A', support: 'supports', note: 'Components render in logical DOM order; reading/tab order follows. Page-level sequence is yours.' },
+  { sc: '1.3.3', name: 'Sensory Characteristics', level: 'A', support: 'consumer', note: 'Instructions that rely on shape/position are content-level.' },
+  { sc: '1.3.4', name: 'Orientation', level: 'AA', support: 'supports', note: 'No component locks orientation.' },
+  { sc: '1.3.5', name: 'Identify Input Purpose', level: 'AA', support: 'supports', note: 'Native inputs pass through autocomplete; PinInput sets one-time-code. No auto-defaults, and Select has no text input.' },
+  { sc: '1.4.1', name: 'Use of Color', level: 'A', support: 'partial', note: 'Link defaults to an always-on underline (not color alone). Gap: form error state is a red border only — no second indicator until invalid is wired to text.' },
+  { sc: '1.4.2', name: 'Audio Control', level: 'A', support: 'na', note: 'Nothing auto-plays audio; players expose pause/stop.' },
+  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'partial', note: 'Themes from defineThemes are clamped to AA — guaranteed. The shipped lightTheme/darkTheme still carry failures (fg-subtle ≈ 2.57:1). Dogfood the generator or fix the exports.' },
+  { sc: '1.4.4', name: 'Resize Text', level: 'AA', support: 'supports', note: 'Type scale is rem-based; no pixel-locked font sizes.' },
+  { sc: '1.4.5', name: 'Images of Text', level: 'AA', support: 'na', note: 'Components render real text, never images of text.' },
+  { sc: '1.4.10', name: 'Reflow', level: 'AA', support: 'supports', note: 'Container queries and min-width:0 layouts; no fixed-width traps. Spot-check Autocomplete tags at 200%.' },
+  { sc: '1.4.11', name: 'Non-text Contrast', level: 'AA', support: 'none', note: 'Input, checkbox, and switch borders resolve to gray-200 ≈ 1.24:1 (need 3:1). auditTheme does not check UI/border contrast at all. Highest-impact contrast fix.' },
+  { sc: '1.4.12', name: 'Text Spacing', level: 'AA', support: 'partial', note: 'Mostly tolerant; single-line inputs use a fixed height that can clip enlarged line-height. Verify at 200% + spacing overrides.' },
+  { sc: '1.4.13', name: 'Content on Hover or Focus', level: 'AA', support: 'supports', note: 'Tooltip (Radix) is dismissible, hoverable, and persistent.' },
+];
+
+const OPERABLE: Criterion[] = [
+  { sc: '2.1.1', name: 'Keyboard', level: 'A', support: 'partial', note: 'Radix overlays are fully operable. Gaps: Carousel viewport has no arrow-key paging (buttons work); ColorPicker slider is role=slider with no key handler (use the channel inputs).' },
+  { sc: '2.1.2', name: 'No Keyboard Trap', level: 'A', support: 'supports', note: 'No focus traps; Radix overlays release focus on close.' },
+  { sc: '2.1.4', name: 'Character Key Shortcuts', level: 'A', support: 'na', note: 'No single-character shortcuts are imposed.' },
+  { sc: '2.2.1', name: 'Timing Adjustable', level: 'A', support: 'supports', note: 'Toast auto-dismiss pauses on hover/focus and its duration is configurable (or disable-able).' },
+  { sc: '2.2.2', name: 'Pause, Stop, Hide', level: 'A', support: 'partial', note: 'Loader/Skeleton-wave/ProgressBar/Toast respect reduced-motion. Gaps: default Skeleton pulse, Avatar pulse, PinInput blink, and Carousel autoplay keep moving; Carousel has no persistent pause control.' },
+  { sc: '2.3.1', name: 'Three Flashes', level: 'A', support: 'supports', note: 'No content flashes above threshold (PinInput caret blinks at 1 Hz).' },
+  { sc: '2.4.1', name: 'Bypass Blocks', level: 'A', support: 'consumer', note: 'Skip links / landmarks are app-level; the shell composes landmarks but you place the skip link.' },
+  { sc: '2.4.2', name: 'Page Titled', level: 'A', support: 'consumer', note: 'Document <title> is set by your app/router.' },
+  { sc: '2.4.3', name: 'Focus Order', level: 'A', support: 'partial', note: 'Generally logical. Gap: the mobile Sidebar sheet is a hand-rolled overlay with no focus trap/restore — focus escapes behind the backdrop.' },
+  { sc: '2.4.4', name: 'Link Purpose (In Context)', level: 'A', support: 'consumer', note: 'Link renders a real anchor; the text is yours.' },
+  { sc: '2.4.5', name: 'Multiple Ways', level: 'AA', support: 'consumer', note: 'Site navigation strategy is app-level.' },
+  { sc: '2.4.6', name: 'Headings & Labels', level: 'AA', support: 'consumer', note: 'Heading + Label components provide the structure; descriptive text is yours.' },
+  { sc: '2.4.7', name: 'Focus Visible', level: 'AA', support: 'supports', note: 'Consistent :focus-visible + --move-focus-ring across the library (TimeField uses plain :focus — minor).' },
+  { sc: '2.4.11', name: 'Focus Not Obscured (Minimum)', level: 'AA', support: 'partial', note: 'New in 2.2. No scroll-padding is set, so sticky headers (Table, editor toolbar, Sidebar, Calendar) can cover an element tabbed underneath. Add scroll-margin/padding.' },
+  { sc: '2.5.1', name: 'Pointer Gestures', level: 'A', support: 'supports', note: 'All interactions are single-pointer; no path or multipoint gestures required.' },
+  { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'partial', note: 'Radix uses up-events. Gap: ColorPicker commits on pointer-down with no abort.' },
+  { sc: '2.5.3', name: 'Label in Name', level: 'A', support: 'partial', note: 'Icon buttons name from labels. Gap: Checkbox visible text is not in the control’s accessible name.' },
+  { sc: '2.5.4', name: 'Motion Actuation', level: 'A', support: 'na', note: 'No device-motion actuation.' },
+  { sc: '2.5.7', name: 'Dragging Movements', level: 'AA', support: 'supports', note: 'New in 2.2. Every draggable (Slider, ColorPicker, Carousel, Splitter, Drawer) has a tap/keyboard/button alternative.' },
+  { sc: '2.5.8', name: 'Target Size (Minimum)', level: 'AA', support: 'none', note: 'New in 2.2. 11 targets fall below 24×24 — ColorPicker sliders (10–18px) and NumberInput steppers (~15–18px) fail at default size; several controls fail at size sm.' },
+];
+
+const UNDERSTANDABLE: Criterion[] = [
+  { sc: '3.1.1', name: 'Language of Page', level: 'A', support: 'consumer', note: '<html lang> is set by your app.' },
+  { sc: '3.1.2', name: 'Language of Parts', level: 'AA', support: 'consumer', note: 'Marking foreign-language content is content-level.' },
+  { sc: '3.2.1', name: 'On Focus', level: 'A', support: 'supports', note: 'No component changes context on focus.' },
+  { sc: '3.2.2', name: 'On Input', level: 'A', support: 'supports', note: 'No component auto-submits or changes context on input.' },
+  { sc: '3.2.3', name: 'Consistent Navigation', level: 'AA', support: 'consumer', note: 'Navigation consistency is an app concern.' },
+  { sc: '3.2.4', name: 'Consistent Identification', level: 'AA', support: 'supports', note: 'A given component is identified consistently across the library.' },
+  { sc: '3.2.6', name: 'Consistent Help', level: 'A', support: 'consumer', note: 'New in 2.2. A repeated help mechanism is app-level.' },
+  { sc: '3.3.1', name: 'Error Identification', level: 'A', support: 'none', note: 'The invalid prop maps to a red border only — never aria-invalid, and error text is not associated. Screen-reader users get no programmatic error. Highest-leverage fix.' },
+  { sc: '3.3.2', name: 'Labels or Instructions', level: 'A', support: 'partial', note: 'Label wires htmlFor; required passes through on native inputs. Gaps: Checkbox drops required; the asterisk is aria-hidden; FormField.Label is a <div>.' },
+  { sc: '3.3.3', name: 'Error Suggestion', level: 'AA', support: 'none', note: 'No scaffolding links suggestion text to the field; entirely manual today.' },
+  { sc: '3.3.4', name: 'Error Prevention', level: 'AA', support: 'consumer', note: 'Confirm/undo for legal/financial submissions is app-flow.' },
+  { sc: '3.3.7', name: 'Redundant Entry', level: 'A', support: 'supports', note: 'New in 2.2. Native inputs support autofill; PinInput enables OTP auto-entry.' },
+  { sc: '3.3.8', name: 'Accessible Authentication', level: 'AA', support: 'supports', note: 'New in 2.2. No cognitive-test/CAPTCHA components; auth fields support autofill and one-time-code.' },
+];
+
+const ROBUST: Criterion[] = [
+  { sc: '4.1.2', name: 'Name, Role, Value', level: 'A', support: 'partial', note: 'Radix supplies roles/states for most widgets. Gaps: Checkbox name, Select uses menu (not combobox/listbox) semantics with no native field, invalid not exposed.' },
+  { sc: '4.1.3', name: 'Status Messages', level: 'AA', support: 'partial', note: 'Toast, Alert, Loader, Skeleton, Autocomplete, PasswordStrength announce correctly. Gaps: FormField error is silent; indeterminate ProgressBar lacks aria-busy.' },
+];
+
+const GROUPS: { key: string; title: string; lede: string; rows: Criterion[] }[] = [
+  { key: 'perceivable', title: '1. Perceivable', lede: 'Information and UI must be presentable in ways users can perceive.', rows: PERCEIVABLE },
+  { key: 'operable', title: '2. Operable', lede: 'Interface components and navigation must be operable.', rows: OPERABLE },
+  { key: 'understandable', title: '3. Understandable', lede: 'Information and operation must be understandable.', rows: UNDERSTANDABLE },
+  { key: 'robust', title: '4. Robust', lede: 'Content must be robust enough for assistive technologies.', rows: ROBUST },
+];
+
+const GAPS: HighlightItem[] = [
+  { icon: 'octagon-alert', text: 'Forms are not screen-reader accessible for errors (§3.3.1/§3.3.3/§4.1.2). The invalid prop is visual-only across all form components — no aria-invalid, no aria-describedby link to the message. Fix: wire invalid → aria-invalid and associate error text. Highest leverage — one change touches every form.' },
+  { icon: 'contrast', text: 'Non-text contrast fails and isn’t checked (§1.4.11). Input/checkbox/switch borders sit near 1.24:1. Fix: raise the border/placeholder tokens above 3:1 and add UI-contrast rules to auditTheme.' },
+  { icon: 'expand', text: 'Target sizes below 24px (§2.5.8). ColorPicker sliders and NumberInput steppers fail at default size. Fix: enlarge, or add expanded ::before hit areas (Autocomplete’s tag-remove is the pattern).' },
+  { icon: 'gauge', text: 'Reduced motion is not honored globally (§2.2.2). useAnimations — the hook behind every loop/autoplay — ignores it, so default Skeleton pulse, Avatar, PinInput, and Carousel keep moving. Fix: check prefersReducedMotion inside useAnimations.' },
+  { icon: 'panel-left', text: 'The mobile Sidebar sheet is a modal with no keyboard support (§2.1.2/§2.4.3). No focus trap, Escape, or restore. Fix: wrap it in Radix Dialog like Drawer already is.' },
+];
+
+const TOC: TocItem[] = [
+  { href: '#stand', label: 'Where we stand' },
+  { href: '#perceivable', label: '1. Perceivable' },
+  { href: '#operable', label: '2. Operable' },
+  { href: '#understandable', label: '3. Understandable' },
+  { href: '#robust', label: '4. Robust' },
+  { href: '#gaps', label: 'Known gaps' },
+];
+
+function SupportBadge({ support }: { support: Support }) {
+  const s = SUPPORT[support];
+  return <Badge variant="soft" color={s.color}>{s.label}</Badge>;
+}
+
+function CriteriaTable({ rows }: { rows: Criterion[] }) {
+  return (
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.Head>Criterion</Table.Head>
+          <Table.Head>Level</Table.Head>
+          <Table.Head>Support</Table.Head>
+          <Table.Head>How Move addresses it</Table.Head>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {rows.map((c) => (
+          <Table.Row key={c.sc}>
+            <Table.Cell>
+              <Text weight="medium">{c.sc}</Text>
+              <Text size="sm" color="muted">{c.name}</Text>
+            </Table.Cell>
+            <Table.Cell>{c.level}</Table.Cell>
+            <Table.Cell><SupportBadge support={c.support} /></Table.Cell>
+            <Table.Cell>
+              <Text size="sm">{c.note}</Text>
+            </Table.Cell>
+          </Table.Row>
+        ))}
+      </Table.Body>
+    </Table.Root>
+  );
+}
+
+export function AccessibilityPage() {
+  return (
+    <Stack direction="row" gap="xl" align="stretch" id="accessibility">
+      <Stack gap="xl" flex={1}>
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/">Docs</RouterLink>
+            </Breadcrumb.Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Breadcrumb.Page>Accessibility</Breadcrumb.Page>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+
+        <Stack gap="sm">
+          <Heading level={1}>Accessibility</Heading>
+          <Text color="muted" size="lg">
+            An honest conformance report for WCAG 2.2, Levels A and AA — every criterion, how Move
+            addresses it, and where it falls short. No blanket “compliant” claims: a component
+            library can only take you part of the way.
+          </Text>
+          <Stack direction="row" gap="xs" wrap>
+            <Badge variant="soft" color="green"><Icon name="check" />Strong keyboard + focus foundation</Badge>
+            <Badge variant="soft" color="yellow"><Icon name="triangle-alert" />Known form + contrast gaps</Badge>
+            <Badge variant="soft"><Icon name="git-commit-horizontal" />WCAG 2.2 A + AA</Badge>
+          </Stack>
+        </Stack>
+
+        <Section id="stand" title="Where we stand" lede="What we guarantee, what we own, and what is yours to finish.">
+          <Stack gap="md">
+            <Text>
+              The one thing Move <strong>guarantees</strong> is color contrast for themes built with{' '}
+              <RouterLink to="/customize/theme">defineThemes</RouterLink> — every generated color is
+              clamped to WCAG 2.2 AA. Everything else sits on a spectrum.
+            </Text>
+            <Text color="muted">
+              Move <strong>owns</strong> the things a library can: keyboard and focus behavior (most
+              overlays are built on Radix), a consistent focus-visible ring, single-pointer
+              alternatives for every drag, and status-message roles on feedback components. Move{' '}
+              <strong>enables</strong> a second tier — labels, error association, autocomplete — but
+              you must wire them. And a large group is simply <strong>yours</strong>: alt text,
+              heading structure, page language, meaningful sequence, and the words in your error
+              messages. The table below says which is which for all 53 criteria.
+            </Text>
+            <Stack direction="row" gap="md" wrap>
+              <Text size="sm" color="muted"><SupportBadge support="supports" /> owns it</Text>
+              <Text size="sm" color="muted"><SupportBadge support="partial" /> works, with gaps</Text>
+              <Text size="sm" color="muted"><SupportBadge support="none" /> not yet</Text>
+              <Text size="sm" color="muted"><SupportBadge support="consumer" /> your responsibility</Text>
+              <Text size="sm" color="muted"><SupportBadge support="na" /> not applicable</Text>
+            </Stack>
+          </Stack>
+        </Section>
+
+        {GROUPS.map((g) => (
+          <Section key={g.key} id={g.key} title={g.title} lede={g.lede}>
+            <CriteriaTable rows={g.rows} />
+          </Section>
+        ))}
+
+        <Section id="gaps" title="Known gaps & fixes" lede="The failures worth fixing first, most-leverage down. We publish these rather than paper over them.">
+          <HighlightList items={GAPS} />
+        </Section>
+      </Stack>
+      <TocRail items={TOC} />
+    </Stack>
+  );
+}

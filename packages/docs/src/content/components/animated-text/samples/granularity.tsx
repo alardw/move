@@ -30,7 +30,7 @@ export default function GranularitySample() {
             by={by}
             effect="slideUp"
             trigger="inView"
-            // recipe-purity-ignore: white-space: pre-line honours the explicit line breaks; no Move prop expresses it
+            // composite-purity-ignore: white-space: pre-line honours the explicit line breaks; no Move prop expresses it
             style={{ whiteSpace: 'pre-line' }}
           >
             <Heading level={3}>{TEXT}</Heading>

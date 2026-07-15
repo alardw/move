@@ -7,7 +7,7 @@ export default function BasicSample() {
   const [value, setValue] = useState('Apple');
   return (
     <Select.Root value={value} onValueChange={setValue}>
-      <Select.Trigger>
+      <Select.Trigger aria-label="Fruit">
         <Select.Value />
         <Select.Icon />
       </Select.Trigger>

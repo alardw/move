@@ -4,16 +4,16 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
+    icon: 'link',
+    text: 'Ties the label to the control for you — a real `<label>` whose `htmlFor` matches the field, so clicking the label focuses it and a screen reader reads the name. You write the text; it wires the association.',
+  },
+  {
+    icon: 'octagon-alert',
+    text: 'Mark the field `invalid` and the Description becomes the error — announced to assistive tech and linked to the control via `aria-describedby`. No ids to manage; FormField generates and threads them.',
+  },
+  {
     icon: 'layout',
-    text: 'A responsive grid wrapper — Label sits beside the field on wide containers, stacks above on narrow ones, with no media queries on your end.',
-  },
-  {
-    icon: 'list',
-    text: 'Slots: Label, Field, Description. Drop the description into an inline error by passing `error` — the colour switches to error red and the text reads as a real form error to assistive tech.',
-  },
-  {
-    icon: 'sliders-horizontal',
-    text: 'Tune the label column width per-instance via `labelWidth` — useful when one form has long field labels and another doesn’t.',
+    text: 'Lays label, control, and description out responsively — label beside the field on wide containers, stacked on narrow ones, no media queries on your end.',
   },
 ];
 
@@ -21,7 +21,7 @@ const related: RelatedItem[] = [
   {
     to: '/components/label',
     name: 'Label',
-    reason: 'Use inside FormField.Label for accessible field labelling. FormField only handles layout — Label handles `htmlFor`.',
+    reason: 'A standalone `<label>` for form controls outside a FormField. Inside FormField, the Label slot ties itself to the control automatically.',
   },
   {
     to: '/components/input-text',
@@ -34,7 +34,7 @@ export const meta: ComponentDocument = {
   slug: 'form-field',
   synonyms: ['form row', 'field group', 'label group', 'form control', 'input wrapper'],
   name: 'FormField',
-  tagline: 'A compound layout wrapper for form fields — handles label / control / description placement so your forms align without manual flex tweaks.',
+  tagline: 'The accessible container for a form field — ties the label to the control, wires the error, and generates the ids, so a labelled, screen-reader-friendly field is just a Label, a control, and a Description.',
   categories: ['forms'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -46,5 +46,5 @@ export const meta: ComponentDocument = {
     { key: '—', action: 'FormField is a layout wrapper. Keyboard behaviour comes from the control inside Field.' },
   ],
   accessibilityLede:
-    'FormField provides only layout. Use a real `<Label htmlFor="id">` inside FormField.Label, an `<input id="id">` inside FormField.Field, and the screen-reader association is already there.',
+    'FormField does the wiring: the Label becomes a real `<label>` tied to the control, `invalid` surfaces as `aria-invalid`, and the Description is linked as the control’s error and announced. Put the id on FormField.Root (or let it generate one) — never repeat it on the control.',
 };

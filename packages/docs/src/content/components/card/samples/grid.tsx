@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Grid, Stack, Text } from 'move';
+import { Badge, Button, Card, Grid, Stack, Text } from "move";
 
 /**
  * Cards drop happily into a CSS grid — `maxWidth` keeps each column
@@ -6,10 +6,30 @@ import { Badge, Button, Card, Grid, Stack, Text } from 'move';
  * adds a soft drop shadow that reads like a tile.
  */
 const projects = [
-  { name: 'Marketing site', status: 'Active', color: 'success' as const, desc: 'Static, edge-cached, deploy on every merge to main.' },
-  { name: 'Customer portal', status: 'Beta', color: 'info' as const, desc: 'Self-serve plan changes, billing history, support tickets.' },
-  { name: 'Analytics ETL', status: 'Failing', color: 'danger' as const, desc: 'Pipes events into the warehouse for the dashboards team.' },
-  { name: 'Legacy admin', status: 'Maintenance', color: 'warning' as const, desc: 'Read-only until the v3 rewrite ships next quarter.' },
+  {
+    name: "Marketing site",
+    status: "Active",
+    color: "green" as const,
+    desc: "Static, edge-cached, deploy on every merge to main.",
+  },
+  {
+    name: "Customer portal",
+    status: "Beta",
+    color: "blue" as const,
+    desc: "Self-serve plan changes, billing history, support tickets.",
+  },
+  {
+    name: "Analytics ETL",
+    status: "Failing",
+    color: "red" as const,
+    desc: "Pipes events into the warehouse for the dashboards team.",
+  },
+  {
+    name: "Legacy admin",
+    status: "Maintenance",
+    color: "yellow" as const,
+    desc: "Read-only until the v3 rewrite ships next quarter.",
+  },
 ];
 
 export default function GridSample() {
@@ -20,15 +40,21 @@ export default function GridSample() {
           <Card.Header>
             <Stack direction="row" gap="sm" align="center">
               <Card.Title>{p.name}</Card.Title>
-              <Badge variant="soft" color={p.color}>{p.status}</Badge>
+              <Badge variant="soft" color={p.color}>
+                {p.status}
+              </Badge>
             </Stack>
           </Card.Header>
           <Card.Body>
-            <Text size="sm" color="muted">{p.desc}</Text>
+            <Text size="sm" color="muted">
+              {p.desc}
+            </Text>
           </Card.Body>
           <Card.Footer>
             <Card.FooterEnd>
-              <Button variant="ghost" size="sm">Open</Button>
+              <Button variant="ghost" size="sm">
+                Open
+              </Button>
             </Card.FooterEnd>
           </Card.Footer>
         </Card.Root>

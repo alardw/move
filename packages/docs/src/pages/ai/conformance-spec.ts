@@ -16,9 +16,10 @@ export type Trait =
   | 'published'        // documented + discoverable (not private app code)
   | 'registered'       // listed in a registry
   | 'renders'          // produces rendered UI
-  | 'logic';           // carries its own logic worth unit-testing
+  | 'logic'            // carries its own logic worth unit-testing
+  | 'designPatternSpec'; // a DesignPatternSpec — validated for integrity + coverage
 
-export type EntityKey = 'component' | 'composition' | 'recipe';
+export type EntityKey = 'component' | 'composition' | 'design-pattern';
 // No 'judgment': a rule that needs a human isn't validation, it's guidance —
 // those live in the skills, not here. Every matrix rule must be mechanizable.
 export type Status = 'check' | 'gap';
@@ -76,15 +77,15 @@ const ENTITIES: EntityDef[] = [
   },
   {
     key: 'composition',
-    title: 'Composition',
-    blurb: 'What you build — composite, page, feature. Spec-driven (the skill generates the CompositionSpec); validated on your own code by `move check`.',
+    title: 'Composite',
+    blurb: 'What you build — a composite, page, or feature. Spec-driven (the skill generates the CompositeSpec); validated on your own code by `move check`.',
     traits: ['spec', 'pureComposition', 'renders', 'logic'],
   },
   {
-    key: 'recipe',
-    title: 'Recipe',
-    blurb: 'A spec-driven guide pattern Move ships.',
-    traits: ['spec', 'pureComposition', 'published', 'registered', 'renders', 'logic'],
+    key: 'design-pattern',
+    title: 'Design Pattern',
+    blurb: 'A parameterized pattern Move ships — validated as a spec (its skeleton, axes, and per-value bindings must be well-formed and complete), not a rendered artifact.',
+    traits: ['designPatternSpec'],
   },
 ];
 
@@ -100,7 +101,7 @@ const GROUPS: GroupDef[] = [
   { id: 'forms', label: 'Forms', kind: 'static', requires: ['pureComposition'] },
   { id: 'icons', label: 'Icons', kind: 'static', requires: ['renders'] },
   { id: 'i18n', label: 'i18n', kind: 'static', requires: ['renders'] },
-  { id: 'registry', label: 'Registry', kind: 'static', requires: ['registered'] },
+  { id: 'patternSpec', label: 'Pattern spec (integrity + coverage)', kind: 'static', requires: ['designPatternSpec'] },
   { id: 'unit', label: 'Unit tests', kind: 'test', requires: ['logic'] },
   { id: 'a11y', label: 'Accessibility tests', kind: 'test', requires: ['renders'] },
   { id: 'behavior', label: 'Behavior & interaction', kind: 'test', requires: ['renders'] },
@@ -110,10 +111,11 @@ const GROUPS: GroupDef[] = [
 
 // Shorthands for enforcement maps.
 const C = (status: Status, check?: string) => ({ component: { status, check } });
+const DP = (status: Status, check?: string) => ({ 'design-pattern': { status, check } });
 const all = (status: Status, check?: string) => ({
-  component: { status, check }, composition: { status, check }, recipe: { status, check },
+  component: { status, check }, composition: { status, check },
 });
-const renders3 = all; // applies to every rendered entity
+const renders3 = all; // applies to every rendered entity (component + composite)
 
 // ── Rules (defined once; status is per-entity) ────────────────────────────────
 
@@ -138,8 +140,8 @@ const RULES: RuleDef[] = [
   { id: 'specParity-2', group: 'specParity', rule: 'Behavior contracts preserved (controlled, dismiss)', why: 'controlledProps/dismissBehavior are easy to drop in a rewrite; the check keeps source honest to the declared behaviour.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-3', group: 'specParity', rule: 'Prop parity — none silently dropped', why: 'A spec prop missing from the source shrinks the public API without anyone noticing.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
-  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A recipe/composition must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'check', check: 'composition-spec-drift' } } },
-  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { recipe: { status: 'check', check: 'composition-spec-drift' }, composition: { status: 'check', check: 'composition-spec-drift' } } },
+  { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A composite must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { composition: { status: 'check', check: 'composite-spec-drift' } } },
+  { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { composition: { status: 'check', check: 'composite-spec-drift' } } },
   { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
@@ -161,32 +163,29 @@ const RULES: RuleDef[] = [
   { id: 'fileLocation-1', group: 'fileLocation', rule: 'Component in a valid category folder', why: 'Category placement drives docs grouping and the registry.', enforcement: C('check', 'component-conformance') },
   { id: 'fileLocation-2', group: 'fileLocation', rule: 'src/index.ts path matches the location', why: 'A stale barrel path breaks the import after a move.', enforcement: C('check', 'component-conformance') },
 
-  // Purity & layout (composition + recipe / pureComposition)
-  { id: 'purity-1', group: 'purity', rule: 'Only Move components; no raw HTML layout', why: 'Raw divs skip the tokens, a11y, and responsive behaviour Move components carry.', enforcement: { composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
-  { id: 'purity-2', group: 'purity', rule: 'No inline styles or custom CSS', why: 'Inline styles and custom CSS escape the token system and drift from the design language.', enforcement: { composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
-  { id: 'purity-3', group: 'purity', rule: 'Spacing via gap/align/justify props', why: 'Layout props keep spacing on the token scale instead of magic pixel values.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
-  { id: 'purity-4', group: 'purity', rule: 'Responsive via collapseBelow, not media queries', why: 'The built-in responsive props already encode the breakpoints; a media query re-invents them inconsistently.', enforcement: { composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
-  { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (a11y + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
+  // Purity & layout (composite / pureComposition)
+  { id: 'purity-1', group: 'purity', rule: 'Only Move components; no raw HTML layout', why: 'Raw divs skip the tokens, a11y, and responsive behaviour Move components carry.', enforcement: { composition: { status: 'check', check: 'purity' } } },
+  { id: 'purity-2', group: 'purity', rule: 'No inline styles or custom CSS', why: 'Inline styles and custom CSS escape the token system and drift from the design language.', enforcement: { composition: { status: 'check', check: 'purity' } } },
+  { id: 'purity-3', group: 'purity', rule: 'Spacing via gap/align/justify props', why: 'Layout props keep spacing on the token scale instead of magic pixel values.', enforcement: { composition: { status: 'gap' } } },
+  { id: 'purity-4', group: 'purity', rule: 'Responsive via collapseBelow, not media queries', why: 'The built-in responsive props already encode the breakpoints; a media query re-invents them inconsistently.', enforcement: { composition: { status: 'check', check: 'purity' } } },
+  { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (a11y + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' } } },
 
-  // Forms (composition + recipe / pureComposition)
-  { id: 'forms-1', group: 'forms', rule: 'Wrap every input in FormField', why: 'FormField wires the label, description, and error to the input for a11y; a bare input loses all three.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
-  { id: 'forms-2', group: 'forms', rule: 'FormField.Description for hints and errors', why: 'Routes hints/errors through the wired description node so screen readers announce them.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
-  { id: 'forms-3', group: 'forms', rule: 'Boolean DOM attrs via value || undefined', why: 'invalid="false" still sets the attribute; `|| undefined` removes it when off.', enforcement: { composition: { status: 'gap' }, recipe: { status: 'gap' } } },
+  // Forms (composite / pureComposition)
+  { id: 'forms-1', group: 'forms', rule: 'Wrap every input in FormField', why: 'FormField wires the label, description, and error to the input for a11y; a bare input loses all three.', enforcement: { composition: { status: 'gap' } } },
+  { id: 'forms-2', group: 'forms', rule: 'FormField.Description for hints and errors', why: 'Routes hints/errors through the wired description node so screen readers announce them.', enforcement: { composition: { status: 'gap' } } },
+  { id: 'forms-3', group: 'forms', rule: 'Boolean DOM attrs via value || undefined', why: 'invalid="false" still sets the attribute; `|| undefined` removes it when off.', enforcement: { composition: { status: 'gap' } } },
 
   // Icons (all rendered)
-  { id: 'icons-1', group: 'icons', rule: 'Icons via the resolver, no inline svg / glyph', why: 'The resolver lets a consumer swap the whole icon set; an inline svg or unicode glyph is frozen and unstyled.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'purity' }, recipe: { status: 'check', check: 'purity' } } },
+  { id: 'icons-1', group: 'icons', rule: 'Icons via the resolver, no inline svg / glyph', why: 'The resolver lets a consumer swap the whole icon set; an inline svg or unicode glyph is frozen and unstyled.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'purity' } } },
   { id: 'icons-2', group: 'icons', rule: 'Icon usage recorded in spec.iconsUsed', why: 'The /customize/icons table derives from it; drift means the docs lie about what to provide.', requires: ['factory'], enforcement: C('check', 'icon-usage') },
   { id: 'icons-3', group: 'icons', rule: 'Every control that needs an icon has a built-in fallback', why: 'A core control whose icon isn’t in builtinIcons renders blank when the consumer’s set lacks it; checkable against the icons the source declares it uses.', requires: ['factory'], enforcement: C('check', 'icon-usage') },
 
   // i18n (all rendered)
-  { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composition-spec-drift' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
+  { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composite-spec-drift' } } },
 
-  // Registry (recipe / registered)
-  { id: 'registry-1', group: 'registry', rule: 'Registered once, no duplicate slug', why: 'A duplicate slug collides the route and the overview card.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },
-  { id: 'registry-2', group: 'registry', rule: 'Registry entry is a complete RecipeDocument', why: 'The card/title/synonyms are authored on the registry entry; a missing slug, synonym, or registration leaves the recipe unrouted or unfindable.', enforcement: { recipe: { status: 'check', check: 'recipe-document-drift' } } },
 
   // Unit tests (all with logic)
-  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composition-spec-drift' }, recipe: { status: 'check', check: 'composition-spec-drift' } } },
+  { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composite-spec-drift' } } },
 
   // Accessibility tests (all rendered)
   { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('gap') },
@@ -202,9 +201,14 @@ const RULES: RuleDef[] = [
   // Public API surface (component / libraryExport)
   { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('gap') },
 
-  // Documentation & discoverability (component + recipe / published)
-  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'component-document-drift' }, recipe: { status: 'check', check: 'recipe-document-drift' } } },
-  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'component-document-drift' }, recipe: { status: 'check', check: 'recipe-document-drift' } } },
+  // Documentation & discoverability (component / published)
+  { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'component-document-drift' } } },
+  { id: 'docs-2', group: 'docs', rule: 'Searchable via synonyms', why: 'Synonyms are how people find it under the name they already use.', enforcement: { component: { status: 'check', check: 'component-document-drift' } } },
+
+  // Pattern spec (design-pattern / designPatternSpec)
+  { id: 'patternSpec-1', group: 'patternSpec', rule: 'Skeleton is a single-rooted tree; every axis owned by one slot; refs resolve', why: 'A broken skeleton, an unowned axis, or a dangling axis/slot/heuristic reference makes generating from the pattern unsafe.', enforcement: DP('check', 'design-pattern-conformance') },
+  { id: 'patternSpec-2', group: 'patternSpec', rule: 'Coverage — every axis value has a binding', why: 'An axis value with no slot representation means the pattern can’t be built for that choice; the SLOT × axis-value matrix must be complete.', enforcement: DP('check', 'design-pattern-conformance') },
+  { id: 'patternSpec-3', group: 'patternSpec', rule: 'Value-naming convention (none reserved; no default markers)', why: '`none` is the reserved absent value; a `default`/`standard`/`normal` marker lies to the use cases that pick differently.', enforcement: DP('check', 'design-pattern-conformance') },
 ];
 
 export const CONFORMANCE: ConformanceSpec = {
@@ -269,25 +273,11 @@ export function entityByKey(key: EntityKey) {
   return CONFORMANCE.entities.find((e) => e.key === key)!;
 }
 
-/** One rule's resolved status for an entity, or null if the rule doesn't apply to
- *  it (so a recipe-only rule renders as "—" in the Composition column). */
+/** One rule's resolved status for an entity, or null if the rule doesn't apply to it. */
 export function statusFor(ruleId: string, entity: EntityDef): { status: Status; check?: string } | null {
   const r = CONFORMANCE.rules.find((x) => x.id === ruleId);
   if (!r) return null;
   const g = CONFORMANCE.groups.find((x) => x.id === r.group);
   if (!g || !hasAll(entity.traits, [...g.requires, ...(r.requires ?? [])])) return null;
   return r.enforcement[entity.key] ?? null;
-}
-
-/** Composition gaps that recipe already enforces — i.e. a check proven on Move's
- *  recipes that just needs to ship via `move check` to cover your compositions. */
-export function shipBacklog(): number {
-  const composition = entityByKey('composition');
-  let n = 0;
-  for (const { rules } of groupsForEntity(entityByKey('recipe'))) {
-    for (const r of rules) {
-      if (r.status === 'check' && statusFor(r.id, composition)?.status === 'gap') n++;
-    }
-  }
-  return n;
 }

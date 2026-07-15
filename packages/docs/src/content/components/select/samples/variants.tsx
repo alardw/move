@@ -8,7 +8,7 @@ export default function VariantsSample() {
     <Stack direction="row" gap="md" wrap>
       {variants.map((variant) => (
         <Select.Root key={variant} defaultValue="Cherry">
-          <Select.Trigger variant={variant}>
+          <Select.Trigger aria-label={`Fruit (${variant})`} variant={variant}>
             <Select.Value />
             <Select.Icon />
           </Select.Trigger>

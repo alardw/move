@@ -6,8 +6,6 @@ import {
   groupsForEntity,
   tallyFor,
   entityByKey,
-  statusFor,
-  shipBacklog,
   type EntityDef,
   type Status,
 } from './conformance-spec';
@@ -16,23 +14,22 @@ const TOC: TocItem[] = [
   { href: '#coverage', label: 'Overview' },
   { href: '#ambient', label: 'Ambient tooling' },
   { href: '#component', label: 'Component' },
-  { href: '#composition-recipe', label: 'Composition / Recipe' },
+  { href: '#composition', label: 'Composite' },
+  { href: '#design-pattern', label: 'Design Pattern' },
 ];
 
 const component = entityByKey('component');
-const recipe = entityByKey('recipe');
 const composition = entityByKey('composition');
+const designPattern = entityByKey('design-pattern');
 
 const cTally = tallyFor(component);
-const rTally = tallyFor(recipe);
-const SHIP = shipBacklog();
+const compTally = tallyFor(composition);
+const dpTally = tallyFor(designPattern);
 
-// Composition gaps that duplicate a recipe gap are the same missing check — count
-// the rule once (via recipe). The only composition-specific work is the ship
-// backlog: a check proven on recipes that isn't in `move check` yet.
+// Every entity's rules, counted once each.
 const TOTAL = {
-  check: cTally.check + rTally.check,
-  gap: cTally.gap + rTally.gap + SHIP,
+  check: cTally.check + compTally.check + dpTally.check,
+  gap: cTally.gap + compTally.gap + dpTally.gap,
 };
 
 function StatusCell({ status, check }: { status: Status; check?: string }) {
@@ -99,82 +96,6 @@ function EntityTable({ entity }: { entity: EntityDef }) {
   );
 }
 
-/** Composition and Recipe share the same pureComposition rules — one table, two
- *  status columns. Recipe is the superset (it adds registry + docs), so a
- *  recipe-only rule shows "—" for Composition. A green Composition cell means the
- *  check ships via `move check`; Recipe-green / Composition-gap means the check is
- *  Move-internal and just needs to ship. */
-function CompositionRecipeTable() {
-  const groups = groupsForEntity(recipe);
-  return (
-    <Section
-      id="composition-recipe"
-      title="Composition / Recipe"
-      lede="A recipe is a composition Move ships. Same purity rules, two places they run: Recipe is Move's CI over the recipes it ships; Composition is move check over the compositions you build."
-    >
-      <Stack direction="row" gap="xs" wrap>
-        <Badge variant="soft" color="green">
-          {rTally.check} enforced on recipes
-        </Badge>
-        <Badge variant="soft" color="blue">
-          {SHIP} checks to ship
-        </Badge>
-        <Badge variant="soft" color="orange">
-          {rTally.gap} gaps
-        </Badge>
-      </Stack>
-      <Text size="sm" color="muted">
-        <strong>Recipe</strong> ✓ + <strong>Composition</strong> ✓ — the check ships and runs on your
-        compositions too. <strong>Recipe</strong> ✓ + <strong>Composition</strong> gap — proven on
-        recipes, not yet in <Code>move check</Code> (the ship backlog). <Code>—</Code> — a recipe-only
-        rule that doesn&apos;t apply to a private composition.
-      </Text>
-      <Table>
-        <Table.Header>
-          <Table.Row>
-            <Table.Head>Rule</Table.Head>
-            <Table.Head>Recipe</Table.Head>
-            <Table.Head>Composition</Table.Head>
-          </Table.Row>
-        </Table.Header>
-        {groups.map(({ group, rules }) => (
-          <Table.Group key={group.id} collapsible={false}>
-            <Table.GroupHeader>{group.label}</Table.GroupHeader>
-            {rules.map((r, i) => {
-              const comp = statusFor(r.id, composition);
-              return (
-                <Table.Row key={r.id}>
-                  <Table.Cell>
-                    <Stack gap="xs">
-                      <Text size="sm">
-                        <Code>{i + 1}</Code> {r.rule}
-                      </Text>
-                      <Text size="xs" color="muted">
-                        {r.why}
-                      </Text>
-                    </Stack>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <StatusCell status={r.status} check={r.check} />
-                  </Table.Cell>
-                  <Table.Cell>
-                    {comp ? (
-                      <StatusCell status={comp.status} check={comp.check} />
-                    ) : (
-                      <Text size="sm" color="muted">
-                        —
-                      </Text>
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              );
-            })}
-          </Table.Group>
-        ))}
-      </Table>
-    </Section>
-  );
-}
 
 export function CoveragePage() {
   return (
@@ -212,10 +133,10 @@ export function CoveragePage() {
           </Stack>
           <Text size="sm" color="muted">
             <Code>check</Code> = a deterministic gate enforces it. <Code>gap</Code> = mechanizable, but
-            no check exists yet — never a human call. Composition shares Recipe&apos;s rules, so they
-            sit in one table; a shared gap is counted once, and the only composition-specific work is
-            shipping a recipe-proven check via <Code>move check</Code>. Beneath all of it, the ambient
-            tooling below runs over the whole source automatically.
+            no check exists yet — never a human call. Component and composite render UI (purity, a11y,
+            spec parity); a design pattern is validated as a spec — its skeleton, axes, and per-value
+            bindings must be well-formed and complete. Beneath all of it, the ambient tooling below runs
+            over the whole source automatically.
           </Text>
         </Stack>
 
@@ -247,7 +168,8 @@ export function CoveragePage() {
         </Section>
 
         <EntityTable entity={component} />
-        <CompositionRecipeTable />
+        <EntityTable entity={composition} />
+        <EntityTable entity={designPattern} />
       </Stack>
       <TocRail items={TOC} />
     </Stack>

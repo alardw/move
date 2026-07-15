@@ -95,7 +95,7 @@ export function ConformanceModelPage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/core-concepts">Core Concepts</RouterLink>
+              <RouterLink to="/contracts">Contracts</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
@@ -126,7 +126,7 @@ export function ConformanceModelPage() {
               the system is the path of least resistance rather than a thing to remember.
             </Text>
             <Text>
-              It is the same idea as the <RouterLink to="/core-concepts/component-contract">Component
+              It is the same idea as the <RouterLink to="/contracts/component">Component
               Contract</RouterLink>, one layer up: the contract keeps a single component true to its
               spec; conformance keeps a whole <Text as="em">app</Text> true to the Move way of building.
             </Text>
@@ -247,9 +247,9 @@ export function ConformanceModelPage() {
               <Heading level={3}>Render-time gate — scaffolded</Heading>
               <Text>
                 The accessibility ratchet can't be a command — it renders your components. So it's part
-                of project setup: <RouterLink to="/ai/skills">/app-setup</RouterLink> and{' '}
-                <Code>create-move-app</Code> drop the sweep test, its baseline, and the CI step into
-                your repo, alongside the <Code>MoveRoot</Code> and shell they already scaffold. From
+                of project setup: <Code>npm create move</Code> drops the sweep test, its baseline,
+                and the CI step into your repo, alongside the <Code>MoveRoot</Code> and shell it
+                already scaffolds. From
                 then on it runs with your own tests, and the baseline is yours to ratchet down.
               </Text>
             </Stack>
@@ -284,7 +284,7 @@ export function ConformanceModelPage() {
             <Text>Adjacent reading:</Text>
             <Stack gap="xs">
               <Text size="sm">• <RouterLink to="/ai/conformance">Conformance</RouterLink> — every gate <Code>move check</Code> runs, for reference.</Text>
-              <Text size="sm">• <RouterLink to="/core-concepts/component-contract">Component Contract</RouterLink> — the same idea one layer down, for a single component.</Text>
+              <Text size="sm">• <RouterLink to="/contracts/component">Component Contract</RouterLink> — the same idea one layer down, for a single component.</Text>
               <Text size="sm">• <RouterLink to="/ai/skills">Skills</RouterLink> — <Code>/app-compose</Code> produces the composites the static gate checks; <Code>/app-setup</Code> scaffolds the render-time one.</Text>
             </Stack>
           </Stack>

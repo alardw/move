@@ -37,3 +37,49 @@ html, body, #root {
 body {
   height: 100dvh;
 }
+
+/* Inline cross-references use react-router's <Link>, which renders a bare <a>.
+   Move's <Link>, Sidebar, and Breadcrumb style their own anchors via classes;
+   this element selector (specificity 0-0-1) only catches the otherwise-unstyled
+   router links and gives them the same treatment as <Prose> links, so they read
+   as links instead of the browser's default purple.
+
+   Color is the theme-aware --move-link token (accent hue tuned as readable
+   on-surface text: AAA on dark, AA on light) rather than the --move-primary
+   fill token, whose shade is tuned to carry white text and falls below AA when
+   used as body-text color on dark surfaces. The always-on underline is the
+   non-color affordance WCAG 1.4.1 requires when color alone would distinguish
+   the link from surrounding text. */
+a {
+  color: var(--move-link);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--move-link-hover);
+  text-decoration-thickness: 2px;
+}
+
+/* Skip-to-content link (WCAG 2.4.1) — off-screen until it receives focus. */
+.skip-link {
+  position: fixed;
+  left: 12px;
+  top: 12px;
+  z-index: var(--move-layer-toast, 9999);
+  padding: 8px 16px;
+  background: var(--move-bg-base);
+  color: var(--move-fg-base);
+  border: 1px solid var(--move-border-emphasis);
+  border-radius: var(--move-rounded-md);
+  font: inherit;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.15s ease;
+}
+.skip-link:focus {
+  transform: translateY(0);
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}

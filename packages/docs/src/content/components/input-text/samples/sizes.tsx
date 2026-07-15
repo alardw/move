@@ -9,7 +9,7 @@ export default function SizesSample() {
         <Stack key={size} direction="row" gap="md" align="center">
           <Text size="sm" weight="medium">{size}</Text>
           <Stack flex={1}>
-            <InputText size={size} placeholder={`size="${size}"`} />
+            <InputText aria-label={`size="${size}"`} size={size} placeholder={`size="${size}"`} />
           </Stack>
         </Stack>
       ))}

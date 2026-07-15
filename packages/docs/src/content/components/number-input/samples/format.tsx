@@ -14,6 +14,7 @@ export default function FormatSample() {
       <Stack gap="xs">
         <Text size="sm" weight="medium">USD currency</Text>
         <NumberInput
+          aria-label="USD currency"
           value={usd}
           onValueChange={(n) => setUsd(round2(n ?? 0))}
           min={0}
@@ -25,6 +26,7 @@ export default function FormatSample() {
       <Stack gap="xs">
         <Text size="sm" weight="medium">Percentage</Text>
         <NumberInput
+          aria-label="Percentage"
           value={pct}
           onValueChange={(n) => setPct(Math.round((n ?? 0) * 20) / 20)}
           min={0}

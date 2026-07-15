@@ -45,6 +45,12 @@
     "inline-style": 2,
     "raw-html": 6
   },
+  "components/DesignPatternCard/DesignPatternCard.module.css": {
+    "css-module": 1
+  },
+  "components/DesignPatternCard/DesignPatternCard.tsx": {
+    "raw-html": 1
+  },
   "components/HeroDemo/HeroDemo.module.css": {
     "css-module": 1
   },
@@ -94,13 +100,6 @@
   },
   "components/PropsTable/PropsTable.tsx": {
     "inline-style": 4
-  },
-  "components/RecipeCard/RecipeCard.module.css": {
-    "css-module": 1
-  },
-  "components/RecipeCard/RecipeCard.tsx": {
-    "inline-style": 1,
-    "raw-html": 4
   },
   "components/StagedOverlay/StagedOverlay.module.css": {
     "css-module": 1
@@ -247,12 +246,5 @@
   },
   "pages/getting-started/VitePage.tsx": {
     "raw-html": 3
-  },
-  "pages/recipes/RecipeDetailPage.tsx": {
-    "inline-style": 6
-  },
-  "pages/recipes/RecipesOverviewPage.tsx": {
-    "inline-style": 2,
-    "raw-html": 2
   }
 }

@@ -4,9 +4,9 @@ import type { ReactNode } from 'react';
 // in both themes). Filler only, so the Grid layout reads clearly.
 export function Tile({ index, children }: { index: number; children?: ReactNode }) {
   return (
-    // recipe-purity-ignore: neutral filler tile (solid gray surface) so the Grid layout reads clearly; no Move colored-box primitive
+    // composite-purity-ignore: neutral filler tile (solid gray surface) so the Grid layout reads clearly; no Move colored-box primitive
     <div
-      // recipe-purity-ignore: neutral filler tile; no Move colored-box primitive
+      // composite-purity-ignore: neutral filler tile; no Move colored-box primitive
       style={{
         background: 'var(--move-gray-700)',
         color: 'var(--move-white)',

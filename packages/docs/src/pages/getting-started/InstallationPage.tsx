@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Alert, Code } from 'move';
 import {
   CodeBlock,
   HighlightList,
@@ -16,10 +16,10 @@ import {
  */
 
 const TAGLINE =
-  'Four small steps, about two minutes. You’ll be rendering a real Move component by the end of it.';
+  'Already using React? Drop Move into the app you already have — four small steps, about two minutes, and you’re rendering a real Move component.';
 
 const BADGES = [
-  { icon: 'rocket', label: 'Getting started' },
+  { icon: 'package-plus', label: 'Existing app' },
   { icon: 'package', label: 'npm / pnpm / yarn' },
   { icon: 'timer', label: '~2 minutes' },
 ];
@@ -27,7 +27,7 @@ const BADGES = [
 const HIGHLIGHTS: HighlightItem[] = [
   {
     icon: 'package',
-    text: 'One dependency. No peer-dep Tetris, no companion CSS framework — Move ships its own tokens and animations.',
+    text: 'Lean install and no companion CSS framework — Move ships its own tokens and animations. Its only runtime peers are React and animejs (the animation engine).',
   },
   {
     icon: 'rabbit',
@@ -65,12 +65,12 @@ export function InstallationPage() {
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Installation</Breadcrumb.Page>
+            <Breadcrumb.Page>Add to an existing app</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="sm">
-          <Heading level={1}>Installation</Heading>
+          <Heading level={1}>Add Move to an existing app</Heading>
           <Text color="muted" size="lg">{TAGLINE}</Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -82,6 +82,12 @@ export function InstallationPage() {
           </Stack>
         </Stack>
 
+        <Alert variant="info" title="Starting a new project?">
+          <RouterLink to="/getting-started/create-move">npm create move</RouterLink> scaffolds a
+          complete app — dependencies, MoveRoot, a shell, and the conformance gates — in one
+          command. The steps below are for adding Move to an app you already have.
+        </Alert>
+
         <Section id="highlights" title="Highlights">
           <HighlightList items={HIGHLIGHTS} />
         </Section>
@@ -89,13 +95,19 @@ export function InstallationPage() {
         <Section
           id="install-the-package"
           title="1. Install the package"
-          lede="Pick the package manager you already opened without thinking."
+          lede="Move and its one required peer, animejs (the animation engine). React and react-dom you already have."
         >
-          <CodeBlock language="bash" code={`npm install move
+          <CodeBlock language="bash" code={`npm install move animejs
 # or
-pnpm add move
+pnpm add move animejs
 # or
-yarn add move`} />
+yarn add move animejs`} />
+          <Text color="muted" size="sm">
+            Icons are bring-your-own — the resolver in step 3 adapts to whatever
+            library your app already uses (Heroicons, Tabler, your own SVGs), so
+            there’s nothing extra to install. Starting without an icon set? The
+            examples below use Lucide: <Code>npm install lucide-react</Code>.
+          </Text>
         </Section>
 
         <Section
@@ -115,14 +127,7 @@ import 'move/styles.css';`} />
           <CodeBlock
             language="tsx"
             code={`import { MoveRoot, lightTheme } from 'move';
-import * as LucideIcons from 'lucide-react';
-
-const iconResolver = (name: string) => {
-  const pascal = name.split('-')
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join('');
-  return (LucideIcons as Record<string, unknown>)[pascal] ?? null;
-};
+import { iconResolver } from './icons'; // wire your icon library once — see below
 
 export function App() {
   return (
@@ -133,10 +138,11 @@ export function App() {
 }`}
           />
           <Text color="muted" size="sm">
-            The icon resolver takes a kebab-case name and returns a React
-            component — that’s the whole contract. Swap Lucide for any pack
-            you like (Tabler, Phosphor, your own SVG map) without touching
-            a single component call site.
+            The icon resolver is a plain function — a kebab-case name in, a React
+            node out — so Move’s <Code>{'<Icon>'}</Code> works with whatever library
+            your app already uses.{' '}
+            <RouterLink to="/customize/icons">Icons</RouterLink> has a copy-paste
+            resolver for Lucide, Heroicons, Phosphor, and your own SVGs.
           </Text>
         </Section>
 
@@ -201,7 +207,7 @@ export function Hello() {
                   <>
                     Build your screens as compositions with{' '}
                     <RouterLink to="/ai/skills">/app-compose</RouterLink>, and keep them true to the
-                    system with the <RouterLink to="/core-concepts/conformance-model">conformance
+                    system with the <RouterLink to="/contracts/conformance">conformance
                     model</RouterLink> — one command plus a ratchet that only tightens.
                   </>
                 ),
