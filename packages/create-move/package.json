@@ -1,0 +1,26 @@
+{
+  "name": "create-move",
+  "version": "0.1.0",
+  "description": "Scaffold a new Move app — deterministic, conformance-gated from the first commit",
+  "type": "module",
+  "bin": {
+    "create-move": "./src/index.mjs"
+  },
+  "files": [
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "move",
+    "react",
+    "create",
+    "scaffold",
+    "cli"
+  ],
+  "dependencies": {
+    "move": "^0.1.50"
+  },
+  "license": "MIT"
+}
