@@ -81,13 +81,13 @@ function mobileRootAnimations(side: 'left' | 'right'): AnimationTrigger[] {
     {
       trigger: 'Root.enter',
       sequence: [
-        { target: 'Root', animation: { translateX: { from: off, to: '0%', ease: poppy } } },
+        { target: 'Root', animation: { translateX: { from: off, to: '0%', ease: snappy } } },
       ],
     },
     {
       trigger: 'Root.exit',
       sequence: [
-        { target: 'Root', animation: { translateX: { to: off, ease: snappy, duration: 220 } } },
+        { target: 'Root', animation: { translateX: { to: off, ease: snappy, duration: 200 } } },
       ],
     },
   ];

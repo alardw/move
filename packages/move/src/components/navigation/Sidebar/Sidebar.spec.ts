@@ -491,7 +491,7 @@ export const spec = {
     {
       trigger: 'Root.enter',
       sequence: [
-        { target: 'Root', animation: { translateX: { from: '-100%', to: '0%', ease: 'poppy' } } },
+        { target: 'Root', animation: { translateX: { from: '-100%', to: '0%', ease: 'snappy' } } },
       ],
     },
     {
@@ -499,7 +499,7 @@ export const spec = {
       sequence: [
         {
           target: 'Root',
-          animation: { translateX: { to: '-100%', ease: 'snappy', duration: 220 } },
+          animation: { translateX: { to: '-100%', ease: 'snappy', duration: 200 } },
         },
       ],
     },
