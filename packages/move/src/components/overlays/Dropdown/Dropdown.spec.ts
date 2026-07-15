@@ -382,7 +382,7 @@ export const spec = {
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.CheckboxItem',
       description:
-        'Toggleable checkbox menu item with animated check indicator (does not close menu on select)',
+        'Toggleable checkbox menu item — a plain checkbox box (empty when unchecked, filled when checked via data-state) with the checkmark rendered only when checked (Radix ItemIndicator). Does not close the menu on select.',
     },
     {
       name: 'RadioGroup',
@@ -721,9 +721,9 @@ export const spec = {
         'Items animate scale to 1.02 on mouse enter and back to 1 on mouse leave using spring config',
     },
     {
-      id: 'checkbox-indicator-animation',
+      id: 'checkbox-indicator-state',
       description:
-        'CheckboxItem indicator animates scale+opacity on checked/unchecked state changes',
+        'CheckboxItem shows a checkbox box at all times — empty (muted bg + border) when unchecked, filled (primary bg) when checked via data-state, with a CSS transition. The checkmark renders only when checked (Radix ItemIndicator). No opacity animation hides the box.',
     },
     {
       id: 'position-aware-transform-origin',
@@ -877,7 +877,7 @@ export const spec = {
       'Item triggers animated close on select',
       'Item has spring hover scale animation (scale 1.02)',
       'CheckboxItem toggles checked state without closing menu',
-      'CheckboxItem indicator animates scale+opacity on state change',
+      'CheckboxItem shows an empty box when unchecked and a filled box + checkmark when checked',
       'RadioGroup manages value state',
       'RadioItem triggers animated close on select',
       'Separator renders as 1px divider',

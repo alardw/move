@@ -10,7 +10,6 @@ import {
   resolveAnimationsConfig,
   staggerItems,
   quick,
-  poppy,
   useDismissable,
   useDismissableExit,
 } from '../../../animation';
@@ -579,60 +578,15 @@ const DropdownCheckboxItem = withMoveComponent<
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const indicatorRef = React.useRef<HTMLSpanElement>(null);
     const resolvedCheck = useIcon('selected', 14);
     const { animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
-    const checked = !!props.checked;
-
-    // Set initial indicator state
-    React.useEffect(() => {
-      const el = indicatorRef.current;
-      if (!el) return;
-      el.style.opacity = checked ? '1' : '0';
-      el.style.transform = checked ? 'scale(1)' : 'scale(0.5)';
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Animate indicator on checked change via useAnimations deps
-    const indicatorConfig: AnimationTrigger[] | null = React.useMemo(() => {
-      if (!animConfig) return null;
-      return [
-        {
-          trigger: 'indicator-check',
-          deps: [checked],
-          sequence: checked
-            ? [
-                {
-                  target: 'Indicator',
-                  animation: {
-                    opacity: { from: 0, to: 1 },
-                    scale: { from: 0.5, to: 1, ease: poppy },
-                  },
-                },
-              ]
-            : [
-                {
-                  target: 'Indicator',
-                  animation: {
-                    opacity: { from: 1, to: 0, duration: 150, ease: 'outQuad' },
-                    scale: { from: 1, to: 0.5, duration: 150, ease: 'outQuad' },
-                  },
-                },
-              ],
-        },
-      ];
-    }, [checked, animConfig]);
-
-    const indicatorRefs = React.useMemo(
-      () => ({
-        Indicator: indicatorRef as React.RefObject<HTMLElement | null>,
-      }),
-      [],
-    );
-
-    useAnimations(indicatorConfig, indicatorRefs);
+    // The box is a plain checkbox state (empty ↔ filled via CSS data-state);
+    // the checkmark renders only when checked (Radix ItemIndicator). No opacity
+    // animation — the box must always be visible so unchecked toggles read as
+    // toggles. The bg transition on check lives in CSS.
 
     const handleSelect = (e: Event) => {
       // Don't prevent default — let the checkbox toggle
@@ -692,12 +646,11 @@ const DropdownCheckboxItem = withMoveComponent<
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             <span
-              ref={indicatorRef}
               {...indSpRest}
               className={cx('checkboxIndicator', indSpClass as string | undefined)}
               style={indSpStyle as React.CSSProperties}
             >
-              {resolvedCheck}
+              <RadixDropdownMenu.ItemIndicator>{resolvedCheck}</RadixDropdownMenu.ItemIndicator>
             </span>
             <span
               {...lblSpRest}
