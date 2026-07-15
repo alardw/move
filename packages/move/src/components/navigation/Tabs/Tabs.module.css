@@ -44,15 +44,20 @@
   /* default — border-bottom line with indicator */
 }
 
-/* Variants — pills */
+/* Variants — pills. Filled segmented-control track that mirrors ToggleGroup
+   pixel-for-pixel: same --move-segment-* track background, radius, and 3px
+   padding, flush items (gap 0), so the two components read as one vocabulary. */
 .list[data-variant='pills'] {
   border-bottom: none;
-  gap: var(--move-space-1);
-  padding-bottom: 0;
+  gap: 0;
+  background-color: var(--move-segment-track-bg);
+  border-radius: var(--move-segment-radius);
+  padding: var(--move-segment-padding);
 }
 
 .list[data-variant='pills'] .trigger {
-  border-radius: var(--move-segment-radius);
+  /* Nest inside the track padding, matching ToggleGroup's item radius. */
+  border-radius: calc(var(--move-segment-radius) - var(--move-segment-padding));
   position: relative;
   z-index: 1;
 }
@@ -171,7 +176,7 @@
   bottom: auto;
   height: auto;
   background-color: var(--move-segment-indicator-bg);
-  border-radius: var(--move-segment-radius);
+  border-radius: calc(var(--move-segment-radius) - var(--move-segment-padding));
   z-index: 0;
   will-change: transform, width, height;
 }
