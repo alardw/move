@@ -51,7 +51,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
       </ScrollArea.Header>
 
       <ScrollArea.Content>
-        {/* recipe-purity-ignore: bordered frame that fills the available height for the splitter — no Move fill-height/box primitive */}
+        {/* composite-purity-ignore: bordered frame that fills the available height for the splitter — no Move fill-height/box primitive */}
         <div style={{ height: '100%', border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-radius-md)', overflow: 'hidden' }}>
           <Splitter.Root layout="horizontal" collapseBelow={640}>
             <Splitter.Panel size={35} minSize={25}>

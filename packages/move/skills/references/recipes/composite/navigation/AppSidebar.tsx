@@ -66,7 +66,7 @@ function SidebarContent({ labels }: { labels: Labels }) {
               size="sm"
               onClick={() => toggleCollapsed()}
               aria-label={collapsed ? t.expand : t.collapse}
-              /* recipe-purity-ignore: align the collapse control to the row end — Button/Sidebar.Header expose no end-align prop */
+              /* composite-purity-ignore: align the collapse control to the row end — Button/Sidebar.Header expose no end-align prop */
               style={{ marginLeft: 'auto' }}
             >
               <Icon name="panel-left-close" />

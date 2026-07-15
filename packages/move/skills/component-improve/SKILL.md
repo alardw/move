@@ -22,7 +22,7 @@ Examples:
 - `/component-improve Tooltip: change default placement from top to bottom`
 - `/component-improve Dialog: add fullscreen size option`
 
-**Output:** Updated `{Name}.spec.ts` with new specHash.
+**Output:** Updated `{Name}.spec.ts`.
 
 **REFUSES if:** `{Name}.spec.ts` does not exist. Run `/component-create-spec {Name}` first.
 
@@ -124,9 +124,9 @@ Support quick commands:
 - `accept all` — accept all proposed new defaults
 - `override <prop>=<value>` — override specific new default
 
-### Step 7 — Compute new specHash and write
+### Step 7 — Write the updated spec
 
-Recompute specHash from the updated spec object. Write the updated spec file with the new hash in the header comment.
+Write the updated spec file, preserving the header comment.
 
 ---
 
@@ -138,9 +138,8 @@ Recompute specHash from the updated spec object. Write the updated spec file wit
 4. **Token validation** — all new token values must reference `var(--move-*)` from `references/component/tokens-semantic.ts`
 5. **Spec must still satisfy ComponentSpec** — the output must type-check against the interface
 6. **Show diff before writing** — user must see and approve what changed
-7. **No specHash collision** — always recompute hash from final spec content
-8. **Deterministic** — same change request on same spec produces same output
-9. **Do not regenerate** — this skill only updates the spec. User runs `/component-generate-all` separately
-10. **Change scope** — only modify what the change request asks for. Do not "clean up" or refactor unrelated parts of the spec
-11. **Default value policy** — same as `/component-create-spec`: no `undefined` defaults, use explicit values or `null`
-12. **Compound components** — changes can target specific sub-components (e.g. "add size prop to Container")
+7. **Deterministic** — same change request on same spec produces same output
+8. **Do not regenerate** — this skill only updates the spec. User runs `/component-generate-all` separately
+9. **Change scope** — only modify what the change request asks for. Do not "clean up" or refactor unrelated parts of the spec
+10. **Default value policy** — same as `/component-create-spec`: no `undefined` defaults, use explicit values or `null`
+11. **Compound components** — changes can target specific sub-components (e.g. "add size prop to Container")

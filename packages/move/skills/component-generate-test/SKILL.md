@@ -121,7 +121,7 @@ Write to `src/components/{category}/{Name}/{Name}.test.tsx`
 
 ## Test conventions
 
-1. **Provenance comment on line 1** — `// Generated from {Name}.spec.ts (schemaVersion: {N}, specHash: {XXXX})`. If no spec, use `// Generated from {Name}.tsx (sourceHash: {XXXX})`.
+1. **Provenance comment on line 1** — `// Generated from {Name}.spec.ts`. If no spec, use `// Generated from {Name}.tsx (sourceHash: {XXXX})`.
 2. **Use `@testing-library/react`** for rendering and queries
 2. **Use `userEvent`** for user interactions (prefer over `fireEvent`)
 3. **Use `vitest`** — `describe`, `it`, `expect`, `vi`

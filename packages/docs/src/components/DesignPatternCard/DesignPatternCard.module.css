@@ -1,0 +1,34 @@
+.card {
+  position: relative;
+  border: 1px solid var(--move-border-base);
+  border-radius: 12px;
+  background: var(--move-bg-base);
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.card:not([data-planned]):hover {
+  border-color: var(--move-border-strong, var(--move-fg-muted));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 10%);
+  transform: translateY(-2px);
+}
+
+.card[data-planned] {
+  opacity: 0.55;
+}
+
+/* Stretched title link — the ::after covers the whole card so it's fully clickable. */
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.body {
+  padding: 16px;
+}

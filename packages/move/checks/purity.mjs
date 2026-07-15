@@ -7,10 +7,10 @@
  * (`<div>`/`<span>`/`<p>`/…), no inline `style=` props. This parses each source
  * with the TypeScript compiler and flags both.
  *
- * Escape hatch: a `purity-ignore: <reason>` comment on a line (or the line
- * above) skips it — for the rare sizing no Move primitive expresses yet — so the
- * exception stays visible and justified. The legacy `recipe-purity-ignore`
- * marker still works (it contains `purity-ignore`).
+ * Escape hatch: a `composite-purity-ignore: <reason>` comment on a line (or the
+ * line above) skips it — for the rare sizing no Move primitive expresses yet — so
+ * the exception stays visible and justified. Any comment containing the substring
+ * `purity-ignore` is honoured.
  *
  * Scans `config.recipes` + `config.composites` + `config.samples` (and any app
  * roots you configure) — an inline `<svg>` is raw HTML, so this also enforces the

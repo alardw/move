@@ -27,11 +27,20 @@ import { MoveRoot, darkTheme } from 'move';
 
 ### Available themes
 
+Ship-ready defaults:
+
 ```tsx
 import { darkTheme, lightTheme } from 'move';
 ```
 
-Consumers can also create custom themes implementing the `Theme` interface.
+Or generate a branded theme from one seed (light + dark, WCAG AA guaranteed):
+
+```tsx
+import { defineThemes } from 'move';
+const { light, dark } = defineThemes({ neutral: { hue: 250, chroma: 0.008 }, accent: { hue: 262 } });
+```
+
+For branding, importing a token set, radius, and fonts, use the **`app-theme`** skill.
 
 ---
 

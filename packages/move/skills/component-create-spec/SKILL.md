@@ -191,25 +191,17 @@ Every `TokenDeclaration.value` must reference real tokens. Before emitting any t
 3. **Never invent token names** — if a token like `--move-space-7` or `--move-space-1-5` is not listed in the reference, it does not exist. Use the nearest value that does exist.
 4. **Snap to nearest** — if no exact match, pick the closest token in the scale (e.g. `--move-space-6` or `--move-space-8` instead of a non-existent `--move-space-7`).
 
-### Step 5 — Compute spec hash
-
-```ts
-import { createHash } from 'crypto';
-const specHash = createHash('md5').update(JSON.stringify(spec)).digest('hex').slice(0, 8);
-```
-
-### Step 6 — Write the spec file
+### Step 5 — Write the spec file
 
 Write to `src/components/{category}/{Name}/{Name}.spec.ts`:
 
 ```ts
 // {Name}.spec.ts — Component specification
-// specHash: {hash}
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: '{Name}',
   componentClass: '{class}' as const,
   // ... all fields
@@ -233,10 +225,9 @@ Note: Every spec MUST end with `satisfies ComponentSpec` and import the type fro
 6a. **Trigger-sequence animation defaults** — preserve extracted component-specific trigger-sequence configs; pattern defaults from animation-map.ts are fallback
 7. **Spec must satisfy ComponentSpec** — the output must type-check against the interface
 7a. **Behavior contracts are required when applicable** — if a component is controlled, include `controlledProps`; if dismissible, include `dismissBehavior`; if composition passthrough is behavior-critical, include `renderContracts`
-8. **specHash in header comment** — compute and include for provenance tracking
-9. **Deterministic output** — same inputs produce same output
-10. **Size baseline** — when a component has a size prop and no stronger extracted/user default, choose `'md'`
-10a. **Undefined extracted size is not a default** — if extraction yields `size: undefined` (or no size key), apply baseline size fallback rules
+8. **Deterministic output** — same inputs produce same output
+9. **Size baseline** — when a component has a size prop and no stronger extracted/user default, choose `'md'`
+9a. **Undefined extracted size is not a default** — if extraction yields `size: undefined` (or no size key), apply baseline size fallback rules
 11. **Typography size baseline** — for typography components, choose `'base'` as default size unless extracted/user override differs
 12. **Form field variant baseline** — for form text/input-like fields, choose `'outlined'` as default variant unless extracted/user override differs
 13. **`undefined` is not a default value** — defaults must be explicit concrete values, `null`, or omitted key

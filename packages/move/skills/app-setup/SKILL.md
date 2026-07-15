@@ -45,7 +45,7 @@ Infer from the user's prompt, or ask if ambiguous:
 | Setting | Options | Default |
 |---------|---------|---------|
 | **Shell** | `sidebar`, `top-nav`, `minimal` | `sidebar` |
-| **Theme** | `darkTheme`, `lightTheme` | `darkTheme` |
+| **Theme** | `darkTheme` / `lightTheme`, or a branded seed via `defineThemes` (use the **`app-theme`** skill) | `darkTheme` |
 | **Icons** | `lucide`, `heroicons`, `none` | `lucide` |
 | **Router** | `react-router`, `tanstack`, `none` | `none` |
 | **Context** | standalone project, workspace package | standalone |
@@ -415,4 +415,4 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 4. **Icon resolver outside component** — stable reference, no re-renders
 5. **Single App.tsx entry** — everything in one file (MoveRoot, shell, routing, mount). No separate main.tsx
 6. **Workspace detection** — if path starts with `packages/` or user says "workspace", use workspace mode
-7. **Match create-move-app output** — the generated code must be identical to what `npx create-move-app` would produce for the same options
+7. **Match create-move output** — the generated code must be identical to what `npm create move` would produce for the same options

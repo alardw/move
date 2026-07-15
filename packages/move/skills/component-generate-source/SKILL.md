@@ -58,7 +58,7 @@ Read these files for generation rules:
 Follow the factory contract exactly:
 
 1. `'use client'` directive at line 1 (must be first — bundlers require it before any other statement)
-2. Provenance comment on line 2: `// Generated from {Name}.spec.ts (schemaVersion: {N}, specHash: {XXXX})`
+2. Provenance comment on line 2: `// Generated from {Name}.spec.ts`
 3. Imports from `../../../engine` (factory, hooks, types)
 4. Imports from `../../../animation` (functions, presets, types) if spec has animations
 5. Radix import if spec declares `radixPrimitive`
@@ -305,13 +305,13 @@ Follow css-contract.md exactly:
 
 **Provenance header:**
 ```css
-/* Generated from {Name}.spec.ts (schemaVersion: {N}, specHash: {XXXX}) */
+/* Generated from {Name}.spec.ts */
 ```
 
 ### Step 5 — Generate index.ts
 
 ```ts
-// Generated from {Name}.spec.ts (schemaVersion: {N}, specHash: {XXXX})
+// Generated from {Name}.spec.ts
 export { {Name} } from './{Name}';
 export type { {Name}Props, /* variant/size types */ } from './{Name}';
 ```
@@ -366,7 +366,7 @@ When a spec declares `componentDeps`, read `references/component/infrastructure.
 1. **REFUSE without spec** — never generate without `{Name}.spec.ts`
 2. **Follow factory-contract.md exactly** — sp/cx/attrs pattern, render order
 3. **Follow css-contract.md exactly** — tokens on .root, data-attributes, no CSS animations
-4. **Provenance headers on all files** — `Generated from {Name}.spec.ts (schemaVersion: N, specHash: XXXX)`
+4. **Provenance headers on all files** — `Generated from {Name}.spec.ts`
 5. **All token values reference semantic tokens** — as specified in the spec
 6. **Props interface extends the correct React HTML attrs** — `React.HTMLAttributes<HTMLElement>` (or element-specific `Anchor`/`Input`/`Td`/`Th`/`Img`… attrs for the rendered root), with `Omit<…,'key'>` for intentionally-redefined native props. NEVER `extends Record<string, unknown>` (enforced by `check:strict-props`; the factory generic is `TProps extends object`).
 7. **No hardcoded values in CSS** — always `var(--move-*)` for colors/spacing/radius

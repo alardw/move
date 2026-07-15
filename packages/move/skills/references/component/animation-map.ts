@@ -164,8 +164,8 @@ export const MOTIONS = {
 // =============================================================================
 
 // Shared animation patterns — reused across 2+ components. Keys ARE the
-// AnimationPattern vocabulary (spec-type.ts ANIMATION_PATTERNS); each spec's
-// `animationPatterns` is the authoritative component↔pattern link. The
+// Choreography vocabulary (spec-type.ts CHOREOGRAPHIES); each spec's
+// `choreographies` is the authoritative component↔pattern link. The
 // `components` lists here mirror it and are kept in sync by the
 // animation-pattern check.
 export const PATTERNS = {

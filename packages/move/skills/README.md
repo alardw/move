@@ -22,8 +22,13 @@ skills/
   component-generate-all/     # Run the generation pipeline
   component-validate/         # Validate component conformance
 
+  # Hook skill — scaffold a cross-cutting React hook
+  hook-create/             # Typed hook + colocated test + barrel export + registry entry
+
   # App skills — building with Move
   app-setup/               # Bootstrap MoveRoot + app shell
+  app-theme/               # Brand a theme: generate from a seed, import a token set, set radius + fonts
+  app-wcag-audit/          # Audit YOUR app for the WCAG 2.2 items Move doesn't supply
   app-compose/             # Compose from a spec at any scale: composite, page, or feature
 ```
 

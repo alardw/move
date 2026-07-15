@@ -1,0 +1,9 @@
+{
+  "check": {
+    "components": "src/components",
+    "composites": "src/composites",
+    "adapters": "src/adapters",
+    "apis": "src/apis"
+  },
+  "env": [".env.local", ".env"]
+}

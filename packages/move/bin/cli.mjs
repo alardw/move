@@ -49,9 +49,10 @@ if (command === 'skills') {
     .agents/skills/   (Codex)
     .claude/skills/   (Claude Code)
 
-  Both get the full set: the component spec pipeline (component-*) and the app
-  builders (app-*). Your AI assistant can now drive Move's spec-driven workflow
-  and scaffold apps, pages, and composites.
+  Both get the full set — the spec-driven pipelines (component-*, design-pattern-*,
+  composite-*, api-*, adapter-*), the app builders (app-*), and hook-create. Your
+  AI assistant can now drive Move's spec-driven workflow and scaffold apps, pages,
+  composites, data sources, and hooks.
 `);
   process.exit(0);
 }
@@ -122,8 +123,13 @@ if (command === 'check') {
   const registry = {
     'strict-props': () => import('../checks/strict-props.mjs'),
     'purity': () => import('../checks/purity.mjs'),
-    'composition-spec-drift': () => import('../checks/composition-spec-drift.mjs'),
+    'composite-spec-drift': () => import('../checks/composite-spec-drift.mjs'),
+    'creation': () => import('../checks/creation.mjs'),
   };
+
+  // `creation` asserts a whole-app shape (a scaffolded Move app), so it's opt-in
+  // (`move check creation`) rather than part of the default component/composite run.
+  const DEFAULT_CHECKS = ['strict-props', 'purity', 'composite-spec-drift'];
 
   const only = process.argv[3];
   if (only && only !== '--help' && !registry[only]) {
@@ -137,12 +143,13 @@ if (command === 'check') {
   Validates the components & recipes in your project against Move's quality
   gates. Roots come from move.config.json (defaults: src/components, src/recipes).
 
-  Available checks: ${Object.keys(registry).join(', ')}
+  Default checks: ${DEFAULT_CHECKS.join(', ')}
+  Opt-in:         creation (validate a scaffolded app against the creation spec)
 `);
     process.exit(0);
   }
 
-  const names = only ? [only] : Object.keys(registry);
+  const names = only ? [only] : DEFAULT_CHECKS;
   let failed = 0;
   for (const name of names) {
     const mod = await registry[name]();
