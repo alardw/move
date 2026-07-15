@@ -109,11 +109,23 @@ const CHANNEL_LABEL_KEYS: Record<string, keyof ColorPickerLabels> = {
 // Drag helper
 // ============================================================================
 
-function useDrag(onMove: (x: number, y: number) => void, onEnd?: () => void) {
+/**
+ * onStart runs on pointer-down BEFORE the first move; it may return a revert
+ * function used to abort. Pressing Escape mid-drag calls it (restoring the
+ * pre-drag value) and ends the drag without committing — WCAG 2.5.2 Pointer
+ * Cancellation (completion is on pointer-up; Escape is the abort mechanism).
+ */
+function useDrag(
+  onMove: (x: number, y: number) => void,
+  onEnd?: () => void,
+  onStart?: () => (() => void) | void,
+) {
   const onMoveRef = React.useRef(onMove);
   onMoveRef.current = onMove;
   const onEndRef = React.useRef(onEnd);
   onEndRef.current = onEnd;
+  const onStartRef = React.useRef(onStart);
+  onStartRef.current = onStart;
 
   const handlePointerDown = React.useCallback((e: React.PointerEvent) => {
     if (e.button !== 0) return;
@@ -121,6 +133,8 @@ function useDrag(onMove: (x: number, y: number) => void, onEnd?: () => void) {
 
     const el = e.currentTarget as HTMLElement;
     el.setPointerCapture(e.pointerId);
+
+    const abort = onStartRef.current?.();
 
     const rect = el.getBoundingClientRect();
     const clampedX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -133,14 +147,33 @@ function useDrag(onMove: (x: number, y: number) => void, onEnd?: () => void) {
       onMoveRef.current(x, y);
     };
 
-    const handlePointerUp = () => {
+    const cleanup = () => {
       el.removeEventListener('pointermove', handlePointerMove);
       el.removeEventListener('pointerup', handlePointerUp);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+
+    const handlePointerUp = () => {
+      cleanup();
       onEndRef.current?.();
+    };
+
+    const handleKeyDown = (ev: KeyboardEvent) => {
+      if (ev.key === 'Escape') {
+        ev.preventDefault();
+        cleanup();
+        try {
+          el.releasePointerCapture(e.pointerId);
+        } catch {
+          /* capture already released */
+        }
+        abort?.();
+      }
     };
 
     el.addEventListener('pointermove', handlePointerMove);
     el.addEventListener('pointerup', handlePointerUp);
+    window.addEventListener('keydown', handleKeyDown);
   }, []);
 
   return handlePointerDown;
@@ -200,6 +233,12 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
 
     const cp = useColorPicker(hookOptions);
 
+    // Snapshot the current colour on drag start; Escape reverts to it (2.5.2).
+    const snapshotColor = React.useCallback(() => {
+      const before = cp.value;
+      return () => cp.setFromString(before);
+    }, [cp]);
+
     // Saturation area drag
     const saturationDrag = useDrag(
       React.useCallback(
@@ -209,6 +248,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         [cp],
       ),
       cp.commitChange,
+      snapshotColor,
     );
 
     // Hue slider drag — clamp to 359 to prevent wrapping (360° === 0°)
@@ -220,6 +260,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         [cp],
       ),
       cp.commitChange,
+      snapshotColor,
     );
 
     // Alpha slider drag
@@ -231,6 +272,104 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
         [cp],
       ),
       cp.commitChange,
+      snapshotColor,
+    );
+
+    // Keyboard control for the sliders. role="slider" + tabIndex=0 means arrows
+    // MUST move them (WCAG 2.1.1 / 4.1.2) — pointer drag alone isn't enough.
+    // Shift = ×10 coarse step; Home/End jump to the ends; each press commits
+    // like the end of a drag. Disabled/read-only pickers stay inert.
+    const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
+    const hueKeyDown = React.useCallback(
+      (e: React.KeyboardEvent) => {
+        if (props.disabled || props.readOnly) return;
+        const step = e.shiftKey ? 10 : 1;
+        let h = cp.hsv.h;
+        switch (e.key) {
+          case 'ArrowLeft':
+          case 'ArrowDown':
+            h = clamp(h - step, 0, 359);
+            break;
+          case 'ArrowRight':
+          case 'ArrowUp':
+            h = clamp(h + step, 0, 359);
+            break;
+          case 'Home':
+            h = 0;
+            break;
+          case 'End':
+            h = 359;
+            break;
+          default:
+            return;
+        }
+        e.preventDefault();
+        cp.setHue(h);
+        cp.commitChange();
+      },
+      [cp, props.disabled, props.readOnly],
+    );
+    const alphaKeyDown = React.useCallback(
+      (e: React.KeyboardEvent) => {
+        if (props.disabled || props.readOnly) return;
+        const step = e.shiftKey ? 0.1 : 0.01;
+        let a = cp.hsv.a;
+        switch (e.key) {
+          case 'ArrowLeft':
+          case 'ArrowDown':
+            a = clamp(a - step, 0, 1);
+            break;
+          case 'ArrowRight':
+          case 'ArrowUp':
+            a = clamp(a + step, 0, 1);
+            break;
+          case 'Home':
+            a = 0;
+            break;
+          case 'End':
+            a = 1;
+            break;
+          default:
+            return;
+        }
+        e.preventDefault();
+        cp.setAlpha(a);
+        cp.commitChange();
+      },
+      [cp, props.disabled, props.readOnly],
+    );
+    const saturationKeyDown = React.useCallback(
+      (e: React.KeyboardEvent) => {
+        if (props.disabled || props.readOnly) return;
+        const step = e.shiftKey ? 10 : 1;
+        let { s, v } = cp.hsv;
+        switch (e.key) {
+          case 'ArrowLeft':
+            s = clamp(s - step, 0, 100);
+            break;
+          case 'ArrowRight':
+            s = clamp(s + step, 0, 100);
+            break;
+          case 'ArrowUp':
+            v = clamp(v + step, 0, 100);
+            break;
+          case 'ArrowDown':
+            v = clamp(v - step, 0, 100);
+            break;
+          case 'Home':
+            s = 0;
+            break;
+          case 'End':
+            s = 100;
+            break;
+          default:
+            return;
+        }
+        e.preventDefault();
+        cp.setSaturationValue(s, v);
+        cp.commitChange();
+      },
+      [cp, props.disabled, props.readOnly],
     );
 
     // Format change handler
@@ -454,6 +593,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     ...(satSpStyle as React.CSSProperties),
                   }}
                   onPointerDown={saturationDrag}
+                  onKeyDown={saturationKeyDown}
                 >
                   <div
                     className={styles.saturationCursor}
@@ -477,6 +617,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   className={cx('hue', hueSpClass as string | undefined)}
                   style={hueSpStyle as React.CSSProperties}
                   onPointerDown={hueDrag}
+                  onKeyDown={hueKeyDown}
                 >
                   <div
                     className={styles.sliderThumb}
@@ -497,6 +638,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     className={cx('alpha', alphaSpClass as string | undefined)}
                     style={alphaSpStyle as React.CSSProperties}
                     onPointerDown={alphaDrag}
+                    onKeyDown={alphaKeyDown}
                   >
                     <div
                       className={styles.alphaGradient}

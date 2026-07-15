@@ -232,6 +232,11 @@ export const spec = {
       description: 'All drag interactions call commitChange on pointer up (onChangeEnd callback)',
     },
     {
+      id: 'drag-escape-aborts',
+      description:
+        'Pressing Escape during a slider/area drag reverts to the colour captured at pointer-down and ends the drag without committing (WCAG 2.5.2 Pointer Cancellation).',
+    },
+    {
       id: 'format-select-changes-format',
       description:
         'Format select changes active format via setActiveFormat, which re-emits value in new format and calls onFormatChange',
@@ -423,6 +428,7 @@ export const spec = {
       'ArrowDown on channel input decrements value by 1',
       'Shift+ArrowUp increments by 10',
       'Shift+ArrowDown decrements by 10',
+      'Escape during a slider/area drag aborts and reverts to the pre-drag colour (WCAG 2.5.2)',
     ],
     aria: [
       'Saturation area has role="slider" and aria-label',

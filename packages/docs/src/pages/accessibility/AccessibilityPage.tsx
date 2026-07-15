@@ -50,7 +50,7 @@ const PERCEIVABLE: Criterion[] = [
   { sc: '1.3.5', name: 'Identify Input Purpose', level: 'AA', support: 'supports', note: { included: 'Native inputs pass through autocomplete; PinInput sets one-time-code.' } },
   { sc: '1.4.1', name: 'Use of Color', level: 'A', support: 'enables', note: { included: 'Link defaults to an always-on underline (not color alone). The invalid state is a red border.', yours: 'Add a FormField.Description error (auto-associated) so the cue is not color-only.' } },
   { sc: '1.4.2', name: 'Audio Control', level: 'A', support: 'na', note: { included: 'Nothing auto-plays audio; players expose pause/stop.' } },
-  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'supports', note: { included: 'Every theme is contrast-clamped — including the shipped lightTheme/darkTheme, which are now generated from one MOVE_SEED by the same defineThemes engine (dogfooded). Body text targets 7:1, secondary 5.5:1, subtle text and links 4.5:1, so no tier ships below AA.', yours: 'Raw-token overrides you pass are your call — auditTheme / check:theme-contrast grade them.' } },
+  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'supports', note: { included: 'Every theme is contrast-clamped — including the shipped lightTheme/darkTheme, which are now generated from one MOVE_SEED by the same defineThemes engine consumers use. Body text targets 7:1, secondary 5.5:1, subtle text and links 4.5:1, so no tier ships below AA.', yours: 'Raw-token overrides you pass are your call — auditTheme / check:theme-contrast grade them.' } },
   { sc: '1.4.4', name: 'Resize Text', level: 'AA', support: 'supports', note: { included: 'Type scale is rem-based; no pixel-locked font sizes.' } },
   { sc: '1.4.5', name: 'Images of Text', level: 'AA', support: 'na', note: { included: 'Components render real text, never images of text.' } },
   { sc: '1.4.6', name: 'Contrast (Enhanced)', level: 'AAA', support: 'partial', note: { included: 'Body text reaches AAA — 14–17:1 on every surface.', gap: 'The muted (~6.5–7.7:1) and subtle (~4.5:1) tiers are AA-conformant, kept recessive by design; guaranteeing them 7:1 would flatten the base/muted/subtle hierarchy.' } },
@@ -85,7 +85,7 @@ const OPERABLE: Criterion[] = [
   { sc: '2.4.12', name: 'Focus Not Obscured (Enhanced)', level: 'AAA', support: 'none', note: { gap: 'The enhanced bar (no part of a focused element ever hidden) is not met — same root as 2.4.11: no scroll-padding, so sticky headers can cover it.' } },
   { sc: '2.4.13', name: 'Focus Appearance', level: 'AAA', support: 'partial', note: { included: 'A consistent 2px solid focus ring from one token, ~5–6:1 against the surface.', gap: 'Not audited against 2.4.13’s exact minimum-area / adjacent-contrast math — likely but unverified.' } },
   { sc: '2.5.1', name: 'Pointer Gestures', level: 'A', support: 'supports', note: { included: 'All interactions are single-pointer; no path or multipoint gestures required.' } },
-  { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'partial', note: { included: 'Radix uses up-events.', gap: 'ColorPicker commits on pointer-down with no abort.' } },
+  { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'supports', note: { included: 'Radix widgets act on up-events; ColorPicker drags commit on pointer-up, and Escape mid-drag aborts and reverts to the pre-drag colour.' } },
   { sc: '2.5.3', name: 'Label in Name', level: 'A', support: 'supports', note: { included: 'Icon buttons name from labels; Checkbox/Radio visible text is the accessible name via aria-labelledby.' } },
   { sc: '2.5.4', name: 'Motion Actuation', level: 'A', support: 'na', note: { included: 'No device-motion actuation.' } },
   { sc: '2.5.5', name: 'Target Size (Enhanced)', level: 'AAA', support: 'none', note: { included: 'Controls meet the AA 24px target (some via expanded hit regions).', gap: 'The enhanced 44×44px bar is not met.' } },
@@ -114,7 +114,7 @@ const UNDERSTANDABLE: Criterion[] = [
 
 const ROBUST: Criterion[] = [
   { sc: '4.1.2', name: 'Name, Role, Value', level: 'A', support: 'partial', note: { included: 'Radix supplies roles/states; names and aria-invalid are exposed across controls.', gap: 'Select uses menu (not combobox/listbox) semantics with no native form field, so its value is not a submittable named control out of the box.' } },
-  { sc: '4.1.3', name: 'Status Messages', level: 'AA', support: 'partial', note: { included: 'Toast, Alert, Loader, Skeleton, Autocomplete, PasswordStrength announce correctly; FormField error messages announce via role=alert.', gap: 'Indeterminate ProgressBar sets no aria-busy.' } },
+  { sc: '4.1.3', name: 'Status Messages', level: 'AA', support: 'supports', note: { included: 'Toast, Alert, Loader, Skeleton, Autocomplete, PasswordStrength announce correctly; FormField error messages announce via role=alert. ProgressBar exposes role=progressbar with aria-valuenow when determinate, and aria-busy when indeterminate.' } },
 ];
 
 const GROUPS: { key: string; title: string; lede: string; rows: Criterion[] }[] = [
@@ -128,8 +128,6 @@ const TOTAL_CRITERIA = GROUPS.reduce((n, g) => n + g.rows.length, 0);
 
 const GAPS: HighlightItem[] = [
   { icon: 'panel-top', text: 'Focus can be obscured by sticky headers (§2.4.11 / §2.4.12). No scroll-padding is set, so a Table/Sidebar/Calendar sticky header can cover an element tabbed underneath. Fix: add scroll-margin / scroll-padding on scroll containers.' },
-  { icon: 'gauge', text: 'Indeterminate ProgressBar sets no aria-busy (§4.1.3), so screen readers are not told the region is busy. Fix: add aria-busy when value is null.' },
-  { icon: 'square-mouse-pointer', text: 'ColorPicker commits on pointer-down with no abort (§2.5.2). Fix: commit on pointer-up so a drag-away cancels.' },
 ];
 
 const TOC: TocItem[] = [
