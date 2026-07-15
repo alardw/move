@@ -131,6 +131,7 @@ export {
   describeTheme,
   defineThemes,
   describeThemes,
+  radiusScale,
   auditTheme,
   hexToOklch,
   hexToLinear,
@@ -147,6 +148,8 @@ export type {
   AuditRow,
   AuditStatus,
   LinRGB,
+  RadiusInput,
+  RadiusVars,
 } from './styles/themes';
 
 // ThemeProvider

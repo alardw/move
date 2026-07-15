@@ -8,18 +8,20 @@
 /* ---- Root ---- */
 
 .root {
-  --move-toggle-group-radius: var(--move-rounded-md);
-  --move-toggle-group-padding: 3px;
+  /* Local aliases onto the shared segmented-control tokens so ToggleGroup
+     and Tabs[variant="pills"] read from one vocabulary. */
+  --move-toggle-group-radius: var(--move-segment-radius);
+  --move-toggle-group-padding: var(--move-segment-padding);
 
   /* Variant-driven tokens — override these via data-variant to change
      how prominent the selected pill looks. Default is the brand pill. */
-  --move-toggle-group-indicator-bg: var(--move-primary);
-  --move-toggle-group-selected-fg: var(--move-primary-fg);
+  --move-toggle-group-indicator-bg: var(--move-segment-indicator-bg);
+  --move-toggle-group-selected-fg: var(--move-segment-indicator-fg);
 
   display: inline-flex;
   gap: 0;
   position: relative;
-  background-color: var(--move-button-secondary-bg, var(--move-bg-muted));
+  background-color: var(--move-button-secondary-bg, var(--move-segment-track-bg));
   border-radius: var(--move-toggle-group-radius);
   padding: var(--move-toggle-group-padding);
 }

@@ -6,9 +6,9 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
-    // src = library components; recipes = vendored compositions (their tests
-    // import from 'move' just like a consumer's would, via the alias below).
-    include: ['src/**/*.test.{ts,tsx}', 'recipes/**/*.test.{ts,tsx}'],
+    // src = library components; patterns = design-pattern spec validators (they
+    // import the registry via the alias below).
+    include: ['src/**/*.test.{ts,tsx}', 'patterns/**/*.test.{ts,tsx}'],
     // Real-browser invariant tests run via vitest.browser.config.ts, not jsdom.
     exclude: ['**/node_modules/**', '**/dist/**', '**/*.browser.test.{ts,tsx}'],
   },

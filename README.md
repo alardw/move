@@ -17,7 +17,7 @@ An npm-workspaces monorepo — everything lives under `packages/`:
 | Package | What it is |
 | --- | --- |
 | [`move`](packages/move) | The published component library: components, the `withMoveComponent` engine, the animation system, theming, and the `move` CLI. |
-| [`create-move-app`](packages/create-move-app) | Scaffolding CLI — `npx create-move-app` stands up a full Move app. |
+| [`create-move`](packages/create-move) | Deterministic scaffolder — `npm create move` stands up a full Move app, conformance-gated from the first commit. |
 | [`docs`](packages/docs) | The documentation site (Vite + React Router), deployed to GitHub Pages. Page-by-page plan in [`PLAN.md`](packages/docs/PLAN.md). |
 
 ## Development

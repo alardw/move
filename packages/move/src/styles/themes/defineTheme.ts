@@ -16,6 +16,7 @@
 import type { Theme, ThemeTokens } from './types';
 import { createThemeShadows } from '../visual/shadows';
 import { oklchToLinear, oklchHex, clampToContrast, contrast, type LinRGB } from './color-engine';
+import { radiusScale, type RadiusInput, type RadiusVars } from './radius';
 
 // ── Seed ─────────────────────────────────────────────────────────────────────
 export interface ThemeSeed {
@@ -27,12 +28,41 @@ export interface ThemeSeed {
   accent: { hue: number; chroma?: number };
   /** Status → palette name. Defaults: success green, warning yellow, danger red, info blue. */
   status?: { success?: string; warning?: string; danger?: string; info?: string };
+  /** Corner radius — one factor (or named level) scales the whole `--move-rounded-*`
+   *  scale. Theme-level (same for light + dark). Default `'md'` = today's scale. */
+  radius?: RadiusInput;
+  /** Categorical palette (Badge/Avatar/… `color` prop) styling. `'harmonize'` (default) mutes
+   *  the 13 colors along with the accent saturation; `'vivid'` keeps full Open Color regardless.
+   *  Semantic status colors are unaffected either way. */
+  palette?: 'harmonize' | 'vivid';
   /** Raw-token escape hatch — overrides any generated value. */
   tokens?: Partial<ThemeTokens>;
 }
 
 // ── Tuned recipe constants (validated in the OKLCH tuner spike) ────────────────
 const DARK_TINT_SATURATION = 1.5; // dark grounds mute tint; boost chroma so it reads equally
+// The categorical palette's colorfulness follows the accent saturation, but never all the way
+// to gray — a floor keeps a whisper of hue so a "red" tag stays distinguishable from a "green"
+// one even under a greyscale accent. Raise to 1 for a starkly monochrome palette.
+const PALETTE_DESAT_MAX = 0.82;
+
+/** Desaturate the categorical palette toward its matched-lightness gray by `mixPct` (0–100).
+ *  We mix each color toward the SAME shade of gray, so hue and lightness hold and only chroma
+ *  drops — a "red" stays a (muted) red rather than shifting or changing brightness. */
+function harmonizePalette(base: Record<string, string>, mixPct: number): Record<string, string> {
+  if (mixPct <= 0.5) return base;
+  const pct = mixPct.toFixed(0);
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(base)) {
+    const m = v.match(/^var\(--move-([a-z]+)-(\d+)\)$/);
+    if (!m || m[1] === 'gray') {
+      out[k] = v;
+      continue;
+    }
+    out[k] = `color-mix(in oklch, ${v}, var(--move-gray-${m[2]}) ${pct}%)`;
+  }
+  return out;
+}
 
 /** Surface & border ramp: lightness per mode + chroma multiplier (tint fades toward text). */
 const SURFACES = [
@@ -300,9 +330,11 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
     (out as Record<string, string>)['--move-primary-fg'] = fg;
   }
 
-  // 5. accent TEXT (link) — clamp to AA on every surface
+  // 5. accent TEXT (link) — clamp to AA on every surface.
+  //    Chroma tracks the accent's own (0.75× of it) so a desaturated accent — down to a
+  //    fully greyscale aC:0 — carries through to links, rather than staying colored.
   {
-    const lC = 0.12;
+    const lC = aC * 0.75;
     const r = clampToContrast(dark ? 0.78 : 0.44, lC, aH, baseLin, 4.5, dark);
     (out as Record<string, string>)['--move-link'] = r.hex;
     (out as Record<string, string>)['--move-link-hover'] = oklchHex(
@@ -313,9 +345,10 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
     if (r.clamped) notices.push('--move-link nudged to hold AA on surfaces');
   }
 
-  // 6. focus ring — clamp to 3:1 on surfaces (WCAG 1.4.11 / 2.2 §2.4.13)
+  // 6. focus ring — clamp to 3:1 on surfaces (WCAG 1.4.11 / 2.2 §2.4.13).
+  //    Chroma tracks the accent (0.875× of it) so it desaturates with a greyscale accent too.
   {
-    const fC = 0.14;
+    const fC = aC * 0.875;
     const r = clampToContrast(
       dark ? 0.68 : 0.55,
       fC,
@@ -349,10 +382,14 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
   }
 
   const ap = dark ? 'dark' : 'light';
+  // Palette colorfulness tracks accent saturation (aC), floored so it never fully greys out.
+  // Opt out with `palette: 'vivid'` to keep full Open Color regardless of the accent.
+  const paletteDesat =
+    seed.palette === 'vivid' ? 0 : Math.max(0, 1 - aC / 0.16) * PALETTE_DESAT_MAX;
   const tokens = {
     ...out,
     ...statusBlock(status, ap),
-    ...PALETTE[ap],
+    ...harmonizePalette(PALETTE[ap] as Record<string, string>, paletteDesat * 100),
     ...MISC[ap],
     ...createThemeShadows(SHADOW_CONFIG[ap]),
     ...(seed.tokens ?? {}),
@@ -374,10 +411,16 @@ export function defineTheme(seed: ThemeSeed): Theme {
  *   const { light, dark } = defineThemes({ neutral: { hue: 250, chroma: 0.008 }, accent: { hue: 262 } });
  *   <MoveRoot theme={prefersDark ? dark : light}>…</MoveRoot>
  */
-export function defineThemes(seed: Omit<ThemeSeed, 'appearance'>): { light: Theme; dark: Theme } {
+export function defineThemes(seed: Omit<ThemeSeed, 'appearance'>): {
+  light: Theme;
+  dark: Theme;
+  /** The `--move-rounded-*` scale — theme-level, apply once (same for both modes). */
+  radius: RadiusVars;
+} {
   return {
     light: defineTheme({ ...seed, appearance: 'light' }),
     dark: defineTheme({ ...seed, appearance: 'dark' }),
+    radius: radiusScale(seed.radius),
   };
 }
 
@@ -385,9 +428,11 @@ export function defineThemes(seed: Omit<ThemeSeed, 'appearance'>): { light: Them
 export function describeThemes(seed: Omit<ThemeSeed, 'appearance'>): {
   light: DescribeThemeResult;
   dark: DescribeThemeResult;
+  radius: RadiusVars;
 } {
   return {
     light: describeTheme({ ...seed, appearance: 'light' }),
     dark: describeTheme({ ...seed, appearance: 'dark' }),
+    radius: radiusScale(seed.radius),
   };
 }

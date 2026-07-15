@@ -15,8 +15,8 @@
  *   - Read the spec's `iconsUsed: [...]` (absent = empty).
  *   - VALIDATE (default): sorted(spec.iconsUsed) must deep-equal sorted(source).
  *   - `--write`: rewrite each spec so `iconsUsed` matches the source set
- *     (inserting before `defaultReview:`, replacing an existing line, or removing
- *     it when the set is empty).
+ *     (inserting as the last property before the `} satisfies` closing, replacing
+ *     an existing line, or removing it when the set is empty).
  *
  * Exit codes:
  *   0 — all components in sync (validate) / written ok

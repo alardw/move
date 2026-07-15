@@ -45,6 +45,10 @@ export const darkTheme: Theme = {
     '--move-primary-subtle': 'var(--move-indigo-950)',
     '--move-primary-fg': 'var(--move-white)',
 
+    // Link (readable accent text — lighter than the primary fill on dark)
+    '--move-link': 'var(--move-indigo-300)',
+    '--move-link-hover': 'var(--move-indigo-200)',
+
     // Secondary
     '--move-secondary': 'var(--move-gray-700)',
     '--move-secondary-hover': 'var(--move-gray-600)',

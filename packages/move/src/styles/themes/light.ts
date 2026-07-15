@@ -43,6 +43,10 @@ export const lightTheme: Theme = {
     '--move-primary-subtle': 'var(--move-indigo-50)',
     '--move-primary-fg': 'var(--move-white)',
 
+    // Link (readable accent text on light surfaces)
+    '--move-link': 'var(--move-indigo-800)',
+    '--move-link-hover': 'var(--move-indigo-900)',
+
     // Secondary
     '--move-secondary': 'var(--move-gray-200)',
     '--move-secondary-hover': 'var(--move-gray-300)',

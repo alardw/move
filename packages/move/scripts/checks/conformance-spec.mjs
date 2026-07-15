@@ -24,15 +24,15 @@ const real = new Set(
 
 // Checks a rule references — both forms used in the spec:
 //   explicit:  { status: 'check', check: 'spec-drift' }
-//   shorthand: C('check', 'spec-drift')  /  all('check', 'spec-drift')
+//   shorthand: C('check', 'spec-drift') / DP('check', 'design-pattern-conformance') / all('check', 'spec-drift')
 const referenced = new Set();
 for (const m of specSrc.matchAll(/\bcheck:\s*'([^']+)'/g)) referenced.add(m[1]);
-for (const m of specSrc.matchAll(/\b(?:C|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) referenced.add(m[1]);
+for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) referenced.add(m[1]);
 
 // Enforced checks that guard a structural/family contract, not one coverage rule.
 const STRUCTURAL = new Set([
   'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
-  'animation-patterns', 'conformance-docs', 'conformance-spec', 'script-refs',
+  'animation-choreography', 'conformance-docs', 'conformance-spec', 'script-refs',
 ]);
 
 const errors = [];

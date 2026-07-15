@@ -40,6 +40,11 @@
   --move-primary-subtle: var(--move-indigo-950);
   --move-primary-fg: var(--move-white);
 
+  /* Link — accent hue as readable on-surface text (not the primary fill).
+     Defaults are dark-theme values; light theme overrides. */
+  --move-link: var(--move-indigo-300);
+  --move-link-hover: var(--move-indigo-200);
+
   /* ============================================
    * Color - Secondary
    * ============================================ */
@@ -126,6 +131,18 @@
   --move-selected-fg: var(--move-fg-base);
 
   /* ============================================
+   * Segmented control (sliding-pill indicator)
+   * Shared vocabulary for the filled active-item pill used by both
+   * ToggleGroup and Tabs[variant="pills"]. Override once to restyle
+   * every segmented surface.
+   * ============================================ */
+  --move-segment-track-bg: var(--move-bg-muted);
+  --move-segment-indicator-bg: var(--move-primary);
+  --move-segment-indicator-fg: var(--move-primary-fg);
+  --move-segment-radius: var(--move-rounded-md);
+  --move-segment-padding: 3px;
+
+  /* ============================================
    * Focus Ring
    * ============================================ */
   --move-focus-ring-color: var(--move-indigo-400);
@@ -171,6 +188,8 @@
    * ============================================ */
   --move-font-body: var(--move-font);
   --move-font-code: var(--move-font-mono);
+  /* Headings default to the body font; override to give display type its own face. */
+  --move-font-heading: var(--move-font-body);
 
   /* Heading weight — shared by the Heading component default and Prose */
   --move-weight-heading: var(--move-weight-semibold);

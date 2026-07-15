@@ -3,8 +3,8 @@
   --move-prose-fg: var(--move-fg-base);
   --move-prose-fg-muted: var(--move-fg-muted);
   --move-prose-fg-subtle: var(--move-fg-subtle);
-  --move-prose-link: var(--move-primary);
-  --move-prose-link-hover: var(--move-primary-hover);
+  --move-prose-link: var(--move-link);
+  --move-prose-link-hover: var(--move-link-hover);
   --move-prose-border: var(--move-border-base);
   --move-prose-bg-code: var(--move-bg-muted);
   --move-prose-bg-blockquote: var(--move-bg-subtle);
@@ -39,6 +39,7 @@
 .root h5,
 .root h6 {
   color: var(--move-prose-fg);
+  font-family: var(--move-font-heading, system-ui, sans-serif);
   font-weight: var(--move-weight-heading);
   letter-spacing: var(--move-tracking-tight);
   line-height: var(--move-leading-tight);
@@ -86,14 +87,14 @@
 
 .root a {
   color: var(--move-prose-link);
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
   transition: color 0.15s ease;
 }
 
 .root a:hover {
   color: var(--move-prose-link-hover);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
+  text-decoration-thickness: 2px;
 }
 
 /* -- Lists -- */

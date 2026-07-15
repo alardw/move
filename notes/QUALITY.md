@@ -73,7 +73,7 @@ where the most novel quality work lives.
 
 Hardest to fake, slowest to gather, most honest.
 
-- **Time-to-first-render** for a fresh `npx create-move-app` — clock it.
+- **Time-to-first-render** for a fresh `npm create move` — clock it.
 - **Issue triage time** — median PR time to merge, median issue time to first response.
 - **Docs site as dogfood** — the docs use Move; if the docs look polished, that is evidence.
 - **External app count** — apps actually shipping with Move.

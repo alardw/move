@@ -24,6 +24,12 @@ export interface ThemeTokens {
   '--move-primary-subtle': string;
   '--move-primary-fg': string;
 
+  // Link — accent hue tuned as readable on-surface text (not the solid
+  // --move-primary fill). Lighter than --move-primary in dark mode so it
+  // clears WCAG AA against the page background.
+  '--move-link': string;
+  '--move-link-hover': string;
+
   // Secondary
   '--move-secondary': string;
   '--move-secondary-hover': string;

@@ -68,8 +68,8 @@ export const STATE_FAMILIES = [
 
 export type StateFamily = (typeof STATE_FAMILIES)[number];
 
-// Animation classification moved to the spec's `animationPatterns` field
-// (ANIMATION_PATTERNS in spec-type.ts). The old families.animation axis was
+// Animation classification moved to the spec's `choreographies` field
+// (CHOREOGRAPHIES in spec-type.ts). The old families.animation axis was
 // removed — it mixed dimension/behavior/structure and duplicated other axes.
 
 // ─── Accessibility pattern ───────────────────────────────────────────
