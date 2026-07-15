@@ -19,9 +19,9 @@
   --move-toggle-group-selected-fg: var(--move-segment-indicator-fg);
 
   display: inline-flex;
-  gap: 0;
+  gap: var(--move-segment-gap);
   position: relative;
-  background-color: var(--move-button-secondary-bg, var(--move-segment-track-bg));
+  background-color: var(--move-segment-track-bg);
   border-radius: var(--move-toggle-group-radius);
   padding: var(--move-toggle-group-padding);
 }
@@ -78,13 +78,13 @@
 
 /* Unselected state */
 .item[data-state='off'] {
-  color: var(--move-fg-muted);
+  color: var(--move-segment-item-fg);
   transition-duration: 100ms;
   transition-delay: 0ms;
 }
 
 .item[data-state='off']:hover:not(:disabled) {
-  color: var(--move-fg-base);
+  color: var(--move-segment-item-fg-hover);
   background-color: transparent !important;
   border-color: transparent !important;
 }

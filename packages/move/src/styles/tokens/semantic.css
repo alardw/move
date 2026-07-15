@@ -132,15 +132,21 @@
 
   /* ============================================
    * Segmented control (sliding-pill indicator)
-   * Shared vocabulary for the filled active-item pill used by both
-   * ToggleGroup and Tabs[variant="pills"]. Override once to restyle
-   * every segmented surface.
+   * Complete shared vocabulary for the filled active-item pill used by
+   * both ToggleGroup and Tabs[variant="pills"]. Override any of these
+   * once to restyle every segmented surface in the app.
    * ============================================ */
+  /* Track (the container the items sit in) */
   --move-segment-track-bg: var(--move-bg-muted);
-  --move-segment-indicator-bg: var(--move-primary);
-  --move-segment-indicator-fg: var(--move-primary-fg);
   --move-segment-radius: var(--move-rounded-md);
   --move-segment-padding: 3px;
+  --move-segment-gap: 0;
+  /* Active item — the sliding pill + its label */
+  --move-segment-indicator-bg: var(--move-primary);
+  --move-segment-indicator-fg: var(--move-primary-fg);
+  /* Inactive items */
+  --move-segment-item-fg: var(--move-fg-muted);
+  --move-segment-item-fg-hover: var(--move-fg-base);
 
   /* ============================================
    * Focus Ring

@@ -49,15 +49,19 @@
    padding, flush items (gap 0), so the two components read as one vocabulary. */
 .list[data-variant='pills'] {
   border-bottom: none;
-  gap: 0;
+  gap: var(--move-segment-gap);
   background-color: var(--move-segment-track-bg);
   border-radius: var(--move-segment-radius);
   padding: var(--move-segment-padding);
 }
 
 .list[data-variant='pills'] .trigger {
-  /* Nest inside the track padding, matching ToggleGroup's item radius. */
+  /* Nest inside the track padding, matching ToggleGroup's item radius, and
+     read text color from the shared segment vocabulary (not the underline
+     variant's --move-tabs-trigger-fg) so theming the segment tokens restyles
+     ToggleGroup and Tabs[pills] identically. */
   border-radius: calc(var(--move-segment-radius) - var(--move-segment-padding));
+  color: var(--move-segment-item-fg);
   position: relative;
   z-index: 1;
 }
@@ -75,7 +79,7 @@
 }
 
 .list[data-variant='pills'] .trigger[data-state='inactive']:hover {
-  color: var(--move-tabs-trigger-fg-active);
+  color: var(--move-segment-item-fg-hover);
 }
 
 /* Variants — outline */
