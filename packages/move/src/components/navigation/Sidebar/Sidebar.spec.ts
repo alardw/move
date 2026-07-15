@@ -490,12 +490,17 @@ export const spec = {
     { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 200 } } }] },
     {
       trigger: 'Root.enter',
-      sequence: [{ target: 'Root', animation: { x: { from: '-100%', to: 0, ease: 'poppy' } } }],
+      sequence: [
+        { target: 'Root', animation: { translateX: { from: '-100%', to: '0%', ease: 'poppy' } } },
+      ],
     },
     {
       trigger: 'Root.exit',
       sequence: [
-        { target: 'Root', animation: { x: { to: '-100%', ease: 'snappy', duration: 220 } } },
+        {
+          target: 'Root',
+          animation: { translateX: { to: '-100%', ease: 'snappy', duration: 220 } },
+        },
       ],
     },
   ],

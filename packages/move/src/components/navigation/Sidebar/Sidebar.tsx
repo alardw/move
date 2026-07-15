@@ -80,11 +80,15 @@ function mobileRootAnimations(side: 'left' | 'right'): AnimationTrigger[] {
   return [
     {
       trigger: 'Root.enter',
-      sequence: [{ target: 'Root', animation: { x: { from: off, to: 0, ease: poppy } } }],
+      sequence: [
+        { target: 'Root', animation: { translateX: { from: off, to: '0%', ease: poppy } } },
+      ],
     },
     {
       trigger: 'Root.exit',
-      sequence: [{ target: 'Root', animation: { x: { to: off, ease: snappy, duration: 220 } } }],
+      sequence: [
+        { target: 'Root', animation: { translateX: { to: off, ease: snappy, duration: 220 } } },
+      ],
     },
   ];
 }
