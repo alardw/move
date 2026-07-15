@@ -1,4 +1,4 @@
-// Generated from PasswordStrength.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from PasswordStrength.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { PasswordStrength, estimatePasswordStrength } from './PasswordStrength';

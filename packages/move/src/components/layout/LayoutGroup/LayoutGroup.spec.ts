@@ -1,10 +1,9 @@
 // LayoutGroup.spec.ts — Component specification
-// specHash: ca963d3b
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'LayoutGroup',
   componentClass: 'presentational' as const,
   category: 'layout',

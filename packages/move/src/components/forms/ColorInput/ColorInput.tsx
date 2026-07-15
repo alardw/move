@@ -1,9 +1,10 @@
 'use client';
-// Generated from ColorInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ColorInput.spec.ts
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
+import { useFormField } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useAnimations, useDismissable, useDismissableExit } from '../../../animation';
@@ -193,6 +194,9 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
 
     // Popup enter/exit animation runs in ColorInputDropdownInner (below the Portal).
     const innerRef = React.useRef<HTMLDivElement>(null);
+    // Popup control: the text <input> is the field. Wire id (so a FormField.Label
+    // names it via htmlFor) + the error association.
+    const field = useFormField();
 
     const format = props.format as ColorFormat;
 
@@ -414,6 +418,8 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                 <input
                   {...inputSpRest}
                   type="text"
+                  aria-invalid={invalid || field?.invalid ? true : undefined}
+                  aria-describedby={field?.describedBy}
                   className={cx('input', inputSpClass as string | undefined)}
                   style={inputSpStyle as React.CSSProperties}
                   value={isInputFocused ? inputText : currentValue}
@@ -425,7 +431,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                   readOnly={readOnly}
                   placeholder={props.placeholder as string | undefined}
                   name={props.name as string | undefined}
-                  id={props.id as string | undefined}
+                  id={(props.id as string | undefined) ?? field?.fieldId}
                   required={props.required as boolean | undefined}
                   autoFocus={props.autoFocus as boolean | undefined}
                 />

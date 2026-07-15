@@ -1,5 +1,5 @@
 'use client';
-// Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Pagination.spec.ts
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';

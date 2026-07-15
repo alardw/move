@@ -1,10 +1,9 @@
 // Password.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Password',
   componentClass: 'input_plain' as const,
   category: 'forms',

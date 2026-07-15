@@ -1,5 +1,5 @@
 'use client';
-// Generated from PasswordStrength.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from PasswordStrength.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';

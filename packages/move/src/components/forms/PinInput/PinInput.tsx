@@ -1,8 +1,9 @@
 'use client';
-// Generated from PinInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from PinInput.spec.ts
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
+import { useFormField } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine';
 import { usePinInput } from './usePinInput';
 import styles from './PinInput.module.css';
@@ -71,6 +72,9 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Multi-box input: the hidden field is the real control (already aria-labelled),
+    // so wire just the FormField error association onto it.
+    const field = useFormField();
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PinInputLabels>) };
 
     const pin = usePinInput({
@@ -173,6 +177,8 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
               {...pin.inputProps}
               name={props.name as string}
               aria-label={labels.pinInput}
+              aria-invalid={props.invalid || field?.invalid ? true : undefined}
+              aria-describedby={field?.describedBy}
               tabIndex={0}
               style={{ pointerEvents: 'auto' }}
             />

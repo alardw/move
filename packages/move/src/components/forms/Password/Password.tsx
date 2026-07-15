@@ -1,7 +1,8 @@
 'use client';
-// Generated from Password.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Password.spec.ts
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Password.module.css';
@@ -81,6 +82,10 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
   setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: inputRef,
+    });
 
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<PasswordLabels>) };
 
@@ -168,7 +173,7 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
               </span>
             )}
             <input
-              {...attrs}
+              {...controlProps}
               {...inSpRest}
               ref={mergedRef}
               type={shown ? 'text' : 'password'}

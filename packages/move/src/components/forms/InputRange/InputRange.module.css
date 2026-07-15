@@ -36,7 +36,7 @@
   --move-range-thumb-shadow: var(--move-shadow-subtle);
   --move-range-thumb-focus-ring: 0 0 0 var(--move-focus-ring-width) var(--move-focus-ring-color);
   --move-range-value-color: var(--move-fg-muted);
-  --move-range-value-size: var(--move-font-size-sm);
+  --move-range-value-size: var(--move-size-sm);
   --move-range-value-min-width: 2ch;
 
   position: relative;

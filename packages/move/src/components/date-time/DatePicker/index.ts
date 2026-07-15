@@ -1,4 +1,4 @@
-// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
+// Generated from DatePicker.spec.ts
 export { DatePicker } from './DatePicker';
 export type {
   DatePickerRootProps,

@@ -1,4 +1,4 @@
-// Generated from ScrollArea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ScrollArea.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ScrollArea } from './ScrollArea';

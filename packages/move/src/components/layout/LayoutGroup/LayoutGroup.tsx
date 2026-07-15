@@ -1,5 +1,5 @@
 'use client';
-// Generated from LayoutGroup.spec.ts (schemaVersion: 7, specHash: ca963d3b)
+// Generated from LayoutGroup.spec.ts
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

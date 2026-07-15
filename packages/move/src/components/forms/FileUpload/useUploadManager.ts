@@ -1,4 +1,4 @@
-// Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from FileUpload.spec.ts
 import { useCallback, useRef, useReducer } from 'react';
 import type {
   FileUploadEntry,

@@ -1,4 +1,4 @@
-// Generated from Stepper.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Stepper.spec.ts
 import { render, screen, fireEvent, renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { createRef } from 'react';

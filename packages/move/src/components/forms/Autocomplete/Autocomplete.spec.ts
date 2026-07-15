@@ -1,10 +1,9 @@
 // Autocomplete.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Autocomplete',
   componentClass: 'input_popup' as const,
   category: 'forms',
@@ -13,7 +12,7 @@ export const spec = {
   // Family memberships. All values are arrays even when only one
   // applies — keeps downstream tooling simple. See
   // `src/shared/families.ts` for the allowed values per axis.
-  animationPatterns: ['popupMenu'],
+  choreographies: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-value', 'controlled-open'],

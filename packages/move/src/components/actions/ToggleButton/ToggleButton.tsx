@@ -1,5 +1,5 @@
 'use client';
-// Generated from ToggleButton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ToggleButton.spec.ts
 import * as React from 'react';
 import { Toggle as RadixToggle } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

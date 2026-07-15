@@ -1,4 +1,4 @@
-// Generated from Dropdown.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Dropdown.spec.ts
 export { Dropdown } from './Dropdown';
 export type {
   DropdownRootProps,

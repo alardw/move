@@ -1,9 +1,10 @@
 'use client';
-// Generated from Switch.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Switch.spec.ts
 import * as React from 'react';
 import { useRef } from 'react';
 import { Switch as RadixSwitch } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import { snappy, useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import styles from './Switch.module.css';
@@ -144,6 +145,11 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
       [ref],
     );
 
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: rootRef,
+    });
+
     return {
       render() {
         const rootSp = sp('root');
@@ -151,7 +157,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
         const switchEl = (
           <SwitchContext.Provider value={contextValue}>
             <RadixSwitch.Root
-              {...attrs}
+              {...controlProps}
               {...spRest}
               ref={mergedRootRef}
               data-size={props.size}

@@ -1,5 +1,5 @@
 'use client';
-// Generated from Grid.spec.ts (schemaVersion: 7, specHash: 796ba7e8)
+// Generated from Grid.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, staggerEnter } from '../../../animation';

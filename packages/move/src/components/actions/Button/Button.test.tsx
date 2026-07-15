@@ -1,4 +1,4 @@
-// Generated from Button.spec.ts (schemaVersion: 6, specHash: 2082df0a)
+// Generated from Button.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Button } from './Button';

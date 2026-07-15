@@ -1,10 +1,9 @@
 // Image.spec.ts — Component specification
-// specHash: 56031b51
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Image',
   componentClass: 'presentational' as const,
   category: 'media',

@@ -1,15 +1,14 @@
 // Button.spec.ts — Component specification
-// specHash: e263843a
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Button',
   componentClass: 'interactive' as const,
   category: 'actions',
   description: 'Clickable interactive element with variant, size, and animation support',
-  animationPatterns: ['press'],
+  choreographies: ['press'],
   families: {
     behavior: ['display'],
     state: ['stateless'],

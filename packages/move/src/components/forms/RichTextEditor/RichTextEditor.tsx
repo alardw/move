@@ -1,5 +1,5 @@
 'use client';
-// Generated from RichTextEditor.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from RichTextEditor.spec.ts
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';

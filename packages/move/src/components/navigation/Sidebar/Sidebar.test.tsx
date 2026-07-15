@@ -1,4 +1,4 @@
-// Generated from Sidebar.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Sidebar.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Sidebar } from './Sidebar';

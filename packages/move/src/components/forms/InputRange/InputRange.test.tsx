@@ -1,4 +1,4 @@
-// Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from InputRange.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { InputRange } from './InputRange';

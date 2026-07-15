@@ -1,7 +1,8 @@
 'use client';
-// Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from NumberInput.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useNumberInput } from './useNumberInput';
@@ -119,6 +120,10 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
   setup({ props, ref, cx, sp, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<NumberInputLabels>) };
     const inputRef = React.useRef<HTMLInputElement>(null);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: inputRef,
+    });
 
     const holdTimerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
     const holdIntervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
@@ -257,7 +262,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
             )}
 
             <input
-              {...attrs}
+              {...controlProps}
               {...inputSpRest}
               ref={inputRef}
               className={cx('input', inputSpClass as string | undefined)}

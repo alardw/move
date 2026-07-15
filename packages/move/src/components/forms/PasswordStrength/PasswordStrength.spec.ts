@@ -1,16 +1,15 @@
 // PasswordStrength.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'PasswordStrength',
   componentClass: 'display' as const,
   category: 'forms',
   description:
     'Password-strength indicator: a segmented meter + label, with an optional requirements checklist. Scoring-agnostic — controlled score, a custom estimate function, or a built-in length/character-class heuristic.',
-  animationPatterns: [],
+  choreographies: [],
   families: {
     behavior: ['display'],
     state: ['stateless'],

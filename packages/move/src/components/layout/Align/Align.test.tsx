@@ -1,4 +1,4 @@
-// Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
+// Generated from Align.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Align } from './Align';

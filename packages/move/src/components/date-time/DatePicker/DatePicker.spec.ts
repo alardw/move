@@ -1,16 +1,15 @@
 // DatePicker.spec.ts — Component specification
-// specHash: 891de3de
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'DatePicker',
   componentClass: 'input_popup' as const,
   category: 'date-time',
   description:
     'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
-  animationPatterns: ['popupMenu'],
+  choreographies: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-value', 'controlled-open'],

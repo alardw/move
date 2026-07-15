@@ -1,16 +1,15 @@
 // Select.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Select',
   componentClass: 'input_popup' as const,
   category: 'forms',
   description:
     'Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger',
-  animationPatterns: ['popupMenu'],
+  choreographies: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-value', 'controlled-open'],

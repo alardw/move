@@ -1,4 +1,4 @@
-// Generated from LayoutGroup.spec.ts (schemaVersion: 7, specHash: ca963d3b)
+// Generated from LayoutGroup.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { LayoutGroup } from './LayoutGroup';

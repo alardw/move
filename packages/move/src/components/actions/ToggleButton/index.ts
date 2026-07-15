@@ -1,3 +1,3 @@
-// Generated from ToggleButton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ToggleButton.spec.ts
 export { ToggleButton } from './ToggleButton';
 export type { ToggleButtonProps } from './ToggleButton';

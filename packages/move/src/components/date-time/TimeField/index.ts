@@ -1,4 +1,4 @@
-// Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from TimeField.spec.ts
 export { TimeField } from './TimeField';
 export type {
   TimeFieldRootProps,

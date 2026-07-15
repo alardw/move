@@ -1,3 +1,3 @@
-// Generated from ToggleGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ToggleGroup.spec.ts
 export { ToggleGroup } from './ToggleGroup';
 export type { ToggleGroupRootProps, ToggleGroupItemProps } from './ToggleGroup';

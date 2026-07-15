@@ -1,5 +1,5 @@
 'use client';
-// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
+// Generated from DatePicker.spec.ts
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';

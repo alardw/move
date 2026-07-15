@@ -1,4 +1,4 @@
-// Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from NumberInput.spec.ts
 'use client';
 
 import { useCallback, useRef } from 'react';

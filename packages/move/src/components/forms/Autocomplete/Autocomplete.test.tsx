@@ -1,4 +1,4 @@
-// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Autocomplete.spec.ts
 import { render, screen, waitFor, renderHook, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';

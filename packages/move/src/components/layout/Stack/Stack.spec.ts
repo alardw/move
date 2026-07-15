@@ -1,16 +1,15 @@
 // Stack.spec.ts — Component specification
-// specHash: ff9e4b6e
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Stack',
   componentClass: 'presentational' as const,
   category: 'layout',
   description:
     'Flex layout container for vertical or horizontal stacking with configurable gap, alignment, and responsive collapse',
-  animationPatterns: ['layoutReveal'],
+  choreographies: ['layoutReveal'],
   families: {
     behavior: ['layout'],
     state: ['stateless'],

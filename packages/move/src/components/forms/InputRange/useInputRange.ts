@@ -1,4 +1,4 @@
-// Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from InputRange.spec.ts
 import { useCallback } from 'react';
 import { useControlledState } from '../../../engine';
 

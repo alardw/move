@@ -1,16 +1,15 @@
 // TimeField.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'TimeField',
   componentClass: 'input_plain' as const,
   category: 'date-time',
   description:
     'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
-  animationPatterns: ['popupMenu'],
+  choreographies: ['popupMenu'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

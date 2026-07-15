@@ -1,5 +1,5 @@
 'use client';
-// Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from FileUpload.spec.ts
 
 import * as React from 'react';
 import { Slot } from 'radix-ui';

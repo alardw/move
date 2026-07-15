@@ -1,4 +1,4 @@
-// Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from InputRange.spec.ts
 export { InputRange } from './InputRange';
 export type { InputRangeProps, InputRangeSlots, InputRangeSize } from './InputRange';
 export { useInputRange } from './useInputRange';

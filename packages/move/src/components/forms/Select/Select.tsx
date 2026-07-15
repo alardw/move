@@ -1,9 +1,10 @@
 'use client';
-// Generated from Select.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Select.spec.ts
 
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import {
@@ -286,6 +287,10 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
     const { open, isClosing, setTriggerWidth, triggerRef } = useSelectContext();
     const moveState = open && !isClosing ? 'open' : 'closed';
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: triggerRef,
+    });
 
     React.useEffect(() => {
       const el = triggerRef.current;
@@ -306,7 +311,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
         } = triggerSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Trigger
-            {...attrs}
+            {...controlProps}
             {...spRest}
             ref={mergedRef}
             disabled={props.disabled as boolean}

@@ -1,4 +1,4 @@
-/* Generated from Switch.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Switch.spec.ts */
 
 .wrapper {
   display: inline-flex;
@@ -63,6 +63,12 @@
 
 .root.root[data-state='checked'] {
   background-color: var(--move-switch-bg-checked);
+}
+
+/* On a light or greyscale theme the primary track is light, so the thumb must use the
+   primary's readable foreground rather than a hardcoded white knob (which would vanish). */
+.root.root[data-state='checked'] .thumb {
+  --move-switch-thumb-bg: var(--move-primary-fg);
 }
 
 .root.root:focus-visible:not(:active) {

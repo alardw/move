@@ -1,4 +1,4 @@
-// Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01)
+// Generated from ChatBubble.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ChatBubble } from './ChatBubble';

@@ -1,16 +1,15 @@
 // Sidebar.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Sidebar',
   componentClass: 'disclosure' as const,
   category: 'navigation',
   description:
     'Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations',
-  animationPatterns: ['sidePanel'],
+  choreographies: ['sidePanel'],
   families: {
     // Sidebar collapses in place on desktop and overlays on mobile —
     // disclosure is the dominant pattern; the mobile overlay is a

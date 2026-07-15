@@ -1,4 +1,4 @@
-// Generated from Drawer.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from Drawer.spec.ts
 export { Drawer } from './Drawer';
 export type {
   DrawerRootProps,

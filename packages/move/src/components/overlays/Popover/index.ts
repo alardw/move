@@ -1,4 +1,4 @@
-// Generated from Popover.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Popover.spec.ts
 export { Popover } from './Popover';
 export type {
   PopoverRootProps,

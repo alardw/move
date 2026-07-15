@@ -1,4 +1,4 @@
-// Generated from Stepper.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Stepper.spec.ts
 export { Stepper } from './Stepper';
 export type {
   StepperRootProps,

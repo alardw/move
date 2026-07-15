@@ -1,5 +1,5 @@
 'use client';
-// Generated from Stack.spec.ts (schemaVersion: 7, specHash: ff9e4b6e)
+// Generated from Stack.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, staggerEnter } from '../../../animation';

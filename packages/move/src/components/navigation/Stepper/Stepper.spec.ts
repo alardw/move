@@ -1,10 +1,9 @@
 // Stepper.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Stepper',
   componentClass: 'display' as const,
   category: 'navigation',
@@ -296,7 +295,7 @@ export const spec = {
     },
     {
       name: '--move-stepper-indicator-fg-active',
-      value: 'var(--move-primary)',
+      value: 'var(--move-indigo-text)',
       description: 'Indicator text color (active state)',
     },
     {

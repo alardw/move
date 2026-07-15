@@ -1,10 +1,9 @@
 // Prose.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Prose',
   componentClass: 'presentational' as const,
   category: 'typography',
@@ -67,10 +66,10 @@ export const spec = {
       value: 'var(--move-fg-subtle)',
       description: 'Subtle text color',
     },
-    { name: '--move-prose-link', value: 'var(--move-primary)', description: 'Link color' },
+    { name: '--move-prose-link', value: 'var(--move-link)', description: 'Link color' },
     {
       name: '--move-prose-link-hover',
-      value: 'var(--move-primary-hover)',
+      value: 'var(--move-link-hover)',
       description: 'Link hover color',
     },
     {

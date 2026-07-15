@@ -1,17 +1,16 @@
 // Drawer.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Drawer',
   componentClass: 'overlay_layer' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'lg' as const },
   description:
     'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
-  animationPatterns: ['sidePanel'],
+  choreographies: ['sidePanel'],
   families: {
     behavior: ['modal-overlay'],
     state: ['controlled-open'],

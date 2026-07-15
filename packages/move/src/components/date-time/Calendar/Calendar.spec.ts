@@ -1,10 +1,9 @@
 // Calendar.spec.ts — Component specification
-// specHash: 7dc1c820
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Calendar',
   componentClass: 'display' as const,
   category: 'date-time',
@@ -306,7 +305,7 @@ export const spec = {
       value: 'var(--move-primary-subtle)',
       slot: 'dayCell',
     },
-    { name: '--move-calendar-cell-fg-today', value: 'var(--move-primary)', slot: 'dayCell' },
+    { name: '--move-calendar-cell-fg-today', value: 'var(--move-indigo-text)', slot: 'dayCell' },
     { name: '--move-calendar-cell-fg-outside', value: 'var(--move-fg-subtle)', slot: 'dayCell' },
     {
       name: '--move-calendar-cell-fg-disabled',

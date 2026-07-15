@@ -1,4 +1,4 @@
-// Generated from EmptyState.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from EmptyState.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { EmptyState } from './EmptyState';

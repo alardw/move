@@ -1,5 +1,5 @@
 'use client';
-// Generated from Button.spec.ts (schemaVersion: 6, specHash: 2082df0a)
+// Generated from Button.spec.ts
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

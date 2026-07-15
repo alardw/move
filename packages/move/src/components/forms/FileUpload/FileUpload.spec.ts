@@ -1,16 +1,15 @@
 // FileUpload.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'FileUpload',
   componentClass: 'interactive' as const,
   category: 'forms',
   description:
     'Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system',
-  animationPatterns: ['listReveal'],
+  choreographies: ['listReveal'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

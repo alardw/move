@@ -1,5 +1,5 @@
 'use client';
-// Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from TimeField.spec.ts
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';

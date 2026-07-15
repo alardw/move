@@ -1,4 +1,4 @@
-// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
+// Generated from DatePicker.spec.ts
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useCalendar } from '../../date-time/Calendar/useCalendar';

@@ -1,4 +1,4 @@
-// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Generated from Calendar.spec.ts
 // Provenance: original-components/date-time/Calendar/useCalendar.ts
 
 import { useCallback, useMemo } from 'react';

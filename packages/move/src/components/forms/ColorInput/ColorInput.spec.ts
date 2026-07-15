@@ -1,16 +1,15 @@
 // ColorInput.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'ColorInput',
   componentClass: 'input_popup' as const,
   category: 'forms',
   description:
     'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
-  animationPatterns: ['popupSurface'],
+  choreographies: ['popupSurface'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-value', 'controlled-open'],

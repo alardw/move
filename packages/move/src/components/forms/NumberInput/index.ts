@@ -1,4 +1,4 @@
-// Generated from NumberInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from NumberInput.spec.ts
 export { NumberInput } from './NumberInput';
 export type { NumberInputProps, NumberInputVariant, NumberInputSize } from './NumberInput';
 export { useNumberInput } from './useNumberInput';

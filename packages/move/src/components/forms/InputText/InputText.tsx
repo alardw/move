@@ -1,7 +1,8 @@
 'use client';
-// Generated from InputText.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from InputText.spec.ts
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import styles from './InputText.module.css';
 
 export type InputTextVariant = 'outlined' | 'filled';
@@ -46,6 +47,10 @@ export const InputText = withMoveComponent<
   setup({ props, ref, cx, sp, attrs }) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: inputRef,
+    });
 
     const handleRootClick = () => {
       inputRef.current?.focus();
@@ -101,7 +106,7 @@ export const InputText = withMoveComponent<
               </span>
             )}
             <input
-              {...attrs}
+              {...controlProps}
               {...inSpRest}
               ref={mergedRef}
               type={props.type as string}

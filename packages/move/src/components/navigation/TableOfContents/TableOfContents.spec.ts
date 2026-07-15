@@ -3,13 +3,13 @@
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'TableOfContents',
   componentClass: 'navigation' as const,
   category: 'navigation',
   description:
     'Right-rail table of contents with scroll-spy active-state tracking, indented nesting, and smooth-scroll anchor navigation.',
-  animationPatterns: ['slidingIndicator'],
+  choreographies: ['slidingIndicator'],
   families: {
     behavior: ['navigation'],
     state: ['stateless'],
@@ -164,7 +164,7 @@ export const spec = {
     },
     {
       name: '--move-toc-item-fg-active',
-      value: 'var(--move-primary)',
+      value: 'var(--move-link)',
       description: 'Active item text color',
     },
     {

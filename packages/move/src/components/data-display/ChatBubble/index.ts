@@ -1,4 +1,4 @@
-// Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01)
+// Generated from ChatBubble.spec.ts
 export { ChatBubble } from './ChatBubble';
 export type {
   ChatBubbleRootProps,

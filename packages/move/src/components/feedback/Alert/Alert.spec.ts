@@ -1,10 +1,9 @@
 // Alert.spec.ts — Component specification
-// specHash: b9fbaaa9
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Alert',
   componentClass: 'display' as const,
   category: 'feedback',

@@ -115,5 +115,5 @@
 
 .optionRow[data-active='true'] {
   background: var(--move-primary, #3b82f6);
-  color: #fff;
+  color: var(--move-primary-fg);
 }

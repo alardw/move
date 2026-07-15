@@ -1,17 +1,16 @@
 // Dropdown.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Dropdown',
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'sm' as const },
   description:
     'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
-  animationPatterns: ['popupMenu'],
+  choreographies: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-open'],

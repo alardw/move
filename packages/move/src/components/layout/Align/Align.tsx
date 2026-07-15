@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-// Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
+// Generated from Align.spec.ts
 import { withMoveComponent } from '../../../engine';
 import type { Gap } from '../../../shared/types';
 import styles from './Align.module.css';

@@ -1,4 +1,4 @@
-// Generated from RichTextEditor.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from RichTextEditor.spec.ts
 export { RichTextEditor } from './RichTextEditor';
 export type {
   RichTextEditorVariant,

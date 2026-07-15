@@ -1,4 +1,4 @@
-// Generated from Timeline.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Timeline.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Timeline } from './Timeline';

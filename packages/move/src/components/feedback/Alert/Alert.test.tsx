@@ -1,4 +1,4 @@
-// Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9)
+// Generated from Alert.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Alert } from './Alert';

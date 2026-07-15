@@ -1,5 +1,5 @@
 'use client';
-// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Generated from Calendar.spec.ts
 // Provenance: original-components/date-time/Calendar/Calendar.tsx
 
 import * as React from 'react';

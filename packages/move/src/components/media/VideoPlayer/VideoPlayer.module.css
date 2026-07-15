@@ -18,7 +18,7 @@
   --move-videoplayer-subtitle-fg: var(--move-white);
   --move-videoplayer-controls-hover: rgba(255, 255, 255, 0.1);
   --move-videoplayer-controls-active-bg: var(--move-primary, #3b82f6);
-  --move-videoplayer-controls-active-fg: var(--move-white);
+  --move-videoplayer-controls-active-fg: var(--move-primary-fg);
   --move-videoplayer-menu-radius: 6px;
   --move-videoplayer-menu-min-width: 80px;
 
@@ -313,5 +313,5 @@
 
 .subtitleOption[data-active='true'] {
   background: var(--move-primary, #3b82f6);
-  color: #fff;
+  color: var(--move-primary-fg);
 }

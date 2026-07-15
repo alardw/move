@@ -1,3 +1,3 @@
-// Generated from Grid.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Grid.spec.ts
 export { Grid } from './Grid';
 export type { GridProps, GridCellProps, GridGap, GridPadding } from './Grid';

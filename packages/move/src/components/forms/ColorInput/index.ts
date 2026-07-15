@@ -1,4 +1,4 @@
-// Generated from ColorInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ColorInput.spec.ts
 export { ColorInput } from './ColorInput';
 export type {
   ColorInputProps,

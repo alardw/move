@@ -1,4 +1,4 @@
-// Generated from Sidebar.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Sidebar.spec.ts
 export { Sidebar } from './Sidebar';
 export type {
   SidebarProviderProps,

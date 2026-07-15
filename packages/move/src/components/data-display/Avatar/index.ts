@@ -1,4 +1,4 @@
-// Generated from Avatar.spec.ts (schemaVersion: 5, specHash: c909e0e0)
+// Generated from Avatar.spec.ts
 export { Avatar } from './Avatar';
 export type {
   AvatarRootProps,

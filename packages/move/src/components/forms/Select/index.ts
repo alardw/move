@@ -1,4 +1,4 @@
-// Generated from Select.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Select.spec.ts
 export { Select } from './Select';
 export type {
   SelectRootProps,

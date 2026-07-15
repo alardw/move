@@ -1,5 +1,5 @@
 'use client';
-// Generated from Image.spec.ts (schemaVersion: 6, specHash: 56031b51)
+// Generated from Image.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';

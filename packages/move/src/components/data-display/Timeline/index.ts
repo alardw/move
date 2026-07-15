@@ -1,4 +1,4 @@
-// Generated from Timeline.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Timeline.spec.ts
 export { Timeline } from './Timeline';
 export type {
   TimelineSize,

@@ -1,4 +1,4 @@
-// Generated from FileUpload.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from FileUpload.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';

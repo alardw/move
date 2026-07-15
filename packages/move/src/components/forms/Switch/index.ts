@@ -1,3 +1,3 @@
-// Generated from Switch.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Switch.spec.ts
 export { Switch } from './Switch';
 export type { SwitchRootProps, SwitchThumbProps, SwitchSize } from './Switch';

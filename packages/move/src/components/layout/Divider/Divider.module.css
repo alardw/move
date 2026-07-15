@@ -11,7 +11,7 @@
   --move-divider-content-bg: var(--move-bg-base);
   --move-divider-content-color: var(--move-fg-muted);
   --move-divider-content-padding: 0 var(--move-spacing-md);
-  --move-divider-content-size: var(--move-font-size-sm);
+  --move-divider-content-size: var(--move-size-sm);
 
   display: flex;
   align-items: center;

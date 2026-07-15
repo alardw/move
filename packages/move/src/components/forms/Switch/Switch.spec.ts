@@ -1,16 +1,15 @@
 // Switch.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Switch',
   componentClass: 'input_toggle' as const,
   category: 'forms',
   description:
     'Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label',
-  animationPatterns: ['toggle'],
+  choreographies: ['toggle'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

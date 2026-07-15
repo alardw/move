@@ -1,4 +1,4 @@
-// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Generated from Calendar.spec.ts
 export { Calendar } from './Calendar';
 export type { CalendarRootProps, CalendarNavProps, CalendarGridProps } from './Calendar';
 export { useCalendar } from './useCalendar';

@@ -1,5 +1,5 @@
 'use client';
-// Generated from Breadcrumb.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Breadcrumb.spec.ts
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';

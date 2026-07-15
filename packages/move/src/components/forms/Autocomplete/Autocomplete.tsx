@@ -1,5 +1,5 @@
 'use client';
-// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Autocomplete.spec.ts
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
@@ -1058,7 +1058,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
                 aria-hidden="true"
                 style={{
                   visibility: isSelected ? 'visible' : 'hidden',
-                  color: isSelected ? 'var(--move-primary)' : undefined,
+                  color: isSelected ? 'var(--move-indigo-text)' : undefined,
                 }}
               >
                 {resolvedCheck}
@@ -1126,7 +1126,7 @@ const AutocompleteItemIndicator = withMoveComponent<
               ...props.style,
               ...(spStyle as React.CSSProperties),
               visibility: isSelected ? 'visible' : 'hidden',
-              color: isSelected ? 'var(--move-primary)' : undefined,
+              color: isSelected ? 'var(--move-indigo-text)' : undefined,
             }}
             aria-hidden="true"
           >

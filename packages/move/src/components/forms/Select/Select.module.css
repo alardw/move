@@ -1,4 +1,4 @@
-/* Generated from Select.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Select.spec.ts */
 
 .trigger {
   /* Component tokens — trigger */
@@ -74,7 +74,7 @@
 
 .trigger:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
-  outline-offset: var(--move-focus-ring-offset);
+  outline-offset: 0px;
 }
 
 /* Invalid */
@@ -85,7 +85,7 @@
 .trigger[data-invalid]:focus-visible:not(:active) {
   border-color: var(--move-error);
   outline: var(--move-focus-ring-width) solid var(--move-error);
-  outline-offset: var(--move-focus-ring-offset);
+  outline-offset: 0px;
 }
 
 .trigger[data-disabled] {

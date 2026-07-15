@@ -21,7 +21,7 @@
 
 .root[data-variant='outline'] {
   --move-pagination-item-bg-active: transparent;
-  --move-pagination-item-fg-active: var(--move-primary);
+  --move-pagination-item-fg-active: var(--move-indigo-text);
 }
 
 /* Size */

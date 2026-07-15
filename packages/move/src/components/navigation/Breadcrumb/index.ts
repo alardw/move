@@ -1,4 +1,4 @@
-// Generated from Breadcrumb.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Breadcrumb.spec.ts
 export { Breadcrumb } from './Breadcrumb';
 export type {
   BreadcrumbRootProps,

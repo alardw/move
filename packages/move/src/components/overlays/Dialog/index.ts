@@ -1,4 +1,4 @@
-// Generated from Dialog.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Dialog.spec.ts
 export { Dialog } from './Dialog';
 export type {
   DialogRootProps,

@@ -127,6 +127,6 @@
 }
 
 .dayColumnHeader[data-today] {
-  color: var(--move-primary);
+  color: var(--move-indigo-text);
   font-weight: var(--move-weight-bold);
 }

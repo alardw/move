@@ -1,4 +1,4 @@
-// Generated from Image.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Image.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Image } from './Image';

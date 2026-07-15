@@ -1,4 +1,4 @@
-// Generated from Toast.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Toast.spec.ts
 import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as React from 'react';

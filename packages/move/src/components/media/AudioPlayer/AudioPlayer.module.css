@@ -14,7 +14,7 @@
   --move-audioplayer-progress-thumb: var(--move-white);
   --move-audioplayer-hover: rgba(255, 255, 255, 0.1);
   --move-audioplayer-active-bg: var(--move-primary, #3b82f6);
-  --move-audioplayer-active-fg: var(--move-white);
+  --move-audioplayer-active-fg: var(--move-primary-fg);
   --move-audioplayer-menu-radius: 6px;
   --move-audioplayer-menu-min-width: 80px;
 

@@ -1,4 +1,4 @@
-// Generated from Toast.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Toast.spec.ts
 export { Toast } from './Toast';
 export type {
   ToastViewportProps,

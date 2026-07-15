@@ -1,4 +1,4 @@
-// Generated from Breadcrumb.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Breadcrumb.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { createRef } from 'react';

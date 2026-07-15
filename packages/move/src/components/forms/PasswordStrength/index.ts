@@ -1,4 +1,4 @@
-// Generated from PasswordStrength.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from PasswordStrength.spec.ts
 export { PasswordStrength, estimatePasswordStrength } from './PasswordStrength';
 export type {
   PasswordStrengthProps,

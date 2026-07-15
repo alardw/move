@@ -1,4 +1,4 @@
-// Generated from AnimatedText.spec.ts (schemaVersion: 7, specHash: e7eefb38)
+// Generated from AnimatedText.spec.ts
 export { AnimatedText } from './AnimatedText';
 export type {
   AnimatedTextProps,

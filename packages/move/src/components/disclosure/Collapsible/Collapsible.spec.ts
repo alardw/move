@@ -1,16 +1,15 @@
 // Collapsible.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Collapsible',
   componentClass: 'disclosure' as const,
   category: 'disclosure',
   description:
     'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
-  animationPatterns: ['disclosure'],
+  choreographies: ['disclosure'],
   families: {
     behavior: ['disclosure'],
     state: ['controlled-open'],

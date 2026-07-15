@@ -1,4 +1,4 @@
-// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from CalendarView.spec.ts
 // Provenance: original-components/date-time/CalendarView/useCalendarView.ts
 
 import React, { useCallback, useMemo } from 'react';

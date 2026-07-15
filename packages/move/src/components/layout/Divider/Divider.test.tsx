@@ -1,4 +1,4 @@
-// Generated from Divider.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Divider.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Divider } from './Divider';

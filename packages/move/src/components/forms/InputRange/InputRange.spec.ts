@@ -1,16 +1,15 @@
 // InputRange.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'InputRange',
   componentClass: 'input_plain' as const,
   category: 'forms',
   description:
     'Slider/range input built on Radix Slider with single or dual thumb, optional value display, and thumb interaction animation',
-  animationPatterns: ['press'],
+  choreographies: ['press'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

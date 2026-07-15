@@ -1,4 +1,4 @@
-// Generated from ScrollArea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ScrollArea.spec.ts
 export { ScrollArea } from './ScrollArea';
 export type {
   ScrollAreaRootProps,

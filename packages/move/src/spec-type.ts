@@ -35,7 +35,7 @@
 //     - animationImports removed (useAnimations handles all wiring)
 //     - User prop renamed from `animate` to `animations`
 
-export const SPEC_SCHEMA_VERSION = 7 as const;
+export const SPEC_SCHEMA_VERSION = 1 as const;
 
 // =============================================================================
 // Component classification
@@ -397,10 +397,10 @@ export interface PreviewSpec {
 // =============================================================================
 
 /** Shared animation patterns — motion recipes reused across 2+ components. A
- *  component's `animationPatterns` lists which it composes (multi-valued).
+ *  component's `choreographies` lists which it composes (multi-valued).
  *  Single-component animations (Dialog modal, Toast notification, AnimatedText
  *  textReveal, …) are NOT patterns — they're component-specific. */
-export const ANIMATION_PATTERNS = [
+export const CHOREOGRAPHIES = [
   'press', // hover-grow / press-dip on a control
   'toggle', // indicator flip on state change
   'popupMenu', // anchored list: panel scale+fade, caret, item stagger
@@ -412,7 +412,7 @@ export const ANIMATION_PATTERNS = [
   'slidingIndicator', // an indicator slides to track the active item
   'loader', // continuous loading motion
 ] as const;
-export type AnimationPattern = (typeof ANIMATION_PATTERNS)[number];
+export type Choreography = (typeof CHOREOGRAPHIES)[number];
 
 /** A typed seam where the consumer brings their own data, service, or library —
  *  an adapter bridges this **port** to their integration. The `contract` names a
@@ -470,10 +470,10 @@ export interface ComponentSpec {
   /** Component-family memberships (behavior/state/...) used by cross-component checks */
   families?: Record<string, string[]>;
 
-  /** Shared animation patterns this component composes (see ANIMATION_PATTERNS).
+  /** Shared animation patterns this component composes (see CHOREOGRAPHIES).
    *  Multi-valued; [] for components with no animation, or only a
    *  component-specific one (Dialog, Toast, Alert, AnimatedText, LayoutGroup). */
-  animationPatterns?: AnimationPattern[];
+  choreographies?: Choreography[];
 
   // --- Structure ---
 

@@ -1,4 +1,4 @@
-// Generated from Align.spec.ts (schemaVersion: 6, specHash: 6cbf8097)
+// Generated from Align.spec.ts
 export { Align } from './Align';
 export type {
   AlignProps,

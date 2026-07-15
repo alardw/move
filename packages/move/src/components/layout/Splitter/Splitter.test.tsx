@@ -1,4 +1,4 @@
-// Generated from Splitter.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Splitter.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Splitter } from './Splitter';

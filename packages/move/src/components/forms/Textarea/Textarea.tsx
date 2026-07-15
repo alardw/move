@@ -1,7 +1,8 @@
 'use client';
-// Generated from Textarea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Textarea.spec.ts
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import styles from './Textarea.module.css';
 
 export type TextareaVariant = 'outlined' | 'filled';
@@ -59,6 +60,10 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
   setup({ props, ref, cx, sp, attrs }) {
     const textareaRef = React.useRef<HTMLTextAreaElement>(null);
     const mergedRef = useMergedRef<HTMLTextAreaElement>(ref, textareaRef);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: textareaRef,
+    });
 
     const adjustHeight = React.useCallback(() => {
       const el = textareaRef.current;
@@ -140,7 +145,7 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
             onClick={handleRootClick}
           >
             <textarea
-              {...attrs}
+              {...controlProps}
               {...taSpRest}
               ref={mergedRef}
               className={cx('textarea', taSpClass as string | undefined)}

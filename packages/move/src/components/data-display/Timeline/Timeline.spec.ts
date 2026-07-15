@@ -1,16 +1,15 @@
 // Timeline.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Timeline',
   componentClass: 'display' as const,
   category: 'data-display',
   description:
     'Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation',
-  animationPatterns: ['listReveal'],
+  choreographies: ['listReveal'],
   families: {
     behavior: ['data-row'],
     state: ['stateless'],

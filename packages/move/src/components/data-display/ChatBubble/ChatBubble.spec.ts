@@ -1,15 +1,14 @@
 // ChatBubble.spec.ts — Component specification
-// specHash: af768c01
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'ChatBubble',
   componentClass: 'display' as const,
   category: 'data-display',
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
-  animationPatterns: ['listReveal'],
+  choreographies: ['listReveal'],
   families: {
     behavior: ['display'],
     state: ['stateless'],

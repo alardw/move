@@ -1,5 +1,5 @@
 'use client';
-// Generated from Alert.spec.ts (schemaVersion: 6, specHash: b9fbaaa9)
+// Generated from Alert.spec.ts
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, useDismissableExit } from '../../../animation';

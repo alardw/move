@@ -1,4 +1,4 @@
-// Generated from RichTextEditor.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from RichTextEditor.spec.ts
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';

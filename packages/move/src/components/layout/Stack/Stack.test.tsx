@@ -1,4 +1,4 @@
-// Generated from Stack.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Stack.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Stack } from './Stack';

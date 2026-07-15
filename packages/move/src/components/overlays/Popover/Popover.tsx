@@ -1,5 +1,5 @@
 'use client';
-// Generated from Popover.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Popover.spec.ts
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

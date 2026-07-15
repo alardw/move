@@ -1,5 +1,5 @@
 'use client';
-// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from CalendarView.spec.ts
 // Provenance: original-components/date-time/CalendarView/CalendarView.tsx
 
 import * as React from 'react';

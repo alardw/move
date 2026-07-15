@@ -5,7 +5,7 @@
   --move-toc-rail-color: var(--move-border-base);
   --move-toc-item-fg: var(--move-fg-muted);
   --move-toc-item-fg-hover: var(--move-fg-base);
-  --move-toc-item-fg-active: var(--move-primary);
+  --move-toc-item-fg-active: var(--move-link);
   --move-toc-item-font-size: var(--move-size-sm);
   --move-toc-item-padding-x: var(--move-spacing-md);
   --move-toc-item-padding-y: 6px;

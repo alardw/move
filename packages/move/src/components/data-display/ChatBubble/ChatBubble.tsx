@@ -1,5 +1,5 @@
 'use client';
-// Generated from ChatBubble.spec.ts (schemaVersion: 6, specHash: af768c01)
+// Generated from ChatBubble.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import { moveAnimate, quick } from '../../../animation';

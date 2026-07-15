@@ -1,4 +1,4 @@
-// Generated from TimeField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from TimeField.spec.ts
 import { useCallback, useRef, useMemo, useState } from 'react';
 import { useControlledState } from '../../../engine';
 

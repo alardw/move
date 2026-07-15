@@ -1,4 +1,4 @@
-// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Autocomplete.spec.ts
 export { Autocomplete } from './Autocomplete';
 export type {
   AutocompleteRootProps,

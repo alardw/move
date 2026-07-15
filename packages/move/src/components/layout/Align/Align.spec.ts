@@ -1,10 +1,9 @@
 // Align.spec.ts — Component specification
-// specHash: 6cbf8097
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Align',
   componentClass: 'presentational' as const,
   category: 'layout',

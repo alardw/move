@@ -1,4 +1,4 @@
-// Generated from Calendar.spec.ts (schemaVersion: 6, specHash: 7dc1c820)
+// Generated from Calendar.spec.ts
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Calendar } from './Calendar';

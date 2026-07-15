@@ -1,16 +1,15 @@
 // Loader.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Loader',
   componentClass: 'presentational' as const,
   category: 'feedback',
   description:
     'Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations',
-  animationPatterns: ['loader'],
+  choreographies: ['loader'],
   families: {
     behavior: ['loading'],
     state: ['stateless'],

@@ -1,4 +1,4 @@
-// Generated from Stack.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Stack.spec.ts
 export { Stack } from './Stack';
 export type {
   StackProps,

@@ -1,4 +1,4 @@
-// Generated from Textarea.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Textarea.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { Textarea } from './Textarea';

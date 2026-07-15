@@ -1,5 +1,5 @@
 'use client';
-// Generated from ColorPicker.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ColorPicker.spec.ts
 
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';

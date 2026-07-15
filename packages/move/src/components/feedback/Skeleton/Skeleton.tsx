@@ -1,5 +1,5 @@
 'use client';
-// Generated from Skeleton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Skeleton.spec.ts
 import * as React from 'react';
 import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';

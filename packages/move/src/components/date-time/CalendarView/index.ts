@@ -1,4 +1,4 @@
-// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from CalendarView.spec.ts
 export { CalendarView } from './CalendarView';
 export type {
   CalendarViewRootProps,

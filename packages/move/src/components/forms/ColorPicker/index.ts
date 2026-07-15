@@ -1,4 +1,4 @@
-// Generated from ColorPicker.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ColorPicker.spec.ts
 export { ColorPicker } from './ColorPicker';
 export type { ColorPickerProps, ColorPickerSize, ColorPickerSlots } from './ColorPicker';
 export { useColorPicker } from './useColorPicker';

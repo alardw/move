@@ -1,4 +1,4 @@
-// Generated from CalendarView.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from CalendarView.spec.ts
 import { render, screen, fireEvent, renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { CalendarView } from './CalendarView';

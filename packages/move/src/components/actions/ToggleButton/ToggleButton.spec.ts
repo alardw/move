@@ -1,16 +1,15 @@
 // ToggleButton.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'ToggleButton',
   componentClass: 'interactive' as const,
   category: 'actions',
   description:
     'Toggle button that switches between pressed and unpressed states, composing Button base styles with Radix Toggle primitive',
-  animationPatterns: ['press'],
+  choreographies: ['press'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

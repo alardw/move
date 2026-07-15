@@ -1,4 +1,4 @@
-// Generated from Carousel.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Carousel.spec.ts
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Carousel } from './Carousel';

@@ -1,4 +1,4 @@
-// Generated from DatePicker.spec.ts (schemaVersion: 6, specHash: 891de3de)
+// Generated from DatePicker.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { DatePicker } from './DatePicker';

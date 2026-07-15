@@ -1,5 +1,5 @@
 'use client';
-// Generated from EmptyState.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from EmptyState.spec.ts
 import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';

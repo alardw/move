@@ -1,5 +1,5 @@
 'use client';
-// Generated from InputRange.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from InputRange.spec.ts
 
 import * as React from 'react';
 import { Slider } from 'radix-ui';

@@ -1,4 +1,4 @@
-// Generated from Grid.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Grid.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { Grid } from './Grid';

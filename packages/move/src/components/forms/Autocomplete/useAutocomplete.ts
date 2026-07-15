@@ -1,4 +1,4 @@
-// Generated from Autocomplete.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Autocomplete.spec.ts
 'use client';
 
 import { useState, useCallback, useRef, useId, useMemo, useEffect } from 'react';

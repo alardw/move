@@ -1,4 +1,4 @@
-// Generated from Pagination.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Pagination.spec.ts
 import { useCallback, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 

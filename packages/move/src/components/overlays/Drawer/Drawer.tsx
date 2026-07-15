@@ -1,5 +1,5 @@
 'use client';
-// Generated from Drawer.spec.ts (schemaVersion: 7, specHash: PLACEHOLDER)
+// Generated from Drawer.spec.ts
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';

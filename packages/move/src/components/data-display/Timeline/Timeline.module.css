@@ -20,6 +20,7 @@
   --move-timeline-bullet-border: var(--move-border-emphasis);
   --move-timeline-line-color: var(--move-border-base);
   --move-timeline-active-color: var(--move-primary);
+  --move-timeline-active-fg: var(--move-primary-fg);
   --move-timeline-title-size: var(--move-size-base);
 
   display: flex;

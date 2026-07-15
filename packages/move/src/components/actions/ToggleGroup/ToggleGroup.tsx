@@ -1,5 +1,5 @@
 'use client';
-// Generated from ToggleGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from ToggleGroup.spec.ts
 import * as React from 'react';
 import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';

@@ -1,3 +1,3 @@
-// Generated from Splitter.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Splitter.spec.ts
 export { Splitter } from './Splitter';
 export type { SplitterRootProps, SplitterPanelProps } from './Splitter';

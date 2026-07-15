@@ -1,4 +1,4 @@
-// Generated from Skeleton.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Skeleton.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { createRef } from 'react';

@@ -1,4 +1,4 @@
-// Generated from PinInput.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from PinInput.spec.ts
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useControlledState } from '../../../engine';
 
