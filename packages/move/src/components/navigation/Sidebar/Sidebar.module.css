@@ -56,21 +56,27 @@
   width: var(--move-sidebar-width-collapsed);
 }
 
-/* Mobile: render inside portal, take mobile width */
+/* Mobile: render inside portal, take mobile width.
+ * The sheet bleeds --move-sidebar-mobile-bleed past its anchored edge (matching
+ * Drawer) so the spring slide can overshoot without revealing a gap at the edge;
+ * matching padding keeps the content fully on-screen. */
 .root[data-mobile='true'] {
   position: fixed;
   top: 0;
   bottom: 0;
-  width: var(--move-sidebar-width-mobile);
+  --move-sidebar-mobile-bleed: 3rem;
+  width: calc(var(--move-sidebar-width-mobile) + var(--move-sidebar-mobile-bleed));
   z-index: var(--move-layer-modal);
 }
 
 .root[data-mobile='true'][data-side='left'] {
-  left: 0;
+  left: calc(-1 * var(--move-sidebar-mobile-bleed));
+  padding-left: var(--move-sidebar-mobile-bleed);
 }
 
 .root[data-mobile='true'][data-side='right'] {
-  right: 0;
+  right: calc(-1 * var(--move-sidebar-mobile-bleed));
+  padding-right: var(--move-sidebar-mobile-bleed);
   border-right: none;
   border-left: 1px solid var(--move-sidebar-border);
 }

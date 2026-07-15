@@ -591,6 +591,12 @@ export const spec = {
     },
     { name: '--move-sidebar-width-mobile', value: '18rem', description: 'Mobile sidebar width' },
     {
+      name: '--move-sidebar-mobile-bleed',
+      value: '3rem',
+      description:
+        'How far the mobile sheet extends past its anchored edge (covers slide overshoot)',
+    },
+    {
       name: '--move-sidebar-bg',
       value: 'var(--move-surface-bg)',
       description: 'Sidebar background color',
