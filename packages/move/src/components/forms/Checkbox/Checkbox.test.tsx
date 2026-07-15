@@ -214,4 +214,22 @@ describe('Checkbox', () => {
       expect(screen.getByRole('group')).toBeInTheDocument();
     });
   });
+
+  describe('decorative', () => {
+    it('renders the visual only — no checkbox role, aria-hidden, reflects checked', () => {
+      const { container, rerender } = render(<Checkbox decorative checked data-testid="deco" />);
+      // No interactive control.
+      expect(screen.queryByRole('checkbox')).toBeNull();
+      const box = container.querySelector('[data-testid="deco"]') as HTMLElement;
+      expect(box.tagName).toBe('SPAN');
+      expect(box).toHaveAttribute('aria-hidden', 'true');
+      expect(box).toHaveAttribute('data-state', 'checked');
+
+      rerender(<Checkbox decorative checked={false} data-testid="deco" />);
+      expect(container.querySelector('[data-testid="deco"]') as HTMLElement).toHaveAttribute(
+        'data-state',
+        'unchecked',
+      );
+    });
+  });
 });

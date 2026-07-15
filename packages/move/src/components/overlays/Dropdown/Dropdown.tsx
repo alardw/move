@@ -4,7 +4,7 @@ import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useIcon } from '../../../infrastructure/Icon';
+import { Checkbox } from '../../forms/Checkbox';
 import {
   useAnimations,
   resolveAnimationsConfig,
@@ -578,7 +578,6 @@ const DropdownCheckboxItem = withMoveComponent<
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const resolvedCheck = useIcon('selected', 14);
     const { animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
@@ -645,13 +644,13 @@ const DropdownCheckboxItem = withMoveComponent<
             className={cx('checkboxItem', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            <span
+            <Checkbox
               {...indSpRest}
+              decorative
+              checked={props.checked as boolean}
               className={cx('checkboxIndicator', indSpClass as string | undefined)}
               style={indSpStyle as React.CSSProperties}
-            >
-              <RadixDropdownMenu.ItemIndicator>{resolvedCheck}</RadixDropdownMenu.ItemIndicator>
-            </span>
+            />
             <span
               {...lblSpRest}
               className={cx('checkboxLabel', lblSpClass as string | undefined)}

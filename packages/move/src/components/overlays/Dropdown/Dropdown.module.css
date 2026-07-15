@@ -166,39 +166,10 @@
   pointer-events: none;
 }
 
+/* The box is the Move Checkbox (decorative); this class only holds its place
+   in the item's flex row. All box/checkmark styling lives in Checkbox. */
 .checkboxIndicator {
-  width: 20px;
-  height: 20px;
-  border-radius: var(--move-rounded-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--move-bg-muted);
-  border: 1px solid var(--move-border-base);
-  color: var(--move-primary-fg);
   flex-shrink: 0;
-  transition:
-    background-color var(--move-transition-fast) var(--move-ease-default),
-    border-color var(--move-transition-fast) var(--move-ease-default);
-}
-
-.checkboxItem:hover .checkboxIndicator {
-  background-color: var(--move-bg-emphasis);
-  border-color: var(--move-border-emphasis);
-}
-
-.checkboxItem[data-state='checked'] .checkboxIndicator {
-  background-color: var(--move-primary);
-  border-color: transparent;
-}
-
-.checkboxItem:hover[data-state='checked'] .checkboxIndicator {
-  background-color: var(--move-primary-hover);
-}
-
-.checkboxIndicator svg {
-  width: 14px;
-  height: 14px;
 }
 
 .checkboxLabel {

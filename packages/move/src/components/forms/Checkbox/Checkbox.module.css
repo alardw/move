@@ -20,7 +20,7 @@
   --move-checkbox-bg-hover: var(--move-bg-emphasis);
   --move-checkbox-bg-checked: var(--move-primary);
   --move-checkbox-bg-checked-hover: var(--move-primary-hover);
-  --move-checkbox-border: var(--move-border-base);
+  --move-checkbox-border: var(--move-border-interactive);
   --move-checkbox-border-hover: var(--move-border-emphasis);
   --move-checkbox-fg: var(--move-primary-fg);
 

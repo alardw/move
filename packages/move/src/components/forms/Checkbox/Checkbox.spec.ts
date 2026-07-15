@@ -63,6 +63,14 @@ export const spec = {
       description: 'Controlled checked state',
     },
     {
+      name: 'decorative',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Render the visual only (no role, not focusable, aria-hidden, pointer-events off), driven by checked — for embedding the box inside a control that owns the interaction (e.g. Dropdown.CheckboxItem).',
+    },
+    {
       name: 'defaultChecked',
       type: 'boolean',
       moveSpecific: true,
@@ -207,7 +215,7 @@ export const spec = {
     },
     {
       name: '--move-checkbox-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Border color',
     },
     {
@@ -272,6 +280,11 @@ export const spec = {
         'icon prop is resolved via useResolvedIcon; falls back to built-in SVG checkmark when icon provider is not available',
     },
     { id: 'keyboard-toggle', description: 'Space and Enter keys trigger toggle via handleKeyDown' },
+    {
+      id: 'decorative-presentational',
+      description:
+        'With decorative=true, renders the same box + checkmark visual as a plain <span> (no <button>, no role, aria-hidden, pointer-events: none) driven by checked — no label wrapper, no hidden input, no handlers. Reuses the identical box/indicator/icon markup and CSS.',
+    },
   ],
 
   hasHook: true,

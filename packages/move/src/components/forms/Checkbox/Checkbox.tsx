@@ -33,6 +33,14 @@ export interface CheckboxProps extends React.HTMLAttributes<HTMLElement> {
   children?: React.ReactNode;
   /** Controlled checked state */
   checked?: boolean;
+  /**
+   * Render the checkbox VISUAL only — no role, not focusable, aria-hidden,
+   * pointer-events off — driven purely by `checked`. For embedding the box
+   * inside a control that already owns the interaction and accessible state
+   * (e.g. a Dropdown menuitemcheckbox), where a nested role="checkbox" would be
+   * invalid. Not a form control on its own.
+   */
+  decorative?: boolean;
   /** Default checked state for uncontrolled mode */
   defaultChecked?: boolean;
   /** Indeterminate (mixed) state */
@@ -107,6 +115,7 @@ const CheckboxRoot = withMoveComponent<
     'name',
     'value',
     'required',
+    'decorative',
   ],
   subComponents: { Group: CheckboxGroup },
 
@@ -236,6 +245,65 @@ const CheckboxRoot = withMoveComponent<
             ? 'checked'
             : 'unchecked';
 
+        // The box + checkmark visual, shared by the interactive and decorative
+        // renders so there is exactly one checkbox appearance.
+        const box = (
+          <span
+            {...indSpRest}
+            ref={indicatorRef}
+            className={cx('indicator', indSpClass as string | undefined)}
+            style={{
+              opacity: checkbox.checked ? 1 : 0,
+              transform: checkbox.checked ? 'scale(1)' : 'scale(0.5)',
+              ...(indSpStyle as React.CSSProperties),
+            }}
+          >
+            <span
+              {...iconSpRest}
+              className={cx('icon', iconSpClass as string | undefined)}
+              style={iconSpStyle as React.CSSProperties}
+            >
+              {resolvedIcon || (
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              )}
+            </span>
+          </span>
+        );
+
+        // Decorative: just the visual, no role/focus/interaction — a parent
+        // control owns the state (e.g. Dropdown.CheckboxItem).
+        if (props.decorative) {
+          return (
+            <span
+              {...attrs}
+              {...rootSpRest}
+              ref={mergedRef}
+              aria-hidden="true"
+              data-state={dataState}
+              {...(size && size !== 'md' ? { 'data-size': size } : {})}
+              className={cx('root', className, rootSpClass as string | undefined)}
+              style={{
+                ...style,
+                ...(rootSpStyle as React.CSSProperties),
+                pointerEvents: 'none',
+              }}
+            >
+              {box}
+            </span>
+          );
+        }
+
         return (
           <label
             className={styles.wrapper}
@@ -269,37 +337,7 @@ const CheckboxRoot = withMoveComponent<
               onClick={handleClick}
               onKeyDown={handleKeyDown}
             >
-              <span
-                {...indSpRest}
-                ref={indicatorRef}
-                className={cx('indicator', indSpClass as string | undefined)}
-                style={{
-                  opacity: checkbox.checked ? 1 : 0,
-                  transform: checkbox.checked ? 'scale(1)' : 'scale(0.5)',
-                  ...(indSpStyle as React.CSSProperties),
-                }}
-              >
-                <span
-                  {...iconSpRest}
-                  className={cx('icon', iconSpClass as string | undefined)}
-                  style={iconSpStyle as React.CSSProperties}
-                >
-                  {resolvedIcon || (
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  )}
-                </span>
-              </span>
+              {box}
             </button>
             {name && (
               <input
