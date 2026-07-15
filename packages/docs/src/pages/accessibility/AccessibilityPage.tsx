@@ -88,7 +88,7 @@ const OPERABLE: Criterion[] = [
   { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'supports', note: { included: 'Radix widgets act on up-events; ColorPicker drags commit on pointer-up, and Escape mid-drag aborts and reverts to the pre-drag colour.' } },
   { sc: '2.5.3', name: 'Label in Name', level: 'A', support: 'supports', note: { included: 'Icon buttons name from labels; Checkbox/Radio visible text is the accessible name via aria-labelledby.' } },
   { sc: '2.5.4', name: 'Motion Actuation', level: 'A', support: 'na', note: { included: 'No device-motion actuation.' } },
-  { sc: '2.5.5', name: 'Target Size (Enhanced)', level: 'AAA', support: 'none', note: { included: 'Controls meet the AA 24px target (some via expanded hit regions).', gap: 'The enhanced 44×44px bar is not met.' } },
+  { sc: '2.5.5', name: 'Target Size (Enhanced)', level: 'AAA', support: 'enables', note: { included: 'The default (md) meets the AA 24px target; size="lg" controls are exactly 44px (--move-control-height-lg) — the enhanced bar.', yours: 'Opt into size="lg" where 44px matters (touch-first UIs). Forcing 44px everywhere would bloat dense layouts, so it is not the default; the smallest handles (ColorPicker sliders) stay below 44px even at lg.' } },
   { sc: '2.5.6', name: 'Concurrent Input Mechanisms', level: 'AAA', support: 'supports', note: { included: 'No component restricts input to one modality — pointer, keyboard, and touch all work.' } },
   { sc: '2.5.7', name: 'Dragging Movements', level: 'AA', support: 'supports', note: { included: 'New in 2.2. Every draggable (Slider, ColorPicker, Carousel, Splitter, Drawer) has a tap/keyboard/button alternative.' } },
   { sc: '2.5.8', name: 'Target Size (Minimum)', level: 'AA', support: 'supports', note: { included: 'Interactive controls meet the 24px minimum. Controls at size sm sit at the 32px control height; Checkbox/Radio expose the whole label row as the target, not just the box. Compact icon buttons (Alert/Toast close) and slider handles (ColorPicker hue/opacity, InputRange thumb) keep a small visual but carry an expanded hit region to 24px. NumberInput steppers rely on full-size text entry, and ColorPicker on its channel inputs — a WCAG 2.5.8 equivalent-control.' } },
@@ -113,7 +113,7 @@ const UNDERSTANDABLE: Criterion[] = [
 ];
 
 const ROBUST: Criterion[] = [
-  { sc: '4.1.2', name: 'Name, Role, Value', level: 'A', support: 'partial', note: { included: 'Radix supplies roles/states; names and aria-invalid are exposed across controls.', gap: 'Select uses menu (not combobox/listbox) semantics with no native form field, so its value is not a submittable named control out of the box.' } },
+  { sc: '4.1.2', name: 'Name, Role, Value', level: 'A', support: 'supports', note: { included: 'Radix supplies roles/states; names and aria-invalid are exposed across controls. Select is now built on Radix Select — a combobox trigger over a listbox of options — and renders a hidden native <select> when given a name, so its value is a real submittable named form control.' } },
   { sc: '4.1.3', name: 'Status Messages', level: 'AA', support: 'supports', note: { included: 'Toast, Alert, Loader, Skeleton, Autocomplete, PasswordStrength announce correctly; FormField error messages announce via role=alert. ProgressBar exposes role=progressbar with aria-valuenow when determinate, and aria-busy when indeterminate.' } },
 ];
 
