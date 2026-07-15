@@ -375,4 +375,44 @@ describe('Sidebar', () => {
       expect(screen.getByText('User')).toBeInTheDocument();
     });
   });
+
+  // === Mobile modal sheet (Radix Dialog) ===
+  describe('mobile modal sheet', () => {
+    it('renders as a Radix Dialog (role=dialog, aria-modal) with an accessible name', () => {
+      const origWidth = window.innerWidth;
+      const origMatchMedia = window.matchMedia;
+      Object.defineProperty(window, 'innerWidth', { configurable: true, value: 500 });
+      window.matchMedia = ((query: string) => ({
+        matches: true,
+        media: query,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        addListener: () => {},
+        removeListener: () => {},
+        dispatchEvent: () => false,
+      })) as unknown as typeof window.matchMedia;
+
+      try {
+        renderWithProvider(
+          <Sidebar.Root>
+            <Sidebar.Content>
+              <Sidebar.Item>Home</Sidebar.Item>
+            </Sidebar.Content>
+          </Sidebar.Root>,
+          { defaultMobileOpen: true },
+        );
+
+        // Radix Dialog renders the sheet with role="dialog"; the focus
+        // trap / aria-modal / scroll-lock are the primitive's guarantees.
+        const dialog = screen.getByRole('dialog');
+        expect(dialog).toBeInTheDocument();
+        // Accessible name comes from the visually-hidden Dialog.Title.
+        expect(screen.getByText('Navigation')).toBeInTheDocument();
+      } finally {
+        Object.defineProperty(window, 'innerWidth', { configurable: true, value: origWidth });
+        window.matchMedia = origMatchMedia;
+      }
+    });
+  });
 });

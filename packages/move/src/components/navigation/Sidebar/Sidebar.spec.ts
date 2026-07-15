@@ -8,7 +8,7 @@ export const spec = {
   componentClass: 'disclosure' as const,
   category: 'navigation',
   description:
-    'Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations',
+    'Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations',
   choreographies: ['sidePanel'],
   families: {
     // Sidebar collapses in place on desktop and overlays on mobile —
@@ -167,10 +167,16 @@ export const spec = {
           moveSpecific: true,
           description: 'Which side the sidebar appears on',
         },
+        {
+          name: 'labels',
+          type: 'Partial<SidebarLabels>',
+          moveSpecific: true,
+          description: 'Overridable user-facing strings (mobile sheet accessible name)',
+        },
       ],
       usesFactory: true,
       description:
-        'Aside container with animated width transitions on collapse, portaled to body on mobile with overlay',
+        'Aside container with animated width transitions on collapse; on mobile it becomes a Radix Dialog modal sheet (focus trap, Escape, focus restore, aria-modal, scroll-lock)',
     },
     {
       name: 'Overlay',
@@ -487,13 +493,14 @@ export const spec = {
 
   renderContracts: [
     {
-      id: 'mobile-portal',
+      id: 'mobile-modal-sheet',
       description:
-        'On mobile (viewport < breakpoint), Root is portaled to document.body with an Overlay backdrop. Returns null when mobileOpen is false.',
+        'On mobile (viewport < breakpoint), Root renders as a Radix Dialog modal sheet portaled to body (open driven by mobileOpen): focus trap, Escape-to-close, focus restore to the trigger, aria-modal, and scroll-lock. A visually-hidden Dialog.Title (labels.title) gives the sheet its accessible name.',
     },
     {
       id: 'overlay-dismisses',
-      description: 'Clicking the mobile overlay calls setMobileOpen(false) to close the sidebar.',
+      description:
+        'Pressing Escape or clicking the overlay closes the sheet via onOpenChange → setMobileOpen(false).',
     },
     {
       id: 'overlay-aria-hidden',
@@ -638,6 +645,11 @@ export const spec = {
       default: 'Close sidebar',
       description: 'aria-label for the mobile close button in the header',
     },
+    {
+      key: 'title',
+      default: 'Navigation',
+      description: 'Accessible name for the mobile navigation sheet (Radix Dialog title)',
+    },
   ],
 
   radixPrimitive: 'Slot',
@@ -688,6 +700,7 @@ export const spec = {
     keyboard: ['Items are focusable via tab', 'Trigger is keyboard accessible'],
     aria: [
       'Root renders as aside element for landmark navigation',
+      'Mobile sheet is a Radix Dialog (role=dialog, aria-modal) with a visually-hidden title and focus trap',
       'Overlay has aria-hidden=true',
       'Rail has aria-hidden=true',
       'Group has role=group',

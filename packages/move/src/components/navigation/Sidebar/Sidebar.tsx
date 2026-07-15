@@ -1,8 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { createPortal } from 'react-dom';
-import { Slot } from 'radix-ui';
+import { Slot, Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
@@ -23,10 +22,13 @@ import styles from './Sidebar.module.css';
 export interface SidebarLabels {
   /** aria-label for the mobile close button. */
   close: string;
+  /** Accessible name for the mobile navigation sheet (Radix Dialog title). */
+  title: string;
 }
 
 const DEFAULT_LABELS: SidebarLabels = {
   close: 'Close sidebar',
+  title: 'Navigation',
 };
 
 // ============================================================================
@@ -215,6 +217,8 @@ export interface SidebarRootProps extends React.HTMLAttributes<HTMLElement> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   side?: 'left' | 'right';
+  /** Overridable user-facing strings (mobile sheet accessible name). */
+  labels?: Partial<SidebarLabels>;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -222,11 +226,11 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
   name: 'SidebarRoot',
   styles,
   slots: ['root'] as const,
-  moveProps: ['side'],
+  moveProps: ['side', 'labels'],
   defaults: { side: 'left' },
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { collapsed, mobileOpen, isMobile } = useSidebarContext();
+    const { collapsed, mobileOpen, isMobile, setMobileOpen } = useSidebarContext();
     const animDisabled = React.useContext(SidebarAnimateContext);
     const surface = useSurfaceFlip();
     const side = (props.side as string) || 'left';
@@ -281,40 +285,60 @@ const SidebarRoot = withMoveComponent<'root', SidebarRootProps, HTMLElement>({
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        const aside = (
-          <SurfaceProvider value={surface}>
-            <LayerProvider value={isMobile ? 400 : 0}>
-              <aside
-                {...attrs}
-                {...spRest}
-                ref={mergedRef}
-                data-collapsed={collapsed}
-                data-side={side}
-                data-mobile={isMobile || undefined}
-                data-surface={surface}
-                className={cx('root', props.className, spClass as string | undefined)}
-                style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-              >
-                {props.children}
-              </aside>
-            </LayerProvider>
-          </SurfaceProvider>
+        const labels = {
+          ...DEFAULT_LABELS,
+          ...(props.labels as Partial<SidebarLabels> | undefined),
+        };
+
+        const asideEl = (
+          <aside
+            {...attrs}
+            {...spRest}
+            ref={mergedRef}
+            data-collapsed={collapsed}
+            data-side={side}
+            data-mobile={isMobile || undefined}
+            data-surface={surface}
+            className={cx('root', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+          >
+            {/* Modal sheet needs an accessible name for Radix Dialog. */}
+            {isMobile && (
+              <VisuallyHidden.Root asChild>
+                <RadixDialog.Title>{labels.title}</RadixDialog.Title>
+              </VisuallyHidden.Root>
+            )}
+            {props.children}
+          </aside>
         );
 
-        // Mobile: portal with overlay
+        // Mobile: modal sheet via Radix Dialog — focus trap, Escape, focus
+        // restore, aria-modal, and scroll-lock all come from the primitive.
         if (isMobile) {
-          if (!mobileOpen) return null;
-          return createPortal(
-            <>
-              <SidebarOverlay />
-              {aside}
-            </>,
-            document.body,
+          return (
+            <SurfaceProvider value={surface}>
+              <LayerProvider value={400}>
+                <RadixDialog.Root open={mobileOpen} onOpenChange={setMobileOpen} modal>
+                  <RadixDialog.Portal>
+                    <RadixDialog.Overlay asChild>
+                      <SidebarOverlay />
+                    </RadixDialog.Overlay>
+                    <RadixDialog.Content asChild aria-describedby={undefined}>
+                      {asideEl}
+                    </RadixDialog.Content>
+                  </RadixDialog.Portal>
+                </RadixDialog.Root>
+              </LayerProvider>
+            </SurfaceProvider>
           );
         }
 
         // Desktop: plain aside
-        return aside;
+        return (
+          <SurfaceProvider value={surface}>
+            <LayerProvider value={0}>{asideEl}</LayerProvider>
+          </SurfaceProvider>
+        );
       },
     };
   },

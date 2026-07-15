@@ -76,7 +76,7 @@ const OPERABLE: Criterion[] = [
   { sc: '2.3.3', name: 'Animation from Interactions', level: 'AAA', support: 'supports', note: { included: 'Motion triggered by interaction respects prefers-reduced-motion end to end, so it can be turned off.' } },
   { sc: '2.4.1', name: 'Bypass Blocks', level: 'A', support: 'consumer', note: { included: 'The shell composes landmarks.', yours: 'Place the skip link.' } },
   { sc: '2.4.2', name: 'Page Titled', level: 'A', support: 'consumer', note: { yours: 'Document <title>, set by your app/router.' } },
-  { sc: '2.4.3', name: 'Focus Order', level: 'A', support: 'partial', note: { included: 'Focus order is generally logical.', gap: 'The mobile Sidebar sheet is a hand-rolled overlay with no focus trap/restore — focus escapes behind the backdrop.' } },
+  { sc: '2.4.3', name: 'Focus Order', level: 'A', support: 'supports', note: { included: 'Focus order is logical, and the mobile Sidebar sheet is now a Radix Dialog — focus moves into it on open, is trapped while open, and restores to the trigger on close.' } },
   { sc: '2.4.4', name: 'Link Purpose (In Context)', level: 'A', support: 'consumer', note: { included: 'Link renders a real anchor.', yours: 'The link text.' } },
   { sc: '2.4.5', name: 'Multiple Ways', level: 'AA', support: 'consumer', note: { yours: 'Site navigation strategy is app-level.' } },
   { sc: '2.4.6', name: 'Headings & Labels', level: 'AA', support: 'consumer', note: { included: 'Heading + Label components provide the structure.', yours: 'The descriptive text.' } },
@@ -127,7 +127,9 @@ const GROUPS: { key: string; title: string; lede: string; rows: Criterion[] }[] 
 const TOTAL_CRITERIA = GROUPS.reduce((n, g) => n + g.rows.length, 0);
 
 const GAPS: HighlightItem[] = [
-  { icon: 'panel-left', text: 'The mobile Sidebar sheet is a modal with no keyboard support (§2.1.2/§2.4.3). No focus trap, Escape, or restore. Fix: wrap it in Radix Dialog like Drawer already is.' },
+  { icon: 'panel-top', text: 'Focus can be obscured by sticky headers (§2.4.11 / §2.4.12). No scroll-padding is set, so a Table/Sidebar/Calendar sticky header can cover an element tabbed underneath. Fix: add scroll-margin / scroll-padding on scroll containers.' },
+  { icon: 'gauge', text: 'Indeterminate ProgressBar sets no aria-busy (§4.1.3), so screen readers are not told the region is busy. Fix: add aria-busy when value is null.' },
+  { icon: 'square-mouse-pointer', text: 'ColorPicker commits on pointer-down with no abort (§2.5.2). Fix: commit on pointer-up so a drag-away cancels.' },
 ];
 
 const TOC: TocItem[] = [
