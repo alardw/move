@@ -1,10 +1,9 @@
 // AnimatedText.spec.ts — Component specification
-// specHash: e7eefb38
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'AnimatedText',
   componentClass: 'presentational' as const,
   category: 'typography',
@@ -117,11 +116,26 @@ export const spec = {
       moveSpecific: true,
       description: 'Duration in ms of each segment animation',
     },
+    {
+      name: 'nowrap',
+      type: 'boolean',
+      default: 'false',
+      moveSpecific: true,
+      description:
+        'Keep the text on a single line (white-space: nowrap) instead of wrapping. When false (default) long text wraps naturally (white-space: normal; overflow-wrap: break-word).',
+    },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-by', 'data-effect', 'data-animated', 'data-size', 'data-weight'],
+    dataAttributes: [
+      'data-by',
+      'data-effect',
+      'data-animated',
+      'data-size',
+      'data-weight',
+      'data-nowrap',
+    ],
   },
 
   controlled: null,
@@ -152,6 +166,7 @@ export const spec = {
     by: 'behavior',
     effect: 'behavior',
     trigger: 'behavior',
+    nowrap: 'behavior',
   },
 
   renderContracts: [
@@ -218,6 +233,7 @@ export const spec = {
       'Applies effect via data-effect attribute',
       'Applies data-size only when size is set; inherits typography otherwise',
       'Applies data-weight only when weight is set; inherits weight otherwise',
+      'Applies data-nowrap and white-space:nowrap when nowrap is set',
       're-splits and re-animates when the children string changes',
       'trigger=mount begins animating without scroll/hover',
       'Forwards className and style',

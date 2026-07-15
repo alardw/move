@@ -1,5 +1,5 @@
 'use client';
-// Generated from AnimatedText.spec.ts (schemaVersion: 7, specHash: e7eefb38)
+// Generated from AnimatedText.spec.ts
 import * as React from 'react';
 import { Slot } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
@@ -52,6 +52,8 @@ export interface AnimatedTextProps extends React.HTMLAttributes<HTMLElement> {
   delay?: number;
   /** ms duration of each segment animation. */
   duration?: number;
+  /** Keep the text on a single line (white-space: nowrap) instead of wrapping. */
+  nowrap?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -70,6 +72,7 @@ export const AnimatedText = withMoveComponent<'root', AnimatedTextProps, HTMLEle
     stagger: null,
     delay: 0,
     duration: 600,
+    nowrap: false,
   },
   moveProps: [
     'as',
@@ -83,6 +86,7 @@ export const AnimatedText = withMoveComponent<'root', AnimatedTextProps, HTMLEle
     'stagger',
     'delay',
     'duration',
+    'nowrap',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -129,6 +133,7 @@ export const AnimatedText = withMoveComponent<'root', AnimatedTextProps, HTMLEle
             data-effect={props.effect}
             {...(props.size ? { 'data-size': props.size } : {})}
             {...(props.weight ? { 'data-weight': props.weight } : {})}
+            {...(props.nowrap ? { 'data-nowrap': '' } : {})}
             {...(animated ? { 'data-animated': '' } : {})}
           >
             {asChild ? childEl : text}

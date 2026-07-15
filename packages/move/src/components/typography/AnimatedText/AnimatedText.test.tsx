@@ -1,4 +1,4 @@
-// Generated from AnimatedText.spec.ts (schemaVersion: 7, specHash: e7eefb38)
+// Generated from AnimatedText.spec.ts
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, afterEach } from 'vitest';
 import { AnimatedText } from './AnimatedText';
@@ -117,6 +117,17 @@ describe('AnimatedText', () => {
         expect(screen.getByTestId('t')).toHaveAttribute('data-effect', effect);
         unmount();
       }
+    });
+
+    it('omits data-nowrap by default and sets it when nowrap', () => {
+      const { rerender } = render(<AnimatedText data-testid="t">{TEXT}</AnimatedText>);
+      expect(screen.getByTestId('t')).not.toHaveAttribute('data-nowrap');
+      rerender(
+        <AnimatedText nowrap data-testid="t">
+          {TEXT}
+        </AnimatedText>,
+      );
+      expect(screen.getByTestId('t')).toHaveAttribute('data-nowrap');
     });
   });
 

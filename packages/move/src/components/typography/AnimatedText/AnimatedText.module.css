@@ -1,4 +1,4 @@
-/* Generated from AnimatedText.spec.ts (schemaVersion: 7, specHash: e7eefb38) */
+/* Generated from AnimatedText.spec.ts */
 
 .root {
   /* Inline-block so per-segment transforms render and IntersectionObserver has
@@ -16,6 +16,12 @@
 /* Line-level splits stack vertically; each generated line wraps as a block. */
 .root[data-by='line'] {
   display: block;
+}
+
+/* nowrap: keep the animated text on a single line instead of wrapping. */
+.root[data-nowrap] {
+  white-space: nowrap;
+  overflow-wrap: normal;
 }
 
 /* Size — Move typography scale, overrides any element default (e.g. h3 1.17em). */
