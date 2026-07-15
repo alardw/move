@@ -1,6 +1,6 @@
 import { Stack, Tabs, Text } from 'move';
 
-const variants = ['underline', 'pills'] as const;
+const variants = ['underline', 'pills', 'outline'] as const;
 
 export default function VariantsSample() {
   return (
