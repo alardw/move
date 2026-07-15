@@ -1,4 +1,4 @@
-// Generated from FormField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from FormField.spec.ts
 export { FormField } from './FormField';
 export type {
   FormFieldRootProps,

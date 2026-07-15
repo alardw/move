@@ -18,7 +18,7 @@ const DEFAULT_TABLE_ANIMATIONS: AnimationTrigger[] = [
       {
         target: 'Body',
         children: 'tr',
-        stagger: { delay: 40 },
+        stagger: { delay: 12 },
         animation: {
           opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
           translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
@@ -382,11 +382,17 @@ const TableFooter = withMoveComponent<'footer', TableFooterProps, HTMLTableSecti
 // Row
 // ============================================================================
 
+/** Vertical alignment of a row's cells: `start` = top, `center` = middle, `end` = bottom. */
+export type TableVerticalAlign = 'start' | 'center' | 'end';
+
 export interface TableRowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
   selected?: boolean;
+  /** Vertical alignment of this row's cells. Defaults to the browser's middle;
+   *  `start` (top) keeps the other cells at the top when one cell is multi-line. */
+  valign?: TableVerticalAlign;
   /** Make the whole row clickable. Adds role="button", tabIndex=0,
    *  keyboard (Enter/Space) → onClick, hover tint, and cursor pointer.
    *  Does not give link semantics — use an anchor overlay inside a
@@ -401,10 +407,18 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
   name: 'TableRow',
   styles,
   slots: ['row'] as const,
-  moveProps: ['selected', 'interactive', 'animations'],
+  moveProps: ['selected', 'interactive', 'animations', 'valign'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { className, style, children, selected, interactive, animations: animationsProp } = props;
+    const {
+      className,
+      style,
+      children,
+      selected,
+      interactive,
+      valign,
+      animations: animationsProp,
+    } = props;
     const onClick = props.onClick as
       ((e: React.MouseEvent<HTMLTableRowElement>) => void) | undefined;
     const tableCtx = React.useContext(TableContext);
@@ -474,6 +488,7 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
             className={cx('row', className, spClass as string | undefined)}
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-state={selected ? 'selected' : undefined}
+            data-valign={valign}
             data-interactive={interactive ? '' : undefined}
             onClick={onClick}
             onMouseEnter={() => handlers.Row?.onMouseEnter?.()}

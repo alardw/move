@@ -1,18 +1,12 @@
 'use client';
-// Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Accordion.spec.ts
 
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAccordion } from './useAccordion';
-import {
-  resolveAnimationsConfig,
-  expandContent,
-  poppy,
-  snappy,
-  useAnimations,
-} from '../../../animation';
-import type { Animation, StaggerConfig, AnimationTrigger } from '../../../animation';
+import { resolveAnimationsConfig, expandContent, snappy, useAnimations } from '../../../animation';
+import type { Animation, AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import type { Size } from '../../../shared/types';
@@ -23,9 +17,6 @@ import acStyles from './Accordion.module.css';
 // ============================================================================
 
 interface AccordionContextValue {
-  stagger?: StaggerConfig;
-  enterAnimation?: Animation;
-  getItemIndex: () => number;
   animatingOutItems: Set<string>;
   animatingInItems: Set<string>;
   isAnimatingOut: (value: string) => boolean;
@@ -69,8 +60,6 @@ export type AccordionSize = Size;
 export type AccordionVariant = 'default' | 'contained' | 'ghost';
 
 export interface AccordionAnimateConfig {
-  enter?: Animation;
-  stagger?: StaggerConfig;
   content?: { open?: Animation; close?: Animation };
 }
 
@@ -89,17 +78,7 @@ export interface AccordionRootProps extends React.HTMLAttributes<HTMLElement> {
   sp?: SlotPropsMap<'root'>;
 }
 
-// Pixel-based fade-in scale (matches Select children) — keeps the motion's
-// visible amplitude constant regardless of accordion width, rather than a
-// fixed 10% relative scale that looks huge on wide layouts.
-const ITEM_SCALE_INSET_PX = 16;
-
 const defaultRootAnimation: AccordionAnimateConfig = {
-  enter: {
-    opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-    scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
-  },
-  stagger: { delay: 80 },
   content: expandContent,
 };
 
@@ -132,7 +111,6 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     } = props;
 
     const multiple = type === 'multiple';
-    const itemIndexRef = React.useRef(0);
 
     const accordion = useAccordion({
       value: controlledValue as string | string[] | undefined,
@@ -149,18 +127,8 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
 
     const config =
       animationsProp === false
-        ? {
-            enter: undefined,
-            stagger: undefined,
-            content: {} as { open?: Animation; close?: Animation },
-          }
+        ? { content: {} as { open?: Animation; close?: Animation } }
         : ((animationsProp as AccordionAnimateConfig | undefined) ?? defaultRootAnimation);
-
-    const getItemIndex = React.useCallback(() => itemIndexRef.current++, []);
-
-    React.useEffect(() => {
-      itemIndexRef.current = 0;
-    });
 
     const prev = prevValueRef.current;
     const current = accordion.value;
@@ -209,9 +177,6 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     }, []);
 
     const contextValue: AccordionContextValue = {
-      stagger: config.stagger,
-      enterAnimation: config.enter,
-      getItemIndex,
       animatingOutItems,
       animatingInItems,
       isAnimatingOut: (v) => animatingOutItems.has(v),
@@ -270,41 +235,9 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, value } = props;
     const context = useAccordionContext();
-    const indexRef = React.useRef<number | null>(null);
-    const itemRef = React.useRef<HTMLDivElement | null>(null);
-
-    if (indexRef.current === null) {
-      indexRef.current = context.getItemIndex();
-    }
 
     const isActive =
       context.isItemActive(value as string) || context.isAnimatingOut(value as string);
-
-    const mergedRef = useMergedRef<HTMLDivElement>(ref, itemRef);
-
-    // Item enter animation with stagger delay from context. `$itemScaleFrom`
-    // is computed per-item at animation time from the item's actual width so
-    // the visible scale-up is a constant pixel delta across sizes.
-    const delay = (context.stagger?.delay ?? 0) * (indexRef.current ?? 0);
-    const computeItemVars = () => {
-      const w = itemRef.current?.getBoundingClientRect().width ?? 0;
-      const itemScaleFrom = w > 0 ? (w - ITEM_SCALE_INSET_PX) / w : 0.95;
-      return { itemScaleFrom };
-    };
-    const itemEnterConfig: AnimationTrigger[] | null = context.enterAnimation
-      ? [
-          {
-            trigger: 'Item.enter',
-            sequence: [{ animation: { ...context.enterAnimation, delay: delay || undefined } }],
-            vars: computeItemVars,
-          },
-        ]
-      : null;
-    const itemRefs = React.useMemo(
-      () => ({ Item: itemRef as React.RefObject<HTMLElement | null> }),
-      [],
-    );
-    useAnimations(itemEnterConfig, itemRefs);
 
     return {
       render() {
@@ -315,7 +248,7 @@ const AccordionItem = withMoveComponent<'item', AccordionItemProps, HTMLDivEleme
             <div
               {...attrs}
               {...spRest}
-              ref={mergedRef}
+              ref={ref}
               className={cx('item', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-state={isActive ? 'open' : 'closed'}

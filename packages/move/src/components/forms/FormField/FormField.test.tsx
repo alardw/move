@@ -1,4 +1,4 @@
-// Generated from FormField.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from FormField.spec.ts
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { FormField } from './FormField';
@@ -75,13 +75,13 @@ describe('FormField', () => {
     });
 
     it('forwards ref on Label', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
+      const ref = { current: null } as React.RefObject<HTMLLabelElement | null>;
       render(
         <FormField.Root>
           <FormField.Label ref={ref as any}>Label</FormField.Label>
         </FormField.Root>,
       );
-      expect(ref.current).toBeInstanceOf(HTMLDivElement);
+      expect(ref.current).toBeInstanceOf(HTMLLabelElement);
     });
   });
 

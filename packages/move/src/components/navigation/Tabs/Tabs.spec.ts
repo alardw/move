@@ -1,16 +1,15 @@
 // Tabs.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Tabs',
   componentClass: 'disclosure' as const,
   category: 'navigation',
   description:
     'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
-  animationPatterns: ['slidingIndicator'],
+  choreographies: ['slidingIndicator'],
   families: {
     behavior: ['navigation'],
     state: ['controlled-value'],
@@ -34,7 +33,7 @@ export const spec = {
       name: 'indicator',
       element: 'div',
       description:
-        'Sliding underline indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger',
+        'Sliding indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger — an underline bar for the underline variant, a filled pill for the pills variant',
     },
     {
       name: 'trigger',
@@ -111,7 +110,7 @@ export const spec = {
       name: 'List',
       slots: [
         { name: 'list', element: 'RadixTabs.List', description: 'Tab list container' },
-        { name: 'indicator', element: 'div', description: 'Sliding underline indicator' },
+        { name: 'indicator', element: 'div', description: 'Sliding underline bar or filled pill' },
       ],
       props: [
         {
@@ -273,14 +272,14 @@ export const spec = {
 
   renderContracts: [
     {
-      id: 'indicator-underline-only',
+      id: 'indicator-underline-and-pills',
       description:
-        'Sliding indicator is only rendered when variant is underline (default). Pills and outline variants do not render the indicator element.',
+        'Sliding indicator renders for both underline and pills variants (underline as a bottom bar, pills as a filled segment behind the active trigger). The outline variant draws its active state with borders and renders no indicator element.',
     },
     {
-      id: 'indicator-tracks-width',
+      id: 'indicator-tracks-dimension',
       description:
-        'The usePositionTracker hook runs with track: "width" — it matches the underline to the active trigger horizontally (offsetLeft + offsetWidth), re-measuring on resize and font load.',
+        'The usePositionTracker hook runs with track: "width" for underline (matching the active trigger horizontally) and track: "both" for pills (matching width and height to fill the trigger as a pill), re-measuring on resize and font load.',
     },
     {
       id: 'content-tabindex-minus-one',
@@ -352,10 +351,9 @@ export const spec = {
       'Inactive content is hidden via data-state=inactive display:none',
       'Default variant is underline',
       'Default size is md',
-      'Sliding indicator renders only for underline variant',
-      'Sliding indicator is hidden for pills variant',
+      'Sliding indicator renders for underline and pills variants',
       'Sliding indicator is hidden for outline variant',
-      'Pills variant applies border-radius and active background',
+      'Pills variant renders the sliding pill indicator and active label color',
       'Outline variant applies borders and active background',
       'Size sm applies smaller padding and font',
       'Size lg applies larger padding and font',

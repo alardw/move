@@ -309,6 +309,23 @@
   border-bottom: 1px solid var(--move-table-cell-border);
 }
 
+/* Row-level vertical alignment — driven by the Row `valign` prop (data attribute),
+   never a default. Applies to that row's cells only. */
+.row[data-valign='start'] > .cell,
+.row[data-valign='start'] > .head {
+  vertical-align: top;
+}
+
+.row[data-valign='center'] > .cell,
+.row[data-valign='center'] > .head {
+  vertical-align: middle;
+}
+
+.row[data-valign='end'] > .cell,
+.row[data-valign='end'] > .head {
+  vertical-align: bottom;
+}
+
 /* Per-column alignment — applies to both Head and Cell. */
 .cell[data-align='start'],
 .head[data-align='start'] {

@@ -1,4 +1,4 @@
-// Generated from Checkbox.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Checkbox.spec.ts
 export { Checkbox } from './Checkbox';
 export type { CheckboxProps, CheckboxGroupProps, CheckboxSize } from './Checkbox';
 export { useCheckbox } from './useCheckbox';

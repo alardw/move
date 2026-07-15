@@ -1,10 +1,9 @@
 // FormField.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'FormField',
   componentClass: 'presentational' as const,
   category: 'forms',
@@ -26,8 +25,8 @@ export const spec = {
     },
     {
       name: 'label',
-      element: 'div',
-      description: 'Label area that sits beside or above the field depending on container width',
+      element: 'label',
+      description: 'Real <label> tied to the control via htmlFor, so clicking it focuses the field',
     },
     {
       name: 'field',
@@ -73,7 +72,7 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'div', description: 'Label container' }],
+      slots: [{ name: 'label', element: 'label', description: 'Label container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

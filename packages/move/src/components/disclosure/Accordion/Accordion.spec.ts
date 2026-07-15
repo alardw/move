@@ -1,16 +1,15 @@
 // Accordion.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Accordion',
   componentClass: 'disclosure' as const,
   category: 'disclosure',
   description:
     'Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal',
-  animationPatterns: ['disclosure'],
+  choreographies: ['disclosure'],
   families: {
     behavior: ['disclosure'],
     state: ['controlled-value'], // value identifies which item(s) are open
@@ -120,8 +119,7 @@ export const spec = {
           name: 'animations',
           type: 'AnimationTrigger[] | false',
           moveSpecific: true,
-          description:
-            'Animation config for enter stagger and content expand/collapse, or false to disable',
+          description: 'Animation config for content expand/collapse, or false to disable',
         },
         {
           name: 'children',
@@ -152,8 +150,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      description:
-        'Individual disclosure panel with stagger enter animation and data-state tracking',
+      description: 'Individual disclosure panel with data-state tracking',
     },
     {
       name: 'Header',
@@ -362,11 +359,6 @@ export const spec = {
         'Item wraps children in AccordionItemContext.Provider to share value and active state with trigger/content',
     },
     {
-      id: 'stagger-enter',
-      description:
-        'Items play a stagger entrance animation on mount based on their DOM index and stagger.delay config',
-    },
-    {
       id: 'icon-rotation-sync',
       description:
         'Trigger icon rotation is synchronized with the content expand/collapse animation duration',
@@ -562,7 +554,6 @@ export const spec = {
       'Content has role=region',
     ] as string[],
     animation: [
-      'Items animate in with stagger on mount (opacity + scale)',
       'Content animates height from 0 to auto on open',
       'Content inner fades in with delayed opacity on open',
       'Content animates height to 0 on close',

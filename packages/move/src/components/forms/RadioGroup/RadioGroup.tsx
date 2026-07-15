@@ -1,9 +1,10 @@
 'use client';
-// Generated from RadioGroup.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from RadioGroup.spec.ts
 import * as React from 'react';
 import { useRef } from 'react';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useAnimations, resolveAnimationsConfig, poppy, snappy } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
@@ -45,15 +46,21 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
   moveProps: ['invalid', 'size'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const rootRef = React.useRef<HTMLDivElement>(null);
+    const mergedRef = useMergedRef<HTMLDivElement>(ref, rootRef);
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!props.invalid,
+      ref: rootRef,
+    });
     return {
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <RadixRadioGroup.Root
-            {...attrs}
+            {...controlProps}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             value={props.value as string}
             defaultValue={props.defaultValue as string}
             onValueChange={props.onValueChange as (value: string) => void}

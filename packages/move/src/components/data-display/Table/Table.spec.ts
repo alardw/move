@@ -1,16 +1,15 @@
 // Table.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Table',
   componentClass: 'display' as const,
   category: 'data-display',
   description:
     'Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.',
-  animationPatterns: ['listReveal'],
+  choreographies: ['listReveal'],
   families: {
     behavior: ['data-row'],
     state: ['stateless'],
@@ -201,6 +200,13 @@ export const spec = {
           type: 'boolean',
           moveSpecific: true,
           description: 'Mark row as selected.',
+        },
+        {
+          name: 'valign',
+          type: "'start' | 'center' | 'end'",
+          moveSpecific: true,
+          description:
+            "Vertical alignment of this row's cells (start = top, center = middle, end = bottom). Defaults to the browser's middle; start keeps neighbours aligned when one cell is multi-line.",
         },
         {
           name: 'interactive',
@@ -503,7 +509,7 @@ export const spec = {
         {
           children: 'tbody > tr',
           animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0 } },
-          stagger: { delay: 30 },
+          stagger: { delay: 12 },
         },
       ],
     },

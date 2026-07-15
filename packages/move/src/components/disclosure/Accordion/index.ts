@@ -1,4 +1,4 @@
-// Generated from Accordion.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Accordion.spec.ts
 export { Accordion } from './Accordion';
 export type {
   AccordionRootProps,

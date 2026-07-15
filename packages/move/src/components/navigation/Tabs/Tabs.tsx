@@ -1,5 +1,5 @@
 'use client';
-// Generated from Tabs.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Tabs.spec.ts
 
 import * as React from 'react';
 import { Tabs as RadixTabs } from 'radix-ui';
@@ -116,11 +116,16 @@ const TabsList = withMoveComponent<'list' | 'indicator', TabsListProps, HTMLDivE
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const variant = props.variant as TabsVariant;
-    const showIndicator = variant === 'underline';
+    // Both underline and pills ride the same sliding indicator; the outline
+    // variant draws its active state with borders and has no indicator.
+    // Underline tracks width only (fixed-height bar); pills is a full-size
+    // pill so it tracks width + height, matching ToggleGroup's segment.
+    const isPills = variant === 'pills';
+    const showIndicator = variant === 'underline' || isPills;
     const { indicatorRef, update } = useSlidingIndicator({
       containerRef: internalRef as React.RefObject<HTMLElement | null>,
       activeSelector: '[data-state="active"]',
-      track: 'width',
+      track: isPills ? 'both' : 'width',
       disabled: props.animations === false || !showIndicator,
     });
 

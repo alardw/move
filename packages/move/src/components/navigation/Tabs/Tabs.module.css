@@ -1,4 +1,4 @@
-/* Generated from Tabs.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER) */
+/* Generated from Tabs.spec.ts */
 
 /* =============================================================================
    Tabs
@@ -52,12 +52,25 @@
 }
 
 .list[data-variant='pills'] .trigger {
-  border-radius: var(--move-rounded-md);
+  border-radius: var(--move-segment-radius);
+  position: relative;
+  z-index: 1;
 }
 
+/* Active label rides above the sliding pill; the indicator provides the fill. */
 .list[data-variant='pills'] .trigger[data-state='active'] {
-  background-color: var(--move-primary);
-  color: var(--move-primary-fg);
+  color: var(--move-segment-indicator-fg);
+}
+
+/* The sliding pill owns the background, so pills triggers stay transparent —
+   an opaque hover fill would paint over the indicator. Hover only nudges the
+   inactive label toward the active color (mirrors ToggleGroup). */
+.list[data-variant='pills'] .trigger:hover {
+  background-color: transparent;
+}
+
+.list[data-variant='pills'] .trigger[data-state='inactive']:hover {
+  color: var(--move-tabs-trigger-fg-active);
 }
 
 /* Variants — outline */
@@ -141,7 +154,7 @@
   display: none;
 }
 
-/* Indicator */
+/* Indicator — underline bar (default) */
 .indicator {
   position: absolute;
   bottom: 0;
@@ -150,4 +163,15 @@
   background-color: var(--move-tabs-indicator);
   pointer-events: none;
   will-change: transform, width;
+}
+
+/* Indicator — pill (filled active-item background, shared segment look) */
+.list[data-variant='pills'] .indicator {
+  top: 0;
+  bottom: auto;
+  height: auto;
+  background-color: var(--move-segment-indicator-bg);
+  border-radius: var(--move-segment-radius);
+  z-index: 0;
+  will-change: transform, width, height;
 }

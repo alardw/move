@@ -1,4 +1,4 @@
-// Generated from Tabs.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Tabs.spec.ts
 export { Tabs } from './Tabs';
 export type {
   TabsRootProps,

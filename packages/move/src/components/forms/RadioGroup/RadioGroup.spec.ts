@@ -1,16 +1,15 @@
 // RadioGroup.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'RadioGroup',
   componentClass: 'input_toggle' as const,
   category: 'forms',
   description:
     'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
-  animationPatterns: ['toggle'],
+  choreographies: ['toggle'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],

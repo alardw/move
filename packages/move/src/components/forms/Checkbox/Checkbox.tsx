@@ -1,8 +1,9 @@
 'use client';
-// Generated from Checkbox.spec.ts (schemaVersion: 6, specHash: PLACEHOLDER)
+// Generated from Checkbox.spec.ts
 import * as React from 'react';
 import { useRef, useCallback } from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
+import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
 import {
@@ -187,6 +188,13 @@ const CheckboxRoot = withMoveComponent<
     const resolvedIcon = useResolvedIcon(icon as string, iconSize);
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, rootRef);
+    // A role="checkbox" button isn't named by a wrapping <label>, so name it from
+    // its own children via aria-labelledby. Plus the shared field wiring.
+    const labelId = React.useId();
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      invalid: !!invalid,
+      ref: rootRef,
+    });
 
     const handleClick = () => {
       if (disabled) return;
@@ -237,12 +245,21 @@ const CheckboxRoot = withMoveComponent<
             onMouseLeave={handlePressUp}
           >
             <button
-              {...attrs}
+              {...controlProps}
               {...rootSpRest}
               ref={mergedRef}
               type="button"
               role="checkbox"
               aria-checked={checkbox.indeterminate ? 'mixed' : checkbox.checked}
+              aria-labelledby={
+                [
+                  controlProps['aria-labelledby'] as string | undefined,
+                  children != null ? labelId : undefined,
+                ]
+                  .filter(Boolean)
+                  .join(' ') || undefined
+              }
+              aria-required={props.required ? true : undefined}
               data-state={dataState}
               {...(size && size !== 'md' ? { 'data-size': size } : {})}
               {...(invalid ? { 'data-invalid': '' } : {})}
@@ -291,7 +308,7 @@ const CheckboxRoot = withMoveComponent<
                 value={checkbox.checked ? ((value as string) ?? 'on') : ''}
               />
             )}
-            {children}
+            {children != null && <span id={labelId}>{children}</span>}
           </label>
         );
       },

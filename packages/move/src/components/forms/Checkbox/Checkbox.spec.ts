@@ -1,16 +1,15 @@
 // Checkbox.spec.ts — Component specification
-// specHash: PLACEHOLDER
 
 import type { ComponentSpec } from '../../../spec-type';
 
 export const spec = {
-  schemaVersion: 7 as const,
+  schemaVersion: 1 as const,
   name: 'Checkbox',
   componentClass: 'input_toggle' as const,
   category: 'forms',
   description:
     'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
-  animationPatterns: ['toggle'],
+  choreographies: ['toggle'],
   families: {
     behavior: ['form-input'],
     state: ['controlled-value'],
