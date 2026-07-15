@@ -9,10 +9,15 @@
   --move-prose-bg-code: var(--move-bg-muted);
   --move-prose-bg-blockquote: var(--move-bg-subtle);
   --move-prose-heading-gap: 1em;
+  --move-prose-measure: 68ch;
+  --move-prose-paragraph-gap: 1.6em;
 
   font-family: var(--move-font-body, system-ui, sans-serif);
   color: var(--move-prose-fg);
   line-height: var(--move-leading-relaxed);
+  /* WCAG 1.4.8 — cap the text column to a readable measure (well under the
+     80-character AAA limit). Override --move-prose-measure (e.g. none) to widen. */
+  max-width: var(--move-prose-measure);
 }
 
 /* -- Size -- */
@@ -80,7 +85,7 @@
 
 .root p {
   margin-top: 0;
-  margin-bottom: 1em;
+  margin-bottom: var(--move-prose-paragraph-gap);
 }
 
 /* -- Links -- */

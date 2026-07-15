@@ -88,6 +88,12 @@ export const spec = {
       description: 'Blockquote background',
     },
     { name: '--move-prose-heading-gap', value: '1em', description: 'Top margin before headings' },
+    {
+      name: '--move-prose-measure',
+      value: '68ch',
+      description: 'Max text-column width — WCAG 1.4.8 readable measure (~66 chars)',
+    },
+    { name: '--move-prose-paragraph-gap', value: '1.6em', description: 'Space between paragraphs' },
   ],
 
   variants: {},
