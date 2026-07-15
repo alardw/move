@@ -38,7 +38,11 @@ interface Criterion {
 //   "Yours"    = entirely app-level; Move plays no part.
 const PERCEIVABLE: Criterion[] = [
   { sc: '1.1.1', name: 'Non-text Content', level: 'A', support: 'consumer', note: { included: 'Icons default to aria-hidden; every component accepts aria-label.', yours: 'Alt text for images and meaningful icons.' } },
-  { sc: '1.2.1–1.2.5', name: 'Time-based Media', level: 'A/AA', support: 'consumer', note: { included: 'AudioPlayer/VideoPlayer ship with controls.', yours: 'Captions, transcripts, and audio description (e.g. <track>).' } },
+  { sc: '1.2.1', name: 'Audio-only & Video-only (Prerecorded)', level: 'A', support: 'consumer', note: { included: 'AudioPlayer/VideoPlayer ship with controls.', yours: 'A transcript (audio-only) or an audio/described track (video-only).' } },
+  { sc: '1.2.2', name: 'Captions (Prerecorded)', level: 'A', support: 'consumer', note: { included: 'VideoPlayer accepts a <track kind="captions">.', yours: 'The caption file.' } },
+  { sc: '1.2.3', name: 'Audio Description or Media Alternative (Prerecorded)', level: 'A', support: 'consumer', note: { yours: 'A described audio track or a full text alternative.' } },
+  { sc: '1.2.4', name: 'Captions (Live)', level: 'AA', support: 'consumer', note: { yours: 'Real-time captions for live audio.' } },
+  { sc: '1.2.5', name: 'Audio Description (Prerecorded)', level: 'AA', support: 'consumer', note: { yours: 'A synchronized audio-description track.' } },
   { sc: '1.3.1', name: 'Info & Relationships', level: 'A', support: 'supports', note: { included: 'Radix roles; FormField wires label↔control (a real <label for>), aria-invalid, and aria-describedby; Checkbox/Radio self-name via aria-labelledby.' } },
   { sc: '1.3.2', name: 'Meaningful Sequence', level: 'A', support: 'supports', note: { included: 'Components render in logical DOM order; reading/tab order follows.', yours: 'Page-level sequence.' } },
   { sc: '1.3.3', name: 'Sensory Characteristics', level: 'A', support: 'consumer', note: { yours: 'Instructions that rely on shape/position are content-level.' } },
@@ -46,22 +50,30 @@ const PERCEIVABLE: Criterion[] = [
   { sc: '1.3.5', name: 'Identify Input Purpose', level: 'AA', support: 'supports', note: { included: 'Native inputs pass through autocomplete; PinInput sets one-time-code.' } },
   { sc: '1.4.1', name: 'Use of Color', level: 'A', support: 'enables', note: { included: 'Link defaults to an always-on underline (not color alone). The invalid state is a red border.', yours: 'Add a FormField.Description error (auto-associated) so the cue is not color-only.' } },
   { sc: '1.4.2', name: 'Audio Control', level: 'A', support: 'na', note: { included: 'Nothing auto-plays audio; players expose pause/stop.' } },
-  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'partial', note: { included: 'Themes from defineThemes are clamped to AA — guaranteed.', gap: 'The shipped lightTheme/darkTheme still carry failures (fg-subtle ≈ 2.57:1). Dogfood the generator or fix the exports.' } },
+  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'supports', note: { included: 'Every theme is contrast-clamped — including the shipped lightTheme/darkTheme, which are now generated from one MOVE_SEED by the same defineThemes engine (dogfooded). Body text targets 7:1, secondary 5.5:1, subtle text and links 4.5:1, so no tier ships below AA.', yours: 'Raw-token overrides you pass are your call — auditTheme / check:theme-contrast grade them.' } },
   { sc: '1.4.4', name: 'Resize Text', level: 'AA', support: 'supports', note: { included: 'Type scale is rem-based; no pixel-locked font sizes.' } },
   { sc: '1.4.5', name: 'Images of Text', level: 'AA', support: 'na', note: { included: 'Components render real text, never images of text.' } },
+  { sc: '1.4.6', name: 'Contrast (Enhanced)', level: 'AAA', support: 'partial', note: { included: 'Stock themes run body text at 14–17:1 and links/most secondary text past the 7:1 AAA bar.', gap: 'The subtle text tier ships at ~4.5:1 (AA), so not every text style clears 7:1.' } },
+  { sc: '1.4.7', name: 'Low or No Background Audio', level: 'AAA', support: 'na', note: { included: 'No multi-track/background audio; players expose volume and mute.' } },
+  { sc: '1.4.8', name: 'Visual Presentation', level: 'AAA', support: 'partial', note: { included: 'Prose caps line length (measure) and sets line-height/paragraph spacing; text is never justified.', yours: 'User-configurable colours, width, and spacing beyond that are app-level.' } },
+  { sc: '1.4.9', name: 'Images of Text (No Exception)', level: 'AAA', support: 'supports', note: { included: 'Components render real text, never rasterised — so the no-exception bar holds (same basis as 1.4.5).' } },
   { sc: '1.4.10', name: 'Reflow', level: 'AA', support: 'supports', note: { included: 'Container queries and min-width:0 layouts; no fixed-width traps.', yours: 'Spot-check Autocomplete tags at 200%.' } },
-  { sc: '1.4.11', name: 'Non-text Contrast', level: 'AA', support: 'none', note: { gap: 'Input, checkbox, and switch borders resolve to gray-200 ≈ 1.24:1 (need 3:1). auditTheme now checks text and the focus ring at 3:1, but not resting borders. Highest-impact contrast fix.' } },
-  { sc: '1.4.12', name: 'Text Spacing', level: 'AA', support: 'partial', note: { included: 'Mostly tolerant of spacing overrides.', gap: 'Single-line inputs use a fixed height that can clip enlarged line-height. Verify at 200%.' } },
+  { sc: '1.4.11', name: 'Non-text Contrast', level: 'AA', support: 'supports', note: { included: 'Interactive control borders (input, checkbox, select, radio…) use --move-border-interactive, clamped to 3:1 against the surface they sit on — a stronger step swaps in automatically on elevated surfaces so the edge holds without ever being harsher than needed. The filled variant keeps that border (a heavier fill, not borderless). auditTheme grades it, so the Theme Builder matrix and check:theme-contrast catch regressions. Focus ring also holds 3:1, and the Switch is identified by its thumb reading 7–19:1 against the track and page.' } },
+  { sc: '1.4.12', name: 'Text Spacing', level: 'AA', support: 'supports', note: { included: 'Type is rem-based and line-height overrides are absorbed. Every text-bearing control (inputs, Select, Button, PinInput, tags) uses min-height, not a fixed height, so enlarged line-height grows the control instead of clipping — widened letter/word spacing scrolls within single-line inputs as usual. Nothing is lost at the 1.5×/0.12em/0.16em test or at 200% zoom.' } },
   { sc: '1.4.13', name: 'Content on Hover or Focus', level: 'AA', support: 'supports', note: { included: 'Tooltip (Radix) is dismissible, hoverable, and persistent.' } },
 ];
 
 const OPERABLE: Criterion[] = [
-  { sc: '2.1.1', name: 'Keyboard', level: 'A', support: 'partial', note: { included: 'Radix overlays are fully operable.', gap: 'Carousel viewport has no arrow-key paging (buttons work); ColorPicker slider is role=slider with no key handler (use the channel inputs).' } },
+  { sc: '2.1.1', name: 'Keyboard', level: 'A', support: 'supports', note: { included: 'Radix overlays are fully operable. ColorPicker sliders (saturation/hue/opacity) take arrow keys — Shift for coarse steps, Home/End to the ends — plus the channel inputs. Carousel is driven by real prev/next buttons and dot controls (all keyboard-operable); viewport arrow-key paging is an unshipped enhancement, not a barrier.' } },
   { sc: '2.1.2', name: 'No Keyboard Trap', level: 'A', support: 'supports', note: { included: 'No focus traps; Radix overlays release focus on close.' } },
+  { sc: '2.1.3', name: 'Keyboard (No Exception)', level: 'AAA', support: 'supports', note: { included: 'All functionality is keyboard-operable with no timing — ColorPicker channels take arrow keys, Carousel runs on real buttons — so the no-exception bar holds.' } },
   { sc: '2.1.4', name: 'Character Key Shortcuts', level: 'A', support: 'na', note: { included: 'No single-character shortcuts are imposed.' } },
   { sc: '2.2.1', name: 'Timing Adjustable', level: 'A', support: 'supports', note: { included: 'Toast auto-dismiss pauses on hover/focus and its duration is configurable (or disable-able).' } },
   { sc: '2.2.2', name: 'Pause, Stop, Hide', level: 'A', support: 'supports', note: { included: 'Reduced-motion is honored end to end: the JS engine snaps every animation to its end state, a global CSS reset neutralizes @keyframes/transitions (Skeleton pulse, Avatar pulse, PinInput blink), and Carousel autoplay does not start. Toast auto-dismiss also pauses on hover/focus.' } },
+  { sc: '2.2.3', name: 'No Timing', level: 'AAA', support: 'partial', note: { included: 'No session or task time limits are imposed.', gap: 'Toast defaults to a timed auto-dismiss (pausable and disable-able) — turn it off for strict "no timing".' } },
   { sc: '2.3.1', name: 'Three Flashes', level: 'A', support: 'supports', note: { included: 'No content flashes above threshold (PinInput caret blinks at 1 Hz).' } },
+  { sc: '2.3.2', name: 'Three Flashes', level: 'AAA', support: 'supports', note: { included: 'Nothing flashes above threshold at all (PinInput caret ~1 Hz) — the stricter no-small-area-exception bar holds.' } },
+  { sc: '2.3.3', name: 'Animation from Interactions', level: 'AAA', support: 'supports', note: { included: 'Motion triggered by interaction respects prefers-reduced-motion end to end, so it can be turned off.' } },
   { sc: '2.4.1', name: 'Bypass Blocks', level: 'A', support: 'consumer', note: { included: 'The shell composes landmarks.', yours: 'Place the skip link.' } },
   { sc: '2.4.2', name: 'Page Titled', level: 'A', support: 'consumer', note: { yours: 'Document <title>, set by your app/router.' } },
   { sc: '2.4.3', name: 'Focus Order', level: 'A', support: 'partial', note: { included: 'Focus order is generally logical.', gap: 'The mobile Sidebar sheet is a hand-rolled overlay with no focus trap/restore — focus escapes behind the backdrop.' } },
@@ -70,12 +82,16 @@ const OPERABLE: Criterion[] = [
   { sc: '2.4.6', name: 'Headings & Labels', level: 'AA', support: 'consumer', note: { included: 'Heading + Label components provide the structure.', yours: 'The descriptive text.' } },
   { sc: '2.4.7', name: 'Focus Visible', level: 'AA', support: 'supports', note: { included: 'The ring shows only for keyboard users (:focus-visible), from one --move-focus-ring token; its offset adapts to the element (hugs an input border, floats outside a button, insets on a table row). TimeField uses plain :focus — minor.' } },
   { sc: '2.4.11', name: 'Focus Not Obscured (Minimum)', level: 'AA', support: 'partial', note: { gap: 'New in 2.2. No scroll-padding is set, so sticky headers (Table, editor toolbar, Sidebar, Calendar) can cover an element tabbed underneath. Add scroll-margin/padding.' } },
+  { sc: '2.4.12', name: 'Focus Not Obscured (Enhanced)', level: 'AAA', support: 'none', note: { gap: 'The enhanced bar (no part of a focused element ever hidden) is not met — same root as 2.4.11: no scroll-padding, so sticky headers can cover it.' } },
+  { sc: '2.4.13', name: 'Focus Appearance', level: 'AAA', support: 'partial', note: { included: 'A consistent 2px solid focus ring from one token, ~5–6:1 against the surface.', gap: 'Not audited against 2.4.13’s exact minimum-area / adjacent-contrast math — likely but unverified.' } },
   { sc: '2.5.1', name: 'Pointer Gestures', level: 'A', support: 'supports', note: { included: 'All interactions are single-pointer; no path or multipoint gestures required.' } },
   { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'partial', note: { included: 'Radix uses up-events.', gap: 'ColorPicker commits on pointer-down with no abort.' } },
   { sc: '2.5.3', name: 'Label in Name', level: 'A', support: 'supports', note: { included: 'Icon buttons name from labels; Checkbox/Radio visible text is the accessible name via aria-labelledby.' } },
   { sc: '2.5.4', name: 'Motion Actuation', level: 'A', support: 'na', note: { included: 'No device-motion actuation.' } },
+  { sc: '2.5.5', name: 'Target Size (Enhanced)', level: 'AAA', support: 'none', note: { included: 'Controls meet the AA 24px target (some via expanded hit regions).', gap: 'The enhanced 44×44px bar is not met.' } },
+  { sc: '2.5.6', name: 'Concurrent Input Mechanisms', level: 'AAA', support: 'supports', note: { included: 'No component restricts input to one modality — pointer, keyboard, and touch all work.' } },
   { sc: '2.5.7', name: 'Dragging Movements', level: 'AA', support: 'supports', note: { included: 'New in 2.2. Every draggable (Slider, ColorPicker, Carousel, Splitter, Drawer) has a tap/keyboard/button alternative.' } },
-  { sc: '2.5.8', name: 'Target Size (Minimum)', level: 'AA', support: 'none', note: { gap: 'New in 2.2. 11 targets fall below 24×24 — ColorPicker sliders (10–18px) and NumberInput steppers (~15–18px) fail at default size; several controls fail at size sm.' } },
+  { sc: '2.5.8', name: 'Target Size (Minimum)', level: 'AA', support: 'supports', note: { included: 'Interactive controls meet the 24px minimum. Controls at size sm sit at the 32px control height; Checkbox/Radio expose the whole label row as the target, not just the box. Compact icon buttons (Alert/Toast close) and slider handles (ColorPicker hue/opacity, InputRange thumb) keep a small visual but carry an expanded hit region to 24px. NumberInput steppers rely on full-size text entry, and ColorPicker on its channel inputs — a WCAG 2.5.8 equivalent-control.' } },
 ];
 
 const UNDERSTANDABLE: Criterion[] = [
@@ -85,6 +101,7 @@ const UNDERSTANDABLE: Criterion[] = [
   { sc: '3.2.2', name: 'On Input', level: 'A', support: 'supports', note: { included: 'No component auto-submits or changes context on input.' } },
   { sc: '3.2.3', name: 'Consistent Navigation', level: 'AA', support: 'consumer', note: { yours: 'Navigation consistency is an app concern.' } },
   { sc: '3.2.4', name: 'Consistent Identification', level: 'AA', support: 'supports', note: { included: 'A given component is identified consistently across the library.' } },
+  { sc: '3.2.5', name: 'Change on Request', level: 'AAA', support: 'supports', note: { included: 'No component initiates a context change on its own — navigation and submission happen only on explicit action.' } },
   { sc: '3.2.6', name: 'Consistent Help', level: 'A', support: 'consumer', note: { yours: 'New in 2.2. A repeated help mechanism is app-level.' } },
   { sc: '3.3.1', name: 'Error Identification', level: 'A', support: 'enables', note: { included: 'aria-invalid on the control, plus the message auto-linked via aria-describedby and announced (role=alert).', yours: 'Set invalid and supply the message text.' } },
   { sc: '3.3.2', name: 'Labels or Instructions', level: 'A', support: 'supports', note: { included: 'Label associates via htmlFor (a real <label>); required reaches the control natively or via aria-required (incl. Checkbox). The asterisk is decorative (aria-hidden) — requiredness is programmatic.' } },
@@ -92,6 +109,7 @@ const UNDERSTANDABLE: Criterion[] = [
   { sc: '3.3.4', name: 'Error Prevention', level: 'AA', support: 'consumer', note: { yours: 'Confirm/undo for legal/financial submissions is app-flow.' } },
   { sc: '3.3.7', name: 'Redundant Entry', level: 'A', support: 'supports', note: { included: 'New in 2.2. Native inputs support autofill; PinInput enables OTP auto-entry.' } },
   { sc: '3.3.8', name: 'Accessible Authentication', level: 'AA', support: 'supports', note: { included: 'New in 2.2. No cognitive-test/CAPTCHA components; auth fields support autofill and one-time-code.' } },
+  { sc: '3.3.9', name: 'Accessible Authentication (Enhanced)', level: 'AAA', support: 'supports', note: { included: 'No cognitive-function test anywhere; auth fields support autofill and one-time-code.', yours: 'Don’t add a CAPTCHA or puzzle.' } },
 ];
 
 const ROBUST: Criterion[] = [
@@ -106,9 +124,9 @@ const GROUPS: { key: string; title: string; lede: string; rows: Criterion[] }[] 
   { key: 'robust', title: '4. Robust', lede: 'Content must be robust enough for assistive technologies.', rows: ROBUST },
 ];
 
+const TOTAL_CRITERIA = GROUPS.reduce((n, g) => n + g.rows.length, 0);
+
 const GAPS: HighlightItem[] = [
-  { icon: 'contrast', text: 'Non-text contrast fails for control borders (§1.4.11). Input/checkbox/switch borders sit near 1.24:1. auditTheme now clamps text and the focus ring to 3:1 but not resting borders. Fix: raise the border/placeholder tokens above 3:1 and extend auditTheme to UI borders. Highest leverage now that forms errors are wired.' },
-  { icon: 'expand', text: 'Target sizes below 24px (§2.5.8). ColorPicker sliders and NumberInput steppers fail at default size. Fix: enlarge, or add expanded ::before hit areas (Autocomplete’s tag-remove is the pattern).' },
   { icon: 'panel-left', text: 'The mobile Sidebar sheet is a modal with no keyboard support (§2.1.2/§2.4.3). No focus trap, Escape, or restore. Fix: wrap it in Radix Dialog like Drawer already is.' },
 ];
 
@@ -190,14 +208,14 @@ export function AccessibilityPage() {
         <Stack gap="sm">
           <Heading level={1}>Accessibility</Heading>
           <Text color="muted" size="lg">
-            An honest conformance report for WCAG 2.2, Levels A and AA — every criterion, how Move
-            addresses it, and where it falls short. No blanket “compliant” claims: a component
-            library can only take you part of the way.
+            An honest conformance report for WCAG 2.2, Levels A and AA — plus the AAA criteria Move
+            already clears. Every criterion, how Move addresses it, and where it falls short. No
+            blanket “compliant” claims: a component library can only take you part of the way.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft" color="green"><Icon name="check" />Strong keyboard + focus foundation</Badge>
             <Badge variant="soft" color="yellow"><Icon name="triangle-alert" />Known contrast + target-size gaps</Badge>
-            <Badge variant="soft"><Icon name="git-commit-horizontal" />WCAG 2.2 A + AA</Badge>
+            <Badge variant="soft"><Icon name="git-commit-horizontal" />WCAG 2.2 A · AA · AAA</Badge>
           </Stack>
         </Stack>
 
@@ -217,7 +235,8 @@ export function AccessibilityPage() {
               <code>invalid</code> and add an error Description). And a large group is simply{' '}
               <strong>yours</strong>: alt text,
               heading structure, page language, meaningful sequence, and the words in your error
-              messages. The table below says which is which for all 53 criteria.
+              messages. The table below says which is which for all {TOTAL_CRITERIA} criteria (A,
+              AA, and the AAA rules that apply).
             </Text>
             <Stack direction="row" gap="md" wrap>
               <Text size="sm" color="muted"><SupportBadge support="supports" /> Move handles it</Text>
