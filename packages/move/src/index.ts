@@ -848,7 +848,11 @@ export { ToggleButton } from './components/actions/ToggleButton';
 export type { ToggleButtonProps } from './components/actions/ToggleButton';
 
 export { ToggleGroup } from './components/actions/ToggleGroup';
-export type { ToggleGroupRootProps, ToggleGroupItemProps } from './components/actions/ToggleGroup';
+export type {
+  ToggleGroupRootProps,
+  ToggleGroupItemProps,
+  ToggleGroupVariant,
+} from './components/actions/ToggleGroup';
 
 export { Breadcrumb } from './components/navigation/Breadcrumb';
 export type {

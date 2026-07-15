@@ -34,7 +34,7 @@ export function Preview({ title, code, children }: PreviewProps) {
             value={view}
             onValueChange={(v: string) => { if (v) setView(v as 'preview' | 'code'); }}
             size="sm"
-            variant="secondary"
+            variant="pills"
             aria-label="Toggle preview or code"
           >
             <ToggleGroup.Item value="preview">Preview</ToggleGroup.Item>

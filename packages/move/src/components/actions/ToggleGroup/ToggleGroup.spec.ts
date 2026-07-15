@@ -104,10 +104,11 @@ export const spec = {
         },
         {
           name: 'variant',
-          type: "'primary' | 'secondary' | 'ghost' | 'danger'",
-          default: "'secondary'",
+          type: "'pills' | 'underline'",
+          default: "'pills'",
           moveSpecific: true,
-          description: 'Visual style variant inherited by items',
+          description:
+            'Visual appearance, shared with Tabs: a filled sliding pill, or a Pinterest-style underline filter bar. Inherited by items.',
         },
         {
           name: 'animations',
@@ -232,7 +233,7 @@ export const spec = {
     {
       id: 'item-on-text-color',
       description:
-        'Selected item (data-state="on") uses --move-primary-fg text color; unselected uses --move-fg-muted',
+        'Selected item (data-state="on") uses --move-toggle-group-selected-fg (segment indicator fg for pills, base fg for underline); unselected uses --move-segment-item-fg',
     },
     {
       id: 'item-animate-disabled-default',
@@ -265,7 +266,7 @@ export const spec = {
   ],
 
   variants: {
-    variant: ['primary', 'secondary', 'ghost', 'danger'] as string[],
+    variant: ['pills', 'underline'] as string[],
   },
   sizes: ['sm', 'md', 'lg'] as string[],
 
@@ -285,7 +286,7 @@ export const spec = {
       'Root renders children',
       'Root forwards className and style',
       'Root forwards ref to root element',
-      'Root defaults to variant=secondary',
+      'Root defaults to variant=pills',
       'Root defaults to size=md',
       'Root applies data-orientation attribute',
       'Root applies data-size attribute',
@@ -299,7 +300,7 @@ export const spec = {
       'Item supports disabled prop',
       'Item has data-state="on" when selected',
       'Item has data-state="off" when not selected',
-      'Item text color changes: --move-fg-muted when off, --move-primary-fg when on',
+      'Item text color changes: --move-segment-item-fg when off, --move-toggle-group-selected-fg when on',
       'Item hover/press animations are disabled by default',
       'Item animations can be re-enabled via animations prop',
       'Controlled value prop selects the matching item',

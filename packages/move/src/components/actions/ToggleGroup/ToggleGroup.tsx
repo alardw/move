@@ -11,8 +11,12 @@ import {
   resolveAnimationsConfig,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import type { ButtonVariant, ButtonSize } from '../../actions/Button';
+import type { ButtonSize } from '../../actions/Button';
 import styles from './ToggleGroup.module.css';
+
+/** Visual appearance, shared with Tabs so the two read as one vocabulary:
+ *  a filled sliding pill, or a Pinterest-style underline filter bar. */
+export type ToggleGroupVariant = 'pills' | 'underline';
 
 // ============================================================================
 // Context
@@ -20,12 +24,12 @@ import styles from './ToggleGroup.module.css';
 
 interface ToggleGroupContextValue {
   size: ButtonSize;
-  variant: ButtonVariant;
+  variant: ToggleGroupVariant;
 }
 
 const ToggleGroupContext = React.createContext<ToggleGroupContextValue>({
   size: 'md',
-  variant: 'secondary',
+  variant: 'pills',
 });
 
 // ============================================================================
@@ -43,7 +47,7 @@ export interface ToggleGroupRootProps extends React.HTMLAttributes<HTMLElement> 
   disabled?: boolean;
   loop?: boolean;
   size?: ButtonSize;
-  variant?: ButtonVariant;
+  variant?: ToggleGroupVariant;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -56,7 +60,7 @@ const ToggleGroupRoot = withMoveComponent<
   name: 'ToggleGroupRoot',
   styles,
   slots: ['root', 'indicator'] as const,
-  defaults: { variant: 'secondary', size: 'md' },
+  defaults: { variant: 'pills', size: 'md' },
   moveProps: [
     'value',
     'defaultValue',
@@ -71,7 +75,7 @@ const ToggleGroupRoot = withMoveComponent<
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const ctxValue = React.useMemo(
-      () => ({ size: props.size as ButtonSize, variant: props.variant as ButtonVariant }),
+      () => ({ size: props.size as ButtonSize, variant: props.variant as ToggleGroupVariant }),
       [props.size, props.variant],
     );
 
@@ -92,10 +96,12 @@ const ToggleGroupRoot = withMoveComponent<
 
     // --- Sliding indicator: shared usePositionTracker hook (the slidingIndicator
     // capability). The press-scale stays a declarative Root.press animation. ---
+    // Pills fill the active item (track both axes); underline rides a bar under
+    // it (track width only) — the same split Tabs uses for its two variants.
     const { indicatorRef, update: updateIndicator } = usePositionTracker({
       containerRef: internalRef as React.RefObject<HTMLElement | null>,
       activeSelector: '[data-state="on"]',
-      track: 'both',
+      track: props.variant === 'underline' ? 'width' : 'both',
       disabled: props.animations === false,
     });
 

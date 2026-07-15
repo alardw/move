@@ -80,7 +80,7 @@ export function ComponentsOverviewPage() {
               <ToggleGroup.Root
                 value={category}
                 onValueChange={(v: string) => v && setCategory(v)}
-                variant="ghost"
+                variant="underline"
                 size="sm"
               >
                 <ToggleGroup.Item value="All">All</ToggleGroup.Item>

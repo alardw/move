@@ -68,7 +68,7 @@ export function DesignPatternsOverviewPage() {
         <ToggleGroup.Root
           value={group}
           onValueChange={(v: string) => v && setGroup(v)}
-          variant="ghost"
+          variant="underline"
           size="sm"
         >
           <ToggleGroup.Item value="All">All</ToggleGroup.Item>

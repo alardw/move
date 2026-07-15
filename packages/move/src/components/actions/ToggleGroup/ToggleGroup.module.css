@@ -9,28 +9,31 @@
 
 .root {
   /* Local aliases onto the shared segmented-control tokens so ToggleGroup
-     and Tabs[variant="pills"] read from one vocabulary. */
+     and Tabs read from one vocabulary. */
   --move-toggle-group-radius: var(--move-segment-radius);
   --move-toggle-group-padding: var(--move-segment-padding);
-
-  /* Variant-driven tokens — override these via data-variant to change
-     how prominent the selected pill looks. Default is the brand pill. */
   --move-toggle-group-indicator-bg: var(--move-segment-indicator-bg);
   --move-toggle-group-selected-fg: var(--move-segment-indicator-fg);
 
   display: inline-flex;
   gap: var(--move-segment-gap);
   position: relative;
+}
+
+/* Pills — filled sliding pill on a shaded track (default). Mirrors
+   Tabs[variant="pills"] pixel-for-pixel via the shared segment tokens. */
+.root[data-variant='pills'] {
   background-color: var(--move-segment-track-bg);
   border-radius: var(--move-toggle-group-radius);
   padding: var(--move-toggle-group-padding);
 }
 
-/* Softer pill: neutral surface background + base text. Use for UI where
-   the toggle is secondary to the content (docs preview/code toggle, etc). */
-.root[data-variant='secondary'],
-.root[data-variant='ghost'] {
-  --move-toggle-group-indicator-bg: var(--move-bg-emphasis);
+/* Underline — Pinterest-style filter bar: transparent, spaced items, a thin
+   accent bar under the active one. Active label is base fg (not inverted).
+   Mirrors Tabs[variant="underline"]. */
+.root[data-variant='underline'] {
+  gap: var(--move-space-2);
+  border-bottom: 1px solid var(--move-border-base);
   --move-toggle-group-selected-fg: var(--move-fg-base);
 }
 
@@ -54,10 +57,23 @@
   top: 0;
   left: 0;
   background-color: var(--move-toggle-group-indicator-bg);
-  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding));
   pointer-events: none;
   will-change: transform, width, height;
   z-index: 0;
+}
+
+/* Pills — the indicator is the filled pill behind the active item. */
+.root[data-variant='pills'] .indicator {
+  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding));
+}
+
+/* Underline — a thin accent bar at the bottom edge; the tracker sizes its
+   width only (track: 'width'), so height/bottom are fixed here. */
+.root[data-variant='underline'] .indicator {
+  top: auto;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 1px;
 }
 
 /* ---- Item ---- */

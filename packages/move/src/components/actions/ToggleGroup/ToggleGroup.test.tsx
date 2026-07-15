@@ -54,7 +54,7 @@ describe('ToggleGroup', () => {
       expect(el).toHaveStyle({ marginTop: '10px' });
     });
 
-    it('defaults to variant=secondary', () => {
+    it('defaults to variant=pills', () => {
       render(
         <ToggleGroup.Root defaultValue="a">
           <ToggleGroup.Item value="a" data-testid="item">
@@ -63,7 +63,7 @@ describe('ToggleGroup', () => {
         </ToggleGroup.Root>,
       );
       // Variant is passed to items via context
-      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'secondary');
+      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'pills');
     });
 
     it('defaults to size=md', () => {
@@ -126,13 +126,13 @@ describe('ToggleGroup', () => {
 
     it('provides size and variant to Items via context', () => {
       render(
-        <ToggleGroup.Root size="lg" variant="primary" defaultValue="a">
+        <ToggleGroup.Root size="lg" variant="underline" defaultValue="a">
           <ToggleGroup.Item value="a" data-testid="item">
             A
           </ToggleGroup.Item>
         </ToggleGroup.Root>,
       );
-      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'primary');
+      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'underline');
       expect(screen.getByTestId('item')).toHaveAttribute('data-size', 'lg');
     });
 
@@ -173,13 +173,13 @@ describe('ToggleGroup', () => {
 
     it('receives data-variant and data-size from context', () => {
       render(
-        <ToggleGroup.Root size="sm" variant="danger" defaultValue="a">
+        <ToggleGroup.Root size="sm" variant="underline" defaultValue="a">
           <ToggleGroup.Item value="a" data-testid="item">
             A
           </ToggleGroup.Item>
         </ToggleGroup.Root>,
       );
-      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'danger');
+      expect(screen.getByTestId('item')).toHaveAttribute('data-variant', 'underline');
       expect(screen.getByTestId('item')).toHaveAttribute('data-size', 'sm');
     });
 
