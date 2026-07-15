@@ -70,7 +70,7 @@ const MOBILE_OVERLAY_ANIMATIONS: AnimationTrigger[] = [
   },
   {
     trigger: 'Overlay.exit',
-    sequence: [{ animation: { opacity: { to: 0, ease: 'outQuart', duration: 200 } } }],
+    sequence: [{ animation: { opacity: { from: 1, to: 0, ease: 'outQuart', duration: 150 } } }],
   },
 ];
 

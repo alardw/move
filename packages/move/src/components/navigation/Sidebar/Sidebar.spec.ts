@@ -487,7 +487,10 @@ export const spec = {
       trigger: 'Overlay.enter',
       sequence: [{ animation: { opacity: { from: 0, to: 1, duration: 200 } } }],
     },
-    { trigger: 'Overlay.exit', sequence: [{ animation: { opacity: { to: 0, duration: 200 } } }] },
+    {
+      trigger: 'Overlay.exit',
+      sequence: [{ animation: { opacity: { from: 1, to: 0, duration: 150 } } }],
+    },
     {
       trigger: 'Root.enter',
       sequence: [
