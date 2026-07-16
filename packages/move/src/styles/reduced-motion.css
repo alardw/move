@@ -1,0 +1,27 @@
+/*
+ * Reduced Motion — global safety net (WCAG 2.3.3 Animation from Interactions)
+ *
+ * The JS animation engine already honors the OS setting: every runtime helper
+ * (moveAnimate, animateDimension, animatePosition, staggerAnimate, useSplitText)
+ * checks prefersReducedMotion() and snaps to the end state instead of tweening.
+ *
+ * This block covers the OTHER class — animation the engine never touches: CSS
+ * @keyframes (a caret blink, a skeleton pulse), CSS transitions (hover/focus
+ * color shifts), and smooth scrolling. Rather than each component repeating a
+ * media query, one rule neutralizes them all.
+ *
+ * Durations collapse to ~0 instead of `none` so the animation still "finishes"
+ * — end styles apply and any animationend/transitionend listener still fires —
+ * and infinite loops stop after a single iteration. Consumers who need a
+ * specific motion under this setting can override with higher specificity.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
