@@ -215,7 +215,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
   const hasIcon = toast.variant !== 'default';
 
   return (
-    <div ref={wrapperRef} className={styles.itemWrapper}>
+    <div ref={wrapperRef} className={styles.itemWrapper} data-closing={isClosing || undefined}>
       <div
         ref={itemRef}
         className={styles.item}

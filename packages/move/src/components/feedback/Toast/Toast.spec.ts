@@ -283,7 +283,7 @@ export const spec = {
       'ToastItem does not render icon for default variant',
       'Close button removes toast from store',
       'Close button has accessible aria-label from context',
-      'Auto-dismiss timer removes toast after duration (default 5000ms)',
+      'Auto-dismiss timer removes toast after duration when duration > 0 (default 0 = manual close)',
       'Auto-dismiss pauses on mouse enter and resumes on mouse leave',
       'Auto-dismiss pauses on focus in and resumes on focus out',
       'Progress bar scaleX animates from 1 to 0 over duration',

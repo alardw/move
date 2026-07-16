@@ -21,6 +21,9 @@ export interface ToastState {
 export interface ToastOptions {
   variant?: ToastVariant;
   description?: string;
+  /** Auto-dismiss after N ms. Default `0` = stay until manually closed (WCAG
+   *  2.2.3 No Timing). Set a positive value to auto-dismiss this toast, or call
+   *  `toast.configure({ defaultDuration })` to change the default app-wide. */
   duration?: number;
   position?: ToastPosition;
 }
@@ -29,12 +32,17 @@ export interface ToastOptions {
 // Store
 // =============================================================================
 
-const DEFAULT_DURATION = 5000;
+// Manual close by default: a timed auto-dismiss imposes a time limit on reading,
+// which WCAG 2.2.3 (No Timing) asks apps to avoid. Toasts stay until the user
+// closes them (the X); opt into auto-dismiss per call with `duration`, or
+// app-wide with `toast.configure({ defaultDuration })`.
+const DEFAULT_DURATION = 0;
 const DEFAULT_POSITION: ToastPosition = 'bottom-right';
 const DEFAULT_MAX = 5;
 
 let toasts: ToastState[] = [];
 let maxPerPosition = DEFAULT_MAX;
+let defaultDuration = DEFAULT_DURATION;
 let nextId = 0;
 const listeners = new Set<() => void>();
 
@@ -62,7 +70,7 @@ function addToast(message: string, options: ToastOptions = {}): string {
     variant: options.variant ?? 'default',
     message,
     description: options.description,
-    duration: options.duration ?? DEFAULT_DURATION,
+    duration: options.duration ?? defaultDuration,
     position: options.position ?? DEFAULT_POSITION,
   };
   toasts = [...toasts, newToast];
@@ -108,8 +116,9 @@ toast.error = (message: string, options?: Omit<ToastOptions, 'variant'>) =>
 
 toast.dismiss = removeToast;
 
-toast.configure = (options: { max?: number }) => {
+toast.configure = (options: { max?: number; defaultDuration?: number }) => {
   if (options.max !== undefined) maxPerPosition = options.max;
+  if (options.defaultDuration !== undefined) defaultDuration = options.defaultDuration;
 };
 
 // =============================================================================
@@ -125,6 +134,7 @@ export { removeToast };
 export function resetStore() {
   toasts = [];
   maxPerPosition = DEFAULT_MAX;
+  defaultDuration = DEFAULT_DURATION;
   nextId = 0;
   emit();
 }

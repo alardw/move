@@ -25,7 +25,7 @@ export const meta: ComponentDocument = {
   slug: 'toast',
   synonyms: ['notification', 'snackbar', 'flash message', 'alert toast'],
   name: 'Toast',
-  tagline: 'A notification toast system with an imperative API, variant icons, auto-dismiss progress, and grouped positioning.',
+  tagline: 'A notification toast system with an imperative API, variant icons, opt-in timed dismissal, and grouped positioning.',
   categories: ['feedback'],
   badges: [
     { icon: 'rabbit', label: 'Animated' },

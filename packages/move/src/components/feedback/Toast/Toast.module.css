@@ -77,8 +77,15 @@
 
 .itemWrapper {
   will-change: height;
-  overflow: hidden;
+  /* Visible so the toast's drop shadow isn't clipped on the sides/top. Clipping
+     is only needed while the height collapses on exit — scoped below. */
+  overflow: visible;
   padding-bottom: var(--move-spacing-sm);
+}
+
+/* During the exit height-collapse, clip so the shrinking toast doesn't spill. */
+.itemWrapper[data-closing] {
+  overflow: hidden;
 }
 
 /* =============================================================================
@@ -181,6 +188,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   width: 20px;
   height: 20px;
   margin-top: 1px;
@@ -194,6 +202,14 @@
   transition:
     color var(--move-transition-fast) var(--move-ease-default),
     background var(--move-transition-fast) var(--move-ease-default);
+}
+
+/* Expand the pointer target to ≥24px (WCAG 2.5.8) without enlarging the 20px
+   visual icon. */
+.closeButton::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
 }
 
 .closeButton:hover {
