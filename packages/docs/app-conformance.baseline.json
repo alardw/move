@@ -1,6 +1,7 @@
 {
   "App.tsx": {
-    "inline-style": 1
+    "inline-style": 1,
+    "raw-html": 2
   },
   "components/AdvancedBadge/AdvancedBadge.module.css": {
     "css-module": 1
@@ -42,8 +43,8 @@
     "css-module": 1
   },
   "components/ComponentCard/ComponentCard.tsx": {
-    "inline-style": 2,
-    "raw-html": 6
+    "inline-style": 1,
+    "raw-html": 5
   },
   "components/DesignPatternCard/DesignPatternCard.module.css": {
     "css-module": 1
@@ -204,12 +205,15 @@
   "content/components/table/samples/selectable.tsx": {
     "inline-style": 2
   },
+  "content/components/text/samples/truncate.tsx": {
+    "inline-style": 1
+  },
   "content/components/toast/preview.tsx": {
     "inline-style": 1,
     "raw-html": 8
   },
-  "pages/ai/CoveragePage.tsx": {
-    "raw-html": 4
+  "pages/accessibility/AccessibilityPage.tsx": {
+    "raw-html": 3
   },
   "pages/animation/MotionsAndSequencesPage.tsx": {
     "inline-style": 3,
@@ -219,24 +223,22 @@
     "inline-style": 2,
     "raw-html": 2
   },
+  "pages/contracts/ComponentContractPage.tsx": {
+    "inline-style": 8
+  },
   "pages/core-concepts/AdaptersPage.tsx": {
     "inline-style": 10,
     "raw-html": 7
-  },
-  "pages/core-concepts/ComponentContractPage.tsx": {
-    "inline-style": 8
-  },
-  "pages/core-concepts/StackingPage.tsx": {
-    "inline-style": 10
-  },
-  "pages/core-concepts/SurfacesPage.tsx": {
-    "inline-style": 6
   },
   "pages/customize/IconsPage.tsx": {
     "inline-style": 2
   },
   "pages/customize/InternationalizationPage.tsx": {
     "inline-style": 4
+  },
+  "pages/customize/ThemeBuilderPage.tsx": {
+    "inline-style": 30,
+    "raw-html": 15
   },
   "pages/getting-started/MoveRootPage.tsx": {
     "inline-style": 8
@@ -246,5 +248,23 @@
   },
   "pages/getting-started/VitePage.tsx": {
     "raw-html": 3
+  },
+  "pages/systems/FormsPage.tsx": {
+    "inline-style": 1,
+    "raw-html": 2
+  },
+  "pages/systems/HooksPage.tsx": {
+    "inline-style": 1,
+    "raw-html": 1
+  },
+  "pages/systems/StackingPage.tsx": {
+    "inline-style": 10
+  },
+  "pages/systems/SurfacesPage.tsx": {
+    "inline-style": 6
+  },
+  "pages/systems/TruncationPage.tsx": {
+    "inline-style": 2,
+    "raw-html": 6
   }
 }
