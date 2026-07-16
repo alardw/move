@@ -1,6 +1,7 @@
 export type { Theme, ThemeTokens, ThemeAnimation } from './types';
 export { darkTheme } from './dark';
 export { lightTheme } from './light';
+export { MOVE_SEED } from './moveSeed';
 export { defineTheme, describeTheme, defineThemes, describeThemes } from './defineTheme';
 export type { ThemeSeed, DescribeThemeResult } from './defineTheme';
 export { radiusScale } from './radius';

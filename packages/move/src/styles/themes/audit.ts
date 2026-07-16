@@ -59,6 +59,22 @@ const CONTRACT: Rule[] = [
     floor: 3,
     label: 'focus ring',
   },
+  // Non-text contrast (WCAG 1.4.11) for interactive control boundaries. Each is
+  // graded on the surfaces it actually renders on: the soft border on the
+  // base/subtle ground, the strong border on the elevated surfaces the surface
+  // system swaps it in for (see surface.css).
+  {
+    fg: '--move-border-interactive',
+    on: ['--move-bg-base', '--move-bg-subtle'],
+    floor: 3,
+    label: 'control border',
+  },
+  {
+    fg: '--move-border-interactive-strong',
+    on: ['--move-bg-muted', '--move-bg-emphasis'],
+    floor: 3,
+    label: 'control border (elevated)',
+  },
 ];
 
 function grade(ratio: number, floor: number, comfort?: number): AuditStatus {

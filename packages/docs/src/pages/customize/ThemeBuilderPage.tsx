@@ -29,7 +29,7 @@ import { CodeBlock, Section, TocRail, type TocItem } from '../../components';
 
 const BADGES = [
   { icon: 'palette', label: 'One seed → light & dark' },
-  { icon: 'circle-check', label: 'WCAG 2.2 AA' },
+  { icon: 'circle-check', label: 'WCAG 2.2 AA contrast' },
 ];
 
 const TOC: TocItem[] = [
@@ -49,7 +49,7 @@ const TOC: TocItem[] = [
 //   · Supabase #3ECF8E 159° · Notion #14B8A6 182° · terracotta #C4623F 40° · rose 350°
 const PRESETS: { label: string; hue: number; chroma: number; accentHue: number; accentChroma?: number; radius: number; heading: string; body: string }[] = [
   // Stock Move — barely-there gray tint + a balanced indigo, system fonts (matches the docs' own theme).
-  { label: 'Move', hue: 250, chroma: 0.008, accentHue: 262, accentChroma: 0.16, radius: 1, heading: 'System', body: 'System' },
+  { label: 'Move', hue: 250, chroma: 0.008, accentHue: 277, accentChroma: 0.23, radius: 1, heading: 'System', body: 'System' },
   // Linear — a vivid purple on a distinctly cool zinc ground, geometric display, tight corners.
   { label: 'Midnight', hue: 287, chroma: 0.024, accentHue: 287, accentChroma: 0.21, radius: 0.6, heading: 'Space Grotesk', body: 'Inter' },
   // Vercel / Geist — fully greyscale: zero-tint ground AND a neutral accent, monospaced over Plex.
@@ -229,8 +229,11 @@ function HolisticSample({ label }: { label: string }) {
 /** The harmonized categorical palette, rendered on the scoped theme's own background so you
  *  see it in context. Reads the swatch colors computed by the page. */
 function PaletteBar({ label, swatches }: { label: string; swatches: { name: string; color: string }[] }) {
+  // The card floats on the theme's own shadow — it tracks the neutral saturation
+  // live. Shadows show best on the light ground; on the near-black dark ground
+  // they're faint by nature (a dark shadow on a dark surface).
   return (
-    <Stack gap="xs" style={{ background: 'var(--move-bg-base)', padding: 12, borderRadius: 'var(--move-rounded-lg)', border: '1px solid var(--move-border-base)' }}>
+    <Stack gap="xs" style={{ background: 'var(--move-bg-base)', padding: 14, borderRadius: 'var(--move-rounded-lg)', border: '1px solid var(--move-border-base)', boxShadow: 'var(--move-shadow-overlay)' }}>
       <Text size="xs" style={{ color: 'var(--move-fg-subtle)', textTransform: 'uppercase', letterSpacing: '0.09em', fontWeight: 650 }}>
         {label} · palette
       </Text>
@@ -244,13 +247,13 @@ function PaletteBar({ label, swatches }: { label: string; swatches: { name: stri
 }
 
 export function ThemeBuilderPage() {
-  // Defaults = the official Move theme (matches the dogfooded MOVE_SEED in App.tsx).
+  // Defaults = the official Move theme, the MOVE_SEED the library ships (exported from `move`).
   const [neutralHue, setNeutralHue] = React.useState(250);
   const [neutralChroma, setNeutralChroma] = React.useState(0.008);
-  const [accentHue, setAccentHue] = React.useState(262);
-  // Accent saturation — a real control. 0.16 is the engine default (a full, colorful accent);
-  // drag it to 0 for a fully greyscale theme. This is what the Mono preset sets.
-  const [accentChroma, setAccentChroma] = React.useState(0.16);
+  const [accentHue, setAccentHue] = React.useState(277);
+  // Accent saturation — a real control. Move ships 0.19 (the brand indigo); the engine
+  // default when a seed omits it is 0.16. Drag it to 0 for a fully greyscale theme (the Mono preset).
+  const [accentChroma, setAccentChroma] = React.useState(0.23);
   const [radius, setRadius] = React.useState(1);
   const [headingFont, setHeadingFont] = React.useState('System');
   const [bodyFont, setBodyFont] = React.useState('System');
@@ -288,7 +291,7 @@ export function ThemeBuilderPage() {
 
   const seedCode = `import { defineThemes } from 'move';
 
-// One brand seed → both light and dark. WCAG 2.2 AA is guaranteed.
+// One brand seed → both light and dark. WCAG 2.2 AA contrast is guaranteed.
 const { light, dark, radius } = defineThemes({
   neutral: { hue: ${neutralHue}, chroma: ${neutralChroma.toFixed(3)} },
   accent: { hue: ${accentHue}${accentChroma !== 0.16 ? `, chroma: ${accentChroma.toFixed(3)}` : ''} },
@@ -377,9 +380,12 @@ const { light, dark, radius } = defineThemes({
         </Section>
 
         <Section id="build" title="Build your theme" lede="Two colors in — a full, accessible theme out. The preview is the proof: it's the real theme, shown in both modes.">
-          <Grid cols={2} gap="lg">
+          {/* Controls + preview side by side, collapsing to a column (preview below
+              the controls) once the row is narrower than 880px — Move's own
+              container-based responsive prop, not a viewport media query. */}
+          <Stack direction="row" gap="lg" collapseBelow="880px" align="stretch">
             {/* Controls */}
-            <Stack gap="lg" style={{ padding: 20, background: 'var(--move-bg-subtle)', borderRadius: 14 }}>
+            <Stack gap="lg" style={{ flex: 1, minWidth: 0, padding: 20, background: 'var(--move-bg-subtle)', borderRadius: 14 }}>
               <Stack gap="sm">
                 <Text weight="medium">Accent color</Text>
                 <Stack direction="row" gap="sm" align="center">
@@ -444,7 +450,7 @@ const { light, dark, radius } = defineThemes({
               </Stack>
 
               <Stack gap="sm">
-                <Text weight="medium">Presets</Text>
+                <Text weight="medium">Samples</Text>
                 <Stack direction="row" gap="sm" wrap>
                   {PRESETS.map((p) => (
                     <Button
@@ -463,7 +469,7 @@ const { light, dark, radius } = defineThemes({
 
             {/* Preview — the real theme in both modes. Radius is theme-level, so it's
                 applied once here (same for both) rather than per color theme. */}
-            <div style={{ ...both.radius, '--move-font': fontStack(bodyFont), '--move-font-body': fontStack(bodyFont), '--move-font-heading': fontStack(headingFont) } as React.CSSProperties}>
+            <div style={{ flex: 1, minWidth: 0, ...both.radius, '--move-font': fontStack(bodyFont), '--move-font-body': fontStack(bodyFont), '--move-font-heading': fontStack(headingFont) } as React.CSSProperties}>
               <Grid cols={2} gap="md">
                 <ThemeProvider theme={both.light.theme}>
                   <HolisticSample label="Light" />
@@ -500,18 +506,22 @@ const { light, dark, radius } = defineThemes({
                 </Grid>
               </Stack>
             </div>
-          </Grid>
+          </Stack>
 
           {/* Verdict + auto-correct note, below the preview */}
           <div style={{ marginTop: 16 }}>
             {violations === 0 ? (
-              <Alert variant="success" title="Meets WCAG 2.2 AA">
+              <Alert variant="success" title="Contrast meets WCAG 2.2 AA">
                 Every text style, link, button label, and focus ring is legible in both light and dark
-                {nudged > 0 ? ` — ${nudged} color${nudged > 1 ? 's were' : ' was'} adjusted automatically to keep it that way` : ''}.
+                {nudged > 0 ? ` — ${nudged} color${nudged > 1 ? 's were' : ' was'} adjusted automatically to keep it that way` : ''}. Contrast is one part of AA —{' '}
+                <RouterLink to="/accessibility" style={{ color: 'var(--move-link)' }}>
+                  see where Move stands on the rest
+                </RouterLink>
+                .
               </Alert>
             ) : (
               <Alert variant="danger" title="Contrast issue">
-                {violations} pairing{violations > 1 ? 's fall' : ' falls'} below WCAG 2.2 AA. Ease the tint or shift a hue.
+                {violations} pairing{violations > 1 ? 's fall' : ' falls'} below the WCAG 2.2 AA contrast minimum. Ease the tint or shift a hue.
               </Alert>
             )}
           </div>

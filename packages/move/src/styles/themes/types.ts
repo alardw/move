@@ -17,6 +17,13 @@ export interface ThemeTokens {
   '--move-border-muted': string;
   '--move-border-emphasis': string;
 
+  // Interactive control borders — clamped to WCAG 1.4.11 non-text contrast (3:1)
+  // against the surfaces a control realistically sits on. `interactive` targets
+  // the base/subtle ground; `-strong` holds 3:1 on more-elevated surfaces and is
+  // swapped in per [data-surface] (see surface.css).
+  '--move-border-interactive': string;
+  '--move-border-interactive-strong': string;
+
   // Primary
   '--move-primary': string;
   '--move-primary-hover': string;

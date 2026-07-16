@@ -127,6 +127,7 @@ export type {
 export {
   darkTheme,
   lightTheme,
+  MOVE_SEED,
   defineTheme,
   describeTheme,
   defineThemes,
@@ -334,6 +335,7 @@ export type {
   TooltipTriggerProps,
   TooltipContentProps,
   TooltipArrowProps,
+  TruncationTooltip,
 } from './components/overlays/Tooltip';
 
 export { Calendar } from './components/date-time/Calendar';

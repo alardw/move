@@ -14,7 +14,7 @@
  */
 
 import type { Theme, ThemeTokens } from './types';
-import { createThemeShadows } from '../visual/shadows';
+import { createThemeShadows, type ThemeShadowConfig } from '../visual/shadows';
 import { oklchToLinear, oklchHex, clampToContrast, contrast, type LinRGB } from './color-engine';
 import { radiusScale, type RadiusInput, type RadiusVars } from './radius';
 
@@ -234,6 +234,35 @@ const SHADOW_CONFIG = {
   },
 } as const;
 
+/**
+ * Re-tint a shadow config's hue to the theme's neutral hue, so shadows carry the
+ * same tint as the surfaces instead of the fixed 220° the base config ships. Only
+ * the hue moves — the near-black saturation/lightness stay — so on a low-chroma
+ * neutral the tint is a whisper, but a warm or green theme's shadow now reads
+ * of-a-piece with its surfaces.
+ */
+function tintShadowConfig(cfg: ThemeShadowConfig, hue: number, chroma: number): ThemeShadowConfig {
+  const h = Math.round(hue);
+  // Saturation tracks the neutral chroma (ref 0.008 = Move's near-grey → ×1), so a
+  // grey theme keeps a near-neutral shadow while a colorful one tints visibly.
+  // A modest floor keeps the shadow from going stone-dead grey; a cap keeps it
+  // from ever reading as a coloured glow.
+  const scale = Math.min(5, chroma / 0.008);
+  const retint = (c: string) => {
+    const m = c.match(/^[\d.]+\s+([\d.]+)%\s+([\d.]+)%$/);
+    if (!m) return c.replace(/^[\d.]+/, String(h));
+    const sat = Math.min(60, +(parseFloat(m[1]) * scale).toFixed(1));
+    return `${h} ${sat}% ${m[2]}%`;
+  };
+  const surfaces = {} as ThemeShadowConfig['surfaces'];
+  for (const [k, v] of Object.entries(cfg.surfaces)) {
+    surfaces[k as keyof ThemeShadowConfig['surfaces']] = v.color
+      ? { ...v, color: retint(v.color) }
+      : v;
+  }
+  return { ...cfg, color: retint(cfg.color), surfaces };
+}
+
 const ANIMATION = {
   spring: { mass: 0.8, stiffness: 500, damping: 15 },
   duration: { fast: 100, normal: 200, slow: 300 },
@@ -299,7 +328,13 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
 
   // 4. accent fill — clamp lightness so its label clears AA
   {
-    let pL = dark ? 0.62 : 0.52;
+    // Accent-fill lightness per mode. Dark lifts one controlled step (0.58 vs
+    // light's 0.52) so the accent pops against a near-black ground — the usual
+    // dark-mode convention — but stays well short of the old 0.62, which pushed
+    // deep hues (indigo/violet/blue) into a pale, black-label pastel. At 0.58 the
+    // fill keeps a saturated body + white label; the loop below still lightens
+    // naturally-light hues until THEIR label clears AA.
+    let pL = dark ? 0.58 : 0.52;
     let fg = bestOn(oklchToLinear(pL, aC, aH));
     let tries = 0;
     const fgLin = () =>
@@ -361,6 +396,35 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
     if (r.clamped) notices.push('--move-focus-ring-color nudged to hold 3:1');
   }
 
+  // 6b. interactive control borders — 3:1 non-text contrast (WCAG 1.4.11).
+  //     Seeded toward the surfaces so the search settles on the SOFTEST border
+  //     that still clears 3:1 — never harsher than the ground demands. Chroma
+  //     tracks the neutral ramp so the border carries the theme's whisper of tint.
+  //     `interactive` holds against the base/subtle ground; `-strong` also clears
+  //     the lighter muted surface (swapped in per [data-surface], see surface.css).
+  {
+    const bC = nC * 1.1;
+    const seed = dark ? 0.42 : 0.62;
+    const soft = clampToContrast(
+      seed,
+      bC,
+      nH,
+      [lin['--move-bg-base'], lin['--move-bg-subtle']],
+      3,
+      dark,
+    );
+    (out as Record<string, string>)['--move-border-interactive'] = soft.hex;
+    const strong = clampToContrast(
+      seed,
+      bC,
+      nH,
+      [lin['--move-bg-muted'], lin['--move-bg-emphasis']],
+      3,
+      dark,
+    );
+    (out as Record<string, string>)['--move-border-interactive-strong'] = strong.hex;
+  }
+
   // 7. secondary (neutral fill)
   {
     const sL = dark ? 0.32 : 0.9;
@@ -391,7 +455,7 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
     ...statusBlock(status, ap),
     ...harmonizePalette(PALETTE[ap] as Record<string, string>, paletteDesat * 100),
     ...MISC[ap],
-    ...createThemeShadows(SHADOW_CONFIG[ap]),
+    ...createThemeShadows(tintShadowConfig(SHADOW_CONFIG[ap], nH, seed.neutral.chroma)),
     ...(seed.tokens ?? {}),
   } as ThemeTokens;
 

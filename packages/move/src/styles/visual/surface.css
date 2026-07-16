@@ -73,6 +73,10 @@
   --move-shadow-lg: var(--move-shadow-muted-lg);
   --move-shadow-xl: var(--move-shadow-muted-xl);
 
+  /* Lighter ground — a control's resting border needs the stronger step to keep
+     3:1 non-text contrast here (WCAG 1.4.11). */
+  --move-border-interactive: var(--move-border-interactive-strong);
+
   --move-surface-bg: var(--move-bg-muted);
   --move-surface-hover: var(--move-bg-emphasis);
   --move-surface-inset: var(--move-bg-subtle);
@@ -85,6 +89,9 @@
   --move-shadow-md: var(--move-shadow-emphasis-md);
   --move-shadow-lg: var(--move-shadow-emphasis-lg);
   --move-shadow-xl: var(--move-shadow-emphasis-xl);
+
+  /* Lightest ground — strongest control border to hold 3:1 (WCAG 1.4.11). */
+  --move-border-interactive: var(--move-border-interactive-strong);
 
   --move-surface-bg: var(--move-bg-emphasis);
   --move-surface-hover: var(--move-bg-muted);

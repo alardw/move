@@ -31,6 +31,16 @@
   --move-border-muted: var(--move-gray-700);
   --move-border-emphasis: var(--move-gray-600);
 
+  /* Interactive control borders (inputs, checkbox, select, switch …).
+     Unlike the decorative borders above, these carry WCAG 1.4.11 non-text
+     contrast: they must read at 3:1 against whatever surface the control sits
+     on. `interactive` is tuned for the base/subtle ground; `-strong` steps
+     lighter to hold 3:1 on elevated (muted/emphasis) surfaces, where the
+     surface system swaps it in — so a control is never harder to see than
+     necessary, but always at least 3:1. See visual/surface.css. */
+  --move-border-interactive: var(--move-gray-500);
+  --move-border-interactive-strong: var(--move-gray-400);
+
   /* ============================================
    * Color - Primary (indigo brand)
    * ============================================ */
@@ -150,6 +160,14 @@
 
   /* ============================================
    * Focus Ring
+   *
+   * Convention for `outline-offset` (keep consistent when adding components):
+   *   • Buttons, toggles, overlays — no border of their own to recolor: the ring
+   *     FLOATS, `outline-offset: var(--move-focus-ring-offset)` (a visible gap).
+   *   • Input fields — recolor their border to --move-primary on focus: the ring
+   *     HUGS that border, `outline-offset: 0` (no gap, reads as one focus edge).
+   *   • Rows / cells / list items — an outset ring would clip: it INSETS,
+   *     `outline-offset: calc(-1 * var(--move-focus-ring-offset))`.
    * ============================================ */
   --move-focus-ring-color: var(--move-indigo-400);
   --move-focus-ring-width: 2px;
@@ -193,6 +211,10 @@
    * Typography - Semantic
    * ============================================ */
   --move-font-body: var(--move-font);
+
+  /* Comfortable reading line length (~66–68 chars, under the WCAG 1.4.8 80-char
+     limit). Shared by Prose and the Text/Heading `readableWidth` prop. */
+  --move-readable-width: 68ch;
   --move-font-code: var(--move-font-mono);
   /* Headings default to the body font; override to give display type its own face. */
   --move-font-heading: var(--move-font-body);
