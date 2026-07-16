@@ -117,6 +117,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
           <Select.Trigger
             ref={monthTriggerRef}
             width="auto"
+            aria-label={labels.selectMonth}
             style={{ minWidth: monthMinWidth, gap: '0.25rem', paddingInline: '0.5rem' }}
           >
             <Select.Value ref={monthValueRef}>{monthName}</Select.Value>
@@ -134,6 +135,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
         <Select.Root value={String(year)} onValueChange={handleYearChange}>
           <Select.Trigger
             width="auto"
+            aria-label={labels.selectYear}
             style={{ minWidth: 0, gap: '0.25rem', paddingInline: '0.5rem' }}
           >
             <Select.Value>{year}</Select.Value>
