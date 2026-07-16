@@ -57,11 +57,11 @@ const CASES: Case[] = [
         </Select.Content>
       </Select.Root>
     ),
-    // Move's Select is built on Radix DropdownMenu: button trigger, role="menuitem" items.
+    // Move's Select is built on Radix Select: button trigger, role="option" items.
     trigger: () =>
       ([...document.querySelectorAll('button')].find((b) => b.textContent?.includes('Pick')) ??
         document.querySelector('button')) as HTMLElement,
-    open: () => !!document.querySelector('[role="menuitem"]'),
+    open: () => !!document.querySelector('[role="option"]'),
   },
   {
     name: 'Dropdown',
