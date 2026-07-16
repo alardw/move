@@ -28,6 +28,9 @@ export interface TextProps extends React.HTMLAttributes<HTMLElement> {
   /** With `truncate`, show the full text in a tooltip on hover — but only when
    *  it's actually cut off. Requires string children. */
   tooltip?: boolean;
+  /** Cap the line length to a comfortable reading measure (WCAG 1.4.8) for a
+   *  standalone paragraph. For real long-form content, use `Prose`. */
+  readableWidth?: boolean;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -43,7 +46,17 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
     weight: 'normal' as TextWeight,
     color: 'base' as TextColor,
   },
-  moveProps: ['as', 'size', 'weight', 'color', 'align', 'truncate', 'lines', 'tooltip'],
+  moveProps: [
+    'as',
+    'size',
+    'weight',
+    'color',
+    'align',
+    'truncate',
+    'lines',
+    'tooltip',
+    'readableWidth',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const truncate = props.truncate as Truncate | undefined;
@@ -74,6 +87,7 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
             data-color={props.color}
             {...(props.align ? { 'data-align': props.align } : {})}
             {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
+            {...(props.readableWidth ? { 'data-readable-width': '' } : {})}
           >
             {trunc.content}
           </Comp>,

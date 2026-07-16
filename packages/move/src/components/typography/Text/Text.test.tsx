@@ -82,6 +82,23 @@ describe('Text', () => {
     });
   });
 
+  // === readableWidth ===
+  describe('readableWidth', () => {
+    it('applies data-readable-width when set', () => {
+      render(
+        <Text data-testid="text" readableWidth>
+          Text
+        </Text>,
+      );
+      expect(screen.getByTestId('text')).toHaveAttribute('data-readable-width');
+    });
+
+    it('omits data-readable-width by default', () => {
+      render(<Text data-testid="text">Text</Text>);
+      expect(screen.getByTestId('text')).not.toHaveAttribute('data-readable-width');
+    });
+  });
+
   // === Sizes ===
   describe('sizes', () => {
     it.each(['xs', 'sm', 'base', 'lg', 'xl'] as const)(

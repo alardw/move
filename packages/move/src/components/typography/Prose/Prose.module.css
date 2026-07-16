@@ -9,7 +9,7 @@
   --move-prose-bg-code: var(--move-bg-muted);
   --move-prose-bg-blockquote: var(--move-bg-subtle);
   --move-prose-heading-gap: 1em;
-  --move-prose-measure: 68ch;
+  --move-prose-measure: var(--move-readable-width, 68ch);
   --move-prose-paragraph-gap: 1.6em;
 
   font-family: var(--move-font-body, system-ui, sans-serif);

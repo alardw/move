@@ -78,12 +78,26 @@ export const spec = {
       moveSpecific: true,
       description: 'With truncate, show full text in a Move Tooltip when actually cut off',
     },
+    {
+      name: 'readableWidth',
+      type: 'boolean',
+      moveSpecific: true,
+      description:
+        'Cap the line length to a comfortable reading measure (WCAG 1.4.8) for a standalone paragraph — use Prose for real long-form content',
+    },
     { name: 'children', type: 'React.ReactNode', moveSpecific: false, description: 'Text content' },
   ],
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-size', 'data-weight', 'data-color', 'data-align', 'data-truncate'],
+    dataAttributes: [
+      'data-size',
+      'data-weight',
+      'data-color',
+      'data-align',
+      'data-truncate',
+      'data-readable-width',
+    ],
   },
 
   controlled: null,
@@ -180,6 +194,7 @@ export const spec = {
       "Applies data-truncate='start'/'clamp' for those modes",
       "Sets --move-line-clamp from lines when truncate='clamp'",
       'Omits data-truncate when truncate is not provided',
+      'Applies data-readable-width when readableWidth is set; omits it otherwise',
       'Forwards className and style',
       'Forwards ref to root element',
       'Spreads HTML attributes',

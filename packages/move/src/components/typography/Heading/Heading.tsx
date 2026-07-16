@@ -46,6 +46,9 @@ export interface HeadingProps extends React.HTMLAttributes<HTMLElement> {
   lines?: number;
   /** With `truncate`, show the full text in a tooltip when it's cut off. */
   tooltip?: boolean;
+  /** Cap the line length to a comfortable reading measure (WCAG 1.4.8). For real
+   *  long-form content, use `Prose`. */
+  readableWidth?: boolean;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -60,7 +63,7 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
     color: 'base' as HeadingColor,
     tracking: 'tight' as HeadingTracking,
   },
-  moveProps: ['align', 'truncate', 'lines', 'tooltip', 'weight'],
+  moveProps: ['align', 'truncate', 'lines', 'tooltip', 'weight', 'readableWidth'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const trunc = resolveTruncate(
@@ -95,6 +98,7 @@ export const Heading = withMoveComponent<'root', HeadingProps, HTMLHeadingElemen
             data-tracking={props.tracking}
             {...(props.align ? { 'data-align': props.align } : {})}
             {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
+            {...(props.readableWidth ? { 'data-readable-width': '' } : {})}
           >
             {trunc.content}
           </Comp>,

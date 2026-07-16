@@ -77,6 +77,13 @@ export const spec = {
       moveSpecific: true,
       description: 'With truncate, show full text in a tooltip when actually cut off',
     },
+    {
+      name: 'readableWidth',
+      type: 'boolean',
+      moveSpecific: true,
+      description:
+        'Cap the line length to a comfortable reading measure (WCAG 1.4.8) — for a standalone heading/paragraph; use Prose for real long-form content',
+    },
     { name: 'className', type: 'string', moveSpecific: false, description: 'Additional CSS class' },
     {
       name: 'style',
@@ -101,6 +108,7 @@ export const spec = {
       'data-tracking',
       'data-align',
       'data-truncate',
+      'data-readable-width',
     ],
   },
 
@@ -185,6 +193,7 @@ export const spec = {
       'Sets data-align only when align prop is provided',
       'Sets data-truncate when truncate=true',
       'Omits data-truncate when truncate is false or undefined',
+      'Applies data-readable-width when readableWidth is set; omits it otherwise',
       'Forwards className and style',
       'Forwards ref to root element',
       'Spreads HTML attributes',

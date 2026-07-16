@@ -13,6 +13,11 @@
   line-height: var(--move-leading-normal);
 }
 
+/* readableWidth: cap a standalone paragraph to a comfortable measure (WCAG 1.4.8). */
+.root[data-readable-width] {
+  max-width: var(--move-readable-width);
+}
+
 /* -- Size -- */
 
 .root[data-size='xs'] {

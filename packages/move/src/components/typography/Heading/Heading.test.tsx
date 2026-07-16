@@ -4,6 +4,23 @@ import { describe, it, expect } from 'vitest';
 import { Heading } from './Heading';
 
 describe('Heading', () => {
+  // === readableWidth ===
+  describe('readableWidth', () => {
+    it('applies data-readable-width when set', () => {
+      render(
+        <Heading data-testid="heading" readableWidth>
+          Title
+        </Heading>,
+      );
+      expect(screen.getByTestId('heading')).toHaveAttribute('data-readable-width');
+    });
+
+    it('omits data-readable-width by default', () => {
+      render(<Heading data-testid="heading">Title</Heading>);
+      expect(screen.getByTestId('heading')).not.toHaveAttribute('data-readable-width');
+    });
+  });
+
   // === Rendering ===
   describe('rendering', () => {
     it('renders as h2 element by default', () => {
