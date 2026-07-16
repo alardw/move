@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Drawer',
+  animationPatterns: ['sidePanel'],
   componentClass: 'overlay_layer' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'lg' as const },

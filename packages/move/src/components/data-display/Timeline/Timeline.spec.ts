@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Timeline',
+  animationPatterns: ['listReveal'],
   componentClass: 'display' as const,
   category: 'data-display',
   description:

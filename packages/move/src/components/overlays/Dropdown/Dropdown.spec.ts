@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Dropdown',
+  animationPatterns: ['popupMenu'],
   componentClass: 'overlay_popup' as const,
   category: 'overlays',
   preview: { staged: true, bare: true, width: 'sm' as const },

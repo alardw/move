@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'FileUpload',
+  animationPatterns: ['listReveal'],
   componentClass: 'interactive' as const,
   category: 'forms',
   description:

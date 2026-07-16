@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'DatePicker',
+  animationPatterns: ['popupMenu'],
   componentClass: 'input_popup' as const,
   category: 'date-time',
   description:

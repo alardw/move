@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'InputRange',
+  animationPatterns: ['press'],
   componentClass: 'input_plain' as const,
   category: 'forms',
   description:

@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Switch',
+  animationPatterns: ['toggle'],
   componentClass: 'input_toggle' as const,
   category: 'forms',
   description:

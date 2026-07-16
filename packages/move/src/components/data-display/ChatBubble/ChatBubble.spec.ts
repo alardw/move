@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'ChatBubble',
+  animationPatterns: ['listReveal'],
   componentClass: 'display' as const,
   category: 'data-display',
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',

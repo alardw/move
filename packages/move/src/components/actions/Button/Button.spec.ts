@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Button',
+  animationPatterns: ['press'],
   componentClass: 'interactive' as const,
   category: 'actions',
   description: 'Clickable interactive element with variant, size, and animation support',

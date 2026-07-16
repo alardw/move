@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Accordion',
+  animationPatterns: ['disclosure'],
   componentClass: 'disclosure' as const,
   category: 'disclosure',
   description:

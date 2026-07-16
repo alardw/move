@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Autocomplete',
+  animationPatterns: ['popupMenu'],
   componentClass: 'input_popup' as const,
   category: 'forms',
   description:

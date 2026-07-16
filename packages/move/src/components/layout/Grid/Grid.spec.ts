@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Grid',
+  animationPatterns: ['layoutReveal'],
   componentClass: 'presentational' as const,
   category: 'layout',
   description:

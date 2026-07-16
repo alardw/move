@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'ToggleGroup',
+  animationPatterns: ['slidingIndicator'],
   componentClass: 'interactive' as const,
   category: 'actions',
   description:

@@ -5,6 +5,7 @@ import type { ComponentSpec } from '../../../spec-type';
 export const spec = {
   schemaVersion: 1 as const,
   name: 'Skeleton',
+  animationPatterns: ['loader'],
   componentClass: 'presentational' as const,
   category: 'feedback',
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',

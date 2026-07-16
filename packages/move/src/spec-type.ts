@@ -225,6 +225,22 @@ export type AnimationCapability =
   | 'textSplit'
   | 'layoutFlip';
 
+/** Shared animation pattern a component composes (see ComponentSpec.animationPatterns).
+ *  Source of truth for the animation-map catalog; kept in sync by check:animation-choreography. */
+export const ANIMATION_PATTERNS = [
+  'press',
+  'toggle',
+  'popupMenu',
+  'popupSurface',
+  'sidePanel',
+  'disclosure',
+  'listReveal',
+  'layoutReveal',
+  'slidingIndicator',
+  'loader',
+] as const;
+export type AnimationPattern = (typeof ANIMATION_PATTERNS)[number];
+
 /** Explicit controlled/uncontrolled prop triad mapping */
 export interface ControlledProps {
   /** Controlled prop key (e.g. 'open', 'value', 'checked') */
@@ -563,6 +579,9 @@ export interface ComponentSpec {
    *   LayoutGroup.
    */
   animationCapabilities?: AnimationCapability[];
+  /** Shared animation patterns this component composes — source of truth for the
+   *  animation-map catalog (kept in sync by check:animation-choreography). */
+  animationPatterns?: AnimationPattern[];
 
   /** Render/composition behavior that must survive generation. A bare string is
    *  shorthand for a contract with that description. */
