@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Table, type Color } from 'move';
-import { HighlightList, type HighlightItem, Section, TocRail, type TocItem } from '../../components';
+import { Section, TocRail, type TocItem } from '../../components';
 
 type Support = 'supports' | 'enables' | 'partial' | 'none' | 'na' | 'consumer';
 
@@ -18,7 +18,7 @@ const SUPPORT: Record<Support, { label: string; color: Color }> = {
 interface CriterionNote {
   included?: string; // what Move ships / handles for you
   yours?: string; // what you must wire or supply
-  gap?: string; // where Move's own support falls short
+  gap?: string; // where Move's own support falls short (unfinished)
 }
 
 interface Criterion {
@@ -37,9 +37,9 @@ interface Criterion {
 //   "Partial"  = Move's own support is genuinely incomplete — a real gap on our side.
 //   "Yours"    = entirely app-level; Move plays no part.
 const PERCEIVABLE: Criterion[] = [
-  { sc: '1.1.1', name: 'Non-text Content', level: 'A', support: 'consumer', note: { included: 'Icons default to aria-hidden; every component accepts aria-label.', yours: 'Alt text for images and meaningful icons.' } },
-  { sc: '1.2.1', name: 'Audio-only & Video-only (Prerecorded)', level: 'A', support: 'consumer', note: { included: 'AudioPlayer/VideoPlayer ship with controls.', yours: 'A transcript (audio-only) or an audio/described track (video-only).' } },
-  { sc: '1.2.2', name: 'Captions (Prerecorded)', level: 'A', support: 'consumer', note: { included: 'VideoPlayer accepts a <track kind="captions">.', yours: 'The caption file.' } },
+  { sc: '1.1.1', name: 'Non-text Content', level: 'A', support: 'enables', note: { included: 'Icons default to aria-hidden; every component accepts aria-label.', yours: 'Alt text for images and meaningful icons.' } },
+  { sc: '1.2.1', name: 'Audio-only & Video-only (Prerecorded)', level: 'A', support: 'enables', note: { included: 'AudioPlayer/VideoPlayer ship with controls.', yours: 'A transcript (audio-only) or an audio/described track (video-only).' } },
+  { sc: '1.2.2', name: 'Captions (Prerecorded)', level: 'A', support: 'enables', note: { included: 'VideoPlayer accepts a <track kind="captions">.', yours: 'The caption file.' } },
   { sc: '1.2.3', name: 'Audio Description or Media Alternative (Prerecorded)', level: 'A', support: 'consumer', note: { yours: 'A described audio track or a full text alternative.' } },
   { sc: '1.2.4', name: 'Captions (Live)', level: 'AA', support: 'consumer', note: { yours: 'Real-time captions for live audio.' } },
   { sc: '1.2.5', name: 'Audio Description (Prerecorded)', level: 'AA', support: 'consumer', note: { yours: 'A synchronized audio-description track.' } },
@@ -50,16 +50,16 @@ const PERCEIVABLE: Criterion[] = [
   { sc: '1.3.5', name: 'Identify Input Purpose', level: 'AA', support: 'supports', note: { included: 'Native inputs pass through autocomplete; PinInput sets one-time-code.' } },
   { sc: '1.4.1', name: 'Use of Color', level: 'A', support: 'enables', note: { included: 'Link defaults to an always-on underline (not color alone). The invalid state is a red border.', yours: 'Add a FormField.Description error (auto-associated) so the cue is not color-only.' } },
   { sc: '1.4.2', name: 'Audio Control', level: 'A', support: 'na', note: { included: 'Nothing auto-plays audio; players expose pause/stop.' } },
-  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'supports', note: { included: 'Every theme is contrast-clamped — including the shipped lightTheme/darkTheme, which are now generated from one MOVE_SEED by the same defineThemes engine consumers use. Body text targets 7:1, secondary 5.5:1, subtle text and links 4.5:1, so no tier ships below AA.', yours: 'Raw-token overrides you pass are your call — auditTheme / check:theme-contrast grade them.' } },
+  { sc: '1.4.3', name: 'Contrast (Minimum)', level: 'AA', support: 'supports', note: { included: 'Every theme — built-in light and dark, or one you generate — guarantees its text contrast: body text 7:1, secondary 5.5:1, and the faintest text and links 4.5:1. No text tier ships below AA.', yours: 'Colours you override by hand are your call — run the contrast check or the Theme Builder to grade them.' } },
   { sc: '1.4.4', name: 'Resize Text', level: 'AA', support: 'supports', note: { included: 'Type scale is rem-based; no pixel-locked font sizes.' } },
   { sc: '1.4.5', name: 'Images of Text', level: 'AA', support: 'na', note: { included: 'Components render real text, never images of text.' } },
-  { sc: '1.4.6', name: 'Contrast (Enhanced)', level: 'AAA', support: 'partial', note: { included: 'Body text reaches AAA — 14–17:1 on every surface.', gap: 'The muted (~6.5–7.7:1) and subtle (~4.5:1) tiers are AA-conformant, kept recessive by design; guaranteeing them 7:1 would flatten the base/muted/subtle hierarchy.' } },
+  { sc: '1.4.6', name: 'Contrast (Enhanced)', level: 'AAA', support: 'enables', note: { included: 'Primary body text is the highest-contrast tier everywhere (14–17:1) — well past AAA.', yours: 'For a blanket AAA claim, keep body text on the high-contrast tiers: the muted (~6.5–7.7:1) and subtle (~4.5:1) tiers are AA and deliberately quieter — pushing them to 7:1 would flatten the primary-to-faint hierarchy.' } },
   { sc: '1.4.7', name: 'Low or No Background Audio', level: 'AAA', support: 'na', note: { included: 'No multi-track/background audio; players expose volume and mute.' } },
-  { sc: '1.4.8', name: 'Visual Presentation', level: 'AAA', support: 'enables', note: { included: 'Prose is the compliant vehicle for blocks of text — it caps the column to ~68ch (--move-prose-measure, under the 80-char limit), sets line-height 1.625 with 1.6em paragraph spacing, and never justifies; resize/reflow to 200% comes from 1.4.4 / 1.4.10.', yours: 'Render long-form text through Prose (or apply your own measure) — a paragraph in a raw full-width Text is not capped. User-selectable colours come from the browser/app.' } },
+  { sc: '1.4.8', name: 'Visual Presentation', level: 'AAA', support: 'enables', note: { included: 'Any Text or Heading caps its line length to a readable measure (~66 characters, under the 80 limit) with the readableWidth prop; Prose applies the same cap plus paragraph spacing, and never justifies. Resizing and reflow to 200% come from 1.4.4 / 1.4.10.', yours: 'Add readableWidth to a standalone paragraph, or use Prose for long-form. Reader-chosen colours come from the browser.' } },
   { sc: '1.4.9', name: 'Images of Text (No Exception)', level: 'AAA', support: 'supports', note: { included: 'Components render real text, never rasterised — so the no-exception bar holds (same basis as 1.4.5).' } },
   { sc: '1.4.10', name: 'Reflow', level: 'AA', support: 'supports', note: { included: 'Container queries and min-width:0 layouts; no fixed-width traps.', yours: 'Spot-check Autocomplete tags at 200%.' } },
-  { sc: '1.4.11', name: 'Non-text Contrast', level: 'AA', support: 'supports', note: { included: 'Interactive control borders (input, checkbox, select, radio…) use --move-border-interactive, clamped to 3:1 against the surface they sit on — a stronger step swaps in automatically on elevated surfaces so the edge holds without ever being harsher than needed. The filled variant keeps that border (a heavier fill, not borderless). auditTheme grades it, so the Theme Builder matrix and check:theme-contrast catch regressions. Focus ring also holds 3:1, and the Switch is identified by its thumb reading 7–19:1 against the track and page.' } },
-  { sc: '1.4.12', name: 'Text Spacing', level: 'AA', support: 'supports', note: { included: 'Type is rem-based and line-height overrides are absorbed. Every text-bearing control (inputs, Select, Button, PinInput, tags) uses min-height, not a fixed height, so enlarged line-height grows the control instead of clipping — widened letter/word spacing scrolls within single-line inputs as usual. Nothing is lost at the 1.5×/0.12em/0.16em test or at 200% zoom.' } },
+  { sc: '1.4.11', name: 'Non-text Contrast', level: 'AA', support: 'supports', note: { included: 'Control edges — input, checkbox, select, radio — hold 3:1 against whatever surface they sit on, stepping up automatically on raised surfaces so the edge stays clear without turning harsh. The filled variant keeps that edge (a heavier fill, never borderless). The focus ring holds 3:1 too, and the Switch is read by its thumb — 7–19:1 against the track and page.' } },
+  { sc: '1.4.12', name: 'Text Spacing', level: 'AA', support: 'supports', note: { included: 'Every text control (inputs, Select, Button, PinInput, tags) grows with a taller line-height instead of clipping, and wider letter or word spacing scrolls within single-line inputs. Nothing is lost at the WCAG text-spacing test or at 200% zoom.' } },
   { sc: '1.4.13', name: 'Content on Hover or Focus', level: 'AA', support: 'supports', note: { included: 'Tooltip (Radix) is dismissible, hoverable, and persistent.' } },
 ];
 
@@ -69,21 +69,21 @@ const OPERABLE: Criterion[] = [
   { sc: '2.1.3', name: 'Keyboard (No Exception)', level: 'AAA', support: 'supports', note: { included: 'All functionality is keyboard-operable with no timing — ColorPicker channels take arrow keys, Carousel runs on real buttons — so the no-exception bar holds.' } },
   { sc: '2.1.4', name: 'Character Key Shortcuts', level: 'A', support: 'na', note: { included: 'No single-character shortcuts are imposed.' } },
   { sc: '2.2.1', name: 'Timing Adjustable', level: 'A', support: 'supports', note: { included: 'Toast auto-dismiss pauses on hover/focus and its duration is configurable (or disable-able).' } },
-  { sc: '2.2.2', name: 'Pause, Stop, Hide', level: 'A', support: 'supports', note: { included: 'Reduced-motion is honored end to end: the JS engine snaps every animation to its end state, a global CSS reset neutralizes @keyframes/transitions (Skeleton pulse, Avatar pulse, PinInput blink), and Carousel autoplay does not start. Toast auto-dismiss also pauses on hover/focus.' } },
+  { sc: '2.2.2', name: 'Pause, Stop, Hide', level: 'A', support: 'supports', note: { included: 'Reduced-motion is honoured everywhere: animations jump straight to their end state, looping effects (Skeleton and Avatar pulse, PinInput blink) stop, and Carousel autoplay never starts. Toast auto-dismiss also pauses on hover or focus.' } },
   { sc: '2.2.3', name: 'No Timing', level: 'AAA', support: 'supports', note: { included: 'No session or task time limits are imposed. Toast now defaults to manual close (no auto-dismiss) — pass a duration to opt a toast into a timed dismissal, or set one app-wide with toast.configure({ defaultDuration }).' } },
   { sc: '2.3.1', name: 'Three Flashes', level: 'A', support: 'supports', note: { included: 'No content flashes above threshold (PinInput caret blinks at 1 Hz).' } },
   { sc: '2.3.2', name: 'Three Flashes', level: 'AAA', support: 'supports', note: { included: 'Nothing flashes above threshold at all (PinInput caret ~1 Hz) — the stricter no-small-area-exception bar holds.' } },
   { sc: '2.3.3', name: 'Animation from Interactions', level: 'AAA', support: 'supports', note: { included: 'Motion triggered by interaction respects prefers-reduced-motion end to end, so it can be turned off.' } },
-  { sc: '2.4.1', name: 'Bypass Blocks', level: 'A', support: 'consumer', note: { included: 'The shell composes landmarks.', yours: 'Place the skip link.' } },
+  { sc: '2.4.1', name: 'Bypass Blocks', level: 'A', support: 'enables', note: { included: 'The shell composes landmarks.', yours: 'Place the skip link.' } },
   { sc: '2.4.2', name: 'Page Titled', level: 'A', support: 'consumer', note: { yours: 'Document <title>, set by your app/router.' } },
   { sc: '2.4.3', name: 'Focus Order', level: 'A', support: 'supports', note: { included: 'Focus order is logical, and the mobile Sidebar sheet is now a Radix Dialog — focus moves into it on open, is trapped while open, and restores to the trigger on close.' } },
-  { sc: '2.4.4', name: 'Link Purpose (In Context)', level: 'A', support: 'consumer', note: { included: 'Link renders a real anchor.', yours: 'The link text.' } },
+  { sc: '2.4.4', name: 'Link Purpose (In Context)', level: 'A', support: 'enables', note: { included: 'Link renders a real anchor.', yours: 'The link text.' } },
   { sc: '2.4.5', name: 'Multiple Ways', level: 'AA', support: 'consumer', note: { yours: 'Site navigation strategy is app-level.' } },
-  { sc: '2.4.6', name: 'Headings & Labels', level: 'AA', support: 'consumer', note: { included: 'Heading + Label components provide the structure.', yours: 'The descriptive text.' } },
-  { sc: '2.4.7', name: 'Focus Visible', level: 'AA', support: 'supports', note: { included: 'The ring shows only for keyboard users (:focus-visible), from one --move-focus-ring token; its offset adapts to the element (hugs an input border, floats outside a button, insets on a table row). TimeField uses plain :focus — minor.' } },
-  { sc: '2.4.11', name: 'Focus Not Obscured (Minimum)', level: 'AA', support: 'partial', note: { gap: 'New in 2.2. No scroll-padding is set, so sticky headers (Table, editor toolbar, Sidebar, Calendar) can cover an element tabbed underneath. Add scroll-margin/padding.' } },
-  { sc: '2.4.12', name: 'Focus Not Obscured (Enhanced)', level: 'AAA', support: 'none', note: { gap: 'The enhanced bar (no part of a focused element ever hidden) is not met — same root as 2.4.11: no scroll-padding, so sticky headers can cover it.' } },
-  { sc: '2.4.13', name: 'Focus Appearance', level: 'AAA', support: 'partial', note: { included: 'A consistent 2px solid focus ring from one token, ~5–6:1 against the surface.', gap: 'Not audited against 2.4.13’s exact minimum-area / adjacent-contrast math — likely but unverified.' } },
+  { sc: '2.4.6', name: 'Headings & Labels', level: 'AA', support: 'enables', note: { included: 'Heading + Label components provide the structure.', yours: 'The descriptive text.' } },
+  { sc: '2.4.7', name: 'Focus Visible', level: 'AA', support: 'supports', note: { included: 'The focus ring shows only for keyboard users, from one shared style; its offset adapts to the control — hugging an input, floating outside a button, inset on a table row. TimeField uses plain focus — minor.' } },
+  { sc: '2.4.11', name: 'Focus Not Obscured (Minimum)', level: 'AA', support: 'enables', note: { included: 'New in 2.2. Most components never obscure focus. Where Move owns the scroll container behind a sticky header — Calendar month & agenda views, the Select/Autocomplete listboxes — it sets scroll-padding so a focused item scrolls clear of the header.', yours: 'When you enable a component sticky header (Table data-sticky-header, a height-constrained editor toolbar) inside a page or region YOU scroll, set scroll-padding-block-start on that scroll container to the header height so a tabbed-to element clears it.' } },
+  { sc: '2.4.12', name: 'Focus Not Obscured (Enhanced)', level: 'AAA', support: 'enables', note: { included: 'Same mechanism as 2.4.11 — where Move owns the scroll container, scroll-padding is sized to the full sticky header, so no part of a focused element is hidden (the enhanced bar).', yours: 'Set scroll-padding on your own scroll region for any component sticky header you place in a page you scroll.' } },
+  { sc: '2.4.13', name: 'Focus Appearance', level: 'AAA', support: 'supports', note: { included: 'One 2px ring that fully encloses the control, held to at least 3:1 against the surface (5–6:1 in practice) — clearing WCAG’s minimum-area and contrast bars. Inside scroll areas it’s drawn inset so it can’t be clipped. Keyboard-highlighted options in menus and lists carry their own enclosing ring — inset on plain rows, outside the fill on the selected row — so the highlight itself clears 3:1, not just its soft background.' } },
   { sc: '2.5.1', name: 'Pointer Gestures', level: 'A', support: 'supports', note: { included: 'All interactions are single-pointer; no path or multipoint gestures required.' } },
   { sc: '2.5.2', name: 'Pointer Cancellation', level: 'A', support: 'supports', note: { included: 'Radix widgets act on up-events; ColorPicker drags commit on pointer-up, and Escape mid-drag aborts and reverts to the pre-drag colour.' } },
   { sc: '2.5.3', name: 'Label in Name', level: 'A', support: 'supports', note: { included: 'Icon buttons name from labels; Checkbox/Radio visible text is the accessible name via aria-labelledby.' } },
@@ -126,17 +126,11 @@ const GROUPS: { key: string; title: string; lede: string; rows: Criterion[] }[] 
 
 const TOTAL_CRITERIA = GROUPS.reduce((n, g) => n + g.rows.length, 0);
 
-const GAPS: HighlightItem[] = [
-  { icon: 'panel-top', text: 'Focus can be obscured by sticky headers (§2.4.11 / §2.4.12). No scroll-padding is set, so a Table/Sidebar/Calendar sticky header can cover an element tabbed underneath. Fix: add scroll-margin / scroll-padding on scroll containers.' },
-];
-
 const TOC: TocItem[] = [
-  { href: '#stand', label: 'Where we stand' },
   { href: '#perceivable', label: '1. Perceivable' },
   { href: '#operable', label: '2. Operable' },
   { href: '#understandable', label: '3. Understandable' },
   { href: '#robust', label: '4. Robust' },
-  { href: '#gaps', label: 'Known gaps' },
 ];
 
 function SupportBadge({ support }: { support: Support }) {
@@ -208,56 +202,37 @@ export function AccessibilityPage() {
         <Stack gap="sm">
           <Heading level={1}>Accessibility</Heading>
           <Text color="muted" size="lg">
-            An honest conformance report for WCAG 2.2, Levels A and AA — plus the AAA criteria Move
-            already clears. Every criterion, how Move addresses it, and where it falls short. No
-            blanket “compliant” claims: a component library can only take you part of the way.
+            What Move handles, and what’s yours to add.
           </Text>
           <Stack direction="row" gap="xs" wrap>
-            <Badge variant="soft" color="green"><Icon name="check" />Strong keyboard + focus foundation</Badge>
-            <Badge variant="soft" color="yellow"><Icon name="triangle-alert" />Known contrast + target-size gaps</Badge>
-            <Badge variant="soft"><Icon name="git-commit-horizontal" />WCAG 2.2 A · AA · AAA</Badge>
+            <Badge variant="soft"><Icon name="git-commit-horizontal" />WCAG 2.2 · A · AA · AAA</Badge>
           </Stack>
         </Stack>
 
-        <Section id="stand" title="Where we stand" lede="What we guarantee, what we own, and what is yours to finish.">
-          <Stack gap="md">
+        <Stack id="stand" gap="md">
             <Text>
-              The one thing Move <strong>guarantees</strong> is color contrast for themes built with{' '}
-              <RouterLink to="/customize/theme">defineThemes</RouterLink> — every generated color is
-              clamped to WCAG 2.2 AA. Everything else sits on a spectrum.
+              WCAG 2.2 is how that fabric gets measured — a shared standard of specific, testable
+              criteria, so “accessible” is something you can check rather than just claim.
             </Text>
-            <Text color="muted">
-              Move <strong>owns</strong> the things a library can: keyboard and focus behavior (most
-              overlays are built on Radix), a consistent focus-visible ring, single-pointer
-              alternatives for every drag, and status-message roles on feedback components. Move{' '}
-              <strong>enables</strong> a second tier — labels, autocomplete, and error
-              association (aria-invalid + announced messages, now wired for you when you set{' '}
-              <code>invalid</code> and add an error Description). And a large group is simply{' '}
-              <strong>yours</strong>: alt text,
-              heading structure, page language, meaningful sequence, and the words in your error
-              messages. The table below says which is which for all {TOTAL_CRITERIA} criteria (A,
-              AA, and the AAA rules that apply).
+            <Text>
+              Move guarantees one thing outright — colour contrast: every{' '}
+              <RouterLink to="/customize/theme">theme</RouterLink> clamps its colours to WCAG 2.2
+              AA. Beyond that, each criterion lands in one of four buckets. The table below says
+              which, for all {TOTAL_CRITERIA} (A, AA, and the AAA rules that apply).
             </Text>
             <Stack direction="row" gap="md" wrap>
               <Text size="sm" color="muted"><SupportBadge support="supports" /> Move handles it</Text>
               <Text size="sm" color="muted"><SupportBadge support="enables" /> mechanism ready, you wire it</Text>
-              <Text size="sm" color="muted"><SupportBadge support="partial" /> incomplete on our side</Text>
-              <Text size="sm" color="muted"><SupportBadge support="none" /> not yet</Text>
               <Text size="sm" color="muted"><SupportBadge support="consumer" /> your responsibility</Text>
               <Text size="sm" color="muted"><SupportBadge support="na" /> not applicable</Text>
             </Stack>
-          </Stack>
-        </Section>
+        </Stack>
 
         {GROUPS.map((g) => (
           <Section key={g.key} id={g.key} title={g.title} lede={g.lede}>
             <CriteriaTable rows={g.rows} />
           </Section>
         ))}
-
-        <Section id="gaps" title="Known gaps & fixes" lede="The failures worth fixing first, most-leverage down. We publish these rather than paper over them.">
-          <HighlightList items={GAPS} />
-        </Section>
       </Stack>
       <TocRail items={TOC} />
     </Stack>
