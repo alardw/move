@@ -46,7 +46,7 @@ describe('Select', () => {
   describe('rendering', () => {
     it('renders trigger button', () => {
       renderSelect();
-      expect(screen.getByRole('button')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
     });
 
     it('shows placeholder when no value', () => {
@@ -74,37 +74,37 @@ describe('Select', () => {
   describe('trigger attributes', () => {
     it('defaults to data-size=md', () => {
       renderSelect();
-      expect(screen.getByRole('button')).toHaveAttribute('data-size', 'md');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-size', 'md');
     });
 
     it('defaults to data-variant=outlined', () => {
       renderSelect();
-      expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'outlined');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-variant', 'outlined');
     });
 
     it('applies custom size', () => {
       renderSelect({ triggerProps: { size: 'lg' } });
-      expect(screen.getByRole('button')).toHaveAttribute('data-size', 'lg');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-size', 'lg');
     });
 
     it('applies custom variant', () => {
       renderSelect({ triggerProps: { variant: 'filled' } });
-      expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'filled');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-variant', 'filled');
     });
 
     it('sets data-disabled when disabled', () => {
       renderSelect({ triggerProps: { disabled: true } });
-      expect(screen.getByRole('button')).toHaveAttribute('data-disabled');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-disabled');
     });
 
     it('sets data-invalid when invalid', () => {
       renderSelect({ triggerProps: { invalid: true } });
-      expect(screen.getByRole('button')).toHaveAttribute('data-invalid');
+      expect(screen.getByRole('combobox')).toHaveAttribute('data-invalid');
     });
 
     it('forwards className on trigger', () => {
       renderSelect({ triggerProps: { className: 'custom-trigger' } });
-      expect(screen.getByRole('button').className).toContain('custom-trigger');
+      expect(screen.getByRole('combobox').className).toContain('custom-trigger');
     });
   });
 
@@ -113,14 +113,14 @@ describe('Select', () => {
     it('opens on trigger click', async () => {
       const user = userEvent.setup();
       renderSelect();
-      await user.click(screen.getByRole('button'));
-      expect(screen.getByRole('menu')).toBeInTheDocument();
+      await user.click(screen.getByRole('combobox'));
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
     });
 
     it('renders items when open', async () => {
       const user = userEvent.setup();
       renderSelect();
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       expect(screen.getByText('Apple')).toBeInTheDocument();
       expect(screen.getByText('Banana')).toBeInTheDocument();
       expect(screen.getByText('Cherry')).toBeInTheDocument();
@@ -129,7 +129,7 @@ describe('Select', () => {
     it('trigger has aria-expanded from Radix', async () => {
       const user = userEvent.setup();
       renderSelect();
-      const trigger = screen.getByRole('button');
+      const trigger = screen.getByRole('combobox');
       expect(trigger).toHaveAttribute('aria-expanded', 'false');
       await user.click(trigger);
       expect(trigger).toHaveAttribute('aria-expanded', 'true');
@@ -142,7 +142,7 @@ describe('Select', () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       renderSelect({ rootProps: { onValueChange: onChange } });
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       await user.click(screen.getByText('Banana'));
       expect(onChange).toHaveBeenCalledWith('banana');
     });
@@ -150,7 +150,7 @@ describe('Select', () => {
     it('displays selected value label after selection', async () => {
       const user = userEvent.setup();
       renderSelect();
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       await user.click(screen.getByText('Apple'));
       // Value span displays the selected label
       const valueSpan = document.querySelector('[class*="value"]');
@@ -167,11 +167,11 @@ describe('Select', () => {
 
   // === Items ===
   describe('items', () => {
-    it('items have role=menuitem', async () => {
+    it('items have role=option', async () => {
       const user = userEvent.setup();
       renderSelect();
-      await user.click(screen.getByRole('button'));
-      const items = screen.getAllByRole('menuitem');
+      await user.click(screen.getByRole('combobox'));
+      const items = screen.getAllByRole('option');
       expect(items.length).toBe(3);
     });
 
@@ -183,18 +183,18 @@ describe('Select', () => {
           { value: 'b', label: 'B', disabled: true },
         ],
       });
-      await user.click(screen.getByRole('button'));
-      const items = screen.getAllByRole('menuitem');
+      await user.click(screen.getByRole('combobox'));
+      const items = screen.getAllByRole('option');
       expect(items[1]).toHaveAttribute('data-disabled');
     });
 
-    it('selected item has data-selected', async () => {
+    it('selected item has data-state checked', async () => {
       const user = userEvent.setup();
       renderSelect({ rootProps: { value: 'apple', onValueChange: () => {} } });
-      await user.click(screen.getByRole('button'));
-      const items = screen.getAllByRole('menuitem');
+      await user.click(screen.getByRole('combobox'));
+      const items = screen.getAllByRole('option');
       const appleItem = items.find((el) => el.textContent === 'Apple');
-      expect(appleItem).toHaveAttribute('data-selected');
+      expect(appleItem).toHaveAttribute('data-state', 'checked');
     });
   });
 
@@ -218,7 +218,7 @@ describe('Select', () => {
           </Select.Content>
         </Select.Root>,
       );
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       expect(screen.getByText('Fruits')).toBeInTheDocument();
     });
 
@@ -239,7 +239,7 @@ describe('Select', () => {
           </Select.Content>
         </Select.Root>,
       );
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       // Separator is in the portal (document.body), not in container
       expect(document.body.querySelector('[class*="separator"]')).toBeInTheDocument();
     });
@@ -251,7 +251,7 @@ describe('Select', () => {
       const user = userEvent.setup();
       const onOpenChange = vi.fn();
       renderSelect({ rootProps: { onOpenChange } });
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       expect(onOpenChange).toHaveBeenCalledWith(true);
     });
   });
@@ -276,7 +276,7 @@ describe('Select', () => {
           </Select.Root>
         </LayerProvider>,
       );
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       const content = document.body.querySelector('[class*="content"]') as HTMLElement;
       expect(content).toBeInTheDocument();
       expect(content.style.zIndex).toBe('401');
@@ -285,10 +285,39 @@ describe('Select', () => {
     it('does not override z-index without LayerProvider', async () => {
       const user = userEvent.setup();
       renderSelect();
-      await user.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('combobox'));
       const content = document.body.querySelector('[class*="content"]') as HTMLElement;
       expect(content).toBeInTheDocument();
       expect(content.style.zIndex).toBe('');
+    });
+  });
+
+  describe('name, role & value (WCAG 4.1.2)', () => {
+    it('trigger exposes role=combobox (not a menu)', () => {
+      renderSelect();
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+    });
+
+    it('renders a named hidden native select carrying the value (submittable in a form)', () => {
+      render(
+        <form>
+          <Select.Root name="fruit" defaultValue="banana">
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Icon />
+            </Select.Trigger>
+            <Select.Content>
+              <Select.Viewport>
+                <Select.Item value="apple">Apple</Select.Item>
+                <Select.Item value="banana">Banana</Select.Item>
+              </Select.Viewport>
+            </Select.Content>
+          </Select.Root>
+        </form>,
+      );
+      const native = document.querySelector('select[name="fruit"]') as HTMLSelectElement | null;
+      expect(native).toBeInTheDocument();
+      expect(native).toHaveValue('banana');
     });
   });
 });

@@ -2,7 +2,7 @@
 // Generated from Select.spec.ts
 
 import * as React from 'react';
-import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
+import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -21,23 +21,22 @@ import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Select.module.css';
 
-// Per-item scale deltas (pixel-based so motion feels consistent at any width).
-// Container (Content) no longer scales — item stagger carries the reveal feel;
-// adding a container scale on top produced inconsistent perceived motion
-// depending on item count (short lists made the solo container scale conspicuous).
-const SCALE_INSET_PX = 16; // per-item fade-in offset
-const SCALE_HOVER_PX = 4; // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
+// Per-item scale deltas, pixel-based so the motion feels the SAME at any width.
+// A fixed scale ratio (e.g. 0.8) would swing wide controls much further in
+// absolute pixels — hence more overshoot/bounce — for the same ratio. Deriving
+// the ratio from a fixed pixel inset keeps the travel constant across widths.
+const SCALE_INSET_PX = 16; // per-item reveal offset
+const SCALE_HOVER_PX = 4; // per-item hover scale
 
-// Every visible dropdown row participates in the stagger: items, group
-// labels, and separators. Keeps the reveal cohesive when the menu is
-// grouped. Items are matched via `role="menuitem"` (Radix adds this),
-// labels and separators via their scoped CSS module classes.
-const CHILDREN_SELECTOR = `[role="menuitem"], [class*="label"], [class*="separator"]`;
+// Every visible dropdown row participates in the stagger: options, group
+// labels, and separators. Built on Radix Select, so items carry `role="option"`
+// (was `menuitem` under the old DropdownMenu build); labels/separators match via
+// their scoped CSS module classes.
+const CHILDREN_SELECTOR = `[role="option"], [class*="label"], [class*="separator"]`;
 
 // Wraps only the string/number leaves of a ReactNode tree in a block-level
 // span so text-overflow: ellipsis applies natively. React elements (Icons,
-// custom components) pass through untouched so they stay as direct flex
-// siblings and center vertically via align-items on the parent.
+// custom components) pass through untouched.
 function wrapTextChildren(children: React.ReactNode, textClass: string): React.ReactNode {
   const wrapped = React.Children.map(children, (child, i) => {
     if (typeof child === 'string' || typeof child === 'number') {
@@ -52,6 +51,52 @@ function wrapTextChildren(children: React.ReactNode, textClass: string): React.R
   return wrapped ?? children;
 }
 
+// Pull the plain-text label out of an item's children/label — the fallback for
+// Radix's <Select.ItemText> when an item has no direct text leaf.
+function textOf(node: React.ReactNode): string {
+  let out = '';
+  React.Children.forEach(node, (child) => {
+    if (typeof child === 'string' || typeof child === 'number') out += String(child);
+    else if (
+      React.isValidElement(child) &&
+      (child.props as { children?: React.ReactNode })?.children
+    )
+      out += textOf((child.props as { children?: React.ReactNode }).children);
+  });
+  return out;
+}
+
+// Render item children with the string/number leaf wrapped in Radix's
+// <Select.ItemText> (Radix reads it for typeahead and the hidden native
+// <option>); element children (icons) pass through as siblings. An item with no
+// text leaf still gets one ItemText, synthesized from label/value, so Radix has
+// something to key on.
+function renderItemChildren(
+  children: React.ReactNode,
+  fallback: string,
+  itemTextClass: string,
+): React.ReactNode {
+  let hasText = false;
+  const out = React.Children.map(children, (child, i) => {
+    if (typeof child === 'string' || typeof child === 'number') {
+      hasText = true;
+      return (
+        <RadixSelect.ItemText key={i} className={itemTextClass}>
+          {child}
+        </RadixSelect.ItemText>
+      );
+    }
+    return child;
+  });
+  if (hasText) return out;
+  return (
+    <>
+      {out}
+      <RadixSelect.ItemText className={itemTextClass}>{fallback}</RadixSelect.ItemText>
+    </>
+  );
+}
+
 const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'open',
@@ -64,7 +109,7 @@ const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
           stagger: staggerItems.stagger,
           animation: {
             scale: { from: '$scaleFrom', to: 1, ease: poppy },
-            opacity: { from: 0, to: 1 },
+            opacity: { from: 0, to: 1, duration: 200 },
           },
         },
         { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
@@ -101,8 +146,6 @@ const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
 
 interface SelectContextValue {
   value: string | undefined;
-  onValueChange: (value: string) => void;
-  open: boolean;
   isClosing: boolean;
   epoch: number;
   onExitDone: (epoch: number) => void;
@@ -125,6 +168,19 @@ function useSelectContext() {
   return context;
 }
 
+// Content → Viewport bridge. Radix Select requires its items to live inside a
+// `RadixSelect.Viewport`, so the Viewport IS the stagger container (`.contentInner`)
+// — items are its DIRECT children, exactly like Dropdown's contentInner div. The
+// Content component owns the animated ref + slot styling and hands them down to
+// whichever `<Select.Viewport>` the consumer renders inside it.
+interface SelectViewportBridge {
+  innerRef: React.RefObject<HTMLDivElement | null>;
+  innerClassName: string;
+  innerStyle?: React.CSSProperties;
+  innerRest: Record<string, unknown>;
+}
+const SelectViewportContext = React.createContext<SelectViewportBridge | null>(null);
+
 // ============================================================================
 // Root
 // ============================================================================
@@ -136,30 +192,37 @@ export interface SelectRootProps {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /** Name of the hidden native <select> — set this to submit the value with a form. */
+  name?: string;
+  /** Marks the underlying native select required for form validation. */
+  required?: boolean;
+  disabled?: boolean;
   animations?: AnimationTrigger[] | false;
   children?: React.ReactNode;
 }
 
-/**
- * Walk the React children tree to extract Select.Item value→label pairs.
- * This allows SelectValue to display the correct label before the dropdown
- * has ever been opened (items inside Portal don't mount until open).
- */
+/** Walk the children tree to pre-fill value→label pairs so the trigger can show
+ *  the selected label (rich content included) before the dropdown ever opens. */
 function extractItemLabels(children: React.ReactNode, map: Map<string, React.ReactNode>): void {
   React.Children.forEach(children, (child) => {
     if (!React.isValidElement(child)) return;
-    // Check if this is a SelectItem by displayName or internal marker
-    const type = child.type as any;
+    const type = child.type as { displayName?: string; __moveSelectItem?: boolean };
     if (type?.displayName === 'SelectItem' || type?.__moveSelectItem) {
-      const { value, label, children: itemChildren } = child.props as any;
+      const {
+        value,
+        label,
+        children: itemChildren,
+      } = child.props as {
+        value?: string;
+        label?: React.ReactNode;
+        children?: React.ReactNode;
+      };
       if (typeof value === 'string' && !map.has(value)) {
         map.set(value, label ?? itemChildren ?? value);
       }
     }
-    // Recurse into children (Portal, Content, Viewport, etc.)
-    if (child.props && (child.props as any).children) {
-      extractItemLabels((child.props as any).children, map);
-    }
+    const kids = (child.props as { children?: React.ReactNode })?.children;
+    if (kids) extractItemLabels(kids, map);
   });
 }
 
@@ -170,6 +233,9 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   open: controlledOpen,
   defaultOpen,
   onOpenChange,
+  name,
+  required,
+  disabled,
   animations: animationsProp,
   children,
 }) => {
@@ -182,13 +248,10 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   // exit-completion is epoch-guarded). See useDismissable.
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
-  const open = isOpen;
   const triggerRef = React.useRef<HTMLButtonElement>(null);
   const labelMapRef = React.useRef<Map<string, React.ReactNode>>(new Map());
   const [, forceUpdate] = React.useState(0);
 
-  // Pre-populate label map from children tree so SelectValue can display
-  // the correct label before the dropdown has been opened.
   extractItemLabels(children, labelMapRef.current);
 
   const isValueControlled = controlledValue !== undefined;
@@ -196,21 +259,20 @@ const SelectRoot: React.FC<SelectRootProps> = ({
 
   const handleValueChange = React.useCallback(
     (newValue: string) => {
-      if (!isValueControlled) {
-        setUncontrolledValue(newValue);
-      }
+      if (!isValueControlled) setUncontrolledValue(newValue);
       onValueChange?.(newValue);
     },
     [isValueControlled, onValueChange],
   );
 
+  // Radix Select drives open on its own (click, selection, escape); route it
+  // through the dismissable so the close plays the exit animation.
   const handleOpenChange = React.useCallback(
     (newOpen: boolean) => {
-      // Open (or cancel an in-flight close); ignore Radix's own close — the exit
-      // animation drives it (useDismissable).
       if (newOpen) openFn();
+      else close();
     },
-    [openFn],
+    [openFn, close],
   );
 
   const registerLabel = React.useCallback((itemValue: string, label: React.ReactNode) => {
@@ -221,16 +283,12 @@ const SelectRoot: React.FC<SelectRootProps> = ({
     }
   }, []);
 
-  const getLabel = React.useCallback((itemValue: string) => {
-    return labelMapRef.current.get(itemValue);
-  }, []);
+  const getLabel = React.useCallback((itemValue: string) => labelMapRef.current.get(itemValue), []);
 
   return (
     <SelectContext.Provider
       value={{
         value,
-        onValueChange: handleValueChange,
-        open: !!open,
         isClosing,
         epoch,
         onExitDone,
@@ -243,13 +301,17 @@ const SelectRoot: React.FC<SelectRootProps> = ({
         triggerRef,
       }}
     >
-      <RadixDropdownMenu.Root
-        open={open || isClosing}
+      <RadixSelect.Root
+        value={value}
+        onValueChange={handleValueChange}
+        open={isOpen || isClosing}
         onOpenChange={handleOpenChange}
-        modal={false}
+        name={name}
+        required={required}
+        disabled={disabled}
       >
         {children}
-      </RadixDropdownMenu.Root>
+      </RadixSelect.Root>
     </SelectContext.Provider>
   );
 };
@@ -284,8 +346,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
   moveProps: ['invalid', 'disabled', 'width', 'minWidth', 'maxWidth', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { open, isClosing, setTriggerWidth, triggerRef } = useSelectContext();
-    const moveState = open && !isClosing ? 'open' : 'closed';
+    const { setTriggerWidth, triggerRef } = useSelectContext();
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
     const controlProps = useFieldControl(attrs as Record<string, unknown>, {
       invalid: !!props.invalid,
@@ -310,14 +371,13 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
           ...spRest
         } = triggerSp as Record<string, unknown>;
         return (
-          <RadixDropdownMenu.Trigger
+          <RadixSelect.Trigger
             {...controlProps}
             {...spRest}
             ref={mergedRef}
             disabled={props.disabled as boolean}
             data-size={props.size}
             data-variant={props.variant}
-            data-move-state={moveState}
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{
               ...props.style,
@@ -336,7 +396,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             {...(props.invalid ? { 'data-invalid': '' } : {})}
           >
             {props.children}
-          </RadixDropdownMenu.Trigger>
+          </RadixSelect.Trigger>
         );
       },
     };
@@ -344,7 +404,9 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
 });
 
 // ============================================================================
-// Value
+// Value — custom display so rich content (icon + label) shows in the trigger,
+// reading the value→label map. Radix's own value plumbing (typeahead, the hidden
+// native <select>) comes from each item's <Select.ItemText>, independent of this.
 // ============================================================================
 
 export interface SelectValueProps extends React.HTMLAttributes<HTMLElement> {
@@ -377,8 +439,6 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
         const displayText = showPlaceholder
           ? (props.placeholder as string)
           : (props.children ?? label ?? value);
-        // Native tooltip — lets users see the full value when the trigger is too
-        // narrow and the text gets ellipsized.
         const titleText = typeof displayText === 'string' ? displayText : undefined;
         return (
           <span
@@ -420,24 +480,24 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
     const { animConfig } = useSelectContext();
 
-    // Icon rotation — extract Icon steps from open/closed triggers, run via state triggers
-    // Trigger always sets data-move-state="open"|"closed" reflecting true state (incl. during exit)
+    // Icon rotation — driven by the trigger's data-state (Radix sets open/closed
+    // on the trigger) plus our data-move-state override during the exit anim.
     const iconStates: AnimationState[] = React.useMemo(
       () => [
         {
           name: 'open',
           slot: 'Icon',
-          source: 'data-move-state',
+          source: 'data-state',
           value: 'open',
-          closest: '[data-move-state]',
+          closest: '[data-state]',
           initial: false,
         },
         {
           name: 'closed',
           slot: 'Icon',
-          source: 'data-move-state',
+          source: 'data-state',
           value: 'closed',
-          closest: '[data-move-state]',
+          closest: '[data-state]',
           initial: false,
         },
       ],
@@ -461,9 +521,7 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
     }, [animConfig]);
 
     const iconRefs = React.useMemo(
-      () => ({
-        Icon: iconRef as React.RefObject<HTMLElement | null>,
-      }),
+      () => ({ Icon: iconRef as React.RefObject<HTMLElement | null> }),
       [],
     );
 
@@ -474,16 +532,18 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
         const iconSp = sp('icon');
         const { className: spClass, style: spStyle, ...spRest } = iconSp as Record<string, unknown>;
         return (
-          <span
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            className={cx('icon', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            aria-hidden="true"
-          >
-            {props.children || resolvedChevron}
-          </span>
+          <RadixSelect.Icon asChild>
+            <span
+              {...attrs}
+              {...spRest}
+              ref={mergedRef}
+              className={cx('icon', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              aria-hidden="true"
+            >
+              {props.children || resolvedChevron}
+            </span>
+          </RadixSelect.Icon>
         );
       },
     };
@@ -506,12 +566,11 @@ export interface SelectContentProps extends React.HTMLAttributes<HTMLElement> {
   maxWidth?: React.CSSProperties['maxWidth'];
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
-  onInteractOutside?: (e: Event) => void;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
-// Inner component that lives INSIDE the Portal — its hooks run after Portal
-// has committed children to the DOM, so refs are always available.
+// Inner component — lives inside the Portal, so its refs are available after the
+// Portal commits children to the DOM.
 interface SelectContentInnerProps {
   children: React.ReactNode;
   className?: string;
@@ -523,7 +582,6 @@ interface SelectContentInnerProps {
   maxWidth?: React.CSSProperties['maxWidth'];
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
-  onInteractOutside?: (e: Event) => void;
   contentCx: CxFn<'content' | 'contentInner'>;
   innerCx: CxFn<'content' | 'contentInner'>;
   contentSp: Record<string, unknown>;
@@ -540,18 +598,32 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
     const innerRef = React.useRef<HTMLDivElement>(null);
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    // Close on external scroll — dropdown doesn't reposition so it would become misaligned.
-    React.useEffect(() => {
-      const onScroll = (e: Event) => {
-        if (contentRef.current?.contains(e.target as Node)) return;
-        close();
-      };
-      document.addEventListener('scroll', onScroll, { capture: true, passive: true });
-      return () => document.removeEventListener('scroll', onScroll, { capture: true });
-    }, [close]);
-
-    // Width-relative item scale from trigger width (known before popup opens).
+    // Width-relative per-item scale → constant pixel travel at any width.
     const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
+
+    // Radix keeps the listbox mounted BEFORE the popup is visibly open and commits
+    // its rows a frame after mount, so the engine's mount-time lifecycle enter is
+    // wrong here (plays invisibly, then its one-shot lock blocks re-firing on
+    // reopen). We suppress that auto-enter and fire imperatively instead:
+    //   • Content.exit is present from the first render, so the config is non-null
+    //     immediately → the lifecycle lock trips with NO enter trigger, killing the
+    //     eager auto-fire (exit itself never auto-fires; only runExit runs it).
+    //   • Content.enter is added once rows exist, but the lock is already tripped so
+    //     it never auto-fires — only runEnter() runs it.
+    //   • A poll calls runEnter() on each closed→open transition (when the popup is
+    //     actually visible), so the stagger plays in view on EVERY open.
+    const [itemsReady, setItemsReady] = React.useState(false);
+
+    React.useLayoutEffect(() => {
+      if (itemsReady) return;
+      let raf = 0;
+      const check = () => {
+        if (innerRef.current?.querySelector('[role="option"]')) return setItemsReady(true);
+        raf = requestAnimationFrame(check);
+      };
+      check();
+      return () => cancelAnimationFrame(raf);
+    }, [itemsReady]);
 
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!animConfig) return null;
@@ -564,12 +636,12 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
         ['Content', 'ContentInner'],
       );
       const result: AnimationTrigger[] = [];
-      if (openSteps)
+      if (openSteps && itemsReady)
         result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
       if (closedSteps)
         result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
       return result.length > 0 ? result : null;
-    }, [animConfig, scaleFrom]);
+    }, [animConfig, itemsReady, scaleFrom]);
 
     const contentRefs = React.useMemo(
       () => ({
@@ -579,44 +651,32 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
       [],
     );
 
-    // Scroll + focus the selected item synchronously on mount — BEFORE the
-    // animation runs and BEFORE Radix's default auto-focus lands on the
-    // first item. This ensures arrow navigation always starts from the
-    // currently-selected value (or from the first item when nothing is
-    // selected), not from whatever Radix happened to focus first.
-    React.useLayoutEffect(() => {
-      const content = contentRef.current;
-      const inner = innerRef.current;
-      if (!content || !inner) return;
-
-      const selected = inner.querySelector('[data-selected]') as HTMLElement | null;
-      const target =
-        selected ??
-        (inner.querySelector('[role="menuitem"]:not([data-disabled])') as HTMLElement | null);
-
-      if (selected) {
-        inner.scrollTop = Math.max(
-          0,
-          selected.offsetTop - inner.clientHeight / 2 + selected.offsetHeight / 2,
-        );
-      }
-
-      // Focus the target so roving tabindex starts from the selected item.
-      target?.focus({ preventScroll: true });
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-    // Enter/exit via useAnimations orchestrator. Focus is already placed
-    // by the useLayoutEffect above, so nothing to do on animation end.
     const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-    useDismissableExit({
-      isClosing,
-      epoch,
-      onExitDone,
-      runExit,
-      runEnter,
-      pauseAll,
-    });
+    useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
+
+    // Fire the reveal imperatively on each closed→open transition (the moment the
+    // popup becomes visible). The engine's auto-enter is suppressed (see above), so
+    // this is the single fire — and runEnter() re-runs regardless of the one-shot
+    // lock, so it plays on EVERY open, not just the first.
+    const wasOpenRef = React.useRef(false);
+    React.useEffect(() => {
+      let raf = 0;
+      const tick = () => {
+        const el = contentRef.current as HTMLElement | null;
+        const open = el?.closest('[data-state]')?.getAttribute('data-state') === 'open';
+        const hasRows = !!innerRef.current?.querySelector('[role="option"]');
+        if (open && hasRows && !wasOpenRef.current) {
+          wasOpenRef.current = true;
+          runEnter();
+        } else if (!open) {
+          wasOpenRef.current = false;
+        }
+        raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(raf);
+    }, [runEnter]);
 
     const handlePointerDownOutside = (e: Event) => {
       props.onPointerDownOutside?.(e);
@@ -628,18 +688,15 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
       if (!e.defaultPrevented) close();
     };
 
-    const handleInteractOutside = (e: Event) => {
-      props.onInteractOutside?.(e);
-    };
-
     const { className: spClass, style: spStyle, ...spRest } = props.contentSp;
     const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
 
     return (
-      <RadixDropdownMenu.Content
+      <RadixSelect.Content
         {...props.attrs}
         {...spRest}
         ref={mergedContentRef}
+        position="popper"
         sideOffset={props.sideOffset ?? 4}
         align={props.align}
         className={props.contentCx('content', props.className, spClass as string | undefined)}
@@ -653,18 +710,23 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
         }}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
-        onInteractOutside={handleInteractOutside}
         data-surface="subtle"
       >
-        <div
-          ref={innerRef}
-          {...innerSpRest}
-          className={props.innerCx('contentInner', innerSpClass as string | undefined)}
-          style={innerSpStyle as React.CSSProperties}
+        {/* The consumer's <Select.Viewport> renders Radix's Viewport as the DIRECT
+            child of Content and becomes the `.contentInner` stagger container —
+            items are its direct children, exactly like Dropdown. The ref + slot
+            styling are handed down through the bridge context. */}
+        <SelectViewportContext.Provider
+          value={{
+            innerRef,
+            innerClassName: props.innerCx('contentInner', innerSpClass as string | undefined),
+            innerStyle: innerSpStyle as React.CSSProperties,
+            innerRest: innerSpRest,
+          }}
         >
           {props.children}
-        </div>
-      </RadixDropdownMenu.Content>
+        </SelectViewportContext.Provider>
+      </RadixSelect.Content>
     );
   },
 );
@@ -686,7 +748,6 @@ const SelectContent = withMoveComponent<
     'maxWidth',
     'onPointerDownOutside',
     'onEscapeKeyDown',
-    'onInteractOutside',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -698,7 +759,7 @@ const SelectContent = withMoveComponent<
         const innerSp = sp('contentInner');
 
         return (
-          <RadixDropdownMenu.Portal container={props.container as HTMLElement | undefined}>
+          <RadixSelect.Portal container={props.container as HTMLElement | undefined}>
             <SelectContentInner
               ref={ref}
               className={props.className}
@@ -710,7 +771,6 @@ const SelectContent = withMoveComponent<
               maxWidth={props.maxWidth as React.CSSProperties['maxWidth'] | undefined}
               onPointerDownOutside={props.onPointerDownOutside as ((e: Event) => void) | undefined}
               onEscapeKeyDown={props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined}
-              onInteractOutside={props.onInteractOutside as ((e: Event) => void) | undefined}
               contentCx={cx}
               innerCx={cx}
               contentSp={contentSp as Record<string, unknown>}
@@ -720,7 +780,7 @@ const SelectContent = withMoveComponent<
             >
               {props.children}
             </SelectContentInner>
-          </RadixDropdownMenu.Portal>
+          </RadixSelect.Portal>
         );
       },
     };
@@ -728,7 +788,10 @@ const SelectContent = withMoveComponent<
 });
 
 // ============================================================================
-// Viewport
+// Viewport — Radix's required scroll viewport, rendered as the DIRECT child of
+// Content. It IS the `.contentInner` stagger container: items are its direct
+// children (matches Dropdown), and its ref + slot styling come from Content via
+// the bridge context so the open/close animation runs on it.
 // ============================================================================
 
 export interface SelectViewportProps extends React.HTMLAttributes<HTMLElement> {
@@ -744,6 +807,12 @@ const SelectViewport = withMoveComponent<'viewport', SelectViewportProps, HTMLDi
   slots: ['viewport'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Radix owns the Viewport (its ref, scroll, positioning) — we leave it alone.
+    // Our animated `.contentInner` stagger container is a plain div INSIDE it, which
+    // Radix doesn't manage (matches Dropdown's contentInner). Items are its direct
+    // children; the ref + slot styling come from Content via the bridge.
+    const bridge = React.useContext(SelectViewportContext);
+
     return {
       render() {
         const viewportSp = sp('viewport');
@@ -753,15 +822,22 @@ const SelectViewport = withMoveComponent<'viewport', SelectViewportProps, HTMLDi
           ...spRest
         } = viewportSp as Record<string, unknown>;
         return (
-          <div
+          <RadixSelect.Viewport
             {...attrs}
             {...spRest}
             ref={ref}
             className={cx('viewport', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
-          </div>
+            <div
+              ref={bridge?.innerRef as React.Ref<HTMLDivElement> | undefined}
+              className={bridge?.innerClassName}
+              style={bridge?.innerStyle}
+              {...(bridge?.innerRest ?? {})}
+            >
+              {props.children}
+            </div>
+          </RadixSelect.Viewport>
         );
       },
     };
@@ -791,9 +867,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const { value, onValueChange, close, registerLabel, animConfig, triggerWidth } =
-      useSelectContext();
-    const isSelected = value === (props.value as string);
+    const { registerLabel, animConfig, triggerWidth } = useSelectContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -802,15 +876,8 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
       registerLabel(props.value as string, displayLabel);
     }, [props.value, displayLabel, registerLabel]);
 
-    const handleSelect = (e: Event) => {
-      e.preventDefault();
-      onValueChange(props.value as string);
-      (props.onSelect as ((e: Event) => void) | undefined)?.(e);
-      close();
-    };
-
-    // Item hover animation via useAnimations
-    // Clamp trigger width to avoid exaggerated scale on narrow selects
+    // Item hover animation. Clamp trigger width to avoid exaggerated scale on
+    // narrow selects.
     const effectiveWidth = Math.max(triggerWidth, 120);
     const scaleHover = (effectiveWidth + SCALE_HOVER_PX) / effectiveWidth;
     const itemConfig = React.useMemo(() => {
@@ -820,9 +887,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
     }, [animConfig, scaleHover]);
 
     const itemRefs = React.useMemo(
-      () => ({
-        Item: itemRef as React.RefObject<HTMLElement | null>,
-      }),
+      () => ({ Item: itemRef as React.RefObject<HTMLElement | null> }),
       [],
     );
 
@@ -833,28 +898,26 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
         const itemSp = sp('item');
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
 
-        const itemTitle =
-          typeof props.children === 'string'
-            ? props.children
-            : typeof props.label === 'string'
-              ? (props.label as string)
-              : undefined;
+        const itemText = textOf(props.label ?? props.children);
         return (
-          <RadixDropdownMenu.Item
+          <RadixSelect.Item
             {...attrs}
             {...spRest}
             ref={mergedItemRef}
+            value={props.value as string}
             disabled={props.disabled as boolean}
-            data-selected={isSelected ? '' : undefined}
-            title={itemTitle}
-            onSelect={handleSelect}
+            title={itemText || undefined}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {wrapTextChildren(props.children, styles.itemText)}
-          </RadixDropdownMenu.Item>
+            {renderItemChildren(
+              props.children,
+              itemText || (props.value as string),
+              styles.itemText,
+            )}
+          </RadixSelect.Item>
         );
       },
     };
@@ -862,7 +925,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 });
 
 // Static marker so extractItemLabels can identify Select.Item in the React tree
-(SelectItem as any).__moveSelectItem = true;
+(SelectItem as unknown as { __moveSelectItem?: boolean }).__moveSelectItem = true;
 
 // ============================================================================
 // Group
@@ -890,7 +953,7 @@ const SelectGroup = withMoveComponent<'group', SelectGroupProps, HTMLDivElement>
           ...spRest
         } = groupSp as Record<string, unknown>;
         return (
-          <RadixDropdownMenu.Group
+          <RadixSelect.Group
             {...attrs}
             {...spRest}
             ref={ref}
@@ -898,7 +961,7 @@ const SelectGroup = withMoveComponent<'group', SelectGroupProps, HTMLDivElement>
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-          </RadixDropdownMenu.Group>
+          </RadixSelect.Group>
         );
       },
     };
@@ -931,7 +994,7 @@ const SelectLabel = withMoveComponent<'label', SelectLabelProps, HTMLDivElement>
           ...spRest
         } = labelSp as Record<string, unknown>;
         return (
-          <RadixDropdownMenu.Label
+          <RadixSelect.Label
             {...attrs}
             {...spRest}
             ref={ref}
@@ -939,7 +1002,7 @@ const SelectLabel = withMoveComponent<'label', SelectLabelProps, HTMLDivElement>
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-          </RadixDropdownMenu.Label>
+          </RadixSelect.Label>
         );
       },
     };
@@ -967,7 +1030,7 @@ const SelectSeparator = withMoveComponent<'separator', SelectSeparatorProps, HTM
         const sepSp = sp('separator');
         const { className: spClass, style: spStyle, ...spRest } = sepSp as Record<string, unknown>;
         return (
-          <RadixDropdownMenu.Separator
+          <RadixSelect.Separator
             {...attrs}
             {...spRest}
             ref={ref}

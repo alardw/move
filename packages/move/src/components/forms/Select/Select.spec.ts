@@ -8,12 +8,12 @@ export const spec = {
   componentClass: 'input_popup' as const,
   category: 'forms',
   description:
-    'Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger',
+    'Dropdown select built on Radix Select — a combobox trigger, listbox popup with option items, and a hidden native <select> for form submission — with an animated popup and item stagger',
   choreographies: ['popupMenu'],
   families: {
     behavior: ['popup-anchored'],
     state: ['controlled-value', 'controlled-open'],
-    a11y: ['listbox'],
+    a11y: ['combobox', 'listbox'],
   },
   behavior: {
     popup: {
@@ -91,6 +91,25 @@ export const spec = {
           type: '(open: boolean) => void',
           moveSpecific: false,
           description: 'Called when open state changes',
+        },
+        {
+          name: 'name',
+          type: 'string',
+          moveSpecific: false,
+          description:
+            'Name of the hidden native <select> — set it to submit the value with a form',
+        },
+        {
+          name: 'required',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Marks the underlying native select required for form validation',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: false,
+          description: 'Disables the trigger and the native select',
         },
         {
           name: 'animations',
@@ -289,13 +308,6 @@ export const spec = {
           moveSpecific: false,
           advanced: true,
           description: 'Escape key handler',
-        },
-        {
-          name: 'onInteractOutside',
-          type: '(e: Event) => void',
-          moveSpecific: false,
-          advanced: true,
-          description: 'Interact outside handler',
         },
       ],
       usesFactory: true,
@@ -606,7 +618,7 @@ export const spec = {
     },
     {
       name: '--move-select-trigger-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Trigger border color',
     },
     {

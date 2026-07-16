@@ -64,3 +64,12 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: () => false,
   }),
 });
+
+// jsdom lacks pointer-capture + scrollIntoView, which Radix Select relies on to
+// open and to scroll the highlighted option into view. Without these it never
+// opens under test.
+const el = window.HTMLElement.prototype as unknown as Record<string, unknown>;
+el.hasPointerCapture = el.hasPointerCapture ?? (() => false);
+el.setPointerCapture = el.setPointerCapture ?? (() => {});
+el.releasePointerCapture = el.releasePointerCapture ?? (() => {});
+el.scrollIntoView = el.scrollIntoView ?? (() => {});

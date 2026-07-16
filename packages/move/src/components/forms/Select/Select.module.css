@@ -3,7 +3,7 @@
 .trigger {
   /* Component tokens — trigger */
   --move-select-trigger-bg: var(--move-bg-subtle);
-  --move-select-trigger-border: var(--move-border-base);
+  --move-select-trigger-border: var(--move-border-interactive);
   --move-select-trigger-radius: var(--move-rounded-md);
   --move-select-trigger-padding-x: var(--move-spacing-sm);
   --move-select-trigger-padding-y: var(--move-spacing-xs);
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--move-spacing-sm);
-  height: var(--move-select-trigger-height);
+  min-height: var(--move-select-trigger-height);
   min-width: var(--move-select-trigger-min-width);
   /* No default cap — trigger fills its parent. Set `--move-select-trigger-max-width`
      or pass `maxWidth` prop to constrain per-instance. */
@@ -63,13 +63,12 @@
   /* default — outlined */
 }
 
+/* Filled = a heavier fill over the same compliant border. It keeps the base
+   --move-select-trigger-border (--move-border-interactive, 3:1) rather than
+   going borderless, so the trigger has a perceivable edge at rest (WCAG
+   1.4.11); hover/focus inherit from the base rules. */
 .trigger[data-variant='filled'] {
   --move-select-trigger-bg: var(--move-bg-muted);
-  --move-select-trigger-border: transparent;
-}
-
-.trigger[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
-  --move-select-trigger-border: var(--move-border-base);
 }
 
 .trigger:focus-visible:not(:active) {
@@ -137,17 +136,14 @@
   --move-select-content-padding: var(--move-spacing-xs);
   --move-select-content-min-width: 10rem;
   --move-select-content-max-width: none;
-  --move-select-content-max-height: min(
-    var(--radix-dropdown-menu-content-available-height, 20rem),
-    20rem
-  );
+  --move-select-content-max-height: min(var(--radix-select-content-available-height, 20rem), 20rem);
 
   /* Match trigger width by default. No default max-width cap — set
      `--move-select-content-max-width` or pass `maxWidth` prop to constrain.
      box-sizing: border-box so padding + border are absorbed inside the
      trigger width rather than added on top. */
   box-sizing: border-box;
-  width: var(--radix-dropdown-menu-trigger-width);
+  width: var(--radix-select-trigger-width);
   min-width: var(--move-select-content-min-width);
   max-width: var(--move-select-content-max-width);
   background-color: var(--move-select-content-bg);
@@ -170,10 +166,12 @@
   overflow-x: hidden;
   will-change: height;
   max-height: var(--move-select-content-max-height);
-  /* Breathing room for item hover scale — the overflow clip above would
-     clip items that scale up beyond their natural bounds (~2px per side
-     at the current 4px hover delta). */
-  padding: 4px;
+  /* Breathing room for item hover scale AND the selected row's OUTER focus ring
+     (offset 2px + width 2px = 4px) — the overflow clip would otherwise cut the
+     ring on a first/last highlighted row. Extra block padding + scroll-padding so
+     Radix leaves room when it scrolls a highlighted row to the edge. */
+  padding: 6px 4px;
+  scroll-padding-block: 6px;
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
@@ -208,6 +206,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
+  /* Small vertical gap so the keyboard-highlight ring doesn't touch neighbours. */
+  margin-block: 2px;
   padding: var(--move-select-item-padding-y) var(--move-select-item-padding-x);
   border-radius: var(--move-select-item-radius);
   font-family: var(--move-font-body);
@@ -233,18 +233,29 @@
   white-space: nowrap;
 }
 
-.item[data-selected] {
+.item[data-state='checked'] {
   background-color: var(--move-primary);
   color: var(--move-primary-fg);
 }
 
 .item[data-highlighted] {
   background-color: var(--move-select-item-bg-highlight);
+  /* Keyboard-active option indicator (WCAG 2.4.13): the bg-muted-on-bg-subtle
+     fill is <3:1, so add the accent ring. On a plain (unselected) row the ring is
+     INSET — the accent reads clearly against the light fill and, being inside the
+     row, it never clips at the scroll edges. The selected row overrides to an
+     OUTER ring below (an inset ring on the accent fill looks like a shrunken fill). */
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }
 
-.item[data-selected][data-highlighted] {
+.item[data-state='checked'][data-highlighted] {
   background-color: var(--move-primary-hover);
   color: var(--move-primary-fg);
+  /* Selected row: flip to an OUTER accent ring so it sits on the surface OUTSIDE
+     the accent fill (an inset ring on the fill reads as a shrunken fill). The
+     contentInner block padding leaves room so it doesn't clip at first/last. */
+  outline-offset: var(--move-focus-ring-offset);
 }
 
 .item[data-disabled] {
