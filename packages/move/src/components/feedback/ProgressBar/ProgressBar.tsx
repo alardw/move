@@ -86,6 +86,9 @@ export const ProgressBar = withMoveComponent<
         return (
           <RadixProgress.Root
             aria-label={labels.label}
+            // Indeterminate (value == null) has no aria-valuenow, so signal the
+            // busy/loading state to assistive tech (WCAG 4.1.3 Status Messages).
+            aria-busy={props.value == null ? true : undefined}
             {...attrs}
             {...spRest}
             ref={ref}

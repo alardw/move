@@ -11,6 +11,13 @@ describe('ProgressBar', () => {
       expect(screen.getByRole('progressbar')).toBeInTheDocument();
     });
 
+    it('marks the indeterminate state aria-busy, but not the determinate one (WCAG 4.1.3)', () => {
+      const { rerender } = render(<ProgressBar aria-label="Loading" />);
+      expect(screen.getByRole('progressbar')).toHaveAttribute('aria-busy', 'true');
+      rerender(<ProgressBar aria-label="Loading" value={50} />);
+      expect(screen.getByRole('progressbar')).not.toHaveAttribute('aria-busy');
+    });
+
     it('forwards ref to root element', () => {
       const ref = { current: null } as React.RefObject<HTMLDivElement>;
       render(<ProgressBar ref={ref} value={50} />);

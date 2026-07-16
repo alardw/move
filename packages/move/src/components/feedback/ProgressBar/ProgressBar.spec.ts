@@ -75,7 +75,14 @@ export const spec = {
   anatomy: {
     slot: 'root',
     dataAttributes: ['data-size', 'data-variant', 'data-state'],
-    ariaAttributes: ['role', 'aria-valuenow', 'aria-valuemin', 'aria-valuemax', 'aria-valuetext'],
+    ariaAttributes: [
+      'role',
+      'aria-valuenow',
+      'aria-valuemin',
+      'aria-valuemax',
+      'aria-valuetext',
+      'aria-busy',
+    ],
     children: [{ slot: 'indicator' }],
   },
 
