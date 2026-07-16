@@ -49,5 +49,5 @@ export const meta: ComponentDocument = {
     { key: 'Enter / Space', action: 'Activates the focused item or trigger.' },
   ],
   accessibilityLede:
-    'Root renders as `<aside>` so screen readers can land on it as a navigation landmark. The mobile overlay is `aria-hidden`, the rail is `aria-hidden`, items stay focusable through the whole collapse/expand cycle. Tooltips on collapsed items use Radix Tooltip and inherit its full a11y contract.',
+    'Root renders as `<aside>` so screen readers can land on it as a navigation landmark. The mobile overlay is `aria-hidden`, the rail is `aria-hidden`, items stay focusable through the whole collapse/expand cycle. Tooltips on collapsed items use Radix Tooltip and inherit its full accessibility contract.',
 };

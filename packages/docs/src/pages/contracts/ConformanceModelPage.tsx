@@ -255,7 +255,7 @@ export function ConformanceModelPage() {
             </Stack>
             <Text size="sm" color="muted">
               For the full list of gates <Code>move check</Code> runs, see the{' '}
-              <RouterLink to="/ai/conformance">Conformance</RouterLink> reference.
+              <RouterLink to="/conformance/validation">Validation</RouterLink> reference.
             </Text>
           </Stack>
         </Section>
@@ -283,7 +283,8 @@ export function ConformanceModelPage() {
           <Stack gap="sm">
             <Text>Adjacent reading:</Text>
             <Stack gap="xs">
-              <Text size="sm">• <RouterLink to="/ai/conformance">Conformance</RouterLink> — every gate <Code>move check</Code> runs, for reference.</Text>
+              <Text size="sm">• <RouterLink to="/conformance/validation">Validation</RouterLink> — every gate <Code>move check</Code> runs, for reference.</Text>
+              <Text size="sm">• <RouterLink to="/conformance/tooling">Tooling</RouterLink> — run the gates: <Code>move check</Code>, pre-commit hook, and CI.</Text>
               <Text size="sm">• <RouterLink to="/contracts/component">Component Contract</RouterLink> — the same idea one layer down, for a single component.</Text>
               <Text size="sm">• <RouterLink to="/ai/skills">Skills</RouterLink> — <Code>/app-compose</Code> produces the composites the static gate checks; <Code>/app-setup</Code> scaffolds the render-time one.</Text>
             </Stack>

@@ -33,6 +33,7 @@ for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g
 const STRUCTURAL = new Set([
   'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
   'animation-choreography', 'conformance-docs', 'conformance-spec', 'script-refs',
+  'doc-spec-drift', 'barrel-completeness',
 ]);
 
 const errors = [];

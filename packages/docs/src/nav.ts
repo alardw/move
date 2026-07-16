@@ -52,15 +52,18 @@ export const DOCS_NAV: NavSection[] = [
     ],
   },
   {
-    key: "contracts",
-    label: "Contracts",
+    key: "conformance",
+    label: "Conformance",
     icon: "scroll-text",
     items: [
+      { to: "/contracts/conformance", label: "Conformance model" },
       { to: "/contracts", label: "Overview" },
-      { to: "/contracts/component", label: "Component" },
-      { to: "/contracts/composite", label: "Composite" },
-      { to: "/contracts/design-pattern", label: "Design Pattern" },
-      { to: "/contracts/conformance", label: "Conformance" },
+      { to: "/contracts/component", label: "Component contract" },
+      { to: "/contracts/composite", label: "Composite contract" },
+      { to: "/contracts/design-pattern", label: "Design patterns" },
+      { to: "/ai/coverage", label: "Coverage" },
+      { to: "/conformance/validation", label: "Validation" },
+      { to: "/conformance/tooling", label: "Tooling" },
     ],
   },
   {
@@ -103,8 +106,6 @@ export const DOCS_NAV: NavSection[] = [
       { to: "/ai", label: "Overview" },
       { to: "/ai/skills", label: "Skills" },
       { to: "/ai/specs", label: "Spec pipeline" },
-      { to: "/ai/conformance", label: "Conformance" },
-      { to: "/ai/coverage", label: "Coverage" },
     ],
   },
   {

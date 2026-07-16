@@ -35,7 +35,8 @@ import { Placeholder } from "./pages/Placeholder";
 import { AIOverviewPage } from "./pages/ai/AIOverviewPage";
 import { SkillsPage } from "./pages/ai/SkillsPage";
 import { SpecsPage } from "./pages/ai/SpecsPage";
-import { ConformancePage } from "./pages/ai/ConformancePage";
+import { ValidationPage } from "./pages/conformance/ValidationPage";
+import { ToolingPage } from "./pages/conformance/ToolingPage";
 import { CoveragePage } from "./pages/ai/CoveragePage";
 import { ComponentDocPage } from "./pages/components/ComponentDocPage";
 import { ComponentsOverviewPage } from "./pages/components/ComponentsOverviewPage";
@@ -435,7 +436,8 @@ function App() {
                 <Route path="/ai" element={<AIOverviewPage />} />
                 <Route path="/ai/skills" element={<SkillsPage />} />
                 <Route path="/ai/specs" element={<SpecsPage />} />
-                <Route path="/ai/conformance" element={<ConformancePage />} />
+                <Route path="/conformance/validation" element={<ValidationPage />} />
+                <Route path="/conformance/tooling" element={<ToolingPage />} />
                 <Route path="/ai/coverage" element={<CoveragePage />} />
                 <Route
                   path="/components"

@@ -228,7 +228,7 @@ const TOC: TocItem[] = [
   { href: '#without-a-system', label: 'Without a system' },
   { href: '#component-library', label: 'A component library' },
   { href: '#design-system', label: 'A design system' },
-  { href: '#accessibility', label: 'The a11y failures, named' },
+  { href: '#accessibility', label: 'The accessibility failures, named' },
   { href: '#how-move-helps', label: 'How Move helps' },
   { href: '#in-practice', label: 'Caught in the act' },
   { href: '#sources', label: 'References' },

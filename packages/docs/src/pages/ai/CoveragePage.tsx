@@ -109,7 +109,7 @@ export function CoveragePage() {
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Link asChild>
-              <RouterLink to="/ai">AI</RouterLink>
+              <RouterLink to="/contracts">Conformance</RouterLink>
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
@@ -133,7 +133,7 @@ export function CoveragePage() {
           </Stack>
           <Text size="sm" color="muted">
             <Code>check</Code> = a deterministic gate enforces it. <Code>gap</Code> = mechanizable, but
-            no check exists yet — never a human call. Component and composite render UI (purity, a11y,
+            no check exists yet — never a human call. Component and composite render UI (purity, accessibility,
             spec parity); a design pattern is validated as a spec — its skeleton, axes, and per-value
             bindings must be well-formed and complete. Beneath all of it, the ambient tooling below runs
             over the whole source automatically.

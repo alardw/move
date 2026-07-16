@@ -407,7 +407,7 @@ export function DesignPatternPage() {
         <Section
           id="heuristics"
           title="Heuristics — the axis-level laws"
-          lede="Design laws that govern AXIS choices and their interactions — the one level nothing else checks. (Component a11y/tokens/ARIA are guaranteed by Move components; composite purity/spec-drift by move check. These don’t restate those.) Each is scoped to the axes it constrains; a checkable one becomes an oracle over the resolved config, failing an incoherent combination."
+          lede="Design laws that govern AXIS choices and their interactions — the one level nothing else checks. (Component accessibility/tokens/ARIA are guaranteed by Move components; composite purity/spec-drift by move check. These don’t restate those.) Each is scoped to the axes it constrains; a checkable one becomes an oracle over the resolved config, failing an incoherent combination."
         >
           <Table.Root>
             <Table.Header>

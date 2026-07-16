@@ -153,6 +153,7 @@ const RULES: RuleDef[] = [
   { id: 'styles-6', group: 'styles', rule: 'No @keyframes for state/entrance/exit', why: 'Those run through useAnimations; raw @keyframes bypass the animation system and the reduced-motion bypass.', enforcement: C('check', 'animation-capabilities') },
   { id: 'styles-7', group: 'styles', rule: 'All var(--move-*) references resolve', why: 'A typo’d token silently falls back to nothing — invisible borders, zero spacing.', enforcement: C('check', 'css-tokens') },
   { id: 'styles-8', group: 'styles', rule: 'Spec token values match the CSS', why: 'The spec declares each token’s value; if the CSS differs, the documented token table is wrong.', enforcement: C('check', 'spec-tokens') },
+  { id: 'styles-9', group: 'styles', rule: 'Controls size from the --move-control-height-* scale', why: 'Forking a raw width/height in the 24–48px control band drifts the size scale and breaks sm/md/lg parity across controls.', enforcement: C('check', 'control-size') },
 
   // Exports (component / libraryExport)
   { id: 'exports-1', group: 'exports', rule: 'index.ts exports the component + all types', why: 'A missing type export forces consumers to re-derive props or use any.', enforcement: C('gap') },
@@ -164,14 +165,14 @@ const RULES: RuleDef[] = [
   { id: 'fileLocation-2', group: 'fileLocation', rule: 'src/index.ts path matches the location', why: 'A stale barrel path breaks the import after a move.', enforcement: C('check', 'component-conformance') },
 
   // Purity & layout (composite / pureComposition)
-  { id: 'purity-1', group: 'purity', rule: 'Only Move components; no raw HTML layout', why: 'Raw divs skip the tokens, a11y, and responsive behaviour Move components carry.', enforcement: { composition: { status: 'check', check: 'purity' } } },
+  { id: 'purity-1', group: 'purity', rule: 'Only Move components; no raw HTML layout', why: 'Raw divs skip the tokens, accessibility, and responsive behaviour Move components carry.', enforcement: { composition: { status: 'check', check: 'purity' } } },
   { id: 'purity-2', group: 'purity', rule: 'No inline styles or custom CSS', why: 'Inline styles and custom CSS escape the token system and drift from the design language.', enforcement: { composition: { status: 'check', check: 'purity' } } },
   { id: 'purity-3', group: 'purity', rule: 'Spacing via gap/align/justify props', why: 'Layout props keep spacing on the token scale instead of magic pixel values.', enforcement: { composition: { status: 'gap' } } },
   { id: 'purity-4', group: 'purity', rule: 'Responsive via collapseBelow, not media queries', why: 'The built-in responsive props already encode the breakpoints; a media query re-invents them inconsistently.', enforcement: { composition: { status: 'check', check: 'purity' } } },
-  { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (a11y + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' } } },
+  { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (accessibility + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' } } },
 
   // Forms (composite / pureComposition)
-  { id: 'forms-1', group: 'forms', rule: 'Wrap every input in FormField', why: 'FormField wires the label, description, and error to the input for a11y; a bare input loses all three.', enforcement: { composition: { status: 'gap' } } },
+  { id: 'forms-1', group: 'forms', rule: 'Wrap every input in FormField', why: 'FormField wires the label, description, and error to the input for accessibility; a bare input loses all three.', enforcement: { composition: { status: 'gap' } } },
   { id: 'forms-2', group: 'forms', rule: 'FormField.Description for hints and errors', why: 'Routes hints/errors through the wired description node so screen readers announce them.', enforcement: { composition: { status: 'gap' } } },
   { id: 'forms-3', group: 'forms', rule: 'Boolean DOM attrs via value || undefined', why: 'invalid="false" still sets the attribute; `|| undefined` removes it when off.', enforcement: { composition: { status: 'gap' } } },
 

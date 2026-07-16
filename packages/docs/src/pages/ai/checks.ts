@@ -71,6 +71,24 @@ export const CHECKS: CheckDoc[] = [
       'Every CSS value references a real design token — no hardcoded colours, spacing, or radii.',
   },
   {
+    name: 'control-size',
+    appliesTo: 'component',
+    enforces:
+      'Interactive controls size from the shared --move-control-height-* scale — no forked raw width/height in the 24–48px control band.',
+  },
+  {
+    name: 'barrel-completeness',
+    appliesTo: 'component',
+    enforces:
+      'Every component and its public types are re-exported from the package’s single public entry, so consumers can import them.',
+  },
+  {
+    name: 'doc-spec-drift',
+    appliesTo: 'docs',
+    enforces:
+      'Hand-written contract docs stay in sync with the real spec types — a doc can’t describe a field the spec no longer has.',
+  },
+  {
     name: 'spec-tokens',
     appliesTo: 'component',
     enforces: 'The token values a spec declares match the component’s CSS (spec ↔ CSS parity).',
