@@ -911,6 +911,4 @@ export const spec = {
       'Reduced motion preference disables animations',
     ],
   },
-
-  iconsUsed: ['check'],
 } satisfies ComponentSpec;
