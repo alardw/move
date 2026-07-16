@@ -117,6 +117,18 @@
   background-color: var(--move-dropdown-item-bg-highlight);
 }
 
+/* Keyboard-active item indicator (WCAG 2.4.13): the bg-muted-on-surface fill is
+   <3:1, so add an inset accent ring. Menu items have no accent-filled selected
+   state, so the ring is always inset — enclosing and never clipped at the scroll
+   edges. (Select adds an outer variant for its selected row; menus don't need it.) */
+.item[data-highlighted],
+.checkboxItem[data-highlighted],
+.radioItem[data-highlighted],
+.subTrigger[data-highlighted] {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}
+
 .item[data-disabled] {
   color: var(--move-dropdown-item-fg-disabled);
   pointer-events: none;

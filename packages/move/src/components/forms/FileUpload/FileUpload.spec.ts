@@ -648,7 +648,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-fileupload-border-color',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Dropzone border color',
     },
     {

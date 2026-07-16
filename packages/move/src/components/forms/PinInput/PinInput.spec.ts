@@ -225,7 +225,7 @@ export const spec = {
     },
     {
       name: '--move-pininput-slot-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Slot border color',
     },
     {

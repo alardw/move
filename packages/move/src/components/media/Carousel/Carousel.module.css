@@ -4,7 +4,7 @@
 
 .root {
   --move-carousel-gap: var(--move-spacing-md);
-  --move-carousel-trigger-size: 36px;
+  --move-carousel-trigger-size: var(--move-control-height-md);
   --move-carousel-trigger-radius: var(--move-rounded-full);
   --move-carousel-trigger-bg: var(--move-surface-bg);
   --move-carousel-trigger-bg-hover: var(--move-surface-hover);
@@ -241,8 +241,8 @@
 
 .prevTrigger[data-size='sm'],
 .nextTrigger[data-size='sm'] {
-  width: 30px;
-  height: 30px;
+  width: var(--move-control-height-sm);
+  height: var(--move-control-height-sm);
 }
 
 .prevTrigger[data-size='md'],
@@ -253,8 +253,8 @@
 
 .prevTrigger[data-size='lg'],
 .nextTrigger[data-size='lg'] {
-  width: 42px;
-  height: 42px;
+  width: var(--move-control-height-lg);
+  height: var(--move-control-height-lg);
 }
 
 .prevTrigger[data-variant='ghost'],

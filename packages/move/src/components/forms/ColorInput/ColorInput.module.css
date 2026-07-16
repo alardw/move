@@ -12,7 +12,7 @@
 
 .root {
   --move-colorinput-bg: var(--move-bg-subtle);
-  --move-colorinput-border: var(--move-border-base);
+  --move-colorinput-border: var(--move-border-interactive);
   --move-colorinput-border-hover: var(--move-border-emphasis);
   --move-colorinput-border-focus: var(--move-primary);
   --move-colorinput-radius: var(--move-rounded-md);
@@ -30,7 +30,7 @@
   align-items: center;
   gap: var(--move-spacing-sm);
   width: var(--move-colorinput-width);
-  height: var(--move-colorinput-height);
+  min-height: var(--move-colorinput-height);
   padding: var(--move-colorinput-padding-y) var(--move-colorinput-padding-x);
   background-color: var(--move-colorinput-bg);
   border: 1px solid var(--move-colorinput-border);
@@ -136,17 +136,12 @@
   /* default — outlined, styles above */
 }
 
+/* Filled = a heavier fill over the same compliant border. It keeps the base
+   --move-colorinput-border (--move-border-interactive, 3:1) rather than going
+   borderless, so the field has a perceivable edge at rest (WCAG 1.4.11);
+   hover/focus inherit from the base rules above. */
 .root[data-variant='filled'] {
   --move-colorinput-bg: var(--move-bg-muted);
-  --move-colorinput-border: transparent;
-}
-
-.root[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
-  --move-colorinput-border: var(--move-border-base);
-}
-
-.root[data-variant='filled']:focus-within {
-  --move-colorinput-border: var(--move-colorinput-border-focus);
 }
 
 /* =========================================================================

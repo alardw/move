@@ -169,7 +169,7 @@ export const spec = {
     },
     {
       name: '--move-input-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Input border color',
     },
     {

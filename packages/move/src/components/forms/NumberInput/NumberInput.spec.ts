@@ -324,7 +324,7 @@ export const spec = {
     },
     {
       name: '--move-numberinput-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Root border color',
     },
     {

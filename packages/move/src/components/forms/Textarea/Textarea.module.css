@@ -3,7 +3,7 @@
 .root {
   /* Component tokens */
   --move-textarea-bg: var(--move-bg-subtle);
-  --move-textarea-border: var(--move-border-base);
+  --move-textarea-border: var(--move-border-interactive);
   --move-textarea-border-hover: var(--move-border-emphasis);
   --move-textarea-border-focus: var(--move-primary);
   --move-textarea-radius: var(--move-rounded-md);
@@ -75,17 +75,12 @@
   /* default — outlined */
 }
 
+/* Filled = a heavier fill over the same compliant border. It keeps the base
+   --move-textarea-border (--move-border-interactive, 3:1) rather than going
+   borderless, so the field has a perceivable edge at rest (WCAG 1.4.11);
+   hover/focus inherit from the base rules above. */
 .root[data-variant='filled'] {
   --move-textarea-bg: var(--move-bg-muted);
-  --move-textarea-border: transparent;
-}
-
-.root[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
-  --move-textarea-border: var(--move-border-base);
-}
-
-.root[data-variant='filled']:focus-within {
-  --move-textarea-border: var(--move-textarea-border-focus);
 }
 
 /* Invalid */

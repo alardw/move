@@ -6,7 +6,7 @@
 
 .trigger {
   --move-autocomplete-trigger-bg: var(--move-bg-subtle);
-  --move-autocomplete-trigger-border: var(--move-border-base);
+  --move-autocomplete-trigger-border: var(--move-border-interactive);
   --move-autocomplete-trigger-border-hover: var(--move-border-emphasis);
   --move-autocomplete-trigger-border-focus: var(--move-primary);
   --move-autocomplete-trigger-radius: var(--move-rounded-md);
@@ -69,17 +69,12 @@
   /* default — outlined */
 }
 
+/* Filled = a heavier fill over the same compliant border. It keeps the base
+   --move-autocomplete-trigger-border (--move-border-interactive, 3:1) rather
+   than going borderless, so the field has a perceivable edge at rest (WCAG
+   1.4.11); hover/focus inherit from the base rules above. */
 .trigger[data-variant='filled'] {
   --move-autocomplete-trigger-bg: var(--move-bg-muted);
-  --move-autocomplete-trigger-border: transparent;
-}
-
-.trigger[data-variant='filled']:hover:not([data-disabled]):not([data-invalid]) {
-  --move-autocomplete-trigger-border: var(--move-border-base);
-}
-
-.trigger[data-variant='filled']:focus-within {
-  --move-autocomplete-trigger-border: var(--move-autocomplete-trigger-border-focus);
 }
 
 /* Invalid */
@@ -155,7 +150,7 @@
 .tag {
   --move-autocomplete-tag-bg: var(--move-bg-muted);
   --move-autocomplete-tag-fg: var(--move-fg-base);
-  --move-autocomplete-tag-border: var(--move-border-base);
+  --move-autocomplete-tag-border: var(--move-border-interactive);
   --move-autocomplete-tag-radius: var(--move-rounded-sm);
   --move-autocomplete-tag-height: 2rem;
   --move-autocomplete-tag-max-width: 16rem;
@@ -163,7 +158,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--move-spacing-xs);
-  height: var(--move-autocomplete-tag-height);
+  min-height: var(--move-autocomplete-tag-height);
   max-width: var(--move-autocomplete-tag-max-width);
   /* Symmetric horizontal padding; visual balance is carried by the tag's
      own padding + the button's own padded hit area. */
@@ -197,8 +192,8 @@
      pointers can comfortably hit it without the tag itself needing to be huge.
      Rectangular (rounded-sm) radius mirrors the tag's own rounded-rectangle shape. */
   position: relative;
-  width: 24px;
-  height: 24px;
+  width: 24px; /* size-exempt: WCAG 2.5.8 minimum hit target */
+  height: 24px; /* size-exempt: WCAG 2.5.8 minimum hit target */
   border-radius: var(--move-rounded-sm);
   cursor: pointer;
   color: var(--move-fg-muted);
@@ -300,9 +295,12 @@
 .contentInner {
   max-height: var(--move-autocomplete-content-max-height);
   overflow-y: auto;
-  /* Keep `padding: inherit` from content + add extra breathing room so item
-     hover scale (~2px per side) doesn't clip against the scroll container. */
-  padding: 4px;
+  /* Breathing room for item hover scale AND the selected row's OUTER focus ring
+     (offset 2px + width 2px) — the overflow clip would otherwise cut it on a
+     first/last highlighted row. Extra block padding + scroll-padding so the row
+     scrolls to the edge with room. */
+  padding: 6px 4px;
+  scroll-padding-block: 6px;
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
@@ -365,11 +363,19 @@
 
 .item[data-highlighted] {
   background-color: var(--move-autocomplete-item-bg-highlight);
+  /* Keyboard-active option indicator (WCAG 2.4.13): the bg-muted fill is <3:1, so
+     add the accent ring. On a plain row it is INSET — reads against the light fill
+     and never clips at the scroll edges. The selected row flips to OUTER below. */
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }
 
 [data-mode='single'] > .item[data-selected][data-highlighted] {
   background-color: var(--move-primary-hover);
   color: var(--move-primary-fg);
+  /* Selected row: OUTER ring on the surface outside the accent fill (an inset ring
+     on the fill reads as a shrunken fill). contentInner block padding gives room. */
+  outline-offset: var(--move-focus-ring-offset);
 }
 
 .item[data-disabled] {

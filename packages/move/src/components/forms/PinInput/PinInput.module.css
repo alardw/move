@@ -4,7 +4,7 @@
   /* Component tokens */
   --move-pininput-slot-size: var(--move-control-height-md);
   --move-pininput-slot-radius: var(--move-rounded-md);
-  --move-pininput-slot-border: var(--move-border-base);
+  --move-pininput-slot-border: var(--move-border-interactive);
   --move-pininput-slot-border-hover: var(--move-border-emphasis);
   --move-pininput-slot-border-focus: var(--move-primary);
   --move-pininput-slot-bg: var(--move-bg-subtle);
@@ -41,7 +41,7 @@
   align-items: center;
   justify-content: center;
   width: var(--move-pininput-slot-size);
-  height: var(--move-pininput-slot-size);
+  min-height: var(--move-pininput-slot-size);
   background-color: var(--move-pininput-slot-bg);
   border: 1px solid var(--move-pininput-slot-border);
   border-radius: var(--move-pininput-slot-radius);

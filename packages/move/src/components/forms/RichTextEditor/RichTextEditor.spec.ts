@@ -316,7 +316,7 @@ export const spec = {
     { name: '--move-rte-bg', value: 'var(--move-bg-base)', description: 'Root background color' },
     {
       name: '--move-rte-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Root border color (outline variant)',
     },
     {

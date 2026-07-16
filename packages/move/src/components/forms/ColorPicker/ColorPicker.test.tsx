@@ -116,6 +116,28 @@ describe('ColorPicker', () => {
       render(<ColorPicker withPicker={false} />);
       expect(screen.queryByRole('slider', { name: 'Hue' })).not.toBeInTheDocument();
     });
+
+    it('is keyboard-operable — arrow keys move the value (WCAG 2.1.1)', () => {
+      render(<ColorPicker defaultValue="#ff0000" />);
+      const hue = screen.getByRole('slider', { name: 'Hue' });
+      const start = Number(hue.getAttribute('aria-valuenow'));
+      fireEvent.keyDown(hue, { key: 'ArrowRight' });
+      expect(Number(hue.getAttribute('aria-valuenow'))).toBe(start + 1);
+      fireEvent.keyDown(hue, { key: 'ArrowLeft' });
+      expect(Number(hue.getAttribute('aria-valuenow'))).toBe(start);
+      fireEvent.keyDown(hue, { key: 'End' });
+      expect(hue.getAttribute('aria-valuenow')).toBe('359');
+      fireEvent.keyDown(hue, { key: 'Home' });
+      expect(hue.getAttribute('aria-valuenow')).toBe('0');
+    });
+
+    it('does not move when disabled', () => {
+      render(<ColorPicker defaultValue="#ff0000" disabled />);
+      const hue = screen.getByRole('slider', { name: 'Hue' });
+      const start = hue.getAttribute('aria-valuenow');
+      fireEvent.keyDown(hue, { key: 'ArrowRight' });
+      expect(hue.getAttribute('aria-valuenow')).toBe(start);
+    });
   });
 
   // === Alpha slider ===

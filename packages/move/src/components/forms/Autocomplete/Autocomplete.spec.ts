@@ -968,7 +968,7 @@ export const spec = {
     },
     {
       name: '--move-autocomplete-trigger-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Trigger border color',
     },
     {
@@ -1019,7 +1019,7 @@ export const spec = {
     },
     {
       name: '--move-autocomplete-tag-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Tag border color',
     },
     {

@@ -154,7 +154,7 @@ export const spec = {
     },
     {
       name: '--move-button-secondary-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Secondary variant border',
     },
     {

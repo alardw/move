@@ -3,6 +3,10 @@
 .root {
   --move-calendarview-bg: transparent;
   --move-calendarview-font: var(--move-font-body);
+  /* Shared cell sizing — one home for the selectable date badge and the
+     month-grid day number, so views don't each hardcode their own rem value. */
+  --move-calendar-date-size: 2rem;
+  --move-calendar-daynum-size: 1.5rem;
 
   display: flex;
   flex-direction: column;
@@ -40,8 +44,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: var(--move-control-height-sm);
+  height: var(--move-control-height-sm);
   border-radius: var(--move-rounded-md);
   border: 1px solid var(--move-border-base);
   background: var(--move-bg-base);

@@ -182,7 +182,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  height: 36px;
+  height: var(--move-control-height-md);
 }
 
 /* Control buttons — override Move Button styles for video player context */
@@ -195,9 +195,9 @@
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: var(--move-control-height-md);
+  height: var(--move-control-height-md);
+  min-width: var(--move-control-height-md);
   padding: 0;
   flex-shrink: 0;
 }
@@ -271,9 +271,9 @@
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: var(--move-control-height-md);
+  height: var(--move-control-height-md);
+  min-width: var(--move-control-height-md);
   padding: 0;
   flex-shrink: 0;
 }

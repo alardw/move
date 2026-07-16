@@ -291,7 +291,7 @@ export const spec = {
     },
     {
       name: '--move-audioplayer-active-fg',
-      value: 'var(--move-white)',
+      value: 'var(--move-primary-fg)',
       description: 'Active subtitle button foreground',
     },
   ],

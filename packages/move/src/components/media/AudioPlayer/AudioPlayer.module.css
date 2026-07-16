@@ -79,9 +79,9 @@
   background: none !important;
   border: none !important;
   box-shadow: none !important;
-  width: 36px;
-  height: 36px;
-  min-width: 36px;
+  width: var(--move-control-height-md);
+  height: var(--move-control-height-md);
+  min-width: var(--move-control-height-md);
   padding: 0;
   flex-shrink: 0;
 }
@@ -97,18 +97,18 @@
 .root[data-size='sm'] .volumeButton,
 .root[data-size='sm'] .settingsButton,
 .root[data-size='sm'] .subtitleButton {
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
+  width: var(--move-control-height-sm);
+  height: var(--move-control-height-sm);
+  min-width: var(--move-control-height-sm);
 }
 
 .root[data-size='lg'] .playButton,
 .root[data-size='lg'] .volumeButton,
 .root[data-size='lg'] .settingsButton,
 .root[data-size='lg'] .subtitleButton {
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
+  width: var(--move-control-height-lg);
+  height: var(--move-control-height-lg);
+  min-width: var(--move-control-height-lg);
 }
 
 .subtitleButton[data-active='true'] {

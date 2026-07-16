@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 import { useCarouselAnimation } from './useCarouselAnimation';
+import { prefersReducedMotion } from '../../../animation';
 import type { Animation } from '../../../animation';
 
 // =============================================================================
@@ -216,9 +217,11 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
     };
   }, [orientation, slidesPerView, pageCount, setPage]);
 
-  // Autoplay — gated by autoplayPaused so hover/focus can suspend AND resume it.
+  // Autoplay — gated by autoplayPaused so hover/focus can suspend AND resume it,
+  // and skipped entirely under prefers-reduced-motion (auto-advancing slides are
+  // motion the user didn't initiate — WCAG 2.2.2 / 2.3.3).
   useEffect(() => {
-    if (autoplay <= 0 || pageCount <= 1 || autoplayPaused) return;
+    if (autoplay <= 0 || pageCount <= 1 || autoplayPaused || prefersReducedMotion()) return;
 
     autoplayTimerRef.current = setInterval(() => {
       scrollToPage(loop ? page + 1 : Math.min(page + 1, pageCount - 1));

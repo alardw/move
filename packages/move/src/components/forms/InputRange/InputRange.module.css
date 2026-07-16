@@ -130,6 +130,15 @@
   cursor: pointer;
   will-change: transform;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
+}
+
+/* Expand the drag target to ≥24px (WCAG 2.5.8) — the visible thumb stays 16–20px
+   but the pointer/tap region reaches 24px, so it's grabbable at every size. */
+.thumb::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
 }
 
 .thumb:focus-visible:not(:active) {

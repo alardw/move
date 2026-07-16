@@ -6,6 +6,9 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Keep a focused event/day clear of the sticky day header when it scrolls into
+     view — WCAG 2.4.11 / 2.4.12 (focus not obscured). */
+  scroll-padding-block-start: 3rem;
 }
 
 .dayGroup {
@@ -38,8 +41,8 @@
   background-color: var(--move-primary);
   color: var(--move-primary-fg);
   border-radius: var(--move-rounded-full);
-  width: 2rem;
-  height: 2rem;
+  width: var(--move-calendar-date-size, 2rem);
+  height: var(--move-calendar-date-size, 2rem);
   display: flex;
   align-items: center;
   justify-content: center;

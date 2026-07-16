@@ -149,7 +149,7 @@ export const spec = {
     },
     {
       name: '--move-divider-content-size',
-      value: 'var(--move-font-size-sm)',
+      value: 'var(--move-size-sm)',
       description: 'Content label font size',
     },
   ],

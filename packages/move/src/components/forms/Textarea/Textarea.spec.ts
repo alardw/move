@@ -181,7 +181,7 @@ export const spec = {
     },
     {
       name: '--move-textarea-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Textarea border color',
     },
     {

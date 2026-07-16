@@ -10,7 +10,7 @@
   --move-button-secondary-bg-hover: var(--move-bg-emphasis);
   --move-button-secondary-bg-active: var(--move-bg-muted);
   --move-button-secondary-fg: var(--move-fg-base);
-  --move-button-secondary-border: var(--move-border-base);
+  --move-button-secondary-border: var(--move-border-interactive);
   --move-button-ghost-fg: var(--move-fg-base);
   --move-button-ghost-bg-hover: var(--move-bg-muted);
   --move-button-danger-bg: var(--move-error);
@@ -22,7 +22,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--move-button-gap, var(--move-spacing-sm));
-  height: var(--move-button-height, var(--move-control-height-md));
+  min-height: var(--move-button-height, var(--move-control-height-md));
   padding: 0 var(--move-button-padding-x, var(--move-spacing-md));
   border-radius: var(--move-button-radius, var(--move-rounded-md));
   font-family: var(--move-font-body, system-ui, sans-serif);

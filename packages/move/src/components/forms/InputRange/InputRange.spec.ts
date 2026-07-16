@@ -260,7 +260,7 @@ export const spec = {
     },
     {
       name: '--move-range-value-size',
-      value: 'var(--move-font-size-sm)',
+      value: 'var(--move-size-sm)',
       description: 'Value label font size',
     },
     {

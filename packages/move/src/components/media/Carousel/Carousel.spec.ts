@@ -501,7 +501,7 @@ export const spec = {
     },
     {
       name: '--move-carousel-trigger-size',
-      value: '36px',
+      value: 'var(--move-control-height-md)',
       description: 'Width and height of trigger buttons (md size)',
     },
     {

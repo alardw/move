@@ -2,7 +2,7 @@
 
 .root {
   /* Component tokens */
-  --move-fileupload-border-color: var(--move-border-base);
+  --move-fileupload-border-color: var(--move-border-interactive);
   --move-fileupload-border-style: dashed;
   --move-fileupload-border-width: 2px;
   --move-fileupload-border-radius: var(--move-rounded-lg);
@@ -152,8 +152,8 @@
 /* ========================================================================= */
 
 .itemPreview {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.5rem; /* size-exempt: file thumbnail preview */
+  height: 2.5rem; /* size-exempt: file thumbnail preview */
   flex-shrink: 0;
   border-radius: var(--move-rounded-sm);
   overflow: hidden;

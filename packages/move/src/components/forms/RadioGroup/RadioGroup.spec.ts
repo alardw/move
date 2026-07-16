@@ -331,7 +331,7 @@ export const spec = {
     },
     {
       name: '--move-radio-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Unchecked border color',
     },
     {

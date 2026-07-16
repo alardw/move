@@ -7,6 +7,9 @@
   flex: 1;
   min-height: 0;
   overflow-y: auto;
+  /* Keep a focused day cell clear of the sticky weekday header when it scrolls
+     into view — WCAG 2.4.11 / 2.4.12 (focus not obscured). */
+  scroll-padding-block-start: 2rem;
 }
 
 .weekHeader {
@@ -72,8 +75,8 @@
   background-color: var(--move-primary);
   color: var(--move-primary-fg);
   border-radius: var(--move-rounded-full);
-  width: 1.5rem;
-  height: 1.5rem;
+  width: var(--move-calendar-daynum-size, 1.5rem);
+  height: var(--move-calendar-daynum-size, 1.5rem);
   display: flex;
   align-items: center;
   justify-content: center;

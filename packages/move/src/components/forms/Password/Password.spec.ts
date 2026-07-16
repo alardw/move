@@ -229,7 +229,7 @@ export const spec = {
     },
     {
       name: '--move-password-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Root border color',
     },
     {

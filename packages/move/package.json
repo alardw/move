@@ -53,6 +53,7 @@
     "check:animation-capabilities": "node scripts/checks/animation-capabilities.mjs",
     "check:purity": "node checks/purity.mjs",
     "check:css-tokens": "node scripts/checks/css-tokens.mjs",
+    "check:control-size": "node scripts/checks/control-size.mjs",
     "check:component-conformance": "node scripts/checks/component-conformance.mjs",
     "check:spec-tokens": "node scripts/checks/spec-tokens.mjs",
     "check:strict-props": "node checks/strict-props.mjs",
@@ -70,7 +71,7 @@
     "check:move-props": "node scripts/checks/move-props.mjs",
     "check:component-document-drift": "node scripts/checks/component-document-drift.mjs",
     "check:doc-spec-drift": "node scripts/checks/doc-spec-drift.mjs",
-    "check:all": "npm run check:spec-drift && npm run check:barrel-completeness && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:composite-spec-drift && npm run check:animation-choreography && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:conformance-docs && npm run check:conformance-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:component-document-drift && npm run check:doc-spec-drift && npm run check:data-attrs && npm run check:move-props && npm run check:design-pattern-conformance",
+    "check:all": "npm run check:spec-drift && npm run check:barrel-completeness && npm run check:family-popup && npm run check:family-modal && npm run check:family-disclosure && npm run check:cross-component-drift && npm run check:animation-capabilities && npm run check:purity && npm run check:css-tokens && npm run check:control-size && npm run check:component-conformance && npm run check:spec-tokens && npm run check:strict-props && npm run check:composite-spec-drift && npm run check:animation-choreography && npm run check:dismissable-lifecycle && npm run check:icon-usage && npm run check:conformance-docs && npm run check:conformance-spec && npm run check:factory-conformance && npm run check:script-refs && npm run check:aria-label-name && npm run check:integration-points && npm run check:component-document-drift && npm run check:doc-spec-drift && npm run check:data-attrs && npm run check:move-props && npm run check:design-pattern-conformance",
     "spec-diff": "tsx scripts/spec-diff/cli.mjs diff",
     "spec-snapshot": "tsx scripts/spec-diff/cli.mjs snapshot --from src/components"
   },

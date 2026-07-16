@@ -131,6 +131,17 @@
   outline-offset: var(--move-focus-ring-offset);
 }
 
+/* Extend the hue/alpha pointer target vertically to ≥24px (WCAG 2.5.8) while the
+   visual bar stays thin. These sliders read the X position only, so a taller hit
+   region doesn't affect the value. */
+.hue::before,
+.alpha::before {
+  content: '';
+  position: absolute;
+  inset-block: -5px;
+  inset-inline: 0;
+}
+
 /* =========================================================================
  * Alpha slider
  * ========================================================================= */
@@ -253,13 +264,13 @@
   box-sizing: border-box;
   flex: 1;
   min-width: 0;
-  height: var(--move-colorpicker-input-height);
+  min-height: var(--move-colorpicker-input-height);
   padding: 0 2px;
   font-family: var(--move-font-mono, var(--move-font-body));
   font-size: var(--move-colorpicker-input-font);
   color: var(--move-fg-base);
   background-color: var(--move-bg-subtle);
-  border: 1px solid var(--move-border-base);
+  border: 1px solid var(--move-border-interactive);
   border-radius: var(--move-rounded-sm);
   text-align: center;
 }
@@ -308,13 +319,13 @@
   box-sizing: border-box;
   flex: 1;
   min-width: 0;
-  height: var(--move-colorpicker-input-height);
+  min-height: var(--move-colorpicker-input-height);
   padding: 0 2px;
   font-family: var(--move-font-mono, var(--move-font-body));
   font-size: var(--move-colorpicker-input-font);
   color: var(--move-fg-base);
   background-color: var(--move-bg-subtle);
-  border: 1px solid var(--move-border-base);
+  border: 1px solid var(--move-border-interactive);
   border-radius: var(--move-rounded-sm);
   text-align: center;
 }

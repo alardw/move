@@ -139,7 +139,7 @@
 }
 
 .handleBar {
-  width: 2.5rem;
+  width: 2.5rem; /* size-exempt: drag handle */
   height: 0.25rem;
   border-radius: var(--move-rounded-full);
   background-color: var(--move-fg-muted);

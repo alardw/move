@@ -7,7 +7,7 @@
 .root {
   /* Component tokens */
   --move-rte-bg: var(--move-bg-base);
-  --move-rte-border: var(--move-border-base);
+  --move-rte-border: var(--move-border-interactive);
   --move-rte-radius: var(--move-rounded-lg);
   --move-rte-font: var(--move-font-body);
 

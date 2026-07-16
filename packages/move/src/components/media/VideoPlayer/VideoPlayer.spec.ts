@@ -367,7 +367,7 @@ export const spec = {
     },
     {
       name: '--move-videoplayer-controls-active-fg',
-      value: 'var(--move-white)',
+      value: 'var(--move-primary-fg)',
       description: 'Active subtitle button foreground',
     },
   ],

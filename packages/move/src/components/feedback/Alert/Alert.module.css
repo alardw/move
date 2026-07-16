@@ -106,6 +106,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  position: relative;
   width: var(--move-alert-close-size);
   height: var(--move-alert-close-size);
   padding: 0;
@@ -119,6 +120,14 @@
   transition:
     background-color var(--move-transition-fast) var(--move-ease-default),
     color var(--move-transition-fast) var(--move-ease-default);
+}
+
+/* Expand the pointer target to ≥24px (WCAG 2.5.8) without enlarging the visual
+   icon — the close sits at 20px but responds across 24px. */
+.close::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
 }
 
 .close:hover {

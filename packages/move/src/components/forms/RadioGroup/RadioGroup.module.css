@@ -8,7 +8,7 @@
   --move-radio-bg-hover: var(--move-bg-emphasis);
   --move-radio-bg-checked: var(--move-primary);
   --move-radio-bg-checked-hover: var(--move-primary-hover);
-  --move-radio-border: var(--move-border-base);
+  --move-radio-border: var(--move-border-interactive);
   --move-radio-border-hover: var(--move-border-emphasis);
   --move-radio-fg: var(--move-primary-fg);
   --move-radio-dot-size: 0.5rem;
