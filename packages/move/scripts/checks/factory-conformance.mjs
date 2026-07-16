@@ -142,6 +142,20 @@ for (const file of componentFiles()) {
             if (el.dotDotDotToken) (fromAttrs ? attrsAliases : spAliases).add(el.name.getText());
       } else if (ts.isIdentifier(n.name) && ts.isIdentifier(init) && init.text === 'attrs') {
         attrsAliases.add(n.name.getText());
+      } else if (
+        ts.isIdentifier(n.name) &&
+        ts.isCallExpression(init) &&
+        ts.isIdentifier(init.expression) &&
+        init.expression.text === 'useFieldControl' &&
+        init.arguments.length &&
+        // useFieldControl(attrs, …) returns the forwarded consumer attrs
+        // (id/aria-*/data-*) in its result; spreading that result forwards them.
+        (() => {
+          const a0 = unwrap(init.arguments[0]);
+          return ts.isIdentifier(a0) && (a0.text === 'attrs' || attrsAliases.has(a0.text));
+        })()
+      ) {
+        attrsAliases.add(n.name.getText());
       }
     });
     const isAttrsAlias = (e) => e && ts.isIdentifier(e) && attrsAliases.has(e.text);

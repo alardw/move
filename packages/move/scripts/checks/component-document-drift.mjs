@@ -29,7 +29,7 @@ const COMP_DOCS = join(REPO, 'packages', 'docs', 'src', 'content', 'components')
 const objName = (txt, which) => {
   const i = txt.indexOf(`export const ${which}`);
   if (i < 0) return null;
-  const m = txt.slice(i).match(/\bname:\s*'([^']+)'/);
+  const m = txt.slice(i).match(/\bname:\s*['"]([^'"]+)['"]/);
   return m ? m[1] : null;
 };
 function specFiles(dir, out = []) {
