@@ -87,6 +87,7 @@ Props:
 - stagger: number (default: null) — Delay in ms between segments. When null, a sensible per-`by` default is used (~30 character / 60 word / 120 line).
 - delay: number (default: 0) — Delay in ms before the first segment animates
 - duration: number (default: 600) — Duration in ms of each segment animation
+- nowrap: boolean (default: false) — Keep the text on a single line (white-space: nowrap) instead of wrapping. When false (default) long text wraps naturally (white-space: normal; overflow-wrap: break-word).
 Example: <AnimatedText as="span" weight="normal">…</AnimatedText>
 
 ## AudioPlayer (media)
@@ -405,8 +406,12 @@ Card.Root props:
 Card.Header props:
 - children: React.ReactNode — Title and description elements
 Card.Title props:
+- truncate: Truncate — Truncate the title when it overflows (opt-in)
+- lines: number — Max lines for truncate='clamp'
 - children: React.ReactNode — Title text
 Card.Description props:
+- truncate: Truncate — Truncate the description when it overflows (opt-in)
+- lines: number — Max lines for truncate='clamp'
 - children: React.ReactNode — Description text
 Card.Body props:
 - children: React.ReactNode — Main body content
@@ -519,6 +524,7 @@ Example: <ChatBubble placement="start">…</ChatBubble>
 Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input
 Props:
 - checked: boolean — Controlled checked state
+- decorative: boolean (default: false) — Render the visual only (no role, not focusable, aria-hidden, pointer-events off), driven by checked — for embedding the box inside a control that owns the interaction (e.g. Dropdown.CheckboxItem).
 - defaultChecked: boolean — Default checked state for uncontrolled mode
 - indeterminate: boolean — Indeterminate (mixed) state
 - onCheckedChange: (checked: boolean) => void — Called when checked state changes
@@ -544,6 +550,9 @@ Props:
 - language: string — Language for syntax highlighting (requires CodeHighlighterProvider)
 - className: string — Additional CSS class
 - style: React.CSSProperties — Inline styles
+- truncate: Truncate — Truncate overflowing inline code (ignored for block): true/'end', 'start', 'clamp'
+- lines: number — Max lines for truncate='clamp' (default 2)
+- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
 - children: React.ReactNode — Code text content
 Example: <Code variant="subtle">…</Code>
 
@@ -1002,6 +1011,7 @@ FormField.Root props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — FormField sub-components (Label, Field, Description)
 - labelWidth: string — Custom width for the label column (sets --move-formfield-label-width)
+- invalid: boolean — Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling
 FormField.Label props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1049,7 +1059,10 @@ Props:
 - color: 'base' | 'muted' | 'subtle' (default: base) — Text color
 - tracking: 'tight' | 'normal' (default: tight) — Letter spacing
 - align: 'left' | 'center' | 'right' — Text alignment (only set when provided)
-- truncate: boolean — Enable text truncation with ellipsis
+- truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
+- lines: number — Max lines for truncate='clamp' (default 2)
+- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
+- readableWidth: boolean — Cap the line length to a comfortable reading measure (WCAG 1.4.8) — for a standalone heading/paragraph; use Prose for real long-form content
 - className: string — Additional CSS class
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Heading text content
@@ -1132,6 +1145,9 @@ Props:
 - required: boolean — Show required asterisk indicator
 - disabled: boolean — Whether the label appears in disabled styling
 - size: 'sm' | 'md' | 'lg' (default: md) — Font size of the label
+- truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
+- lines: number — Max lines for truncate='clamp' (default 2)
+- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
 - children: React.ReactNode — Label text content
 Example: <Label>…</Label>
 
@@ -1159,6 +1175,9 @@ Props:
 - size: 'xs' | 'sm' | 'base' | 'lg' | 'xl' — Font size (optional, inherits when unset)
 - external: boolean — Opens in new tab with noopener noreferrer
 - asChild: boolean (default: false) — Render as child element via Radix Slot
+- truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
+- lines: number — Max lines for truncate='clamp' (default 2)
+- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
 - children: React.ReactNode — Link content
 Example: <Link variant="default" underline="always">…</Link>
 
@@ -1194,6 +1213,8 @@ List.Leading props:
 List.Content props:
 - children: React.ReactNode — Title, Description, and any additional content
 List.Title props:
+- truncate: Truncate (default: end) — How the title truncates when it overflows (default 'end'; 'middle' for paths)
+- lines: number — Max lines for truncate='clamp'
 - children: React.ReactNode — Primary text content
 List.Description props:
 - lines: 1 | 2 | 3 | 'none' (default: none) — Number of visible lines before truncation (line-clamp). Defaults to none — opt into truncation explicitly.
@@ -1554,7 +1575,7 @@ ScrollArea.Footer props:
 Example: <ScrollArea>…</ScrollArea>
 
 ## Select (forms)
-Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger
+Dropdown select built on Radix Select — a combobox trigger, listbox popup with option items, and a hidden native <select> for form submission — with an animated popup and item stagger
 Props:
 - value: string — Controlled selected value
 - defaultValue: string — Default selected value (uncontrolled)
@@ -1571,6 +1592,9 @@ Select.Root props:
 - open: boolean — Controlled open state
 - defaultOpen: boolean — Default open state (uncontrolled)
 - onOpenChange: (open: boolean) => void — Called when open state changes
+- name: string — Name of the hidden native <select> — set it to submit the value with a form
+- required: boolean — Marks the underlying native select required for form validation
+- disabled: boolean — Disables the trigger and the native select
 - animations: AnimationTrigger[] | false — Animation config or false to disable
 - children: React.ReactNode — Select sub-components
 Select.Trigger props:
@@ -1605,7 +1629,6 @@ Select.Content props:
 - maxWidth: React.CSSProperties['maxWidth'] — Maximum width override (token default: 30rem)
 - onPointerDownOutside: (e: Event) => void — Pointer down outside handler
 - onEscapeKeyDown: (e: KeyboardEvent) => void — Escape key handler
-- onInteractOutside: (e: Event) => void — Interact outside handler
 Select.Viewport props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1632,7 +1655,7 @@ Select.Separator props:
 Example: <Select>…</Select>
 
 ## Sidebar (navigation)
-Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations
+Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations
 Sidebar.Provider props:
 - children: React.ReactNode — App content including sidebar and main area
 - collapsed: boolean — Controlled collapsed state
@@ -1648,6 +1671,7 @@ Sidebar.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - side: 'left' | 'right' (default: left) — Which side the sidebar appears on
+- labels: Partial<SidebarLabels> — Overridable user-facing strings (mobile sheet accessible name)
 Sidebar.Overlay props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1742,7 +1766,7 @@ Flex layout container for vertical or horizontal stacking with configurable gap,
 Props:
 - direction: 'row' | 'column' (default: column) — Flex direction
 - gap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' (default: md) — Gap between children
-- padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'none' — Padding around the stack. Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.
+- padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'none' — Padding around the stack. One token for all sides, or a two-value "block inline" shorthand like CSS (e.g. "md 2xl" — top/bottom md, left/right 2xl). Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.
 - align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' (default: stretch) — Cross-axis alignment (align-items)
 - justify: 'start' | 'center' | 'end' | 'between' | 'evenly' (default: start) — Main-axis alignment (justify-content)
 - wrap: boolean (default: false) — Allow children to wrap to next line
@@ -1935,7 +1959,10 @@ Props:
 - weight: 'normal' | 'medium' | 'semibold' | 'bold' (default: normal) — Font weight
 - color: 'base' | 'muted' | 'subtle' | 'primary' | 'success' | 'warning' | 'error' (default: base) — Text color
 - align: 'left' | 'center' | 'right' — Text alignment (optional)
-- truncate: boolean — Truncate text with ellipsis
+- truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
+- lines: number — Max lines for truncate='clamp' (default 2)
+- tooltip: boolean — With truncate, show full text in a Move Tooltip when actually cut off
+- readableWidth: boolean — Cap the line length to a comfortable reading measure (WCAG 1.4.8) for a standalone paragraph — use Prose for real long-form content
 - children: React.ReactNode — Text content
 Example: <Text as="p" weight="normal">…</Text>
 
@@ -2089,7 +2116,7 @@ ToggleGroup.Root props:
 - disabled: boolean — Disable the entire group
 - loop: boolean (default: true) — Whether keyboard navigation loops around
 - size: 'sm' | 'md' | 'lg' (default: md) — Item size affecting padding and font size
-- variant: 'primary' | 'secondary' | 'ghost' | 'danger' (default: secondary) — Visual style variant inherited by items
+- variant: 'pills' | 'underline' | 'outline' (default: pills) — Visual appearance, shared with Tabs: a filled sliding pill, a Pinterest-style underline filter bar, or connected outlined segments. Inherited by items.
 - animations: AnimationTrigger[] | false — Pass false to disable indicator animation
 ToggleGroup.Item props:
 - children: React.ReactNode — Item label content
@@ -2106,7 +2133,7 @@ Props:
 - label: React.ReactNode — Tooltip text content
 - children: React.ReactElement — Trigger element (rendered via asChild)
 - side: 'top' | 'right' | 'bottom' | 'left' (default: top) — Preferred placement side
-- sideOffset: number (default: 6) — Distance from trigger in px
+- sideOffset: number (default: 4) — Distance from trigger in px
 - align: 'start' | 'center' | 'end' — Alignment along the side axis
 - arrow: boolean (default: true) — Show arrow pointing to trigger
 - animations: AnimationTrigger[] | false — Animation config or false to disable

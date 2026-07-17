@@ -508,6 +508,12 @@
           "type": "number",
           "default": "600",
           "description": "Duration in ms of each segment animation"
+        },
+        {
+          "name": "nowrap",
+          "type": "boolean",
+          "default": "false",
+          "description": "Keep the text on a single line (white-space: nowrap) instead of wrapping. When false (default) long text wraps naturally (white-space: normal; overflow-wrap: break-word)."
         }
       ],
       "subComponents": []
@@ -2148,6 +2154,16 @@
           "name": "Title",
           "props": [
             {
+              "name": "truncate",
+              "type": "Truncate",
+              "description": "Truncate the title when it overflows (opt-in)"
+            },
+            {
+              "name": "lines",
+              "type": "number",
+              "description": "Max lines for truncate='clamp'"
+            },
+            {
               "name": "children",
               "type": "React.ReactNode",
               "description": "Title text"
@@ -2157,6 +2173,16 @@
         {
           "name": "Description",
           "props": [
+            {
+              "name": "truncate",
+              "type": "Truncate",
+              "description": "Truncate the description when it overflows (opt-in)"
+            },
+            {
+              "name": "lines",
+              "type": "number",
+              "description": "Max lines for truncate='clamp'"
+            },
             {
               "name": "children",
               "type": "React.ReactNode",
@@ -2800,6 +2826,12 @@
           "description": "Controlled checked state"
         },
         {
+          "name": "decorative",
+          "type": "boolean",
+          "default": "false",
+          "description": "Render the visual only (no role, not focusable, aria-hidden, pointer-events off), driven by checked — for embedding the box inside a control that owns the interaction (e.g. Dropdown.CheckboxItem)."
+        },
+        {
           "name": "defaultChecked",
           "type": "boolean",
           "description": "Default checked state for uncontrolled mode"
@@ -2931,6 +2963,21 @@
           "name": "style",
           "type": "React.CSSProperties",
           "description": "Inline styles"
+        },
+        {
+          "name": "truncate",
+          "type": "Truncate",
+          "description": "Truncate overflowing inline code (ignored for block): true/'end', 'start', 'clamp'"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Max lines for truncate='clamp' (default 2)"
+        },
+        {
+          "name": "tooltip",
+          "type": "boolean",
+          "description": "With truncate, show full text in a tooltip when actually cut off"
         },
         {
           "name": "children",
@@ -5216,6 +5263,11 @@
               "name": "labelWidth",
               "type": "string",
               "description": "Custom width for the label column (sets --move-formfield-label-width)"
+            },
+            {
+              "name": "invalid",
+              "type": "boolean",
+              "description": "Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling"
             }
           ]
         },
@@ -5486,8 +5538,23 @@
         },
         {
           "name": "truncate",
+          "type": "Truncate",
+          "description": "Truncate overflowing text: true/'end', 'start', or 'clamp'"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Max lines for truncate='clamp' (default 2)"
+        },
+        {
+          "name": "tooltip",
           "type": "boolean",
-          "description": "Enable text truncation with ellipsis"
+          "description": "With truncate, show full text in a tooltip when actually cut off"
+        },
+        {
+          "name": "readableWidth",
+          "type": "boolean",
+          "description": "Cap the line length to a comfortable reading measure (WCAG 1.4.8) — for a standalone heading/paragraph; use Prose for real long-form content"
         },
         {
           "name": "className",
@@ -5901,6 +5968,21 @@
           "description": "Font size of the label"
         },
         {
+          "name": "truncate",
+          "type": "Truncate",
+          "description": "Truncate overflowing text: true/'end', 'start', or 'clamp'"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Max lines for truncate='clamp' (default 2)"
+        },
+        {
+          "name": "tooltip",
+          "type": "boolean",
+          "description": "With truncate, show full text in a tooltip when actually cut off"
+        },
+        {
           "name": "children",
           "type": "React.ReactNode",
           "description": "Label text content"
@@ -6048,6 +6130,21 @@
           "type": "boolean",
           "default": "false",
           "description": "Render as child element via Radix Slot"
+        },
+        {
+          "name": "truncate",
+          "type": "Truncate",
+          "description": "Truncate overflowing text: true/'end', 'start', or 'clamp'"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Max lines for truncate='clamp' (default 2)"
+        },
+        {
+          "name": "tooltip",
+          "type": "boolean",
+          "description": "With truncate, show full text in a tooltip when actually cut off"
         },
         {
           "name": "children",
@@ -6252,6 +6349,17 @@
         {
           "name": "Title",
           "props": [
+            {
+              "name": "truncate",
+              "type": "Truncate",
+              "default": "end",
+              "description": "How the title truncates when it overflows (default 'end'; 'middle' for paths)"
+            },
+            {
+              "name": "lines",
+              "type": "number",
+              "description": "Max lines for truncate='clamp'"
+            },
             {
               "name": "children",
               "type": "React.ReactNode",
@@ -8093,7 +8201,7 @@
       "name": "Select",
       "category": "forms",
       "componentClass": null,
-      "description": "Dropdown select input built on DropdownMenu primitives with value semantics, animated popup, and item stagger",
+      "description": "Dropdown select built on Radix Select — a combobox trigger, listbox popup with option items, and a hidden native <select> for form submission — with an animated popup and item stagger",
       "props": [
         {
           "name": "value",
@@ -8169,6 +8277,21 @@
               "name": "onOpenChange",
               "type": "(open: boolean) => void",
               "description": "Called when open state changes"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "description": "Name of the hidden native <select> — set it to submit the value with a form"
+            },
+            {
+              "name": "required",
+              "type": "boolean",
+              "description": "Marks the underlying native select required for form validation"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "description": "Disables the trigger and the native select"
             },
             {
               "name": "animations",
@@ -8356,11 +8479,6 @@
               "name": "onEscapeKeyDown",
               "type": "(e: KeyboardEvent) => void",
               "description": "Escape key handler"
-            },
-            {
-              "name": "onInteractOutside",
-              "type": "(e: Event) => void",
-              "description": "Interact outside handler"
             }
           ]
         },
@@ -8485,7 +8603,7 @@
       "name": "Sidebar",
       "category": "navigation",
       "componentClass": null,
-      "description": "Collapsible navigation sidebar with icon-only mode, mobile portal overlay, item tooltips, and staggered entrance animations",
+      "description": "Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations",
       "props": [],
       "subComponents": [
         {
@@ -8568,6 +8686,11 @@
               ],
               "default": "left",
               "description": "Which side the sidebar appears on"
+            },
+            {
+              "name": "labels",
+              "type": "Partial<SidebarLabels>",
+              "description": "Overridable user-facing strings (mobile sheet accessible name)"
             }
           ]
         },
@@ -9052,7 +9175,7 @@
             "3xl",
             "none"
           ],
-          "description": "Padding around the stack. Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope."
+          "description": "Padding around the stack. One token for all sides, or a two-value \"block inline\" shorthand like CSS (e.g. \"md 2xl\" — top/bottom md, left/right 2xl). Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope."
         },
         {
           "name": "align",
@@ -10135,8 +10258,23 @@
         },
         {
           "name": "truncate",
+          "type": "Truncate",
+          "description": "Truncate overflowing text: true/'end', 'start', or 'clamp'"
+        },
+        {
+          "name": "lines",
+          "type": "number",
+          "description": "Max lines for truncate='clamp' (default 2)"
+        },
+        {
+          "name": "tooltip",
           "type": "boolean",
-          "description": "Truncate text with ellipsis"
+          "description": "With truncate, show full text in a Move Tooltip when actually cut off"
+        },
+        {
+          "name": "readableWidth",
+          "type": "boolean",
+          "description": "Cap the line length to a comfortable reading measure (WCAG 1.4.8) for a standalone paragraph — use Prose for real long-form content"
         },
         {
           "name": "children",
@@ -10992,15 +11130,14 @@
             },
             {
               "name": "variant",
-              "type": "'primary' | 'secondary' | 'ghost' | 'danger'",
+              "type": "'pills' | 'underline' | 'outline'",
               "values": [
-                "primary",
-                "secondary",
-                "ghost",
-                "danger"
+                "pills",
+                "underline",
+                "outline"
               ],
-              "default": "secondary",
-              "description": "Visual style variant inherited by items"
+              "default": "pills",
+              "description": "Visual appearance, shared with Tabs: a filled sliding pill, a Pinterest-style underline filter bar, or connected outlined segments. Inherited by items."
             },
             {
               "name": "animations",
@@ -11077,7 +11214,7 @@
         {
           "name": "sideOffset",
           "type": "number",
-          "default": "6",
+          "default": "4",
           "description": "Distance from trigger in px"
         },
         {
