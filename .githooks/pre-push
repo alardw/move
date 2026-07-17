@@ -9,40 +9,62 @@
 
 hook_start=$(date +%s)
 
-# Each gate announces itself before running and reports its own elapsed time, so a
-# slow or hanging step is identifiable while it happens rather than in hindsight.
+# A gate's own output is held back and printed only if it fails. Every gate reports
+# success as a wall of its own checkmarks (check:all ~30 lines, the suite ~80), which
+# buries the one line worth reading. Green gets a summary; red gets everything.
 #
-# A gate's own output is held back and printed only if it fails. Every gate already
-# reports success as a wall of its own checkmarks (check:all alone prints ~30 lines,
-# the suite ~80), which buries the one line you're looking for. On a green push the
-# only thing worth reading is which gate ran and how long it took; on a red one you
-# want everything, so that's exactly what each case gets.
+# On a terminal each gate owns one line, counting up while it works and settling into
+# its result:  ┄ move check:all… 12s   →   ✓ move check:all — 17s
+# Piped or redirected (CI, `git push 2>&1 | tee log`), \r and the erase sequence would
+# land as literal junk, so there the line is printed once, after the fact.
 
-# On a terminal the in-progress line is rewritten in place by its result, so each gate
-# costs one line, not two. Piped or redirected (CI, `git push 2>&1 | tee`), \r and the
-# erase sequence would land as literal junk, so the in-progress line is simply skipped
-# there — nothing is watching it anyway, and the result lines stand on their own.
-progress() {
-  if [ -t 1 ]; then printf '  ┄ %s…' "$1"; fi
-}
-clear_progress() {
-  if [ -t 1 ]; then printf '\r\033[K'; fi
+# Live path: run the gate in the background so the counter can tick while it works.
+# Output has to go to a file — $(...) would block until exit, which is the thing we're
+# trying to avoid. Returns the gate's exit status; leaves its output in "$log".
+run_ticking() {
+  desc="$1"
+  shift
+  "$@" >"$log" 2>&1 &
+  pid=$!
+  last=-1
+  while kill -0 "$pid" 2>/dev/null; do
+    now=$(($(date +%s) - start))
+    # Poll faster than the redraw so the loop exits promptly when the gate finishes
+    # (a flat `sleep 1` would add up to a second per gate), but only repaint when the
+    # displayed second actually changes.
+    if [ "$now" -ne "$last" ]; then
+      printf '\r\033[K  ┄ %s… %ss' "$desc" "$now"
+      last=$now
+    fi
+    sleep 0.1
+  done
+  wait "$pid"
 }
 
 run() {
   desc="$1"
   shift
   start=$(date +%s)
-  progress "$desc"
-  if ! out=$("$@" 2>&1); then
-    clear_progress
-    printf '  ✗ %s — FAILED after %ss\n\n' "$desc" "$(($(date +%s) - start))"
+  status=0
+
+  if [ -t 1 ]; then
+    log=$(mktemp)
+    run_ticking "$desc" "$@" || status=$?
+    out=$(cat "$log")
+    rm -f "$log"
+    printf '\r\033[K'
+  else
+    out=$("$@" 2>&1) || status=$?
+  fi
+
+  elapsed=$(($(date +%s) - start))
+  if [ "$status" -ne 0 ]; then
+    printf '  ✗ %s — FAILED after %ss\n\n' "$desc" "$elapsed"
     printf '%s\n\n' "$out"
     echo "    fix it, or push a work-in-progress branch with: git push --no-verify"
     exit 1
   fi
-  clear_progress
-  printf '  ✓ %s — %ss\n' "$desc" "$(($(date +%s) - start))"
+  printf '  ✓ %s — %ss\n' "$desc" "$elapsed"
 }
 
 echo "▶ pre-push: Move"
