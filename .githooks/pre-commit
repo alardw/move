@@ -50,7 +50,7 @@ if [ -n "$staged_move" ]; then
   echo "▶ pre-commit: formatting + linting staged Move source…"
 
   # Auto-format staged files and re-stage them (lint-staged style). Paths are
-  # passed relative to the package so its .prettierrc / eslint.config.js apply.
+  # passed relative to the package so its .prettierrc / eslint.config.mjs apply.
   rel=$(printf '%s\n' "$staged_move" | sed 's#^packages/move/##')
   ( cd packages/move && printf '%s\n' "$rel" | xargs npx prettier --write ) || { echo "✗ prettier failed."; exit 1; }
   printf '%s\n' "$staged_move" | xargs git add
