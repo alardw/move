@@ -199,7 +199,7 @@ const RULES: RuleDef[] = [
   // Behavior & interaction (all rendered)
   { id: 'behavior-1', group: 'behavior', rule: 'Implements the declared keyboard pattern', why: 'The spec declares the pattern (roving, linear, typeahead); the component must actually wire those keys.', enforcement: renders3('gap') },
   { id: 'behavior-2', group: 'behavior', rule: 'Focus management matches the declared strategy', why: 'Trap/restore/roving from the spec must hold, or overlays leak focus and lose the return point.', enforcement: renders3('gap') },
-  { id: 'behavior-3', group: 'behavior', rule: 'Works controlled and uncontrolled', why: 'The spec declares a controlled triad; both modes must work or half the API is broken.', enforcement: renders3('gap') },
+  { id: 'behavior-3', group: 'behavior', rule: 'Works controlled and uncontrolled', why: 'The spec declares a controlled triad; both modes must work or half the API is broken.', enforcement: { component: { status: 'check', check: 'controlled-modes' }, composition: { status: 'gap' } } },
 
   // Public API surface (component / libraryExport)
   { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('gap') },

@@ -124,6 +124,12 @@ export const CHECKS: CheckDoc[] = [
       'Dismissable components honour the Presence exit/unmount contract, so a closing animation can’t lock the lifecycle.',
   },
   {
+    name: 'controlled-modes',
+    appliesTo: 'component',
+    enforces:
+      'A component declaring a controlled triad has tests for both modes — the consumer owning the value, and the component owning it.',
+  },
+  {
     name: 'family-popup',
     appliesTo: 'component',
     enforces: 'Popup-family components (Tooltip, Dropdown, …) share one contract — props, ARIA, and animation.',
