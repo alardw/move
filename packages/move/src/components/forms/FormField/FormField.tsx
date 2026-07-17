@@ -69,7 +69,6 @@ export function useFieldControl(
       (node as HTMLInputElement).labels?.length ||
       node.getAttribute('title');
     if (!named) {
-      // eslint-disable-next-line no-console
       console.warn(
         '[move] This form control has no accessible name. Wrap it in a <FormField> with a ' +
           '<FormField.Label>, or pass an aria-label / aria-labelledby.',

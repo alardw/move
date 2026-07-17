@@ -592,7 +592,7 @@ const AccordionContent = withMoveComponent<
       enterHeightDuration,
       exitHeightDuration,
       itemContext.value,
-    ]); // eslint-disable-line react-hooks/exhaustive-deps
+    ]);
 
     const contentRefs = React.useMemo(
       () => ({

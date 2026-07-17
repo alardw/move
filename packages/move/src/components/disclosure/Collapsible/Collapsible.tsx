@@ -423,7 +423,7 @@ const CollapsibleContent = withMoveComponent<
       hasAnimConfig,
       enterHeightDuration,
       exitHeightDuration,
-    ]); // eslint-disable-line react-hooks/exhaustive-deps
+    ]);
 
     const contentRefs = React.useMemo(
       () => ({

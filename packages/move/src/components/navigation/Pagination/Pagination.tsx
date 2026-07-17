@@ -470,7 +470,7 @@ const PaginationItems = withMoveComponent<
         },
       ],
       [rangeKey, range, page],
-    ); // eslint-disable-line react-hooks/exhaustive-deps
+    );
 
     useAnimations(slideConfig, animRefs);
 

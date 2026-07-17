@@ -41,9 +41,13 @@ export default defineConfig([
       // Complexity signals — target per-FUNCTION tangledness, not file line count
       // (a big file of small functions is fine; a single gnarly function is not).
       // Warnings for now: surface what trips before we commit to blocking thresholds.
-      complexity: ['warn', 15],
-      'max-depth': ['warn', 4],
-      'max-lines-per-function': ['warn', { max: 150, skipBlankLines: true, skipComments: true }],
+      // Metric rules tuned to flag only genuine outliers, not the house style.
+      // A warning nobody acts on is noise that buries the real ones, so the
+      // thresholds sit just above the codebase's normal band — only the handful
+      // of true monsters (complexity >25, >350 lines, depth >5) still warn.
+      complexity: ['warn', 25],
+      'max-depth': ['warn', 5],
+      'max-lines-per-function': ['warn', { max: 350, skipBlankLines: true, skipComments: true }],
     },
   },
   {

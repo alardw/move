@@ -224,7 +224,6 @@ export function useSplitText(options: UseSplitTextOptions): UseSplitTextReturn {
       splitter.revert();
     };
     // Re-split / re-animate when the text or any split-shaping option changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [text, by, effect, trigger]);
 
   return { ref, animated };

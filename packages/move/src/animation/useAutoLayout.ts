@@ -295,7 +295,6 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
       window.removeEventListener('resize', scheduleRefresh);
       observer.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return { ref };

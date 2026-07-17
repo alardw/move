@@ -191,7 +191,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
         setInputValue(label.textContent);
       }
     }
-  }, [setIsOpen, multiple, selectedValues, allowCustomValue, setInputValue]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [setIsOpen, multiple, selectedValues, allowCustomValue, setInputValue]);
 
   // Close the popup on viewport changes — scroll (any ancestor) or
   // resize. Without this the popover floats away from the trigger

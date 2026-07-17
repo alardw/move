@@ -133,7 +133,6 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
         [staggerEnter({ delay: staggerCfg.delay, from: staggerCfg.from })],
         props.animations as AnimationTrigger[] | undefined,
       );
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [staggerOn, staggerCfg.delay, staggerCfg.from, props.animations]);
     const animRefs = React.useMemo(
       () => ({ Root: internalRef as React.RefObject<HTMLElement | null> }),
