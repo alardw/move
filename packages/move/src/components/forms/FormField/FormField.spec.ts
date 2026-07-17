@@ -66,6 +66,13 @@ export const spec = {
           moveSpecific: true,
           description: 'Custom width for the label column (sets --move-formfield-label-width)',
         },
+        {
+          name: 'invalid',
+          type: 'boolean',
+          moveSpecific: true,
+          description:
+            'Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling',
+        },
       ],
       usesFactory: true,
       description: 'Outer wrapper that provides responsive grid layout via container queries',
