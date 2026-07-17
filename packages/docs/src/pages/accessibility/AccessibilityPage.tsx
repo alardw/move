@@ -41,9 +41,11 @@ function Evidence({ c }: { c: Criterion }) {
       </Text>
       {c.evidence.length ? (
         c.evidence.map((e) => (
-          <Code key={e} size="sm">
-            {e}
-          </Code>
+          // Into the hub, not across to /ai/coverage: the check is what both pages
+          // share, so it's the only link that can't drift.
+          <RouterLink key={e} to={`/conformance/validation#check-${e}`}>
+            <Code size="sm">{e}</Code>
+          </RouterLink>
         ))
       ) : (
         <Text size="sm" as="span" color="muted">

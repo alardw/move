@@ -42,11 +42,15 @@ const STRUCTURAL_CHECKS = CHECKS.filter((c) => !REFERENCED.has(c.name));
 
 function StatusCell({ status, check }: { status: Status; check?: string }) {
   if (status === 'check') {
+    // Links to the check hub, where the same gate also shows any WCAG criteria that
+    // cite it — the two vocabularies meet at the check, never at each other.
     return (
-      <Badge variant="soft" color="green">
-        <Icon name="check" />
-        {check}
-      </Badge>
+      <RouterLink to={`/conformance/validation#check-${check}`}>
+        <Badge variant="soft" color="green">
+          <Icon name="check" />
+          {check}
+        </Badge>
+      </RouterLink>
     );
   }
   return (
