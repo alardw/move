@@ -1,20 +1,36 @@
 import '@testing-library/jest-dom/vitest';
 
-// Fail any test that leaks a move-specific prop to the DOM. React only warns on
-// a genuine leak (a prop spread onto a host element that it doesn't recognize),
-// so this is a precise, zero-false-positive guard for the `Button.fullWidth`
-// class of bug — a move prop missing from `moveProps`. Turning the warning into
-// a thrown error makes the offending component's test fail loudly.
+// Fail any test that writes to console.error/warn. The suite runs at zero console
+// output, so anything new is a regression — and this class of bug is otherwise
+// invisible: React's controlled/uncontrolled flip and act() warnings, Radix's a11y
+// warnings, and Move's own dev warnings all only ever printed while the suite stayed
+// green. The Select uncontrolled→controlled bug was a genuine consumer-facing defect
+// whose sole symptom was one of these lines scrolling past.
+//
+// A test that deliberately asserts a warning should silence it locally, which also
+// bypasses this guard:
+//   const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+//
+// Known trade-off: when a component genuinely throws, React reports it via
+// console.error, so this guard throws too. The test fails either way, but the
+// message below may arrive alongside the original — read the original first.
 const DOM_LEAK_RE =
   /does not recognize the .* prop on a DOM element|Invalid DOM property|Unknown event handler property/;
-const originalConsoleError = console.error.bind(console);
-console.error = (...args: unknown[]) => {
-  const msg = typeof args[0] === 'string' ? args[0] : '';
+
+function failOnConsole(kind: 'error' | 'warn', args: unknown[]): never {
+  const msg = args.map(String).join(' ');
+  // Keep the specific hint for the `Button.fullWidth` class of bug — a move prop
+  // missing from `moveProps` and spread onto a host element.
   if (DOM_LEAK_RE.test(msg)) {
-    throw new Error(`DOM prop leak (add the prop to moveProps): ${args.map(String).join(' ')}`);
+    throw new Error(`DOM prop leak (add the prop to moveProps): ${msg}`);
   }
-  originalConsoleError(...args);
-};
+  throw new Error(
+    `console.${kind} during test — fix it, or silence it locally with vi.spyOn(console, '${kind}'):\n${msg}`,
+  );
+}
+
+console.error = (...args: unknown[]) => failOnConsole('error', args);
+console.warn = (...args: unknown[]) => failOnConsole('warn', args);
 
 // jsdom does not implement ResizeObserver (needed by Radix)
 global.ResizeObserver = class ResizeObserver {
