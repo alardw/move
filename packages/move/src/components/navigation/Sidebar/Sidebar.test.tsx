@@ -299,6 +299,26 @@ describe('Sidebar', () => {
       expect(onCollapsedChange).toHaveBeenCalledWith(true);
     });
 
+    // behavior-3: the spec declares the collapsed/defaultCollapsed/onCollapsedChange
+    // triad. The tests above all drive defaultCollapsed (uncontrolled); this covers the
+    // controlled half, where the parent owns the value.
+    it('controlled: collapsed owns the state, a click only reports', () => {
+      const onCollapsedChange = vi.fn();
+      render(
+        <Sidebar.Provider collapsed={true} onCollapsedChange={onCollapsedChange}>
+          <Sidebar.Root data-testid="root">
+            <Sidebar.Trigger data-testid="trigger">Toggle</Sidebar.Trigger>
+          </Sidebar.Root>
+        </Sidebar.Provider>,
+      );
+      expect(screen.getByTestId('root')).toHaveAttribute('data-collapsed', 'true');
+
+      fireEvent.click(screen.getByTestId('trigger'));
+      expect(onCollapsedChange).toHaveBeenCalledWith(false);
+      // The parent never fed the new value back, so it must stay collapsed.
+      expect(screen.getByTestId('root')).toHaveAttribute('data-collapsed', 'true');
+    });
+
     it('forwards className and style', () => {
       renderWithProvider(
         <Sidebar.Trigger data-testid="trigger" className="custom" style={{ padding: '4px' }}>

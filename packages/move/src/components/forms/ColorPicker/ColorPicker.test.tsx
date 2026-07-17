@@ -238,6 +238,39 @@ describe('ColorPicker', () => {
     });
   });
 
+  // === Controlled / uncontrolled (behavior-3) ===
+  // The spec declares the value/defaultValue/onValueChange triad. Every test above
+  // drives defaultValue or no value at all, leaving the controlled half — where the
+  // parent owns the colour — unexercised.
+  describe('controlled and uncontrolled', () => {
+    const swatches = ['#ff0000', '#00ff00', '#0000ff'];
+
+    it('controlled: value owns the colour, a swatch click only reports', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(
+        <ColorPicker format="hex" value="#ff0000" swatches={swatches} onValueChange={onChange} />,
+      );
+      const input = screen.getByRole('textbox', { name: 'Hex color value' });
+      expect(input).toHaveValue('ff0000');
+
+      await user.click(screen.getByRole('button', { name: '#00ff00' }));
+      expect(onChange).toHaveBeenCalledWith('#00ff00');
+      // The parent never fed the new value back, so the picker must still read the prop.
+      expect(input).toHaveValue('ff0000');
+    });
+
+    it('uncontrolled: defaultValue seeds it and a swatch click owns the colour', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="hex" defaultValue="#ff0000" swatches={swatches} />);
+      const input = screen.getByRole('textbox', { name: 'Hex color value' });
+
+      await user.click(screen.getByRole('button', { name: '#00ff00' }));
+      // No `value` prop, so the picker owns the colour and must move on its own.
+      expect(input).toHaveValue('00ff00');
+    });
+  });
+
   // === Channel inputs (RGB mode) ===
   describe('channel inputs (RGB)', () => {
     it('renders R, G, B inputs when format is rgb', () => {

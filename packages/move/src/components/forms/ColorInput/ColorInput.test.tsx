@@ -178,6 +178,26 @@ describe('ColorInput', () => {
       expect(onChange).not.toHaveBeenCalled();
     });
 
+    // behavior-3: every test above drives defaultValue (uncontrolled). The spec declares
+    // the value/defaultValue/onValueChange triad, so the controlled half — parent owns
+    // the value — is public API too.
+    it('controlled: value owns the input, a commit only reports', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(<ColorInput value="#ff0000" onValueChange={onChange} />);
+      const input = screen.getByRole('textbox');
+      expect(input).toHaveValue('#ff0000');
+
+      await user.click(input);
+      await user.clear(input);
+      await user.type(input, '#00ff00');
+      await user.tab();
+      expect(onChange).toHaveBeenCalledWith('#00ff00');
+      // The parent never fed the new value back, so it must snap back to the prop
+      // rather than keep the typed value in its own state.
+      expect(input).toHaveValue('#ff0000');
+    });
+
     it('Enter key triggers blur', async () => {
       const user = userEvent.setup();
       render(<ColorInput defaultValue="#ff0000" />);

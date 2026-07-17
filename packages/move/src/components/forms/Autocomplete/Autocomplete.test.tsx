@@ -192,6 +192,37 @@ describe('Autocomplete', () => {
       expect(input).toHaveValue('Apple');
     });
 
+    // behavior-3: the spec declares the value/defaultValue/onValueChange triad. The
+    // tests drive `value` and `onValueChange`, so the uncontrolled seed — Autocomplete
+    // owning the selection from a defaultValue — went unexercised.
+    //
+    // Asserted on the option's aria-selected, not the input text: selection and input
+    // text are separate state, and the input only syncs to the selected label on close.
+    // So a seeded selection shows on the option immediately and in the input later —
+    // the same for `value` as for `defaultValue`.
+    it('uncontrolled: defaultValue seeds the selection and a pick moves it', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      renderAutocomplete({ rootProps: { defaultValue: 'apple', onValueChange: onChange } });
+      const input = screen.getByRole('combobox');
+
+      await user.click(input);
+      expect(screen.getByRole('option', { name: 'Apple' })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
+
+      await user.click(screen.getByText('Banana'));
+      expect(onChange).toHaveBeenCalledWith('banana');
+
+      // No `value` prop, so Autocomplete owns the selection and must move it itself.
+      await user.click(input);
+      expect(screen.getByRole('option', { name: 'Banana' })).toHaveAttribute(
+        'aria-selected',
+        'true',
+      );
+    });
+
     it('closes popup after selection in single mode', async () => {
       const user = userEvent.setup();
       renderAutocomplete();

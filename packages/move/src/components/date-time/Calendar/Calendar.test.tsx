@@ -94,6 +94,29 @@ describe('Calendar', () => {
       expect(selected.length).toBeGreaterThanOrEqual(1);
     });
 
+    // behavior-3: the spec declares the value/defaultValue/onValueChange triad, but the
+    // tests only ever drive `value` — the uncontrolled half, where Calendar owns the
+    // selection, went unexercised.
+    it('uncontrolled: defaultValue seeds the selection and a click moves it', () => {
+      const onChange = vi.fn();
+      render(
+        <Calendar.Root defaultValue={REF_DATE} onValueChange={onChange}>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      const selectedOf = () =>
+        screen.getAllByRole('gridcell').filter((c) => c.getAttribute('aria-selected') === 'true');
+      expect(selectedOf()).toHaveLength(1);
+      const first = selectedOf()[0];
+
+      const other = screen.getAllByRole('gridcell').find((c) => c !== first && c.textContent);
+      fireEvent.click(other!);
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+      // No `value` prop, so Calendar owns the selection and must move it itself.
+      expect(selectedOf()[0]).not.toBe(first);
+    });
+
     it('receives data-today for current date', () => {
       render(
         <Calendar.Root>

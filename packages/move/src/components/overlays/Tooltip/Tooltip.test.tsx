@@ -322,5 +322,23 @@ describe('Tooltip', () => {
         expect(tooltip.textContent).toContain('Compound tooltip');
       });
     });
+
+    // behavior-3: the spec declares the open/defaultOpen/onOpenChange triad, but every
+    // other test here drives `open` — the uncontrolled path, where the component owns
+    // its own visibility, went unexercised. It lives on Tooltip.Root: the simple
+    // <Tooltip label> API takes `open`/`onOpenChange` but has no `defaultOpen`.
+    it('uncontrolled: defaultOpen opens it with no controlled prop', async () => {
+      renderTooltip(
+        <Tooltip.Root defaultOpen>
+          <Tooltip.Trigger asChild>
+            <button data-testid="trigger">Hover</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Uncontrolled tooltip</Tooltip.Content>
+        </Tooltip.Root>,
+      );
+      await waitFor(() => {
+        expect(findTooltip().textContent).toContain('Uncontrolled tooltip');
+      });
+    });
   });
 });

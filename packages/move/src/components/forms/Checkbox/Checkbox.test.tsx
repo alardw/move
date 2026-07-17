@@ -74,6 +74,37 @@ describe('Checkbox', () => {
     });
   });
 
+  // === Controlled / uncontrolled (behavior-3) ===
+  // The spec declares the checked/defaultChecked/onCheckedChange triad, so both modes
+  // are public API and both have to work.
+  describe('controlled and uncontrolled', () => {
+    it('uncontrolled: defaultChecked seeds the state and the click owns it', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      renderCheckbox({ defaultChecked: true, onCheckedChange: onChange });
+      const box = screen.getByRole('checkbox');
+      expect(box).toHaveAttribute('data-state', 'checked');
+
+      await user.click(box);
+      expect(onChange).toHaveBeenCalledWith(false);
+      // No `checked` prop, so the component owns the value and must move on its own.
+      expect(box).toHaveAttribute('data-state', 'unchecked');
+    });
+
+    it('controlled: the prop owns the state, a click only reports', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      renderCheckbox({ checked: false, onCheckedChange: onChange });
+      const box = screen.getByRole('checkbox');
+
+      await user.click(box);
+      expect(onChange).toHaveBeenCalledWith(true);
+      // The parent never fed the new value back, so it must still read unchecked —
+      // moving anyway would mean the component is quietly holding its own state.
+      expect(box).toHaveAttribute('data-state', 'unchecked');
+    });
+  });
+
   // === Sizes ===
   describe('sizes', () => {
     it('applies size via data-size for sm', () => {

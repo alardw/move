@@ -1,6 +1,7 @@
 // Generated from DatePicker.spec.ts
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 import { DatePicker } from './DatePicker';
 
 // Helper: minimal DatePicker composition
@@ -153,6 +154,42 @@ describe('DatePicker', () => {
     it('renders children when open', () => {
       render(
         <DatePicker.Root defaultOpen>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+          </DatePicker.Trigger>
+          <DatePicker.Content>
+            <span data-testid="calendar">Calendar</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
+      );
+      expect(screen.getByTestId('calendar')).toBeInTheDocument();
+    });
+
+    // behavior-3: the spec declares the open/defaultOpen/onOpenChange triad. Every test
+    // here drives defaultOpen (uncontrolled), leaving the controlled half — where the
+    // parent owns visibility — unexercised.
+    it('controlled: open drives visibility and the trigger only reports', async () => {
+      const user = userEvent.setup();
+      const onOpenChange = vi.fn();
+      const { rerender } = render(
+        <DatePicker.Root open={false} onOpenChange={onOpenChange}>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+          </DatePicker.Trigger>
+          <DatePicker.Content>
+            <span data-testid="calendar">Calendar</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
+      );
+      expect(screen.queryByTestId('calendar')).not.toBeInTheDocument();
+
+      await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+      expect(onOpenChange).toHaveBeenCalledWith(true);
+      // The parent never fed `open` back, so it must stay shut.
+      expect(screen.queryByTestId('calendar')).not.toBeInTheDocument();
+
+      rerender(
+        <DatePicker.Root open={true} onOpenChange={onOpenChange}>
           <DatePicker.Trigger>
             <DatePicker.Input />
           </DatePicker.Trigger>
