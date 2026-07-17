@@ -89,17 +89,59 @@ export function isInFamily(specObj, axis, family) {
   return arr.includes(family);
 }
 
-/** Print a one-line header + summary, then exit 0/1. Lets each
- *  family script avoid hand-rolling the same epilogue. */
-export function exitWithSummary({ familyName, members, totalErrors, weakFlags }) {
-  console.log('');
-  if (totalErrors > 0) {
-    console.log(`✗ ${totalErrors} error(s) across ${members} ${familyName} components.`);
+/**
+ * Report a family check, then exit 0/1. Details only what's BAD — structural
+ * errors and false flags that aren't exempt — and rolls everything GOOD into a
+ * one-line summary. Each `results` entry may carry:
+ *   member:     boolean                     // in this family?
+ *   errors:     string[]                     // structural problems (hard-fail)
+ *   flags:      { [flag]: boolean }          // graded contract flags
+ *   exempt:     string[]                     // flags whose `false` is intentional (N/A)
+ *   exemptNote: string | null               // why — shown in the summary
+ *
+ * A `false` flag that's exempt (e.g. Tooltip delegating dismiss to Radix, or a
+ * single-panel disclosure's `multipleOpen`) is conformant, not a limitation.
+ */
+export function reportFamily({ familyName, requiredFlags, results }) {
+  const members = results.filter((r) => r.member);
+  console.log(`\n${familyName} family — ${members.length} components.\n`);
+
+  let structuralErrors = 0;
+  let gapFlags = 0;
+  let conform = 0;
+  const exempt = [];
+
+  for (const r of members) {
+    const exemptSet = new Set(r.exempt ?? []);
+    const gaps = requiredFlags.filter((f) => r.flags[f] === false && !exemptSet.has(f));
+    if (r.errors.length === 0 && gaps.length === 0) {
+      conform++;
+      if (r.exemptNote) exempt.push(`${r.name}: ${r.exemptNote}`);
+      continue;
+    }
+    console.log(`  ${r.name}`);
+    for (const e of r.errors) {
+      console.log(`    ✗ ${e}`);
+      structuralErrors++;
+    }
+    for (const f of gaps) {
+      console.log(`    · ${f} declared false — known limitation or unfixed bug`);
+      gapFlags++;
+    }
+    console.log('');
+  }
+
+  if (structuralErrors > 0) {
+    console.log(`✗ ${structuralErrors} contract error(s) in the ${familyName} family — see above.`);
   } else {
-    console.log(`✓ ${members} ${familyName} components declare a complete contract.`);
+    let msg = `✓ ${conform} ${familyName} components conform`;
+    if (exempt.length) msg += ` — ${exempt.length} with N/A flags (${exempt.join('; ')})`;
+    console.log(msg + '.');
   }
-  if (weakFlags > 0) {
-    console.log(`· ${weakFlags} flag(s) declared as false — known limitations or unfixed bugs.`);
+  if (gapFlags > 0) {
+    console.log(
+      `· ${gapFlags} flag(s) declared false without exemption (above) — known limitations or unfixed bugs.`,
+    );
   }
-  process.exit(totalErrors > 0 ? 1 : 0);
+  process.exit(structuralErrors > 0 ? 1 : 0);
 }

@@ -19,7 +19,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   loadSpec, listComponents, getProp, asBool, asArray,
-  isInFamily, exitWithSummary,
+  isInFamily, reportFamily,
 } from './_familyShared.mjs';
 
 const COMPONENTS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'src', 'components');
@@ -50,44 +50,15 @@ function check(component) {
     }
   }
 
-  return { name: component.name, member: true, errors, flags };
+  // A single-panel disclosure (multipleOpen: false) is correct, not a gap —
+  // "multiple open" only applies to multi-panel accordions.
+  const exempt = flags.multipleOpen === false ? ['multipleOpen'] : [];
+  const exemptNote = exempt.length ? 'single-panel (multipleOpen N/A)' : null;
+
+  return { name: component.name, member: true, errors, flags, exempt, exemptNote };
 }
 
 const components = listComponents(COMPONENTS_DIR);
 const results = components.map(check);
-const members = results.filter((r) => r.member);
 
-console.log(`\nDisclosure family — ${members.length} components.\n`);
-
-let totalErrors = 0;
-let weakFlags = 0;
-for (const r of members) {
-  const flagSummary = REQUIRED_DISCLOSURE_FLAGS
-    .map((f) => {
-      const v = r.flags[f];
-      if (v === undefined) return `${f}=?`;
-      if (v) return `${f}=✓`;
-      weakFlags++;
-      return `${f}=✗`;
-    })
-    .join('  ');
-  if (r.errors.length === 0) {
-    console.log(`  ${r.name.padEnd(14)} ${flagSummary}`);
-  } else {
-    console.log(`\n  ${r.name}`);
-    console.log(`    ${flagSummary}`);
-    for (const e of r.errors) console.log(`    ✗ ${e}`);
-    totalErrors += r.errors.length;
-  }
-}
-
-// `multipleOpen=false` is informational, not a weakness — single-panel
-// disclosures are correct. Subtract it from the weakFlags count so
-// the summary doesn't misrepresent them.
-const expectedFalse = members.reduce((acc, r) => acc + (r.flags.multipleOpen === false ? 1 : 0), 0);
-exitWithSummary({
-  familyName: 'disclosure',
-  members: members.length,
-  totalErrors,
-  weakFlags: Math.max(0, weakFlags - expectedFalse),
-});
+reportFamily({ familyName: 'Disclosure', requiredFlags: REQUIRED_DISCLOSURE_FLAGS, results });

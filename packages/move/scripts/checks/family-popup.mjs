@@ -37,11 +37,10 @@ import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
+import { reportFamily } from './_familyShared.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const COMPONENTS_DIR = join(HERE, '..', '..', 'src', 'components');
-
-const VERBOSE = process.argv.includes('--verbose');
 
 const REQUIRED_POPUP_FLAGS = [
   'closeOnEscape',
@@ -194,7 +193,9 @@ function check(component) {
     if (!subNames.includes('Content')) errors.push('missing `Content` sub-component');
   }
 
-  return { name: component.name, member: true, errors, flags, delegated };
+  const exempt = delegated ? REQUIRED_POPUP_FLAGS : [];
+  const exemptNote = delegated ? 'dismiss delegated to Radix' : null;
+  return { name: component.name, member: true, errors, flags, exempt, exemptNote };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -203,56 +204,5 @@ function check(component) {
 
 const components = listComponents();
 const results = components.map(check);
-const popupComponents = results.filter((r) => r.member);
 
-console.log(`\nPopup family — ${popupComponents.length} components.\n`);
-
-let structuralErrors = 0;
-let limitationFlags = 0;
-let selfManaged = 0;
-const delegated = [];
-
-// Report only what's BAD in detail (structural errors + false flags on a
-// self-managed popup); everything GOOD (a complete self-managed contract, or a
-// component that delegates dismiss to another owner) is rolled into the summary.
-for (const r of popupComponents) {
-  const falseFlags = REQUIRED_POPUP_FLAGS.filter((f) => r.flags[f] === false);
-  const problem = r.errors.length > 0 || falseFlags.length > 0;
-
-  if (r.delegated) delegated.push(r.name);
-  else if (!problem) selfManaged++;
-
-  if (VERBOSE && !problem) {
-    console.log(`  ${r.name.padEnd(14)} ✓ ${r.delegated ? 'delegated (dismiss owned elsewhere)' : 'self-managed'}`);
-  }
-  if (!problem) continue;
-
-  console.log(`  ${r.name}`);
-  for (const e of r.errors) {
-    console.log(`    ✗ ${e}`);
-    structuralErrors++;
-  }
-  for (const f of falseFlags) {
-    console.log(`    · ${f} declared false — known limitation or unfixed bug`);
-    limitationFlags++;
-  }
-  console.log('');
-}
-
-if (VERBOSE) {
-  const nonMember = results.filter((r) => !r.member && r.errors.length === 0);
-  console.log(`\n  (${nonMember.length} components are not popup-anchored — skipped)`);
-}
-
-if (structuralErrors > 0) {
-  console.log(`✗ ${structuralErrors} contract error(s) in the popup family — see above.`);
-} else {
-  const parts = [`${selfManaged} self-managed`];
-  if (delegated.length) parts.push(`${delegated.length} delegated (${delegated.join(', ')})`);
-  console.log(`✓ ${selfManaged + delegated.length} popup components conform — ${parts.join(', ')}.`);
-}
-if (limitationFlags > 0) {
-  console.log(`· ${limitationFlags} dismiss flag(s) declared false on self-managed popups (above) — known limitations or unfixed bugs.`);
-}
-
-process.exit(structuralErrors > 0 ? 1 : 0);
+reportFamily({ familyName: 'Popup', requiredFlags: REQUIRED_POPUP_FLAGS, results });

@@ -18,7 +18,7 @@ import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 import {
   loadSpec, listComponents, getProp, asString, asBool, asArray,
-  isInFamily, exitWithSummary,
+  isInFamily, reportFamily,
 } from './_familyShared.mjs';
 
 const COMPONENTS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'src', 'components');
@@ -49,6 +49,14 @@ function check(component) {
     }
   }
 
+  // Dismiss delegated to another owner (e.g. Radix Dialog) → the two dismiss
+  // flags are N/A; lockBodyScroll/trapFocus are Move's own and never exempt.
+  const exempt =
+    modal && asString(getProp(modal, 'dismiss')) === 'delegated'
+      ? ['closeOnEscape', 'closeOnOverlayClick']
+      : [];
+  const exemptNote = exempt.length ? 'dismiss delegated' : null;
+
   const compound = asBool(getProp(specObj, 'compound'));
   if (compound) {
     const subsNode = getProp(specObj, 'subComponents');
@@ -64,35 +72,10 @@ function check(component) {
     }
   }
 
-  return { name: component.name, member: true, errors, flags };
+  return { name: component.name, member: true, errors, flags, exempt, exemptNote };
 }
 
 const components = listComponents(COMPONENTS_DIR);
 const results = components.map(check);
-const members = results.filter((r) => r.member);
 
-console.log(`\nModal-overlay family — ${members.length} components.\n`);
-
-let totalErrors = 0;
-let weakFlags = 0;
-for (const r of members) {
-  const flagSummary = REQUIRED_MODAL_FLAGS
-    .map((f) => {
-      const v = r.flags[f];
-      if (v === undefined) return `${f}=?`;
-      if (v) return `${f}=✓`;
-      weakFlags++;
-      return `${f}=✗`;
-    })
-    .join('  ');
-  if (r.errors.length === 0) {
-    console.log(`  ${r.name.padEnd(14)} ${flagSummary}`);
-  } else {
-    console.log(`\n  ${r.name}`);
-    console.log(`    ${flagSummary}`);
-    for (const e of r.errors) console.log(`    ✗ ${e}`);
-    totalErrors += r.errors.length;
-  }
-}
-
-exitWithSummary({ familyName: 'modal-overlay', members: members.length, totalErrors, weakFlags });
+reportFamily({ familyName: 'Modal-overlay', requiredFlags: REQUIRED_MODAL_FLAGS, results });
