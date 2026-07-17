@@ -302,7 +302,11 @@ const SelectRoot: React.FC<SelectRootProps> = ({
       }}
     >
       <RadixSelect.Root
-        value={value}
+        // Radix must see ONE mode for its whole life. Passing `value` unconditionally made an
+        // uncontrolled Select (no defaultValue) hand Radix `undefined` on mount and a string
+        // after the first selection — i.e. uncontrolled → controlled. `handleValueChange`
+        // mirrors into `uncontrolledValue` either way, so the trigger label still resolves.
+        {...(isValueControlled ? { value: controlledValue } : { defaultValue })}
         onValueChange={handleValueChange}
         open={isOpen || isClosing}
         onOpenChange={handleOpenChange}
