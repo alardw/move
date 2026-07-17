@@ -23,12 +23,31 @@ const real = new Set(
     .map((k) => k.slice('check:'.length)),
 );
 
+// Not every gate is a check:* script. The docs a11y sweep runs every component sample
+// through axe as a vitest ratchet — and its own header names the rule it implements
+// ("Mechanical a11y sweep (a11y-1)"). Because this file only ever resolved check:*
+// scripts, a11y-1 could not cite the thing that already enforces it, and sat as a "gap"
+// while running in CI on every push. The gap count was measuring what's WIRED, not what
+// exists. Resolved against the docs script that actually runs it, so a gate can't be
+// claimed here without something running. Mirrors EXTRA_GATES in check:wcag-evidence.
+const NON_CHECK_GATES = { 'a11y-sweep': 'test:a11y' };
+const docsPkg = JSON.parse(readFileSync(join(here, '../../../docs/package.json'), 'utf8'));
+for (const [gate, script] of Object.entries(NON_CHECK_GATES)) {
+  if (!docsPkg.scripts?.[script]) {
+    console.error(`✗ conformance-spec: gate "${gate}" maps to docs script "${script}", now gone.`);
+    process.exit(1);
+  }
+  real.add(gate);
+}
+
 // Checks a rule references — both forms used in the spec:
 //   explicit:  { status: 'check', check: 'spec-drift' }
 //   shorthand: C('check', 'spec-drift') / DP('check', 'design-pattern-conformance') / all('check', 'spec-drift')
 const referenced = new Set();
 for (const m of specSrc.matchAll(/\bcheck:\s*'([^']+)'/g)) referenced.add(m[1]);
-for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g))
+// `renders3` is an alias for `all` in the spec — matched here too, or a rule using the
+// semantic name reads as unreferenced and the gate reports a real gate as orphaned.
+for (const m of specSrc.matchAll(/\b(?:C|DP|all|renders3)\(\s*'check'\s*,\s*'([^']+)'\)/g))
   referenced.add(m[1]);
 
 // Enforced checks that guard a structural/family contract, not one coverage rule.

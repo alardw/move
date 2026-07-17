@@ -190,7 +190,12 @@ const RULES: RuleDef[] = [
   { id: 'unit-1', group: 'unit', rule: 'Test file exists', why: 'No test file = the logic is unverified by construction.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composite-spec-drift' } } },
 
   // Accessibility tests (all rendered)
-  { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('gap') },
+  // Enforced by the docs a11y sweep, which renders every component sample through axe
+  // and holds a baseline — its own header names this rule. It ran in CI on every push
+  // while this said "gap", because nothing here could resolve a gate that isn't a
+  // check:* script. A ratchet is still a gate: new violations fail (same standing as
+  // app-conformance). The baseline it holds is a separate debt, tracked on /accessibility.
+  { id: 'a11y-1', group: 'a11y', rule: 'No axe violations (roles, names, ARIA)', why: 'Catches the mechanical a11y errors — missing names, bad roles, broken ARIA — that the eye misses.', enforcement: renders3('check', 'a11y-sweep') },
   { id: 'a11y-2', group: 'a11y', rule: 'Keyboard-operable; focus visible and ordered', why: 'Keyboard-only and screen-reader users can’t use what they can’t reach or see focused.', enforcement: renders3('gap') },
   { id: 'a11y-3', group: 'a11y', rule: 'Text/UI contrast meets WCAG AA', why: 'Low contrast fails AA and is unreadable for low-vision users.', enforcement: renders3('gap') },
   { id: 'a11y-4', group: 'a11y', rule: 'No aria-label over visible children (Label-in-Name)', why: 'A control that sets aria-label while rendering its children gives screen-reader/voice users a different name than sighted users see (WCAG 2.5.3).', enforcement: C('check', 'aria-label-name') },
