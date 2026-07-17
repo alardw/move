@@ -104,7 +104,6 @@ function EntityTable({ entity }: { entity: EntityDef }) {
   );
 }
 
-
 export function CoveragePage() {
   return (
     <Stack direction="row" gap="xl" align="stretch" id="coverage">
@@ -128,8 +127,9 @@ export function CoveragePage() {
         <Stack gap="sm">
           <Heading level={1}>Coverage</Heading>
           <Text color="muted" size="lg">
-            Every rule the contract implies, mapped to the deterministic check that enforces it. Which
-            rules apply to each entity is computed from the entity&apos;s traits, not assigned by hand.
+            Every rule the contract implies, mapped to the deterministic check that enforces it.
+            Which rules apply to each entity is computed from the entity&apos;s traits, not assigned
+            by hand.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft" color="green">
@@ -143,18 +143,19 @@ export function CoveragePage() {
             </Badge>
           </Stack>
           <Text size="sm" color="muted">
-            <Code>check</Code> = a deterministic gate enforces it. <Code>gap</Code> = mechanizable, but
-            no check exists yet — never a human call. Component and composite render UI (purity, accessibility,
-            spec parity); a design pattern is validated as a spec — its skeleton, axes, and per-value
-            bindings must be well-formed and complete. Beneath all of it, the ambient tooling below runs
-            over the whole source automatically.
+            <Code>check</Code> = a deterministic gate enforces it. <Code>gap</Code> = mechanizable,
+            but no check exists yet — never a human call. Component and composite render UI (purity,
+            accessibility, spec parity); a design pattern is validated as a spec — its skeleton,
+            axes, and per-value bindings must be well-formed and complete. Beneath all of it, the
+            ambient tooling below runs over the whole source automatically.
           </Text>
         </Stack>
 
         <Section id="ambient" title="Ambient tooling">
           <Text color="muted">
-            Always-on, whole-source tools that run beneath the rule-by-rule coverage. Every entry maps
-            to a real package script, so this list can&apos;t drift from what the repo actually runs.
+            Always-on, whole-source tools that run beneath the rule-by-rule coverage. Every entry
+            maps to a real package script, so this list can&apos;t drift from what the repo actually
+            runs.
           </Text>
           <Table>
             <Table.Header>
@@ -180,10 +181,10 @@ export function CoveragePage() {
 
         <Section id="structural" title="Cross-cutting & structural">
           <Text color="muted">
-            Enforced checks that guard a family or cross-cutting contract, or the docs
-            themselves — real gates, but not tied to one entity rule, so they don&apos;t
-            appear in the tables below. Derived: every catalogued check that no rule
-            references, so this list stays in step with the checks and the gate.
+            Enforced checks that guard a family or cross-cutting contract, or the docs themselves —
+            real gates, but not tied to one entity rule, so they don&apos;t appear in the tables
+            below. Derived: every catalogued check that no rule references, so this list stays in
+            step with the checks and the gate.
           </Text>
           <Table>
             <Table.Header>
@@ -193,11 +194,13 @@ export function CoveragePage() {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {STRUCTURAL_CHECKS.map((c) => (
+              {STRUCTURAL_CHECKS.map((c, i) => (
                 <Table.Row key={c.name}>
                   <Table.Cell>
                     <Stack gap="xs">
-                      <Text size="sm">{c.enforces}</Text>
+                      <Text size="sm">
+                        <Code>{i + 1}</Code> {c.enforces}
+                      </Text>
                       <Text size="xs" color="muted">
                         {c.appliesTo}
                       </Text>
