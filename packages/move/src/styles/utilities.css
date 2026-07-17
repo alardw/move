@@ -75,3 +75,61 @@
 .move-wrap {
   flex-wrap: wrap;
 }
+
+/* Directional spacing shorthand ----------------------------------------------
+   The block/inline half of the two-value `padding` shorthand. A component
+   renders data-padding-block / data-padding-inline via directionalAttrs()
+   (shared/shorthand.ts) when its `padding` prop is given a "block inline"
+   value; these style from those attributes globally, so the scale lives in one
+   place instead of being repeated per component. Single-value `padding` keeps
+   using each component's own scoped [data-padding] rule. */
+
+[data-padding-block='none'] {
+  padding-block: 0;
+}
+[data-padding-block='xs'] {
+  padding-block: var(--move-spacing-xs);
+}
+[data-padding-block='sm'] {
+  padding-block: var(--move-spacing-sm);
+}
+[data-padding-block='md'] {
+  padding-block: var(--move-spacing-md);
+}
+[data-padding-block='lg'] {
+  padding-block: var(--move-spacing-lg);
+}
+[data-padding-block='xl'] {
+  padding-block: var(--move-spacing-xl);
+}
+[data-padding-block='2xl'] {
+  padding-block: var(--move-spacing-2xl);
+}
+[data-padding-block='3xl'] {
+  padding-block: var(--move-spacing-3xl);
+}
+
+[data-padding-inline='none'] {
+  padding-inline: 0;
+}
+[data-padding-inline='xs'] {
+  padding-inline: var(--move-spacing-xs);
+}
+[data-padding-inline='sm'] {
+  padding-inline: var(--move-spacing-sm);
+}
+[data-padding-inline='md'] {
+  padding-inline: var(--move-spacing-md);
+}
+[data-padding-inline='lg'] {
+  padding-inline: var(--move-spacing-lg);
+}
+[data-padding-inline='xl'] {
+  padding-inline: var(--move-spacing-xl);
+}
+[data-padding-inline='2xl'] {
+  padding-inline: var(--move-spacing-2xl);
+}
+[data-padding-inline='3xl'] {
+  padding-inline: var(--move-spacing-3xl);
+}

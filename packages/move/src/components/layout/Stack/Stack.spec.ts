@@ -41,7 +41,7 @@ export const spec = {
       typeRef: 'GapWithXL2',
       moveSpecific: true,
       description:
-        'Padding around the stack. Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.',
+        'Padding around the stack. One token for all sides, or a two-value "block inline" shorthand like CSS (e.g. "md 2xl" — top/bottom md, left/right 2xl). Uses the extended scale (adds 2xl/3xl) since stacks frequently sit at page-level scope.',
     },
     {
       name: 'align',
@@ -115,6 +115,8 @@ export const spec = {
       'data-align',
       'data-justify',
       'data-padding',
+      'data-padding-block',
+      'data-padding-inline',
       'data-wrap',
       'data-collapsed',
       'data-flex',

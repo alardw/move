@@ -94,6 +94,33 @@ describe('Stack', () => {
     });
   });
 
+  // === Padding ===
+  describe('padding', () => {
+    it('sets data-padding for a single token', () => {
+      render(
+        <Stack padding="md" data-testid="stack">
+          Content
+        </Stack>,
+      );
+      const el = screen.getByTestId('stack');
+      expect(el).toHaveAttribute('data-padding', 'md');
+      expect(el).not.toHaveAttribute('data-padding-block');
+      expect(el).not.toHaveAttribute('data-padding-inline');
+    });
+
+    it('splits a two-value "block inline" shorthand into block/inline attrs', () => {
+      render(
+        <Stack padding="md 2xl" data-testid="stack">
+          Content
+        </Stack>,
+      );
+      const el = screen.getByTestId('stack');
+      expect(el).toHaveAttribute('data-padding-block', 'md');
+      expect(el).toHaveAttribute('data-padding-inline', '2xl');
+      expect(el).not.toHaveAttribute('data-padding');
+    });
+  });
+
   // === Direction ===
   describe('direction', () => {
     it('defaults to direction=column', () => {

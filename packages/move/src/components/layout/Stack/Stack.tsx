@@ -6,6 +6,7 @@ import { useAnimations, resolveAnimationsConfig, staggerEnter } from '../../../a
 import type { AnimationTrigger } from '../../../animation';
 import type { SlotPropsMap } from '../../../engine/types';
 import type { Gap, GapWithXL2 } from '../../../shared/types';
+import { directionalAttrs, type Shorthand } from '../../../shared/shorthand';
 import styles from './Stack.module.css';
 
 // ============================================================================
@@ -18,9 +19,9 @@ export type StackDirection = 'row' | 'column';
 export type StackGap = Gap;
 export type StackAlign = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
 export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'evenly';
-/** Re-exported for backwards-compatible imports. Prefer `GapWithXL2`
- *  (the extended spacing scale) from `'move'` directly going forward. */
-export type StackPadding = GapWithXL2;
+/** A single token, or a two-value `"block inline"` shorthand (like CSS), e.g.
+ *  `"md 2xl"` (top/bottom md, left/right 2xl). Uses the extended spacing scale. */
+export type StackPadding = Shorthand<GapWithXL2>;
 export type StackFlex = 1 | 'auto' | 'none';
 /** `true` fills the parent's height (100%); `'screen'` fills the viewport
  *  (100dvh) — for app-shell roots that own the full window height. */
@@ -125,7 +126,7 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
             data-gap={props.gap as string}
             data-align={props.align as string}
             data-justify={props.justify as string}
-            data-padding={props.padding as string | undefined}
+            {...directionalAttrs('padding', props.padding as string | undefined)}
             data-flex={props.flex != null ? String(props.flex) : undefined}
             data-fill={props.fill ? (props.fill === true ? '' : String(props.fill)) : undefined}
             data-wrap={props.wrap ? '' : undefined}
