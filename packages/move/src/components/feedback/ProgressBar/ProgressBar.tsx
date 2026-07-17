@@ -72,6 +72,14 @@ export const ProgressBar = withMoveComponent<
       indicator.style.transform = `translateX(-${100 - percentage}%)`;
     }, [props.value, props.max]);
 
+    // Clamp what Radix sees too, not just the indicator above. Radix rejects an
+    // out-of-range value and falls back to `null` = indeterminate, which drops
+    // aria-valuenow — so an unclamped `value={150}` rendered a visually-full bar that
+    // announced itself as indeterminate. Clamping keeps the visual and the
+    // accessibility tree telling the same story.
+    const clampValue = (value: number | null | undefined, max: number) =>
+      value == null ? value : Math.min(max, Math.max(0, value));
+
     return {
       render() {
         const rootSp = sp('root');
@@ -92,7 +100,7 @@ export const ProgressBar = withMoveComponent<
             {...attrs}
             {...spRest}
             ref={ref}
-            value={props.value as number | null | undefined}
+            value={clampValue(props.value as number | null | undefined, props.max as number)}
             max={props.max as number}
             getValueLabel={
               props.getValueLabel as ((value: number, max: number) => string) | undefined

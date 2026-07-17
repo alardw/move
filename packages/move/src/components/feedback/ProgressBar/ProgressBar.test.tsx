@@ -130,6 +130,10 @@ describe('ProgressBar', () => {
       const { container } = render(<ProgressBar value={150} max={100} />);
       const indicator = container.querySelector('[class*="indicator"]') as HTMLElement;
       expect(indicator.style.transform).toBe('translateX(-0%)');
+      // The clamp must reach the accessibility tree too, not just the transform: an
+      // out-of-range value handed to Radix falls back to indeterminate and drops
+      // aria-valuenow, leaving a full-looking bar that announces no value.
+      expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '100');
     });
 
     it('handles value=0', () => {
