@@ -28,13 +28,25 @@ const real = new Set(
 //   shorthand: C('check', 'spec-drift') / DP('check', 'design-pattern-conformance') / all('check', 'spec-drift')
 const referenced = new Set();
 for (const m of specSrc.matchAll(/\bcheck:\s*'([^']+)'/g)) referenced.add(m[1]);
-for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) referenced.add(m[1]);
+for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g))
+  referenced.add(m[1]);
 
 // Enforced checks that guard a structural/family contract, not one coverage rule.
 const STRUCTURAL = new Set([
-  'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
-  'animation-choreography', 'conformance-docs', 'conformance-spec', 'script-refs',
-  'doc-spec-drift', 'rule-coverage',
+  'family-popup',
+  'family-modal',
+  'family-disclosure',
+  'cross-component-drift',
+  'animation-choreography',
+  'conformance-docs',
+  'conformance-spec',
+  'script-refs',
+  'doc-spec-drift',
+  'rule-coverage',
+  // Guards the WCAG claim↔evidence mapping on /accessibility, which is a different
+  // vocabulary from the coverage rules — criteria, not rules. Same family as
+  // rule-coverage: a meta-check over a mapping, so it answers to no single rule.
+  'wcag-evidence',
 ]);
 
 const errors = [];
@@ -47,21 +59,29 @@ for (const c of referenced) {
 const allScripts = new Set(Object.keys(pkg.scripts));
 for (const m of specSrc.matchAll(/\bscript:\s*'([^']+)'/g)) {
   if (!allScripts.has(m[1])) {
-    errors.push(`ambient tooling references script "${m[1]}" but there is no "${m[1]}" package script`);
+    errors.push(
+      `ambient tooling references script "${m[1]}" but there is no "${m[1]}" package script`,
+    );
   }
 }
 for (const c of real) {
   if (!referenced.has(c) && !STRUCTURAL.has(c)) {
-    errors.push(`check:${c} is enforced but no coverage rule references it (add a rule, or add it to the structural allow-list)`);
+    errors.push(
+      `check:${c} is enforced but no coverage rule references it (add a rule, or add it to the structural allow-list)`,
+    );
   }
 }
 
 if (errors.length) {
   console.error('✗ conformance-spec: the coverage spec is out of sync with the checks');
   for (const e of errors) console.error(`  - ${e}`);
-  console.error('  → reconcile packages/docs/src/pages/ai/conformance-spec.ts with the check:* scripts');
+  console.error(
+    '  → reconcile packages/docs/src/pages/ai/conformance-spec.ts with the check:* scripts',
+  );
   process.exit(1);
 }
 
 const structuralCount = [...real].filter((c) => STRUCTURAL.has(c)).length;
-console.log(`✓ conformance-spec: ${referenced.size} rule-mapped checks + ${structuralCount} structural, all in sync`);
+console.log(
+  `✓ conformance-spec: ${referenced.size} rule-mapped checks + ${structuralCount} structural, all in sync`,
+);

@@ -130,6 +130,12 @@ export const CHECKS: CheckDoc[] = [
       'A component declaring a controlled triad has tests for both modes — the consumer owning the value, and the component owning it.',
   },
   {
+    name: 'wcag-evidence',
+    appliesTo: 'docs',
+    enforces:
+      'Every check a WCAG criterion cites as its evidence is a real, running gate — so an accessibility claim can’t rest on a check that was only ever described.',
+  },
+  {
     name: 'family-popup',
     appliesTo: 'component',
     enforces: 'Popup-family components (Tooltip, Dropdown, …) share one contract — props, ARIA, and animation.',
