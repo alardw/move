@@ -103,6 +103,7 @@ export function isInFamily(specObj, axis, family) {
  * single-panel disclosure's `multipleOpen`) is conformant, not a limitation.
  */
 export function reportFamily({ familyName, requiredFlags, results }) {
+  const VERBOSE = process.argv.includes('--verbose');
   const members = results.filter((r) => r.member);
   console.log(`\n${familyName} family — ${members.length} components.\n`);
 
@@ -134,9 +135,11 @@ export function reportFamily({ familyName, requiredFlags, results }) {
   if (structuralErrors > 0) {
     console.log(`✗ ${structuralErrors} contract error(s) in the ${familyName} family — see above.`);
   } else {
-    let msg = `✓ ${conform} ${familyName} components conform`;
-    if (exempt.length) msg += ` — ${exempt.length} with N/A flags (${exempt.join('; ')})`;
-    console.log(msg + '.');
+    // A conforming component is conforming — an exempt (N/A) flag is not a
+    // caveat, so it stays out of the pass line. `--verbose` surfaces it for
+    // anyone auditing whether an exemption is applied correctly.
+    console.log(`✓ ${conform} ${familyName} components conform.`);
+    if (VERBOSE && exempt.length) console.log(`  exempt: ${exempt.join('; ')}`);
   }
   if (gapFlags > 0) {
     console.log(
