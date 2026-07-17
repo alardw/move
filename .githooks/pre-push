@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+# Pre-push: run the CI gates locally so a red build can't leave your machine.
+# Mirrors .github/workflows/checks.yml — the `move` and `docs` jobs. The
+# `browser` job (Playwright/Chromium) is intentionally left to CI: it needs a
+# matching Chromium download and is too heavy for every push.
+#
+# Skip for a work-in-progress push with:  git push --no-verify
+
+run() {
+  desc="$1"
+  shift
+  if ! "$@"; then
+    echo "✗ pre-push failed: $desc"
+    echo "  fix it, or push a work-in-progress branch with: git push --no-verify"
+    exit 1
+  fi
+}
+
+echo "▶ pre-push: Move — typecheck · lint · format · check:all · tests"
+run "move typecheck" npm run typecheck --workspace move --silent
+run "move lint" npm run lint --workspace move --silent
+run "move format:check" npm run format:check --workspace move --silent
+run "move check:all" npm run check:all --workspace move --silent
+run "move tests" npm run test --workspace move --silent
+
+echo "▶ pre-push: Docs — typecheck · conformance ratchet · a11y ratchet"
+run "docs typecheck" npm run typecheck --workspace docs --silent
+run "docs conformance" npm run check:conformance --workspace docs --silent
+run "docs a11y" npm run test:a11y --workspace docs --silent
+
+echo "✓ pre-push: all CI gates green — safe to push"
