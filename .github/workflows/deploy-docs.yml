@@ -15,17 +15,19 @@ permissions:
   pages: write
   id-token: write
 
-# Let an in-progress deploy finish, but only keep the latest queued one.
+# Only the latest docs should be live, so a newer push cancels an in-flight deploy
+# rather than queuing behind it. Queued deploys piling up under this group is what
+# left multiple `github-pages` artifacts for deploy-pages to trip over.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm
