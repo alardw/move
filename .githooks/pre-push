@@ -23,9 +23,16 @@ hook_start=$(date +%s)
 # which is the useful half of "where is it up to". Purely a tail: no gate-specific
 # parsing, so a tool changing its output degrades the hint rather than breaking it.
 # Fast gates just show nothing here, which is correct — they have nothing to report.
+
+# A literal ESC byte. BSD/macOS sed does not understand \033, so the pattern below has
+# to carry the real character: with \033 the codes survive, the hint emits an unreset
+# colour that bleeds into every line after it, and cut counts the escape bytes toward
+# the width and truncates mid-sequence.
+ESC=$(printf '\033')
+
 last_subitem() {
   tail -n 20 "$log" 2>/dev/null |
-    sed 's/\033\[[0-9;]*[A-Za-z]//g' | # vitest colours every line
+    sed "s/${ESC}\[[0-9;]*[A-Za-z]//g" | # vitest colours every line
     grep -v '^[[:space:]]*$' |
     tail -n 1 |
     cut -c1-"$1"
