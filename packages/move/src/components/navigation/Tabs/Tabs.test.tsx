@@ -1,5 +1,5 @@
 // Generated from Tabs.spec.ts
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Tabs } from './Tabs';
@@ -177,7 +177,9 @@ describe('Tabs', () => {
       const user = userEvent.setup();
       renderTabs();
       const tab1 = screen.getByRole('tab', { name: 'Tab 1' });
-      tab1.focus();
+      // Raw .focus() drives Radix's roving-focus manager, which sets state — act() keeps
+      // that inside the render cycle.
+      act(() => tab1.focus());
       await user.keyboard('{ArrowRight}');
       expect(screen.getByRole('tab', { name: 'Tab 2' })).toHaveFocus();
     });

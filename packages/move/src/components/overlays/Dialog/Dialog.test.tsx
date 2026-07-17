@@ -151,6 +151,7 @@ describe('Dialog', () => {
             <Dialog.Overlay />
             <Dialog.Content>
               <Dialog.Title>Title</Dialog.Title>
+              <Dialog.Description>Description</Dialog.Description>
               <Dialog.Close data-testid="close">X</Dialog.Close>
             </Dialog.Content>
           </Dialog.Portal>
@@ -167,6 +168,7 @@ describe('Dialog', () => {
             <Dialog.Overlay />
             <Dialog.Content>
               <Dialog.Title>Title</Dialog.Title>
+              <Dialog.Description>Description</Dialog.Description>
               <Dialog.Close data-testid="close">X</Dialog.Close>
             </Dialog.Content>
           </Dialog.Portal>

@@ -62,12 +62,19 @@ vi.mock('react-dom', async () => {
 import { Toast, toast } from './Toast';
 import { resetStore } from './store';
 
+// resetStore() emits to the store's subscribers, and ToastViewport is still mounted when
+// this afterEach runs (it precedes RTL's auto-cleanup), so the emit lands as a React state
+// update — act() keeps it inside the test's render cycle instead of warning.
 beforeEach(() => {
-  resetStore();
+  act(() => {
+    resetStore();
+  });
 });
 
 afterEach(() => {
-  resetStore();
+  act(() => {
+    resetStore();
+  });
 });
 
 describe('Toast', () => {

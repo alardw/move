@@ -1,5 +1,5 @@
 // Generated from RadioGroup.spec.ts
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { RadioGroup } from './RadioGroup';
@@ -139,7 +139,9 @@ describe('RadioGroup', () => {
     it('ArrowDown moves focus to next item', async () => {
       const user = userEvent.setup();
       renderGroup({ defaultValue: 'a' });
-      screen.getAllByRole('radio')[0].focus();
+      // Raw .focus() drives Radix's roving-focus manager, which sets state — act() keeps
+      // that inside the render cycle.
+      act(() => screen.getAllByRole('radio')[0].focus());
       await user.keyboard('{ArrowDown}');
       expect(screen.getAllByRole('radio')[1]).toHaveFocus();
     });
@@ -148,7 +150,7 @@ describe('RadioGroup', () => {
       const user = userEvent.setup();
       const onChange = vi.fn();
       renderGroup({ onValueChange: onChange });
-      screen.getAllByRole('radio')[0].focus();
+      act(() => screen.getAllByRole('radio')[0].focus());
       await user.keyboard(' ');
       expect(onChange).toHaveBeenCalledWith('a');
     });
