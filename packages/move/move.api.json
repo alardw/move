@@ -11249,6 +11249,11 @@
           "description": "Controlled open state"
         },
         {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Initial open state (uncontrolled) — opens on mount, hover-driven thereafter"
+        },
+        {
           "name": "onOpenChange",
           "type": "(open: boolean) => void",
           "description": "Called when open state changes"
