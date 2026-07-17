@@ -24,7 +24,9 @@
 }
 
 .label {
-  padding: var(--move-spacing-xs) var(--move-spacing-md);
+  /* No top padding — align "On this page" with the breadcrumb / collapse button
+     row (the shell's content top padding sets that line). */
+  padding: 0 var(--move-spacing-md) var(--move-spacing-xs);
   color: var(--move-fg-subtle);
   font-size: var(--move-size-xs);
   font-weight: var(--move-weight-semibold);

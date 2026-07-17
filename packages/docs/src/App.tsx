@@ -316,7 +316,7 @@ function App() {
         <AppSidebar />
         <ScrollArea.Root>
           <ScrollArea.Content ref={contentRef}>
-            <Stack padding="2xl">
+            <Stack padding="xl 2xl">
               <Sidebar.Trigger icon="menu" visibility="mobile" />
               <main id="main" tabIndex={-1}>
               <Routes>
