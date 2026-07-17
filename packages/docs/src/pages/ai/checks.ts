@@ -136,6 +136,12 @@ export const CHECKS: CheckDoc[] = [
       'Every colour pair in the shipped light + dark themes meets WCAG 2.2 AA once resolved — proving the defineTheme clamp holds end to end, not just for the tokens it computes.',
   },
   {
+    name: 'api-surface',
+    appliesTo: 'component',
+    enforces:
+      'The generated API surface (move.api.json + llms.txt) matches the specs — so any prop added, removed, or retyped lands as a reviewed diff, never a silent drift.',
+  },
+  {
     name: 'wcag-evidence',
     appliesTo: 'docs',
     enforces:

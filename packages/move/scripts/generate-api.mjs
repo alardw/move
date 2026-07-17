@@ -16,6 +16,12 @@
  *
  * Regenerated in `build` and shipped via package.json `files`. Do not hand-edit
  * the outputs.
+ *
+ * `--check` (check:api-surface) regenerates in memory and fails if the committed
+ * outputs differ — the apiSurface-1 gate. Same logic as the write path, so it can't
+ * drift from the generator it guards.
+ *
+ * @enforces apiSurface-1
  */
 
 import { readdirSync, statSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -28,18 +34,39 @@ const ROOT = join(HERE, '..');
 const COMPONENTS_DIR = join(ROOT, 'src', 'components');
 
 // ── AST helpers ────────────────────────────────────────────────────────────
-const parse = (f) => ts.createSourceFile(f, readFileSync(f, 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
-const walk = (n, v) => { v(n); ts.forEachChild(n, (c) => walk(c, v)); };
-const asString = (n) => (n && (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n)) ? n.text : null);
-const unwrap = (n) => { while (n && (ts.isAsExpression(n) || ts.isParenthesizedExpression(n) || ts.isSatisfiesExpression(n))) n = n.expression; return n; };
+const parse = (f) =>
+  ts.createSourceFile(f, readFileSync(f, 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.TSX);
+const walk = (n, v) => {
+  v(n);
+  ts.forEachChild(n, (c) => walk(c, v));
+};
+const asString = (n) =>
+  n && (ts.isStringLiteral(n) || ts.isNoSubstitutionTemplateLiteral(n)) ? n.text : null;
+const unwrap = (n) => {
+  while (
+    n &&
+    (ts.isAsExpression(n) || ts.isParenthesizedExpression(n) || ts.isSatisfiesExpression(n))
+  )
+    n = n.expression;
+  return n;
+};
 function getProp(obj, name) {
   if (!obj || !ts.isObjectLiteralExpression(obj)) return null;
   for (const p of obj.properties) {
-    if (ts.isPropertyAssignment(p) && ((ts.isIdentifier(p.name) && p.name.text === name) || asString(p.name) === name)) return p.initializer;
+    if (
+      ts.isPropertyAssignment(p) &&
+      ((ts.isIdentifier(p.name) && p.name.text === name) || asString(p.name) === name)
+    )
+      return p.initializer;
   }
   return null;
 }
-const stripQuotes = (s) => (s == null ? null : String(s).trim().replace(/^['"`]|['"`]$/g, ''));
+const stripQuotes = (s) =>
+  s == null
+    ? null
+    : String(s)
+        .trim()
+        .replace(/^['"`]|['"`]$/g, '');
 
 /** Parse a string-literal union like "'a' | 'b' | 'c'" → ['a','b','c'], else null. */
 function parseUnion(type) {
@@ -58,9 +85,15 @@ function loadCanonicalTypes() {
   const colorFile = join(ROOT, 'src', 'shared', 'color.ts');
   if (existsSync(colorFile)) {
     walk(parse(colorFile), (n) => {
-      if (ts.isVariableDeclaration(n) && ts.isIdentifier(n.name) && n.name.text === 'MOVE_COLORS' && n.initializer) {
+      if (
+        ts.isVariableDeclaration(n) &&
+        ts.isIdentifier(n.name) &&
+        n.name.text === 'MOVE_COLORS' &&
+        n.initializer
+      ) {
         const arr = unwrap(n.initializer);
-        if (ts.isArrayLiteralExpression(arr)) moveColors = arr.elements.map(asString).filter(Boolean);
+        if (ts.isArrayLiteralExpression(arr))
+          moveColors = arr.elements.map(asString).filter(Boolean);
       }
     });
   }
@@ -68,14 +101,20 @@ function loadCanonicalTypes() {
   const regFile = join(ROOT, 'src', 'shared', 'typeRegistry.ts');
   if (existsSync(regFile)) {
     walk(parse(regFile), (n) => {
-      if (ts.isVariableDeclaration(n) && ts.isIdentifier(n.name) && n.name.text === 'CANONICAL_TYPES' && n.initializer) {
+      if (
+        ts.isVariableDeclaration(n) &&
+        ts.isIdentifier(n.name) &&
+        n.name.text === 'CANONICAL_TYPES' &&
+        n.initializer
+      ) {
         const obj = unwrap(n.initializer);
         if (ts.isObjectLiteralExpression(obj)) {
           for (const p of obj.properties) {
             if (!ts.isPropertyAssignment(p)) continue;
             const key = ts.isIdentifier(p.name) ? p.name.text : asString(p.name);
             const init = unwrap(p.initializer);
-            if (ts.isArrayLiteralExpression(init)) map[key] = init.elements.map(asString).filter(Boolean);
+            if (ts.isArrayLiteralExpression(init))
+              map[key] = init.elements.map(asString).filter(Boolean);
             else if (ts.isIdentifier(init) && init.text === 'MOVE_COLORS') map[key] = moveColors;
           }
         }
@@ -121,7 +160,12 @@ function extractComponent(specFile, category) {
   let specObj = null;
   walk(sf, (node) => {
     if (specObj) return;
-    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.name.text === 'spec' && node.initializer) {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.name.text === 'spec' &&
+      node.initializer
+    ) {
       const init = unwrap(node.initializer);
       if (ts.isObjectLiteralExpression(init)) specObj = init;
     }
@@ -141,7 +185,8 @@ function extractComponent(specFile, category) {
       const subName = asString(getProp(el, 'name'));
       if (!subName) continue;
       const subProps = extractPropsArray(getProp(el, 'props'));
-      if (subName !== 'Root' || subProps.length) subComponents.push({ name: subName, props: subProps });
+      if (subName !== 'Root' || subProps.length)
+        subComponents.push({ name: subName, props: subProps });
     }
   }
 
@@ -167,19 +212,37 @@ components.sort((a, b) => a.name.localeCompare(b.name));
 
 const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
 
+// `--check` (apiSurface-1): don't write — compare what we'd generate against what's
+// committed, and fail on any difference. Same generation logic either way, so the check
+// can't drift from the generator. A drifted move.api.json (which shipped this session
+// with nothing to catch it) means the public API changed without the generated surface
+// being regenerated + committed — i.e. an unreviewed API change.
+const CHECK = process.argv.includes('--check');
+const drifted = [];
+const emit = (relPath, content) => {
+  const abs = join(ROOT, relPath);
+  if (!CHECK) {
+    writeFileSync(abs, content);
+    return;
+  }
+  const current = existsSync(abs) ? readFileSync(abs, 'utf8') : null;
+  if (current !== content) drifted.push(relPath);
+};
+
 // ── Emit move.api.json ──────────────────────────────────────────────────────
 const apiJson = {
   name: pkg.name,
   version: pkg.version,
-  description: 'Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.',
+  description:
+    'Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.',
   componentCount: components.length,
   components,
 };
-writeFileSync(join(ROOT, 'move.api.json'), JSON.stringify(apiJson, null, 2) + '\n');
+emit('move.api.json', JSON.stringify(apiJson, null, 2) + '\n');
 
 // ── Emit llms.txt ───────────────────────────────────────────────────────────
 function propLine(p) {
-  const val = p.values ? p.values.map((v) => `'${v}'`).join(' | ') : p.type ?? 'unknown';
+  const val = p.values ? p.values.map((v) => `'${v}'`).join(' | ') : (p.type ?? 'unknown');
   const dft = p.default !== undefined ? ` (default: ${p.default})` : '';
   const desc = p.description ? ` — ${p.description}` : '';
   return `- ${p.name}: ${val}${dft}${desc}`;
@@ -194,7 +257,9 @@ const lines = [];
 lines.push(`# ${pkg.name} — Component API`);
 lines.push('');
 lines.push(`> Machine-readable API surface, generated from *.spec.ts. One section per component:`);
-lines.push(`> props, allowed values, defaults, and an example. Import components from '${pkg.name}'.`);
+lines.push(
+  `> props, allowed values, defaults, and an example. Import components from '${pkg.name}'.`,
+);
 lines.push(`> ${components.length} components. Version ${pkg.version}.`);
 lines.push('');
 for (const c of components) {
@@ -212,6 +277,21 @@ for (const c of components) {
   lines.push(`Example: ${example(c)}`);
   lines.push('');
 }
-writeFileSync(join(ROOT, 'llms.txt'), lines.join('\n'));
+emit('llms.txt', lines.join('\n'));
+
+if (CHECK) {
+  if (drifted.length) {
+    console.error('  ✗ Generated API surface is out of date:');
+    for (const f of drifted) console.error(`      ${f}`);
+    console.error('\n  apiSurface-1: the public API changed but the generated surface was not');
+    console.error('  regenerated + committed. Run `npm run gen:api` and commit, so the change is');
+    console.error('  a reviewed diff rather than a silent drift.');
+    process.exit(1);
+  }
+  console.log(
+    `✓ apiSurface: move.api.json + llms.txt match the specs (${components.length} components).`,
+  );
+  process.exit(0);
+}
 
 console.log(`✓ generate-api: ${components.length} components → move.api.json + llms.txt`);

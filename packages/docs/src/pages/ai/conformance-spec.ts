@@ -212,7 +212,11 @@ const RULES: RuleDef[] = [
   { id: 'behavior-3', group: 'behavior', rule: 'Works controlled and uncontrolled', why: 'The spec declares a controlled triad; both modes must work or half the API is broken.', enforcement: { component: { status: 'check', check: 'controlled-modes' }, composition: { status: 'gap' } } },
 
   // Public API surface (component / libraryExport)
-  { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('gap') },
+  // Enforced by the generated-surface diff: move.api.json + llms.txt are generated from
+  // the specs, so a prop added/removed/retyped changes them. check:api-surface fails if
+  // they drift from what's committed — so any API change has to be regenerated and lands
+  // as a reviewed diff, never silently. (It shipped drifted once with nothing to catch it.)
+  { id: 'apiSurface-1', group: 'apiSurface', rule: 'No unintended public-API change', why: 'A removed/renamed prop or changed type is a breaking change; the diff must be intentional and reviewed.', enforcement: C('check', 'api-surface') },
 
   // Documentation & discoverability (component / published)
   { id: 'docs-1', group: 'docs', rule: 'Has a doc page with live samples', why: 'An undocumented published artifact is effectively invisible to consumers.', enforcement: { component: { status: 'check', check: 'component-document-drift' } } },
