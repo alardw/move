@@ -172,12 +172,12 @@ const PERCEIVABLE: Criterion[] = [
     name: 'Contrast (Minimum)',
     level: 'AA',
     support: 'supports',
-    evidence: [],
+    evidence: ['theme-contrast'],
     note: {
       included:
         'Every theme — built-in light and dark, or one you generate — guarantees its text contrast: body text 7:1, secondary 5.5:1, and the faintest text and links 4.5:1. No text tier ships below AA.',
       yours:
-        'Colours you override by hand are your call — run the contrast check or the Theme Builder to grade them.',
+        'Colours you override by hand are your call — grade them in the Theme Builder, or call auditTheme on your resolved theme (both use the same contrast audit Move runs on its own themes).',
     },
   },
   {
@@ -257,7 +257,7 @@ const PERCEIVABLE: Criterion[] = [
     name: 'Non-text Contrast',
     level: 'AA',
     support: 'supports',
-    evidence: [],
+    evidence: ['theme-contrast'],
     note: {
       included:
         'Control edges — input, checkbox, select, radio — hold 3:1 against whatever surface they sit on, stepping up automatically on raised surfaces so the edge stays clear without turning harsh. The filled variant keeps that edge (a heavier fill, never borderless). The focus ring holds 3:1 too, and the Switch is read by its thumb — 7–19:1 against the track and page.',

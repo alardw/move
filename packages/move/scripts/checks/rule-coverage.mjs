@@ -56,7 +56,10 @@ for (const line of specSrc.split('\n')) {
   const rid = idM[1];
   const checks = new Set();
   for (const m of line.matchAll(/\bcheck:\s*'([^']+)'/g)) checks.add(m[1]);
-  for (const m of line.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g)) checks.add(m[1]);
+  // `renders3` is an alias for `all` in the spec — match it too, or a rule using the
+  // semantic name reads as unenforced and its @enforces annotation looks unmatched.
+  for (const m of line.matchAll(/\b(?:C|DP|all|renders3)\(\s*'check'\s*,\s*'([^']+)'\)/g))
+    checks.add(m[1]);
   for (const c of checks) {
     if (!checkToRules.has(c)) checkToRules.set(c, new Set());
     checkToRules.get(c).add(rid);
@@ -89,7 +92,9 @@ for (const name of CHECKS) {
   // `@enforces none` — the check owns no coverage rule (structural/meta).
   if (/\bnone\b/.test(body) && declared.size === 0) {
     if (specSet.size) {
-      errors.push(`${name}: declares "@enforces none" but the spec maps rule(s) to it: ${[...specSet].sort().join(', ')}`);
+      errors.push(
+        `${name}: declares "@enforces none" but the spec maps rule(s) to it: ${[...specSet].sort().join(', ')}`,
+      );
     } else {
       verified++;
     }
@@ -99,18 +104,26 @@ for (const name of CHECKS) {
   const declaredNotInSpec = [...declared].filter((r) => !specSet.has(r)).sort();
   const specNotDeclared = [...specSet].filter((r) => !declared.has(r)).sort();
   if (declaredNotInSpec.length) {
-    errors.push(`${name}: @enforces lists [${declaredNotInSpec.join(', ')}] that the spec does not map to this check`);
+    errors.push(
+      `${name}: @enforces lists [${declaredNotInSpec.join(', ')}] that the spec does not map to this check`,
+    );
   }
   if (specNotDeclared.length) {
-    errors.push(`${name}: the spec maps [${specNotDeclared.join(', ')}] to this check, but @enforces omits ${specNotDeclared.length > 1 ? 'them' : 'it'}`);
+    errors.push(
+      `${name}: the spec maps [${specNotDeclared.join(', ')}] to this check, but @enforces omits ${specNotDeclared.length > 1 ? 'them' : 'it'}`,
+    );
   }
   if (!declaredNotInSpec.length && !specNotDeclared.length) verified++;
 }
 
 for (const n of todo.sort())
-  errors.push(`${n}: its script file has no @enforces annotation — add "@enforces <rule-ids>" (or "@enforces none" for a structural/meta check)`);
+  errors.push(
+    `${n}: its script file has no @enforces annotation — add "@enforces <rule-ids>" (or "@enforces none" for a structural/meta check)`,
+  );
 for (const n of unresolved.sort())
-  errors.push(`${n}: could not resolve a single script file from its package.json command to look for @enforces`);
+  errors.push(
+    `${n}: could not resolve a single script file from its package.json command to look for @enforces`,
+  );
 
 if (errors.length) {
   console.error(`✗ rule-coverage: ${errors.length} file→rule issue(s).\n`);

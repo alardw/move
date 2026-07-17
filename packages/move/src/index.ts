@@ -134,6 +134,8 @@ export {
   describeThemes,
   radiusScale,
   auditTheme,
+  parsePrimitives,
+  themeColorOf,
   hexToOklch,
   hexToLinear,
   oklchHex,

@@ -130,6 +130,12 @@ export const CHECKS: CheckDoc[] = [
       'A component declaring a controlled triad has tests for both modes — the consumer owning the value, and the component owning it.',
   },
   {
+    name: 'theme-contrast',
+    appliesTo: 'docs',
+    enforces:
+      'Every colour pair in the shipped light + dark themes meets WCAG 2.2 AA once resolved — proving the defineTheme clamp holds end to end, not just for the tokens it computes.',
+  },
+  {
     name: 'wcag-evidence',
     appliesTo: 'docs',
     enforces:
