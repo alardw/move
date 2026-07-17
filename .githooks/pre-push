@@ -18,6 +18,19 @@ hook_start=$(date +%s)
 # Piped or redirected (CI, `git push 2>&1 | tee log`), \r and the erase sequence would
 # land as literal junk, so there the line is printed once, after the fact.
 
+# The aggregates (check:all ~30 checks, the suite 79 files) each log a line per
+# sub-item as it finishes, so the tail of the log is the last thing that completed —
+# which is the useful half of "where is it up to". Purely a tail: no gate-specific
+# parsing, so a tool changing its output degrades the hint rather than breaking it.
+# Fast gates just show nothing here, which is correct — they have nothing to report.
+last_subitem() {
+  tail -n 20 "$log" 2>/dev/null |
+    sed 's/\033\[[0-9;]*[A-Za-z]//g' | # vitest colours every line
+    grep -v '^[[:space:]]*$' |
+    tail -n 1 |
+    cut -c1-"$1"
+}
+
 # Live path: run the gate in the background so the counter can tick while it works.
 # Output has to go to a file — $(...) would block until exit, which is the thing we're
 # trying to avoid. Returns the gate's exit status; leaves its output in "$log".
@@ -27,13 +40,28 @@ run_ticking() {
   "$@" >"$log" 2>&1 &
   pid=$!
   last=-1
+  # Truncate the whole line to the terminal width: if it wraps, the \r redraw lands on
+  # the wrong row and the display smears down the screen instead of updating in place.
+  cols=$(tput cols 2>/dev/null || echo 80)
   while kill -0 "$pid" 2>/dev/null; do
     now=$(($(date +%s) - start))
     # Poll faster than the redraw so the loop exits promptly when the gate finishes
     # (a flat `sleep 1` would add up to a second per gate), but only repaint when the
     # displayed second actually changes.
     if [ "$now" -ne "$last" ]; then
-      printf '\r\033[K  ┄ %s… %ss' "$desc" "$now"
+      # ${desc} must be braced: unbraced, this sh eats the leading byte of the
+      # following multibyte "…" as part of the variable name, silently blanking the
+      # gate name and leaving the ellipsis's orphaned tail bytes on screen.
+      head="  ┄ ${desc}… ${now}s"
+      # 3 = the " · " joiner; keep at least a little room before bothering.
+      room=$((cols - ${#head} - 3))
+      sub=''
+      if [ "$room" -gt 12 ]; then sub=$(last_subitem "$room"); fi
+      if [ -n "$sub" ]; then
+        printf '\r\033[K%s · %s' "$head" "$sub"
+      else
+        printf '\r\033[K%s' "$head"
+      fi
       last=$now
     fi
     sleep 0.1
