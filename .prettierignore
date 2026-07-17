@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+coverage
+
+# Hand-authored data tables — one record per line for readable diffs and grep.
+# printWidth would wrap them into an unscannable form, and check:conformance-spec
+# parses them. Format is otherwise the shared root .prettierrc.json.
+packages/docs/src/pages/ai/conformance-spec.ts
+packages/docs/src/pages/ai/checks.ts
