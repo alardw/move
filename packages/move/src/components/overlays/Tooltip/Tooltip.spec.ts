@@ -19,9 +19,12 @@ export const spec = {
   },
   behavior: {
     popup: {
-      // Tooltip closes when the trigger loses hover/focus, not on
-      // outside click or escape — those flags don't apply. Same with
-      // scroll/resize, which keep the tooltip pinned via Radix.
+      // Dismiss is delegated to Radix Tooltip, which owns Escape + hover/focus
+      // blur (WCAG 1.4.13) and keeps the tooltip pinned on scroll/resize. Move's
+      // own closeOn* mechanism isn't the one driving it, so the flags read false
+      // — but that's correct-by-design, not a gap. `dismiss: 'delegated'` tells
+      // the family check to treat it as conformant, not a limitation.
+      dismiss: 'delegated',
       closeOnEscape: false,
       closeOnOutsideClick: false,
       closeOnScroll: false,

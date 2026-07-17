@@ -14,9 +14,13 @@
  *
  * What this catches today:
  *   - A popup component missing the family declaration → drift.
- *   - A flag that's `false` → either a known limitation (Tooltip's
- *     pinned positioning) or an unfixed bug (Autocomplete on scroll).
- *     Either way, the gap is visible in the report instead of buried.
+ *   - A dismiss flag `false` on a SELF-MANAGED popup → a known limitation or
+ *     an unfixed bug, reported in detail so it isn't buried.
+ *
+ * A component that delegates dismiss to another owner
+ * (`behavior.popup.dismiss: 'delegated'`, e.g. Tooltip → Radix, which owns
+ * Escape + blur) is conformant, not flagged: its closeOn* flags are N/A, not a
+ * gap. The report details only what's bad and summarizes what's good.
  *
  * Future:
  *   - Runtime Playwright pass that opens each popup, fires each event,
@@ -155,8 +159,13 @@ function check(component) {
   // 2. behavior.popup with all four flags
   const behavior = getProp(specObj, 'behavior');
   const popup = getProp(behavior, 'popup');
+  let delegated = false;
   if (!popup) {
     errors.push('missing `behavior.popup` block — required for popup-anchored components');
+  } else if (asString(getProp(popup, 'dismiss')) === 'delegated') {
+    // Dismiss delegated to another owner (e.g. Radix Tooltip) — the four Move
+    // closeOn* flags are N/A here, so don't require or grade them.
+    delegated = true;
   } else {
     for (const flag of REQUIRED_POPUP_FLAGS) {
       const v = asBool(getProp(popup, flag));
@@ -185,7 +194,7 @@ function check(component) {
     if (!subNames.includes('Content')) errors.push('missing `Content` sub-component');
   }
 
-  return { name: component.name, member: true, errors, flags };
+  return { name: component.name, member: true, errors, flags, delegated };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -196,30 +205,38 @@ const components = listComponents();
 const results = components.map(check);
 const popupComponents = results.filter((r) => r.member);
 
-let totalErrors = 0;
-let weakFlags = 0;
+console.log(`\nPopup family — ${popupComponents.length} components.\n`);
 
-console.log(`\nPopup family — ${popupComponents.length} components declaring popup-anchored.\n`);
+let structuralErrors = 0;
+let limitationFlags = 0;
+let selfManaged = 0;
+const delegated = [];
 
+// Report only what's BAD in detail (structural errors + false flags on a
+// self-managed popup); everything GOOD (a complete self-managed contract, or a
+// component that delegates dismiss to another owner) is rolled into the summary.
 for (const r of popupComponents) {
-  const flagSummary = REQUIRED_POPUP_FLAGS
-    .map((f) => {
-      const v = r.flags[f];
-      if (v === undefined) return `${f}=?`;
-      if (v) return `${f}=✓`;
-      weakFlags++;
-      return `${f}=✗`;
-    })
-    .join('  ');
+  const falseFlags = REQUIRED_POPUP_FLAGS.filter((f) => r.flags[f] === false);
+  const problem = r.errors.length > 0 || falseFlags.length > 0;
 
-  if (r.errors.length === 0) {
-    console.log(`  ${r.name.padEnd(14)} ${flagSummary}`);
-  } else {
-    console.log(`\n  ${r.name}`);
-    console.log(`    ${flagSummary}`);
-    for (const e of r.errors) console.log(`    ✗ ${e}`);
-    totalErrors += r.errors.length;
+  if (r.delegated) delegated.push(r.name);
+  else if (!problem) selfManaged++;
+
+  if (VERBOSE && !problem) {
+    console.log(`  ${r.name.padEnd(14)} ✓ ${r.delegated ? 'delegated (dismiss owned elsewhere)' : 'self-managed'}`);
   }
+  if (!problem) continue;
+
+  console.log(`  ${r.name}`);
+  for (const e of r.errors) {
+    console.log(`    ✗ ${e}`);
+    structuralErrors++;
+  }
+  for (const f of falseFlags) {
+    console.log(`    · ${f} declared false — known limitation or unfixed bug`);
+    limitationFlags++;
+  }
+  console.log('');
 }
 
 if (VERBOSE) {
@@ -227,14 +244,15 @@ if (VERBOSE) {
   console.log(`\n  (${nonMember.length} components are not popup-anchored — skipped)`);
 }
 
-console.log('');
-if (totalErrors > 0) {
-  console.log(`✗ ${totalErrors} error(s) across ${popupComponents.length} popup components.`);
+if (structuralErrors > 0) {
+  console.log(`✗ ${structuralErrors} contract error(s) in the popup family — see above.`);
 } else {
-  console.log(`✓ ${popupComponents.length} popup components declare a complete contract.`);
+  const parts = [`${selfManaged} self-managed`];
+  if (delegated.length) parts.push(`${delegated.length} delegated (${delegated.join(', ')})`);
+  console.log(`✓ ${selfManaged + delegated.length} popup components conform — ${parts.join(', ')}.`);
 }
-if (weakFlags > 0) {
-  console.log(`· ${weakFlags} flag(s) declared as false — known limitations or unfixed bugs.`);
+if (limitationFlags > 0) {
+  console.log(`· ${limitationFlags} dismiss flag(s) declared false on self-managed popups (above) — known limitations or unfixed bugs.`);
 }
 
-process.exit(totalErrors > 0 ? 1 : 0);
+process.exit(structuralErrors > 0 ? 1 : 0);
