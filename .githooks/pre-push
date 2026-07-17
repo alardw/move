@@ -1,8 +1,9 @@
 #!/usr/bin/env sh
-# Pre-push: run the CI gates locally so a red build can't leave your machine.
-# Mirrors .github/workflows/checks.yml — the `move` and `docs` jobs. The
-# `browser` job (Playwright/Chromium) is intentionally left to CI: it needs a
-# matching Chromium download and is too heavy for every push.
+# Pre-push: run the fast, deterministic CI gates locally so the common breakage
+# (type errors, spec/conformance drift, formatting, failing unit tests) can't
+# leave your machine red. The slow ratchets — docs a11y (axe over every sample,
+# ~60s) and the Playwright browser invariants — are left to CI, which runs them
+# once per push/PR rather than blocking every local push.
 #
 # Skip for a work-in-progress push with:  git push --no-verify
 
@@ -18,14 +19,13 @@ run() {
 
 echo "▶ pre-push: Move — typecheck · lint · format · check:all · tests"
 run "move typecheck" npm run typecheck --workspace move --silent
-run "move lint" npm run lint --workspace move --silent
+run "move lint" npm run lint --workspace move --silent -- --quiet
 run "move format:check" npm run format:check --workspace move --silent
 run "move check:all" npm run check:all --workspace move --silent
 run "move tests" npm run test --workspace move --silent
 
-echo "▶ pre-push: Docs — typecheck · conformance ratchet · a11y ratchet"
+echo "▶ pre-push: Docs — typecheck · conformance ratchet"
 run "docs typecheck" npm run typecheck --workspace docs --silent
 run "docs conformance" npm run check:conformance --workspace docs --silent
-run "docs a11y" npm run test:a11y --workspace docs --silent
 
-echo "✓ pre-push: all CI gates green — safe to push"
+echo "✓ pre-push: CI gates green (a11y + browser run in CI) — safe to push"
