@@ -193,6 +193,7 @@ const RULES: RuleDef[] = [
   { id: 'a11y-2', group: 'a11y', rule: 'Keyboard-operable; focus visible and ordered', why: 'Keyboard-only and screen-reader users can’t use what they can’t reach or see focused.', enforcement: renders3('gap') },
   { id: 'a11y-3', group: 'a11y', rule: 'Text/UI contrast meets WCAG AA', why: 'Low contrast fails AA and is unreadable for low-vision users.', enforcement: renders3('gap') },
   { id: 'a11y-4', group: 'a11y', rule: 'No aria-label over visible children (Label-in-Name)', why: 'A control that sets aria-label while rendering its children gives screen-reader/voice users a different name than sighted users see (WCAG 2.5.3).', enforcement: C('check', 'aria-label-name') },
+  { id: 'a11y-5', group: 'a11y', rule: 'Composed Select.Trigger carries an accessible name', why: 'role="combobox" forbids name-from-content, so a Select.Trigger composed inside another component with no aria-label/labelledby is announced as an unnamed control (WCAG 4.1.2).', enforcement: C('check', 'combobox-name') },
 
   // Behavior & interaction (all rendered)
   { id: 'behavior-1', group: 'behavior', rule: 'Implements the declared keyboard pattern', why: 'The spec declares the pattern (roving, linear, typeahead); the component must actually wire those keys.', enforcement: renders3('gap') },

@@ -163,6 +163,11 @@ export const CHECKS: CheckDoc[] = [
     enforces: 'No native button/link sets aria-label while rendering its children — visible text and accessible name must not diverge (WCAG 2.5.3 Label-in-Name).',
   },
   {
+    name: 'combobox-name',
+    appliesTo: 'component',
+    enforces: 'Every `<Select.Trigger>` composed inside another component carries an aria-label/aria-labelledby — role="combobox" forbids name-from-content, so the visible text inside gives no accessible name (WCAG 4.1.2 Name, Role, Value).',
+  },
+  {
     name: 'integration-points',
     appliesTo: 'component',
     enforces: "Every spec integration point resolves — its contract is exported from the public barrel and any fixture/sample exists, so the docs Integrations panel can't dangle.",
