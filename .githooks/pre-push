@@ -19,10 +19,16 @@ hook_start=$(date +%s)
 # land as literal junk, so there the line is printed once, after the fact.
 
 # The aggregates (check:all ~30 checks, the suite 79 files) each log a line per
-# sub-item as it finishes, so the tail of the log is the last thing that completed —
-# which is the useful half of "where is it up to". Purely a tail: no gate-specific
-# parsing, so a tool changing its output degrades the hint rather than breaking it.
-# Fast gates just show nothing here, which is correct — they have nothing to report.
+# sub-item as it finishes, so the log's tail says where the gate is up to. Echoing that
+# line raw is useless though — it's as often a summary ("0 error(s), 0 migration
+# candidate(s)") or a half-sentence as it is a name. So pull out just the item's name:
+#
+#   ✓ data-attrs: 72 variant/size selector group(s)…   ->  data-attrs
+#   ✓ src/components/forms/Select/Select.test.tsx (27) ->  Select
+#
+# That is two format assumptions, which is the price of a useful hint over a noisy one.
+# They fail safe: no match means no hint, and the counter carries on alone. Fast gates
+# show nothing here, which is right — they have nothing to report.
 
 # A literal ESC byte. BSD/macOS sed does not understand \033, so the pattern below has
 # to carry the real character: with \033 the codes survive, the hint emits an unreset
@@ -31,9 +37,19 @@ hook_start=$(date +%s)
 ESC=$(printf '\033')
 
 last_subitem() {
-  tail -n 20 "$log" 2>/dev/null |
+  tail -n 200 "$log" 2>/dev/null |
     sed "s/${ESC}\[[0-9;]*[A-Za-z]//g" | # vitest colours every line
-    grep -v '^[[:space:]]*$' |
+    # Reduce to printable ASCII (keeping tab + newline). `cut -c` counts characters in a
+    # UTF-8 locale but BYTES under LC_ALL=C — and hooks launched from GUI git clients
+    # often carry no locale — so a multibyte char straddling the cut boundary comes out
+    # as mojibake. ASCII-only makes the two identical, and drops the tools' own ✓ glyphs
+    # (which is why the patterns below don't try to match one).
+    LC_ALL=C tr -cd '\11\12\40-\176' |
+    # First pattern wins per line: `t` skips the rest once one substitutes.
+    sed -n \
+      -e 's|.*/\([A-Za-z0-9_-]*\)\.test\.tsx.*|\1|p' \
+      -e 't' \
+      -e 's|^[[:space:]]*\([a-z][a-z0-9-]*\):.*|\1|p' |
     tail -n 1 |
     cut -c1-"$1"
 }
