@@ -72,7 +72,7 @@ const ENTITIES: EntityDef[] = [
   {
     key: 'component',
     title: 'Component',
-    blurb: 'A Move library primitive, generated from a spec.',
+    blurb: 'A styled primitive generated from a spec — Move ships a library of them, and you author your own the same way with the pipeline.',
     traits: ['factory', 'cssModule', 'libraryExport', 'spec', 'published', 'renders', 'logic'],
   },
   {
