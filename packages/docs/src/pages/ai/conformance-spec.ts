@@ -132,7 +132,6 @@ const RULES: RuleDef[] = [
   { id: 'source-9', group: 'source', rule: 'ref forwarded to root', why: 'Focus, measurement, and portals need a handle on the real DOM node; a dropped ref breaks all three.', enforcement: C('check', 'factory-conformance') },
   { id: 'source-10', group: 'source', rule: 'data-variant/size used', why: 'CSS targets these attributes for variant styling; missing them means the variant prop has no visual effect.', enforcement: C('check', 'data-attrs') },
   { id: 'source-11', group: 'source', rule: 'Imports use engine/, not ../core', why: 'Deep imports bypass the stable barrel and break when internals move.', enforcement: C('check', 'component-conformance') },
-  { id: 'source-12', group: 'source', rule: 'No Move-internal props leak to the DOM', why: 'Undeclared internal props become invalid HTML attributes and React warnings.', enforcement: C('gap') },
   { id: 'source-13', group: 'source', rule: 'Dismissable lifecycle uses the shared hook', why: 'useDismissable owns non-hanging exit and re-open; a hand-rolled isClosing state leaks or locks the close animation.', enforcement: C('check', 'dismissable-lifecycle') },
 
   // Spec parity & defaults
@@ -140,15 +139,17 @@ const RULES: RuleDef[] = [
   { id: 'specParity-2', group: 'specParity', rule: 'Behavior contracts preserved (controlled, dismiss)', why: 'controlledProps/dismissBehavior are easy to drop in a rewrite; the check keeps source honest to the declared behaviour.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-3', group: 'specParity', rule: 'Prop parity — none silently dropped', why: 'A spec prop missing from the source shrinks the public API without anyone noticing.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-4', group: 'specParity', rule: 'Runtime defaults match spec defaults', why: 'If the code defaults differ from the approved spec defaults, the component behaves unlike its documentation.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
+  { id: 'specParity-8', group: 'specParity', rule: 'Source + spec file both present', why: 'The spec is the contract; a component missing its .tsx or its .spec.ts is either dead code or unspecified.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
+  { id: 'specParity-9', group: 'specParity', rule: 'Compound shape matches spec sub-components', why: 'The Object.assign parts (Root, Item, …) must be exactly the sub-components the spec declares — otherwise a part is undocumented or the spec names one that no longer exists.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
+  { id: 'specParity-10', group: 'specParity', rule: 'Spec strings are non-empty', why: 'An empty description/name/type ships a blank into the generated docs and API table.', requires: ['factory'], enforcement: C('check', 'spec-drift') },
   { id: 'specParity-5', group: 'specParity', rule: 'Composition parity — imports match spec.composition', why: 'A composite must use exactly the components its spec declares, so the allow-list stays meaningful.', requires: ['pureComposition'], enforcement: { composition: { status: 'check', check: 'composite-spec-drift' } } },
   { id: 'specParity-6', group: 'specParity', rule: 'Labels parity — defaults match spec.labels', why: 'Mismatched label keys mean a string is either unreachable or untranslatable.', requires: ['pureComposition'], enforcement: { composition: { status: 'check', check: 'composite-spec-drift' } } },
   { id: 'specParity-7', group: 'specParity', rule: 'Integration points resolve', why: 'Each declared integration point must name a contract the consumer can import and a fixture/sample the docs can render — a dangling reference is a broken integration.', requires: ['factory'], enforcement: C('check', 'integration-points') },
 
   // Styles (component / cssModule)
   { id: 'styles-1', group: 'styles', rule: 'A matching .{slot} class for every slot', why: 'A slot with no class can’t be styled; a class with no slot is dead CSS.', enforcement: C('check', 'component-conformance') },
-  { id: 'styles-2', group: 'styles', rule: 'Design tokens — no hard-coded values', why: 'Hard-coded colours/spacing escape the theme and break dark mode and rebranding.', enforcement: C('check', 'css-tokens') },
+  { id: 'styles-2', group: 'styles', rule: 'Colours come from tokens — no raw hex/rgb/hsl', why: 'A hard-coded colour escapes the theme and breaks dark mode and rebranding; colours must be --move-* tokens (colour tools and media overlays are file-exempt).', enforcement: C('check', 'css-hardcoded') },
   { id: 'styles-3', group: 'styles', rule: 'Component tokens on .root, not :root', why: ':root leaks the token globally; on .root it’s scoped to the component.', enforcement: C('check', 'component-conformance') },
-  { id: 'styles-4', group: 'styles', rule: 'Data-attribute selectors for variant/size/state', why: 'Keeps variant styling declarative and in CSS instead of branching in JS.', enforcement: C('gap') },
   { id: 'styles-5', group: 'styles', rule: 'CSS var naming --move-{component}-{property}', why: 'Predictable names are how consumers override a component’s tokens.', enforcement: C('gap') },
   { id: 'styles-6', group: 'styles', rule: 'No @keyframes for state/entrance/exit', why: 'Those run through useAnimations; raw @keyframes bypass the animation system and the reduced-motion bypass.', enforcement: C('check', 'animation-capabilities') },
   { id: 'styles-7', group: 'styles', rule: 'All var(--move-*) references resolve', why: 'A typo’d token silently falls back to nothing — invisible borders, zero spacing.', enforcement: C('check', 'css-tokens') },
@@ -156,7 +157,7 @@ const RULES: RuleDef[] = [
   { id: 'styles-9', group: 'styles', rule: 'Controls size from the --move-control-height-* scale', why: 'Forking a raw width/height in the 24–48px control band drifts the size scale and breaks sm/md/lg parity across controls.', enforcement: C('check', 'control-size') },
 
   // Exports (component / libraryExport)
-  { id: 'exports-1', group: 'exports', rule: 'index.ts exports the component + all types', why: 'A missing type export forces consumers to re-derive props or use any.', enforcement: C('gap') },
+  { id: 'exports-1', group: 'exports', rule: 'index.ts exports the component + all types', why: 'A missing type export forces consumers to re-derive props or use any.', enforcement: C('check', 'barrel-completeness') },
   { id: 'exports-2', group: 'exports', rule: 'Component added to src/index.ts', why: 'Not in the barrel = not importable at all.', enforcement: C('check', 'component-conformance') },
   { id: 'exports-3', group: 'exports', rule: 'Headless hook exported, if one exists', why: 'The hook is the headless API; unexported, it can’t be used.', enforcement: C('check', 'component-conformance') },
 
@@ -273,6 +274,22 @@ export function tallyFor(entity: EntityDef) {
 /** An entity by key. */
 export function entityByKey(key: EntityKey) {
   return CONFORMANCE.entities.find((e) => e.key === key)!;
+}
+
+/** Every check referenced by at least one rule (any entity). The complement
+ *  within the check catalog is the "structural" set — cross-cutting/meta checks
+ *  that guard a contract rather than one entity rule (family-*, cross-component
+ *  consistency, the docs meta-checks). Mirrors what check:conformance-spec
+ *  computes, so the Coverage page and the gate can't disagree. */
+export function referencedChecks(): Set<string> {
+  const names = new Set<string>();
+  for (const r of CONFORMANCE.rules) {
+    for (const key of Object.keys(r.enforcement) as EntityKey[]) {
+      const c = r.enforcement[key]?.check;
+      if (c) names.add(c);
+    }
+  }
+  return names;
 }
 
 /** One rule's resolved status for an entity, or null if the rule doesn't apply to it. */

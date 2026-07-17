@@ -10,6 +10,8 @@
  *      generator reference and the specs can't drift.
  *
  * Exit: 0 = in sync, 1 = drift.
+ *
+ * @enforces none
  */
 
 import { dirname, join } from 'node:path';

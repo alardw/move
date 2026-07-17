@@ -1,4 +1,5 @@
 // check:design-pattern-conformance — the DesignPatternSpec oracle. Symmetric with the component
+// @enforces patternSpec-1 patternSpec-2 patternSpec-3
 // (component-conformance) and composite (composite-spec-drift) validators: it checks
 // the ONE level nothing else does — that each pattern spec is well-formed (integrity)
 // and complete (coverage). Runs over every `available` pattern in the registry.

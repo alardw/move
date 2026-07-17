@@ -16,6 +16,8 @@
  * to a hook, not the DOM) have no factory to match and are skipped.
  *
  * Exit 0 = clean, 1 = a moveSpecific prop missing from its factory's moveProps/defaults.
+ *
+ * @enforces source-3
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

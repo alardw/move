@@ -31,6 +31,8 @@
  *     for review but does not error.
  *
  * Exit: 0 = no migration candidates, 1 = at least one drift found.
+ *
+ * @enforces none
  */
 
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';

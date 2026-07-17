@@ -1,4 +1,5 @@
 // Conformance-docs sync.
+// @enforces none  (meta-check — guards the docs/catalog, not an entity rule)
 //
 // The Conformance page's catalog (packages/docs/src/pages/ai/checks.ts) must list
 // exactly the `check:*` scripts in package.json, and every `check:*` must be wired

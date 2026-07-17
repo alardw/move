@@ -25,6 +25,8 @@
  *     automatically.
  *
  * Exit: 0 = pass, 1 = fail.
+ *
+ * @enforces none
  */
 
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';

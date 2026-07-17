@@ -21,6 +21,8 @@
  * Exit codes:
  *   0 — every component type export reaches the barrel
  *   1 — at least one type export is missing from the barrel
+ *
+ * @enforces exports-1
  */
 
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';

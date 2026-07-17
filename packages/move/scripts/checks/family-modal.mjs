@@ -9,6 +9,8 @@
  *   4. Animation family is one of `scale-fade`, `slide-in`, or `fade`.
  *
  * Exit: 0 = pass, 1 = fail.
+ *
+ * @enforces none
  */
 
 import { dirname, join } from 'node:path';

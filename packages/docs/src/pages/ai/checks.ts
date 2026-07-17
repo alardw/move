@@ -49,7 +49,7 @@ export const CHECKS: CheckDoc[] = [
     name: 'spec-drift',
     appliesTo: 'component',
     enforces:
-      'Spec ↔ source ↔ docs stay in sync — the slots, props, and defaults a spec declares match the component and its generated docs.',
+      'Spec ↔ source stay in sync per component — the slots, props, and defaults a spec declares match the component, and its docs entry resolves to the same component. (Distinct from doc-spec-drift, which guards the contract pages against the spec type.)',
   },
   {
     name: 'composite-spec-drift',
@@ -68,7 +68,13 @@ export const CHECKS: CheckDoc[] = [
     name: 'css-tokens',
     appliesTo: 'component',
     enforces:
-      'Every CSS value references a real design token — no hardcoded colours, spacing, or radii.',
+      'Every `var(--move-*)` reference without a fallback resolves to a real token — a typo’d or undefined token (which silently does nothing) fails.',
+  },
+  {
+    name: 'css-hardcoded',
+    appliesTo: 'component',
+    enforces:
+      'Colours come from `--move-*` tokens — no raw hex/rgb/hsl in component CSS. Colour tools and media overlays are file-exempt via `token-exempt-file`.',
   },
   {
     name: 'control-size',
@@ -146,6 +152,12 @@ export const CHECKS: CheckDoc[] = [
     name: 'conformance-spec',
     appliesTo: 'docs',
     enforces: 'The coverage spec stays in sync with the checks — every rule references a real `check:*`, and every enforced check is reflected as a rule or a known structural check.',
+  },
+  {
+    name: 'rule-coverage',
+    appliesTo: 'docs',
+    enforces:
+      'Every check declares the coverage rules it enforces (an `@enforces` header — file → rule), and that declaration matches the spec exactly: a check can’t enforce a rule it doesn’t declare, or declare one the spec doesn’t attribute to it.',
   },
   {
     name: 'factory-conformance',

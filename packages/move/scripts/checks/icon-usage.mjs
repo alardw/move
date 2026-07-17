@@ -21,6 +21,8 @@
  * Exit codes:
  *   0 — all components in sync (validate) / written ok
  *   1 — at least one mismatch (validate)
+ *
+ * @enforces icons-2 icons-3
  */
 
 import { readdirSync, statSync, existsSync, readFileSync, writeFileSync } from 'node:fs';

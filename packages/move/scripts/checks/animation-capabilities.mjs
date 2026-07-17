@@ -13,6 +13,8 @@
  * matching capability. Warns on migration candidates (e.g. an indicator still
  * driven by fn:'animatePosition' instead of the shared slidingIndicator hook)
  * and on stale declarations.
+ *
+ * @enforces styles-6
  */
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';

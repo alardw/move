@@ -15,6 +15,8 @@
  * Scans `config.recipes` + `config.composites` + `config.samples` (and any app
  * roots you configure) — an inline `<svg>` is raw HTML, so this also enforces the
  * svg half of the icons rule (icons-1) on composed code.
+ *
+ * @enforces icons-1 purity-1 purity-2 purity-4
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';

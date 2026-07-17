@@ -29,6 +29,8 @@
  * Escape hatch: put `combobox-name-ignore` in a comment on the opening line.
  *
  * Exit 0 = clean, 1 = at least one unnamed composed Select.Trigger.
+ *
+ * @enforces a11y-5
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

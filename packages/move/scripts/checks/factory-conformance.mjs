@@ -16,6 +16,8 @@
  *              leftover styles reach the real element (else they vanish).
  *   source-9 — the render forwards a ref to the real node.
  *
+ * @enforces source-4 source-5 source-6 source-7 source-8 source-9
+ *
  * Files that contain no `withMoveComponent` call (e.g. Calendar's bespoke build,
  * non-factory sub-files) are simply skipped — the rule doesn't apply.
  *

@@ -14,6 +14,8 @@
  *   3. That folder's `samples/` has ≥1 `.tsx` — a doc page with live samples.
  *
  * Exit 0 = every component document in sync; 1 = a component is missing one.
+ *
+ * @enforces docs-1 docs-2
  */
 import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';

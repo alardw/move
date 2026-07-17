@@ -17,6 +17,8 @@
  * Escape hatch: `data-attrs-ignore` in the CSS file skips it.
  *
  * Exit 0 = clean, 1 = a CSS-targeted attribute the source never sets.
+ *
+ * @enforces source-10
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

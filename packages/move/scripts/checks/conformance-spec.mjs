@@ -1,4 +1,5 @@
 // Conformance-spec ↔ checks sync.
+// @enforces none  (meta-check — guards the docs/catalog, not an entity rule)
 //
 // The coverage spec (packages/docs/src/pages/ai/conformance-spec.ts) is the source
 // of truth for what we validate. This keeps it honest against the real checks:
@@ -33,7 +34,7 @@ for (const m of specSrc.matchAll(/\b(?:C|DP|all)\(\s*'check'\s*,\s*'([^']+)'\)/g
 const STRUCTURAL = new Set([
   'family-popup', 'family-modal', 'family-disclosure', 'cross-component-drift',
   'animation-choreography', 'conformance-docs', 'conformance-spec', 'script-refs',
-  'doc-spec-drift', 'barrel-completeness',
+  'doc-spec-drift', 'rule-coverage',
 ]);
 
 const errors = [];

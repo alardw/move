@@ -10,6 +10,9 @@
  *  E1  — User-facing strings (incl. every aria-label) come from the component's
  *        `labels` object — never a hardcoded `aria-label="…"` literal in source.
  *
+ * Internal rule IDs (A1 B4 …) map to these coverage rules:
+ * @enforces source-1 source-11 styles-3 styles-1 icons-1 exports-2 exports-3 i18n-1 fileLocation-1 fileLocation-2 unit-1
+ *
  * Scans component source only (`.tsx`, excluding `.test.tsx`).
  * Exit: 0 = clean, 1 = at least one violation.
  */

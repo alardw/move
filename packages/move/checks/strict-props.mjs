@@ -13,6 +13,8 @@
  *
  * Fix: extend `React.HTMLAttributes<HTMLElement>` (or element-specific attrs),
  * using `Omit<…, 'key'>` for intentionally-redefined native props.
+ *
+ * @enforces source-2
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';

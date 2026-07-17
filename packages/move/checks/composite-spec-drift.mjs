@@ -16,6 +16,8 @@
  *
  * Move runs it on its recipes (the proving ground); you run it on your composites
  * (`move check`). Scans `config.recipes` + `config.composites`.
+ *
+ * @enforces i18n-1 specParity-5 specParity-6 unit-1
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, basename, relative } from 'node:path';

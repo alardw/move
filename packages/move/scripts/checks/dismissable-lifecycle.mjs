@@ -15,6 +15,8 @@
  * the hook.
  *
  * Exit: 0 = clean, 1 = a component hand-rolls the exit lifecycle.
+ *
+ * @enforces source-13
  */
 
 import { readdirSync, statSync, readFileSync } from 'node:fs';

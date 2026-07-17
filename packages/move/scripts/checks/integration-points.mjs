@@ -12,6 +12,8 @@
  *              (packages/docs/src/content/components/<slug>/index.ts).
  *
  * Exit 0 = every reference resolves, 1 = at least one dangling reference.
+ *
+ * @enforces specParity-7
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

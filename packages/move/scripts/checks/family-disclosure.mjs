@@ -11,6 +11,8 @@
  *  a disclosure-behavior component may animate as `sidePanel` (Sidebar).)
  *
  * Exit: 0 = pass, 1 = fail.
+ *
+ * @enforces none
  */
 
 import { dirname, join } from 'node:path';

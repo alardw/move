@@ -1,11 +1,13 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Badge, Code, Icon, Table } from 'move';
 import { Section, TocRail, type TocItem } from '../../components';
+import { CHECKS } from './checks';
 import {
   CONFORMANCE,
   groupsForEntity,
   tallyFor,
   entityByKey,
+  referencedChecks,
   type EntityDef,
   type Status,
 } from './conformance-spec';
@@ -13,6 +15,7 @@ import {
 const TOC: TocItem[] = [
   { href: '#coverage', label: 'Overview' },
   { href: '#ambient', label: 'Ambient tooling' },
+  { href: '#structural', label: 'Cross-cutting & structural' },
   { href: '#component', label: 'Component' },
   { href: '#composition', label: 'Composite' },
   { href: '#design-pattern', label: 'Design Pattern' },
@@ -31,6 +34,11 @@ const TOTAL = {
   check: cTally.check + compTally.check + dpTally.check,
   gap: cTally.gap + compTally.gap + dpTally.gap,
 };
+
+// Enforced checks that no rule references — family/cross-cutting/meta contracts.
+// Derived (not hand-listed) so it can't drift from the catalog or the gate.
+const REFERENCED = referencedChecks();
+const STRUCTURAL_CHECKS = CHECKS.filter((c) => !REFERENCED.has(c.name));
 
 function StatusCell({ status, check }: { status: Status; check?: string }) {
   if (status === 'check') {
@@ -130,6 +138,9 @@ export function CoveragePage() {
             <Badge variant="soft" color="orange">
               {TOTAL.gap} gaps
             </Badge>
+            <Badge variant="soft" color="blue">
+              {STRUCTURAL_CHECKS.length} structural
+            </Badge>
           </Stack>
           <Text size="sm" color="muted">
             <Code>check</Code> = a deterministic gate enforces it. <Code>gap</Code> = mechanizable, but
@@ -161,6 +172,40 @@ export function CoveragePage() {
                   </Table.Cell>
                   <Table.Cell>{t.role}</Table.Cell>
                   <Table.Cell>{t.detail}</Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+        </Section>
+
+        <Section id="structural" title="Cross-cutting & structural">
+          <Text color="muted">
+            Enforced checks that guard a family or cross-cutting contract, or the docs
+            themselves — real gates, but not tied to one entity rule, so they don&apos;t
+            appear in the tables below. Derived: every catalogued check that no rule
+            references, so this list stays in step with the checks and the gate.
+          </Text>
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>Contract</Table.Head>
+                <Table.Head>Enforced by</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {STRUCTURAL_CHECKS.map((c) => (
+                <Table.Row key={c.name}>
+                  <Table.Cell>
+                    <Stack gap="xs">
+                      <Text size="sm">{c.enforces}</Text>
+                      <Text size="xs" color="muted">
+                        {c.appliesTo}
+                      </Text>
+                    </Stack>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <StatusCell status="check" check={c.name} />
+                  </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>

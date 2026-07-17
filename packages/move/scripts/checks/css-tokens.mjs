@@ -13,6 +13,8 @@
  * e.g. Card's `--move-card-max-width`) ∪ tokens declared in the same file.
  *
  * Exit: 0 = all resolve, 1 = at least one undefined no-fallback reference.
+ *
+ * @enforces styles-7
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// @enforces none  (meta-check — guards the docs/catalog, not an entity rule)
 // doc-spec-drift — guards the hand-written contract docs against the real spec types.
 //
 // The contract pages (ComponentContract, CompositionContract) document each spec field in

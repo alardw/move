@@ -21,6 +21,8 @@
  * comment forces the divergence to be a conscious, documented decision.
  *
  * Exit: 0 = clean (or every hit exempt), 1 = at least one un-exempt deviation.
+ *
+ * @enforces styles-9
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

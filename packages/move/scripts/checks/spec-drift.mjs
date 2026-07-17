@@ -23,6 +23,8 @@
  *
  * The script reports a tight summary at the end; pass `--verbose` to
  * see every passing component as well.
+ *
+ * @enforces specParity-1 specParity-2 specParity-3 specParity-4 specParity-8 specParity-9 specParity-10
  */
 
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';

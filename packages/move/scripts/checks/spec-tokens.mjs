@@ -14,6 +14,8 @@
  *
  * Pass --report to list without failing (dry-run).
  * Exit: 0 = parity (or --report), 1 = drift.
+ *
+ * @enforces styles-8
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

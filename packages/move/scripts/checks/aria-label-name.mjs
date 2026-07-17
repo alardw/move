@@ -17,6 +17,8 @@
  * Escape hatch: put `aria-label-name-ignore` in a comment on the line.
  *
  * Exit 0 = clean, 1 = at least one Label-in-Name risk.
+ *
+ * @enforces a11y-4
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

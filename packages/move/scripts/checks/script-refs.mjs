@@ -10,6 +10,8 @@
  * catch this because it doesn't run the hooks/workflows. This does.
  *
  * Exit 0 = every reference resolves, 1 = at least one dangling reference.
+ *
+ * @enforces none
  */
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
