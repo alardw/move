@@ -260,13 +260,13 @@ describe('Timeline', () => {
     });
 
     it('does not render title element when title prop is not provided', () => {
-      const { container } = render(
+      render(
         <Timeline animations={false}>
           <Timeline.Item data-testid="item">Step content</Timeline.Item>
         </Timeline>,
       );
       // Title slot should not be present when no title prop
-      const item = screen.getByTestId('item');
+      screen.getByTestId('item');
       // The title class comes from css modules - just check there's no extra title div
       expect(screen.queryByText('Step Title')).not.toBeInTheDocument();
     });

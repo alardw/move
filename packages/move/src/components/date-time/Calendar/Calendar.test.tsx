@@ -1,5 +1,5 @@
 // Generated from Calendar.spec.ts
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Calendar } from './Calendar';
 
@@ -166,7 +166,7 @@ describe('Calendar', () => {
     });
 
     it('navigates months via buttons', async () => {
-      const { container } = render(
+      render(
         <Calendar.Root value={new Date(2026, 0, 15)}>
           <Calendar.Nav />
           <Calendar.Grid />

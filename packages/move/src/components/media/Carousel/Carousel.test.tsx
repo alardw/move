@@ -1,6 +1,6 @@
 // Generated from Carousel.spec.ts
-import { render, screen, fireEvent, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { Carousel } from './Carousel';
 
 // Helper to render a basic Carousel with slides

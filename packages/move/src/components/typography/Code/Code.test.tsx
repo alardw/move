@@ -1,5 +1,5 @@
 // Generated from Code.spec.ts
-import { render, screen, act, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Code } from './Code';
 import { CodeHighlighterProvider } from './CodeHighlighter';

@@ -1,5 +1,5 @@
 // Generated from Toast.spec.ts
-import { render, screen, fireEvent, act, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

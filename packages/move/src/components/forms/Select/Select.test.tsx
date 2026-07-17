@@ -202,7 +202,7 @@ describe('Select', () => {
   describe('groups', () => {
     it('renders group and label', async () => {
       const user = userEvent.setup();
-      const { container } = render(
+      render(
         <Select.Root>
           <Select.Trigger>
             <Select.Value placeholder="Select..." />
@@ -224,7 +224,7 @@ describe('Select', () => {
 
     it('renders separator', async () => {
       const user = userEvent.setup();
-      const { container } = render(
+      render(
         <Select.Root>
           <Select.Trigger>
             <Select.Value placeholder="Select..." />

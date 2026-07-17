@@ -1,5 +1,5 @@
 // Generated from PinInput.spec.ts
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { PinInput } from './PinInput';

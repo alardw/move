@@ -424,7 +424,6 @@ describe('Autocomplete', () => {
   // === ClearTrigger ===
   describe('clear trigger', () => {
     it('is hidden when no values and no input text', async () => {
-      const user = userEvent.setup();
       renderAutocomplete({ showClear: true });
       // ClearTrigger returns null when no values and empty input
       expect(screen.queryByLabelText('Clear all')).not.toBeInTheDocument();

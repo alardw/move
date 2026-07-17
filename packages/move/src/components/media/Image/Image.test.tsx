@@ -134,7 +134,7 @@ describe('Image', () => {
     });
 
     it('renders children as custom fallback content when image errors', () => {
-      const { container } = render(
+      render(
         <Image src="bad.jpg" alt="Test">
           <span>Custom fallback</span>
         </Image>,

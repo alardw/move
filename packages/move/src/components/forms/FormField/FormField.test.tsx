@@ -7,7 +7,7 @@ describe('FormField', () => {
   // === Root ===
   describe('Root', () => {
     it('renders a container div with inner grid wrapper', () => {
-      const { container } = render(
+      render(
         <FormField.Root data-testid="root">
           <FormField.Field>content</FormField.Field>
         </FormField.Root>,

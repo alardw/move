@@ -7,27 +7,6 @@ import { useCalendarView } from './useCalendarView';
 // Fixed reference date to avoid test flakiness
 const REF_DATE = new Date(2026, 2, 15); // March 15, 2026
 
-const sampleEvents = [
-  {
-    id: '1',
-    title: 'Morning Meeting',
-    start: new Date(2026, 2, 15, 9, 0),
-    end: new Date(2026, 2, 15, 10, 0),
-  },
-  {
-    id: '2',
-    title: 'All Day Event',
-    start: new Date(2026, 2, 15),
-    allDay: true,
-  },
-  {
-    id: '3',
-    title: 'Afternoon Task',
-    start: new Date(2026, 2, 16, 14, 0),
-    end: new Date(2026, 2, 16, 15, 30),
-  },
-];
-
 describe('CalendarView', () => {
   // === Root ===
   describe('Root', () => {

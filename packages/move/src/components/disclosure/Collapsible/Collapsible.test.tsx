@@ -87,7 +87,6 @@ describe('Collapsible', () => {
     });
 
     it('does not toggle when disabled', async () => {
-      const user = userEvent.setup();
       renderCollapsible({ disabled: true, animations: false });
       const trigger = screen.getByRole('button', { name: 'Toggle' });
       expect(trigger).toBeDisabled();
@@ -109,7 +108,7 @@ describe('Collapsible', () => {
     });
 
     it('renders custom children', () => {
-      const { container } = render(
+      render(
         <Collapsible.Root>
           <Collapsible.Trigger>Toggle</Collapsible.Trigger>
           <Collapsible.Icon>
