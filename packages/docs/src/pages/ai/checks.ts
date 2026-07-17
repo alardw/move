@@ -136,6 +136,12 @@ export const CHECKS: CheckDoc[] = [
       'Every check a WCAG criterion cites as its evidence is a real, running gate — so an accessibility claim can’t rest on a check that was only ever described.',
   },
   {
+    name: 'skill-a11y-drift',
+    appliesTo: 'docs',
+    enforces:
+      'The app-wcag-audit skill’s list of what Move already handles is generated from the WCAG criteria — so the guidance shipped to consumers can’t drift from what the library actually does.',
+  },
+  {
     name: 'family-popup',
     appliesTo: 'component',
     enforces: 'Popup-family components (Tooltip, Dropdown, …) share one contract — props, ARIA, and animation.',

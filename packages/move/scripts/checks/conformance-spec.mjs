@@ -47,6 +47,9 @@ const STRUCTURAL = new Set([
   // vocabulary from the coverage rules — criteria, not rules. Same family as
   // rule-coverage: a meta-check over a mapping, so it answers to no single rule.
   'wcag-evidence',
+  // Guards a generated artifact (the skill's criteria list) against its source — same
+  // family: a meta-check over a mapping, answering to no single rule.
+  'skill-a11y-drift',
 ]);
 
 const errors = [];
