@@ -1,6 +1,6 @@
 ---
 name: app-theme
-description: "Theme a Move app — generate a full light+dark theme from a brand's colors with defineThemes (WCAG AA guaranteed), import an existing token set (Tailwind, Radix, Material 3, DTCG/Figma) by distilling it to a seed, set radius and fonts, and override any specific token. Never hand-pick colors for contrast — the engine clamps."
+description: "Theme a Move app — generate a full light+dark theme from a brand's colors with defineThemes (WCAG AA guaranteed), import an existing token set (Tailwind, Radix, Material 3, DTCG/Figma) by distilling it to a seed, and set radius and fonts. Never hand-pick colors for contrast — the engine clamps; raw token overrides are a last resort that leave that clamp behind."
 user-invocable: true
 argument-hint: "[brand colors, a token file, or a described vibe]"
 ---
@@ -12,7 +12,7 @@ light **and** dark. This skill covers three jobs that all land on the same
 `defineThemes` seed:
 
 1. **From scratch** — a described brand or vibe → pick a neutral + accent → generate.
-2. **Import a token set** — Tailwind / Radix / Material 3 / a DTCG (Figma) export → *distill it to a seed*, then override the few tokens that genuinely differ.
+2. **Import a token set** — Tailwind / Radix / Material 3 / a DTCG (Figma) export → *distill it to a seed*. The seed reproduces almost everything; a raw override is a last resort for the rare value the ramp genuinely can't (see below).
 3. **Adjust an existing theme** — nudge the accent, change radius, give headings their own font, fix a contrast complaint.
 
 ---
@@ -58,7 +58,7 @@ The seed fields, in full:
 | `radius` | corner factor (number or `'none'\|'sm'\|'md'\|'lg'\|'xl'`) | scales `--move-rounded-*`; pills stay pills |
 | `palette` | `'harmonize'` (default) or `'vivid'` | `harmonize` mutes the 13 categorical colors with the accent; `vivid` keeps full Open Color |
 | `status` | override success/warning/danger/info palette | rarely needed; status stays meaningful regardless of accent |
-| `tokens` | raw `--move-*` overrides | the escape hatch — wins over any generated value |
+| `tokens` | raw `--move-*` overrides | last-resort escape hatch — wins over any generated value, and leaves it outside the AA clamp |
 
 Fonts are **CSS, not part of the seed** — set the tokens once:
 
@@ -93,16 +93,24 @@ and type scale (`12/14/16/18/20/24/30/36`) are the same rem-based scale Tailwind
 uses (Material's 4dp grid lands on it too). So for most sources there's nothing to
 port. Radius distills to the `radius` factor; fonts to the CSS tokens above.
 
-**The genuinely-bespoke leftovers → `tokens` override.** A source value that Move's
-ramp doesn't reproduce (e.g. Material 3 repurposes a mid-gray `outline` as its
-strongest border) is a targeted override, not a reason to abandon generation:
+**The genuinely-bespoke leftovers.** A source value the ramp doesn't reproduce (e.g.
+Material 3 repurposes a mid-gray `outline` as its strongest border) *can* be pinned
+with a raw `tokens` override — but this is the last resort, not a normal step, and it
+comes with a real cost: **an override leaves the AA clamp behind.** `defineThemes`
+guarantees contrast only for the tokens it generates; the moment you pin one by hand,
+that token's contrast is yours to own, and `check:theme-contrast` will hold you to it.
+
+So before reaching for it: is the difference actually worth losing the guarantee? A
+border a shade off is rarely worth it. If it genuinely is, pin the value and grade the
+result:
 
 ```ts
-defineThemes({
+const { light, dark } = defineThemes({
   neutral: { hue: 300, chroma: 0.016 },
   accent:  { hue: 294 },
-  tokens:  { '--move-border-emphasis': '#79747e' }, // match M3's outline exactly
+  tokens:  { '--move-border-emphasis': '#79747e' }, // last resort — now unclamped
 });
+// You own this token's contrast now — audit it (see "Checking a theme").
 ```
 
 ### Where each system keeps the seed values
@@ -136,7 +144,7 @@ or letting the engine generate that value instead of pinning it.
 1. **Identify the input** — described vibe, brand hex(es), or a token file.
 2. **Get to a seed** — from scratch: pick neutral + accent. From a file: read the OKLCH of the source's accent and mid-gray (and its radius, fonts).
 3. **Generate** — `defineThemes({ neutral, accent, radius, palette })`.
-4. **Reconcile bespoke tokens** — only the handful the source needs exactly → `tokens` overrides.
+4. **Reconcile bespoke tokens** — only if the source needs an exact value the ramp can't reach, and only after weighing that a `tokens` override drops it out of the AA clamp. Prefer none.
 5. **Fonts** — set `--move-font` / `--move-font-heading` / `--move-font-mono` if the brand has type.
 6. **Apply** — `<MoveRoot theme={dark|light}>`; wire the light/dark toggle to the pair.
 7. **Verify** — generated themes are AA by construction; `auditTheme` any hand-authored or heavily-overridden one.
@@ -144,7 +152,7 @@ or letting the engine generate that value instead of pinning it.
 ## Rules
 
 - Choose the brand (hue + vividness); let the engine own contrast. Never eyeball colors for AA.
-- Distill imports to a seed; reach for `tokens` overrides only for genuinely-bespoke values, not wholesale.
+- Distill imports to a seed. A raw `tokens` override is a last resort — it drops that token out of the AA clamp, so weigh whether the exact value is worth owning its contrast, and audit it if you pin it.
 - Light and dark come from **one** seed — never author them separately.
 - Status colors (success/warning/danger/info) carry meaning; leave them unless the brand truly redefines them.
 - No custom CSS for layout or component styling — theming is tokens only.
