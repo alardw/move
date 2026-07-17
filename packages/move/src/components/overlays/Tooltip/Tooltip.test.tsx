@@ -126,6 +126,20 @@ describe('Tooltip', () => {
       expect(screen.getByRole('tooltip')).toBeInTheDocument();
     });
 
+    // The simple API carried `open`/`onOpenChange` but not `defaultOpen`, so the one
+    // thing you'd reach for it for — open on mount, hover-driven after — meant either
+    // useState boilerplate or dropping to the compound API. Whole triad now.
+    it('forwards defaultOpen to Root', async () => {
+      renderTooltip(
+        <Tooltip label="Uncontrolled" defaultOpen>
+          <button>Hover</button>
+        </Tooltip>,
+      );
+      await waitFor(() => {
+        expect(findTooltip().textContent).toContain('Uncontrolled');
+      });
+    });
+
     it('forwards animations prop into Content', async () => {
       renderTooltip(
         <Tooltip label="No anim" animations={false} open>

@@ -292,6 +292,12 @@ export const spec = {
     },
     { name: 'open', type: 'boolean', moveSpecific: false, description: 'Controlled open state' },
     {
+      name: 'defaultOpen',
+      type: 'boolean',
+      moveSpecific: false,
+      description: 'Initial open state (uncontrolled) — opens on mount, hover-driven thereafter',
+    },
+    {
       name: 'onOpenChange',
       type: '(open: boolean) => void',
       moveSpecific: false,
@@ -408,7 +414,8 @@ export const spec = {
     },
     {
       id: 'simple-forwards-controlled',
-      description: 'Simple API forwards open and onOpenChange into Root sub-component',
+      description:
+        'Simple API forwards the whole open/defaultOpen/onOpenChange triad into Root sub-component',
     },
     {
       id: 'content-portaled-font',

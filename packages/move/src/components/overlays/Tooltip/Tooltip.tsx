@@ -389,6 +389,8 @@ export interface TooltipSimpleProps {
   delayDuration?: number;
   /** Controlled open state */
   open?: boolean;
+  /** Initial open state (uncontrolled) — opens on mount, hover-driven thereafter */
+  defaultOpen?: boolean;
   /** Controlled open change */
   onOpenChange?: (open: boolean) => void;
 }
@@ -403,10 +405,16 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   animations: animationsProp,
   delayDuration,
   open,
+  defaultOpen,
   onOpenChange,
 }) => (
   <TooltipProvider delayDuration={delayDuration ?? 400}>
-    <TooltipRoot delayDuration={delayDuration} open={open} onOpenChange={onOpenChange}>
+    <TooltipRoot
+      delayDuration={delayDuration}
+      open={open}
+      defaultOpen={defaultOpen}
+      onOpenChange={onOpenChange}
+    >
       <TooltipTrigger asChild>{children}</TooltipTrigger>
       <TooltipContent side={side} sideOffset={sideOffset} align={align} animations={animationsProp}>
         {arrow && <TooltipArrow />}
