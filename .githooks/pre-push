@@ -17,17 +17,31 @@ hook_start=$(date +%s)
 # the suite ~80), which buries the one line you're looking for. On a green push the
 # only thing worth reading is which gate ran and how long it took; on a red one you
 # want everything, so that's exactly what each case gets.
+
+# On a terminal the in-progress line is rewritten in place by its result, so each gate
+# costs one line, not two. Piped or redirected (CI, `git push 2>&1 | tee`), \r and the
+# erase sequence would land as literal junk, so the in-progress line is simply skipped
+# there — nothing is watching it anyway, and the result lines stand on their own.
+progress() {
+  if [ -t 1 ]; then printf '  ┄ %s…' "$1"; fi
+}
+clear_progress() {
+  if [ -t 1 ]; then printf '\r\033[K'; fi
+}
+
 run() {
   desc="$1"
   shift
   start=$(date +%s)
-  printf '  ┄ %s…\n' "$desc"
+  progress "$desc"
   if ! out=$("$@" 2>&1); then
+    clear_progress
     printf '  ✗ %s — FAILED after %ss\n\n' "$desc" "$(($(date +%s) - start))"
     printf '%s\n\n' "$out"
     echo "    fix it, or push a work-in-progress branch with: git push --no-verify"
     exit 1
   fi
+  clear_progress
   printf '  ✓ %s — %ss\n' "$desc" "$(($(date +%s) - start))"
 }
 
