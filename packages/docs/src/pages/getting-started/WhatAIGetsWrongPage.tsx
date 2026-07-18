@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card, Table } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card, Table, Quote } from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -377,6 +377,11 @@ export function WhatAIGetsWrongPage() {
           title="How Move closes the gap"
           lede="Move moves these decisions out of the prompt and into the system, so the assistant can’t get them wrong by omission."
         >
+          <Quote variant="pull" attribution="Claude, Opus 4.8">
+            The value I invent feels identical to the value I look up — same confidence, no inner
+            signal that one of them is a guess. So the fix was never going to be me trying harder; it
+            has to be a check I can’t get a wrong answer past.
+          </Quote>
           <HighlightList items={HOW_MOVE} />
         </Section>
 

@@ -1,0 +1,52 @@
+/* Generated from Quote.spec.ts */
+
+.root {
+  --move-quote-rule: var(--move-primary);
+  --move-quote-fg: var(--move-fg-base);
+  --move-quote-attribution-fg: var(--move-fg-muted);
+  --move-quote-icon-color: var(--move-fg-subtle);
+  --move-quote-padding: var(--move-spacing-md);
+  margin: 0;
+  color: var(--move-quote-fg);
+  font-family: var(--move-font-body, system-ui, sans-serif);
+}
+
+/* The quoted text — left accent rule (the app primary/accent) + padding.
+   Carries the rule in BOTH the figure case (inner blockquote) and the bare
+   case (root blockquote). */
+.quote {
+  margin: 0;
+  border-inline-start: 3px solid var(--move-quote-rule);
+  padding-inline-start: var(--move-quote-padding);
+  color: var(--move-quote-fg);
+  font-size: var(--move-text-lg);
+  line-height: var(--move-leading-relaxed);
+}
+
+/* Decorative quote-mark (aria-hidden in the source) */
+.icon {
+  display: block;
+  margin-block-end: var(--move-space-2);
+  color: var(--move-quote-icon-color);
+}
+
+/* Attribution (figcaption) — sits outside the blockquote */
+.attribution {
+  margin-block-start: var(--move-space-3);
+  padding-inline-start: var(--move-quote-padding);
+  color: var(--move-quote-attribution-fg);
+  font-size: var(--move-text-sm);
+}
+
+/* Pull-quote: larger emphasis. Bare case → the root IS .quote; figure case →
+   the inner blockquote is .quote. Cover both. */
+.root[data-variant='pull'] .quote,
+.root[data-variant='pull'].quote {
+  font-size: var(--move-text-2xl);
+  line-height: var(--move-leading-snug);
+  font-weight: var(--move-weight-medium);
+}
+
+.root[data-variant='pull'] .attribution {
+  font-size: var(--move-text-base);
+}

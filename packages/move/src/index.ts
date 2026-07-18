@@ -271,6 +271,9 @@ export type {
   HighlightResult,
 } from './components/typography/Code';
 
+export { Quote } from './components/typography/Quote';
+export type { QuoteProps, QuoteVariant } from './components/typography/Quote';
+
 export { Grid } from './components/layout/Grid';
 export type { GridProps, GridCellProps, GridGap, GridPadding } from './components/layout/Grid';
 export { LayoutGroup } from './components/layout/LayoutGroup';

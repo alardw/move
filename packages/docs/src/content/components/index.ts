@@ -46,6 +46,7 @@ import { content as pinInput } from './pin-input';
 import { content as popover } from './popover';
 import { content as progressBar } from './progress-bar';
 import { content as prose } from './prose';
+import { content as quote } from './quote';
 import { content as radioGroup } from './radio-group';
 import { content as richTextEditor } from './rich-text-editor';
 import { content as scrollArea } from './scroll-area';
@@ -117,6 +118,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   popover,
   'progress-bar': progressBar,
   prose,
+  quote,
   'radio-group': radioGroup,
   'rich-text-editor': richTextEditor,
   'scroll-area': scrollArea,
