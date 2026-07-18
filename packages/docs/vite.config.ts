@@ -16,9 +16,6 @@ export default defineConfig({
       { find: '@move-specs', replacement: path.resolve('../move/src/components') },
       // The creation spec — so the scaffold docs render its file manifest + options.
       { find: '@move-scaffold', replacement: path.resolve('../move/scaffold') },
-      // Recipes live in the move package (shipped + vendored by `move recipes`);
-      // docs is just their viewer.
-      { find: '@move-recipes', replacement: path.resolve('../move/recipes') },
       { find: '@move-patterns', replacement: path.resolve('../move/patterns') },
     ],
   },

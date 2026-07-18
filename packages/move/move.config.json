@@ -2,7 +2,7 @@
   "check": {
     "components": "src/components",
     "infrastructure": "src/infrastructure",
-    "recipes": ["recipes", "skills/references/recipes/composite"],
+    "recipes": ["skills/references/recipes/composite"],
     "samples": ["../docs/src/content/components"]
   }
 }
