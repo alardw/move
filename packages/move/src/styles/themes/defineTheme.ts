@@ -228,6 +228,188 @@ const ANIMATION = {
   reducedMotion: false,
 };
 
+// ── Derivation steps ───────────────────────────────────────────────────────────
+//
+// One step per token family, each reading the seed's hues and the surfaces the
+// earlier steps computed. They were inline blocks in describeTheme, numbered 1–7
+// by comment; naming them makes the dependency order explicit (everything with a
+// contrast floor needs `lin` populated by deriveSurfaces first) and keeps any one
+// family readable on its own.
+
+/** Shared state threaded through the steps. */
+interface Derivation {
+  dark: boolean;
+  /** Neutral hue + chroma (already boosted for dark grounds). */
+  nH: number;
+  nC: number;
+  /** Accent hue + chroma. */
+  aH: number;
+  aC: number;
+  /** Linear-RGB cache of computed colors, so later clamps can read earlier surfaces. */
+  lin: Record<string, LinRGB>;
+  out: Record<string, string>;
+  /** Contrast nudges applied, surfaced to the themer rather than hidden. */
+  notices: string[];
+}
+
+/** The four page grounds every foreground clamp is graded against. */
+const groundsOf = (d: Derivation): LinRGB[] => [
+  d.lin['--move-bg-base'],
+  d.lin['--move-bg-subtle'],
+  d.lin['--move-bg-muted'],
+  d.lin['--move-bg-emphasis'],
+];
+
+/** 1. Surfaces + the decorative border ramp. Must run first — the rest clamp against these. */
+function deriveSurfaces(d: Derivation): void {
+  for (const s of SURFACES) {
+    const L = d.dark ? s.Ld : s.Ll;
+    const C = d.nC * s.cm;
+    d.lin[s.k] = oklchToLinear(L, C, d.nH);
+    d.out[s.k] = oklchHex(L, C, d.nH);
+  }
+}
+
+/** 2. Text tiers — clamped against the worst realistic surface each one lands on. */
+function deriveTextTiers(d: Derivation): void {
+  for (const t of TEXT) {
+    const L = d.dark ? t.Ld : t.Ll;
+    const C = d.nC * t.cm;
+    const r = clampToContrast(
+      L,
+      C,
+      d.nH,
+      t.on.map((k) => d.lin[k]),
+      t.target,
+      d.dark,
+    );
+    d.out[t.k] = r.hex;
+    d.lin[t.k] = oklchToLinear(r.L, C, d.nH);
+    if (r.clamped) d.notices.push(`${t.k} nudged to hold ${t.target}:1`);
+  }
+}
+
+/** 3. Inverse surface — opposite polarity, for inverted panels. */
+function deriveInverse(d: Derivation): void {
+  d.out['--move-bg-inverse'] = oklchHex(d.dark ? 0.955 : 0.2, d.nC, d.nH);
+  d.out['--move-fg-inverse'] = oklchHex(d.dark ? 0.18 : 0.96, d.nC * 0.3, d.nH);
+}
+
+/**
+ * 4. Accent FILL — lightness clamped so its own label clears AA.
+ *
+ * Dark lifts one controlled step (0.58 vs light's 0.52) so the accent pops against
+ * a near-black ground — the usual dark-mode convention — but stays well short of
+ * the old 0.62, which pushed deep hues (indigo/violet/blue) into a pale, black-label
+ * pastel. At 0.58 the fill keeps a saturated body + white label; the loop still
+ * lightens naturally-light hues until THEIR label clears AA.
+ */
+function deriveAccentFill(d: Derivation): void {
+  let pL = d.dark ? 0.58 : 0.52;
+  let fg = bestOn(oklchToLinear(pL, d.aC, d.aH));
+  let tries = 0;
+  const fgLin = () =>
+    fg === 'var(--move-white)' ? oklchToLinear(0.99, 0, 0) : oklchToLinear(0.22, 0, 0);
+  while (contrast(fgLin(), oklchToLinear(pL, d.aC, d.aH)) < 4.5 && tries < 80) {
+    pL += fg === 'var(--move-white)' ? -0.008 : 0.008;
+    if (pL < 0.14 || pL > 0.9) break;
+    fg = bestOn(oklchToLinear(pL, d.aC, d.aH));
+    tries += 1;
+  }
+  if (tries > 0) d.notices.push('--move-primary darkened so its label holds AA');
+  d.out['--move-primary'] = oklchHex(pL, d.aC, d.aH);
+  d.out['--move-primary-hover'] = oklchHex(pL + (d.dark ? 0.06 : -0.06), d.aC, d.aH);
+  d.out['--move-primary-active'] = oklchHex(pL + (d.dark ? -0.06 : 0.06), d.aC, d.aH);
+  d.out['--move-primary-subtle'] = oklchHex(d.dark ? 0.2 : 0.95, d.aC * 0.35, d.aH);
+  d.out['--move-primary-fg'] = fg;
+}
+
+/**
+ * 5. Accent TEXT (link) — clamped to AA on every surface.
+ *
+ * Chroma tracks the accent's own (0.75× of it) so a desaturated accent — down to a
+ * fully greyscale aC:0 — carries through to links, rather than staying colored.
+ */
+function deriveAccentText(d: Derivation): void {
+  const lC = d.aC * 0.75;
+  const r = clampToContrast(d.dark ? 0.78 : 0.44, lC, d.aH, groundsOf(d), 4.5, d.dark);
+  d.out['--move-link'] = r.hex;
+  d.out['--move-link-hover'] = oklchHex(r.L + (d.dark ? 0.06 : -0.06), lC, d.aH);
+  if (r.clamped) d.notices.push('--move-link nudged to hold AA on surfaces');
+}
+
+/**
+ * 6. Focus ring — clamped to 3:1 on surfaces (WCAG 1.4.11 / 2.2 §2.4.13).
+ * Chroma tracks the accent (0.875×) so it desaturates with a greyscale accent too.
+ */
+function deriveFocusRing(d: Derivation): void {
+  const fC = d.aC * 0.875;
+  const r = clampToContrast(
+    d.dark ? 0.68 : 0.55,
+    fC,
+    d.aH,
+    [d.lin['--move-bg-base'], d.lin['--move-bg-subtle']],
+    3,
+    d.dark,
+  );
+  d.out['--move-focus-ring-color'] = r.hex;
+  if (r.clamped) d.notices.push('--move-focus-ring-color nudged to hold 3:1');
+}
+
+/**
+ * 6b. Interactive control borders — 3:1 non-text contrast (WCAG 1.4.11).
+ *
+ * Seeded toward the surfaces so the search settles on the SOFTEST border that still
+ * clears 3:1 — never harsher than the ground demands. Chroma tracks the neutral ramp
+ * so the border carries the theme's whisper of tint. `interactive` holds against the
+ * base/subtle ground; `-strong` also clears the lighter muted surface (swapped in per
+ * [data-surface], see surface.css).
+ */
+function deriveInteractiveBorders(d: Derivation): void {
+  const bC = d.nC * 1.1;
+  const start = d.dark ? 0.42 : 0.62;
+  const soft = clampToContrast(
+    start,
+    bC,
+    d.nH,
+    [d.lin['--move-bg-base'], d.lin['--move-bg-subtle']],
+    3,
+    d.dark,
+  );
+  d.out['--move-border-interactive'] = soft.hex;
+  const strong = clampToContrast(
+    start,
+    bC,
+    d.nH,
+    [d.lin['--move-bg-muted'], d.lin['--move-bg-emphasis']],
+    3,
+    d.dark,
+  );
+  d.out['--move-border-interactive-strong'] = strong.hex;
+}
+
+/** 7. Secondary — a neutral fill, label borrowed from the base text tier. */
+function deriveSecondary(d: Derivation): void {
+  const sL = d.dark ? 0.32 : 0.9;
+  const sC = d.nC * 1.2;
+  d.out['--move-secondary'] = oklchHex(sL, sC, d.nH);
+  d.out['--move-secondary-hover'] = oklchHex(sL + (d.dark ? 0.05 : -0.05), sC, d.nH);
+  d.out['--move-secondary-active'] = oklchHex(sL + (d.dark ? -0.05 : 0.05), sC, d.nH);
+  d.out['--move-secondary-fg'] = d.out['--move-fg-base'];
+}
+
+/** Every derivation step, in dependency order. Surfaces first; the rest clamp against them. */
+const STEPS = [
+  deriveSurfaces,
+  deriveTextTiers,
+  deriveInverse,
+  deriveAccentFill,
+  deriveAccentText,
+  deriveFocusRing,
+  deriveInteractiveBorders,
+  deriveSecondary,
+];
+
 // ── Engine ─────────────────────────────────────────────────────────────────────
 export interface DescribeThemeResult {
   theme: Theme;
@@ -251,158 +433,9 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
   };
   const notices: string[] = [];
 
-  // lin cache for computed surfaces (fg clamps read these)
-  const lin: Record<string, LinRGB> = {};
-  const out: Partial<ThemeTokens> = {};
-
-  // 1. surfaces + borders
-  for (const s of SURFACES) {
-    const L = dark ? s.Ld : s.Ll;
-    const C = nC * s.cm;
-    lin[s.k] = oklchToLinear(L, C, nH);
-    (out as Record<string, string>)[s.k] = oklchHex(L, C, nH);
-  }
-
-  // 2. text tiers — clamped against the worst realistic surface
-  for (const t of TEXT) {
-    const L = dark ? t.Ld : t.Ll;
-    const C = nC * t.cm;
-    const surfs = t.on.map((k) => lin[k]);
-    const r = clampToContrast(L, C, nH, surfs, t.target, dark);
-    (out as Record<string, string>)[t.k] = r.hex;
-    lin[t.k] = oklchToLinear(r.L, C, nH);
-    if (r.clamped) notices.push(`${t.k} nudged to hold ${t.target}:1`);
-  }
-
-  // 3. inverse surface (opposite polarity)
-  (out as Record<string, string>)['--move-bg-inverse'] = oklchHex(dark ? 0.955 : 0.2, nC, nH);
-  (out as Record<string, string>)['--move-fg-inverse'] = oklchHex(dark ? 0.18 : 0.96, nC * 0.3, nH);
-
-  const baseLin = [
-    lin['--move-bg-base'],
-    lin['--move-bg-subtle'],
-    lin['--move-bg-muted'],
-    lin['--move-bg-emphasis'],
-  ];
-
-  // 4. accent fill — clamp lightness so its label clears AA
-  {
-    // Accent-fill lightness per mode. Dark lifts one controlled step (0.58 vs
-    // light's 0.52) so the accent pops against a near-black ground — the usual
-    // dark-mode convention — but stays well short of the old 0.62, which pushed
-    // deep hues (indigo/violet/blue) into a pale, black-label pastel. At 0.58 the
-    // fill keeps a saturated body + white label; the loop below still lightens
-    // naturally-light hues until THEIR label clears AA.
-    let pL = dark ? 0.58 : 0.52;
-    let fg = bestOn(oklchToLinear(pL, aC, aH));
-    let tries = 0;
-    const fgLin = () =>
-      fg === 'var(--move-white)' ? oklchToLinear(0.99, 0, 0) : oklchToLinear(0.22, 0, 0);
-    while (contrast(fgLin(), oklchToLinear(pL, aC, aH)) < 4.5 && tries < 80) {
-      pL += fg === 'var(--move-white)' ? -0.008 : 0.008;
-      if (pL < 0.14 || pL > 0.9) break;
-      fg = bestOn(oklchToLinear(pL, aC, aH));
-      tries += 1;
-    }
-    if (tries > 0) notices.push('--move-primary darkened so its label holds AA');
-    (out as Record<string, string>)['--move-primary'] = oklchHex(pL, aC, aH);
-    (out as Record<string, string>)['--move-primary-hover'] = oklchHex(
-      pL + (dark ? 0.06 : -0.06),
-      aC,
-      aH,
-    );
-    (out as Record<string, string>)['--move-primary-active'] = oklchHex(
-      pL + (dark ? -0.06 : 0.06),
-      aC,
-      aH,
-    );
-    (out as Record<string, string>)['--move-primary-subtle'] = oklchHex(
-      dark ? 0.2 : 0.95,
-      aC * 0.35,
-      aH,
-    );
-    (out as Record<string, string>)['--move-primary-fg'] = fg;
-  }
-
-  // 5. accent TEXT (link) — clamp to AA on every surface.
-  //    Chroma tracks the accent's own (0.75× of it) so a desaturated accent — down to a
-  //    fully greyscale aC:0 — carries through to links, rather than staying colored.
-  {
-    const lC = aC * 0.75;
-    const r = clampToContrast(dark ? 0.78 : 0.44, lC, aH, baseLin, 4.5, dark);
-    (out as Record<string, string>)['--move-link'] = r.hex;
-    (out as Record<string, string>)['--move-link-hover'] = oklchHex(
-      r.L + (dark ? 0.06 : -0.06),
-      lC,
-      aH,
-    );
-    if (r.clamped) notices.push('--move-link nudged to hold AA on surfaces');
-  }
-
-  // 6. focus ring — clamp to 3:1 on surfaces (WCAG 1.4.11 / 2.2 §2.4.13).
-  //    Chroma tracks the accent (0.875× of it) so it desaturates with a greyscale accent too.
-  {
-    const fC = aC * 0.875;
-    const r = clampToContrast(
-      dark ? 0.68 : 0.55,
-      fC,
-      aH,
-      [lin['--move-bg-base'], lin['--move-bg-subtle']],
-      3,
-      dark,
-    );
-    (out as Record<string, string>)['--move-focus-ring-color'] = r.hex;
-    if (r.clamped) notices.push('--move-focus-ring-color nudged to hold 3:1');
-  }
-
-  // 6b. interactive control borders — 3:1 non-text contrast (WCAG 1.4.11).
-  //     Seeded toward the surfaces so the search settles on the SOFTEST border
-  //     that still clears 3:1 — never harsher than the ground demands. Chroma
-  //     tracks the neutral ramp so the border carries the theme's whisper of tint.
-  //     `interactive` holds against the base/subtle ground; `-strong` also clears
-  //     the lighter muted surface (swapped in per [data-surface], see surface.css).
-  {
-    const bC = nC * 1.1;
-    const seed = dark ? 0.42 : 0.62;
-    const soft = clampToContrast(
-      seed,
-      bC,
-      nH,
-      [lin['--move-bg-base'], lin['--move-bg-subtle']],
-      3,
-      dark,
-    );
-    (out as Record<string, string>)['--move-border-interactive'] = soft.hex;
-    const strong = clampToContrast(
-      seed,
-      bC,
-      nH,
-      [lin['--move-bg-muted'], lin['--move-bg-emphasis']],
-      3,
-      dark,
-    );
-    (out as Record<string, string>)['--move-border-interactive-strong'] = strong.hex;
-  }
-
-  // 7. secondary (neutral fill)
-  {
-    const sL = dark ? 0.32 : 0.9;
-    const sC = nC * 1.2;
-    (out as Record<string, string>)['--move-secondary'] = oklchHex(sL, sC, nH);
-    (out as Record<string, string>)['--move-secondary-hover'] = oklchHex(
-      sL + (dark ? 0.05 : -0.05),
-      sC,
-      nH,
-    );
-    (out as Record<string, string>)['--move-secondary-active'] = oklchHex(
-      sL + (dark ? -0.05 : 0.05),
-      sC,
-      nH,
-    );
-    (out as Record<string, string>)['--move-secondary-fg'] = (out as Record<string, string>)[
-      '--move-fg-base'
-    ];
-  }
+  const d: Derivation = { dark, nH, nC, aH, aC, lin: {}, out: {}, notices };
+  for (const step of STEPS) step(d);
+  const out = d.out;
 
   const ap = dark ? 'dark' : 'light';
   // Palette colorfulness tracks accent saturation (aC), floored so it never fully greys out.
