@@ -1,0 +1,61 @@
+/*
+ * Palette — semantic roles per categorical color.
+ *
+ * Three roles, the categorical counterpart of the brand's --move-primary /
+ * --move-link / --move-primary-fg:
+ *   -text:     colored text readable on the page background AND on -soft-bg
+ *   -soft-bg:  subtle tinted background
+ *   -fg-solid: text/icon on a solid fill of shades 5–9
+ *
+ * Each owes a contrast ratio against a specific background, which is what makes
+ * them semantic rather than primitive (the raw ramps are in primitives/colors.css).
+ * accents.css maps them onto the --move-accent-* roles per [data-color].
+ *
+ * These are the DARK-theme values, serving as the no-theme fallback; defineTheme
+ * emits the per-appearance set and ThemeProvider applies it over this.
+ *
+ * GENERATED from src/styles/themes/palette.ts — do not edit by hand.
+ * Run `npm run gen:tokens` after changing a shade choice.
+ */
+
+:root {
+  --move-gray-text: var(--move-gray-300);
+  --move-gray-soft-bg: var(--move-gray-950);
+  --move-gray-fg-solid: var(--move-white);
+  --move-red-text: var(--move-red-300);
+  --move-red-soft-bg: var(--move-red-950);
+  --move-red-fg-solid: var(--move-white);
+  --move-pink-text: var(--move-pink-300);
+  --move-pink-soft-bg: var(--move-pink-950);
+  --move-pink-fg-solid: var(--move-white);
+  --move-grape-text: var(--move-grape-300);
+  --move-grape-soft-bg: var(--move-grape-950);
+  --move-grape-fg-solid: var(--move-white);
+  --move-violet-text: var(--move-violet-300);
+  --move-violet-soft-bg: var(--move-violet-950);
+  --move-violet-fg-solid: var(--move-white);
+  --move-indigo-text: var(--move-indigo-300);
+  --move-indigo-soft-bg: var(--move-indigo-950);
+  --move-indigo-fg-solid: var(--move-white);
+  --move-blue-text: var(--move-blue-300);
+  --move-blue-soft-bg: var(--move-blue-950);
+  --move-blue-fg-solid: var(--move-white);
+  --move-cyan-text: var(--move-cyan-300);
+  --move-cyan-soft-bg: var(--move-cyan-950);
+  --move-cyan-fg-solid: var(--move-white);
+  --move-teal-text: var(--move-teal-300);
+  --move-teal-soft-bg: var(--move-teal-950);
+  --move-teal-fg-solid: var(--move-white);
+  --move-green-text: var(--move-green-300);
+  --move-green-soft-bg: var(--move-green-950);
+  --move-green-fg-solid: var(--move-white);
+  --move-lime-text: var(--move-lime-300);
+  --move-lime-soft-bg: var(--move-lime-950);
+  --move-lime-fg-solid: var(--move-black);
+  --move-yellow-text: var(--move-yellow-300);
+  --move-yellow-soft-bg: var(--move-yellow-950);
+  --move-yellow-fg-solid: var(--move-black);
+  --move-orange-text: var(--move-orange-300);
+  --move-orange-soft-bg: var(--move-orange-950);
+  --move-orange-fg-solid: var(--move-black);
+}

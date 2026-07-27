@@ -4,4 +4,8 @@
  */
 
 @import './semantic.css';
+/* Generated from themes/palette.ts — the per-palette semantic roles. Comes after
+   semantic.css (which imports the ramps it references) and before accents.css,
+   which maps these onto the --move-accent-* roles. */
+@import './palette-semantic.css';
 @import './accents.css';

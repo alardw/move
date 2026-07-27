@@ -16,6 +16,7 @@
 import type { Theme, ThemeTokens } from './types';
 import { createThemeShadows, type ThemeShadowConfig } from '../visual/shadows';
 import { oklchToLinear, oklchHex, clampToContrast, contrast, type LinRGB } from './color-engine';
+import { PALETTE as CATEGORICAL, semanticShades } from './palette';
 import { radiusScale, type RadiusInput, type RadiusVars } from './radius';
 
 // ── Seed ─────────────────────────────────────────────────────────────────────
@@ -132,65 +133,23 @@ function statusBlock(status: Required<NonNullable<ThemeSeed['status']>>, ap: 'li
   };
 }
 
-// Per-palette readable text + soft-bg. Hand-tuned per palette for AA; ported verbatim.
+// Per-palette readable text + soft-bg, DERIVED from the shade choices in palette.ts
+// (one declaration, shared with the generated CSS fallback — they used to be two
+// hand-maintained lists and 8 of 26 had drifted apart).
 const PALETTE = {
-  light: {
-    '--move-gray-text': 'var(--move-gray-700)',
-    '--move-gray-soft-bg': 'var(--move-gray-100)',
-    '--move-red-text': 'var(--move-red-900)',
-    '--move-red-soft-bg': 'var(--move-red-50)',
-    '--move-pink-text': 'var(--move-pink-800)',
-    '--move-pink-soft-bg': 'var(--move-pink-50)',
-    '--move-grape-text': 'var(--move-grape-800)',
-    '--move-grape-soft-bg': 'var(--move-grape-50)',
-    '--move-violet-text': 'var(--move-violet-700)',
-    '--move-violet-soft-bg': 'var(--move-violet-50)',
-    '--move-indigo-text': 'var(--move-indigo-800)',
-    '--move-indigo-soft-bg': 'var(--move-indigo-50)',
-    '--move-blue-text': 'var(--move-blue-800)',
-    '--move-blue-soft-bg': 'var(--move-blue-50)',
-    '--move-cyan-text': 'var(--move-cyan-900)',
-    '--move-cyan-soft-bg': 'var(--move-cyan-50)',
-    '--move-teal-text': 'var(--move-teal-900)',
-    '--move-teal-soft-bg': 'var(--move-teal-50)',
-    '--move-green-text': 'var(--move-green-950)',
-    '--move-green-soft-bg': 'var(--move-green-50)',
-    '--move-lime-text': 'var(--move-lime-950)',
-    '--move-lime-soft-bg': 'var(--move-lime-50)',
-    '--move-yellow-text': 'var(--move-yellow-950)',
-    '--move-yellow-soft-bg': 'var(--move-yellow-50)',
-    '--move-orange-text': 'var(--move-orange-950)',
-    '--move-orange-soft-bg': 'var(--move-orange-50)',
-  },
-  dark: {
-    '--move-gray-text': 'var(--move-gray-300)',
-    '--move-gray-soft-bg': 'var(--move-gray-950)',
-    '--move-red-text': 'var(--move-red-300)',
-    '--move-red-soft-bg': 'var(--move-red-950)',
-    '--move-pink-text': 'var(--move-pink-300)',
-    '--move-pink-soft-bg': 'var(--move-pink-950)',
-    '--move-grape-text': 'var(--move-grape-300)',
-    '--move-grape-soft-bg': 'var(--move-grape-950)',
-    '--move-violet-text': 'var(--move-violet-300)',
-    '--move-violet-soft-bg': 'var(--move-violet-950)',
-    '--move-indigo-text': 'var(--move-indigo-300)',
-    '--move-indigo-soft-bg': 'var(--move-indigo-950)',
-    '--move-blue-text': 'var(--move-blue-300)',
-    '--move-blue-soft-bg': 'var(--move-blue-950)',
-    '--move-cyan-text': 'var(--move-cyan-300)',
-    '--move-cyan-soft-bg': 'var(--move-cyan-950)',
-    '--move-teal-text': 'var(--move-teal-300)',
-    '--move-teal-soft-bg': 'var(--move-teal-950)',
-    '--move-green-text': 'var(--move-green-300)',
-    '--move-green-soft-bg': 'var(--move-green-950)',
-    '--move-lime-text': 'var(--move-lime-300)',
-    '--move-lime-soft-bg': 'var(--move-lime-950)',
-    '--move-yellow-text': 'var(--move-yellow-300)',
-    '--move-yellow-soft-bg': 'var(--move-yellow-950)',
-    '--move-orange-text': 'var(--move-orange-300)',
-    '--move-orange-soft-bg': 'var(--move-orange-950)',
-  },
+  light: paletteBlock('light'),
+  dark: paletteBlock('dark'),
 } as const;
+
+function paletteBlock(appearance: 'light' | 'dark'): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const p of CATEGORICAL) {
+    const s = semanticShades(p.name, appearance);
+    out[`--move-${p.name}-text`] = `var(--move-${p.name}-${s.text})`;
+    out[`--move-${p.name}-soft-bg`] = `var(--move-${p.name}-${s.softBg})`;
+  }
+  return out;
+}
 
 const MISC = {
   light: {

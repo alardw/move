@@ -277,6 +277,74 @@ export const PALETTE: readonly PaletteEntry[] = [
   },
 ];
 
+/**
+ * The SEMANTIC layer's shade choices, per appearance.
+ *
+ * Which stop of a ramp serves as readable text, and which as the soft tinted
+ * background. These were written out as 26 literal `var(--move-red-900)` strings
+ * per mode in defineTheme AND again as a fallback block in semantic.css — where
+ * 8 of the 26 had quietly drifted apart, invisible because ThemeProvider always
+ * applies a theme over the fallback. One declaration now feeds both.
+ *
+ * These are still hand-picked, and hand-picking is why three palettes ship below
+ * AA (light red 4.46, blue 4.10, teal 4.09 as text on the page background). The
+ * clamp replaces the choice with a computed lightness; until then this is at
+ * least a single, inspectable list of what was chosen.
+ */
+export interface SemanticShades {
+  /** Readable text on the page background and on softBg. */
+  text: Shade;
+  /** Subtle tinted background. */
+  softBg: Shade;
+}
+
+/** Shade choices that hold for most palettes, per appearance. */
+const SEMANTIC_DEFAULT: Record<'light' | 'dark', SemanticShades> = {
+  light: { text: 900, softBg: 50 },
+  dark: { text: 300, softBg: 950 },
+};
+
+/** Palettes whose lightness curve needs a different stop than the default. */
+const SEMANTIC_OVERRIDE: Partial<
+  Record<string, Partial<Record<'light' | 'dark', Partial<SemanticShades>>>>
+> = {
+  gray: { light: { text: 700, softBg: 100 } },
+  pink: { light: { text: 800 } },
+  grape: { light: { text: 800 } },
+  violet: { light: { text: 700 } },
+  indigo: { light: { text: 800 } },
+  blue: { light: { text: 800 } },
+  // Naturally light hues need a deeper stop to clear AA on a white ground.
+  green: { light: { text: 950 } },
+  lime: { light: { text: 950 } },
+  yellow: { light: { text: 950 } },
+  orange: { light: { text: 950 } },
+};
+
+/** The semantic shade choices for one palette in one appearance. */
+export function semanticShades(name: string, appearance: 'light' | 'dark'): SemanticShades {
+  return {
+    ...SEMANTIC_DEFAULT[appearance],
+    ...SEMANTIC_OVERRIDE[name]?.[appearance],
+  };
+}
+
+/**
+ * Which ramp stops back the two mode-independent roles. `solid` is the filled
+ * surface (Badge solid, Avatar, the Stepper's complete step); `border` is its
+ * edge, one stop darker.
+ */
+export const SOLID_SHADE: Shade = 600;
+export const BORDER_SHADE: Shade = 700;
+
+/** Text/icon on a solid fill — today's hand-set choice per palette. */
+const FG_SOLID_BLACK = new Set(['lime', 'yellow', 'orange']);
+
+/** `'--move-white'` or `'--move-black'`, whichever is legible on this fill. */
+export function fgSolidToken(name: string): string {
+  return FG_SOLID_BLACK.has(name) ? '--move-black' : '--move-white';
+}
+
 /** Absolutes — not part of any ramp, and never theme-derived. */
 export const STATIC_COLORS: readonly (readonly [string, string])[] = [
   ['--move-white', '#ffffff'],
