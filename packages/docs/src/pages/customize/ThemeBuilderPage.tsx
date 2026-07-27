@@ -258,7 +258,7 @@ export function ThemeBuilderPage() {
   const [headingFont, setHeadingFont] = React.useState('System');
   const [bodyFont, setBodyFont] = React.useState('System');
   const [showDetails, setShowDetails] = React.useState(false);
-  // Whether the categorical palette mutes with the accent saturation (default) or stays vivid.
+  // Whether the categorical palette mutes with the accent saturation (default) or stays independent.
   const [paletteHarmonize, setPaletteHarmonize] = React.useState(true);
 
   React.useEffect(() => {
@@ -273,7 +273,7 @@ export function ThemeBuilderPage() {
         neutral: { hue: neutralHue, chroma: neutralChroma },
         accent: { hue: accentHue, chroma: accentChroma },
         radius,
-        palette: paletteHarmonize ? 'harmonize' : 'vivid',
+        palette: paletteHarmonize ? 'harmonize' : 'independent',
       }),
     [neutralHue, neutralChroma, accentHue, accentChroma, radius, paletteHarmonize],
   );
@@ -295,7 +295,7 @@ export function ThemeBuilderPage() {
 const { light, dark, radius } = defineThemes({
   neutral: { hue: ${neutralHue}, chroma: ${neutralChroma.toFixed(3)} },
   accent: { hue: ${accentHue}${accentChroma !== 0.16 ? `, chroma: ${accentChroma.toFixed(3)}` : ''} },
-  radius: ${radius},${paletteHarmonize ? '' : `\n  palette: 'vivid',`}
+  radius: ${radius},${paletteHarmonize ? '' : `\n  palette: 'independent',`}
 });`;
 
   // Fonts are a separate concern — CSS custom properties, not part of the TS seed.

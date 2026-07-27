@@ -2,8 +2,8 @@
  * Accent role tokens — the theme-owned color contract.
  *
  * The categorical `color` prop (Avatar, Badge, ChatBubble, Stepper, Timeline)
- * sets `data-color` on a component. These rules map each palette name to a
- * small set of generic ROLE tokens that the components consume:
+ * sets `data-color` on a component. These rules map each palette's semantic
+ * tokens onto the generic ROLE tokens the components consume:
  *
  *   --move-accent-solid      saturated fill (solid surfaces)
  *   --move-accent-solid-fg   text/icon on a solid fill
@@ -11,113 +11,117 @@
  *   --move-accent-soft-fg    text on a soft background
  *   --move-accent-border     border / outline
  *
- * The 13 built-in palettes are mapped below. A consumer THEME adds a color
- * with ONE rule — after augmenting the `MoveColors` type — and it renders
- * across every categorical component:
+ * Every value on the right is a THEME token (see themes/defineTheme.ts), so a
+ * theme owns all five and nothing here reaches past it into a raw ramp stop.
+ *
+ * A consumer theme adds a color with one rule — after augmenting the
+ * `MoveColors` type — and it renders across every categorical component:
  *
  *   declare module 'move' { interface MoveColors { sage: true } }   // types
  *
  *   [data-color='sage'] {                                            // styling
- *     --move-accent-solid:    var(--move-sage-600);
- *     --move-accent-solid-fg: var(--move-sage-fg-solid);
- *     --move-accent-soft:     var(--move-sage-soft-bg);
- *     --move-accent-soft-fg:  var(--move-sage-text);
- *     --move-accent-border:   var(--move-sage-700);
+ *     --move-accent-solid:    #5b7f5b;
+ *     --move-accent-solid-fg: #ffffff;
+ *     --move-accent-soft:     #eef3ee;
+ *     --move-accent-soft-fg:  #2c3f2c;
+ *     --move-accent-border:   #466446;
  *   }
  *
- * Built-in components keep their own per-palette `[data-color]` rules for
- * pixel-exact styling; those win by specificity. These role tokens are the
- * fallback path that makes theme-added colors render.
+ * Those five are on you to make legible: the engine clamps the palettes it
+ * generates, and cannot reach a color it has never seen.
+ *
+ * GENERATED from src/styles/themes/palette.ts — do not edit by hand.
+ * Run `npm run gen:tokens` after adding a palette.
  */
 
 [data-color='gray'] {
-  --move-accent-solid: var(--move-gray-600);
+  --move-accent-solid: var(--move-gray-solid);
   --move-accent-solid-fg: var(--move-gray-fg-solid);
   --move-accent-soft: var(--move-gray-soft-bg);
   --move-accent-soft-fg: var(--move-gray-text);
-  --move-accent-border: var(--move-border-emphasis);
+  --move-accent-border: var(--move-gray-border);
 }
 [data-color='red'] {
-  --move-accent-solid: var(--move-red-600);
+  --move-accent-solid: var(--move-red-solid);
   --move-accent-solid-fg: var(--move-red-fg-solid);
   --move-accent-soft: var(--move-red-soft-bg);
   --move-accent-soft-fg: var(--move-red-text);
-  --move-accent-border: var(--move-red-700);
+  --move-accent-border: var(--move-red-border);
 }
 [data-color='pink'] {
-  --move-accent-solid: var(--move-pink-600);
+  --move-accent-solid: var(--move-pink-solid);
   --move-accent-solid-fg: var(--move-pink-fg-solid);
   --move-accent-soft: var(--move-pink-soft-bg);
   --move-accent-soft-fg: var(--move-pink-text);
-  --move-accent-border: var(--move-pink-700);
+  --move-accent-border: var(--move-pink-border);
 }
 [data-color='grape'] {
-  --move-accent-solid: var(--move-grape-600);
+  --move-accent-solid: var(--move-grape-solid);
   --move-accent-solid-fg: var(--move-grape-fg-solid);
   --move-accent-soft: var(--move-grape-soft-bg);
   --move-accent-soft-fg: var(--move-grape-text);
-  --move-accent-border: var(--move-grape-700);
+  --move-accent-border: var(--move-grape-border);
 }
 [data-color='violet'] {
-  --move-accent-solid: var(--move-violet-600);
+  --move-accent-solid: var(--move-violet-solid);
   --move-accent-solid-fg: var(--move-violet-fg-solid);
   --move-accent-soft: var(--move-violet-soft-bg);
   --move-accent-soft-fg: var(--move-violet-text);
-  --move-accent-border: var(--move-violet-700);
+  --move-accent-border: var(--move-violet-border);
 }
 [data-color='indigo'] {
-  --move-accent-solid: var(--move-indigo-600);
+  --move-accent-solid: var(--move-indigo-solid);
   --move-accent-solid-fg: var(--move-indigo-fg-solid);
   --move-accent-soft: var(--move-indigo-soft-bg);
   --move-accent-soft-fg: var(--move-indigo-text);
-  --move-accent-border: var(--move-indigo-700);
+  --move-accent-border: var(--move-indigo-border);
 }
 [data-color='blue'] {
-  --move-accent-solid: var(--move-blue-600);
+  --move-accent-solid: var(--move-blue-solid);
   --move-accent-solid-fg: var(--move-blue-fg-solid);
   --move-accent-soft: var(--move-blue-soft-bg);
   --move-accent-soft-fg: var(--move-blue-text);
-  --move-accent-border: var(--move-blue-700);
+  --move-accent-border: var(--move-blue-border);
 }
 [data-color='cyan'] {
-  --move-accent-solid: var(--move-cyan-600);
+  --move-accent-solid: var(--move-cyan-solid);
   --move-accent-solid-fg: var(--move-cyan-fg-solid);
   --move-accent-soft: var(--move-cyan-soft-bg);
   --move-accent-soft-fg: var(--move-cyan-text);
-  --move-accent-border: var(--move-cyan-700);
+  --move-accent-border: var(--move-cyan-border);
 }
 [data-color='teal'] {
-  --move-accent-solid: var(--move-teal-600);
+  --move-accent-solid: var(--move-teal-solid);
   --move-accent-solid-fg: var(--move-teal-fg-solid);
   --move-accent-soft: var(--move-teal-soft-bg);
   --move-accent-soft-fg: var(--move-teal-text);
-  --move-accent-border: var(--move-teal-700);
+  --move-accent-border: var(--move-teal-border);
 }
 [data-color='green'] {
-  --move-accent-solid: var(--move-green-600);
+  --move-accent-solid: var(--move-green-solid);
   --move-accent-solid-fg: var(--move-green-fg-solid);
   --move-accent-soft: var(--move-green-soft-bg);
   --move-accent-soft-fg: var(--move-green-text);
-  --move-accent-border: var(--move-green-700);
+  --move-accent-border: var(--move-green-border);
 }
 [data-color='lime'] {
-  --move-accent-solid: var(--move-lime-600);
+  --move-accent-solid: var(--move-lime-solid);
   --move-accent-solid-fg: var(--move-lime-fg-solid);
   --move-accent-soft: var(--move-lime-soft-bg);
   --move-accent-soft-fg: var(--move-lime-text);
-  --move-accent-border: var(--move-lime-700);
+  --move-accent-border: var(--move-lime-border);
 }
 [data-color='yellow'] {
-  --move-accent-solid: var(--move-yellow-600);
+  --move-accent-solid: var(--move-yellow-solid);
   --move-accent-solid-fg: var(--move-yellow-fg-solid);
   --move-accent-soft: var(--move-yellow-soft-bg);
   --move-accent-soft-fg: var(--move-yellow-text);
-  --move-accent-border: var(--move-yellow-700);
+  --move-accent-border: var(--move-yellow-border);
 }
 [data-color='orange'] {
-  --move-accent-solid: var(--move-orange-600);
+  --move-accent-solid: var(--move-orange-solid);
   --move-accent-solid-fg: var(--move-orange-fg-solid);
   --move-accent-soft: var(--move-orange-soft-bg);
   --move-accent-soft-fg: var(--move-orange-text);
-  --move-accent-border: var(--move-orange-700);
+  --move-accent-border: var(--move-orange-border);
 }

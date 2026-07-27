@@ -16,7 +16,13 @@
 import type { Theme, ThemeTokens } from './types';
 import { createThemeShadows, type ThemeShadowConfig } from '../visual/shadows';
 import { oklchToLinear, oklchHex, clampToContrast, contrast, type LinRGB } from './color-engine';
-import { PALETTE as CATEGORICAL, semanticShades } from './palette';
+import {
+  PALETTE as CATEGORICAL,
+  SOLID_SHADE,
+  borderValue,
+  fgSolidToken,
+  semanticShades,
+} from './palette';
 import { radiusScale, type RadiusInput, type RadiusVars } from './radius';
 
 // ── Seed ─────────────────────────────────────────────────────────────────────
@@ -32,10 +38,17 @@ export interface ThemeSeed {
   /** Corner radius — one factor (or named level) scales the whole `--move-rounded-*`
    *  scale. Theme-level (same for light + dark). Default `'md'` = today's scale. */
   radius?: RadiusInput;
-  /** Categorical palette (Badge/Avatar/… `color` prop) styling. `'harmonize'` (default) mutes
-   *  the 13 colors along with the accent saturation; `'vivid'` keeps full Open Color regardless.
-   *  Semantic status colors are unaffected either way. */
-  palette?: 'harmonize' | 'vivid';
+  /**
+   * Whether the categorical palette (Badge/Avatar/… `color` prop) tracks the brand's
+   * saturation or stays independent of it.
+   *
+   * `'harmonize'` (default) mutes the 13 colors in proportion to how desaturated the
+   * accent is; `'independent'` leaves them at full Open Color. NOTE this only has an
+   * effect below `accent.chroma: 0.16` — at or above it the desaturation factor is
+   * zero and the two settings emit identical palettes. Move's own seed is 0.23, so
+   * the shipped themes are unaffected either way. Semantic status colors never mute.
+   */
+  palette?: 'harmonize' | 'independent';
   /** Raw-token escape hatch — overrides any generated value. */
   tokens?: Partial<ThemeTokens>;
 }
@@ -131,24 +144,6 @@ function statusBlock(status: Required<NonNullable<ThemeSeed['status']>>, ap: 'li
     ...role('error', status.danger, 'var(--move-white)'),
     ...role('info', status.info, 'var(--move-white)'),
   };
-}
-
-// Per-palette readable text + soft-bg, DERIVED from the shade choices in palette.ts
-// (one declaration, shared with the generated CSS fallback — they used to be two
-// hand-maintained lists and 8 of 26 had drifted apart).
-const PALETTE = {
-  light: paletteBlock('light'),
-  dark: paletteBlock('dark'),
-} as const;
-
-function paletteBlock(appearance: 'light' | 'dark'): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const p of CATEGORICAL) {
-    const s = semanticShades(p.name, appearance);
-    out[`--move-${p.name}-text`] = `var(--move-${p.name}-${s.text})`;
-    out[`--move-${p.name}-soft-bg`] = `var(--move-${p.name}-${s.softBg})`;
-  }
-  return out;
 }
 
 const MISC = {
@@ -250,6 +245,8 @@ interface Derivation {
   out: Record<string, string>;
   /** Contrast nudges applied, surfaced to the themer rather than hidden. */
   notices: string[];
+  /** How far the categorical palette is muted toward grey (0 = untouched). */
+  paletteDesat: number;
 }
 
 /** The four page grounds every foreground clamp is graded against. */
@@ -398,6 +395,42 @@ function deriveSecondary(d: Derivation): void {
   d.out['--move-secondary-fg'] = d.out['--move-fg-base'];
 }
 
+/**
+ * 8. Categorical palette roles — the five values every `color` prop resolves to.
+ *
+ * The mode-dependent pair (-text on a surface, -soft-bg behind it) comes from the
+ * shade choices in palette.ts; the mode-independent three (-solid fill, its
+ * -border edge, and the -fg-solid label on it) are the ramp stops accents.css
+ * used to hardcode. Emitting all five as theme tokens is what lets a theme own
+ * them — and what will let the clamp reach them, the way deriveAccentText already
+ * clamps the brand's equivalent.
+ *
+ * Values reproduce exactly what accents.css and the old PALETTE map resolved to;
+ * no contrast floor is applied yet. Harmonisation still touches only -text and
+ * -soft-bg, as it always has — the solid fill and border staying at full Open
+ * Color saturation is a real inconsistency, but fixing it belongs with the clamp,
+ * not here.
+ */
+function derivePaletteRoles(d: Derivation): void {
+  const appearance = d.dark ? 'dark' : 'light';
+  for (const p of CATEGORICAL) {
+    const s = semanticShades(p.name, appearance);
+    Object.assign(
+      d.out,
+      harmonizePalette(
+        {
+          [`--move-${p.name}-text`]: `var(--move-${p.name}-${s.text})`,
+          [`--move-${p.name}-soft-bg`]: `var(--move-${p.name}-${s.softBg})`,
+        },
+        d.paletteDesat * 100,
+      ),
+    );
+    d.out[`--move-${p.name}-solid`] = `var(--move-${p.name}-${SOLID_SHADE})`;
+    d.out[`--move-${p.name}-border`] = borderValue(p.name);
+    d.out[`--move-${p.name}-fg-solid`] = `var(${fgSolidToken(p.name)})`;
+  }
+}
+
 /** Every derivation step, in dependency order. Surfaces first; the rest clamp against them. */
 const STEPS = [
   deriveSurfaces,
@@ -408,6 +441,7 @@ const STEPS = [
   deriveFocusRing,
   deriveInteractiveBorders,
   deriveSecondary,
+  derivePaletteRoles,
 ];
 
 // ── Engine ─────────────────────────────────────────────────────────────────────
@@ -433,19 +467,19 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
   };
   const notices: string[] = [];
 
-  const d: Derivation = { dark, nH, nC, aH, aC, lin: {}, out: {}, notices };
+  // Palette colorfulness tracks accent saturation (aC), floored so it never fully greys out.
+  // Opt out with `palette: 'independent'` to keep full Open Color regardless of the accent.
+  const paletteDesat =
+    seed.palette === 'independent' ? 0 : Math.max(0, 1 - aC / 0.16) * PALETTE_DESAT_MAX;
+
+  const d: Derivation = { dark, nH, nC, aH, aC, lin: {}, out: {}, notices, paletteDesat };
   for (const step of STEPS) step(d);
   const out = d.out;
 
   const ap = dark ? 'dark' : 'light';
-  // Palette colorfulness tracks accent saturation (aC), floored so it never fully greys out.
-  // Opt out with `palette: 'vivid'` to keep full Open Color regardless of the accent.
-  const paletteDesat =
-    seed.palette === 'vivid' ? 0 : Math.max(0, 1 - aC / 0.16) * PALETTE_DESAT_MAX;
   const tokens = {
     ...out,
     ...statusBlock(status, ap),
-    ...harmonizePalette(PALETTE[ap] as Record<string, string>, paletteDesat * 100),
     ...MISC[ap],
     ...createThemeShadows(tintShadowConfig(SHADOW_CONFIG[ap], nH, seed.neutral.chroma)),
     ...(seed.tokens ?? {}),

@@ -56,7 +56,7 @@ The seed fields, in full:
 | `neutral` | `{ hue, chroma }` of the gray | `chroma` is the tint strength: `0` = pure gray, `~0.008` = subtle, `0.02+` = clearly colored ground |
 | `accent` | `{ hue, chroma? }` of the brand | omit `chroma` for a full accent (0.16); set `0` for a fully greyscale theme |
 | `radius` | corner factor (number or `'none'\|'sm'\|'md'\|'lg'\|'xl'`) | scales `--move-rounded-*`; pills stay pills |
-| `palette` | `'harmonize'` (default) or `'vivid'` | `harmonize` mutes the 13 categorical colors with the accent; `vivid` keeps full Open Color |
+| `palette` | `'harmonize'` (default) or `'independent'` | `harmonize` mutes the 13 categorical colors in proportion to the accent's saturation; `independent` keeps full Open Color. Only bites below `accent.chroma: 0.16` — above that both emit the same palette |
 | `status` | override success/warning/danger/info palette | rarely needed; status stays meaningful regardless of accent |
 | `tokens` | raw `--move-*` overrides | last-resort escape hatch — wins over any generated value, and leaves it outside the AA clamp |
 

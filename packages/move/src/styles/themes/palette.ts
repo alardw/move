@@ -53,7 +53,7 @@ export interface PaletteEntry {
  * interpolated one step darker than Open Color's 900, for dark-mode tinted
  * backgrounds (`-soft-bg`).
  */
-export const PALETTE: readonly PaletteEntry[] = [
+export const PALETTE = [
   {
     name: 'gray',
     note: ['Gray — neutral base (Move custom scale)'],
@@ -275,7 +275,22 @@ export const PALETTE: readonly PaletteEntry[] = [
       '#873008',
     ],
   },
-];
+] as const satisfies readonly PaletteEntry[];
+
+/**
+ * The built-in palette names, as a literal union.
+ *
+ * Distinct from `Color` (= `keyof MoveColors`), which is deliberately augmentable
+ * so a consumer theme can add its own names. This one is closed, which is what
+ * `ThemeTokens` needs: the engine emits roles for the palettes it ships, and a
+ * consumer-added colour is served by its own `[data-color]` rule, not by a token
+ * the engine is expected to produce.
+ */
+export type BuiltInColor = (typeof PALETTE)[number]['name'];
+
+/** The five roles each palette resolves to. See tokens/accents.css. */
+export const PALETTE_ROLES = ['text', 'soft-bg', 'solid', 'border', 'fg-solid'] as const;
+export type PaletteRole = (typeof PALETTE_ROLES)[number];
 
 /**
  * The SEMANTIC layer's shade choices, per appearance.
@@ -343,6 +358,22 @@ const FG_SOLID_BLACK = new Set(['lime', 'yellow', 'orange']);
 /** `'--move-white'` or `'--move-black'`, whichever is legible on this fill. */
 export function fgSolidToken(name: string): string {
   return FG_SOLID_BLACK.has(name) ? '--move-black' : '--move-white';
+}
+
+/**
+ * Palettes whose border role isn't a ramp stop.
+ *
+ * Gray is the neutral, so its border follows the theme's own neutral border ramp
+ * rather than a fixed stop — which means it tracks the seed instead of staying at
+ * a hardcoded grey. Everything else uses BORDER_SHADE of its own ramp.
+ */
+const BORDER_OVERRIDE: Record<string, string> = {
+  gray: 'var(--move-border-emphasis)',
+};
+
+/** The CSS value for a palette's border role. */
+export function borderValue(name: string): string {
+  return BORDER_OVERRIDE[name] ?? `var(--move-${name}-${BORDER_SHADE})`;
 }
 
 /** Absolutes — not part of any ramp, and never theme-derived. */

@@ -1,4 +1,15 @@
-export interface ThemeTokens {
+import type { BuiltInColor, PaletteRole } from './palette';
+/**
+ * Every palette's five semantic roles, keyed off the ramps in palette.ts.
+ *
+ * Written out by hand this is 65 lines that must stay in step with the ramp list;
+ * as a mapped type, adding a palette or a role updates the contract in one place.
+ */
+type PaletteRoleTokens = {
+  [K in `--move-${BuiltInColor}-${PaletteRole}`]: string;
+};
+
+export interface ThemeTokens extends PaletteRoleTokens {
   // Background
   '--move-bg-base': string;
   '--move-bg-subtle': string;
@@ -67,33 +78,9 @@ export interface ThemeTokens {
   '--move-info-subtle': string;
   '--move-info-fg': string;
 
-  // Palette — per-color text & soft-bg overrides
-  '--move-gray-text': string;
-  '--move-gray-soft-bg': string;
-  '--move-red-text': string;
-  '--move-red-soft-bg': string;
-  '--move-pink-text': string;
-  '--move-pink-soft-bg': string;
-  '--move-grape-text': string;
-  '--move-grape-soft-bg': string;
-  '--move-violet-text': string;
-  '--move-violet-soft-bg': string;
-  '--move-indigo-text': string;
-  '--move-indigo-soft-bg': string;
-  '--move-blue-text': string;
-  '--move-blue-soft-bg': string;
-  '--move-cyan-text': string;
-  '--move-cyan-soft-bg': string;
-  '--move-teal-text': string;
-  '--move-teal-soft-bg': string;
-  '--move-green-text': string;
-  '--move-green-soft-bg': string;
-  '--move-lime-text': string;
-  '--move-lime-soft-bg': string;
-  '--move-yellow-text': string;
-  '--move-yellow-soft-bg': string;
-  '--move-orange-text': string;
-  '--move-orange-soft-bg': string;
+  // Palette roles come from PaletteRoleTokens below — 5 roles × 13 palettes,
+  // derived from the ramps rather than transcribed. This block used to list
+  // text + soft-bg by hand for all 13.
 
   // Focus
   '--move-focus-ring-color': string;
