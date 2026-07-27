@@ -96,37 +96,58 @@
   --move-info-fg: var(--move-white);
 
   /* ============================================
-   * Palette — theme-aware color tokens
-   * -text:    colored text readable on page background
-   * -soft-bg: subtle tinted background
-   * Defaults are dark-theme values; light theme overrides.
+   * Palette — the SEMANTIC layer over the ramps in primitives/colors.css.
+   *
+   * Three roles per color, the categorical counterpart of the brand's
+   * --move-primary / --move-link / --move-primary-fg:
+   *   -text:     colored text readable on the page background AND on -soft-bg
+   *   -soft-bg:  subtle tinted background
+   *   -fg-solid: text/icon on a solid fill of shades 5–9
+   *
+   * These are semantic, not primitive: each one answers to a contrast floor
+   * against a specific background, so they belong here rather than beside the
+   * raw ramps. accents.css maps them onto the --move-accent-* roles per
+   * [data-color]. Defaults are dark-theme values; light theme overrides.
    * ============================================ */
   --move-gray-text: var(--move-gray-300);
   --move-gray-soft-bg: var(--move-gray-800);
+  --move-gray-fg-solid: var(--move-white);
   --move-red-text: var(--move-red-400);
   --move-red-soft-bg: var(--move-red-950);
+  --move-red-fg-solid: var(--move-white);
   --move-pink-text: var(--move-pink-300);
   --move-pink-soft-bg: var(--move-pink-950);
+  --move-pink-fg-solid: var(--move-white);
   --move-grape-text: var(--move-grape-300);
   --move-grape-soft-bg: var(--move-grape-950);
+  --move-grape-fg-solid: var(--move-white);
   --move-violet-text: var(--move-violet-200);
   --move-violet-soft-bg: var(--move-violet-950);
+  --move-violet-fg-solid: var(--move-white);
   --move-indigo-text: var(--move-indigo-300);
   --move-indigo-soft-bg: var(--move-indigo-950);
+  --move-indigo-fg-solid: var(--move-white);
   --move-blue-text: var(--move-blue-300);
   --move-blue-soft-bg: var(--move-blue-950);
+  --move-blue-fg-solid: var(--move-white);
   --move-cyan-text: var(--move-cyan-400);
   --move-cyan-soft-bg: var(--move-cyan-950);
+  --move-cyan-fg-solid: var(--move-white);
   --move-teal-text: var(--move-teal-400);
   --move-teal-soft-bg: var(--move-teal-950);
+  --move-teal-fg-solid: var(--move-white);
   --move-green-text: var(--move-green-400);
   --move-green-soft-bg: var(--move-green-950);
+  --move-green-fg-solid: var(--move-white);
   --move-lime-text: var(--move-lime-400);
   --move-lime-soft-bg: var(--move-lime-950);
+  --move-lime-fg-solid: var(--move-black);
   --move-yellow-text: var(--move-yellow-400);
   --move-yellow-soft-bg: var(--move-yellow-950);
+  --move-yellow-fg-solid: var(--move-black);
   --move-orange-text: var(--move-orange-300);
   --move-orange-soft-bg: var(--move-orange-950);
+  --move-orange-fg-solid: var(--move-black);
 
   /* ============================================
    * Selection (browser text selection)

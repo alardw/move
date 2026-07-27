@@ -1,9 +1,11 @@
 /*
  * Primitive Color Tokens
- * Raw color values — Open Color (MIT) + Move gray scale
- * Each chromatic palette includes a pre-paired foreground for WCAG AA legibility:
- *   --move-{color}-fg-solid:  text color on shades 5–9 (solid fills)
- *   --move-{color}-fg-subtle: text color on shade 950 (dark tinted bg)
+ * Raw color values — Open Color (MIT) + Move gray scale.
+ * Ramps ONLY: no value here answers to a contrast floor. The semantic layer
+ * over these (-text, -soft-bg, -fg-solid) lives in ../semantic.css.
+ *
+ * GENERATED from src/styles/themes/palette.ts — do not edit by hand.
+ * Run `npm run gen:tokens` after changing a ramp.
  */
 
 :root {
@@ -21,8 +23,6 @@
   --move-gray-800: #27272a;
   --move-gray-900: #18181b;
   --move-gray-950: #09090b;
-  --move-gray-fg-solid: var(--move-white);
-  --move-gray-fg-subtle: var(--move-white);
 
   /* ==========================================
    * Red — errors, danger, destructive
@@ -39,8 +39,6 @@
   --move-red-800: #e03131;
   --move-red-900: #c92a2a;
   --move-red-950: #7a1a1a;
-  --move-red-fg-solid: var(--move-white);
-  --move-red-fg-subtle: #ffe3e3;
 
   /* ==========================================
    * Pink — highlights, playful accents
@@ -57,8 +55,6 @@
   --move-pink-800: #c2255c;
   --move-pink-900: #a61e4d;
   --move-pink-950: #6b1434;
-  --move-pink-fg-solid: var(--move-white);
-  --move-pink-fg-subtle: #fcc2d7;
 
   /* ==========================================
    * Grape — warm purple, tags, categories
@@ -75,8 +71,6 @@
   --move-grape-800: #9c36b5;
   --move-grape-900: #862e9c;
   --move-grape-950: #5a1e6a;
-  --move-grape-fg-solid: var(--move-white);
-  --move-grape-fg-subtle: #eebefa;
 
   /* ==========================================
    * Violet — cool purple, avatars, badges
@@ -93,8 +87,6 @@
   --move-violet-800: #6741d9;
   --move-violet-900: #5f3dc4;
   --move-violet-950: #3d2880;
-  --move-violet-fg-solid: var(--move-white);
-  --move-violet-fg-subtle: #d0bfff;
 
   /* ==========================================
    * Indigo — brand primary, links, focus
@@ -111,8 +103,6 @@
   --move-indigo-800: #3b5bdb;
   --move-indigo-900: #364fc7;
   --move-indigo-950: #233080;
-  --move-indigo-fg-solid: var(--move-white);
-  --move-indigo-fg-subtle: #bac8ff;
 
   /* ==========================================
    * Blue — info, links, data
@@ -129,8 +119,6 @@
   --move-blue-800: #1971c2;
   --move-blue-900: #1864ab;
   --move-blue-950: #0f406e;
-  --move-blue-fg-solid: var(--move-white);
-  --move-blue-fg-subtle: #a5d8ff;
 
   /* ==========================================
    * Cyan — cool info, data visualization
@@ -147,8 +135,6 @@
   --move-cyan-800: #0c8599;
   --move-cyan-900: #0b7285;
   --move-cyan-950: #074a57;
-  --move-cyan-fg-solid: var(--move-white);
-  --move-cyan-fg-subtle: #99e9f2;
 
   /* ==========================================
    * Teal — cool secondary, dashboards
@@ -165,8 +151,6 @@
   --move-teal-800: #099268;
   --move-teal-900: #087f5b;
   --move-teal-950: #05503a;
-  --move-teal-fg-solid: var(--move-white);
-  --move-teal-fg-subtle: #96f2d7;
 
   /* ==========================================
    * Green — success, positive
@@ -183,8 +167,6 @@
   --move-green-800: #2f9e44;
   --move-green-900: #2b8a3e;
   --move-green-950: #1b5727;
-  --move-green-fg-solid: var(--move-white);
-  --move-green-fg-subtle: #b2f2bb;
 
   /* ==========================================
    * Lime — fresh positive, eco
@@ -201,8 +183,6 @@
   --move-lime-800: #66a80f;
   --move-lime-900: #5c940d;
   --move-lime-950: #3b5f09;
-  --move-lime-fg-solid: var(--move-black);
-  --move-lime-fg-subtle: #d8f5a2;
 
   /* ==========================================
    * Yellow — warnings, caution
@@ -219,8 +199,6 @@
   --move-yellow-800: #f08c00;
   --move-yellow-900: #e67700;
   --move-yellow-950: #8a4800;
-  --move-yellow-fg-solid: var(--move-black);
-  --move-yellow-fg-subtle: #ffec99;
 
   /* ==========================================
    * Orange — warm accent
@@ -237,8 +215,6 @@
   --move-orange-800: #e8590c;
   --move-orange-900: #d9480f;
   --move-orange-950: #873008;
-  --move-orange-fg-solid: var(--move-black);
-  --move-orange-fg-subtle: #ffd8a8;
 
   /* ==========================================
    * Static colors

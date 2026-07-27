@@ -69,6 +69,9 @@ const STRUCTURAL = new Set([
   // Guards a generated artifact (the skill's criteria list) against its source — same
   // family: a meta-check over a mapping, answering to no single rule.
   'skill-a11y-drift',
+  // Same family again: generated colour CSS vs the palette.ts it comes from. A
+  // source↔artifact drift gate, not a rule about how an entity is built.
+  'tokens-surface',
 ]);
 
 const errors = [];

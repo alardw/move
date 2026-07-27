@@ -160,7 +160,7 @@ const WCAG_FAILURES: { violation: string; wcag: string; ref: string; prevented: 
     violation: 'Muted gray on white, brand text on a brand fill, a placeholder doubling as a label — combinations that look fine in a preview and fail a contrast check.',
     wcag: '1.4.3 Contrast (Minimum)',
     ref: 'contrast-minimum.html',
-    prevented: 'Every color resolves to a WCAG-legible foreground token (fg-solid / fg-subtle), in light mode and dark — the off-token combination isn’t expressible.',
+    prevented: 'Every color resolves to a WCAG-legible foreground token (fg-solid on a fill, -text on a surface), in light mode and dark — the off-token combination isn’t expressible.',
   },
   {
     violation: 'outline: none with nothing to replace it — the keyboard user loses all trace of where they are on the page.',

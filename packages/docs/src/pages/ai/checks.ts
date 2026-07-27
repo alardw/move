@@ -142,6 +142,12 @@ export const CHECKS: CheckDoc[] = [
       'The generated API surface (move.api.json + llms.txt) matches the specs — so any prop added, removed, or retyped lands as a reviewed diff, never a silent drift.',
   },
   {
+    name: 'tokens-surface',
+    appliesTo: 'component',
+    enforces:
+      'The generated primitive colour CSS matches its source (src/styles/themes/palette.ts) — the ramps live in TS so the engine and the Theme Builder read the same numbers, and this proves the shipped CSS hasn’t drifted from them.',
+  },
+  {
     name: 'wcag-evidence',
     appliesTo: 'docs',
     enforces:

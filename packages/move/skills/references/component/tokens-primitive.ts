@@ -5,7 +5,7 @@
  * Reference only — these are the raw values available for semantic tokens.
  *
  * Color palettes: Open Color (MIT) + Move gray scale.
- * Each chromatic palette includes fg-solid and fg-subtle for WCAG AA legibility.
+ * Each chromatic palette includes fg-solid (text on a solid fill) for WCAG AA legibility.
  */
 
 // =============================================================================
@@ -39,7 +39,6 @@ export const COLORS = {
     '--move-red-900': '#c92a2a',
     '--move-red-950': '#7a1a1a',
     '--move-red-fg-solid': 'white',
-    '--move-red-fg-subtle': '#ffa8a8',
   },
   pink: {
     '--move-pink-50': '#fff0f6',
@@ -54,7 +53,6 @@ export const COLORS = {
     '--move-pink-900': '#a61e4d',
     '--move-pink-950': '#6b1434',
     '--move-pink-fg-solid': 'white',
-    '--move-pink-fg-subtle': '#fcc2d7',
   },
   grape: {
     '--move-grape-50': '#f8f0fc',
@@ -69,7 +67,6 @@ export const COLORS = {
     '--move-grape-900': '#862e9c',
     '--move-grape-950': '#5a1e6a',
     '--move-grape-fg-solid': 'white',
-    '--move-grape-fg-subtle': '#eebefa',
   },
   violet: {
     '--move-violet-50': '#f3f0ff',
@@ -84,7 +81,6 @@ export const COLORS = {
     '--move-violet-900': '#5f3dc4',
     '--move-violet-950': '#3d2880',
     '--move-violet-fg-solid': 'white',
-    '--move-violet-fg-subtle': '#d0bfff',
   },
   indigo: {
     '--move-indigo-50': '#edf2ff',
@@ -99,7 +95,6 @@ export const COLORS = {
     '--move-indigo-900': '#364fc7',
     '--move-indigo-950': '#233080',
     '--move-indigo-fg-solid': 'white',
-    '--move-indigo-fg-subtle': '#bac8ff',
   },
   blue: {
     '--move-blue-50': '#e7f5ff',
@@ -114,7 +109,6 @@ export const COLORS = {
     '--move-blue-900': '#1864ab',
     '--move-blue-950': '#0f406e',
     '--move-blue-fg-solid': 'white',
-    '--move-blue-fg-subtle': '#a5d8ff',
   },
   cyan: {
     '--move-cyan-50': '#e3fafc',
@@ -129,7 +123,6 @@ export const COLORS = {
     '--move-cyan-900': '#0b7285',
     '--move-cyan-950': '#074a57',
     '--move-cyan-fg-solid': 'white',
-    '--move-cyan-fg-subtle': '#99e9f2',
   },
   teal: {
     '--move-teal-50': '#e6fcf5',
@@ -144,7 +137,6 @@ export const COLORS = {
     '--move-teal-900': '#087f5b',
     '--move-teal-950': '#05503a',
     '--move-teal-fg-solid': 'white',
-    '--move-teal-fg-subtle': '#96f2d7',
   },
   green: {
     '--move-green-50': '#ebfbee',
@@ -159,7 +151,6 @@ export const COLORS = {
     '--move-green-900': '#2b8a3e',
     '--move-green-950': '#1b5727',
     '--move-green-fg-solid': 'white',
-    '--move-green-fg-subtle': '#b2f2bb',
   },
   lime: {
     '--move-lime-50': '#f4fce3',
@@ -174,7 +165,6 @@ export const COLORS = {
     '--move-lime-900': '#5c940d',
     '--move-lime-950': '#3b5f09',
     '--move-lime-fg-solid': 'black',
-    '--move-lime-fg-subtle': '#d8f5a2',
   },
   yellow: {
     '--move-yellow-50': '#fff9db',
@@ -189,7 +179,6 @@ export const COLORS = {
     '--move-yellow-900': '#e67700',
     '--move-yellow-950': '#8a4800',
     '--move-yellow-fg-solid': 'black',
-    '--move-yellow-fg-subtle': '#ffec99',
   },
   orange: {
     '--move-orange-50': '#fff4e6',
@@ -204,7 +193,6 @@ export const COLORS = {
     '--move-orange-900': '#d9480f',
     '--move-orange-950': '#873008',
     '--move-orange-fg-solid': 'black',
-    '--move-orange-fg-subtle': '#ffd8a8',
   },
   static: {
     '--move-white': '#ffffff',
