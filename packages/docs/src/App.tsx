@@ -56,6 +56,7 @@ import { SurfacesPage } from "./pages/systems/SurfacesPage";
 import { SystemsOverviewPage } from "./pages/systems/SystemsOverviewPage";
 import { FormsPage } from "./pages/systems/FormsPage";
 import { StackingPage } from "./pages/systems/StackingPage";
+import { LayoutPage } from "./pages/systems/LayoutPage";
 import { AdaptersPage } from "./pages/core-concepts/AdaptersPage";
 import { AnimationOverviewPage } from "./pages/animation/AnimationOverviewPage";
 import { AnimationLifecyclePage } from "./pages/animation/AnimationLifecyclePage";
@@ -312,7 +313,7 @@ function App() {
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <Stack direction="row" gap="none" align="stretch" fill>
+      <Stack direction="row" gap="none" align="stretch" fill="parent">
         <AppSidebar />
         <ScrollArea.Root>
           <ScrollArea.Content ref={contentRef}>
@@ -375,6 +376,7 @@ function App() {
                 <Route path="/systems/forms" element={<FormsPage />} />
                 <Route path="/systems/surfaces" element={<SurfacesPage />} />
                 <Route path="/systems/stacking" element={<StackingPage />} />
+                <Route path="/systems/layout" element={<LayoutPage />} />
                 <Route path="/systems/hooks" element={<HooksPage />} />
                 <Route
                   path="/systems/truncation"

@@ -2,6 +2,7 @@
 // Generated from InputRange.spec.ts
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Slider } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { scaleUp, scaleDown, useAnimations, resolveAnimationsConfig } from '../../../animation';
@@ -29,7 +30,7 @@ export interface InputRangeProps extends Omit<React.HTMLAttributes<HTMLElement>,
   disabled?: boolean;
   invalid?: boolean;
   orientation?: 'horizontal' | 'vertical';
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   name?: string;
   showValue?: boolean;
   formatValue?: (value: number) => string;

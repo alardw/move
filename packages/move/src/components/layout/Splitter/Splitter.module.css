@@ -30,6 +30,16 @@
  * Panel
  * ============================================ */
 
+/* fill=remaining — take the space left after siblings rather than the parent's
+   full height, for a Splitter placed directly in a flex chain. Yields the
+   unconditional height:100% above. See /systems/layout. */
+.root[data-fill='remaining'] {
+  height: auto;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
 .panel {
   overflow: auto;
   min-width: 0;

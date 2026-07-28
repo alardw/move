@@ -245,13 +245,13 @@ export const spec = {
     },
     {
       name: 'width',
-      type: 'string | number',
+      typeRef: 'Dimension',
       moveSpecific: true,
       description: 'Width of the player (number treated as px)',
     },
     {
       name: 'height',
-      type: 'string | number',
+      typeRef: 'Dimension',
       moveSpecific: true,
       description: 'Height of the player (number treated as px)',
     },

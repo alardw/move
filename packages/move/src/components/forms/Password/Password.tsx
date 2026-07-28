@@ -1,6 +1,7 @@
 'use client';
 // Generated from Password.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -33,7 +34,7 @@ export interface PasswordProps extends React.HTMLAttributes<HTMLElement> {
   iconLeft?: React.ReactNode;
   showIcon?: React.ReactNode;
   hideIcon?: React.ReactNode;
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   visible?: boolean;
   defaultVisible?: boolean;
   onVisibleChange?: (visible: boolean) => void;

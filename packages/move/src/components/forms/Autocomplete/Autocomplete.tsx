@@ -2,6 +2,7 @@
 // Generated from Autocomplete.spec.ts
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -215,7 +216,7 @@ export interface AutocompleteTriggerProps extends React.HTMLAttributes<HTMLEleme
   invalid?: boolean;
   size?: AutocompleteTriggerSize;
   variant?: AutocompleteTriggerVariant;
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   sp?: SlotPropsMap<'trigger'>;
 }
 
@@ -762,9 +763,9 @@ export interface AutocompleteContentProps extends React.HTMLAttributes<HTMLEleme
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
-  width?: React.CSSProperties['width'];
-  minWidth?: React.CSSProperties['minWidth'];
-  maxWidth?: React.CSSProperties['maxWidth'];
+  width?: Dimension;
+  minWidth?: Dimension;
+  maxWidth?: Dimension;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
@@ -774,9 +775,9 @@ interface AutocompleteContentInnerProps {
   style?: React.CSSProperties;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
-  width?: React.CSSProperties['width'];
-  minWidth?: React.CSSProperties['minWidth'];
-  maxWidth?: React.CSSProperties['maxWidth'];
+  width?: Dimension;
+  minWidth?: Dimension;
+  maxWidth?: Dimension;
   contentCx: CxFn<'content' | 'contentInner'>;
   innerCx: CxFn<'content' | 'contentInner'>;
   contentSp: Record<string, unknown>;

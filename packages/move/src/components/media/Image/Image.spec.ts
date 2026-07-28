@@ -110,13 +110,13 @@ export const spec = {
     },
     {
       name: 'width',
-      type: 'string | number',
+      typeRef: 'Dimension',
       moveSpecific: true,
       description: 'Width of the root container (number treated as px)',
     },
     {
       name: 'height',
-      type: 'string | number',
+      typeRef: 'Dimension',
       moveSpecific: true,
       description: 'Height of the root container (number treated as px)',
     },

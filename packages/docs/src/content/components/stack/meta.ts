@@ -4,6 +4,10 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
+    icon: 'layout-dashboard',
+    text: 'Carries a full-height layout: `fill="remaining"` passes a definite height down so a scroll region below can actually scroll, and `clip` makes it a boundary. See Systems → Layout.',
+  },
+  {
     icon: 'rows',
     text: 'A flexbox layout primitive with token-driven `gap`, `padding`, alignment, and direction. The most-reached-for layout component in any Move app.',
   },

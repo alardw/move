@@ -266,7 +266,6 @@
   font-weight: var(--move-table-header-weight);
   font-size: inherit;
   color: var(--move-table-header-fg);
-  white-space: nowrap;
 }
 
 .head[data-sortable] {

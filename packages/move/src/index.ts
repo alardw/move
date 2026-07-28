@@ -980,6 +980,7 @@ export type {
   MoveColors,
   Radius,
   Truncate,
+  Dimension,
 } from './shared/types';
 export { MOVE_COLORS } from './shared/color';
 export { CANONICAL_TYPES, resolveTypeRef, valuesForTypeRef } from './shared/typeRegistry';

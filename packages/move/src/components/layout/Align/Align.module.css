@@ -80,6 +80,23 @@
   padding: var(--move-spacing-xl);
 }
 
+/* fill=parent — all of the parent's height. Only correct as the parent's only
+   child; with siblings it claims the full height and overflows. Needed when the
+   parent is not a flex container. See /systems/layout. */
+.root[data-fill='parent'] {
+  height: 100%;
+}
+
+/* fill=remaining — the space left after siblings, plus a waiver of the automatic
+   minimum size so this box can be shrunk to it. Both minimums are set because the
+   flex main axis belongs to the PARENT and a child can't read its direction in
+   CSS; each is a no-op on the axis that isn't the main one. */
+.root[data-fill='remaining'] {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
 /* Flex */
 .root[data-flex='1'] {
   flex: 1;

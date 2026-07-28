@@ -10,14 +10,14 @@ export default function BasicSample() {
       <Splitter.Root>
         <Splitter.Panel>
           {/* composite-purity-ignore: muted pane surface tint; no Move background primitive */}
-          <Stack gap="xs" fill padding="md" style={panelBg}>
+          <Stack gap="xs" fill="parent" padding="md" style={panelBg}>
             <Text weight="medium">Sidebar</Text>
             <Text size="sm" color="muted">Drag the gutter to resize.</Text>
           </Stack>
         </Splitter.Panel>
         <Splitter.Panel>
           {/* composite-purity-ignore: muted pane surface tint; no Move background primitive */}
-          <Stack gap="xs" fill padding="md" style={panelBg}>
+          <Stack gap="xs" fill="parent" padding="md" style={panelBg}>
             <Text weight="medium">Main</Text>
             <Text size="sm" color="muted">Or focus the gutter and use Arrow keys.</Text>
           </Stack>

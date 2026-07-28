@@ -79,10 +79,17 @@ export const spec = {
     },
     {
       name: 'fill',
-      type: "boolean | 'screen'",
+      type: "'parent' | 'remaining'",
       moveSpecific: true,
       description:
-        "Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height.",
+        "Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child or you overflow it); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can actually scroll. Prefer 'remaining'. Neither knows what a viewport is — that enters at the app boundary via <MoveRoot fullHeight>. See /systems/layout.",
+    },
+    {
+      name: 'clip',
+      type: 'boolean',
+      moveSpecific: true,
+      description:
+        'Clip overflowing content (overflow: clip) — a boundary, not a scroller. Deliberately not overflow:hidden, which stays programmatically scrollable and lets a focused child silently scroll the box with no scrollbar to return by. To scroll, use ScrollArea.',
     },
     {
       name: 'stagger',
@@ -121,6 +128,7 @@ export const spec = {
       'data-collapsed',
       'data-flex',
       'data-fill',
+      'data-clip',
     ],
   },
 

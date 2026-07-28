@@ -50,6 +50,18 @@ const STRICT = process.argv.includes('--strict');
 
 const ALLOWED_TYPEREFS = {
   size:    ['Size', 'SizeWithXS', 'SizeWithXL', 'SizeFull', 'TypographySize', 'DisplaySize'],
+  // Measurements, not scales. `Dimension` is number-is-pixels | CSS length string;
+  // these were spelled five different ways before it existed.
+  width:       ['Dimension'],
+  height:      ['Dimension'],
+  minWidth:    ['Dimension'],
+  minHeight:   ['Dimension'],
+  maxWidth:    ['Dimension'],
+  maxHeight:   ['Dimension'],
+  defaultSize: ['Dimension'],
+  minSize:     ['Dimension'],
+  gutterSize:  ['Dimension'],
+  diameter:    ['Dimension'],
   gap:     ['Gap', 'GapWithXL2'],
   padding: ['Gap', 'GapWithXL2'],
   color:   ['Color'],

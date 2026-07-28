@@ -5,7 +5,7 @@ export default function BasicSample() {
     <Skeleton.Root>
       <Stack gap="md">
         <Stack direction="row" gap="md" align="center">
-          <Skeleton.Circle size={48} />
+          <Skeleton.Circle diameter={48} />
           <Stack gap="xs" flex={1}>
             <Skeleton.Rounded width="40%" height={16} />
             <Skeleton.Rounded width="70%" height={12} />

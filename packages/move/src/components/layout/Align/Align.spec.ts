@@ -56,6 +56,13 @@ export const spec = {
             'Use flex (instead of grid) when you need natural-width children rather than the 1fr/auto/1fr distribution.',
         },
         {
+          name: 'fill',
+          type: "'parent' | 'remaining'",
+          moveSpecific: true,
+          description:
+            "Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can scroll. See /systems/layout.",
+        },
+        {
           name: 'children',
           type: 'React.ReactNode',
           moveSpecific: false,

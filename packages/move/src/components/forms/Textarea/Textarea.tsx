@@ -1,6 +1,7 @@
 'use client';
 // Generated from Textarea.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import styles from './Textarea.module.css';
@@ -17,7 +18,7 @@ export interface TextareaProps extends React.HTMLAttributes<HTMLElement> {
   maxRows?: number;
   rows?: number;
   resize?: 'none' | 'vertical' | 'horizontal' | 'both';
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;

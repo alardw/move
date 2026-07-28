@@ -1,6 +1,7 @@
 'use client';
 // Generated from InputText.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import styles from './InputText.module.css';
@@ -14,7 +15,7 @@ export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
   invalid?: boolean;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;

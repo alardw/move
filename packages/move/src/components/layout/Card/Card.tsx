@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
-import type { Size, Truncate } from '../../../shared/types';
+import type { Size, Truncate, Dimension } from '../../../shared/types';
 import { resolveTruncate } from '../../../shared/truncate';
 import styles from './Card.module.css';
 
@@ -24,7 +24,7 @@ export type CardSize = Size;
 export interface CardRootProps extends React.HTMLAttributes<HTMLElement> {
   variant?: CardVariant;
   size?: CardSize;
-  maxWidth?: string | number;
+  maxWidth?: Dimension;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

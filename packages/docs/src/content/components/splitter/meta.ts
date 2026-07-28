@@ -4,6 +4,10 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
+    icon: 'layout-dashboard',
+    text: 'Panels scroll independently inside a full-height layout — `Root` takes `fill="remaining"`, and since each `Panel` is a block, its child uses `fill="parent"`. See Systems → Layout.',
+  },
+  {
     icon: 'columns-2',
     text: 'Two or more resizable panels with auto-injected gutters between them. Drag to resize, double-click a gutter to reset.',
   },

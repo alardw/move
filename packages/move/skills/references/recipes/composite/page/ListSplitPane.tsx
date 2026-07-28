@@ -54,7 +54,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
         {/* composite-purity-ignore: bordered frame that fills the available height for the splitter — no Move fill-height/box primitive */}
         <div style={{ height: '100%', border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-radius-md)', overflow: 'hidden' }}>
           <Splitter.Root layout="horizontal" collapseBelow={640}>
-            <Splitter.Panel size={35} minSize={25}>
+            <Splitter.Panel defaultSize="35%" minSize="25%">
               <List hover>
                 {MESSAGES.map((msg) => (
                   <List.Item
@@ -80,7 +80,7 @@ export default function ListSplitPane({ labels }: { labels?: Partial<Labels> }) 
               </List>
             </Splitter.Panel>
 
-            <Splitter.Panel size={65}>
+            <Splitter.Panel defaultSize="65%">
               {selected ? (
                 <Stack gap="md" padding="md">
                   <Stack direction="row" align="center" justify="between">

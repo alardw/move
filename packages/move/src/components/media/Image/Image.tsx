@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
-import type { Radius } from '../../../shared/types';
+import type { Radius, Dimension } from '../../../shared/types';
 import styles from './Image.module.css';
 
 // =============================================================================
@@ -49,8 +49,8 @@ export interface ImageProps extends React.HTMLAttributes<HTMLElement> {
   radius?: ImageRadius;
   position?: ImagePosition;
   aspectRatio?: string;
-  width?: string | number;
-  height?: string | number;
+  width?: Dimension;
+  height?: Dimension;
   loading?: 'lazy' | 'eager';
   action?: React.ReactNode;
   /** Mark the image as a click target — adds cursor: pointer, hover

@@ -141,7 +141,7 @@ describe('Skeleton', () => {
     it('size prop sets width and height (number converts to px)', () => {
       render(
         <Skeleton.Root>
-          <Skeleton.Circle size={60} data-testid="circle" />
+          <Skeleton.Circle diameter={60} data-testid="circle" />
         </Skeleton.Root>,
       );
       const el = screen.getByTestId('circle');
@@ -151,7 +151,7 @@ describe('Skeleton', () => {
     it('size prop accepts string values', () => {
       render(
         <Skeleton.Root>
-          <Skeleton.Circle size="3rem" data-testid="circle" />
+          <Skeleton.Circle diameter="3rem" data-testid="circle" />
         </Skeleton.Root>,
       );
       const el = screen.getByTestId('circle');

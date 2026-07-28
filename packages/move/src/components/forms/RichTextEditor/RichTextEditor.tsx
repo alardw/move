@@ -2,6 +2,7 @@
 // Generated from RichTextEditor.spec.ts
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent } from '../../../engine';
 import { useControlledState } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
@@ -302,7 +303,7 @@ export interface RichTextEditorContentProps extends React.HTMLAttributes<HTMLEle
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  minHeight?: React.CSSProperties['minHeight'];
+  minHeight?: Dimension;
   onFocus?: React.FocusEventHandler<HTMLDivElement>;
   onBlur?: React.FocusEventHandler<HTMLDivElement>;
   sp?: SlotPropsMap<'content'>;

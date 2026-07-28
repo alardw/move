@@ -13,12 +13,18 @@ export type AlignVertical = 'start' | 'center' | 'end' | 'stretch' | 'baseline';
  *  `'move'` directly going forward. */
 export type AlignPadding = Gap;
 export type AlignFlex = 1 | 'auto' | 'none';
+/** Where this box's height comes from. `'parent'` = all of the parent's height;
+ *  `'remaining'` = the space left after siblings, waiving the automatic minimum
+ *  size so a scroll region below can scroll. Prefer `'remaining'`. */
+export type AlignFill = 'parent' | 'remaining';
 
 export interface AlignProps extends React.HTMLAttributes<HTMLElement> {
   gap?: AlignGap;
   align?: AlignVertical;
   padding?: AlignPadding;
   flex?: AlignFlex;
+  /** Where this box's height comes from — see /systems/layout. */
+  fill?: AlignFill;
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
@@ -35,7 +41,7 @@ const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
   styles,
   slots: ['root'] as const,
   defaults: { gap: 'md' as AlignGap, align: 'center' as AlignVertical },
-  moveProps: ['padding', 'flex'],
+  moveProps: ['padding', 'flex', 'fill'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -54,6 +60,7 @@ const AlignRoot = withMoveComponent<'root', AlignProps, HTMLDivElement>({
             data-align={props.align as string}
             data-padding={props.padding as string | undefined}
             data-flex={props.flex != null ? String(props.flex) : undefined}
+            data-fill={props.fill as string | undefined}
           >
             {props.children}
           </div>

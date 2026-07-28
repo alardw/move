@@ -1,6 +1,7 @@
 'use client';
 // Generated from Skeleton.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { animate } from 'animejs';
 import { withMoveComponent } from '../../../engine';
 import { useAnimations, prefersReducedMotion } from '../../../animation';
@@ -144,7 +145,8 @@ const SkeletonRoot = withMoveComponent<'root', SkeletonRootProps, HTMLDivElement
 // ============================================================================
 
 export interface SkeletonCircleProps extends React.HTMLAttributes<HTMLElement> {
-  size?: number | string;
+  /** Circle diameter. A number is pixels; a string is any CSS length. */
+  diameter?: Dimension;
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'circle'>;
@@ -154,8 +156,8 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
   name: 'SkeletonCircle',
   styles,
   slots: ['circle'] as const,
-  defaults: { size: 40 },
-  moveProps: ['size'],
+  defaults: { diameter: 40 },
+  moveProps: ['diameter'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     useSkeletonPulse(internalRef);
@@ -169,7 +171,7 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
           ...spRest
         } = circleSp as Record<string, unknown>;
 
-        const s = typeof props.size === 'number' ? `${props.size}px` : props.size;
+        const s = typeof props.diameter === 'number' ? `${props.diameter}px` : props.diameter;
 
         return (
           <div
@@ -195,8 +197,8 @@ const SkeletonCircle = withMoveComponent<'circle', SkeletonCircleProps, HTMLDivE
 // ============================================================================
 
 export interface SkeletonRectangleProps extends React.HTMLAttributes<HTMLElement> {
-  width?: number | string;
-  height?: number | string;
+  width?: Dimension;
+  height?: Dimension;
   className?: string;
   style?: React.CSSProperties;
   sp?: SlotPropsMap<'rectangle'>;
@@ -244,8 +246,8 @@ const SkeletonRectangle = withMoveComponent<'rectangle', SkeletonRectangleProps,
 // ============================================================================
 
 export interface SkeletonRoundedProps extends React.HTMLAttributes<HTMLElement> {
-  width?: number | string;
-  height?: number | string;
+  width?: Dimension;
+  height?: Dimension;
   radius?: string;
   className?: string;
   style?: React.CSSProperties;

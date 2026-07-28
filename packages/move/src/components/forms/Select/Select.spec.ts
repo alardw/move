@@ -166,19 +166,19 @@ export const spec = {
         },
         {
           name: 'width',
-          type: "React.CSSProperties['width']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Custom width override',
         },
         {
           name: 'minWidth',
-          type: "React.CSSProperties['minWidth']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Minimum width override (token default: 10rem)',
         },
         {
           name: 'maxWidth',
-          type: "React.CSSProperties['maxWidth']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description:
             'Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)',
@@ -280,19 +280,19 @@ export const spec = {
         },
         {
           name: 'width',
-          type: "React.CSSProperties['width']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Custom width override — by default matches trigger width',
         },
         {
           name: 'minWidth',
-          type: "React.CSSProperties['minWidth']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Minimum width override (token default: 10rem)',
         },
         {
           name: 'maxWidth',
-          type: "React.CSSProperties['maxWidth']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Maximum width override (token default: 30rem)',
         },

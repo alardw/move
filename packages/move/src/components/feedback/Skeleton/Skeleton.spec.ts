@@ -87,11 +87,12 @@ export const spec = {
       ],
       props: [
         {
-          name: 'size',
-          type: 'number | string',
+          name: 'diameter',
+          typeRef: 'Dimension',
           default: '40',
           moveSpecific: true,
-          description: 'Circle diameter (number for px, string for custom)',
+          description:
+            'Circle diameter. A number is pixels; a string is any CSS length. Named `diameter` rather than `size` because `size` is the scale token everywhere else in the library.',
         },
       ],
       usesFactory: true,
@@ -109,14 +110,14 @@ export const spec = {
       props: [
         {
           name: 'width',
-          type: 'number | string',
+          typeRef: 'Dimension',
           default: "'100%'",
           moveSpecific: true,
           description: 'Rectangle width',
         },
         {
           name: 'height',
-          type: 'number | string',
+          typeRef: 'Dimension',
           default: "'1rem'",
           moveSpecific: true,
           description: 'Rectangle height',
@@ -137,14 +138,14 @@ export const spec = {
       props: [
         {
           name: 'width',
-          type: 'number | string',
+          typeRef: 'Dimension',
           default: "'100%'",
           moveSpecific: true,
           description: 'Width of the rounded shape',
         },
         {
           name: 'height',
-          type: 'number | string',
+          typeRef: 'Dimension',
           default: "'1rem'",
           moveSpecific: true,
           description: 'Height of the rounded shape',

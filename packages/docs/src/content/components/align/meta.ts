@@ -4,6 +4,10 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
+    icon: 'layout-dashboard',
+    text: 'Takes `fill="remaining"`, so it can sit inside a full-height layout without breaking the height travelling through it. See Systems → Layout.',
+  },
+  {
     icon: 'columns-3',
     text: 'Three slots — Start, Center, End — distributed on a `1fr auto 1fr` grid, so the centre stays centred even when one side is heavier than the other.',
   },

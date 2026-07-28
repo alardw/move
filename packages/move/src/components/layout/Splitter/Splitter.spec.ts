@@ -71,6 +71,13 @@ export const spec = {
             'Container width in pixels below which horizontal layout collapses to vertical stacking',
         },
         {
+          name: 'fill',
+          type: "'remaining'",
+          moveSpecific: true,
+          description:
+            "Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout.",
+        },
+        {
           name: 'onResizeEnd',
           type: '(sizes: number[]) => void',
           moveSpecific: true,
@@ -100,17 +107,19 @@ export const spec = {
           description: 'Inline styles',
         },
         {
-          name: 'size',
-          type: 'number',
+          name: 'defaultSize',
+          typeRef: 'Dimension',
           moveSpecific: true,
-          description: 'Initial size as percentage (auto-distributed if not specified)',
+          description:
+            "Starting size before the user drags. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Omit it and the panel takes an equal share of what its sized siblings leave.",
         },
         {
           name: 'minSize',
-          type: 'number',
-          default: '5',
+          typeRef: 'Dimension',
+          default: '44',
           moveSpecific: true,
-          description: 'Minimum size as percentage (prevents panel from collapsing below this)',
+          description:
+            "Smallest the panel can be dragged to. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Defaults to 44px (WCAG 2.5.8 enhanced target size), which unlike a percentage means the same thing in both orientations and at every window size.",
         },
       ],
       usesFactory: true,
@@ -197,7 +206,7 @@ export const spec = {
     {
       id: 'min-size-enforced',
       description:
-        'During drag and keyboard resize, both adjacent panels are constrained to not go below their minSize (default 5%).',
+        'During drag and keyboard resize, both adjacent panels are constrained to not go below their OWN minSize (default 44px), resolved to a percentage of the Splitter against its measured length.',
     },
     {
       id: 'context-internal',
@@ -248,8 +257,8 @@ export const spec = {
       'Root provides context to Panel and Gutter sub-components',
       'Panel renders with percentage width in horizontal layout',
       'Panel renders with percentage height in vertical layout',
-      'Panel defaults minSize to 5',
-      'Panel auto-distributes size when size prop not specified',
+      'Panel defaults minSize to 44px',
+      'Panel auto-distributes size when defaultSize not specified',
       'Panel determines index from DOM position',
       'Gutter renders with role=separator',
       'Gutter aria-orientation is vertical for horizontal layout',

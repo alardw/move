@@ -2,6 +2,7 @@
 // Generated from Select.spec.ts
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
@@ -336,9 +337,9 @@ export interface SelectTriggerProps extends React.HTMLAttributes<HTMLElement> {
   invalid?: boolean;
   size?: SelectTriggerSize;
   variant?: SelectTriggerVariant;
-  width?: React.CSSProperties['width'];
-  minWidth?: React.CSSProperties['minWidth'];
-  maxWidth?: React.CSSProperties['maxWidth'];
+  width?: Dimension;
+  minWidth?: Dimension;
+  maxWidth?: Dimension;
   sp?: SlotPropsMap<'trigger'>;
 }
 
@@ -565,9 +566,9 @@ export interface SelectContentProps extends React.HTMLAttributes<HTMLElement> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
-  width?: React.CSSProperties['width'];
-  minWidth?: React.CSSProperties['minWidth'];
-  maxWidth?: React.CSSProperties['maxWidth'];
+  width?: Dimension;
+  minWidth?: Dimension;
+  maxWidth?: Dimension;
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
@@ -581,9 +582,9 @@ interface SelectContentInnerProps {
   style?: React.CSSProperties;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
-  width?: React.CSSProperties['width'];
-  minWidth?: React.CSSProperties['minWidth'];
-  maxWidth?: React.CSSProperties['maxWidth'];
+  width?: Dimension;
+  minWidth?: Dimension;
+  maxWidth?: Dimension;
   onPointerDownOutside?: (e: Event) => void;
   onEscapeKeyDown?: (e: KeyboardEvent) => void;
   contentCx: CxFn<'content' | 'contentInner'>;

@@ -23,9 +23,19 @@ export type StackJustify = 'start' | 'center' | 'end' | 'between' | 'evenly';
  *  `"md 2xl"` (top/bottom md, left/right 2xl). Uses the extended spacing scale. */
 export type StackPadding = Shorthand<GapWithXL2>;
 export type StackFlex = 1 | 'auto' | 'none';
-/** `true` fills the parent's height (100%); `'screen'` fills the viewport
- *  (100dvh) — for app-shell roots that own the full window height. */
-export type StackFill = boolean | 'screen';
+/**
+ * Where this box's height comes from — see /systems/layout.
+ *
+ * `'parent'` takes all of the parent's height (the parent must be sized, and you
+ * must be its only child, or you'll overflow it). `'remaining'` takes the space
+ * left after your siblings, and waives the right to be as tall as your content —
+ * which is what lets a scroll region below you actually scroll. `'remaining'` is
+ * correct in both cases, so prefer it unless the parent isn't a flex container.
+ *
+ * Neither knows what a viewport is. That constraint enters at the app boundary
+ * via `<MoveRoot fullHeight>`, and everything below is relative to it.
+ */
+export type StackFill = 'parent' | 'remaining';
 
 /** Opt-in staggered entrance for direct children. `true` uses defaults;
  *  the object form tunes the per-item delay and the stagger origin. */
@@ -39,6 +49,11 @@ export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   padding?: StackPadding;
   flex?: StackFlex;
   fill?: StackFill;
+  /** Clip anything that overflows this box (`overflow: clip`) — a boundary, not a
+   *  scroller. Deliberately not `overflow: hidden`: hidden stays programmatically
+   *  scrollable, so focusing a child below the fold silently scrolls the box with
+   *  no scrollbar to get back. `clip` cannot. To scroll, use ScrollArea. */
+  clip?: boolean;
   wrap?: boolean;
   collapseBelow?: string;
   /** Reveal direct children with a staggered fade+rise on mount. Off by default. */
@@ -67,7 +82,7 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
     wrap: false,
     stagger: false as StackStagger,
   },
-  moveProps: ['collapseBelow', 'fill', 'stagger', 'animations', 'padding', 'flex'],
+  moveProps: ['collapseBelow', 'fill', 'clip', 'stagger', 'animations', 'padding', 'flex'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const collapseBelow = props.collapseBelow as string | undefined;
@@ -127,7 +142,8 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
             data-justify={props.justify as string}
             {...directionalAttrs('padding', props.padding as string | undefined)}
             data-flex={props.flex != null ? String(props.flex) : undefined}
-            data-fill={props.fill ? (props.fill === true ? '' : String(props.fill)) : undefined}
+            data-fill={props.fill as string | undefined}
+            data-clip={props.clip ? '' : undefined}
             data-wrap={props.wrap ? '' : undefined}
           >
             {props.children}

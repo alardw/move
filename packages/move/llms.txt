@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 69 components. Version 0.1.50.
+> 70 components. Version 0.1.50.
 
 ## Accordion (disclosure)
 Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal
@@ -63,6 +63,7 @@ Align.Root props:
 - align: 'start' | 'center' | 'end' | 'stretch' | 'baseline' (default: center) — Vertical alignment of items
 - padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Padding around the bar.
 - flex: boolean — Use flex (instead of grid) when you need natural-width children rather than the 1fr/auto/1fr distribution.
+- fill: 'parent' | 'remaining' — Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can scroll. See /systems/layout.
 - children: React.ReactNode — Align sections (Start, Center, End)
 Align.Start props:
 - children: React.ReactNode — Start-aligned content.
@@ -172,7 +173,7 @@ Autocomplete.Trigger props:
 - invalid: boolean — Invalid state
 - size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
 - variant: 'outlined' | 'filled' (default: outlined) — Trigger variant
-- width: React.CSSProperties['width'] — Explicit width override
+- width: Dimension — Explicit width override
 Autocomplete.Input props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -202,9 +203,9 @@ Autocomplete.Content props:
 - sideOffset: number (default: 4) — Offset from trigger
 - align: 'start' | 'center' | 'end' (default: start) — Alignment relative to trigger
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
-- width: string | number — Override the popover width.
-- minWidth: string | number — Minimum popover width.
-- maxWidth: string | number — Maximum popover width.
+- width: Dimension — Override the popover width.
+- minWidth: Dimension — Minimum popover width.
+- maxWidth: Dimension — Maximum popover width.
 Autocomplete.Item props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -401,7 +402,7 @@ Props:
 Card.Root props:
 - variant: 'default' | 'elevated' | 'ghost' (default: default) — Visual style variant
 - size: 'sm' | 'md' | 'lg' (default: md) — Card size controlling padding and title size
-- maxWidth: string | number — Cap the card width via the --move-card-max-width custom property.
+- maxWidth: Dimension — Cap the card width via the --move-card-max-width custom property.
 - children: React.ReactNode — Card content sections
 Card.Header props:
 - children: React.ReactNode — Title and description elements
@@ -586,7 +587,7 @@ Form input with color preview swatch that opens a ColorPicker popover, supportin
 Props:
 - variant: 'outlined' | 'filled' (default: outlined) — Input variant
 - size: 'sm' | 'md' | 'lg' (default: md) — Input size
-- width: React.CSSProperties['width'] — Explicit width override
+- width: Dimension — Explicit width override
 - format: ColorFormat (default: hex) — Active color format (hex, hexa, rgb, rgba, hsl, hsla)
 - value: string — Controlled color value
 - defaultValue: string — Default color value (uncontrolled)
@@ -1080,8 +1081,8 @@ Props:
 - radius: 'none' | 'sm' | 'md' | 'lg' | 'full' (default: none) — Border radius applied to the root container
 - position: 'center' | 'top' | 'bottom' | 'left' | 'right' | 'top left' | 'top right' | 'bottom left' | 'bottom right' (default: center) — CSS object-position value for the img element
 - aspectRatio: string — CSS aspect-ratio value applied to the root container
-- width: string | number — Width of the root container (number treated as px)
-- height: string | number — Height of the root container (number treated as px)
+- width: Dimension — Width of the root container (number treated as px)
+- height: Dimension — Height of the root container (number treated as px)
 - loading: 'lazy' | 'eager' — Native loading attribute passed to the img element
 - action: React.ReactNode — Content rendered in the action overlay, revealed on hover or focus.
 - interactive: boolean — Make the image a click target. Adds cursor, hover tint, focus ring, and Enter/Space activation. Defaults to true when `onClick` is set.
@@ -1104,7 +1105,7 @@ Props:
 - disabled: boolean — Disabled state
 - invalid: boolean — Invalid state — changes range/thumb to error color
 - orientation: 'horizontal' | 'vertical' (default: horizontal) — Slider orientation
-- width: React.CSSProperties['width'] — Custom width override
+- width: Dimension — Custom width override
 - name: string — Form input name
 - showValue: boolean — Show value label(s) alongside slider
 - formatValue: (value: number) => string — Custom value formatter for display labels
@@ -1121,7 +1122,7 @@ Props:
 - invalid: boolean — Whether the input is in an invalid/error state
 - iconLeft: React.ReactNode — Icon element rendered before the input
 - iconRight: React.ReactNode — Icon element rendered after the input
-- width: React.CSSProperties['width'] — Explicit width override for the root wrapper
+- width: Dimension — Explicit width override for the root wrapper
 - disabled: boolean — Whether the input is disabled
 - readOnly: boolean — Whether the input is read-only
 - placeholder: string — Placeholder text
@@ -1276,7 +1277,7 @@ Props:
 - allowNegative: boolean (default: true) — Allow negative numbers
 - hideControls: boolean (default: false) — Hide increment/decrement buttons
 - invalid: boolean — Invalid state with error border styling
-- width: React.CSSProperties['width'] — Custom width override
+- width: Dimension — Custom width override
 - iconLeft: React.ReactNode — Optional icon rendered before input
 - prefix: string — Prefix text prepended to display value (e.g. "$")
 - suffix: string — Suffix text appended to display value (e.g. "%")
@@ -1340,7 +1341,7 @@ Props:
 - iconLeft: React.ReactNode — Optional icon rendered before input
 - showIcon: React.ReactNode — Custom icon for show password state (defaults to eye icon)
 - hideIcon: React.ReactNode — Custom icon for hide password state (defaults to eye-off icon)
-- width: React.CSSProperties['width'] — Custom width override
+- width: Dimension — Custom width override
 - visible: boolean — Controlled visibility state
 - defaultVisible: boolean (default: false) — Default visibility state (uncontrolled)
 - onVisibleChange: (visible: boolean) => void — Called when visibility toggles
@@ -1442,8 +1443,8 @@ Popover.Content props:
 Popover.Arrow props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- width: number — Arrow width in px
-- height: number — Arrow height in px
+- width: Dimension — Arrow width in px
+- height: Dimension — Arrow height in px
 Popover.Close props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1469,6 +1470,18 @@ Props:
 - size: 'sm' | 'base' | 'lg' (default: base) — Base font size for prose content
 - children: React.ReactNode — HTML content to style
 Example: <Prose>…</Prose>
+
+## Quote (typography)
+An attributed quotation — a semantic figure/blockquote/figcaption with optional cite URL, a left accent rule on a subtle panel, and italic (overridable) quote text; block (inline) or pull (emphasis) variant
+Props:
+- variant: 'block' | 'pull' (default: block) — block = inline indented blockquote with a left accent rule; pull = larger pull-quote emphasis
+- italic: boolean (default: true) — Italic quote text (default); false renders it upright
+- attribution: React.ReactNode — Attribution content (name + optional source); rendered in <figcaption>
+- cite: string — Source URL → the <blockquote cite> HTML attribute
+- className: string — Additional CSS class
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — The quoted text content
+Example: <Quote variant="block">…</Quote>
 
 ## RadioGroup (forms)
 Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state
@@ -1545,7 +1558,7 @@ RichTextEditor.Content props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Editor engine component (TipTap, Lexical, Plate, etc.)
-- minHeight: React.CSSProperties['minHeight'] — Minimum height for the content area
+- minHeight: Dimension — Minimum height for the content area
 - onFocus: React.FocusEventHandler<HTMLDivElement> — Focus event handler
 - onBlur: React.FocusEventHandler<HTMLDivElement> — Blur event handler
 Example: <RichTextEditor variant="outline">…</RichTextEditor>
@@ -1605,9 +1618,9 @@ Select.Trigger props:
 - invalid: boolean — Invalid state
 - size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
 - variant: 'outlined' | 'filled' (default: outlined) — Visual variant
-- width: React.CSSProperties['width'] — Custom width override
-- minWidth: React.CSSProperties['minWidth'] — Minimum width override (token default: 10rem)
-- maxWidth: React.CSSProperties['maxWidth'] — Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)
+- width: Dimension — Custom width override
+- minWidth: Dimension — Minimum width override (token default: 10rem)
+- maxWidth: Dimension — Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)
 Select.Value props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1624,9 +1637,9 @@ Select.Content props:
 - sideOffset: number (default: 4) — Distance from trigger in px
 - align: 'start' | 'center' | 'end' — Alignment along the trigger axis
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
-- width: React.CSSProperties['width'] — Custom width override — by default matches trigger width
-- minWidth: React.CSSProperties['minWidth'] — Minimum width override (token default: 10rem)
-- maxWidth: React.CSSProperties['maxWidth'] — Maximum width override (token default: 30rem)
+- width: Dimension — Custom width override — by default matches trigger width
+- minWidth: Dimension — Minimum width override (token default: 10rem)
+- maxWidth: Dimension — Maximum width override (token default: 30rem)
 - onPointerDownOutside: (e: Event) => void — Pointer down outside handler
 - onEscapeKeyDown: (e: KeyboardEvent) => void — Escape key handler
 Select.Viewport props:
@@ -1728,13 +1741,13 @@ Skeleton.Root props:
 - loading: boolean (default: true) — Whether to render skeleton (returns null when false)
 - animation: 'pulse' | 'wave' | false (default: pulse) — Animation style: pulse fades opacity, wave sweeps a highlight gradient
 Skeleton.Circle props:
-- size: number | string (default: 40) — Circle diameter (number for px, string for custom)
+- diameter: Dimension (default: 40) — Circle diameter. A number is pixels; a string is any CSS length. Named `diameter` rather than `size` because `size` is the scale token everywhere else in the library.
 Skeleton.Rectangle props:
-- width: number | string (default: 100%) — Rectangle width
-- height: number | string (default: 1rem) — Rectangle height
+- width: Dimension (default: 100%) — Rectangle width
+- height: Dimension (default: 1rem) — Rectangle height
 Skeleton.Rounded props:
-- width: number | string (default: 100%) — Width of the rounded shape
-- height: number | string (default: 1rem) — Height of the rounded shape
+- width: Dimension (default: 100%) — Width of the rounded shape
+- height: Dimension (default: 1rem) — Height of the rounded shape
 - radius: string (default: var(--move-skeleton-radius)) — Border radius value
 Skeleton.Text props:
 - lines: number (default: 3) — Number of text lines to render
@@ -1752,13 +1765,14 @@ Splitter.Root props:
 - layout: 'horizontal' | 'vertical' (default: horizontal) — Layout direction of the panels
 - gutterSize: number (default: 4) — Size of the gutter/handle in pixels
 - collapseBelow: number — Container width in pixels below which horizontal layout collapses to vertical stacking
+- fill: 'remaining' — Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout.
 - onResizeEnd: (sizes: number[]) => void — Callback fired when panel resize completes, with current sizes as percentages
 Splitter.Panel props:
 - children: React.ReactNode — Panel content
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- size: number — Initial size as percentage (auto-distributed if not specified)
-- minSize: number (default: 5) — Minimum size as percentage (prevents panel from collapsing below this)
+- defaultSize: Dimension — Starting size before the user drags. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Omit it and the panel takes an equal share of what its sized siblings leave.
+- minSize: Dimension (default: 44) — Smallest the panel can be dragged to. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Defaults to 44px (WCAG 2.5.8 enhanced target size), which unlike a percentage means the same thing in both orientations and at every window size.
 Example: <Splitter>…</Splitter>
 
 ## Stack (layout)
@@ -1772,7 +1786,8 @@ Props:
 - wrap: boolean (default: false) — Allow children to wrap to next line
 - collapseBelow: string — Container width threshold (px) below which direction collapses to column
 - flex: 1 | 'auto' | 'none' — Flex sizing along the parent's main axis. 1 = grow to fill remaining space (with min-width:0 so wide children scroll instead of overflowing the row); 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size.
-- fill: boolean | 'screen' — Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height.
+- fill: 'parent' | 'remaining' — Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child or you overflow it); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can actually scroll. Prefer 'remaining'. Neither knows what a viewport is — that enters at the app boundary via <MoveRoot fullHeight>. See /systems/layout.
+- clip: boolean — Clip overflowing content (overflow: clip) — a boundary, not a scroller. Deliberately not overflow:hidden, which stays programmatically scrollable and lets a focused child silently scroll the box with no scrollbar to return by. To scroll, use ScrollArea.
 - stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center' } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.
 - animations: AnimationTrigger[] | false — Override or disable the entrance stagger animation (only relevant when `stagger` is set).
 - children: React.ReactNode — Child elements to lay out
@@ -1977,7 +1992,7 @@ Props:
 - maxRows: number — Maximum number of visible rows when autoSize is enabled
 - rows: number (default: 3) — Number of visible text rows
 - resize: 'none' | 'vertical' | 'horizontal' | 'both' (default: vertical) — CSS resize behavior (overridden to none when autoSize is true)
-- width: React.CSSProperties['width'] — Explicit width override for the root wrapper
+- width: Dimension — Explicit width override for the root wrapper
 - disabled: boolean — Whether the textarea is disabled
 - readOnly: boolean — Whether the textarea is read-only
 - placeholder: string — Placeholder text
@@ -2171,8 +2186,8 @@ Tooltip.Content props:
 Tooltip.Arrow props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- width: number — Arrow width in px
-- height: number — Arrow height in px
+- width: Dimension — Arrow width in px
+- height: Dimension — Arrow height in px
 Example: <Tooltip side="top" align="start">…</Tooltip>
 
 ## VideoPlayer (media)
@@ -2208,7 +2223,7 @@ Props:
 - labels: Partial<VideoPlayerLabels> — i18n labels for the player controls
 - radius: 'none' | 'sm' | 'md' | 'lg' (default: none) — Border radius of the player container
 - aspectRatio: string — CSS aspect-ratio value applied to the root
-- width: string | number — Width of the player (number treated as px)
-- height: string | number — Height of the player (number treated as px)
+- width: Dimension — Width of the player (number treated as px)
+- height: Dimension — Height of the player (number treated as px)
 - children: React.ReactNode — Additional content rendered inside the player container
 Example: <VideoPlayer radius="none">…</VideoPlayer>

@@ -1,6 +1,7 @@
 'use client';
 // Generated from Popover.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
@@ -382,8 +383,8 @@ const PopoverContent = withMoveComponent<
 export interface PopoverArrowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
-  width?: number;
-  height?: number;
+  width?: Dimension;
+  height?: Dimension;
   sp?: SlotPropsMap<'arrow'>;
 }
 

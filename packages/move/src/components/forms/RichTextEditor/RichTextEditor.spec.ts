@@ -227,7 +227,7 @@ export const spec = {
         },
         {
           name: 'minHeight',
-          type: "React.CSSProperties['minHeight']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Minimum height for the content area',
         },

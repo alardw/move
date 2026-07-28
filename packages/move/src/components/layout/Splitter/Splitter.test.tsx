@@ -85,13 +85,59 @@ describe('Splitter', () => {
 
   // === Splitter.Panel ===
   describe('Splitter.Panel', () => {
+    // An unsized panel used to take 100/panelCount regardless of what its
+    // siblings had claimed, so `size={38}` + one unsized came to 88% and left
+    // 12% of the Splitter empty. The remainder is only knowable in the Root.
+    it('gives an unsized panel the space its sized siblings leave', () => {
+      render(
+        <Splitter.Root>
+          <Splitter.Panel defaultSize="38%">A</Splitter.Panel>
+          <Splitter.Panel data-testid="rest">B</Splitter.Panel>
+        </Splitter.Root>,
+      );
+      expect(screen.getByTestId('rest')).toHaveStyle({ width: '62%' });
+    });
+
+    it('splits evenly across several unsized panels', () => {
+      render(
+        <Splitter.Root>
+          <Splitter.Panel defaultSize="40%">A</Splitter.Panel>
+          <Splitter.Panel data-testid="b">B</Splitter.Panel>
+          <Splitter.Panel data-testid="c">C</Splitter.Panel>
+        </Splitter.Root>,
+      );
+      // 60 left over, two takers.
+      expect(screen.getByTestId('b')).toHaveStyle({ width: '30%' });
+      expect(screen.getByTestId('c')).toHaveStyle({ width: '30%' });
+    });
+
+    // minSize was registered and then never read by the drag handler, which
+    // clamped every panel at a hardcoded 5% — so the prop had no effect at all.
+    it("honours each panel's own minSize, not a shared floor", () => {
+      render(
+        <Splitter.Root>
+          <Splitter.Panel data-testid="a" defaultSize="50%" minSize="40%">
+            A
+          </Splitter.Panel>
+          <Splitter.Panel data-testid="b" defaultSize="50%" minSize="10%">
+            B
+          </Splitter.Panel>
+        </Splitter.Root>,
+      );
+      const gutter = screen.getByRole('separator');
+      // Push well past the 40% floor — 2% a press, so 10 presses would reach 30%.
+      for (let i = 0; i < 10; i += 1) fireEvent.keyDown(gutter, { key: 'ArrowLeft' });
+      const a = parseFloat((screen.getByTestId('a') as HTMLElement).style.width);
+      expect(a).toBeGreaterThanOrEqual(40);
+    });
+
     it('renders with percentage width in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel" size={30}>
+          <Splitter.Panel data-testid="panel" defaultSize="30%">
             A
           </Splitter.Panel>
-          <Splitter.Panel size={70}>B</Splitter.Panel>
+          <Splitter.Panel defaultSize="70%">B</Splitter.Panel>
         </Splitter.Root>,
       );
       const panel = screen.getByTestId('panel');
@@ -101,10 +147,10 @@ describe('Splitter', () => {
     it('renders with percentage height in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel" size={40}>
+          <Splitter.Panel data-testid="panel" defaultSize="40%">
             A
           </Splitter.Panel>
-          <Splitter.Panel size={60}>B</Splitter.Panel>
+          <Splitter.Panel defaultSize="60%">B</Splitter.Panel>
         </Splitter.Root>,
       );
       const panel = screen.getByTestId('panel');
@@ -206,8 +252,8 @@ describe('Splitter', () => {
     it('has aria-valuenow attribute', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel size={30}>A</Splitter.Panel>
-          <Splitter.Panel size={70}>B</Splitter.Panel>
+          <Splitter.Panel defaultSize="30%">A</Splitter.Panel>
+          <Splitter.Panel defaultSize="70%">B</Splitter.Panel>
         </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
@@ -231,10 +277,10 @@ describe('Splitter', () => {
     it('ArrowRight increases panel before gutter in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -248,10 +294,10 @@ describe('Splitter', () => {
     it('ArrowLeft decreases panel before gutter in horizontal layout', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -265,10 +311,10 @@ describe('Splitter', () => {
     it('ArrowDown increases panel before gutter in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -281,10 +327,10 @@ describe('Splitter', () => {
     it('ArrowUp decreases panel before gutter in vertical layout', () => {
       render(
         <Splitter.Root layout="vertical">
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -297,10 +343,10 @@ describe('Splitter', () => {
     it('Home minimizes the panel before the gutter', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -313,10 +359,10 @@ describe('Splitter', () => {
     it('End maximizes the panel before the gutter', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={50}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="50%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={50}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="50%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
@@ -330,8 +376,8 @@ describe('Splitter', () => {
       const onResizeEnd = vi.fn();
       render(
         <Splitter.Root onResizeEnd={onResizeEnd}>
-          <Splitter.Panel size={50}>A</Splitter.Panel>
-          <Splitter.Panel size={50}>B</Splitter.Panel>
+          <Splitter.Panel defaultSize="50%">A</Splitter.Panel>
+          <Splitter.Panel defaultSize="50%">B</Splitter.Panel>
         </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
@@ -342,16 +388,16 @@ describe('Splitter', () => {
     it('keyboard resize respects minSize constraint', () => {
       render(
         <Splitter.Root>
-          <Splitter.Panel data-testid="panel-a" size={6}>
+          <Splitter.Panel data-testid="panel-a" defaultSize="6%" minSize="5%">
             A
           </Splitter.Panel>
-          <Splitter.Panel data-testid="panel-b" size={94}>
+          <Splitter.Panel data-testid="panel-b" defaultSize="94%" minSize="5%">
             B
           </Splitter.Panel>
         </Splitter.Root>,
       );
       const gutter = screen.getByRole('separator');
-      // ArrowLeft would try to shrink panel A to 4% (below minSize=5), but Math.max(5, ...) prevents it
+      // ArrowLeft would take panel A to 4%, under its declared 5% floor — refused.
       fireEvent.keyDown(gutter, { key: 'ArrowLeft' });
       expect(screen.getByTestId('panel-a')).toHaveStyle({ width: '5%' });
     });

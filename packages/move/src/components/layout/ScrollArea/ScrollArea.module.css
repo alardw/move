@@ -26,10 +26,13 @@
   min-height: 0;
 }
 
-/* Fill=screen — own the viewport height (app-shell root with no sized ancestor) */
-.root[data-fill='screen'] {
-  height: 100vh; /* fallback for browsers without dvh */
-  height: 100dvh;
+/* fill=remaining — take the space left after siblings instead of the parent's
+   full height, for a ScrollArea placed directly in a flex chain. */
+.root[data-fill='remaining'] {
+  height: auto; /* yield the unconditional 100% above — flex sizes this now */
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
 
 /* ============================================

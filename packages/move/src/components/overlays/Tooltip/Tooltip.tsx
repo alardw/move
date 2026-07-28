@@ -1,6 +1,7 @@
 'use client';
 // Generated from Tooltip.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Tooltip as RadixTooltip } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import {
@@ -330,8 +331,8 @@ const TooltipContent = withMoveComponent<
 export interface TooltipArrowProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
-  width?: number;
-  height?: number;
+  width?: Dimension;
+  height?: Dimension;
   sp?: SlotPropsMap<'arrow'>;
 }
 

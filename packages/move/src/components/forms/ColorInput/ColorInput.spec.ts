@@ -71,7 +71,7 @@ export const spec = {
     },
     {
       name: 'width',
-      type: "React.CSSProperties['width']",
+      typeRef: 'Dimension',
       moveSpecific: true,
       description: 'Explicit width override',
     },

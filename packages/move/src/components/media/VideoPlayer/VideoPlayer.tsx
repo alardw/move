@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../actions/Button';
@@ -114,8 +115,8 @@ export interface VideoPlayerProps extends Omit<
 
   radius?: VideoPlayerRadius;
   aspectRatio?: string;
-  width?: string | number;
-  height?: string | number;
+  width?: Dimension;
+  height?: Dimension;
 
   className?: string;
   style?: React.CSSProperties;

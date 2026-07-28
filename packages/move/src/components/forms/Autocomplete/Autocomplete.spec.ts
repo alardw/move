@@ -277,7 +277,7 @@ export const spec = {
         },
         {
           name: 'width',
-          type: "React.CSSProperties['width']",
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Explicit width override',
         },
@@ -444,19 +444,19 @@ export const spec = {
         },
         {
           name: 'width',
-          type: 'string | number',
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Override the popover width.',
         },
         {
           name: 'minWidth',
-          type: 'string | number',
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Minimum popover width.',
         },
         {
           name: 'maxWidth',
-          type: 'string | number',
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Maximum popover width.',
         },

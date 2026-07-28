@@ -73,6 +73,7 @@ export const DOCS_NAV: NavSection[] = [
     items: [
       { to: "/systems", label: "Overview" },
       { to: "/systems/forms", label: "Forms" },
+      { to: "/systems/layout", label: "Layout" },
       { to: "/systems/hooks", label: "Hooks" },
       { to: "/systems/truncation", label: "Truncation" },
       { to: "/systems/stacking", label: "Stacking" },

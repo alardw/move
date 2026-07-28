@@ -4,6 +4,10 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
+    icon: 'layout-dashboard',
+    text: 'The end of a full-height layout: `Content` becomes the scrollport once every level above has passed a definite height down. See Systems → Layout.',
+  },
+  {
     icon: 'mouse',
     text: 'Custom-styled scrollbars on top of native overflow scrolling — scrollbars hide when idle, surface on hover, and respect each platform’s native scroll feel.',
   },

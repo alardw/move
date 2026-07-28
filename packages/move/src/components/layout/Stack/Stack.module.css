@@ -148,14 +148,33 @@
 }
 
 /* Fill — stretches to parent height */
-.root[data-fill] {
+/* fill=parent — all of the parent's height. Only correct when this is the
+   parent's only child; with siblings it claims the full height and overflows.
+   Needed when the parent is NOT a flex container (a block with a definite
+   height), where `remaining` has nothing to act on. */
+.root[data-fill='parent'] {
   height: 100%;
 }
 
-/* Fill=screen — owns the viewport height (app-shell roots) */
-.root[data-fill='screen'] {
-  height: 100vh; /* fallback for browsers without dvh */
-  height: 100dvh;
+/* fill=remaining — the space left after siblings, and a waiver of the automatic
+   minimum size so this box can be shrunk to it. Without that waiver a flex item
+   is floored at its content height, grows, and hands the wrong height to
+   everything below — the reason a nested ScrollArea won't scroll.
+
+   Both minimums are set because the flex main axis belongs to the PARENT, and a
+   child can't read its parent's direction in CSS. Each is a no-op on the axis
+   that isn't the main one. See /systems/layout. */
+.root[data-fill='remaining'] {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* clip — a boundary. `overflow: clip`, never `hidden`: hidden remains a scroll
+   container, so focusing a child below the fold scrolls this box with no
+   scrollbar to return by (content clipped AND unreachable). clip can't. */
+.root[data-clip] {
+  overflow: clip;
 }
 
 /* Collapse: overrides direction to column on narrow containers */

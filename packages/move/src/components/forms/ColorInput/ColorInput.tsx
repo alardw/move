@@ -2,6 +2,7 @@
 // Generated from ColorInput.spec.ts
 
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent } from '../../../engine';
 import { useFormField } from '../FormField/FormField';
@@ -50,7 +51,7 @@ export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   withEyeDropper?: boolean;
   closeOnColorSwatchClick?: boolean;
   invalid?: boolean;
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   labels?: Partial<ColorInputLabels>;
   disabled?: boolean;
   readOnly?: boolean;

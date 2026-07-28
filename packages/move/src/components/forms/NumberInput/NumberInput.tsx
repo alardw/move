@@ -1,6 +1,7 @@
 'use client';
 // Generated from NumberInput.spec.ts
 import * as React from 'react';
+import type { Dimension } from '../../../shared/types';
 import { withMoveComponent } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -46,7 +47,7 @@ export interface NumberInputProps extends React.HTMLAttributes<HTMLElement> {
   allowNegative?: boolean;
   hideControls?: boolean;
   invalid?: boolean;
-  width?: React.CSSProperties['width'];
+  width?: Dimension;
   iconLeft?: React.ReactNode;
   prefix?: string;
   suffix?: string;

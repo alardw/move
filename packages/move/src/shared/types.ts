@@ -26,6 +26,23 @@
 /** Default size scale. Use this on most components. */
 export type Size = 'sm' | 'md' | 'lg';
 
+/**
+ * A CSS length: a **number is pixels**, a string is any CSS length or
+ * percentage (`'240px'`, `'38%'`, `'20rem'`, `'50vh'`).
+ *
+ * Distinct from `Size` and friends, which are scale TOKENS ('sm' | 'md' | 'lg').
+ * A prop takes one or the other, never both: `size` is always the scale, and any
+ * prop naming an axis or a measurement (`width`, `minHeight`, `defaultSize`)
+ * takes a Dimension. Before this existed the same idea was spelled five ways
+ * across the library — `React.CSSProperties['width']`, `string | number`,
+ * `number | string`, bare `number`, and inline unions.
+ *
+ * The type is deliberately axis-free: the axis belongs to the prop name, which
+ * is what lets Splitter's `defaultSize` mean width when horizontal and height
+ * when vertical without a second type.
+ */
+export type Dimension = number | string;
+
 /** Adds `'xs'` for tighter contexts (icon buttons, dense avatars). */
 export type SizeWithXS = 'xs' | Size;
 

@@ -2,7 +2,7 @@
   "name": "move",
   "version": "0.1.50",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
-  "componentCount": 69,
+  "componentCount": 70,
   "components": [
     {
       "name": "Accordion",
@@ -351,6 +351,15 @@
               "name": "flex",
               "type": "boolean",
               "description": "Use flex (instead of grid) when you need natural-width children rather than the 1fr/auto/1fr distribution."
+            },
+            {
+              "name": "fill",
+              "type": "'parent' | 'remaining'",
+              "values": [
+                "parent",
+                "remaining"
+              ],
+              "description": "Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can scroll. See /systems/layout."
             },
             {
               "name": "children",
@@ -945,7 +954,7 @@
             },
             {
               "name": "width",
-              "type": "React.CSSProperties['width']",
+              "type": "Dimension",
               "description": "Explicit width override"
             }
           ]
@@ -1102,17 +1111,17 @@
             },
             {
               "name": "width",
-              "type": "string | number",
+              "type": "Dimension",
               "description": "Override the popover width."
             },
             {
               "name": "minWidth",
-              "type": "string | number",
+              "type": "Dimension",
               "description": "Minimum popover width."
             },
             {
               "name": "maxWidth",
-              "type": "string | number",
+              "type": "Dimension",
               "description": "Maximum popover width."
             }
           ]
@@ -2130,7 +2139,7 @@
             },
             {
               "name": "maxWidth",
-              "type": "string | number",
+              "type": "Dimension",
               "description": "Cap the card width via the --move-card-max-width custom property."
             },
             {
@@ -3128,7 +3137,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Explicit width override"
         },
         {
@@ -5656,12 +5665,12 @@
         },
         {
           "name": "width",
-          "type": "string | number",
+          "type": "Dimension",
           "description": "Width of the root container (number treated as px)"
         },
         {
           "name": "height",
-          "type": "string | number",
+          "type": "Dimension",
           "description": "Height of the root container (number treated as px)"
         },
         {
@@ -5778,7 +5787,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Custom width override"
         },
         {
@@ -5858,7 +5867,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Explicit width override for the root wrapper"
         },
         {
@@ -6727,7 +6736,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Custom width override"
         },
         {
@@ -7053,7 +7062,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Custom width override"
         },
         {
@@ -7550,12 +7559,12 @@
             },
             {
               "name": "width",
-              "type": "number",
+              "type": "Dimension",
               "description": "Arrow width in px"
             },
             {
               "name": "height",
-              "type": "number",
+              "type": "Dimension",
               "description": "Arrow height in px"
             }
           ]
@@ -7666,6 +7675,56 @@
           "name": "children",
           "type": "React.ReactNode",
           "description": "HTML content to style"
+        }
+      ],
+      "subComponents": []
+    },
+    {
+      "name": "Quote",
+      "category": "typography",
+      "componentClass": null,
+      "description": "An attributed quotation — a semantic figure/blockquote/figcaption with optional cite URL, a left accent rule on a subtle panel, and italic (overridable) quote text; block (inline) or pull (emphasis) variant",
+      "props": [
+        {
+          "name": "variant",
+          "type": "'block' | 'pull'",
+          "values": [
+            "block",
+            "pull"
+          ],
+          "default": "block",
+          "description": "block = inline indented blockquote with a left accent rule; pull = larger pull-quote emphasis"
+        },
+        {
+          "name": "italic",
+          "type": "boolean",
+          "default": "true",
+          "description": "Italic quote text (default); false renders it upright"
+        },
+        {
+          "name": "attribution",
+          "type": "React.ReactNode",
+          "description": "Attribution content (name + optional source); rendered in <figcaption>"
+        },
+        {
+          "name": "cite",
+          "type": "string",
+          "description": "Source URL → the <blockquote cite> HTML attribute"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "description": "Additional CSS class"
+        },
+        {
+          "name": "style",
+          "type": "React.CSSProperties",
+          "description": "Inline styles"
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "The quoted text content"
         }
       ],
       "subComponents": []
@@ -8068,7 +8127,7 @@
             },
             {
               "name": "minHeight",
-              "type": "React.CSSProperties['minHeight']",
+              "type": "Dimension",
               "description": "Minimum height for the content area"
             },
             {
@@ -8356,17 +8415,17 @@
             },
             {
               "name": "width",
-              "type": "React.CSSProperties['width']",
+              "type": "Dimension",
               "description": "Custom width override"
             },
             {
               "name": "minWidth",
-              "type": "React.CSSProperties['minWidth']",
+              "type": "Dimension",
               "description": "Minimum width override (token default: 10rem)"
             },
             {
               "name": "maxWidth",
-              "type": "React.CSSProperties['maxWidth']",
+              "type": "Dimension",
               "description": "Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)"
             }
           ]
@@ -8457,17 +8516,17 @@
             },
             {
               "name": "width",
-              "type": "React.CSSProperties['width']",
+              "type": "Dimension",
               "description": "Custom width override — by default matches trigger width"
             },
             {
               "name": "minWidth",
-              "type": "React.CSSProperties['minWidth']",
+              "type": "Dimension",
               "description": "Minimum width override (token default: 10rem)"
             },
             {
               "name": "maxWidth",
-              "type": "React.CSSProperties['maxWidth']",
+              "type": "Dimension",
               "description": "Maximum width override (token default: 30rem)"
             },
             {
@@ -8968,10 +9027,10 @@
           "name": "Circle",
           "props": [
             {
-              "name": "size",
-              "type": "number | string",
+              "name": "diameter",
+              "type": "Dimension",
               "default": "40",
-              "description": "Circle diameter (number for px, string for custom)"
+              "description": "Circle diameter. A number is pixels; a string is any CSS length. Named `diameter` rather than `size` because `size` is the scale token everywhere else in the library."
             }
           ]
         },
@@ -8980,13 +9039,13 @@
           "props": [
             {
               "name": "width",
-              "type": "number | string",
+              "type": "Dimension",
               "default": "100%",
               "description": "Rectangle width"
             },
             {
               "name": "height",
-              "type": "number | string",
+              "type": "Dimension",
               "default": "1rem",
               "description": "Rectangle height"
             }
@@ -8997,13 +9056,13 @@
           "props": [
             {
               "name": "width",
-              "type": "number | string",
+              "type": "Dimension",
               "default": "100%",
               "description": "Width of the rounded shape"
             },
             {
               "name": "height",
-              "type": "number | string",
+              "type": "Dimension",
               "default": "1rem",
               "description": "Height of the rounded shape"
             },
@@ -9093,6 +9152,11 @@
               "description": "Container width in pixels below which horizontal layout collapses to vertical stacking"
             },
             {
+              "name": "fill",
+              "type": "'remaining'",
+              "description": "Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout."
+            },
+            {
               "name": "onResizeEnd",
               "type": "(sizes: number[]) => void",
               "description": "Callback fired when panel resize completes, with current sizes as percentages"
@@ -9118,15 +9182,15 @@
               "description": "Inline styles"
             },
             {
-              "name": "size",
-              "type": "number",
-              "description": "Initial size as percentage (auto-distributed if not specified)"
+              "name": "defaultSize",
+              "type": "Dimension",
+              "description": "Starting size before the user drags. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Omit it and the panel takes an equal share of what its sized siblings leave."
             },
             {
               "name": "minSize",
-              "type": "number",
-              "default": "5",
-              "description": "Minimum size as percentage (prevents panel from collapsing below this)"
+              "type": "Dimension",
+              "default": "44",
+              "description": "Smallest the panel can be dragged to. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Defaults to 44px (WCAG 2.5.8 enhanced target size), which unlike a percentage means the same thing in both orientations and at every window size."
             }
           ]
         }
@@ -9221,8 +9285,17 @@
         },
         {
           "name": "fill",
-          "type": "boolean | 'screen'",
-          "description": "Stretch to fill height. true = 100% of the parent (the parent must be sized); 'screen' = the viewport (100dvh), for app-shell roots that own the full window height."
+          "type": "'parent' | 'remaining'",
+          "values": [
+            "parent",
+            "remaining"
+          ],
+          "description": "Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child or you overflow it); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can actually scroll. Prefer 'remaining'. Neither knows what a viewport is — that enters at the app boundary via <MoveRoot fullHeight>. See /systems/layout."
+        },
+        {
+          "name": "clip",
+          "type": "boolean",
+          "description": "Clip overflowing content (overflow: clip) — a boundary, not a scroller. Deliberately not overflow:hidden, which stays programmatically scrollable and lets a focused child silently scroll the box with no scrollbar to return by. To scroll, use ScrollArea."
         },
         {
           "name": "stagger",
@@ -10351,7 +10424,7 @@
         },
         {
           "name": "width",
-          "type": "React.CSSProperties['width']",
+          "type": "Dimension",
           "description": "Explicit width override for the root wrapper"
         },
         {
@@ -11423,12 +11496,12 @@
             },
             {
               "name": "width",
-              "type": "number",
+              "type": "Dimension",
               "description": "Arrow width in px"
             },
             {
               "name": "height",
-              "type": "number",
+              "type": "Dimension",
               "description": "Arrow height in px"
             }
           ]
@@ -11605,12 +11678,12 @@
         },
         {
           "name": "width",
-          "type": "string | number",
+          "type": "Dimension",
           "description": "Width of the player (number treated as px)"
         },
         {
           "name": "height",
-          "type": "string | number",
+          "type": "Dimension",
           "description": "Height of the player (number treated as px)"
         },
         {

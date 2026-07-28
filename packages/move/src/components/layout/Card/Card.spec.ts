@@ -61,7 +61,7 @@ export const spec = {
         },
         {
           name: 'maxWidth',
-          type: 'string | number',
+          typeRef: 'Dimension',
           moveSpecific: true,
           description: 'Cap the card width via the --move-card-max-width custom property.',
         },
