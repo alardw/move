@@ -64,7 +64,6 @@ export const ICON_ROLES = {
   eyedropper: 'pipette', // ColorInput (pick a colour)
   file: 'file', // FileUpload (file row)
   imageError: 'image-off', // Image (broken/failed image)
-  quote: 'quote', // Quote (decorative quotation mark)
 } as const;
 
 export type IconRoleStatus = `status.${keyof (typeof ICON_ROLES)['status']}`;

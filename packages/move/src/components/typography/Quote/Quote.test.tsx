@@ -92,17 +92,15 @@ describe('Quote', () => {
     });
   });
 
-  describe('quote-mark icon', () => {
-    it('renders the decorative quote-mark by default, aria-hidden', () => {
+  describe('italic', () => {
+    it('is italic by default (no data-italic override)', () => {
       const { container } = render(<Quote>Q</Quote>);
-      const mark = container.querySelector('[aria-hidden="true"]');
-      expect(mark).not.toBeNull();
-      expect(mark?.querySelector('svg')).not.toBeNull();
+      expect(container.firstElementChild).not.toHaveAttribute('data-italic');
     });
 
-    it('omits the quote-mark when icon={false}', () => {
-      const { container } = render(<Quote icon={false}>Q</Quote>);
-      expect(container.querySelector('svg')).toBeNull();
+    it('marks data-italic="false" when italic={false}', () => {
+      const { container } = render(<Quote italic={false}>Q</Quote>);
+      expect(container.firstElementChild).toHaveAttribute('data-italic', 'false');
     });
   });
 });

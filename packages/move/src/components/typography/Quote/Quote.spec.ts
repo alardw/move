@@ -8,7 +8,7 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'typography',
   description:
-    'An attributed quotation — a semantic figure/blockquote/figcaption with optional cite URL, a left accent rule, and a decorative quote-mark; block (inline) or pull (emphasis) variant',
+    'An attributed quotation — a semantic figure/blockquote/figcaption with optional cite URL, a left accent rule on a subtle panel, and italic (overridable) quote text; block (inline) or pull (emphasis) variant',
   families: {
     behavior: ['typography'],
     state: ['stateless'],
@@ -22,7 +22,7 @@ export const spec = {
       name: 'root',
       element: 'figure | blockquote',
       description:
-        'Container — <figure> (wrapping <blockquote> + <figcaption>) when attributed, otherwise a bare <blockquote>. Inner structure (blockquote / figcaption / quote-mark) is described in renderContracts.',
+        'Container — <figure> (wrapping <blockquote> + <figcaption>) when attributed, otherwise a bare <blockquote>. Inner structure (blockquote / figcaption) is described in renderContracts.',
     },
   ],
 
@@ -36,12 +36,11 @@ export const spec = {
         'block = inline indented blockquote with a left accent rule; pull = larger pull-quote emphasis',
     },
     {
-      name: 'icon',
+      name: 'italic',
       type: 'boolean',
       default: 'true',
       moveSpecific: true,
-      description:
-        "Show the decorative quote-mark (the 'quote' icon role); false to hide it. Consumers re-theme the glyph per-role on MoveRoot",
+      description: 'Italic quote text (default); false renders it upright',
     },
     {
       name: 'attribution',
@@ -72,7 +71,7 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-variant'],
+    dataAttributes: ['data-variant', 'data-italic'],
   },
 
   controlled: null,
@@ -90,6 +89,11 @@ export const spec = {
       description: 'Left accent rule color — the app primary/accent (theme-aware)',
     },
     {
+      name: '--move-quote-bg',
+      value: 'var(--move-bg-subtle)',
+      description: 'Subtle panel background behind the quote',
+    },
+    {
       name: '--move-quote-fg',
       value: 'var(--move-fg-base)',
       description: 'Quote text color',
@@ -98,16 +102,6 @@ export const spec = {
       name: '--move-quote-attribution-fg',
       value: 'var(--move-fg-muted)',
       description: 'Attribution (figcaption) text color',
-    },
-    {
-      name: '--move-quote-icon-color',
-      value: 'var(--move-fg-subtle)',
-      description: 'Decorative quote-mark color',
-    },
-    {
-      name: '--move-quote-padding',
-      value: 'var(--move-spacing-md)',
-      description: 'Inline padding between the accent rule and the quote text',
     },
   ],
 
@@ -135,9 +129,9 @@ export const spec = {
       description: 'The cite prop maps to the cite attribute on the <blockquote> element',
     },
     {
-      id: 'icon-decorative',
+      id: 'italic-default',
       description:
-        "When icon=true, render the 'quote' icon role via useIcon('quote', size) with aria-hidden; omit the mark when icon=false",
+        'The quote text is italic by default; data-italic="false" (from italic={false}) renders it upright',
     },
   ],
 
@@ -145,7 +139,6 @@ export const spec = {
   engineImports: ['withMoveComponent'],
 
   componentDeps: [],
-  iconsUsed: ['quote'],
 
   testing: {
     behaviors: [
@@ -156,9 +149,8 @@ export const spec = {
       'Sets the cite attribute on <blockquote> when cite is provided; omits it otherwise',
       'Applies variant via data-variant attribute',
       'Defaults to variant=block',
-      'Renders the decorative quote-mark (quote role) when icon=true (default)',
-      'Omits the quote-mark when icon=false',
-      'Renders the quote-mark with aria-hidden',
+      'Renders italic quote text by default',
+      'Sets data-italic="false" and upright text when italic={false}',
       'Forwards className and style',
       'Forwards ref to root element',
       'Spreads HTML attributes',

@@ -2,38 +2,39 @@
 
 .root {
   --move-quote-rule: var(--move-primary);
+  --move-quote-bg: var(--move-bg-subtle);
   --move-quote-fg: var(--move-fg-base);
   --move-quote-attribution-fg: var(--move-fg-muted);
-  --move-quote-icon-color: var(--move-fg-subtle);
-  --move-quote-padding: var(--move-spacing-md);
   margin: 0;
+  border-inline-start: 3px solid var(--move-quote-rule);
+  border-start-end-radius: var(--move-rounded-md);
+  border-end-end-radius: var(--move-rounded-md);
+  background: var(--move-quote-bg);
+  padding: var(--move-spacing-md) var(--move-spacing-lg);
   color: var(--move-quote-fg);
   font-family: var(--move-font-body, system-ui, sans-serif);
 }
 
-/* The quoted text — left accent rule (the app primary/accent) + padding.
-   Carries the rule in BOTH the figure case (inner blockquote) and the bare
-   case (root blockquote). */
+/* The quoted text. The accent rule + panel live on .root, so they span the whole
+   block — the attribution below the quote sits inside them. Italic by default. */
 .quote {
   margin: 0;
-  border-inline-start: 3px solid var(--move-quote-rule);
-  padding-inline-start: var(--move-quote-padding);
   color: var(--move-quote-fg);
   font-size: var(--move-text-lg);
   line-height: var(--move-leading-relaxed);
+  font-style: italic;
 }
 
-/* Decorative quote-mark (aria-hidden in the source) */
-.icon {
-  display: block;
-  margin-block-end: var(--move-space-2);
-  color: var(--move-quote-icon-color);
+/* Overridable: italic={false} sets it upright. Covers the bare case (root IS
+   .quote) and the figure case (inner blockquote is .quote). */
+.root[data-italic='false'] .quote,
+.root[data-italic='false'].quote {
+  font-style: normal;
 }
 
-/* Attribution (figcaption) — sits outside the blockquote */
+/* Attribution (figcaption) — inside the accent block, below the quote. */
 .attribution {
   margin-block-start: var(--move-space-3);
-  padding-inline-start: var(--move-quote-padding);
   color: var(--move-quote-attribution-fg);
   font-size: var(--move-text-sm);
 }
@@ -42,7 +43,7 @@
    the inner blockquote is .quote. Cover both. */
 .root[data-variant='pull'] .quote,
 .root[data-variant='pull'].quote {
-  font-size: var(--move-text-2xl);
+  font-size: var(--move-text-xl);
   line-height: var(--move-leading-snug);
   font-weight: var(--move-weight-medium);
 }

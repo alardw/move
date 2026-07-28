@@ -280,17 +280,7 @@ type BuiltinIconComponent = React.ComponentType<{
   height: number | string;
 }>;
 
-function Quote({ width, height }: { width: number | string; height: number | string }) {
-  return (
-    <Svg width={width} height={height}>
-      <path d="M16 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />
-      <path d="M5 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2 1 1 0 0 1 1 1v1a2 2 0 0 1-2 2 1 1 0 0 0-1 1v2a1 1 0 0 0 1 1 6 6 0 0 0 6-6V5a2 2 0 0 0-2-2z" />
-    </Svg>
-  );
-}
-
 export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
-  'quote': Quote,
   'chevron-left': ChevronLeft,
   'chevron-right': ChevronRight,
   'chevron-up': ChevronUp,

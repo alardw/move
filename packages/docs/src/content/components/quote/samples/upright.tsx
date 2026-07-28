@@ -1,8 +1,8 @@
 import { Quote } from 'move';
 
-export default function NoIconSample() {
+export default function UprightSample() {
   return (
-    <Quote icon={false} attribution="Leonardo da Vinci">
+    <Quote italic={false} attribution="Leonardo da Vinci">
       Art is never finished, only abandoned.
     </Quote>
   );
