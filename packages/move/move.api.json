@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.50",
+  "version": "0.1.52",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
   "componentCount": 70,
   "components": [
@@ -1832,7 +1832,7 @@
             {
               "name": "sp",
               "type": "CalendarNavSp",
-              "description": "Spacing prop forwarded to the shared CalendarNav layout"
+              "description": "Slot-prop overrides for the nav’s previous/next buttons, forwarded to the shared CalendarNav"
             }
           ]
         },
@@ -1843,6 +1843,11 @@
               "name": "className",
               "type": "string",
               "description": "CSS class name"
+            },
+            {
+              "name": "sp",
+              "type": "MonthGridSp",
+              "description": "Slot-prop overrides for the grid, weekday header row and cells, week rows and the week-number gutter, forwarded to the shared MonthGrid"
             }
           ]
         }
@@ -7404,7 +7409,7 @@
               "name": "closeOnScroll",
               "type": "boolean",
               "default": "false",
-              "description": "Close the popover when an ancestor element scrolls"
+              "description": "Close the popover when an ancestor element scrolls. Scrolling inside the popover content keeps it open"
             },
             {
               "name": "modal",
