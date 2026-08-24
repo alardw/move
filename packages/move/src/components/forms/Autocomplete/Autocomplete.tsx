@@ -15,10 +15,15 @@ import {
   staggerItems,
   quick,
   poppy,
+  scaleIn,
+  scaleOut,
+  fadeIn,
+  fadeOut,
   useDismissable,
   useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { useFieldControl } from '../FormField/FormField';
 import { useAutocomplete } from './useAutocomplete';
 import type { UseAutocompleteReturn } from './useAutocomplete';
 import type { AsyncResource } from '../../../adapters';
@@ -65,7 +70,47 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
     trigger: 'Item.hover',
     sequence: [{ animation: { scale: { to: '$scaleHover', ease: quick } } }],
   },
+  // The multi-select check pops in and out of its box exactly as Checkbox's
+  // does. Deps-driven rather than state-driven: `data-selected` is a presence
+  // attribute (empty string / absent), and a state watcher can only match a
+  // value, so it could see the select but never the deselect.
+  {
+    trigger: 'itemSelected',
+    sequence: [{ target: 'ItemIndicator', animation: { ...scaleIn(0.5), ...fadeIn() } }],
+  },
+  {
+    trigger: 'itemDeselected',
+    sequence: [{ target: 'ItemIndicator', animation: { ...scaleOut(0.5), ...fadeOut() } }],
+  },
 ];
+
+/**
+ * Builds the pair of deps triggers that toggle an item's check glyph. Both
+ * carry the same dep, so both stay in step with the current selection; the one
+ * pointing the wrong way is neutralised with `sequence: false` so it updates
+ * its bookkeeping without animating. Shared by the built-in indicator inside
+ * Item and the standalone ItemIndicator sub-component.
+ */
+function indicatorTriggers(
+  animConfig: AnimationTrigger[] | null,
+  isSelected: boolean,
+): AnimationTrigger[] {
+  if (!animConfig) return [];
+  const out: AnimationTrigger[] = [];
+  for (const [name, runsWhenSelected] of [
+    ['itemSelected', true],
+    ['itemDeselected', false],
+  ] as const) {
+    const found = animConfig.find((tr) => tr.trigger === name);
+    if (!found) continue;
+    out.push({
+      ...found,
+      deps: [isSelected],
+      sequence: isSelected === runsWhenSelected ? found.sequence : false,
+    });
+  }
+  return out;
+}
 
 // =============================================================================
 // Labels (i18n)
@@ -339,6 +384,15 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
       ac.inputRef as React.Ref<HTMLInputElement>,
     );
 
+    // The combobox <input> is this component's labellable node — the one a
+    // wrapping FormField.Label must point its `for` at. Nothing else in the
+    // tree can be named: Trigger and Root are divs, and the listbox is a
+    // separate element with its own id. Marking it here is what lets FormField
+    // name the field; without it the label's `for` resolved to nothing.
+    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+      ref: ac.inputRef as React.RefObject<HTMLElement | null>,
+    });
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       ac.onInputValueChange(e.target.value);
     };
@@ -451,7 +505,7 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
 
         return (
           <input
-            {...attrs}
+            {...controlProps}
             {...spRest}
             ref={mergedRef}
             role="combobox"
@@ -962,6 +1016,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
     const resolvedCheck = useIcon('selected', 14);
+    const indicatorGlyphRef = React.useRef<HTMLSpanElement | null>(null);
     const itemValue = props.value as string;
     const isDisabled = props.disabled as boolean;
     const isSelected = ac.isSelected(itemValue);
@@ -979,33 +1034,40 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     // the trigger to "browse all" — cleared as soon as they type).
     const isVisible = ac.bypassFilter || ac.filterFn(ac.inputValue, itemValue, textContent);
 
-    // Check if highlighted
+    // Check if highlighted. The index guard matters: an Item registers itself in
+    // a mount effect, so on the first render after opening it is not in the
+    // registry yet and findIndex returns -1 — which would match a -1 highlight
+    // (the "nothing highlighted" state) and mark every item highlighted at once.
     const visibleItems = ac.getVisibleItems();
     const myVisibleIndex = visibleItems.findIndex((v) => v.value === itemValue);
-    const isHighlighted = myVisibleIndex === ac.highlightedIndex;
+    const isHighlighted = myVisibleIndex >= 0 && myVisibleIndex === ac.highlightedIndex;
 
-    // Scroll into view when highlighted
+    // Scroll into view when highlighted by the keyboard. Pointer highlights are
+    // skipped — the item is under the cursor, already visible.
     React.useEffect(() => {
-      if (
-        isHighlighted &&
-        itemRef.current &&
-        typeof itemRef.current.scrollIntoView === 'function'
-      ) {
-        itemRef.current.scrollIntoView({ block: 'nearest' });
+      if (!isHighlighted || ac.isPointerHighlight()) return;
+      const el = itemRef.current;
+      if (el && typeof el.scrollIntoView === 'function') {
+        el.scrollIntoView({ block: 'nearest' });
       }
-    }, [isHighlighted]);
+    }, [isHighlighted]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Item hover animation via useAnimations
     const scaleHover = (ac.triggerWidth + SCALE_HOVER_PX) / ac.triggerWidth;
     const itemConfig = React.useMemo(() => {
       if (!ac.animConfig) return null;
       const hover = ac.animConfig.find((t) => t.trigger === 'Item.hover');
-      return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
-    }, [ac.animConfig, scaleHover]);
+      const triggers: AnimationTrigger[] = hover
+        ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }]
+        : [];
+      if (ac.multiple) triggers.push(...indicatorTriggers(ac.animConfig, isSelected));
+      return triggers.length > 0 ? triggers : null;
+    }, [ac.animConfig, ac.multiple, scaleHover, isSelected]);
 
     const itemRefs = React.useMemo(
       () => ({
         Item: itemRef as React.RefObject<HTMLElement | null>,
+        ItemIndicator: indicatorGlyphRef as React.RefObject<HTMLElement | null>,
       }),
       [],
     );
@@ -1020,7 +1082,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
 
     const handleMouseEnter = () => {
       if (isDisabled) return;
-      ac.setHighlightedIndex(myVisibleIndex);
+      ac.setHighlightedIndex(myVisibleIndex, 'pointer');
       handlers.Item?.onMouseEnter?.();
     };
 
@@ -1054,15 +1116,10 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
             onMouseLeave={handleMouseLeave}
           >
             {ac.multiple && (
-              <span
-                className={styles.itemIndicator}
-                aria-hidden="true"
-                style={{
-                  visibility: isSelected ? 'visible' : 'hidden',
-                  color: isSelected ? 'var(--move-indigo-text)' : undefined,
-                }}
-              >
-                {resolvedCheck}
+              <span className={styles.itemIndicator} aria-hidden="true">
+                <span ref={indicatorGlyphRef} className={styles.itemIndicatorGlyph}>
+                  {resolvedCheck}
+                </span>
               </span>
             )}
             <AutocompleteItemContext.Provider value={{ value: itemValue }}>
@@ -1110,7 +1167,24 @@ const AutocompleteItemIndicator = withMoveComponent<
     const ac = useAutocompleteContext();
     const itemCtx = React.useContext(AutocompleteItemContext);
     const resolvedCheck = useIcon('selected', 14);
+    const glyphRef = React.useRef<HTMLSpanElement | null>(null);
+
+    // Selection drives the pop-in/out only; the resting look is CSS off the
+    // row's `data-selected`, so a hand-composed indicator matches the built-in
+    // one even before anything animates.
     const isSelected = itemCtx ? ac.isSelected(itemCtx.value) : false;
+
+    const indicatorConfig = React.useMemo(() => {
+      const triggers = indicatorTriggers(ac.animConfig, isSelected);
+      return triggers.length > 0 ? triggers : null;
+    }, [ac.animConfig, isSelected]);
+
+    const indicatorRefs = React.useMemo(
+      () => ({ ItemIndicator: glyphRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
+
+    useAnimations(indicatorConfig, indicatorRefs);
 
     return {
       render() {
@@ -1123,15 +1197,12 @@ const AutocompleteItemIndicator = withMoveComponent<
             {...spRest}
             ref={ref}
             className={cx('itemIndicator', props.className, spClass as string | undefined)}
-            style={{
-              ...props.style,
-              ...(spStyle as React.CSSProperties),
-              visibility: isSelected ? 'visible' : 'hidden',
-              color: isSelected ? 'var(--move-indigo-text)' : undefined,
-            }}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             aria-hidden="true"
           >
-            {props.children ?? resolvedCheck}
+            <span ref={glyphRef} className={styles.itemIndicatorGlyph}>
+              {props.children ?? resolvedCheck}
+            </span>
           </span>
         );
       },

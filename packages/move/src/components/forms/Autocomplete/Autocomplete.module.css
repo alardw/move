@@ -5,7 +5,7 @@
  * ========================================================================= */
 
 .trigger {
-  --move-autocomplete-trigger-bg: var(--move-bg-subtle);
+  --move-autocomplete-trigger-bg: var(--move-bg-base);
   --move-autocomplete-trigger-border: var(--move-border-interactive);
   --move-autocomplete-trigger-border-hover: var(--move-border-emphasis);
   --move-autocomplete-trigger-border-focus: var(--move-primary);
@@ -387,13 +387,49 @@
  * Item indicator
  * ========================================================================= */
 
+/* Multi-select rows carry the indicator on every option, selected or not: an
+   empty bordered box unselected, an accent-filled box holding the check when
+   selected. Always painting it justifies the gutter and shows the list is a
+   multi-toggle before anything is picked. Driven off `data-selected` on the
+   row, so nothing about it lives in an inline style a consumer cannot reach. */
 .itemIndicator {
+  --move-autocomplete-itemindicator-size: 1rem;
+  --move-autocomplete-itemindicator-radius: var(--move-rounded-sm);
+  --move-autocomplete-itemindicator-border: var(--move-border-interactive);
+  --move-autocomplete-itemindicator-bg-selected: var(--move-primary);
+  --move-autocomplete-itemindicator-border-selected: var(--move-primary);
+  --move-autocomplete-itemindicator-fg-selected: var(--move-primary-fg);
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1rem;
-  height: 1rem;
+  width: var(--move-autocomplete-itemindicator-size);
+  height: var(--move-autocomplete-itemindicator-size);
+  border: 1px solid var(--move-autocomplete-itemindicator-border);
+  border-radius: var(--move-autocomplete-itemindicator-radius);
+  color: var(--move-autocomplete-itemindicator-fg-selected);
+}
+
+/* The glyph hides with opacity, never `display` — the box keeps its size and
+   the row never reflows as selection changes. Its own wrapper so the check can
+   scale independently of the box, the way Checkbox's indicator does; the JS
+   toggle animation writes inline opacity/scale here and takes over from these
+   resting values on the first change. */
+.itemIndicatorGlyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+}
+
+.item[data-selected] .itemIndicator {
+  background-color: var(--move-autocomplete-itemindicator-bg-selected);
+  border-color: var(--move-autocomplete-itemindicator-border-selected);
+}
+
+.item[data-selected] .itemIndicatorGlyph {
+  opacity: 1;
 }
 
 /* =========================================================================

@@ -27,10 +27,28 @@ export const spec = {
   // verifies the runtime matches.
   behavior: {
     popup: {
+      // APG combobox: focus STAYS on the input while the listbox is open,
+      // navigation is via aria-activedescendant, so nothing focuses an option.
+      // The mechanism FIXES that contract (POPUP_FOCUS_BY_MECHANISM).
+      mechanism: 'field-listbox' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // Combobox: focus STAYS on the input while the listbox is open (APG combobox),
+      // navigation is via aria-activedescendant, so nothing focuses an option.
+      keyboard: {
+        openKeys: ['ArrowDown'],
+        tabbableTrigger: true,
+      },
+      // Scope of closeOnScroll. A scroll INSIDE the popup — wheeling the
+      // option list, or the scroll-into-view keyboard nav runs — moves the
+      // content along with its anchor, so it is not a viewport change and
+      // must not dismiss. Only scrolls outside the popup close it.
+      closeOnScrollScope: 'outside' as const,
     },
   },
 
@@ -84,7 +102,8 @@ export const spec = {
     {
       name: 'itemIndicator',
       element: 'span',
-      description: 'Check icon indicator for selected items in multi mode',
+      description:
+        'Checkbox-style selection box shown on every item in multi mode; fills with the accent colour and reveals the check when selected',
     },
     { name: 'group', element: 'div', description: 'Grouping container for related items' },
     { name: 'groupLabel', element: 'div', description: 'Label heading for a group of items' },
@@ -469,7 +488,12 @@ export const spec = {
       name: 'Item',
       slots: [
         { name: 'item', element: 'div', description: 'Option item' },
-        { name: 'itemIndicator', element: 'span', description: 'Check indicator for multi mode' },
+        {
+          name: 'itemIndicator',
+          element: 'span',
+          description:
+            'Checkbox-style selection box on every item in multi mode, filled with a check when selected',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -505,7 +529,13 @@ export const spec = {
     },
     {
       name: 'ItemIndicator',
-      slots: [{ name: 'itemIndicator', element: 'span', description: 'Check icon' }],
+      slots: [
+        {
+          name: 'itemIndicator',
+          element: 'span',
+          description: 'Checkbox-style selection box holding the check glyph',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -885,6 +915,21 @@ export const spec = {
         'Item registers/unregisters with useAutocomplete item registry for filtering and keyboard navigation',
     },
     {
+      id: 'highlight-index-sentinel',
+      description:
+        'highlightedIndex -1 means "no item highlighted". An Item whose visible index is -1 (not yet in the registry — Items register in a mount effect) is never treated as highlighted, so a freshly opened list does not mark every item at once',
+    },
+    {
+      id: 'highlight-on-open',
+      description:
+        'On open in single mode the highlight lands on the selected item; with no selection it stays off, so the list opens at the top with nothing preselected. Resolved once the item registry has filled, not on the commit where open flips',
+    },
+    {
+      id: 'highlight-scroll-source',
+      description:
+        'Keyboard highlight scrolls the item into view; pointer highlight does not, since moving the list under the cursor would change which item is hovered',
+    },
+    {
       id: 'item-hover-scale-animation',
       description:
         'Item animates scale to 1.02 on mouse enter using anime.js spring, reverts on leave',
@@ -892,7 +937,7 @@ export const spec = {
     {
       id: 'item-multi-indicator',
       description:
-        'In multi mode, Item renders a built-in check indicator; in single mode, selected item gets filled background via CSS',
+        'In multi mode, Item renders a built-in indicator on every option — a bordered box that fills with the accent colour and pops the check in on select and out on deselect, matching Checkbox; in single mode, selected item gets filled background via CSS',
     },
     {
       id: 'trigger-move-state',
@@ -916,6 +961,11 @@ export const spec = {
     {
       id: 'backspace-removes-last-tag',
       description: 'In multi mode, Backspace on empty input removes the last selected tag',
+    },
+    {
+      id: 'close-on-scroll-outside-only',
+      description:
+        'The close-on-scroll listener ignores scroll events originating inside the popper content wrapper, so wheeling the option list keeps the popup open',
     },
     {
       id: 'clear-trigger-visibility',
@@ -958,13 +1008,31 @@ export const spec = {
         ],
       ],
     },
+    {
+      trigger: 'itemSelected',
+      sequence: [
+        {
+          target: 'ItemIndicator',
+          animation: { scale: { from: 0.5, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+        },
+      ],
+    },
+    {
+      trigger: 'itemDeselected',
+      sequence: [
+        {
+          target: 'ItemIndicator',
+          animation: { scale: { to: 0.5, ease: 'poppy' }, opacity: { to: 0 } },
+        },
+      ],
+    },
   ],
 
   tokens: [
     // Trigger tokens
     {
       name: '--move-autocomplete-trigger-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Trigger background color',
     },
     {
@@ -1172,6 +1240,10 @@ export const spec = {
       'Forwards className and style on Trigger',
       'Forwards className and style on Content',
       'allowCustomValue prevents input text restoration on close',
+      'Opening with no selection highlights nothing and leaves the list scrolled to the top',
+      'Opening with a selection highlights the selected item',
+      'Scrolling inside the option list keeps the popup open',
+      'Scrolling outside the popup closes it',
     ],
     keyboard: [
       'ArrowDown opens popup and highlights first item',

@@ -9,6 +9,8 @@ import type { AsyncResource } from '../../../adapters';
 // Types
 // =============================================================================
 
+export type HighlightSource = 'keyboard' | 'pointer';
+
 export interface RegisteredItem {
   value: string;
   label: React.ReactNode;
@@ -66,10 +68,14 @@ export interface UseAutocompleteReturn {
   bypassFilter: boolean;
   setBypassFilter: (v: boolean) => void;
 
-  // Keyboard navigation
+  // Keyboard navigation. `-1` means "no item highlighted" — the list opens at
+  // the top with nothing preselected.
   highlightedIndex: number;
-  setHighlightedIndex: (i: number) => void;
+  setHighlightedIndex: (i: number, source?: HighlightSource) => void;
   highlightedValue: string | null;
+  /** True when the current highlight came from the pointer. Items read this to
+   *  skip scroll-into-view, which would move the list under the cursor. */
+  isPointerHighlight: () => boolean;
 
   // Item registry
   registerItem: (
@@ -182,7 +188,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
 
   const close = useCallback(() => {
     setIsOpen(false);
-    setHighlightedIndex(-1);
+    setHighlightedIndexState(-1);
     setBypassFilter(false);
     // Single mode: restore input to selected label
     if (!multiple && selectedValues.length > 0 && !allowCustomValue) {
@@ -209,15 +215,25 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     const armTimer = window.setTimeout(() => {
       armed = true;
     }, 150);
-    const onViewportChange = () => {
+    // Scrolling *within* the popup — the wheel over a long option list, or the
+    // scroll-into-view keyboard nav runs — moves the content with its anchor,
+    // so it is not a viewport change. Closing on it makes the list unusable.
+    const onScroll = (e: Event) => {
+      const target = e.target;
+      if (target instanceof Element && target.closest('[data-radix-popper-content-wrapper]')) {
+        return;
+      }
       if (armed) setIsOpen(false);
     };
-    window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
-    window.addEventListener('resize', onViewportChange);
+    const onResize = () => {
+      if (armed) setIsOpen(false);
+    };
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', onResize);
     return () => {
       window.clearTimeout(armTimer);
-      window.removeEventListener('scroll', onViewportChange, { capture: true });
-      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('resize', onResize);
     };
   }, [isOpen, setIsOpen]);
 
@@ -230,7 +246,10 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   // Content+Items on close). Keeps tag labels available when the dropdown
   // is closed. Live operations (getVisibleItems, keyboard nav) use itemMapRef.
   const labelCacheRef = useRef<Map<string, React.ReactNode>>(new Map());
-  const [, forceUpdate] = useState(0);
+  // Bumped whenever the registry changes. Effects that need to read item
+  // positions depend on it, because Items register in their own mount effect —
+  // a render that only knows `isOpen` flipped still sees an empty registry.
+  const [registryVersion, setRegistryVersion] = useState(0);
 
   const registerItem = useCallback(
     (
@@ -249,7 +268,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
         prev.textContent !== textContent
       ) {
         itemMapRef.current.set(value, { value, label, textContent, disabled, ref });
-        forceUpdate((n) => n + 1);
+        setRegistryVersion((n) => n + 1);
       }
     },
     [],
@@ -258,7 +277,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   const unregisterItem = useCallback((value: string) => {
     if (itemMapRef.current.has(value)) {
       itemMapRef.current.delete(value);
-      forceUpdate((n) => n + 1);
+      setRegistryVersion((n) => n + 1);
     }
   }, []);
 
@@ -284,7 +303,17 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
   // Keyboard navigation
   // -------------------------------------------------------------------------
 
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [highlightedIndex, setHighlightedIndexState] = useState(-1);
+
+  // Pointer-driven highlights must not scroll the item into view: the list
+  // would shift under the cursor, changing which item is hovered. Kept in a ref
+  // so it is already correct when the Item's scroll effect reads it.
+  const pointerHighlightRef = useRef(false);
+  const setHighlightedIndex = useCallback((i: number, source: HighlightSource = 'keyboard') => {
+    pointerHighlightRef.current = source === 'pointer';
+    setHighlightedIndexState(i);
+  }, []);
+  const isPointerHighlight = useCallback(() => pointerHighlightRef.current, []);
 
   const highlightedValue = useMemo(() => {
     if (highlightedIndex < 0) return null;
@@ -299,17 +328,28 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     }
   }, [inputValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // When the dropdown opens (single-mode, no filter), highlight the currently
-  // selected value so arrow-nav starts from there rather than from the first
-  // item. If nothing is selected, leave the highlight at 0.
+  // On open (single mode), highlight the currently selected value so arrow-nav
+  // and scroll-into-view start from there. With nothing selected the highlight
+  // stays off, so the list opens at the top with no item preselected.
+  //
+  // Items register in their own mount effect, so the registry can still be
+  // empty on the commit where `isOpen` flips — hence the registryVersion dep
+  // and the once-per-open latch.
+  const openHighlightDoneRef = useRef(false);
   useEffect(() => {
-    if (!isOpen || multiple || inputValue !== '') return;
-    const currentValue = selectedValues[0];
-    if (!currentValue) return;
+    if (!isOpen) {
+      openHighlightDoneRef.current = false;
+      return;
+    }
+    if (openHighlightDoneRef.current || multiple) return;
     const visible = getVisibleItems();
-    const idx = visible.findIndex((item) => item.value === currentValue);
-    if (idx >= 0) setHighlightedIndex(idx);
-  }, [isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (visible.length === 0) return;
+    openHighlightDoneRef.current = true;
+    const currentValue = selectedValues[0];
+    setHighlightedIndex(
+      currentValue ? visible.findIndex((item) => item.value === currentValue) : -1,
+    );
+  }, [isOpen, registryVersion]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // -------------------------------------------------------------------------
   // Selection
@@ -337,7 +377,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
         // instant setIsOpen(false), so selecting matches outside-click/Escape.
         if (requestClose) requestClose();
         else setIsOpen(false);
-        setHighlightedIndex(-1);
+        setHighlightedIndexState(-1);
       }
     },
     [multiple, closeOnSelect, setSelectedValues, setInputValue, setIsOpen, requestClose],
@@ -404,6 +444,7 @@ export function useAutocomplete(options: UseAutocompleteOptions = {}): UseAutoco
     highlightedIndex,
     setHighlightedIndex,
     highlightedValue,
+    isPointerHighlight,
     registerItem,
     unregisterItem,
     primeLabelCache,

@@ -1,5 +1,5 @@
 // Generated from Autocomplete.spec.ts
-import { render, screen, waitFor, renderHook, act } from '@testing-library/react';
+import { render, screen, waitFor, renderHook, act, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Autocomplete } from './Autocomplete';
@@ -341,6 +341,58 @@ describe('Autocomplete', () => {
       renderAutocomplete();
       await user.click(screen.getByRole('combobox'));
       expect(screen.getAllByRole('option')).toHaveLength(3);
+    });
+  });
+
+  // === Highlight ===
+  describe('highlight on open', () => {
+    it('highlights nothing when opened with no selection', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete();
+      await user.click(screen.getByRole('combobox'));
+      await waitFor(() => expect(screen.getAllByRole('option')).toHaveLength(3));
+      expect(document.querySelectorAll('[data-highlighted]')).toHaveLength(0);
+    });
+
+    it('highlights the selected item when opened with a selection', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete({ rootProps: { defaultValue: 'cherry' } });
+      await user.click(screen.getByRole('combobox'));
+      await waitFor(() => {
+        const highlighted = document.querySelectorAll('[data-highlighted]');
+        expect(highlighted).toHaveLength(1);
+        expect(highlighted[0].textContent).toBe('Cherry');
+      });
+    });
+  });
+
+  // === Close on scroll ===
+  describe('close on scroll', () => {
+    // The listener arms on a 150ms delay so the focus-driven scroll-into-view
+    // doesn't close what was just opened.
+    const passArmDelay = () =>
+      act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+      });
+
+    it('stays open when the option list itself scrolls', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete();
+      await user.click(screen.getByRole('combobox'));
+      const listbox = await screen.findByRole('listbox');
+      await passArmDelay();
+      fireEvent.scroll(listbox);
+      expect(screen.getByRole('listbox')).toBeInTheDocument();
+    });
+
+    it('closes when the page scrolls outside the popup', async () => {
+      const user = userEvent.setup();
+      renderAutocomplete();
+      await user.click(screen.getByRole('combobox'));
+      await screen.findByRole('listbox');
+      await passArmDelay();
+      fireEvent.scroll(document);
+      await waitFor(() => expect(screen.queryByRole('listbox')).not.toBeInTheDocument());
     });
   });
 
