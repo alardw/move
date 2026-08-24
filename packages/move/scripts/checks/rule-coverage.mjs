@@ -41,7 +41,9 @@ const CHECKS = Object.keys(pkg.scripts)
   .map((k) => k.slice('check:'.length))
   .filter((n) => n !== 'rule-coverage');
 const fileForCheck = (name) => {
-  const m = (pkg.scripts['check:' + name] || '').match(/(\S+\.(?:mjs|ts|tsx))/);
+  // `tsx` before `ts`: the alternation is ordered, so `ts` first would truncate a
+  // .tsx path to a .ts one that doesn't exist and report the check as unresolvable.
+  const m = (pkg.scripts['check:' + name] || '').match(/(\S+\.(?:mjs|tsx|ts))/);
   return m ? join(MOVE_ROOT, m[1]) : null;
 };
 

@@ -240,7 +240,7 @@ export const spec = {
     },
     {
       name: '--move-pininput-slot-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Slot background color',
     },
     {

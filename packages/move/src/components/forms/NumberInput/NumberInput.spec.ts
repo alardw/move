@@ -319,7 +319,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-numberinput-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Root background color',
     },
     {

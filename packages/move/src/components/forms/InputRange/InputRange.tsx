@@ -4,6 +4,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Slider } from 'radix-ui';
+import { useFieldGroup } from '../FormField/FormField';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { scaleUp, scaleDown, useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
@@ -74,6 +75,17 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
   },
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Radix Slider is a wrapper element around role="slider" thumbs — two of them
+    // in range mode — so there is no labelable element for a `<label for>` to
+    // reach. The name has to sit on the thumbs: they carry the slider role, and
+    // a name on the wrapper (which has no role of its own) is announced by
+    // nothing. Both thumbs of a range take the same field name; each already
+    // reports its own value through aria-valuenow.
+    const { 'aria-labelledby': fieldLabelledBy, ...groupProps } = useFieldGroup(
+      attrs as Record<string, unknown>,
+      { invalid: !!props.invalid },
+    );
+
     const { values, setValues } = useInputRange({
       value: props.value as InputRangeValue | undefined,
       defaultValue: props.defaultValue as InputRangeValue | undefined,
@@ -164,7 +176,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
 
         const slider = (
           <Slider.Root
-            {...attrs}
+            {...groupProps}
             {...rootSpRest}
             ref={ref}
             value={values}
@@ -198,6 +210,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
             {values.map((_, i) => (
               <Slider.Thumb
                 key={i}
+                aria-labelledby={fieldLabelledBy as string | undefined}
                 {...thumbSpRest}
                 {...(i === 0 ? { ref: mergedThumbRef } : {})}
                 className={cx('thumb', thumbSpClass as string | undefined)}

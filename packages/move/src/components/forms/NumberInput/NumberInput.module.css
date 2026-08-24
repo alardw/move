@@ -2,7 +2,7 @@
 
 .root {
   /* Component tokens */
-  --move-numberinput-bg: var(--move-bg-subtle);
+  --move-numberinput-bg: var(--move-bg-base);
   --move-numberinput-border: var(--move-border-interactive);
   --move-numberinput-border-hover: var(--move-border-emphasis);
   --move-numberinput-border-focus: var(--move-primary);

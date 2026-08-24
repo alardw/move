@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useRef } from 'react';
 import { RadioGroup as RadixRadioGroup } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
-import { useFieldControl } from '../FormField/FormField';
+import { useFieldGroup } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useAnimations, resolveAnimationsConfig, poppy, snappy } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
@@ -48,9 +48,11 @@ const RadioGroupRoot = withMoveComponent<'root', RadioGroupRootProps, HTMLDivEle
   setup({ props, ref, cx, sp, attrs }) {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, rootRef);
-    const controlProps = useFieldControl(attrs as Record<string, unknown>, {
+    // role="radiogroup" on a div, with the radios inside it — nothing here is a
+    // labelable element, so the FormField's `<label for>` pointed at this div
+    // and named nothing at all. The group takes the label by reference instead.
+    const controlProps = useFieldGroup(attrs as Record<string, unknown>, {
       invalid: !!props.invalid,
-      ref: rootRef,
     });
     return {
       render() {

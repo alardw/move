@@ -25,6 +25,13 @@ export { useMergedRef } from './engine';
 
 // Headless utilities (from core)
 export { useControlledState } from './engine';
+
+// Anchored-popup focus container. Requires a Radix popup primitive — its
+// handlers are Radix's onOpenAutoFocus/onCloseAutoFocus.
+export { usePopupFocus } from './engine';
+export type { UsePopupFocusOptions, PopupFocusHandlers } from './engine';
+export { POPUP_FOCUS_BY_MECHANISM } from './spec-type';
+export type { PopupMechanism, PopupFocusContract } from './spec-type';
 export type { UseControlledStateOptions } from './engine';
 
 // General-purpose hooks + their wrapper components
@@ -446,12 +453,18 @@ export type { InputTextProps, InputTextVariant, InputTextSize } from './componen
 export { Label } from './components/forms/Label';
 export type { LabelProps, LabelSize } from './components/forms/Label';
 
-export { FormField } from './components/forms/FormField';
+export {
+  FormField,
+  useFieldControl,
+  useFieldGroup,
+  useFormField,
+} from './components/forms/FormField';
 export type {
   FormFieldRootProps,
   FormFieldLabelProps,
   FormFieldFieldProps,
   FormFieldDescriptionProps,
+  FormFieldContextValue,
 } from './components/forms/FormField';
 
 export { Switch } from './components/forms/Switch';

@@ -49,7 +49,13 @@
   pointer-events: none;
 }
 
-.wrapper:hover .item:not(:disabled) {
+/* Scoped OFF the checked state rather than overridden back afterwards — see the
+   same reasoning in Checkbox. The checked dot paints an accent fill with no
+   border, and this rule is more specific than the state rule below, so left
+   unscoped it drew a ring around that fill on hover. Excluding the state here
+   means there is nothing to override, and no trap for the next state added.
+   The [data-invalid] hover rule further down is separate and still applies. */
+.wrapper:hover .item:not(:disabled):not([data-state='checked']) {
   background-color: var(--move-radio-bg-hover);
   border-color: var(--move-radio-border-hover);
 }
@@ -63,6 +69,8 @@
   border-color: var(--move-error);
 }
 
+/* Hover feedback for the checked state is the darker fill; no border is
+   restated, because the rule above no longer matches this state. */
 .wrapper:hover .item[data-state='checked']:not(:disabled) {
   background-color: var(--move-radio-bg-checked-hover);
 }

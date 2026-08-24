@@ -22,6 +22,14 @@
  * Escape + blur) is conformant, not flagged: its closeOn* flags are N/A, not a
  * gap. The report details only what's bad and summarizes what's good.
  *
+ * Rules 1 and 3 assume a surface the user opens deliberately and the consumer
+ * can control. `behavior.popup.mechanism: 'pointer-panel'` is neither: the
+ * panel is a pointer mirror of a field that is already keyboard-operable
+ * (TimeField's segments), revealed as a side effect of arrowing rather than
+ * opened, so there is no trigger to name and no open state to control. Those
+ * two rules are relaxed for it; rule 2 still applies, because "does this
+ * dismiss on scroll" is a real question whatever opened it.
+ *
  * Future:
  *   - Runtime Playwright pass that opens each popup, fires each event,
  *     and asserts the declared flag matches behavior. That's where
@@ -72,13 +80,21 @@ function getProp(obj, name) {
   return null;
 }
 
+/** Unwrap `'x' as const` / `false as const` — house style in these specs, and
+ *  an AsExpression hides the literal from every reader below. */
+function unwrap(node) {
+  return node && ts.isAsExpression(node) ? unwrap(node.expression) : node;
+}
+
 function asString(node) {
+  node = unwrap(node);
   if (!node) return null;
   if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
   return null;
 }
 
 function asBool(node) {
+  node = unwrap(node);
   if (!node) return null;
   if (node.kind === ts.SyntaxKind.TrueKeyword) return true;
   if (node.kind === ts.SyntaxKind.FalseKeyword) return false;
@@ -149,15 +165,19 @@ function check(component) {
     return { name: component.name, member: false, errors: [], flags };
   }
 
+  const behavior = getProp(specObj, 'behavior');
+  const popup = getProp(behavior, 'popup');
+  // A pointer mirror of an already-operable field: nothing triggers it and
+  // nothing controls it, so rules 1 and 3 do not apply. See the header.
+  const pointerPanel = asString(getProp(popup, 'mechanism')) === 'pointer-panel';
+
   // 1. controlled-open in state family
   const stateFamilies = asArray(getProp(families, 'state')) ?? [];
-  if (!stateFamilies.includes('controlled-open')) {
+  if (!pointerPanel && !stateFamilies.includes('controlled-open')) {
     errors.push('families.state should include "controlled-open" for popup-anchored components');
   }
 
   // 2. behavior.popup with all four flags
-  const behavior = getProp(specObj, 'behavior');
-  const popup = getProp(behavior, 'popup');
   let delegated = false;
   if (!popup) {
     errors.push('missing `behavior.popup` block — required for popup-anchored components');
@@ -180,7 +200,7 @@ function check(component) {
   //    Monolithic popups (compound: false) own their popover state
   //    internally and don't expose those sub-components.
   const compound = asBool(getProp(specObj, 'compound'));
-  if (compound) {
+  if (compound && !pointerPanel) {
     const subsNode = getProp(specObj, 'subComponents');
     const subNames = [];
     if (subsNode && ts.isArrayLiteralExpression(subsNode)) {

@@ -171,12 +171,22 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
             {...(props.disabled ? { 'data-disabled': '' } : {})}
             onClick={handleRootClick}
           >
+            {/* The one real <input> behind the rendered cells is this component's
+                labellable node — the cells are presentational and the root is a
+                div. It takes the FormField id so a FormField.Label can point its
+                `for` here; previously it read the context's invalid/describedBy
+                but never its id, so the label resolved to nothing.
+                The built-in aria-label is a standalone fallback and steps aside
+                inside a FormField: aria-label outranks a <label for> in the
+                accessible-name order, so keeping it would have let the field
+                resolve to "PIN input" and silently ignore the visible label. */}
             <input
               ref={pin.inputRef as React.Ref<HTMLInputElement>}
               className={styles.hiddenInput}
               {...pin.inputProps}
               name={props.name as string}
-              aria-label={labels.pinInput}
+              id={(props.id as string | undefined) ?? field?.fieldId}
+              aria-label={field ? undefined : labels.pinInput}
               aria-invalid={props.invalid || field?.invalid ? true : undefined}
               aria-describedby={field?.describedBy}
               tabIndex={0}

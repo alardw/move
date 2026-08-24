@@ -262,6 +262,11 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
               </span>
             )}
 
+            {/* `controlProps` already carries the id — `props.id` when the consumer
+                set one, otherwise the id a wrapping FormField.Label points its
+                `for` at. Restating `id={props.id}` below the spread overwrote it
+                with undefined whenever no explicit id was passed, which left the
+                label dangling and the field with no accessible name. */}
             <input
               {...controlProps}
               {...inputSpRest}
@@ -279,7 +284,6 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
               readOnly={readOnly}
               placeholder={props.placeholder as string | undefined}
               name={props.name as string | undefined}
-              id={props.id as string | undefined}
               required={props.required as boolean | undefined}
               autoFocus={props.autoFocus as boolean | undefined}
               onChange={ni.handleChange}

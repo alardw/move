@@ -83,6 +83,24 @@ export const CHECKS: CheckDoc[] = [
       'Interactive controls size from the shared --move-control-height-* scale — no forked raw width/height in the 24–48px control band.',
   },
   {
+    name: 'css-important',
+    appliesTo: 'component',
+    enforces:
+      'No !important in component CSS. It outranks the consumer too — a token, an sp slot-prop style or an app class cannot override it without escalating in turn. To outrank a component you compose, put that component’s styles in the @layer move.base cascade layer; unlayered rules beat layered ones at any specificity, and the consumer stays unlayered and on top.',
+  },
+  {
+    name: 'internal-slot-props',
+    appliesTo: 'component',
+    enforces:
+      'No sp={{…}} between Move’s own components. Slot props are the consumer’s escape hatch; used internally they compete with the consumer for the same channel and hide a missing token. Restyle through the composed component’s tokens and take a plain className on the element you render.',
+  },
+  {
+    name: 'internal-slot-props',
+    appliesTo: 'component',
+    enforces:
+      'No sp={{…}} between Move’s own components. Slot props are the consumer’s escape hatch; used internally they compete with the consumer for the same channel and hide a missing token. Restyle through the composed component’s tokens and take a plain className on the element you render.',
+  },
+  {
     name: 'barrel-completeness',
     appliesTo: 'component',
     enforces:
@@ -163,6 +181,18 @@ export const CHECKS: CheckDoc[] = [
     name: 'family-popup',
     appliesTo: 'component',
     enforces: 'Popup-family components (Tooltip, Dropdown, …) share one contract — props, ARIA, and animation.',
+  },
+  {
+    name: 'field-naming',
+    appliesTo: 'component',
+    enforces:
+      'Every form control is actually named by its FormField.Label, through the mechanism that fits what it is built from: a `for` pointing at its one labelable element, or aria-labelledby from the element carrying its widget role. Renders each control to check, because the wrong mechanism produces markup that reads as wired and names nothing — and axe only flags a control with no name at all.',
+  },
+  {
+    name: 'keyboard-entry',
+    appliesTo: 'component',
+    enforces:
+      'Every popup component is reachable by keyboard: the gate presses the keys its spec declares and asserts focus lands where the spec says — inside the popup, or on the field for a combobox. Behavioural, not structural: axe cannot press a key.',
   },
   {
     name: 'family-modal',

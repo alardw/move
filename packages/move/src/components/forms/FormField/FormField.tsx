@@ -18,6 +18,8 @@ declare const process: { env: { NODE_ENV?: string } };
 export interface FormFieldContextValue {
   /** id to put on the control (Label points its htmlFor here). */
   fieldId: string;
+  /** id of the Label element, for a composite control's aria-labelledby. */
+  labelId: string;
   /** id of the Description element, for the control's aria-describedby. */
   descriptionId: string;
   /** Whether the field is invalid — drives aria-invalid. */
@@ -26,6 +28,25 @@ export interface FormFieldContextValue {
   describedBy: string | undefined;
   /** Description registers/unregisters itself here. */
   registerDescription: () => () => void;
+  /**
+   * True once a composite control has claimed the label by reference. A `<label
+   * for>` can only name a labelable element — an input, select, textarea or
+   * button — so a widget built from a div plus several inner controls (a radio
+   * group, a segmented time field, a slider, an editable region) cannot be
+   * named that way at all. Those point `aria-labelledby` at the Label instead,
+   * and register here so Label drops the `htmlFor` that would otherwise dangle.
+   */
+  labelledByControl: boolean;
+  /** A composite control registers/unregisters itself here. */
+  registerLabelledByControl: () => () => void;
+  /**
+   * True once a labelable control has claimed the field id. Both can be true at
+   * once: a date-and-time field is one InputText plus an inline TimeField, and
+   * the group must not strip the `for` that names the input.
+   */
+  labelableControl: boolean;
+  /** A labelable control registers/unregisters itself here. */
+  registerLabelableControl: () => () => void;
 }
 
 const FormFieldContext = React.createContext<FormFieldContextValue | null>(null);
@@ -44,11 +65,54 @@ export function useFormField(): FormFieldContextValue | null {
  * clobbering a value the consumer passed explicitly. Every control in the forms
  * category should route its input through this, so the behavior lives in one place.
  */
+/**
+ * The composite-widget counterpart to {@link useFieldControl}.
+ *
+ * `useFieldControl` marks the one labelable element a `<label for>` can point
+ * at. Plenty of controls have no such element: a radio group is a div wrapping
+ * several inputs, a time field is a row of spinbutton segments each with its
+ * own name, a slider is a div with role="slider" thumbs, an editor is a
+ * contenteditable div. Naming those means pointing `aria-labelledby` at the
+ * Label from the element that carries the widget role, which is what this
+ * returns. Registering also tells Label to drop its `htmlFor`, so no `for`
+ * is left pointing at an id that never appears in the DOM.
+ *
+ * Returns nothing but empty attributes outside a FormField, so a control can
+ * spread it unconditionally.
+ */
+export function useFieldGroup(
+  attrs: Record<string, unknown> = {},
+  opts: { invalid?: boolean } = {},
+): Record<string, unknown> {
+  const field = useFormField();
+  const register = field?.registerLabelledByControl;
+  React.useEffect(() => register?.(), [register]);
+
+  const {
+    'aria-labelledby': labelledBy,
+    'aria-invalid': ariaInvalid,
+    'aria-describedby': describedBy,
+    ...rest
+  } = attrs;
+  const mergedDescribedBy =
+    [describedBy, field?.describedBy].filter(Boolean).join(' ') || undefined;
+
+  return {
+    ...rest,
+    'aria-labelledby': (labelledBy as string | undefined) ?? field?.labelId,
+    'aria-describedby': mergedDescribedBy,
+    'aria-invalid':
+      (ariaInvalid as boolean | undefined) ?? (opts.invalid || field?.invalid ? true : undefined),
+  };
+}
+
 export function useFieldControl(
   attrs: Record<string, unknown>,
   opts: { invalid?: boolean; ref?: React.RefObject<HTMLElement | null> } = {},
 ): Record<string, unknown> {
   const field = useFormField();
+  const registerLabelable = field?.registerLabelableControl;
+  React.useEffect(() => registerLabelable?.(), [registerLabelable]);
   const { id, 'aria-invalid': ariaInvalid, 'aria-describedby': describedBy, ...rest } = attrs;
   const mergedDescribedBy =
     [describedBy, field?.describedBy].filter(Boolean).join(' ') || undefined;
@@ -108,22 +172,49 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
   setup({ props, ref, cx, sp, attrs }) {
     const generated = React.useId();
     const fieldId = (props.id as string) || `${generated}-field`;
+    const labelId = `${generated}-label`;
     const descriptionId = `${generated}-desc`;
     const [descriptionCount, setDescriptionCount] = React.useState(0);
     const registerDescription = React.useCallback(() => {
       setDescriptionCount((c) => c + 1);
       return () => setDescriptionCount((c) => c - 1);
     }, []);
+    const [labelledByCount, setLabelledByCount] = React.useState(0);
+    const registerLabelledByControl = React.useCallback(() => {
+      setLabelledByCount((c) => c + 1);
+      return () => setLabelledByCount((c) => c - 1);
+    }, []);
+    const [labelableCount, setLabelableCount] = React.useState(0);
+    const registerLabelableControl = React.useCallback(() => {
+      setLabelableCount((c) => c + 1);
+      return () => setLabelableCount((c) => c - 1);
+    }, []);
 
     const ctx = React.useMemo<FormFieldContextValue>(
       () => ({
         fieldId,
+        labelId,
         descriptionId,
         invalid: !!props.invalid,
         describedBy: descriptionCount > 0 ? descriptionId : undefined,
         registerDescription,
+        labelledByControl: labelledByCount > 0,
+        registerLabelledByControl,
+        labelableControl: labelableCount > 0,
+        registerLabelableControl,
       }),
-      [fieldId, descriptionId, props.invalid, descriptionCount, registerDescription],
+      [
+        fieldId,
+        labelId,
+        descriptionId,
+        props.invalid,
+        descriptionCount,
+        registerDescription,
+        labelledByCount,
+        registerLabelledByControl,
+        labelableCount,
+        registerLabelableControl,
+      ],
     );
 
     return {
@@ -187,7 +278,15 @@ const FormFieldLabel = withMoveComponent<'label', FormFieldLabelProps, HTMLLabel
             {...attrs}
             {...spRest}
             ref={ref}
-            htmlFor={(props.htmlFor as string) ?? field?.fieldId}
+            id={((attrs as Record<string, unknown>).id as string | undefined) ?? field?.labelId}
+            /* The `for` is dropped only when a composite is the field's ONLY
+               participant. A field can hold both — DatePicker with `showTime`
+               is an InputText beside an inline TimeField — and dropping it
+               there left the input named by nothing but its title. */
+            htmlFor={
+              (props.htmlFor as string) ??
+              (field?.labelledByControl && !field?.labelableControl ? undefined : field?.fieldId)
+            }
             className={cx('label', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >

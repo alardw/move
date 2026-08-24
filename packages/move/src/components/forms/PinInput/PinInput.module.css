@@ -7,7 +7,7 @@
   --move-pininput-slot-border: var(--move-border-interactive);
   --move-pininput-slot-border-hover: var(--move-border-emphasis);
   --move-pininput-slot-border-focus: var(--move-primary);
-  --move-pininput-slot-bg: var(--move-bg-subtle);
+  --move-pininput-slot-bg: var(--move-bg-base);
   --move-pininput-slot-fg: var(--move-fg-base);
   --move-pininput-slot-font-size: var(--move-size-lg);
   --move-pininput-slot-gap: var(--move-spacing-sm);

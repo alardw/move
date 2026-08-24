@@ -136,27 +136,32 @@ for (const file of componentFiles()) {
     walk(call, (n) => {
       if (!ts.isVariableDeclaration(n) || !n.initializer) return;
       const init = unwrap(n.initializer);
+      // Both field hooks take attrs and return them merged with the wiring a
+      // FormField supplies, so spreading either result forwards the consumer's
+      // attributes. useFieldControl marks a labelable element; useFieldGroup
+      // marks a composite widget named by reference. Same forwarding contract.
+      const isFieldHook =
+        ts.isCallExpression(init) &&
+        ts.isIdentifier(init.expression) &&
+        (init.expression.text === 'useFieldControl' || init.expression.text === 'useFieldGroup') &&
+        init.arguments.length > 0 &&
+        (() => {
+          const a0 = unwrap(init.arguments[0]);
+          return ts.isIdentifier(a0) && (a0.text === 'attrs' || attrsAliases.has(a0.text));
+        })();
+
       if (ts.isObjectBindingPattern(n.name)) {
-        const fromAttrs = ts.isIdentifier(init) && init.text === 'attrs';
+        // A rest element still carries everything not named individually, so a
+        // control that pulls one attribute out to place it elsewhere (a slider
+        // moving the label onto its thumbs) keeps forwarding the remainder.
+        const fromAttrs = (ts.isIdentifier(init) && init.text === 'attrs') || isFieldHook;
         const fromSp = isSpCall(init);
         if (fromAttrs || fromSp)
           for (const el of n.name.elements)
             if (el.dotDotDotToken) (fromAttrs ? attrsAliases : spAliases).add(el.name.getText());
       } else if (ts.isIdentifier(n.name) && ts.isIdentifier(init) && init.text === 'attrs') {
         attrsAliases.add(n.name.getText());
-      } else if (
-        ts.isIdentifier(n.name) &&
-        ts.isCallExpression(init) &&
-        ts.isIdentifier(init.expression) &&
-        init.expression.text === 'useFieldControl' &&
-        init.arguments.length &&
-        // useFieldControl(attrs, …) returns the forwarded consumer attrs
-        // (id/aria-*/data-*) in its result; spreading that result forwards them.
-        (() => {
-          const a0 = unwrap(init.arguments[0]);
-          return ts.isIdentifier(a0) && (a0.text === 'attrs' || attrsAliases.has(a0.text));
-        })()
-      ) {
+      } else if (ts.isIdentifier(n.name) && isFieldHook) {
         attrsAliases.add(n.name.getText());
       }
     });
