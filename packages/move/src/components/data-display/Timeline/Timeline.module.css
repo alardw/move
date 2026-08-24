@@ -175,9 +175,13 @@
  * Colors
  * ========================================================================= */
 
-.item {
-  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
-     the built-in palettes below override by specificity. */
+.item[data-color] {
+  /* Theme-added colors resolve via accent role tokens (tokens/accents.css); the
+     built-in palettes below override at equal specificity by coming after.
+     Scoped to [data-color] so it can never apply without one — `--move-accent-*`
+     exists only under a [data-color] rule, so an unscoped match resolves to an
+     undefined var and drops the declaration. Inert here today because this
+     component defaults its `color`, unlike Avatar, where it was not. */
   --move-timeline-active-color: var(--move-accent-solid);
 }
 .item[data-color='gray'] {

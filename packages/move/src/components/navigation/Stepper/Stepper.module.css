@@ -31,9 +31,13 @@
 }
 
 /* Colors — override active/complete indicator and separator */
-.root {
-  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
-     the built-in palettes below override by specificity. */
+.root[data-color] {
+  /* Theme-added colors resolve via accent role tokens (tokens/accents.css); the
+     built-in palettes below override at equal specificity by coming after.
+     Scoped to [data-color] so it can never apply without one — `--move-accent-*`
+     exists only under a [data-color] rule, so an unscoped match resolves to an
+     undefined var and drops the declaration. Inert here today because this
+     component defaults its `color`, unlike Avatar, where it was not. */
   --move-stepper-indicator-bg-complete: var(--move-accent-solid);
   --move-stepper-indicator-fg-active: var(--move-accent-soft-fg);
   --move-stepper-indicator-fg-complete: var(--move-accent-solid-fg);

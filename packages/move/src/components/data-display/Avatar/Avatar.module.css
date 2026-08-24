@@ -70,11 +70,19 @@
 }
 
 /* Colors — solid backgrounds with WCAG-legible foreground */
-.root {
-  /* Theme-added colors resolve via accent role tokens (tokens/accents.css);
-     the built-in palettes below override by specificity. */
-  --move-avatar-bg: var(--move-accent-solid);
-  --move-avatar-fg: var(--move-accent-solid-fg);
+/* Theme-added colors resolve via accent role tokens (tokens/accents.css); the
+   built-in palettes below override at equal specificity by coming after.
+   Scoped to [data-color] deliberately: `--move-accent-*` is only ever defined
+   under a [data-color] rule in accents.css, so unscoped this matched an Avatar
+   with no `color` at all and set --move-avatar-bg to an undefined var. That is
+   invalid at computed-value time, which drops the whole declaration — the
+   background fell back to transparent and the text to whatever it inherited,
+   silently overwriting the --move-primary default set at the top of this file.
+   The fallbacks cover the other half: a `color` the active theme never defined
+   lands here too, and degrades to the primary default instead of vanishing. */
+.root[data-color] {
+  --move-avatar-bg: var(--move-accent-solid, var(--move-primary));
+  --move-avatar-fg: var(--move-accent-solid-fg, var(--move-primary-fg));
 }
 .root[data-color='gray'] {
   --move-avatar-bg: var(--move-gray-600);
@@ -154,20 +162,25 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+  background-color: var(--move-avatar-bg);
   color: var(--move-avatar-fg);
   font-weight: var(--move-weight-medium);
   line-height: 1;
   user-select: none;
 }
 
-.fallback[data-status='loading'] {
-  background-color: transparent;
-}
-
+/* The fill lives on the base rule, not on the status rules, so a consumer class
+   on the fallback competes with it on equal terms. Scoped to [data-status] it
+   sat at (0,2,0) and beat any single class outright — leaving no way to restyle
+   an avatar's fallback from the outside short of !important. Loading still wins
+   its transparent override below; the token stays the intended override point. */
 .fallback[data-status='error'],
 .fallback[data-status='idle'] {
-  background-color: var(--move-avatar-bg);
   animation: avatar-fadeIn 200ms ease-out both;
+}
+
+.fallback[data-status='loading'] {
+  background-color: transparent;
 }
 
 /* Group */
