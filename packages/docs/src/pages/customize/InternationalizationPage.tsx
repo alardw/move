@@ -54,7 +54,7 @@ function Form() {
   return (
     <>
       <Password
-        labels={{ showPassword: t('a11y.showPassword'), hidePassword: t('a11y.hidePassword') }}
+        labels={{ showPassword: t('a11y.showPassword') }}
       />
       <DatePicker labels={{ selectDate: t('date.select'), openCalendar: t('date.open') }} />
       <VideoPlayer labels={{ play: t('player.play'), mute: t('player.mute') }} />
@@ -103,7 +103,6 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'Pagination', key: 'previous / next', def: 'Go to previous / next page' },
   { component: 'Pagination', key: 'page', def: 'Go to page {page}' },
   { component: 'Password', key: 'showPassword', def: 'Show password' },
-  { component: 'Password', key: 'hidePassword', def: 'Hide password' },
   { component: 'PinInput', key: 'pinInput', def: 'PIN input' },
   { component: 'Popover', key: 'close', def: 'Close' },
   { component: 'ProgressBar', key: 'label', def: 'Progress' },

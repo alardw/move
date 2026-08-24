@@ -17,6 +17,14 @@
   overflow-x: auto;
 }
 
+/* The scroll container is the tab stop (keyboard users need to reach the
+   horizontal scroll). Ring is inset because `.root` clips overflow. */
+.body:focus-visible,
+.fallback:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}
+
 .copy {
   position: absolute;
   top: var(--move-spacing-xs);

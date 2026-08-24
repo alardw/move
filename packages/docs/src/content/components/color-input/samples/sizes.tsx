@@ -1,17 +1,33 @@
-import { ColorInput, Stack, Text } from 'move';
+import { ColorInput, FormField, Label, Stack } from 'move';
 
 const sizes = ['sm', 'md', 'lg'] as const;
+const variants = [
+  { variant: undefined, defaultValue: '#7950f2', name: 'outlined' },
+  { variant: 'filled' as const, defaultValue: '#12b886', name: 'filled' },
+];
 
 export default function SizesSample() {
   return (
     <Stack gap="md">
-      {sizes.map((size) => (
-        <Stack key={size} direction="row" gap="md" align="center">
-          <Text size="sm" weight="medium">{size}</Text>
-          <ColorInput aria-label={`Colour (size ${size}, outlined)`} size={size} defaultValue="#7950f2" width="14rem" />
-          <ColorInput aria-label={`Colour (size ${size}, filled)`} size={size} variant="filled" defaultValue="#12b886" width="14rem" />
-        </Stack>
-      ))}
+      {sizes.map((size) =>
+        variants.map((v) => (
+          <FormField.Root key={`${size}-${v.name}`} labelWidth="8rem">
+            <FormField.Label>
+              <Label>
+                {size} · {v.name}
+              </Label>
+            </FormField.Label>
+            <FormField.Field>
+              <ColorInput
+                size={size}
+                variant={v.variant}
+                defaultValue={v.defaultValue}
+                width="14rem"
+              />
+            </FormField.Field>
+          </FormField.Root>
+        )),
+      )}
     </Stack>
   );
 }

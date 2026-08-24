@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { DatePicker, Stack, Text } from 'move';
+import { DatePicker, FormField, Label, Stack } from 'move';
 
 const locales = [
   { tag: 'en-US', label: 'English (US)', placeholder: 'Pick a date', weekStartsOn: 0 as const },
@@ -19,21 +19,26 @@ export default function LanguagesSample() {
   return (
     <Stack gap="md">
       {locales.map((l) => (
-        <Stack key={l.tag} gap="xs" align="start">
-          <Text size="sm" weight="medium">{l.label} <Text as="span" size="sm" color="muted">· {l.tag}</Text></Text>
-          <DatePicker.Root
-            mode="single"
-            locale={l.tag}
-            weekStartsOn={l.weekStartsOn}
-            value={values[l.tag]}
-            onValueChange={(d) => setValues((v) => ({ ...v, [l.tag]: d as Date | undefined }))}
-          >
-            <DatePicker.Trigger>
-              <DatePicker.Input placeholder={l.placeholder} />
-            </DatePicker.Trigger>
-            <DatePicker.Content />
-          </DatePicker.Root>
-        </Stack>
+        <FormField.Root key={l.tag}>
+          <FormField.Label>
+            <Label>{l.label}</Label>
+          </FormField.Label>
+          <FormField.Field>
+            <DatePicker.Root
+              mode="single"
+              locale={l.tag}
+              weekStartsOn={l.weekStartsOn}
+              value={values[l.tag]}
+              onValueChange={(d) => setValues((v) => ({ ...v, [l.tag]: d as Date | undefined }))}
+            >
+              <DatePicker.Trigger>
+                <DatePicker.Input placeholder={l.placeholder} />
+              </DatePicker.Trigger>
+              <DatePicker.Content />
+            </DatePicker.Root>
+          </FormField.Field>
+          <FormField.Description>{l.tag}</FormField.Description>
+        </FormField.Root>
       ))}
     </Stack>
   );

@@ -290,7 +290,7 @@ const OPERABLE: Criterion[] = [
     name: 'Keyboard',
     level: 'A',
     support: 'supports',
-    evidence: ['a11y-sweep'],
+    evidence: ['a11y-sweep', 'keyboard-entry'],
     note: {
       included:
         'Radix overlays are fully operable. ColorPicker sliders (saturation/hue/opacity) take arrow keys — Shift for coarse steps, Home/End to the ends — plus the channel inputs. Carousel is driven by real prev/next buttons and dot controls (all keyboard-operable); viewport arrow-key paging is an unshipped enhancement, not a barrier.',

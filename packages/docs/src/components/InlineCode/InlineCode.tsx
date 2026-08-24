@@ -55,7 +55,10 @@ export function InlineCode({ code, language = 'tsx', tintByType = false }: Inlin
       return;
     }
     let cancelled = false;
-    codeToHtml(code, { lang: language, theme: 'github-light' })
+    // `tabindex: false` — Shiki's <pre> is a tab stop by default so keyboard
+    // users can scroll overflowing code. These pills are inline and wrap
+    // instead of scrolling, so the tab stop is pure noise in a props table.
+    codeToHtml(code, { lang: language, theme: 'github-light', tabindex: false })
       .then((result) => {
         cache.set(code, result);
         if (!cancelled) setHtml(result);

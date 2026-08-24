@@ -13,7 +13,8 @@ export type HookCategory =
   | "Viewport"
   | "Theming & surfaces"
   | "Icons"
-  | "Component context";
+  | "Component context"
+  | "Focus & popups";
 
 export interface HookDoc {
   /** Exact export name from `move`. */
@@ -70,6 +71,25 @@ export const HOOKS_REGISTRY: HookDoc[] = [
     example: `<Deferred rootMargin="300px" style={{ position: 'absolute', inset: 0 }}>
   <ExpensivePreview />
 </Deferred>`,
+  },
+  // ── Focus & popups ──────────────────────────────────────────────
+  {
+    name: "usePopupFocus",
+    signature:
+      "usePopupFocus({ mechanism, contentRef, returnRef, anchorRef?, getFocusTarget?, isOpen, onDismiss? }): { onOpenAutoFocus, onCloseAutoFocus }",
+    summary:
+      "Focus handling for an anchored popup: moves focus in on open, returns it to the field or trigger on close, and dismisses when focus leaves. Pick a mechanism and the focus contract follows from it. Its handlers are Radix events — spread them onto a Radix Popover.Content, DropdownMenu.Content or Select.Content.",
+    category: "Focus & popups",
+    example: `const handlers = usePopupFocus({
+  mechanism: 'field-dialog',
+  contentRef,
+  returnRef: inputRef,
+  anchorRef: rootRef,
+  isOpen,
+  onDismiss: close,
+});
+
+<Popover.Content ref={contentRef} {...handlers}>…</Popover.Content>`,
   },
   {
     name: "useTruncate",
@@ -203,4 +223,5 @@ export const HOOK_CATEGORY_ORDER: HookCategory[] = [
   "Theming & surfaces",
   "Icons",
   "Component context",
+  "Focus & popups",
 ];

@@ -1,4 +1,4 @@
-import { InputText, Stack, Text } from 'move';
+import { FormField, InputText, Label, Stack } from 'move';
 
 const sizes = ['sm', 'md', 'lg'] as const;
 
@@ -6,12 +6,14 @@ export default function SizesSample() {
   return (
     <Stack gap="md">
       {sizes.map((size) => (
-        <Stack key={size} direction="row" gap="md" align="center">
-          <Text size="sm" weight="medium">{size}</Text>
-          <Stack flex={1}>
-            <InputText aria-label={`size="${size}"`} size={size} placeholder={`size="${size}"`} />
-          </Stack>
-        </Stack>
+        <FormField.Root key={size} labelWidth="3rem">
+          <FormField.Label>
+            <Label>{size}</Label>
+          </FormField.Label>
+          <FormField.Field>
+            <InputText size={size} placeholder={`size="${size}"`} />
+          </FormField.Field>
+        </FormField.Root>
       ))}
     </Stack>
   );

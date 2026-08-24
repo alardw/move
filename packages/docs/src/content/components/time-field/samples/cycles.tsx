@@ -1,20 +1,32 @@
-import { Stack, Text, TimeField } from 'move';
+import { FormField, Label, Stack, TimeField } from 'move';
 
 export default function CyclesSample() {
   return (
     <Stack gap="md">
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">24-hour</Text>
-        <TimeField hourCycle={24} defaultValue="14:30" />
-      </Stack>
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">12-hour with AM/PM</Text>
-        <TimeField hourCycle={12} defaultValue="14:30" />
-      </Stack>
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">With seconds</Text>
-        <TimeField defaultValue="14:30:45" granularity="second" />
-      </Stack>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>24-hour</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <TimeField hourCycle={24} defaultValue="14:30" />
+        </FormField.Field>
+      </FormField.Root>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>12-hour with AM/PM</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <TimeField hourCycle={12} defaultValue="14:30" />
+        </FormField.Field>
+      </FormField.Root>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>With seconds</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <TimeField defaultValue="14:30:45" granularity="second" />
+        </FormField.Field>
+      </FormField.Root>
     </Stack>
   );
 }

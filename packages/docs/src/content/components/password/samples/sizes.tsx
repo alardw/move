@@ -1,4 +1,4 @@
-import { Password, Stack, Text } from 'move';
+import { FormField, Label, Password, Stack } from 'move';
 
 const sizes = ['sm', 'md', 'lg'] as const;
 
@@ -6,10 +6,14 @@ export default function SizesSample() {
   return (
     <Stack gap="md">
       {sizes.map((size) => (
-        <Stack key={size} direction="row" gap="md" align="center">
-          <Text size="sm" weight="medium">{size}</Text>
-          <Password aria-label={`size="${size}"`} size={size} placeholder={`size="${size}"`} />
-        </Stack>
+        <FormField.Root key={size} labelWidth="3rem">
+          <FormField.Label>
+            <Label>{size}</Label>
+          </FormField.Label>
+          <FormField.Field>
+            <Password size={size} placeholder={`size="${size}"`} />
+          </FormField.Field>
+        </FormField.Root>
       ))}
     </Stack>
   );

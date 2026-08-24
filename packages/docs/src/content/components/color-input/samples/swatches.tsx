@@ -1,10 +1,19 @@
 import { useState } from 'react';
-import { ColorInput, Stack, Text } from 'move';
+import { ColorInput, FormField, Label } from 'move';
 
 const brand = [
-  '#4c6ef5', '#5c7cfa', '#7950f2', '#9775fa',
-  '#15aabf', '#22b8cf', '#12b886', '#40c057',
-  '#fab005', '#fd7e14', '#fa5252', '#e64980',
+  '#4c6ef5',
+  '#5c7cfa',
+  '#7950f2',
+  '#9775fa',
+  '#15aabf',
+  '#22b8cf',
+  '#12b886',
+  '#40c057',
+  '#fab005',
+  '#fd7e14',
+  '#fa5252',
+  '#e64980',
 ];
 
 /**
@@ -15,16 +24,20 @@ const brand = [
 export default function SwatchesSample() {
   const [value, setValue] = useState('#4c6ef5');
   return (
-    <Stack gap="sm" align="start">
-      <ColorInput
-        aria-label="Colour"
-        value={value}
-        onValueChange={setValue}
-        swatches={brand}
-        swatchesPerRow={6}
-        width="20rem"
-      />
-      <Text size="sm" color="muted">value: {value}</Text>
-    </Stack>
+    <FormField.Root>
+      <FormField.Label>
+        <Label>Colour</Label>
+      </FormField.Label>
+      <FormField.Field>
+        <ColorInput
+          value={value}
+          onValueChange={setValue}
+          swatches={brand}
+          swatchesPerRow={6}
+          width="20rem"
+        />
+      </FormField.Field>
+      <FormField.Description>value: {value}</FormField.Description>
+    </FormField.Root>
   );
 }

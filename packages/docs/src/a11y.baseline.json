@@ -5,21 +5,6 @@
   "align/two-slot": {
     "button-name": 1
   },
-  "color-input/basic": {
-    "label": 1
-  },
-  "color-input/formats": {
-    "label": 1
-  },
-  "color-input/sizes": {
-    "label": 6
-  },
-  "color-input/states": {
-    "label": 4
-  },
-  "color-input/swatches": {
-    "label": 1
-  },
   "file-upload/basic": {
     "label": 1
   },
@@ -28,12 +13,6 @@
   },
   "image/overlay": {
     "nested-interactive": 3
-  },
-  "input-range/basic": {
-    "aria-input-field-name": 1
-  },
-  "input-range/step": {
-    "aria-input-field-name": 2
   },
   "tooltip/basic": {
     "button-name": 3

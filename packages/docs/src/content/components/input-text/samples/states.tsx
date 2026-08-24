@@ -1,24 +1,40 @@
-import { InputText, Stack, Text } from 'move';
+import { FormField, InputText, Label, Stack } from 'move';
 
 export default function StatesSample() {
   return (
     <Stack gap="md">
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">Default</Text>
-        <InputText aria-label="Default" defaultValue="Type here" />
-      </Stack>
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">Invalid</Text>
-        <InputText aria-label="Invalid" defaultValue="not an email" invalid />
-      </Stack>
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">Read-only</Text>
-        <InputText aria-label="Read-only" defaultValue="alex@acme.co" readOnly />
-      </Stack>
-      <Stack gap="xs">
-        <Text size="sm" weight="medium">Disabled</Text>
-        <InputText aria-label="Disabled" defaultValue="Frozen" disabled />
-      </Stack>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>Default</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <InputText defaultValue="Type here" />
+        </FormField.Field>
+      </FormField.Root>
+      <FormField.Root invalid>
+        <FormField.Label>
+          <Label>Invalid</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <InputText defaultValue="not an email" invalid />
+        </FormField.Field>
+      </FormField.Root>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>Read-only</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <InputText defaultValue="alex@acme.co" readOnly />
+        </FormField.Field>
+      </FormField.Root>
+      <FormField.Root>
+        <FormField.Label>
+          <Label>Disabled</Label>
+        </FormField.Label>
+        <FormField.Field>
+          <InputText defaultValue="Frozen" disabled />
+        </FormField.Field>
+      </FormField.Root>
     </Stack>
   );
 }
