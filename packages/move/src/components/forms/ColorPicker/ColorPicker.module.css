@@ -19,6 +19,7 @@
   --move-colorpicker-thumb-size: 14px;
   --move-colorpicker-radius: var(--move-rounded-md);
   --move-colorpicker-swatch-size: 28px;
+  --move-colorpicker-thumb-ring: 3px;
   --move-colorpicker-gap: var(--move-spacing-sm);
   --move-colorpicker-cursor-size: 14px;
   --move-colorpicker-input-height: 28px;
@@ -37,24 +38,24 @@
 /* Size: sm */
 .root[data-size='sm'] {
   --move-colorpicker-width: 232px;
+  --move-colorpicker-gap: var(--move-spacing-xs);
   --move-colorpicker-saturation-height: 120px;
   --move-colorpicker-slider-height: 10px;
   --move-colorpicker-thumb-size: 10px;
   --move-colorpicker-cursor-size: 10px;
   --move-colorpicker-swatch-size: 22px;
-  --move-colorpicker-gap: var(--move-spacing-xs);
   --move-colorpicker-input-height: 24px;
 }
 
 /* Size: lg */
 .root[data-size='lg'] {
   --move-colorpicker-width: 284px;
+  --move-colorpicker-gap: var(--move-spacing-md);
   --move-colorpicker-saturation-height: 200px;
   --move-colorpicker-slider-height: 18px;
   --move-colorpicker-thumb-size: 18px;
   --move-colorpicker-cursor-size: 18px;
   --move-colorpicker-swatch-size: 34px;
-  --move-colorpicker-gap: var(--move-spacing-md);
   --move-colorpicker-input-height: 32px;
 }
 
@@ -76,7 +77,16 @@
   width: 100%;
   height: var(--move-colorpicker-saturation-height);
   border-radius: var(--move-colorpicker-radius);
-  overflow: hidden;
+  /* No `overflow: hidden`. The gradients are this element's OWN background, so
+     border-radius already clips them — the only thing overflow clipped was the
+     cursor, which is centred on its position and so hangs half outside at every
+     edge. At full brightness its top half was sliced off. `.hue` and `.alpha`
+     never clipped, which is why only this area showed it. */
+  /* The cursor is centred on its value, so at v=0 it hangs half its width (plus
+     its ring) below this box and collided with the hue slider's thumb. That
+     clearance belongs to THIS edge — the row gap sets the picker's rhythm and
+     should not be inflated for one element's overhang. */
+  margin-bottom: calc(var(--move-colorpicker-cursor-size) / 2 + var(--move-colorpicker-thumb-ring));
   cursor: crosshair;
   touch-action: none;
   user-select: none;
@@ -95,7 +105,7 @@
   width: var(--move-colorpicker-cursor-size);
   height: var(--move-colorpicker-cursor-size);
   border-radius: var(--move-rounded-full);
-  border: 3px solid #fff;
+  border: var(--move-colorpicker-thumb-ring) solid #fff;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.4);
@@ -191,7 +201,7 @@
   width: var(--move-colorpicker-thumb-size);
   height: var(--move-colorpicker-thumb-size);
   border-radius: var(--move-rounded-full);
-  border: 3px solid #fff;
+  border: var(--move-colorpicker-thumb-ring) solid #fff;
   box-shadow:
     0 0 0 1px rgba(0, 0, 0, 0.2),
     0 1px 4px rgba(0, 0, 0, 0.4);

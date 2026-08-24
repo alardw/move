@@ -12,7 +12,7 @@
  * ========================================================================= */
 
 .root {
-  --move-colorinput-bg: var(--move-bg-subtle);
+  --move-colorinput-bg: var(--move-bg-base);
   --move-colorinput-border: var(--move-border-interactive);
   --move-colorinput-border-hover: var(--move-border-emphasis);
   --move-colorinput-border-focus: var(--move-primary);
@@ -280,5 +280,10 @@
 }
 
 .contentInner {
-  padding: var(--move-spacing-sm);
+  /* Roomy enough for the picker's thumbs to overhang. They are centred on their
+     value, so at 0% and 100% half a thumb sits outside the track — 10px at the
+     default size (14px wide plus a 3px ring each side). The old 8px left that
+     2px short, and the panel clips, so the hue and alpha thumbs were sliced at
+     full value and the saturation cursor at full brightness. */
+  padding: var(--move-spacing-md);
 }

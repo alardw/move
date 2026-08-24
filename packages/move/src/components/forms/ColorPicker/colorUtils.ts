@@ -103,7 +103,12 @@ export function rgbToHsv(r: number, g: number, b: number): { h: number; s: numbe
   const s = max === 0 ? 0 : (d / max) * 100;
   const v = max * 100;
 
-  return { h: Math.round(h), s: Math.round(s), v: Math.round(v) };
+  // NOT rounded. Integer HSV has ~3.7M representable points against RGB's
+  // 16.7M, so rounding here is lossy in both directions: it made 81% of hex
+  // values change when parsed and formatted back (#abcdef → #adcef0), which is
+  // every commit of a typed value. HSV is the internal model; rounding is a
+  // display concern and happens at the display sites.
+  return { h, s, v };
 }
 
 // ============================================================================
@@ -169,7 +174,9 @@ export function rgbToHsl(r: number, g: number, b: number): { h: number; s: numbe
     h *= 60;
   }
 
-  return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
+  // Unrounded for the same reason as rgbToHsv — callers that render an
+  // `hsl(...)` string round at that point.
+  return { h, s: s * 100, l: l * 100 };
 }
 
 export function hslToRgb(h: number, s: number, l: number): { r: number; g: number; b: number } {
@@ -281,11 +288,12 @@ export function formatColor(hsv: HsvColor, format: ColorFormat): string {
       return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${round2(hsv.a)})`;
     case 'hsl': {
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      return `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      // Rounded HERE, at the display boundary — not in the converter.
+      return `hsl(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%)`;
     }
     case 'hsla': {
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      return `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${round2(hsv.a)})`;
+      return `hsla(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%, ${round2(hsv.a)})`;
     }
     default:
       return rgbToHex(rgb.r, rgb.g, rgb.b);
@@ -339,9 +347,10 @@ export function getColorChannels(hsv: HsvColor, format: ColorFormat): ColorChann
     const rgb = hsvToRgb(hsv.h, hsv.s, hsv.v);
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
     return [
-      { label: 'H', value: hsl.h, min: 0, max: 360 },
-      { label: 'S', value: hsl.s, min: 0, max: 100, suffix: '%' },
-      { label: 'L', value: hsl.l, min: 0, max: 100, suffix: '%' },
+      // Feeds number inputs, so integers — the display boundary again.
+      { label: 'H', value: Math.round(hsl.h), min: 0, max: 360 },
+      { label: 'S', value: Math.round(hsl.s), min: 0, max: 100, suffix: '%' },
+      { label: 'L', value: Math.round(hsl.l), min: 0, max: 100, suffix: '%' },
     ];
   }
   // hex — no individual channels

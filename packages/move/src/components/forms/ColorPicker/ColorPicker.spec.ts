@@ -199,6 +199,21 @@ export const spec = {
 
   renderContracts: [
     {
+      id: 'hsv-is-the-source-of-truth',
+      description:
+        'The hook holds HSV and records every string it emits. A controlled consumer hands that string straight back as `value`, and re-parsing it would rebuild HSV from RGB — a conversion that cannot carry hue or saturation at the edges of the space. Dragging to the bottom of the saturation area makes every colour #000000, so the round trip returned h=0, s=0: the cursor jumped to the left edge and the hue reset to red mid-drag. Its own echo is ignored; a genuinely new external value is still adopted.',
+    },
+    {
+      id: 'model-keeps-full-precision',
+      description:
+        'rgbToHsv and rgbToHsl do NOT round. Integer HSV has roughly 3.7M representable points against RGB 16.7M, so rounding in the converter changed 81% of hex values on a parse/format round-trip (#abcdef came back as #adcef0) — and every committed value goes through that path. Rounding happens at the display boundary instead: the hsl() string and the channel number inputs.',
+    },
+    {
+      id: 'inputs-clamp-to-their-range',
+      description:
+        'Arrow nudges and typed values clamp to the driven channel range (alpha 0-100, RGB 0-255) in the FIELD as well as in the model. The model always clamped; the input did not, so alpha could read 101% — or 500% — over a colour that was fully opaque.',
+    },
+    {
       id: 'uses-color-picker-hook',
       description:
         'Component uses useColorPicker hook for all color state management (HSV internal, format conversion, channel computation)',
@@ -300,6 +315,12 @@ export const spec = {
       description: 'Hue and alpha slider height',
     },
     { name: '--move-colorpicker-thumb-size', value: '14px', description: 'Slider thumb diameter' },
+    {
+      name: '--move-colorpicker-thumb-ring',
+      value: '3px',
+      description:
+        'White ring around the thumbs and the saturation cursor. Also sets how far they overhang their track, which is the clearance below the saturation area.',
+    },
     {
       name: '--move-colorpicker-radius',
       value: 'var(--move-rounded-md)',
@@ -428,6 +449,11 @@ export const spec = {
       'ArrowDown on channel input decrements value by 1',
       'Shift+ArrowUp increments by 10',
       'Shift+ArrowDown decrements by 10',
+      // The field and the colour must never disagree. The model has always
+      // clamped; the input did not, so alpha could read 101% (or 500%) over a
+      // fully opaque colour, and R could read 256.
+      'Arrow nudges clamp to the channel range — alpha 0-100, RGB 0-255',
+      'A typed out-of-range value clamps the field to the channel range',
       'Escape during a slider/area drag aborts and reverts to the pre-drag colour (WCAG 2.5.2)',
     ],
     aria: [

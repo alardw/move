@@ -2,7 +2,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
+import * as React from 'react';
 import { ColorPicker } from './ColorPicker';
+
+/** A controlled parent: it stores what the picker emits and hands it straight
+ *  back, which is how ColorInput drives it. */
+function Controlled({ initial }: { initial: string }) {
+  const [value, setValue] = React.useState(initial);
+  return <ColorPicker value={value} onValueChange={setValue} />;
+}
 
 describe('ColorPicker', () => {
   // === Rendering ===
@@ -87,6 +95,69 @@ describe('ColorPicker', () => {
       render(<ColorPicker />);
       const sat = screen.getByRole('slider', { name: 'Color saturation and brightness' });
       expect(sat).toBeInTheDocument();
+    });
+
+    // Controlled mode used to rebuild HSV by re-parsing the value it had just
+    // emitted. RGB cannot carry hue or saturation at the edges of the space, so
+    // dragging to the bottom (every colour is #000000 there) came back as
+    // h=0, s=0: the cursor jumped to the left edge and the hue reset to red.
+    describe('controlled round-trip stability', () => {
+      const satOf = (el: HTMLElement) =>
+        Number(/Saturation (\d+)%/.exec(el.getAttribute('aria-valuetext') ?? '')?.[1]);
+      const brightnessOf = (el: HTMLElement) =>
+        Number(/Brightness (\d+)%/.exec(el.getAttribute('aria-valuetext') ?? '')?.[1]);
+
+      it('keeps saturation while brightness is driven to zero', async () => {
+        const user = userEvent.setup();
+        render(<Controlled initial="#3366ff" />);
+        const sat = screen.getByRole('slider', { name: 'Color saturation and brightness' });
+        const before = satOf(sat);
+        expect(before).toBeGreaterThan(0);
+
+        sat.focus();
+        // Shift+ArrowDown steps brightness by 10; extra presses clamp at the floor.
+        for (let i = 0; i < 12; i++) await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+
+        expect(brightnessOf(sat)).toBe(0);
+        expect(satOf(sat)).toBe(before);
+      });
+
+      it('keeps hue while brightness is driven to zero', async () => {
+        const user = userEvent.setup();
+        render(<Controlled initial="#3366ff" />);
+        const hue = screen.getByRole('slider', { name: 'Hue' });
+        const sat = screen.getByRole('slider', { name: 'Color saturation and brightness' });
+        const before = hue.getAttribute('aria-valuenow');
+
+        sat.focus();
+        for (let i = 0; i < 12; i++) await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+
+        expect(hue).toHaveAttribute('aria-valuenow', before);
+      });
+
+      it('returns to the starting colour after down-and-back-up', async () => {
+        const user = userEvent.setup();
+        render(<Controlled initial="#3366ff" />);
+        const sat = screen.getByRole('slider', { name: 'Color saturation and brightness' });
+        const before = sat.getAttribute('aria-valuetext');
+
+        sat.focus();
+        for (let i = 0; i < 10; i++) await user.keyboard('{Shift>}{ArrowDown}{/Shift}');
+        for (let i = 0; i < 10; i++) await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
+
+        // No drift: the position the user left is the position they come back to.
+        expect(sat).toHaveAttribute('aria-valuetext', before);
+      });
+
+      it('still adopts a value the parent genuinely changes', async () => {
+        // The echo is ignored, but real external control must still win.
+        const { rerender } = render(<ColorPicker value="#ff0000" onValueChange={() => {}} />);
+        const hue = screen.getByRole('slider', { name: 'Hue' });
+        expect(hue).toHaveAttribute('aria-valuenow', '0');
+
+        rerender(<ColorPicker value="#00ff00" onValueChange={() => {}} />);
+        expect(hue).toHaveAttribute('aria-valuenow', '120');
+      });
     });
 
     it('saturation area has aria-valuetext', () => {
@@ -312,6 +383,108 @@ describe('ColorPicker', () => {
       render(<ColorPicker format="rgba" defaultValue="#ff0000" />);
       const alphaInput = screen.getByRole('textbox', { name: 'Alpha' });
       expect(alphaInput).toHaveValue('100');
+    });
+
+    // The model always clamped alpha to 0–1; the FIELD did not, so it could sit
+    // at 101% or 500% over a colour that was fully opaque.
+    it('ArrowUp at 100% does not push the field past 100', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgba" defaultValue="#ff0000" />);
+      const alphaInput = screen.getByRole('textbox', { name: 'Alpha' });
+
+      await user.click(alphaInput);
+      await user.keyboard('{ArrowUp}{ArrowUp}');
+      expect(alphaInput).toHaveValue('100');
+
+      await user.keyboard('{Shift>}{ArrowUp}{/Shift}');
+      expect(alphaInput).toHaveValue('100');
+    });
+
+    it('ArrowDown at 0% does not push the field below 0', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgba" defaultValue="#ff000000" />);
+      const alphaInput = screen.getByRole('textbox', { name: 'Alpha' });
+
+      await user.click(alphaInput);
+      await user.keyboard('{ArrowDown}{ArrowDown}');
+      expect(alphaInput).toHaveValue('0');
+    });
+
+    it('typing an out-of-range alpha clamps the field to the colour', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(<ColorPicker format="rgba" defaultValue="#ff0000" onValueChange={onChange} />);
+      const alphaInput = screen.getByRole('textbox', { name: 'Alpha' });
+
+      await user.click(alphaInput);
+      await user.clear(alphaInput);
+      await user.type(alphaInput, '500');
+
+      expect(alphaInput).toHaveValue('100');
+      // And the committed colour agrees with what the field shows.
+      expect(onChange).toHaveBeenLastCalledWith('rgba(255, 0, 0, 1)');
+    });
+
+    it('accepts an in-range alpha', async () => {
+      const user = userEvent.setup();
+      const onChange = vi.fn();
+      render(<ColorPicker format="rgba" defaultValue="#ff0000" onValueChange={onChange} />);
+      const alphaInput = screen.getByRole('textbox', { name: 'Alpha' });
+
+      await user.click(alphaInput);
+      await user.clear(alphaInput);
+      await user.type(alphaInput, '50');
+
+      expect(alphaInput).toHaveValue('50');
+      expect(onChange).toHaveBeenLastCalledWith('rgba(255, 0, 0, 0.5)');
+    });
+  });
+
+  // === Channel input bounds ===
+  // Same defect as alpha, same shared handler: the nudge had no bounds at all,
+  // so R could read 256 while the colour stayed at 255.
+  describe('channel input bounds', () => {
+    it('ArrowUp at the channel maximum does not exceed it', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgb" defaultValue="#ff0000" />);
+      const red = screen.getByRole('textbox', { name: 'Red' });
+
+      await user.click(red);
+      await user.keyboard('{ArrowUp}{ArrowUp}');
+      expect(red).toHaveValue('255');
+    });
+
+    it('ArrowDown at the channel minimum does not go negative', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgb" defaultValue="#ff0000" />);
+      const green = screen.getByRole('textbox', { name: 'Green' });
+
+      await user.click(green);
+      await user.keyboard('{ArrowDown}{ArrowDown}');
+      expect(green).toHaveValue('0');
+    });
+
+    it('typing an out-of-range channel clamps the field', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgb" defaultValue="#000000" />);
+      const red = screen.getByRole('textbox', { name: 'Red' });
+
+      await user.click(red);
+      await user.clear(red);
+      await user.type(red, '999');
+      expect(red).toHaveValue('255');
+    });
+
+    it('nudges within range', async () => {
+      const user = userEvent.setup();
+      render(<ColorPicker format="rgb" defaultValue="#806040" />);
+      const red = screen.getByRole('textbox', { name: 'Red' });
+
+      await user.click(red);
+      await user.keyboard('{ArrowUp}');
+      expect(red).toHaveValue('129');
+      await user.keyboard('{ArrowDown}{ArrowDown}');
+      expect(red).toHaveValue('127');
     });
   });
 

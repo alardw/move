@@ -430,15 +430,17 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
 
     const handleChannelChange = React.useCallback(
       (index: number, text: string) => {
+        const num = parseInt(text, 10);
+        const ch = cp.channels[index];
+        // Clamped to the channel's own range for the same reason as alpha: the
+        // model clamps, so an unclamped draft shows a value the colour is not.
+        const shown = isNaN(num) || !ch ? text : String(Math.max(ch.min, Math.min(ch.max, num)));
         setChannelTexts((prev) => {
           const next = [...prev];
-          next[index] = text;
+          next[index] = shown;
           return next;
         });
-        const num = parseInt(text, 10);
-        if (!isNaN(num)) {
-          cp.setChannel(index, num);
-        }
+        if (!isNaN(num)) cp.setChannel(index, num);
       },
       [cp],
     );
@@ -463,38 +465,50 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
 
     const handleAlphaChange = React.useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAlphaText(e.target.value);
-        const num = parseInt(e.target.value, 10);
-        if (!isNaN(num)) {
-          cp.setAlpha(Math.max(0, Math.min(100, num)) / 100);
+        const raw = e.target.value;
+        const num = parseInt(raw, 10);
+        if (isNaN(num)) {
+          setAlphaText(raw);
+          return;
         }
+        // Clamp the DRAFT too, not just the committed value. The model always
+        // clamped, so an out-of-range draft left the field reading 500% over a
+        // colour that was fully opaque.
+        const clamped = Math.max(0, Math.min(100, num));
+        setAlphaText(String(clamped));
+        cp.setAlpha(clamped / 100);
       },
       [cp],
     );
 
-    // Shared key handler for all inputs (Enter to blur, Arrow up/down to nudge)
-    const handleInputKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        (e.target as HTMLInputElement).blur();
-        return;
-      }
-      if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    // Key handler for the numeric inputs: Enter to blur, Arrow up/down to
+    // nudge. Bounds are the driven channel's own — unclamped, ArrowUp at the
+    // top wrote 101 into the alpha field and 256 into R, so the text read 101%
+    // while the committed color was still 100%: the model clamps on every
+    // keystroke, the display did not, and the two drifted apart on screen.
+    const makeNudgeKeyDown = React.useCallback(
+      (min: number, max: number) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+          (e.target as HTMLInputElement).blur();
+          return;
+        }
+        if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
         e.preventDefault();
         const step = e.shiftKey ? 10 : 1;
         const delta = e.key === 'ArrowUp' ? step : -step;
         const input = e.target as HTMLInputElement;
         const current = parseInt(input.value, 10);
-        if (!isNaN(current)) {
-          const newVal = current + delta;
-          const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-            window.HTMLInputElement.prototype,
-            'value',
-          )?.set;
-          nativeInputValueSetter?.call(input, String(newVal));
-          input.dispatchEvent(new Event('input', { bubbles: true }));
-        }
-      }
-    }, []);
+        if (isNaN(current)) return;
+        const newVal = Math.max(min, Math.min(max, current + delta));
+        const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+          window.HTMLInputElement.prototype,
+          'value',
+        )?.set;
+        nativeInputValueSetter?.call(input, String(newVal));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+      },
+      [],
+    );
 
     return {
       render() {
@@ -740,7 +754,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     onChange={(e) => handleChannelChange(i, e.target.value)}
                     onFocus={() => handleChannelFocus(i)}
                     onBlur={() => handleChannelBlur(i)}
-                    onKeyDown={handleInputKeyDown}
+                    onKeyDown={makeNudgeKeyDown(ch.min, ch.max)}
                     disabled={disabled}
                     readOnly={readOnly}
                     aria-label={
@@ -761,7 +775,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                     onChange={handleAlphaChange}
                     onFocus={handleAlphaFocus}
                     onBlur={handleAlphaBlur}
-                    onKeyDown={handleInputKeyDown}
+                    onKeyDown={makeNudgeKeyDown(0, 100)}
                     disabled={disabled}
                     readOnly={readOnly}
                     aria-label={labels.alphaInput}

@@ -18,10 +18,28 @@ export const spec = {
   },
   behavior: {
     popup: {
+      // A text field anchoring a panel of real controls (sliders + a nested
+      // select), so focus ENTERS the panel and Escape returns it to the field.
+      // The mechanism FIXES that contract — focusOnOpen/focusOnClose are read
+      // from POPUP_FOCUS_BY_MECHANISM and cannot be restated here.
+      mechanism: 'field-dialog' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // tabbableTrigger is false: the swatch is pointer/AT-click only, so
+      // ArrowDown on the field is the keyboard way in.
+      keyboard: {
+        openKeys: ['ArrowDown'],
+        tabbableTrigger: false,
+      },
+      // Scope of closeOnScroll. A scroll INSIDE the popup moves the content
+      // along with its anchor, so it is not a viewport change and must not
+      // dismiss. Only scrolls outside the popup close it.
+      closeOnScrollScope: 'outside' as const,
     },
   },
 
@@ -229,6 +247,16 @@ export const spec = {
 
   renderContracts: [
     {
+      id: 'open-focuses-picker',
+      description:
+        'Focus enters the panel on EVERY open, pointer or keyboard alike — the `field-dialog` mechanism makes no distinction. It is placed by usePopupFocus through onOpenAutoFocus, the one point Radix guarantees runs after its own FocusScope, so it cannot race a mount effect; the handler always preventDefaults first, because Radix would otherwise focus the bare container. The panel is portaled away from the field in tab order, so an open that left focus behind put the next Tab on the following page control while the panel stayed open behind it.',
+    },
+    {
+      id: 'close-on-scroll-outside-only',
+      description:
+        'Close-on-scroll ignores scroll events originating inside the popper content wrapper, so scrolling within the picker keeps it open',
+    },
+    {
       id: 'root-wraps-radix-popover',
       description:
         'Root wraps in Radix Popover.Root with open state coordinated via isClosing for exit animation',
@@ -256,7 +284,11 @@ export const spec = {
         'On blur, input validates text via isValidColor, parses, formats in active format, and calls handleValueChange+handleChangeEnd',
     },
     { id: 'input-arrowdown-opens', description: 'ArrowDown on input opens popover when closed' },
-    { id: 'input-enter-blurs', description: 'Enter key on input triggers blur to commit value' },
+    {
+      id: 'input-enter-commits',
+      description:
+        'Enter commits the typed draft in place and closes the panel, leaving focus on the field. It used to blur() to commit, which dropped focus on <body> and left the panel open behind it. preventDefault only fires while the panel is open, so with it closed Enter still reaches an enclosing form.',
+    },
     {
       id: 'content-fade-only',
       description:
@@ -268,8 +300,24 @@ export const spec = {
         'Content inner renders ColorPicker component with forwarded picker props (format, swatches, withPicker, size)',
     },
     {
-      id: 'content-prevents-autofocus',
-      description: 'Content prevents auto-focus on open to keep focus on input',
+      id: 'close-returns-focus-to-field',
+      description:
+        'Closing returns focus to the text field, via usePopupFocus through onCloseAutoFocus. Radix restores to its Trigger, which this component does not render — it anchors with Anchor — so left alone Escape dropped focus on <body>. Focus is only reclaimed when the popup still holds it: a close caused by clicking elsewhere leaves focus where the user put it.',
+    },
+    {
+      id: 'dismiss-on-focus-leave',
+      description:
+        'Focus reaching anything outside the panel and its anchor dismisses the panel, so an open dialog cannot trail behind the user. Focus moving into another floating layer does NOT count as leaving — a Select opened inside the panel portals its listbox to the end of <body>, so by DOM containment it looks outside while the user is still working inside.',
+    },
+    {
+      id: 'field-is-a-combobox',
+      description:
+        'The field carries role="combobox", aria-haspopup="dialog", aria-expanded and aria-controls (APG combobox with dialog popup), and the panel is a role="dialog" named from labels.picker. Without them the panel opens silently for a screen reader.',
+    },
+    {
+      id: 'typed-text-is-the-only-draft',
+      description:
+        'Commit model: interactions in the panel are LIVE — a slider drag fires onValueChange as it happens and survives close. Only the typed text is a draft: Enter commits it, Escape abandons it and restores the committed value. Escape never rolls back what the panel already applied, because the user watched those changes land on the field and the swatch.',
     },
     {
       id: 'dismiss-outside-root',
@@ -307,7 +355,7 @@ export const spec = {
     // Root tokens
     {
       name: '--move-colorinput-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Root background color',
     },
     {
@@ -375,6 +423,11 @@ export const spec = {
       default: 'Pick color from screen',
       description: 'Eye dropper button accessible label',
     },
+    {
+      key: 'picker',
+      default: 'Color picker',
+      description: 'Accessible name for the picker dialog — role="dialog" requires one',
+    },
   ],
 
   childrenKind: undefined,
@@ -401,6 +454,8 @@ export const spec = {
 
   testing: {
     behaviors: [
+      'Scrolling inside the picker popup keeps it open',
+      'Scrolling outside the popup closes it',
       'Root renders with Radix Popover.Root',
       'Root renders as Radix Popover.Anchor',
       'Swatch displays current color as backgroundColor',
@@ -411,7 +466,7 @@ export const spec = {
       'Input snapshots value on focus for local editing',
       'Input validates and commits on blur via parseColor',
       'Input rejects invalid color strings on blur (no change)',
-      'Input Enter key triggers blur',
+      'Input Enter commits the typed draft without moving focus',
       'Input ArrowDown opens popover when closed',
       'Content embeds ColorPicker with forwarded props',
       'ColorPicker value change propagates to parent value',
@@ -432,15 +487,29 @@ export const spec = {
       'Escape key closes popover',
     ],
     keyboard: [
-      'Enter on input commits and blurs',
-      'ArrowDown on input opens popover',
-      'Escape closes popover',
+      // Commit model: panel interactions are LIVE (a slider drag fires
+      // onValueChange as it happens and survives close). Only the typed text is
+      // a draft — Enter commits it, Escape abandons it. Escape never rolls back
+      // what the panel already applied.
+      'Enter commits the typed draft, closes the panel, and keeps focus on the field',
+      'Escape abandons the typed draft, reverting the field to the committed value',
+      'Escape does not roll back a change the panel already applied',
+      'Opening the format select inside the panel does not dismiss the panel',
+      'ArrowDown on input opens the popover and moves focus to the first control in the picker',
+      'A pointer open moves focus into the picker too — the mechanism makes no pointer/keyboard distinction',
+      'Escape closes the popover and returns focus to the field, asserted after the exit unmounts',
+      'Tab cycles within the panel rather than escaping to the page',
+      'Focus reaching anything outside the panel and its anchor dismisses it',
     ],
     aria: [
       'Swatch has role="button" and tabIndex=-1',
       'Swatch has aria-label from labels.swatch',
       'Eye dropper has aria-label from labels.eyeDropper',
       'Input is a native input with name and label association',
+      // APG combobox-with-dialog-popup. Without these the panel opens silently.
+      'Input has role="combobox" and aria-haspopup="dialog"',
+      'Input aria-expanded tracks the popup, and aria-controls points at it when open',
+      'Picker dialog is named from labels.picker',
     ],
     form: [
       'Native input with name participates in form submission',

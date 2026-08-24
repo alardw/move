@@ -4,9 +4,9 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, usePopupFocus } from '../../../engine';
 import { useFormField } from '../FormField/FormField';
-import type { SlotPropsMap } from '../../../engine';
+import type { SlotPropsMap, PopupFocusHandlers } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useAnimations, useDismissable, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
@@ -28,11 +28,14 @@ export interface ColorInputLabels {
   swatch: string;
   /** Eye dropper button accessible label */
   eyeDropper: string;
+  /** Accessible name for the picker dialog. `role="dialog"` requires one. */
+  picker: string;
 }
 
 const DEFAULT_LABELS: ColorInputLabels = {
   swatch: 'Open color picker',
   eyeDropper: 'Pick color from screen',
+  picker: 'Color picker',
 };
 
 export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
@@ -110,19 +113,32 @@ const ColorInputDropdownInner: React.FC<{
   epoch: number;
   onExitDone: (epoch: number) => void;
   contentProps: Record<string, unknown>;
+  /** Owned by setup() so `usePopupFocus` (which lives above the Portal, with
+   *  the field ref) and the exit animation address the same element. */
+  contentRef: React.RefObject<HTMLDivElement | null>;
+  /** Focus contract for `field-dialog`, from the shared focus container. */
+  focusHandlers: PopupFocusHandlers;
   children?: React.ReactNode;
-}> = ({ isClosing, epoch, onExitDone, contentProps, children }) => {
-  const contentRef = React.useRef<HTMLDivElement>(null);
+}> = ({ isClosing, epoch, onExitDone, contentProps, contentRef, focusHandlers, children }) => {
   const contentRefs = React.useMemo(
     () => ({ Content: contentRef as React.RefObject<HTMLElement | null> }),
-    [],
+    [contentRef],
   );
   const { runExit, runEnter, pauseAll } = useAnimations(DEFAULT_COLORINPUT_ANIMATIONS, contentRefs);
 
   useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
+  // onOpen/onCloseAutoFocus rather than a mount effect: Radix' FocusScope does
+  // its own focus work in its effect and the ordering against ours is not
+  // guaranteed — it can land after us and undo it. These two events are the
+  // points Radix guarantees run after that scope is set up and torn down.
   return (
-    <RadixPopover.Content ref={contentRef} {...contentProps}>
+    <RadixPopover.Content
+      ref={contentRef as React.RefObject<HTMLDivElement>}
+      {...contentProps}
+      onOpenAutoFocus={focusHandlers.onOpenAutoFocus}
+      onCloseAutoFocus={focusHandlers.onCloseAutoFocus}
+    >
       {children}
     </RadixPopover.Content>
   );
@@ -167,6 +183,14 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     // exit-completion is epoch-guarded). See useDismissable.
     const dismissable = useDismissable();
     const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
+
+    // `field-dialog`: focus enters the panel on EVERY open, pointer or
+    // keyboard. The panel is portaled, so it is not adjacent to the field in
+    // the tab order — a pointer open that left focus behind put the next Tab
+    // on the following page control while the panel stayed open behind it.
+    const contentRef = React.useRef<HTMLDivElement>(null);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const dialogId = React.useId();
     const [inputText, setInputText] = React.useState('');
     const [isInputFocused, setIsInputFocused] = React.useState(false);
 
@@ -177,19 +201,41 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       [openFn],
     );
 
+    // Focus contract for the mechanism this spec declares. Owns focus-in on
+    // open, focus-back to the field on close, and dismiss-on-focus-leave.
+    const focusHandlers = usePopupFocus({
+      mechanism: 'field-dialog',
+      contentRef,
+      returnRef: inputRef,
+      anchorRef: internalRef,
+      isOpen: isOpen || isClosing,
+      onDismiss: close,
+    });
+
     // Close the popup on viewport changes — scroll (any ancestor) or
     // resize. Without this the popover floats away from the trigger
     // when the page or a parent ScrollArea scrolls. capture: true so
     // we catch scroll events on nested scroll containers, not just
     // window. passive: true so we don't block the scroll itself.
+    //
+    // Scrolling *within* the popup moves the content with its anchor, so it is
+    // not a viewport change — closing on it would dismiss the picker the moment
+    // the user wheels over it.
     React.useEffect(() => {
       if (!isOpen || isClosing || typeof window === 'undefined') return;
-      const onViewportChange = () => close();
-      window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
-      window.addEventListener('resize', onViewportChange);
+      const onScroll = (e: Event) => {
+        const target = e.target;
+        if (target instanceof Element && target.closest('[data-radix-popper-content-wrapper]')) {
+          return;
+        }
+        close();
+      };
+      const onResize = () => close();
+      window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+      window.addEventListener('resize', onResize);
       return () => {
-        window.removeEventListener('scroll', onViewportChange, { capture: true });
-        window.removeEventListener('resize', onViewportChange);
+        window.removeEventListener('scroll', onScroll, { capture: true });
+        window.removeEventListener('resize', onResize);
       };
     }, [isOpen, isClosing, close]);
 
@@ -238,34 +284,56 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
       [currentValue, props.onFocus],
     );
 
+    /** Commit the typed draft if it parses. Invalid text is simply not
+     *  committed — the field snaps back to the live value. */
+    const commitInputText = React.useCallback(() => {
+      if (!isValidColor(inputText)) return;
+      const formatted = formatColor(parseColor(inputText)!, format);
+      handleValueChange(formatted);
+      handleChangeEnd(formatted);
+    }, [inputText, format, handleValueChange, handleChangeEnd]);
+
     const handleInputBlur = React.useCallback(
       (e: React.FocusEvent<HTMLInputElement>) => {
         setIsInputFocused(false);
-        if (isValidColor(inputText)) {
-          const parsed = parseColor(inputText)!;
-          const formatted = formatColor(parsed, format);
-          handleValueChange(formatted);
-          handleChangeEnd(formatted);
-        }
+        commitInputText();
         (props.onBlur as React.FocusEventHandler<HTMLInputElement> | undefined)?.(e);
       },
-      [inputText, format, handleValueChange, handleChangeEnd, props.onBlur],
+      [commitInputText, props.onBlur],
     );
 
     const handleInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(e.target.value);
     }, []);
 
+    // Commit model: everything done IN the panel (a slider drag, a swatch
+    // click) commits live — it fires onValueChange as it happens and is not
+    // undone by closing. Only the typed text is a draft, and Enter/Escape
+    // resolve that draft: Enter commits it, Escape abandons it. Escape never
+    // rolls back what the panel already applied — the user watched those land
+    // on the field and the swatch, and silently reverting them is the worst of
+    // both models.
     const handleInputKeyDown = React.useCallback(
       (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
-          (e.target as HTMLInputElement).blur();
+          commitInputText();
+          if (isOpen && !isClosing) {
+            // Enter dismisses the dialog it opened. preventDefault only here:
+            // with the panel closed, Enter must still reach an enclosing form.
+            e.preventDefault();
+            close();
+          }
+          // Focus deliberately stays on the field. This used to blur(), which
+          // dropped focus on <body> and left the panel open behind it.
+        } else if (e.key === 'Escape') {
+          // Abandon the draft. Radix's onEscapeKeyDown closes the panel.
+          setInputText(currentValue);
         } else if (e.key === 'ArrowDown' && !isOpen) {
           e.preventDefault();
           openFn();
         }
       },
-      [isOpen, openFn],
+      [isOpen, isClosing, openFn, close, commitInputText, currentValue],
     );
 
     // Swatch click toggles popover
@@ -418,7 +486,16 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
 
                 <input
                   {...inputSpRest}
+                  ref={inputRef}
                   type="text"
+                  // APG combobox-with-dialog-popup: the field owns the expanded
+                  // state, so a screen reader announces that a picker exists and
+                  // whether it is open. Without these the panel opens silently.
+                  role="combobox"
+                  aria-haspopup="dialog"
+                  aria-expanded={isOpen && !isClosing}
+                  aria-controls={isOpen ? dialogId : undefined}
+                  autoComplete="off"
                   aria-invalid={invalid || field?.invalid ? true : undefined}
                   aria-describedby={field?.describedBy}
                   className={cx('input', inputSpClass as string | undefined)}
@@ -457,13 +534,18 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                 isClosing={isClosing}
                 epoch={epoch}
                 onExitDone={onExitDone}
+                contentRef={contentRef}
+                focusHandlers={focusHandlers}
                 contentProps={{
                   ...contentSpRest,
+                  id: dialogId,
+                  // Radix gives Content role="dialog"; a dialog without an
+                  // accessible name announces as just "dialog".
+                  'aria-label': labels.picker,
                   sideOffset: 4,
                   align: 'start',
                   className: cx('content', contentSpClass as string | undefined),
                   style: contentSpStyle as React.CSSProperties,
-                  onOpenAutoFocus: (e: Event) => e.preventDefault(),
                   onPointerDownOutside: handlePointerDownOutside,
                   onEscapeKeyDown: handleEscapeKeyDown as unknown,
                   onInteractOutside: () => {},
