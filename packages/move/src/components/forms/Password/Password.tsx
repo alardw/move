@@ -18,13 +18,14 @@ export type PasswordSize = 'sm' | 'md' | 'lg';
 type PasswordSlots = 'root' | 'input' | 'iconLeft' | 'toggle' | 'toggleIcon';
 
 export interface PasswordLabels {
+  /** The toggle's accessible name. Stable across states — `aria-pressed`
+   *  carries whether the password is currently visible, so the control keeps
+   *  one identity instead of becoming a different button when pressed. */
   showPassword: string;
-  hidePassword: string;
 }
 
 const DEFAULT_LABELS: PasswordLabels = {
   showPassword: 'Show password',
-  hidePassword: 'Hide password',
 };
 
 export interface PasswordProps extends React.HTMLAttributes<HTMLElement> {
@@ -189,8 +190,12 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
               style={toggleSpStyle as React.CSSProperties}
               onClick={handleToggle}
               disabled={props.disabled as boolean}
-              tabIndex={-1}
-              aria-label={shown ? labels.hidePassword : labels.showPassword}
+              // In the tab order. It used to be tabIndex={-1} "to keep the input
+              // as the focus target", which made revealing your own password a
+              // pointer-only function — WCAG 2.1.1, Level A. There is no other
+              // keyboard path to it.
+              aria-label={labels.showPassword}
+              aria-pressed={shown}
             >
               <span
                 {...tiSpRest}

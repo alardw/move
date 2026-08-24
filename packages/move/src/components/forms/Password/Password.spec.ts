@@ -198,9 +198,24 @@ export const spec = {
         'Visibility supports controlled (visible prop) and uncontrolled (defaultVisible) patterns',
     },
     {
-      id: 'toggle-tabindex-negative',
+      id: 'toggle-is-keyboard-operable',
       description:
-        'Toggle button has tabIndex=-1 to keep it out of tab order (input is the focus target)',
+        'The visibility toggle is a normal tab stop. It carried tabIndex=-1 so the input stayed "the focus target", which left revealing your own password reachable by pointer only — WCAG 2.1.1, Level A, since no other keyboard path to it exists. The spec asserted that as intentional and a test pinned it, so every gate stayed green over it.',
+    },
+    {
+      id: 'toggle-focus-visible',
+      description:
+        'The toggle carries its own :focus-visible ring. `all: unset` on .toggle clears the UA outline, and while the control sat outside the tab order it had no focus rule at all — so making it tabbable without one left focus landing invisibly, which reads as "tab does nothing" (WCAG 2.4.7). The ring is inset so it sits inside the field border rather than straddling it.',
+    },
+    {
+      id: 'one-focus-indicator-at-a-time',
+      description:
+        'The field border highlights for its OWN input, not for anything focused inside it: `.root:focus-within` is qualified with `:not(:has(.toggle:focus-visible))`. Unqualified, tabbing to the visibility toggle lit the field border AND the toggle ring at once, which leaves it ambiguous which control Enter will act on. Most container-styled inputs elsewhere show both; the alternative is not to nest the control at all.',
+    },
+    {
+      id: 'toggle-is-a-toggle-button',
+      description:
+        'The toggle keeps ONE accessible name (labels.showPassword) and carries its state in aria-pressed, rather than swapping the name between "Show password" and "Hide password". A name that changes with state reads as a different control each press; APG\'s toggle-button pattern is a stable name plus aria-pressed.',
     },
     {
       id: 'toggle-stop-propagation',
@@ -224,7 +239,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-password-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Root background color',
     },
     {
@@ -283,6 +298,23 @@ export const spec = {
       value: 'var(--move-spacing-sm)',
       description: 'Gap between icon, input, and toggle',
     },
+    {
+      name: '--move-password-toggle-inset',
+      value: 'var(--move-password-padding-y)',
+      description: 'Clearance between the reveal toggle and the field border, on every side',
+    },
+    {
+      name: '--move-password-border-width',
+      value: '1px',
+      description: 'Field border width, also subtracted when sizing the toggle square',
+    },
+    {
+      name: '--move-password-toggle-size',
+      value:
+        'calc(var(--move-password-height) - 2 * var(--move-password-padding-y) - 2 * var(--move-password-border-width))',
+      description:
+        'Square reveal-toggle target: the row height minus its block padding and borders',
+    },
   ],
 
   variants: {
@@ -294,12 +326,8 @@ export const spec = {
     {
       key: 'showPassword',
       default: 'Show password',
-      description: 'Toggle button aria-label when password is hidden',
-    },
-    {
-      key: 'hidePassword',
-      default: 'Hide password',
-      description: 'Toggle button aria-label when password is visible',
+      description:
+        'Toggle button accessible name. Stable across states — aria-pressed carries visibility.',
     },
   ],
 
@@ -315,8 +343,10 @@ export const spec = {
       'Input type becomes "text" when visibility toggled on',
       'Toggle button switches visibility state on click',
       'Toggle shows eye icon when password hidden, eye-off when visible',
-      'Toggle aria-label changes between "Show password" and "Hide password"',
-      'Toggle has tabIndex=-1',
+      'Toggle keeps one accessible name and reports state via aria-pressed',
+      'Toggle is reachable and operable by keyboard (WCAG 2.1.1)',
+      'Toggle shows a focus ring when focused by keyboard (WCAG 2.4.7)',
+      'Focusing the toggle does not also light the field border — one indicator at a time',
       'Toggle click stopsPropagation',
       'Root click focuses the input element',
       'Controlled visibility via visible prop',

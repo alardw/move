@@ -53,18 +53,35 @@ describe('Password', () => {
       expect(screen.getByPlaceholderText('Enter password')).toHaveAttribute('type', 'text');
     });
 
-    it('toggle aria-label changes between show/hide', async () => {
+    // One name, state in aria-pressed. A name that swapped between "Show
+    // password" and "Hide password" read as a different control each press.
+    it('toggle keeps one accessible name and reports state via aria-pressed', async () => {
       const user = userEvent.setup();
       renderPassword();
       const toggle = screen.getByRole('button');
       expect(toggle).toHaveAttribute('aria-label', 'Show password');
+      expect(toggle).toHaveAttribute('aria-pressed', 'false');
+
       await user.click(toggle);
-      expect(toggle).toHaveAttribute('aria-label', 'Hide password');
+      expect(toggle).toHaveAttribute('aria-label', 'Show password');
+      expect(toggle).toHaveAttribute('aria-pressed', 'true');
     });
 
-    it('toggle has tabIndex=-1', () => {
+    // It carried tabIndex={-1}, which left revealing your own password a
+    // pointer-only function: WCAG 2.1.1, Level A. Nothing else reaches it.
+    it('toggle is reachable and operable by keyboard', async () => {
+      const user = userEvent.setup();
       renderPassword();
-      expect(screen.getByRole('button')).toHaveAttribute('tabindex', '-1');
+      const input = screen.getByPlaceholderText('Enter password');
+      const toggle = screen.getByRole('button');
+
+      input.focus();
+      await user.tab();
+      expect(toggle).toHaveFocus();
+
+      await user.keyboard('{Enter}');
+      expect(input).toHaveAttribute('type', 'text');
+      expect(toggle).toHaveAttribute('aria-pressed', 'true');
     });
 
     it('onVisibleChange fires on toggle click', async () => {
