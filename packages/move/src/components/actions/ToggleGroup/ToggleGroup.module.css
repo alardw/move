@@ -90,25 +90,27 @@
 }
 
 /* Outline items — connected 1px borders, ends rounded, active outlined in the
-   accent. !important overrides the transparent/borderless base .item rules. */
+   accent. Outranks the transparent/borderless base .item rules by specificity
+   ([data-variant] on the root); the composed Button underneath is outranked by
+   the move.base layer, so no !important is involved on either side. */
 .root[data-variant='outline'] .item {
-  border: 1px solid var(--move-border-base) !important;
-  border-radius: 0 !important;
+  border: 1px solid var(--move-border-base);
+  border-radius: 0;
   margin-left: -1px;
 }
 
 .root[data-variant='outline'] .item:first-of-type {
   margin-left: 0;
-  border-radius: var(--move-rounded-md) 0 0 var(--move-rounded-md) !important;
+  border-radius: var(--move-rounded-md) 0 0 var(--move-rounded-md);
 }
 
 .root[data-variant='outline'] .item:last-of-type {
-  border-radius: 0 var(--move-rounded-md) var(--move-rounded-md) 0 !important;
+  border-radius: 0 var(--move-rounded-md) var(--move-rounded-md) 0;
 }
 
 .root[data-variant='outline'] .item[data-state='on'] {
-  background-color: var(--move-surface-hover) !important;
-  border-color: var(--move-primary) !important;
+  background-color: var(--move-surface-hover);
+  border-color: var(--move-primary);
   z-index: 1;
 }
 
@@ -116,12 +118,10 @@
 
 .item {
   composes: root from '../../actions/Button/Button.module.css';
-  background-color: transparent !important;
-  border: none !important;
-  border-radius: calc(
-    var(--move-toggle-group-radius) - var(--move-toggle-group-padding)
-  ) !important;
-  box-shadow: none !important;
+  background-color: transparent;
+  border: none;
+  border-radius: calc(var(--move-toggle-group-radius) - var(--move-toggle-group-padding));
+  box-shadow: none;
   font-weight: var(--move-weight-normal, 400);
   position: relative;
   z-index: 1;
@@ -137,22 +137,22 @@
 
 .item[data-state='off']:hover:not(:disabled) {
   color: var(--move-segment-item-fg-hover);
-  background-color: transparent !important;
-  border-color: transparent !important;
+  background-color: transparent;
+  border-color: transparent;
 }
 
-/* Selected state — text color only, indicator provides background.
-   !important needed to override composed Button variant color at same specificity. */
+/* Selected state — text color only, indicator provides background. Beats the
+   composed Button's own colour because Button lives in the move.base layer. */
 .item[data-state='on'] {
-  color: var(--move-toggle-group-selected-fg) !important;
+  color: var(--move-toggle-group-selected-fg);
   z-index: 1;
   transition-duration: 120ms;
   transition-delay: 80ms;
 }
 
 .item[data-state='on']:hover:not(:disabled) {
-  background-color: transparent !important;
-  border-color: transparent !important;
+  background-color: transparent;
+  border-color: transparent;
 }
 
 /* Unselected: inset focus ring */

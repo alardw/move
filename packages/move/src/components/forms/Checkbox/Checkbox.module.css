@@ -38,7 +38,15 @@
   pointer-events: none;
 }
 
-.wrapper:hover .root:not(:disabled) {
+/* Scoped OFF the filled states rather than overridden back afterwards. Checked
+   and indeterminate paint an accent fill with no border — the fill is the
+   affordance — and this rule is more specific than the state rules below, so
+   left unscoped it reinstated a border on hover as a ring around the fill (and
+   dropped an indeterminate box back to the unchecked hover background). An
+   override further down would fix the symptom but leave the trap for the next
+   state someone adds; excluding the states here means there is nothing to
+   override. Invalid keeps its own hover rule further down and still applies. */
+.wrapper:hover .root:not(:disabled):not([data-state='checked']):not([data-state='indeterminate']) {
   background-color: var(--move-checkbox-bg-hover);
   border-color: var(--move-checkbox-border-hover);
 }
@@ -52,7 +60,10 @@
   border-color: var(--move-error);
 }
 
-.wrapper:hover .root[data-state='checked']:not(:disabled) {
+/* Hover feedback for the filled states is the darker fill; no border is
+   restated, because the rule above no longer matches these states. */
+.wrapper:hover .root[data-state='checked']:not(:disabled),
+.wrapper:hover .root[data-state='indeterminate']:not(:disabled) {
   background-color: var(--move-checkbox-bg-checked-hover);
 }
 

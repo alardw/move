@@ -19,9 +19,9 @@
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important; /* important-exempt: a user OS-level motion preference must outrank every author style, the consumer\'s included — the one case where being un-overridable is the point */
+    animation-iteration-count: 1 !important; /* important-exempt: a user OS-level motion preference must outrank every author style, the consumer\'s included — the one case where being un-overridable is the point */
+    transition-duration: 0.01ms !important; /* important-exempt: a user OS-level motion preference must outrank every author style, the consumer\'s included — the one case where being un-overridable is the point */
+    scroll-behavior: auto !important; /* important-exempt: a user OS-level motion preference must outrank every author style, the consumer\'s included — the one case where being un-overridable is the point */
   }
 }

@@ -2,7 +2,7 @@
 
 .trigger {
   /* Component tokens — trigger */
-  --move-select-trigger-bg: var(--move-bg-subtle);
+  --move-select-trigger-bg: var(--move-bg-base);
   --move-select-trigger-border: var(--move-border-interactive);
   --move-select-trigger-radius: var(--move-rounded-md);
   --move-select-trigger-padding-x: var(--move-spacing-sm);
@@ -166,12 +166,16 @@
   overflow-x: hidden;
   will-change: height;
   max-height: var(--move-select-content-max-height);
-  /* Breathing room for item hover scale AND the selected row's OUTER focus ring
-     (offset 2px + width 2px = 4px) — the overflow clip would otherwise cut the
-     ring on a first/last highlighted row. Extra block padding + scroll-padding so
-     Radix leaves room when it scrolls a highlighted row to the edge. */
-  padding: 6px 4px;
-  scroll-padding-block: 6px;
+  /* Breathing room for item hover scale AND the selected row's OUTER focus ring.
+     Derived from the ring itself rather than hardcoded: the ring reaches
+     offset + width outward from the row, and the horizontal padding used to be
+     exactly that reach, so the ring landed ON the overflow clip boundary and was
+     shaved down both sides of the selected row. The extra 2px is the clearance
+     that makes it read as a ring rather than an edge. scroll-padding keeps the
+     same room when Radix scrolls a highlighted row to the edge. */
+  --move-select-ring-room: calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px);
+  padding: var(--move-select-ring-room);
+  scroll-padding-block: var(--move-select-ring-room);
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }

@@ -76,10 +76,10 @@
 .volumeButton,
 .settingsButton,
 .subtitleButton {
-  color: var(--move-audioplayer-fg) !important;
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
+  color: var(--move-audioplayer-fg);
+  background: none;
+  border: none;
+  box-shadow: none;
   width: var(--move-control-height-md);
   height: var(--move-control-height-md);
   min-width: var(--move-control-height-md);
@@ -91,7 +91,7 @@
 .volumeButton:hover,
 .settingsButton:hover,
 .subtitleButton:hover {
-  background: var(--move-audioplayer-hover) !important;
+  background: var(--move-audioplayer-hover);
 }
 
 .root[data-size='sm'] .playButton,
@@ -113,8 +113,8 @@
 }
 
 .subtitleButton[data-active='true'] {
-  background: var(--move-audioplayer-active-bg) !important;
-  color: var(--move-audioplayer-active-fg) !important;
+  background: var(--move-audioplayer-active-bg);
+  color: var(--move-audioplayer-active-fg);
 }
 
 /* Progress bar */

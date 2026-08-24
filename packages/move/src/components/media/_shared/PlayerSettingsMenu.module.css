@@ -5,16 +5,23 @@
  * Portaled — component tokens from .root are NOT available. Use direct values.
  */
 
+/* Restyles the Popover surface through Popover's OWN tokens rather than
+   re-declaring its properties. The tokens are declared on Popover's `.content`
+   shell and read by `.contentInner`, so setting them here — on the inner
+   shell — the inner box reads them from here, so the dark surface reaches where
+   it is painted without reaching into a slot. `color` has no token and is direct;
+   it inherits, and Popover's `move.base` layer keeps it winning. No `overflow`
+   override: the inner box already clips at its radius via its own overflow. */
 .menu {
-  background: rgba(0, 0, 0, 0.92) !important;
-  border: none !important;
-  border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-  padding: 4px 0 !important;
-  min-width: 180px !important;
-  max-width: none !important;
-  color: #fff !important;
-  overflow: hidden;
+  --move-popover-content-bg: rgba(0, 0, 0, 0.92);
+  --move-popover-content-border: transparent;
+  --move-popover-content-radius: 6px;
+  --move-popover-content-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --move-popover-content-padding: 4px 0;
+  --move-popover-content-min-width: 180px;
+  --move-popover-content-max-width: none;
+
+  color: #fff;
 }
 
 /* Category row (main view) */

@@ -164,7 +164,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-input-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Input background color',
     },
     {

@@ -176,7 +176,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-textarea-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Textarea background color',
     },
     {

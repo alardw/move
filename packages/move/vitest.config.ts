@@ -7,8 +7,13 @@ export default defineConfig({
     setupFiles: ['./vitest.setup.ts'],
     globals: true,
     // src = library components; patterns = design-pattern spec validators (they
-    // import the registry via the alias below).
-    include: ['src/**/*.test.{ts,tsx}', 'patterns/**/*.test.{ts,tsx}'],
+    // import the registry via the alias below); checks = cross-component gates
+    // that must render and drive real components, so they can't be node scripts.
+    include: [
+      'src/**/*.test.{ts,tsx}',
+      'patterns/**/*.test.{ts,tsx}',
+      'checks/**/*.test.{ts,tsx}',
+    ],
     // Real-browser invariant tests run via vitest.browser.config.ts, not jsdom.
     exclude: ['**/node_modules/**', '**/dist/**', '**/*.browser.test.{ts,tsx}'],
   },

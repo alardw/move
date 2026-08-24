@@ -2,7 +2,7 @@
 
 .root {
   /* Component tokens */
-  --move-textarea-bg: var(--move-bg-subtle);
+  --move-textarea-bg: var(--move-bg-base);
   --move-textarea-border: var(--move-border-interactive);
   --move-textarea-border-hover: var(--move-border-emphasis);
   --move-textarea-border-focus: var(--move-primary);

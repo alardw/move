@@ -192,10 +192,10 @@
 .speedButton,
 .subtitleButton,
 .fullscreenButton {
-  color: var(--move-videoplayer-controls-fg) !important;
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
+  color: var(--move-videoplayer-controls-fg);
+  background: none;
+  border: none;
+  box-shadow: none;
   width: var(--move-control-height-md);
   height: var(--move-control-height-md);
   min-width: var(--move-control-height-md);
@@ -208,7 +208,7 @@
 .speedButton:hover,
 .subtitleButton:hover,
 .fullscreenButton:hover {
-  background: var(--move-videoplayer-controls-hover) !important;
+  background: var(--move-videoplayer-controls-hover);
 }
 
 .speedButton {
@@ -220,8 +220,8 @@
 }
 
 .subtitleButton[data-active='true'] {
-  background: var(--move-videoplayer-controls-active-bg) !important;
-  color: var(--move-videoplayer-controls-active-fg) !important;
+  background: var(--move-videoplayer-controls-active-bg);
+  color: var(--move-videoplayer-controls-active-fg);
 }
 
 /* Time display */
@@ -268,10 +268,10 @@
 
 /* Settings button */
 .settingsButton {
-  color: var(--move-videoplayer-controls-fg) !important;
-  background: none !important;
-  border: none !important;
-  box-shadow: none !important;
+  color: var(--move-videoplayer-controls-fg);
+  background: none;
+  border: none;
+  box-shadow: none;
   width: var(--move-control-height-md);
   height: var(--move-control-height-md);
   min-width: var(--move-control-height-md);
@@ -280,20 +280,20 @@
 }
 
 .settingsButton:hover {
-  background: var(--move-videoplayer-controls-hover) !important;
+  background: var(--move-videoplayer-controls-hover);
 }
 
 /* Subtitle menu — portaled via Popover, override its defaults.
    Component tokens from .root are NOT available here (portal). Use direct values. */
 .subtitleMenu {
-  background: rgba(0, 0, 0, 0.92) !important;
-  border: none !important;
-  border-radius: 6px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-  padding: 4px 0 !important;
-  min-width: 80px !important;
-  max-width: none !important;
-  color: #fff !important;
+  background: rgba(0, 0, 0, 0.92);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 4px 0;
+  min-width: 80px;
+  max-width: none;
+  color: #fff;
 }
 
 .subtitleOption {

@@ -2,7 +2,7 @@
 
 .root {
   /* Component tokens */
-  --move-input-bg: var(--move-bg-subtle);
+  --move-input-bg: var(--move-bg-base);
   --move-input-border: var(--move-border-interactive);
   --move-input-border-hover: var(--move-border-emphasis);
   --move-input-border-focus: var(--move-primary);

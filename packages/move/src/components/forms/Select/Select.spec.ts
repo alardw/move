@@ -18,10 +18,22 @@ export const spec = {
   },
   behavior: {
     popup: {
+      // A button trigger opening a listbox: Radix Select moves focus into it,
+      // onto the selected option, and returns focus to the trigger on close.
+      // The mechanism FIXES that contract (POPUP_FOCUS_BY_MECHANISM).
+      mechanism: 'trigger-surface' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // Radix Select moves focus into the listbox and puts it on the selected option.
+      keyboard: {
+        openKeys: ['ArrowDown', 'Enter', ' '],
+        tabbableTrigger: true,
+      },
     },
   },
 
@@ -614,7 +626,7 @@ export const spec = {
     // Trigger tokens
     {
       name: '--move-select-trigger-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Trigger background color',
     },
     {
@@ -682,6 +694,12 @@ export const spec = {
       name: '--move-select-content-shadow',
       value: 'var(--move-shadow-overlay)',
       description: 'Content box shadow',
+    },
+    {
+      name: '--move-select-ring-room',
+      value: 'calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px)',
+      description:
+        "Padding inside the scrolling option list, sized so the selected row's outer focus ring clears the overflow clip",
     },
     {
       name: '--move-select-content-padding',

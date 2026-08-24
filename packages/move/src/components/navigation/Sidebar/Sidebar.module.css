@@ -89,7 +89,11 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-md);
-  padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
+  /* Content and Footer inset their children by spacing-sm; Header has no such
+     wrapper, so it carries that inset itself and the title lines up with the
+     nav labels below it instead of sitting 8px to their left. */
+  padding: var(--move-sidebar-item-padding-y)
+    calc(var(--move-spacing-sm) + var(--move-sidebar-item-padding-x));
   flex-shrink: 0;
   /* Keep the rail single-line so the width spring (collapse/expand) never
      reflows the logo into extra lines and jostles the vertical layout. */
@@ -322,7 +326,8 @@
   align-items: center;
   gap: var(--move-spacing-md);
   width: 100%;
-  padding: var(--move-spacing-xs) var(--move-sidebar-item-padding-x);
+  /* Same box as .item, so the collapse row reads as one more rail row. */
+  padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
   border: none;
   border-radius: var(--move-sidebar-item-radius);
   background: transparent;

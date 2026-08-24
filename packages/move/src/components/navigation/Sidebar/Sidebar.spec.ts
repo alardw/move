@@ -511,6 +511,11 @@ export const spec = {
 
   renderContracts: [
     {
+      id: 'rail-shared-inset',
+      description:
+        'Header, Item and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets itself by that amount plus --move-sidebar-item-padding-x. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
+    },
+    {
       id: 'mobile-modal-sheet',
       description:
         'On mobile (viewport < breakpoint), Root renders as a Radix Dialog modal sheet portaled to body (open driven by mobileOpen): focus trap, Escape-to-close, focus restore to the trigger, aria-modal, and scroll-lock. A visually-hidden Dialog.Title (labels.title) gives the sheet its accessible name.',
