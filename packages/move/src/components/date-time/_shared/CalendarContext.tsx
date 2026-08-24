@@ -57,6 +57,10 @@ export interface CalendarContextValue {
   // Focus management
   focusedDate: Date | null;
   setFocusedDate: (date: Date | null) => void;
+  /** The grid's single tab stop while focusedDate is null — selected day, else
+   *  today, else the first enabled day. Drives tabIndex only; nothing focuses
+   *  it, so a rendered calendar never steals focus. */
+  entryDate: Date | null;
 
   // Labels
   labels: Required<CalendarLabels>;

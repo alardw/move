@@ -6,6 +6,7 @@ import * as React from 'react';
 import { CalendarContext } from '../_shared/CalendarContext';
 import { CalendarNav } from '../_shared/CalendarNav';
 import { MonthGrid } from '../_shared/MonthGrid';
+import type { MonthGridSp } from '../_shared/MonthGrid';
 import { useCalendar } from './useCalendar';
 import type { UseCalendarOptions } from './useCalendar';
 import type {
@@ -131,10 +132,11 @@ CalendarNavComponent.displayName = 'Calendar.Nav';
 
 export interface CalendarGridProps {
   className?: string;
+  sp?: MonthGridSp;
 }
 
-const CalendarGridComponent: React.FC<CalendarGridProps> = ({ className }) => {
-  return <MonthGrid className={className} />;
+const CalendarGridComponent: React.FC<CalendarGridProps> = ({ className, sp }) => {
+  return <MonthGrid className={className} sp={sp} />;
 };
 CalendarGridComponent.displayName = 'Calendar.Grid';
 

@@ -33,8 +33,10 @@ import {
   useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useMergedRef } from '../../../engine';
+import { useMergedRef, usePopupFocus } from '../../../engine';
+import type { PopupFocusHandlers } from '../../../engine';
 import { InputText } from '../../forms/InputText';
+import { useFormField, useFieldGroup } from '../../forms/FormField/FormField';
 import { TimeField } from '../TimeField';
 import { Button } from '../../actions/Button';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -120,13 +122,16 @@ interface DatePickerContextValue {
   epoch: number;
   onExitDone: (epoch: number) => void;
   openPopover: () => void;
+  /** Open the calendar. Focus enters it on every open — see `usePopupFocus`. */
   focusCalendar: (cancelClose?: boolean) => void;
   mode: SelectionMode;
   anchorRef: React.RefObject<HTMLElement | null>;
   activeField: 'from' | 'to' | null;
   setActiveField: (field: 'from' | 'to' | null) => void;
-  shouldFocusCalendar: boolean;
-  clearFocusRequest: () => void;
+  /** Owned by Root so the focus container and the exit animation address the
+   *  same element. */
+  contentRef: React.RefObject<HTMLDivElement | null>;
+  popupFocus: PopupFocusHandlers;
   inputRef: React.RefObject<HTMLInputElement | null>;
   fromInputRef: React.RefObject<HTMLInputElement | null>;
   toInputRef: React.RefObject<HTMLInputElement | null>;
@@ -249,7 +254,6 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   const animConfig = resolveAnimationsConfig(DEFAULT_DATEPICKER_ANIMATIONS, animationsProp);
 
   const [activeField, setActiveField] = React.useState<'from' | 'to' | null>(null);
-  const [shouldFocusCalendar, setShouldFocusCalendar] = React.useState(false);
 
   // Interruptible open/close lifecycle (open cancels an in-flight close;
   // exit-completion is epoch-guarded so a reopened popup can't be closed by a
@@ -426,14 +430,25 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
   // when the page or a parent ScrollArea scrolls. capture: true so
   // we catch scroll events on nested scroll containers, not just
   // window. passive: true so we don't block the scroll itself.
+  //
+  // Scrolling *within* the popup moves the content with its anchor, so it is
+  // not a viewport change — closing on it would dismiss the calendar the moment
+  // the user wheels over it.
   React.useEffect(() => {
     if (!isOpen || isClosing || typeof window === 'undefined') return;
-    const onViewportChange = () => close();
-    window.addEventListener('scroll', onViewportChange, { capture: true, passive: true });
-    window.addEventListener('resize', onViewportChange);
+    const onScroll = (e: Event) => {
+      const target = e.target;
+      if (target instanceof Element && target.closest('[data-radix-popper-content-wrapper]')) {
+        return;
+      }
+      close();
+    };
+    const onResize = () => close();
+    window.addEventListener('scroll', onScroll, { capture: true, passive: true });
+    window.addEventListener('resize', onResize);
     return () => {
-      window.removeEventListener('scroll', onViewportChange, { capture: true });
-      window.removeEventListener('resize', onViewportChange);
+      window.removeEventListener('scroll', onScroll, { capture: true });
+      window.removeEventListener('resize', onResize);
     };
   }, [isOpen, isClosing, close]);
 
@@ -443,14 +458,37 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
       // close so a rapid re-click reopens). Focus-driven opens pass nothing, so
       // they can't cancel a deliberate close-on-select.
       (cancelClose ? reopen : openPopover)();
-      setShouldFocusCalendar(true);
     },
     [openPopover, reopen],
   );
 
-  const clearFocusRequest = React.useCallback(() => {
-    setShouldFocusCalendar(false);
-  }, []);
+  // Where Escape puts focus back. In range mode that is whichever of the two
+  // fields the user opened from, so the caret returns where they left it.
+  const returnRef = React.useRef<HTMLElement | null>(null);
+  React.useEffect(() => {
+    returnRef.current =
+      mode === 'range'
+        ? ((activeField === 'to' ? toInputRef.current : fromInputRef.current) ?? null)
+        : inputRef.current;
+  }, [mode, activeField, isOpen]);
+
+  const contentRef = React.useRef<HTMLDivElement>(null);
+
+  // `field-dialog`: focus enters the calendar on EVERY open, pointer or
+  // keyboard, and Escape returns it to the field it opened from.
+  const popupFocus = usePopupFocus({
+    mechanism: 'field-dialog',
+    contentRef,
+    returnRef,
+    anchorRef,
+    isOpen: isOpen || isClosing,
+    onDismiss: close,
+    // The grid's roving tab stop, not the first tabbable — that would be a nav
+    // button, and a keydown there bubbles UP, never reaching the grid's handler
+    // below it, so arrow keys would do nothing.
+    getFocusTarget: (content) =>
+      content.querySelector<HTMLElement>('[role="gridcell"][tabindex="0"]'),
+  });
 
   return (
     <DatePickerContext.Provider
@@ -465,8 +503,8 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
         anchorRef,
         activeField,
         setActiveField,
-        shouldFocusCalendar,
-        clearFocusRequest,
+        contentRef,
+        popupFocus,
         inputRef,
         fromInputRef,
         toInputRef,
@@ -753,6 +791,21 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
   const pattern = getLocaleDatePattern(locale);
   const calendarIcon = useIcon('calendar', 16);
 
+  // A range renders TWO InputTexts, and each one claims the wrapping
+  // FormField's id for itself — so inside a FormField both ends came out
+  // carrying the SAME DOM id. Give the end input its own id derived from the
+  // field's; the start input keeps the field id, so the label's `for` still
+  // resolves to a real element. Outside a FormField there is no id on either
+  // and nothing to collide.
+  const field = useFormField();
+  const endInputId = field ? `${field.fieldId}-end` : undefined;
+
+  // Two inputs, each already named "Start date"/"End date" — and aria-label
+  // outranks a `<label for>`, so the FormField's label lost to those names even
+  // once the id collision was gone. A range is a group of two fields, not one
+  // field: the wrapper carries the group name, the ends keep their own.
+  const groupProps = useFieldGroup();
+
   const fromFormatted = React.useMemo(
     () => (value?.from ? formatDate(value.from, locale) : ''),
     [value?.from, locale],
@@ -904,7 +957,13 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
   );
 
   return (
-    <div className={`${styles.rangeWrapper} ${className ?? ''}`} style={style} data-size={size}>
+    <div
+      role="group"
+      {...groupProps}
+      className={`${styles.rangeWrapper} ${className ?? ''}`}
+      style={style}
+      data-size={size}
+    >
       <InputText
         ref={dpCtx?.fromInputRef as React.RefObject<HTMLInputElement>}
         value={fromText}
@@ -922,6 +981,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
       </span>
       <InputText
         ref={dpCtx?.toInputRef as React.RefObject<HTMLInputElement>}
+        id={endInputId}
         value={toText}
         placeholder={pattern}
         size={size}
@@ -989,7 +1049,9 @@ const DatePickerContentInner = React.forwardRef<
   const dpCtx = React.useContext(DatePickerContext);
   const animConfig = dpCtx?.animConfig ?? null;
 
-  const contentRef = React.useRef<HTMLDivElement>(null);
+  // Owned by Root — the focus container lives there, with the field refs.
+  const localContentRef = React.useRef<HTMLDivElement>(null);
+  const contentRef = dpCtx?.contentRef ?? localContentRef;
   const innerRef = React.useRef<HTMLDivElement>(null);
 
   const contentConfig = React.useMemo(
@@ -1019,13 +1081,6 @@ const DatePickerContentInner = React.forwardRef<
 
   const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
-  React.useEffect(() => {
-    if (dpCtx?.shouldFocusCalendar && contentRef.current) {
-      contentRef.current.focus();
-      dpCtx.clearFocusRequest();
-    }
-  }, [dpCtx?.shouldFocusCalendar]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const handlePointerDownOutside = (e: Event) => {
     const target = e.target as Node;
     if (dpCtx?.anchorRef.current?.contains(target)) {
@@ -1049,8 +1104,11 @@ const DatePickerContentInner = React.forwardRef<
       style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
       onPointerDownOutside={handlePointerDownOutside}
       onEscapeKeyDown={handleEscapeKeyDown}
-      onOpenAutoFocus={(e) => e.preventDefault()}
-      onCloseAutoFocus={(e) => e.preventDefault()}
+      // Focus-in on open and focus-back to the field on close, from the shared
+      // focus container. These are the points Radix guarantees run after its
+      // own FocusScope, so they cannot race a mount effect.
+      onOpenAutoFocus={dpCtx?.popupFocus.onOpenAutoFocus}
+      onCloseAutoFocus={dpCtx?.popupFocus.onCloseAutoFocus}
     >
       <div ref={innerRef} className={styles.contentInner}>
         {dpCtx?.mode === 'range' && dpCtx.activeField && (

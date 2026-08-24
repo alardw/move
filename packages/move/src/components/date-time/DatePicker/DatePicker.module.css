@@ -28,7 +28,7 @@
 
 .calendarButton {
   flex-shrink: 0;
-  padding: 0 !important;
+  padding: 0;
   aspect-ratio: 1;
 }
 
@@ -39,7 +39,13 @@
   gap: var(--move-spacing-sm);
 }
 
-.singleWrapper input {
+/* Scoped to THIS component's own date input. As a bare descendant selector it
+   also matched the segment inputs of the TimeField that `showTime` renders
+   inside this wrapper, sizing each hour/minute box to 7rem. TimeField's own
+   max-width used to clamp the row back down and hide it; once that cap went
+   (it was a guess, and it fought the AM/PM segment for room) the stretched
+   segments showed up immediately. */
+.singleWrapper input[data-move='InputText'] {
   width: 7rem;
 }
 
@@ -50,7 +56,8 @@
   gap: var(--move-spacing-sm);
 }
 
-.rangeWrapper input {
+/* Same scoping as .singleWrapper above — this wrapper's own two date inputs. */
+.rangeWrapper input[data-move='InputText'] {
   width: 5rem;
 }
 

@@ -18,10 +18,26 @@ export const spec = {
   },
   behavior: {
     popup: {
+      // A text field anchoring a calendar grid: focus ENTERS the grid on open,
+      // landing on the entry day, and Escape returns it to the field. The
+      // mechanism FIXES that contract (POPUP_FOCUS_BY_MECHANISM).
+      mechanism: 'field-dialog' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // APG date-picker-dialog: focus enters the grid, landing on the entry day.
+      keyboard: {
+        openKeys: ['ArrowDown'],
+        tabbableTrigger: true,
+      },
+      // Scope of closeOnScroll. A scroll INSIDE the popup moves the content
+      // along with its anchor, so it is not a viewport change and must not
+      // dismiss. Only scrolls outside the popup close it.
+      closeOnScrollScope: 'outside' as const,
     },
   },
 
@@ -356,6 +372,9 @@ export const spec = {
   dismissBehavior: 'unmountAfterExit' as const,
 
   renderContracts: [
+    'Close-on-scroll ignores scroll events originating inside the popper content wrapper, so scrolling within the calendar keeps it open',
+    'EVERY open — pointer or keyboard — focuses the grid tab stop inside Content: the day cell with tabIndex 0, not the Content container, whose keydown would never reach the grid handler below it. Placed by usePopupFocus via getFocusTarget, since the first tabbable is a nav button and landing there means arrow keys never reach the grid.',
+    'Closing returns focus to the field it was opened from (in range mode, whichever of the two the user opened). Radix restores to its Trigger, which this component does not render — it anchors with Anchor — so Escape used to drop focus on <body>.',
     'Root provides DatePickerContext to all children with animation config, open state, refs, labels, time state',
     'Root provides CalendarContext (via useCalendar) with wrapped onSelect for close-on-select and field-aware range behavior',
     'Content reads animation config from DatePickerContext for enter/exit animations',
@@ -476,6 +495,8 @@ export const spec = {
 
   testing: {
     behaviors: [
+      'Scrolling inside the calendar popup keeps it open',
+      'Scrolling outside the popup closes it',
       'Root renders with DatePickerContext provider',
       'Root renders with CalendarContext provider',
       'Root wraps children in Radix Popover.Root',
@@ -498,7 +519,9 @@ export const spec = {
       'Time integration: popup TimeField in Content when showTime + placement=popup',
     ],
     keyboard: [
-      'ArrowDown opens calendar / focuses calendar grid',
+      'ArrowDown opens the calendar and moves focus to its entry day, so arrow keys navigate immediately',
+      'A pointer open focuses the entry day too — the mechanism makes no pointer/keyboard distinction',
+      'Escape closes the calendar and returns focus to the field, asserted after the exit unmounts',
       'Enter commits typed date and closes (single mode)',
       'Escape reverts typed date and closes',
       'Range mode: Enter on from-input advances focus to to-input',

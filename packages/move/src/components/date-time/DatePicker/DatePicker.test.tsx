@@ -1,5 +1,5 @@
 // Generated from DatePicker.spec.ts
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { DatePicker } from './DatePicker';
@@ -255,6 +255,118 @@ describe('DatePicker', () => {
         </DatePicker.Root>,
       );
       expect(screen.getByRole('button', { name: 'Show calendar' })).toBeInTheDocument();
+    });
+  });
+
+  // === Keyboard entry into the calendar ===
+  describe('keyboard open', () => {
+    it('ArrowDown opens the calendar and focuses its entry day', async () => {
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+          </DatePicker.Trigger>
+          <DatePicker.Content />
+        </DatePicker.Root>,
+      );
+
+      await user.click(screen.getByRole('textbox'));
+      await user.keyboard('{ArrowDown}');
+
+      await waitFor(() => {
+        const active = document.activeElement as HTMLElement | null;
+        expect(active?.getAttribute('role')).toBe('gridcell');
+        expect(active?.getAttribute('tabindex')).toBe('0');
+      });
+    });
+
+    // `field-dialog` makes no pointer/keyboard distinction — the calendar is
+    // portaled, so an open that left focus behind is one the keyboard user
+    // reaches only by tabbing through the rest of the document.
+    it('a pointer open also focuses the calendar entry day', async () => {
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+            <DatePicker.Icon />
+          </DatePicker.Trigger>
+          <DatePicker.Content />
+        </DatePicker.Root>,
+      );
+
+      await user.click(screen.getByLabelText('Open calendar'));
+
+      await waitFor(() => {
+        const active = document.activeElement as HTMLElement | null;
+        expect(active?.getAttribute('role')).toBe('gridcell');
+        expect(active?.getAttribute('tabindex')).toBe('0');
+      });
+    });
+
+    it('Escape returns focus to the field, not <body>', async () => {
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+          </DatePicker.Trigger>
+          <DatePicker.Content />
+        </DatePicker.Root>,
+      );
+
+      const input = screen.getByRole('textbox');
+      await user.click(input);
+      await user.keyboard('{ArrowDown}');
+      await waitFor(() =>
+        expect(
+          document.body.querySelector('[data-radix-popper-content-wrapper]'),
+        ).toBeInTheDocument(),
+      );
+
+      await user.keyboard('{Escape}');
+
+      // Asserted AFTER unmount: Radix restores focus at unmount, so a check
+      // while the popup is still animating out passes on focus about to be
+      // dropped — which is exactly how this shipped broken.
+      await waitFor(() =>
+        expect(
+          document.body.querySelector('[data-radix-popper-content-wrapper]'),
+        ).not.toBeInTheDocument(),
+      );
+      await waitFor(() => expect(document.activeElement).toBe(input));
+    });
+  });
+
+  // === Close on scroll ===
+  describe('close on scroll', () => {
+    const openCalendar = async () => {
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+          </DatePicker.Trigger>
+          <DatePicker.Content>
+            <span data-testid="calendar">Calendar</span>
+          </DatePicker.Content>
+        </DatePicker.Root>,
+      );
+      await user.click(screen.getByRole('button', { name: 'Open calendar' }));
+      return await screen.findByTestId('calendar');
+    };
+
+    it('stays open when the calendar itself scrolls', async () => {
+      const calendar = await openCalendar();
+      fireEvent.scroll(calendar);
+      expect(screen.getByTestId('calendar')).toBeInTheDocument();
+    });
+
+    it('closes when the page scrolls outside the popup', async () => {
+      await openCalendar();
+      fireEvent.scroll(document);
+      await waitFor(() => expect(screen.queryByTestId('calendar')).not.toBeInTheDocument());
     });
   });
 });

@@ -2,8 +2,11 @@
 
 .root {
   /* Component tokens */
-  --move-timefield-bg: var(--move-bg-subtle);
-  --move-timefield-border: var(--move-border-base);
+  --move-timefield-bg: var(--move-bg-base);
+  /* The control boundary, so it is held to WCAG 1.4.11's 3:1 like every other
+     field's — `--move-border-base` is the decorative ramp and measures 1.31:1
+     against the page. TimeField was the only control still on it. */
+  --move-timefield-border: var(--move-border-interactive);
   --move-timefield-border-hover: var(--move-border-emphasis);
   --move-timefield-border-focus: var(--move-primary);
   --move-timefield-radius: var(--move-rounded-md);
@@ -51,7 +54,10 @@
 
 .root[data-size='md'],
 .root:not([data-size]) {
-  font-size: var(--move-size-sm);
+  /* `inherit`, matching InputText / Password / NumberInput / Textarea / ColorInput
+     at md. TimeField was the only control a step down, which showed as soon as one
+     sat beside a date input in DatePicker's `showTime` row. */
+  font-size: inherit;
 }
 
 .root[data-size='lg'] {
@@ -193,6 +199,9 @@
   pointer-events: none;
   user-select: none;
   line-height: 1;
+  /* Breathing room on both sides so the colon reads as a separator rather than
+     a third glyph crowding the digits either side of it. */
+  padding: 0 2px;
 }
 
 /* ============================================
@@ -202,7 +211,12 @@
 .period {
   all: unset;
   box-sizing: border-box;
-  min-width: 2.5ch;
+  /* `ch` is the advance of "0" in the font's DEFAULT figures, but this row sets
+     `tabular-nums`, whose digits are wider — so a ch-derived floor under-measures
+     what it has to hold. At 2.5ch the box came out 21.6px for an "AM" needing 23,
+     and the glyphs pushed past their own box: the period read tighter to the
+     field's border than the hour did to the other side, which is the asymmetry. */
+  min-width: 3ch;
   text-align: center;
   font-variant-numeric: tabular-nums;
   caret-color: transparent;

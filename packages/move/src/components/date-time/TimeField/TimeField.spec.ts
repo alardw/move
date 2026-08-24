@@ -12,9 +12,29 @@ export const spec = {
     'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
   choreographies: ['popupMenu'],
   families: {
-    behavior: ['form-input'],
+    behavior: ['form-input', 'popup-anchored'],
     state: ['controlled-value'],
     a11y: ['none'],
+  },
+  behavior: {
+    popup: {
+      // The dropdown mirrors segments that are already fully keyboard-operable
+      // (arrows edit, digits type). Moving focus into it would take the arrow
+      // keys away from the value they edit, so focus STAYS on the segment and
+      // the panel is pointer-only — its items are out of the tab order.
+      mechanism: 'pointer-panel' as const,
+      closeOnEscape: true,
+      closeOnOutsideClick: true,
+      // Known limitation, declared rather than hidden: the panel stays put when
+      // the page scrolls or resizes, so it can drift from its anchor.
+      closeOnScroll: false,
+      closeOnResize: false,
+      keyboard: {
+        // ArrowDown on a segment both decrements it and reveals the panel.
+        openKeys: ['ArrowDown'],
+        tabbableTrigger: true,
+      },
+    },
   },
 
   compound: true,
@@ -430,6 +450,11 @@ export const spec = {
         'DropdownColumn item click sets the corresponding segment value (handles 12h/24h conversion for hours)',
     },
     {
+      id: 'dropdown-is-pointer-only',
+      description:
+        'The dropdown mirrors segments that are already fully keyboard-operable (arrows edit, digits type), so focus stays on the segment and its items are out of the tab order. Left tabbable they were reachable only by tabbing through the whole document and wrapping around into a panel the keyboard cannot otherwise use.',
+    },
+    {
       id: 'value-always-24h',
       description:
         'Internal value is always stored in 24h format regardless of hourCycle display setting',
@@ -474,13 +499,13 @@ export const spec = {
     // Root tokens
     {
       name: '--move-timefield-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-bg-base)',
       description: 'Root background color',
     },
     {
       name: '--move-timefield-border',
-      value: 'var(--move-border-base)',
-      description: 'Root border color',
+      value: 'var(--move-border-interactive)',
+      description: 'Root border color — the 3:1 control boundary (WCAG 1.4.11)',
     },
     {
       name: '--move-timefield-border-hover',
@@ -604,6 +629,7 @@ export const spec = {
       'DropdownColumn generates correct items (24h=0-23, 12h=1-12, min/sec=0-59)',
       'DropdownColumn scrolls to selected on open',
       'DropdownColumn item click sets segment value',
+      'DropdownColumn items are out of the tab order (pointer-panel: the segments are the keyboard path)',
       'DropdownColumn handles 12h/24h conversion on hour click',
       'Disabled state prevents all interaction',
       'Invalid state applies error border styling',

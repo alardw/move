@@ -5,14 +5,35 @@
 import * as React from 'react';
 import { getMonthGrid, getWeekDayNames, getWeekNumber, addMonths } from './dateUtils';
 import { useCalendarContext } from './CalendarContext';
+import { mergeSlotProps } from '../../../engine';
+import type { SlotProps } from '../../../engine';
 import { DayCell } from './DayCell';
 import styles from './MonthGrid.module.css';
 
-export interface MonthGridProps {
-  className?: string;
+/**
+ * Per-slot overrides, mirroring `CalendarNavSp`. Calendar presents Nav and Grid
+ * as peers, so they expose the same kind of surface: the nav's buttons, the
+ * grid's structural rows and headers.
+ */
+export interface MonthGridSp {
+  /** The `role="grid"` element for one month. */
+  grid?: SlotProps;
+  /** The weekday-name header row. */
+  weekDayRow?: SlotProps;
+  /** A single weekday-name cell. */
+  weekDayHeader?: SlotProps;
+  /** A row of day cells. */
+  weekRow?: SlotProps;
+  /** The week-number gutter cell, when `showWeekNumbers` is on. */
+  weekNumber?: SlotProps;
 }
 
-export function MonthGrid({ className }: MonthGridProps) {
+export interface MonthGridProps {
+  className?: string;
+  sp?: MonthGridSp;
+}
+
+export function MonthGrid({ className, sp }: MonthGridProps) {
   const ctx = useCalendarContext();
   const {
     displayMonth,
@@ -23,6 +44,7 @@ export function MonthGrid({ className }: MonthGridProps) {
     fixedWeeks,
     focusedDate,
     setFocusedDate,
+    entryDate,
     setDisplayMonth,
   } = ctx;
 
@@ -42,45 +64,49 @@ export function MonthGrid({ className }: MonthGridProps) {
   }, [displayMonth, numberOfMonths, weekStartsOn, fixedWeeks]);
 
   const handleGridKeyDown = (e: React.KeyboardEvent) => {
-    if (!focusedDate) return;
+    // Navigate from the entry day when nothing has been focused yet — arriving
+    // by Tab (or a programmatic focus from DatePicker) lands on the entry cell
+    // without setting focusedDate, and bailing here left arrows dead.
+    const from = focusedDate ?? entryDate;
+    if (!from) return;
 
     let next: Date | null = null;
 
     switch (e.key) {
       case 'ArrowRight':
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setDate(next.getDate() + 1);
         break;
       case 'ArrowLeft':
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setDate(next.getDate() - 1);
         break;
       case 'ArrowDown':
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setDate(next.getDate() + 7);
         break;
       case 'ArrowUp':
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setDate(next.getDate() - 7);
         break;
       case 'PageDown':
         e.preventDefault();
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setMonth(next.getMonth() + 1);
         break;
       case 'PageUp':
         e.preventDefault();
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setMonth(next.getMonth() - 1);
         break;
       case 'Home':
         e.preventDefault();
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setDate(1);
         break;
       case 'End':
         e.preventDefault();
-        next = new Date(focusedDate);
+        next = new Date(from);
         next.setMonth(next.getMonth() + 1);
         next.setDate(0);
         break;
@@ -109,18 +135,25 @@ export function MonthGrid({ className }: MonthGridProps) {
           aria-label={new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(
             m.date,
           )}
-          className={styles.grid}
           onKeyDown={handleGridKeyDown}
+          {...mergeSlotProps({ className: styles.grid }, sp?.grid)}
         >
           {/* Weekday headers */}
           <div
-            className={styles.weekRow}
             role="row"
             {...(showWeekNumbers ? { 'data-has-week-numbers': '' } : {})}
+            {...mergeSlotProps({ className: styles.weekRow }, sp?.weekDayRow)}
           >
-            {showWeekNumbers && <div className={styles.weekNumber} />}
+            {showWeekNumbers && (
+              <div {...mergeSlotProps({ className: styles.weekNumber }, sp?.weekNumber)} />
+            )}
             {weekDayNames.map((name, i) => (
-              <div key={i} className={styles.weekDayHeader} role="columnheader" aria-label={name}>
+              <div
+                key={i}
+                role="columnheader"
+                aria-label={name}
+                {...mergeSlotProps({ className: styles.weekDayHeader }, sp?.weekDayHeader)}
+              >
                 {name}
               </div>
             ))}
@@ -130,11 +163,15 @@ export function MonthGrid({ className }: MonthGridProps) {
           {m.grid.map((week, wi) => (
             <div
               key={wi}
-              className={styles.weekRow}
               role="row"
               {...(showWeekNumbers ? { 'data-has-week-numbers': '' } : {})}
+              {...mergeSlotProps({ className: styles.weekRow }, sp?.weekRow)}
             >
-              {showWeekNumbers && <div className={styles.weekNumber}>{getWeekNumber(week[0])}</div>}
+              {showWeekNumbers && (
+                <div {...mergeSlotProps({ className: styles.weekNumber }, sp?.weekNumber)}>
+                  {getWeekNumber(week[0])}
+                </div>
+              )}
               {week.map((day, di) => (
                 <DayCell key={di} date={day} referenceMonth={m.date} />
               ))}

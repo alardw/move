@@ -142,6 +142,53 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
   // ---- Current value ----
   const value = mode === 'single' ? singleValue : mode === 'range' ? rangeValue : multipleValue;
 
+  // ---- Grid entry day ----
+  // The grid needs exactly one tab stop at all times, including before the user
+  // has focused anything. With focusedDate still null every cell would take
+  // tabIndex -1 and Tab would skip the grid entirely, leaving only the month/year
+  // nav reachable — and arrow keys would have no date to move from.
+  //
+  // Deliberately NOT the same thing as focusedDate: this only decides which cell
+  // is tabbable. Nothing focuses it, so rendering a calendar never pulls focus.
+  const entryDate = useMemo(() => {
+    const inDisplayedMonths = (d: Date) => {
+      const first = new Date(displayMonth.getFullYear(), displayMonth.getMonth(), 1);
+      const afterLast = new Date(
+        displayMonth.getFullYear(),
+        displayMonth.getMonth() + numberOfMonths,
+        1,
+      );
+      return d >= first && d < afterLast;
+    };
+
+    const selected =
+      mode === 'single'
+        ? singleValue
+        : mode === 'range'
+          ? (rangeValue?.from ?? null)
+          : (multipleValue[0] ?? null);
+
+    if (selected && inDisplayedMonths(selected) && !isDateDisabled(selected, constraints)) {
+      return startOfDay(selected);
+    }
+
+    const today = startOfDay(new Date());
+    if (inDisplayedMonths(today) && !isDateDisabled(today, constraints)) return today;
+
+    // Fall back to the first day of the displayed month that can be selected;
+    // a fully disabled month yields no tab stop, which is the honest answer.
+    const first = new Date(displayMonth.getFullYear(), displayMonth.getMonth(), 1);
+    const afterLast = new Date(
+      displayMonth.getFullYear(),
+      displayMonth.getMonth() + numberOfMonths,
+      1,
+    );
+    for (const d = new Date(first); d < afterLast; d.setDate(d.getDate() + 1)) {
+      if (!isDateDisabled(d, constraints)) return startOfDay(d);
+    }
+    return null;
+  }, [mode, singleValue, rangeValue, multipleValue, displayMonth, numberOfMonths, constraints]);
+
   // ---- Selection handler ----
   const onSelect = useCallback(
     (date: Date) => {
@@ -205,6 +252,7 @@ export function useCalendar(options: UseCalendarOptions = {}): UseCalendarReturn
     renderEvent,
     focusedDate,
     setFocusedDate,
+    entryDate,
     labels,
   };
 }

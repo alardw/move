@@ -165,7 +165,8 @@ export const spec = {
           name: 'sp',
           typeRef: 'CalendarNavSp',
           moveSpecific: true,
-          description: 'Spacing prop forwarded to the shared CalendarNav layout',
+          description:
+            'Slot-prop overrides for the nav’s previous/next buttons, forwarded to the shared CalendarNav',
         },
       ],
       usesFactory: false,
@@ -177,6 +178,16 @@ export const spec = {
       slots: [{ name: 'grid', element: 'div', description: 'Month grid' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        {
+          name: 'sp',
+          typeRef: 'MonthGridSp',
+          moveSpecific: true,
+          // Nav and Grid are presented as peers, so they expose the same kind of
+          // surface: without this, the nav was styleable per slot and the grid
+          // was not.
+          description:
+            'Slot-prop overrides for the grid, weekday header row and cells, week rows and the week-number gutter, forwarded to the shared MonthGrid',
+        },
       ],
       usesFactory: false,
       description:
@@ -258,6 +269,16 @@ export const spec = {
   ],
 
   renderContracts: [
+    {
+      id: 'roving-tabindex-entry-day',
+      description:
+        'The grid always has exactly one tab stop. Until the user moves focus, focusedDate is null and the roving tabIndex 0 falls to the derived entry day — the selected day if it is in the displayed months, else today if displayed, else the first enabled day. Only the in-month rendering of that date is the tab stop, so a day repeated as an outside-month cell in another grid does not duplicate it.',
+    },
+    {
+      id: 'focus-follows-explicit-focus-only',
+      description:
+        'The cell auto-focus effect fires only for an explicitly focused day (focusedDate), never for the derived entry day, so rendering a calendar never steals focus from the page. Arrow keys navigate from the entry day and set focusedDate, which is what then moves DOM focus.',
+    },
     {
       id: 'root-provides-context',
       description: 'Root provides CalendarContext consumed by Nav and Grid',
@@ -424,6 +445,10 @@ export const spec = {
     keyboard: [
       'Arrow keys move focus between days (roving tabindex)',
       'Roving tabIndex sets 0 on focused day and -1 on the rest',
+      'Grid is reachable by Tab before any day has been focused: the entry day carries tabIndex 0',
+      'Entry day is the selected day, else today, else the first enabled day of the displayed month',
+      'Arrow keys move from the entry day without a prior focus event',
+      'Rendering a calendar does not move focus into the grid',
     ],
     aria: [
       'role="grid" on month grid element',

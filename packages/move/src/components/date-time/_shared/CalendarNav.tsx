@@ -8,12 +8,14 @@ import { useCalendarContext } from './CalendarContext';
 import { Select } from '../../forms/Select';
 import { Button } from '../../actions/Button';
 import { Icon } from '../../../infrastructure/Icon';
+import { mergeSlotProps } from '../../../engine';
+import type { SlotProps } from '../../../engine';
 import { snappy } from '../../../animation';
 import styles from './CalendarNav.module.css';
 
 export interface CalendarNavSp {
-  prevButton?: React.HTMLAttributes<HTMLButtonElement> & { children?: React.ReactNode };
-  nextButton?: React.HTMLAttributes<HTMLButtonElement> & { children?: React.ReactNode };
+  prevButton?: SlotProps & { children?: React.ReactNode };
+  nextButton?: SlotProps & { children?: React.ReactNode };
 }
 
 export interface CalendarNavProps {
@@ -106,8 +108,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
         ]}
         onClick={goToPrevMonth}
         aria-label={labels.previousMonth}
-        className={styles.navButton}
-        {...(sp?.prevButton ?? {})}
+        {...mergeSlotProps({ className: styles.navButton }, sp?.prevButton)}
       >
         {sp?.prevButton?.children ?? <Icon name="chevron-left" size="sm" />}
       </Button>
@@ -162,8 +163,7 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
         ]}
         onClick={goToNextMonth}
         aria-label={labels.nextMonth}
-        className={styles.navButton}
-        {...(sp?.nextButton ?? {})}
+        {...mergeSlotProps({ className: styles.navButton }, sp?.nextButton)}
       >
         {sp?.nextButton?.children ?? <Icon name="chevron-right" size="sm" />}
       </Button>

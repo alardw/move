@@ -1,5 +1,5 @@
 // Generated from Calendar.spec.ts
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { Calendar } from './Calendar';
 
@@ -47,6 +47,59 @@ describe('Calendar', () => {
   });
 
   // === Grid ===
+  // Nav and Grid are presented as peers, so they expose the same kind of
+  // surface. Grid used to take only className, which left the nav styleable per
+  // slot and the grid not.
+  describe('slot props', () => {
+    it('Grid forwards slot props to the month grid', () => {
+      render(
+        <Calendar.Root locale="en-US">
+          <Calendar.Grid
+            sp={{
+              grid: { 'data-testid': 'the-grid', className: 'custom-grid' },
+              weekDayHeader: { className: 'custom-header' },
+              weekRow: { className: 'custom-row' },
+            }}
+          />
+        </Calendar.Root>,
+      );
+      const grid = screen.getByTestId('the-grid');
+      expect(grid).toHaveAttribute('role', 'grid');
+      expect(grid.className).toContain('custom-grid');
+      expect(screen.getAllByRole('columnheader')[0].className).toContain('custom-header');
+      expect(document.querySelectorAll('.custom-row').length).toBeGreaterThan(0);
+    });
+
+    it('an sp className adds to the component’s own rather than replacing it', () => {
+      const { container } = render(
+        <Calendar.Root locale="en-US">
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      const ownClass = container.querySelector('[role="grid"]')!.className;
+      cleanup();
+
+      render(
+        <Calendar.Root locale="en-US">
+          <Calendar.Grid sp={{ grid: { className: 'custom-grid' } }} />
+        </Calendar.Root>,
+      );
+      const withSp = document.querySelector('[role="grid"]')!.className;
+      // A raw spread would drop the module class and leave the grid unstyled.
+      expect(withSp).toContain(ownClass);
+      expect(withSp).toContain('custom-grid');
+    });
+
+    it('Nav forwards slot props to its buttons', () => {
+      render(
+        <Calendar.Root locale="en-US">
+          <Calendar.Nav sp={{ prevButton: { className: 'custom-prev' } }} />
+        </Calendar.Root>,
+      );
+      expect(document.querySelectorAll('.custom-prev').length).toBe(1);
+    });
+  });
+
   describe('Grid', () => {
     it('renders weekday headers', () => {
       render(
@@ -251,6 +304,73 @@ describe('Calendar', () => {
       // Week number rows should have the data attribute
       const weekNumberRows = container.querySelectorAll('[data-has-week-numbers]');
       expect(weekNumberRows.length).toBeGreaterThan(0);
+    });
+  });
+
+  // === Roving tabindex entry point ===
+  describe('grid entry point', () => {
+    const tabStops = (container: HTMLElement) =>
+      Array.from(container.querySelectorAll('[role="gridcell"][tabindex="0"]'));
+
+    it('exposes exactly one tab stop before anything is focused', () => {
+      // No selection → the displayed month is the current one, so today is the
+      // entry day.
+      const { container } = render(
+        <Calendar.Root>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      const stops = tabStops(container);
+      expect(stops).toHaveLength(1);
+      expect(stops[0]).toHaveAttribute('data-today');
+    });
+
+    it('puts the tab stop on the selected day', () => {
+      // The selection drives the displayed month, so today is not in view and
+      // the entry day is the selection itself.
+      const { container } = render(
+        <Calendar.Root defaultValue={new Date(2026, 2, 20)}>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      const stops = tabStops(container);
+      expect(stops).toHaveLength(1);
+      expect(stops[0].textContent).toContain('20');
+    });
+
+    it('falls back past a disabled entry day to the first enabled one', () => {
+      const { container } = render(
+        <Calendar.Root constraints={{ disabledDates: [new Date()] }}>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      const stops = tabStops(container);
+      expect(stops).toHaveLength(1);
+      expect(stops[0]).not.toHaveAttribute('data-today');
+      expect(stops[0]).not.toHaveAttribute('data-disabled');
+    });
+
+    it('does not move focus into the grid on render', () => {
+      const { container } = render(
+        <Calendar.Root>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      expect(container.contains(document.activeElement)).toBe(false);
+    });
+
+    it('arrow keys navigate from the entry day with no prior focus event', () => {
+      const { container } = render(
+        <Calendar.Root defaultValue={new Date(2026, 2, 20)}>
+          <Calendar.Grid />
+        </Calendar.Root>,
+      );
+      fireEvent.keyDown(container.querySelector('[role="grid"]') as HTMLElement, {
+        key: 'ArrowRight',
+      });
+      const stops = tabStops(container);
+      expect(stops).toHaveLength(1);
+      expect(stops[0].textContent).toContain('21');
     });
   });
 });

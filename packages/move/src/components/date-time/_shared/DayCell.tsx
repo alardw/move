@@ -58,6 +58,7 @@ export const DayCell = React.memo(function DayCell({
     renderDayCell,
     focusedDate,
     setFocusedDate,
+    entryDate,
   } = ctx;
 
   const today = isToday(date);
@@ -66,7 +67,15 @@ export const DayCell = React.memo(function DayCell({
   const state = getDayState(date, mode, value);
   const isSelected = state !== 'default' && state !== 'in-range';
   const dayEvents = getEventsForDate(date);
-  const isFocused = focusedDate ? isSameDay(date, focusedDate) : false;
+  // Two different questions, deliberately not the same flag:
+  //  - isFocused: the user put focus here → the effect below moves DOM focus.
+  //  - isTabStop: which single cell Tab enters the grid at. Falls back to the
+  //    derived entry day so the grid is reachable before anything is focused.
+  // The `!outside` guard keeps the tab stop unique when a date is repeated as
+  // an outside-month cell in an adjacent grid.
+  const isFocused = focusedDate ? isSameDay(date, focusedDate) && !outside : false;
+  const tabStopDate = focusedDate ?? entryDate;
+  const isTabStop = tabStopDate ? isSameDay(date, tabStopDate) && !outside : false;
 
   const cellRef = React.useRef<HTMLButtonElement | null>(null);
 
@@ -111,7 +120,7 @@ export const DayCell = React.memo(function DayCell({
         ref={cellRef}
         type="button"
         role="gridcell"
-        tabIndex={isFocused ? 0 : -1}
+        tabIndex={isTabStop ? 0 : -1}
         aria-selected={isSelected}
         aria-disabled={disabled}
         data-state={state}
@@ -142,7 +151,7 @@ export const DayCell = React.memo(function DayCell({
       ref={cellRef}
       type="button"
       role="gridcell"
-      tabIndex={isFocused ? 0 : -1}
+      tabIndex={isTabStop ? 0 : -1}
       aria-selected={isSelected}
       aria-disabled={disabled}
       aria-label={date.toLocaleDateString()}

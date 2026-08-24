@@ -14,6 +14,7 @@ import {
   useDismissableExit,
 } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
+import { useFieldGroup } from '../../forms/FormField/FormField';
 import type { AnimationTrigger } from '../../../animation';
 import { useTimeField } from './useTimeField';
 import type { UseTimeFieldReturn, SegmentType, TimeFieldGranularity } from './useTimeField';
@@ -241,9 +242,17 @@ const TimeFieldRoot: React.FC<TimeFieldRootProps> = ({
     </>
   );
 
+  // The segments are separate role="spinbutton" inputs, each already named
+  // "Hour"/"Minute" — there is no one element a `<label for>` could point at, so
+  // a FormField's label named nothing. The wrapper becomes the named group and
+  // the segments keep their own names inside it.
+  const groupProps = useFieldGroup(undefined, { invalid });
+
   const rootEl = (
     <div
       ref={anchorRef}
+      role="group"
+      {...groupProps}
       className={`${styles.root} ${className ?? ''}`}
       style={style}
       data-size={size}
@@ -690,6 +699,13 @@ const TimeFieldDropdownColumn = withMoveComponent<
                 key={item}
                 type="button"
                 className={styles.dropdownItem}
+                // `pointer-panel`: the segments are fully keyboard-operable on
+                // their own (arrows + digits), and focus stays on them while
+                // this panel is open. Left tabbable, these buttons were
+                // reachable only by tabbing through the whole document and
+                // wrapping around into a panel the keyboard cannot otherwise
+                // use — so they are pointer affordances, out of the tab order.
+                tabIndex={-1}
                 data-selected={item === selectedValue ? '' : undefined}
                 onClick={() => handleItemClick(item)}
               >
