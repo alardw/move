@@ -1,5 +1,5 @@
 // Generated from Popover.spec.ts
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import { Popover } from './Popover';
@@ -281,6 +281,30 @@ describe('Popover', () => {
         expect(screen.getByText('Popover panel content')).toBeInTheDocument();
         expect(screen.getByTestId('close')).toBeInTheDocument();
       });
+    });
+  });
+
+  // === Close on scroll (opt-in) ===
+  describe('closeOnScroll', () => {
+    it('stays open when the popover body itself scrolls', async () => {
+      renderPopover({ defaultOpen: true, closeOnScroll: true });
+      const content = await screen.findByTestId('content');
+      fireEvent.scroll(content);
+      expect(screen.getByTestId('content')).toBeInTheDocument();
+    });
+
+    it('closes when an ancestor scrolls', async () => {
+      renderPopover({ defaultOpen: true, closeOnScroll: true });
+      await screen.findByTestId('content');
+      fireEvent.scroll(document);
+      await waitFor(() => expect(screen.queryByTestId('content')).not.toBeInTheDocument());
+    });
+
+    it('ignores ancestor scroll when closeOnScroll is off (default)', async () => {
+      renderPopover({ defaultOpen: true });
+      await screen.findByTestId('content');
+      fireEvent.scroll(document);
+      expect(screen.getByTestId('content')).toBeInTheDocument();
     });
   });
 });

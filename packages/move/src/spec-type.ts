@@ -84,6 +84,108 @@ export type FocusPattern =
   | 'none' // No focus management
   | null;
 
+/**
+ * How an anchored popup handles focus — the closed set of mechanisms Move
+ * supports. Picking one FIXES where focus goes on open and on close (see
+ * `POPUP_FOCUS_BY_MECHANISM`), so a spec cannot declare a focus contract its
+ * implementation does not honour. A popup that fits none of these is a design
+ * decision, not a spec detail: add a mechanism here first, with its runtime
+ * support in `usePopupFocus`, so the gate can enforce it.
+ */
+export type PopupMechanism =
+  // A text field anchors a panel of real controls. Focus ENTERS the panel on
+  // open; Escape returns it to the field. (ColorInput, DatePicker, TimeField)
+  | 'field-dialog'
+  // A text field anchors a list and KEEPS focus — the list is navigated with
+  // virtual focus (aria-activedescendant). APG combobox. (Autocomplete)
+  | 'field-listbox'
+  // A button opens a surface. Focus ENTERS it; Escape returns to the trigger.
+  // (Select, Dropdown, Popover)
+  | 'trigger-surface'
+  // A panel mirroring a field that is already fully keyboard-operable on its
+  // own (a spinbutton edited with arrows and digits). Focus STAYS on the field
+  // — moving it into the panel would take the arrow keys away from the thing
+  // they edit — so the panel is a pointer affordance and is kept out of the
+  // tab order entirely rather than left reachable by tab wrap-around.
+  // (TimeField)
+  | 'pointer-panel'
+  // Open/close/focus owned by an underlying primitive; never takes focus.
+  // (Tooltip)
+  | 'delegated';
+
+/** Where focus sits after open, and where it returns on close. */
+export interface PopupFocusContract {
+  /** 'popup' — focus enters the content. 'field' — it stays on the field. */
+  focusOnOpen: 'popup' | 'field';
+  /** Element focus returns to when the popup closes. */
+  focusOnClose: 'field' | 'trigger' | 'none';
+  /**
+   * Whether focus reaching anything outside the popup and its anchor dismisses
+   * it. Follows from whether the popup took focus in the first place: one that
+   * holds focus is finished with when focus goes elsewhere, while one that
+   * never had it (the field kept it) cannot read focus movement that way.
+   */
+  dismissOnFocusLeave: boolean;
+}
+
+/**
+ * The single source for what each mechanism means. Specs declare only the
+ * mechanism; `check:keyboard-entry` reads the contract from here and asserts
+ * the running component against it. Restating these values in a spec is a type
+ * error (see `PopupBehavior`) — a restated value is a value that can drift.
+ */
+export const POPUP_FOCUS_BY_MECHANISM: Record<PopupMechanism, PopupFocusContract> = {
+  'field-dialog': { focusOnOpen: 'popup', focusOnClose: 'field', dismissOnFocusLeave: true },
+  'field-listbox': { focusOnOpen: 'field', focusOnClose: 'field', dismissOnFocusLeave: false },
+  'trigger-surface': {
+    focusOnOpen: 'popup',
+    focusOnClose: 'trigger',
+    // false, and this records what these popups DO rather than an aspiration.
+    // They delegate open/close to Radix, whose FocusScope loops Tab back into
+    // the surface, so focus does not wander out to the page the way it did from
+    // a field-anchored panel — Escape and an outside pointer are the dismiss
+    // routes. Changing this means changing Select, Dropdown and Popover, not
+    // just this line.
+    dismissOnFocusLeave: false,
+  },
+  // Focus never leaves the field, so there is nothing to return on close and
+  // nothing to read a departure from.
+  'pointer-panel': { focusOnOpen: 'field', focusOnClose: 'none', dismissOnFocusLeave: false },
+  delegated: { focusOnOpen: 'field', focusOnClose: 'none', dismissOnFocusLeave: false },
+};
+
+/** Keyboard-entry contract for an anchored popup. */
+export interface PopupKeyboardContract {
+  /** Keys pressed on the field/trigger that MUST open the popup. */
+  openKeys: string[];
+  /** Whether a plain tab stop can open it without a shortcut key. */
+  tabbableTrigger: boolean;
+  /** Derived from `mechanism` — declaring them here is a type error. */
+  focusOnOpen?: never;
+  focusOnClose?: never;
+  dismissOnFocusLeave?: never;
+}
+
+/** `behavior.popup` — the anchored-popup contract, enforced at runtime. */
+export interface PopupBehavior {
+  /** Which focus mechanism this popup uses. Fixes the focus contract. */
+  mechanism: PopupMechanism;
+  keyboard?: PopupKeyboardContract;
+  /** Set when open/close is owned by an underlying primitive. */
+  dismiss?: 'delegated';
+  /** Derived from `mechanism`; declaring it here is a type error. It lived here
+   *  as a free-form flag that nothing read — a declaration that cannot be wrong
+   *  because nothing consults it is the exact fiction this type exists to stop. */
+  closeOnFocusLeave?: never;
+  closeOnEscape?: boolean;
+  closeOnOutsideClick?: boolean;
+  closeOnScroll?: boolean;
+  closeOnResize?: boolean;
+  /** Whether a scroll INSIDE the popup dismisses it. It moves with its anchor,
+   *  so it is not a viewport change — 'outside' is the correct scope. */
+  closeOnScrollScope?: 'outside' | 'any';
+}
+
 /** Form integration type */
 export type FormType =
   | 'native-name' // Standard <input name="...">
@@ -513,8 +615,10 @@ export interface ComponentSpec {
 
   // --- Behavior ---
 
-  /** Component-specific behavior config (modal/dismiss/…); shape varies per component */
-  behavior?: Record<string, unknown>;
+  /** Component-specific behavior config (modal/dismiss/…); shape varies per
+   *  component, except `popup`, which is typed so the focus contract cannot
+   *  drift from what `usePopupFocus` actually does. */
+  behavior?: { popup?: PopupBehavior } & Record<string, unknown>;
 
   /** Controlled state pattern */
   controlled: ControlledPattern;

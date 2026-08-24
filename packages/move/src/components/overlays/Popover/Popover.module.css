@@ -4,99 +4,109 @@
  * Content lives in a portal, so it declares all tokens it consumes.
  */
 
-.trigger {
-  cursor: pointer;
-}
+/* Popover's own styles live in the `move.base` cascade layer, for the same
+ * reason Button's do: components compose it and override slots through `sp`
+ * (PlayerSettingsMenu restyles `contentInner` into a dark YouTube-style menu).
+ * An `sp` className is just another class at equal specificity, so which one
+ * won came down to bundler source order — which is why that override carried
+ * `!important`. Layered, the sp class wins deterministically, and a consumer's
+ * own class still beats both.
+ */
+@layer move.base {
+  .trigger {
+    cursor: pointer;
+  }
 
-.anchor {
-  display: inline-block;
-}
+  .anchor {
+    display: inline-block;
+  }
 
-/* Two layers: `.content` is the Radix-positioned shell — Radix owns its
-   `transform: translate(x,y)` and re-applies it on scroll, so this layer never
-   carries a transform animation. `.contentInner` is the visible box: it owns the
-   scale entrance AND the scroll region. Tokens live on the shell so the inner box
-   and any descendants resolve them. */
-.content {
-  /* Component tokens -- content */
-  --move-popover-content-bg: var(--move-surface-bg);
-  --move-popover-content-border: var(--move-border-base);
-  --move-popover-content-radius: var(--move-rounded-lg);
-  --move-popover-content-shadow: var(--move-shadow-overlay);
-  --move-popover-content-padding: var(--move-spacing-md);
-  --move-popover-content-min-width: 12rem;
-  --move-popover-content-max-width: 24rem;
-  /* Cap to the space Radix measured between trigger and viewport edge, so long
-     content scrolls internally instead of overflowing off-screen. */
-  --move-popover-content-max-height: var(--radix-popover-content-available-height, 28rem);
+  /* Two layers: `.content` is the Radix-positioned shell — Radix owns its
+     `transform: translate(x,y)` and re-applies it on scroll, so this layer never
+     carries a transform animation. `.contentInner` is the visible box: it owns the
+     scale entrance AND the scroll region. Tokens live on the shell so the inner box
+     and any descendants resolve them. */
+  .content {
+    /* Component tokens -- content */
+    --move-popover-content-bg: var(--move-surface-bg);
+    --move-popover-content-border: var(--move-border-base);
+    --move-popover-content-radius: var(--move-rounded-lg);
+    --move-popover-content-shadow: var(--move-shadow-overlay);
+    --move-popover-content-padding: var(--move-spacing-md);
+    --move-popover-content-min-width: 12rem;
+    --move-popover-content-max-width: 24rem;
+    /* Cap to the space Radix measured between trigger and viewport edge, so long
+       content scrolls internally instead of overflowing off-screen. */
+    --move-popover-content-max-height: var(--radix-popover-content-available-height, 28rem);
 
-  /* Positioned shell only — Radix owns the transform; this layer stacks. */
-  z-index: var(--move-layer-popover);
-}
+    /* Positioned shell only — Radix owns the transform; this layer stacks. */
+    z-index: var(--move-layer-popover);
+  }
 
-.contentInner {
-  /* Scale animates here (origin from Radix' var); overflow-y + max-height let
-     long content (e.g. a list) scroll internally without closing the popover. */
-  min-width: var(--move-popover-content-min-width);
-  max-width: var(--move-popover-content-max-width);
-  max-height: var(--move-popover-content-max-height);
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: var(--move-popover-content-bg);
-  border: 1px solid var(--move-popover-content-border);
-  border-radius: var(--move-popover-content-radius);
-  box-shadow: var(--move-popover-content-shadow);
-  padding: var(--move-popover-content-padding);
-  font-family: var(--move-font-body);
-  font-size: var(--move-size-sm);
-  color: var(--move-fg-base);
-  line-height: 1.5;
-  transform-origin: var(--radix-popover-content-transform-origin);
-  will-change: transform, opacity;
-  scrollbar-width: thin;
-  scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
-}
+  .contentInner {
+    /* Scale animates here (origin from Radix' var); overflow-y + max-height let
+       long content (e.g. a list) scroll internally without closing the popover. */
+    min-width: var(--move-popover-content-min-width);
+    max-width: var(--move-popover-content-max-width);
+    max-height: var(--move-popover-content-max-height);
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--move-popover-content-bg);
+    border: 1px solid var(--move-popover-content-border);
+    border-radius: var(--move-popover-content-radius);
+    box-shadow: var(--move-popover-content-shadow);
+    padding: var(--move-popover-content-padding);
+    font-family: var(--move-font-body);
+    font-size: var(--move-size-sm);
+    color: var(--move-fg-base);
+    line-height: 1.5;
+    transform-origin: var(--radix-popover-content-transform-origin);
+    will-change: transform, opacity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
+  }
 
-.content:focus,
-.contentInner:focus {
-  outline: none;
-}
+  .content:focus,
+  .contentInner:focus {
+    outline: none;
+  }
 
-.arrow {
-  fill: var(--move-popover-content-bg);
-}
+  .arrow {
+    fill: var(--move-popover-content-bg);
+  }
 
-.close {
-  /* Component tokens -- close */
-  --move-popover-close-size: 24px;
-  --move-popover-close-radius: var(--move-rounded-sm);
-  --move-popover-close-fg: var(--move-fg-muted);
-  --move-popover-close-fg-hover: var(--move-fg-base);
-  --move-popover-close-bg-hover: var(--move-surface-hover);
+  .close {
+    /* Component tokens -- close */
+    --move-popover-close-size: 24px;
+    --move-popover-close-radius: var(--move-rounded-sm);
+    --move-popover-close-fg: var(--move-fg-muted);
+    --move-popover-close-fg-hover: var(--move-fg-base);
+    --move-popover-close-bg-hover: var(--move-surface-hover);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: var(--move-popover-close-size);
-  height: var(--move-popover-close-size);
-  padding: 0;
-  background: transparent;
-  border: none;
-  border-radius: var(--move-popover-close-radius);
-  color: var(--move-popover-close-fg);
-  cursor: pointer;
-  transition:
-    background-color var(--move-transition-fast) var(--move-ease-default),
-    color var(--move-transition-fast) var(--move-ease-default);
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: var(--move-popover-close-size);
+    height: var(--move-popover-close-size);
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-radius: var(--move-popover-close-radius);
+    color: var(--move-popover-close-fg);
+    cursor: pointer;
+    transition:
+      background-color var(--move-transition-fast) var(--move-ease-default),
+      color var(--move-transition-fast) var(--move-ease-default);
+  }
 
-.close:hover {
-  background-color: var(--move-popover-close-bg-hover);
-  color: var(--move-popover-close-fg-hover);
-}
+  .close:hover {
+    background-color: var(--move-popover-close-bg-hover);
+    color: var(--move-popover-close-fg-hover);
+  }
 
-.close:focus-visible:not(:active) {
-  outline: var(--move-focus-ring);
-  outline-offset: var(--move-focus-ring-offset);
+  .close:focus-visible:not(:active) {
+    outline: var(--move-focus-ring);
+    outline-offset: var(--move-focus-ring-offset);
+  }
 }

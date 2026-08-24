@@ -24,6 +24,8 @@ export const spec = {
       // own closeOn* mechanism isn't the one driving it, so the flags read false
       // — but that's correct-by-design, not a gap. `dismiss: 'delegated'` tells
       // the family check to treat it as conformant, not a limitation.
+      // A tooltip never takes focus, so the focus contract is 'delegated' too.
+      mechanism: 'delegated' as const,
       dismiss: 'delegated',
       closeOnEscape: false,
       closeOnOutsideClick: false,

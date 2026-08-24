@@ -14,6 +14,8 @@ export { useMergedRef } from './useMergedRef';
 // Headless utilities
 export { useControlledState } from './useControlledState';
 export type { UseControlledStateOptions } from './useControlledState';
+export { usePopupFocus } from './usePopupFocus';
+export type { UsePopupFocusOptions, PopupFocusHandlers } from './usePopupFocus';
 
 // Types
 export type {

@@ -19,10 +19,22 @@ export const spec = {
   },
   behavior: {
     popup: {
+      // A button trigger opening a menu: Radix moves focus to the first item
+      // and returns it to the trigger on close. The mechanism FIXES that
+      // contract (POPUP_FOCUS_BY_MECHANISM).
+      mechanism: 'trigger-surface' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // Radix DropdownMenu moves focus to the first menu item.
+      keyboard: {
+        openKeys: ['Enter', ' ', 'ArrowDown'],
+        tabbableTrigger: true,
+      },
     },
   },
 

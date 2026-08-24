@@ -294,10 +294,21 @@ const PopoverContent = withMoveComponent<
     // Radix' positioning transform free), so the popup follows instead of hanging.
     React.useEffect(() => {
       if (!closeOnScroll) return;
-      const el = contentRef.current;
-      if (!el) return;
 
-      const handler = () => close();
+      const handler = (e: Event) => {
+        // Resolve the content at EVENT time, not attach time: this component
+        // stays mounted while the popover is closed, so the ref is still null
+        // when the effect first runs (the portal renders nothing) — reading it
+        // here left the listener permanently unattached.
+        const el = contentRef.current;
+        if (!el) return; // closed — nothing to dismiss
+        // Scrolling *within* the popover moves the content with its anchor, so
+        // it is not an ancestor scroll — closing on it would dismiss the
+        // popover the moment the user wheels over its own body.
+        const target = e.target;
+        if (target instanceof Node && el.contains(target)) return;
+        close();
+      };
 
       // Listen on all scrollable ancestors (capture on window catches them all)
       window.addEventListener('scroll', handler, true);

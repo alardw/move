@@ -19,10 +19,26 @@ export const spec = {
   },
   behavior: {
     popup: {
+      // A button trigger opening arbitrary content: focus enters it and
+      // returns to the trigger on close. The mechanism FIXES that contract
+      // (POPUP_FOCUS_BY_MECHANISM).
+      mechanism: 'trigger-surface' as const,
       closeOnEscape: true,
       closeOnOutsideClick: true,
       closeOnScroll: true,
       closeOnResize: true,
+      // Keyboard entry contract — enforced at RUNTIME by check:keyboard-entry,
+      // which presses these keys and asserts where focus lands. Declaring it is
+      // what stops a popup shipping unreachable by keyboard.
+      // Radix Popover moves focus into the content.
+      keyboard: {
+        openKeys: ['Enter', ' '],
+        tabbableTrigger: true,
+      },
+      // Scope of closeOnScroll (opt-in on this component). A scroll INSIDE the
+      // popup moves the content along with its anchor, so it is not a viewport
+      // change and must not dismiss. Only scrolls outside the popup close it.
+      closeOnScrollScope: 'outside' as const,
     },
   },
 
@@ -102,7 +118,8 @@ export const spec = {
           type: 'boolean',
           default: 'false',
           moveSpecific: true,
-          description: 'Close the popover when an ancestor element scrolls',
+          description:
+            'Close the popover when an ancestor element scrolls. Scrolling inside the popover content keeps it open',
         },
         {
           name: 'modal',
@@ -376,6 +393,11 @@ export const spec = {
 
   renderContracts: [
     {
+      id: 'close-on-scroll-outside-only',
+      description:
+        'With closeOnScroll enabled, the listener ignores scroll events originating inside the popover content, so scrolling the popover body keeps it open',
+    },
+    {
       id: 'animation-context',
       description:
         'Root provides PopoverContext with isClosing, close(), onCloseComplete, animation config, and closeOnScroll to all sub-components',
@@ -502,6 +524,8 @@ export const spec = {
 
   testing: {
     behaviors: [
+      'closeOnScroll: scrolling inside the popover content keeps it open',
+      'closeOnScroll: scrolling outside the popover closes it',
       'Root manages open/close state with controlled and uncontrolled patterns',
       'Root keeps popover mounted during exit animation (open || isClosing)',
       'Root ignores Radix onOpenChange(false) — closing is driven by close()',
