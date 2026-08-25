@@ -10,7 +10,7 @@ export const spec = {
   category: 'data-display',
   choreographies: ['listReveal'],
   description:
-    'Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar.',
+    'Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar, on a category or linear x.',
   families: {
     behavior: ['display'],
     state: ['stateless'],
@@ -159,6 +159,14 @@ export const spec = {
       default: 'false',
       moveSpecific: true,
       description: 'Mark each data point on line and area series.',
+    },
+    {
+      name: 'xScale',
+      type: "'category' | 'linear'",
+      default: "'category'",
+      moveSpecific: true,
+      description:
+        'How x positions are derived. `category` spaces rows evenly by index; `linear` places each at its own numeric x, which is what unevenly sampled or time-series data needs — a category axis would draw equal gaps between unequal intervals. Timestamps are numbers: pass epoch milliseconds and a `formatX`. Falls back to `category` if any x value is not finite.',
     },
     {
       name: 'curve',

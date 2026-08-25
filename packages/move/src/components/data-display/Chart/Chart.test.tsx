@@ -252,3 +252,100 @@ describe('Chart', () => {
     });
   });
 });
+
+describe('Chart — x scale', () => {
+  const uneven = [
+    { at: 0, v: 1 },
+    { at: 1, v: 2 },
+    { at: 10, v: 3 },
+  ];
+
+  const capture = () => {
+    const seen: { spec: ChartRendererProps['spec'] }[] = [];
+    const renderer: ChartRenderer = (p) => {
+      seen.push({ spec: p.spec });
+      return null;
+    };
+    return { seen, renderer };
+  };
+
+  it('defaults to a category scale', () => {
+    const { seen, renderer } = capture();
+    render(
+      <Chart
+        caption="R"
+        data={uneven}
+        x="at"
+        series={[{ key: 'v', type: 'line' }]}
+        renderer={renderer}
+      />,
+    );
+    expect(seen[0].spec.xScale).toBe('category');
+  });
+
+  it('passes a linear scale through to the renderer', () => {
+    const { seen, renderer } = capture();
+    render(
+      <Chart
+        caption="R"
+        data={uneven}
+        x="at"
+        xScale="linear"
+        series={[{ key: 'v', type: 'line' }]}
+        renderer={renderer}
+      />,
+    );
+    expect(seen[0].spec.xScale).toBe('linear');
+  });
+
+  it('a category axis spaces rows evenly, however uneven the values', () => {
+    const { container } = render(
+      <Chart caption="R" data={uneven} x="at" dots series={[{ key: 'v', type: 'line' }]} />,
+    );
+    const xs = [...container.querySelectorAll('[data-dot]')].map((c) =>
+      Number(c.getAttribute('cx')),
+    );
+    expect(xs[1] - xs[0]).toBeCloseTo(xs[2] - xs[1], 1);
+  });
+
+  it('a linear axis places each row at its own value', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={uneven}
+        x="at"
+        xScale="linear"
+        dots
+        series={[{ key: 'v', type: 'line' }]}
+      />,
+    );
+    const xs = [...container.querySelectorAll('[data-dot]')].map((c) =>
+      Number(c.getAttribute('cx')),
+    );
+    // 0 -> 1 is a tenth of the span; 1 -> 10 is the rest.
+    expect(xs[2] - xs[1]).toBeGreaterThan((xs[1] - xs[0]) * 5);
+  });
+
+  it('falls back to even spacing when an x value is not numeric', () => {
+    const mixed = [
+      { at: 0, v: 1 },
+      { at: 'oops', v: 2 },
+      { at: 10, v: 3 },
+    ];
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={mixed}
+        x="at"
+        xScale="linear"
+        dots
+        series={[{ key: 'v', type: 'line' }]}
+      />,
+    );
+    const xs = [...container.querySelectorAll('[data-dot]')].map((c) =>
+      Number(c.getAttribute('cx')),
+    );
+    expect(xs.every((v) => Number.isFinite(v))).toBe(true);
+    expect(xs[1] - xs[0]).toBeCloseTo(xs[2] - xs[1], 1);
+  });
+});

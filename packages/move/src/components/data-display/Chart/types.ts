@@ -40,6 +40,16 @@ export type ChartGrid = 'none' | 'horizontal' | 'vertical' | 'both';
 export type ChartCurve = 'linear' | 'monotone' | 'step';
 
 /**
+ * How x positions are derived.
+ *
+ * `category` spaces rows evenly by index — right for months, regions, names.
+ * `linear` places each row at its own numeric x, so unevenly sampled data is
+ * drawn honestly instead of being straightened into equal spacing. Timestamps
+ * are just numbers: pass epoch milliseconds and a `formatX`.
+ */
+export type ChartXScale = 'category' | 'linear';
+
+/**
  * One series, as the CONSUMER declares it on `<Chart series={[...]} />`.
  * `color` is a Move color NAME; the shell resolves it to a value before any
  * renderer sees it.
@@ -92,6 +102,8 @@ export interface ChartSpec {
   dots: boolean;
   /** How line and area paths travel between points. */
   curve: ChartCurve;
+  /** How x positions are derived from the data. */
+  xScale: ChartXScale;
   /** Format an x tick label. */
   formatX?: (value: unknown) => string;
   /** Format a y tick label. */

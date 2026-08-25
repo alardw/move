@@ -25,6 +25,7 @@ import {
   type ChartRendererProps,
   type ChartCurve,
   type ChartSpec,
+  type ChartXScale,
   type ChartTheme,
   type PlotGeometry,
   type PlotRect,
@@ -235,6 +236,12 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
    * inventing peaks the data does not contain.
    */
   curve?: ChartCurve;
+  /**
+   * How x positions are derived. `category` spaces rows evenly by index;
+   * `linear` places each at its own numeric x, which is what unevenly sampled
+   * or time-series data needs — pass epoch milliseconds and a `formatX`.
+   */
+  xScale?: ChartXScale;
   /** Stack bar and area series instead of overlaying them. */
   stacked?: boolean;
   /** Width-to-height ratio for the plot. Ignored when `height` is set. */
@@ -545,6 +552,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     tooltip: true,
     dots: false,
     curve: 'linear' as ChartCurve,
+    xScale: 'category' as ChartXScale,
     stacked: false,
     aspect: 2,
     height: null,
@@ -696,6 +704,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           stacked: props.stacked as boolean,
           dots: props.dots as boolean,
           curve: props.curve as ChartCurve,
+          xScale: props.xScale as ChartXScale,
           formatX,
           formatY,
         };

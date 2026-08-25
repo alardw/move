@@ -495,7 +495,7 @@ Carousel.Indicator props:
 Example: <Carousel orientation="horizontal" align="start">…</Carousel>
 
 ## Chart (data-display)
-Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar.
+Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar, on a category or linear x.
 Props:
 - data: readonly Record<string, unknown>[] — Row-oriented source data. One object per x position.
 - x: string — Key in each row holding the x/category value.
@@ -510,6 +510,7 @@ Props:
 - legend: boolean (default: true) — Render the series legend below the plot.
 - tooltip: boolean (default: true) — Show every series' value at the hovered position. Rendered by the shell over the plot, so it looks and behaves the same for any renderer that reports its plot rect.
 - dots: boolean (default: false) — Mark each data point on line and area series.
+- xScale: 'category' | 'linear' (default: category) — How x positions are derived. `category` spaces rows evenly by index; `linear` places each at its own numeric x, which is what unevenly sampled or time-series data needs — a category axis would draw equal gaps between unequal intervals. Timestamps are numbers: pass epoch milliseconds and a `formatX`. Falls back to `category` if any x value is not finite.
 - curve: 'linear' | 'monotone' | 'step' (default: linear) — How line and area paths travel between points. `monotone` smooths without inventing peaks the data does not contain.
 - stacked: boolean (default: false) — Stack bar and area series sharing an axis instead of overlaying them.
 - aspect: number (default: 2) — Width-to-height ratio for the viewport. Ignored when `height` is set.
@@ -520,7 +521,7 @@ Props:
 - dataTable: boolean (default: true) — Render the visually hidden data table. Turn off only when an equivalent table is already on the page.
 - labels: Partial<ChartLabels> (default: null) — Override the built-in user-facing strings.
 - animations: AnimationTrigger[] | false (default: null) — Override or disable the series entrance animation.
-Example: <Chart grid="horizontal" curve="linear">…</Chart>
+Example: <Chart grid="horizontal" xScale="category">…</Chart>
 
 ## ChatBubble (data-display)
 Conversation bubble for chat UIs with avatar, placement, tail, and variant support

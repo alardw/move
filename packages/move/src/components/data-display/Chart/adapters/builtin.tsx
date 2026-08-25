@@ -17,7 +17,15 @@
 
 import * as React from 'react';
 import type { ChartRenderer, ResolvedChartSeries } from '../types';
-import { areaPath, bandScale, labelStride, linePath, niceDomain, niceTicks } from '../scales';
+import {
+  areaPath,
+  bandScale,
+  labelStride,
+  linePath,
+  linearScale,
+  niceDomain,
+  niceTicks,
+} from '../scales';
 
 const MARGIN = { top: 8, right: 8, bottom: 22, left: 46 } as const;
 const TICK_COUNT = 5;
@@ -50,7 +58,7 @@ function stackOffsets(
 export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onPlotGeometry }) => {
   // Namespaced so several charts on one page cannot collide on gradient ids.
   const uid = React.useId().replace(/:/g, '');
-  const { data, x, series, grid, stacked, dots, curve, formatX, formatY } = spec;
+  const { data, x, series, grid, stacked, dots, curve, xScale, formatX, formatY } = spec;
 
   const innerWidth = Math.max(0, width - MARGIN.left - MARGIN.right);
   const innerHeight = Math.max(0, height - MARGIN.top - MARGIN.bottom);
@@ -60,12 +68,20 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
   const pointCount = data.length;
   React.useEffect(() => {
     if (innerWidth <= 0 || pointCount === 0) return;
-    const band = bandScale(pointCount, [MARGIN.left, MARGIN.left + innerWidth], 0.2);
+    const scale = bandScale(pointCount, [MARGIN.left, MARGIN.left + innerWidth], 0.2);
+    const values = data.map((row) => Number(row[x]));
+    const useLinear = spec.xScale === 'linear' && values.every((v) => Number.isFinite(v));
+    const lin = useLinear
+      ? linearScale(
+          [Math.min(...values), Math.max(...values)],
+          [MARGIN.left, MARGIN.left + innerWidth],
+        )
+      : null;
     onPlotGeometry?.({
       rect: { x: MARGIN.left, y: MARGIN.top, width: innerWidth, height: innerHeight },
-      x: Array.from({ length: pointCount }, (_, i) => band.center(i)),
+      x: Array.from({ length: pointCount }, (_, i) => (lin ? lin(values[i]) : scale.center(i))),
     });
-  }, [onPlotGeometry, innerWidth, innerHeight, pointCount]);
+  }, [onPlotGeometry, innerWidth, innerHeight, pointCount, data, x, spec.xScale]);
 
   if (innerWidth <= 0 || innerHeight <= 0 || data.length === 0 || series.length === 0) return null;
 
@@ -92,6 +108,19 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
   const toY = (v: number) => MARGIN.top + innerHeight - ((v - d0) / (d1 - d0 || 1)) * innerHeight;
 
   const band = bandScale(data.length, [MARGIN.left, MARGIN.left + innerWidth], 0.2);
+
+  // A linear x only makes sense if every row actually carries a number; one
+  // non-numeric value and even spacing is the honest fallback.
+  const xNumbers = data.map((row) => Number(row[x]));
+  const linearX = xScale === 'linear' && xNumbers.every((v) => Number.isFinite(v));
+  const xLinearScale = linearX
+    ? linearScale(
+        [Math.min(...xNumbers), Math.max(...xNumbers)],
+        [MARGIN.left, MARGIN.left + innerWidth],
+      )
+    : null;
+  /** Where row `i` sits horizontally, whichever scale is in play. */
+  const xAt = (i: number) => (xLinearScale ? xLinearScale(xNumbers[i]) : band.center(i));
   const barSeries = series.filter((s) => s.type === 'bar');
   const groupCount = stacked ? 1 : Math.max(1, barSeries.length);
   const barWidth = band.bandwidth / groupCount;
@@ -134,32 +163,49 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
         ))}
       </g>
 
-      {/* x labels + optional vertical grid */}
+      {/* x labels + optional vertical grid.
+          A linear x labels TICK VALUES at their own positions; a category x
+          labels rows, thinned by stride so a dense axis stays readable. */}
       <g data-chart-part="axis-x">
-        {data.map((row, i) =>
-          i % stride === 0 ? (
-            <g key={i}>
-              {(grid === 'vertical' || grid === 'both') && (
-                <line
-                  x1={band.center(i)}
-                  x2={band.center(i)}
-                  y1={MARGIN.top}
-                  y2={MARGIN.top + innerHeight}
-                  stroke={theme.grid}
-                  strokeWidth={1}
-                />
-              )}
-              <text
-                x={band.center(i)}
-                y={MARGIN.top + innerHeight + 14}
-                textAnchor="middle"
-                style={textStyle}
-              >
-                {formatX ? formatX(row[x]) : String(row[x] ?? '')}
-              </text>
-            </g>
-          ) : null,
-        )}
+        {(linearX
+          ? niceTicks(Math.min(...xNumbers), Math.max(...xNumbers), MAX_X_LABELS - 2).map((t) => ({
+              key: `t${t}`,
+              at: xLinearScale!(t),
+              text: formatX ? formatX(t) : String(t),
+            }))
+          : data
+              .map((row, i) =>
+                i % stride === 0
+                  ? {
+                      key: `c${i}`,
+                      at: xAt(i),
+                      text: formatX ? formatX(row[x]) : String(row[x] ?? ''),
+                    }
+                  : null,
+              )
+              .filter((v): v is { key: string; at: number; text: string } => v !== null)
+        ).map((label) => (
+          <g key={label.key}>
+            {(grid === 'vertical' || grid === 'both') && (
+              <line
+                x1={label.at}
+                x2={label.at}
+                y1={MARGIN.top}
+                y2={MARGIN.top + innerHeight}
+                stroke={theme.grid}
+                strokeWidth={1}
+              />
+            )}
+            <text
+              x={label.at}
+              y={MARGIN.top + innerHeight + 14}
+              textAnchor="middle"
+              style={textStyle}
+            >
+              {label.text}
+            </text>
+          </g>
+        ))}
       </g>
 
       {/* Baseline */}
@@ -179,7 +225,7 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
           const v = valueAt(row, s.key);
           if (v === null) return;
           const base = stacked && s.type !== 'line' ? offsets[i][si] : 0;
-          points.push([band.center(i), toY(base + v)]);
+          points.push([xAt(i), toY(base + v)]);
         });
 
         if (s.type === 'bar') {

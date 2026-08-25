@@ -21,6 +21,10 @@ import CurveStep from './samples/curve-step';
 import curveStepCode from './samples/curve-step?raw';
 import Palette from './samples/palette';
 import paletteCode from './samples/palette?raw';
+import NumericX from './samples/numeric-x';
+import numericXCode from './samples/numeric-x?raw';
+import Sine from './samples/sine';
+import sineCode from './samples/sine?raw';
 import Dots from './samples/dots';
 import dotsCode from './samples/dots?raw';
 import NoTooltip from './samples/no-tooltip';
@@ -46,6 +50,8 @@ export const content: ComponentContent = {
     { id: 'curve-step', title: 'Interpolation — step', render: CurveStep, code: curveStepCode },
     { id: 'dots', title: 'Data points', render: Dots, code: dotsCode },
     { id: 'palette', title: 'Series palette', render: Palette, code: paletteCode },
+    { id: 'sine', title: 'A sampled function', render: Sine, code: sineCode },
+    { id: 'numeric-x', title: 'Numeric x scale', render: NumericX, code: numericXCode },
     { id: 'no-tooltip', title: 'Without a tooltip', render: NoTooltip, code: noTooltipCode },
     { id: 'accessible', title: 'Text alternative', render: Accessible, code: accessibleCode },
     { id: 'recharts', title: 'Drawn by Recharts', render: Recharts, code: rechartsCode },
