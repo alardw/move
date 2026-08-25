@@ -27,6 +27,7 @@ import {
   type ChartSpec,
   type ChartTheme,
   type PlotGeometry,
+  type PlotRect,
   type ResolvedChartSeries,
 } from './types';
 
@@ -88,6 +89,14 @@ const DRAW_MS = 900;
  */
 const SWEEP_MS = 1200;
 
+/**
+ * Ceiling on how long the pre-entrance state may hide the marks.
+ *
+ * Comfortably past the slowest entrance (a many-series sweep plus its stagger),
+ * so it only ever fires when something has genuinely gone wrong.
+ */
+const ENTER_TIMEOUT_MS = 4000;
+
 /** Total time the dot sequence should span, however many dots there are. */
 const DOT_SEQUENCE_MS = 700;
 
@@ -108,7 +117,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
         [
           {
             target: 'Plot',
-            children: '[data-series] rect',
+            children: '[data-bar]',
             stagger: { delay: 70, from: 'first' },
             animation: { scaleY: { from: 0, to: 1, ease: quick, duration: 480 } },
           },
@@ -116,7 +125,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
             // Draws the stroke on. Kebab-case KEY is deliberate: `staggerAnimate`
             // seeds the `from` state via `el.style.setProperty(key, …)`, which
             // needs a real CSS property name — `strokeDashoffset` no-ops silently.
-            target: 'PlotLines',
+            target: 'Plot',
             children: '[data-draw]',
             stagger: { delay: 140, from: 'first' },
             // ease + duration at the TOP level, not nested. staggerAnimate reads
@@ -135,7 +144,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
             // is at risk if this never runs — the line still carries the data.
             // Same duration, easing and stagger as the stroke draw, so the fill
             // edge tracks the line rather than trailing it.
-            target: 'PlotAreas',
+            target: 'Plot',
             children: '[data-sweep]',
             stagger: { delay: 140, from: 'first' },
             animation: { scaleX: { from: 0, to: 1 }, ease: 'outQuart', duration: SWEEP_MS },
@@ -148,7 +157,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
             // stagger index is global — the palette sample has 6 series x 8 points,
             // so 120ms per dot ran for nearly six seconds. The delay has to be
             // budgeted against the total dot count, not the points per series.
-            target: 'PlotDots',
+            target: 'Plot',
             children: '[data-dot]',
             stagger: { delay: dotDelay, from: 'first' },
             // KEYFRAMES, not a spring. `poppy` overshoots ~30%, but a dot is 3px
@@ -311,6 +320,220 @@ function deriveSummary(
   return `${parts.join('; ')}. ${data.length} points.`;
 }
 
+/** CSS owns the box: an explicit height, or an aspect ratio. */
+function sizingStyle(height: number | string | null | undefined, aspect: number | undefined) {
+  return height != null
+    ? ({ height: Number(height) } as React.CSSProperties)
+    : ({ aspectRatio: String(aspect || 2) } as React.CSSProperties);
+}
+
+/** Normalise the nullable formatter props to plain optionals. */
+function formatters(
+  formatX: ((value: unknown) => string) | null | undefined,
+  formatY: ((value: number) => string) | null | undefined,
+) {
+  return { formatX: formatX ?? undefined, formatY: formatY ?? undefined };
+}
+
+/**
+ * Hover is only possible once the renderer has reported a position per row —
+ * a renderer that never calls `onPlotGeometry` simply has no tooltip.
+ */
+function hoverable(
+  tooltip: boolean | undefined,
+  geometry: PlotGeometry | null,
+  rowCount: number,
+): boolean {
+  return tooltip !== false && geometry !== null && geometry.x.length === rowCount;
+}
+
+/**
+ * Index of the reported position closest to `localX`.
+ *
+ * Snapping to what the renderer actually reported means no assumption about how
+ * it distributed points — band, point, or uneven.
+ */
+function nearestIndex(positions: readonly number[], localX: number): number {
+  let best = 0;
+  let bestDistance = Infinity;
+  positions.forEach((px, i) => {
+    const distance = Math.abs(px - localX);
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/** Series key, rendered as DOM so it stays reachable behind a canvas renderer. */
+function Legend({ series }: { series: readonly ResolvedChartSeries[] }) {
+  if (series.length === 0) return null;
+  return (
+    <ul className={styles.legend}>
+      {series.map((s) => (
+        <li key={s.key} className={styles.legendItem}>
+          <span
+            className={styles.swatch}
+            style={{ background: s.color }}
+            data-dash={s.dash ? '' : undefined}
+          />
+          {s.label}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** Move's tokens, resolved to the concrete values a renderer can draw with. */
+function resolveChartTheme(
+  token: (name: string) => string,
+  size: ChartSize,
+  palette: readonly Color[] | null | undefined,
+  reducedMotion: boolean,
+): ChartTheme {
+  const background = token('--move-bg-base');
+  const ramp = palette ?? CHART_SERIES_COLORS;
+  return {
+    series: ramp.map((c) => resolveMarkColor(c as string, background, token(`--move-${c}-solid`))),
+    grid: token('--move-border-muted'),
+    axis: token('--move-border-base'),
+    tick: token('--move-fg-subtle'),
+    label: token('--move-fg-muted'),
+    font: token('--move-font-body'),
+    areaOpacity: AREA_OPACITY,
+    reducedMotion,
+    ...SIZE_SCALE[size],
+  };
+}
+
+/** Default the label and turn the colour NAME into a value, once, up front. */
+function resolveSeries(
+  series: readonly ChartSeries[],
+  ramp: readonly string[],
+  token: (name: string) => string,
+): ResolvedChartSeries[] {
+  const background = token('--move-bg-base');
+  return series.map((s, i) => ({
+    key: s.key,
+    type: s.type,
+    label: s.label ?? s.key,
+    color: s.color
+      ? resolveMarkColor(s.color as string, background, token(`--move-${s.color}-solid`))
+      : ramp[i % ramp.length],
+    dash: s.dash ?? false,
+  }));
+}
+
+/**
+ * Crosshair + tooltip over the plot.
+ *
+ * Shell-owned rather than renderer-owned, so it looks and behaves identically
+ * behind any adapter — including a canvas one, where there is no DOM to hover.
+ * The tooltip attaches to a zero-size anchor that moves to the hovered band,
+ * which is what lets Move's Tooltip do the positioning and gives it WCAG 1.4.13
+ * behaviour for free.
+ */
+function HoverOverlay({
+  x,
+  rect,
+  row,
+  xKey,
+  series,
+  formatX,
+  formatY,
+}: {
+  x: number;
+  rect: PlotRect;
+  row: ChartDatum;
+  xKey: string;
+  series: readonly ResolvedChartSeries[];
+  formatX?: (value: unknown) => string;
+  formatY?: (value: number) => string;
+}) {
+  return (
+    <>
+      <span className={styles.crosshair} style={{ left: x, top: rect.y, height: rect.height }} />
+      <Tooltip.Root open delayDuration={0}>
+        <Tooltip.Trigger asChild>
+          <span className={styles.anchor} style={{ left: x, top: rect.y }} aria-hidden="true" />
+        </Tooltip.Trigger>
+        <Tooltip.Content side="top" sideOffset={8}>
+          <span className={styles.tipHeading}>
+            {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
+          </span>
+          {series.map((s) => {
+            const v = numeric(row, s.key);
+            return (
+              <span key={s.key} className={styles.tipRow}>
+                <span className={styles.swatch} style={{ background: s.color }} />
+                {s.label}
+                <span className={styles.tipValue}>
+                  {v === null ? '—' : formatY ? formatY(v) : String(v)}
+                </span>
+              </span>
+            );
+          })}
+        </Tooltip.Content>
+      </Tooltip.Root>
+    </>
+  );
+}
+
+/**
+ * The visually hidden data table — the plot's long text alternative.
+ *
+ * Built from `data` + `series` rather than from anything the renderer drew, so
+ * every renderer inherits the same table. Lives here rather than inline in
+ * `render()` purely to keep that function's complexity in range.
+ */
+function DataTable({
+  id,
+  data,
+  x,
+  series,
+  labels,
+  formatX,
+  formatY,
+}: {
+  id: string;
+  data: readonly ChartDatum[];
+  x: string;
+  series: readonly ResolvedChartSeries[];
+  labels: ChartLabels;
+  formatX?: (value: unknown) => string;
+  formatY?: (value: number) => string;
+}) {
+  return (
+    <div id={id} className={styles.description}>
+      <table>
+        <caption>{labels.dataTable}</caption>
+        <thead>
+          <tr>
+            <th scope="col">{labels.categoryColumn}</th>
+            {series.map((s) => (
+              <th key={s.key} scope="col">
+                {s.label}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row, i) => (
+            <tr key={i}>
+              <th scope="row">{formatX ? formatX(row[x]) : String(row[x] ?? '')}</th>
+              {series.map((s) => {
+                const v = numeric(row, s.key);
+                return <td key={s.key}>{v === null ? '' : formatY ? formatY(v) : String(v)}</td>;
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
   name: 'Chart',
   styles,
@@ -334,7 +557,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     summary: null,
     renderer: null,
   },
-  moveProps: ['data', 'x', 'series', 'caption'],
+  moveProps: ['data', 'x', 'series', 'caption', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const viewportRef = React.useRef<HTMLDivElement>(null);
@@ -396,6 +619,17 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // finished plot painted once first — that was the "line is there, then it
     // animates in" flash.
     const plotReady = width > 0 && height > 0 && inView;
+    // Fail-open bound. `data-enter="pending"` hides the marks until the entrance
+    // reports completion, so a callback that never arrives — an interrupted or
+    // failed animation — would leave the chart blank. Lift the pre-entrance
+    // state unconditionally once the longest possible entrance has had time to
+    // run. A chart must never be able to hide its own data.
+    React.useEffect(() => {
+      if (!plotReady || entered) return;
+      const timer = setTimeout(() => setEntered(true), ENTER_TIMEOUT_MS);
+      return () => clearTimeout(timer);
+    }, [plotReady, entered]);
+
     // Only line and area series render dots, so that is what the stagger spans.
     const dotCount = props.dots
       ? props.data.length * props.series.filter((x) => x.type !== 'bar').length
@@ -419,15 +653,10 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // Memoised because the refs object is also an effect dependency whose
     // cleanup cancels in-flight animations; a new identity each render tears
     // the stagger down mid-flight.
-    const animRefs = React.useMemo(
-      () => ({
-        Plot: plotRef,
-        PlotLines: plotRef,
-        PlotAreas: plotRef,
-        PlotDots: plotRef,
-      }),
-      [],
-    );
+    // Memoised: the refs object is an effect dependency in `useAnimations`, and
+    // that effect's cleanup cancels in-flight animations — a fresh identity each
+    // render tears the stagger down mid-flight.
+    const animRefs = React.useMemo(() => ({ Plot: plotRef }), []);
     useAnimations(animConfig, animRefs);
 
     const captionId = React.useId();
@@ -454,36 +683,10 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         // not apply, or the chart would render permanently blank.
         const willAnimate = props.animations !== false && !reducedMotion && !entered;
 
-        const background = token('--move-bg-base');
-        const ramp = (props.palette ?? CHART_SERIES_COLORS) as readonly Color[];
-        const rampValues = ramp.map((c) =>
-          resolveMarkColor(c as string, background, token(`--move-${c}-solid`)),
-        );
+        const chartTheme = resolveChartTheme(token, size, props.palette, reducedMotion);
+        const resolved = resolveSeries(props.series, chartTheme.series, token);
 
-        const chartTheme: ChartTheme = {
-          series: rampValues,
-          grid: token('--move-border-muted'),
-          axis: token('--move-border-base'),
-          tick: token('--move-fg-subtle'),
-          label: token('--move-fg-muted'),
-          font: token('--move-font-body'),
-          areaOpacity: AREA_OPACITY,
-          reducedMotion,
-          ...SIZE_SCALE[size],
-        };
-
-        const resolved: ResolvedChartSeries[] = props.series.map((s, i) => ({
-          key: s.key,
-          type: s.type,
-          label: s.label ?? s.key,
-          color: s.color
-            ? resolveMarkColor(s.color as string, background, token(`--move-${s.color}-solid`))
-            : rampValues[i % rampValues.length],
-          dash: s.dash ?? false,
-        }));
-
-        const formatX = props.formatX ?? undefined;
-        const formatY = props.formatY ?? undefined;
+        const { formatX, formatY } = formatters(props.formatX, props.formatY);
 
         const chartSpec: ChartSpec = {
           data: props.data,
@@ -497,12 +700,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           formatY,
         };
 
-        // CSS owns the box: an explicit height, or an aspect ratio. The renderer
-        // is handed what was actually measured, never a value derived here.
-        const sizing: React.CSSProperties =
-          props.height != null
-            ? { height: Number(props.height) }
-            : { aspectRatio: String(props.aspect || 2) };
+        const sizing = sizingStyle(props.height, props.aspect);
         // Rendered as a component, never called as a function: a renderer may
         // use hooks, and the plot mounts and unmounts cleanly.
         const Renderer = (props.renderer ??
@@ -511,23 +709,12 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         // Snap to the nearest position the renderer actually reported. No
         // assumption about band vs point scaling, and it works the same over an
         // SVG renderer, a canvas one, or anything else.
-        const canHover =
-          props.tooltip !== false && geometry !== null && geometry.x.length === props.data.length;
+        const canHover = hoverable(props.tooltip, geometry, props.data.length);
 
         const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
           if (!canHover || !geometry) return;
           const bounds = event.currentTarget.getBoundingClientRect();
-          const localX = event.clientX - bounds.left;
-          let best = 0;
-          let bestDistance = Infinity;
-          geometry.x.forEach((px, i) => {
-            const distance = Math.abs(px - localX);
-            if (distance < bestDistance) {
-              bestDistance = distance;
-              best = i;
-            }
-          });
-          setHovered(best);
+          setHovered(nearestIndex(geometry.x, event.clientX - bounds.left));
         };
 
         const hoveredRow = hovered !== null ? props.data[hovered] : null;
@@ -581,89 +768,30 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
               </div>
 
               {canHover && hoveredRow && geometry && (
-                <>
-                  <span
-                    className={styles.crosshair}
-                    style={{ left: anchorLeft, top: geometry.rect.y, height: geometry.rect.height }}
-                  />
-                  <Tooltip.Root open delayDuration={0}>
-                    <Tooltip.Trigger asChild>
-                      <span
-                        className={styles.anchor}
-                        style={{ left: anchorLeft, top: geometry.rect.y }}
-                        aria-hidden="true"
-                      />
-                    </Tooltip.Trigger>
-                    <Tooltip.Content side="top" sideOffset={8}>
-                      <span className={styles.tipHeading}>
-                        {formatX ? formatX(hoveredRow[props.x]) : String(hoveredRow[props.x] ?? '')}
-                      </span>
-                      {resolved.map((s) => {
-                        const v = numeric(hoveredRow, s.key);
-                        return (
-                          <span key={s.key} className={styles.tipRow}>
-                            <span className={styles.swatch} style={{ background: s.color }} />
-                            {s.label}
-                            <span className={styles.tipValue}>
-                              {v === null ? '—' : formatY ? formatY(v) : String(v)}
-                            </span>
-                          </span>
-                        );
-                      })}
-                    </Tooltip.Content>
-                  </Tooltip.Root>
-                </>
+                <HoverOverlay
+                  x={anchorLeft}
+                  rect={geometry.rect}
+                  row={hoveredRow}
+                  xKey={props.x}
+                  series={resolved}
+                  formatX={formatX}
+                  formatY={formatY}
+                />
               )}
             </div>
 
-            {props.legend !== false && resolved.length > 0 && (
-              <ul className={styles.legend}>
-                {resolved.map((s) => (
-                  <li key={s.key} className={styles.legendItem}>
-                    <span
-                      className={styles.swatch}
-                      style={{ background: s.color }}
-                      data-dash={s.dash ? '' : undefined}
-                    />
-                    {s.label}
-                  </li>
-                ))}
-              </ul>
-            )}
+            {props.legend !== false && <Legend series={resolved} />}
 
             {showTable && (
-              <div id={tableId} className={styles.description}>
-                <table>
-                  <caption>{labels.dataTable}</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">{labels.categoryColumn}</th>
-                      {resolved.map((s) => (
-                        <th key={s.key} scope="col">
-                          {s.label}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {props.data.map((row, i) => (
-                      <tr key={i}>
-                        <th scope="row">
-                          {formatX ? formatX(row[props.x]) : String(row[props.x] ?? '')}
-                        </th>
-                        {resolved.map((s) => {
-                          const v = numeric(row, s.key);
-                          return (
-                            <td key={s.key}>
-                              {v === null ? '' : formatY ? formatY(v) : String(v)}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                id={tableId}
+                data={props.data}
+                x={props.x}
+                series={resolved}
+                labels={labels}
+                formatX={formatX}
+                formatY={formatY}
+              />
             )}
           </figure>
         );

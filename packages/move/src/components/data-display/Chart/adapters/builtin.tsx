@@ -195,6 +195,7 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
                 return (
                   <rect
                     key={i}
+                    data-bar=""
                     x={band(i) + slot * barWidth}
                     y={Math.min(top, bottom)}
                     width={Math.max(0, barWidth - 1)}

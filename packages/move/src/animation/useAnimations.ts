@@ -155,8 +155,16 @@ function executeStep(
   const ref = refs[target];
   const el = ref?.current;
 
-  // Get or create cancel ref for this target
-  const cancelKey = `${target}-${step.fn ?? 'move'}`;
+  // Get or create cancel ref for this target.
+  //
+  // The `children` selector is part of the key. `staggerAnimate` pauses whatever
+  // the cancel ref holds before it starts, so two stagger steps sharing a target
+  // used to cancel each other — in a parallel group only the last one survived,
+  // and the earlier ones froze at their seeded `from` values (invisible, for a
+  // scale or opacity). Steps with different selectors animate different
+  // elements and must not interfere; re-running the SAME step still resolves to
+  // the same key, so cancel-on-refire is unchanged.
+  const cancelKey = `${target}-${step.fn ?? 'move'}${step.children ? `-${step.children}` : ''}`;
   if (!cancelRefs.has(cancelKey)) {
     cancelRefs.set(cancelKey, { current: null });
   }

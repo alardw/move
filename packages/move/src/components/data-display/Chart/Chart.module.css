@@ -83,11 +83,13 @@
 /* Bars scale from their own bottom edge. `fill-box` makes the origin the rect's
    own box — without it the origin is the SVG viewport and every bar grows from
    the chart's bottom-left corner instead of its own baseline. */
-/* Direct children only. The sweep rect lives inside a <clipPath> nested in the
-   same series group, and this rule is more specific than the [data-sweep] one —
-   so without the child combinator it captures the clip rect too and pins its
-   origin to bottom-CENTRE, making the fill grow outward from the middle. */
-.plot [data-series] > rect {
+/* Targets [data-bar], not `rect`. The sweep rect lives inside a <clipPath> in
+   the same series group, so any rule matching bare `rect` also captures it —
+   and being more specific than the [data-sweep] rule, it silently pinned the
+   clip's origin to bottom-CENTRE and made the fill grow out from the middle.
+   An explicit marker makes that collision impossible rather than combinator-
+   dependent. */
+.plot [data-bar] {
   transform-box: fill-box;
   transform-origin: bottom;
 }
@@ -99,8 +101,7 @@
    Scoped to [data-enter="pending"], which the shell sets ONLY when it is going
    to animate (motion allowed, animations not disabled) and clears when the
    entrance completes — so nothing can be left permanently hidden. */
-/* Direct children only — see the note on the bar transform-origin above. */
-.plot[data-enter='pending'] [data-series] > rect {
+.plot[data-enter='pending'] [data-bar] {
   transform: scaleY(0);
 }
 
