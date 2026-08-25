@@ -105,10 +105,6 @@
   transform: scaleY(0);
 }
 
-.plot[data-enter='pending'] [data-draw] {
-  stroke-dashoffset: 1;
-}
-
 .plot[data-enter='pending'] [data-sweep] {
   transform: scaleX(0);
 }
@@ -122,13 +118,6 @@
 .plot [data-sweep] {
   transform-box: fill-box;
   transform-origin: left;
-}
-
-/* `pathLength="1"` normalises every stroke to a length of 1, so a single dash
-   value draws any path without measuring it. A `dash` series is excluded — its
-   pattern already owns stroke-dasharray. */
-.plot [data-draw] {
-  stroke-dasharray: 1;
 }
 
 /* Dots pop from their own centre. Without `fill-box` the origin is the SVG

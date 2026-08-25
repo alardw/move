@@ -261,6 +261,27 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
 
         return (
           <g key={s.key} data-series={s.key}>
+            {/* ONE reveal for everything drawn in this series: the stroke, and the
+                fill beneath it if there is one. Both ride the same clip, so
+                there is nothing to keep in sync — only one thing is moving.
+
+                Everything advances by x. A stroke-dashoffset draw-on advances
+                by PATH LENGTH instead, which is up to 1.6x longer than the
+                chart is wide, so a line animated that way falls behind anything
+                animated by x. It also cannot touch a fill, and collides with a
+                dashed series' stroke-dasharray.
+
+                The clip sits on each PATH, never on the series group; clipping
+                the group would take the bars with it. */}
+            <clipPath id={`${uid}-sweep-${si}`}>
+              <rect
+                data-sweep=""
+                x={MARGIN.left}
+                y={MARGIN.top}
+                width={innerWidth}
+                height={innerHeight}
+              />
+            </clipPath>
             {s.type === 'area' && (
               <>
                 {/* Fades out towards the baseline so the fill reads as a tint
@@ -272,19 +293,6 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
                   <stop offset="0%" stopColor={s.color} stopOpacity={theme.areaOpacity} />
                   <stop offset="100%" stopColor={s.color} stopOpacity={0} />
                 </linearGradient>
-                {/* Reveals the fill left-to-right so it advances with the line
-                    rather than fading in underneath it. The clip is on the PATH,
-                    never on the series group — clipping the group would take the
-                    bars with it. */}
-                <clipPath id={`${uid}-sweep-${si}`}>
-                  <rect
-                    data-sweep=""
-                    x={MARGIN.left}
-                    y={MARGIN.top}
-                    width={innerWidth}
-                    height={innerHeight}
-                  />
-                </clipPath>
                 <path
                   data-area=""
                   d={areaPath(points, stacked ? baseline : zeroY, curve)}
@@ -295,7 +303,7 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
             )}
             <path
               data-series-line=""
-              {...(s.dash ? {} : { 'data-draw': '', pathLength: 1 })}
+              clipPath={`url(#${uid}-sweep-${si})`}
               d={linePath(points, curve)}
               fill="none"
               stroke={s.color}

@@ -284,15 +284,9 @@ export const spec = {
           },
           {
             target: 'Plot',
-            children: '[data-draw]',
-            stagger: { delay: 140, from: 'first' },
-            animation: { 'stroke-dashoffset': { from: 1, to: 0 }, ease: 'outQuart', duration: 900 },
-          },
-          {
-            target: 'Plot',
             children: '[data-sweep]',
             stagger: { delay: 140, from: 'first' },
-            animation: { scaleX: { from: 0, to: 1 }, ease: 'outQuart', duration: 1200 },
+            animation: { scaleX: { from: 0, to: 1 }, ease: 'outQuart', duration: 1000 },
           },
           {
             target: 'Plot',
@@ -302,7 +296,7 @@ export const spec = {
           },
         ],
       ],
-      note: "Bars grow from the baseline, strokes draw on, area fills sweep in behind them and dots pop. Fires when the plot has been measured AND is 80% on screen — not on mount, since a lifecycle enter is one-shot and would otherwise play off-screen. The pre-entrance state lives in CSS under [data-enter='pending'] so nothing paints before the seed lands; the shell clears it on completion, with a timeout bound so a failed entrance can never leave a chart blank. A renderer takes part by marking its output: [data-bar], [data-draw], [data-sweep], [data-dot]. One that marks nothing simply appears. The dot stagger is computed per chart from the real dot count — the selector matches every dot in the plot, so a fixed delay cannot serve both a 12-dot and a 48-dot chart.",
+      note: "Bars grow from the baseline, strokes and their fills wipe open left to right, and dots pop. Fires when the plot has been measured AND is 80% on screen — not on mount, since a lifecycle enter is one-shot and would otherwise play off-screen. The pre-entrance state lives in CSS under [data-enter='pending'] so nothing paints before the seed lands; the shell clears it on completion, with a timeout bound so a failed entrance can never leave a chart blank. Everything that is not a bar is revealed by ONE clip per series, so a stroke and the fill beneath it ride the same animation and cannot drift; stroke-dashoffset was dropped because it advances by path length (up to 1.6x the chart width), cannot reveal a fill at all, and collides with a dashed series' stroke-dasharray. A renderer takes part by marking its output: [data-bar], [data-sweep], [data-dot]. One that marks nothing simply appears. The dot stagger is computed per chart from the real dot count — the selector matches every dot in the plot, so a fixed delay cannot serve both a 12-dot and a 48-dot chart.",
     },
   ],
 

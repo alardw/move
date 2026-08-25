@@ -76,19 +76,12 @@ const AREA_OPACITY = 0.18;
  *
  * `staggerAnimate` bails on `prefers-reduced-motion`, so that is handled.
  */
-/** Stroke draw-on. */
-const DRAW_MS = 900;
-
 /**
- * Area sweep — a little slower than the stroke.
- *
- * The stroke advances along PATH LENGTH while the fill advances along X, and a
- * path is always the longer of the two, so at equal duration the fill edge runs
- * ahead of the pen. Slowing it slightly brings them back together. It cannot be
- * exact — the ratio differs per chart and per segment — but the gap is small
- * enough that a nudge covers it.
+ * The reveal. One clip per series wipes its stroke and its fill open together,
+ * so everything in a chart advances at the same rate by construction rather
+ * than by matching two durations.
  */
-const SWEEP_MS = 1200;
+const SWEEP_MS = 1000;
 
 /**
  * Ceiling on how long the pre-entrance state may hide the marks.
@@ -123,26 +116,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
             animation: { scaleY: { from: 0, to: 1, ease: quick, duration: 480 } },
           },
           {
-            // Draws the stroke on. Kebab-case KEY is deliberate: `staggerAnimate`
-            // seeds the `from` state via `el.style.setProperty(key, …)`, which
-            // needs a real CSS property name — `strokeDashoffset` no-ops silently.
-            target: 'Plot',
-            children: '[data-draw]',
-            stagger: { delay: 140, from: 'first' },
-            // ease + duration at the TOP level, not nested. staggerAnimate reads
-            // `enterParams.ease ?? quick`, so nested easing falls through to the
-            // `quick` SPRING — which ignores duration outright. Hoisting is what
-            // makes this and the area sweep share one clock.
-            animation: {
-              'stroke-dashoffset': { from: 1, to: 0 },
-              ease: 'outQuart',
-              duration: DRAW_MS,
-            },
-          },
-          {
-            // The area fill is a filled path with no stroke, so the stroke draw-on
-            // cannot reveal it. A clip rect sweeps it open instead. Only the fill
-            // is at risk if this never runs — the line still carries the data.
+            // One clip per series, wiping its stroke and fill open together.
             // Same duration, easing and stagger as the stroke draw, so the fill
             // edge tracks the line rather than trailing it.
             target: 'Plot',
