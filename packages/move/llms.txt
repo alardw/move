@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 70 components. Version 0.1.52.
+> 71 components. Version 0.1.53.
 
 ## Accordion (disclosure)
 Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal
@@ -493,6 +493,34 @@ Carousel.Indicator props:
 - children: React.ReactNode — Custom indicator content
 - index: number — The page index this indicator targets
 Example: <Carousel orientation="horizontal" align="start">…</Carousel>
+
+## Chart (data-display)
+Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar.
+Props:
+- data: readonly Record<string, unknown>[] — Row-oriented source data. One object per x position.
+- x: string — Key in each row holding the x/category value.
+- series: ChartSeries[] — One entry per drawn series: { key, type, label?, color?, axis?, dash? }. Order fixes draw order and legend order.
+- caption: string — Chart title. Renders as the figcaption and supplies the accessible name — required, because a chart without one is unusable non-visually. Named `caption` rather than `title` so it cannot collide with the HTML title attribute.
+- hideCaption: boolean (default: false) — Visually hide the caption while keeping it in the accessibility tree.
+- summary: string (default: null) — Optional one-line trend summary announced before the data table. When absent the shell derives one from the series (first/last value and direction).
+- renderer: ChartRenderer (default: null) — Swap the drawing layer for a charting library. Falls back to the built-in SVG renderer when omitted.
+- resource: AsyncResource<unknown> (default: null) — Async source status. Drives the loading, error, retry, and empty states so they are shell-owned rather than per-renderer.
+- size: 'sm' | 'md' | 'lg' (default: md) — Scales tick font size, stroke width, point radius, and tick density.
+- grid: 'none' | 'horizontal' | 'vertical' | 'both' (default: horizontal) — Which grid lines the renderer draws.
+- legend: boolean (default: true) — Render the series legend below the plot.
+- tooltip: boolean (default: true) — Show every series' value at the hovered position. Rendered by the shell over the plot, so it looks and behaves the same for any renderer that reports its plot rect.
+- dots: boolean (default: false) — Mark each data point on line and area series.
+- curve: 'linear' | 'monotone' | 'step' (default: linear) — How line and area paths travel between points. `monotone` smooths without inventing peaks the data does not contain.
+- stacked: boolean (default: false) — Stack bar and area series sharing an axis instead of overlaying them.
+- aspect: number (default: 2) — Width-to-height ratio for the viewport. Ignored when `height` is set.
+- height: number | string (default: null) — Explicit plot height. Overrides `aspect` when set.
+- palette: Color[] (default: null) — Override the categorical series ramp with Move color names. Defaults to the theme-derived ramp.
+- formatX: (value: unknown) => string (default: null) — Format x tick labels and the data-table header column.
+- formatY: (value: number) => string (default: null) — Format y tick labels, data-table cells, and the derived summary.
+- dataTable: boolean (default: true) — Render the visually hidden data table. Turn off only when an equivalent table is already on the page.
+- labels: Partial<ChartLabels> (default: null) — Override the built-in user-facing strings.
+- animations: AnimationTrigger[] | false (default: null) — Override or disable the series entrance animation.
+Example: <Chart grid="horizontal" curve="linear">…</Chart>
 
 ## ChatBubble (data-display)
 Conversation bubble for chat UIs with avatar, placement, tail, and variant support

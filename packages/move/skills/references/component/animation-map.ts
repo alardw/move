@@ -329,7 +329,7 @@ const mergedRef = useMergedRef(ref, splitRef); // merge with the factory ref
 
   listReveal: {
     description: 'Per-item stagger on mount — data rows / items.',
-    components: ["List", "Table", "Timeline", "FileUpload", "ChatBubble"],
+    components: ["List", "Table", "Timeline", "FileUpload", "ChatBubble", "Chart"],
     defaultAnimations: `
 const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
   { trigger: 'Root.enter', sequence: [{ children: ':scope > *', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }] },

@@ -255,6 +255,29 @@ export type {
   ButtonGroupProps,
 } from './components/actions/Button';
 
+export {
+  Chart,
+  CHART_DEFAULT_LABELS,
+  builtinRenderer,
+  CHART_SERIES_COLORS,
+} from './components/data-display/Chart';
+export type {
+  ChartProps,
+  ChartSize,
+  ChartLabels,
+  ChartDatum,
+  ChartGrid,
+  ChartRenderer,
+  ChartRendererProps,
+  PlotRect,
+  PlotGeometry,
+  ChartSeries,
+  ChartSeriesType,
+  ChartSpec,
+  ChartTheme,
+  ResolvedChartSeries,
+} from './components/data-display/Chart';
+
 export { ChatBubble } from './components/data-display/ChatBubble';
 export type {
   ChatBubbleRootProps,

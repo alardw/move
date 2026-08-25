@@ -13,6 +13,7 @@ import { content as calendar } from './calendar';
 import { content as calendarView } from './calendar-view';
 import { content as card } from './card';
 import { content as carousel } from './carousel';
+import { content as chart } from './chart';
 import { content as chatBubble } from './chat-bubble';
 import { content as checkbox } from './checkbox';
 import { content as code } from './code';
@@ -85,6 +86,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   'calendar-view': calendarView,
   card,
   carousel,
+  chart,
   'chat-bubble': chatBubble,
   checkbox,
   code,

@@ -1,8 +1,8 @@
 {
   "name": "move",
-  "version": "0.1.52",
+  "version": "0.1.53",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
-  "componentCount": 70,
+  "componentCount": 71,
   "components": [
     {
       "name": "Accordion",
@@ -2662,6 +2662,165 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Chart",
+      "category": "data-display",
+      "componentClass": null,
+      "description": "Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar.",
+      "props": [
+        {
+          "name": "data",
+          "type": "readonly Record<string, unknown>[]",
+          "description": "Row-oriented source data. One object per x position."
+        },
+        {
+          "name": "x",
+          "type": "string",
+          "description": "Key in each row holding the x/category value."
+        },
+        {
+          "name": "series",
+          "type": "ChartSeries[]",
+          "description": "One entry per drawn series: { key, type, label?, color?, axis?, dash? }. Order fixes draw order and legend order."
+        },
+        {
+          "name": "caption",
+          "type": "string",
+          "description": "Chart title. Renders as the figcaption and supplies the accessible name — required, because a chart without one is unusable non-visually. Named `caption` rather than `title` so it cannot collide with the HTML title attribute."
+        },
+        {
+          "name": "hideCaption",
+          "type": "boolean",
+          "default": "false",
+          "description": "Visually hide the caption while keeping it in the accessibility tree."
+        },
+        {
+          "name": "summary",
+          "type": "string",
+          "default": "null",
+          "description": "Optional one-line trend summary announced before the data table. When absent the shell derives one from the series (first/last value and direction)."
+        },
+        {
+          "name": "renderer",
+          "type": "ChartRenderer",
+          "default": "null",
+          "description": "Swap the drawing layer for a charting library. Falls back to the built-in SVG renderer when omitted."
+        },
+        {
+          "name": "resource",
+          "type": "AsyncResource<unknown>",
+          "default": "null",
+          "description": "Async source status. Drives the loading, error, retry, and empty states so they are shell-owned rather than per-renderer."
+        },
+        {
+          "name": "size",
+          "type": "Size",
+          "values": [
+            "sm",
+            "md",
+            "lg"
+          ],
+          "default": "md",
+          "description": "Scales tick font size, stroke width, point radius, and tick density."
+        },
+        {
+          "name": "grid",
+          "type": "'none' | 'horizontal' | 'vertical' | 'both'",
+          "values": [
+            "none",
+            "horizontal",
+            "vertical",
+            "both"
+          ],
+          "default": "horizontal",
+          "description": "Which grid lines the renderer draws."
+        },
+        {
+          "name": "legend",
+          "type": "boolean",
+          "default": "true",
+          "description": "Render the series legend below the plot."
+        },
+        {
+          "name": "tooltip",
+          "type": "boolean",
+          "default": "true",
+          "description": "Show every series' value at the hovered position. Rendered by the shell over the plot, so it looks and behaves the same for any renderer that reports its plot rect."
+        },
+        {
+          "name": "dots",
+          "type": "boolean",
+          "default": "false",
+          "description": "Mark each data point on line and area series."
+        },
+        {
+          "name": "curve",
+          "type": "'linear' | 'monotone' | 'step'",
+          "values": [
+            "linear",
+            "monotone",
+            "step"
+          ],
+          "default": "linear",
+          "description": "How line and area paths travel between points. `monotone` smooths without inventing peaks the data does not contain."
+        },
+        {
+          "name": "stacked",
+          "type": "boolean",
+          "default": "false",
+          "description": "Stack bar and area series sharing an axis instead of overlaying them."
+        },
+        {
+          "name": "aspect",
+          "type": "number",
+          "default": "2",
+          "description": "Width-to-height ratio for the viewport. Ignored when `height` is set."
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "default": "null",
+          "description": "Explicit plot height. Overrides `aspect` when set."
+        },
+        {
+          "name": "palette",
+          "type": "Color[]",
+          "default": "null",
+          "description": "Override the categorical series ramp with Move color names. Defaults to the theme-derived ramp."
+        },
+        {
+          "name": "formatX",
+          "type": "(value: unknown) => string",
+          "default": "null",
+          "description": "Format x tick labels and the data-table header column."
+        },
+        {
+          "name": "formatY",
+          "type": "(value: number) => string",
+          "default": "null",
+          "description": "Format y tick labels, data-table cells, and the derived summary."
+        },
+        {
+          "name": "dataTable",
+          "type": "boolean",
+          "default": "true",
+          "description": "Render the visually hidden data table. Turn off only when an equivalent table is already on the page."
+        },
+        {
+          "name": "labels",
+          "type": "Partial<ChartLabels>",
+          "default": "null",
+          "description": "Override the built-in user-facing strings."
+        },
+        {
+          "name": "animations",
+          "type": "AnimationTrigger[] | false",
+          "default": "null",
+          "description": "Override or disable the series entrance animation."
+        }
+      ],
+      "subComponents": []
     },
     {
       "name": "ChatBubble",

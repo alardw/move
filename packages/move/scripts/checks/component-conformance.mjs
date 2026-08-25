@@ -5,8 +5,11 @@
  *
  *  A20 — Icons render through the resolver (`useResolvedIcon` / `<Icon>`), never a
  *        hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner,
- *        Loader) and indicator glyphs that are part of a Radix primitive's own
- *        rendering (Checkbox's checkmark, like the Radix Arrows).
+ *        Loader), indicator glyphs that are part of a Radix primitive's own
+ *        rendering (Checkbox's checkmark, like the Radix Arrows), and any
+ *        `adapters/` folder — a renderer adapter draws graphics, not icons, and
+ *        its SVG output is the whole point of the seam (Chart's built-in
+ *        renderer). The rule still applies to the component's own source.
  *  E1  — User-facing strings (incl. every aria-label) come from the component's
  *        `labels` object — never a hardcoded `aria-label="…"` literal in source.
  *
@@ -24,8 +27,9 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const MOVE_ROOT = join(HERE, '..', '..');
 const COMPONENTS = join(MOVE_ROOT, 'src', 'components');
 
-// Inline-<svg> exemptions: loading animations + Radix indicator glyphs.
-const SVG_EXEMPT = /\/(Loader|Checkbox)\//;
+// Inline-<svg> exemptions: loading animations, Radix indicator glyphs, and
+// renderer adapters (drawing layers, where emitting SVG is the contract).
+const SVG_EXEMPT = /\/(Loader|Checkbox)\/|\/adapters\//;
 
 function walk(dir, out = []) {
   for (const e of readdirSync(dir)) {

@@ -20,6 +20,23 @@
 export type { IconResolver, IconRoleOverrides } from '../infrastructure/Icon';
 export type { CodeHighlighterFn, HighlightResult } from '../components/typography/Code';
 
+// Chart's renderer seam. The contracts live with the component (like
+// FileUpload's adapter) and are surfaced here so every shared adapter is
+// discoverable in one place.
+export type {
+  ChartRenderer,
+  ChartRendererProps,
+  PlotRect,
+  PlotGeometry,
+  ChartTheme,
+  ChartSpec,
+  ChartSeries,
+  ResolvedChartSeries,
+  ChartSeriesType,
+  ChartGrid,
+  ChartDatum,
+} from '../components/data-display/Chart/types';
+
 // --- AsyncResource<T> ---------------------------------------------------------
 // A typed contract for asynchronously-loaded data, so data-driven components are
 // source-agnostic: the consumer brings React Query / SWR / RSC / plain fetch and

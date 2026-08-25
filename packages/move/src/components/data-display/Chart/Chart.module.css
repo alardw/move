@@ -1,0 +1,184 @@
+.root {
+  --move-chart-caption: var(--move-fg-base);
+  --move-chart-label: var(--move-fg-muted);
+  --move-chart-crosshair: var(--move-border-emphasis);
+  --move-chart-font: var(--move-font-body);
+  --move-chart-gap: var(--move-spacing-sm);
+  --move-chart-legend-gap: var(--move-spacing-md);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-chart-gap);
+  margin: 0;
+  font-family: var(--move-chart-font);
+}
+
+.caption {
+  color: var(--move-chart-caption);
+  font-size: var(--move-size-sm);
+  font-weight: 500;
+}
+
+/* Keep the caption in the accessibility tree while removing it visually. */
+.caption[data-hidden] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Zero-size anchor the tooltip attaches to; moves to the hovered band. */
+.anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+.crosshair {
+  position: absolute;
+  width: 1px;
+  background: var(--move-chart-crosshair);
+  pointer-events: none;
+}
+
+.tipHeading {
+  display: block;
+  margin-bottom: var(--move-space-1);
+  font-weight: 500;
+}
+
+.tipRow {
+  display: flex;
+  align-items: center;
+  gap: var(--move-space-2);
+  white-space: nowrap;
+}
+
+.tipValue {
+  margin-left: auto;
+  padding-left: var(--move-space-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.plot {
+  width: 100%;
+  height: 100%;
+}
+
+.plot > svg {
+  display: block;
+}
+
+/* Bars scale from their own bottom edge. `fill-box` makes the origin the rect's
+   own box — without it the origin is the SVG viewport and every bar grows from
+   the chart's bottom-left corner instead of its own baseline. */
+/* Direct children only. The sweep rect lives inside a <clipPath> nested in the
+   same series group, and this rule is more specific than the [data-sweep] one —
+   so without the child combinator it captures the clip rect too and pins its
+   origin to bottom-CENTRE, making the fill grow outward from the middle. */
+.plot [data-series] > rect {
+  transform-box: fill-box;
+  transform-origin: bottom;
+}
+
+/* Pre-entrance state, applied from the FIRST paint.
+   The stagger seeds its own `from` values, but only once it fires — and it
+   fires on scroll-into-view, long after the plot has painted. Without this the
+   finished chart shows, then hides, then animates in.
+   Scoped to [data-enter="pending"], which the shell sets ONLY when it is going
+   to animate (motion allowed, animations not disabled) and clears when the
+   entrance completes — so nothing can be left permanently hidden. */
+/* Direct children only — see the note on the bar transform-origin above. */
+.plot[data-enter='pending'] [data-series] > rect {
+  transform: scaleY(0);
+}
+
+.plot[data-enter='pending'] [data-draw] {
+  stroke-dashoffset: 1;
+}
+
+.plot[data-enter='pending'] [data-sweep] {
+  transform: scaleX(0);
+}
+
+.plot[data-enter='pending'] [data-dot] {
+  transform: scale(0);
+}
+
+/* The clip rect sweeps open from the left edge. `fill-box` keeps the origin on
+   the rect itself rather than the SVG viewport. */
+.plot [data-sweep] {
+  transform-box: fill-box;
+  transform-origin: left;
+}
+
+/* `pathLength="1"` normalises every stroke to a length of 1, so a single dash
+   value draws any path without measuring it. A `dash` series is excluded — its
+   pattern already owns stroke-dasharray. */
+.plot [data-draw] {
+  stroke-dasharray: 1;
+}
+
+/* Dots pop from their own centre. Without `fill-box` the origin is the SVG
+   viewport and every dot flies in from the top-left corner. */
+.plot [data-dot] {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--move-chart-legend-gap);
+  margin: 0;
+  padding: 0;
+  color: var(--move-chart-label);
+  font-size: var(--move-size-sm);
+  list-style: none;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-space-2);
+}
+
+.swatch {
+  width: 0.75rem;
+  height: 0.1875rem;
+  border-radius: var(--move-rounded-full);
+}
+
+/* Dashed series get a matching dashed swatch, so the legend carries the same
+   non-colour differentiator the plot does. */
+.swatch[data-dash] {
+  background-image: linear-gradient(
+    90deg,
+    transparent 40%,
+    var(--move-bg-base) 40% 60%,
+    transparent 60%
+  );
+}
+
+/* The data-table alternative: available to assistive tech, invisible on screen. */
+.description {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

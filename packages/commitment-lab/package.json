@@ -1,0 +1,19 @@
+{
+  "name": "commitment-lab",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Experiment: the commitment ledger (role + signature on a composite). Quarantined — imports move read-only, changes nothing in it.",
+  "scripts": {
+    "dev": "tsx watch src/resolve.ts",
+    "resolve": "tsx src/resolve.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "move": "*"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
