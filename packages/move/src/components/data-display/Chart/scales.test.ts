@@ -252,3 +252,50 @@ describe('labelStride', () => {
     expect(labelStride(10, 0)).toBe(1);
   });
 });
+
+describe('areaPath with a stacked baseline', () => {
+  const top: [number, number][] = [
+    [0, 10],
+    [10, 20],
+  ];
+  const under: [number, number][] = [
+    [0, 40],
+    [10, 30],
+  ];
+
+  it('closes along the series below, not down to the axis', () => {
+    const d = areaPath(top, under);
+    // walks back through the baseline points…
+    expect(d).toContain('L10,30');
+    expect(d).toContain('L0,40');
+    // …and never invents a flat bottom at some fixed y
+    expect(d).not.toContain('L10,0');
+    expect(d.endsWith('Z')).toBe(true);
+  });
+
+  it('still supports a flat baseline for an unstacked area', () => {
+    const d = areaPath(top, 100);
+    expect(d).toContain('L10,100');
+    expect(d).toContain('L0,100');
+  });
+
+  it('uses the same curve on both edges of the band', () => {
+    const pts: [number, number][] = [
+      [0, 10],
+      [10, 20],
+      [20, 5],
+    ];
+    const base: [number, number][] = [
+      [0, 50],
+      [10, 55],
+      [20, 45],
+    ];
+    const d = areaPath(pts, base, 'monotone');
+    // one cubic run out along the top, another back along the baseline
+    expect((d.match(/C/g) ?? []).length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('is empty when the baseline has no points', () => {
+    expect(areaPath(top, [])).toBe('');
+  });
+});

@@ -225,19 +225,39 @@ export function linePath(
   return polylinePath(points);
 }
 
-/** A closed band between the points and a flat baseline. */
+/**
+ * A closed band between the points and a baseline.
+ *
+ * The baseline is either a flat y (an area anchored to the axis) or a run of
+ * points (a STACKED area, sitting on whatever is beneath it). Stacked bands
+ * must close along the series below rather than down to zero — closing to zero
+ * makes every band overlap the ones under it, which reads as a plausible chart
+ * while being wrong.
+ *
+ * A point baseline is travelled with the same `curve` as the top edge, so the
+ * two edges of a band always agree.
+ */
 export function areaPath(
   points: readonly (readonly [number, number])[],
-  baseline: number,
+  baseline: number | readonly (readonly [number, number])[],
   curve: ChartCurve = 'linear',
 ): string {
   if (points.length === 0) return '';
   const forward = linePath(points, curve);
-  const back = points
-    .slice()
-    .reverse()
-    .map(([x]) => `L${r(x)},${r(baseline)}`)
-    .join('');
+
+  if (typeof baseline === 'number') {
+    const back = points
+      .slice()
+      .reverse()
+      .map(([x]) => `L${r(x)},${r(baseline)}`)
+      .join('');
+    return `${forward}${back}Z`;
+  }
+
+  if (baseline.length === 0) return '';
+  // Same curve, walked backwards; the leading move becomes a line so the band
+  // stays one closed shape.
+  const back = linePath(baseline.slice().reverse(), curve).replace(/^M/, 'L');
   return `${forward}${back}Z`;
 }
 

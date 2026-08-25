@@ -13,6 +13,8 @@ import Mixed from './samples/mixed';
 import mixedCode from './samples/mixed?raw';
 import Stacked from './samples/stacked';
 import stackedCode from './samples/stacked?raw';
+import StackedArea from './samples/stacked-area';
+import stackedAreaCode from './samples/stacked-area?raw';
 import CurveLinear from './samples/curve-linear';
 import curveLinearCode from './samples/curve-linear?raw';
 import CurveMonotone from './samples/curve-monotone';
@@ -45,6 +47,7 @@ export const content: ComponentContent = {
     { id: 'bar', title: 'Bar', render: Bar, code: barCode },
     { id: 'mixed', title: 'Mixed types', render: Mixed, code: mixedCode },
     { id: 'stacked', title: 'Stacked', render: Stacked, code: stackedCode },
+    { id: 'stacked-area', title: 'Stacked area', render: StackedArea, code: stackedAreaCode },
     { id: 'curve-linear', title: 'Interpolation — linear', render: CurveLinear, code: curveLinearCode },
     { id: 'curve-monotone', title: 'Interpolation — monotone', render: CurveMonotone, code: curveMonotoneCode },
     { id: 'curve-step', title: 'Interpolation — step', render: CurveStep, code: curveStepCode },

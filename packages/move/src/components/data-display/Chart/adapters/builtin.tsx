@@ -221,11 +221,16 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
       {/* Series — draw order follows declaration order */}
       {series.map((s, si) => {
         const points: [number, number][] = [];
+        // Where this series' band SITS. For a stacked area that is the running
+        // total beneath it, not the axis — closing to zero would overlap every
+        // band below.
+        const baseline: [number, number][] = [];
         data.forEach((row, i) => {
           const v = valueAt(row, s.key);
           if (v === null) return;
           const base = stacked && s.type !== 'line' ? offsets[i][si] : 0;
           points.push([xAt(i), toY(base + v)]);
+          baseline.push([xAt(i), toY(base)]);
         });
 
         if (s.type === 'bar') {
@@ -282,7 +287,7 @@ export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onP
                 </clipPath>
                 <path
                   data-area=""
-                  d={areaPath(points, zeroY, curve)}
+                  d={areaPath(points, stacked ? baseline : zeroY, curve)}
                   fill={`url(#${uid}-fill-${si})`}
                   clipPath={`url(#${uid}-sweep-${si})`}
                 />
