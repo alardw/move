@@ -22,6 +22,7 @@ import { builtinRenderer } from './adapters/builtin';
 import styles from './Chart.module.css';
 import {
   CHART_SERIES_COLORS,
+  CHART_SWEEP_MS,
   type ChartDatum,
   type ChartGrid,
   type ChartRenderer,
@@ -99,12 +100,6 @@ const DEFAULT_PADDING = 24;
  *
  * `staggerAnimate` bails on `prefers-reduced-motion`, so that is handled.
  */
-/**
- * The reveal. One clip per series wipes its stroke and its fill open together,
- * so everything in a chart advances at the same rate by construction rather
- * than by matching two durations.
- */
-const SWEEP_MS = 1000;
 
 /**
  * Ceiling on how long the pre-entrance state may hide the marks.
@@ -156,7 +151,7 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
             target: 'Plot',
             children: '[data-sweep]',
             stagger: { delay: 140, from: 'first' },
-            animation: { scaleX: { from: 0, to: 1 }, ease: 'outQuart', duration: SWEEP_MS },
+            animation: { scaleX: { from: 0, to: 1 }, ease: 'outQuart', duration: CHART_SWEEP_MS },
           },
           {
             // Dots are evenly spaced along x, so a uniform delay lands each pop
@@ -183,6 +178,12 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
 
 /** WCAG 1.4.11: a series mark carries information, so it needs 3:1 on its ground. */
 const MARK_CONTRAST = 3;
+/**
+ * Relative luminance at or below which a surface counts as dark, deciding which
+ * way `clampToContrast` walks lightness to reach the ratio. Above it a mark is
+ * darkened against a light ground, below it lightened against a dark one.
+ */
+const DARK_SURFACE_LUMINANCE = 0.18;
 const SOLID_INDEX = SHADES.indexOf(SOLID_SHADE);
 
 /**
@@ -206,7 +207,7 @@ function resolveMarkColor(name: string, background: string, fallback: string): s
   const base = ramp[SOLID_INDEX] as string;
   const bg = hexToLinear(background);
   const { L, C, H } = hexToOklch(base);
-  const isDark = luminance(bg) < 0.18;
+  const isDark = luminance(bg) < DARK_SURFACE_LUMINANCE;
   return clampToContrast(L, C, H, [bg], MARK_CONTRAST, isDark).hex;
 }
 

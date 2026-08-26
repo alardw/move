@@ -12,25 +12,11 @@
 
 import * as React from 'react';
 import { animate } from 'animejs';
-import type { ChartRendererProps } from '../../types';
+import { CHART_SWEEP_MS, type ChartRendererProps } from '../../types';
 import { arcPath, pieLayout, sliceAnchor, sliceAt } from '../../scales';
 import { markAttrs, valueAt } from './shared';
 
-/**
- * Entrance: a clockwise sweep from twelve o'clock.
- *
- * This is the convention every charting library uses, and the honest one for a
- * pie — the ANGLE is the data, so watching it fill shows each share arriving at
- * its true size. Scaling the ring from the centre would animate radius, which
- * carries no meaning when every slice shares it.
- *
- * It cannot be a CSS transform like the shell's other reveals: the geometry has
- * to be regenerated as the angle grows. So the pie owns its own animation, via
- * the same anime.js proxy-and-onRender pattern Loader and Skeleton use — which
- * is what `animationCapabilities: ['valueLoop']` in the spec declares.
- */
-const SWEEP_MS = 900;
-
+/** The pie renderer: slices, labels, and its own angular entrance. */
 export function PiePlot({
   spec,
   theme,
@@ -50,10 +36,20 @@ export function PiePlot({
       if (entrance !== 'pending') setProgress(1);
       return;
     }
+    // A clockwise sweep from twelve o'clock — the convention every charting
+    // library uses, and the honest one for a pie: the ANGLE is the data, so
+    // watching it fill shows each share arriving at its true size. Scaling the
+    // ring from the centre would animate radius, which carries no meaning when
+    // every slice shares it.
+    //
+    // It cannot be a CSS transform like the shell's other reveals, because the
+    // geometry has to be regenerated as the angle grows — hence the anime.js
+    // proxy-and-onRender pattern Loader and Skeleton use, which is what
+    // `animationCapabilities: ['valueLoop']` in the spec declares.
     const value = { t: 0 };
     const anim = animate(value, {
       t: 1,
-      duration: SWEEP_MS,
+      duration: CHART_SWEEP_MS,
       ease: 'outQuart',
       onRender: () => setProgress(value.t),
     });

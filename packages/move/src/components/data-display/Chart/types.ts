@@ -352,6 +352,16 @@ export type ChartRenderer = (props: ChartRendererProps) => React.ReactNode;
  * Pass `palette` to override — a chart that genuinely is about pass/fail should
  * absolutely use red and green.
  */
+/**
+ * How long a series reveal takes, in ms.
+ *
+ * Shared between the shell's clip sweep and a renderer that has to animate its
+ * own geometry instead (a pie grows by ANGLE, so it cannot ride a CSS
+ * transform). Two charts on one page reveal at the same rate whichever path
+ * they took, which only holds while there is one number.
+ */
+export const CHART_SWEEP_MS = 1000;
+
 export const CHART_SERIES_COLORS = [
   'indigo',
   'orange',
