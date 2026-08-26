@@ -45,6 +45,20 @@
   position: relative;
 }
 
+/* Occupies the plot rather than floating over it, so nothing reads as a chart
+   that is merely still loading. */
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--move-spacing-sm);
+  width: 100%;
+  height: 100%;
+  color: var(--move-chart-label);
+  text-align: center;
+}
+
 /* Zero-size anchor the tooltip attaches to; moves to the hovered band. */
 .anchor {
   position: absolute;

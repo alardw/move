@@ -42,7 +42,7 @@ export const meta: ComponentDocument = {
   preview: { width: "full" },
   name: "Chart",
   tagline:
-    "A chart that belongs to your theme. Move owns the frame, the axes, and the accessible alternative; the drawing layer is yours to swap.",
+    "Line, area, bar and pie built in, with no charting dependency — or swap the drawing layer for Recharts, Highcharts or Chart.js. Your theme, tooltip and accessible alternative come from Move either way.",
   categories: ["data-display"],
   badges: [],
   highlights,

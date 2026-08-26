@@ -3,6 +3,7 @@ import {
   arcPath,
   areaPath,
   pieLayout,
+  sliceAnchor,
   sliceAt,
   bandScale,
   labelStride,
@@ -382,5 +383,43 @@ describe('sliceAt', () => {
 
   it('misses inside the hole of a ring', () => {
     expect(sliceAt(slices, 0, 0, 5, 10, 1, 1)).toBeNull();
+  });
+});
+
+describe('sliceAnchor', () => {
+  const quarters = pieLayout([1, 1, 1, 1]); // from twelve o'clock, clockwise
+
+  it('sits outside the ring, never on it', () => {
+    for (const slice of quarters) {
+      const a = sliceAnchor(0, 0, 100, 8, slice);
+      expect(Math.hypot(a.x, a.y)).toBeCloseTo(108);
+    }
+  });
+
+  it('opens away from the chart — right half right, left half left', () => {
+    expect(sliceAnchor(0, 0, 100, 8, quarters[0]).side).toBe('right'); // upper right
+    expect(sliceAnchor(0, 0, 100, 8, quarters[1]).side).toBe('right'); // lower right
+    expect(sliceAnchor(0, 0, 100, 8, quarters[2]).side).toBe('left'); // lower left
+    expect(sliceAnchor(0, 0, 100, 8, quarters[3]).side).toBe('left'); // upper left
+  });
+
+  it('is offset from the pie centre', () => {
+    const a = sliceAnchor(200, 150, 50, 4, quarters[0]);
+    expect(a.x).toBeGreaterThan(200);
+    expect(a.y).toBeLessThan(150);
+  });
+});
+
+describe('emphasis', () => {
+  it('leaves everything at full strength when nothing is hovered', async () => {
+    const { emphasis } = await import('./adapters/builtin/shared');
+    expect(emphasis(0, null)).toBe(1);
+    expect(emphasis(3, undefined)).toBe(1);
+  });
+
+  it('dims every mark except the hovered one', async () => {
+    const { emphasis, DIMMED } = await import('./adapters/builtin/shared');
+    expect(emphasis(2, 2)).toBe(1);
+    expect(emphasis(0, 2)).toBe(DIMMED);
   });
 });

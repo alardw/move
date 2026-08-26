@@ -210,7 +210,31 @@ export interface PlotGeometry {
    * drops the crosshair — a vertical line through a pie says nothing.
    */
   hitTest?: (localX: number, localY: number) => number | null;
+  /**
+   * Which way the tooltip should open from each anchor.
+   *
+   * An axis chart is fine opening upward from a point on a vertical. A radial
+   * one is not: an anchor on the lower edge of a ring would open back across
+   * the chart it belongs to, which is worst on small pies. Reporting the side
+   * lets the renderer push it outward instead.
+   */
+  side?: ('top' | 'right' | 'bottom' | 'left')[];
 }
+
+/**
+ * Whether an entrance is coming, and whether to run it now.
+ *
+ * Most reveals are CSS transforms the shell drives against marked elements, so
+ * a renderer never hears about them. Some cannot be: a pie's entrance is a
+ * sweep of ANGLE, which means regenerating the geometry per frame rather than
+ * transforming a finished shape. A renderer doing that needs to know both that
+ * an entrance is expected — so it draws its first frame already at the start
+ * state instead of flashing the finished chart — and when the chart is actually
+ * on screen, which only the shell knows.
+ *
+ * `null` means no entrance: draw at rest.
+ */
+export type ChartEntrance = 'pending' | 'run' | null;
 
 /** What a renderer is handed. */
 export interface ChartRendererProps {
@@ -222,6 +246,23 @@ export interface ChartRendererProps {
   width: number;
   /** Measured plot height in px. Always > 0. */
   height: number;
+  /**
+   * Entrance state, for renderers that animate their own geometry.
+   *
+   * Ignore it and your output simply appears — the shell's CSS-driven reveals
+   * still apply to anything you mark with `data-bar` / `data-sweep` /
+   * `data-dot`.
+   */
+  entrance?: ChartEntrance;
+  /**
+   * The row the pointer is over, or null.
+   *
+   * State flows DOWN; geometry stays in the renderer. The shell knows which row
+   * is hovered (it owns hit-testing and the tooltip) but not where the mark for
+   * it landed in pixels, so emphasising it is the renderer's job. Ignoring this
+   * is fine — you simply get no hover emphasis.
+   */
+  activeIndex?: number | null;
   /**
    * Report where you drew, so the shell can hit-test the pointer and render its
    * own tooltip and crosshair over the plot.

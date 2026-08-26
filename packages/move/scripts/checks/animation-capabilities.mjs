@@ -40,11 +40,24 @@ let warnings = 0;
 const out = [];
 
 for (const { name, dir } of dirs.sort((a, b) => a.name.localeCompare(b.name))) {
-  let src = '';
-  for (const f of readdirSync(dir)) {
-    if (!/\.(ts|tsx)$/.test(f) || /\.(test|spec)\./.test(f)) continue;
-    src += read(join(dir, f)) + '\n';
-  }
+  // RECURSIVE. A component may keep source in subfolders — Chart splits its
+  // built-in renderer into `adapters/builtin/*` — and imperative animation
+  // living one level down is exactly what this check exists to catch. Reading
+  // only the top level let it hide.
+  const collect = (d) => {
+    let out = '';
+    for (const f of readdirSync(d)) {
+      const full = join(d, f);
+      if (statSync(full).isDirectory()) {
+        out += collect(full);
+        continue;
+      }
+      if (!/\.(ts|tsx)$/.test(f) || /\.(test|spec)\./.test(f)) continue;
+      out += read(full) + '\n';
+    }
+    return out;
+  };
+  const src = collect(dir);
   const specSrc = read(join(dir, `${name}.spec.ts`));
   const capMatch = specSrc.match(/animationCapabilities:\s*\[([^\]]*)\]/);
   const declared = new Set(

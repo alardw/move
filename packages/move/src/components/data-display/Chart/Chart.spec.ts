@@ -6,6 +6,11 @@ export const spec = {
   schemaVersion: 1 as const,
   name: 'Chart',
   animationPatterns: ['listReveal'],
+  // The pie sweeps by ANGLE, which means regenerating its geometry per frame
+  // rather than transforming a finished shape — an anime.js proxy driven by
+  // onRender, the same pattern Loader and Skeleton use. Declared so the
+  // imperative path is visible rather than ad hoc.
+  animationCapabilities: ['valueLoop'],
   componentClass: 'display' as const,
   category: 'data-display',
   choreographies: ['listReveal'],
@@ -333,6 +338,16 @@ export const spec = {
       id: 'legend-shell-owned',
       description:
         'The legend is DOM rendered by the shell, not by the renderer — it stays keyboard- and screen-reader-reachable even behind a canvas adapter.',
+    },
+    {
+      id: 'hover-emphasis-in-renderer',
+      description:
+        'The shell reports the hovered row via `activeIndex`; the renderer emphasises the matching mark. State flows down, geometry stays in the renderer — the shell owns hit-testing and the tooltip but does not know where a mark landed. A renderer that ignores it simply has no hover emphasis.',
+    },
+    {
+      id: 'radial-tooltip-anchor',
+      description:
+        'A renderer may report `side` per anchor. An axis chart opens its tooltip upward; a radial one must open outward, or an anchor on the lower edge of a ring opens back across the chart it describes — worst on small pies.',
     },
     {
       id: 'status-replaces-plot',

@@ -35,6 +35,8 @@ import Dots from './samples/dots';
 import dotsCode from './samples/dots?raw';
 import NoTooltip from './samples/no-tooltip';
 import noTooltipCode from './samples/no-tooltip?raw';
+import Async from './samples/async';
+import asyncCode from './samples/async?raw';
 import Accessible from './samples/accessible';
 import accessibleCode from './samples/accessible?raw';
 import Recharts from './samples/recharts';
@@ -62,6 +64,7 @@ export const content: ComponentContent = {
     { id: 'sine', title: 'A sampled function', render: Sine, code: sineCode },
     { id: 'numeric-x', title: 'Numeric x scale', render: NumericX, code: numericXCode },
     { id: 'no-tooltip', title: 'Without a tooltip', render: NoTooltip, code: noTooltipCode },
+    { id: 'async', title: 'Loading and error states', render: Async, code: asyncCode },
     { id: 'accessible', title: 'Text alternative', render: Accessible, code: accessibleCode },
     { id: 'recharts', title: 'Drawn by Recharts', render: Recharts, code: rechartsCode },
     { id: 'renderer', title: 'Writing your own renderer', render: Renderer, code: rendererCode },

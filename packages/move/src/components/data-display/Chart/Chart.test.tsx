@@ -349,3 +349,219 @@ describe('Chart — x scale', () => {
     expect(xs[1] - xs[0]).toBeCloseTo(xs[2] - xs[1], 1);
   });
 });
+
+describe('Chart — async status', () => {
+  const line = [{ key: 'mrr', type: 'line' as const, label: 'MRR' }];
+  const rows = [{ month: 'Jan', mrr: 1 }];
+
+  it('shows the loading state instead of the plot', () => {
+    const { container } = render(
+      <Chart caption="R" data={[]} x="month" series={line} resource={{ status: 'loading' }} />,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('Loading chart');
+    // The plot, not just any svg — the Loader draws a spinner of its own.
+    expect(container.querySelector('[data-series]')).not.toBeInTheDocument();
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it('never invokes the renderer while loading', () => {
+    const renderer = vi.fn(() => null);
+    render(
+      <Chart
+        caption="R"
+        data={[]}
+        x="month"
+        series={line}
+        resource={{ status: 'loading' }}
+        renderer={renderer}
+      />,
+    );
+    expect(renderer).not.toHaveBeenCalled();
+  });
+
+  it('offers retry when the resource carries one', async () => {
+    const retry = vi.fn();
+    render(
+      <Chart
+        caption="R"
+        data={[]}
+        x="month"
+        series={line}
+        resource={{ status: 'error', error: new Error('nope'), retry }}
+      />,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('Could not load chart data');
+    screen.getByRole('button', { name: 'Retry' }).click();
+    expect(retry).toHaveBeenCalledOnce();
+  });
+
+  it('omits retry when the resource has none', () => {
+    render(
+      <Chart
+        caption="R"
+        data={[]}
+        x="month"
+        series={line}
+        resource={{ status: 'error', error: new Error('nope') }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: 'Retry' })).not.toBeInTheDocument();
+  });
+
+  it('reports empty when there is nothing to draw, resource or not', () => {
+    render(<Chart caption="R" data={[]} x="month" series={line} />);
+    expect(screen.getByRole('status')).toHaveTextContent('No data to display');
+  });
+
+  it('draws once the resource succeeds', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="month"
+        series={line}
+        resource={{ status: 'success', data: rows }}
+      />,
+    );
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(container.querySelector('[data-series]')).toBeInTheDocument();
+  });
+
+  it('keeps `resource` off the DOM — it is also an RDFa attribute', () => {
+    render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="month"
+        series={line}
+        resource={{ status: 'success', data: rows }}
+        data-testid="c"
+      />,
+    );
+    expect(screen.getByTestId('c')).not.toHaveAttribute('resource');
+  });
+
+  it('labels are overridable', () => {
+    render(
+      <Chart caption="R" data={[]} x="month" series={line} labels={{ empty: 'Niets te tonen' }} />,
+    );
+    expect(screen.getByRole('status')).toHaveTextContent('Niets te tonen');
+  });
+});
+
+describe('Chart — pie', () => {
+  const slices = [
+    { channel: 'Organic', sessions: 40 },
+    { channel: 'Paid', sessions: 30 },
+    { channel: 'Referral', sessions: 30 },
+  ];
+  const pie = [{ key: 'sessions', type: 'pie' as const, label: 'Sessions' }];
+
+  it('draws one wedge per row', () => {
+    const { container } = render(
+      <Chart caption="R" data={slices} x="channel" series={pie} animations={false} />,
+    );
+    expect(container.querySelectorAll('[data-slice]')).toHaveLength(3);
+  });
+
+  it('colours per SLICE, not per series — a pie is one series of parts', () => {
+    const { container } = render(
+      <Chart caption="R" data={slices} x="channel" series={pie} animations={false} />,
+    );
+    const fills = [...container.querySelectorAll('[data-slice]')].map((p) =>
+      p.getAttribute('fill'),
+    );
+    expect(new Set(fills).size).toBe(3);
+  });
+
+  it('the legend names the rows, not the series', () => {
+    render(<Chart caption="R" data={slices} x="channel" series={pie} animations={false} />);
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      'Organic',
+      'Paid',
+      'Referral',
+    ]);
+  });
+
+  it('legend swatches match the wedges', () => {
+    const { container } = render(
+      <Chart caption="R" data={slices} x="channel" series={pie} animations={false} />,
+    );
+    const wedges = [...container.querySelectorAll('[data-slice]')].map((p) =>
+      p.getAttribute('fill'),
+    );
+    const swatches = [...container.querySelectorAll('li span')].map(
+      (s) => (s as HTMLElement).style.background,
+    );
+    // jsdom normalises an inline `background` to rgb(), so compare values.
+    const toRgb = (hex: string) => {
+      const n = Number.parseInt(hex.slice(1), 16);
+      return `rgb(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255})`;
+    };
+    expect(swatches.filter(Boolean)).toHaveLength(3);
+    wedges.forEach((fill, i) => expect(swatches[i]).toBe(toRgb(fill!)));
+  });
+
+  it('draws no axis furniture', () => {
+    const { container } = render(
+      <Chart caption="R" data={slices} x="channel" series={pie} animations={false} />,
+    );
+    expect(container.querySelector('[data-chart-part="axis-x"]')).not.toBeInTheDocument();
+    expect(container.querySelector('[data-chart-part="axis-y"]')).not.toBeInTheDocument();
+  });
+
+  it('still carries the full data table', () => {
+    render(<Chart caption="R" data={slices} x="channel" series={pie} animations={false} />);
+    const table = screen.getByRole('table');
+    expect(within(table).getByText('Organic')).toBeInTheDocument();
+    expect(within(table).getByText('40')).toBeInTheDocument();
+  });
+
+  it('renders at rest when animation is off, rather than waiting for an entrance', () => {
+    const { container } = render(
+      <Chart caption="R" data={slices} x="channel" series={pie} animations={false} />,
+    );
+    // The whole circle is present, not a partial sweep.
+    expect(container.querySelectorAll('[data-slice]')).toHaveLength(3);
+  });
+});
+
+describe('Chart — tooltip content', () => {
+  const rows = [
+    { day: 'Mon', visits: 10, signups: 4 },
+    { day: 'Tue', visits: 20, signups: 6 },
+  ];
+
+  it('names each series when there is more than one to tell apart', () => {
+    render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="day"
+        animations={false}
+        series={[
+          { key: 'visits', type: 'line', label: 'Visits' },
+          { key: 'signups', type: 'line', label: 'Signups' },
+        ]}
+      />,
+    );
+    // the legend is the same source of truth the tooltip rows use
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual([
+      'Visits',
+      'Signups',
+    ]);
+  });
+
+  it('a pie legend names rows, so one series still yields many entries', () => {
+    render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="day"
+        animations={false}
+        series={[{ key: 'visits', type: 'pie', label: 'Visits' }]}
+      />,
+    );
+    expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Mon', 'Tue']);
+  });
+});

@@ -6,6 +6,10 @@ import type { AnimationTrigger } from '../../../animation';
 import { useInView } from '../../../hooks';
 import { useTheme } from '../../../infrastructure/Theme';
 import { Tooltip } from '../../overlays/Tooltip';
+import { Button } from '../../actions/Button';
+import { Loader } from '../../feedback/Loader';
+import { Text } from '../../typography/Text';
+import type { AsyncResource } from '../../../adapters';
 import type { Color } from '../../../shared/types';
 import {
   clampToContrast,
@@ -39,11 +43,23 @@ export interface ChartLabels {
   dataTable: string;
   /** Header of the data table's category column. */
   categoryColumn: string;
+  /** Announced while the resource is loading. */
+  loading: string;
+  /** Announced when the resource failed. */
+  error: string;
+  /** Action offered when the resource carries a retry. */
+  retry: string;
+  /** Announced when the resource succeeded but carries nothing to draw. */
+  empty: string;
 }
 
 export const DEFAULT_LABELS: ChartLabels = {
   dataTable: 'Chart data',
   categoryColumn: 'Category',
+  loading: 'Loading chart',
+  error: 'Could not load chart data',
+  retry: 'Retry',
+  empty: 'No data to display',
 };
 
 /**
@@ -179,7 +195,11 @@ function resolveMarkColor(name: string, background: string, fallback: string): s
   return clampToContrast(L, C, H, [bg], MARK_CONTRAST, isDark).hex;
 }
 
-export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'children'> {
+export interface ChartProps
+  // `resource` is also an HTML (RDFa) attribute, so it must be omitted or the
+  // typed prop collides with the string one — and, left in the passthrough, it
+  // renders as `resource="[object Object]"` on the figure.
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'resource'> {
   /** Row-oriented source data, one object per x position. */
   data: readonly ChartDatum[];
   /** Key in each row holding the x/category value. */
@@ -238,6 +258,14 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
   formatY?: ((value: number) => string) | null;
   /** Render the visually hidden data table. */
   dataTable?: boolean;
+  /**
+   * Async source status.
+   *
+   * Drives the loading, error, retry and empty states in the shell rather than
+   * in each renderer, so every adapter gets them identically — and so a
+   * renderer is never handed data that is not there.
+   */
+  resource?: AsyncResource<unknown> | null;
   /** Override the built-in user-facing strings. */
   labels?: Partial<ChartLabels> | null;
   /** Override or disable the bar entrance stagger. */
@@ -370,6 +398,35 @@ function sliceLegend(
   }));
 }
 
+/**
+ * Loading, error and empty, rendered INSTEAD of the plot.
+ *
+ * Shell-owned rather than per-renderer, so every adapter reports these states
+ * identically — and so a renderer is never invoked with data that is not there.
+ * `role="status"` announces the change without stealing focus.
+ */
+function StatusPanel({
+  state,
+  labels,
+  retry,
+}: {
+  state: 'loading' | 'error' | 'empty';
+  labels: ChartLabels;
+  retry?: (() => void) | undefined;
+}) {
+  return (
+    <div className={styles.status} role="status" aria-live="polite" data-state={state}>
+      {state === 'loading' && <Loader size="sm" />}
+      <Text size="sm">{labels[state]}</Text>
+      {state === 'error' && retry && (
+        <Button size="sm" variant="secondary" onClick={retry}>
+          {labels.retry}
+        </Button>
+      )}
+    </div>
+  );
+}
+
 /** Series key, rendered as DOM so it stays reachable behind a canvas renderer. */
 function Legend({ series }: { series: readonly ResolvedChartSeries[] }) {
   if (series.length === 0) return null;
@@ -444,7 +501,9 @@ function resolveSeries(
 function HoverOverlay({
   x,
   y,
+  side,
   crosshair,
+  showSeriesLabel,
   rect,
   row,
   xKey,
@@ -454,7 +513,15 @@ function HoverOverlay({
 }: {
   x: number;
   y: number | null;
+  side: 'top' | 'right' | 'bottom' | 'left';
   crosshair: boolean;
+  /**
+   * Naming the series is only worth the space when there is more than one to
+   * tell apart. With a single series the caption and legend have already said
+   * it, and the heading names the row — so the tooltip needs just the colour
+   * and the value.
+   */
+  showSeriesLabel: boolean;
   rect: PlotRect;
   row: ChartDatum;
   xKey: string;
@@ -475,22 +542,41 @@ function HoverOverlay({
             aria-hidden="true"
           />
         </Tooltip.Trigger>
-        <Tooltip.Content side="top" sideOffset={8}>
-          <span className={styles.tipHeading}>
-            {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
-          </span>
-          {series.map((s) => {
-            const v = numeric(row, s.key);
-            return (
-              <span key={s.key} className={styles.tipRow}>
-                <span className={styles.swatch} style={{ background: s.color }} />
-                {s.label}
-                <span className={styles.tipValue}>
-                  {v === null ? '—' : formatY ? formatY(v) : String(v)}
-                </span>
+        <Tooltip.Content side={side} sideOffset={8}>
+          {showSeriesLabel ? (
+            <>
+              {/* Several series to tell apart: name the row once, then list
+                  each series under it. */}
+              <span className={styles.tipHeading}>
+                {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
               </span>
-            );
-          })}
+              {series.map((s) => {
+                const v = numeric(row, s.key);
+                return (
+                  <span key={s.key} className={styles.tipRow}>
+                    <span className={styles.swatch} style={{ background: s.color }} />
+                    {s.label}
+                    <span className={styles.tipValue}>
+                      {v === null ? '—' : formatY ? formatY(v) : String(v)}
+                    </span>
+                  </span>
+                );
+              })}
+            </>
+          ) : (
+            // One series: colour, name and value read as a single fact, so
+            // stacking them over two lines only adds height.
+            <span className={styles.tipRow}>
+              <span className={styles.swatch} style={{ background: series[0]?.color }} />
+              {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
+              <span className={styles.tipValue}>
+                {(() => {
+                  const v = series[0] ? numeric(row, series[0].key) : null;
+                  return v === null ? '—' : formatY ? formatY(v) : String(v);
+                })()}
+              </span>
+            </span>
+          )}
         </Tooltip.Content>
       </Tooltip.Root>
     </>
@@ -573,10 +659,11 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     formatX: null,
     formatY: null,
     labels: null,
+    resource: null,
     summary: null,
     renderer: null,
   },
-  moveProps: ['data', 'x', 'series', 'caption', 'animations'],
+  moveProps: ['data', 'x', 'series', 'caption', 'animations', 'resource'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const viewportRef = React.useRef<HTMLDivElement>(null);
@@ -718,7 +805,13 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         // coming. Reduced motion makes `staggerAnimate` bail, and
         // `animations={false}` removes the trigger — in either case the CSS must
         // not apply, or the chart would render permanently blank.
-        const willAnimate = props.animations !== false && !reducedMotion && !entered;
+        // Is motion wanted at all? Independent of whether the CSS entrance has
+        // finished — a renderer that animates its own geometry owns its own
+        // completion.
+        const motionAllowed = props.animations !== false && !reducedMotion;
+        // Drives the pre-entrance CSS, which must lift once the stagger reports
+        // done. `entered` belongs to that mechanism only.
+        const willAnimate = motionAllowed && !entered;
 
         const chartTheme = resolveChartTheme(token, size, props.palette, reducedMotion, padding);
         const resolved = resolveSeries(props.series, chartTheme.series, token);
@@ -772,6 +865,18 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const summary = props.summary ?? deriveSummary(props.data, resolved, formatY);
         const showTable = props.dataTable !== false;
 
+        // A renderer is never handed absent data: these replace the plot rather
+        // than overlaying it.
+        const resource = props.resource ?? null;
+        const status: 'loading' | 'error' | 'empty' | null =
+          resource?.status === 'loading'
+            ? 'loading'
+            : resource?.status === 'error'
+              ? 'error'
+              : props.data.length === 0
+                ? 'empty'
+                : null;
+
         return (
           <figure
             {...attrs}
@@ -781,6 +886,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
             data-size={size}
             data-grid={props.grid as string}
+            data-status={status ?? undefined}
             aria-labelledby={captionId}
           >
             <figcaption
@@ -792,42 +898,81 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
             </figcaption>
 
             <div ref={measuredRef} className={styles.viewport} style={sizing}>
-              <div
-                ref={plotRef}
-                className={styles.plot}
-                data-enter={willAnimate ? 'pending' : undefined}
-                onPointerMove={onPointerMove}
-                onPointerLeave={() => setHovered(null)}
-                role="img"
-                aria-label={summary}
-                aria-describedby={showTable ? tableId : undefined}
-              >
-                {width > 0 && height > 0 ? (
-                  <Renderer
-                    spec={chartSpec}
-                    theme={chartTheme}
-                    width={width}
-                    height={height}
-                    onPlotGeometry={handleGeometry}
-                  />
-                ) : null}
+              {/* Status REPLACES the plot rather than sitting inside it. Left in
+                  place, the plot keeps role="img" and an accessible summary
+                  describing a chart that is not there. */}
+              {status ? (
+                <StatusPanel
+                  state={status}
+                  labels={labels}
+                  retry={resource?.status === 'error' ? resource.retry : undefined}
+                />
+              ) : (
+                <div
+                  ref={plotRef}
+                  className={styles.plot}
+                  data-enter={willAnimate ? 'pending' : undefined}
+                  onPointerMove={onPointerMove}
+                  onPointerLeave={() => setHovered(null)}
+                  role="img"
+                  aria-label={summary}
+                  aria-describedby={showTable ? tableId : undefined}
+                >
+                  {width > 0 && height > 0 ? (
+                    <Renderer
+                      spec={chartSpec}
+                      theme={chartTheme}
+                      width={width}
+                      height={height}
+                      onPlotGeometry={handleGeometry}
+                      // Renderers that animate their own geometry (a pie sweeps
+                      // by ANGLE, which no CSS transform expresses) need to know
+                      // both that an entrance is coming — so their first frame is
+                      // already the start state — and when the chart is on
+                      // screen, which only the shell knows.
+                      // NOT `willAnimate`: a pie has no [data-bar]/[data-sweep]/
+                      // [data-dot], so the CSS stagger completes instantly against
+                      // zero elements and flips `entered` true — which would kill
+                      // the pie's own entrance before it started.
+                      entrance={motionAllowed ? (plotReady ? 'run' : 'pending') : null}
+                      activeIndex={hovered}
+                    />
+                  ) : null}
 
-                {canHover && hoveredRow && geometry && (
-                  <HoverOverlay
-                    x={anchorLeft}
-                    y={anchorTop}
-                    // A vertical line through a pie says nothing; a renderer that
-                    // owns hit-testing is not laid out along an axis.
-                    crosshair={!geometry.hitTest}
-                    rect={geometry.rect}
-                    row={hoveredRow}
-                    xKey={props.x}
-                    series={resolved}
-                    formatX={formatX}
-                    formatY={formatY}
-                  />
-                )}
-              </div>
+                  {canHover && hoveredRow && geometry && (
+                    <HoverOverlay
+                      x={anchorLeft}
+                      y={anchorTop}
+                      // A vertical line through a pie says nothing; a renderer that
+                      // owns hit-testing is not laid out along an axis.
+                      crosshair={!geometry.hitTest}
+                      showSeriesLabel={resolved.length > 1}
+                      // The renderer decides, when it knows better than "upward".
+                      side={
+                        (geometry.side && hovered !== null ? geometry.side[hovered] : 'top') ??
+                        'top'
+                      }
+                      rect={geometry.rect}
+                      row={hoveredRow}
+                      xKey={props.x}
+                      // A pie's tooltip names the SLICE, so it takes the slice's
+                      // colour from the same ramp the legend and the renderer
+                      // walk. Passing `resolved` shows one row in the series
+                      // colour whichever wedge you hover.
+                      series={
+                        isPie && hovered !== null
+                          ? resolved.map((entry) => ({
+                              ...entry,
+                              color: chartTheme.series[hovered % chartTheme.series.length],
+                            }))
+                          : resolved
+                      }
+                      formatX={formatX}
+                      formatY={formatY}
+                    />
+                  )}
+                </div>
+              )}
             </div>
 
             {props.legend !== false &&

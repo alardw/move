@@ -365,6 +365,29 @@ export function arcCentroid(
   return [cx + Math.cos(a) * radius, cy + Math.sin(a) * radius];
 }
 
+/**
+ * Where a slice's tooltip should sit, and which way it should open.
+ *
+ * Just outside the ring along the slice's mid-angle, opening away from the
+ * chart — a tooltip over a pie hides the thing it describes, which is worst on
+ * small ones. The side is horizontal because a vertical one would still cross
+ * the ring for slices near the top or bottom.
+ */
+export function sliceAnchor(
+  cx: number,
+  cy: number,
+  outerRadius: number,
+  gap: number,
+  slice: PieSlice,
+): { x: number; y: number; side: 'left' | 'right' } {
+  const mid = (slice.startAngle + slice.endAngle) / 2;
+  return {
+    x: cx + Math.cos(mid) * (outerRadius + gap),
+    y: cy + Math.sin(mid) * (outerRadius + gap),
+    side: Math.cos(mid) >= 0 ? 'right' : 'left',
+  };
+}
+
 /** Which slice a pointer is over, or null outside the ring. */
 export function sliceAt(
   slices: readonly PieSlice[],
