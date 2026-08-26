@@ -60,7 +60,20 @@ export function AxisPlot({
       rect: { x: margin.left, y: margin.top, width: innerWidth, height: innerHeight },
       x: Array.from({ length: pointCount }, (_, i) => (lin ? lin(values[i]) : scale.center(i))),
     });
-  }, [onPlotGeometry, innerWidth, innerHeight, pointCount, data, x, spec.xScale]);
+    // `margin` is in here because it moves with `axes`: toggling the axes off
+    // shifts every reported position, and without it the shell would keep
+    // hit-testing and anchoring against the old gutter.
+  }, [
+    onPlotGeometry,
+    innerWidth,
+    innerHeight,
+    pointCount,
+    data,
+    x,
+    spec.xScale,
+    margin.left,
+    margin.top,
+  ]);
 
   if (innerWidth <= 0 || innerHeight <= 0 || data.length === 0 || series.length === 0) return null;
 
