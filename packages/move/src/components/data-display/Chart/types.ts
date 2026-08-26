@@ -28,12 +28,14 @@ export type ChartDatum = Record<string, unknown>;
 /**
  * How a series is drawn.
  *
- * `line`, `area` and `bar` share one axis, scale and grid machine and combine
- * freely. `pie` shares none of it: it has no axes, its colours and legend are
+ * `line`, `area`, `bar` and `scatter` share one axis, scale and grid machine and
+ * combine freely. A scatter is points with no connecting stroke — it says the
+ * readings are unrelated samples rather than a continuous signal, which is why
+ * it usually wants `xScale="linear"`. `pie` shares none of it: it has no axes, its colours and legend are
  * per ROW rather than per series, and hit-testing is angular. A pie is
  * therefore exclusive — one pie series, on its own.
  */
-export type ChartSeriesType = 'line' | 'area' | 'bar' | 'pie';
+export type ChartSeriesType = 'line' | 'area' | 'bar' | 'scatter' | 'pie';
 
 /** Which grid lines the renderer draws. */
 export type ChartGrid = 'none' | 'horizontal' | 'vertical' | 'both';
@@ -91,6 +93,24 @@ export interface ResolvedChartSeries {
 }
 
 /**
+ * A line drawn across the plot at a fixed value — a target, a budget, an SLA,
+ * an average.
+ *
+ * An annotation rather than a series: it has no data of its own, it exists to
+ * give the data something to be read against. A number on its own says little;
+ * the same number against the line it was supposed to beat says everything.
+ */
+export interface ChartRule {
+  /** Where on the value axis the line sits. */
+  y: number;
+  /** Shown at the end of the line. Omit for an unlabelled guide. */
+  label?: string;
+  /** Move colour name. Defaults to a muted axis colour, so it never competes
+   *  with the data it is annotating. */
+  color?: Color;
+}
+
+/**
  * The normalized, renderer-facing description of what to draw. Plain data —
  * serializable, with no React nodes and no pixel geometry.
  */
@@ -111,6 +131,16 @@ export interface ChartSpec {
   curve: ChartCurve;
   /** How x positions are derived from the data. */
   xScale: ChartXScale;
+  /** Reference lines across the plot. Ignored by a pie, which has no value axis. */
+  rules: readonly ResolvedChartRule[];
+  /**
+   * Draw the axes — tick labels and the baseline.
+   *
+   * Off makes a sparkline: shape with no values, small enough to sit in a table
+   * cell or beside a number. The margins collapse with them, so the drawing
+   * fills the box instead of leaving a gutter for labels that are not there.
+   */
+  axes: boolean;
   /**
    * Hole size for a pie, as a fraction of the radius. 0 is a full pie; around
    * 0.6 reads as a donut. Ignored by every other series type.
@@ -120,6 +150,14 @@ export interface ChartSpec {
   formatX?: (value: unknown) => string;
   /** Format a y tick label. */
   formatY?: (value: number) => string;
+}
+
+/** A rule after the shell has resolved its colour, as with a series. */
+export interface ResolvedChartRule {
+  y: number;
+  label?: string;
+  /** Concrete CSS colour value. */
+  color: string;
 }
 
 /**

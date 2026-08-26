@@ -27,6 +27,8 @@ import {
   type ChartRenderer,
   type ChartSeries,
   type ChartRendererProps,
+  type ChartRule,
+  type ResolvedChartRule,
   type ChartCurve,
   type ChartEntrance,
   type ChartSpec,
@@ -136,7 +138,12 @@ function buildChartAnimations(
   onComplete: () => void,
   activeIndex: number | null,
 ): AnimationTrigger[] {
-  const dotDelay = dotCount > 1 ? Math.max(14, Math.min(90, DOT_SEQUENCE_MS / (dotCount - 1))) : 0;
+  // No lower bound. A floor of a few ms looks harmless and silently breaks the
+  // budget it exists inside: at 10,000 points a 14ms floor turns 700ms into 140
+  // SECONDS. Above a few hundred marks the stagger stops being perceptible
+  // anyway, so letting the delay fall to nearly zero is both correct and what
+  // keeps the total fixed at every size.
+  const dotDelay = dotCount > 1 ? Math.min(90, DOT_SEQUENCE_MS / (dotCount - 1)) : 0;
   return [
     {
       /**
@@ -285,6 +292,18 @@ export interface ChartProps
    * or time-series data needs — pass epoch milliseconds and a `formatX`.
    */
   xScale?: ChartXScale;
+  /**
+   * Draw the axes — tick labels and the baseline. Off makes a sparkline: shape
+   * without values, for a table cell or beside a KPI. Pair with `grid="none"`,
+   * `legend={false}` and `tooltip={false}`.
+   */
+  axes?: boolean;
+  /**
+   * Reference lines across the plot — a target, a budget, an SLA, an average.
+   * Annotations rather than series: they give the data something to be read
+   * against. Ignored by a pie, which has no value axis.
+   */
+  rules?: readonly ChartRule[] | null;
   /**
    * Hole size for a pie, as a fraction of the radius. 0 is a full pie, around
    * 0.6 reads as a donut. Ignored by every other series type.
@@ -556,6 +575,29 @@ function tooltipSeries(
   return resolved.map((entry) => ({ ...entry, color: ramp[hovered % ramp.length] }));
 }
 
+/**
+ * Resolve each rule's colour, as with a series.
+ *
+ * Defaults to the axis colour rather than a palette hue: a reference line is
+ * scenery for the data, and one drawn in a series colour reads as another
+ * series.
+ */
+function resolveRules(
+  rules: readonly ChartRule[] | null | undefined,
+  token: (name: string) => string,
+  theme: ChartTheme,
+): ResolvedChartRule[] {
+  if (!rules) return [];
+  const background = token('--move-bg-base');
+  return rules.map((rule) => ({
+    y: rule.y,
+    label: rule.label,
+    color: rule.color
+      ? resolveMarkColor(rule.color as string, background, token(`--move-${rule.color}-solid`))
+      : theme.axis,
+  }));
+}
+
 /** Legend entries for a pie: one per row, coloured from the same ramp. */
 function sliceLegend(
   data: readonly ChartDatum[],
@@ -612,7 +654,12 @@ function Legend({ series }: { series: readonly ResolvedChartSeries[] }) {
             style={{ background: s.color }}
             data-dash={s.dash ? '' : undefined}
           />
-          {s.label}
+          {/* Series names are consumer data and can be arbitrarily long. Through
+              the shared truncation utility, so a chart legend clips the same way
+              every other Move text does. */}
+          <span className={styles.legendLabel} data-truncate="end">
+            {s.label}
+          </span>
         </li>
       ))}
     </ul>
@@ -755,7 +802,11 @@ function HoverOverlay({
   formatY?: (value: number) => string;
 }) {
   return (
-    <>
+    // Its OWN provider, as TooltipSimple carries one for standalone use. MoveRoot
+    // supplies one, but a bare <Chart> would otherwise throw the moment a
+    // pointer entered the plot — a hover is not the place to discover a missing
+    // ancestor. Nested providers are harmless.
+    <Tooltip.Provider delayDuration={0}>
       {crosshair && (
         <span className={styles.crosshair} style={{ left: x, top: rect.y, height: rect.height }} />
       )}
@@ -787,7 +838,7 @@ function HoverOverlay({
           )}
         </Tooltip.Content>
       </Tooltip.Root>
-    </>
+    </Tooltip.Provider>
   );
 }
 
@@ -858,6 +909,8 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     curve: 'linear' as ChartCurve,
     xScale: 'category' as ChartXScale,
     innerRadius: 0,
+    rules: null,
+    axes: true,
     stacked: false,
     aspect: 2,
     height: null,
@@ -962,10 +1015,16 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
       return () => clearTimeout(timer);
     }, [plotReady, entered]);
 
-    // Only line and area series render dots, so that is what the stagger spans.
-    const dotCount = props.dots
-      ? props.data.length * props.series.filter((x) => x.type !== 'bar').length
-      : 0;
+    // Which series actually put points on the page. A scatter always does —
+    // points ARE the mark — while a line or area only does when `dots` is on.
+    // Deriving this from the prop alone left a scatter with a dot count of 0,
+    // so every point took a delay of 0 and they all appeared together.
+    const dotCount =
+      props.data.length *
+      props.series.filter(
+        (x) =>
+          x.type === 'scatter' || (props.dots === true && (x.type === 'line' || x.type === 'area')),
+      ).length;
     const animConfig = React.useMemo(
       () =>
         plotReady
@@ -1041,6 +1100,8 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           curve: props.curve as ChartCurve,
           xScale: props.xScale as ChartXScale,
           innerRadius: props.innerRadius as number,
+          rules: resolveRules(props.rules, token, chartTheme),
+          axes: props.axes !== false,
           formatX,
           formatY,
         };

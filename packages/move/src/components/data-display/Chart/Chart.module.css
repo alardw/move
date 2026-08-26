@@ -180,6 +180,14 @@
   display: inline-flex;
   align-items: center;
   gap: var(--move-space-2);
+  min-width: 0;
+}
+
+/* Bounded so one long series name cannot push the rest of the legend off the
+   row; [data-truncate] does the clipping. */
+.legendLabel {
+  min-width: 0;
+  max-width: 14rem;
 }
 
 .swatch {

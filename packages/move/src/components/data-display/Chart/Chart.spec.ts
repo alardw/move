@@ -166,6 +166,22 @@ export const spec = {
       description: 'Mark each data point on line and area series.',
     },
     {
+      name: 'rules',
+      type: 'ChartRule[]',
+      default: 'null',
+      moveSpecific: true,
+      description:
+        'Reference lines across the plot — a target, a budget, an SLA, an average. Annotations rather than series: they carry no data of their own, they give the data something to be read against. A rule extends the value domain, so a target above everything achieved still appears. Ignored by a pie, which has no value axis.',
+    },
+    {
+      name: 'axes',
+      type: 'boolean',
+      default: 'true',
+      moveSpecific: true,
+      description:
+        'Draw the tick labels and baseline. Off makes a sparkline: the margins collapse with them, so the drawing fills the box. Pair with grid="none", legend={false} and tooltip={false}.',
+    },
+    {
       name: 'innerRadius',
       type: 'number',
       default: '0',
@@ -338,6 +354,11 @@ export const spec = {
       id: 'legend-shell-owned',
       description:
         'The legend is DOM rendered by the shell, not by the renderer — it stays keyboard- and screen-reader-reachable even behind a canvas adapter.',
+    },
+    {
+      id: 'scale-limits',
+      description:
+        'Every mark is a DOM node, and the hidden data table is a row per point — there is no downsampling or virtualisation. Charts of a few hundred points are comfortable; tens of thousands are not, and the honest answer is to aggregate before passing the data in. Axis labels already thin themselves (labelStride), the tick count is fixed, and the dot stagger spreads a fixed total rather than a fixed per-item delay, so none of those degrade with size.',
     },
     {
       id: 'hover-emphasis-in-renderer',

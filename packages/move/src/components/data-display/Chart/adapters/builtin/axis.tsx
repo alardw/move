@@ -21,6 +21,7 @@ import {
 import { AreaSeries } from './area';
 import { BarSeries } from './bar';
 import { LineSeries } from './line';
+import { ScatterSeries } from './scatter';
 
 export function AxisPlot({
   spec,
@@ -30,29 +31,33 @@ export function AxisPlot({
   onPlotGeometry,
   activeIndex,
 }: ChartRendererProps) {
-  const { data, x, series, grid, stacked, dots, curve, xScale, formatX, formatY } = spec;
+  const { data, x, series, grid, stacked, dots, curve, xScale, rules, axes, formatX, formatY } =
+    spec;
 
   // Namespaced so several charts on one page cannot collide on gradient ids.
   const uid = React.useId().replace(/:/g, '');
-  const innerWidth = Math.max(0, width - MARGIN.left - MARGIN.right);
-  const innerHeight = Math.max(0, height - MARGIN.top - MARGIN.bottom);
+  // Without axes there is nothing to leave room FOR, so the drawing fills the
+  // box — which is what makes a sparkline read at the size of a line of text.
+  const margin = axes ? MARGIN : { top: 2, right: 2, bottom: 2, left: 2 };
+  const innerWidth = Math.max(0, width - margin.left - margin.right);
+  const innerHeight = Math.max(0, height - margin.top - margin.bottom);
 
   // Margins are fixed, so the geometry is known before render. Report it so the
   // shell can hit-test for its tooltip. Band scale: points sit at band centres.
   const pointCount = data.length;
   React.useEffect(() => {
     if (innerWidth <= 0 || pointCount === 0) return;
-    const scale = bandScale(pointCount, [MARGIN.left, MARGIN.left + innerWidth], 0.2);
+    const scale = bandScale(pointCount, [margin.left, margin.left + innerWidth], 0.2);
     const values = data.map((row) => Number(row[x]));
     const useLinear = spec.xScale === 'linear' && values.every((v) => Number.isFinite(v));
     const lin = useLinear
       ? linearScale(
           [Math.min(...values), Math.max(...values)],
-          [MARGIN.left, MARGIN.left + innerWidth],
+          [margin.left, margin.left + innerWidth],
         )
       : null;
     onPlotGeometry?.({
-      rect: { x: MARGIN.left, y: MARGIN.top, width: innerWidth, height: innerHeight },
+      rect: { x: margin.left, y: margin.top, width: innerWidth, height: innerHeight },
       x: Array.from({ length: pointCount }, (_, i) => (lin ? lin(values[i]) : scale.center(i))),
     });
   }, [onPlotGeometry, innerWidth, innerHeight, pointCount, data, x, spec.xScale]);
@@ -75,13 +80,21 @@ export function AxisPlot({
       max = Math.max(max, top, base);
     });
   });
+  // A reference line has to be inside the domain or it simply will not appear —
+  // and a target ABOVE everything achieved is exactly the case worth drawing.
+  for (const rule of rules) {
+    if (!Number.isFinite(rule.y)) continue;
+    min = Math.min(min, rule.y);
+    max = Math.max(max, rule.y);
+  }
+
   if (!Number.isFinite(min) || !Number.isFinite(max)) return null;
 
   const [d0, d1] = niceDomain(min, max, TICK_COUNT);
   const ticks = niceTicks(d0, d1, TICK_COUNT);
-  const toY = (v: number) => MARGIN.top + innerHeight - ((v - d0) / (d1 - d0 || 1)) * innerHeight;
+  const toY = (v: number) => margin.top + innerHeight - ((v - d0) / (d1 - d0 || 1)) * innerHeight;
 
-  const band = bandScale(data.length, [MARGIN.left, MARGIN.left + innerWidth], 0.2);
+  const band = bandScale(data.length, [margin.left, margin.left + innerWidth], 0.2);
 
   // A linear x only makes sense if every row actually carries a number; one
   // non-numeric value and even spacing is the honest fallback.
@@ -90,7 +103,7 @@ export function AxisPlot({
   const xLinearScale = linearX
     ? linearScale(
         [Math.min(...xNumbers), Math.max(...xNumbers)],
-        [MARGIN.left, MARGIN.left + innerWidth],
+        [margin.left, margin.left + innerWidth],
       )
     : null;
   /** Where row `i` sits horizontally, whichever scale is in play. */
@@ -110,29 +123,33 @@ export function AxisPlot({
 
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} focusable="false">
-      {/* Grid + y ticks */}
+      {/* Grid + y ticks. Grid lines are independent of `axes` — a sparkline
+          turns them off through `grid`, and a chart may want gridlines without
+          tick labels. */}
       <g data-chart-part="axis-y">
         {ticks.map((t) => (
           <g key={t}>
             {(grid === 'horizontal' || grid === 'both') && (
               <line
-                x1={MARGIN.left}
-                x2={MARGIN.left + innerWidth}
+                x1={margin.left}
+                x2={margin.left + innerWidth}
                 y1={toY(t)}
                 y2={toY(t)}
                 stroke={theme.grid}
                 strokeWidth={1}
               />
             )}
-            <text
-              x={MARGIN.left - 8}
-              y={toY(t)}
-              textAnchor="end"
-              dominantBaseline="middle"
-              style={textStyle}
-            >
-              {formatY ? formatY(t) : t}
-            </text>
+            {axes && (
+              <text
+                x={margin.left - 8}
+                y={toY(t)}
+                textAnchor="end"
+                dominantBaseline="middle"
+                style={textStyle}
+              >
+                {formatY ? formatY(t) : t}
+              </text>
+            )}
           </g>
         ))}
       </g>
@@ -164,33 +181,71 @@ export function AxisPlot({
               <line
                 x1={label.at}
                 x2={label.at}
-                y1={MARGIN.top}
-                y2={MARGIN.top + innerHeight}
+                y1={margin.top}
+                y2={margin.top + innerHeight}
                 stroke={theme.grid}
                 strokeWidth={1}
               />
             )}
-            <text
-              x={label.at}
-              y={MARGIN.top + innerHeight + 14}
-              textAnchor="middle"
-              style={textStyle}
-            >
-              {label.text}
-            </text>
+            {axes && (
+              <text
+                x={label.at}
+                y={margin.top + innerHeight + 14}
+                textAnchor="middle"
+                style={textStyle}
+              >
+                {label.text}
+              </text>
+            )}
           </g>
         ))}
       </g>
 
-      {/* Baseline */}
-      <line
-        x1={MARGIN.left}
-        x2={MARGIN.left + innerWidth}
-        y1={zeroY}
-        y2={zeroY}
-        stroke={theme.axis}
-        strokeWidth={1}
-      />
+      {/* Baseline. Goes with the axes: without labels there is no scale for it
+          to anchor, and it reads as a stray rule under a sparkline. */}
+      {axes && (
+        <line
+          x1={margin.left}
+          x2={margin.left + innerWidth}
+          y1={zeroY}
+          y2={zeroY}
+          stroke={theme.axis}
+          strokeWidth={1}
+        />
+      )}
+
+      {/* Reference lines. Drawn UNDER the series: an annotation that obscures the
+          data it annotates has the relationship backwards. Dashed, so it never
+          reads as a flat series. */}
+      <g data-chart-part="rules">
+        {rules.map((rule, i) => {
+          const y = toY(rule.y);
+          if (y < margin.top || y > margin.top + innerHeight) return null;
+          return (
+            <g key={i}>
+              <line
+                x1={margin.left}
+                x2={margin.left + innerWidth}
+                y1={y}
+                y2={y}
+                stroke={rule.color}
+                strokeWidth={1}
+                strokeDasharray="4 4"
+              />
+              {rule.label && (
+                <text
+                  x={margin.left + innerWidth}
+                  y={y - 4}
+                  textAnchor="end"
+                  style={{ ...textStyle, fill: rule.color }}
+                >
+                  {rule.label}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </g>
 
       {/* Series — draw order follows declaration order */}
       {series.map((s, si) => {
@@ -213,7 +268,7 @@ export function AxisPlot({
           points,
           baseline,
           uid,
-          plot: { x: MARGIN.left, y: MARGIN.top, width: innerWidth, height: innerHeight },
+          plot: { x: margin.left, y: margin.top, width: innerWidth, height: innerHeight },
           dots,
           activeIndex,
         };
@@ -232,6 +287,11 @@ export function AxisPlot({
               toY={toY}
             />
           );
+        }
+
+        // Points only — the shared dot markers carry emphasis and the entrance.
+        if (s.type === 'scatter') {
+          return <ScatterSeries key={s.key} frame={{ ...frame, dots: true }} />;
         }
 
         if (s.type === 'area') {

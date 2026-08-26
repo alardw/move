@@ -9,6 +9,12 @@ import Line from './samples/line';
 import lineCode from './samples/line?raw';
 import Bar from './samples/bar';
 import barCode from './samples/bar?raw';
+import Scatter from './samples/scatter';
+import scatterCode from './samples/scatter?raw';
+import ReferenceLines from './samples/reference-lines';
+import referencelinesCode from './samples/reference-lines?raw';
+import Sparkline from './samples/sparkline';
+import sparklineCode from './samples/sparkline?raw';
 import Mixed from './samples/mixed';
 import mixedCode from './samples/mixed?raw';
 import Pie from './samples/pie';
@@ -51,9 +57,11 @@ export const content: ComponentContent = {
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'line', title: 'Line', render: Line, code: lineCode },
     { id: 'bar', title: 'Bar', render: Bar, code: barCode },
+    { id: 'scatter', title: 'Scatter', render: Scatter, code: scatterCode },
     { id: 'mixed', title: 'Mixed types', render: Mixed, code: mixedCode },
     { id: 'pie', title: 'Pie', render: Pie, code: pieCode },
     { id: 'donut', title: 'Donut', render: Donut, code: donutCode },
+    { id: 'reference-lines', title: 'Reference lines', render: ReferenceLines, code: referencelinesCode },
     { id: 'stacked', title: 'Stacked', render: Stacked, code: stackedCode },
     { id: 'stacked-area', title: 'Stacked area', render: StackedArea, code: stackedAreaCode },
     { id: 'curve-linear', title: 'Interpolation — linear', render: CurveLinear, code: curveLinearCode },
@@ -63,6 +71,7 @@ export const content: ComponentContent = {
     { id: 'palette', title: 'Series palette', render: Palette, code: paletteCode },
     { id: 'sine', title: 'A sampled function', render: Sine, code: sineCode },
     { id: 'numeric-x', title: 'Numeric x scale', render: NumericX, code: numericXCode },
+    { id: 'sparkline', title: 'Sparkline', render: Sparkline, code: sparklineCode },
     { id: 'no-tooltip', title: 'Without a tooltip', render: NoTooltip, code: noTooltipCode },
     { id: 'async', title: 'Loading and error states', render: Async, code: asyncCode },
     { id: 'accessible', title: 'Text alternative', render: Accessible, code: accessibleCode },

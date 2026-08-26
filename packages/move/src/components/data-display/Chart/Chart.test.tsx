@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render as rtlRender, screen, within } from '@testing-library/react';
+import { fireEvent, render as rtlRender, screen, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { Chart } from './Chart';
 import { ThemeProvider } from '../../../infrastructure/Theme';
@@ -490,7 +490,8 @@ describe('Chart — pie', () => {
     const wedges = [...container.querySelectorAll('[data-slice]')].map((p) =>
       p.getAttribute('fill'),
     );
-    const swatches = [...container.querySelectorAll('li span')].map(
+    // first span in each item is the swatch; the second is the (truncatable) label
+    const swatches = [...container.querySelectorAll('li > span:first-child')].map(
       (s) => (s as HTMLElement).style.background,
     );
     // jsdom normalises an inline `background` to rgb(), so compare values.
@@ -563,5 +564,142 @@ describe('Chart — tooltip content', () => {
       />,
     );
     expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Mon', 'Tue']);
+  });
+});
+
+describe('Chart — hover emphasis', () => {
+  const rows = [
+    { day: 'Mon', visits: 10 },
+    { day: 'Tue', visits: 20 },
+    { day: 'Wed', visits: 30 },
+  ];
+  const bar = [{ key: 'visits', type: 'bar' as const, label: 'Visits' }];
+
+  /** The plot is what carries the pointer handlers and the reported geometry. */
+  const hoverAt = (container: HTMLElement, clientX: number) => {
+    const plot = container.querySelector('[role="img"]')!;
+    fireEvent.pointerMove(plot, { clientX, clientY: 150 });
+  };
+
+  it('marks every mark active while nothing is hovered', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="day" series={bar} animations={false} />,
+    );
+    const marks = [...container.querySelectorAll('[data-mark]')];
+    expect(marks).toHaveLength(3);
+    expect(marks.every((m) => m.hasAttribute('data-active'))).toBe(true);
+  });
+
+  it('leaves exactly one active once a mark is hovered', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="day" series={bar} animations={false} />,
+    );
+    hoverAt(container, 500);
+    const active = container.querySelectorAll('[data-mark][data-active]');
+    expect(active).toHaveLength(1);
+  });
+
+  it('the active mark is the one nearest the pointer', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="day" series={bar} animations={false} />,
+    );
+    const marks = () => [...container.querySelectorAll('[data-mark]')];
+    hoverAt(container, 20);
+    expect(marks().findIndex((m) => m.hasAttribute('data-active'))).toBe(0);
+    hoverAt(container, 580);
+    expect(marks().findIndex((m) => m.hasAttribute('data-active'))).toBe(2);
+  });
+
+  it('restores every mark when the pointer leaves', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="day" series={bar} animations={false} />,
+    );
+    hoverAt(container, 500);
+    expect(container.querySelectorAll('[data-mark][data-active]')).toHaveLength(1);
+    fireEvent.pointerLeave(container.querySelector('[role="img"]')!);
+    // "nothing hovered" and "this one" resolve alike — which is what keeps the
+    // animation's selectors static.
+    expect(container.querySelectorAll('[data-mark][data-active]')).toHaveLength(3);
+  });
+
+  it('pie slices take part too', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="day"
+        series={[{ key: 'visits', type: 'pie', label: 'Visits' }]}
+        animations={false}
+      />,
+    );
+    expect(container.querySelectorAll('[data-slice][data-mark]')).toHaveLength(3);
+  });
+
+  it('scatter points take part too', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="day"
+        series={[{ key: 'visits', type: 'scatter', label: 'Visits' }]}
+        animations={false}
+      />,
+    );
+    expect(container.querySelectorAll('[data-dot][data-mark]')).toHaveLength(3);
+  });
+});
+
+describe('Chart — axes', () => {
+  const rows = [
+    { d: 'a', v: 1 },
+    { d: 'b', v: 4 },
+    { d: 'c', v: 2 },
+  ];
+  const line = [{ key: 'v', type: 'line' as const, label: 'V' }];
+
+  it('draws tick labels by default', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="d" series={line} animations={false} />,
+    );
+    expect(container.querySelectorAll('text').length).toBeGreaterThan(0);
+  });
+
+  it('axes={false} removes every label and the baseline', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="d"
+        series={line}
+        axes={false}
+        grid="none"
+        animations={false}
+      />,
+    );
+    expect(container.querySelectorAll('text')).toHaveLength(0);
+    // no stray rule under the drawing
+    expect(container.querySelectorAll('line')).toHaveLength(0);
+  });
+
+  it('the drawing fills the box once the gutters are gone', () => {
+    const withAxes = render(
+      <Chart caption="R" data={rows} x="d" series={line} animations={false} />,
+    );
+    const bare = render(
+      <Chart caption="R" data={rows} x="d" series={line} axes={false} animations={false} />,
+    );
+    const width = (c: HTMLElement) =>
+      c.querySelector('[data-series] path[stroke]')!.getBoundingClientRect().width;
+    // jsdom has no layout, so compare the path data instead: the bare chart
+    // starts further left because there is no gutter for tick labels.
+    const firstX = (c: HTMLElement) =>
+      Number(
+        c
+          .querySelector('[data-series] path[stroke]')!
+          .getAttribute('d')!
+          .match(/M([\d.]+)/)![1],
+      );
+    expect(firstX(bare.container)).toBeLessThan(firstX(withAxes.container));
+    void width;
   });
 });

@@ -430,3 +430,27 @@ describe('isEmphasised', () => {
     expect(markAttrs(1, 0)['data-active']).toBeUndefined();
   });
 });
+
+describe('dot stagger budget', () => {
+  /** Mirrors buildChartAnimations — the total must not grow with the count. */
+  const DOT_SEQUENCE_MS = 700;
+  const delay = (n: number) => (n > 1 ? Math.min(90, DOT_SEQUENCE_MS / (n - 1)) : 0);
+  const total = (n: number) => (n - 1) * delay(n);
+
+  it('spans the same time whatever the point count', () => {
+    for (const n of [12, 48, 200, 2000, 10000]) {
+      expect(total(n)).toBeLessThanOrEqual(DOT_SEQUENCE_MS + 1);
+    }
+  });
+
+  it('a lower bound on the per-item delay would break that — 14ms costs 140s at 10k', () => {
+    const floored = (n: number) => (n - 1) * Math.max(14, delay(n));
+    expect(floored(10_000)).toBeGreaterThan(100_000);
+    expect(total(10_000)).toBeLessThanOrEqual(DOT_SEQUENCE_MS + 1);
+  });
+
+  it('still reads as a sequence at chart-sized counts', () => {
+    expect(delay(12)).toBeGreaterThan(30);
+    expect(delay(48)).toBeGreaterThan(10);
+  });
+});
