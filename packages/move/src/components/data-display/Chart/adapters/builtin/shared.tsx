@@ -18,6 +18,14 @@ import type { ChartTheme, ResolvedChartSeries } from '../../types';
 export const MARGIN = { top: 8, right: 8, bottom: 22, left: 46 } as const;
 export const TICK_COUNT = 5;
 export const MAX_X_LABELS = 8;
+/**
+ * Gap between bands, as a fraction of the band.
+ *
+ * Shared because it is used TWICE for the same chart — once to report point
+ * positions for hit-testing, once to draw — and the two must agree exactly or
+ * the tooltip anchors drift away from the bars they describe.
+ */
+export const BAND_PADDING = 0.2;
 
 /** Read a series value out of a row, coercing to a finite number or null. */
 export function valueAt(row: Record<string, unknown>, key: string): number | null {

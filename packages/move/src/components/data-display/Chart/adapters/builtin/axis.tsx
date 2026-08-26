@@ -11,6 +11,7 @@ import * as React from 'react';
 import type { ChartRendererProps } from '../../types';
 import { bandScale, labelStride, linearScale, niceDomain, niceTicks } from '../../scales';
 import {
+  BAND_PADDING,
   MARGIN,
   MAX_X_LABELS,
   TICK_COUNT,
@@ -47,7 +48,7 @@ export function AxisPlot({
   const pointCount = data.length;
   React.useEffect(() => {
     if (innerWidth <= 0 || pointCount === 0) return;
-    const scale = bandScale(pointCount, [margin.left, margin.left + innerWidth], 0.2);
+    const scale = bandScale(pointCount, [margin.left, margin.left + innerWidth], BAND_PADDING);
     const values = data.map((row) => Number(row[x]));
     const useLinear = spec.xScale === 'linear' && values.every((v) => Number.isFinite(v));
     const lin = useLinear
@@ -107,7 +108,7 @@ export function AxisPlot({
   const ticks = niceTicks(d0, d1, TICK_COUNT);
   const toY = (v: number) => margin.top + innerHeight - ((v - d0) / (d1 - d0 || 1)) * innerHeight;
 
-  const band = bandScale(data.length, [margin.left, margin.left + innerWidth], 0.2);
+  const band = bandScale(data.length, [margin.left, margin.left + innerWidth], BAND_PADDING);
 
   // A linear x only makes sense if every row actually carries a number; one
   // non-numeric value and even spacing is the honest fallback.
