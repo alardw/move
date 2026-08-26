@@ -1,6 +1,6 @@
 ---
 name: app-compose
-description: "Compose an app screen from a CompositionSpec — a composite, a page, or a whole feature, all built entirely from Move components, spec-driven. Seeds from a Move recipe when one fits, else from analysis. No custom CSS."
+description: "Compose an app screen from a CompositionSpec — a composite, a page, or a whole feature, all built entirely from Move components, spec-driven. Seeds from a Move design pattern when one fits, else from analysis. No custom CSS."
 user-invocable: true
 ---
 
@@ -16,8 +16,8 @@ says which:
 | `page`       | a composite that owns a route | a dashboard, a settings screen |
 | `feature`    | several pages + composites + routing | auth (sign-in, sign-up, reset) |
 
-A composition is the same model as a Move recipe **minus publishing**: a typed
-`CompositionSpec` (the substance) plus generated `.tsx`. You author the spec,
+A composition is a typed `CompositionSpec` (the substance) plus generated
+`.tsx`. You author the spec,
 generation produces the code, and `move check` validates it (purity +
 composition/labels parity). The spec is what makes a composition checkable —
 without it, a composition is unverifiable by construction.
@@ -39,15 +39,13 @@ composite or page, several plus routing for a feature.
 
 The spec always comes first — you arrive at it one of two ways:
 
-### A. Seed from a Move recipe (preferred when one fits)
-If a shipped recipe covers the pattern (a sign-in flow, a filterable table, an
-app sidebar, a detail/overview page…), **start from its `CompositionSpec`.** It's
-a proven decomposition. Copy it in, then adapt: rename, trim `composition` to what
-you use, adjust `behaviors` to the app's acceptance criteria, rewrite `labels` to
-the app's copy, repoint `integrationPoints` at real data/handlers. Check
-`recipes/registry.ts` for what exists.
+### A. Seed from a design pattern (preferred when one fits)
+If a shipped design pattern covers the shape (a gallery, a filterable
+collection…), **resolve it into a `CompositeSpec`** with `/composite-create-spec`
+rather than decomposing from nothing. The pattern carries the axes, the skeleton
+and the bindings, so what you supply is the decisions. Check `packages/move/patterns/registry.ts` for what exists.
 
-### B. Analyze from scratch (when no recipe fits)
+### B. Analyze from scratch (when no pattern fits)
 Decompose the requirement into the spec: which Move components compose it (→
 `composition`), what it must do (→ `behaviors`, each testable), where real
 data/handlers plug in (→ `integrationPoints`), every user-facing string (→
@@ -58,8 +56,8 @@ data/handlers plug in (→ `integrationPoints`), every user-facing string (→
 
 ## The CompositionSpec
 
-`{Name}.spec.ts` — a typed object matching `CompositionSpec` (the same substance
-type Move's own recipes use). Substance only — no publishing/discovery fields.
+`{Name}.spec.ts` — a typed object matching `CompositionSpec`. Substance only —
+no publishing/discovery fields.
 
 ```ts
 // {Name}.spec.ts — the composition's substance.
@@ -106,7 +104,7 @@ export const spec = {
 ## Rules
 
 1. **Spec first, code second** — the `.tsx` derives from `{Name}.spec.ts`; the spec is the source of truth.
-2. **Prefer a recipe seed** — adapt an existing Move recipe before analyzing from scratch.
+2. **Prefer a design-pattern seed** — resolve an existing Move design pattern before analyzing from scratch.
 3. **Only `spec.composition` components** — no other UI, no raw HTML layout, no custom CSS. This list is the validate allow-list.
 4. **Every label via the `labels` object** — no hardcoded user-facing strings.
 5. **Every integration point marked** — explicit, greppable `// Integration point:` stubs; sample data `SAMPLE_`-prefixed.

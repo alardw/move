@@ -23,6 +23,8 @@
  * Exit: 0 = clean (or every hit exempt), 1 = at least one un-exempt deviation.
  *
  * @enforces styles-9
+ * @instead size from `--move-control-height-sm|md|lg` so the control scales with the system.
+ *   For a dimension that genuinely is not a control, mark it `/* size-exempt: reason *\/`.
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

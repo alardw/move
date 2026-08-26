@@ -23,6 +23,8 @@
  *   1 — at least one mismatch (validate)
  *
  * @enforces icons-2 icons-3
+ * @instead render through `useResolvedIcon(name, size)` or `<Icon name>` and declare the name in
+ *   the spec's `iconsUsed`, so the consumer's `iconResolver` can swap the whole set.
  */
 
 import { readdirSync, statSync, existsSync, readFileSync, writeFileSync } from 'node:fs';

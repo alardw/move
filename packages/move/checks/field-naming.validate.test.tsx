@@ -247,11 +247,13 @@ const FIXTURES: Record<string, Expectation> = {
 };
 
 /** The tree every fixture is measured in: a Label and the control, nothing else. */
+const LABEL_TEXT = 'Field name';
+
 function field(control: React.ReactNode) {
   return (
     <FormField.Root>
       <FormField.Label>
-        <Label>Field name</Label>
+        <Label>{LABEL_TEXT}</Label>
       </FormField.Label>
       <FormField.Field>{control}</FormField.Field>
     </FormField.Root>
@@ -345,6 +347,33 @@ describe('check:field-naming', () => {
               `widget role (radiogroup, slider, group…), not on a bare wrapper.`,
           ).toBeTruthy();
         }
+      });
+
+      // The wiring assertions above prove the mechanism is CONNECTED. This one
+      // proves it WORKS — that the name a screen reader computes is the one the
+      // page shows. The two come apart: PinInput's own aria-label outranked the
+      // Label and announced "PIN input" while its `for` was perfectly wired, and
+      // a control can carry a fallback name that hides a dangling `for` entirely.
+      // Reading the resolved name is the only assertion that sees the difference.
+      it(`resolves "${LABEL_TEXT}" as its accessible name`, () => {
+        fixture.render();
+        const label = document.querySelector('label') as HTMLLabelElement | null;
+        const control =
+          fixture.mechanism === 'labelable'
+            ? label?.htmlFor
+              ? document.getElementById(label.htmlFor)
+              : null
+            : label?.id
+              ? document.querySelector(`[aria-labelledby~="${label.id}"]`)
+              : null;
+
+        expect(control, 'No control reached by the label — see the naming test above.').not.toBeNull();
+        expect(
+          control!,
+          `The control is named something other than its FormField.Label. A name ` +
+            `the control supplies itself (aria-label, title, inner text) outranks ` +
+            `the Label, so the field announces one thing and reads as another.`,
+        ).toHaveAccessibleName(LABEL_TEXT);
       });
 
       it('emits no duplicate ids', () => {

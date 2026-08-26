@@ -13,6 +13,8 @@
  *      Catches drift when a prop is removed from code but not the spec
  *      (or vice versa).
  *   4. Spec strings are non-empty: descriptions, names, types are filled.
+ *   4b. `engineImports` matches what the source actually imports from the
+ *      engine barrel, both directions.
  *   5. Optional cross-package check: if a docs entry exists at
  *      `packages/docs/src/content/components/<slug>/index.ts`, ensure
  *      the spec name resolves to the same component.
@@ -24,7 +26,7 @@
  * The script reports a tight summary at the end; pass `--verbose` to
  * see every passing component as well.
  *
- * @enforces specParity-1 specParity-2 specParity-3 specParity-4 specParity-8 specParity-9 specParity-10
+ * @enforces specParity-1 specParity-2 specParity-3 specParity-4 specParity-8 specParity-9 specParity-10 specParity-11
  */
 
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
@@ -652,6 +654,39 @@ function checkComponent(componentDir) {
     const db = specText.match(/dismissBehavior:\s*'([^']+)'/);
     if (db && db[1] === 'unmountAfterExit' && !/\brunExit\b/.test(dirSrc)) {
       errors.push("spec dismissBehavior='unmountAfterExit' but source never calls runExit() (no exit-then-unmount flow)");
+    }
+
+    // 0c. engineImports parity. The field existed in the schema from the start
+    //     and nothing read it, so every spec's list was frozen at whatever the
+    //     component imported the day it was generated. A declared-but-unchecked
+    //     field reads as assurance and is not one — it is worse than no field,
+    //     because a reader trusts it. Compare it with what the source actually
+    //     pulls off the engine barrel, both directions.
+    const declared = specText.match(/engineImports:\s*\[([^\]]*)\]/s);
+    if (declared) {
+      const specImports = [...declared[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
+      const actual = new Set();
+      for (const m of dirSrc.matchAll(
+        /import\s*\{([^}]*)\}\s*from\s*'[^']*\/engine'/g,
+      )) {
+        for (const part of m[1].split(',')) {
+          // `type Foo` entries are types, not the runtime imports this lists.
+          const named = part.trim().replace(/\s+as\s+\w+$/, '');
+          if (named && !named.startsWith('type ')) actual.add(named);
+        }
+      }
+      const missing = [...actual].filter((i) => !specImports.includes(i));
+      const stale = specImports.filter((i) => !actual.has(i));
+      if (missing.length) {
+        errors.push(
+          `spec engineImports is missing what the source imports: ${missing.join(', ')}`,
+        );
+      }
+      if (stale.length) {
+        errors.push(
+          `spec engineImports lists what the source no longer imports: ${stale.join(', ')}`,
+        );
+      }
     }
   }
 

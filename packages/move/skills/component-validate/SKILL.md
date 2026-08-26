@@ -17,7 +17,7 @@ Merged validation skill: component conformance, theme validation, spec drift det
 - A component name (e.g. "Badge") — validate that component
 - `"all"` — validate all components
 - `"theme {name}"` or `"theme all"` — validate theme files
-- `"registry"` — show registry status of all components
+- `"registry"` — show spec status of all components
 - Append `"fix"` to auto-fix failures (e.g. "Badge fix")
 
 **Output:**
@@ -169,11 +169,6 @@ The **Component Issues** section captures problems found during generation that 
 
 This section is only written when issues are found. Omit it entirely for clean components.
 
-### Step 5 — Update registry
-
-Update `src/components/specs.registry.ts` with the component's validation status.
-
----
 
 ## Theme Validation
 
@@ -209,15 +204,10 @@ When input starts with "theme":
 
 When input is "registry":
 
-Read `src/components/specs.registry.ts` and output a summary table:
-
-```
-| Component | Category | Spec | Status |
-|-----------|----------|------|--------|
-| Badge     | misc     | yes  | valid  |
-| Button    | core     | no   | no-spec|
-| ...       | ...      | ...  | ...    |
-```
+Run `npm run check:spec-drift -- --verbose` from `packages/move` and report its
+per-component output. It prints the status of every component against its spec,
+which is the question this mode asks — and being the live gate, it cannot go
+stale the way a checked-in status file did.
 
 ---
 

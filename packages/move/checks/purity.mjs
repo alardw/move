@@ -29,6 +29,13 @@
  * the boundary.
  *
  * @enforces icons-1 purity-1 purity-2 purity-4 purity-6
+ * @instead compose from Move components; use Stack/Align/Grid for layout, the `sp` slot-prop
+ *   for a slot the component exposes, and a component token for anything visual.
+ *   NOTE: there is currently NO sanctioned way to set an arbitrary width or
+ *   height — no Frame/Box primitive exists — so this rule is INCOMPLETE. Three
+ *   consumer teams each built their own Frame and each one failed this check.
+ *   Tracked as the Tier-2 sizing gap in STEVE-FINDINGS.md; until it lands, this
+ *   is a wall rather than a design, and that is a known defect in the rule.
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';

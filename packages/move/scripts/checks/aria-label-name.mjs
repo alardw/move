@@ -19,6 +19,8 @@
  * Exit 0 = clean, 1 = at least one Label-in-Name risk.
  *
  * @enforces a11y-4
+ * @instead let the visible children BE the name and drop the aria-label; where the control has no
+ *   visible text (an icon-only button), aria-label is correct and is what this expects.
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

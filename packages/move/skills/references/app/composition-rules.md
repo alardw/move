@@ -32,4 +32,4 @@ Composites are app-specific components built entirely from Move core components.
 
 ## Available components
 
-See `app/references/layout-composition.md` for the full list of Move layout components and their props.
+See `references/app/layout-composition.md` for the full list of Move layout components and their props.

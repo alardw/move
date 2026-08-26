@@ -110,7 +110,7 @@ When generating variant-specific color overrides, use **exactly** these token na
 
 Hover variants: `var(--move-{name}-hover)`. Subtle variants: `var(--move-{name}-subtle)`.
 
-Cross-reference `references/tokens-semantic.ts` if unsure — if a token isn't defined there, it doesn't exist.
+Cross-reference `references/component/tokens-semantic.ts` if unsure — if a token isn't defined there, it doesn't exist.
 
 ## Slot class naming
 

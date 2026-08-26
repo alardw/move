@@ -16,6 +16,9 @@
  *     colour picker, whose swatches/spectrum ARE colour content, not chrome).
  *
  * @enforces styles-2
+ * @instead use a `--move-*` token — a semantic role (`--move-fg-muted`) where one fits, else
+ *   a component token declared in the spec. For a surface that is deliberately not
+ *   theme-following, mark it `/* token-exempt: reason *\/`.
  *
  * Exit: 0 = clean, 1 = at least one raw colour.
  */

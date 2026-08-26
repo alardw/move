@@ -60,6 +60,12 @@ const STRUCTURAL = new Set([
   'conformance-docs',
   'conformance-spec',
   'script-refs',
+  // Sibling of script-refs: guards skill prose against repo paths. A dangling
+  // reference is not a violation of any entity rule — it is a broken instruction.
+  'skill-refs',
+  // Meta-check over how rules are WRITTEN, not over an entity: it asserts each
+  // restriction check declares the sanctioned alternative to what it refuses.
+  'escape-hatch',
   'doc-spec-drift',
   'rule-coverage',
   // Guards the WCAG claim↔evidence mapping on /accessibility, which is a different

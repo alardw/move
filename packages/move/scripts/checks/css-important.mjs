@@ -29,6 +29,8 @@
  * Exit: 0 = clean (or every hit exempt), 1 = at least one un-exempt use.
  *
  * @enforces styles-10
+ * @instead raise specificity within your own stylesheet, or move the declaration into a
+ *   cascade layer so a consumer's rule still wins.
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

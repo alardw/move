@@ -28,6 +28,8 @@
  * Exit: 0 = clean (or every hit exempt), 1 = at least one internal slot prop.
  *
  * @enforces styles-11
+ * @instead expose what the inner component needs as its own prop or component token, so the
+ *   surface is public rather than reached past.
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
