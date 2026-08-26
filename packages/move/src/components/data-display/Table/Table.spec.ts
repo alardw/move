@@ -708,6 +708,7 @@ export const spec = {
       'Head renders aria-sort based on sorted prop.',
       'Group renders as tbody with data-open bound to internal/controlled state.',
       'GroupHeader is role="button" and toggles the parent Group on click / Enter / Space.',
+      'The group chevron rotates through useAnimations on a deps trigger, not a CSS transition.',
       'GroupHeader renders a td that spans the inferred column count.',
       'Forwards className, style, and ref on every sub-component.',
     ],

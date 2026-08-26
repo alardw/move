@@ -420,13 +420,13 @@
 .groupChevron {
   display: inline-block;
   margin-right: var(--move-spacing-xs);
-  /* transition-exempt: KNOWN DRIFT. A disclosure chevron should rotate off a
-     data-state trigger in useAnimations, the way Autocomplete's does; this
-     predates that convention. Worth migrating. */
-  transition: transform 0.18s ease;
   color: var(--move-fg-muted);
 }
 
+/* Resting state only — the ROTATION is animated in Table.tsx through
+   useAnimations, which writes an inline transform that supersedes this once the
+   group has been toggled. This is what the chevron looks like before it has
+   ever moved. */
 .group[data-collapsible][data-open='true'] .groupChevron {
   transform: rotate(90deg);
 }

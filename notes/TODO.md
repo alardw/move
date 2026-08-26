@@ -102,3 +102,27 @@ Things components do today that the spec doesn't capture or only loosely capture
 - Bug fix: `CalendarRoot` accepts `yearRange` + `fixedWeeks` (was unreachable)
 - Bug fix: `Image.tsx` use-before-declare on `setLoaded`
 - Inventory of components Move lacks → `missing-components.md`
+
+## CSS transition debt (rule `styles-12`, `check:css-transitions`)
+
+Four components still animate motion in CSS. Each carries a `transition-exempt:
+KNOWN DRIFT` comment naming the reason, so the check surfaces them; this is the
+work each one needs. Table's chevron was migrated as the reference case — it now
+rotates on a **deps trigger** in `useAnimations` (Table.tsx `chevronAnimations`),
+which is simpler than Autocomplete's state trigger because a group owns `open` in
+React rather than reading it off the DOM.
+
+- **ProgressBar** — the indicator transitions `transform` to a new value. That is
+  real motion: a deps trigger on `value` would make it sequenceable, sprung, and
+  switchable off with `animations={false}`. Highest value of the four, and the
+  most care needed — it is widely used and smoothness is the point.
+- **AudioPlayer** — controls fade on pointer presence. A state change, so it wants
+  a `data-*` attribute the component sets plus a state trigger.
+- **VideoPlayer** — same fade, plus a control bar sliding clear of the captions
+  track on `bottom`. Both driven by playback state.
+- **Carousel** — controls fading on pointer presence, as above.
+
+Not debt, and correctly exempt: Button, ToggleGroup and EventSlot transition
+`opacity` alongside a colour change for hover/disabled — state feedback, not
+motion. Image fades a decoded image in off the browser's load event, where there
+is no React state for `useAnimations` to hang a trigger on.

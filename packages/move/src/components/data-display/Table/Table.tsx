@@ -28,6 +28,40 @@ const DEFAULT_TABLE_ANIMATIONS: AnimationTrigger[] = [
   },
 ];
 
+/**
+ * The disclosure chevron, rotating with its group.
+ *
+ * A deps trigger rather than the state trigger Autocomplete's chevron uses:
+ * that one has to watch Radix's `data-state` through the DOM, whereas a group
+ * owns `open` in React and can just declare it as a dependency.
+ *
+ * Previously a CSS transition on `transform`, which put it outside the
+ * animation system — unsequenceable, unsprung, and deaf to `animations={false}`
+ * (rule styles-12).
+ */
+const CHEVRON_ROTATION = { closed: 0, open: 90 } as const;
+
+function chevronAnimations(open: boolean): AnimationTrigger[] {
+  return [
+    {
+      trigger: 'Chevron.rotate',
+      deps: [open],
+      sequence: [
+        {
+          target: 'Chevron',
+          animation: {
+            rotate: {
+              to: open ? CHEVRON_ROTATION.open : CHEVRON_ROTATION.closed,
+              ease: 'outQuart',
+              duration: 180,
+            },
+          },
+        },
+      ],
+    },
+  ];
+}
+
 // ============================================================================
 // Context
 // ============================================================================
@@ -804,6 +838,13 @@ const TableGroupHeader = withMoveComponent<
     const inferredSpan = tableCtx?.headerLabels.length || 1;
     const span = (props.colSpan as number | undefined) ?? inferredSpan;
 
+    const chevronRef = React.useRef<HTMLSpanElement>(null);
+    const chevronRefs = React.useMemo(() => ({ Chevron: chevronRef }), []);
+    useAnimations(
+      resolveAnimationsConfig(chevronAnimations(groupCtx.open), undefined),
+      chevronRefs,
+    );
+
     return {
       render() {
         const ghSp = sp('groupHeader');
@@ -835,7 +876,7 @@ const TableGroupHeader = withMoveComponent<
           >
             <td className={styles.groupHeaderCell} colSpan={span}>
               {collapsible && (
-                <span className={styles.groupChevron} aria-hidden="true">
+                <span ref={chevronRef} className={styles.groupChevron} aria-hidden="true">
                   {'›'}
                 </span>
               )}

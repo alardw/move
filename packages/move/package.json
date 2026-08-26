@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
+    "./spec": {
+      "types": "./dist/spec.d.ts",
+      "import": "./dist/spec.mjs"
+    },
     "./styles.css": "./dist/styles.css",
     "./system.css": "./dist/styles/system.css",
     "./styles/*": "./dist/styles/*",
