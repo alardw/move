@@ -21,6 +21,7 @@
   white-space: nowrap;
   min-height: 1.25rem;
   border-inline-start: 3px solid;
+  /* transition-exempt: dims the slot as a state, with no movement. */
   transition: opacity 0.15s ease;
 }
 

@@ -7,7 +7,7 @@
 // =============================================================================
 
 import type { ChartDatum } from '../../types';
-import { emphasis, valueAt, type SeriesFrame } from './shared';
+import { markAttrs, valueAt, type SeriesFrame } from './shared';
 
 export function BarSeries({
   frame,
@@ -43,12 +43,12 @@ export function BarSeries({
           <rect
             key={i}
             data-bar=""
+            {...markAttrs(i, activeIndex)}
             x={bandAt(i) + slot * barWidth}
             y={Math.min(top, bottom)}
             width={Math.max(0, barWidth - 1)}
             height={Math.max(0, Math.abs(bottom - top))}
             fill={series.color}
-            opacity={emphasis(i, activeIndex)}
             stroke={theme.surface}
             strokeWidth={0}
           />

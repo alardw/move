@@ -410,16 +410,23 @@ describe('sliceAnchor', () => {
   });
 });
 
-describe('emphasis', () => {
-  it('leaves everything at full strength when nothing is hovered', async () => {
-    const { emphasis } = await import('./adapters/builtin/shared');
-    expect(emphasis(0, null)).toBe(1);
-    expect(emphasis(3, undefined)).toBe(1);
+describe('isEmphasised', () => {
+  it('emphasises everything when nothing is hovered', async () => {
+    const { isEmphasised } = await import('./adapters/builtin/shared');
+    expect(isEmphasised(0, null)).toBe(true);
+    expect(isEmphasised(3, undefined)).toBe(true);
   });
 
-  it('dims every mark except the hovered one', async () => {
-    const { emphasis, DIMMED } = await import('./adapters/builtin/shared');
-    expect(emphasis(2, 2)).toBe(1);
-    expect(emphasis(0, 2)).toBe(DIMMED);
+  it('emphasises only the hovered mark', async () => {
+    const { isEmphasised } = await import('./adapters/builtin/shared');
+    expect(isEmphasised(2, 2)).toBe(true);
+    expect(isEmphasised(0, 2)).toBe(false);
+  });
+
+  it('"nothing hovered" and "this one" resolve alike — which is what keeps the animation config static', async () => {
+    const { markAttrs } = await import('./adapters/builtin/shared');
+    expect(markAttrs(1, null)['data-active']).toBe('');
+    expect(markAttrs(1, 1)['data-active']).toBe('');
+    expect(markAttrs(1, 0)['data-active']).toBeUndefined();
   });
 });

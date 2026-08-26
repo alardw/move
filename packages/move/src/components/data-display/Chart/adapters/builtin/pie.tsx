@@ -14,7 +14,7 @@ import * as React from 'react';
 import { animate } from 'animejs';
 import type { ChartRendererProps } from '../../types';
 import { arcPath, pieLayout, sliceAnchor, sliceAt } from '../../scales';
-import { emphasis, valueAt } from './shared';
+import { markAttrs, valueAt } from './shared';
 
 /**
  * Entrance: a clockwise sweep from twelve o'clock.
@@ -106,9 +106,9 @@ export function PiePlot({
             <path
               key={slice.index}
               data-slice=""
+              {...markAttrs(slice.index, activeIndex)}
               d={arcPath(cx, cy, inner, outer, slice.startAngle, end)}
               fill={theme.series[slice.index % theme.series.length]}
-              opacity={emphasis(slice.index, activeIndex)}
               stroke={theme.surface}
               strokeWidth={1}
             />

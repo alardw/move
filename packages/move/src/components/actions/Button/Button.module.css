@@ -53,6 +53,8 @@
     cursor: pointer;
     border: 1px solid transparent;
     outline: none;
+    /* transition-exempt: opacity rides along with the colour change for hover and
+       disabled — state feedback, not motion. */
     transition-property: background-color, border-color, color, box-shadow, opacity;
     transition-duration: var(--move-duration-slowest, 300ms);
     transition-timing-function: var(--move-ease-default, ease-out);

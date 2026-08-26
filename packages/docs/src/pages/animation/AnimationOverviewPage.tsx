@@ -166,6 +166,47 @@ export function AnimationOverviewPage() {
         </Section>
 
         <Section
+          id="css-transitions"
+          title="Where CSS may animate"
+          lede="Colour is state. Everything else is motion, and motion has one home."
+        >
+          <Text>
+            A CSS transition is a second animation system, and the two cannot be
+            combined. A transition is a fixed duration on a bezier; a spring has
+            no duration at all. Run them together on one element and they read
+            as two clocks — put them on the same property and they overwrite
+            each other outright.
+          </Text>
+          <Text>
+            So the line is drawn by property, because that is what decides
+            whether a collision is possible:
+          </Text>
+          <HighlightList
+            items={[
+              {
+                icon: 'palette',
+                text: 'Colour may transition — color, background-color, border-color, fill, stroke, box-shadow. A hover tint or a focus ring is state feedback, and nothing in useAnimations writes these, so there is nothing to collide with.',
+              },
+              {
+                icon: 'move',
+                text: 'Motion may not — transform, opacity and geometry belong in useAnimations, where they can be sequenced, staggered, sprung, and switched off with animations={false}. A component that moves things in CSS is invisible to all of that.',
+              },
+              {
+                icon: 'accessibility',
+                text: 'Inside prefers-reduced-motion, a flat transition-free fallback is right: staggerAnimate declines to run there, and state emphasis should not disappear with the motion.',
+              },
+            ]}
+          />
+          <Text>
+            `check:css-transitions` enforces this (rule styles-12). A genuine
+            exception — media chrome fading with pointer presence, say, which
+            composes with nothing — takes a `transition-exempt` comment giving
+            the reason, so the exception stays visible rather than becoming the
+            norm.
+          </Text>
+        </Section>
+
+        <Section
           id="anime-js"
           title="Running on anime.js"
           lede="A small engine with real spring physics, wrapped so you never touch it."

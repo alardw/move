@@ -81,17 +81,22 @@ export interface SeriesFrame {
 }
 
 /**
- * How far a mark recedes when another is hovered.
+ * Is the mark at `index` emphasised?
  *
- * Dimming the rest rather than brightening the target: it keeps every colour
- * truthful (a highlighted slice still reads as its own hue) and it works on any
- * background, where a glow or a lightened fill would not.
+ * True when NOTHING is hovered as well as when this is the hovered one, so both
+ * resolve to the same `data-active` selector. That is what lets the shell's
+ * hover animation keep a completely static config: "no hover" needs every mark
+ * back at full strength, which is the same instruction as "this one is active".
+ * Without it the dim step would match everything the moment the pointer left.
  */
-export const DIMMED = 0.45;
+export const isEmphasised = (index: number, activeIndex: number | null | undefined) =>
+  activeIndex == null || activeIndex === index;
 
-/** Opacity for the mark at `index`, given what is hovered. */
-export const emphasis = (index: number, activeIndex: number | null | undefined) =>
-  activeIndex == null || activeIndex === index ? 1 : DIMMED;
+/** Attributes that opt a mark into the shell's hover emphasis. */
+export const markAttrs = (index: number, activeIndex: number | null | undefined) => ({
+  'data-mark': '',
+  'data-active': isEmphasised(index, activeIndex) ? '' : undefined,
+});
 
 export const clipId = (uid: string, index: number) => `${uid}-sweep-${index}`;
 
@@ -147,13 +152,11 @@ export function SeriesDots({
         <circle
           key={i}
           data-dot=""
+          {...markAttrs(i, activeIndex)}
           cx={px}
           cy={py}
-          // The hovered reading also grows a little; on a 3px dot, opacity
-          // alone is too small a change to notice.
-          r={activeIndex === i ? theme.pointRadius * 1.8 : theme.pointRadius}
+          r={theme.pointRadius}
           fill={series.color}
-          opacity={emphasis(i, activeIndex)}
         />
       ))}
     </>

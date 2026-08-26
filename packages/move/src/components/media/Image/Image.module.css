@@ -87,6 +87,9 @@
   width: 100%;
   height: 100%;
   opacity: 0;
+  /* transition-exempt: fades a decoded image in, driven by the browser's load
+     event rather than by React state Move controls. Genuinely outside the
+     animation system — there is no trigger for useAnimations to hang this on. */
   transition: opacity 240ms ease-out;
 }
 

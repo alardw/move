@@ -142,33 +142,19 @@
   transform-origin: left;
 }
 
-/* Hover emphasis eases rather than snapping.
-   Only marks that exist PER ROW take part: a bar, a slice, a point. A line or
-   an area path spans every row, so there is nothing per-row to emphasise — its
-   hovered reading is the dot.
+/* Hover emphasis runs through useAnimations, like every other motion here —
+   see DEFAULT_CHART_ANIMATIONS. It is NOT a CSS transition: a transition is a
+   fixed duration on a bezier and cannot compose with a spring, so the moment an
+   emphasised mark should also pop, the two would be separate clocks fighting
+   over the same element.
 
-   Deliberately NOT `transform`: the entrances own that (bars scaleY, dots
-   scale) and a transition would fight them frame by frame — the same collision
-   stroke-dasharray had. Dots therefore grow via the `r` ATTRIBUTE, which no
-   entrance touches, so size and opacity can ease together without conflict.
-   A bar cannot do that; scaling one on hover would mean transform, and would
-   have to move into useAnimations so a single system owns it. */
-.plot [data-bar],
-.plot [data-slice] {
-  transition: opacity var(--move-transition-fast) var(--move-ease-default);
-}
-
-.plot [data-dot] {
-  transition:
-    opacity var(--move-transition-fast) var(--move-ease-default),
-    r var(--move-transition-fast) var(--move-ease-default);
-}
-
+   This block is the REDUCED-MOTION FLOOR only. `staggerAnimate` bails on
+   prefers-reduced-motion, which would otherwise leave those readers with no
+   emphasis at all — and emphasis is state, not motion. So the dim is applied
+   flatly, with no transition, exactly when the animation declines to run. */
 @media (prefers-reduced-motion: reduce) {
-  .plot [data-bar],
-  .plot [data-slice],
-  .plot [data-dot] {
-    transition: none;
+  .plot [data-mark]:not([data-active]) {
+    opacity: 0.45;
   }
 }
 

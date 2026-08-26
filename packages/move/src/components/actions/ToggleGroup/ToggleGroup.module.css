@@ -125,6 +125,8 @@
   font-weight: var(--move-weight-normal, 400);
   position: relative;
   z-index: 1;
+  /* transition-exempt: opacity accompanies the colour change on the inactive
+     segment — state feedback, not motion. */
   transition-property: color, opacity;
 }
 

@@ -420,6 +420,9 @@
 .groupChevron {
   display: inline-block;
   margin-right: var(--move-spacing-xs);
+  /* transition-exempt: KNOWN DRIFT. A disclosure chevron should rotate off a
+     data-state trigger in useAnimations, the way Autocomplete's does; this
+     predates that convention. Worth migrating. */
   transition: transform 0.18s ease;
   color: var(--move-fg-muted);
 }

@@ -72,6 +72,8 @@
 
 .root[data-overlay-hide='true'] .overlayNav > * {
   opacity: 0;
+  /* transition-exempt: KNOWN DRIFT. Controls fading on pointer presence is a
+     state change and belongs on a data-state trigger. Predates the rule. */
   transition: opacity 150ms ease;
 }
 
