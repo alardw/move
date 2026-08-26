@@ -198,7 +198,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Alert",
@@ -262,7 +263,8 @@
           "description": "Alert description content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Align",
@@ -398,7 +400,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "AnimatedText",
@@ -525,7 +528,8 @@
           "description": "Keep the text on a single line (white-space: nowrap) instead of wrapping. When false (default) long text wraps naturally (white-space: normal; overflow-wrap: break-word)."
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "AudioPlayer",
@@ -692,7 +696,8 @@
           "description": "Additional content rendered inside the player container"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Autocomplete",
@@ -1316,7 +1321,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Avatar",
@@ -1418,7 +1424,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Badge",
@@ -1477,7 +1484,8 @@
           "description": "Badge content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Breadcrumb",
@@ -1634,7 +1642,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Button",
@@ -1710,7 +1719,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Calendar",
@@ -1851,7 +1861,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "CalendarView",
@@ -2080,7 +2091,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Card",
@@ -2244,7 +2256,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Carousel",
@@ -2661,13 +2674,14 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Chart",
       "category": "data-display",
       "componentClass": null,
-      "description": "Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar, on a category or linear x.",
+      "description": "Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, tooltip, hover emphasis and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path maths, so the package takes on no charting dependency; libraries plug in as optional adapters. Covers line, area, bar and scatter over a shared axis (category or linear x, three interpolations, stacking, reference lines, and `axes={false}` for a sparkline), plus pie and donut, which share none of that machinery and take their own path.",
       "props": [
         {
           "name": "data",
@@ -2755,6 +2769,18 @@
           "description": "Mark each data point on line and area series."
         },
         {
+          "name": "rules",
+          "type": "ChartRule[]",
+          "default": "null",
+          "description": "Reference lines across the plot — a target, a budget, an SLA, an average. Annotations rather than series: they carry no data of their own, they give the data something to be read against. A rule extends the value domain, so a target above everything achieved still appears. Ignored by a pie, which has no value axis."
+        },
+        {
+          "name": "axes",
+          "type": "boolean",
+          "default": "true",
+          "description": "Draw the tick labels and baseline. Off makes a sparkline: the margins collapse with them, so the drawing fills the box. Pair with grid=\"none\", legend={false} and tooltip={false}."
+        },
+        {
           "name": "innerRadius",
           "type": "number",
           "default": "0",
@@ -2836,7 +2862,8 @@
           "description": "Override or disable the series entrance animation."
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "ChatBubble",
@@ -3001,7 +3028,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Checkbox",
@@ -3100,7 +3128,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Code",
@@ -3174,7 +3203,8 @@
           "description": "Code text content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Collapsible",
@@ -3286,7 +3316,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "ColorInput",
@@ -3450,7 +3481,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "ColorPicker",
@@ -3553,7 +3585,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "DatePicker",
@@ -3767,7 +3800,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Dialog",
@@ -3808,6 +3842,11 @@
               "name": "modal",
               "type": "boolean",
               "description": "Whether to render as modal with backdrop"
+            },
+            {
+              "name": "labels",
+              "type": "Partial<DialogLabels>",
+              "description": "Overridable user-facing strings"
             }
           ]
         },
@@ -3921,7 +3960,7 @@
               "name": "closable",
               "type": "boolean",
               "default": "true",
-              "description": "Render the auto-close button on the right side of the header."
+              "description": "Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close."
             },
             {
               "name": "children",
@@ -4075,7 +4114,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Divider",
@@ -4148,7 +4188,8 @@
           "description": "Optional inline content (text or element)"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Drawer",
@@ -4214,6 +4255,11 @@
               "type": "number",
               "default": "768",
               "description": "Viewport width below which responsive mode activates (px)."
+            },
+            {
+              "name": "labels",
+              "type": "Partial<DrawerLabels>",
+              "description": "Overridable user-facing strings"
             }
           ]
         },
@@ -4328,7 +4374,7 @@
               "name": "closable",
               "type": "boolean",
               "default": "true",
-              "description": "Render the auto-close button on the right side of the header."
+              "description": "Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close."
             },
             {
               "name": "children",
@@ -4457,7 +4503,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Dropdown",
@@ -4876,7 +4923,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "EmptyState",
@@ -4921,7 +4969,8 @@
           "description": "Additional content rendered after structured slots"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "FileUpload",
@@ -5410,7 +5459,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "FormField",
@@ -5525,7 +5575,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Grid",
@@ -5670,7 +5721,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Heading",
@@ -5761,7 +5813,8 @@
           "description": "Heading text content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Image",
@@ -5893,7 +5946,8 @@
           "description": "Custom fallback content rendered inside the fallback slot when image errors and no fallbackSrc is set"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "InputRange",
@@ -6001,7 +6055,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "InputText",
@@ -6122,7 +6177,8 @@
           "description": "Keydown event handler"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Label",
@@ -6177,7 +6233,8 @@
           "description": "Label text content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "LayoutGroup",
@@ -6267,7 +6324,8 @@
           "description": "Inline style applied to the root."
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Link",
@@ -6341,7 +6399,8 @@
           "description": "Link content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "List",
@@ -6582,7 +6641,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Loader",
@@ -6629,7 +6689,8 @@
           "description": "SVG stroke width for spinner variant"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "MarkerList",
@@ -6810,7 +6871,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "NumberInput",
@@ -7015,7 +7077,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Pagination",
@@ -7191,7 +7254,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Password",
@@ -7337,7 +7401,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "PasswordStrength",
@@ -7435,7 +7500,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "PinInput",
@@ -7543,7 +7609,8 @@
           "description": "Inline styles"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Popover",
@@ -7779,7 +7846,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "ProgressBar",
@@ -7832,7 +7900,8 @@
           "description": "Optional children content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Prose",
@@ -7857,7 +7926,8 @@
           "description": "HTML content to style"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Quote",
@@ -7907,7 +7977,8 @@
           "description": "The quoted text content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "RadioGroup",
@@ -8099,7 +8170,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "RichTextEditor",
@@ -8322,7 +8394,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "ScrollArea",
@@ -8434,7 +8507,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Select",
@@ -8836,7 +8910,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Sidebar",
@@ -9154,7 +9229,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Skeleton",
@@ -9283,7 +9359,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Splitter",
@@ -9374,7 +9451,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Stack",
@@ -9494,7 +9572,8 @@
           "description": "Child elements to lay out"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Stepper",
@@ -9683,7 +9762,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Switch",
@@ -9850,7 +9930,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Table",
@@ -10182,7 +10263,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "TableOfContents",
@@ -10253,7 +10335,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Tabs",
@@ -10436,7 +10519,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Text",
@@ -10535,7 +10619,8 @@
           "description": "Text content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "Textarea",
@@ -10673,7 +10758,8 @@
           "description": "Keydown event handler"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "TimeField",
@@ -10988,7 +11074,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Timeline",
@@ -11205,7 +11292,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "Toast",
@@ -11244,7 +11332,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "ToggleButton",
@@ -11286,6 +11375,11 @@
           "description": "Visual style variant (inherits Button variants)"
         },
         {
+          "name": "fullWidth",
+          "type": "boolean",
+          "description": "Fill the container width"
+        },
+        {
           "name": "size",
           "type": "Size",
           "values": [
@@ -11307,7 +11401,8 @@
           "description": "Button content"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     },
     {
       "name": "ToggleGroup",
@@ -11434,7 +11529,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": false
     },
     {
       "name": "Tooltip",
@@ -11686,7 +11782,8 @@
             }
           ]
         }
-      ]
+      ],
+      "callable": true
     },
     {
       "name": "VideoPlayer",
@@ -11872,7 +11969,8 @@
           "description": "Additional content rendered inside the player container"
         }
       ],
-      "subComponents": []
+      "subComponents": [],
+      "callable": true
     }
   ]
 }

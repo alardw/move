@@ -17,7 +17,7 @@ export default function BasicSample() {
             <InputText placeholder="Search anything…" width="16rem" />
           </Align.Center>
           <Align.End>
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" aria-label="Notifications">
               <Icon name="bell" />
             </Button>
             <Avatar.Root>

@@ -15,7 +15,7 @@ export default function TwoSlotSample() {
               <Text weight="semibold" size="lg">Projects</Text>
             </Align.Start>
             <Align.End>
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" aria-label="Filter projects">
                 <Icon name="filter" />
               </Button>
               <Button>

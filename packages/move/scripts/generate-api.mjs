@@ -190,7 +190,25 @@ function extractComponent(specFile, category) {
     }
   }
 
-  return { name, category, componentClass, description, props, subComponents };
+  // Is the exported value callable? Three shapes ship from this repo:
+  //
+  //   export const Alert  = withMoveComponent(...)        → callable
+  //   export const Button = Object.assign(ButtonRoot, {}) → callable, has parts
+  //   export const Switch = { Root, Thumb }               → NOT callable
+  //
+  // Only the third makes `<Switch checked />` a type error, and 27 components
+  // have that shape. Emitting a flat prop block for them documents JSX that
+  // cannot compile — which is worse than documenting nothing, because an agent
+  // writes what it can find.
+  const sourceFile = specFile.replace(/\.spec\.ts$/, '.tsx');
+  let callable = true;
+  if (existsSync(sourceFile)) {
+    const src = readFileSync(sourceFile, 'utf8');
+    const m = new RegExp(`export const ${name}(?::[^=]+)? = (Object\\.assign|withMoveComponent|\\{)`).exec(src);
+    if (m) callable = m[1] !== '{';
+  }
+
+  return { name, category, componentClass, description, props, subComponents, callable };
 }
 
 // ── Collect ─────────────────────────────────────────────────────────────────
@@ -251,7 +269,10 @@ function example(c) {
   // Pick up to two enum-ish props to show a realistic usage.
   const shown = c.props.filter((p) => p.values && p.name !== 'size').slice(0, 2);
   const attrs = shown.map((p) => ` ${p.name}="${p.default ?? p.values[0]}"`).join('');
-  return `<${c.name}${attrs}>…</${c.name}>`;
+  // A non-callable compound is only ever entered through `.Root` — `<Switch>`
+  // does not typecheck, so it must not appear in a generated example either.
+  const tag = c.callable ? c.name : `${c.name}.Root`;
+  return `<${tag}${attrs}>…</${tag}>`;
 }
 const lines = [];
 lines.push(`# ${pkg.name} — Component API`);
@@ -265,8 +286,11 @@ lines.push('');
 for (const c of components) {
   lines.push(`## ${c.name} (${c.category})`);
   if (c.description) lines.push(c.description);
-  if (c.props.length) {
-    lines.push('Props:');
+  const hasRootSub = c.subComponents.some((s) => s.name === 'Root');
+  if (c.props.length && (c.callable || !hasRootSub)) {
+    // A non-callable compound with no Root entry still needs its props somewhere;
+    // they are the Root's, so label them that way rather than as flat props.
+    lines.push(c.callable ? 'Props:' : `${c.name}.Root props:`);
     for (const p of c.props) lines.push(propLine(p));
   }
   for (const sub of c.subComponents) {

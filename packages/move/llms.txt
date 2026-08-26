@@ -126,25 +126,6 @@ Example: <AudioPlayer radius="none">…</AudioPlayer>
 
 ## Autocomplete (forms)
 Searchable dropdown with single/multi-value support, tag management, keyboard navigation, and filtered option list
-Props:
-- value: string | string[] — Controlled selected value(s)
-- defaultValue: string | string[] — Default selected value(s) (uncontrolled)
-- onValueChange: (value: string | string[]) => void — Called when selected value changes
-- open: boolean — Controlled open state
-- defaultOpen: boolean (default: false) — Default open state (uncontrolled)
-- onOpenChange: (open: boolean) => void — Called when open state changes
-- multiple: boolean (default: false) — Enable multi-select mode
-- inputValue: string — Controlled input text value
-- onInputValueChange: (value: string) => void — Called when input text changes
-- loading: boolean (default: false) — Loading state
-- resource: AsyncResource<unknown> — Async data source driving loading/error state for the options list (supersedes loading; feeds RetryTrigger)
-- animations: AnimationTrigger[] | false — Animation config for popup
-- closeOnSelect: boolean — Close after selection
-- openOnFocus: boolean (default: true) — Open on input focus
-- allowCustomValue: boolean (default: false) — Allow custom input values
-- filterFn: (inputValue: string, itemValue: string, itemLabel: string) => boolean — Custom filter function
-- labels: Partial<AutocompleteLabels> — Accessible label overrides (clearAll, removeTag, retry)
-- children: React.ReactNode — Autocomplete sub-components
 Autocomplete.Root props:
 - value: string | string[] — Controlled selected value(s)
 - defaultValue: string | string[] — Default selected value(s) (uncontrolled)
@@ -244,7 +225,7 @@ Autocomplete.RetryTrigger props:
 Autocomplete.Separator props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <Autocomplete>…</Autocomplete>
+Example: <Autocomplete.Root>…</Autocomplete.Root>
 
 ## Avatar (data-display)
 User avatar with image, fallback, and size options
@@ -262,7 +243,7 @@ Avatar.Image props:
 Avatar.Fallback props:
 - delayMs: number — Delay before showing fallback
 - children: React.ReactNode — Fallback content (initials, icon)
-Example: <Avatar>…</Avatar>
+Example: <Avatar.Root>…</Avatar.Root>
 
 ## Badge (data-display)
 Inline status label with variant and size options
@@ -346,7 +327,7 @@ Calendar.Nav props:
 Calendar.Grid props:
 - className: string — CSS class name
 - sp: MonthGridSp — Slot-prop overrides for the grid, weekday header row and cells, week rows and the week-number gutter, forwarded to the shared MonthGrid
-Example: <Calendar>…</Calendar>
+Example: <Calendar.Root>…</Calendar.Root>
 
 ## CalendarView (date-time)
 Full-featured calendar view supporting day, week, month, and agenda modes with event display, time grid, locale-aware formatting, and view switching
@@ -392,14 +373,10 @@ CalendarView.ViewSwitcher props:
 CalendarView.Body props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <CalendarView>…</CalendarView>
+Example: <CalendarView.Root>…</CalendarView.Root>
 
 ## Card (layout)
 Presentational container with header, title, description, body, and footer sections for grouping related content
-Props:
-- variant: 'default' | 'elevated' | 'ghost' (default: default) — Visual style variant
-- size: 'sm' | 'md' | 'lg' (default: md) — Card size
-- children: React.ReactNode — Card content sections
 Card.Root props:
 - variant: 'default' | 'elevated' | 'ghost' (default: default) — Visual style variant
 - size: 'sm' | 'md' | 'lg' (default: md) — Card size controlling padding and title size
@@ -423,22 +400,10 @@ Card.FooterStart props:
 - children: React.ReactNode — Left-aligned footer content
 Card.FooterEnd props:
 - children: React.ReactNode — Right-aligned footer content
-Example: <Card variant="default">…</Card>
+Example: <Card.Root variant="default">…</Card.Root>
 
 ## Carousel (media)
 Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls
-Props:
-- orientation: 'horizontal' | 'vertical' (default: horizontal) — Scroll orientation
-- align: 'start' | 'center' | 'end' (default: start) — Snap alignment
-- slidesPerView: number (default: 1) — Slides visible at once
-- loop: boolean (default: false) — Loop back to start
-- autoplay: number (default: 0) — Auto-advance interval in ms
-- draggable: boolean (default: true) — Enable drag/swipe
-- animations: AnimationTrigger[] | false — Scroll animation config
-- page: number — Controlled active page
-- defaultPage: number — Initial page (uncontrolled)
-- onPageChange: (page: number) => void — Page change callback
-- children: React.ReactNode — Carousel content
 Carousel.Root props:
 - orientation: 'horizontal' | 'vertical' (default: horizontal) — Scroll orientation
 - align: 'start' | 'center' | 'end' (default: start) — Snap alignment for slides
@@ -492,10 +457,10 @@ Carousel.Indicator props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Custom indicator content
 - index: number — The page index this indicator targets
-Example: <Carousel orientation="horizontal" align="start">…</Carousel>
+Example: <Carousel.Root orientation="horizontal" align="start">…</Carousel.Root>
 
 ## Chart (data-display)
-Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar, on a category or linear x.
+Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, tooltip, hover emphasis and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path maths, so the package takes on no charting dependency; libraries plug in as optional adapters. Covers line, area, bar and scatter over a shared axis (category or linear x, three interpolations, stacking, reference lines, and `axes={false}` for a sparkline), plus pie and donut, which share none of that machinery and take their own path.
 Props:
 - data: readonly Record<string, unknown>[] — Row-oriented source data. One object per x position.
 - x: string — Key in each row holding the x/category value.
@@ -510,6 +475,8 @@ Props:
 - legend: boolean (default: true) — Render the series legend below the plot.
 - tooltip: boolean (default: true) — Show every series' value at the hovered position. Rendered by the shell over the plot, so it looks and behaves the same for any renderer that reports its plot rect.
 - dots: boolean (default: false) — Mark each data point on line and area series.
+- rules: ChartRule[] (default: null) — Reference lines across the plot — a target, a budget, an SLA, an average. Annotations rather than series: they carry no data of their own, they give the data something to be read against. A rule extends the value domain, so a target above everything achieved still appears. Ignored by a pie, which has no value axis.
+- axes: boolean (default: true) — Draw the tick labels and baseline. Off makes a sparkline: the margins collapse with them, so the drawing fills the box. Pair with grid="none", legend={false} and tooltip={false}.
 - innerRadius: number (default: 0) — Hole size for a pie, as a fraction of the radius. 0 is a full pie, around 0.6 reads as a donut. Ignored by every other series type.
 - xScale: 'category' | 'linear' (default: category) — How x positions are derived. `category` spaces rows evenly by index; `linear` places each at its own numeric x, which is what unevenly sampled or time-series data needs — a category axis would draw equal gaps between unequal intervals. Timestamps are numbers: pass epoch milliseconds and a `formatX`. Falls back to `category` if any x value is not finite.
 - curve: 'linear' | 'monotone' | 'step' (default: linear) — How line and area paths travel between points. `monotone` smooths without inventing peaks the data does not contain.
@@ -526,10 +493,6 @@ Example: <Chart grid="horizontal" xScale="category">…</Chart>
 
 ## ChatBubble (data-display)
 Conversation bubble for chat UIs with avatar, placement, tail, and variant support
-Props:
-- placement: 'start' | 'end' (default: start) — Bubble alignment direction
-- animations: AnimationTrigger[] | false — Enter animation config
-- children: React.ReactNode — ChatBubble sub-components
 ChatBubble.Root props:
 - placement: 'start' | 'end' (default: start) — Bubble alignment (start=left, end=right)
 - animations: AnimationTrigger[] | false — Enter animation config
@@ -550,7 +513,7 @@ ChatBubble.Content props:
 - children: React.ReactNode — Message content
 ChatBubble.Footer props:
 - children: React.ReactNode — Footer content
-Example: <ChatBubble placement="start">…</ChatBubble>
+Example: <ChatBubble.Root placement="start">…</ChatBubble.Root>
 
 ## Checkbox (forms)
 Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input
@@ -590,13 +553,6 @@ Example: <Code variant="subtle">…</Code>
 
 ## Collapsible (disclosure)
 Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon
-Props:
-- open: boolean — Controlled open state
-- defaultOpen: boolean — Default open state for uncontrolled mode
-- onOpenChange: (open: boolean) => void — Called when open state changes
-- disabled: boolean (default: false) — Disable the collapsible
-- animations: AnimationTrigger[] | false — Content animation config or false to disable
-- children: React.ReactNode — Trigger, icon, and content
 Collapsible.Root props:
 - open: boolean — Controlled open state
 - defaultOpen: boolean — Default open state for uncontrolled mode
@@ -611,7 +567,7 @@ Collapsible.Icon props:
 - children: React.ReactNode — Custom icon replacing the default chevron
 Collapsible.Content props:
 - children: React.ReactNode — Collapsible content
-Example: <Collapsible>…</Collapsible>
+Example: <Collapsible.Root>…</Collapsible.Root>
 
 ## ColorInput (forms)
 Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper
@@ -670,7 +626,7 @@ Example: <ColorPicker>…</ColorPicker>
 
 ## DatePicker (date-time)
 Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker
-Props:
+DatePicker.Root props:
 - animations: AnimationTrigger[] | false — Animation config for open/close transitions
 - open: boolean — Controlled open state
 - defaultOpen: boolean (default: false) — Default open state (uncontrolled)
@@ -707,7 +663,7 @@ DatePicker.Content props:
 - align: 'start' | 'center' | 'end' (default: start) — Alignment relative to trigger
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
 - children: React.ReactNode — Calendar content
-Example: <DatePicker mode="single">…</DatePicker>
+Example: <DatePicker.Root mode="single">…</DatePicker.Root>
 
 ## Dialog (overlays)
 Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout
@@ -718,6 +674,7 @@ Dialog.Root props:
 - onOpenChange: (open: boolean) => void — Called when open state changes
 - animations: AnimationTrigger[] | false — Animation config or false to disable
 - modal: boolean — Whether to render as modal with backdrop
+- labels: Partial<DialogLabels> — Overridable user-facing strings
 Dialog.Trigger props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -738,7 +695,7 @@ Dialog.Content props:
 Dialog.Header props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- closable: boolean (default: true) — Render the auto-close button on the right side of the header.
+- closable: boolean (default: true) — Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close.
 - children: React.ReactNode — Header content (typically Title + Close)
 Dialog.Body props:
 - className: string — CSS class name
@@ -769,7 +726,7 @@ Dialog.Close props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Close button content
 - asChild: boolean — Merge props onto child element instead of wrapping
-Example: <Dialog>…</Dialog>
+Example: <Dialog.Root>…</Dialog.Root>
 
 ## Divider (layout)
 Visual separator for content sections with optional inline label, orientation, line style, and alignment
@@ -794,6 +751,7 @@ Drawer.Root props:
 - position: 'left' | 'right' | 'top' | 'bottom' (default: right) — Edge the drawer slides in from. Lives on Root so the entire compound (overlay, content, animations) can react to the side.
 - responsive: boolean (default: true) — Auto-switch to a bottom sheet on mobile viewport.
 - breakpoint: number (default: 768) — Viewport width below which responsive mode activates (px).
+- labels: Partial<DrawerLabels> — Overridable user-facing strings
 Drawer.Trigger props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -814,7 +772,7 @@ Drawer.Content props:
 Drawer.Header props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- closable: boolean (default: true) — Render the auto-close button on the right side of the header.
+- closable: boolean (default: true) — Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close.
 - children: React.ReactNode — Header content (typically Title + Close)
 Drawer.Body props:
 - className: string — CSS class name
@@ -840,7 +798,7 @@ Drawer.Close props:
 Drawer.Handle props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <Drawer>…</Drawer>
+Example: <Drawer.Root>…</Drawer.Root>
 
 ## Dropdown (overlays)
 Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu
@@ -925,7 +883,7 @@ Dropdown.SubContent props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Sub-menu items
 - sideOffset: number — Distance from sub-trigger in px
-Example: <Dropdown>…</Dropdown>
+Example: <Dropdown.Root>…</Dropdown.Root>
 
 ## EmptyState (feedback)
 Centered placeholder for empty views with icon, title, description, and optional action
@@ -940,24 +898,6 @@ Example: <EmptyState>…</EmptyState>
 
 ## FileUpload (forms)
 Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system
-Props:
-- accept: string | string[] — Accepted file types — MIME types, extensions, or wildcards
-- maxSize: number — Maximum file size in bytes
-- maxFiles: number — Maximum number of files
-- multiple: boolean (default: true) — Allow multiple file selection
-- disabled: boolean — Disabled state
-- value: File[] — Controlled file list
-- defaultValue: File[] — Default file list (uncontrolled)
-- onFilesChange: (files: File[]) => void — Called when the file list changes
-- onFileReject: (rejections: FileRejection[]) => void — Called when files fail validation
-- validate: (file: File) => string | null — Custom per-file validation function
-- size: 'sm' | 'md' | 'lg' (default: md) — Component size
-- variant: 'default' | 'compact' (default: default) — Layout variant
-- adapter: FileUploadAdapter — Upload adapter function for server uploads
-- autoUpload: boolean (default: false) — Automatically start uploading when files are added
-- concurrency: number (default: 3) — Maximum concurrent uploads
-- removeOnComplete: boolean | number — Remove files from list after upload completes
-- children: React.ReactNode — Sub-components (Dropzone, Trigger, ItemGroup, etc.)
 FileUpload.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1031,13 +971,10 @@ FileUpload.UploadTrigger props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Trigger content (e.g. Button)
-Example: <FileUpload variant="default">…</FileUpload>
+Example: <FileUpload.Root variant="default">…</FileUpload.Root>
 
 ## FormField (forms)
 Compound form layout wrapper that arranges label, field input, and description/error in a responsive grid
-Props:
-- labelWidth: string — Custom width for the label column in wide layout
-- children: React.ReactNode — FormField sub-components
 FormField.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1057,7 +994,7 @@ FormField.Description props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Description or error text
 - error: boolean — Whether to display as error text (red color)
-Example: <FormField>…</FormField>
+Example: <FormField.Root>…</FormField.Root>
 
 ## Grid (layout)
 CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control
@@ -1332,16 +1269,6 @@ Example: <NumberInput variant="outlined" clampBehavior="blur">…</NumberInput>
 
 ## Pagination (navigation)
 Page navigation control with numbered buttons, prev/next triggers, sliding active indicator, and staggered spring entrance animation
-Props:
-- total: number — Total number of pages
-- page: number — Controlled active page (1-based)
-- defaultPage: number — Initial page for uncontrolled mode
-- onChange: (page: number) => void — Called when active page changes
-- siblings: number (default: 1) — Pages shown on each side of active
-- boundaries: number (default: 1) — Pages pinned at start and end
-- size: 'sm' | 'md' | 'lg' (default: md) — Size of pagination controls
-- variant: 'default' | 'outline' (default: default) — Visual variant
-- children: React.ReactNode — PrevTrigger, Items, NextTrigger
 Pagination.Root props:
 - total: number — Total number of pages
 - page: number — Controlled active page (1-based)
@@ -1361,7 +1288,7 @@ Pagination.NextTrigger props:
 - children: React.ReactNode — Button content (defaults to right chevron SVG)
 Pagination.Items props:
 - animations: AnimationTrigger[] | false — Interactive animation config or false to disable
-Example: <Pagination variant="default">…</Pagination>
+Example: <Pagination.Root variant="default">…</Pagination.Root>
 
 ## Password (forms)
 Password input with visibility toggle button, outlined/filled variants, and optional left icon
@@ -1482,7 +1409,7 @@ Popover.Close props:
 - children: React.ReactNode — Close button content (defaults to X icon)
 - asChild: boolean — Merge props onto child element instead of wrapping
 - labels: Partial<PopoverLabels> — Override default accessible labels
-Example: <Popover>…</Popover>
+Example: <Popover.Root>…</Popover.Root>
 
 ## ProgressBar (feedback)
 Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes
@@ -1516,18 +1443,6 @@ Example: <Quote variant="block">…</Quote>
 
 ## RadioGroup (forms)
 Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state
-Props:
-- value: string — Controlled selected value
-- defaultValue: string — Default selected value (uncontrolled)
-- onValueChange: (value: string) => void — Called when selected value changes
-- disabled: boolean — Disable all radio items
-- name: string — Form input name
-- required: boolean — Required state
-- invalid: boolean — Invalid state
-- size: 'sm' | 'md' | 'lg' (default: md) — Radio item size
-- orientation: 'horizontal' | 'vertical' (default: vertical) — Layout orientation
-- loop: boolean — Whether keyboard navigation loops
-- children: React.ReactNode — RadioGroup.Item children
 RadioGroup.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1549,14 +1464,10 @@ RadioGroup.Item props:
 - value: string — Value of this radio option
 - disabled: boolean — Disabled state
 - animations: AnimationTrigger[] | false — Toggle animation config or false to disable
-Example: <RadioGroup orientation="vertical">…</RadioGroup>
+Example: <RadioGroup.Root orientation="vertical">…</RadioGroup.Root>
 
 ## RichTextEditor (forms)
 Editor-agnostic rich text editor chrome with toolbar, control groups, formatting controls, and content area wrapping any editor engine (TipTap, Lexical, Plate, etc.)
-Props:
-- variant: 'outline' | 'subtle' (default: outline) — Visual variant
-- size: 'sm' | 'md' | 'lg' (default: md) — Component size
-- children: React.ReactNode — Toolbar and Content sub-components
 RichTextEditor.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1592,7 +1503,7 @@ RichTextEditor.Content props:
 - minHeight: Dimension — Minimum height for the content area
 - onFocus: React.FocusEventHandler<HTMLDivElement> — Focus event handler
 - onBlur: React.FocusEventHandler<HTMLDivElement> — Blur event handler
-Example: <RichTextEditor variant="outline">…</RichTextEditor>
+Example: <RichTextEditor.Root variant="outline">…</RichTextEditor.Root>
 
 ## ScrollArea (layout)
 Scrollable content container with customizable scrollbar styling, optional sticky header and footer
@@ -1616,19 +1527,10 @@ ScrollArea.Footer props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - padded: boolean (default: true) — Whether to apply padding using the scroll area padding token
-Example: <ScrollArea>…</ScrollArea>
+Example: <ScrollArea.Root>…</ScrollArea.Root>
 
 ## Select (forms)
 Dropdown select built on Radix Select — a combobox trigger, listbox popup with option items, and a hidden native <select> for form submission — with an animated popup and item stagger
-Props:
-- value: string — Controlled selected value
-- defaultValue: string — Default selected value (uncontrolled)
-- onValueChange: (value: string) => void — Called when selected value changes
-- open: boolean — Controlled open state
-- defaultOpen: boolean — Default open state (uncontrolled)
-- onOpenChange: (open: boolean) => void — Called when open state changes
-- animations: AnimationTrigger[] | false — Animation config or false to disable
-- children: React.ReactNode — Select sub-components
 Select.Root props:
 - value: string — Controlled selected value
 - defaultValue: string — Default selected value (uncontrolled)
@@ -1696,7 +1598,7 @@ Select.Label props:
 Select.Separator props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <Select>…</Select>
+Example: <Select.Root>…</Select.Root>
 
 ## Sidebar (navigation)
 Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations
@@ -1759,14 +1661,10 @@ Sidebar.Trigger props:
 - icon: string | React.ReactNode — Icon to render — either a Lucide name (resolved via the icon resolver) or any ReactNode.
 - tooltip: string — Tooltip label shown on hover when the sidebar is collapsed.
 - visibility: 'desktop' | 'mobile' | 'always' (default: always) — When to render the trigger — desktop-only collapse handle, mobile-only menu, or always.
-Example: <Sidebar>…</Sidebar>
+Example: <Sidebar.Root>…</Sidebar.Root>
 
 ## Skeleton (feedback)
 Compound placeholder shapes for loading states with pulse and wave animation modes
-Props:
-- loading: boolean (default: true) — Whether to render the skeleton (Root prop)
-- animation: 'pulse' | 'wave' | false (default: pulse) — Animation style (Root prop)
-- children: React.ReactNode — Shape sub-components (Root prop)
 Skeleton.Root props:
 - children: React.ReactNode — Shape sub-components to render
 - loading: boolean (default: true) — Whether to render skeleton (returns null when false)
@@ -1785,7 +1683,7 @@ Skeleton.Text props:
 - spacing: string (default: var(--move-skeleton-text-spacing)) — Gap between lines
 - lineHeight: string (default: var(--move-skeleton-text-line-height)) — Height of each line
 - lastLineWidth: string (default: 60%) — Width of the last line (shorter for realism)
-Example: <Skeleton>…</Skeleton>
+Example: <Skeleton.Root>…</Skeleton.Root>
 
 ## Splitter (layout)
 Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking
@@ -1804,7 +1702,7 @@ Splitter.Panel props:
 - style: React.CSSProperties — Inline styles
 - defaultSize: Dimension — Starting size before the user drags. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Omit it and the panel takes an equal share of what its sized siblings leave.
 - minSize: Dimension (default: 44) — Smallest the panel can be dragged to. A number is pixels; a string is any CSS length or percentage. Applies along the Splitter's axis — width when horizontal, height when vertical. Defaults to 44px (WCAG 2.5.8 enhanced target size), which unlike a percentage means the same thing in both orientations and at every window size.
-Example: <Splitter>…</Splitter>
+Example: <Splitter.Root>…</Splitter.Root>
 
 ## Stack (layout)
 Flex layout container for vertical or horizontal stacking with configurable gap, alignment, and responsive collapse
@@ -1857,18 +1755,6 @@ Example: <Stepper orientation="horizontal">…</Stepper>
 
 ## Switch (forms)
 Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label
-Props:
-- checked: boolean — Controlled checked state
-- defaultChecked: boolean — Default checked state for uncontrolled mode
-- onCheckedChange: (checked: boolean) => void — Called when checked state changes
-- disabled: boolean — Whether the switch is disabled
-- invalid: boolean — Whether the switch is in an invalid state
-- label: React.ReactNode — Optional label displayed beside the switch
-- size: 'sm' | 'md' | 'lg' (default: md) — Size of the switch
-- animations: AnimationTrigger[] | false — Toggle animation config or false to disable
-- required: boolean — Required for form validation
-- name: string — Form submission name
-- value: string — Form submission value
 Switch.Root props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -1887,7 +1773,7 @@ Switch.Root props:
 Switch.Thumb props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <Switch>…</Switch>
+Example: <Switch.Root>…</Switch.Root>
 
 ## Table (data-display)
 Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.
@@ -1961,7 +1847,7 @@ TableOfContents.Item props:
 - children: React.ReactNode — Item label
 - href: string — Anchor href — e.g. "#section-id"
 - depth: 1 | 2 | 3 | 4 (default: 1) — Nesting level; visually indents the item
-Example: <TableOfContents>…</TableOfContents>
+Example: <TableOfContents.Root>…</TableOfContents.Root>
 
 ## Tabs (navigation)
 Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive
@@ -1995,7 +1881,7 @@ Tabs.Content props:
 - style: React.CSSProperties — Inline styles
 - value: string — Value matching the trigger to show this content
 - forceMount: true — Force mount content even when inactive
-Example: <Tabs>…</Tabs>
+Example: <Tabs.Root>…</Tabs.Root>
 
 ## Text (typography)
 Typography primitive with configurable element, size, weight, color, alignment, and truncation
@@ -2144,6 +2030,7 @@ Props:
 - onPressedChange: (pressed: boolean) => void — Called when pressed state changes
 - disabled: boolean (default: false) — Disabled state
 - variant: 'primary' | 'secondary' | 'ghost' | 'danger' (default: secondary) — Visual style variant (inherits Button variants)
+- fullWidth: boolean — Fill the container width
 - size: 'sm' | 'md' | 'lg' (default: md) — Button size
 - animations: AnimationTrigger[] | false — Animation config for hover/press interactions, or false to disable
 - children: React.ReactNode — Button content
@@ -2171,7 +2058,7 @@ ToggleGroup.Item props:
 - value: string — Unique value for this item
 - disabled: boolean — Disable this specific item
 - animations: AnimationTrigger[] | false — Per-item animation overrides; defaults to no animation to avoid scale artifacts on connected items
-Example: <ToggleGroup>…</ToggleGroup>
+Example: <ToggleGroup.Root>…</ToggleGroup.Root>
 
 ## Tooltip (overlays)
 Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning

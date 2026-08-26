@@ -1,20 +1,5 @@
 {
-  "align/basic": {
-    "button-name": 1
-  },
-  "align/two-slot": {
-    "button-name": 1
-  },
-  "file-upload/basic": {
-    "label": 1
-  },
-  "file-upload/constraints": {
-    "label": 1
-  },
   "image/overlay": {
     "nested-interactive": 3
-  },
-  "tooltip/basic": {
-    "button-name": 3
   }
 }

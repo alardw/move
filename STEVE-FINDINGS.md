@@ -14,6 +14,10 @@ Both vendor a packed tarball and never edit this repo. This repo is at **0.1.51*
 so some findings are already stale — marked below.
 
 **Verified:** 2026-08-24 against `packages/move/src`.
+**Re-verified:** 2026-08-26 — every open item re-checked against the repo
+rather than carried forward. Six moved without anyone filing them: they were
+fixed in the course of other work, which is exactly why a register needs
+re-reading and not just appending.
 
 Status: `[ ]` open · `[x]` done · `[~]` fixed but unverified in a browser ·
 `[–]` won't fix / by design (record the reason).
@@ -74,19 +78,32 @@ these, which is what makes them ours.
       translatable. Spec `labels` entry and the i18n docs table carry the key;
       two tests assert the name **resolves** (not that the attribute is
       present) — the shape the Tier-1 oracle should generalise.
-- [ ] **J16 · Dialog/Drawer auto-close button is unlabelled.**
+- [x] **J16 · Dialog/Drawer auto-close button is unlabelled.**
       `closable` defaults true; `DrawerClose` renders only `useIcon('close')`.
       The one button a consumer never writes and therefore never labels.
       Second-order damage is worse: because it is easy to miss, they added
       their own labelled Close and shipped **19 of 20 drawers and 12 dialogs
       with a visible duplicate**.
-      → Default accessible name + `labels`; consider suppressing the auto-close
-      when the header already contains a `Close` child.
-- [ ] **J12 · Autocomplete.Input is not routed through `useFieldControl`.**
+      **Fixed, both halves.** `DialogLabels`/`DrawerLabels` with `close: 'Close'`
+      flow from Root through context; Close applies it as `aria-label` only when
+      it renders the bare glyph — children or `asChild` mean the consumer owns
+      the content, and labelling over visible text would breach WCAG 2.5.3.
+      A consumer-passed `aria-label` still wins.
+      The duplicate half is closed structurally: Header now suppresses its
+      automatic Close when the children it was given already contain one
+      (`containsElementOfType`, new in the engine barrel). Writing your own
+      Close yields exactly one button, so the shape that produced 31 duplicated
+      surfaces no longer can. Docs samples are unaffected — theirs sit in the
+      Footer.
+- [x] **J12 · Autocomplete.Input is not routed through `useFieldControl`.**
       Nine form components are; this one is not, so it renders with no `id`, a
       `FormField.Label`'s `for` dangles, and the combobox is unnamed. Note
       `useFieldControl`'s own docstring says every forms control should route
       through it. axe does not flag a `for` pointing at nothing.
+      **Already fixed — the register is stale here.** `AutocompleteInput` routes
+      through `useFieldControl` and spreads `controlProps` first onto the
+      combobox (`Autocomplete.tsx:392,508`). It is pinned by `check:field-naming`,
+      which lists this exact component among the failures it was built to catch.
 - [x] **J4/J18 · Password's visibility toggle is pointer-only** — *reclassified
       from their Tier-3 naming report; verifying it surfaced this underneath.*
       `Password.tsx:192` sets `tabIndex={-1}` and no keydown path exists, so
@@ -125,10 +142,23 @@ these, which is what makes them ours.
       → A doc line on querying password fields. Nothing to change in the
       component. Their "English-only" claim is also wrong —
       `PasswordLabels.showPassword` is overridable.
-- [ ] **Gate for the class.** All three pass every existing check. Add an
+- [x] **Gate for the class.** All three pass every existing check. Add an
       oracle that asserts each rendered form control **resolves** an accessible
       name, rather than that the wiring is present. Without it the fourth
       instance arrives the same way.
+      **Done.** The oracle already existed — `check:field-naming` renders every
+      form control in a `FormField`, derives its population from the specs
+      (`families.behavior` `form-input`) so a new control with no fixture FAILS
+      rather than being skipped, and declares exemptions instead of omitting
+      them. What it asserted was the wiring: that the label's `for` reaches an
+      element a `<label>` can legally name.
+      It now also asserts the **resolved** name — that what a screen reader
+      computes is what the page shows. The two come apart exactly as their
+      report describes: PinInput's own `aria-label` outranked the Label while
+      its `for` was perfectly wired, and a control carrying a fallback name can
+      hide a dangling `for` completely. 34 → 50 tests, one per form control.
+      Their framing was right and worth keeping: a gate that reads wiring is a
+      gate that can be satisfied without the thing working.
 
 ---
 
@@ -159,18 +189,40 @@ those three would remove roughly half of a 23-component extension library.
       one app; every mutation button hand-rolls `disabled` + a swapped child.
       The a11y contract for icon-only (required name, hit-target size) is
       precisely what a kit should own rather than leave to 20 consumers.
-- [ ] **J20 + A(DataGrid) · Table cannot sort.** Both projects built one.
+      *Confirmed still open 2026-08-26 — no `loading` or icon-only shape anywhere in `Button.tsx` or its spec.*
+      **Corroborated from an unexpected direction.** Tightening the docs a11y
+      ratchet surfaced five accepted `button-name` violations, and every one was
+      the same shape: `<Button><Icon name="…" /></Button>` with no name, in
+      Move's own samples — including three under a Tooltip, where the tooltip
+      supplies `aria-describedby` and names nothing. So the library's own docs
+      were teaching the mistake five times over, to every agent that reads them.
+      Samples fixed with explicit names; the durable fix is still this item — an
+      icon-only shape that REQUIRES a name, rather than 20 consumers each
+      remembering.
+- [~] **J20 + A(DataGrid) · Table cannot sort.** Both projects built one.
       Move's Table being presentational is defensible — but then ship a
       headless sort helper (state + `aria-sort` + header affordance) beside it.
       Everyone needs it; so far everyone has shipped without it.
-- [ ] **J11 + A(CostTrend) · no charting position.** Purity accepts any
+      **Half of the ask already shipped.** `Table.HeaderCell` carries
+      `sortable`, `sorted`, `onSort`, `aria-sort`, `data-sortable`/`data-sorted`
+      and Enter/Space handling (`Table.tsx:521-566`) — the affordance and the
+      a11y wiring are there. What is missing is the STATE half: no `useSort` in
+      `src/hooks/`, so every consumer still writes the comparator, the tri-state
+      cycle and the column bookkeeping. Remaining work is one hook, not a
+      component.
+- [x] **J11 + A(CostTrend) · no charting position.** Purity accepts any
       capitalised import, so `<AreaChart>` passes untouched **inside a
       composite** — the one place it should never be.
-      → Cheapest close: a documented, checkable rule that a rendering library
-      may only be imported by a `withMoveComponent` component, never a
-      composite. Better: a thin token-aware chart shell.
+      **Both halves shipped.** The chart shell exists
+      (`data-display/Chart/` — spec, source, CSS, tests, swappable renderer
+      adapters, pie/donut, numeric x scale), so the token-aware option is the
+      default rather than the ambitious one. And the boundary is now a real gate:
+      `purity-6` in `checks/purity.mjs` refuses a rendering-library import from
+      anything that is not the component wrapping it (or a renderer adapter
+      beside it), which is the hole this finding named.
 - [ ] **A6 · ToggleGroup is single-select only** (`type="single"` hardcoded).
       Multi-select chip/tag pickers degrade silently.
+      *Confirmed still open 2026-08-26 — `ToggleGroup.tsx:150` still passes a literal `type="single"`.*
 
 ---
 
@@ -187,64 +239,178 @@ hatch found by reading `dist`.
       → `dismissOnSelect?: boolean` (default true), or auto-suppress when the
       item is a `Collapsible.Trigger` child (detectable via the `data-state`
       Collapsible already injects). Documenting the sentinel is the minimum.
-- [ ] **J19 · Dropdown.Item + overlay needs `preventDefault`.** Radix restores
+      *Confirmed still open 2026-08-26 — `Sidebar.tsx:861` still gates on `e.defaultPrevented`; no `dismissOnSelect` prop exists.*
+- [x] **J19 · Dropdown.Item + overlay needs `preventDefault`.** Radix restores
       focus after `onSelect`; the overlay reads it as focus escaping and
       dismisses itself. Symptom: the action appears to do nothing. Hit **ten
       surfaces at once** through one shared wrapper. jsdom cannot model the
       focus race, so no component test catches it — an argument for handling it
       in the library rather than rediscovering it per consumer.
-- [ ] **J17 · The factory strips `undefined` props** (`factory.tsx:59`), which
+      **Fixed, and in the library as they argued.** `Dropdown.Item`'s
+      `handleSelect` calls `e.preventDefault()` before the consumer's `onSelect`
+      and closes through the animated path (`Dropdown.tsx:421-425`), so no call
+      site has to know about the focus race.
+- [x] **J17 · The factory strips `undefined` props** (`factory.tsx:59`), which
       is exactly the value Radix reserves for opting out
       (`aria-describedby={undefined}`). ~44 overlays affected.
       → Use `Object.hasOwn` to distinguish "not passed" from "passed as
       undefined". Also refresh the vendored Radix — the warning comes from
       Move's bundled copy, so consumers cannot fix it by upgrading their own.
+      **Fixed, with one refinement to their proposal.** A blanket `hasOwn` would
+      have broken every default: `undefined` means two different things depending
+      on whether the prop HAS one.
+      With a default, `variant={undefined}` means "I'm not choosing" and the
+      default must win — React's own convention, and every call site relies on
+      it. Without a default, `aria-describedby={undefined}` is a VALUE and the
+      only way to say "no description": Radix sets
+      `aria-describedby={descriptionId}` and then spreads the consumer's props
+      over it, so dropping the key means the override never lands and the
+      generated id survives. So the factory now skips an explicit `undefined`
+      ONLY where a default would replace it.
+      `hasOwnProperty.call`, not `Object.hasOwn` — the latter is ES2022 and this
+      package targets ES2020; raising the floor for every consumer over one call
+      site is not a trade worth making.
+      Verified against the symptom, not the code: a Dialog with no Description
+      can now be silenced with `aria-describedby={undefined}`, and reinstating
+      the old strip makes that test fail with Radix's warning verbatim. 2238
+      tests pass across all 71 components, run three times.
+      *Their second half — refreshing the vendored Radix — is untouched and
+      still open.*
 - [ ] **J14 · Tabs.List can neither wrap nor scroll.** `white-space: nowrap`,
       no `wrap`/`scroll` prop. Past ~6 tabs it forces document-level horizontal
       overflow that clips page content far from the cause. **The consumer
       cannot fix it themselves** — the sliding indicator is absolutely
       positioned, so a consumer-side `flex-wrap` mispositions it on every row
       after the first.
+      *Confirmed still open 2026-08-26 — `Tabs.module.css:126` still `white-space: nowrap`, and no `wrap`/`scroll` prop exists.*
 - [ ] **Alert has no overflow containment** (only `.content` carries
       `min-width: 0`) — cannot contain a long unbroken error string.
-- [ ] **A7 · `Text color="primary"` ignores the theme accent** — hard-wired to
+      *Confirmed still open 2026-08-26 — `Alert.module.css:83` is still the only `min-width: 0`; no `overflow-wrap`/`word-break` anywhere in the file.*
+- [x] **A7 · `Text color="primary"` ignores the theme accent** — hard-wired to
       `var(--move-indigo-text)`. An amber-themed app renders blue eyebrows.
+      **Fixed — and it was nine components, not one.** Text, Stepper,
+      Pagination, Label's required asterisk and four calendar "today" markers had
+      all pinned the same hue.
+      The reason it had spread is that the role token did not exist. The theme
+      engine already derives exactly this value — `deriveAccentText`, AA-clamped
+      against every surface — but published it only as `--move-link`, which reads
+      wrong at a "today" marker or an eyebrow, so each author reached past it to
+      the palette. Named it for the role it plays: `--move-accent-text` /
+      `--move-accent-text-hover`, with `--move-link` kept as the same value under
+      its most common name. No new colour maths — the AA audit picked the role up
+      on its own, 40 → 48 audited pairs.
+      Also fixed the one non-accent instance the sweep found: Button's danger
+      `:active` used `--move-red-700`, which is what `--move-error` already is.
 - [ ] **A11 · No large accent-coloured inline text.** Text colours cap at `xl`;
       Heading offers only base/muted/subtle. An accent word in a hero headline
       can be big or coloured, not both.
-- [ ] **A10 · `List.Item[active]` has no emphasis hook** beyond
+- [x] **A10 · `List.Item[active]` has no emphasis hook** beyond
       `--move-list-active-bg`. → add `--move-list-active-ring`, default none.
-- [ ] **A3 · ToggleButton has no `fullWidth`** though docs say it composes
+      **Done as specified.** `--move-list-active-ring` defaults to `none`, so
+      nothing changes unless a consumer sets it; it rides `box-shadow`, so any
+      shadow value works — a leading rule, a ring, an inset border — and it is
+      applied on the active-and-hovered rule too, which otherwise reset it.
+- [x] **A3 · ToggleButton has no `fullWidth`** though docs say it composes
       Button's base styles. Forward the layout props or document the exclusion.
-- [ ] **A5 · Type-only imports trip composite-spec-drift** — importing a Move
+      **Forwarded, which was the right of the two options** — the docs were
+      accurate and the component was not. ToggleButton already composed Button's
+      root class, so `[data-full-width]` applied to it all along; only the prop
+      was missing. Three tests, including one that it does not leak to the DOM.
+- [x] **A5 · Type-only imports trip composite-spec-drift** — importing a Move
       type into a composite makes it read as an undeclared component.
-      → Ignore `import type { … }`.
-- [ ] **A4 · llms.txt documents flat props for compound components**
+      **Fixed.** `checks/composite-spec-drift.mjs:72-74` skips both a type-only
+      import clause and per-specifier `type` markers.
+- [x] **A4 · llms.txt documents flat props for compound components**
       (Switch, Select, Card, Avatar, FormField, ToggleGroup, FileUpload) while
       the `.d.ts` is object-only. Flat JSX does not typecheck.
+      **Fixed — and it was 27 components, not 7.** The generator read the spec
+      and never asked what the source exports, so it emitted a flat `Props:`
+      block AND an `Example: <Switch …>` for every component whose export is a
+      bare object.
+      The discriminator it was missing is callability. Three shapes ship here:
+      `withMoveComponent(...)` and `Object.assign(Root, {...})` are callable, so
+      flat props are correct; `{ Root, Thumb }` is not, so they are a lie. The
+      generator now reads the source, omits the flat block for the 27 that are
+      objects (their props are the Root's and were duplicated under
+      `Name.Root props:` anyway), and emits `<Switch.Root>` as the example.
+      Gated by `check:api-compound-shape`, which asserts on the generated files
+      so it catches a regressed generator and a hand-edit alike. Worth stating
+      plainly: this artifact exists to be read by a model, and a model writes
+      what it can find — so the one file built to make the API discoverable was
+      teaching 27 components' worth of code that cannot build.
 
 ---
 
 ## Tier 4 — cheap, high-leverage, mostly process
 
-- [ ] **T4-1 · Publish guard for A8.** Assert `dist` contains no `jsxDEV`
+- [x] **T4-1 · Publish guard for A8.** Assert `dist` contains no `jsxDEV`
       before pack. ~10 lines, and it is the difference between "fixed" and
       "fixed until the next publish".
-- [ ] **A2 + J9 · Export `ComponentSpec` and `CompositionSpec`.** The exports
+      **Done, and widened to cover A1 as well** — the two findings share one
+      origin (a build shipping what it should have externalised), so one guard
+      on the artifact closes both. `scripts/checks/dist-packaging.mjs` asserts,
+      against `dist` rather than `src`: no `jsxDEV` anywhere in the bundle; no
+      `react`/`react-dom` copy inside the package; and React reached only by
+      BARE specifier — the third catches a copy that moved rather than left.
+      Wired into `pack` between `build` and `npm pack`, where dist is guaranteed
+      fresh, and into `check:all`, where it SKIPS with a printed notice if no
+      dist exists. The notice is the point: a green line that verified nothing
+      is the false assurance J10 is about.
+      Proven the way they ask for — each of the three assertions was made to
+      fail on a deliberate violation and pass again on restore, rather than
+      trusted because the run was green.
+- [x] **A2 + J9 · Export `ComponentSpec` and `CompositionSpec`.** The exports
       map is `.`, `./styles.css`, `./system.css`, `./styles/*`, `./scaffold/*` —
       no spec types. Consumers cannot write `satisfies ComponentSpec`, so their
       specs are `as const` and TypeScript checks nothing. They **shipped two
       malformed specs (12 required fields missing each) with every gate green**,
       and two more declaring tokens the stylesheet never defaulted. One export
       line closes it.
-- [ ] **A1 · React resolution from the built lib.** Both projects independently
+      **Fixed.** New `src/spec.ts` barrel exports every spec contract —
+      `ComponentSpec`, `CompositeSpec` (the current name for what they called
+      `CompositionSpec`), `AdapterSpec`, `ApiSpec` and their supporting types.
+      Reachable both from the main barrel and as `move/spec`, since a consumer
+      will try `from 'move'` first. `spec` is its own build entry: the file is
+      almost all types, so rollup dropped it when it was only a re-export.
+      Verified the way the finding describes the harm rather than by inspection —
+      a spec missing required fields now fails `satisfies ComponentSpec`.
+- [x] **A1 · React resolution from the built lib.** Both projects independently
       landed on `resolve.dedupe` + `server.deps.inline: ['move']`. Root cause is
       Move bundling its own `dist/node_modules/react` — same origin as A8. Every
       consumer rediscovers this. Fix the packaging or document the workaround.
-- [ ] **J2 · `recipes/registry.ts` does not exist.** `app-compose` rule 2 says
+      **Fixed — the packaging option, which is the better of the two they
+      offered.** `vite.config.ts:57` externalises `react`, `react-dom` and
+      `react/jsx-runtime`; `dist` contains no React copy (only @floating-ui,
+      @radix-ui and their sidecars); every emitted file reaches React by bare
+      specifier (`Button.mjs` → `from "react"`), so it resolves to the
+      consumer's copy; and `react`/`react-dom` are declared as peers.
+      It also cannot silently regress: `check:dist-packaging` (T4-1) fails the
+      pack if React is bundled again or reached by anything but a bare
+      specifier — which is what makes this "fixed" rather than "one good build".
+      The docs need nothing: the installation page already states the contract
+      positively ("React and react-dom you already have").
+      Their workaround is now inert rather than required. Whether they have
+      deleted those two config lines is their housekeeping, not a Move defect,
+      so it does not gate this item.
+- [x] **J2 · `recipes/registry.ts` does not exist.** `app-compose` rule 2 says
       to prefer a recipe seed, so the rule is unfollowable and every
       composition falls back to analyse-from-scratch. Notably there is **no
       sign-in recipe**. Ship the registry or amend the skill to match reality.
+      **Still open, and the answer is now settled: amend the skill.** Recipes
+      were superseded by design-pattern + composite and the RecipeSpec pipeline
+      was deleted — there is no `src/recipes/` and no registry is coming.
+      `skills/app-compose/SKILL.md:42-48` still says "Seed from a Move recipe
+      (preferred when one fits)" and points at `recipes/registry.ts`, so the
+      skill sends every agent to a file that cannot exist. Their diagnosis was
+      right; only the resolution changed.
+      **Fixed, and it was not alone.** `app-compose` now seeds from a design
+      pattern and points at `packages/move/patterns/registry.ts`, which exists.
+      Writing the gate for this (`check:skill-refs`) turned up **three more
+      dangling references nobody had filed**: `component-validate` told agents to
+      read and update `src/components/specs.registry.ts` — a file removed with
+      the `.report.md` artifacts, so both its Step 5 and its whole "registry"
+      input mode were dead — plus two wrong relative paths between reference
+      docs. All four fixed; the gate now holds 59 references across 39 docs.
 - [ ] **J5 · No migration map from the mainstream kits.** Porting a Mantine app
       they nearly rebuilt four things that already exist: `SegmentedControl`
       (= ToggleGroup), `MultiSelect` (= Autocomplete multiple), an icon adapter
@@ -252,11 +418,23 @@ hatch found by reading `dist`.
       found these by reading `dist/**/*.d.ts`.
       → A "Coming from Mantine / MUI / Chakra" table. Cheap, high leverage —
       **for an agent especially, the model writes what it cannot find.**
-- [ ] **J3 · No i18n story.** `labels` defaults are English; a hardcoded
+- [~] **J3 · No i18n story.** `labels` defaults are English; a hardcoded
       `aria-label` is rejected, but a plain `<Text>Save</Text>` passes clean.
       They wrote `check-i18n.mjs` (TS AST, same technique as our checks) and
       **offered it upstream**. Caveat they flag: it must not touch
       server-served content.
+      **Half closed — the library half.** `check:i18n-literals` refuses a
+      user-facing string baked into a component. Their diagnosis of the
+      asymmetry was exactly right and worth restating: a hardcoded `aria-label`
+      was already refused while `<span>Time</span>` passed clean, so the name a
+      screen reader speaks was guarded and the word a sighted user reads was not
+      — the same problem, and the visible half is the one that ships
+      untranslatable to every locale. One violation existed (DatePicker's "Time"
+      heading); it now routes through `DatePickerLabels.time`.
+      **Still open: the consumer-app half**, which is what they actually built.
+      Scanning an app's own compositions needs the config-driven model `purity`
+      uses, plus their caveat about server-served content. Worth asking for
+      theirs rather than rebuilding it.
 - [ ] **J7 · No story for an app that already has a design system.** `MoveRoot`
       takes one theme; theirs carries 6 named themes, 3 runtime A/B token
       overrides and 3 surface variants — 885 lines predating Move. The
@@ -306,6 +484,18 @@ assurance faster than actual assurance.** Worth weighing whenever we add one.
 Related, from the same register: *"Gates are proven by deliberate violation, not
 just green runs."* They verify each gate by committing a violation and watching
 it fail. That is the standard this repo should hold its own checks to.
+
+**A worked example of their thesis, found 2026-08-26.** The docs a11y sweep is a
+ratchet with a baseline. It computed how many baselined violations were FIXED,
+printed the number — and never asserted on it. So a repaired violation left its
+allowance behind permanently, and the same bug could slide back in silently.
+Two of those allowances were FileUpload `label` findings: axe had caught J13 all
+along, and the baseline absorbed it while the sweep ran green.
+The ratchet now fails when it is slack, so it can only tighten. Re-snapping it
+took the baseline from 10 findings across 6 entries to 3 across 1 — the rest
+were real WCAG failures sitting accepted. Their line was exactly right: each new
+check raises apparent assurance faster than actual assurance, and a gate with
+slack in it reads as assurance while being its opposite.
 
 ---
 

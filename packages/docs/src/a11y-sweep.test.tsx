@@ -101,6 +101,19 @@ describe('a11y sweep (axe — roles, names, ARIA)', () => {
       }
 
       expect(regressions, regressions.join('\n')).toEqual([]);
+
+      // A ratchet only ratchets if it tightens. `fixed` was computed and printed
+      // and never asserted, so a repaired violation left its allowance behind and
+      // the same bug could slide back in silently — which is what happened: two
+      // FileUpload `label` findings sat in the baseline while the hidden file
+      // input genuinely had no accessible name (WCAG 4.1.2), and the sweep was
+      // green throughout. Slack in a gate reads as assurance and is the opposite.
+      expect(
+        fixed,
+        `${fixed} baselined a11y violation(s) are fixed but still allowed. Re-snapshot so ` +
+          `the baseline cannot absorb them again:\n\n` +
+          `    A11Y_UPDATE=1 npx vitest run src/a11y-sweep.test.tsx\n`,
+      ).toBe(0);
     },
     120_000,
   );
