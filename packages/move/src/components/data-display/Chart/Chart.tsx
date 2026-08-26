@@ -28,6 +28,7 @@ import {
   type ChartSeries,
   type ChartRendererProps,
   type ChartCurve,
+  type ChartEntrance,
   type ChartSpec,
   type ChartXScale,
   type ChartTheme,
@@ -383,6 +384,133 @@ function nearestIndex(positions: readonly number[], localX: number): number {
   return best;
 }
 
+/** The chart's title, and the accessible name the plot is labelled by. */
+function Caption({
+  id,
+  hidden,
+  children,
+}: {
+  id: string;
+  hidden: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <figcaption id={id} className={styles.caption} data-hidden={hidden ? '' : undefined}>
+      {children}
+    </figcaption>
+  );
+}
+
+/** The retry an errored resource carries, if it carries one. */
+function resourceRetry(resource: AsyncResource<unknown> | null) {
+  return resource?.status === 'error' ? resource.retry : undefined;
+}
+
+/**
+ * The drawing area: the renderer's output, plus the shell's own overlay.
+ *
+ * `role="img"` with a generated name sits HERE rather than on the viewport, so
+ * it describes the drawing and nothing else — and so the hover overlay shares
+ * one coordinate space with the geometry the renderer reports.
+ */
+function Plot({
+  plotRef,
+  pending,
+  summary,
+  describedBy,
+  renderer: Renderer,
+  spec,
+  theme,
+  width,
+  height,
+  onGeometry,
+  entrance,
+  activeIndex,
+  overlay,
+  onPointerMove,
+  onPointerLeave,
+}: {
+  plotRef: React.Ref<HTMLDivElement>;
+  pending: boolean;
+  summary: string;
+  describedBy: string | undefined;
+  renderer: React.ComponentType<ChartRendererProps>;
+  spec: ChartSpec;
+  theme: ChartTheme;
+  width: number;
+  height: number;
+  onGeometry: (geometry: PlotGeometry) => void;
+  entrance: ChartEntrance;
+  activeIndex: number | null;
+  overlay: React.ReactNode;
+  onPointerMove: (event: React.PointerEvent<HTMLDivElement>) => void;
+  onPointerLeave: () => void;
+}) {
+  const drawable = width > 0 && height > 0;
+  return (
+    <div
+      ref={plotRef}
+      className={styles.plot}
+      data-enter={pending ? 'pending' : undefined}
+      role="img"
+      aria-label={summary}
+      aria-describedby={describedBy}
+      onPointerMove={onPointerMove}
+      onPointerLeave={onPointerLeave}
+    >
+      {drawable && (
+        <Renderer
+          spec={spec}
+          theme={theme}
+          width={width}
+          height={height}
+          onPlotGeometry={onGeometry}
+          entrance={entrance}
+          activeIndex={activeIndex}
+        />
+      )}
+      {overlay}
+    </div>
+  );
+}
+
+/** Which of the three non-drawing states applies, if any. */
+function deriveStatus(
+  resource: AsyncResource<unknown> | null,
+  rowCount: number,
+): 'loading' | 'error' | 'empty' | null {
+  if (resource?.status === 'loading') return 'loading';
+  if (resource?.status === 'error') return 'error';
+  return rowCount === 0 ? 'empty' : null;
+}
+
+/** What to tell a renderer that animates its own geometry. */
+function entranceOf(motionAllowed: boolean, plotReady: boolean): ChartEntrance {
+  if (!motionAllowed) return null;
+  return plotReady ? 'run' : 'pending';
+}
+
+/** Which way the tooltip opens — the renderer decides when it knows better. */
+function sideOf(geometry: PlotGeometry, hovered: number | null) {
+  if (!geometry.side || hovered === null) return 'top';
+  return geometry.side[hovered] ?? 'top';
+}
+
+/**
+ * A pie's tooltip names the SLICE, so it takes the slice's colour from the same
+ * ramp the legend and the renderer walk — otherwise every wedge would report
+ * the one series colour.
+ */
+function tooltipSeries(
+  resolved: readonly ResolvedChartSeries[],
+  isPie: boolean,
+  hovered: number | null,
+  ramp: readonly string[],
+): readonly ResolvedChartSeries[] {
+  if (!isPie || hovered === null) return resolved;
+  return resolved.map((entry) => ({ ...entry, color: ramp[hovered % ramp.length] }));
+}
+
 /** Legend entries for a pie: one per row, coloured from the same ramp. */
 function sliceLegend(
   data: readonly ChartDatum[],
@@ -489,6 +617,58 @@ function resolveSeries(
   }));
 }
 
+type RowFormat = {
+  row: ChartDatum;
+  xKey: string;
+  formatX?: (value: unknown) => string;
+  formatY?: (value: number) => string;
+};
+
+const readX = ({ row, xKey, formatX }: RowFormat) =>
+  formatX ? formatX(row[xKey]) : String(row[xKey] ?? '');
+
+const readY = (row: ChartDatum, key: string, formatY?: (value: number) => string) => {
+  const v = numeric(row, key);
+  return v === null ? '—' : formatY ? formatY(v) : String(v);
+};
+
+/** Several series: name the row once, then list each series beneath it. */
+function MultiSeriesRows({
+  series,
+  ...rest
+}: RowFormat & { series: readonly ResolvedChartSeries[] }) {
+  return (
+    <>
+      <span className={styles.tipHeading}>{readX(rest)}</span>
+      {series.map((s) => (
+        <span key={s.key} className={styles.tipRow}>
+          <span className={styles.swatch} style={{ background: s.color }} />
+          {s.label}
+          <span className={styles.tipValue}>{readY(rest.row, s.key, rest.formatY)}</span>
+        </span>
+      ))}
+    </>
+  );
+}
+
+/**
+ * One series: colour, name and value read as a single fact, so stacking them
+ * over two lines only adds height.
+ */
+function SingleSeriesRow({
+  series,
+  ...rest
+}: RowFormat & { series: ResolvedChartSeries | undefined }) {
+  if (!series) return null;
+  return (
+    <span className={styles.tipRow}>
+      <span className={styles.swatch} style={{ background: series.color }} />
+      {readX(rest)}
+      <span className={styles.tipValue}>{readY(rest.row, series.key, rest.formatY)}</span>
+    </span>
+  );
+}
+
 /**
  * Crosshair + tooltip over the plot.
  *
@@ -544,38 +724,21 @@ function HoverOverlay({
         </Tooltip.Trigger>
         <Tooltip.Content side={side} sideOffset={8}>
           {showSeriesLabel ? (
-            <>
-              {/* Several series to tell apart: name the row once, then list
-                  each series under it. */}
-              <span className={styles.tipHeading}>
-                {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
-              </span>
-              {series.map((s) => {
-                const v = numeric(row, s.key);
-                return (
-                  <span key={s.key} className={styles.tipRow}>
-                    <span className={styles.swatch} style={{ background: s.color }} />
-                    {s.label}
-                    <span className={styles.tipValue}>
-                      {v === null ? '—' : formatY ? formatY(v) : String(v)}
-                    </span>
-                  </span>
-                );
-              })}
-            </>
+            <MultiSeriesRows
+              row={row}
+              xKey={xKey}
+              series={series}
+              formatX={formatX}
+              formatY={formatY}
+            />
           ) : (
-            // One series: colour, name and value read as a single fact, so
-            // stacking them over two lines only adds height.
-            <span className={styles.tipRow}>
-              <span className={styles.swatch} style={{ background: series[0]?.color }} />
-              {formatX ? formatX(row[xKey]) : String(row[xKey] ?? '')}
-              <span className={styles.tipValue}>
-                {(() => {
-                  const v = series[0] ? numeric(row, series[0].key) : null;
-                  return v === null ? '—' : formatY ? formatY(v) : String(v);
-                })()}
-              </span>
-            </span>
+            <SingleSeriesRow
+              row={row}
+              xKey={xKey}
+              series={series[0]}
+              formatX={formatX}
+              formatY={formatY}
+            />
           )}
         </Tooltip.Content>
       </Tooltip.Root>
@@ -790,6 +953,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+        const retry = resourceRetry(props.resource ?? null);
 
         const size = props.size as ChartSize;
         const labels = { ...DEFAULT_LABELS, ...(props.labels ?? {}) };
@@ -864,18 +1028,10 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const anchorTop = geometry && hovered !== null && geometry.y ? geometry.y[hovered] : null;
         const summary = props.summary ?? deriveSummary(props.data, resolved, formatY);
         const showTable = props.dataTable !== false;
+        const legendSeries = isPie ? sliceLegend(props.data, props.x, chartTheme.series) : resolved;
 
-        // A renderer is never handed absent data: these replace the plot rather
-        // than overlaying it.
         const resource = props.resource ?? null;
-        const status: 'loading' | 'error' | 'empty' | null =
-          resource?.status === 'loading'
-            ? 'loading'
-            : resource?.status === 'error'
-              ? 'error'
-              : props.data.length === 0
-                ? 'empty'
-                : null;
+        const status = deriveStatus(resource, props.data.length);
 
         return (
           <figure
@@ -889,98 +1045,54 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
             data-status={status ?? undefined}
             aria-labelledby={captionId}
           >
-            <figcaption
-              id={captionId}
-              className={styles.caption}
-              data-hidden={props.hideCaption ? '' : undefined}
-            >
+            <Caption id={captionId} hidden={props.hideCaption === true}>
               {props.caption}
-            </figcaption>
+            </Caption>
 
             <div ref={measuredRef} className={styles.viewport} style={sizing}>
               {/* Status REPLACES the plot rather than sitting inside it. Left in
                   place, the plot keeps role="img" and an accessible summary
                   describing a chart that is not there. */}
               {status ? (
-                <StatusPanel
-                  state={status}
-                  labels={labels}
-                  retry={resource?.status === 'error' ? resource.retry : undefined}
-                />
+                <StatusPanel state={status} labels={labels} retry={retry} />
               ) : (
-                <div
-                  ref={plotRef}
-                  className={styles.plot}
-                  data-enter={willAnimate ? 'pending' : undefined}
+                <Plot
+                  plotRef={plotRef}
+                  pending={willAnimate}
+                  summary={summary}
+                  describedBy={showTable ? tableId : undefined}
+                  renderer={Renderer}
+                  spec={chartSpec}
+                  theme={chartTheme}
+                  width={width}
+                  height={height}
+                  onGeometry={handleGeometry}
+                  entrance={entranceOf(motionAllowed, plotReady)}
+                  activeIndex={hovered}
+                  overlay={
+                    canHover && hoveredRow && geometry ? (
+                      <HoverOverlay
+                        x={anchorLeft}
+                        y={anchorTop}
+                        showSeriesLabel={resolved.length > 1}
+                        side={sideOf(geometry, hovered)}
+                        crosshair={!geometry.hitTest}
+                        rect={geometry.rect}
+                        row={hoveredRow}
+                        xKey={props.x}
+                        series={tooltipSeries(resolved, isPie, hovered, chartTheme.series)}
+                        formatX={formatX}
+                        formatY={formatY}
+                      />
+                    ) : null
+                  }
                   onPointerMove={onPointerMove}
                   onPointerLeave={() => setHovered(null)}
-                  role="img"
-                  aria-label={summary}
-                  aria-describedby={showTable ? tableId : undefined}
-                >
-                  {width > 0 && height > 0 ? (
-                    <Renderer
-                      spec={chartSpec}
-                      theme={chartTheme}
-                      width={width}
-                      height={height}
-                      onPlotGeometry={handleGeometry}
-                      // Renderers that animate their own geometry (a pie sweeps
-                      // by ANGLE, which no CSS transform expresses) need to know
-                      // both that an entrance is coming — so their first frame is
-                      // already the start state — and when the chart is on
-                      // screen, which only the shell knows.
-                      // NOT `willAnimate`: a pie has no [data-bar]/[data-sweep]/
-                      // [data-dot], so the CSS stagger completes instantly against
-                      // zero elements and flips `entered` true — which would kill
-                      // the pie's own entrance before it started.
-                      entrance={motionAllowed ? (plotReady ? 'run' : 'pending') : null}
-                      activeIndex={hovered}
-                    />
-                  ) : null}
-
-                  {canHover && hoveredRow && geometry && (
-                    <HoverOverlay
-                      x={anchorLeft}
-                      y={anchorTop}
-                      // A vertical line through a pie says nothing; a renderer that
-                      // owns hit-testing is not laid out along an axis.
-                      crosshair={!geometry.hitTest}
-                      showSeriesLabel={resolved.length > 1}
-                      // The renderer decides, when it knows better than "upward".
-                      side={
-                        (geometry.side && hovered !== null ? geometry.side[hovered] : 'top') ??
-                        'top'
-                      }
-                      rect={geometry.rect}
-                      row={hoveredRow}
-                      xKey={props.x}
-                      // A pie's tooltip names the SLICE, so it takes the slice's
-                      // colour from the same ramp the legend and the renderer
-                      // walk. Passing `resolved` shows one row in the series
-                      // colour whichever wedge you hover.
-                      series={
-                        isPie && hovered !== null
-                          ? resolved.map((entry) => ({
-                              ...entry,
-                              color: chartTheme.series[hovered % chartTheme.series.length],
-                            }))
-                          : resolved
-                      }
-                      formatX={formatX}
-                      formatY={formatY}
-                    />
-                  )}
-                </div>
+                />
               )}
             </div>
 
-            {props.legend !== false &&
-              (isPie ? (
-                <Legend series={sliceLegend(props.data, props.x, chartTheme.series)} />
-              ) : (
-                <Legend series={resolved} />
-              ))}
+            {props.legend !== false && <Legend series={legendSeries} />}
 
             {showTable && (
               <DataTable

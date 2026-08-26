@@ -142,6 +142,36 @@
   transform-origin: left;
 }
 
+/* Hover emphasis eases rather than snapping.
+   Only marks that exist PER ROW take part: a bar, a slice, a point. A line or
+   an area path spans every row, so there is nothing per-row to emphasise — its
+   hovered reading is the dot.
+
+   Deliberately NOT `transform`: the entrances own that (bars scaleY, dots
+   scale) and a transition would fight them frame by frame — the same collision
+   stroke-dasharray had. Dots therefore grow via the `r` ATTRIBUTE, which no
+   entrance touches, so size and opacity can ease together without conflict.
+   A bar cannot do that; scaling one on hover would mean transform, and would
+   have to move into useAnimations so a single system owns it. */
+.plot [data-bar],
+.plot [data-slice] {
+  transition: opacity var(--move-transition-fast) var(--move-ease-default);
+}
+
+.plot [data-dot] {
+  transition:
+    opacity var(--move-transition-fast) var(--move-ease-default),
+    r var(--move-transition-fast) var(--move-ease-default);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .plot [data-bar],
+  .plot [data-slice],
+  .plot [data-dot] {
+    transition: none;
+  }
+}
+
 /* Dots pop from their own centre. Without `fill-box` the origin is the SVG
    viewport and every dot flies in from the top-left corner. */
 .plot [data-dot] {
