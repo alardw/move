@@ -2860,6 +2860,12 @@
           "type": "AnimationTrigger[] | false",
           "default": "null",
           "description": "Override or disable the series entrance animation."
+        },
+        {
+          "name": "entranceThreshold",
+          "type": "number | 'always'",
+          "default": "0.8",
+          "description": "How much of the chart must be on screen before the entrance plays, as a fraction of its own height. 'always' drops the visibility gate and plays as soon as the chart can draw. The ask is capped against what the chart can actually reach, since one taller than the viewport can never satisfy a high fraction."
         }
       ],
       "subComponents": [],

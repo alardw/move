@@ -441,6 +441,29 @@ describe('Chart — async status', () => {
     expect(screen.getByTestId('c')).not.toHaveAttribute('resource');
   });
 
+  it('keeps `entranceThreshold` off the DOM', () => {
+    render(
+      <Chart
+        caption="R"
+        data={rows}
+        x="month"
+        series={line}
+        entranceThreshold="always"
+        data-testid="c"
+      />,
+    );
+    const root = screen.getByTestId('c');
+    expect(root).not.toHaveAttribute('entranceThreshold');
+    expect(root).not.toHaveAttribute('entrancethreshold');
+  });
+
+  it('draws with the entrance gate off', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="month" series={line} entranceThreshold="always" />,
+    );
+    expect(container.querySelector('[data-series]')).toBeInTheDocument();
+  });
+
   it('labels are overridable', () => {
     render(
       <Chart caption="R" data={[]} x="month" series={line} labels={{ empty: 'Niets te tonen' }} />,
@@ -564,6 +587,34 @@ describe('Chart — tooltip content', () => {
       />,
     );
     expect(screen.getAllByRole('listitem').map((li) => li.textContent)).toEqual(['Mon', 'Tue']);
+  });
+});
+
+describe('Chart — tooltip placement', () => {
+  const rows = [
+    { day: 'Mon', visits: 10 },
+    { day: 'Tue', visits: 20 },
+    { day: 'Wed', visits: 30 },
+  ];
+  const line = [{ key: 'visits', type: 'line' as const, label: 'Visits' }];
+
+  /**
+   * The anchor sits at the MIDDLE of the plot, not its top edge. Anchored at the
+   * top, a tooltip listing several series has no room above it, flips downward,
+   * and lands across the values it describes.
+   */
+  it('centres the tooltip anchor vertically in the plot', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="day" series={line} animations={false} />,
+    );
+    fireEvent.pointerMove(container.querySelector('[role="img"]')!, {
+      clientX: 100,
+      clientY: 150,
+    });
+    const anchor = container.querySelector<HTMLElement>('span[data-state]');
+    expect(anchor).not.toBeNull();
+    // 600x300 box, MARGIN top 8 / bottom 22 => plot y 8, height 270.
+    expect(anchor!.style.top).toBe('143px');
   });
 });
 

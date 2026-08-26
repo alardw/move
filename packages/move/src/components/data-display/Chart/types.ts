@@ -37,6 +37,9 @@ export type ChartDatum = Record<string, unknown>;
  */
 export type ChartSeriesType = 'line' | 'area' | 'bar' | 'scatter' | 'pie';
 
+/** Which edge of the anchor a tooltip opens from. */
+export type ChartTooltipSide = 'top' | 'right' | 'bottom' | 'left';
+
 /** Which grid lines the renderer draws. */
 export type ChartGrid = 'none' | 'horizontal' | 'vertical' | 'both';
 
@@ -256,7 +259,7 @@ export interface PlotGeometry {
    * the chart it belongs to, which is worst on small pies. Reporting the side
    * lets the renderer push it outward instead.
    */
-  side?: ('top' | 'right' | 'bottom' | 'left')[];
+  side?: ChartTooltipSide[];
 }
 
 /**

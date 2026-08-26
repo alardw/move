@@ -34,6 +34,7 @@ import {
   type ChartSpec,
   type ChartXScale,
   type ChartTheme,
+  type ChartTooltipSide,
   type PlotGeometry,
   type PlotRect,
   type ResolvedChartSeries,
@@ -112,6 +113,12 @@ const SWEEP_MS = 1000;
  * so it only ever fires when something has genuinely gone wrong.
  */
 const ENTER_TIMEOUT_MS = 4000;
+/**
+ * Share of the viewport a chart may fill and still be considered fully seen.
+ * Below 1 so a chart the exact height of the window still clears its gate
+ * despite the observer never reporting a ratio of 1 for it.
+ */
+const VIEWPORT_FILL = 0.9;
 
 /** Total time the dot sequence should span, however many dots there are. */
 const DOT_SEQUENCE_MS = 700;
@@ -290,6 +297,15 @@ export interface ChartProps
   labels?: Partial<ChartLabels> | null;
   /** Override or disable the bar entrance stagger. */
   animations?: AnimationTrigger[] | false;
+  /**
+   * How much of the chart must be on screen before the entrance plays, as a
+   * fraction of the chart's own height (`0.8` = four fifths visible).
+   *
+   * `'always'` drops the visibility gate entirely and plays as soon as the
+   * chart can draw — right for a chart that is above the fold anyway, or one
+   * inside a scroller the observer cannot see into.
+   */
+  entranceThreshold?: number | 'always';
   className?: string;
   style?: React.CSSProperties;
 }
@@ -510,9 +526,17 @@ function entranceOf(motionAllowed: boolean, plotReady: boolean): ChartEntrance {
 }
 
 /** Which way the tooltip opens — the renderer decides when it knows better. */
-function sideOf(geometry: PlotGeometry, hovered: number | null) {
-  if (!geometry.side || hovered === null) return 'top';
-  return geometry.side[hovered] ?? 'top';
+function sideOf(geometry: PlotGeometry, hovered: number | null): ChartTooltipSide {
+  if (hovered === null) return 'top';
+  if (geometry.side) return geometry.side[hovered] ?? 'top';
+  // An axis chart opens BESIDE the crosshair, never above or below it. A tooltip
+  // listing several series is taller than the room above a high point, so a
+  // vertical placement collides with the plot edge and flips down across the
+  // very values it is describing. Sideways it always clears the hovered column.
+  // The side follows which half the crosshair is in, so it opens into the wider
+  // space rather than relying on a collision flip to rescue it.
+  const midX = geometry.rect.x + geometry.rect.width / 2;
+  return geometry.x[hovered] > midX ? 'left' : 'right';
 }
 
 /**
@@ -740,7 +764,7 @@ function HoverOverlay({
 }: {
   x: number;
   y: number | null;
-  side: 'top' | 'right' | 'bottom' | 'left';
+  side: ChartTooltipSide;
   crosshair: boolean;
   /**
    * Naming the series is only worth the space when there is more than one to
@@ -769,7 +793,7 @@ function HoverOverlay({
         <Tooltip.Trigger asChild>
           <span
             className={styles.anchor}
-            style={{ left: x, top: y ?? rect.y }}
+            style={{ left: x, top: y ?? rect.y + rect.height / 2 }}
             aria-hidden="true"
           />
         </Tooltip.Trigger>
@@ -878,6 +902,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     resource: null,
     summary: null,
     renderer: null,
+    entranceThreshold: 0.8 as number | 'always',
   },
   moveProps: ['data', 'x', 'series', 'caption', 'animations', 'resource'],
 
@@ -887,16 +912,33 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // Hold the entrance until the chart is actually on screen. A chart far down
     // the page would otherwise play its stagger unseen and, being one-shot, have
     // nothing left to show by the time the reader arrives.
-    // 0.8, not a delay. A delay decouples the animation from what the reader is
-    // actually looking at — scroll fast and it still plays off-screen. Waiting
-    // until most of the plot is on screen means the entrance starts when the
-    // chart is genuinely being looked at.
-    const { ref: inViewRef, inView } = useInView<HTMLDivElement>({ threshold: 0.8 });
+    // A fraction, not a delay. A delay decouples the animation from what the
+    // reader is actually looking at — scroll fast and it still plays off-screen.
+    // Waiting until most of the plot is on screen means the entrance starts when
+    // the chart is genuinely being looked at. `entranceThreshold` tunes it.
+    const { width, height } = useMeasuredSize(viewportRef);
+    const gateOff = props.entranceThreshold === 'always';
+    // The observer measures visibility as a fraction of the ELEMENT, so a chart
+    // taller than the viewport can never reach a high ratio: a 900px chart in an
+    // 800px window peaks at 0.89, and one at 1200px peaks at 0.67 — under the
+    // default, so it would never animate at all. Cap the ask at what this chart
+    // can actually achieve here, where its measured height is known.
+    const reachable =
+      height > 0 && typeof window !== 'undefined' && window.innerHeight > 0
+        ? Math.min(1, (window.innerHeight * VIEWPORT_FILL) / height)
+        : 1;
+    // A non-number can only be 'always' here, since `defaults` guarantees a
+    // value — and both that and any bad input fall open to 0, which plays the
+    // entrance rather than gating it behind a test nothing can satisfy.
+    const threshold =
+      gateOff || typeof props.entranceThreshold !== 'number'
+        ? 0
+        : Math.min(props.entranceThreshold, reachable);
+    const { ref: inViewRef, inView } = useInView<HTMLDivElement>({ threshold });
     // Tracks whether the entrance has played, so the pre-entrance CSS can be
     // dropped afterwards.
     const [entered, setEntered] = React.useState(false);
     const measuredRef = useMergedRef(viewportRef, inViewRef);
-    const { width, height } = useMeasuredSize(viewportRef);
     const [geometry, setGeometry] = React.useState<PlotGeometry | null>(null);
     const [hovered, setHovered] = React.useState<number | null>(null);
     // Stable identity: a renderer stores this in a deps array. Bail out on an
@@ -958,7 +1000,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // `geometry` arrives from a passive effect, i.e. a render later, so the
     // finished plot painted once first — that was the "line is there, then it
     // animates in" flash.
-    const plotReady = width > 0 && height > 0 && inView;
+    const plotReady = width > 0 && height > 0 && (gateOff || inView);
     // Fail-open bound. `data-enter="pending"` hides the marks until the entrance
     // reports completion, so a callback that never arrives — an interrupted or
     // failed animation — would leave the chart blank. Lift the pre-entrance

@@ -489,6 +489,7 @@ Props:
 - dataTable: boolean (default: true) — Render the visually hidden data table. Turn off only when an equivalent table is already on the page.
 - labels: Partial<ChartLabels> (default: null) — Override the built-in user-facing strings.
 - animations: AnimationTrigger[] | false (default: null) — Override or disable the series entrance animation.
+- entranceThreshold: number | 'always' (default: 0.8) — How much of the chart must be on screen before the entrance plays, as a fraction of its own height. 'always' drops the visibility gate and plays as soon as the chart can draw. The ask is capped against what the chart can actually reach, since one taller than the viewport can never satisfy a high fraction.
 Example: <Chart grid="horizontal" xScale="category">…</Chart>
 
 ## ChatBubble (data-display)
