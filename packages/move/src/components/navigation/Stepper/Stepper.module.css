@@ -8,7 +8,7 @@
   --move-stepper-indicator-bg-complete: var(--move-primary);
   --move-stepper-indicator-bg-error: var(--move-error);
   --move-stepper-indicator-fg: var(--move-fg-muted);
-  --move-stepper-indicator-fg-active: var(--move-indigo-text);
+  --move-stepper-indicator-fg-active: var(--move-accent-text);
   --move-stepper-indicator-fg-complete: var(--move-primary-fg);
   --move-stepper-indicator-fg-error: var(--move-error-fg, var(--move-primary-fg));
   --move-stepper-indicator-border: var(--move-border-base);

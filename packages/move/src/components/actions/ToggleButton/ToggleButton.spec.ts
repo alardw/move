@@ -57,6 +57,12 @@ export const spec = {
       description: 'Visual style variant (inherits Button variants)',
     },
     {
+      name: 'fullWidth',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Fill the container width',
+    },
+    {
       name: 'size',
       typeRef: 'Size',
       default: "'md'",

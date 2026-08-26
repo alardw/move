@@ -1,7 +1,7 @@
 'use client';
 // Generated from Stepper.spec.ts
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, elementTypeName } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import type { Color, Size } from '../../../shared/types';
@@ -91,10 +91,7 @@ const StepperRoot = withMoveComponent<'root', StepperRootProps, HTMLDivElement>(
     // Inject index and isLast into Step children via context
     let stepIndex = 0;
     const enrichedChildren = React.Children.map(children, (child) => {
-      if (
-        React.isValidElement(child) &&
-        (child.type as any)?._moveComponentName === 'StepperStep'
-      ) {
+      if (React.isValidElement(child) && elementTypeName(child) === 'StepperStep') {
         const idx = stepIndex++;
         const status: StepStatus =
           (child.props as any).status ||
@@ -182,10 +179,7 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
         const contentParts: React.ReactNode[] = [];
 
         for (const part of parts) {
-          if (
-            React.isValidElement(part) &&
-            (part.type as { _moveComponentName?: string })._moveComponentName === 'StepperIndicator'
-          ) {
+          if (elementTypeName(part) === 'StepperIndicator') {
             indicatorParts.push(part);
             continue;
           }

@@ -1207,7 +1207,12 @@ export const spec = {
   },
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: [
+    'withMoveComponent',
+    'elementTypeName',
+    'useControlledState',
+    'useMergedRef',
+  ] as string[],
   radixPrimitive: 'Popover',
   componentDeps: [] as string[],
 

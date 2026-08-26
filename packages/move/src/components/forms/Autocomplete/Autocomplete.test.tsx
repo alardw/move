@@ -147,6 +147,54 @@ describe('Autocomplete', () => {
     });
   });
 
+  // === Invalid children ===
+  //
+  // Root walks ALL its children before they render, to seed tag labels — items
+  // included, which live inside a Popover that is unmounted while closed. So the
+  // walk is handed elements React has not rendered and may never render. A JSX
+  // element naming a component that does not exist arrives there with
+  // `type: undefined`; reading through it would crash the page at mount over a
+  // typo in a dropdown nobody has opened, and bury React's own precise message
+  // under a TypeError pointing into library internals.
+  describe('an undefined sub-component', () => {
+    const Missing = undefined as unknown as React.FC;
+
+    it('does not crash the page while it sits unrendered in a closed Content', () => {
+      expect(() =>
+        render(
+          <Autocomplete.Root>
+            <Autocomplete.Trigger>
+              <Autocomplete.Input />
+            </Autocomplete.Trigger>
+            <Autocomplete.Content>
+              <Missing />
+            </Autocomplete.Content>
+          </Autocomplete.Root>,
+        ),
+      ).not.toThrow();
+
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+    });
+
+    it("surfaces React's own diagnostic once it actually renders", () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      try {
+        expect(() =>
+          render(
+            <Autocomplete.Root>
+              <Autocomplete.Trigger>
+                <Autocomplete.Input />
+                <Missing />
+              </Autocomplete.Trigger>
+            </Autocomplete.Root>,
+          ),
+        ).toThrow(/Element type is invalid/);
+      } finally {
+        consoleError.mockRestore();
+      }
+    });
+  });
+
   // === Open/close ===
   describe('open/close', () => {
     it('opens on input focus (openOnFocus default)', async () => {

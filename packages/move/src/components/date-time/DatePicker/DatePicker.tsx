@@ -62,6 +62,8 @@ export interface DatePickerLabels {
   endDate?: string;
   selectStartDate?: string;
   selectEndDate?: string;
+  /** Heading above the time field in the popup. Visible text, not just a name. */
+  time?: string;
 }
 
 const DEFAULT_LABELS: Required<DatePickerLabels> = {
@@ -72,6 +74,7 @@ const DEFAULT_LABELS: Required<DatePickerLabels> = {
   endDate: 'End date',
   selectStartDate: 'Select start date',
   selectEndDate: 'Select end date',
+  time: 'Time',
 };
 
 // =============================================================================
@@ -1126,7 +1129,9 @@ const DatePickerContentInner = React.forwardRef<
         }
         {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
           <div className={styles.datePickerTime}>
-            <span className={styles.datePickerTimeLabel}>Time</span>
+            <span className={styles.datePickerTimeLabel}>
+              {dpCtx?.labels.time ?? DEFAULT_LABELS.time}
+            </span>
             <TimeField
               value={dpCtx.timeValue}
               onValueChange={dpCtx.onTimeChange}

@@ -295,7 +295,7 @@ export const spec = {
     },
     {
       name: '--move-stepper-indicator-fg-active',
-      value: 'var(--move-indigo-text)',
+      value: 'var(--move-accent-text)',
       description: 'Indicator text color (active state)',
     },
     {
@@ -460,7 +460,7 @@ export const spec = {
   ],
 
   hasHook: true,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'elementTypeName'] as string[],
 
   componentDeps: [] as string[],
 

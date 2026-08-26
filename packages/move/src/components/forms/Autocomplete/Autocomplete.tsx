@@ -4,7 +4,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
@@ -320,12 +320,10 @@ const AutocompleteTrigger = withMoveComponent<
         const contentChildren: React.ReactNode[] = [];
         const actionChildren: React.ReactNode[] = [];
         React.Children.forEach(props.children, (child) => {
-          if (React.isValidElement(child) && typeof child.type !== 'string') {
-            const displayName = (child.type as any).displayName;
-            if (displayName && ACTION_NAMES.has(displayName)) {
-              actionChildren.push(child);
-              return;
-            }
+          const displayName = elementTypeName(child);
+          if (displayName && ACTION_NAMES.has(displayName)) {
+            actionChildren.push(child);
+            return;
           }
           contentChildren.push(child);
         });
@@ -1558,7 +1556,7 @@ function walkChildrenForLabels(
 ): void {
   React.Children.forEach(node, (child) => {
     if (!React.isValidElement(child)) return;
-    const displayName = (child.type as { displayName?: string }).displayName;
+    const displayName = elementTypeName(child);
     const props = child.props as { value?: unknown; children?: React.ReactNode };
     if (displayName === 'AutocompleteItem' && typeof props.value === 'string') {
       prime(props.value, props.children);

@@ -95,6 +95,8 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'DatePicker', key: 'openCalendar', def: 'Open calendar' },
   { component: 'DatePicker', key: 'startDate / endDate', def: 'Start date / End date' },
   { component: 'DatePicker', key: 'selectStartDate / selectEndDate', def: 'Select start/end date' },
+  { component: 'Dialog', key: 'close', def: 'Close' },
+  { component: 'Drawer', key: 'close', def: 'Close' },
   { component: 'FileUpload', key: 'removeFile', def: 'Remove {filename}' },
   { component: 'FileUpload', key: 'uploadComplete', def: 'Upload complete' },
   { component: 'FileUpload', key: 'fileInput', def: 'Choose files' },

@@ -4,7 +4,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Select as RadixSelect } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -207,8 +207,10 @@ export interface SelectRootProps {
 function extractItemLabels(children: React.ReactNode, map: Map<string, React.ReactNode>): void {
   React.Children.forEach(children, (child) => {
     if (!React.isValidElement(child)) return;
-    const type = child.type as { displayName?: string; __moveSelectItem?: boolean };
-    if (type?.displayName === 'SelectItem' || type?.__moveSelectItem) {
+    // The marker is the opt-in path: a consumer's own wrapper can declare itself
+    // a SelectItem without matching the name.
+    const marked = (child.type as { __moveSelectItem?: boolean } | undefined)?.__moveSelectItem;
+    if (elementTypeName(child) === 'SelectItem' || marked) {
       const {
         value,
         label,

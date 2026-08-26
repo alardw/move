@@ -112,6 +112,12 @@ export const spec = {
           moveSpecific: false,
           description: 'Whether to render as modal with backdrop',
         },
+        {
+          name: 'labels',
+          type: 'Partial<DialogLabels>',
+          moveSpecific: true,
+          description: 'Overridable user-facing strings',
+        },
       ],
       usesFactory: false,
       description:
@@ -235,7 +241,8 @@ export const spec = {
           type: 'boolean',
           default: 'true',
           moveSpecific: true,
-          description: 'Render the auto-close button on the right side of the header.',
+          description:
+            'Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close.',
         },
         {
           name: 'children',
@@ -631,11 +638,17 @@ export const spec = {
   variants: {},
   sizes: ['sm', 'md', 'lg', 'xl', 'full'] as string[],
 
-  labels: [],
+  labels: [
+    {
+      key: 'close',
+      default: 'Close',
+      description: 'Accessible name for the close button Header renders automatically',
+    },
+  ],
 
   radixPrimitive: 'Dialog',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'containsElementOfType'] as string[],
 
   componentDeps: [] as string[],
 

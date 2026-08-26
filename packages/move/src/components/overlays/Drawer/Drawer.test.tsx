@@ -90,6 +90,40 @@ describe('Drawer', () => {
       expect(dialog).toHaveAttribute('aria-labelledby', title.id);
       expect(dialog).toHaveAttribute('aria-describedby', desc.id);
     });
+
+    it("Header's automatic close button resolves an accessible name", () => {
+      renderDrawer({ defaultOpen: true });
+      expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+    });
+
+    it('automatic close name is overridable via labels', () => {
+      renderDrawer({ defaultOpen: true, labels: { close: 'Sluiten' } });
+      expect(screen.getByRole('button', { name: 'Sluiten' })).toBeInTheDocument();
+    });
+
+    it('a Close written by the consumer suppresses the automatic one', () => {
+      render(
+        <Drawer.Root animations={false} defaultOpen>
+          <Drawer.Content>
+            <Drawer.Header>
+              <Drawer.Title>Settings</Drawer.Title>
+              <Drawer.Description>Tweak your preferences.</Drawer.Description>
+              <Drawer.Close>Done</Drawer.Close>
+            </Drawer.Header>
+            <Drawer.Body>Body content</Drawer.Body>
+          </Drawer.Content>
+        </Drawer.Root>,
+      );
+
+      expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+    });
+
+    it('visible text on a Close is not overridden by the default name', () => {
+      renderDrawer({ defaultOpen: true });
+      // The footer Close carries its own text; only the header's glyph is named.
+      expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+    });
   });
 
   describe('dismiss', () => {

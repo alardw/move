@@ -796,7 +796,7 @@ export const spec = {
 
   radixPrimitive: 'DropdownMenu',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef', 'elementTypeName'] as string[],
   componentDeps: [] as string[],
 
   testing: {

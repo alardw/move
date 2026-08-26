@@ -85,6 +85,34 @@ describe('ToggleButton', () => {
     });
   });
 
+  // === Full width ===
+  // ToggleButton composes Button's root class, so Button's [data-full-width]
+  // rule already applies — the prop only had to be forwarded.
+  describe('fullWidth', () => {
+    it('sets data-full-width when fullWidth', () => {
+      render(
+        <ToggleButton fullWidth data-testid="tb">
+          Toggle
+        </ToggleButton>,
+      );
+      expect(screen.getByTestId('tb')).toHaveAttribute('data-full-width', '');
+    });
+
+    it('omits the attribute by default', () => {
+      render(<ToggleButton data-testid="tb">Toggle</ToggleButton>);
+      expect(screen.getByTestId('tb')).not.toHaveAttribute('data-full-width');
+    });
+
+    it('does not leak fullWidth to the DOM as a prop', () => {
+      render(
+        <ToggleButton fullWidth data-testid="tb">
+          Toggle
+        </ToggleButton>,
+      );
+      expect(screen.getByTestId('tb')).not.toHaveAttribute('fullwidth');
+    });
+  });
+
   // === Disabled ===
   describe('disabled', () => {
     it('supports disabled state via disabled prop', () => {

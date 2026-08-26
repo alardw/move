@@ -471,6 +471,11 @@ export const spec = {
       default: 'Select end date',
       description: 'Range instruction label for to field',
     },
+    {
+      key: 'time',
+      default: 'Time',
+      description: 'Heading above the time field in the popup',
+    },
   ],
 
   childrenKind: 'composition' as const,
@@ -489,7 +494,7 @@ export const spec = {
   },
 
   hasHook: true,
-  engineImports: [] as string[],
+  engineImports: ['useMergedRef', 'usePopupFocus'] as string[],
   radixPrimitive: 'Popover',
   componentDeps: ['InputText', 'TimeField', 'Button', 'Icon', 'Calendar'],
 

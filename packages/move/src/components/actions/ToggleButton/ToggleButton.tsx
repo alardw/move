@@ -23,6 +23,9 @@ export interface ToggleButtonProps extends React.HTMLAttributes<HTMLElement> {
   disabled?: boolean;
   variant?: ButtonVariant;
   size?: ButtonSize;
+  /** Fill the container. ToggleButton composes Button's root, so this is the
+   *  same `[data-full-width]` rule the base already defines. */
+  fullWidth?: boolean;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -39,6 +42,7 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
     'disabled',
     'variant',
     'size',
+    'fullWidth',
     'animations',
   ],
 
@@ -79,6 +83,7 @@ export const ToggleButton = withMoveComponent<'root', ToggleButtonProps, HTMLBut
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
             data-variant={variant}
             data-size={size}
+            data-full-width={props.fullWidth ? '' : undefined}
             onMouseEnter={() => {
               if (!isDisabled) handlers.Root?.onMouseEnter?.();
             }}

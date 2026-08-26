@@ -365,6 +365,122 @@ describe('Dialog', () => {
         expect(dialog).toHaveAttribute('aria-describedby');
       });
     });
+
+    // J17 — the factory used to strip `undefined` from incoming props, so this
+    // opt-out never reached Radix. Radix sets `aria-describedby={descriptionId}`
+    // and then spreads the consumer's props over it, so passing `undefined` is
+    // the documented way to say "this dialog needs no description". With the key
+    // dropped, the generated id survived and Radix warned about a description
+    // that could not be suppressed — on ~44 overlays. vitest.setup throws on
+    // console.warn, so this test fails loudly if the strip ever comes back.
+    it('accepts aria-describedby={undefined} as the no-description opt-out', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content aria-describedby={undefined}>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
+      expect(screen.getByRole('dialog')).not.toHaveAttribute('aria-describedby');
+    });
+
+    it("Header's automatic close button resolves an accessible name", async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Description>Body</Dialog.Description>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+      });
+    });
+
+    it('automatic close name is overridable via labels', async () => {
+      render(
+        <Dialog.Root open animations={false} labels={{ close: 'Sluiten' }}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+              <Dialog.Description>Body</Dialog.Description>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Sluiten' })).toBeInTheDocument();
+      });
+    });
+
+    it('a Close written by the consumer suppresses the automatic one', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+                <Dialog.Close>Done</Dialog.Close>
+              </Dialog.Header>
+              <Dialog.Description>Body</Dialog.Description>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+      });
+      expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+    });
+
+    it('a consumer Close nested inside header markup also suppresses it', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <div>
+                  <Dialog.Title>Title</Dialog.Title>
+                  <Dialog.Close>Done</Dialog.Close>
+                </div>
+              </Dialog.Header>
+              <Dialog.Description>Body</Dialog.Description>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Done' })).toBeInTheDocument();
+      });
+      expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+    });
+
+    it('visible text on a Close is not overridden by the default name', async () => {
+      renderDialog({ open: true });
+
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'X' })).toBeInTheDocument();
+      });
+    });
   });
 
   // === Size variants ===
