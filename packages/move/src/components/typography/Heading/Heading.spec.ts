@@ -173,7 +173,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent'],
+  engineImports: ['withMoveComponent', 'useMergedRef'],
 
   componentDeps: [],
 

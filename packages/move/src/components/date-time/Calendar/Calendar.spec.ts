@@ -326,7 +326,7 @@ export const spec = {
       value: 'var(--move-primary-subtle)',
       slot: 'dayCell',
     },
-    { name: '--move-calendar-cell-fg-today', value: 'var(--move-indigo-text)', slot: 'dayCell' },
+    { name: '--move-calendar-cell-fg-today', value: 'var(--move-accent-text)', slot: 'dayCell' },
     { name: '--move-calendar-cell-fg-outside', value: 'var(--move-fg-subtle)', slot: 'dayCell' },
     {
       name: '--move-calendar-cell-fg-disabled',
@@ -420,7 +420,7 @@ export const spec = {
 
   radixPrimitive: null,
   hasHook: true,
-  engineImports: [] as string[],
+  engineImports: ['useControlledState'] as string[],
 
   componentDeps: ['Button', 'Icon', 'Select'] as string[],
 

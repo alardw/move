@@ -17,7 +17,7 @@
   --move-calendar-cell-bg-selected: var(--move-primary);
   --move-calendar-cell-fg-selected: var(--move-primary-fg);
   --move-calendar-cell-bg-range: var(--move-primary-subtle);
-  --move-calendar-cell-fg-today: var(--move-indigo-text);
+  --move-calendar-cell-fg-today: var(--move-accent-text);
   --move-calendar-cell-fg-outside: var(--move-fg-subtle);
   --move-calendar-cell-fg-disabled: var(--move-fg-subtle);
 

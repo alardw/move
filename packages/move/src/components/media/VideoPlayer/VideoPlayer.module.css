@@ -6,6 +6,7 @@
  */
 
 .root {
+  /* palette-exempt: player chrome is a fixed neutral in both themes — it sits over video, not over a themed surface */
   --move-videoplayer-bg: var(--move-gray-950);
   --move-videoplayer-controls-bg: rgba(0, 0, 0, 0.65);
   --move-videoplayer-controls-blur: 12px;

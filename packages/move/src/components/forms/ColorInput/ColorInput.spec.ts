@@ -447,7 +447,7 @@ export const spec = {
   },
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'usePopupFocus'] as string[],
 
   radixPrimitive: 'Popover',
   componentDeps: ['ColorPicker'] as string[],

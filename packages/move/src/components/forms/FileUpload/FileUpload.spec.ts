@@ -841,7 +841,7 @@ export const spec = {
   },
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'useControlledState', 'useMergedRef'] as string[],
   componentDeps: ['ProgressBar'] as string[],
 
   testing: {

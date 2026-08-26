@@ -338,7 +338,7 @@ export const spec = {
   radixPrimitive: 'Tabs',
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'useControlledState'] as string[],
 
   componentDeps: [] as string[],
 

@@ -22,7 +22,7 @@
 }
 
 .dayHeaderCell[data-today] {
-  color: var(--move-indigo-text);
+  color: var(--move-accent-text);
   font-weight: var(--move-weight-bold);
 }
 

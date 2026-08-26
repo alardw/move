@@ -509,7 +509,7 @@ export const spec = {
   childrenKind: 'composition' as const,
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'useControlledState', 'useMergedRef'] as string[],
 
   componentDeps: [] as string[],
 

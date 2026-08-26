@@ -170,7 +170,7 @@ export const spec = {
 
   radixPrimitive: 'Avatar',
   hasHook: false,
-  engineImports: ['withMoveComponent'],
+  engineImports: ['withMoveComponent', 'useMergedRef'],
   componentDeps: [],
 
   testing: {

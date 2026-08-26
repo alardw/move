@@ -34,7 +34,7 @@
 }
 
 .asterisk {
-  color: var(--move-indigo-text);
+  color: var(--move-accent-text);
   font-size: 1.1em;
   margin-left: 0.2em;
 }

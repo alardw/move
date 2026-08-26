@@ -411,6 +411,12 @@ export const spec = {
       description: 'Background color for active/selected items',
     },
     {
+      name: '--move-list-active-ring',
+      value: 'none',
+      description:
+        'Emphasis for the active item beyond its tint — any box-shadow value (a leading rule, a ring, an inset border). None by default.',
+    },
+    {
       name: '--move-list-title-size',
       value: 'var(--move-size-base)',
       description: 'Title font size',

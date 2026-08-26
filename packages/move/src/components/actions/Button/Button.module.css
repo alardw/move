@@ -128,7 +128,7 @@
   }
 
   .root[data-variant='danger']:active:not(:disabled) {
-    background-color: var(--move-red-700);
+    background-color: var(--move-error);
   }
 
   /* Focus state — keyboard only; suppress during :active to avoid flash on click */

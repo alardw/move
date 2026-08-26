@@ -149,7 +149,7 @@ export const spec = {
   radixPrimitive: 'Label',
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
 
   componentDeps: [] as string[],
 

@@ -126,7 +126,7 @@ export const spec = {
     },
     {
       name: '--move-text-color-primary',
-      value: 'var(--move-indigo-text)',
+      value: 'var(--move-accent-text)',
       description: 'Primary text color',
     },
     {
@@ -172,7 +172,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent'],
+  engineImports: ['withMoveComponent', 'useMergedRef'],
 
   componentDeps: [],
 

@@ -16,6 +16,10 @@
   --move-list-divider-color: var(--move-border-base);
   --move-list-hover-bg: var(--move-surface-hover);
   --move-list-active-bg: var(--move-selected-bg);
+  /* Emphasis for the active item beyond its tint — a leading rule, a ring, an
+     inset border. `none` by default so nothing changes unless it is set; any
+     box-shadow value works, e.g. `inset 3px 0 0 var(--move-accent-text)`. */
+  --move-list-active-ring: none;
   --move-list-title-size: var(--move-size-base);
   --move-list-title-weight: var(--move-weight-medium);
   --move-list-title-color: var(--move-fg-base);
@@ -136,12 +140,14 @@
 /* Active state */
 .item[data-active] {
   background-color: var(--move-list-active-bg);
+  box-shadow: var(--move-list-active-ring);
   border-radius: var(--move-list-radius);
 }
 
 /* Active + hover — keep active appearance */
 .root[data-hover] .item[data-active]:hover {
   background-color: var(--move-list-active-bg);
+  box-shadow: var(--move-list-active-ring);
 }
 
 /* Disabled state */

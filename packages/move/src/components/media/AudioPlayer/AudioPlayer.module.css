@@ -6,6 +6,7 @@
  */
 
 .root {
+  /* palette-exempt: player chrome is a fixed neutral in both themes — it sits over artwork, not over a themed surface */
   --move-audioplayer-bg: var(--move-gray-800);
   --move-audioplayer-fg: var(--move-white);
   --move-audioplayer-fg-muted: rgba(255, 255, 255, 0.6);

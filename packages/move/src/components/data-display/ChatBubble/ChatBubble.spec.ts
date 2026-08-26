@@ -279,7 +279,7 @@ export const spec = {
   labels: [],
 
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'],
+  engineImports: ['withMoveComponent'],
   componentDeps: ['Avatar'],
 
   testing: {
