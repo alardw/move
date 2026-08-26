@@ -1001,7 +1001,13 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // `geometry` arrives from a passive effect, i.e. a render later, so the
     // finished plot painted once first — that was the "line is there, then it
     // animates in" flash.
-    const plotReady = width > 0 && height > 0 && (gateOff || inView);
+    // A status panel REPLACES the plot, but the measured viewport wraps both —
+    // so width and height arrive while loading and would call the plot ready
+    // before it exists. The lifecycle enter is one-shot per mount: it would fire
+    // against a null ref, lock, and never run again once the real plot arrived.
+    // That is why an async chart appeared with no entrance at all.
+    const status = deriveStatus(props.resource ?? null, props.data.length);
+    const plotReady = status === null && width > 0 && height > 0 && (gateOff || inView);
     // Fail-open bound. `data-enter="pending"` hides the marks until the entrance
     // reports completion, so a callback that never arrives — an interrupted or
     // failed animation — would leave the chart blank. Lift the pre-entrance
@@ -1135,7 +1141,6 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const legendSeries = isPie ? sliceLegend(props.data, props.x, chartTheme.series) : resolved;
 
         const resource = props.resource ?? null;
-        const status = deriveStatus(resource, props.data.length);
 
         return (
           <figure

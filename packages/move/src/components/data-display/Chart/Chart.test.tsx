@@ -250,6 +250,39 @@ describe('Chart', () => {
       // data-enter="pending" is what applies the hidden pre-entrance CSS.
       expect(screen.getByRole('img')).not.toHaveAttribute('data-enter');
     });
+
+    /**
+     * The measured viewport wraps the status panel as well as the plot, so a
+     * loading chart has a width and a height while having no plot at all —
+     * which is why readiness is gated on the status too, or the one-shot
+     * lifecycle enter fires against a null ref and leaves nothing for the real
+     * plot. This covers the visible transition only; jsdom runs no animation
+     * and its fail-open timer does not fire, so the entrance itself has to be
+     * confirmed in a browser.
+     */
+    it('shows the status panel instead of a plot, then the plot once data lands', () => {
+      {
+        const { container, rerender } = render(
+          <Chart caption="R" data={[]} x="month" series={line} resource={{ status: 'loading' }} />,
+        );
+        expect(screen.getByRole('status')).toBeInTheDocument();
+        expect(container.querySelector('[role="img"]')).toBeNull();
+
+        // `rerender` replaces the ROOT, so the provider has to come with it.
+        rerender(
+          <ThemeProvider>
+            <Chart
+              caption="R"
+              data={data}
+              x="month"
+              series={line}
+              resource={{ status: 'success', data }}
+            />
+          </ThemeProvider>,
+        );
+        expect(screen.getByRole('img')).toHaveAttribute('data-enter', 'pending');
+      }
+    });
   });
 });
 
