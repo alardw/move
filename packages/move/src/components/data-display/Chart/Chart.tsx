@@ -1140,8 +1140,6 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const showTable = props.dataTable !== false;
         const legendSeries = isPie ? sliceLegend(props.data, props.x, chartTheme.series) : resolved;
 
-        const resource = props.resource ?? null;
-
         return (
           <figure
             {...attrs}
