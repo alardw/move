@@ -4,7 +4,10 @@ import type { Animation } from '../types';
  * Check if user prefers reduced motion
  */
 export function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
+  // `matchMedia` is guarded separately from `window`: jsdom supplies a window
+  // without one unless a test mocks it, and reaching straight for it throws
+  // where the honest answer is simply that no preference is expressed.
+  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return false;
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
