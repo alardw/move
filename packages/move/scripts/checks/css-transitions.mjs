@@ -7,6 +7,13 @@
  * no duration at all, so a transition and a spring on the same element read as
  * two clocks; on the same property they overwrite each other outright.
  *
+ * Note what is scoped here: only TRANSITIONS. Setting `opacity` or `transform`
+ * flatly is a state, and states belong in CSS — a dimmed mark, a rotated
+ * chevron at rest. It is transitioning them that makes them motion. Chart's
+ * hover emphasis is a flat `opacity` rule for exactly this reason: a resting
+ * state that depended on an animation completing could be interrupted and
+ * stranded, which is not a state at all.
+ *
  * The line is drawn by PROPERTY, because that is what decides whether the two
  * systems can collide:
  *
@@ -16,11 +23,11 @@
  *             there is nothing to collide with. This is what the great majority
  *             of Move components already do.
  *
- *   FLAGGED   transform, opacity, and every geometry property (width, height,
- *             top, r, …). These are MOTION, and motion belongs in
- *             `useAnimations` where it can be sequenced, staggered, sprung, and
- *             switched off by `animations={false}`. A component animating them
- *             in CSS is invisible to that system.
+ *   FLAGGED   transitioning transform, opacity, or any geometry property
+ *             (width, height, top, r, …). Animating those is MOTION, and motion
+ *             belongs in `useAnimations` where it can be sequenced, staggered,
+ *             sprung, and switched off by `animations={false}`. A component
+ *             moving things in CSS is invisible to that system.
  *
  * Two escapes, both deliberate and both narrow:
  *   - Inside `@media (prefers-reduced-motion: reduce)`. `staggerAnimate` bails
@@ -28,6 +35,8 @@
  *   - A `transition-exempt: <reason>` comment on the line or the one above.
  *
  * @enforces styles-12
+ * @instead express the motion through `useAnimations` — one system, composable with springs.
+ *   A transition stays legal for a pure state change (colour, opacity on hover).
  */
 import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';

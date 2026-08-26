@@ -166,6 +166,68 @@ export function AnimationOverviewPage() {
         </Section>
 
         <Section
+          id="ownership"
+          title="State, animation, state"
+          lede="An animation is a bridge between two resting states — never a state itself."
+        >
+          <Text>
+            The shape of every animation in Move is the same:{' '}
+            <strong>state 1 &rarr; animation &rarr; state 2</strong>. Both ends
+            are rendered and correct with nothing running. The animation is the
+            transient middle, and when it is done it should get out of the way so
+            state 2 applies on its own.
+          </Text>
+          <Text>
+            That matters because animations here run on anime.js, which writes
+            INLINE STYLES. CSS and animation are not two systems — they are one
+            language at two cascade levels, where a stylesheet rule is the floor
+            and an inline style always wins. Three things follow:
+          </Text>
+          <HighlightList
+            items={[
+              {
+                icon: 'lock',
+                text: 'An animation is a permanent override, not a temporary one. anime does not clean up after itself, so the last value it wrote sits on the element indefinitely — which is how a cancelled animation strands an element half-way, with no state left to fall back to.',
+              },
+              {
+                icon: 'eye-off',
+                text: 'A CSS rule for a property an animation also writes works exactly once: before that animation first runs. It is a fuse, not a fallback.',
+              },
+              {
+                icon: 'git-branch',
+                text: 'So: one writer per property, per element. Not a convention we picked — the cascade decided it. All we choose is whether it is deliberate.',
+              },
+            ]}
+          />
+          <Text>
+            <strong>States are rendered, never animated.</strong> Express one in
+            CSS when it is declarable — a dimmed mark under an attribute — and in
+            the RENDERER when it needs computing, like an exploded pie whose
+            slices each push along their own angle. Both are correct at rest.
+            Neither waits for anything to finish.
+          </Text>
+          <Text>
+            <strong>Animations move between them.</strong> They may write a DOM
+            property directly where they are its only writer. Where the state is
+            computed geometry they animate the INPUT and let the renderer redraw
+            — a pie sweeps by animating one number, so nothing but the renderer
+            ever writes a path. That is the difference between an animation that
+            composes and one that fights.
+          </Text>
+          <Text>
+            <strong>The handoff is the one exception.</strong> CSS may set state
+            1 under an attribute the component removes once the animation takes
+            over, as Chart does with{' '}
+            <code>[data-enter=&quot;pending&quot;]</code>. One direction only.
+          </Text>
+          <Text>
+            <strong>Motion targets markers</strong> — <code>[data-bar]</code>,{' '}
+            <code>[data-dot]</code> — never bare elements, so a stylesheet can
+            see which properties are already spoken for.
+          </Text>
+        </Section>
+
+        <Section
           id="css-transitions"
           title="Where CSS may animate"
           lede="Colour is state. Everything else is motion, and motion has one home."
@@ -176,6 +238,14 @@ export function AnimationOverviewPage() {
             no duration at all. Run them together on one element and they read
             as two clocks — put them on the same property and they overwrite
             each other outright.
+          </Text>
+          <Text>
+            Only transitions are in scope. Setting opacity or a transform flatly
+            is a state, and states belong in CSS — a dimmed mark, a chevron
+            resting at an angle. It is transitioning them that makes them
+            motion. Chart's hover emphasis is a flat opacity rule for that
+            reason: a resting state that depended on an animation finishing
+            could be interrupted and left stranded, which is not a state at all.
           </Text>
           <Text>
             So the line is drawn by property, because that is what decides
@@ -189,7 +259,7 @@ export function AnimationOverviewPage() {
               },
               {
                 icon: 'move',
-                text: 'Motion may not — transform, opacity and geometry belong in useAnimations, where they can be sequenced, staggered, sprung, and switched off with animations={false}. A component that moves things in CSS is invisible to all of that.',
+                text: 'Motion may not — transitioning transform, opacity or geometry belongs in useAnimations, where it can be sequenced, staggered, sprung, and switched off with animations={false}. A component that moves things in CSS is invisible to all of that.',
               },
               {
                 icon: 'accessibility',

@@ -15,7 +15,7 @@ export const spec = {
   category: 'data-display',
   choreographies: ['listReveal'],
   description:
-    'Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path math, so the package takes on no charting dependency; libraries plug in as optional adapters. v1 covers line, area, and bar, on a category or linear x.',
+    'Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, tooltip, hover emphasis and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path maths, so the package takes on no charting dependency; libraries plug in as optional adapters. Covers line, area, bar and scatter over a shared axis (category or linear x, three interpolations, stacking, reference lines, and `axes={false}` for a sparkline), plus pie and donut, which share none of that machinery and take their own path.',
   families: {
     behavior: ['display'],
     state: ['stateless'],
@@ -361,9 +361,14 @@ export const spec = {
         'Every mark is a DOM node, and the hidden data table is a row per point — there is no downsampling or virtualisation. Charts of a few hundred points are comfortable; tens of thousands are not, and the honest answer is to aggregate before passing the data in. Axis labels already thin themselves (labelStride), the tick count is fixed, and the dot stagger spreads a fixed total rather than a fixed per-item delay, so none of those degrade with size.',
     },
     {
-      id: 'hover-emphasis-in-renderer',
+      id: 'renderer-participation-markers',
       description:
-        'The shell reports the hovered row via `activeIndex`; the renderer emphasises the matching mark. State flows down, geometry stays in the renderer — the shell owns hit-testing and the tooltip but does not know where a mark landed. A renderer that ignores it simply has no hover emphasis.',
+        'A renderer opts into the shell\u2019s behaviour by MARKING its output, and gets nothing if it marks nothing \u2014 which is the graceful default, not a failure. `data-bar` / `data-sweep` / `data-dot` join the entrance; `data-mark` plus `data-active` join the hover emphasis; `onPlotGeometry` enables the tooltip and `hitTest` overrides how it is resolved. The built-in marks all of them; the Recharts adapter marks none, so those charts render correctly and simply appear without an entrance.',
+    },
+    {
+      id: 'hover-emphasis-is-state',
+      description:
+        'The shell reports the hovered row via `activeIndex`; the renderer MARKS the matching element (`data-mark`, plus `data-active` when it is emphasised) and CSS does the dimming. State flows down, geometry stays in the renderer — the shell owns hit-testing but does not know where a mark landed. Emphasis is deliberately not an animation: a resting state that depends on one completing can be interrupted and stranded, which is not a state. A renderer that marks nothing simply has no hover emphasis. Note `data-active` is present when NOTHING is hovered as well as when this is the hovered one, so "pointer left" and "this one" are one instruction.',
     },
     {
       id: 'radial-tooltip-anchor',
@@ -487,18 +492,23 @@ export const spec = {
   testing: {
     behaviors: [
       'Renders a figure containing a figcaption, a measured viewport, and the plot mount point.',
-      'Defaults to size=md, grid=horizontal, legend=true, aspect=2.',
+      'Defaults to size=md, grid=horizontal, legend=true, aspect=2, xScale=category, curve=linear, axes=true.',
       'Applies data-size, data-grid, and data-status to the root.',
       'Invokes the built-in renderer when no renderer prop is given.',
-      'Invokes a supplied renderer with { spec, theme, width, height } and mounts its output in the plot slot.',
+      'Invokes a supplied renderer with { spec, theme, width, height, onPlotGeometry, entrance, activeIndex } and mounts its output in the plot slot.',
       'Passes resolved token VALUES in ChartTheme — the renderer receives no CSS custom property strings.',
       'Assigns categorical series colors from the theme ramp in series order; a series `color` overrides its slot.',
       'palette overrides the derived ramp.',
       'Uses height when set and falls back to aspect otherwise.',
       'Renders one legend entry per series with its resolved swatch color; legend={false} omits the slot.',
+      'A pie colours and legends per ROW rather than per series, from the same ramp the renderer walks.',
+      'A scatter draws points with no connecting stroke.',
       'Renders the visually hidden data table from data + series; dataTable={false} omits it.',
       'Applies formatX and formatY to tick labels and data table cells.',
-      'stacked={true} produces stacked offsets in the ChartSpec handed to the renderer.',
+      'stacked={true} produces stacked offsets, and a stacked area closes along the series below rather than the axis.',
+      'xScale="linear" places rows at their own numeric x; a non-finite value falls back to even spacing.',
+      'rules draw reference lines and extend the value domain so a target above the data still appears.',
+      'axes={false} removes tick labels and the baseline, and collapses the margins.',
       'Renders the status slot instead of the plot for loading, error, and empty resource states.',
       'The renderer is not invoked while resource is loading or errored.',
       'Error state renders the retry action when resource carries retry.',
@@ -512,13 +522,17 @@ export const spec = {
       'A derived summary is announced when the summary prop is absent.',
       'The status slot is role="status" with aria-live="polite".',
       'Series remain distinguishable without color when dash is set (WCAG 1.4.1).',
+      'Series colours clear 3:1 against the page background (WCAG 1.4.11), clamped with hue and chroma preserved.',
+      'The tooltip carries its own Tooltip.Provider, so a bare Chart does not throw on hover.',
     ],
     animation: [
-      'Series groups stagger in on mount in declaration order.',
-      'Line and area strokes draw on from their measured path length.',
-      'animations={false} disables the entrance.',
-      'Reduced motion preference skips animations.',
-      'A renderer that emits no [data-series] groups renders without error.',
+      'Entrance fires when the plot is measured AND 80% on screen, not on mount.',
+      'Bars grow from the baseline in sequence; the dot stagger spreads a fixed total, so its duration does not grow with the point count.',
+      'Strokes and their fills are revealed by ONE clip per series, so they cannot drift apart.',
+      'A pie sweeps clockwise from twelve o\u2019clock, regenerating its arcs per frame (valueLoop).',
+      'The pre-entrance state lives in CSS under [data-enter="pending"], so nothing paints before the seed lands, and a timeout lifts it if the entrance never reports back.',
+      'animations={false} and reduced motion both skip the entrance — and neither disables hover emphasis, which is state rather than animation.',
+      'A renderer that marks none of [data-bar]/[data-sweep]/[data-dot] renders without error and simply appears.',
     ],
   },
 } satisfies ComponentSpec;

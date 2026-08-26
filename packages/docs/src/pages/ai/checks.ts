@@ -46,6 +46,42 @@ export const CHECKS: CheckDoc[] = [
   // ── Move-internal: read specs / CSS modules / family rules, so they only
   //    apply to Move's own source (`check:all`, not shipped) ──
   {
+    name: 'i18n-literals',
+    appliesTo: 'component',
+    enforces:
+      'No user-facing string is baked into a component. A hardcoded aria-label was already refused; this closes the other half \u2014 VISIBLE text like <span>Time</span>, which no consumer can translate.',
+  },
+  {
+    name: 'escape-hatch',
+    appliesTo: 'component',
+    enforces:
+      'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
+  },
+  {
+    name: 'api-compound-shape',
+    appliesTo: 'component',
+    enforces:
+      'The generated API documents JSX that compiles. A component exporting a bare object ({ Root, \u2026 }) is entered through .Root, so llms.txt must not give it a flat prop block or a flat example \u2014 27 components had both.',
+  },
+  {
+    name: 'palette-tokens',
+    appliesTo: 'component',
+    enforces:
+      'Component CSS reaches for a ROLE token, never a named palette. A palette reference is allowed only where the selector names that same colour (a categorical [data-color] rule); anywhere else it pins one hue and ignores the theme \u2014 the same bug as a hardcoded hex, wearing a token.',
+  },
+  {
+    name: 'skill-refs',
+    appliesTo: 'component',
+    enforces:
+      'Every repo file a skill tells an agent to read exists. Skills are the primary agent interface and are prose \u2014 nothing type-checks them, so deleting a file they name breaks them silently.',
+  },
+  {
+    name: 'dist-packaging',
+    appliesTo: 'component',
+    enforces:
+      'The published artifact, not the source: no dev-mode JSX (jsxDEV) in the bundle, no second copy of React inside the package, and React reached only by bare specifier so it resolves to the consumer\u2019s copy. Runs in pack, between build and npm pack; skips with a notice when no dist is present.',
+  },
+  {
     name: 'spec-drift',
     appliesTo: 'component',
     enforces:
@@ -75,6 +111,12 @@ export const CHECKS: CheckDoc[] = [
     appliesTo: 'component',
     enforces:
       'Colours come from `--move-*` tokens — no raw hex/rgb/hsl in component CSS. Colour tools and media overlays are file-exempt via `token-exempt-file`.',
+  },
+  {
+    name: 'css-transitions',
+    appliesTo: 'component',
+    enforces:
+      'CSS transitions animate colour, never motion. anime.js writes inline styles, so a transition and an animation are one language at two cascade levels — a transition cannot compose with a spring, and on the same property they overwrite each other. Colour is safe because nothing in `useAnimations` writes it. Setting `opacity` or `transform` flatly is a state and stays allowed; it is transitioning them that is motion. Escapes: inside `prefers-reduced-motion`, or a justified `transition-exempt` comment.',
   },
   {
     name: 'control-size',
