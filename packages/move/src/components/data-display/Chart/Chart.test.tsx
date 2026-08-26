@@ -678,6 +678,53 @@ describe('Chart — large series', () => {
     expect(label).not.toContain('low of');
   });
 
+  /**
+   * A guard on the page, not a tuning knob: an SVG path for a million points is
+   * megabytes of attribute, and every one of them is sharing a pixel with a
+   * hundred others by then.
+   */
+  it('declines to draw past the built-in renderer\u2019s point cap', () => {
+    const { container } = render(
+      <Chart caption="R" data={many(120_000)} x="t" series={line} animations={false} />,
+    );
+    expect(container.querySelector('path[d]')).toBeNull();
+    expect(screen.getByRole('status')).toHaveTextContent('Chart too large to display');
+  });
+
+  it('counts series, not just rows, toward the cap', () => {
+    const wide = Array.from({ length: 40_000 }, (_, i) => ({ t: i, a: i, b: i, c: i }));
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={wide}
+        x="t"
+        series={[
+          { key: 'a', type: 'line', label: 'A' },
+          { key: 'b', type: 'line', label: 'B' },
+          { key: 'c', type: 'line', label: 'C' },
+        ]}
+        animations={false}
+      />,
+    );
+    expect(container.querySelector('path[d]')).toBeNull();
+  });
+
+  it('leaves a custom renderer to its own limits', () => {
+    const renderer = () => <svg data-testid="mine" />;
+    render(
+      <Chart
+        caption="R"
+        data={many(120_000)}
+        x="t"
+        series={line}
+        renderer={renderer}
+        animations={false}
+      />,
+    );
+    expect(screen.getByTestId('mine')).toBeInTheDocument();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
   it('drops dots once they would be closer together than their own width', () => {
     const sparse = render(
       <Chart caption="R" data={many(20)} x="t" series={line} dots animations={false} />,

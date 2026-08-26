@@ -1,7 +1,12 @@
 'use client';
 import * as React from 'react';
 import { useMergedRef, withMoveComponent } from '../../../engine';
-import { quick, resolveAnimationsConfig, useAnimations } from '../../../animation';
+import {
+  prefersReducedMotion,
+  quick,
+  resolveAnimationsConfig,
+  useAnimations,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useInView } from '../../../hooks';
 import { useTheme } from '../../../infrastructure/Theme';
@@ -56,6 +61,8 @@ export interface ChartLabels {
   retry: string;
   /** Announced when the resource succeeded but carries nothing to draw. */
   empty: string;
+  /** Shown when the series is past what the built-in renderer will draw. */
+  oversized: string;
 }
 
 export const DEFAULT_LABELS: ChartLabels = {
@@ -65,6 +72,7 @@ export const DEFAULT_LABELS: ChartLabels = {
   error: 'Could not load chart data',
   retry: 'Retry',
   empty: 'No data to display',
+  oversized: 'Chart too large to display',
 };
 
 /**
@@ -190,6 +198,27 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
  * readers at the same count.
  */
 const DATA_TABLE_MAX_ROWS = 200;
+
+// Bundlers (Vite, webpack, Next) statically replace `process.env.NODE_ENV`.
+declare const process: { env: { NODE_ENV?: string } };
+
+/**
+ * Most marks the BUILT-IN renderer will draw, counted as rows times series.
+ *
+ * Not a performance tuning knob — a guard on the page. The cost of an SVG line
+ * is its path string, and that grows with the readings: 100k points is a 1.3MB
+ * `d` attribute and renders comfortably, while 1M is 12.7MB and risks taking
+ * the tab with it. Past this the chart declines to draw rather than locking the
+ * page trying.
+ *
+ * It is also the point where more points stop being visible: at 100k across a
+ * typical plot there are already north of a hundred readings behind every
+ * pixel. A chart that genuinely needs more needs a different drawing
+ * technology, which is what the `renderer` prop is for — a canvas or WebGL
+ * renderer rasterises instead of building a path, so the cap does not apply to
+ * one.
+ */
+const MAX_PLOTTED_POINTS = 100_000;
 
 const MARK_CONTRAST = 3;
 /**
@@ -551,13 +580,73 @@ function Plot({
 }
 
 /** Which of the three non-drawing states applies, if any. */
+/** What the shell shows in place of the plot, or null to draw it. */
+type ChartStatus = 'loading' | 'error' | 'empty' | 'oversized' | null;
+
 function deriveStatus(
   resource: AsyncResource<unknown> | null,
   rowCount: number,
-): 'loading' | 'error' | 'empty' | null {
+  oversized: boolean,
+): ChartStatus {
   if (resource?.status === 'loading') return 'loading';
   if (resource?.status === 'error') return 'error';
-  return rowCount === 0 ? 'empty' : null;
+  if (rowCount === 0) return 'empty';
+  return oversized ? 'oversized' : null;
+}
+
+/**
+ * Whether an entrance is wanted, and whether it still has to be hidden for.
+ *
+ * `motionAllowed` is about intent and survives the animation; `willAnimate`
+ * also asks whether it has already played, because the pre-entrance CSS must
+ * lift the moment it has. Reduced motion makes the stagger bail and
+ * `animations={false}` removes the trigger, so in either case the CSS must not
+ * apply or the chart would sit permanently blank.
+ */
+function resolveMotion(
+  animations: unknown,
+  entered: boolean,
+): { reducedMotion: boolean; motionAllowed: boolean; willAnimate: boolean } {
+  const reducedMotion = prefersReducedMotion();
+  const motionAllowed = animations !== false && !reducedMotion;
+  return { reducedMotion, motionAllowed, willAnimate: motionAllowed && !entered };
+}
+
+/** Where the tooltip attaches, and the row it describes. */
+function resolveHover(
+  geometry: PlotGeometry | null,
+  hovered: number | null,
+  data: readonly ChartDatum[],
+): { row: ChartDatum | null; x: number; y: number | null } {
+  if (!geometry || hovered === null) return { row: null, x: 0, y: null };
+  return {
+    row: data[hovered] ?? null,
+    x: geometry.x[hovered],
+    y: geometry.y?.[hovered] ?? null,
+  };
+}
+
+/**
+ * The text alternative: the sentence the plot is named by, and whether a table
+ * stands behind it.
+ */
+function resolveAlternative(input: {
+  summary: string | null | undefined;
+  dataTable: boolean | number | undefined;
+  data: readonly ChartDatum[];
+  x: string;
+  series: readonly ResolvedChartSeries[];
+  formatX?: (value: unknown) => string;
+  formatY?: (value: number) => string;
+}): { summary: string; showTable: boolean } {
+  const { summary, dataTable, data, x, series, formatX, formatY } = input;
+  // The number is the point at which the table stops being the alternative and
+  // the summary takes over — not a budget the table is thinned to fit.
+  const limit = typeof dataTable === 'number' ? dataTable : DATA_TABLE_MAX_ROWS;
+  return {
+    summary: summary ?? deriveSummary(data, x, series, formatX, formatY),
+    showTable: dataTable !== false && data.length <= limit,
+  };
 }
 
 /** What to tell a renderer that animates its own geometry. */
@@ -645,7 +734,7 @@ function StatusPanel({
   labels,
   retry,
 }: {
-  state: 'loading' | 'error' | 'empty';
+  state: Exclude<ChartStatus, null>;
   labels: ChartLabels;
   retry?: (() => void) | undefined;
 }) {
@@ -1046,7 +1135,29 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // before it exists. The lifecycle enter is one-shot per mount: it would fire
     // against a null ref, lock, and never run again once the real plot arrived.
     // That is why an async chart appeared with no entrance at all.
-    const status = deriveStatus(props.resource ?? null, props.data.length);
+    // Rows times series: what the renderer would actually have to put on the
+    // page, which is the number the path string grows with — not the row count.
+    const plotted = props.data.length * props.series.length;
+    const oversized = props.renderer == null && plotted > MAX_PLOTTED_POINTS;
+    const status = deriveStatus(props.resource ?? null, props.data.length, oversized);
+
+    // The panel tells the reader the chart is too large; it cannot tell them
+    // what to do about it, because that is a decision for whoever built the
+    // page. So the way out goes to the console, once.
+    const warnedOversized = React.useRef(false);
+    React.useEffect(() => {
+      if (process.env.NODE_ENV !== 'development') return;
+      if (!oversized || warnedOversized.current) return;
+      warnedOversized.current = true;
+      console.warn(
+        `[move] Chart: ${plotted.toLocaleString('en-US')} points to plot, past the ` +
+          `${MAX_PLOTTED_POINTS.toLocaleString('en-US')} the built-in renderer draws. It has ` +
+          'declined to draw rather than risk the page: an SVG path this long is megabytes of ' +
+          'attribute, and at this density every point is already sharing a pixel with a ' +
+          'hundred others. Aggregate the data, or pass a `renderer` backed by canvas or WebGL — ' +
+          'the cap does not apply to one.',
+      );
+    }, [oversized, plotted]);
     const plotReady = status === null && width > 0 && height > 0 && (gateOff || inView);
     // Fail-open bound. `data-enter="pending"` hides the marks until the entrance
     // reports completion, so a callback that never arrives — an interrupted or
@@ -1108,22 +1219,10 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const tokens = theme.tokens as unknown as Record<string, string>;
         const token = (name: string) => tokens[name] ?? '';
 
-        const reducedMotion =
-          typeof window !== 'undefined' &&
-          typeof window.matchMedia === 'function' &&
-          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        // Hide the marks before the entrance ONLY when an entrance is really
-        // coming. Reduced motion makes `staggerAnimate` bail, and
-        // `animations={false}` removes the trigger — in either case the CSS must
-        // not apply, or the chart would render permanently blank.
-        // Is motion wanted at all? Independent of whether the CSS entrance has
-        // finished — a renderer that animates its own geometry owns its own
-        // completion.
-        const motionAllowed = props.animations !== false && !reducedMotion;
-        // Drives the pre-entrance CSS, which must lift once the stagger reports
-        // done. `entered` belongs to that mechanism only.
-        const willAnimate = motionAllowed && !entered;
+        const { reducedMotion, motionAllowed, willAnimate } = resolveMotion(
+          props.animations,
+          entered,
+        );
 
         const chartTheme = resolveChartTheme(token, size, props.palette, reducedMotion, padding);
         const resolved = resolveSeries(props.series, chartTheme.series, token);
@@ -1173,16 +1272,16 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           );
         };
 
-        const hoveredRow = hovered !== null ? props.data[hovered] : null;
-        const anchorLeft = geometry && hovered !== null ? geometry.x[hovered] : 0;
-        const anchorTop = geometry && hovered !== null && geometry.y ? geometry.y[hovered] : null;
-        const summary =
-          props.summary ?? deriveSummary(props.data, props.x, resolved, formatX, formatY);
-        // The number is the point at which the table stops being the alternative
-        // and the summary takes over — not a budget the table is thinned to fit.
-        const tableLimit =
-          typeof props.dataTable === 'number' ? props.dataTable : DATA_TABLE_MAX_ROWS;
-        const showTable = props.dataTable !== false && props.data.length <= tableLimit;
+        const hover = resolveHover(geometry, hovered, props.data);
+        const { summary, showTable } = resolveAlternative({
+          summary: props.summary as string | null | undefined,
+          dataTable: props.dataTable as boolean | number | undefined,
+          data: props.data,
+          x: props.x,
+          series: resolved,
+          formatX,
+          formatY,
+        });
         const legendSeries = isPie ? sliceLegend(props.data, props.x, chartTheme.series) : resolved;
 
         return (
@@ -1222,15 +1321,15 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
                   entrance={entranceOf(motionAllowed, plotReady)}
                   activeIndex={hovered}
                   overlay={
-                    canHover && hoveredRow && geometry ? (
+                    canHover && hover.row && geometry ? (
                       <HoverOverlay
-                        x={anchorLeft}
-                        y={anchorTop}
+                        x={hover.x}
+                        y={hover.y}
                         showSeriesLabel={resolved.length > 1}
                         side={sideOf(geometry, hovered)}
                         crosshair={!geometry.hitTest}
                         rect={geometry.rect}
-                        row={hoveredRow}
+                        row={hover.row}
                         xKey={props.x}
                         series={tooltipSeries(resolved, isPie, hovered, chartTheme.series)}
                         formatX={formatX}

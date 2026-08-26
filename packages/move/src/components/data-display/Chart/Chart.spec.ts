@@ -369,6 +369,11 @@ export const spec = {
         'Every mark is a DOM node, and the hidden data table is a row per point — there is no downsampling or virtualisation. Charts of a few hundred points are comfortable; tens of thousands are not, and the honest answer is to aggregate before passing the data in. Axis labels already thin themselves (labelStride), the tick count is fixed, and the dot stagger spreads a fixed total rather than a fixed per-item delay, so none of those degrade with size.',
     },
     {
+      id: 'built-in-renderer-declines-past-100k-points',
+      description:
+        'Rows times series past 100,000 renders the oversized status instead of the plot, with a development-only console warning naming the count and the way out. A guard on the page rather than a tuning knob: the cost of an SVG line is its path string, and at a million points that is a 12.7MB attribute for a drawing where every point already shares a pixel with a hundred others. The cap is the built-in renderer\u2019s alone — a `renderer` prop backed by canvas or WebGL rasterises instead of building a path, so it is never capped.',
+    },
+    {
       id: 'large-series-summarise-rather-than-thin',
       description:
         'A data table is the COMPLETE data or it is misleading, so past 200 rows it is dropped rather than sampled: a thinned table still reads as authoritative while an outlier between two kept rows has silently gone. The summary takes over, naming each series\u2019 peak and low and where they fall, which cannot lose an outlier the way a sample can. The drawing is untouched either way — every point stays in the path. The built-in renderer does stop drawing DOT MARKERS once consecutive dots would sit closer than their own width, since at that spacing they mark nothing and merely thicken the stroke; a scatter keeps its points, because there the points ARE the mark.',
@@ -484,6 +489,11 @@ export const spec = {
     },
     { key: 'retry', default: 'Retry', description: 'Retry button in the error state.' },
     { key: 'empty', default: 'No data to display', description: 'Status text when data is empty.' },
+    {
+      key: 'oversized',
+      default: 'Chart too large to display',
+      description: 'Status text when the series is past what the built-in renderer draws.',
+    },
     {
       key: 'dataTable',
       default: 'Chart data',
