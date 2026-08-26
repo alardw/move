@@ -2845,9 +2845,9 @@
         },
         {
           "name": "dataTable",
-          "type": "boolean",
+          "type": "boolean | number",
           "default": "true",
-          "description": "Render the visually hidden data table. Turn off only when an equivalent table is already on the page."
+          "description": "Render the visually hidden data table. A number sets the row count past which the table is dropped and the summary carries the chart alone (200 by default, following Highcharts, which stops exposing individual points at the same count). Turn it off outright only when an equivalent table is already on the page."
         },
         {
           "name": "labels",

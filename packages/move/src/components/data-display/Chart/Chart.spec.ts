@@ -251,12 +251,12 @@ export const spec = {
     },
     {
       name: 'dataTable',
-      type: 'boolean',
+      type: 'boolean | number',
       default: 'true',
       moveSpecific: true,
       advanced: true,
       description:
-        'Render the visually hidden data table. Turn off only when an equivalent table is already on the page.',
+        'Render the visually hidden data table. A number sets the row count past which the table is dropped and the summary carries the chart alone (200 by default, following Highcharts, which stops exposing individual points at the same count). Turn it off outright only when an equivalent table is already on the page.',
     },
     {
       name: 'labels',
@@ -367,6 +367,11 @@ export const spec = {
       id: 'scale-limits',
       description:
         'Every mark is a DOM node, and the hidden data table is a row per point — there is no downsampling or virtualisation. Charts of a few hundred points are comfortable; tens of thousands are not, and the honest answer is to aggregate before passing the data in. Axis labels already thin themselves (labelStride), the tick count is fixed, and the dot stagger spreads a fixed total rather than a fixed per-item delay, so none of those degrade with size.',
+    },
+    {
+      id: 'large-series-summarise-rather-than-thin',
+      description:
+        'A data table is the COMPLETE data or it is misleading, so past 200 rows it is dropped rather than sampled: a thinned table still reads as authoritative while an outlier between two kept rows has silently gone. The summary takes over, naming each series\u2019 peak and low and where they fall, which cannot lose an outlier the way a sample can. The drawing is untouched either way — every point stays in the path. The built-in renderer does stop drawing DOT MARKERS once consecutive dots would sit closer than their own width, since at that spacing they mark nothing and merely thicken the stroke; a scatter keeps its points, because there the points ARE the mark.',
     },
     {
       id: 'renderer-participation-markers',

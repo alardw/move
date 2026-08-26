@@ -12,6 +12,7 @@ import type { ChartRendererProps } from '../../types';
 import { bandScale, labelStride, linearScale, niceDomain, niceTicks } from '../../scales';
 import {
   BAND_PADDING,
+  dotsAreLegible,
   MARGIN,
   MAX_X_LABELS,
   TICK_COUNT,
@@ -283,7 +284,7 @@ export function AxisPlot({
           baseline,
           uid,
           plot: { x: margin.left, y: margin.top, width: innerWidth, height: innerHeight },
-          dots,
+          dots: dots && dotsAreLegible(innerWidth, data.length, theme.pointRadius),
           activeIndex,
         };
 

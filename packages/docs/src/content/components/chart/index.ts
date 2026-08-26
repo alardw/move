@@ -13,6 +13,8 @@ import Scatter from './samples/scatter';
 import scatterCode from './samples/scatter?raw';
 import ReferenceLines from './samples/reference-lines';
 import referencelinesCode from './samples/reference-lines?raw';
+import Large from './samples/large';
+import largeCode from './samples/large?raw';
 import Sparkline from './samples/sparkline';
 import sparklineCode from './samples/sparkline?raw';
 import Mixed from './samples/mixed';
@@ -71,6 +73,7 @@ export const content: ComponentContent = {
     { id: 'palette', title: 'Series palette', render: Palette, code: paletteCode },
     { id: 'sine', title: 'A sampled function', render: Sine, code: sineCode },
     { id: 'numeric-x', title: 'Numeric x scale', render: NumericX, code: numericXCode },
+    { id: 'large', title: 'Ten thousand data points', render: Large, code: largeCode },
     { id: 'sparkline', title: 'Sparkline', render: Sparkline, code: sparklineCode },
     { id: 'no-tooltip', title: 'Without a tooltip', render: NoTooltip, code: noTooltipCode },
     { id: 'async', title: 'Loading and error states', render: Async, code: asyncCode },

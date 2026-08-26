@@ -177,6 +177,20 @@ function buildChartAnimations(dotCount: number, onComplete: () => void): Animati
 }
 
 /** WCAG 1.4.11: a series mark carries information, so it needs 3:1 on its ground. */
+/**
+ * Most rows the text alternative will tabulate.
+ *
+ * Past this the table is dropped and the summary carries the chart instead. A
+ * table is the COMPLETE data or it is misleading: thinning it leaves an
+ * artifact that still reads as authoritative while a spike between two kept
+ * rows has silently gone. The summary cannot lose an outlier that way, because
+ * it names the extremes rather than hoping a sample lands on them.
+ *
+ * 200 follows Highcharts, which stops exposing individual points to screen
+ * readers at the same count.
+ */
+const DATA_TABLE_MAX_ROWS = 200;
+
 const MARK_CONTRAST = 3;
 /**
  * Relative luminance at or below which a surface counts as dark, deciding which
@@ -285,7 +299,13 @@ export interface ChartProps
   /** Format a y tick label and data table cells. */
   formatY?: ((value: number) => string) | null;
   /** Render the visually hidden data table. */
-  dataTable?: boolean;
+  /**
+   * Render the visually hidden data table that carries the chart's values.
+   *
+   * A number sets how many rows it may hold before it samples evenly across the
+   * range instead of tabulating every one.
+   */
+  dataTable?: boolean | number;
   /**
    * Async source status.
    *
@@ -358,18 +378,38 @@ function numeric(row: ChartDatum, key: string): number | null {
 /** "MRR rises from 12 to 48 over 6 points." — the fallback accessible summary. */
 function deriveSummary(
   data: readonly ChartDatum[],
+  x: string,
   series: readonly ResolvedChartSeries[],
+  formatX: ((value: unknown) => string) | null | undefined,
   formatY: ((v: number) => string) | null | undefined,
 ): string {
   if (data.length === 0 || series.length === 0) return 'No data.';
-  const fmt = (v: number) => (formatY ? formatY(v) : String(v));
+  const fy = (v: number) => (formatY ? formatY(v) : String(v));
+  const fx = (i: number) => (formatX ? formatX(data[i][x]) : String(data[i][x] ?? ''));
   const parts = series.map((s) => {
-    const values = data.map((row) => numeric(row, s.key)).filter((v): v is number => v !== null);
+    const values: { v: number; i: number }[] = [];
+    data.forEach((row, i) => {
+      const v = numeric(row, s.key);
+      if (v !== null) values.push({ v, i });
+    });
     if (values.length === 0) return `${s.label} has no values`;
-    const first = values[0];
-    const last = values[values.length - 1];
+    const first = values[0].v;
+    const last = values[values.length - 1].v;
     const direction = last > first ? 'rises' : last < first ? 'falls' : 'holds';
-    return `${s.label} ${direction} from ${fmt(first)} to ${fmt(last)}`;
+    let text = `${s.label} ${direction} from ${fy(first)} to ${fy(last)}`;
+    // Name the extremes, and name WHERE they are. This is the one thing a
+    // sighted reader gets from the shape instantly and a serial reader cannot
+    // recover from a list of values — and past the table threshold it is the
+    // only place an outlier is reported at all.
+    //
+    // Only when the endpoints do not already carry them: a peak equal to the
+    // final value is not news, and a series that only climbs reads as one
+    // clause instead of three saying the same thing.
+    const peak = values.reduce((a, b) => (b.v > a.v ? b : a));
+    const trough = values.reduce((a, b) => (b.v < a.v ? b : a));
+    if (peak.v > Math.max(first, last)) text += `, peaking at ${fy(peak.v)} (${fx(peak.i)})`;
+    if (trough.v < Math.min(first, last)) text += `, low of ${fy(trough.v)} (${fx(trough.i)})`;
+    return text;
   });
   return `${parts.join('; ')}. ${data.length} points.`;
 }
@@ -1136,8 +1176,13 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const hoveredRow = hovered !== null ? props.data[hovered] : null;
         const anchorLeft = geometry && hovered !== null ? geometry.x[hovered] : 0;
         const anchorTop = geometry && hovered !== null && geometry.y ? geometry.y[hovered] : null;
-        const summary = props.summary ?? deriveSummary(props.data, resolved, formatY);
-        const showTable = props.dataTable !== false;
+        const summary =
+          props.summary ?? deriveSummary(props.data, props.x, resolved, formatX, formatY);
+        // The number is the point at which the table stops being the alternative
+        // and the summary takes over — not a budget the table is thinned to fit.
+        const tableLimit =
+          typeof props.dataTable === 'number' ? props.dataTable : DATA_TABLE_MAX_ROWS;
+        const showTable = props.dataTable !== false && props.data.length <= tableLimit;
         const legendSeries = isPie ? sliceLegend(props.data, props.x, chartTheme.series) : resolved;
 
         return (

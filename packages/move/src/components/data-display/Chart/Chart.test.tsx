@@ -623,6 +623,87 @@ describe('Chart — tooltip content', () => {
   });
 });
 
+describe('Chart — large series', () => {
+  const many = (n: number) => Array.from({ length: n }, (_, i) => ({ t: i, v: i % 7 }));
+  const line = [{ key: 'v', type: 'line' as const, label: 'V' }];
+
+  it('tabulates the complete data up to the threshold', () => {
+    const { container } = render(
+      <Chart caption="R" data={many(200)} x="t" series={line} animations={false} />,
+    );
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(200);
+  });
+
+  /**
+   * Past the threshold the table is dropped rather than thinned. A partial
+   * table still reads as authoritative while an outlier between two kept rows
+   * has silently gone; the summary names the extremes instead, so it cannot
+   * lose one.
+   */
+  it('drops the table past the threshold rather than sampling it', () => {
+    const { container } = render(
+      <Chart caption="R" data={many(10000)} x="t" series={line} animations={false} />,
+    );
+    expect(container.querySelector('table')).toBeNull();
+    expect(screen.getByRole('img')).not.toHaveAttribute('aria-describedby');
+  });
+
+  it('takes an explicit threshold', () => {
+    const { container } = render(
+      <Chart caption="R" data={many(300)} x="t" series={line} dataTable={500} animations={false} />,
+    );
+    expect(container.querySelectorAll('tbody tr')).toHaveLength(300);
+  });
+
+  it('names the peak and where it falls, so an outlier survives the summary', () => {
+    const spike = [
+      { t: 'Jan', v: 10 },
+      { t: 'Feb', v: 900 },
+      { t: 'Mar', v: 20 },
+    ];
+    render(<Chart caption="R" data={spike} x="t" series={line} animations={false} />);
+    expect(screen.getByRole('img').getAttribute('aria-label')).toContain('peaking at 900 (Feb)');
+  });
+
+  it('stays terse when the endpoints already carry the extremes', () => {
+    const climb = [
+      { t: 'Jan', v: 1 },
+      { t: 'Feb', v: 2 },
+      { t: 'Mar', v: 3 },
+    ];
+    render(<Chart caption="R" data={climb} x="t" series={line} animations={false} />);
+    const label = screen.getByRole('img').getAttribute('aria-label')!;
+    expect(label).toContain('rises from 1 to 3');
+    expect(label).not.toContain('peaking');
+    expect(label).not.toContain('low of');
+  });
+
+  it('drops dots once they would be closer together than their own width', () => {
+    const sparse = render(
+      <Chart caption="R" data={many(20)} x="t" series={line} dots animations={false} />,
+    );
+    expect(sparse.container.querySelectorAll('circle').length).toBe(20);
+
+    const dense = render(
+      <Chart caption="R" data={many(5000)} x="t" series={line} dots animations={false} />,
+    );
+    expect(dense.container.querySelectorAll('circle').length).toBe(0);
+  });
+
+  it('keeps a scatter\u2019s points, since the points ARE the mark', () => {
+    const { container } = render(
+      <Chart
+        caption="R"
+        data={many(5000)}
+        x="t"
+        series={[{ key: 'v', type: 'scatter', label: 'V' }]}
+        animations={false}
+      />,
+    );
+    expect(container.querySelectorAll('circle').length).toBe(5000);
+  });
+});
+
 describe('Chart — tooltip placement', () => {
   const rows = [
     { day: 'Mon', visits: 10 },

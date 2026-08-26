@@ -486,7 +486,7 @@ Props:
 - palette: Color[] (default: null) — Override the categorical series ramp with Move color names. Defaults to the theme-derived ramp.
 - formatX: (value: unknown) => string (default: null) — Format x tick labels and the data-table header column.
 - formatY: (value: number) => string (default: null) — Format y tick labels, data-table cells, and the derived summary.
-- dataTable: boolean (default: true) — Render the visually hidden data table. Turn off only when an equivalent table is already on the page.
+- dataTable: boolean | number (default: true) — Render the visually hidden data table. A number sets the row count past which the table is dropped and the summary carries the chart alone (200 by default, following Highcharts, which stops exposing individual points at the same count). Turn it off outright only when an equivalent table is already on the page.
 - labels: Partial<ChartLabels> (default: null) — Override the built-in user-facing strings.
 - animations: AnimationTrigger[] | false (default: null) — Override or disable the series entrance animation.
 - entranceThreshold: number | 'always' (default: 0.8) — How much of the chart must be on screen before the entrance plays, as a fraction of its own height. 'always' drops the visibility gate and plays as soon as the chart can draw. The ask is capped against what the chart can actually reach, since one taller than the viewport can never satisfy a high fraction.

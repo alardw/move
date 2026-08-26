@@ -26,6 +26,21 @@ export const MAX_X_LABELS = 8;
  * the tooltip anchors drift away from the bars they describe.
  */
 export const BAND_PADDING = 0.2;
+/**
+ * Clear space required between two dots before they are worth drawing, in px.
+ *
+ * A dot marks where a reading was actually taken. Once consecutive dots are
+ * closer together than their own width they stop marking anything and simply
+ * thicken the stroke into a band — more ink, less information, and one DOM node
+ * per reading to draw it. Below this spacing the line alone carries the shape.
+ */
+export const DOT_MIN_GAP = 2;
+
+/** Whether dots spaced across `width` would still read as separate marks. */
+export function dotsAreLegible(width: number, count: number, pointRadius: number): boolean {
+  if (count < 2) return true;
+  return width / (count - 1) >= pointRadius * 2 + DOT_MIN_GAP;
+}
 
 /** Read a series value out of a row, coercing to a finite number or null. */
 export function valueAt(row: Record<string, unknown>, key: string): number | null {
