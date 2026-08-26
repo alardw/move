@@ -665,6 +665,36 @@ describe('Chart — large series', () => {
     expect(screen.getByRole('img').getAttribute('aria-label')).toContain('peaking at 900 (Feb)');
   });
 
+  /**
+   * The plot's accessible name is the component's most important user-facing
+   * string, so it goes through `labels` like every other one. A function, not a
+   * template: word order and verb agreement move between languages.
+   */
+  it('routes the accessible name through labels, so it can be translated', () => {
+    const spike = [
+      { t: 'Jan', v: 10 },
+      { t: 'Feb', v: 900 },
+      { t: 'Mar', v: 20 },
+    ];
+    render(
+      <Chart
+        caption="R"
+        data={spike}
+        x="t"
+        series={line}
+        animations={false}
+        labels={{
+          summary: ({ series, points }) =>
+            `${series[0].label} piekt op ${series[0].peak?.value} in ${series[0].peak?.at}, ${points} metingen`,
+        }}
+      />,
+    );
+    expect(screen.getByRole('img')).toHaveAttribute(
+      'aria-label',
+      'V piekt op 900 in Feb, 3 metingen',
+    );
+  });
+
   it('stays terse when the endpoints already carry the extremes', () => {
     const climb = [
       { t: 'Jan', v: 1 },

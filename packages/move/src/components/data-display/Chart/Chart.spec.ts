@@ -369,6 +369,11 @@ export const spec = {
         'Every mark is a DOM node, and the hidden data table is a row per point — there is no downsampling or virtualisation. Charts of a few hundred points are comfortable; tens of thousands are not, and the honest answer is to aggregate before passing the data in. Axis labels already thin themselves (labelStride), the tick count is fixed, and the dot stagger spreads a fixed total rather than a fixed per-item delay, so none of those degrade with size.',
     },
     {
+      id: 'accessible-name-is-translatable',
+      description:
+        'The plot\u2019s accessible name is assembled by `labels.summary` from facts the shell derives (per-series first, last, direction, and the peak and low with where they fall), never from words baked into the component. It is the most important string Chart speaks, and a computed aria-label evades both guards that would otherwise catch English: conformance E1 refuses a LITERAL aria-label, and the i18n check scans JSX text children. The `summary` prop still overrides the sentence outright for one chart; the label translates it for an application.',
+    },
+    {
       id: 'built-in-renderer-declines-past-100k-points',
       description:
         'Rows times series past 100,000 renders the oversized status instead of the plot, with a development-only console warning naming the count and the way out. A guard on the page rather than a tuning knob: the cost of an SVG line is its path string, and at a million points that is a 12.7MB attribute for a drawing where every point already shares a pixel with a hundred others. The cap is the built-in renderer\u2019s alone — a `renderer` prop backed by canvas or WebGL rasterises instead of building a path, so it is never capped.',
@@ -493,6 +498,12 @@ export const spec = {
       key: 'oversized',
       default: 'Chart too large to display',
       description: 'Status text when the series is past what the built-in renderer draws.',
+    },
+    {
+      key: 'summary',
+      default: '{series} rises from {first} to {last}, peaking at {peak}. {points} points.',
+      description:
+        'Phrases the plot\u2019s accessible name from the facts the shell derived (function, not a template: word order and verb agreement move between languages).',
     },
     {
       key: 'dataTable',

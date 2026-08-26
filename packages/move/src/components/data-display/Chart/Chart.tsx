@@ -48,6 +48,26 @@ import {
 
 export type ChartSize = 'sm' | 'md' | 'lg';
 
+/** One series, as the accessible summary describes it. */
+export interface ChartSummarySeries {
+  label: string;
+  /** False when the series carries no numeric values at all. */
+  hasValues: boolean;
+  /** First and last values, already run through `formatY`. */
+  first: string;
+  last: string;
+  direction: 'up' | 'down' | 'flat';
+  /** Present only where the endpoints do not already carry the extreme. */
+  peak?: { value: string; at: string };
+  low?: { value: string; at: string };
+}
+
+/** What the shell worked out about the data, for `labels.summary` to phrase. */
+export interface ChartSummaryFacts {
+  series: ChartSummarySeries[];
+  points: number;
+}
+
 export interface ChartLabels {
   /** Caption of the visually hidden data table. */
   dataTable: string;
@@ -63,6 +83,15 @@ export interface ChartLabels {
   empty: string;
   /** Shown when the series is past what the built-in renderer will draw. */
   oversized: string;
+  /**
+   * Builds the plot's accessible name from the facts derived for it.
+   *
+   * A function rather than a template because the sentence is not a slot-filling
+   * exercise: word order, the verb agreeing with the subject, and how a range is
+   * phrased all move between languages, and a `{series} {direction} {from}`
+   * string cannot follow them.
+   */
+  summary: (facts: ChartSummaryFacts) => string;
 }
 
 export const DEFAULT_LABELS: ChartLabels = {
@@ -73,6 +102,18 @@ export const DEFAULT_LABELS: ChartLabels = {
   retry: 'Retry',
   empty: 'No data to display',
   oversized: 'Chart too large to display',
+  summary: ({ series, points }) => {
+    if (series.length === 0) return 'No data.';
+    const parts = series.map((s) => {
+      if (!s.hasValues) return `${s.label} has no values`;
+      const verb = s.direction === 'up' ? 'rises' : s.direction === 'down' ? 'falls' : 'holds';
+      let text = `${s.label} ${verb} from ${s.first} to ${s.last}`;
+      if (s.peak) text += `, peaking at ${s.peak.value} (${s.peak.at})`;
+      if (s.low) text += `, low of ${s.low.value} (${s.low.at})`;
+      return text;
+    });
+    return `${parts.join('; ')}. ${points} points.`;
+  },
 };
 
 /**
@@ -404,43 +445,59 @@ function numeric(row: ChartDatum, key: string): number | null {
   return Number.isFinite(n) ? n : null;
 }
 
-/** "MRR rises from 12 to 48 over 6 points." — the fallback accessible summary. */
-function deriveSummary(
+/**
+ * Work out what there is to say about the data. The WORDS live in
+ * `labels.summary`, so this reports facts and phrases nothing.
+ */
+function summaryFacts(
   data: readonly ChartDatum[],
   x: string,
   series: readonly ResolvedChartSeries[],
   formatX: ((value: unknown) => string) | null | undefined,
   formatY: ((v: number) => string) | null | undefined,
-): string {
-  if (data.length === 0 || series.length === 0) return 'No data.';
+): ChartSummaryFacts {
   const fy = (v: number) => (formatY ? formatY(v) : String(v));
   const fx = (i: number) => (formatX ? formatX(data[i][x]) : String(data[i][x] ?? ''));
-  const parts = series.map((s) => {
-    const values: { v: number; i: number }[] = [];
-    data.forEach((row, i) => {
-      const v = numeric(row, s.key);
-      if (v !== null) values.push({ v, i });
-    });
-    if (values.length === 0) return `${s.label} has no values`;
-    const first = values[0].v;
-    const last = values[values.length - 1].v;
-    const direction = last > first ? 'rises' : last < first ? 'falls' : 'holds';
-    let text = `${s.label} ${direction} from ${fy(first)} to ${fy(last)}`;
-    // Name the extremes, and name WHERE they are. This is the one thing a
-    // sighted reader gets from the shape instantly and a serial reader cannot
-    // recover from a list of values — and past the table threshold it is the
-    // only place an outlier is reported at all.
-    //
-    // Only when the endpoints do not already carry them: a peak equal to the
-    // final value is not news, and a series that only climbs reads as one
-    // clause instead of three saying the same thing.
-    const peak = values.reduce((a, b) => (b.v > a.v ? b : a));
-    const trough = values.reduce((a, b) => (b.v < a.v ? b : a));
-    if (peak.v > Math.max(first, last)) text += `, peaking at ${fy(peak.v)} (${fx(peak.i)})`;
-    if (trough.v < Math.min(first, last)) text += `, low of ${fy(trough.v)} (${fx(trough.i)})`;
-    return text;
-  });
-  return `${parts.join('; ')}. ${data.length} points.`;
+  if (data.length === 0) return { series: [], points: 0 };
+
+  return {
+    points: data.length,
+    series: series.map((s) => {
+      const values: { v: number; i: number }[] = [];
+      data.forEach((row, i) => {
+        const v = numeric(row, s.key);
+        if (v !== null) values.push({ v, i });
+      });
+      if (values.length === 0) {
+        return { label: s.label, hasValues: false, first: '', last: '', direction: 'flat' };
+      }
+      const first = values[0].v;
+      const last = values[values.length - 1].v;
+      // Name the extremes, and name WHERE they are: it is the one thing a
+      // sighted reader takes from the shape instantly and a serial reader
+      // cannot recover from a list of values — and past the table threshold it
+      // is the only place an outlier is reported at all.
+      //
+      // Only where the endpoints do not already carry them. A peak equal to the
+      // final value is not news, and a series that only climbs should read as
+      // one clause rather than three saying the same thing.
+      const peak = values.reduce((a, b) => (b.v > a.v ? b : a));
+      const trough = values.reduce((a, b) => (b.v < a.v ? b : a));
+      return {
+        label: s.label,
+        hasValues: true,
+        first: fy(first),
+        last: fy(last),
+        direction: last > first ? 'up' : last < first ? 'down' : 'flat',
+        ...(peak.v > Math.max(first, last)
+          ? { peak: { value: fy(peak.v), at: fx(peak.i) } }
+          : null),
+        ...(trough.v < Math.min(first, last)
+          ? { low: { value: fy(trough.v), at: fx(trough.i) } }
+          : null),
+      } satisfies ChartSummarySeries;
+    }),
+  };
 }
 
 /** CSS owns the box: an explicit height, or an aspect ratio. */
@@ -636,11 +693,12 @@ function resolveAlternative(input: {
   data: readonly ChartDatum[];
   x: string;
   series: readonly ResolvedChartSeries[];
+  labels: ChartLabels;
   plotVisible: boolean;
   formatX?: (value: unknown) => string;
   formatY?: (value: number) => string;
 }): { summary: string; showTable: boolean } {
-  const { summary, dataTable, data, x, series, plotVisible, formatX, formatY } = input;
+  const { summary, dataTable, data, x, series, labels, plotVisible, formatX, formatY } = input;
   // The number is the point at which the table stops being the alternative and
   // the summary takes over — not a budget the table is thinned to fit.
   const limit = typeof dataTable === 'number' ? dataTable : DATA_TABLE_MAX_ROWS;
@@ -649,7 +707,9 @@ function resolveAlternative(input: {
     // for it to name. Deriving it walks every row, which would spend the one
     // cost that scales with the data at the exact moment the chart has decided
     // the data is too large to touch.
-    summary: plotVisible ? (summary ?? deriveSummary(data, x, series, formatX, formatY)) : '',
+    summary: plotVisible
+      ? (summary ?? labels.summary(summaryFacts(data, x, series, formatX, formatY)))
+      : '',
     showTable: dataTable !== false && data.length <= limit,
   };
 }
@@ -1284,6 +1344,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           data: props.data,
           x: props.x,
           series: resolved,
+          labels,
           plotVisible: status === null,
           formatX,
           formatY,
