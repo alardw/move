@@ -16,7 +16,19 @@
  * roots you configure) — an inline `<svg>` is raw HTML, so this also enforces the
  * svg half of the icons rule (icons-1) on composed code.
  *
- * @enforces icons-1 purity-1 purity-2 purity-4
+ * It also enforces the RENDERING-LIBRARY BOUNDARY (purity-6). A drawing library
+ * — Recharts, Chart.js, D3, three.js — may be imported by a component that
+ * wraps it (a `withMoveComponent` component, or a renderer adapter beside one),
+ * and nowhere else. Composed code must reach it through that component's typed
+ * seam instead. Without this, `<AreaChart>` passes every other rule: it is a
+ * capitalised tag, so the raw-HTML check waves it through, and it lands in a
+ * composite where its DOM, theming and accessibility are outside Move's reach.
+ *
+ * The scan roots are what makes this checkable: purity only ever walks composed
+ * code, never components, so any hit here is by definition on the wrong side of
+ * the boundary.
+ *
+ * @enforces icons-1 purity-1 purity-2 purity-4 purity-6
  */
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
@@ -24,6 +36,45 @@ import ts from 'typescript';
 import { loadConfig } from './_config.mjs';
 
 const IGNORE_MARKER = 'purity-ignore';
+
+/**
+ * Libraries that draw their own DOM or canvas.
+ *
+ * A denylist rather than a heuristic, because "does this package render?" is
+ * not decidable from a module name. Matches the package root or any subpath, so
+ * `@nivo/bar` and `d3-shape` are caught alongside `d3`.
+ */
+const RENDER_LIBRARIES = [
+  'recharts',
+  'chart.js',
+  'react-chartjs-2',
+  'd3',
+  'victory',
+  '@nivo',
+  '@visx',
+  'plotly.js',
+  'react-plotly.js',
+  'echarts',
+  'echarts-for-react',
+  'apexcharts',
+  'react-apexcharts',
+  'highcharts',
+  'highcharts-react-official',
+  'three',
+  '@react-three/fiber',
+  'konva',
+  'react-konva',
+  'pixi.js',
+  'fabric',
+];
+
+/** True when a module specifier names a rendering library, or a subpath of one. */
+function isRenderLibrary(specifier) {
+  if (specifier.startsWith('.') || specifier.startsWith('/')) return false;
+  return RENDER_LIBRARIES.some(
+    (lib) => specifier === lib || specifier.startsWith(`${lib}/`) || specifier.startsWith(`${lib}-`),
+  );
+}
 
 function collectTsx(dir, out = []) {
   if (!existsSync(dir)) return out;
@@ -58,6 +109,18 @@ export function run(config) {
         if (/^[a-z]/.test(tag)) record(node, 'raw-html', `<${tag}>`);
       }
       if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'style') record(node, 'inline-style', 'style=');
+      // purity-6: a drawing library belongs behind a component's renderer seam,
+      // never in composed code.
+      if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
+        const from = node.moduleSpecifier.text;
+        if (isRenderLibrary(from)) {
+          record(
+            node,
+            'render-library',
+            `imports '${from}' — a rendering library may only be imported by the component that wraps it (withMoveComponent, or a renderer adapter beside it). Reach it through that component's seam.`,
+          );
+        }
+      }
       // purity-4: manual responsive — read layout off Move's responsive props
       // (collapseBelow, …), not viewport math. Only width/height media queries
       // count; feature queries (prefers-reduced-motion, prefers-color-scheme) are fine.

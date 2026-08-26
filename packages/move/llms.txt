@@ -510,6 +510,7 @@ Props:
 - legend: boolean (default: true) — Render the series legend below the plot.
 - tooltip: boolean (default: true) — Show every series' value at the hovered position. Rendered by the shell over the plot, so it looks and behaves the same for any renderer that reports its plot rect.
 - dots: boolean (default: false) — Mark each data point on line and area series.
+- innerRadius: number (default: 0) — Hole size for a pie, as a fraction of the radius. 0 is a full pie, around 0.6 reads as a donut. Ignored by every other series type.
 - xScale: 'category' | 'linear' (default: category) — How x positions are derived. `category` spaces rows evenly by index; `linear` places each at its own numeric x, which is what unevenly sampled or time-series data needs — a category axis would draw equal gaps between unequal intervals. Timestamps are numbers: pass epoch milliseconds and a `formatX`. Falls back to `category` if any x value is not finite.
 - curve: 'linear' | 'monotone' | 'step' (default: linear) — How line and area paths travel between points. `monotone` smooths without inventing peaks the data does not contain.
 - stacked: boolean (default: false) — Stack bar and area series sharing an axis instead of overlaying them.

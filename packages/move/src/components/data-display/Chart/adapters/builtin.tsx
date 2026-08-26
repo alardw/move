@@ -16,8 +16,10 @@
 // =============================================================================
 
 import * as React from 'react';
-import type { ChartRenderer, ResolvedChartSeries } from '../types';
+import type { ChartRenderer, ChartRendererProps, ResolvedChartSeries } from '../types';
 import {
+  arcCentroid,
+  arcPath,
   areaPath,
   bandScale,
   labelStride,
@@ -25,6 +27,8 @@ import {
   linearScale,
   niceDomain,
   niceTicks,
+  pieLayout,
+  sliceAt,
 } from '../scales';
 
 const MARGIN = { top: 8, right: 8, bottom: 22, left: 46 } as const;
@@ -55,11 +59,81 @@ function stackOffsets(
   return offsets;
 }
 
+/**
+ * A pie shares nothing with the axis renderer — no scales, no grid, no ticks —
+ * so it takes its own path rather than threading conditionals through one that
+ * assumes a horizontal axis.
+ *
+ * Colours come from `theme.series` PER SLICE rather than per series, which is
+ * what a pie means: one series, many parts. The shell's legend reads the same
+ * ramp in the same order, so the two agree without passing colours between them.
+ */
+function PiePlot({ spec, theme, width, height, onPlotGeometry }: ChartRendererProps) {
+  const { data, series, innerRadius } = spec;
+  const key = series[0]?.key ?? '';
+
+  const cx = width / 2;
+  const cy = height / 2;
+  const outer = Math.max(0, Math.min(width, height) / 2 - theme.padding);
+  const inner = Math.max(0, Math.min(0.95, innerRadius)) * outer;
+
+  const values = data.map((row) => valueAt(row, key) ?? 0);
+  const slices = pieLayout(values);
+
+  React.useEffect(() => {
+    if (outer <= 0 || slices.length === 0) return;
+    const centres = slices.map((s) => arcCentroid(cx, cy, inner, outer, s));
+    onPlotGeometry?.({
+      rect: { x: cx - outer, y: cy - outer, width: outer * 2, height: outer * 2 },
+      x: centres.map(([px]) => px),
+      y: centres.map(([, py]) => py),
+      // Angular, so the shell must not fall back to nearest-x snapping.
+      hitTest: (px, py) => sliceAt(slices, cx, cy, inner, outer, px, py),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [onPlotGeometry, cx, cy, inner, outer, JSON.stringify(values)]);
+
+  if (outer <= 0 || slices.length === 0) return null;
+
+  return (
+    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} focusable="false">
+      <g data-series={key}>
+        {slices.map((slice) => (
+          <path
+            key={slice.index}
+            data-slice=""
+            d={arcPath(cx, cy, inner, outer, slice.startAngle, slice.endAngle)}
+            fill={theme.series[slice.index % theme.series.length]}
+            stroke={theme.surface}
+            strokeWidth={1}
+          />
+        ))}
+      </g>
+    </svg>
+  );
+}
+
 export const builtinRenderer: ChartRenderer = ({ spec, theme, width, height, onPlotGeometry }) => {
-  // Namespaced so several charts on one page cannot collide on gradient ids.
-  const uid = React.useId().replace(/:/g, '');
   const { data, x, series, grid, stacked, dots, curve, xScale, formatX, formatY } = spec;
 
+  // Dispatched BEFORE any hook in this function. A pie shares none of the axis
+  // machinery, and PiePlot is a separate component with its own hook scope — so
+  // switching a series between pie and line cannot change the hook count here,
+  // which it would if this sat below the useId.
+  if (series.some((s) => s.type === 'pie')) {
+    return (
+      <PiePlot
+        spec={spec}
+        theme={theme}
+        width={width}
+        height={height}
+        onPlotGeometry={onPlotGeometry}
+      />
+    );
+  }
+
+  // Namespaced so several charts on one page cannot collide on gradient ids.
+  const uid = React.useId().replace(/:/g, '');
   const innerWidth = Math.max(0, width - MARGIN.left - MARGIN.right);
   const innerHeight = Math.max(0, height - MARGIN.top - MARGIN.bottom);
 

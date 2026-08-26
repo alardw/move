@@ -2,6 +2,7 @@
   --move-chart-caption: var(--move-fg-base);
   --move-chart-label: var(--move-fg-muted);
   --move-chart-crosshair: var(--move-border-emphasis);
+  --move-chart-padding: var(--move-spacing-lg);
   --move-chart-font: var(--move-font-body);
   --move-chart-gap: var(--move-spacing-sm);
   --move-chart-legend-gap: var(--move-spacing-md);
@@ -32,9 +33,16 @@
 }
 
 .viewport {
-  position: relative;
   width: 100%;
   min-width: 0;
+}
+
+/* Positioning context for the crosshair and tooltip anchor. They live in HERE,
+   not in .viewport — this is the box the renderer's reported geometry is
+   measured against, so both share one coordinate space. Anchor them to the
+   padded box instead and every position is off by the padding. */
+.plot {
+  position: relative;
 }
 
 /* Zero-size anchor the tooltip attaches to; moves to the hovered band. */

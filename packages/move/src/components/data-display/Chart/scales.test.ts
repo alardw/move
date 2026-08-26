@@ -1,6 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import {
+  arcPath,
   areaPath,
+  pieLayout,
+  sliceAt,
   bandScale,
   labelStride,
   linePath,
@@ -297,5 +300,87 @@ describe('areaPath with a stacked baseline', () => {
 
   it('is empty when the baseline has no points', () => {
     expect(areaPath(top, [])).toBe('');
+  });
+});
+
+describe('pieLayout', () => {
+  it('divides the circle in proportion to the values', () => {
+    const slices = pieLayout([1, 1, 2]);
+    expect(slices.map((s) => s.share)).toEqual([0.25, 0.25, 0.5]);
+    const total = slices.reduce((sum, s) => sum + (s.endAngle - s.startAngle), 0);
+    expect(total).toBeCloseTo(Math.PI * 2);
+  });
+
+  it('starts at twelve o’clock and runs clockwise', () => {
+    const [first] = pieLayout([1, 1]);
+    expect(first.startAngle).toBeCloseTo(-Math.PI / 2);
+    expect(first.endAngle).toBeGreaterThan(first.startAngle);
+  });
+
+  it('drops negatives rather than reflecting them — a negative part of a whole is not a wedge', () => {
+    const slices = pieLayout([3, -5, 1]);
+    expect(slices[1].share).toBe(0);
+    expect(slices[0].share + slices[2].share).toBeCloseTo(1);
+  });
+
+  it('keeps zero rows so the legend and table stay aligned with the data', () => {
+    expect(pieLayout([5, 0, 5])).toHaveLength(3);
+  });
+
+  it('returns nothing when there is no positive total', () => {
+    expect(pieLayout([0, 0])).toEqual([]);
+    expect(pieLayout([])).toEqual([]);
+  });
+});
+
+describe('arcPath', () => {
+  it('draws a wedge from the centre when there is no inner radius', () => {
+    const d = arcPath(50, 50, 0, 40, -Math.PI / 2, 0);
+    expect(d.startsWith('M50,50')).toBe(true);
+    expect(d).toContain('A40,40');
+    expect(d.endsWith('Z')).toBe(true);
+  });
+
+  it('draws a ring segment when there is', () => {
+    const d = arcPath(50, 50, 20, 40, -Math.PI / 2, 0);
+    expect(d.startsWith('M50,50')).toBe(false); // never touches the centre
+    expect(d).toContain('A40,40');
+    expect(d).toContain('A20,20');
+  });
+
+  it('sets the large-arc flag past a half turn', () => {
+    const small = arcPath(0, 0, 0, 10, 0, Math.PI / 2);
+    const large = arcPath(0, 0, 0, 10, 0, Math.PI * 1.5);
+    expect(small).toContain('0 0 1');
+    expect(large).toContain('0 1 1');
+  });
+
+  it('splits a full circle in two, which a single arc cannot express', () => {
+    const d = arcPath(50, 50, 0, 40, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2);
+    expect((d.match(/A/g) ?? []).length).toBe(2);
+  });
+
+  it('is empty for a zero-width slice', () => {
+    expect(arcPath(0, 0, 0, 10, 1, 1)).toBe('');
+  });
+});
+
+describe('sliceAt', () => {
+  const slices = pieLayout([1, 1, 1, 1]); // quarters, from twelve o'clock
+  const hit = (x: number, y: number) => sliceAt(slices, 0, 0, 0, 10, x, y);
+
+  it('finds the slice under a point', () => {
+    expect(hit(3, -3)).toBe(0); // upper right
+    expect(hit(3, 3)).toBe(1); // lower right
+    expect(hit(-3, 3)).toBe(2); // lower left
+    expect(hit(-3, -3)).toBe(3); // upper left
+  });
+
+  it('misses outside the outer radius', () => {
+    expect(hit(50, 50)).toBeNull();
+  });
+
+  it('misses inside the hole of a ring', () => {
+    expect(sliceAt(slices, 0, 0, 5, 10, 1, 1)).toBeNull();
   });
 });

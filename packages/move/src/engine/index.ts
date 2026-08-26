@@ -11,6 +11,9 @@ export { mergeSlotProps, createCx, createSp } from './slotUtils';
 // Ref utilities
 export { useMergedRef } from './useMergedRef';
 
+// Child-tree inspection
+export { containsElementOfType } from './childUtils';
+
 // Headless utilities
 export { useControlledState } from './useControlledState';
 export type { UseControlledStateOptions } from './useControlledState';

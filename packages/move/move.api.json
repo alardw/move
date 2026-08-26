@@ -2755,6 +2755,12 @@
           "description": "Mark each data point on line and area series."
         },
         {
+          "name": "innerRadius",
+          "type": "number",
+          "default": "0",
+          "description": "Hole size for a pie, as a fraction of the radius. 0 is a full pie, around 0.6 reads as a donut. Ignored by every other series type."
+        },
+        {
           "name": "xScale",
           "type": "'category' | 'linear'",
           "values": [

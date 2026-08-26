@@ -25,8 +25,15 @@ import type { Color } from '../../../shared/types';
 /** One row of source data. Series values are read by key and coerced to number. */
 export type ChartDatum = Record<string, unknown>;
 
-/** How a series is drawn. v1 covers the shared axis/scale/grid family only. */
-export type ChartSeriesType = 'line' | 'area' | 'bar';
+/**
+ * How a series is drawn.
+ *
+ * `line`, `area` and `bar` share one axis, scale and grid machine and combine
+ * freely. `pie` shares none of it: it has no axes, its colours and legend are
+ * per ROW rather than per series, and hit-testing is angular. A pie is
+ * therefore exclusive — one pie series, on its own.
+ */
+export type ChartSeriesType = 'line' | 'area' | 'bar' | 'pie';
 
 /** Which grid lines the renderer draws. */
 export type ChartGrid = 'none' | 'horizontal' | 'vertical' | 'both';
@@ -104,6 +111,11 @@ export interface ChartSpec {
   curve: ChartCurve;
   /** How x positions are derived from the data. */
   xScale: ChartXScale;
+  /**
+   * Hole size for a pie, as a fraction of the radius. 0 is a full pie; around
+   * 0.6 reads as a donut. Ignored by every other series type.
+   */
+  innerRadius: number;
   /** Format an x tick label. */
   formatX?: (value: unknown) => string;
   /** Format a y tick label. */
@@ -131,6 +143,8 @@ export interface ChartTheme {
   tick: string;
   /** Axis and legend label color. */
   label: string;
+  /** The ground the plot sits on — used to separate touching shapes. */
+  surface: string;
   /** Font family for all chart text. */
   font: string;
   /** Tick and legend text size, in px. */
@@ -139,6 +153,14 @@ export interface ChartTheme {
   strokeWidth: number;
   /** Data point radius, in px. */
   pointRadius: number;
+  /**
+   * Breathing room between the drawing and the edge of the plot, in px.
+   *
+   * Resolved by the shell from `--move-chart-padding` and handed over as a
+   * number, because a canvas renderer has no CSS to read. Only layouts without
+   * their own gutter need it — an axis chart already insets itself for ticks.
+   */
+  padding: number;
   /** Fill opacity for area series, 0–1. */
   areaOpacity: number;
   /**
@@ -174,6 +196,20 @@ export interface PlotGeometry {
   rect: PlotRect;
   /** Pixel x of each data index, in data order. Same length as `spec.data`. */
   x: number[];
+  /**
+   * Pixel y per index, where the tooltip should point. Only needed when a row's
+   * anchor is not simply "somewhere on the vertical at x" — a pie slice, say.
+   */
+  y?: number[];
+  /**
+   * Resolve a pointer position to a row index yourself.
+   *
+   * The shell's default is to snap to the nearest reported x, which is right
+   * for anything laid out along an axis and meaningless for anything radial.
+   * A renderer that provides this owns hit-testing entirely, and the shell
+   * drops the crosshair — a vertical line through a pie says nothing.
+   */
+  hitTest?: (localX: number, localY: number) => number | null;
 }
 
 /** What a renderer is handed. */

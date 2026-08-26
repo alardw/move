@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, containsElementOfType } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -18,6 +18,19 @@ import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Dialog.module.css';
 
 // ============================================================================
+// Labels (i18n)
+// ============================================================================
+
+export interface DialogLabels {
+  /** Accessible name for the close button Header renders automatically. */
+  close: string;
+}
+
+const DEFAULT_LABELS: DialogLabels = {
+  close: 'Close',
+};
+
+// ============================================================================
 // Context (animation coordination)
 // ============================================================================
 
@@ -27,6 +40,7 @@ interface DialogContextValue {
   epoch: number;
   onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
+  labels: DialogLabels;
 }
 
 const DialogContext = React.createContext<DialogContextValue | null>(null);
@@ -91,6 +105,8 @@ export interface DialogRootProps {
   onOpenChange?: (open: boolean) => void;
   animations?: AnimationTrigger[] | false;
   modal?: boolean;
+  /** Overridable user-facing strings. */
+  labels?: Partial<DialogLabels>;
 }
 
 const DialogRoot: React.FC<DialogRootProps> = ({
@@ -100,6 +116,7 @@ const DialogRoot: React.FC<DialogRootProps> = ({
   onOpenChange,
   animations: animationsProp,
   modal,
+  labels: labelsProp,
 }) => {
   // Interruptible open/close lifecycle (open cancels an in-flight close;
   // exit-completion is epoch-guarded). See useDismissable.
@@ -117,8 +134,10 @@ const DialogRoot: React.FC<DialogRootProps> = ({
 
   const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
 
+  const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
+
   return (
-    <DialogContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig }}>
+    <DialogContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig, labels }}>
       <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
@@ -469,6 +488,10 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
   defaults: { closable: true },
 
   setup({ props, ref, cx, sp, attrs }) {
+    // A consumer who writes their own Close gets exactly that one — rendering the
+    // automatic button beside it would leave two close controls in the header.
+    const hasOwnClose = containsElementOfType(props.children as React.ReactNode, DialogClose);
+
     return {
       render() {
         const headerSp = sp('header');
@@ -486,7 +509,7 @@ const DialogHeader = withMoveComponent<'header', DialogHeaderProps, HTMLDivEleme
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-            {props.closable !== false && <DialogClose />}
+            {props.closable !== false && !hasOwnClose && <DialogClose />}
           </div>
         );
       },
@@ -673,10 +696,15 @@ const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonEleme
   moveProps: ['asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { close } = useDialogContext();
+    const { close, labels } = useDialogContext();
     // Default close glyph resolves through the icon resolver (falls back to the
     // built-in 'x'), so it re-skins with the rest of the app's icons.
     const closeIcon = useIcon('close', 16);
+
+    // The default glyph carries no text, so the button needs a name. Children or
+    // `asChild` mean the consumer supplied the content — and with visible text an
+    // aria-label would override it, so we leave those alone (WCAG 2.5.3).
+    const defaultName = props.children == null && !props.asChild ? labels.close : undefined;
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -693,6 +721,7 @@ const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonEleme
         } = closeSp as Record<string, unknown>;
         return (
           <RadixDialog.Close
+            aria-label={defaultName}
             {...attrs}
             {...spRest}
             ref={ref}

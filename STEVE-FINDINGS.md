@@ -63,13 +63,17 @@ The sharpest class in the report: the markup *looks* wired, every check is
 green, and a screen-reader user gets an unnamed control. A consumer cannot see
 these, which is what makes them ours.
 
-- [ ] **J13 · FileUpload's hidden input has no accessible name.**
+- [x] **J13 · FileUpload's hidden input has no accessible name.**
       `FileUpload.tsx:409` renders `<input type="file">` with no `aria-label`
       and no route to one — `labels` exists on Root but does not cover it, and
       props on `Trigger` reach the visible button. WCAG 4.1.2, **no consumer
       workaround at all**. They caught it only because one demo renders
       standalone; they assume every other call site carries it unseen.
-      → Add the input's name to `FileUploadLabels`.
+      **Fixed** — `FileUploadLabels.fileInput` (default `Choose files`) added
+      and applied as the input's `aria-label`, so it is named by default and
+      translatable. Spec `labels` entry and the i18n docs table carry the key;
+      two tests assert the name **resolves** (not that the attribute is
+      present) — the shape the Tier-1 oracle should generalise.
 - [ ] **J16 · Dialog/Drawer auto-close button is unlabelled.**
       `closable` defaults true; `DrawerClose` renders only `useIcon('close')`.
       The one button a consumer never writes and therefore never labels.

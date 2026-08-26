@@ -776,6 +776,7 @@ export type {
   DrawerDescriptionProps,
   DrawerCloseProps,
   DrawerHandleProps,
+  DrawerLabels,
 } from './components/overlays/Drawer';
 export type {
   DialogRootProps,
@@ -792,6 +793,7 @@ export type {
   DialogTitleProps,
   DialogDescriptionProps,
   DialogCloseProps,
+  DialogLabels,
 } from './components/overlays/Dialog';
 
 export { Dropdown } from './components/overlays/Dropdown';

@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, containsElementOfType } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -47,6 +47,19 @@ export type DrawerPosition = 'left' | 'right' | 'top' | 'bottom';
 export type DrawerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
 
 // ============================================================================
+// Labels (i18n)
+// ============================================================================
+
+export interface DrawerLabels {
+  /** Accessible name for the close button Header renders automatically. */
+  close: string;
+}
+
+const DEFAULT_LABELS: DrawerLabels = {
+  close: 'Close',
+};
+
+// ============================================================================
 // Context (animation coordination)
 // ============================================================================
 
@@ -57,6 +70,7 @@ interface DrawerContextValue {
   onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
   effectivePosition: DrawerPosition;
+  labels: DrawerLabels;
 }
 
 const DrawerContext = React.createContext<DrawerContextValue | null>(null);
@@ -131,6 +145,8 @@ export interface DrawerRootProps {
   position?: DrawerPosition;
   responsive?: boolean;
   breakpoint?: number;
+  /** Overridable user-facing strings. */
+  labels?: Partial<DrawerLabels>;
 }
 
 const DrawerRoot: React.FC<DrawerRootProps> = ({
@@ -143,6 +159,7 @@ const DrawerRoot: React.FC<DrawerRootProps> = ({
   position = 'right',
   responsive = true,
   breakpoint = 768,
+  labels: labelsProp,
 }) => {
   const isMobile = useMediaQuery(`(max-width: ${breakpoint - 1}px)`);
   const effectivePosition: DrawerPosition = responsive && isMobile ? 'bottom' : position;
@@ -167,9 +184,11 @@ const DrawerRoot: React.FC<DrawerRootProps> = ({
   );
   const animConfig = resolveAnimationsConfig(defaultAnims, animationsProp);
 
+  const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
+
   return (
     <DrawerContext.Provider
-      value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition }}
+      value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition, labels }}
     >
       <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
@@ -419,6 +438,10 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
   defaults: { closable: true },
 
   setup({ props, ref, cx, sp, attrs }) {
+    // A consumer who writes their own Close gets exactly that one — rendering the
+    // automatic button beside it would leave two close controls in the header.
+    const hasOwnClose = containsElementOfType(props.children as React.ReactNode, DrawerClose);
+
     return {
       render() {
         const headerSp = sp('header');
@@ -436,7 +459,7 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
             {props.children}
-            {props.closable !== false && <DrawerClose />}
+            {props.closable !== false && !hasOwnClose && <DrawerClose />}
           </div>
         );
       },
@@ -621,10 +644,15 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
   moveProps: ['asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { close } = useDrawerContext();
+    const { close, labels } = useDrawerContext();
     // Default close glyph resolves through the icon resolver (falls back to the
     // built-in 'x'), so it re-skins with the rest of the app's icons.
     const closeIcon = useIcon('close', 16);
+
+    // The default glyph carries no text, so the button needs a name. Children or
+    // `asChild` mean the consumer supplied the content — and with visible text an
+    // aria-label would override it, so we leave those alone (WCAG 2.5.3).
+    const defaultName = props.children == null && !props.asChild ? labels.close : undefined;
 
     const handleClick = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -641,6 +669,7 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
         } = closeSp as Record<string, unknown>;
         return (
           <RadixDialog.Close
+            aria-label={defaultName}
             {...attrs}
             {...spRest}
             ref={ref}

@@ -11,6 +11,10 @@ import Bar from './samples/bar';
 import barCode from './samples/bar?raw';
 import Mixed from './samples/mixed';
 import mixedCode from './samples/mixed?raw';
+import Pie from './samples/pie';
+import pieCode from './samples/pie?raw';
+import Donut from './samples/donut';
+import donutCode from './samples/donut?raw';
 import Stacked from './samples/stacked';
 import stackedCode from './samples/stacked?raw';
 import StackedArea from './samples/stacked-area';
@@ -46,6 +50,8 @@ export const content: ComponentContent = {
     { id: 'line', title: 'Line', render: Line, code: lineCode },
     { id: 'bar', title: 'Bar', render: Bar, code: barCode },
     { id: 'mixed', title: 'Mixed types', render: Mixed, code: mixedCode },
+    { id: 'pie', title: 'Pie', render: Pie, code: pieCode },
+    { id: 'donut', title: 'Donut', render: Donut, code: donutCode },
     { id: 'stacked', title: 'Stacked', render: Stacked, code: stackedCode },
     { id: 'stacked-area', title: 'Stacked area', render: StackedArea, code: stackedAreaCode },
     { id: 'curve-linear', title: 'Interpolation — linear', render: CurveLinear, code: curveLinearCode },

@@ -15,4 +15,5 @@ export type {
   DialogTitleProps,
   DialogDescriptionProps,
   DialogCloseProps,
+  DialogLabels,
 } from './Dialog';

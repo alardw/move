@@ -66,6 +66,18 @@ describe('FileUpload', () => {
       const input = container.querySelector('input[type="file"]');
       expect(input).toHaveAttribute('multiple');
     });
+
+    it('hidden input resolves an accessible name', () => {
+      const { container } = render(<BasicUpload />);
+      const input = container.querySelector('input[type="file"]');
+      expect(input).toHaveAccessibleName('Choose files');
+    });
+
+    it('hidden input accessible name is overridable via labels', () => {
+      const { container } = render(<BasicUpload labels={{ fileInput: 'Kies bestanden' }} />);
+      const input = container.querySelector('input[type="file"]');
+      expect(input).toHaveAccessibleName('Kies bestanden');
+    });
   });
 
   // === Data attributes ===

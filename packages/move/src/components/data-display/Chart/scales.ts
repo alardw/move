@@ -269,3 +269,121 @@ export function labelStride(count: number, max: number): number {
   if (count <= max || max <= 0) return 1;
   return Math.ceil(count / max);
 }
+
+// =============================================================================
+// Radial
+// =============================================================================
+
+/** A slice of a ring, as laid out by `pieLayout`. */
+export interface PieSlice {
+  /** Index of the row this slice came from. */
+  index: number;
+  /** Share of the total, 0–1. */
+  share: number;
+  startAngle: number;
+  endAngle: number;
+}
+
+/**
+ * Turn values into slices, running clockwise from twelve o'clock.
+ *
+ * Negative values are dropped rather than reflected: a pie shows parts of a
+ * whole, and a negative part has no honest wedge. Zero-valued rows are kept so
+ * the legend and the data table still line up with the data.
+ */
+export function pieLayout(values: readonly number[]): PieSlice[] {
+  const usable = values.map((v) => (Number.isFinite(v) && v > 0 ? v : 0));
+  const total = usable.reduce((sum, v) => sum + v, 0);
+  if (total <= 0) return [];
+
+  let angle = -Math.PI / 2; // twelve o'clock
+  return usable.map((v, index) => {
+    const share = v / total;
+    const startAngle = angle;
+    angle += share * Math.PI * 2;
+    return { index, share, startAngle, endAngle: angle };
+  });
+}
+
+/**
+ * The path for one slice, or one ring segment when `innerRadius > 0`.
+ *
+ * A slice covering the whole circle is drawn as two half arcs, because a single
+ * arc whose start and end coincide renders as nothing at all.
+ */
+export function arcPath(
+  cx: number,
+  cy: number,
+  innerRadius: number,
+  outerRadius: number,
+  startAngle: number,
+  endAngle: number,
+): string {
+  const sweep = endAngle - startAngle;
+  if (sweep <= 0) return '';
+
+  if (sweep >= Math.PI * 2 - 1e-9) {
+    const mid = startAngle + Math.PI;
+    return (
+      arcPath(cx, cy, innerRadius, outerRadius, startAngle, mid) +
+      arcPath(cx, cy, innerRadius, outerRadius, mid, startAngle + Math.PI * 2)
+    );
+  }
+
+  const at = (radius: number, a: number): [number, number] => [
+    r(cx + Math.cos(a) * radius),
+    r(cy + Math.sin(a) * radius),
+  ];
+  const large = sweep > Math.PI ? 1 : 0;
+  const [ox1, oy1] = at(outerRadius, startAngle);
+  const [ox2, oy2] = at(outerRadius, endAngle);
+
+  if (innerRadius <= 0) {
+    return `M${r(cx)},${r(cy)}L${ox1},${oy1}A${r(outerRadius)},${r(outerRadius)} 0 ${large} 1 ${ox2},${oy2}Z`;
+  }
+
+  const [ix1, iy1] = at(innerRadius, endAngle);
+  const [ix2, iy2] = at(innerRadius, startAngle);
+  return (
+    `M${ox1},${oy1}` +
+    `A${r(outerRadius)},${r(outerRadius)} 0 ${large} 1 ${ox2},${oy2}` +
+    `L${ix1},${iy1}` +
+    `A${r(innerRadius)},${r(innerRadius)} 0 ${large} 0 ${ix2},${iy2}Z`
+  );
+}
+
+/** Middle of a slice, where a label or tooltip anchor belongs. */
+export function arcCentroid(
+  cx: number,
+  cy: number,
+  innerRadius: number,
+  outerRadius: number,
+  slice: PieSlice,
+): [number, number] {
+  const a = (slice.startAngle + slice.endAngle) / 2;
+  const radius = (innerRadius + outerRadius) / 2;
+  return [cx + Math.cos(a) * radius, cy + Math.sin(a) * radius];
+}
+
+/** Which slice a pointer is over, or null outside the ring. */
+export function sliceAt(
+  slices: readonly PieSlice[],
+  cx: number,
+  cy: number,
+  innerRadius: number,
+  outerRadius: number,
+  px: number,
+  py: number,
+): number | null {
+  const dx = px - cx;
+  const dy = py - cy;
+  const distance = Math.hypot(dx, dy);
+  if (distance < innerRadius || distance > outerRadius) return null;
+
+  // Normalise into the same [-90deg, 270deg) range the layout runs in.
+  let angle = Math.atan2(dy, dx);
+  if (angle < -Math.PI / 2) angle += Math.PI * 2;
+
+  const hit = slices.find((s) => angle >= s.startAngle && angle < s.endAngle);
+  return hit ? hit.index : null;
+}

@@ -15,4 +15,5 @@ export type {
   DrawerDescriptionProps,
   DrawerCloseProps,
   DrawerHandleProps,
+  DrawerLabels,
 } from './Drawer';

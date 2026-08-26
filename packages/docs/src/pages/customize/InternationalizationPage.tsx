@@ -97,6 +97,7 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'DatePicker', key: 'selectStartDate / selectEndDate', def: 'Select start/end date' },
   { component: 'FileUpload', key: 'removeFile', def: 'Remove {filename}' },
   { component: 'FileUpload', key: 'uploadComplete', def: 'Upload complete' },
+  { component: 'FileUpload', key: 'fileInput', def: 'Choose files' },
   { component: 'Loader', key: 'loading', def: 'Loading' },
   { component: 'NumberInput', key: 'increment / decrement', def: 'Increment / Decrement' },
   { component: 'Pagination', key: 'label', def: 'Pagination' },

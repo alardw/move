@@ -172,6 +172,7 @@ const RULES: RuleDef[] = [
   { id: 'purity-2', group: 'purity', rule: 'No inline styles or custom CSS', why: 'Inline styles and custom CSS escape the token system and drift from the design language.', enforcement: { composition: { status: 'check', check: 'purity' } } },
   { id: 'purity-3', group: 'purity', rule: 'Spacing via gap/align/justify props', why: 'Layout props keep spacing on the token scale instead of magic pixel values.', enforcement: { composition: { status: 'gap' } } },
   { id: 'purity-4', group: 'purity', rule: 'Responsive via collapseBelow, not media queries', why: 'The built-in responsive props already encode the breakpoints; a media query re-invents them inconsistently.', enforcement: { composition: { status: 'check', check: 'purity' } } },
+  { id: 'purity-6', group: 'purity', rule: 'Rendering libraries only behind a component seam', why: 'A drawing library imported straight into composed code puts its DOM, theming and accessibility outside Move\u2019s reach \u2014 and it slips past every other rule, because a capitalised tag reads as a component.', enforcement: { composition: { status: 'check', check: 'purity' } } },
   { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (accessibility + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' } } },
 
   // Forms (composite / pureComposition)

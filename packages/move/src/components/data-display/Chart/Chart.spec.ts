@@ -161,6 +161,14 @@ export const spec = {
       description: 'Mark each data point on line and area series.',
     },
     {
+      name: 'innerRadius',
+      type: 'number',
+      default: '0',
+      moveSpecific: true,
+      description:
+        'Hole size for a pie, as a fraction of the radius. 0 is a full pie, around 0.6 reads as a donut. Ignored by every other series type.',
+    },
+    {
       name: 'xScale',
       type: "'category' | 'linear'",
       default: "'category'",
@@ -384,6 +392,13 @@ export const spec = {
       value: 'var(--move-font-body)',
       slot: 'root',
       description: 'Typeface for all chart text.',
+    },
+    {
+      name: '--move-chart-padding',
+      value: 'var(--move-spacing-lg)',
+      slot: 'plot',
+      description:
+        'Breathing room between the drawing and the edge of the plot. Read by the shell and passed to the renderer as a number, since a canvas renderer cannot resolve CSS.',
     },
     {
       name: '--move-chart-gap',

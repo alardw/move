@@ -731,6 +731,11 @@ export const spec = {
       default: 'Upload complete',
       description: 'Aria-label for the check icon shown on completed uploads',
     },
+    {
+      key: 'fileInput',
+      default: 'Choose files',
+      description: 'Accessible name for the hidden native file input the Trigger and Dropzone open',
+    },
   ],
 
   renderContracts: [

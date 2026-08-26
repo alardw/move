@@ -30,11 +30,14 @@ export interface FileUploadLabels {
   removeFile: string;
   /** Aria-label for the check icon shown on completed uploads. */
   uploadComplete: string;
+  /** Accessible name for the hidden native file input the Trigger and Dropzone open. */
+  fileInput: string;
 }
 
 const DEFAULT_LABELS: FileUploadLabels = {
   removeFile: 'Remove {filename}',
   uploadComplete: 'Upload complete',
+  fileInput: 'Choose files',
 };
 
 // =============================================================================
@@ -409,6 +412,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
               <input
                 type="file"
                 ref={upload.inputRef as React.RefObject<HTMLInputElement>}
+                aria-label={labels.fileInput}
                 accept={acceptList}
                 multiple={props.multiple as boolean}
                 tabIndex={-1}

@@ -65,6 +65,9 @@ const SIZE_SCALE: Record<
 
 const AREA_OPACITY = 0.18;
 
+/** Used until `--move-chart-padding` has been read off the element. */
+const DEFAULT_PADDING = 24;
+
 /**
  * Bars grow from the baseline, one after another.
  *
@@ -216,6 +219,11 @@ export interface ChartProps extends Omit<React.HTMLAttributes<HTMLElement>, 'chi
    * or time-series data needs — pass epoch milliseconds and a `formatX`.
    */
   xScale?: ChartXScale;
+  /**
+   * Hole size for a pie, as a fraction of the radius. 0 is a full pie, around
+   * 0.6 reads as a donut. Ignored by every other series type.
+   */
+  innerRadius?: number;
   /** Stack bar and area series instead of overlaying them. */
   stacked?: boolean;
   /** Width-to-height ratio for the plot. Ignored when `height` is set. */
@@ -347,6 +355,21 @@ function nearestIndex(positions: readonly number[], localX: number): number {
   return best;
 }
 
+/** Legend entries for a pie: one per row, coloured from the same ramp. */
+function sliceLegend(
+  data: readonly ChartDatum[],
+  xKey: string,
+  ramp: readonly string[],
+): ResolvedChartSeries[] {
+  return data.map((row, i) => ({
+    key: `${i}`,
+    type: 'pie' as const,
+    label: String(row[xKey] ?? ''),
+    color: ramp[i % ramp.length],
+    dash: false,
+  }));
+}
+
 /** Series key, rendered as DOM so it stays reachable behind a canvas renderer. */
 function Legend({ series }: { series: readonly ResolvedChartSeries[] }) {
   if (series.length === 0) return null;
@@ -372,6 +395,7 @@ function resolveChartTheme(
   size: ChartSize,
   palette: readonly Color[] | null | undefined,
   reducedMotion: boolean,
+  padding: number,
 ): ChartTheme {
   const background = token('--move-bg-base');
   const ramp = palette ?? CHART_SERIES_COLORS;
@@ -381,9 +405,11 @@ function resolveChartTheme(
     axis: token('--move-border-base'),
     tick: token('--move-fg-subtle'),
     label: token('--move-fg-muted'),
+    surface: token('--move-bg-base'),
     font: token('--move-font-body'),
     areaOpacity: AREA_OPACITY,
     reducedMotion,
+    padding,
     ...SIZE_SCALE[size],
   };
 }
@@ -417,6 +443,8 @@ function resolveSeries(
  */
 function HoverOverlay({
   x,
+  y,
+  crosshair,
   rect,
   row,
   xKey,
@@ -425,6 +453,8 @@ function HoverOverlay({
   formatY,
 }: {
   x: number;
+  y: number | null;
+  crosshair: boolean;
   rect: PlotRect;
   row: ChartDatum;
   xKey: string;
@@ -434,10 +464,16 @@ function HoverOverlay({
 }) {
   return (
     <>
-      <span className={styles.crosshair} style={{ left: x, top: rect.y, height: rect.height }} />
+      {crosshair && (
+        <span className={styles.crosshair} style={{ left: x, top: rect.y, height: rect.height }} />
+      )}
       <Tooltip.Root open delayDuration={0}>
         <Tooltip.Trigger asChild>
-          <span className={styles.anchor} style={{ left: x, top: rect.y }} aria-hidden="true" />
+          <span
+            className={styles.anchor}
+            style={{ left: x, top: y ?? rect.y }}
+            aria-hidden="true"
+          />
         </Tooltip.Trigger>
         <Tooltip.Content side="top" sideOffset={8}>
           <span className={styles.tipHeading}>
@@ -527,6 +563,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     dots: false,
     curve: 'linear' as ChartCurve,
     xScale: 'category' as ChartXScale,
+    innerRadius: 0,
     stacked: false,
     aspect: 2,
     height: null,
@@ -578,6 +615,24 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
       });
     }, []);
     const { theme } = useTheme();
+
+    // `--move-chart-padding` is a real CSS token so a consumer can override it,
+    // but a renderer may be drawing to a canvas and cannot resolve CSS — so the
+    // SHELL reads it here and passes a number across. Reading our own element's
+    // computed style is the only way to let a token drive geometry.
+    const [padding, setPadding] = React.useState(DEFAULT_PADDING);
+    React.useLayoutEffect(() => {
+      const el = plotRef.current;
+      if (!el) return;
+      const raw = getComputedStyle(el).getPropertyValue('--move-chart-padding').trim();
+      const value = Number.parseFloat(raw);
+      if (!Number.isFinite(value) || value < 0) return;
+      // rem against the ACTUAL root size, not an assumed 16 — a consumer may
+      // scale the root for accessibility, and the padding should scale with it.
+      const rootPx = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+      const scale = Number.isFinite(rootPx) && rootPx > 0 ? rootPx : 16;
+      setPadding(raw.endsWith('rem') ? value * scale : value);
+    }, [theme]);
     // The plot subtree mounts LATE — the renderer only runs once the viewport has
     // been measured, and the bars only exist once it has drawn. A lifecycle enter
     // is one-shot and locks on the first non-null config, so firing it on the
@@ -665,8 +720,12 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         // not apply, or the chart would render permanently blank.
         const willAnimate = props.animations !== false && !reducedMotion && !entered;
 
-        const chartTheme = resolveChartTheme(token, size, props.palette, reducedMotion);
+        const chartTheme = resolveChartTheme(token, size, props.palette, reducedMotion, padding);
         const resolved = resolveSeries(props.series, chartTheme.series, token);
+        // A pie is one series of many PARTS, so its colours and legend run per
+        // row. The renderer walks the same ramp in the same order, so the two
+        // agree without colours being passed between them.
+        const isPie = resolved.some((s) => s.type === 'pie');
 
         const { formatX, formatY } = formatters(props.formatX, props.formatY);
 
@@ -679,6 +738,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           dots: props.dots as boolean,
           curve: props.curve as ChartCurve,
           xScale: props.xScale as ChartXScale,
+          innerRadius: props.innerRadius as number,
           formatX,
           formatY,
         };
@@ -697,11 +757,18 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
           if (!canHover || !geometry) return;
           const bounds = event.currentTarget.getBoundingClientRect();
-          setHovered(nearestIndex(geometry.x, event.clientX - bounds.left));
+          const localX = event.clientX - bounds.left;
+          const localY = event.clientY - bounds.top;
+          // A renderer that supplied hitTest owns the question entirely —
+          // snapping to the nearest x is meaningless for anything radial.
+          setHovered(
+            geometry.hitTest ? geometry.hitTest(localX, localY) : nearestIndex(geometry.x, localX),
+          );
         };
 
         const hoveredRow = hovered !== null ? props.data[hovered] : null;
         const anchorLeft = geometry && hovered !== null ? geometry.x[hovered] : 0;
+        const anchorTop = geometry && hovered !== null && geometry.y ? geometry.y[hovered] : null;
         const summary = props.summary ?? deriveSummary(props.data, resolved, formatY);
         const showTable = props.dataTable !== false;
 
@@ -724,17 +791,13 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
               {props.caption}
             </figcaption>
 
-            <div
-              ref={measuredRef}
-              className={styles.viewport}
-              style={sizing}
-              onPointerMove={onPointerMove}
-              onPointerLeave={() => setHovered(null)}
-            >
+            <div ref={measuredRef} className={styles.viewport} style={sizing}>
               <div
                 ref={plotRef}
                 className={styles.plot}
                 data-enter={willAnimate ? 'pending' : undefined}
+                onPointerMove={onPointerMove}
+                onPointerLeave={() => setHovered(null)}
                 role="img"
                 aria-label={summary}
                 aria-describedby={showTable ? tableId : undefined}
@@ -748,22 +811,31 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
                     onPlotGeometry={handleGeometry}
                   />
                 ) : null}
-              </div>
 
-              {canHover && hoveredRow && geometry && (
-                <HoverOverlay
-                  x={anchorLeft}
-                  rect={geometry.rect}
-                  row={hoveredRow}
-                  xKey={props.x}
-                  series={resolved}
-                  formatX={formatX}
-                  formatY={formatY}
-                />
-              )}
+                {canHover && hoveredRow && geometry && (
+                  <HoverOverlay
+                    x={anchorLeft}
+                    y={anchorTop}
+                    // A vertical line through a pie says nothing; a renderer that
+                    // owns hit-testing is not laid out along an axis.
+                    crosshair={!geometry.hitTest}
+                    rect={geometry.rect}
+                    row={hoveredRow}
+                    xKey={props.x}
+                    series={resolved}
+                    formatX={formatX}
+                    formatY={formatY}
+                  />
+                )}
+              </div>
             </div>
 
-            {props.legend !== false && <Legend series={resolved} />}
+            {props.legend !== false &&
+              (isPie ? (
+                <Legend series={sliceLegend(props.data, props.x, chartTheme.series)} />
+              ) : (
+                <Legend series={resolved} />
+              ))}
 
             {showTable && (
               <DataTable
