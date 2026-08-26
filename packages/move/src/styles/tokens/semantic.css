@@ -50,10 +50,17 @@
   --move-primary-subtle: var(--move-indigo-950);
   --move-primary-fg: var(--move-white);
 
-  /* Link — accent hue as readable on-surface text (not the primary fill).
+  /* Accent TEXT — the accent hue as readable on-surface text, as distinct from
+     the primary FILL. Every accent-coloured string takes this: a "today" marker,
+     a required asterisk, an eyebrow, a step number. Reaching for a palette token
+     instead is what made an amber-themed app render blue eyebrows.
      Defaults are dark-theme values; light theme overrides. */
-  --move-link: var(--move-indigo-300);
-  --move-link-hover: var(--move-indigo-200);
+  --move-accent-text: var(--move-indigo-300);
+  --move-accent-text-hover: var(--move-indigo-200);
+
+  /* Link — the same value under its most common name. */
+  --move-link: var(--move-accent-text);
+  --move-link-hover: var(--move-accent-text-hover);
 
   /* ============================================
    * Color - Secondary

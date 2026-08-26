@@ -52,6 +52,7 @@ const CONTRACT: Rule[] = [
     label: 'secondary / placeholder',
   },
   { fg: '--move-fg-subtle', on: SURFACES.slice(0, 2), floor: 4.5, label: 'subtle text' },
+  { fg: '--move-accent-text', on: SURFACES, floor: 4.5, label: 'accent text' },
   { fg: '--move-link', on: SURFACES, floor: 4.5, label: 'accent text (link)' },
   {
     fg: '--move-focus-ring-color',

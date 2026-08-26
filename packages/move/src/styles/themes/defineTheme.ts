@@ -330,9 +330,13 @@ function deriveAccentFill(d: Derivation): void {
 function deriveAccentText(d: Derivation): void {
   const lC = d.aC * 0.75;
   const r = clampToContrast(d.dark ? 0.78 : 0.44, lC, d.aH, groundsOf(d), 4.5, d.dark);
+  const hover = oklchHex(r.L + (d.dark ? 0.06 : -0.06), lC, d.aH);
+  d.out['--move-accent-text'] = r.hex;
+  d.out['--move-accent-text-hover'] = hover;
+  // Same value under its most common name.
   d.out['--move-link'] = r.hex;
-  d.out['--move-link-hover'] = oklchHex(r.L + (d.dark ? 0.06 : -0.06), lC, d.aH);
-  if (r.clamped) d.notices.push('--move-link nudged to hold AA on surfaces');
+  d.out['--move-link-hover'] = hover;
+  if (r.clamped) d.notices.push('--move-accent-text nudged to hold AA on surfaces');
 }
 
 /**

@@ -42,9 +42,19 @@ export interface ThemeTokens extends PaletteRoleTokens {
   '--move-primary-subtle': string;
   '--move-primary-fg': string;
 
-  // Link — accent hue tuned as readable on-surface text (not the solid
-  // --move-primary fill). Lighter than --move-primary in dark mode so it
-  // clears WCAG AA against the page background.
+  // Accent TEXT — the accent hue tuned as readable on-surface text, as distinct
+  // from the solid --move-primary FILL. Lighter than --move-primary in dark mode
+  // so it clears WCAG AA against the page background.
+  //
+  // Any accent-coloured text takes this: a "today" marker, a required asterisk,
+  // an eyebrow, a step number. Reaching for a palette token instead (
+  // --move-indigo-text) is what made an amber-themed app render blue eyebrows.
+  '--move-accent-text': string;
+  '--move-accent-text-hover': string;
+
+  // Link — the same value under its most common name. Kept so `--move-link`
+  // stays meaningful at a link call site, and so nothing that already uses it
+  // breaks.
   '--move-link': string;
   '--move-link-hover': string;
 
