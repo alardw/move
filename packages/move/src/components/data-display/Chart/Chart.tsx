@@ -636,15 +636,20 @@ function resolveAlternative(input: {
   data: readonly ChartDatum[];
   x: string;
   series: readonly ResolvedChartSeries[];
+  plotVisible: boolean;
   formatX?: (value: unknown) => string;
   formatY?: (value: number) => string;
 }): { summary: string; showTable: boolean } {
-  const { summary, dataTable, data, x, series, formatX, formatY } = input;
+  const { summary, dataTable, data, x, series, plotVisible, formatX, formatY } = input;
   // The number is the point at which the table stops being the alternative and
   // the summary takes over — not a budget the table is thinned to fit.
   const limit = typeof dataTable === 'number' ? dataTable : DATA_TABLE_MAX_ROWS;
   return {
-    summary: summary ?? deriveSummary(data, x, series, formatX, formatY),
+    // The summary NAMES the plot, so with no plot on the page there is nothing
+    // for it to name. Deriving it walks every row, which would spend the one
+    // cost that scales with the data at the exact moment the chart has decided
+    // the data is too large to touch.
+    summary: plotVisible ? (summary ?? deriveSummary(data, x, series, formatX, formatY)) : '',
     showTable: dataTable !== false && data.length <= limit,
   };
 }
@@ -1279,6 +1284,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
           data: props.data,
           x: props.x,
           series: resolved,
+          plotVisible: status === null,
           formatX,
           formatY,
         });
