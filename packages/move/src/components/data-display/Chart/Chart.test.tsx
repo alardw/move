@@ -703,3 +703,32 @@ describe('Chart — axes', () => {
     void width;
   });
 });
+
+describe('Chart — emphasis is state, not animation', () => {
+  const rows = [
+    { d: 'a', v: 1 },
+    { d: 'b', v: 2 },
+    { d: 'c', v: 3 },
+  ];
+  const bar = [{ key: 'v', type: 'bar' as const, label: 'V' }];
+
+  it('has no emphasis animation to get stuck in', () => {
+    // The resting state must not depend on an animation completing: the config
+    // identity changes on every hover, so useAnimations' cleanup cancels
+    // whatever is in flight, which used to strand marks mid-dim.
+    const { container } = render(<Chart caption="R" data={rows} x="d" series={bar} />);
+    const marks = [...container.querySelectorAll('[data-mark]')];
+    expect(marks.every((m) => (m as HTMLElement).style.opacity === '')).toBe(true);
+  });
+
+  it('emphasis survives animations={false}, because it is not animation', () => {
+    const { container } = render(
+      <Chart caption="R" data={rows} x="d" series={bar} animations={false} />,
+    );
+    const plot = container.querySelector('[role="img"]')!;
+    fireEvent.pointerMove(plot, { clientX: 20, clientY: 150 });
+    expect(container.querySelectorAll('[data-mark][data-active]')).toHaveLength(1);
+    fireEvent.pointerLeave(plot);
+    expect(container.querySelectorAll('[data-mark][data-active]')).toHaveLength(3);
+  });
+});

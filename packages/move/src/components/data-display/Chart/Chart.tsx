@@ -113,16 +113,6 @@ const SWEEP_MS = 1000;
  */
 const ENTER_TIMEOUT_MS = 4000;
 
-/**
- * How far a mark recedes when another is hovered.
- *
- * Dimming the rest rather than brightening the target keeps every colour
- * truthful — a highlighted slice still reads as its own hue — and it works on
- * any background, where a glow would not.
- */
-const DIMMED = 0.45;
-const EMPHASIS_MS = 160;
-
 /** Total time the dot sequence should span, however many dots there are. */
 const DOT_SEQUENCE_MS = 700;
 
@@ -133,11 +123,7 @@ const DOT_SEQUENCE_MS = 700;
  * (which then fires them almost together) and a 48-dot one (which then runs for
  * seconds). Spreading a fixed total across the real count fixes both.
  */
-function buildChartAnimations(
-  dotCount: number,
-  onComplete: () => void,
-  activeIndex: number | null,
-): AnimationTrigger[] {
+function buildChartAnimations(dotCount: number, onComplete: () => void): AnimationTrigger[] {
   // No lower bound. A floor of a few ms looks harmless and silently breaks the
   // budget it exists inside: at 10,000 points a 14ms floor turns 700ms into 140
   // SECONDS. Above a few hundred marks the stagger stops being perceptible
@@ -145,37 +131,6 @@ function buildChartAnimations(
   // keeps the total fixed at every size.
   const dotDelay = dotCount > 1 ? Math.min(90, DOT_SEQUENCE_MS / (dotCount - 1)) : 0;
   return [
-    {
-      /**
-       * Hover emphasis, through the SAME system as everything else.
-       *
-       * Not a CSS transition: a transition is a fixed duration on a bezier and
-       * cannot compose with a spring, so the moment an emphasised mark should
-       * also pop, the two become separate clocks on one element. Here `scale`
-       * could join `opacity` tomorrow and the engine would own both.
-       *
-       * The selectors never change, because a renderer marks a mark active when
-       * NOTHING is hovered as well as when it is the hovered one — so "pointer
-       * left" and "this one" are one instruction. Otherwise the dim step would
-       * match every mark the moment the pointer left the chart.
-       */
-      trigger: 'Plot.emphasis',
-      deps: [activeIndex],
-      sequence: [
-        [
-          {
-            target: 'Plot',
-            children: '[data-mark][data-active]',
-            animation: { opacity: 1, ease: quick, duration: EMPHASIS_MS },
-          },
-          {
-            target: 'Plot',
-            children: '[data-mark]:not([data-active])',
-            animation: { opacity: DIMMED, ease: quick, duration: EMPHASIS_MS },
-          },
-        ],
-      ],
-    },
     {
       trigger: 'Plot.enter',
       onComplete,
@@ -1029,11 +984,11 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
       () =>
         plotReady
           ? resolveAnimationsConfig(
-              buildChartAnimations(dotCount, () => setEntered(true), hovered),
+              buildChartAnimations(dotCount, () => setEntered(true)),
               props.animations,
             )
           : null,
-      [plotReady, dotCount, hovered, props.animations],
+      [plotReady, dotCount, props.animations],
     );
     // Three names, ONE element. `useAnimations` keys its cancel-ref as
     // `${target}-${fn}`, and `staggerAnimate` pauses whatever that ref holds

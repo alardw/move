@@ -142,20 +142,19 @@
   transform-origin: left;
 }
 
-/* Hover emphasis runs through useAnimations, like every other motion here —
-   see DEFAULT_CHART_ANIMATIONS. It is NOT a CSS transition: a transition is a
-   fixed duration on a bezier and cannot compose with a spring, so the moment an
-   emphasised mark should also pop, the two would be separate clocks fighting
-   over the same element.
+/* Hover emphasis is STATE, so CSS owns it — declaratively, with no transition.
+   Rule styles-12 allows exactly this: a flat state change, no motion.
 
-   This block is the REDUCED-MOTION FLOOR only. `staggerAnimate` bails on
-   prefers-reduced-motion, which would otherwise leave those readers with no
-   emphasis at all — and emphasis is state, not motion. So the dim is applied
-   flatly, with no transition, exactly when the animation declines to run. */
-@media (prefers-reduced-motion: reduce) {
-  .plot [data-mark]:not([data-active]) {
-    opacity: 0.45;
-  }
+   It deliberately does NOT go through useAnimations. An animation was the only
+   thing setting opacity, which made the resting state depend on one completing:
+   any interruption — and the config identity changes on every hover, which
+   makes the animation effect's cleanup cancel whatever is in flight — left
+   marks stranded mid-dim with no way back. A declarative rule cannot get stuck.
+
+   Dimming the rest rather than brightening the target keeps every colour
+   truthful, and works on any background where a glow would not. */
+.plot [data-mark]:not([data-active]) {
+  opacity: 0.45;
 }
 
 /* Dots pop from their own centre. Without `fill-box` the origin is the SVG
