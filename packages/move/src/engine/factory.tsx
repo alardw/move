@@ -53,12 +53,35 @@ export function withMoveComponent<
 
   const Component = React.forwardRef<TRef, TProps & { sp?: SlotPropsMap<TSlots> }>(
     (incomingProps, forwardedRef) => {
-      // 1. Merge defaults into props (strip undefined so defaults aren't overridden)
+      // 1. Merge defaults into props.
+      //
+      // `undefined` means two different things depending on whether the prop has
+      // a default, and collapsing them broke ~44 overlays:
+      //
+      //   HAS a default    → `variant={undefined}` means "I'm not choosing",
+      //                      so the default must win. This is React's own
+      //                      convention and every call site relies on it.
+      //   has NO default   → `aria-describedby={undefined}` is a VALUE, and the
+      //                      only way to say "no description". Radix reserves exactly
+      //                      this to opt out of its generated id: it sets
+      //                      `aria-describedby={descriptionId}` and then spreads
+      //                      the consumer's props over it. Dropping the key means
+      //                      the override never lands, the generated id stays,
+      //                      and Radix warns about a description that cannot be
+      //                      suppressed.
+      //
+      // So: skip an explicit `undefined` only when a default would replace it.
+      //
+      // `hasOwnProperty.call` rather than `Object.hasOwn`: the latter is ES2022
+      // and this package targets ES2020, and raising the floor for every
+      // consumer over one call site is not a trade worth making.
+      const incoming = incomingProps as Record<string, unknown>;
+      const hasDefault = (key: string) =>
+        !!defaults && Object.prototype.hasOwnProperty.call(defaults, key);
       const defined: Record<string, unknown> = {};
-      for (const key of Object.keys(incomingProps as Record<string, unknown>)) {
-        if ((incomingProps as Record<string, unknown>)[key] !== undefined) {
-          defined[key] = (incomingProps as Record<string, unknown>)[key];
-        }
+      for (const key of Object.keys(incoming)) {
+        if (incoming[key] === undefined && hasDefault(key)) continue;
+        defined[key] = incoming[key];
       }
       const props = { ...defaults, ...defined } as TProps & {
         sp?: SlotPropsMap<TSlots>;

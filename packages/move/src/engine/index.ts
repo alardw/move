@@ -12,7 +12,7 @@ export { mergeSlotProps, createCx, createSp } from './slotUtils';
 export { useMergedRef } from './useMergedRef';
 
 // Child-tree inspection
-export { containsElementOfType } from './childUtils';
+export { containsElementOfType, elementTypeName } from './childUtils';
 
 // Headless utilities
 export { useControlledState } from './useControlledState';

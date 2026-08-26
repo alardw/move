@@ -1035,3 +1035,9 @@ export type { Z, ZKind, ZLayers } from './shared/z-layers';
 // above). New here: AsyncResource for source-agnostic data components.
 export { asyncResource } from './adapters';
 export type { AsyncResource, AsyncStateInput } from './adapters';
+
+// Spec types — the contracts a consumer's own `.spec.ts` files are written
+// against. Also available as `move/spec`. Without these a consumer spec can only
+// be `as const`, which checks nothing: a spec missing required fields passes
+// every gate because there is no shape for it to fail against.
+export * from './spec';

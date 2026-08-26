@@ -50,7 +50,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(dirname, 'src/index.ts'),
+      // `spec` is its own entry so `move/spec` always emits. It is almost all
+      // types, so rollup drops it when it is only reachable as a re-export.
+      entry: {
+        index: resolve(dirname, 'src/index.ts'),
+        spec: resolve(dirname, 'src/spec.ts')
+      },
       formats: ['es']
     },
     rollupOptions: {
