@@ -349,6 +349,27 @@ hatch found by reading `dist`.
       branch unmounts, so an open menu inside `Expanded` closes when the sidebar
       collapses; that is right, and belongs in the docs rather than in a
       surprise.
+      → **The organising wrapper carries the semantics that are missing.**
+      Today the sidebar has NONE: `aside > div > div > button` throughout, no
+      `<nav>`, no list, zero occurrences in the source. `Sidebar.Group`'s own
+      description reads "Section grouping container for nav items" while
+      rendering a `div`. Non-visually that is a complementary landmark followed
+      by an undifferentiated pile of buttons — nothing to jump to, no "list, 5
+      items" to orient by, no section boundaries. A silent failure that passes
+      every gate, and the same complaint as the visual one a layer down. So
+      `Sidebar.Nav` (a `<nav>` wrapping a `<ul>`, named by `aria-label`) holds
+      `NavItem`s (each an `<li><a>`), and it is required rather than optional:
+      one flat list of things that do not belong together is exactly what it
+      exists to prevent. It separates the two kinds structurally as a
+      side-effect — a `Button` cannot be an `<li>` in a nav list, so non-nav
+      controls sit outside it without anyone having to be told.
+      → **`Sidebar.Expanded` marks a PART, not only a whole.** It renders its
+      children when expanded and nothing when collapsed, at whatever granularity
+      the call site needs — around a whole control, or around just the text
+      beside an icon that stays:
+      `<Stack direction="row"><Icon name="moon" /><Sidebar.Expanded>Theme</Sidebar.Expanded></Stack>`.
+      That keeps the collapse explicit without duplicating the icon, and leaves
+      `NavItem` as the only part that handles its own label.
       → `Sidebar.Item` is deprecated rather than switched: it renders `Action`'s
       element with `NavItem`'s behaviour, so neither new name is a drop-in and
       changing it underneath a consumer would be worse than asking them to pick.
