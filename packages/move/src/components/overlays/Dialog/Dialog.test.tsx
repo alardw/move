@@ -357,6 +357,40 @@ describe('Dialog', () => {
       });
     });
 
+    /**
+     * A bare Close is the one button a consumer never writes, so the component
+     * names it — but only as a DEFAULT. Given children, the consumer owns the
+     * content and naming over it would breach WCAG 2.5.3, so no default
+     * applies; given none, the glyph needs a name and gets one.
+     */
+    const renderBareClose = (closeProps: Record<string, unknown> = {}) =>
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Title>T</Dialog.Title>
+              <Dialog.Description>D</Dialog.Description>
+              <Dialog.Close {...closeProps} />
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+    it('names a bare Close by default when the caller says nothing', async () => {
+      renderBareClose();
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument();
+      });
+    });
+
+    it('lets a caller\u2019s aria-label win over that default', async () => {
+      renderBareClose({ 'aria-label': 'Close the filter panel' });
+      await waitFor(() => {
+        expect(screen.getByRole('button', { name: 'Close the filter panel' })).toBeInTheDocument();
+      });
+      expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument();
+    });
+
     it('Description provides accessible description via aria-describedby', async () => {
       renderDialog({ open: true });
 
