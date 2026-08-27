@@ -25,7 +25,7 @@ import {
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useFieldControl } from '../FormField/FormField';
 import { useAutocomplete } from './useAutocomplete';
-import type { UseAutocompleteReturn } from './useAutocomplete';
+import type { RegisteredItem, UseAutocompleteReturn } from './useAutocomplete';
 import type { AsyncResource } from '../../../adapters';
 import styles from './Autocomplete.module.css';
 
@@ -267,6 +267,36 @@ export interface AutocompleteTriggerProps extends React.HTMLAttributes<HTMLEleme
 
 const ACTION_NAMES = new Set(['AutocompleteIcon', 'AutocompleteClearTrigger']);
 
+/**
+ * The next index in `step` direction that is not disabled, wrapping past either
+ * end. Returns `from` unchanged when nothing else can take the highlight, so a
+ * list of disabled options leaves it where it is instead of moving onto one
+ * that cannot be chosen.
+ */
+function nextEnabledIndex(items: readonly RegisteredItem[], from: number, step: 1 | -1): number {
+  const count = items.length;
+  if (count === 0) return from;
+  let at = from;
+  for (let i = 0; i < count; i++) {
+    at = (at + step + count) % count;
+    if (!items[at]?.disabled) return at;
+  }
+  return from;
+}
+
+/**
+ * The highlighted value when there is one and it can actually be chosen, else
+ * null. Enter and Tab both commit the highlight and must agree on what counts.
+ */
+function selectableHighlight(
+  ac: { isOpen: boolean; highlightedValue: string | null; highlightedIndex: number },
+  items: readonly RegisteredItem[],
+): string | null {
+  if (!ac.isOpen || !ac.highlightedValue) return null;
+  const item = items[ac.highlightedIndex];
+  return item && !item.disabled ? ac.highlightedValue : null;
+}
+
 const AutocompleteTrigger = withMoveComponent<
   'trigger' | 'triggerContent' | 'triggerActions',
   AutocompleteTriggerProps,
@@ -401,87 +431,59 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       const visibleItems = ac.getVisibleItems();
       const visibleCount = visibleItems.length;
+      const move = (step: 1 | -1, openAt: number) => {
+        e.preventDefault();
+        if (ac.isOpen) {
+          ac.setHighlightedIndex(nextEnabledIndex(visibleItems, ac.highlightedIndex, step));
+          return;
+        }
+        ac.open();
+        ac.setHighlightedIndex(openAt);
+      };
+      const chooseHighlighted = () => {
+        const value = selectableHighlight(ac, visibleItems);
+        if (value !== null) ac.onSelect(value);
+      };
 
       switch (e.key) {
-        case 'ArrowDown': {
-          e.preventDefault();
-          if (!ac.isOpen) {
-            ac.open();
-            ac.setHighlightedIndex(0);
-          } else {
-            let next = ac.highlightedIndex + 1;
-            while (next < visibleCount && visibleItems[next]?.disabled) next++;
-            if (next >= visibleCount) next = 0;
-            while (next < visibleCount && visibleItems[next]?.disabled) next++;
-            ac.setHighlightedIndex(next < visibleCount ? next : ac.highlightedIndex);
-          }
+        case 'ArrowDown':
+          move(1, 0);
           break;
-        }
-        case 'ArrowUp': {
-          e.preventDefault();
-          if (!ac.isOpen) {
-            ac.open();
-            ac.setHighlightedIndex(visibleCount - 1);
-          } else {
-            let prev = ac.highlightedIndex - 1;
-            while (prev >= 0 && visibleItems[prev]?.disabled) prev--;
-            if (prev < 0) prev = visibleCount - 1;
-            while (prev >= 0 && visibleItems[prev]?.disabled) prev--;
-            ac.setHighlightedIndex(prev >= 0 ? prev : ac.highlightedIndex);
-          }
+        case 'ArrowUp':
+          move(-1, visibleCount - 1);
           break;
-        }
-        case 'Enter': {
+        case 'Enter':
           e.preventDefault();
-          if (ac.isOpen && ac.highlightedValue) {
-            const item = visibleItems[ac.highlightedIndex];
-            if (item && !item.disabled) {
-              ac.onSelect(ac.highlightedValue);
-            }
-          }
+          chooseHighlighted();
           break;
-        }
-        case 'Escape': {
+        case 'Escape':
           e.preventDefault();
+          if (ac.isOpen) ac.close();
+          else if (ac.inputValue) ac.onInputValueChange('');
+          break;
+        case 'Tab':
           if (ac.isOpen) {
-            ac.close();
-          } else if (ac.inputValue) {
-            ac.onInputValueChange('');
-          }
-          break;
-        }
-        case 'Tab': {
-          if (ac.isOpen) {
-            if (ac.highlightedValue) {
-              const item = visibleItems[ac.highlightedIndex];
-              if (item && !item.disabled) {
-                ac.onSelect(ac.highlightedValue);
-              }
-            }
+            chooseHighlighted();
             ac.close();
           }
           break;
-        }
-        case 'Backspace': {
+        case 'Backspace':
           if (ac.multiple && ac.inputValue === '' && ac.selectedValues.length > 0) {
             ac.onDeselect(ac.selectedValues[ac.selectedValues.length - 1]);
           }
           break;
-        }
-        case 'Home': {
+        case 'Home':
           if (ac.isOpen) {
             e.preventDefault();
             ac.setHighlightedIndex(0);
           }
           break;
-        }
-        case 'End': {
+        case 'End':
           if (ac.isOpen) {
             e.preventDefault();
             ac.setHighlightedIndex(visibleCount - 1);
           }
           break;
-        }
       }
     };
 

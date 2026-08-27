@@ -55,6 +55,11 @@ export function useTruncate<T extends Element = HTMLElement>(
   }, [enabled]);
 
   // Content changes may alter overflow without a resize; re-read each render.
+  // No dependency array on purpose: the read has to happen after EVERY render,
+  // because content can change truncation without changing the element's size, and
+  // a ResizeObserver only reports the latter. The state setter is a no-op when the
+  // value is unchanged, so this cannot loop.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useLayoutEffect(() => {
     const el = ref.current;
     if (el && enabled) setIsTruncated(measureTruncated(el));
