@@ -132,7 +132,7 @@ export const spec = {
     },
     {
       name: '--move-alert-close-size',
-      value: 'var(--move-space-5)',
+      value: 'var(--move-control-target-min)',
       description: 'Close button size',
     },
     {

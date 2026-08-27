@@ -189,8 +189,8 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: var(--move-control-target-min);
+  height: var(--move-control-target-min);
   margin-top: 1px;
   margin-right: -4px;
   padding: 0;

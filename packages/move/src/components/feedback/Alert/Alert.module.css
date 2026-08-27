@@ -9,7 +9,7 @@
   --move-alert-radius: var(--move-rounded-lg);
   --move-alert-padding-x: var(--move-spacing-md);
   --move-alert-padding-y: var(--move-spacing-sm);
-  --move-alert-close-size: var(--move-space-5);
+  --move-alert-close-size: var(--move-control-target-min);
   --move-alert-close-radius: var(--move-rounded-sm);
   --move-alert-close-fg: var(--move-fg-muted);
   --move-alert-close-fg-hover: var(--move-fg-base);

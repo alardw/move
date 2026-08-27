@@ -182,7 +182,10 @@
   --move-autocomplete-tag-fg: var(--move-fg-base);
   --move-autocomplete-tag-border: var(--move-border-interactive);
   --move-autocomplete-tag-radius: var(--move-rounded-sm);
-  --move-autocomplete-tag-height: 2rem;
+  /* The tag stands exactly as tall as the remove button inside it, so the
+     button fills the end of the tag and their edges coincide rather than the
+     button floating in a taller box with a gap above and below. */
+  --move-autocomplete-tag-height: var(--move-control-target-min);
   --move-autocomplete-tag-max-width: 16rem;
 
   display: inline-flex;
