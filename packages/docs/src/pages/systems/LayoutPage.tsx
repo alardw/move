@@ -10,24 +10,45 @@ import {
   Icon,
   Table,
   Alert,
-  Splitter,
-  ScrollArea,
-  List,
 } from "move";
-import { CodeBlock, Section, TocRail, type TocItem } from "../../components";
+import { Preview, Section, TocRail, type TocItem } from "../../components";
+import ScrollChain from "../../content/systems/layout/samples/scroll-chain";
+import scrollChainCode from "../../content/systems/layout/samples/scroll-chain?raw";
+import FluidGrid from "../../content/systems/layout/samples/fluid-grid";
+import fluidGridCode from "../../content/systems/layout/samples/fluid-grid?raw";
 
 /**
- * Layout. The constraint chain: how a definite height travels from the app
- * boundary down to a scroll region, which prop plays which role, and why a
- * missing link fails silently.
+ * Layout. Where a box's size comes from: how width is decided by the space a
+ * container offers, how height is passed down from the app shell to a scroll
+ * region, and which prop plays which role along the way.
  */
 
 const TOC: TocItem[] = [
   { href: "#overview", label: "Overview" },
-  { href: "#roles", label: "The three roles" },
+  { href: "#width", label: "Width" },
+  { href: "#roles", label: "Height, in three roles" },
   { href: "#choosing", label: "Choosing a fill value" },
-  { href: "#nested", label: "Deeply nested example" },
+  { href: "#shell", label: "A full-height shell" },
   { href: "#pitfalls", label: "Pitfalls" },
+];
+
+const WIDTH_KINDS = [
+  {
+    says: "How it takes part",
+    props: "Stack flex, Grid.Cell span / offset / order",
+    resolved: "The container, from its own tracks and the other children.",
+  },
+  {
+    says: "How far it stretches",
+    props: "Text readableWidth, Splitter.Panel minSize",
+    resolved: "A cap. It holds the box back, and never grows it.",
+  },
+  {
+    says: "What it would like",
+    props: "Grid minChildWidth, Splitter.Panel defaultSize",
+    resolved:
+      "The container, which fits as many as it can and shares out the rest.",
+  },
 ];
 
 const ROLES = [
@@ -47,89 +68,6 @@ const ROLES = [
     does: "Reads the height it was handed and turns it into a scrollport.",
   },
 ];
-
-const NESTED_SOURCE = `<MoveRoot fullHeight>
-  <Stack fill="remaining" gap="none">          {/* conduit */}
-    <Splitter.Root fill="remaining">          {/* conduit */}
-      <Splitter.Panel defaultSize="35%">
-        <Stack fill="parent" gap="none">       {/* Panel is a block → "parent" */}
-          <ScrollArea.Root fill="parent">
-            <ScrollArea.Header>Files</ScrollArea.Header>
-            <ScrollArea.Content>{/* long list */}</ScrollArea.Content>
-          </ScrollArea.Root>
-        </Stack>
-      </Splitter.Panel>
-      <Splitter.Panel>
-        <Stack fill="parent" gap="none">
-          <ScrollArea.Root fill="parent">
-            <ScrollArea.Header>Detail</ScrollArea.Header>
-            <ScrollArea.Content>{/* long body */}</ScrollArea.Content>
-            <ScrollArea.Footer>42 items</ScrollArea.Footer>
-          </ScrollArea.Root>
-        </Stack>
-      </Splitter.Panel>
-    </Splitter.Root>
-  </Stack>
-</MoveRoot>`;
-
-const rows = (n: number, label: string) =>
-  Array.from({ length: n }, (_, i) => (
-    <List.Item key={i}>
-      <List.Content>
-        <List.Title>{`${label} ${i + 1}`}</List.Title>
-        <List.Description>Scrolls inside its own region</List.Description>
-      </List.Content>
-    </List.Item>
-  ));
-
-/** The live demo: five levels deep, two independent scroll regions, no escape hatches. */
-function NestedDemo() {
-  return (
-    <Stack
-      clip
-      gap="none"
-      style={{ height: 360, border: "1px solid var(--move-border-base)", borderRadius: "var(--move-rounded-lg)" }}
-    >
-      <Stack fill="remaining" gap="none">
-        <Splitter.Root fill="remaining">
-          <Splitter.Panel defaultSize="38%">
-            <Stack fill="parent" gap="none">
-              <ScrollArea.Root fill="parent">
-                <ScrollArea.Header padded>
-                  <Text weight="medium" size="sm">
-                    Files
-                  </Text>
-                </ScrollArea.Header>
-                <ScrollArea.Content padded>
-                  <List>{rows(24, "File")}</List>
-                </ScrollArea.Content>
-              </ScrollArea.Root>
-            </Stack>
-          </Splitter.Panel>
-          <Splitter.Panel>
-            <Stack fill="parent" gap="none">
-              <ScrollArea.Root fill="parent">
-                <ScrollArea.Header padded>
-                  <Text weight="medium" size="sm">
-                    Detail
-                  </Text>
-                </ScrollArea.Header>
-                <ScrollArea.Content padded>
-                  <List>{rows(30, "Row")}</List>
-                </ScrollArea.Content>
-                <ScrollArea.Footer padded>
-                  <Text size="xs" color="muted">
-                    30 items — this footer never scrolls away
-                  </Text>
-                </ScrollArea.Footer>
-              </ScrollArea.Root>
-            </Stack>
-          </Splitter.Panel>
-        </Splitter.Root>
-      </Stack>
-    </Stack>
-  );
-}
 
 export function LayoutPage() {
   return (
@@ -154,15 +92,15 @@ export function LayoutPage() {
         <Stack gap="sm">
           <Heading level={1}>Layout</Heading>
           <Text color="muted" size="lg">
-            A scroll region needs a definite height, and height travels in one
-            direction: down. Each level converts “my container has a definite
-            height” into “so do I” — and one missing link leaves everything below
-            it sized to its content instead.
+            Sizing in Move works from the outside in. Each container decides how
+            much room its children get, and each child fits the space it is
+            handed. That is what lets a panel fill the screen and scroll on its
+            own when its content runs long.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft">
               <Icon name="layers" />
-              Three roles
+              Two axes
             </Badge>
             <Badge variant="soft">
               <Icon name="git-branch" />
@@ -172,8 +110,69 @@ export function LayoutPage() {
         </Stack>
 
         <Section
+          id="width"
+          title="Width"
+          lede="A container decides how much room its children get. What a child says is how it takes part, and how far it stretches."
+        >
+          <Table>
+            <Table.Header>
+              <Table.Row>
+                <Table.Head>What a child says</Table.Head>
+                <Table.Head>Props</Table.Head>
+                <Table.Head>Who resolves it</Table.Head>
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {WIDTH_KINDS.map((k) => (
+                <Table.Row key={k.says}>
+                  <Table.Cell>
+                    <Text weight="medium">{k.says}</Text>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Code>{k.props}</Code>
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Text size="sm">{k.resolved}</Text>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+
+          <Text size="sm" color="muted">
+            All three keep the last word with the container, which is what lets
+            one tree serve a phone and a wide monitor. A preference travels as a
+            floor the container may raise — <Code>minChildWidth</Code> caps
+            itself at the room available, so a child that asks for more than it
+            can have wraps onto its own row.
+          </Text>
+
+          <Preview title="A grid that reflows" code={fluidGridCode}>
+            <FluidGrid />
+          </Preview>
+
+          <Stack gap="sm">
+            <Text weight="medium">When a length is the right answer</Text>
+            <Text size="sm" color="muted">
+              Some sizes are measurements rather than choices, and those props take a{" "}
+              <Code>Dimension</Code> — a number in pixels, or a CSS length. A{" "}
+              <RouterLink to="/components/splitter">Splitter</RouterLink> panel starts
+              at a size the reader then drags wherever they like. An{" "}
+              <RouterLink to="/components/image">Image</RouterLink> or{" "}
+              <RouterLink to="/components/video-player">VideoPlayer</RouterLink> carries
+              the dimensions of the media itself. A{" "}
+              <RouterLink to="/components/skeleton">Skeleton</RouterLink> takes the
+              shape of the content it stands in for. In each of those the number is the
+              point. Everywhere else a size comes from a scale, and{" "}
+              <RouterLink to="/systems/forms">form controls</RouterLink> have one of
+              their own.
+            </Text>
+          </Stack>
+        </Section>
+
+        <Section
           id="roles"
-          title="The three roles"
+          title="Height, in three roles"
           lede="Every full-height layout is these three, in order. Naming them is most of the work — the CSS is four declarations."
         >
           <Table>
@@ -268,19 +267,20 @@ export function LayoutPage() {
         </Section>
 
         <Section
-          id="nested"
-          title="Deeply nested example"
-          lede="Five levels, two independent scroll regions, a header and a footer that stay put — and no inline styles or escape hatches in the tree."
+          id="shell"
+          title="A full-height shell"
+          lede="Five levels, two panes that scroll on their own, and a header and footer that stay put."
         >
-          <NestedDemo />
+          <Preview title="Two panes, one chain" code={scrollChainCode}>
+            <ScrollChain />
+          </Preview>
           <Text size="sm" color="muted">
-            Drag the divider. Each pane scrolls on its own, the frame never
-            grows, and the page behind it never scrolls. Note the value switches
+            Drag the divider. Each pane scrolls on its own, the frame keeps its
+            size, and the page behind it stays where it is. The value switches
             from <Code>remaining</Code> to <Code>parent</Code> exactly where the
             parent stops being a flex container — inside{" "}
             <Code>Splitter.Panel</Code>.
           </Text>
-          <CodeBlock code={NESTED_SOURCE} language="tsx" />
         </Section>
 
         <Section

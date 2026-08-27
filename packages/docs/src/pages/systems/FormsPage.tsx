@@ -15,6 +15,8 @@ import {
   Card,
 } from 'move';
 import { Section, TocRail, CodeBlock, Preview, type TocItem } from '../../components';
+import FieldWidths from '../../content/systems/forms/samples/field-widths';
+import fieldWidthsCode from '../../content/systems/forms/samples/field-widths?raw';
 
 const FIELD_EXAMPLE = `<FormField.Root invalid={!!error}>
   <FormField.Label>Email</FormField.Label>
@@ -53,6 +55,7 @@ const TOC: TocItem[] = [
   { href: '#example', label: 'A complete form' },
   { href: '#wired', label: 'What a field wires' },
   { href: '#named', label: 'Every field has a name' },
+  { href: '#width', label: 'How wide a field is' },
 ];
 
 export function FormsPage() {
@@ -165,6 +168,44 @@ export function FormsPage() {
               This is the forms half of{' '}
               <RouterLink to="/accessibility">accessibility</RouterLink> — where Move takes on the
               labelling and error wiring, and you bring the words.
+            </Text>
+          </Stack>
+        </Section>
+
+        <Section
+          id="width"
+          title="How wide a field is"
+          lede="Fields take a width from a scale, sized by the content each one expects."
+        >
+          <Stack gap="md">
+            <Text>
+              A field is as wide as what goes in it. The steps are measured in
+              characters, so a box tracks the reader’s font size and its size tells
+              them how much input is wanted — a short box asks for a year, a long one
+              for an email. Every step stops at the width of its column, so a field
+              narrows on a phone instead of running past the edge.
+            </Text>
+            <Preview title="The scale" code={fieldWidthsCode}>
+              <FieldWidths />
+            </Preview>
+            <Text>
+              <Code>full</Code> is the default and takes the column. <Code>auto</Code>{' '}
+              hugs its content, for a control that sits in a row of its own rather than
+              in a form. The same scale is on every control that takes one —{' '}
+              <RouterLink to="/components/input-text">InputText</RouterLink>,{' '}
+              <RouterLink to="/components/textarea">Textarea</RouterLink>,{' '}
+              <RouterLink to="/components/select">Select</RouterLink>,{' '}
+              <RouterLink to="/components/password">Password</RouterLink>,{' '}
+              <RouterLink to="/components/number-input">NumberInput</RouterLink>,{' '}
+              <RouterLink to="/components/autocomplete">Autocomplete</RouterLink>,{' '}
+              <RouterLink to="/components/color-input">ColorInput</RouterLink> and{' '}
+              <RouterLink to="/components/input-range">InputRange</RouterLink>.
+            </Text>
+            <Text size="sm" color="muted">
+              A dropdown takes its width from the field it hangs off, so the two read as
+              one control. Where the options are longer than a narrow field, set{' '}
+              <Code>width="content"</Code> on the content and the list sizes to the
+              widest option instead, within the room the field has.
             </Text>
           </Stack>
         </Section>
