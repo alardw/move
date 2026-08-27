@@ -19,6 +19,10 @@ rather than carried forward. Six moved without anyone filing them: they were
 fixed in the course of other work, which is exactly why a register needs
 re-reading and not just appending.
 
+That pass read `src` and not `packages/docs`, so it kept three items whose
+answer was already published — the surface system, and half of the sizing item.
+Re-checking a register against the source alone is not re-checking it.
+
 Status: `[ ]` open · `[x]` done · `[~]` fixed but unverified in a browser ·
 `[–]` won't fix / by design (record the reason).
 
@@ -173,18 +177,76 @@ A rule with no sanctioned escape. Their own summary is the right diagnosis: it
 is not exotic widgets, it is **sizing, surfaces and a sortable table** — and
 those three would remove roughly half of a 23-component extension library.
 
-- [ ] **No sanctioned way to set a dimension.** Purity forbids inline styles and
+- [–] **No sanctioned way to set a dimension.** Purity forbids inline styles and
       there is no `Frame`/`Box` primitive. Every consumer invents one, and the
       invention then fails purity/token review — the cost is paid twice.
+      **No `Frame`/`Box` is coming, and the premise is wrong** (decided
+      2026-08-26). A free-length prop at an arbitrary call site is the mechanism
+      by which a kit stops being able to guarantee anything below the author's
+      own viewport; it is also an axis with no clamp, which inverts the model the
+      library is built on. Primer shipped `Box`+`sx` and is publicly unwinding
+      it; Spectrum and Polaris, the two whose position most resembles ours,
+      both landed on a clamped prop set instead. Chakra and MUI hand out an
+      escape hatch because they never forbade CSS in the first place — for them
+      it is a convenience, not a permission.
+      The rule that replaces it: **a call site may express constraints and
+      participation, not a size.** `maxWidth` / `flex` / `span` / `ratio` yes;
+      `width: 340px` no. A preference is legal exactly when the container can
+      overrule it — if nothing can, it is a size. The tell that a decision
+      belongs to the container is that it needs a breakpoint to be right.
+      **And "NO legal way to set a width" was not true.** `Stack.flex`,
+      `Stack.fill`, `Grid.minChildWidth`, `Grid.Cell.span/offset`,
+      `Splitter.Panel.defaultSize/minSize` and `Text.readableWidth` were all
+      already doing this job. J21 is substantially a **discoverability** failure
+      — which fits their own account of finding things by reading
+      `dist/**/*.d.ts`. `/systems/layout` now runs a width axis alongside the
+      height chain, with a reflowing sample.
+      One real defect sat underneath it: `Grid.tsx:89` emitted a bare
+      `minmax(${minChildWidth}, 1fr)`, and a `minmax()` floor cannot shrink, so
+      any container narrower than that value overflowed horizontally instead of
+      wrapping. Their fear about fixed sizing, already shipped. Now
+      `minmax(min(…, 100%), 1fr)`, with a test.
+      → **Residual, and the decision that would actually close J21:** a `Stack
+      basis` prop (flexbox's own word for a preferred size) and its value space.
+      `Dimension` is `number | string` today — fully unclamped. Height stays
+      asymmetric: a preferred height clips, because text reflows taller as it
+      narrows, so height remains constraint-only (`fill`, maxHeight +
+      ScrollArea, aspect-ratio).
 - [ ] **No overlay/absolute-positioning primitive.** Raised independently by
       both projects. A `⋮` card menu or an on-artwork badge has to sit in an
       adjacent row instead of overlaying.
       → Nebulaa found the shape of the answer: positions travel as **custom
       properties into a sibling `.module.css`**, never as inline styles. That
       pattern is worth adopting as the sanctioned mechanism.
-- [ ] **No surface/elevation concept.** Drove five separate extension
-      components (`CardSurface`, `PanelSurface`, `PageSurface`, `DrawerSurface`,
-      `ListItemCard`).
+      **Deliberately parked, not refused** (2026-08-26) — and it should not be
+      filed with the sizing item, which is what nearly buried it. Overlaying is a
+      stacking relationship, not a size, and it does not break responsively: a
+      badge pinned at `inset-block-start: var(--move-space-2)` is fully fluid.
+      Move itself relies on it constantly — the Tabs sliding indicator is
+      absolutely positioned, and every Dropdown, Popover and Tooltip is Floating
+      UI, which is absolute positioning with a solver. So a `⋮` on a card is the
+      same shape as things the library already ships; what separates them is
+      permission, not merit.
+      → Preferred direction when it is picked up: make the existing layout
+      components carry stacking (grid-area overlap on Card, a documented custom
+      -property surface) rather than adding a positioning primitive.
+- [ ] **No consumer handle for the surface system.** *(Filed as "no
+      surface/elevation concept" — that half is stale.)* Drove five separate
+      extension components (`CardSurface`, `PanelSurface`, `PageSurface`,
+      `DrawerSurface`, `ListItemCard`).
+      **The concept exists and is documented**: two levels
+      (`--move-bg-base`, `--move-bg-subtle`), an alternating-tint rule so a
+      nested panel stays visible against its parent, nine components mapped to
+      `subtle`, all at `/systems/surfaces`.
+      **What survives is sharper than what they filed: it is internal-only.**
+      There is no `surface` prop on any component — checked across every spec and
+      source, 2026-08-26. Components declare their own level; a consumer has no
+      way to put their own panel on the system. That is why they built five
+      wrappers: `CardSurface` and `ListItemCard` are Card with extra,
+      `PageSurface` is the implicit base ground, and `PanelSurface`/
+      `DrawerSurface` want a handle that does not exist.
+      → Same gap as the sizing item, one layer up: the concept is there, the
+      thing to attach it to is not. Whatever answers one should answer both.
 - [ ] **J6 · Button has no `loading` and no icon-only shape.** 25 call sites in
       one app; every mutation button hand-rolls `disabled` + a swapped child.
       The a11y contract for icon-only (required name, hit-target size) is
