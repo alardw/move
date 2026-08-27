@@ -487,6 +487,7 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
 
         return (
           <button
+            aria-label={labels.close}
             {...attrs}
             {...spRest}
             ref={ref}
@@ -494,7 +495,6 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
             className={cx('close', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
-            aria-label={labels.close}
           >
             {props.children ?? resolvedCloseIcon}
           </button>

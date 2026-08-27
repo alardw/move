@@ -447,6 +447,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
         return (
           <RadixDropdownMenu.Item
+            title={typeof props.children === 'string' ? props.children : undefined}
             {...attrs}
             {...spRest}
             ref={mergedItemRef}
@@ -456,7 +457,6 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            title={typeof props.children === 'string' ? props.children : undefined}
           >
             {wrapTextChildren(props.children, styles.itemText)}
           </RadixDropdownMenu.Item>

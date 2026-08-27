@@ -158,10 +158,10 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
         return (
           <PaginationContext.Provider value={contextValue}>
             <nav
+              aria-label={labels.label}
               {...attrs}
               {...spRest}
               ref={ref}
-              aria-label={labels.label}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-size={props.size}
@@ -230,11 +230,11 @@ const PaginationPrevTrigger = withMoveComponent<
 
         return (
           <button
+            aria-label={labels.previous}
             {...attrs}
             {...spRest}
             ref={mergedRef}
             type="button"
-            aria-label={labels.previous}
             disabled={!canPrevious}
             className={cx('prev', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
@@ -318,11 +318,11 @@ const PaginationNextTrigger = withMoveComponent<
 
         return (
           <button
+            aria-label={labels.next}
             {...attrs}
             {...spRest}
             ref={mergedRef}
             type="button"
-            aria-label={labels.next}
             disabled={!canNext}
             className={cx('next', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}

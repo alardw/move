@@ -178,10 +178,10 @@ const TableOfContentsRoot = withMoveComponent<
         return (
           <TableOfContentsContext.Provider value={ctx}>
             <nav
+              aria-label={labels.label}
               {...attrs}
               {...spRest}
               ref={ref as React.Ref<HTMLElement>}
-              aria-label={labels.label}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >

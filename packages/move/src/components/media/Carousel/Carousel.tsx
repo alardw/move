@@ -675,13 +675,13 @@ const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps,
 
           return (
             <button
+              aria-label={`Go to slide ${index + 1}`}
               {...restAttrs}
               {...spRest}
               ref={ref}
               type="button"
               role="tab"
               aria-selected={page === index}
-              aria-label={`Go to slide ${index + 1}`}
               data-active={page === index || undefined}
               onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                 scrollToPage(index);

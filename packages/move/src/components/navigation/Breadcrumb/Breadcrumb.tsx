@@ -123,10 +123,10 @@ const BreadcrumbRoot = withMoveComponent<'root' | 'list', BreadcrumbRootProps, H
         return (
           <BreadcrumbContext.Provider value={contextValue}>
             <nav
+              aria-label={labels.label}
               {...attrs}
               {...spRest}
               ref={ref}
-              aria-label={labels.label}
               className={cx('root', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-size={size}

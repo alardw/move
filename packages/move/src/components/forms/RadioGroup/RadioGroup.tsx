@@ -205,12 +205,12 @@ const RadioGroupItem = withMoveComponent<
             }}
           >
             <RadixRadioGroup.Item
+              aria-labelledby={props.children != null ? labelId : undefined}
               {...attrs}
               {...itemSpRest}
               ref={mergedRef}
               value={props.value as string}
               disabled={props.disabled as boolean}
-              aria-labelledby={props.children != null ? labelId : undefined}
               className={cx('item', props.className, itemSpClass as string | undefined)}
               style={{ ...props.style, ...(itemSpStyle as React.CSSProperties) }}
             >

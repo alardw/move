@@ -113,11 +113,11 @@ const RichTextEditorToolbar = withMoveComponent<
 
         return (
           <div
+            aria-label={labels.toolbar}
             {...attrs}
             {...spRest}
             ref={ref}
             role="toolbar"
-            aria-label={labels.toolbar}
             data-sticky={props.sticky || undefined}
             className={cx('toolbar', props.className, spClass as string | undefined)}
             style={{

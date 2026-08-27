@@ -447,10 +447,10 @@ const SelectValue = withMoveComponent<'value', SelectValueProps, HTMLSpanElement
         const titleText = typeof displayText === 'string' ? displayText : undefined;
         return (
           <span
+            title={titleText}
             {...attrs}
             {...spRest}
             ref={ref}
-            title={titleText}
             className={cx('value', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             {...(showPlaceholder ? { 'data-placeholder': '' } : {})}
@@ -906,12 +906,12 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
         const itemText = textOf(props.label ?? props.children);
         return (
           <RadixSelect.Item
+            title={itemText || undefined}
             {...attrs}
             {...spRest}
             ref={mergedItemRef}
             value={props.value as string}
             disabled={props.disabled as boolean}
-            title={itemText || undefined}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}

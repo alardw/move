@@ -1433,6 +1433,7 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
 
         return (
           <figure
+            aria-labelledby={captionId}
             {...attrs}
             {...spRest}
             ref={ref as React.Ref<HTMLElement>}
@@ -1441,7 +1442,6 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
             data-size={size}
             data-grid={props.grid as string}
             data-status={status ?? undefined}
-            aria-labelledby={captionId}
           >
             <Caption id={captionId} hidden={props.hideCaption === true}>
               {props.caption}

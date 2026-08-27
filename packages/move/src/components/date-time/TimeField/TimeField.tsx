@@ -379,13 +379,13 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
         const { className: spClass, style: spStyle, ...spRest } = segSp as Record<string, unknown>;
         return (
           <input
+            aria-label={labels[segType as keyof TimeFieldLabels] ?? segType}
             {...attrs}
             {...spRest}
             ref={mergedRef}
             type="text"
             inputMode="numeric"
             role="spinbutton"
-            aria-label={labels[segType as keyof TimeFieldLabels] ?? segType}
             aria-valuenow={parseInt(segInfo?.value ?? '0', 10)}
             value={segInfo?.value ?? ''}
             readOnly
@@ -504,11 +504,11 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLDi
         } = periodSp as Record<string, unknown>;
         return (
           <div
+            aria-label={labels.period}
             {...attrs}
             {...spRest}
             ref={mergedRef}
             role="spinbutton"
-            aria-label={labels.period}
             aria-valuenow={tf.period === 'AM' ? 0 : 1}
             aria-disabled={disabled || undefined}
             tabIndex={disabled ? -1 : 0}

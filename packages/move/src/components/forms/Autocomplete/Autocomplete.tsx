@@ -785,11 +785,11 @@ const AutocompleteClearTrigger = withMoveComponent<
         } = clearSp as Record<string, unknown>;
         return (
           <button
+            aria-label={ac.labels.clearAll}
             {...attrs}
             {...spRest}
             ref={ref}
             type="button"
-            aria-label={ac.labels.clearAll}
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={handleClick}
