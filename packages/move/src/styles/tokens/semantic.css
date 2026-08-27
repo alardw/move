@@ -177,6 +177,15 @@
   --move-control-height-md: 2.375rem;
   --move-control-height-lg: 2.75rem;
 
+  /* Smallest a control may be and still be reliably hittable: WCAG 2.5.8
+     Target Size (Minimum), Level AA, is 24x24 CSS px. Applies to the small
+     controls that sit INSIDE a field — a tag's remove button, a clear button,
+     a reveal toggle — which is exactly where the temptation is to size them by
+     eye against the glyph rather than the finger. A control may look smaller
+     than this by padding a larger hit area around a small glyph; it may not BE
+     smaller. */
+  --move-control-target-min: 24px;
+
   /* ============================================
    * Field Widths
    * Sized by the content a field expects, in ch, so the box follows the

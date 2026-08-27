@@ -470,7 +470,14 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
           break;
         case 'Tab':
           if (ac.isOpen) {
-            chooseHighlighted();
+            // Tab commits the highlighted option on the way out, but only when
+            // that ADDS one. In multi mode `onSelect` toggles, and the item you
+            // just chose is still the highlighted one — so committing again
+            // took it straight back off: pick a value, press Tab, and the tag
+            // you had just made disappeared. Leaving is never a request to
+            // deselect.
+            const value = selectableHighlight(ac, visibleItems);
+            if (value !== null && !ac.selectedValues.includes(value)) ac.onSelect(value);
             ac.close();
           }
           break;

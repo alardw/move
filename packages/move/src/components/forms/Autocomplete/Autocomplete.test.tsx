@@ -702,6 +702,36 @@ describe('useAutocomplete — close-on-select animation', () => {
     expect(requestClose).toHaveBeenCalledTimes(1);
   });
 });
+describe('Autocomplete — Tab out of a multi-select', () => {
+  /**
+   * Tab commits a highlighted option on the way out, which is useful when it
+   * ADDS one. In multi mode `onSelect` toggles and the item just chosen is
+   * still highlighted, so committing again removed it — choose a value, press
+   * Tab, and the tag vanished. Leaving is never a request to deselect.
+   */
+  it('keeps the value you just chose', async () => {
+    const user = userEvent.setup();
+    render(
+      <Autocomplete.Root multiple animations={false}>
+        <Autocomplete.Trigger>
+          <Autocomplete.TagList />
+          <Autocomplete.Input placeholder="p" />
+        </Autocomplete.Trigger>
+        <Autocomplete.Content>
+          <Autocomplete.Item value="vue">Vue</Autocomplete.Item>
+          <Autocomplete.Item value="lit">Lit</Autocomplete.Item>
+        </Autocomplete.Content>
+      </Autocomplete.Root>,
+    );
+    await user.click(screen.getByPlaceholderText('p'));
+    await user.keyboard('vu{ArrowDown}{Enter}');
+    expect(screen.getByRole('button', { name: 'Remove Vue' })).toBeInTheDocument();
+
+    await user.keyboard('{Tab}');
+    expect(screen.getByRole('button', { name: 'Remove Vue' })).toBeInTheDocument();
+  });
+});
+
 describe('Autocomplete — tag remove button', () => {
   /**
    * The button names the LABEL, not the value key. TagList renders

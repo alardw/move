@@ -187,7 +187,10 @@
 
   display: inline-flex;
   align-items: center;
-  gap: var(--move-spacing-xs);
+  /* Room for the remove button's focus ring, which reaches outward as far as
+     `--move-focus-ring-offset + width`. At spacing-xs the ring lands on the
+     last letter of the label rather than in space beside it. */
+  gap: var(--move-spacing-sm);
   min-height: var(--move-autocomplete-tag-height);
   max-width: var(--move-autocomplete-tag-max-width);
   /* Asymmetric on purpose. The remove button carries its own 24px hit area,
@@ -223,8 +226,8 @@
      pointers can comfortably hit it without the tag itself needing to be huge.
      Rectangular (rounded-sm) radius mirrors the tag's own rounded-rectangle shape. */
   position: relative;
-  width: 24px; /* size-exempt: WCAG 2.5.8 minimum hit target */
-  height: 24px; /* size-exempt: WCAG 2.5.8 minimum hit target */
+  width: var(--move-control-target-min);
+  height: var(--move-control-target-min);
   border-radius: var(--move-rounded-sm);
   cursor: pointer;
   color: var(--move-fg-muted);
@@ -287,9 +290,14 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  border-radius: var(--move-rounded-full);
+  /* Was 1.25rem — 20px, under the 24px minimum, and a different size from the
+     tag remove button sitting inches away in the same field. */
+  width: var(--move-control-target-min);
+  height: var(--move-control-target-min);
+  /* Square, like every other dismiss control — the tag's own remove button and
+     Password's reveal toggle are both rounded-sm. A circle here was the one
+     exception, and it sat next to a square one inside the same field. */
+  border-radius: var(--move-rounded-sm);
   cursor: pointer;
   color: var(--move-fg-muted);
 }
