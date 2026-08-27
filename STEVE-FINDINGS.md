@@ -302,10 +302,56 @@ hatch found by reading `dist`.
       navigation is unreachable below 768px — the composition Move's own split
       *forces* on you. The only escape is the undocumented `e.defaultPrevented`
       sentinel.
-      → `dismissOnSelect?: boolean` (default true), or auto-suppress when the
-      item is a `Collapsible.Trigger` child (detectable via the `data-state`
-      Collapsible already injects). Documenting the sentinel is the minimum.
       *Confirmed still open 2026-08-26 — `Sidebar.tsx:861` still gates on `e.defaultPrevented`; no `dismissOnSelect` prop exists.*
+      **Half of the ask closed sideways (2026-08-27):** the sentinel is no longer
+      undocumented. `preventDefault()` meaning "the component stands down" is now
+      the library's stated convention — `composeHandlers`, `/systems/props`, and
+      the opening of `llms.txt`. Sidebar had hand-rolled that exact shape at
+      `Sidebar.tsx:859-863` all along.
+      **The rest should NOT be fixed as filed.** A `dismissOnSelect` prop, or
+      sniffing `data-state` for a `Collapsible.Trigger`, both patch the symptom
+      and leave the cause: `Sidebar.Item` renders a `<button>` (spec slot
+      `item`) while carrying a destination's props (`active`, `badge`) and a
+      destination's behaviour (dismiss the drawer). The rule cannot tell a
+      submenu toggle from a route because the ELEMENT does not either — every
+      item is a button that dismisses. `Sidebar.Item asChild` around a
+      `Dropdown.Trigger` is a natural composition that silently breaks, and
+      nothing in the API warns you off it.
+      Both neighbouring defaults are known to be wrong, which is the evidence
+      that a default is not the answer. shadcn's `SidebarMenuButton` — the same
+      shape, button + asChild + tooltip-when-collapsed — never closes the mobile
+      sheet, and carries open PRs asking it to (shadcn-ui/ui#8402, #5755,
+      issue #5561). Move always closes, and this finding asks it to stop. It
+      also has a discussion thread on `SidebarMenuButton` inside
+      `DropdownMenuTrigger` (#6778): the account-menu case, hit often enough to
+      become a thread. Neither library separates navigating from acting, so both
+      get reports from the half they chose against.
+      → **Containers plus one honest primitive.** `Header`, `Content`, `Footer`,
+      `Group`, `GroupLabel` are boxes; `NavItem` is the only part with
+      sidebar-specific semantics, because navigating is the only thing a sidebar
+      does that a `div` cannot express. It renders an anchor, takes `active`, and
+      dismisses the mobile drawer — correct by definition rather than by
+      configuration. Everything else is a `Button`, a `Dropdown`, a
+      `Collapsible`: components that already behave correctly and that nobody
+      has to be warned about. J15 then has nothing to fix, because a `Button`
+      does not dismiss a drawer. The precedent is `Table`, which ships `Root`,
+      `Header`, `Body`, `Row`, `Cell` and no `Table.Action` — you put a `Button`
+      in a `Cell`.
+      → **Collapse is explicit for foreign content, implicit only for `NavItem`.**
+      Optional `Sidebar.Collapsed` / `Sidebar.Expanded` render their children in
+      one state and not the other, so a `Button`, an `Avatar` or a `Dropdown`
+      becomes collapse-aware without knowing what a sidebar is; leave them out
+      when there is nothing to collapse, which an icon-only control already is.
+      `NavItem` is the single exception — it hides its label and shows its
+      tooltip on its own, because twenty nav items answering the same question
+      the same way is noise, and because the sidebar's own primitive may know
+      about the sidebar. Anything foreign is told, never assumed. Note the other
+      branch unmounts, so an open menu inside `Expanded` closes when the sidebar
+      collapses; that is right, and belongs in the docs rather than in a
+      surprise.
+      → `Sidebar.Item` is deprecated rather than switched: it renders `Action`'s
+      element with `NavItem`'s behaviour, so neither new name is a drop-in and
+      changing it underneath a consumer would be worse than asking them to pick.
 - [x] **J19 · Dropdown.Item + overlay needs `preventDefault`.** Radix restores
       focus after `onSelect`; the overlay reads it as focus escaping and
       dismisses itself. Symptom: the action appears to do nothing. Hit **ten
