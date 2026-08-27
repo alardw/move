@@ -92,7 +92,11 @@ these, which is what makes them ours.
       flow from Root through context; Close applies it as `aria-label` only when
       it renders the bare glyph — children or `asChild` mean the consumer owns
       the content, and labelling over visible text would breach WCAG 2.5.3.
-      A consumer-passed `aria-label` still wins.
+      A consumer-passed `aria-label` still wins — because the attribute precedes
+      the props spread, which is what makes it hold. That is now a library-wide
+      guarantee rather than a property of these two components: `prop-precedence`
+      (2026-08-27) enforces it across all 71, after 18 sites elsewhere were found
+      replacing a caller's name and one deleting it outright.
       The duplicate half is closed structurally: Header now suppresses its
       automatic Close when the children it was given already contain one
       (`containsElementOfType`, new in the engine barrel). Writing your own
