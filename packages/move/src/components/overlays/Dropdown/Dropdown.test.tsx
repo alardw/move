@@ -686,3 +686,36 @@ describe('Dropdown', () => {
     });
   });
 });
+
+describe('Dropdown.Item — select does not let focus escape', () => {
+  /**
+   * Radix restores focus after `onSelect`, and an enclosing overlay reads that
+   * as focus escaping and dismisses itself — the action appears to do nothing.
+   * The library calls `preventDefault()` so no call site has to know about it.
+   *
+   * jsdom cannot model the focus race, so this does not reproduce the symptom.
+   * It holds the LINE the fix depends on: remove the preventDefault and this
+   * fails, which is what stops the ten surfaces it hit from regressing quietly.
+   */
+  it('prevents default on select, and still calls the caller and closes', async () => {
+    const user = userEvent.setup();
+    const onSelect = vi.fn((e: Event) => e);
+    const onOpenChange = vi.fn();
+
+    render(
+      <Dropdown.Root defaultOpen animations={false} onOpenChange={onOpenChange}>
+        <Dropdown.Trigger>Open</Dropdown.Trigger>
+        <Dropdown.Content>
+          <Dropdown.Item onSelect={onSelect}>Act</Dropdown.Item>
+        </Dropdown.Content>
+      </Dropdown.Root>,
+    );
+
+    await user.click(await screen.findByText('Act'));
+
+    expect(onSelect).toHaveBeenCalledTimes(1);
+    const event = onSelect.mock.calls[0][0];
+    expect(event.defaultPrevented).toBe(true);
+    await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
+  });
+});
