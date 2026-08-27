@@ -22,6 +22,8 @@ export type {
 
 // Ref utilities
 export { useMergedRef } from './engine';
+export { composeHandlers } from './engine';
+export type { ComposedHandler } from './engine';
 
 // Headless utilities (from core)
 export { useControlledState } from './engine';

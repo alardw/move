@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { usePositionTracker } from '../../../animation';
 import styles from './TableOfContents.module.css';
@@ -279,7 +279,7 @@ const TableOfContentsItem = withMoveComponent<'item', TableOfContentsItemProps, 
             {...spRest}
             ref={ref}
             href={href}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
             data-depth={props.depth}
             data-active={isActive ? '' : undefined}
             aria-current={isActive ? 'location' : undefined}

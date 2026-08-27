@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Slot } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useCollapsible } from './useCollapsible';
 import { expandContent, useAnimations } from '../../../animation';
@@ -189,7 +189,7 @@ const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps,
               data-disabled={context.disabled || undefined}
               disabled={context.disabled || undefined}
               aria-expanded={context.open}
-              onClick={() => context.toggle()}
+              onClick={composeHandlers(attrs.onClick, () => context.toggle())}
             >
               {children}
             </Comp>

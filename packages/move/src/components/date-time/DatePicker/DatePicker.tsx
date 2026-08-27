@@ -33,7 +33,7 @@ import {
   useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useMergedRef, usePopupFocus } from '../../../engine';
+import { composeHandlers, useMergedRef, usePopupFocus } from '../../../engine';
 import type { PopupFocusHandlers } from '../../../engine';
 import { InputText } from '../../forms/InputText';
 import { useFormField, useFieldGroup } from '../../forms/FormField/FormField';
@@ -1112,7 +1112,7 @@ const DatePickerContentInner = React.forwardRef<
       align={align as 'start' | 'center' | 'end'}
       className={`${styles.content} ${className ?? ''}`}
       style={{ ...(style as React.CSSProperties), ...(layer > 0 ? { zIndex: layer + 1 } : {}) }}
-      onPointerDownOutside={handlePointerDownOutside}
+      onPointerDownOutside={composeHandlers(rest.onPointerDownOutside, handlePointerDownOutside)}
       onEscapeKeyDown={handleEscapeKeyDown}
       // Focus-in on open and focus-back to the field on close, from the shared
       // focus container. These are the points Radix guarantees run after its

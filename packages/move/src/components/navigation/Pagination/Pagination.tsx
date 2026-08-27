@@ -1,7 +1,7 @@
 'use client';
 // Generated from Pagination.spec.ts
 import * as React from 'react';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   scaleUp,
@@ -238,7 +238,7 @@ const PaginationPrevTrigger = withMoveComponent<
             disabled={!canPrevious}
             className={cx('prev', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={previous}
+            onClick={composeHandlers(attrs.onClick, previous)}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               if (!isDisabled) handlers.Prev?.onMouseEnter?.();
               (props.onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
@@ -326,7 +326,7 @@ const PaginationNextTrigger = withMoveComponent<
             disabled={!canNext}
             className={cx('next', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={next}
+            onClick={composeHandlers(attrs.onClick, next)}
             onMouseEnter={(e: React.MouseEvent<HTMLButtonElement>) => {
               if (!isDisabled) handlers.Next?.onMouseEnter?.();
               (props.onMouseEnter as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);

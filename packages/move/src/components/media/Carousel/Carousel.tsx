@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useCarousel } from './useCarousel';
@@ -488,10 +488,13 @@ const CarouselPrevTrigger = withMoveComponent<
             type="button"
             aria-label={(props['aria-label'] as string) || 'Previous slide'}
             disabled={!canScrollPrev}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              scrollPrev();
-              (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
+            onClick={composeHandlers(
+              restAttrs.onClick,
+              (e: React.MouseEvent<HTMLButtonElement>) => {
+                scrollPrev();
+                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+              },
+            )}
             className={cx('prevTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-orientation={orientation}
@@ -553,10 +556,13 @@ const CarouselNextTrigger = withMoveComponent<
             type="button"
             aria-label={(props['aria-label'] as string) || 'Next slide'}
             disabled={!canScrollNext}
-            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-              scrollNext();
-              (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-            }}
+            onClick={composeHandlers(
+              restAttrs.onClick,
+              (e: React.MouseEvent<HTMLButtonElement>) => {
+                scrollNext();
+                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+              },
+            )}
             className={cx('nextTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-orientation={orientation}
@@ -683,10 +689,13 @@ const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps,
               role="tab"
               aria-selected={page === index}
               data-active={page === index || undefined}
-              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                scrollToPage(index);
-                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-              }}
+              onClick={composeHandlers(
+                restAttrs.onClick,
+                (e: React.MouseEvent<HTMLButtonElement>) => {
+                  scrollToPage(index);
+                  (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+                },
+              )}
               className={cx('indicator', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >

@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../actions/Button';
 import { Popover } from '../../overlays/Popover';
@@ -546,8 +546,8 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
             data-controls-hidden={!controlsVisible}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={rootStyle}
-            onMouseMove={showControls}
-            onKeyDown={handleKeyDown}
+            onMouseMove={composeHandlers(attrs.onMouseMove, showControls)}
+            onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
           >
             {/* Video */}
             <div

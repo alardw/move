@@ -4,7 +4,7 @@
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
+import { composeHandlers, elementTypeName, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
@@ -372,7 +372,7 @@ const AutocompleteTrigger = withMoveComponent<
               data-width={props.width as string | undefined}
               {...(props.disabled ? { 'data-disabled': '' } : {})}
               {...(props.invalid ? { 'data-invalid': '' } : {})}
-              onClick={handleClick}
+              onClick={composeHandlers(attrs.onClick, handleClick)}
             >
               <div {...slot('triggerContent')}>{contentChildren}</div>
               {actionChildren.length > 0 && <div {...slot('triggerActions')}>{actionChildren}</div>}
@@ -513,9 +513,9 @@ const AutocompleteInput = withMoveComponent<'input', AutocompleteInputProps, HTM
             aria-haspopup="listbox"
             autoComplete="off"
             value={ac.inputValue}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onKeyDown={handleKeyDown}
+            onChange={composeHandlers(controlProps.onChange, handleChange)}
+            onFocus={composeHandlers(controlProps.onFocus, handleFocus)}
+            onKeyDown={composeHandlers(controlProps.onKeyDown, handleKeyDown)}
             disabled={props.disabled as boolean}
             placeholder={props.placeholder as string}
             className={cx('input', props.className, spClass as string | undefined)}
@@ -792,7 +792,7 @@ const AutocompleteClearTrigger = withMoveComponent<
             type="button"
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
             tabIndex={-1}
           >
             {props.children ?? resolvedX}
@@ -1105,9 +1105,9 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
             data-disabled={isDisabled ? '' : undefined}
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={handleClick}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
+            onMouseEnter={composeHandlers(attrs.onMouseEnter, handleMouseEnter)}
+            onMouseLeave={composeHandlers(attrs.onMouseLeave, handleMouseLeave)}
           >
             {ac.multiple && (
               <span className={styles.itemIndicator} aria-hidden="true">
@@ -1483,7 +1483,7 @@ const AutocompleteRetryTrigger = withMoveComponent<
             type="button"
             className={cx('retryTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
           >
             {props.children ?? ac.labels.retry}
           </button>

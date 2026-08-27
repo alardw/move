@@ -2,7 +2,7 @@
 // Generated from Accordion.spec.ts
 
 import * as React from 'react';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAccordion } from './useAccordion';
 import { resolveAnimationsConfig, expandContent, snappy, useAnimations } from '../../../animation';
@@ -445,8 +445,10 @@ const AccordionTrigger = withMoveComponent<
             aria-expanded={itemContext.isActive}
             onMouseEnter={() => handlers.Trigger?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Trigger?.onMouseLeave?.()}
-            onClick={() => context.onHeaderClick(itemContext.value)}
-            onKeyDown={(e) => context.onHeaderKeyDown(e, itemContext.value)}
+            onClick={composeHandlers(attrs.onClick, () => context.onHeaderClick(itemContext.value))}
+            onKeyDown={composeHandlers(attrs.onKeyDown, (e) =>
+              context.onHeaderKeyDown(e, itemContext.value),
+            )}
           >
             {children}
             <span

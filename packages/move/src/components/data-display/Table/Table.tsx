@@ -1,7 +1,12 @@
 'use client';
 
 import * as React from 'react';
-import { withMoveComponent, useMergedRef, useControlledState } from '../../../engine';
+import {
+  composeHandlers,
+  useControlledState,
+  useMergedRef,
+  withMoveComponent,
+} from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
@@ -599,8 +604,8 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
             aria-sort={
               sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined
             }
-            onClick={sortable ? handleClick : undefined}
-            onKeyDown={sortable ? handleKeyDown : undefined}
+            onClick={composeHandlers(attrs.onClick, sortable ? handleClick : undefined)}
+            onKeyDown={composeHandlers(attrs.onKeyDown, sortable ? handleKeyDown : undefined)}
             tabIndex={sortable ? 0 : undefined}
             role={sortable ? 'columnheader' : undefined}
           >
@@ -871,8 +876,8 @@ const TableGroupHeader = withMoveComponent<
             role={collapsible ? 'button' : undefined}
             tabIndex={collapsible ? 0 : undefined}
             aria-expanded={collapsible ? groupCtx.open : undefined}
-            onClick={collapsible ? toggle : undefined}
-            onKeyDown={collapsible ? handleKeyDown : undefined}
+            onClick={composeHandlers(attrs.onClick, collapsible ? toggle : undefined)}
+            onKeyDown={composeHandlers(attrs.onKeyDown, collapsible ? handleKeyDown : undefined)}
           >
             <td className={styles.groupHeaderCell} colSpan={span}>
               {collapsible && (

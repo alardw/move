@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { withMoveComponent, containsElementOfType } from '../../../engine';
+import { composeHandlers, containsElementOfType, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -371,7 +371,10 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
                 data-size={props.size}
                 data-surface={surface}
                 onOpenAutoFocus={handleOpenAutoFocus}
-                onPointerDownOutside={handlePointerDownOutside}
+                onPointerDownOutside={composeHandlers(
+                  attrs.onPointerDownOutside,
+                  handlePointerDownOutside,
+                )}
                 onEscapeKeyDown={handleEscapeKeyDown}
                 onInteractOutside={handleInteractOutside}
                 className={cx('content', props.className, spClass as string | undefined)}
@@ -726,7 +729,7 @@ const DialogClose = withMoveComponent<'close', DialogCloseProps, HTMLButtonEleme
             {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
             className={
               props.asChild
                 ? props.className

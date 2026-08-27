@@ -1,7 +1,7 @@
 'use client';
 // Generated from AudioPlayer.spec.ts
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Button } from '../../actions/Button';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -414,7 +414,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             data-size={props.size}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
           >
             {/* Hidden audio element */}
             <audio

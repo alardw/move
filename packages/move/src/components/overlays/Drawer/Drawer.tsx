@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { withMoveComponent, containsElementOfType } from '../../../engine';
+import { composeHandlers, containsElementOfType, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -399,7 +399,10 @@ const DrawerContent = withMoveComponent<'content', DrawerContentProps, HTMLDivEl
             data-responsive={isBottomSheet ? '' : undefined}
             data-surface={surface}
             onOpenAutoFocus={handleOpenAutoFocus}
-            onPointerDownOutside={handlePointerDownOutside}
+            onPointerDownOutside={composeHandlers(
+              attrs.onPointerDownOutside,
+              handlePointerDownOutside,
+            )}
             onEscapeKeyDown={handleEscapeKeyDown}
             onInteractOutside={handleInteractOutside}
             className={cx('content', props.className, spClass as string | undefined)}
@@ -674,7 +677,7 @@ const DrawerClose = withMoveComponent<'close', DrawerCloseProps, HTMLButtonEleme
             {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
             className={
               props.asChild
                 ? props.className

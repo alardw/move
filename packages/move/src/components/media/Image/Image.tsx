@@ -1,7 +1,7 @@
 'use client';
 // Generated from Image.spec.ts
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import type { Radius, Dimension } from '../../../shared/types';
@@ -245,7 +245,7 @@ export const Image = withMoveComponent<ImageSlots, ImageProps, HTMLDivElement>({
             data-interactive={isInteractive ? '' : undefined}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={rootStyle}
-            onClick={userOnClick}
+            onClick={composeHandlers(attrs.onClick, userOnClick)}
             {...interactiveAttrs}
           >
             {showBackdrop && (

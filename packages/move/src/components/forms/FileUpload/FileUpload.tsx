@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Slot } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useFileUpload, formatFileSize } from './useFileUpload';
 import type { UseFileUploadOptions, UseFileUploadReturn } from './useFileUpload';
@@ -469,9 +469,9 @@ const FileUploadDropzone = withMoveComponent<'dropzone', FileUploadDropzoneProps
             data-disabled={context.disabled ? '' : undefined}
             className={cx('dropzone', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => {
+            onClick={composeHandlers(attrs.onClick, () => {
               if (!context.disabled) context.openFileDialog();
-            }}
+            })}
           >
             {props.children}
           </div>
@@ -508,10 +508,10 @@ const FileUploadTrigger = withMoveComponent<'trigger', FileUploadTriggerProps, H
             ref={ref}
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={(e: React.MouseEvent) => {
+            onClick={composeHandlers(attrs.onClick, (e: React.MouseEvent) => {
               e.stopPropagation(); // prevent dropzone click from double-firing
               if (!context.disabled) context.openFileDialog();
-            }}
+            })}
           >
             {props.children}
           </Slot.Root>
@@ -845,13 +845,13 @@ const FileUploadItemDelete = withMoveComponent<
             disabled={context.disabled}
             className={cx('itemDelete', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => {
+            onClick={composeHandlers(attrs.onClick, () => {
               // If uploading, abort first
               if (entry?.status === 'uploading') {
                 context.abortFile?.(file);
               }
               context.removeFile(file);
-            }}
+            })}
           >
             {props.children || fallbackXIcon}
           </button>
@@ -895,10 +895,10 @@ const FileUploadClearTrigger = withMoveComponent<
             ref={ref}
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => {
+            onClick={composeHandlers(attrs.onClick, () => {
               context.abortAll?.();
               context.clearFiles();
-            }}
+            })}
           >
             {props.children}
           </Slot.Root>
@@ -1159,7 +1159,7 @@ const FileUploadUploadTrigger = withMoveComponent<
             ref={ref}
             className={cx('uploadTrigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => context.uploadAll?.()}
+            onClick={composeHandlers(attrs.onClick, () => context.uploadAll?.())}
           >
             {props.children}
           </Slot.Root>

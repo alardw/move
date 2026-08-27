@@ -2,7 +2,7 @@
 // Generated from Checkbox.spec.ts
 import * as React from 'react';
 import { useRef, useCallback } from 'react';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useCheckbox } from './useCheckbox';
@@ -334,8 +334,8 @@ const CheckboxRoot = withMoveComponent<
               disabled={disabled as boolean}
               className={cx('root', className, rootSpClass as string | undefined)}
               style={{ ...style, ...(rootSpStyle as React.CSSProperties) }}
-              onClick={handleClick}
-              onKeyDown={handleKeyDown}
+              onClick={composeHandlers(controlProps.onClick, handleClick)}
+              onKeyDown={composeHandlers(controlProps.onKeyDown, handleKeyDown)}
             >
               {box}
             </button>

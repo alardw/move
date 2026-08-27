@@ -648,7 +648,7 @@ export const spec = {
 
   radixPrimitive: 'Dialog',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'containsElementOfType'] as string[],
+  engineImports: ['withMoveComponent', 'containsElementOfType', 'composeHandlers'] as string[],
 
   componentDeps: [] as string[],
 

@@ -116,7 +116,7 @@ export const CHECKS: CheckDoc[] = [
     name: 'prop-precedence',
     appliesTo: 'component',
     enforces:
-      "An attribute set after a `{...attrs}` spread replaces what the caller passed, and a conditional one resolving to `undefined` deletes it — leaving the element with no accessible name. Naming props (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-valuetext`, `title`, `alt`) must precede the spread or read the caller's value back, because a component can only supply a default. Structural props stay after it: `role`, `type` and `aria-expanded` ARE the component. Reading the caller's value back is equally legal, so the check parses rather than greps. Escape: a justified `precedence-exempt` comment.",
+      "An attribute set after a `{...attrs}` spread replaces what the caller passed, and a conditional one resolving to `undefined` deletes it — leaving the element with no accessible name. Naming props (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-valuetext`, `title`, `alt`) must precede the spread or read the caller's value back, because a component can only supply a default. Structural props stay after it: `role`, `type` and `aria-expanded` ARE the component. DOM handlers are composed rather than replaced, via `composeHandlers`, so the caller's runs alongside the component's. Reading the caller's value back is equally legal, so the check parses rather than greps. Escape: a justified `precedence-exempt` comment.",
   },
   {
     name: 'css-transitions',

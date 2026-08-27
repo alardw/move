@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -365,7 +365,10 @@ const PopoverContent = withMoveComponent<
                 ...(layer > 0 ? { zIndex: layer + 1 } : {}),
                 ...(spStyle as React.CSSProperties),
               }}
-              onPointerDownOutside={handlePointerDownOutside}
+              onPointerDownOutside={composeHandlers(
+                attrs.onPointerDownOutside,
+                handlePointerDownOutside,
+              )}
               onEscapeKeyDown={handleEscapeKeyDown}
               onInteractOutside={handleInteractOutside}
               onOpenAutoFocus={props.onOpenAutoFocus as ((e: Event) => void) | undefined}
@@ -479,7 +482,13 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
 
         if (props.asChild) {
           return (
-            <RadixPopover.Close {...attrs} {...spRest} ref={ref} asChild onClick={handleClick}>
+            <RadixPopover.Close
+              {...attrs}
+              {...spRest}
+              ref={ref}
+              asChild
+              onClick={composeHandlers(attrs.onClick, handleClick)}
+            >
               {props.children}
             </RadixPopover.Close>
           );
@@ -494,7 +503,7 @@ const PopoverClose = withMoveComponent<'close', PopoverCloseProps, HTMLButtonEle
             type="button"
             className={cx('close', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
           >
             {props.children ?? resolvedCloseIcon}
           </button>

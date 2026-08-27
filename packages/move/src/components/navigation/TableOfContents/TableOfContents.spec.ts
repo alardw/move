@@ -194,7 +194,7 @@ export const spec = {
 
   radixPrimitive: null,
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'composeHandlers'] as string[],
 
   componentDeps: [] as string[],
 

@@ -1,7 +1,7 @@
 'use client';
 // Generated from Stepper.spec.ts
 import * as React from 'react';
-import { withMoveComponent, elementTypeName } from '../../../engine';
+import { composeHandlers, elementTypeName, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
 import type { Color, Size } from '../../../shared/types';
@@ -197,8 +197,8 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
               data-clickable={isClickable ? 'true' : undefined}
               className={cx('step', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
-              onClick={isClickable ? handleClick : undefined}
-              onKeyDown={isClickable ? handleKeyDown : undefined}
+              onClick={composeHandlers(attrs.onClick, isClickable ? handleClick : undefined)}
+              onKeyDown={composeHandlers(attrs.onKeyDown, isClickable ? handleKeyDown : undefined)}
               tabIndex={isClickable ? 0 : undefined}
             >
               <div className={styles.rail}>
@@ -222,8 +222,8 @@ const StepperStep = withMoveComponent<'step', StepperStepProps, HTMLDivElement>(
             data-clickable={isClickable ? 'true' : undefined}
             className={cx('step', className, spClass as string | undefined)}
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
-            onClick={isClickable ? handleClick : undefined}
-            onKeyDown={isClickable ? handleKeyDown : undefined}
+            onClick={composeHandlers(attrs.onClick, isClickable ? handleClick : undefined)}
+            onKeyDown={composeHandlers(attrs.onKeyDown, isClickable ? handleKeyDown : undefined)}
             tabIndex={isClickable ? 0 : undefined}
           >
             {itemCtx.index > 0 && (

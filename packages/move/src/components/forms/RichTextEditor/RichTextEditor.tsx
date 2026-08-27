@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import { useControlledState } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { Prose } from '../../typography/Prose/Prose';
@@ -242,7 +242,7 @@ const RichTextEditorControl = withMoveComponent<
             ref={ref}
             type="button"
             data-active={active || undefined}
-            onClick={handleClick}
+            onClick={composeHandlers(restAttrs.onClick, handleClick)}
             className={cx('control', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >

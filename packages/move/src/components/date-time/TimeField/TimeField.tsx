@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import { Popover as RadixPopover } from 'radix-ui';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import { useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
@@ -392,8 +392,8 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
             disabled={disabled}
             className={cx('segment', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onKeyDown={handleKeyDown}
-            onFocus={handleFocus}
+            onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
+            onFocus={composeHandlers(attrs.onFocus, handleFocus)}
             data-segment={segType}
           />
         );
@@ -514,7 +514,7 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLDi
             tabIndex={disabled ? -1 : 0}
             className={cx('period', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
             data-segment="period"
           >
             {tf.period}

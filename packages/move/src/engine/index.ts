@@ -11,6 +11,9 @@ export { mergeSlotProps, createCx, createSp } from './slotUtils';
 // Ref utilities
 export { useMergedRef } from './useMergedRef';
 
+export { composeHandlers } from './composeHandlers';
+export type { ComposedHandler } from './composeHandlers';
+
 // Child-tree inspection
 export { containsElementOfType, elementTypeName } from './childUtils';
 

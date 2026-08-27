@@ -684,7 +684,12 @@ export const spec = {
   radixPrimitive: 'Slot',
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useMergedRef', 'useControlledState'] as string[],
+  engineImports: [
+    'withMoveComponent',
+    'useMergedRef',
+    'useControlledState',
+    'composeHandlers',
+  ] as string[],
 
   componentDeps: ['Tooltip'] as string[],
 

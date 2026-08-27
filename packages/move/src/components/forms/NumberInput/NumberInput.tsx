@@ -2,7 +2,7 @@
 // Generated from NumberInput.spec.ts
 import * as React from 'react';
 import type { FieldWidth } from '../../../shared/types';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -286,7 +286,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
               name={props.name as string | undefined}
               required={props.required as boolean | undefined}
               autoFocus={props.autoFocus as boolean | undefined}
-              onChange={ni.handleChange}
+              onChange={composeHandlers(controlProps.onChange, ni.handleChange)}
               onKeyDown={(e) => {
                 ni.handleKeyDown(e);
                 (props.onKeyDown as React.KeyboardEventHandler<HTMLInputElement> | undefined)?.(e);

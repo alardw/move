@@ -2,7 +2,7 @@
 // Generated from Textarea.spec.ts
 import * as React from 'react';
 import type { FieldWidth } from '../../../shared/types';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import styles from './Textarea.module.css';
 
@@ -157,7 +157,7 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
                   : (props.rows as number)
               }
               disabled={props.disabled as boolean}
-              onInput={handleInput}
+              onInput={composeHandlers(controlProps.onInput, handleInput)}
             />
           </div>
         );

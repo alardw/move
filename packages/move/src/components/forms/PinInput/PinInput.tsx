@@ -2,7 +2,7 @@
 // Generated from PinInput.spec.ts
 
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { composeHandlers, withMoveComponent } from '../../../engine';
 import { useFormField } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine';
 import { usePinInput } from './usePinInput';
@@ -169,7 +169,7 @@ export const PinInput = withMoveComponent<PinInputSlots, PinInputProps, HTMLDivE
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}
             {...(props.disabled ? { 'data-disabled': '' } : {})}
-            onClick={handleRootClick}
+            onClick={composeHandlers(attrs.onClick, handleRootClick)}
           >
             {/* The one real <input> behind the rendered cells is this component's
                 labellable node — the cells are presentational and the root is a

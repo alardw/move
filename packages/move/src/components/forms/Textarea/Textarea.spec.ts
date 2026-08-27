@@ -290,7 +290,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef', 'composeHandlers'] as string[],
 
   componentDeps: [] as string[],
 

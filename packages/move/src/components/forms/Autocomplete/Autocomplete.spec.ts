@@ -1216,6 +1216,7 @@ export const spec = {
     'elementTypeName',
     'useControlledState',
     'useMergedRef',
+    'composeHandlers',
   ] as string[],
   radixPrimitive: 'Popover',
   componentDeps: [] as string[],

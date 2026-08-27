@@ -366,6 +366,70 @@ describe('Table', () => {
       expect(screen.getByTestId('head')).toHaveAttribute('aria-sort', 'descending');
     });
 
+    /**
+     * A handler set after the props spread used to REPLACE the caller's, and
+     * when it was conditional it deleted it outright — `onClick={sortable ?
+     * sort : undefined}` left a plain header with no handler at all. Neither
+     * side should win here: both are meant to run.
+     */
+    it('runs the caller\u2019s onClick alongside the sort, not instead of it', () => {
+      const onClick = vi.fn();
+      const onSort = vi.fn();
+      render(
+        <Table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" sortable onSort={onSort} onClick={onClick}>
+                Name
+              </Table.Head>
+            </tr>
+          </thead>
+        </Table>,
+      );
+      fireEvent.click(screen.getByTestId('head'));
+      expect(onClick).toHaveBeenCalledTimes(1);
+      expect(onSort).toHaveBeenCalledTimes(1);
+    });
+
+    it('keeps the caller\u2019s onClick on a header that does not sort', () => {
+      const onClick = vi.fn();
+      render(
+        <Table>
+          <thead>
+            <tr>
+              <Table.Head data-testid="head" onClick={onClick}>
+                Name
+              </Table.Head>
+            </tr>
+          </thead>
+        </Table>,
+      );
+      fireEvent.click(screen.getByTestId('head'));
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('lets the caller opt out of the sort with preventDefault', () => {
+      const onSort = vi.fn();
+      render(
+        <Table>
+          <thead>
+            <tr>
+              <Table.Head
+                data-testid="head"
+                sortable
+                onSort={onSort}
+                onClick={(e) => e.preventDefault()}
+              >
+                Name
+              </Table.Head>
+            </tr>
+          </thead>
+        </Table>,
+      );
+      fireEvent.click(screen.getByTestId('head'));
+      expect(onSort).not.toHaveBeenCalled();
+    });
+
     it('is focusable and has role=columnheader when sortable', () => {
       render(
         <table>

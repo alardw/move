@@ -281,7 +281,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'composeHandlers'] as string[],
 
   componentDeps: ['Icon'] as string[],
 

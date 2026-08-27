@@ -27,8 +27,11 @@
  *
  *   BEHAVIOUR   onClick, onKeyDown and the other DOM handlers. Neither wins:
  *               BOTH must run. Replacing a caller's handler swallows it with no
- *               error; ignoring the component's breaks the component. Compose —
- *               destructure the caller's handler and call it alongside.
+ *               error; ignoring the component's breaks the component. Compose
+ *               with `composeHandlers(attrs.onClick, ours)` — the caller's runs
+ *               first, and `preventDefault()` opts out of the component's, so
+ *               there is somewhere to stand for a caller who wants the click
+ *               without the sort.
  *
  * Only naming and behaviour are flagged. Reading the caller's value back is the
  * other legal shape for both (`props['aria-label'] ?? labels.close`, or calling
@@ -39,8 +42,8 @@
  * @enforces behavior-4
  * @instead move a naming attribute ahead of the `{...attrs}` spread so the
  *   caller's value survives, or read theirs back (`props['aria-label'] ?? …`);
- *   for a handler, destructure the caller's and call it alongside the
- *   component's own rather than replacing it.
+ *   for a handler, wrap it in `composeHandlers(attrs.<name>, …)` so the
+ *   caller's runs alongside the component's rather than instead of it.
  */
 
 import { readdirSync, statSync, readFileSync } from 'node:fs';
@@ -48,11 +51,6 @@ import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
 
-// Naming is enforced. BEHAVIOUR is measured but not yet enforced: 55 sites
-// replace a caller's handler today, and composing them changes runtime
-// behaviour in ~20 components, so that tranche lands on its own rather than
-// riding along with a rule about names. `--handlers` reproduces the work list.
-const HANDLERS = process.argv.includes('--handlers');
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const MOVE = join(HERE, '..', '..');
@@ -99,7 +97,6 @@ for (const file of walk(COMPONENTS)) {
           const name = p.name.getText(sf);
           const kind = NAMING.test(name) ? 'name' : DOM_EVENT.test(name) ? 'handler' : null;
           if (!kind) continue;
-          if (kind === 'handler' && !HANDLERS) continue;
 
           const expr = p.initializer ? p.initializer.getText(sf) : '';
           // Reading the caller's value back is the other legal shape. Accept the
@@ -150,7 +147,5 @@ if (errors.length) {
 }
 
 console.log(
-  HANDLERS
-    ? `✓ prop-precedence: no component replaces a caller's name or swallows their handler.`
-    : `✓ prop-precedence: no component replaces a caller's accessible name.`,
+  `✓ prop-precedence: no component replaces a caller's accessible name or swallows their handler.`,
 );

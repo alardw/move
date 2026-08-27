@@ -289,7 +289,12 @@ export const spec = {
   ],
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useControlledState', 'useMergedRef'] as string[],
+  engineImports: [
+    'withMoveComponent',
+    'useControlledState',
+    'useMergedRef',
+    'composeHandlers',
+  ] as string[],
   componentDeps: [] as string[],
 
   testing: {

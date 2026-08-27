@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { Slot, Dialog as RadixDialog, VisuallyHidden } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
 import {
@@ -240,7 +240,7 @@ const SidebarOverlay = withMoveComponent<'overlay', SidebarOverlayProps, HTMLDiv
             ref={mergedRef}
             className={cx('overlay', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={() => setMobileOpen(false)}
+            onClick={composeHandlers(attrs.onClick, () => setMobileOpen(false))}
             aria-hidden="true"
           />
         );
@@ -955,7 +955,7 @@ const SidebarItem = withMoveComponent<
               {...attrs}
               {...spRest}
               ref={ref as any}
-              onClick={handleItemClick}
+              onClick={composeHandlers(attrs.onClick, handleItemClick)}
               data-active={props.active || undefined}
               data-disabled={props.disabled || undefined}
               className={cx('item', props.className, spClass as string | undefined)}
@@ -1067,7 +1067,7 @@ const SidebarTrigger = withMoveComponent<
             ref={ref as any}
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            onClick={handleClick}
+            onClick={composeHandlers(attrs.onClick, handleClick)}
           >
             {props.icon ? content : props.children}
           </Comp>
