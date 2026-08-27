@@ -959,8 +959,17 @@
             },
             {
               "name": "width",
-              "type": "Dimension",
-              "description": "Explicit width override"
+              "type": "FieldWidth",
+              "values": [
+                "auto",
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "full"
+              ],
+              "default": "full",
+              "description": "How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column."
             }
           ]
         },
@@ -1116,8 +1125,13 @@
             },
             {
               "name": "width",
-              "type": "Dimension",
-              "description": "Override the popover width."
+              "type": "PopoverWidth",
+              "values": [
+                "anchor",
+                "content"
+              ],
+              "default": "anchor",
+              "description": "Where the popover takes its width from. 'anchor' matches the trigger, so field and list read as one control; 'content' sizes to the widest option — what a narrow field with long labels needs — and stays inside the room the anchor has."
             },
             {
               "name": "minWidth",
@@ -3354,8 +3368,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Explicit width override"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content."
         },
         {
           "name": "format",
@@ -6027,8 +6050,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Custom width override"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content."
         },
         {
           "name": "name",
@@ -6108,8 +6140,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Explicit width override for the root wrapper"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column."
         },
         {
           "name": "disabled",
@@ -6984,8 +7025,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Custom width override"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content."
         },
         {
           "name": "iconLeft",
@@ -7312,8 +7362,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Custom width override"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects — 'xs' a code, 'sm' a date, 'md' a phone, 'lg' an email — and every one is capped at the space available. 'full' takes the column."
         },
         {
           "name": "visible",
@@ -8420,8 +8479,12 @@
             },
             {
               "name": "fill",
-              "type": "boolean | 'screen'",
-              "description": "Stretch to fill height. The Root already fills its parent (100%); set 'screen' to own the viewport height (100dvh) when it's the app-shell root with no sized ancestor."
+              "type": "'parent' | 'remaining'",
+              "values": [
+                "parent",
+                "remaining"
+              ],
+              "description": "Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout."
             },
             {
               "name": "className",
@@ -8675,8 +8738,17 @@
             },
             {
               "name": "width",
-              "type": "Dimension",
-              "description": "Custom width override"
+              "type": "FieldWidth",
+              "values": [
+                "auto",
+                "xs",
+                "sm",
+                "md",
+                "lg",
+                "full"
+              ],
+              "default": "full",
+              "description": "How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content."
             },
             {
               "name": "minWidth",
@@ -8776,8 +8848,13 @@
             },
             {
               "name": "width",
-              "type": "Dimension",
-              "description": "Custom width override — by default matches trigger width"
+              "type": "PopoverWidth",
+              "values": [
+                "anchor",
+                "content"
+              ],
+              "default": "anchor",
+              "description": "Where the popover takes its width from. 'anchor' matches the trigger, so trigger and list read as one control; 'content' sizes to the widest option and stays inside the room the anchor has."
             },
             {
               "name": "minWidth",
@@ -10695,8 +10772,17 @@
         },
         {
           "name": "width",
-          "type": "Dimension",
-          "description": "Explicit width override for the root wrapper"
+          "type": "FieldWidth",
+          "values": [
+            "auto",
+            "xs",
+            "sm",
+            "md",
+            "lg",
+            "full"
+          ],
+          "default": "full",
+          "description": "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column."
         },
         {
           "name": "disabled",

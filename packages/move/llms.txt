@@ -154,7 +154,7 @@ Autocomplete.Trigger props:
 - invalid: boolean — Invalid state
 - size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
 - variant: 'outlined' | 'filled' (default: outlined) — Trigger variant
-- width: Dimension — Explicit width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column.
 Autocomplete.Input props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -184,7 +184,7 @@ Autocomplete.Content props:
 - sideOffset: number (default: 4) — Offset from trigger
 - align: 'start' | 'center' | 'end' (default: start) — Alignment relative to trigger
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
-- width: Dimension — Override the popover width.
+- width: 'anchor' | 'content' (default: anchor) — Where the popover takes its width from. 'anchor' matches the trigger, so field and list read as one control; 'content' sizes to the widest option — what a narrow field with long labels needs — and stays inside the room the anchor has.
 - minWidth: Dimension — Minimum popover width.
 - maxWidth: Dimension — Maximum popover width.
 Autocomplete.Item props:
@@ -575,7 +575,7 @@ Form input with color preview swatch that opens a ColorPicker popover, supportin
 Props:
 - variant: 'outlined' | 'filled' (default: outlined) — Input variant
 - size: 'sm' | 'md' | 'lg' (default: md) — Input size
-- width: Dimension — Explicit width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.
 - format: ColorFormat (default: hex) — Active color format (hex, hexa, rgb, rgba, hsl, hsla)
 - value: string — Controlled color value
 - defaultValue: string — Default color value (uncontrolled)
@@ -601,7 +601,7 @@ Props:
 - labels: Partial<ColorInputLabels> — Accessible label overrides
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <ColorInput variant="outlined">…</ColorInput>
+Example: <ColorInput variant="outlined" width="full">…</ColorInput>
 
 ## ColorPicker (forms)
 Standalone color picker with saturation/brightness area, hue and alpha sliders, color swatches, format selector, and per-channel inputs
@@ -1074,14 +1074,14 @@ Props:
 - disabled: boolean — Disabled state
 - invalid: boolean — Invalid state — changes range/thumb to error color
 - orientation: 'horizontal' | 'vertical' (default: horizontal) — Slider orientation
-- width: Dimension — Custom width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.
 - name: string — Form input name
 - showValue: boolean — Show value label(s) alongside slider
 - formatValue: (value: number) => string — Custom value formatter for display labels
 - animations: AnimationTrigger[] | false — Thumb interaction animation config or false to disable
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <InputRange orientation="horizontal">…</InputRange>
+Example: <InputRange orientation="horizontal" width="full">…</InputRange>
 
 ## InputText (forms)
 Single-line text input with outlined/filled variants, icon slots, and configurable size
@@ -1091,7 +1091,7 @@ Props:
 - invalid: boolean — Whether the input is in an invalid/error state
 - iconLeft: React.ReactNode — Icon element rendered before the input
 - iconRight: React.ReactNode — Icon element rendered after the input
-- width: Dimension — Explicit width override for the root wrapper
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column.
 - disabled: boolean — Whether the input is disabled
 - readOnly: boolean — Whether the input is read-only
 - placeholder: string — Placeholder text
@@ -1106,7 +1106,7 @@ Props:
 - onFocus: React.FocusEventHandler<HTMLInputElement> — Focus event handler
 - onBlur: React.FocusEventHandler<HTMLInputElement> — Blur event handler
 - onKeyDown: React.KeyboardEventHandler<HTMLInputElement> — Keydown event handler
-Example: <InputText variant="outlined">…</InputText>
+Example: <InputText variant="outlined" width="full">…</InputText>
 
 ## Label (forms)
 Text label for form fields with required asterisk indicator and size variants
@@ -1246,7 +1246,7 @@ Props:
 - allowNegative: boolean (default: true) — Allow negative numbers
 - hideControls: boolean (default: false) — Hide increment/decrement buttons
 - invalid: boolean — Invalid state with error border styling
-- width: Dimension — Custom width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.
 - iconLeft: React.ReactNode — Optional icon rendered before input
 - prefix: string — Prefix text prepended to display value (e.g. "$")
 - suffix: string — Suffix text appended to display value (e.g. "%")
@@ -1300,7 +1300,7 @@ Props:
 - iconLeft: React.ReactNode — Optional icon rendered before input
 - showIcon: React.ReactNode — Custom icon for show password state (defaults to eye icon)
 - hideIcon: React.ReactNode — Custom icon for hide password state (defaults to eye-off icon)
-- width: Dimension — Custom width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects — 'xs' a code, 'sm' a date, 'md' a phone, 'lg' an email — and every one is capped at the space available. 'full' takes the column.
 - visible: boolean — Controlled visibility state
 - defaultVisible: boolean (default: false) — Default visibility state (uncontrolled)
 - onVisibleChange: (visible: boolean) => void — Called when visibility toggles
@@ -1319,7 +1319,7 @@ Props:
 - onKeyDown: React.KeyboardEventHandler<HTMLInputElement> — Input keydown handler
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Example: <Password variant="outlined">…</Password>
+Example: <Password variant="outlined" width="full">…</Password>
 
 ## PasswordStrength (forms)
 Password-strength indicator: a segmented meter + label, with an optional requirements checklist. Scoring-agnostic — controlled score, a custom estimate function, or a built-in length/character-class heuristic.
@@ -1510,7 +1510,7 @@ Example: <RichTextEditor.Root variant="outline">…</RichTextEditor.Root>
 Scrollable content container with customizable scrollbar styling, optional sticky header and footer
 ScrollArea.Root props:
 - children: React.ReactNode — Header, Content, and Footer elements
-- fill: boolean | 'screen' — Stretch to fill height. The Root already fills its parent (100%); set 'screen' to own the viewport height (100dvh) when it's the app-shell root with no sized ancestor.
+- fill: 'parent' | 'remaining' — Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout.
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 ScrollArea.Header props:
@@ -1552,7 +1552,7 @@ Select.Trigger props:
 - invalid: boolean — Invalid state
 - size: 'sm' | 'md' | 'lg' (default: md) — Trigger size
 - variant: 'outlined' | 'filled' (default: outlined) — Visual variant
-- width: Dimension — Custom width override
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.
 - minWidth: Dimension — Minimum width override (token default: 10rem)
 - maxWidth: Dimension — Maximum width override (token default: 30rem — prevents absurdly wide selects in stretched parents)
 Select.Value props:
@@ -1571,7 +1571,7 @@ Select.Content props:
 - sideOffset: number (default: 4) — Distance from trigger in px
 - align: 'start' | 'center' | 'end' — Alignment along the trigger axis
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
-- width: Dimension — Custom width override — by default matches trigger width
+- width: 'anchor' | 'content' (default: anchor) — Where the popover takes its width from. 'anchor' matches the trigger, so trigger and list read as one control; 'content' sizes to the widest option and stays inside the room the anchor has.
 - minWidth: Dimension — Minimum width override (token default: 10rem)
 - maxWidth: Dimension — Maximum width override (token default: 30rem)
 - onPointerDownOutside: (e: Event) => void — Pointer down outside handler
@@ -1910,7 +1910,7 @@ Props:
 - maxRows: number — Maximum number of visible rows when autoSize is enabled
 - rows: number (default: 3) — Number of visible text rows
 - resize: 'none' | 'vertical' | 'horizontal' | 'both' (default: vertical) — CSS resize behavior (overridden to none when autoSize is true)
-- width: Dimension — Explicit width override for the root wrapper
+- width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column.
 - disabled: boolean — Whether the textarea is disabled
 - readOnly: boolean — Whether the textarea is read-only
 - placeholder: string — Placeholder text
