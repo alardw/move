@@ -123,6 +123,25 @@
    * both ToggleGroup and Tabs[variant="pills"]. Override any of these
    * once to restyle every segmented surface in the app.
    * ============================================ */
+  /* ============================================
+   * ANCHORED POPUP SURFACE
+   * ============================================
+   * Shared by every panel that hangs off a control — Select, Autocomplete,
+   * DatePicker, TimeField, ColorInput. They sit on different Radix primitives
+   * and so have different internals: a Radix Select owns scrolling through its
+   * Viewport, while a Popover clips its own box to animate height. The element
+   * that ends up clipping therefore differs per component, which is why the
+   * VALUE lives here and only the placement is local.
+   *
+   * Room for a highlighted row's focus ring to read as a ring rather than being
+   * shaved flat against the panel edge. Derived, not measured: the ring reaches
+   * exactly offset + width, and the extra 2px is the clearance that separates
+   * it from the boundary. Select carried this calc privately and Autocomplete
+   * approximated it with `6px 4px`, so a change to the ring tokens moved one
+   * and not the other.
+   */
+  --move-popup-ring-room: calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px);
+
   /* Track (the container the items sit in) */
   --move-segment-track-bg: var(--move-bg-muted);
   --move-segment-radius: var(--move-rounded-md);

@@ -14,7 +14,7 @@ import {
   extractSteps,
   staggerItems,
   quick,
-  poppy,
+  smooth,
   scaleIn,
   scaleOut,
   fadeIn,
@@ -49,7 +49,15 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
           children: '[role="option"]',
           stagger: staggerItems.stagger,
           animation: {
-            scale: { from: '$scaleFrom', to: 1, ease: poppy },
+            // `smooth`, not `poppy`: this row settles inside the panel's
+            // overflow:hidden box, and a spring that passes its resting size
+            // gets that overshoot shaved off. Every spring here is underdamped,
+            // but they are not close — poppy sits at damping 12 against a
+            // critical 33.5 and overshoots ~30%, while smooth's 25 against 34.6
+            // overshoots ~4%. Against a scale delta this small that is a
+            // fraction of a pixel, so the spring reads as a spring and nothing
+            // has to make room for it.
+            scale: { from: '$scaleFrom', to: 1, ease: smooth },
             opacity: { from: 0, to: 1 },
           },
         },

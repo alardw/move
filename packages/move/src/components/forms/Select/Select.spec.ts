@@ -546,7 +546,7 @@ export const spec = {
           {
             target: 'ContentInner',
             children: '[role="option"]',
-            animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+            animation: { scale: { from: 0.8, to: 1, ease: 'smooth' }, opacity: { from: 0, to: 1 } },
             stagger: { delay: 30 },
           },
           { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
@@ -701,9 +701,9 @@ export const spec = {
     },
     {
       name: '--move-select-ring-room',
-      value: 'calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px)',
+      value: 'var(--move-popup-ring-room)',
       description:
-        "Padding inside the scrolling option list, sized so the selected row's outer focus ring clears the overflow clip",
+        "Padding inside the scrolling option list, sized so the selected row's outer focus ring clears the overflow clip. Reads the shared popup value rather than deriving it again — Autocomplete had approximated the same calc with literal pixels, so a change to the ring tokens moved one panel and not the other.",
     },
     {
       name: '--move-select-content-padding',

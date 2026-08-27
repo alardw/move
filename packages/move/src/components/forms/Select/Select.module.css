@@ -163,6 +163,13 @@
      Vertical clip is fine; items don't overflow horizontally. */
   overflow-y: auto;
   overflow-x: hidden;
+  /* A column with real gaps, not flush rows. The focus ring on a highlighted
+     row reaches outward the same distance vertically as horizontally, so with
+     rows touching it lands on its neighbour instead of in space. Same value as
+     the room around the list, for the same reason. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-popup-ring-room);
   will-change: height;
   max-height: var(--move-select-content-max-height);
   /* Breathing room for item hover scale AND the selected row's OUTER focus ring.
@@ -172,7 +179,7 @@
      shaved down both sides of the selected row. The extra 2px is the clearance
      that makes it read as a ring rather than an edge. scroll-padding keeps the
      same room when Radix scrolls a highlighted row to the edge. */
-  --move-select-ring-room: calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px);
+  --move-select-ring-room: var(--move-popup-ring-room);
   padding: var(--move-select-ring-room);
   scroll-padding-block: var(--move-select-ring-room);
   scrollbar-width: thin;

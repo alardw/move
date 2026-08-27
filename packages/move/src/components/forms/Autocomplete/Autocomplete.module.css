@@ -316,13 +316,25 @@
   overflow: hidden;
   will-change: height, transform;
   transform-origin: top center;
+  /* border-box so the padding and border are absorbed INSIDE the trigger width
+     rather than added on top of it. Without it `width: var(--radix-popover-
+     trigger-width)` sizes the content box, and the panel renders wider than the
+     field it belongs to — with align="start" the excess all hangs off the right
+     edge. Select carries the same line for the same reason. */
+  box-sizing: border-box;
   min-width: var(--move-autocomplete-content-min-width);
   max-width: var(--move-autocomplete-content-max-width);
   background-color: var(--move-autocomplete-content-bg);
   border: 1px solid var(--move-autocomplete-content-border);
   border-radius: var(--move-autocomplete-content-radius);
   box-shadow: var(--move-autocomplete-content-shadow);
-  padding: var(--move-autocomplete-content-padding);
+  /* The room goes HERE, on the element that clips. `.content` carries
+     `overflow: hidden` for its height animation, so it is the boundary a
+     highlighted row's focus ring is shaved against — padding further in, on
+     `.contentInner`, never reaches it. Select needs the same room one level
+     down, because a Radix Select scrolls in its Viewport and its content box
+     does not clip at all. Same contract, different element, one value. */
+  padding: max(var(--move-autocomplete-content-padding), var(--move-popup-ring-room));
   z-index: var(--move-layer-popover);
   font-family: var(--move-font-body);
 }
@@ -351,12 +363,19 @@
 .contentInner {
   max-height: var(--move-autocomplete-content-max-height);
   overflow-y: auto;
+  /* A column with real gaps, not flush rows. The focus ring on a highlighted
+     row reaches outward the same distance vertically as horizontally, so with
+     rows touching it lands on its neighbour instead of in space. Same value as
+     the room around the list, for the same reason. */
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-popup-ring-room);
   /* Breathing room for item hover scale AND the selected row's OUTER focus ring
      (offset 2px + width 2px) — the overflow clip would otherwise cut it on a
      first/last highlighted row. Extra block padding + scroll-padding so the row
      scrolls to the edge with room. */
-  padding: 6px 4px;
-  scroll-padding-block: 6px;
+  padding: var(--move-popup-ring-room);
+  scroll-padding-block: var(--move-popup-ring-room);
   scrollbar-width: thin;
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
