@@ -86,7 +86,10 @@ function getGridTemplate(props: GridProps): string {
   const columns = props.columns as number | undefined;
 
   if (minChildWidth) {
-    return `repeat(auto-fill, minmax(${minChildWidth}, 1fr))`;
+    // min(…, 100%) so the floor can never exceed the container: a bare
+    // minmax() minimum can't shrink, so a preferred width wider than the
+    // available space overflows horizontally instead of wrapping.
+    return `repeat(auto-fill, minmax(min(${minChildWidth}, 100%), 1fr))`;
   }
   if (cols) {
     return `repeat(${cols}, 1fr)`;

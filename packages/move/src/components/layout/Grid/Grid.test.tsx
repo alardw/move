@@ -120,8 +120,20 @@ describe('Grid', () => {
       );
       const el = screen.getByTestId('grid');
       expect(el.style.getPropertyValue('--_grid-template')).toBe(
-        'repeat(auto-fill, minmax(200px, 1fr))',
+        'repeat(auto-fill, minmax(min(200px, 100%), 1fr))',
       );
+    });
+
+    it('caps the minChildWidth floor at 100% so a wide preference wraps instead of overflowing', () => {
+      render(
+        <Grid data-testid="grid" minChildWidth="900px">
+          Content
+        </Grid>,
+      );
+      const el = screen.getByTestId('grid');
+      // A bare minmax(900px, 1fr) floor cannot shrink below 900px, so in any
+      // narrower container the track overflows horizontally.
+      expect(el.style.getPropertyValue('--_grid-template')).toContain('min(900px, 100%)');
     });
 
     it('minChildWidth takes priority over cols', () => {
@@ -132,7 +144,7 @@ describe('Grid', () => {
       );
       const el = screen.getByTestId('grid');
       expect(el.style.getPropertyValue('--_grid-template')).toBe(
-        'repeat(auto-fill, minmax(150px, 1fr))',
+        'repeat(auto-fill, minmax(min(150px, 100%), 1fr))',
       );
     });
 
