@@ -61,4 +61,22 @@ export default defineConfig([
       'max-depth': 'off',
     },
   },
+  {
+    // Component sources, for length only.
+    //
+    // A factory `setup` returns ONE render tree, so its length is the markup the
+    // component has — a colour picker is a saturation field, three sliders, a
+    // format toggle and a swatch grid, and a video player is its whole control
+    // bar. Splitting by line count scatters that across helpers without making
+    // any of it clearer, which is the same reason this repo has no file-size cap
+    // and the same exemption tests already get.
+    //
+    // `complexity` and `max-depth` stay ON here on purpose: those measure
+    // tangle, which is worth acting on wherever it appears. Length alone is not
+    // gnarliness.
+    files: ['src/components/**/*.tsx'],
+    rules: {
+      'max-lines-per-function': 'off',
+    },
+  },
 ]);

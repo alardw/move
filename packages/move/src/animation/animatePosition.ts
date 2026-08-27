@@ -202,6 +202,44 @@ function resolveValue(
  * @param cancelRef - Ref to store/cancel the running animation
  * @param options - Slot elements and vars for resolution
  */
+/**
+ * Resolve every animation value against the measured slots. A value that cannot
+ * be resolved is dropped rather than failing the whole animation — a slot that
+ * has not mounted yet should cost that one property, not the movement.
+ */
+function resolveAnimationValues(
+  animation: Animation,
+  measurements: Record<string, SlotMeasurement>,
+  vars: Record<string, unknown>,
+): Record<string, unknown> {
+  const resolved: Record<string, unknown> = {};
+
+  for (const [key, value] of Object.entries(animation)) {
+    if (key === 'delay') {
+      resolved[key] = value;
+      continue;
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      const propObj = value as Record<string, unknown>;
+      const resolvedProp: Record<string, unknown> = {};
+      for (const [propKey, propVal] of Object.entries(propObj)) {
+        const resolvedVal = resolveValue(propVal, measurements, vars);
+        if (resolvedVal === undefined && propVal !== undefined) continue;
+        resolvedProp[propKey] = resolvedVal;
+      }
+      resolved[key] = resolvedProp;
+      continue;
+    }
+
+    const resolvedVal = resolveValue(value, measurements, vars);
+    if (resolvedVal === undefined && value !== undefined) continue;
+    resolved[key] = resolvedVal;
+  }
+
+  return resolved;
+}
+
 export function animatePosition(
   indicator: HTMLElement | null,
   animation: Animation | undefined,
@@ -230,43 +268,7 @@ export function animatePosition(
     }
   }
 
-  // Resolve all animation values
-  const resolved: Record<string, unknown> = {};
-  let hasUnresolvable = false;
-
-  for (const [key, value] of Object.entries(animation)) {
-    if (key === 'delay') {
-      resolved[key] = value;
-      continue;
-    }
-
-    if (typeof value === 'object' && value !== null) {
-      const propObj = value as Record<string, unknown>;
-      const resolvedProp: Record<string, unknown> = {};
-
-      for (const [propKey, propVal] of Object.entries(propObj)) {
-        const resolvedVal = resolveValue(propVal, measurements, vars);
-        if (resolvedVal === undefined && propVal !== undefined) {
-          hasUnresolvable = true;
-          continue;
-        }
-        resolvedProp[propKey] = resolvedVal;
-      }
-
-      resolved[key] = resolvedProp;
-    } else {
-      const resolvedVal = resolveValue(value, measurements, vars);
-      if (resolvedVal === undefined && value !== undefined) {
-        hasUnresolvable = true;
-        continue;
-      }
-      resolved[key] = resolvedVal;
-    }
-  }
-
-  if (hasUnresolvable) {
-    // Still proceed with what we can resolve
-  }
+  const resolved = resolveAnimationValues(animation, measurements, vars);
 
   // First-run snap
   if (isFirstRun?.current || prefersReducedMotion()) {

@@ -48,9 +48,9 @@ export function hsvToRgb(h: number, s: number, v: number): { r: number; g: numbe
   const X = C * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = V - C;
 
-  let r = 0,
-    g = 0,
-    b = 0;
+  // The chain below is exhaustive (it ends in `else`), so these are assigned
+  // on every path.
+  let r: number, g: number, b: number;
   if (h < 60) {
     r = C;
     g = X;
@@ -186,9 +186,9 @@ export function hslToRgb(h: number, s: number, l: number): { r: number; g: numbe
   const X = C * (1 - Math.abs(((h / 60) % 2) - 1));
   const m = L - C / 2;
 
-  let r = 0,
-    g = 0,
-    b = 0;
+  // The chain below is exhaustive (it ends in `else`), so these are assigned
+  // on every path.
+  let r: number, g: number, b: number;
   if (h < 60) {
     r = C;
     g = X;

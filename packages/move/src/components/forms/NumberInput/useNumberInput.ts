@@ -100,12 +100,15 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
 
   const effectiveShiftStep = shiftStep ?? step * 10;
 
-  function stripAffixes(s: string): string {
-    let result = s;
-    if (prefix && result.startsWith(prefix)) result = result.slice(prefix.length);
-    if (suffix && result.endsWith(suffix)) result = result.slice(0, -suffix.length);
-    return result;
-  }
+  const stripAffixes = useCallback(
+    (s: string): string => {
+      let result = s;
+      if (prefix && result.startsWith(prefix)) result = result.slice(prefix.length);
+      if (suffix && result.endsWith(suffix)) result = result.slice(0, -suffix.length);
+      return result;
+    },
+    [prefix, suffix],
+  );
 
   function toNumber(v: number | string | undefined): number | undefined {
     if (v === undefined || v === '') return undefined;
@@ -237,6 +240,7 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
       prefix,
       suffix,
       displayValue,
+      stripAffixes,
     ],
   );
 
@@ -270,8 +274,7 @@ export function useNumberInput(options: UseNumberInputOptions = {}): UseNumberIn
       formatValueFn,
       parseValueFn,
       fireChange,
-      prefix,
-      suffix,
+      stripAffixes,
     ],
   );
 

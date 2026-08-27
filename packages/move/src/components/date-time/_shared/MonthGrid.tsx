@@ -70,7 +70,8 @@ export function MonthGrid({ className, sp }: MonthGridProps) {
     const from = focusedDate ?? entryDate;
     if (!from) return;
 
-    let next: Date | null = null;
+    // Every surviving branch assigns; `default` returns, so there is no unset path.
+    let next: Date;
 
     switch (e.key) {
       case 'ArrowRight':
@@ -114,15 +115,13 @@ export function MonthGrid({ className, sp }: MonthGridProps) {
         return;
     }
 
-    if (next) {
-      e.preventDefault();
-      setFocusedDate(next);
-      // Auto-navigate if focused date moves outside displayed range
-      const firstDisplayed = months[0].date;
-      const lastDisplayed = addMonths(months[months.length - 1].date, 1);
-      if (next < firstDisplayed || next >= lastDisplayed) {
-        setDisplayMonth(new Date(next.getFullYear(), next.getMonth(), 1));
-      }
+    e.preventDefault();
+    setFocusedDate(next);
+    // Auto-navigate if focused date moves outside displayed range
+    const firstDisplayed = months[0].date;
+    const lastDisplayed = addMonths(months[months.length - 1].date, 1);
+    if (next < firstDisplayed || next >= lastDisplayed) {
+      setDisplayMonth(new Date(next.getFullYear(), next.getMonth(), 1));
     }
   };
 

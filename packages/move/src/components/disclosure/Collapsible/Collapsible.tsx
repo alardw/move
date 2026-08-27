@@ -415,6 +415,11 @@ const CollapsibleContent = withMoveComponent<
           direction: 'exit' as const,
         },
       ];
+      // `context` is deliberately absent: the provider builds a fresh value on
+      // every render, so depending on it would rebuild this config every render
+      // and the memo would do nothing. Only `onCloseComplete` is read, and at completion
+      // time the closure's latest value is the one wanted.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       context.isOpening,
       context.isClosing,

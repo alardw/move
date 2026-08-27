@@ -117,12 +117,9 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
       const viewport = viewportRef.current;
       if (!viewport || pageCount === 0) return;
 
-      let resolved = targetPage;
-      if (loop) {
-        resolved = ((targetPage % pageCount) + pageCount) % pageCount;
-      } else {
-        resolved = Math.max(0, Math.min(targetPage, pageCount - 1));
-      }
+      const resolved = loop
+        ? ((targetPage % pageCount) + pageCount) % pageCount
+        : Math.max(0, Math.min(targetPage, pageCount - 1));
 
       const isHorizontal = orientation === 'horizontal';
       const slideElements = Array.from(viewport.children) as HTMLElement[];

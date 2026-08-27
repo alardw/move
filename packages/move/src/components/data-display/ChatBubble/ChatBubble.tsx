@@ -87,7 +87,10 @@ const ChatBubbleRoot = withMoveComponent<'root', ChatBubbleRootProps, HTMLDivEle
       return () => {
         anim?.cancel?.();
       };
-    }, []); // mount-only
+      // Mount-only on purpose: the entrance is one-shot, so re-running it when a
+      // prop identity changes would replay it on an already-settled bubble.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return {
       render() {

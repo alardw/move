@@ -1041,6 +1041,19 @@ export interface DatePickerContentProps {
   [key: string]: unknown;
 }
 
+/**
+ * The exit contract the Root owns, with its fallbacks applied. Content can be
+ * rendered without a Root in a test or a story, so every read needs a default —
+ * gathered here rather than restated at each use.
+ */
+function exitState(dpCtx: React.ContextType<typeof DatePickerContext>) {
+  return {
+    isClosing: dpCtx?.isClosing ?? false,
+    epoch: dpCtx?.epoch ?? 0,
+    onExitDone: dpCtx?.onExitDone ?? (() => {}),
+  };
+}
+
 const DatePickerContentInner = React.forwardRef<
   HTMLDivElement,
   DatePickerContentProps & { layer: number }
@@ -1051,6 +1064,7 @@ const DatePickerContentInner = React.forwardRef<
   const layer = rawLayer as number;
   const dpCtx = React.useContext(DatePickerContext);
   const animConfig = dpCtx?.animConfig ?? null;
+  const timeLabel = dpCtx?.labels.time ?? DEFAULT_LABELS.time;
 
   // Owned by Root — the focus container lives there, with the field refs.
   const localContentRef = React.useRef<HTMLDivElement>(null);
@@ -1068,19 +1082,12 @@ const DatePickerContentInner = React.forwardRef<
       Content: contentRef as React.RefObject<HTMLElement | null>,
       ContentInner: innerRef as React.RefObject<HTMLElement | null>,
     }),
-    [],
+    [contentRef, innerRef],
   );
 
   const { runExit, runEnter, pauseAll } = useAnimations(contentConfig, contentRefs);
 
-  useDismissableExit({
-    isClosing: dpCtx?.isClosing ?? false,
-    epoch: dpCtx?.epoch ?? 0,
-    onExitDone: dpCtx?.onExitDone ?? (() => {}),
-    runExit,
-    runEnter,
-    pauseAll,
-  });
+  useDismissableExit({ ...exitState(dpCtx), runExit, runEnter, pauseAll });
 
   const mergedRef = useMergedRef(forwardedRef, contentRef as React.Ref<HTMLDivElement>);
 
@@ -1129,9 +1136,7 @@ const DatePickerContentInner = React.forwardRef<
         }
         {dpCtx?.showTime && dpCtx.timePlacement === 'popup' && (
           <div className={styles.datePickerTime}>
-            <span className={styles.datePickerTimeLabel}>
-              {dpCtx?.labels.time ?? DEFAULT_LABELS.time}
-            </span>
+            <span className={styles.datePickerTimeLabel}>{timeLabel}</span>
             <TimeField
               value={dpCtx.timeValue}
               onValueChange={dpCtx.onTimeChange}

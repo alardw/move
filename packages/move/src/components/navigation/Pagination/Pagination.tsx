@@ -135,6 +135,10 @@ const PaginationRoot = withMoveComponent<'root', PaginationRootProps, HTMLElemen
         variant: props.variant as PaginationVariant,
         labels,
       }),
+      // `labels` deliberately absent: it is merged fresh on every render, so
+      // depending on the object would defeat the memo; the four strings the
+      // context actually carries are listed.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [
         pagination,
         props.size,
@@ -469,7 +473,7 @@ const PaginationItems = withMoveComponent<
           },
         },
       ],
-      [rangeKey, range, page],
+      [rangeKey, range, page, internalRef],
     );
 
     useAnimations(slideConfig, animRefs);

@@ -154,7 +154,7 @@ function ToastItem({ toast }: { toast: ToastState }) {
         ],
       },
     ];
-  }, [isPresent, toastId, toastDuration]);
+  }, [isPresent, toastDuration]);
 
   const progressRefs = React.useMemo(
     () => ({

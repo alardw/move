@@ -175,6 +175,9 @@ export function useDatePicker(
     }
 
     return '';
+    // `calendar` deliberately absent: only `calendar.value` is read here, and the calendar object is rebuilt on
+    // every render, so depending on it would defeat the memo.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [calendar.value, mode, locale]);
 
   const isSingleMode = mode === 'single';

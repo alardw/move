@@ -143,6 +143,10 @@ export function Presence({
     });
 
     isInitialRender.current = false;
+    // `childStates and presentChildren` deliberately absent: this runs when the KEY SET changes, which `presentKeysString` captures;
+    // the other two are read for their current values at that moment and must not
+    // re-trigger it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presentKeysString, mode]);
 
   const handleExitComplete = (key: Key) => {

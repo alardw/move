@@ -328,6 +328,10 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       }
 
       return cats;
+      // `player` deliberately absent: the object changes identity on every media
+      // tick, so depending on it would rebuild this menu constantly; the fields
+      // actually read are listed.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       player.playbackRate,
       player.activeQualityIndex,

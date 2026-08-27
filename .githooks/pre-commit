@@ -55,11 +55,16 @@ if [ -n "$staged_move" ]; then
   ( cd packages/move && printf '%s\n' "$rel" | xargs npx prettier --write ) || { echo "✗ prettier failed."; exit 1; }
   printf '%s\n' "$staged_move" | xargs git add
 
-  # Lint staged TS/TSX — errors block the commit; complexity rules only warn.
+  # Lint staged TS/TSX — anything ESLint reports blocks the commit.
   rel_lint=$(printf '%s\n' "$rel" | grep -E '\.(ts|tsx)$' || true)
   if [ -n "$rel_lint" ]; then
-    if ! ( cd packages/move && printf '%s\n' "$rel_lint" | xargs npx eslint ); then
-      echo "✗ eslint: staged Move source has lint errors (warnings are fine). Fix them."
+    # --max-warnings 0: the package is at zero, and a warning nobody acts on is
+    # noise that buries the real ones. If a metric rule is measuring the wrong
+    # thing for a file's shape, change the rule in eslint.config.mjs with a
+    # reason — that is a decision in one reviewable place, not a disable comment
+    # per site.
+    if ! ( cd packages/move && printf '%s\n' "$rel_lint" | xargs npx eslint --max-warnings 0 ); then
+      echo "✗ eslint: staged Move source has lint problems. Fix them (warnings count)."
       exit 1
     fi
   fi

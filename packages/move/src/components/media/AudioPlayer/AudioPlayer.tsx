@@ -259,6 +259,9 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       }
 
       return cats;
+      // `player` deliberately absent: the player object changes identity on every media tick, so depending on it
+      // would rebuild this menu constantly; the fields actually read are listed.
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       player.playbackRate,
       player.activeQualityIndex,

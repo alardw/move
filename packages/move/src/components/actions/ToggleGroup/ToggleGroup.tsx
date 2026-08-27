@@ -123,7 +123,7 @@ const ToggleGroupRoot = withMoveComponent<
         Root: internalRef as React.RefObject<HTMLElement | null>,
         Indicator: indicatorRef,
       }),
-      [internalRef],
+      [internalRef, indicatorRef],
     );
     const { handlers } = useAnimations(animConfig, animRefs);
     React.useEffect(() => {

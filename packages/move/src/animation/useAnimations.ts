@@ -140,6 +140,87 @@ function animToPromise(anim: unknown, fallbackMs: number): Promise<void> {
 /**
  * Execute a single animation step.
  */
+/** Where a step's animations get registered, so a trigger can pause or cancel them. */
+interface StepTracking {
+  activeAnims?: Set<JSAnimation>;
+  triggerAnims?: Map<string, JSAnimation>;
+  triggerName?: string;
+}
+
+/**
+ * Every path through `executeStep` ends the same way: nothing to run resolves
+ * immediately, and a running animation is tracked and awaited with a timeout a
+ * little past its own duration. Written once so the four paths differ only in
+ * the animation they start.
+ */
+function settle(
+  anim: JSAnimation | undefined | null,
+  step: AnimationStep,
+  fallbackMs: number,
+  tracking: StepTracking,
+): Promise<void> {
+  if (!anim) return Promise.resolve();
+  const { activeAnims, triggerAnims, triggerName } = tracking;
+  if (activeAnims && triggerAnims && triggerName) {
+    trackAnimation(anim, activeAnims, triggerAnims, triggerName);
+  }
+  const own = (anim as { duration?: unknown }).duration;
+  const duration = typeof own === 'number' ? own : fallbackMs;
+  return wrapStepPromise(animToPromise(anim, duration + 100), step);
+}
+
+/** The longest duration any property in this animation asks for. */
+function longestDuration(animation: Record<string, unknown>, floor: number): number {
+  let longest = floor;
+  for (const val of Object.values(animation)) {
+    if (typeof val === 'object' && val !== null && 'duration' in val) {
+      longest = Math.max(longest, (val as { duration?: number }).duration ?? floor);
+    }
+  }
+  return longest;
+}
+
+/**
+ * The cancel ref this step should pause before it starts.
+ *
+ * The `children` selector is part of the key. `staggerAnimate` pauses whatever
+ * the cancel ref holds before it starts, so two stagger steps sharing a target
+ * used to cancel each other — in a parallel group only the last one survived,
+ * and the earlier ones froze at their seeded `from` values (invisible, for a
+ * scale or opacity). Steps with different selectors animate different elements
+ * and must not interfere; re-running the SAME step still resolves to the same
+ * key, so cancel-on-refire is unchanged.
+ */
+function cancelRefFor(
+  cancelRefs: Map<string, React.MutableRefObject<JSAnimation | null>>,
+  target: string,
+  step: AnimationStep,
+): React.MutableRefObject<JSAnimation | null> {
+  const suffix = step.children ? `-${step.children}` : '';
+  const key = `${target}-${step.fn ?? 'move'}${suffix}`;
+  const existing = cancelRefs.get(key);
+  if (existing) return existing;
+  const created = { current: null };
+  cancelRefs.set(key, created);
+  return created;
+}
+
+/**
+ * A flag set on this target's first positional animation, so it snaps into place
+ * instead of sliding in from wherever the indicator happened to be. Returns
+ * undefined once that has happened.
+ */
+function firstRunFlag(
+  cancelRefs: Map<string, React.MutableRefObject<JSAnimation | null>>,
+  target: string,
+): React.MutableRefObject<boolean> | undefined {
+  const key = `${target}-position-first`;
+  if (cancelRefs.has(key)) return undefined;
+  const flag = { current: true };
+  cancelRefs.set(key, flag as unknown as React.MutableRefObject<JSAnimation | null>);
+  return flag;
+}
+
 function executeStep(
   step: AnimationStep,
   refs: RefMap,
@@ -164,11 +245,7 @@ function executeStep(
   // scale or opacity). Steps with different selectors animate different
   // elements and must not interfere; re-running the SAME step still resolves to
   // the same key, so cancel-on-refire is unchanged.
-  const cancelKey = `${target}-${step.fn ?? 'move'}${step.children ? `-${step.children}` : ''}`;
-  if (!cancelRefs.has(cancelKey)) {
-    cancelRefs.set(cancelKey, { current: null });
-  }
-  const cancelRef = cancelRefs.get(cancelKey)!;
+  const cancelRef = cancelRefFor(cancelRefs, target, step);
 
   let animation = resolveStepAnimation(step);
 
@@ -177,44 +254,24 @@ function executeStep(
     animation = resolveAnimationVars(animation, vars);
   }
 
+  const tracking: StepTracking = { activeAnims, triggerAnims, triggerName };
+
   // Stagger path
   if (step.children && step.stagger) {
-    if (!el) {
-      return Promise.resolve();
-    }
-    const anim = staggerAnimate(el, step.children, animation, step.stagger, cancelRef, direction);
-    if (!anim) return Promise.resolve();
-    if (activeAnims && triggerAnims && triggerName) {
-      trackAnimation(anim, activeAnims, triggerAnims, triggerName);
-    }
-    return wrapStepPromise(
-      animToPromise(
-        anim,
-        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 1000) + 100,
-      ),
+    if (!el) return Promise.resolve();
+    return settle(
+      staggerAnimate(el, step.children, animation, step.stagger, cancelRef, direction),
       step,
+      1000,
+      tracking,
     );
   }
 
   // animateDimension path
   if (step.fn === 'animateDimension') {
-    if (!el) {
-      return Promise.resolve();
-    }
-    const raw = animation ?? {};
-    const prop: 'height' | 'width' = 'width' in raw ? 'width' : 'height';
-    const anim = animateDimension(el, prop, direction, cancelRef, animation);
-    if (!anim) return Promise.resolve();
-    if (activeAnims && triggerAnims && triggerName) {
-      trackAnimation(anim, activeAnims, triggerAnims, triggerName);
-    }
-    return wrapStepPromise(
-      animToPromise(
-        anim,
-        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100,
-      ),
-      step,
-    );
+    if (!el) return Promise.resolve();
+    const prop: 'height' | 'width' = 'width' in (animation ?? {}) ? 'width' : 'height';
+    return settle(animateDimension(el, prop, direction, cancelRef, animation), step, 300, tracking);
   }
 
   // animatePosition path
@@ -226,28 +283,12 @@ function executeStep(
     for (const [name, r] of Object.entries(refs)) {
       slotElements[name] = r.current;
     }
-    const isFirstRun = cancelRefs.has(`${target}-position-first`)
-      ? undefined
-      : (() => {
-          const fr = { current: true };
-          cancelRefs.set(`${target}-position-first`, fr as any);
-          return fr;
-        })();
-    const anim = animatePosition(el, animation, cancelRef, {
-      slots: slotElements,
-      vars,
-      isFirstRun,
-    });
-    if (!anim) return Promise.resolve();
-    if (activeAnims && triggerAnims && triggerName) {
-      trackAnimation(anim, activeAnims, triggerAnims, triggerName);
-    }
-    return wrapStepPromise(
-      animToPromise(
-        anim,
-        (typeof (anim as any).duration === 'number' ? (anim as any).duration : 300) + 100,
-      ),
+    const isFirstRun = firstRunFlag(cancelRefs, target);
+    return settle(
+      animatePosition(el, animation, cancelRef, { slots: slotElements, vars, isFirstRun }),
       step,
+      300,
+      tracking,
     );
   }
 
@@ -260,19 +301,14 @@ function executeStep(
     return Promise.resolve();
   }
   const anim = moveAnimate(el, animation, cancelRef);
-  if (!anim) return Promise.resolve();
-  if (activeAnims && triggerAnims && triggerName) {
-    trackAnimation(anim, activeAnims, triggerAnims, triggerName);
-  }
   // Looping animations never complete — resolve immediately
-  if (isLooping(animation)) return Promise.resolve();
-  let maxDur = 200;
-  for (const val of Object.values(animation)) {
-    if (typeof val === 'object' && val !== null && 'duration' in val) {
-      maxDur = Math.max(maxDur, (val as any).duration ?? 200);
+  if (anim && isLooping(animation)) {
+    if (activeAnims && triggerAnims && triggerName) {
+      trackAnimation(anim, activeAnims, triggerAnims, triggerName);
     }
+    return Promise.resolve();
   }
-  return wrapStepPromise(animToPromise(anim, maxDur + 100), step);
+  return settle(anim, step, longestDuration(animation, 200), tracking);
 }
 
 /**
@@ -450,18 +486,22 @@ export interface UseAnimationsReturn {
  * @param refs - Map of slot name → React ref
  * @param states - State declarations for state triggers
  */
-export function useAnimations(
+/**
+ * Event-trigger handlers, built from the config.
+ *
+ * Split out of `useAnimations` because it is one self-contained job — turning
+ * declared triggers into props a component can spread — while the rest of the
+ * orchestrator is about lifecycle, state observation and exit. The refs come in
+ * as parameters so the ownership stays visible.
+ */
+function useTriggerHandlers(
   config: AnimationTrigger[] | false | null,
   refs: RefMap,
-  states?: AnimationState[],
-  options?: UseAnimationsOptions,
-): UseAnimationsReturn {
-  const cancelRefs = useRef(new Map<string, React.MutableRefObject<JSAnimation | null>>());
-  const activeAnims = useRef(new Set<JSAnimation>());
-  const triggerAnims = useRef(new Map<string, JSAnimation>());
-
-  // Build handlers for event triggers
-  const handlers = useMemo(() => {
+  cancelRefs: React.MutableRefObject<Map<string, React.MutableRefObject<JSAnimation | null>>>,
+  activeAnims: React.MutableRefObject<Set<JSAnimation>>,
+  triggerAnims: React.MutableRefObject<Map<string, JSAnimation>>,
+): HandlerMap {
+  return useMemo(() => {
     const result: HandlerMap = {};
 
     if (!config) return result;
@@ -648,7 +688,22 @@ export function useAnimations(
     }
 
     return result;
-  }, [config, refs]);
+    // The three ref containers are stable for the life of the component, so
+    // listing them changes nothing about when handlers rebuild.
+  }, [config, refs, cancelRefs, activeAnims, triggerAnims]);
+}
+export function useAnimations(
+  config: AnimationTrigger[] | false | null,
+  refs: RefMap,
+  states?: AnimationState[],
+  options?: UseAnimationsOptions,
+): UseAnimationsReturn {
+  const cancelRefs = useRef(new Map<string, React.MutableRefObject<JSAnimation | null>>());
+  const activeAnims = useRef(new Set<JSAnimation>());
+  const triggerAnims = useRef(new Map<string, JSAnimation>());
+
+  // Build handlers for event triggers
+  const handlers = useTriggerHandlers(config, refs, cancelRefs, activeAnims, triggerAnims);
 
   // Delegate event setup — wire up capture listeners on container elements
   useEffect(() => {

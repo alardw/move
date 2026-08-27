@@ -96,33 +96,132 @@ export interface CarouselRootProps {
   indicatorInset?: string | number;
 }
 
-const CarouselRoot: React.FC<CarouselRootProps> = ({
-  children,
-  className,
-  style,
-  orientation = 'horizontal',
-  align = 'start',
-  slidesPerView = 1,
-  loop = false,
-  autoplay = 0,
-  draggable = true,
-  animations,
-  page,
-  defaultPage,
-  onPageChange,
-  showTriggers = false,
-  showIndicators = false,
-  triggerPlacement = 'top',
-  triggerAlign = 'end',
-  triggerSize = 'md',
-  triggerVariant = 'surface',
-  overlayInset = 'var(--move-spacing-sm)',
-  overlayOffsetY = '50%',
-  overlayHideUntilHover = false,
-  indicatorPlacement = 'below',
-  indicatorGap,
-  indicatorInset = 'var(--move-spacing-sm)',
-}) => {
+const toCssValue = (value: string | number | undefined) =>
+  value == null ? undefined : typeof value === 'number' ? `${value}px` : value;
+
+/** The spacing custom properties a caller actually set, as inline style. */
+function spacingVars(o: {
+  indicatorGap?: string | number;
+  indicatorInset?: string | number;
+  overlayInset?: string | number;
+  overlayOffsetY?: string | number;
+}): React.CSSProperties {
+  const vars: Record<string, string | undefined> = {};
+  const set = (name: string, value: string | number | undefined) => {
+    if (value != null) vars[name] = toCssValue(value);
+  };
+  set('--move-carousel-indicator-gap', o.indicatorGap);
+  set('--move-carousel-indicator-inset', o.indicatorInset);
+  set('--move-carousel-overlay-inset', o.overlayInset);
+  set('--move-carousel-overlay-offset-y', o.overlayOffsetY);
+  return vars as React.CSSProperties;
+}
+
+/** Triggers flanking the indicators, as one row. */
+function IndicatorSides({
+  showTriggers,
+  showIndicators,
+  align,
+  size,
+  variant,
+}: {
+  showTriggers: boolean;
+  showIndicators: boolean;
+  align: string;
+  size: 'sm' | 'md' | 'lg';
+  variant: 'surface' | 'ghost' | 'solid';
+}) {
+  return (
+    <div className={styles.indicatorSides} data-align={align}>
+      {showTriggers && <CarouselPrevTrigger size={size} variant={variant} />}
+      {showIndicators && <CarouselIndicatorGroup />}
+      {showTriggers && <CarouselNextTrigger size={size} variant={variant} />}
+    </div>
+  );
+}
+
+/**
+ * Which optional regions this configuration shows, and where.
+ *
+ * The placement rules read as one table here rather than as a chain of tests
+ * spread through the render tree — where they are answering the same question
+ * five times and it is hard to see that `indicator-sides` suppresses the others.
+ */
+function resolveRegions(o: {
+  showTriggers: boolean;
+  showIndicators: boolean;
+  triggerPlacement: string;
+  indicatorPlacement: string;
+}) {
+  const autoTriggers = o.showTriggers && o.triggerPlacement !== 'none';
+  // The sides layout owns both triggers and indicators, so it stands in for
+  // every other placement rather than sitting alongside them.
+  const indicatorSides =
+    o.triggerPlacement === 'indicator-sides' && (o.showTriggers || o.showIndicators);
+  const looseIndicators = o.showIndicators && !indicatorSides;
+  return {
+    triggersTop: autoTriggers && o.triggerPlacement === 'top',
+    triggersOverlay: autoTriggers && o.triggerPlacement === 'overlay',
+    triggersBottom: autoTriggers && o.triggerPlacement === 'bottom',
+    indicatorsInside: looseIndicators && o.indicatorPlacement === 'inside-bottom',
+    indicatorsBelow: looseIndicators && o.indicatorPlacement === 'below',
+    indicatorSides,
+  };
+}
+
+/**
+ * The chrome a Carousel draws around its slides, with every fallback in one
+ * place. Read as a table rather than as two dozen defaults spread across a
+ * destructure, where it is hard to see which knobs belong together.
+ */
+function chromeDefaults(p: CarouselRootProps) {
+  return {
+    showTriggers: p.showTriggers ?? false,
+    showIndicators: p.showIndicators ?? false,
+    triggerPlacement: p.triggerPlacement ?? 'top',
+    triggerAlign: p.triggerAlign ?? 'end',
+    triggerSize: p.triggerSize ?? 'md',
+    triggerVariant: p.triggerVariant ?? 'surface',
+    overlayInset: p.overlayInset ?? 'var(--move-spacing-sm)',
+    overlayOffsetY: p.overlayOffsetY ?? '50%',
+    overlayHideUntilHover: p.overlayHideUntilHover ?? false,
+    indicatorPlacement: p.indicatorPlacement ?? 'below',
+    indicatorGap: p.indicatorGap,
+    indicatorInset: p.indicatorInset ?? 'var(--move-spacing-sm)',
+  } as const;
+}
+
+const CarouselRoot: React.FC<CarouselRootProps> = (props) => {
+  const {
+    children,
+    className,
+    style,
+    orientation = 'horizontal',
+    align = 'start',
+    slidesPerView = 1,
+    loop = false,
+    autoplay = 0,
+    draggable = true,
+    animations,
+    page,
+    defaultPage,
+    onPageChange,
+  } = props;
+  const {
+    showTriggers,
+    showIndicators,
+    triggerPlacement,
+    triggerAlign,
+    triggerSize,
+    triggerVariant,
+    overlayInset,
+    overlayOffsetY,
+    overlayHideUntilHover,
+    indicatorPlacement,
+    indicatorGap,
+    indicatorInset,
+  } = chromeDefaults(props);
+
   const carousel = useCarousel({
     page,
     defaultPage,
@@ -156,30 +255,17 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
     [carousel],
   );
 
-  const toCssValue = React.useCallback((value: string | number | undefined) => {
-    if (value == null) return undefined;
-    return typeof value === 'number' ? `${value}px` : value;
-  }, []);
-
   const rootStyle: React.CSSProperties = {
     ...style,
-    ...(indicatorGap != null
-      ? { ['--move-carousel-indicator-gap' as string]: toCssValue(indicatorGap) }
-      : undefined),
-    ...(indicatorInset != null
-      ? { ['--move-carousel-indicator-inset' as string]: toCssValue(indicatorInset) }
-      : undefined),
-    ...(overlayInset != null
-      ? { ['--move-carousel-overlay-inset' as string]: toCssValue(overlayInset) }
-      : undefined),
-    ...(overlayOffsetY != null
-      ? { ['--move-carousel-overlay-offset-y' as string]: toCssValue(overlayOffsetY) }
-      : undefined),
+    ...spacingVars({ indicatorGap, indicatorInset, overlayInset, overlayOffsetY }),
   };
 
-  const showAutoTriggers = showTriggers && triggerPlacement !== 'none';
-  const showIndicatorSidesLayout =
-    triggerPlacement === 'indicator-sides' && (showTriggers || showIndicators);
+  const at = resolveRegions({
+    showTriggers,
+    showIndicators,
+    triggerPlacement,
+    indicatorPlacement,
+  });
 
   const renderTriggerPair = () => (
     <>
@@ -198,7 +284,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
         role="region"
         aria-roledescription="carousel"
       >
-        {showAutoTriggers && triggerPlacement === 'top' && (
+        {at.triggersTop && (
           <div className={styles.autoRow} data-align={triggerAlign} data-position="top">
             {renderTriggerPair()}
           </div>
@@ -207,40 +293,32 @@ const CarouselRoot: React.FC<CarouselRootProps> = ({
         <div className={styles.frame}>
           {children}
 
-          {showAutoTriggers && triggerPlacement === 'overlay' && (
-            <div className={styles.overlayNav}>{renderTriggerPair()}</div>
-          )}
+          {at.triggersOverlay && <div className={styles.overlayNav}>{renderTriggerPair()}</div>}
 
-          {showIndicators &&
-            indicatorPlacement === 'inside-bottom' &&
-            !showIndicatorSidesLayout && (
-              <div className={styles.insideIndicators}>
-                <CarouselIndicatorGroup />
-              </div>
-            )}
+          {at.indicatorsInside && (
+            <div className={styles.insideIndicators}>
+              <CarouselIndicatorGroup />
+            </div>
+          )}
         </div>
 
-        {showIndicatorSidesLayout && (
-          <div className={styles.indicatorSides} data-align={triggerAlign}>
-            {showTriggers ? (
-              <CarouselPrevTrigger size={triggerSize} variant={triggerVariant} />
-            ) : null}
-            {showIndicators ? <CarouselIndicatorGroup /> : null}
-            {showTriggers ? (
-              <CarouselNextTrigger size={triggerSize} variant={triggerVariant} />
-            ) : null}
-          </div>
+        {at.indicatorSides && (
+          <IndicatorSides
+            showTriggers={showTriggers}
+            showIndicators={showIndicators}
+            align={triggerAlign}
+            size={triggerSize}
+            variant={triggerVariant}
+          />
         )}
 
-        {showAutoTriggers && triggerPlacement === 'bottom' && (
+        {at.triggersBottom && (
           <div className={styles.autoRow} data-align={triggerAlign} data-position="bottom">
             {renderTriggerPair()}
           </div>
         )}
 
-        {showIndicators && indicatorPlacement === 'below' && !showIndicatorSidesLayout && (
-          <CarouselIndicatorGroup />
-        )}
+        {at.indicatorsBelow && <CarouselIndicatorGroup />}
       </div>
     </CarouselContext.Provider>
   );

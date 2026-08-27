@@ -144,7 +144,7 @@ const TableOfContentsRoot = withMoveComponent<
         } as EventListenerOptions);
         window.removeEventListener('resize', computeActive);
       };
-    }, [registrationVersion, offset]);
+    }, [registrationVersion, offset, scheduleUnlock]);
 
     const ctx = React.useMemo<TocContextValue>(
       () => ({ activeHref, register, lockActive }),

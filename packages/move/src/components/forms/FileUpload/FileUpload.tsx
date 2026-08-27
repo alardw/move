@@ -324,19 +324,23 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       validate: props.validate as UseFileUploadOptions['validate'],
     });
 
-    // Wrapped removeFile/clearFiles that also untrack from upload manager
+    // Wrapped removeFile/clearFiles that also untrack from upload manager.
+    // Destructured so each callback depends on the method it calls rather than
+    // the whole adapter, whose identity changes for reasons neither cares about.
+    const { removeFile: removeUploadFile, clearFiles: clearUploadFiles } = upload;
+
     const removeFile = React.useCallback(
       (file: File) => {
         managerRef.current.untrackFile(file);
-        upload.removeFile(file);
+        removeUploadFile(file);
       },
-      [upload.removeFile],
+      [removeUploadFile],
     );
 
     const clearFiles = React.useCallback(() => {
       managerRef.current.untrackAll();
-      upload.clearFiles();
-    }, [upload.clearFiles]);
+      clearUploadFiles();
+    }, [clearUploadFiles]);
 
     // Animation config
     const animConfig = resolveAnimationsConfig(

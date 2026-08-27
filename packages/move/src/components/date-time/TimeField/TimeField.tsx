@@ -320,11 +320,14 @@ const TimeFieldSegment = withMoveComponent<'segment', TimeFieldSegmentProps, HTM
     const mergedRef = useMergedRef<HTMLInputElement>(ref, inputRef);
     const segType = props.segment as SegmentType;
 
-    // Register ref
+    // Register ref. The map is read into a local so cleanup unregisters from the
+    // same map this effect registered with, not whichever one the ref points at
+    // by the time the component unmounts.
     React.useEffect(() => {
-      segmentRefs.current.set(segType, inputRef.current);
+      const registry = segmentRefs.current;
+      registry.set(segType, inputRef.current);
       return () => {
-        segmentRefs.current.delete(segType);
+        registry.delete(segType);
       };
     }, [segType, segmentRefs]);
 
@@ -464,11 +467,12 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLDi
     const btnRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, btnRef);
 
-    // Register ref
+    // Register ref — see the note on Segment: cleanup uses the map captured here.
     React.useEffect(() => {
-      segmentRefs.current.set('period', btnRef.current);
+      const registry = segmentRefs.current;
+      registry.set('period', btnRef.current);
       return () => {
-        segmentRefs.current.delete('period');
+        registry.delete('period');
       };
     }, [segmentRefs]);
 
