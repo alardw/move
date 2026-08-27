@@ -113,6 +113,12 @@ export const CHECKS: CheckDoc[] = [
       'Colours come from `--move-*` tokens — no raw hex/rgb/hsl in component CSS. Colour tools and media overlays are file-exempt via `token-exempt-file`.',
   },
   {
+    name: 'prop-precedence',
+    appliesTo: 'component',
+    enforces:
+      "An attribute set after a `{...attrs}` spread replaces what the caller passed, and a conditional one resolving to `undefined` deletes it — leaving the element with no accessible name. Naming props (`aria-label`, `aria-labelledby`, `aria-describedby`, `aria-valuetext`, `title`, `alt`) must precede the spread or read the caller's value back, because a component can only supply a default. Structural props stay after it: `role`, `type` and `aria-expanded` ARE the component. Reading the caller's value back is equally legal, so the check parses rather than greps. Escape: a justified `precedence-exempt` comment.",
+  },
+  {
     name: 'css-transitions',
     appliesTo: 'component',
     enforces:
