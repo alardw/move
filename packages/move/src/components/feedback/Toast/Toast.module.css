@@ -204,6 +204,15 @@
     background var(--move-transition-fast) var(--move-ease-default);
 }
 
+/* Its own indicator. Without one the browser's default applies, and Chrome's is
+   deliberately two-toned — a dark ring inside a white one so it survives any
+   background — which read as the button having two borders. Alert's close
+   already defined this; Toast's never did. */
+.closeButton:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+}
+
 /* Expand the pointer target to ≥24px (WCAG 2.5.8) without enlarging the 20px
    visual icon. */
 .closeButton::before {

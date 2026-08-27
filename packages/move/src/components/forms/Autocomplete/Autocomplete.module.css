@@ -193,13 +193,16 @@
   /* Room for the remove button's focus ring, which reaches outward as far as
      `--move-focus-ring-offset + width`. At spacing-xs the ring lands on the
      last letter of the label rather than in space beside it. */
-  gap: var(--move-spacing-sm);
+  gap: 0;
   min-height: var(--move-autocomplete-tag-height);
   max-width: var(--move-autocomplete-tag-max-width);
   /* Asymmetric on purpose. The remove button carries its own 24px hit area,
      so the right side already reads as having room while the label sat almost
      against the left edge. Equal padding measures equal and looks lopsided. */
-  padding: 0 var(--move-spacing-xs) 0 var(--move-spacing-sm);
+  /* Only on the label side. The remove button is a full-height segment at the
+     right end and reaches the tag's own border, so padding there would push it
+     off the edge it is meant to meet. */
+  padding: 0 0 0 var(--move-spacing-sm);
   background-color: var(--move-autocomplete-tag-bg);
   border: 1px solid var(--move-autocomplete-tag-border);
   border-radius: var(--move-autocomplete-tag-radius);
@@ -231,7 +234,15 @@
   position: relative;
   width: var(--move-control-target-min);
   height: var(--move-control-target-min);
-  border-radius: var(--move-rounded-sm);
+  /* A SEGMENT of the tag, not a rounded box floating in it: square where it
+     meets the label, and following the tag's own curve on the outside so the
+     two edges read as one. The border is the divider between them. */
+  border-radius: 0 var(--move-autocomplete-tag-radius) var(--move-autocomplete-tag-radius) 0;
+  border-left: 1px solid var(--move-autocomplete-tag-border);
+  /* Its own left padding replaces the flex gap, so the glyph is not jammed
+     against the divider. */
+  padding-inline: var(--move-spacing-xs);
+  box-sizing: content-box;
   cursor: pointer;
   color: var(--move-fg-muted);
   flex-shrink: 0;
@@ -250,9 +261,13 @@
   background-color: var(--move-bg-emphasis);
 }
 
+/* INSET. The tag clips its own overflow to keep the segment inside its rounded
+   corners, so an outset ring is shaved off top, bottom and right — which is
+   what it did. Drawn inward it sits wholly within the segment and cannot be
+   cut, the same choice the option rows make against their scroll clip. */
 .tagRemove:focus-visible {
   outline: var(--move-focus-ring);
-  outline-offset: 0px;
+  outline-offset: calc(-1 * var(--move-focus-ring-offset) - var(--move-focus-ring-width));
 }
 
 /* =========================================================================
