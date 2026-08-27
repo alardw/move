@@ -12,7 +12,7 @@ export const spec = {
   families: {
     behavior: ['layout'],
     state: ['stateless'],
-    a11y: ['none'],
+    a11y: ['region'],
   },
 
   compound: true,
@@ -53,10 +53,10 @@ export const spec = {
         },
         {
           name: 'fill',
-          type: "boolean | 'screen'",
+          type: "'parent' | 'remaining'",
           moveSpecific: true,
           description:
-            "Stretch to fill height. The Root already fills its parent (100%); set 'screen' to own the viewport height (100dvh) when it's the app-shell root with no sized ancestor.",
+            "Where the Root's height comes from. It already fills its parent (100%); set 'remaining' when it sits in a flex chain and should take the space left after siblings. See /systems/layout.",
         },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -178,8 +178,11 @@ export const spec = {
   },
 
   controlled: null,
-  keyboard: null,
-  focus: null,
+  // Move adds no key handlers — the browser scrolls a focused scrollport with
+  // arrows/Page keys on its own. What Move owes it is reach: Content takes
+  // focus while it overflows, so those keys have somewhere to land.
+  keyboard: 'none' as const,
+  focus: 'self' as const,
   formType: null,
   asChild: false,
 
@@ -253,7 +256,7 @@ export const spec = {
   labels: [],
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
 
   componentDeps: [] as string[],
 

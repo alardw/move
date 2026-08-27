@@ -7,5 +7,8 @@ export type { UseInViewOptions, UseInViewReturn } from './useInView';
 export { useTruncate } from './useTruncate';
 export type { UseTruncateOptions, UseTruncateReturn } from './useTruncate';
 
+export { useOverflow } from './useOverflow';
+export type { OverflowAxis, UseOverflowOptions, UseOverflowReturn } from './useOverflow';
+
 export { Deferred } from './Deferred';
 export type { DeferredProps } from './Deferred';

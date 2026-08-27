@@ -98,6 +98,16 @@ export const HOOKS_REGISTRY: HookDoc[] = [
       "Report whether a text element is actually clipped by its truncate strategy (re-measured on resize) — so you can show a tooltip only when text is really cut off.",
     category: "Viewport",
   },
+  {
+    name: "useOverflow",
+    signature: "useOverflow({ axis?, enabled? }): { ref, isOverflowing }",
+    summary:
+      "Report whether an element's content currently overflows it (re-measured on resize and on content growth) — so a scroll region takes focus, or a fade edge appears, only when there is something to scroll.",
+    category: "Viewport",
+    example: `const { ref, isOverflowing } = useOverflow<HTMLDivElement>();
+
+<div ref={ref} tabIndex={isOverflowing ? 0 : undefined}>…</div>`,
+  },
 
   // ── Animation & motion ──────────────────────────────────────────
   {

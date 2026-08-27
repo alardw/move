@@ -186,6 +186,87 @@ describe('ScrollArea', () => {
   });
 
   // === ScrollArea.Footer ===
+  // === Keyboard reach ===
+  // A scroll container is not focusable by default in Chrome/Safari, so an
+  // overflowing region whose content holds nothing focusable is unreachable by
+  // keyboard (WCAG 2.1.1). These assert what a keyboard user gets, not that an
+  // attribute was written.
+  describe('ScrollArea.Content keyboard reach', () => {
+    const setOverflow = (el: Element, scrollHeight: number, clientHeight: number) => {
+      Object.defineProperty(el, 'scrollHeight', { configurable: true, value: scrollHeight });
+      Object.defineProperty(el, 'clientHeight', { configurable: true, value: clientHeight });
+    };
+
+    it('takes focus once its content overflows', () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content">Long</ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 900, 100);
+      rerender(<ScrollArea.Content data-testid="content">Longer</ScrollArea.Content>);
+
+      el.focus();
+      expect(el).toHaveFocus();
+    });
+
+    it('is not a tab stop while its content fits', () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content">Short</ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 100, 100);
+      rerender(<ScrollArea.Content data-testid="content">Short</ScrollArea.Content>);
+
+      expect(el).not.toHaveAttribute('tabindex');
+    });
+
+    it('announces as a named region when it overflows and has a name', () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content" aria-label="Messages">
+          Long
+        </ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 900, 100);
+      rerender(
+        <ScrollArea.Content data-testid="content" aria-label="Messages">
+          Longer
+        </ScrollArea.Content>,
+      );
+
+      expect(screen.getByRole('region', { name: 'Messages' })).toBe(el);
+    });
+
+    it('claims no region role without a name, since an unnamed region is not exposed', () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content">Long</ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 900, 100);
+      rerender(<ScrollArea.Content data-testid="content">Longer</ScrollArea.Content>);
+
+      expect(el).not.toHaveAttribute('role');
+      expect(screen.queryByRole('region')).toBeNull();
+    });
+
+    it('lets a consumer override the tab index', () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content" tabIndex={-1}>
+          Long
+        </ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 900, 100);
+      rerender(
+        <ScrollArea.Content data-testid="content" tabIndex={-1}>
+          Longer
+        </ScrollArea.Content>,
+      );
+
+      expect(el).toHaveAttribute('tabindex', '-1');
+    });
+  });
+
   describe('ScrollArea.Footer', () => {
     it('renders as a div element', () => {
       render(<ScrollArea.Footer data-testid="footer">Footer</ScrollArea.Footer>);

@@ -35,7 +35,7 @@ export type { PopupMechanism, PopupFocusContract } from './spec-type';
 export type { UseControlledStateOptions } from './engine';
 
 // General-purpose hooks + their wrapper components
-export { useInView, useTruncate, Deferred } from './hooks';
+export { useInView, useTruncate, useOverflow, Deferred } from './hooks';
 export type {
   UseInViewOptions,
   UseInViewReturn,
@@ -1019,6 +1019,8 @@ export type {
   Radius,
   Truncate,
   Dimension,
+  FieldWidth,
+  PopoverWidth,
 } from './shared/types';
 export { MOVE_COLORS } from './shared/color';
 export { CANONICAL_TYPES, resolveTypeRef, valuesForTypeRef } from './shared/typeRegistry';

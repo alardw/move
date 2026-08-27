@@ -1,8 +1,9 @@
 'use client';
 import * as React from 'react';
 
-import { withMoveComponent } from '../../../engine';
+import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
+import { useOverflow } from '../../../hooks';
 import styles from './ScrollArea.module.css';
 
 // ============================================================================
@@ -13,9 +14,6 @@ export interface ScrollAreaRootProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  /** Stretch to fill height. The Root already fills its parent (100%); set
-   *  `'screen'` to own the viewport height (100dvh) when it's the app-shell
-   *  root with no sized ancestor. */
   /** Where the Root's height comes from. It already fills its parent (100%);
    *  set `'remaining'` when it sits in a flex chain and should take the space
    *  left after siblings. See /systems/layout. */
@@ -118,6 +116,10 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
   moveProps: ['padded'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Vertical only: .content is overflow-y:auto / overflow-x:hidden.
+    const { ref: overflowRef, isOverflowing } = useOverflow<HTMLDivElement>({ axis: 'vertical' });
+    const mergedRef = useMergedRef<HTMLDivElement>(ref, overflowRef);
+
     return {
       render() {
         const contentSp = sp('content');
@@ -126,11 +128,21 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
           style: spStyle,
           ...spRest
         } = contentSp as Record<string, unknown>;
+        const named = Boolean(props['aria-label'] ?? props['aria-labelledby']);
         return (
           <div
+            // Chrome and Safari don't make a scroll container focusable, so
+            // when it overflows and nothing inside it takes focus, a keyboard
+            // user can't reach the hidden content at all (WCAG 2.1.1). Applied
+            // only while it actually overflows — a scrollport with nothing
+            // hidden would otherwise be a tab stop that does nothing.
+            tabIndex={isOverflowing ? 0 : undefined}
+            // An unnamed region isn't exposed as one, so claim the role only
+            // when the consumer has given it a name to announce.
+            role={isOverflowing && named ? 'region' : undefined}
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             data-padded={props.padded}
             className={cx('content', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
