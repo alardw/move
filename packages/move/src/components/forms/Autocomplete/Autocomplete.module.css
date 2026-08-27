@@ -62,7 +62,12 @@
   border-color: var(--move-autocomplete-trigger-border-hover);
 }
 
-.trigger:focus-within {
+/* One focus indicator at a time. `:focus-within` alone lit the field's border
+   while a nested control drew its own ring, so tabbing to the clear button
+   showed TWO rings and left it ambiguous which one Enter would act on. The
+   field highlights for its own input; the buttons inside speak for themselves.
+   Password carries the same rule for its reveal toggle. */
+.trigger:focus-within:not(:has(.clearTrigger:focus-visible)):not(:has(.tagRemove:focus-visible)) {
   border-color: var(--move-autocomplete-trigger-border-focus);
   outline: var(--move-focus-ring);
   outline-offset: 0px;
@@ -105,7 +110,9 @@
   --move-autocomplete-trigger-border: var(--move-error);
 }
 
-.trigger[data-invalid]:focus-within {
+.trigger[data-invalid]:focus-within:not(:has(.clearTrigger:focus-visible)):not(
+    :has(.tagRemove:focus-visible)
+  ) {
   border-color: var(--move-error);
   outline: var(--move-focus-ring-width) solid var(--move-error);
   outline-offset: 0px;
@@ -183,9 +190,10 @@
   gap: var(--move-spacing-xs);
   min-height: var(--move-autocomplete-tag-height);
   max-width: var(--move-autocomplete-tag-max-width);
-  /* Symmetric horizontal padding; visual balance is carried by the tag's
-     own padding + the button's own padded hit area. */
-  padding: 0 var(--move-spacing-xs);
+  /* Asymmetric on purpose. The remove button carries its own 24px hit area,
+     so the right side already reads as having room while the label sat almost
+     against the left edge. Equal padding measures equal and looks lopsided. */
+  padding: 0 var(--move-spacing-xs) 0 var(--move-spacing-sm);
   background-color: var(--move-autocomplete-tag-bg);
   border: 1px solid var(--move-autocomplete-tag-border);
   border-radius: var(--move-autocomplete-tag-radius);

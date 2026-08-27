@@ -702,3 +702,43 @@ describe('useAutocomplete — close-on-select animation', () => {
     expect(requestClose).toHaveBeenCalledTimes(1);
   });
 });
+describe('Autocomplete — tag remove button', () => {
+  /**
+   * The button names the LABEL, not the value key. TagList renders
+   * `getLabel(val)` as the tag's text, so an aria-label built from `value`
+   * announced "Remove us-ca" for a tag reading California.
+   */
+  it('names the tag by its label, not its value', () => {
+    render(
+      <Autocomplete.Root multiple defaultValue={['react']} animations={false}>
+        <Autocomplete.Trigger>
+          <Autocomplete.TagList />
+          <Autocomplete.Input placeholder="p" />
+        </Autocomplete.Trigger>
+        <Autocomplete.Content>
+          <Autocomplete.Item value="react">React</Autocomplete.Item>
+        </Autocomplete.Content>
+      </Autocomplete.Root>,
+    );
+    expect(screen.getByRole('button', { name: 'Remove React' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Remove react' })).not.toBeInTheDocument();
+  });
+
+  it('removes the tag when clicked', () => {
+    render(
+      <Autocomplete.Root multiple defaultValue={['react', 'htmx']} animations={false}>
+        <Autocomplete.Trigger>
+          <Autocomplete.TagList />
+          <Autocomplete.Input placeholder="p" />
+        </Autocomplete.Trigger>
+        <Autocomplete.Content>
+          <Autocomplete.Item value="react">React</Autocomplete.Item>
+          <Autocomplete.Item value="htmx">HTMX</Autocomplete.Item>
+        </Autocomplete.Content>
+      </Autocomplete.Root>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Remove React' }));
+    expect(screen.queryByRole('button', { name: 'Remove React' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Remove HTMX' })).toBeInTheDocument();
+  });
+});

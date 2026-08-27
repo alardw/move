@@ -644,11 +644,21 @@ const AutocompleteTag = withMoveComponent<
             <button
               {...removeSpRest}
               type="button"
-              aria-label={ac.labels.removeTag.replace('{value}', props.value as string)}
+              // The label, not the value key. TagList passes `getLabel(val)` as
+              // children, which `titleText` already resolves — so a screen
+              // reader said "Remove us-ca" where the tag reads California.
+              aria-label={ac.labels.removeTag.replace('{value}', titleText)}
               className={cx('tagRemove', removeSpClass as string | undefined)}
               style={removeSpStyle as React.CSSProperties}
               onClick={handleRemove}
-              tabIndex={-1}
+              // In the tab order. A tag here is inert — it holds a label and a
+              // remove button, and nothing else in it does anything — so the
+              // close button is the only interactive element and has to be
+              // reachable. Backspace was the fallback, but it peels off the
+              // LAST tag only: removing the second of five meant destroying
+              // three others, which is a path rather than equivalent access.
+              // If the tab stops grow tiresome the answer is a roving tabindex
+              // across the tag list, not an unreachable button.
             >
               {resolvedX}
             </button>
