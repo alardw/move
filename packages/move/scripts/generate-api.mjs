@@ -283,6 +283,22 @@ lines.push(
 );
 lines.push(`> ${components.length} components. Version ${pkg.version}.`);
 lines.push('');
+lines.push('## Props you pass');
+lines.push('');
+lines.push('Anything you pass a component lands on the element it renders. Three kinds settle differently:');
+lines.push('');
+lines.push(
+  '- NAMES — aria-label, aria-labelledby, aria-describedby, aria-valuetext, title, alt. Yours wins; the component supplies a default for when you say nothing.',
+);
+lines.push(
+  '- HANDLERS — onClick, onKeyDown, onFocus and other DOM events. Both run, yours first. Call preventDefault() and the component stands down.',
+);
+lines.push(
+  '- STRUCTURE — role, type, aria-expanded, aria-sort, aria-checked, data-*. The component owns these; they say what it is and what state it is in.',
+);
+lines.push('');
+lines.push('For text a component displays, use its `labels` prop — one object per component.');
+lines.push('');
 for (const c of components) {
   lines.push(`## ${c.name} (${c.category})`);
   if (c.description) lines.push(c.description);

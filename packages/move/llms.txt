@@ -4,6 +4,16 @@
 > props, allowed values, defaults, and an example. Import components from 'move'.
 > 71 components. Version 0.1.53.
 
+## Props you pass
+
+Anything you pass a component lands on the element it renders. Three kinds settle differently:
+
+- NAMES — aria-label, aria-labelledby, aria-describedby, aria-valuetext, title, alt. Yours wins; the component supplies a default for when you say nothing.
+- HANDLERS — onClick, onKeyDown, onFocus and other DOM events. Both run, yours first. Call preventDefault() and the component stands down.
+- STRUCTURE — role, type, aria-expanded, aria-sort, aria-checked, data-*. The component owns these; they say what it is and what state it is in.
+
+For text a component displays, use its `labels` prop — one object per component.
+
 ## Accordion (disclosure)
 Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal
 Props:
