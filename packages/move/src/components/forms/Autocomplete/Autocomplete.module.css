@@ -363,13 +363,6 @@
 .contentInner {
   max-height: var(--move-autocomplete-content-max-height);
   overflow-y: auto;
-  /* A column with real gaps, not flush rows. The focus ring on a highlighted
-     row reaches outward the same distance vertically as horizontally, so with
-     rows touching it lands on its neighbour instead of in space. Same value as
-     the room around the list, for the same reason. */
-  display: flex;
-  flex-direction: column;
-  gap: var(--move-popup-ring-room);
   /* Breathing room for item hover scale AND the selected row's OUTER focus ring
      (offset 2px + width 2px) — the overflow clip would otherwise cut it on a
      first/last highlighted row. Extra block padding + scroll-padding so the row
@@ -419,6 +412,16 @@
   outline: none;
   will-change: transform;
   overflow: hidden;
+}
+
+/* Room BETWEEN rows, not around them. A highlighted row's focus ring reaches
+   outward as far vertically as horizontally, so with rows flush it lands on the
+   neighbour — clearest when the row above is the selected one and its fill meets
+   the ring. Adjacent-sibling rather than a gap on the container: that element
+   carries a max-height, and making it a flex column lets its rows shrink to fit
+   instead of keeping their own height. */
+.item + .item {
+  margin-top: calc(var(--move-popup-ring-room) / 2);
 }
 
 /* Wrapping span around item children — see Select.itemText for rationale. */

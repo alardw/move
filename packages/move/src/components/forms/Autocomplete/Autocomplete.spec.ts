@@ -997,7 +997,7 @@ export const spec = {
           {
             target: 'ContentInner',
             children: '[role="option"]',
-            animation: { scale: { from: 0.8, to: 1, ease: 'smooth' }, opacity: { from: 0, to: 1 } },
+            animation: { scale: { from: 0.8, to: 1, ease: 'quick' }, opacity: { from: 0, to: 1 } },
             stagger: { delay: 30 },
           },
           { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },

@@ -14,7 +14,6 @@ import {
   extractSteps,
   staggerItems,
   quick,
-  smooth,
   useDismissable,
   useDismissableExit,
 } from '../../../animation';
@@ -109,15 +108,15 @@ const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
           children: CHILDREN_SELECTOR,
           stagger: staggerItems.stagger,
           animation: {
-            // `smooth`, not `poppy`: this row settles inside the panel's
+            // `quick`, not `poppy`: this row settles inside the panel's
             // overflow:hidden box, and a spring that passes its resting size
             // gets that overshoot shaved off. Every spring here is underdamped,
             // but they are not close — poppy sits at damping 12 against a
-            // critical 33.5 and overshoots ~30%, while smooth's 25 against 34.6
-            // overshoots ~4%. Against a scale delta this small that is a
-            // fraction of a pixel, so the spring reads as a spring and nothing
-            // has to make room for it.
-            scale: { from: '$scaleFrom', to: 1, ease: smooth },
+            // critical 33.5 and overshoots ~30%, while quick's 20 against 31
+            // overshoots ~7%. Against a scale delta this small that is a
+            // fraction of a pixel, so it still reads as a spring without
+            // needing room made for it.
+            scale: { from: '$scaleFrom', to: 1, ease: quick },
             opacity: { from: 0, to: 1, duration: 200 },
           },
         },
