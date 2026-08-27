@@ -2,7 +2,7 @@
 // Generated from Select.spec.ts
 
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
 import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
@@ -339,7 +339,7 @@ export interface SelectTriggerProps extends React.HTMLAttributes<HTMLElement> {
   invalid?: boolean;
   size?: SelectTriggerSize;
   variant?: SelectTriggerVariant;
-  width?: Dimension;
+  width?: FieldWidth;
   minWidth?: Dimension;
   maxWidth?: Dimension;
   sp?: SlotPropsMap<'trigger'>;
@@ -386,11 +386,9 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             data-size={props.size}
             data-variant={props.variant}
             className={cx('trigger', props.className, spClass as string | undefined)}
+            data-width={props.width as string | undefined}
             style={{
               ...props.style,
-              ...(props.width != null
-                ? { width: props.width as React.CSSProperties['width'] }
-                : {}),
               ...(props.minWidth != null
                 ? { minWidth: props.minWidth as React.CSSProperties['minWidth'] }
                 : {}),
@@ -568,7 +566,7 @@ export interface SelectContentProps extends React.HTMLAttributes<HTMLElement> {
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
-  width?: Dimension;
+  width?: PopoverWidth;
   minWidth?: Dimension;
   maxWidth?: Dimension;
   onPointerDownOutside?: (e: Event) => void;
@@ -584,7 +582,7 @@ interface SelectContentInnerProps {
   style?: React.CSSProperties;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
-  width?: Dimension;
+  width?: PopoverWidth;
   minWidth?: Dimension;
   maxWidth?: Dimension;
   onPointerDownOutside?: (e: Event) => void;
@@ -710,13 +708,13 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
         style={{
           ...props.style,
           ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
-          ...(props.width != null ? { width: props.width } : {}),
           ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
           ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
           ...(spStyle as React.CSSProperties),
         }}
         onPointerDownOutside={handlePointerDownOutside}
         onEscapeKeyDown={handleEscapeKeyDown}
+        data-width={(props.width as string | undefined) ?? 'anchor'}
         data-surface="subtle"
       >
         {/* The consumer's <Select.Viewport> renders Radix's Viewport as the DIRECT
@@ -773,9 +771,9 @@ const SelectContent = withMoveComponent<
               style={props.style}
               sideOffset={props.sideOffset as number | undefined}
               align={props.align as 'start' | 'center' | 'end' | undefined}
-              width={props.width as React.CSSProperties['width'] | undefined}
-              minWidth={props.minWidth as React.CSSProperties['minWidth'] | undefined}
-              maxWidth={props.maxWidth as React.CSSProperties['maxWidth'] | undefined}
+              width={props.width as PopoverWidth | undefined}
+              minWidth={props.minWidth as Dimension | undefined}
+              maxWidth={props.maxWidth as Dimension | undefined}
               onPointerDownOutside={props.onPointerDownOutside as ((e: Event) => void) | undefined}
               onEscapeKeyDown={props.onEscapeKeyDown as ((e: KeyboardEvent) => void) | undefined}
               contentCx={cx}

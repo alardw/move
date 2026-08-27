@@ -97,6 +97,14 @@ describe('Autocomplete', () => {
       expect(trigger).toHaveAttribute('data-variant', 'filled');
     });
 
+    it('applies data-width from the field-width scale', () => {
+      const { container } = renderAutocomplete({ triggerProps: { width: 'sm' } });
+      const trigger = container.querySelector('[class*="trigger"]');
+      expect(trigger).toHaveAttribute('data-width', 'sm');
+      // The step resolves in CSS, capped at the space available — never inline.
+      expect((trigger as HTMLElement).style.width).toBe('');
+    });
+
     it('sets data-disabled when disabled', () => {
       const { container } = renderAutocomplete({ triggerProps: { disabled: true } });
       const trigger = container.querySelector('[class*="trigger"]');

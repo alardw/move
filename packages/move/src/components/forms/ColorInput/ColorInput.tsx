@@ -2,7 +2,7 @@
 // Generated from ColorInput.spec.ts
 
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, usePopupFocus } from '../../../engine';
 import { useFormField } from '../FormField/FormField';
@@ -54,7 +54,7 @@ export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   withEyeDropper?: boolean;
   closeOnColorSwatchClick?: boolean;
   invalid?: boolean;
-  width?: Dimension;
+  width?: FieldWidth;
   labels?: Partial<ColorInputLabels>;
   disabled?: boolean;
   readOnly?: boolean;
@@ -442,7 +442,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
         const invalid = props.invalid as boolean | undefined;
         const disabled = props.disabled as boolean | undefined;
         const readOnly = props.readOnly as boolean | undefined;
-        const width = props.width as React.CSSProperties['width'] | undefined;
+        const width = props.width as string | undefined;
         const withEyeDropper = props.withEyeDropper as boolean | undefined;
         const showEyeDropper =
           withEyeDropper && typeof window !== 'undefined' && !!window.EyeDropper;
@@ -460,10 +460,10 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
                   rootSpClass as string | undefined,
                 )}
                 style={{
-                  width,
                   ...(props.style as React.CSSProperties),
                   ...(rootSpStyle as React.CSSProperties),
                 }}
+                data-width={width}
                 data-variant={variant}
                 data-size={sizeVal}
                 data-format={format}

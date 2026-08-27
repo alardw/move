@@ -1,7 +1,7 @@
 'use client';
 // Generated from InputText.spec.ts
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import styles from './InputText.module.css';
@@ -15,7 +15,7 @@ export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
   invalid?: boolean;
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
-  width?: Dimension;
+  width?: FieldWidth;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
@@ -84,11 +84,8 @@ export const InputText = withMoveComponent<
           <div
             {...spRest}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{
-              ...props.style,
-              ...(props.width != null ? { width: props.width } : {}),
-              ...(spStyle as React.CSSProperties),
-            }}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-width={props.width as string | undefined}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}

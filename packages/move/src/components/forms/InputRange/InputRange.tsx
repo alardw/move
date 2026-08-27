@@ -2,7 +2,7 @@
 // Generated from InputRange.spec.ts
 
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { Slider } from 'radix-ui';
 import { useFieldGroup } from '../FormField/FormField';
 import { withMoveComponent, useMergedRef } from '../../../engine';
@@ -31,7 +31,7 @@ export interface InputRangeProps extends Omit<React.HTMLAttributes<HTMLElement>,
   disabled?: boolean;
   invalid?: boolean;
   orientation?: 'horizontal' | 'vertical';
-  width?: Dimension;
+  width?: FieldWidth;
   name?: string;
   showValue?: boolean;
   formatValue?: (value: number) => string;
@@ -156,20 +156,16 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
 
         const rootStyle: React.CSSProperties = {
           ...(showValue ? {} : props.style),
-          ...(showValue
-            ? {}
-            : props.width
-              ? { width: props.width as React.CSSProperties['width'] }
-              : {}),
           ...(rootSpStyle as React.CSSProperties),
         };
 
         const wrapperStyle: React.CSSProperties | undefined = showValue
-          ? {
-              ...props.style,
-              ...(props.width ? { width: props.width as React.CSSProperties['width'] } : {}),
-            }
+          ? { ...props.style }
           : undefined;
+
+        // The width lands on whichever element is the outer box: the wrapper
+        // when a value is shown beside the track, the root otherwise.
+        const width = props.width as string | undefined;
 
         const valueClassName = cx('value', valueSpClass as string | undefined);
         const valueStyle = valueSpStyle as React.CSSProperties | undefined;
@@ -195,6 +191,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
               rootSpClass as string | undefined,
             )}
             style={rootStyle}
+            data-width={showValue ? undefined : width}
           >
             <Slider.Track
               {...trackSpRest}
@@ -238,6 +235,7 @@ export const InputRange = withMoveComponent<InputRangeSlots, InputRangeProps, HT
           <div
             className={[styles.wrapper, props.className].filter(Boolean).join(' ')}
             style={wrapperStyle}
+            data-width={width}
             data-orientation={orientation}
           >
             {isRange && (

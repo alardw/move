@@ -1,7 +1,7 @@
 'use client';
 // Generated from NumberInput.spec.ts
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { withMoveComponent } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -47,7 +47,7 @@ export interface NumberInputProps extends React.HTMLAttributes<HTMLElement> {
   allowNegative?: boolean;
   hideControls?: boolean;
   invalid?: boolean;
-  width?: Dimension;
+  width?: FieldWidth;
   iconLeft?: React.ReactNode;
   prefix?: string;
   suffix?: string;
@@ -231,7 +231,7 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
         const disabled = props.disabled as boolean | undefined;
         const readOnly = props.readOnly as boolean | undefined;
         const hideControls = props.hideControls as boolean;
-        const width = props.width as React.CSSProperties['width'] | undefined;
+        const width = props.width as string | undefined;
         const iconLeft = props.iconLeft as React.ReactNode | undefined;
 
         return (
@@ -240,10 +240,10 @@ export const NumberInput = withMoveComponent<NumberInputSlots, NumberInputProps,
             ref={ref}
             className={cx('root', props.className, rootSpClass as string | undefined)}
             style={{
-              ...(width != null ? { width } : {}),
               ...props.style,
               ...(rootSpStyle as React.CSSProperties),
             }}
+            data-width={width}
             data-variant={variant}
             data-size={sizeVal}
             {...(invalid ? { 'data-invalid': '' } : {})}

@@ -1,7 +1,7 @@
 'use client';
 // Generated from Password.spec.ts
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import type { SlotPropsMap } from '../../../engine/types';
@@ -35,7 +35,7 @@ export interface PasswordProps extends React.HTMLAttributes<HTMLElement> {
   iconLeft?: React.ReactNode;
   showIcon?: React.ReactNode;
   hideIcon?: React.ReactNode;
-  width?: Dimension;
+  width?: FieldWidth;
   visible?: boolean;
   defaultVisible?: boolean;
   onVisibleChange?: (visible: boolean) => void;
@@ -150,13 +150,8 @@ export const Password = withMoveComponent<PasswordSlots, PasswordProps, HTMLInpu
           <div
             {...spRest}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{
-              ...props.style,
-              ...(props.width != null
-                ? { width: props.width as React.CSSProperties['width'] }
-                : {}),
-              ...(spStyle as React.CSSProperties),
-            }}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-width={props.width as string | undefined}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}

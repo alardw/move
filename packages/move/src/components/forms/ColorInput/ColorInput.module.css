@@ -287,3 +287,26 @@
      full value and the saturation cursor at full brightness. */
   padding: var(--move-spacing-md);
 }
+
+/* Field widths. Each step is capped at the space available, so the control
+   narrows with its column rather than overflowing it. */
+.root[data-width='auto'] {
+  width: auto;
+  max-width: 100%;
+}
+
+.root[data-width='xs'] {
+  width: min(var(--move-field-width-xs), 100%);
+}
+
+.root[data-width='sm'] {
+  width: min(var(--move-field-width-sm), 100%);
+}
+
+.root[data-width='md'] {
+  width: min(var(--move-field-width-md), 100%);
+}
+
+.root[data-width='lg'] {
+  width: min(var(--move-field-width-lg), 100%);
+}

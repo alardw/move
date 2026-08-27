@@ -59,7 +59,7 @@ export function DesignPatternsOverviewPage() {
       <Stack gap="lg">
         <Stack direction="row" gap="md" align="center" wrap>
           <InputText
-            width={320}
+            width="lg"
             placeholder="Search patterns…"
             value={query}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}

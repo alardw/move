@@ -104,9 +104,11 @@ export const spec = {
     },
     {
       name: 'width',
-      typeRef: 'Dimension',
+      typeRef: 'FieldWidth',
+      default: "'full'",
       moveSpecific: true,
-      description: 'Custom width override',
+      description:
+        "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.",
     },
     { name: 'name', type: 'string', moveSpecific: false, description: 'Form input name' },
     {
@@ -138,7 +140,13 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-size', 'data-invalid', 'data-disabled', 'data-orientation'],
+    dataAttributes: [
+      'data-size',
+      'data-width',
+      'data-invalid',
+      'data-disabled',
+      'data-orientation',
+    ],
     children: [
       {
         slot: 'track',

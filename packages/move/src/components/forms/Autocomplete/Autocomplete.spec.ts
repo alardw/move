@@ -296,9 +296,11 @@ export const spec = {
         },
         {
           name: 'width',
-          typeRef: 'Dimension',
+          typeRef: 'FieldWidth',
+          default: "'full'",
           moveSpecific: true,
-          description: 'Explicit width override',
+          description:
+            "How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column.",
         },
       ],
       usesFactory: true,
@@ -463,9 +465,11 @@ export const spec = {
         },
         {
           name: 'width',
-          typeRef: 'Dimension',
+          typeRef: 'PopoverWidth',
+          default: "'anchor'",
           moveSpecific: true,
-          description: 'Override the popover width.',
+          description:
+            "Where the popover takes its width from. 'anchor' matches the trigger, so field and list read as one control; 'content' sizes to the widest option — what a narrow field with long labels needs — and stays inside the room the anchor has.",
         },
         {
           name: 'minWidth',
@@ -813,7 +817,7 @@ export const spec = {
 
   anatomy: {
     slot: 'trigger',
-    dataAttributes: ['data-size', 'data-variant', 'data-disabled', 'data-invalid'],
+    dataAttributes: ['data-size', 'data-variant', 'data-width', 'data-disabled', 'data-invalid'],
     children: [
       {
         slot: 'triggerContent',
@@ -825,7 +829,7 @@ export const spec = {
       },
       {
         slot: 'content',
-        dataAttributes: [],
+        dataAttributes: ['data-width'],
         children: [
           {
             slot: 'contentInner',

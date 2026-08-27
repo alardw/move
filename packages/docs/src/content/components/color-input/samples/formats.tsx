@@ -19,7 +19,7 @@ export default function FormatsSample() {
           onValueChange={setValue}
           format="rgba"
           formatOptions={['hex', 'rgb', 'hsl']}
-          width="20rem"
+          width="lg"
         />
       </FormField.Field>
       <FormField.Description>

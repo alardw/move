@@ -14,7 +14,7 @@ export default function BasicSample() {
             <Text weight="semibold">Acme Co.</Text>
           </Align.Start>
           <Align.Center>
-            <InputText placeholder="Search anything…" width="16rem" />
+            <InputText placeholder="Search anything…" width="md" />
           </Align.Center>
           <Align.End>
             <Button variant="ghost" size="sm" aria-label="Notifications">

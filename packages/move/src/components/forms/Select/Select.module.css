@@ -143,7 +143,6 @@
      box-sizing: border-box so padding + border are absorbed inside the
      trigger width rather than added on top. */
   box-sizing: border-box;
-  width: var(--radix-select-trigger-width);
   min-width: var(--move-select-content-min-width);
   max-width: var(--move-select-content-max-width);
   background-color: var(--move-select-content-bg);
@@ -296,4 +295,43 @@
   height: 1px;
   background-color: var(--move-select-separator-color);
   margin: var(--move-select-separator-margin) 0;
+}
+
+/* Where the popover takes its width from. 'anchor' keeps trigger and list
+   reading as one control; 'content' sizes to the widest option — what a narrow
+   trigger with long labels needs — and stays inside the room the anchor has. */
+.content[data-width='anchor'] {
+  width: var(--radix-select-trigger-width);
+}
+
+.content[data-width='content'] {
+  /* Redefine the token rather than the property, so the base rule's
+     `max-width: var(--move-select-content-max-width)` picks this up and a
+     consumer setting the token still wins. */
+  --move-select-content-max-width: var(--radix-select-content-available-width, 100vw);
+
+  width: max-content;
+}
+
+/* Field widths. Each step is capped at the space available, so the trigger
+   narrows with its column rather than overflowing it. */
+.trigger[data-width='auto'] {
+  width: auto;
+  max-width: 100%;
+}
+
+.trigger[data-width='xs'] {
+  width: min(var(--move-field-width-xs), 100%);
+}
+
+.trigger[data-width='sm'] {
+  width: min(var(--move-field-width-sm), 100%);
+}
+
+.trigger[data-width='md'] {
+  width: min(var(--move-field-width-md), 100%);
+}
+
+.trigger[data-width='lg'] {
+  width: min(var(--move-field-width-lg), 100%);
 }

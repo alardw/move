@@ -89,9 +89,11 @@ export const spec = {
     },
     {
       name: 'width',
-      typeRef: 'Dimension',
+      typeRef: 'FieldWidth',
+      default: "'full'",
       moveSpecific: true,
-      description: 'Explicit width override',
+      description:
+        "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.",
     },
     // Value
     {
@@ -215,6 +217,7 @@ export const spec = {
     dataAttributes: [
       'data-variant',
       'data-size',
+      'data-width',
       'data-format',
       'data-invalid',
       'data-disabled',

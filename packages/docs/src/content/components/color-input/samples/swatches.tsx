@@ -34,7 +34,7 @@ export default function SwatchesSample() {
           onValueChange={setValue}
           swatches={brand}
           swatchesPerRow={6}
-          width="20rem"
+          width="lg"
         />
       </FormField.Field>
       <FormField.Description>value: {value}</FormField.Description>

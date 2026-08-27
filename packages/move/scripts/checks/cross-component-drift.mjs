@@ -21,6 +21,10 @@
  *     canonical literal forms (drift candidate — should migrate)
  *   - prop has `typeRef` that's NOT in the allowed list for this
  *     prop name (real bug)
+ *   - a `width` prop in `forms/` with no `typeRef` at all — there the
+ *     canonical type is REQUIRED, since a form control's width is a scale
+ *     (`FieldWidth`) or a popover's is a mode (`PopoverWidth`), never a raw
+ *     length the container cannot overrule
  *
  * What's exempt:
  *
@@ -67,6 +71,29 @@ const ALLOWED_TYPEREFS = {
   color:   ['Color'],
   radius:  ['Radius'],
 };
+
+/**
+ * `width` in `forms/` is never a raw length.
+ *
+ * A form control's width is a SCALE (`FieldWidth`), because a length there is a
+ * size the container cannot overrule — the one thing a call site may not state,
+ * and the shape that put an inline `style.width` inside two components while
+ * purity forbade consumers the same move. A popover's width is a MODE
+ * (`PopoverWidth`): what it was ever used for is "don't inherit the anchor's
+ * width", which is a choice between two behaviours, not a measurement.
+ *
+ * Elsewhere `width` stays `Dimension` — a genuine measurement, like a pane the
+ * user drags.
+ */
+const FORMS_WIDTH_TYPEREFS = ['FieldWidth', 'PopoverWidth'];
+
+/**
+ * …and it must SAY so. Checking the typeRef only when one is present leaves the
+ * way back in wide open: a spec that writes `type: 'number | string'` and no
+ * typeRef matches no canonical signature, so it lands among the intentional
+ * locals and passes green. That is the shape a raw width returns in.
+ */
+const requiresTypeRef = (propName, category) => propName === 'width' && category === 'forms';
 
 // Literal-union signatures that mean "this is the canonical thing,
 // you should be using typeRef." Used to flag non-migrated specs.
@@ -204,7 +231,7 @@ function listComponents() {
       const compDir = join(catDir, compName);
       if (!statSync(compDir).isDirectory()) continue;
       const specFile = join(compDir, `${compName}.spec.ts`);
-      if (existsSync(specFile)) out.push({ name: compName, specFile });
+      if (existsSync(specFile)) out.push({ name: compName, category: cat, specFile });
     }
   }
   return out;
@@ -224,8 +251,23 @@ for (const c of components) {
   const props = collectAllProps(specObj);
 
   for (const p of props) {
-    const allowed = ALLOWED_TYPEREFS[p.name];
+    const allowed =
+      p.name === 'width' && c.category === 'forms'
+        ? FORMS_WIDTH_TYPEREFS
+        : ALLOWED_TYPEREFS[p.name];
     if (!allowed) continue; // not a canonical-claimed name
+
+    if (!p.typeRef && requiresTypeRef(p.name, c.category)) {
+      errors.push({
+        component: c.name,
+        context: p.context,
+        prop: p.name,
+        got: p.typeLiteral ? `type: '${p.typeLiteral}'` : '',
+        missingTypeRef: true,
+        allowed,
+      });
+      continue;
+    }
 
     if (p.typeRef) {
       if (!allowed.includes(p.typeRef)) {
@@ -262,7 +304,12 @@ for (const c of components) {
 if (errors.length > 0) {
   console.log('\n✗ Wrong typeRef values:');
   for (const e of errors) {
-    console.log(`  ${e.component}.${e.context}.${e.prop} uses typeRef="${e.got}"; expected one of: ${e.allowed.join(', ')}`);
+    const has = e.missingTypeRef
+      ? e.got
+        ? `declares ${e.got} and no typeRef`
+        : 'declares no typeRef'
+      : `uses typeRef="${e.got}"`;
+    console.log(`  ${e.component}.${e.context}.${e.prop} ${has}; expected one of: ${e.allowed.join(', ')}`);
   }
 }
 

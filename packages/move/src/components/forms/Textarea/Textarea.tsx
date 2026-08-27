@@ -1,7 +1,7 @@
 'use client';
 // Generated from Textarea.spec.ts
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { FieldWidth } from '../../../shared/types';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
 import styles from './Textarea.module.css';
@@ -18,7 +18,7 @@ export interface TextareaProps extends React.HTMLAttributes<HTMLElement> {
   maxRows?: number;
   rows?: number;
   resize?: 'none' | 'vertical' | 'horizontal' | 'both';
-  width?: Dimension;
+  width?: FieldWidth;
   disabled?: boolean;
   readOnly?: boolean;
   placeholder?: string;
@@ -133,11 +133,8 @@ export const Textarea = withMoveComponent<'root' | 'textarea', TextareaProps, HT
             {...spRest}
             ref={rootRef}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{
-              ...props.style,
-              ...(props.width != null ? { width: props.width } : {}),
-              ...(spStyle as React.CSSProperties),
-            }}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-width={props.width as string | undefined}
             data-variant={props.variant}
             data-size={props.size}
             {...(props.invalid ? { 'data-invalid': '' } : {})}

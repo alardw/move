@@ -41,7 +41,65 @@ export type Size = 'sm' | 'md' | 'lg';
  * is what lets Splitter's `defaultSize` mean width when horizontal and height
  * when vertical without a second type.
  */
-export type Dimension = number | string;
+type LengthUnit =
+  | 'px'
+  | 'rem'
+  | 'em'
+  | 'ch'
+  | 'ex'
+  | '%'
+  | 'vw'
+  | 'vh'
+  | 'dvw'
+  | 'dvh'
+  | 'svw'
+  | 'svh'
+  | 'lvw'
+  | 'lvh'
+  | 'vmin'
+  | 'vmax';
+
+/** A number with a unit: `'240px'`, `'38%'`, `'20rem'`. */
+type CssLength = `${number}${LengthUnit}`;
+
+/** Sizes derived from content rather than stated. These cannot overflow the way
+ *  a stated length can, so they stay legal wherever a Dimension is. */
+type CssIntrinsic = 'auto' | 'min-content' | 'max-content' | 'fit-content' | 'stretch';
+
+/** Computed values. The argument stays free — CSS grammar is past what a
+ *  template literal can check, and the point here is to reject `'banana'`, not
+ *  to reimplement a parser. */
+type CssComputed =
+  | `calc(${string})`
+  | `min(${string})`
+  | `max(${string})`
+  | `clamp(${string})`
+  | `fit-content(${string})`
+  | `var(${string})`;
+
+export type Dimension = number | CssLength | CssIntrinsic | CssComputed;
+
+/**
+ * How wide a form control is, chosen from a scale rather than given a length.
+ *
+ * A field's right width follows the content it expects, so the steps are named
+ * for that and defined in `ch` — the box then tracks the user's font size, and
+ * its size tells them how much input is wanted. Each step resolves to
+ * `min(token, 100%)`, so a field narrows with its column instead of overflowing
+ * it. `'full'` is the default and takes the column; `'auto'` hugs its content,
+ * for a control sitting in a row of its own rather than in a form column.
+ */
+export type FieldWidth = 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full';
+
+/**
+ * Where an anchored popover's width comes from.
+ *
+ * `'anchor'` matches the control it hangs off, which keeps a field and its list
+ * reading as one thing. `'content'` sizes to the widest option instead — what a
+ * narrow field with long labels needs — and stays within the room the anchor has,
+ * so a long option cannot push it off screen.
+ */
+export type PopoverWidth = 'anchor' | 'content';
 
 /** Adds `'xs'` for tighter contexts (icon buttons, dense avatars). */
 export type SizeWithXS = 'xs' | Size;

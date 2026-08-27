@@ -8,7 +8,7 @@ export default function StatesSample() {
           <Label>Default</Label>
         </FormField.Label>
         <FormField.Field>
-          <ColorInput defaultValue="#4c6ef5" width="20rem" />
+          <ColorInput defaultValue="#4c6ef5" width="lg" />
         </FormField.Field>
       </FormField.Root>
       <FormField.Root invalid>
@@ -16,7 +16,7 @@ export default function StatesSample() {
           <Label>Invalid</Label>
         </FormField.Label>
         <FormField.Field>
-          <ColorInput invalid defaultValue="#not-a-color" width="20rem" />
+          <ColorInput invalid defaultValue="#not-a-color" width="lg" />
         </FormField.Field>
       </FormField.Root>
       <FormField.Root>
@@ -24,7 +24,7 @@ export default function StatesSample() {
           <Label>Read-only</Label>
         </FormField.Label>
         <FormField.Field>
-          <ColorInput readOnly defaultValue="#15aabf" width="20rem" />
+          <ColorInput readOnly defaultValue="#15aabf" width="lg" />
         </FormField.Field>
       </FormField.Root>
       <FormField.Root>
@@ -32,7 +32,7 @@ export default function StatesSample() {
           <Label>Disabled</Label>
         </FormField.Label>
         <FormField.Field>
-          <ColorInput disabled defaultValue="#fa5252" width="20rem" />
+          <ColorInput disabled defaultValue="#fa5252" width="lg" />
         </FormField.Field>
       </FormField.Root>
     </Stack>

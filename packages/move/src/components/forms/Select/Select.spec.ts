@@ -178,9 +178,11 @@ export const spec = {
         },
         {
           name: 'width',
-          typeRef: 'Dimension',
+          typeRef: 'FieldWidth',
+          default: "'full'",
           moveSpecific: true,
-          description: 'Custom width override',
+          description:
+            "How wide the trigger is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.",
         },
         {
           name: 'minWidth',
@@ -292,9 +294,11 @@ export const spec = {
         },
         {
           name: 'width',
-          typeRef: 'Dimension',
+          typeRef: 'PopoverWidth',
+          default: "'anchor'",
           moveSpecific: true,
-          description: 'Custom width override — by default matches trigger width',
+          description:
+            "Where the popover takes its width from. 'anchor' matches the trigger, so trigger and list read as one control; 'content' sizes to the widest option and stays inside the room the anchor has.",
         },
         {
           name: 'minWidth',

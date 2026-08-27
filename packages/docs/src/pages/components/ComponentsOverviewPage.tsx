@@ -67,7 +67,7 @@ export function ComponentsOverviewPage() {
           <Stack gap="sm">
             <Stack direction="row" gap="md" align="center" wrap>
               <InputText
-                width={320}
+                width="lg"
                 placeholder="Search — try “modal”, “spinner”, “otp”…"
                 value={query}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}

@@ -2,7 +2,7 @@
 // Generated from Autocomplete.spec.ts
 
 import * as React from 'react';
-import type { Dimension } from '../../../shared/types';
+import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
 import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -261,7 +261,7 @@ export interface AutocompleteTriggerProps extends React.HTMLAttributes<HTMLEleme
   invalid?: boolean;
   size?: AutocompleteTriggerSize;
   variant?: AutocompleteTriggerVariant;
-  width?: Dimension;
+  width?: FieldWidth;
   sp?: SlotPropsMap<'trigger'>;
 }
 
@@ -338,11 +338,8 @@ const AutocompleteTrigger = withMoveComponent<
               data-variant={props.variant}
               data-move-state={moveState}
               className={cx('trigger', props.className, spClass as string | undefined)}
-              style={{
-                ...props.style,
-                ...(props.width != null ? { width: props.width } : {}),
-                ...(spStyle as React.CSSProperties),
-              }}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              data-width={props.width as string | undefined}
               {...(props.disabled ? { 'data-disabled': '' } : {})}
               {...(props.invalid ? { 'data-invalid': '' } : {})}
               onClick={handleClick}
@@ -815,7 +812,7 @@ export interface AutocompleteContentProps extends React.HTMLAttributes<HTMLEleme
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
   container?: HTMLElement;
-  width?: Dimension;
+  width?: PopoverWidth;
   minWidth?: Dimension;
   maxWidth?: Dimension;
   sp?: SlotPropsMap<'content' | 'contentInner'>;
@@ -827,7 +824,7 @@ interface AutocompleteContentInnerProps {
   style?: React.CSSProperties;
   sideOffset?: number;
   align?: 'start' | 'center' | 'end';
-  width?: Dimension;
+  width?: PopoverWidth;
   minWidth?: Dimension;
   maxWidth?: Dimension;
   contentCx: CxFn<'content' | 'contentInner'>;
@@ -919,13 +916,10 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
           ...props.style,
           ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
           ...(spStyle as React.CSSProperties),
-          // Default to matching trigger width; props override per-instance.
-          width:
-            (props.width as React.CSSProperties['width'] | undefined) ??
-            'var(--radix-popover-trigger-width)',
           ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
           ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
         }}
+        data-width={(props.width as string | undefined) ?? 'anchor'}
         onPointerDownOutside={handlePointerDownOutside}
         onOpenAutoFocus={handleOpenAutoFocus}
         onCloseAutoFocus={handleCloseAutoFocus}
@@ -970,9 +964,9 @@ const AutocompleteContent = withMoveComponent<
               style={props.style}
               sideOffset={props.sideOffset as number | undefined}
               align={props.align as 'start' | 'center' | 'end' | undefined}
-              width={props.width as React.CSSProperties['width'] | undefined}
-              minWidth={props.minWidth as React.CSSProperties['minWidth'] | undefined}
-              maxWidth={props.maxWidth as React.CSSProperties['maxWidth'] | undefined}
+              width={props.width as PopoverWidth | undefined}
+              minWidth={props.minWidth as Dimension | undefined}
+              maxWidth={props.maxWidth as Dimension | undefined}
               contentCx={cx}
               innerCx={cx}
               contentSp={sp('content') as Record<string, unknown>}

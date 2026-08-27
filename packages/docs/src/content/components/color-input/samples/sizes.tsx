@@ -22,7 +22,7 @@ export default function SizesSample() {
                 size={size}
                 variant={v.variant}
                 defaultValue={v.defaultValue}
-                width="14rem"
+                width="md"
               />
             </FormField.Field>
           </FormField.Root>

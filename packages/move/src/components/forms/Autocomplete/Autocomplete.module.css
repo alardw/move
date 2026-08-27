@@ -35,6 +35,29 @@
     box-shadow var(--move-transition-fast) var(--move-ease-default);
 }
 
+/* Field widths. Each step is capped at the space available, so the trigger
+   narrows with its column rather than overflowing it. */
+.trigger[data-width='auto'] {
+  width: auto;
+  max-width: 100%;
+}
+
+.trigger[data-width='xs'] {
+  width: min(var(--move-field-width-xs), 100%);
+}
+
+.trigger[data-width='sm'] {
+  width: min(var(--move-field-width-sm), 100%);
+}
+
+.trigger[data-width='md'] {
+  width: min(var(--move-field-width-md), 100%);
+}
+
+.trigger[data-width='lg'] {
+  width: min(var(--move-field-width-lg), 100%);
+}
+
 .trigger:hover:not([data-disabled]):not([data-invalid]) {
   border-color: var(--move-autocomplete-trigger-border-hover);
 }
@@ -286,6 +309,23 @@
   padding: var(--move-autocomplete-content-padding);
   z-index: var(--move-layer-popover);
   font-family: var(--move-font-body);
+}
+
+/* Where the popover takes its width from. 'anchor' keeps the field and its list
+   reading as one control; 'content' sizes to the widest option — what a narrow
+   field with long labels needs — and stays inside the room the anchor has, so a
+   long option cannot push it off screen. */
+.content[data-width='anchor'] {
+  width: var(--radix-popover-trigger-width);
+}
+
+.content[data-width='content'] {
+  /* Redefine the token rather than the property, so the base rule's
+     `max-width: var(--move-autocomplete-content-max-width)` picks this up and a
+     consumer setting the token still wins. */
+  --move-autocomplete-content-max-width: var(--radix-popover-content-available-width, 100vw);
+
+  width: max-content;
 }
 
 .content:focus {

@@ -80,9 +80,11 @@ export const spec = {
     },
     {
       name: 'width',
-      typeRef: 'Dimension',
+      typeRef: 'FieldWidth',
+      default: "'full'",
       moveSpecific: true,
-      description: 'Custom width override',
+      description:
+        "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects — 'xs' a code, 'sm' a date, 'md' a phone, 'lg' an email — and every one is capped at the space available. 'full' takes the column.",
     },
     {
       name: 'visible',
@@ -157,7 +159,14 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-variant', 'data-size', 'data-invalid', 'data-disabled', 'data-readonly'],
+    dataAttributes: [
+      'data-variant',
+      'data-size',
+      'data-width',
+      'data-invalid',
+      'data-disabled',
+      'data-readonly',
+    ],
     children: [
       { slot: 'iconLeft', ariaAttributes: ['aria-hidden'] },
       { slot: 'input' },

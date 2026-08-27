@@ -33,6 +33,12 @@ export const CANONICAL_TYPES = {
 
   // Border-radius scale for media surfaces
   Radius: ['none', 'sm', 'md', 'lg', 'full'] as const,
+
+  // Form-control widths, sized by the content a field expects
+  FieldWidth: ['auto', 'xs', 'sm', 'md', 'lg', 'full'] as const,
+
+  // Where an anchored popover takes its width from
+  PopoverWidth: ['anchor', 'content'] as const,
 } as const;
 
 export type CanonicalTypeName = keyof typeof CANONICAL_TYPES;

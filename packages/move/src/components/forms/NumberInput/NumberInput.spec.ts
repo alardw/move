@@ -134,9 +134,11 @@ export const spec = {
     },
     {
       name: 'width',
-      typeRef: 'Dimension',
+      typeRef: 'FieldWidth',
+      default: "'full'",
       moveSpecific: true,
-      description: 'Custom width override',
+      description:
+        "How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.",
     },
     {
       name: 'iconLeft',
@@ -226,7 +228,14 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-variant', 'data-size', 'data-invalid', 'data-disabled', 'data-readonly'],
+    dataAttributes: [
+      'data-variant',
+      'data-size',
+      'data-width',
+      'data-invalid',
+      'data-disabled',
+      'data-readonly',
+    ],
     children: [
       { slot: 'iconLeft', ariaAttributes: ['aria-hidden'] },
       { slot: 'input', ariaAttributes: ['aria-valuemin', 'aria-valuemax', 'aria-valuenow'] },

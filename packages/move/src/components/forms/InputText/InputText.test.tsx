@@ -122,10 +122,12 @@ describe('InputText', () => {
       expect(document.activeElement).toBe(input);
     });
 
-    it('applies width as inline style on root when provided', () => {
-      render(<InputText placeholder="test" width="200px" />);
+    it('applies data-width from the field-width scale, never an inline width', () => {
+      render(<InputText placeholder="test" width="sm" />);
       const root = screen.getByPlaceholderText('test').closest('div')!;
-      expect(root.style.width).toBe('200px');
+      expect(root).toHaveAttribute('data-width', 'sm');
+      // The step resolves in CSS, capped at the space available.
+      expect(root.style.width).toBe('');
     });
   });
 

@@ -103,9 +103,11 @@ describe('Textarea', () => {
       expect(document.activeElement).toBe(ta);
     });
 
-    it('applies width as inline style on root when provided', () => {
-      render(<Textarea placeholder="test" width="400px" />);
-      expect(screen.getByPlaceholderText('test').closest('div')!.style.width).toBe('400px');
+    it('applies data-width from the field-width scale, never an inline width', () => {
+      render(<Textarea placeholder="test" width="lg" />);
+      const root = screen.getByPlaceholderText('test').closest('div')!;
+      expect(root).toHaveAttribute('data-width', 'lg');
+      expect(root.style.width).toBe('');
     });
   });
 

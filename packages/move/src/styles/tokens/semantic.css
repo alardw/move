@@ -159,6 +159,17 @@
   --move-control-height-lg: 2.75rem;
 
   /* ============================================
+   * Field Widths
+   * Sized by the content a field expects, in ch, so the box follows the
+   * user's font size and signals how much input is wanted. Every one is
+   * applied as min(token, 100%), so a field never outgrows its column.
+   * ============================================ */
+  --move-field-width-xs: 7ch; /* a code, a year, a PIN */
+  --move-field-width-sm: 13ch; /* a date, a postcode */
+  --move-field-width-md: 22ch; /* a phone number, a short name */
+  --move-field-width-lg: 34ch; /* an email, a URL */
+
+  /* ============================================
    * Disabled State
    * ============================================ */
   --move-disabled-opacity: 0.6;

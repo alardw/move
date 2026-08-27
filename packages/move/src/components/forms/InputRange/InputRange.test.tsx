@@ -170,17 +170,27 @@ describe('InputRange', () => {
   });
 
   // === Custom width ===
-  describe('custom width', () => {
-    it('applies width to root when showValue=false', () => {
-      const { container } = renderSlider({ width: 200 });
+  // The width lands on whichever element is the outer box, and resolves from the
+  // field-width scale in CSS — never as an inline length.
+  describe('width', () => {
+    it('applies data-width to the root when showValue=false', () => {
+      const { container } = renderSlider({ width: 'sm' });
       const root = container.querySelector('[class*="root"]') as HTMLElement;
-      expect(root.style.width).toBe('200px');
+      expect(root).toHaveAttribute('data-width', 'sm');
+      expect(root.style.width).toBe('');
     });
 
-    it('applies width to wrapper when showValue=true', () => {
-      const { container } = renderSlider({ width: 200, showValue: true, defaultValue: 50 });
+    it('applies data-width to the wrapper when showValue=true', () => {
+      const { container } = renderSlider({ width: 'sm', showValue: true, defaultValue: 50 });
       const wrapper = container.firstChild as HTMLElement;
-      expect(wrapper.style.width).toBe('200px');
+      expect(wrapper).toHaveAttribute('data-width', 'sm');
+      expect(wrapper.style.width).toBe('');
+    });
+
+    it('leaves the root unmarked when the wrapper carries the width', () => {
+      const { container } = renderSlider({ width: 'sm', showValue: true, defaultValue: 50 });
+      const root = container.querySelector('[class*="root"]') as HTMLElement;
+      expect(root).not.toHaveAttribute('data-width');
     });
   });
 });

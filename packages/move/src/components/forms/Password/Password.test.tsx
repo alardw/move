@@ -157,9 +157,27 @@ describe('Password', () => {
 
   // === Width ===
   describe('width', () => {
-    it('custom width applied to root', () => {
-      const { container } = renderPassword({ width: 300 });
-      expect((container.firstChild as HTMLElement).style.width).toBe('300px');
+    it('applies data-width for each step of the scale', () => {
+      for (const step of ['xs', 'sm', 'md', 'lg'] as const) {
+        const { container, unmount } = renderPassword({ width: step });
+        expect(container.firstChild as HTMLElement).toHaveAttribute('data-width', step);
+        unmount();
+      }
+    });
+
+    it("carries data-width='full', which takes the column", () => {
+      const { container } = renderPassword({ width: 'full' });
+      expect(container.firstChild as HTMLElement).toHaveAttribute('data-width', 'full');
+    });
+
+    it('omits data-width when width is not given', () => {
+      const { container } = renderPassword({});
+      expect(container.firstChild as HTMLElement).not.toHaveAttribute('data-width');
+    });
+
+    it('sets no inline width — the step resolves in CSS, capped at the space available', () => {
+      const { container } = renderPassword({ width: 'sm' });
+      expect((container.firstChild as HTMLElement).style.width).toBe('');
     });
   });
 
