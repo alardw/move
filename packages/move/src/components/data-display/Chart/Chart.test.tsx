@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, render as rtlRender, screen, within } from '@testing-library/react';
+import { act, fireEvent, render as rtlRender, screen, within } from '@testing-library/react';
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { Chart } from './Chart';
 import { ThemeProvider } from '../../../infrastructure/Theme';
@@ -245,6 +245,27 @@ describe('Chart', () => {
   });
 
   describe('entrance state', () => {
+    /**
+     * The pre-entrance CSS hides the marks, so anything that can stop the
+     * entrance from EVER starting can hide a chart's data for good. That is not
+     * hypothetical: the visibility gate asks for a fraction of the chart's own
+     * height, and a chart cropped by an ancestor — a card that clips its
+     * preview, a short scroll region — can never reach it. The observer here
+     * never reports (jsdom's is inert), which is exactly that condition.
+     */
+    it('reveals the marks even when the visibility gate never opens', () => {
+      vi.useFakeTimers();
+      try {
+        render(<Chart caption="R" data={data} x="month" series={line} />);
+        act(() => {
+          vi.advanceTimersByTime(30_000);
+        });
+        expect(screen.getByRole('img')).not.toHaveAttribute('data-enter');
+      } finally {
+        vi.useRealTimers();
+      }
+    });
+
     it('never hides the marks when animations are disabled', () => {
       render(<Chart caption="R" animations={false} data={data} x="month" series={line} />);
       // data-enter="pending" is what applies the hidden pre-entrance CSS.

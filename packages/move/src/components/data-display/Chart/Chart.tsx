@@ -157,12 +157,58 @@ const DEFAULT_PADDING = 24;
  * so it only ever fires when something has genuinely gone wrong.
  */
 const ENTER_TIMEOUT_MS = 4000;
+
+/**
+ * Hard deadline on the pre-entrance state, measured from the moment the chart
+ * draws rather than from the moment it is allowed to animate. Nothing an
+ * observer does can extend it, which is what makes it a guarantee rather than
+ * another gate.
+ */
+const ENTER_BACKSTOP_MS = 30_000;
+
+/**
+ * How long the marks may stay hidden once the chart is on screen and the
+ * entrance still has not started.
+ *
+ * An entrance that is going to run starts as soon as its gate opens, so this
+ * never cuts one short. What it bounds is a gate that cannot open: the
+ * threshold is a fraction of the chart's own box, and inside a clipped or
+ * transformed ancestor the observer reports a ratio no arithmetic here can
+ * predict. Rather than guess the geometry, give the wait a limit.
+ */
+const ENTER_ONSCREEN_MS = 1200;
 /**
  * Share of the viewport a chart may fill and still be considered fully seen.
  * Below 1 so a chart the exact height of the window still clears its gate
  * despite the observer never reporting a ratio of 1 for it.
  */
 const VIEWPORT_FILL = 0.9;
+
+/**
+ * The tallest band of this chart that can be on screen at once.
+ *
+ * The window is only the bound when nothing between the chart and the page
+ * clips. An ancestor with its own overflow — a scroll region, a card that crops
+ * its contents — is a smaller window, and a chart taller than it can never reach
+ * a high visibility ratio no matter where the reader scrolls. Measuring the
+ * nearest one keeps `entranceThreshold` a test the chart can actually pass.
+ */
+function visibleHeightFor(el: HTMLElement | null): number {
+  const windowHeight = typeof window !== 'undefined' ? window.innerHeight : 0;
+  if (!el || typeof getComputedStyle !== 'function') return windowHeight;
+  // A detached or unlaid-out element tells us nothing; fall back to the window.
+  if (!el.isConnected) return windowHeight;
+  let node = el.parentElement;
+  while (node && node !== document.body && node !== document.documentElement) {
+    const { overflow, overflowY } = getComputedStyle(node);
+    if (/(hidden|clip|auto|scroll)/.test(`${overflow} ${overflowY}`)) {
+      // A clipped ancestor with no height of its own tells us nothing.
+      return node.clientHeight > 0 ? Math.min(windowHeight, node.clientHeight) : windowHeight;
+    }
+    node = node.parentElement;
+  }
+  return windowHeight;
+}
 
 /** Total time the dot sequence should span, however many dots there are. */
 const DOT_SEQUENCE_MS = 700;
@@ -1118,9 +1164,25 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // 800px window peaks at 0.89, and one at 1200px peaks at 0.67 — under the
     // default, so it would never animate at all. Cap the ask at what this chart
     // can actually achieve here, where its measured height is known.
+    // Measured in an effect, not read off the ref mid-render: the ref is null on
+    // the first pass, so reading it there produced a window-sized answer that
+    // only corrected if something happened to re-render — the chart animated or
+    // not depending on timing.
+    const [clipHeight, setClipHeight] = React.useState(0);
+    React.useLayoutEffect(() => {
+      setClipHeight(visibleHeightFor(viewportRef.current));
+    }, [width, height]);
     const reachable =
-      height > 0 && typeof window !== 'undefined' && window.innerHeight > 0
-        ? Math.min(1, (window.innerHeight * VIEWPORT_FILL) / height)
+      height > 0 && clipHeight > 0
+        ? // A chart that does not fit its clip cannot be judged by how much of
+          // it shows: the observer measures the box AFTER transforms, so a
+          // cropped, scaled or rotated chart reads lower than its layout size
+          // suggests, and any fraction near the limit becomes a coin flip.
+          // Where the whole chart can never be on screen at once, being on
+          // screen at all is the most the gate can honestly ask.
+          clipHeight < height
+          ? 0
+          : Math.min(1, (clipHeight * VIEWPORT_FILL) / height)
         : 1;
     // A non-number can only be 'always' here, since `defaults` guarantees a
     // value — and both that and any bad input fall open to 0, which plays the
@@ -1130,10 +1192,14 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
         ? 0
         : Math.min(props.entranceThreshold, reachable);
     const { ref: inViewRef, inView } = useInView<HTMLDivElement>({ threshold });
+    // Any part of the chart on screen at all. A zero threshold is the one
+    // question about visibility that survives a transform and a clip, which is
+    // why the deadline below hangs off it rather than off the entrance gate.
+    const { ref: onScreenRef, inView: onScreen } = useInView<HTMLDivElement>({ threshold: 0 });
     // Tracks whether the entrance has played, so the pre-entrance CSS can be
     // dropped afterwards.
     const [entered, setEntered] = React.useState(false);
-    const measuredRef = useMergedRef(viewportRef, inViewRef);
+    const measuredRef = useMergedRef(viewportRef, inViewRef, onScreenRef);
     const [geometry, setGeometry] = React.useState<PlotGeometry | null>(null);
     const [hovered, setHovered] = React.useState<number | null>(null);
     // Stable identity: a renderer stores this in a deps array. Bail out on an
@@ -1227,13 +1293,27 @@ export const Chart = withMoveComponent<'root', ChartProps, HTMLElement>({
     // Fail-open bound. `data-enter="pending"` hides the marks until the entrance
     // reports completion, so a callback that never arrives — an interrupted or
     // failed animation — would leave the chart blank. Lift the pre-entrance
-    // state unconditionally once the longest possible entrance has had time to
-    // run. A chart must never be able to hide its own data.
+    // state once the longest possible entrance has had time to run.
     React.useEffect(() => {
       if (!plotReady || entered) return;
       const timer = setTimeout(() => setEntered(true), ENTER_TIMEOUT_MS);
       return () => clearTimeout(timer);
     }, [plotReady, entered]);
+
+    // Backstop, and the reason it is separate: the timer above waits on
+    // `plotReady`, which includes the visibility gate — so it protects against
+    // an entrance that starts and never finishes, and not at all against one
+    // that never starts. A chart whose gate never opens kept its marks hidden
+    // for good. This one waits on nothing observational: once the chart has
+    // drawn, the pre-entrance state has a deadline no observer can extend. It
+    // is long enough that a reader scrolling down a page still meets the
+    // entrance, and short enough that nobody sits in front of an empty chart.
+    React.useEffect(() => {
+      if (entered || status !== null || width <= 0 || height <= 0) return;
+      const drawn = onScreen ? ENTER_ONSCREEN_MS : ENTER_BACKSTOP_MS;
+      const timer = setTimeout(() => setEntered(true), drawn);
+      return () => clearTimeout(timer);
+    }, [entered, status, width, height, onScreen]);
 
     // Which series actually put points on the page. A scatter always does —
     // points ARE the mark — while a line or area only does when `dots` is on.
