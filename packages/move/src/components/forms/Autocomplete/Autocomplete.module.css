@@ -253,6 +253,22 @@
   cursor: pointer;
 }
 
+/* The chevron's two RESTING states. The rotation between them is animated, but
+ * the states themselves are CSS, so the animation can hand the property back
+ * when it finishes and this holds what it arrived at.
+ *
+ * It is also what the chevron does when nothing animates at all: under reduced
+ * motion, or `animations={false}`, the triggers never run, and without these
+ * rules an open menu had a chevron still pointing down. A state that only
+ * exists while an animation is running is not a state. */
+.icon {
+  transform: rotate(0deg);
+}
+
+.trigger[data-move-state='open'] .icon {
+  transform: rotate(180deg);
+}
+
 /* =========================================================================
  * Clear trigger
  * ========================================================================= */

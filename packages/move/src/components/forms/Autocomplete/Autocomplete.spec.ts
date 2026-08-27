@@ -817,7 +817,14 @@ export const spec = {
 
   anatomy: {
     slot: 'trigger',
-    dataAttributes: ['data-size', 'data-variant', 'data-width', 'data-disabled', 'data-invalid'],
+    dataAttributes: [
+      'data-size',
+      'data-variant',
+      'data-width',
+      'data-disabled',
+      'data-invalid',
+      'data-move-state',
+    ],
     children: [
       {
         slot: 'triggerContent',
