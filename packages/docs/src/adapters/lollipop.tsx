@@ -5,7 +5,7 @@
 // behind it.
 // =============================================================================
 
-import type { ChartRenderer } from "move";
+import type { ChartRenderer } from 'move';
 
 export interface LollipopOptions {
   /** Print each value above its dot. */
@@ -33,12 +33,21 @@ export function lollipopRenderer(options: LollipopOptions = {}): ChartRenderer {
     const y = (v: number) => baseline - (v / max) * (baseline - headroom);
 
     return (
+      // A renderer DRAWS. Every element below is chart geometry, and there is no
+      // Move component for a circle at a coordinate — the whole point of the
+      // `renderer` seam is that this layer emits shapes. The built-in renderer
+      // does the same, and escapes the scan only by living in the library
+      // package rather than here.
+      // dogfood-ignore: the plot surface
       <svg width={width} height={height}>
+        {/* dogfood-ignore: the baseline */}
         <line x1={0} x2={width} y1={baseline} y2={baseline} stroke={theme.axis} strokeWidth={1} />
         {values.map((v, i) => {
           const cx = step * i + step / 2;
           return (
+            // dogfood-ignore: one lollipop — stem, head, and its value
             <g key={i} data-series={series.key}>
+              {/* dogfood-ignore: the stem */}
               <line
                 x1={cx}
                 x2={cx}
@@ -47,8 +56,10 @@ export function lollipopRenderer(options: LollipopOptions = {}): ChartRenderer {
                 stroke={series.color}
                 strokeWidth={theme.strokeWidth}
               />
+              {/* dogfood-ignore: the head */}
               <circle cx={cx} cy={y(v)} r={theme.pointRadius * 2} fill={series.color} />
               {showValues && (
+                // dogfood-ignore: the value above the head
                 <text
                   x={cx}
                   y={y(v) - 10}

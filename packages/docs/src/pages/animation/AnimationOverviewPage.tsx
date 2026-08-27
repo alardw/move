@@ -23,9 +23,8 @@ const DOORS: HighlightItem[] = [
     icon: 'activity',
     text: (
       <>
-        <RouterLink to="/animation/lifecycle">Lifecycle</RouterLink> — the
-        three moments a component animates: when it enters, when its state
-        changes, and when it leaves.
+        <RouterLink to="/animation/lifecycle">Lifecycle</RouterLink> — the three moments a component
+        animates: when it enters, when its state changes, and when it leaves.
       </>
     ),
   },
@@ -33,9 +32,8 @@ const DOORS: HighlightItem[] = [
     icon: 'wind',
     text: (
       <>
-        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
-        — the named springs that give Move its feel, and when to reach for a
-        plain easing instead.
+        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink> — the named springs
+        that give Move its feel, and when to reach for a plain easing instead.
       </>
     ),
   },
@@ -43,11 +41,8 @@ const DOORS: HighlightItem[] = [
     icon: 'zap',
     text: (
       <>
-        <RouterLink to="/animation/motions-and-sequences">
-          Motions &amp; sequences
-        </RouterLink>{' '}
-        — the motions you reach for, and the triggers and sequences that wire
-        them to a moment.
+        <RouterLink to="/animation/motions-and-sequences">Motions &amp; sequences</RouterLink> — the
+        motions you reach for, and the triggers and sequences that wire them to a moment.
       </>
     ),
   },
@@ -55,8 +50,8 @@ const DOORS: HighlightItem[] = [
     icon: 'puzzle',
     text: (
       <>
-        <RouterLink to="/animation/choreography">Patterns</RouterLink> — the named
-        motion patterns shared across components, live.
+        <RouterLink to="/animation/choreography">Patterns</RouterLink> — the named motion patterns
+        shared across components, live.
       </>
     ),
   },
@@ -64,9 +59,8 @@ const DOORS: HighlightItem[] = [
     icon: 'code',
     text: (
       <>
-        <RouterLink to="/animation/reference">Reference</RouterLink> — the
-        hook, the runtime functions, and the utilities, for when you drive
-        animation yourself.
+        <RouterLink to="/animation/reference">Reference</RouterLink> — the hook, the runtime
+        functions, and the utilities, for when you drive animation yourself.
       </>
     ),
   },
@@ -98,7 +92,9 @@ export function AnimationOverviewPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Animation</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -115,10 +111,9 @@ export function AnimationOverviewPage() {
           lede="The motion ships with the component. You don't wire it up."
         >
           <Text>
-            A button presses in under the cursor. A dialog springs onto the
-            screen and traps focus. A toast slides up, counts down, and clears
-            itself out. None of that is something you add — it's how the
-            components behave the moment you render them.
+            A button presses in under the cursor. A dialog springs onto the screen and traps focus.
+            A toast slides up, counts down, and clears itself out. None of that is something you add
+            — it's how the components behave the moment you render them.
           </Text>
           <Preview
             code={`import { Button } from 'move';
@@ -128,8 +123,8 @@ export function AnimationOverviewPage() {
             <Button>Press me</Button>
           </Preview>
           <Text color="muted" size="sm">
-            Hover and press the button — the scale response is the animation
-            system at work, with nothing wired up on this page.
+            Hover and press the button — the scale response is the animation system at work, with
+            nothing wired up on this page.
           </Text>
         </Section>
 
@@ -139,9 +134,8 @@ export function AnimationOverviewPage() {
           lede="Four questions, the same everywhere Move animates."
         >
           <Text>
-            Every animation in Move is described the same way, so motion reads
-            as one product instead of a per-component grab bag. One config
-            answers four questions:
+            Every animation in Move is described the same way, so motion reads as one product
+            instead of a per-component grab bag. One config answers four questions:
           </Text>
           <HighlightList
             items={[
@@ -172,16 +166,17 @@ export function AnimationOverviewPage() {
         >
           <Text>
             The shape of every animation in Move is the same:{' '}
-            <strong>state 1 &rarr; animation &rarr; state 2</strong>. Both ends
-            are rendered and correct with nothing running. The animation is the
-            transient middle, and when it is done it should get out of the way so
-            state 2 applies on its own.
+            <Text as="strong" weight="bold">
+              state 1 &rarr; animation &rarr; state 2
+            </Text>
+            . Both ends are rendered and correct with nothing running. The animation is the
+            transient middle, and when it is done it should get out of the way so state 2 applies on
+            its own.
           </Text>
           <Text>
-            That matters because animations here run on anime.js, which writes
-            INLINE STYLES. CSS and animation are not two systems — they are one
-            language at two cascade levels, where a stylesheet rule is the floor
-            and an inline style always wins. Three things follow:
+            That matters because animations here run on anime.js, which writes INLINE STYLES. CSS
+            and animation are not two systems — they are one language at two cascade levels, where a
+            stylesheet rule is the floor and an inline style always wins. Three things follow:
           </Text>
           <HighlightList
             items={[
@@ -200,30 +195,36 @@ export function AnimationOverviewPage() {
             ]}
           />
           <Text>
-            <strong>States are rendered, never animated.</strong> Express one in
-            CSS when it is declarable — a dimmed mark under an attribute — and in
-            the RENDERER when it needs computing, like an exploded pie whose
-            slices each push along their own angle. Both are correct at rest.
-            Neither waits for anything to finish.
+            <Text as="strong" weight="bold">
+              States are rendered, never animated.
+            </Text>{' '}
+            Express one in CSS when it is declarable — a dimmed mark under an attribute — and in the
+            RENDERER when it needs computing, like an exploded pie whose slices each push along
+            their own angle. Both are correct at rest. Neither waits for anything to finish.
           </Text>
           <Text>
-            <strong>Animations move between them.</strong> They may write a DOM
-            property directly where they are its only writer. Where the state is
-            computed geometry they animate the INPUT and let the renderer redraw
-            — a pie sweeps by animating one number, so nothing but the renderer
-            ever writes a path. That is the difference between an animation that
-            composes and one that fights.
+            <Text as="strong" weight="bold">
+              Animations move between them.
+            </Text>{' '}
+            They may write a DOM property directly where they are its only writer. Where the state
+            is computed geometry they animate the INPUT and let the renderer redraw — a pie sweeps
+            by animating one number, so nothing but the renderer ever writes a path. That is the
+            difference between an animation that composes and one that fights.
           </Text>
           <Text>
-            <strong>The handoff is the one exception.</strong> CSS may set state
-            1 under an attribute the component removes once the animation takes
-            over, as Chart does with{' '}
-            <code>[data-enter=&quot;pending&quot;]</code>. One direction only.
+            <Text as="strong" weight="bold">
+              The handoff is the one exception.
+            </Text>{' '}
+            CSS may set state 1 under an attribute the component removes once the animation takes
+            over, as Chart does with <Code size="sm">[data-enter=&quot;pending&quot;]</Code>. One
+            direction only.
           </Text>
           <Text>
-            <strong>Motion targets markers</strong> — <code>[data-bar]</code>,{' '}
-            <code>[data-dot]</code> — never bare elements, so a stylesheet can
-            see which properties are already spoken for.
+            <Text as="strong" weight="bold">
+              Motion targets markers
+            </Text>{' '}
+            — <Code size="sm">[data-bar]</Code>, <Code size="sm">[data-dot]</Code> — never bare
+            elements, so a stylesheet can see which properties are already spoken for.
           </Text>
         </Section>
 
@@ -233,23 +234,21 @@ export function AnimationOverviewPage() {
           lede="Colour is state. Everything else is motion, and motion has one home."
         >
           <Text>
-            A CSS transition is a second animation system, and the two cannot be
-            combined. A transition is a fixed duration on a bezier; a spring has
-            no duration at all. Run them together on one element and they read
-            as two clocks — put them on the same property and they overwrite
-            each other outright.
+            A CSS transition is a second animation system, and the two cannot be combined. A
+            transition is a fixed duration on a bezier; a spring has no duration at all. Run them
+            together on one element and they read as two clocks — put them on the same property and
+            they overwrite each other outright.
           </Text>
           <Text>
-            Only transitions are in scope. Setting opacity or a transform flatly
-            is a state, and states belong in CSS — a dimmed mark, a chevron
-            resting at an angle. It is transitioning them that makes them
-            motion. Chart's hover emphasis is a flat opacity rule for that
-            reason: a resting state that depended on an animation finishing
-            could be interrupted and left stranded, which is not a state at all.
+            Only transitions are in scope. Setting opacity or a transform flatly is a state, and
+            states belong in CSS — a dimmed mark, a chevron resting at an angle. It is transitioning
+            them that makes them motion. Chart's hover emphasis is a flat opacity rule for that
+            reason: a resting state that depended on an animation finishing could be interrupted and
+            left stranded, which is not a state at all.
           </Text>
           <Text>
-            So the line is drawn by property, because that is what decides
-            whether a collision is possible:
+            So the line is drawn by property, because that is what decides whether a collision is
+            possible:
           </Text>
           <HighlightList
             items={[
@@ -268,11 +267,10 @@ export function AnimationOverviewPage() {
             ]}
           />
           <Text>
-            `check:css-transitions` enforces this (rule styles-12). A genuine
-            exception — media chrome fading with pointer presence, say, which
-            composes with nothing — takes a `transition-exempt` comment giving
-            the reason, so the exception stays visible rather than becoming the
-            norm.
+            `check:css-transitions` enforces this (rule styles-12). A genuine exception — media
+            chrome fading with pointer presence, say, which composes with nothing — takes a
+            `transition-exempt` comment giving the reason, so the exception stays visible rather
+            than becoming the norm.
           </Text>
         </Section>
 
@@ -283,12 +281,13 @@ export function AnimationOverviewPage() {
         >
           <Text>
             Move's motion runs on{' '}
-            <Link href="https://animejs.com" external>anime.js</Link>. It brings
-            spring physics — what makes motion feel like it has weight rather
-            than following a fixed curve — along with a full set of easing
-            curves for the cases where you want a fixed timing instead. Move
-            wraps it end to end: you pick a named spring, the components feed it
-            the right values, and anime.js draws the frames. You never import it
+            <Link href="https://animejs.com" external>
+              anime.js
+            </Link>
+            . It brings spring physics — what makes motion feel like it has weight rather than
+            following a fixed curve — along with a full set of easing curves for the cases where you
+            want a fixed timing instead. Move wraps it end to end: you pick a named spring, the
+            components feed it the right values, and anime.js draws the frames. You never import it
             yourself, and components never reach for it directly.
           </Text>
         </Section>
@@ -299,10 +298,9 @@ export function AnimationOverviewPage() {
           lede="Honored automatically, library-wide."
         >
           <Text>
-            When a visitor has <Code>prefers-reduced-motion</Code> set, Move
-            settles elements to their end state instead of animating to it.
-            There's no per-component opt-in and no half-played frames — the
-            whole library respects the setting at once.
+            When a visitor has <Code>prefers-reduced-motion</Code> set, Move settles elements to
+            their end state instead of animating to it. There's no per-component opt-in and no
+            half-played frames — the whole library respects the setting at once.
           </Text>
         </Section>
 
