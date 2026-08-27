@@ -212,6 +212,9 @@
     "inline-style": 1,
     "raw-html": 8
   },
+  "content/systems/layout/samples/scroll-chain.tsx": {
+    "inline-style": 1
+  },
   "pages/accessibility/AccessibilityPage.tsx": {
     "raw-html": 3
   },
