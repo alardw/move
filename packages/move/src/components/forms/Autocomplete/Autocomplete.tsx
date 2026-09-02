@@ -805,7 +805,12 @@ const AutocompleteClearTrigger = withMoveComponent<
 
     return {
       render() {
-        if (ac.selectedValues.length === 0 && !ac.inputValue) return null;
+        // Rendered even with nothing to clear, and hidden. Unmounting it
+        // collapsed its width, so the field reflowed the moment you typed the
+        // first character — the input jumped narrower under the cursor.
+        // `visibility: hidden` keeps the space and still takes the button out of
+        // the tab order and the accessibility tree.
+        const nothingToClear = ac.selectedValues.length === 0 && !ac.inputValue;
 
         const clearSp = sp('clearTrigger');
         const {
@@ -821,6 +826,7 @@ const AutocompleteClearTrigger = withMoveComponent<
             ref={ref}
             type="button"
             className={cx('clearTrigger', props.className, spClass as string | undefined)}
+            data-empty={nothingToClear || undefined}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={composeHandlers(attrs.onClick, handleClick)}
             // In the tab order. It carried tabIndex={-1}, which made clearing
@@ -1138,7 +1144,13 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
             data-highlighted={isHighlighted ? '' : undefined}
             data-disabled={isDisabled ? '' : undefined}
             className={cx('item', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{
+              // Width-relative, so it cannot be a constant in the stylesheet —
+              // the component supplies the VALUE and CSS holds the STATE.
+              ['--move-autocomplete-item-scale-hover' as string]: scaleHover,
+              ...props.style,
+              ...(spStyle as React.CSSProperties),
+            }}
             onClick={composeHandlers(attrs.onClick, handleClick)}
             onMouseEnter={composeHandlers(attrs.onMouseEnter, handleMouseEnter)}
             onMouseLeave={composeHandlers(attrs.onMouseLeave, handleMouseLeave)}

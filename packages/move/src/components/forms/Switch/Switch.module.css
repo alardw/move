@@ -116,6 +116,14 @@
   will-change: transform;
 }
 
+/* The class fallback for this interaction. Without it the animation has nothing
+   to hand its transform back to on arrival, and the control clicks to full size
+   while the pointer is still down; it is also the whole behaviour under
+   `animations={false}` and reduced motion, where nothing runs. */
+.root:active:not(:disabled) .thumb {
+  scale: 0.85;
+}
+
 /* No CSS press state here, unlike the other controls: this thumb already
    carries a transform for its position, and a separate `scale` would multiply
    with it rather than override — the press would compound the travel. The press

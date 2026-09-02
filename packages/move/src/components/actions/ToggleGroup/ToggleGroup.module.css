@@ -20,6 +20,14 @@
   position: relative;
 }
 
+/* The class fallback for this interaction. Without it the animation has nothing
+   to hand its transform back to on arrival, and the control clicks to full size
+   while the pointer is still down; it is also the whole behaviour under
+   `animations={false}` and reduced motion, where nothing runs. */
+.root:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
 /* Pills — filled sliding pill on a shaded track (default). Mirrors
    Tabs[variant="pills"] pixel-for-pixel via the shared segment tokens. */
 .root[data-variant='pills'] {

@@ -340,6 +340,14 @@
   color: var(--move-fg-muted);
 }
 
+/* Holds its place with nothing to clear. Hidden rather than removed, so typing
+   the first character does not reflow the field under the cursor —
+   `visibility` keeps the box and still takes it out of the tab order and the
+   accessibility tree. */
+.clearTrigger[data-empty] {
+  visibility: hidden;
+}
+
 .clearTrigger:hover {
   color: var(--move-fg-base);
   background-color: var(--move-bg-muted);
@@ -466,6 +474,11 @@
   outline: none;
   will-change: transform;
   overflow: hidden;
+}
+
+/* The class fallback for the row hover — see Select, which carries the same. */
+.item:hover:not([data-disabled]) {
+  transform: scale(var(--move-autocomplete-item-scale-hover, 1.02));
 }
 
 /* Room BETWEEN rows, not around them. A highlighted row's focus ring reaches

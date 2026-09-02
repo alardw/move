@@ -103,6 +103,14 @@
   overflow: hidden;
 }
 
+/* The class fallback for this interaction. Without it the animation has nothing
+   to hand its transform back to on arrival, and the control clicks to full size
+   while the pointer is still down; it is also the whole behaviour under
+   `animations={false}` and reduced motion, where nothing runs. */
+.item:hover:not(:disabled) {
+  transform: scale(1.02);
+}
+
 /* Wrapping span around string item children — see Select.itemText for rationale. */
 .itemText {
   flex: 1;

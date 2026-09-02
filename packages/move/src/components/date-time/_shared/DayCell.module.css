@@ -49,6 +49,14 @@
     color 0.15s ease;
 }
 
+/* The class fallback for this interaction. Without it the animation has nothing
+   to hand its transform back to on arrival, and the control clicks to full size
+   while the pointer is still down; it is also the whole behaviour under
+   `animations={false}` and reduced motion, where nothing runs. */
+.dayCell:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
 /* When the Calendar.Root has events, grow the row so the event dots
    below the day-number circle have breathing room. */
 [data-has-events] .dayCell {

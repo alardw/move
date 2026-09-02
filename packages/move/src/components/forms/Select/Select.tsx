@@ -928,7 +928,15 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
             className={cx('item', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={{
+              // Width-relative, so it cannot be a constant in the stylesheet —
+              // the component supplies the VALUE and CSS holds the STATE. Without
+              // the class the hover animation has nothing to hand its transform
+              // back to and the row clicks flat under the pointer.
+              ['--move-select-item-scale-hover' as string]: scaleHover,
+              ...props.style,
+              ...(spStyle as React.CSSProperties),
+            }}
           >
             {renderItemChildren(
               props.children,

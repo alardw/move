@@ -223,6 +223,14 @@
   overflow: hidden;
 }
 
+/* The class fallback for the row hover. Without it the animation has nothing to
+   hand its transform back to on arrival and the row clicks flat under the
+   pointer; it is also the whole behaviour under `animations={false}` and
+   reduced motion. The value is width-relative, so it comes from the component. */
+.item:hover:not([data-disabled]) {
+  transform: scale(var(--move-select-item-scale-hover, 1.02));
+}
+
 /* Room BETWEEN rows, not around them. A highlighted row's focus ring reaches
    outward as far vertically as horizontally, so with rows flush it lands on the
    neighbour — clearest when the row above is the selected one and its fill meets

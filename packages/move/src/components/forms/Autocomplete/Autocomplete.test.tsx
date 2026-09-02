@@ -562,10 +562,16 @@ describe('Autocomplete', () => {
 
   // === ClearTrigger ===
   describe('clear trigger', () => {
-    it('is hidden when no values and no input text', async () => {
+    /**
+     * Present but hidden, rather than absent. Unmounting it collapsed its width,
+     * so typing the first character reflowed the field under the cursor.
+     * `data-empty` is what the stylesheet hides it by; jsdom applies no CSS, so
+     * the attribute is the observable half here and the visibility is not.
+     */
+    it('holds its place when there is nothing to clear', async () => {
       renderAutocomplete({ showClear: true });
-      // ClearTrigger returns null when no values and empty input
-      expect(screen.queryByLabelText('Clear all')).not.toBeInTheDocument();
+      const clear = screen.getByLabelText('Clear all');
+      expect(clear).toHaveAttribute('data-empty');
     });
 
     it('is visible when input has text', async () => {
@@ -573,7 +579,9 @@ describe('Autocomplete', () => {
       renderAutocomplete({ showClear: true });
       const input = screen.getByRole('combobox');
       await user.type(input, 'test');
-      expect(document.body.querySelector('[aria-label="Clear all"]')).toBeInTheDocument();
+      const clear = document.body.querySelector('[aria-label="Clear all"]');
+      expect(clear).toBeInTheDocument();
+      expect(clear).not.toHaveAttribute('data-empty');
     });
 
     it('has aria-label "Clear all"', async () => {
