@@ -21,7 +21,9 @@ const OUT = 'outQuart';
 /** opacity 0 → 1 */
 export const fadeIn = (): Animation => ({ opacity: { from: 0, to: 1, ease: OUT, duration: 200 } });
 /** opacity 1 → 0 */
-export const fadeOut = (): Animation => ({ opacity: { to: 0, ease: OUT, duration: 150 } });
+export const fadeOut = (): Animation => ({
+  opacity: { from: 1, to: 0, ease: OUT, duration: 150 },
+});
 
 /** translateY: enters from `distance` below → 0 */
 export const slideUp = (distance = 8): Animation => ({
