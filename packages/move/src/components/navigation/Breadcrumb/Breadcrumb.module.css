@@ -29,7 +29,7 @@
   align-items: center;
   color: var(--move-breadcrumb-fg);
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color var(--move-transition-fast) var(--move-ease-default);
   cursor: pointer;
   line-height: 100%;
 }
@@ -38,6 +38,15 @@
   text-decoration: underline;
   text-underline-offset: 0.2em;
   color: var(--move-fg-base);
+}
+
+/* These are links and they take focus; nothing here said what that looks like,
+   so the browser drew its own — which follows the OS accent colour and has
+   nothing to do with the theme. */
+.link:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: var(--move-focus-ring-offset);
+  border-radius: var(--move-rounded-sm);
 }
 
 .page {

@@ -83,3 +83,12 @@ a:hover {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
 }
+
+/* The skip link's destination. `tabindex="-1"` is what lets focus land here,
+   and it is not in the tab order and cannot be operated — so it needs no
+   indicator of its own, and the browser's default drew a ring around the whole
+   page in the OS accent colour. What tells you the skip worked is the next Tab
+   landing inside the content. */
+main:focus {
+  outline: none;
+}
