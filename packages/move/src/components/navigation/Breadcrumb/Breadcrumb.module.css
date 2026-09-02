@@ -46,7 +46,6 @@
 .link:focus-visible {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
-  border-radius: var(--move-rounded-sm);
 }
 
 .page {

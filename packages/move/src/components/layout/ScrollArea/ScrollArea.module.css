@@ -64,6 +64,16 @@
   scrollbar-color: var(--move-scrollarea-scrollbar-thumb) var(--move-scrollarea-scrollbar-track);
 }
 
+/* This takes focus whenever it overflows — that is the point, since arrow keys
+   are the only way to reach hidden content — so it needs to say what focus looks
+   like, or the browser draws its own in the OS accent colour, around the whole
+   region. Inset, because an outset ring on a scrollport sits outside the box it
+   belongs to and clips against whatever encloses it. */
+.content:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-width));
+}
+
 .content[data-padded='true'] {
   padding: var(--move-scrollarea-padding);
 }

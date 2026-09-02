@@ -1,5 +1,5 @@
 // Generated from ScrollArea.spec.ts
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ScrollArea } from './ScrollArea';
 import { createRef } from 'react';
@@ -207,6 +207,29 @@ describe('ScrollArea', () => {
 
       el.focus();
       expect(el).toHaveFocus();
+    });
+
+    /**
+     * The other half of the reason it takes focus at all. With something
+     * focusable inside, tabbing between those already scrolls it, so a stop on
+     * the container reaches nothing new — a page-sized scrollport full of links
+     * was taking focus and drawing a ring around the whole page.
+     */
+    it('is not a tab stop when something inside it can take focus', async () => {
+      const { rerender } = render(
+        <ScrollArea.Content data-testid="content">
+          <a href="/somewhere">A link</a>
+        </ScrollArea.Content>,
+      );
+      const el = screen.getByTestId('content');
+      setOverflow(el, 900, 100);
+      rerender(
+        <ScrollArea.Content data-testid="content">
+          <a href="/somewhere">A link</a>
+        </ScrollArea.Content>,
+      );
+
+      await waitFor(() => expect(el).not.toHaveAttribute('tabindex'));
     });
 
     it('is not a tab stop while its content fits', () => {

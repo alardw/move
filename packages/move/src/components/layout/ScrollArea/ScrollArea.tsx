@@ -6,6 +6,43 @@ import type { SlotPropsMap } from '../../../engine';
 import { useOverflow } from '../../../hooks';
 import styles from './ScrollArea.module.css';
 
+/**
+ * Anything inside that can already take focus.
+ *
+ * A scrollport only needs its own tab stop when tabbing cannot reach its
+ * content — with a link or a button inside, moving between them scrolls it
+ * already, and the extra stop lands on the container and does nothing.
+ *
+ * Watched rather than measured once: content arrives late (a route renders, a
+ * list loads), and a scrollport that was empty at mount should stop being a tab
+ * stop once something focusable appears in it.
+ */
+const FOCUSABLE =
+  'a[href],button,input,select,textarea,[contenteditable="true"],[tabindex]:not([tabindex="-1"])';
+
+function useHasFocusableContent(ref: React.RefObject<HTMLElement | null>): boolean {
+  const [hasFocusable, setHasFocusable] = React.useState(false);
+
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof MutationObserver === 'undefined') return;
+
+    const read = () => setHasFocusable(el.querySelector(FOCUSABLE) !== null);
+    read();
+
+    const observer = new MutationObserver(read);
+    observer.observe(el, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['tabindex', 'href', 'disabled', 'contenteditable'],
+    });
+    return () => observer.disconnect();
+  }, [ref]);
+
+  return hasFocusable;
+}
+
 // ============================================================================
 // Root
 // ============================================================================
@@ -119,6 +156,7 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
     // Vertical only: .content is overflow-y:auto / overflow-x:hidden.
     const { ref: overflowRef, isOverflowing } = useOverflow<HTMLDivElement>({ axis: 'vertical' });
     const mergedRef = useMergedRef<HTMLDivElement>(ref, overflowRef);
+    const hasFocusableContent = useHasFocusableContent(overflowRef);
 
     return {
       render() {
@@ -136,7 +174,14 @@ const ScrollAreaContent = withMoveComponent<'content', ScrollAreaContentProps, H
             // user can't reach the hidden content at all (WCAG 2.1.1). Applied
             // only while it actually overflows — a scrollport with nothing
             // hidden would otherwise be a tab stop that does nothing.
-            tabIndex={isOverflowing ? 0 : undefined}
+            //
+            // And only while nothing INSIDE it is focusable, which is the other
+            // half of that sentence and used to be missing: tabbing through the
+            // content already scrolls it, so an extra stop reaches nothing new.
+            // A page-sized scrollport full of links took focus and drew a ring
+            // around the whole page. It is also the condition Chrome applies to
+            // the scrollers it makes focusable on its own.
+            tabIndex={isOverflowing && !hasFocusableContent ? 0 : undefined}
             // An unnamed region isn't exposed as one, so claim the role only
             // when the consumer has given it a name to announce.
             role={isOverflowing && named ? 'region' : undefined}

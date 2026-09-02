@@ -179,6 +179,16 @@
   scrollbar-color: var(--move-scrollbar-thumb) var(--move-scrollbar-track);
 }
 
+/* A scrollport takes focus when nothing inside it can — arrow keys are then the
+   only way to reach what is hidden — so it has to say what focus looks like, or
+   the browser draws its own in the OS accent colour. Inset, because an outset
+   ring on a scrollport sits outside the box it belongs to and clips against
+   whatever encloses it. */
+.contentInner:focus-visible {
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-width));
+}
+
 .contentInner::-webkit-scrollbar {
   width: 6px;
 }
