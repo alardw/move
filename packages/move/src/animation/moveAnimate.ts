@@ -74,13 +74,18 @@ export function moveAnimate(
   params: Animation | undefined,
   cancelRef?: React.MutableRefObject<JSAnimation | null>,
   /**
-   * Whether this animation ends somewhere a stylesheet holds.
+   * Which end of a transition this is.
    *
-   * An EXIT has nowhere to hand back to: the element is on its way out, and its
-   * end state — transparent, collapsed, slid away — is deliberately not a
-   * resting state anyone declared. Handing the properties back there returns it
-   * toward visible for the frames before it unmounts, which reads as a stutter
-   * on close. So an exit keeps what it wrote and leaves with it.
+   * Handing properties back means letting state 2 apply. An ENTER has one: the
+   * class for where it arrived. An exit does not — what holds an element once
+   * it has gone is a property of how that component is built, not of the
+   * animation. Most unmount, so there is no element left to hold anything;
+   * where one persists, whatever keeps it hidden is the component's own
+   * business. Either way there is nothing for the animation to defer to, so an
+   * exit keeps what it wrote.
+   *
+   * Handing back regardless returned a closing panel toward visible for the
+   * frames before it unmounted, which read as a stutter on close.
    */
   direction: 'enter' | 'exit' = 'enter',
 ): JSAnimation | undefined {
