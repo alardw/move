@@ -177,15 +177,19 @@
   display: contents;
 }
 
+/* Two parts, one line. The tag itself draws no border: the value carries top,
+   left and bottom, the close button carries all four, and where they meet the
+   button's left edge IS the divider — a single border rather than one part's
+   edge sitting beside or inside another's. */
 .tag {
   --move-autocomplete-tag-bg: var(--move-bg-muted);
   --move-autocomplete-tag-fg: var(--move-fg-base);
   --move-autocomplete-tag-border: var(--move-border-interactive);
   --move-autocomplete-tag-radius: var(--move-rounded-sm);
-  /* The tag stands exactly as tall as the remove button inside it, so the
-     button fills the end of the tag and their edges coincide rather than the
-     button floating in a taller box with a gap above and below. */
-  --move-autocomplete-tag-height: var(--move-control-target-min);
+  /* Comfortably above the 24px minimum target, since the remove segment fills
+     this height rather than carrying a size of its own — sizing both to the
+     same number let a border on one push it past the other, and the tag clips. */
+  --move-autocomplete-tag-height: 2rem;
   --move-autocomplete-tag-max-width: 16rem;
 
   display: inline-flex;
@@ -193,25 +197,22 @@
   /* Room for the remove button's focus ring, which reaches outward as far as
      `--move-focus-ring-offset + width`. At spacing-xs the ring lands on the
      last letter of the label rather than in space beside it. */
+  /* The label's right-hand breathing room. It sits between the text and the
+     divider, so with padding-left it gives the label equal space either side. */
   gap: 0;
   min-height: var(--move-autocomplete-tag-height);
   max-width: var(--move-autocomplete-tag-max-width);
   /* Asymmetric on purpose. The remove button carries its own 24px hit area,
      so the right side already reads as having room while the label sat almost
      against the left edge. Equal padding measures equal and looks lopsided. */
-  /* Only on the label side. The remove button is a full-height segment at the
-     right end and reaches the tag's own border, so padding there would push it
-     off the edge it is meant to meet. */
-  padding: 0 0 0 var(--move-spacing-sm);
+  padding: 0;
   background-color: var(--move-autocomplete-tag-bg);
-  border: 1px solid var(--move-autocomplete-tag-border);
   border-radius: var(--move-autocomplete-tag-radius);
   font-size: var(--move-size-xs);
   color: var(--move-autocomplete-tag-fg);
   white-space: nowrap;
   user-select: none;
   line-height: 1;
-  overflow: hidden;
 }
 
 /* Truncating span for tag text — same rationale as .itemText. */
@@ -221,6 +222,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* The value half: bordered on three sides, open on the right where the close
+     button's own border completes it. */
+  display: flex;
+  align-items: center;
+  align-self: stretch;
+  padding-inline: var(--move-spacing-sm);
+  border: 1px solid var(--move-autocomplete-tag-border);
+  border-right: none;
+  border-radius: var(--move-autocomplete-tag-radius) 0 0 var(--move-autocomplete-tag-radius);
 }
 
 .tagRemove {
@@ -232,17 +242,25 @@
      pointers can comfortably hit it without the tag itself needing to be huge.
      Rectangular (rounded-sm) radius mirrors the tag's own rounded-rectangle shape. */
   position: relative;
-  width: var(--move-control-target-min);
-  height: var(--move-control-target-min);
+  /* Stretches to the tag's inner height, so its top and bottom edges ARE the
+     tag's and nothing overflows the clip. Width holds the minimum target on its
+     own; the height comes from the tag, which is taller than the minimum. */
+  /* Square. It stretches to the tag's height, so the width follows from that
+     rather than being set to a number of its own — sized to the 24px minimum it
+     came out narrower than it was tall and read as a thin sliver. The minimum
+     stays as a floor for the day the tag is shorter. */
+  align-self: stretch;
+  aspect-ratio: 1;
+  min-width: var(--move-control-target-min);
   /* A SEGMENT of the tag, not a rounded box floating in it: square where it
      meets the label, and following the tag's own curve on the outside so the
      two edges read as one. The border is the divider between them. */
   border-radius: 0 var(--move-autocomplete-tag-radius) var(--move-autocomplete-tag-radius) 0;
-  border-left: 1px solid var(--move-autocomplete-tag-border);
+  border: 1px solid var(--move-autocomplete-tag-border);
   /* Its own left padding replaces the flex gap, so the glyph is not jammed
      against the divider. */
   padding-inline: var(--move-spacing-xs);
-  box-sizing: content-box;
+  box-sizing: border-box;
   cursor: pointer;
   color: var(--move-fg-muted);
   flex-shrink: 0;
@@ -261,13 +279,15 @@
   background-color: var(--move-bg-emphasis);
 }
 
-/* INSET. The tag clips its own overflow to keep the segment inside its rounded
-   corners, so an outset ring is shaved off top, bottom and right — which is
-   what it did. Drawn inward it sits wholly within the segment and cannot be
-   cut, the same choice the option rows make against their scroll clip. */
+/* The segment's own perimeter, lit: the divider it already shows plus the three
+   edges it keeps transparent against the tag's border. Nothing new is drawn
+   inside it, and nothing extends past the tag to be clipped — the outline is
+   the boundary the segment already has. */
 .tagRemove:focus-visible {
-  outline: var(--move-focus-ring);
-  outline-offset: calc(-1 * var(--move-focus-ring-offset) - var(--move-focus-ring-width));
+  outline: none;
+  border-color: var(--move-focus-ring-color);
+  background-color: var(--move-bg-emphasis);
+  color: var(--move-fg-base);
 }
 
 /* =========================================================================
