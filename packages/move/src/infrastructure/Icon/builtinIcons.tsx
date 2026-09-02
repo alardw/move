@@ -92,6 +92,16 @@ function Check({ width, height }: { width: number | string; height: number | str
   );
 }
 
+/** The indeterminate checkbox's glyph: a horizontal rule, the convention every
+ *  browser renders natively for a partially-selected group. */
+function Minus({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="M5 12h14" />
+    </Svg>
+  );
+}
+
 function Calendar({ width, height }: { width: number | string; height: number | string }) {
   return (
     <Svg width={width} height={height}>
@@ -287,6 +297,7 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'chevron-down': ChevronDown,
   'x': X,
   'check': Check,
+  'minus': Minus,
   'calendar': Calendar,
   'image-off': ImageOff,
   'info': Info,

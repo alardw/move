@@ -194,7 +194,18 @@ const CheckboxRoot = withMoveComponent<
     }, [handlers]);
 
     const iconSize = size === 'sm' ? 14 : size === 'lg' ? 22 : 17;
-    const resolvedIcon = useResolvedIcon(icon as string, iconSize);
+    // A partially-selected group shows a RULE, not a tick. Every browser draws
+    // one natively for `indeterminate`, and the whole point of the state is that
+    // it is distinguishable from checked — `aria-checked="mixed"` said so while
+    // the box showed the same tick, so it was announced and not shown.
+    //
+    // Both resolved unconditionally, and the rule by a literal name: hooks
+    // cannot be called in a branch, and `check:icon-usage` reads literal icon
+    // names out of the source to keep the spec's `iconsUsed` honest — a name
+    // arriving through a variable is invisible to it.
+    const checkedIcon = useResolvedIcon(icon as string, iconSize);
+    const indeterminateIcon = useResolvedIcon('minus', iconSize);
+    const resolvedIcon = indeterminate ? indeterminateIcon : checkedIcon;
 
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, rootRef);
     // A role="checkbox" button isn't named by a wrapping <label>, so name it from

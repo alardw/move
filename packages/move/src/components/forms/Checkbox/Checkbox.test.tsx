@@ -264,3 +264,24 @@ describe('Checkbox', () => {
     });
   });
 });
+
+describe('Checkbox — indeterminate is distinguishable', () => {
+  /**
+   * The state exists to say "some, not all". It was announced as
+   * aria-checked="mixed" while the box drew the same tick as checked, so it
+   * reached a screen reader and not an eye. Every browser renders a rule
+   * natively for this.
+   */
+  it('draws a rule rather than a tick', () => {
+    const { container, rerender } = render(<Checkbox indeterminate />);
+    const indeterminate = container.innerHTML;
+
+    rerender(<Checkbox checked />);
+    expect(container.innerHTML).not.toBe(indeterminate);
+  });
+
+  it('still announces itself as mixed', () => {
+    render(<Checkbox indeterminate />);
+    expect(screen.getByRole('checkbox')).toHaveAttribute('aria-checked', 'mixed');
+  });
+});

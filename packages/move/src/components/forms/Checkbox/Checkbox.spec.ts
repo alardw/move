@@ -338,4 +338,5 @@ export const spec = {
       'animations={false} disables toggle animation',
     ],
   },
+  iconsUsed: ['minus'],
 } satisfies ComponentSpec;
