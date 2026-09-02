@@ -117,7 +117,10 @@ const DEFAULT_RADIO_ANIMATIONS: AnimationTrigger[] = [
     sequence: [
       {
         target: 'Indicator',
-        animation: { scale: { to: 0.5, duration: 150 }, opacity: { to: 0, duration: 150 } },
+        animation: {
+          scale: { from: 1, to: 0.5, duration: 150 },
+          opacity: { from: 1, to: 0, duration: 150 },
+        },
       },
     ],
   },

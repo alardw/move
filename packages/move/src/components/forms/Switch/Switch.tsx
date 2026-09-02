@@ -80,14 +80,20 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
         trigger: 'Root.press',
         sequence: [{ target: 'Thumb', animation: { scale: { to: 0.85, ease: snappy } } }],
       },
+      // Both ends stated. Without a `from`, anime reads the element's CURRENT
+      // value as the start — and by the time a state trigger fires, the class
+      // for the new state already applies, so the thumb is where the animation
+      // was about to move it and it travels nowhere. Naming both ends makes the
+      // journey independent of what CSS says at that instant.
       {
         trigger: 'checked',
         vars: (el: HTMLElement) => ({ dist: measureDist(el) }),
-        sequence: [{ target: 'Thumb', animation: { x: { to: '$dist', ease: snappy } } }],
+        sequence: [{ target: 'Thumb', animation: { x: { from: 0, to: '$dist', ease: snappy } } }],
       },
       {
         trigger: 'unchecked',
-        sequence: [{ target: 'Thumb', animation: { x: { to: 0, ease: snappy } } }],
+        vars: (el: HTMLElement) => ({ dist: measureDist(el) }),
+        sequence: [{ target: 'Thumb', animation: { x: { from: '$dist', to: 0, ease: snappy } } }],
       },
     ];
 

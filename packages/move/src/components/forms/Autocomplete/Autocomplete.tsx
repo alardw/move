@@ -60,7 +60,10 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
             opacity: { from: 0, to: 1 },
           },
         },
-        { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+        {
+          target: 'Icon',
+          animation: { rotate: { from: 0, to: 180, ease: 'outQuart', duration: 300 } },
+        },
       ],
     ],
   },
@@ -69,7 +72,10 @@ const DEFAULT_AUTOCOMPLETE_ANIMATIONS: AnimationTrigger[] = [
     sequence: [
       [
         { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-        { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+        {
+          target: 'Icon',
+          animation: { rotate: { from: 180, to: 0, ease: 'outQuart', duration: 300 } },
+        },
       ],
     ],
   },

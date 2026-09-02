@@ -69,6 +69,12 @@
    primary's readable foreground rather than a hardcoded white knob (which would vanish). */
 .root.root[data-state='checked'] .thumb {
   --move-switch-thumb-bg: var(--move-primary-fg);
+  /* WHERE the thumb rests when on. `--move-switch-thumb-translate` was computed
+     here all along and never used: the position existed only as the animation's
+     inline style, so the moment that was handed back the thumb returned to the
+     left. `transform`, matching what the animation writes, so the inline value
+     overrides this while it travels and this holds it on arrival. */
+  transform: translateX(var(--move-switch-thumb-translate));
 }
 
 .root.root:focus-visible:not(:active) {
@@ -110,9 +116,7 @@
   will-change: transform;
 }
 
-/* Pressed. The animation scales it and then HOLDS it there for as long as the
-   pointer is down, which makes it a state — and states are CSS. Flat, never a
-   transition: travelling between the two is the animation's job. */
-.root:active:not(:disabled) .thumb {
-  scale: 0.85;
-}
+/* No CSS press state here, unlike the other controls: this thumb already
+   carries a transform for its position, and a separate `scale` would multiply
+   with it rather than override — the press would compound the travel. The press
+   animation owns that one. */

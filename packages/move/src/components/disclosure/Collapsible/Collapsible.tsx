@@ -241,7 +241,9 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
             ? [
                 {
                   target: 'Icon',
-                  animation: { rotate: { to: 180, ease: 'outQuart', duration: openDuration } },
+                  animation: {
+                    rotate: { from: 0, to: 180, ease: 'outQuart', duration: openDuration },
+                  },
                 },
               ]
             : false,
@@ -253,7 +255,9 @@ const CollapsibleIcon = withMoveComponent<'icon', CollapsibleIconProps, HTMLSpan
             ? [
                 {
                   target: 'Icon',
-                  animation: { rotate: { to: 0, ease: 'outQuart', duration: closeDuration } },
+                  animation: {
+                    rotate: { from: 180, to: 0, ease: 'outQuart', duration: closeDuration },
+                  },
                 },
               ]
             : false,
