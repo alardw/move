@@ -263,11 +263,7 @@ const CheckboxRoot = withMoveComponent<
             {...indSpRest}
             ref={indicatorRef}
             className={cx('indicator', indSpClass as string | undefined)}
-            style={{
-              opacity: checkbox.checked ? 1 : 0,
-              transform: checkbox.checked ? 'scale(1)' : 'scale(0.5)',
-              ...(indSpStyle as React.CSSProperties),
-            }}
+            style={indSpStyle as React.CSSProperties}
           >
             <span
               {...iconSpRest}

@@ -115,11 +115,13 @@
   color: var(--move-checkbox-fg);
 }
 
-/* The unchecked RESTING state. There was none: "no tick" existed only as the
-   inline style the unchecking animation left behind, so the moment those
-   properties were handed back the tick returned to an unchecked box. Both
-   properties the animation writes are declared, or the state is half in CSS
-   and half in an animation. */
+/* The unchecked RESTING state, and the only one that hides the glyph. It used
+   to be written inline from `checked` alone, which meant an INDETERMINATE box
+   drew its rule at opacity 0 — the glyph was there and invisible, and being
+   inline it outranked any rule the stylesheet could offer. Checked and
+   indeterminate both show theirs; only unchecked hides. Both properties the
+   animation writes are declared, or the state is half in CSS and half in an
+   animation. */
 .root[data-state='unchecked'] .indicator {
   opacity: 0;
   transform: scale(0.5);
