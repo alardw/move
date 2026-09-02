@@ -108,9 +108,10 @@
 .trigger:hover {
   background-color: var(--move-accordion-trigger-bg-hover);
   /* Held for as long as the pointer is over it, so it is a state rather than a
-     movement. `scale` rather than `transform` so it composes with the icon's
-     own rotation instead of overwriting it. */
-  scale: 1.005;
+     movement. `transform`, matching what the animation writes — the separate
+     `scale` property does not override an inline transform, it MULTIPLIES with
+     it, so the rule landed instantly and the hover stopped looking animated. */
+  transform: scale(1.005);
 }
 
 .trigger:focus-visible:not(:active) {

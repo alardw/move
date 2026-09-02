@@ -70,8 +70,16 @@ export function LogoMark() {
       <span>Move</span>
       <span className={styles.suffix} aria-label={`Move ${letter}I`}>
         <span className={styles.slot} aria-hidden="true">
-          <span ref={uRef} className={styles.char}>U</span>
-          <span ref={aRef} className={`${styles.char} ${styles.charA}`}>A</span>
+          <span ref={uRef} className={styles.char} data-shown={letter === 'U' || undefined}>
+            U
+          </span>
+          <span
+            ref={aRef}
+            className={`${styles.char} ${styles.charA}`}
+            data-shown={letter === 'A' || undefined}
+          >
+            A
+          </span>
         </span>
         <span>I</span>
       </span>

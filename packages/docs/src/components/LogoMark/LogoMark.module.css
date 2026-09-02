@@ -27,10 +27,25 @@
   line-height: 1;
 }
 
+/* The two RESTING states. Only one letter is up at a time, and which one is a
+   state of the component — so CSS holds it and the swap animation only travels
+   between the two. Held in an inline style instead, the letter that had left
+   came back the moment the animation handed its properties over, and both
+   stacked. `transform` rather than the `translate` property, matching what the
+   animation writes, so the inline value overrides this while it runs rather
+   than composing with it — `.charA` keeps `translate` for its nudge precisely
+   because that one SHOULD compose. */
 .char {
   grid-area: 1 / 1;
   text-align: center;
+  opacity: 0;
+  transform: translateY(-100%);
   will-change: transform, opacity;
+}
+
+.char[data-shown] {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* A is slightly narrower and its apex reads offset-left against U —
