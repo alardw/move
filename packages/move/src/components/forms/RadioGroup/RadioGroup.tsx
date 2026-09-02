@@ -124,7 +124,10 @@ const DEFAULT_RADIO_ANIMATIONS: AnimationTrigger[] = [
       },
     ],
   },
-  { trigger: 'Item.press', sequence: [{ animation: { scale: { to: 0.9, ease: snappy } } }] },
+  {
+    trigger: 'Item.press',
+    sequence: [{ animation: { scale: { from: 1, to: 0.9, ease: snappy } } }],
+  },
 ];
 
 const RADIO_STATES: AnimationState[] = [

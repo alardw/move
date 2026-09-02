@@ -265,7 +265,7 @@ export const spec = {
       sequence: [
         {
           target: 'indicator',
-          animation: { opacity: { to: 0 }, scale: { to: 0.5, ease: 'snappy' } },
+          animation: { opacity: { from: 1, to: 0 }, scale: { from: 1, to: 0.5, ease: 'snappy' } },
         },
       ],
     },

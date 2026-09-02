@@ -47,9 +47,13 @@ export const scaleOut = (to = 0.9): Animation => ({
   scale: { from: 1, to, ease: OUT, duration: 150 },
 });
 /** scale: momentary grow, springs back (hover) */
-export const scaleUp = (to = 1.04): Animation => ({ scale: { to, ease: snappy } });
+/* Both ends stated. Without a `from`, anime takes the element's CURRENT value
+   as the start — and where a class holds the hovered state, that value has
+   already arrived, so the animation travelled nowhere and the hover read as a
+   jump. Resting scale is 1 by definition, so naming it costs nothing. */
+export const scaleUp = (to = 1.04): Animation => ({ scale: { from: 1, to, ease: snappy } });
 /** scale: momentary shrink, springs back (press) */
-export const scaleDown = (to = 0.96): Animation => ({ scale: { to, ease: snappy } });
+export const scaleDown = (to = 0.96): Animation => ({ scale: { from: 1, to, ease: snappy } });
 
 /** rotate: `from` → `to` degrees (required — no universal default) */
 export const rotate = (from: number, to: number): Animation => ({

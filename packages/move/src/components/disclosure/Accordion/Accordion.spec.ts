@@ -332,7 +332,7 @@ export const spec = {
       trigger: 'open',
       sequence: [
         [
-          { target: 'icon', animation: { rotate: { to: 180, ease: 'snappy' } } },
+          { target: 'icon', animation: { rotate: { from: 0, to: 180, ease: 'snappy' } } },
           { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
         ],
       ],
@@ -341,7 +341,7 @@ export const spec = {
       trigger: 'close',
       sequence: [
         [
-          { target: 'icon', animation: { rotate: { to: 0, ease: 'snappy' } } },
+          { target: 'icon', animation: { rotate: { from: 180, to: 0, ease: 'snappy' } } },
           { target: 'content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
         ],
       ],

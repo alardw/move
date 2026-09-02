@@ -317,7 +317,10 @@ export interface AccordionTriggerProps extends React.HTMLAttributes<HTMLElement>
 }
 
 const DEFAULT_TRIGGER_ANIMATIONS: AnimationTrigger[] = [
-  { trigger: 'Trigger.hover', sequence: [{ animation: { scale: { to: 1.005, ease: snappy } } }] },
+  {
+    trigger: 'Trigger.hover',
+    sequence: [{ animation: { scale: { from: 1, to: 1.005, ease: snappy } } }],
+  },
 ];
 
 const AccordionTrigger = withMoveComponent<

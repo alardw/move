@@ -549,7 +549,10 @@ export const spec = {
             animation: { scale: { from: 0.8, to: 1, ease: 'quick' }, opacity: { from: 0, to: 1 } },
             stagger: { delay: 30 },
           },
-          { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+          {
+            target: 'Icon',
+            animation: { rotate: { from: 0, to: 180, ease: 'outQuart', duration: 300 } },
+          },
         ],
       ],
     },
@@ -564,7 +567,10 @@ export const spec = {
             animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
             stagger: { delay: 20, from: 'last' },
           },
-          { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+          {
+            target: 'Icon',
+            animation: { rotate: { from: 180, to: 0, ease: 'outQuart', duration: 300 } },
+          },
         ],
       ],
     },

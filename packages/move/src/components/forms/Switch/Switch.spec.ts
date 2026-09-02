@@ -227,13 +227,18 @@ export const spec = {
       sequence: [
         {
           target: 'thumb',
-          animation: { x: { to: 'calc($track.width - $thumb.width)', ease: 'poppy' } },
+          animation: { x: { from: 0, to: 'calc($track.width - $thumb.width)', ease: 'poppy' } },
         },
       ],
     },
     {
       trigger: 'unchecked',
-      sequence: [{ target: 'thumb', animation: { x: { to: 0, ease: 'snappy' } } }],
+      sequence: [
+        {
+          target: 'thumb',
+          animation: { x: { from: 'calc($track.width - $thumb.width)', to: 0, ease: 'snappy' } },
+        },
+      ],
     },
     { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
   ],
