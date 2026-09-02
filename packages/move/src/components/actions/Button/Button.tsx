@@ -144,6 +144,14 @@ const ButtonRoot = withMoveComponent<
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
         const combinedStyle: React.CSSProperties = {
+          // The scale is width-relative — a fixed ratio moves a wide button far
+          // more than a narrow one — so it cannot be a constant in the
+          // stylesheet. Published as custom properties instead: the component
+          // supplies the VALUE, CSS holds the STATE. Without that, the hover
+          // animation had nothing to hand its transform back to and the button
+          // clicked back to full size while still hovered.
+          ['--move-button-scale-hover' as string]: scaleVals.up,
+          ['--move-button-scale-press' as string]: scaleVals.down,
           ...(style as React.CSSProperties),
           ...(spStyle as React.CSSProperties),
         };

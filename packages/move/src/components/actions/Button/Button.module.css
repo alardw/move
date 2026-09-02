@@ -56,9 +56,26 @@
     /* transition-exempt: opacity rides along with the colour change for hover and
        disabled — state feedback, not motion. */
     transition-property: background-color, border-color, color, box-shadow, opacity;
-    transition-duration: var(--move-duration-slowest, 300ms);
+    /* The fast step, like every other component's state feedback. This read
+       `var(--move-duration-slowest, 300ms)`, where the fallback was the intent
+       and the token is 500ms — so it never applied, and a hover tint took half
+       a second to arrive. */
+    transition-duration: var(--move-transition-fast);
     transition-timing-function: var(--move-ease-default, ease-out);
     will-change: transform;
+  }
+
+  /* The class fallback. `:hover` and `:active` hold these states, and their
+     absence holds rest — so the control still responds with `animations={false}`
+     or reduced motion, where nothing runs at all. The animation only travels
+     between them, seeding its start synchronously so neither boundary flashes.
+     Flat, never a transition: motion is the animation's job. */
+  .root:hover:not(:disabled) {
+    transform: scale(var(--move-button-scale-hover, 1.05));
+  }
+
+  .root:active:not(:disabled) {
+    transform: scale(var(--move-button-scale-press, 0.95));
   }
 
   /* Full width — fill the container (form actions, sidebar rows) */

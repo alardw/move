@@ -300,7 +300,20 @@ function executeStep(
     console.warn(`[useAnimations] No animation resolved for target: ${target}`);
     return Promise.resolve();
   }
-  const anim = moveAnimate(el, animation, cancelRef, direction);
+  // Hand the properties back unless the element is LEAVING.
+  //
+  // Both ends of an interaction have a class waiting — `:hover` and `:active`
+  // hold those states, and their absence holds rest — so both directions hand
+  // back and the DOM carries no inline style at rest. Those classes are also
+  // the entire behaviour under `animations={false}` and reduced motion, where
+  // nothing runs at all: a state that exists only while an animation is playing
+  // is not a state.
+  //
+  // Only a lifecycle exit keeps what it wrote, because its element is on its
+  // way out and there is nothing left for a class to apply to.
+  const isInteraction = /\.(hover|press)$/.test(triggerName ?? '');
+  const handsBack = isInteraction || direction === 'enter';
+  const anim = moveAnimate(el, animation, cancelRef, handsBack ? 'enter' : 'exit');
   // Looping animations never complete — resolve immediately
   if (anim && isLooping(animation)) {
     if (activeAnims && triggerAnims && triggerName) {
@@ -417,16 +430,28 @@ const REST_VALUES: Record<string, number> = {
  * Create a "reset" animation that returns to rest state.
  * Used as the auto-reverse for event triggers (mouseLeave, mouseUp).
  */
+/** How long a control takes to return to rest — shorter than its way out. */
+const RESET_MS = 120;
+
 function createResetAnimation(anim: Animation): Animation {
-  const reset: Record<string, unknown> = { duration: 0 };
+  // The journey back, with the same feel as the journey out — it used to be
+  // `duration: 0`, an instant snap. That was the only option when nothing but
+  // the animation held the hovered state: anything slower would have left the
+  // element visibly hovered after the pointer had gone. Now a class holds it,
+  // so the return can travel, and both ends are named so it does not depend on
+  // reading a value the class has already changed.
+  // Faster than the way out, and without the spring. Arriving is where a
+  // control gets to have personality; leaving should get out of the way, and a
+  // bounce on the way back reads as the thing chasing your pointer.
+  const reset: Record<string, unknown> = { duration: RESET_MS, ease: 'outQuart' };
+
   for (const [key, value] of Object.entries(anim)) {
-    if (key === 'delay') continue;
+    if (key === 'delay' || key === 'ease' || key === 'duration') continue;
     if (typeof value === 'object' && value !== null) {
       const propObj = value as Record<string, unknown>;
-      // Reset to the `from` value if specified, otherwise use the property's rest value
-      const resetTo = propObj.from ?? REST_VALUES[key];
-      if (resetTo !== undefined) {
-        reset[key] = { to: resetTo };
+      const restValue = propObj.from ?? REST_VALUES[key];
+      if (restValue !== undefined) {
+        reset[key] = { from: propObj.to, to: restValue };
       }
     }
   }

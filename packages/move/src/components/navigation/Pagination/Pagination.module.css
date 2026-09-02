@@ -160,10 +160,6 @@
    them states rather than movements — so CSS declares where they rest and the
    animation only travels between. Flat `transform`, matching what the animation writes so the inline value
    overrides this one while it runs instead of multiplying with it. */
-.prev:active:not(:disabled),
-.next:active:not(:disabled) {
-  transform: scale(0.96);
-}
 
 .prev:hover:not(:disabled),
 .next:hover:not(:disabled) {

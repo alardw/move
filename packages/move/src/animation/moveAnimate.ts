@@ -1,6 +1,7 @@
 import { animate, type JSAnimation } from 'animejs';
 import { prefersReducedMotion, toEndValues } from './utils/helpers';
 import type { Animation } from './types';
+import { seedFromState } from './utils/seed';
 
 /**
  * Which CSS property anime.js writes for each animatable key.
@@ -110,6 +111,12 @@ export function moveAnimate(
   // state that CSS never declared. That is the bug, not this.
   //
   // A looping animation is exempt: it has no end to hand back at.
+  // Seed the start synchronously. anime does not write its first frame until the
+  // next tick, and the class this is taking over from stops matching the instant
+  // the pointer leaves — so without this there is one frame belonging to neither,
+  // and a hover-out snaps to rest before the reverse animation plays.
+  seedFromState(el, params);
+
   const props = params.loop || direction === 'exit' ? [] : writtenProperties(params);
   const anim = animate(el, {
     ...(params as any),

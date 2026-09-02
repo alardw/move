@@ -38,6 +38,15 @@
   pointer-events: none;
 }
 
+/* The class fallback. `:hover` and `:active` hold these states, and their
+   absence holds rest — so the control still responds with `animations={false}`
+   or reduced motion, where nothing runs at all. The animation only travels
+   between them, seeding its start synchronously so neither boundary flashes.
+   Flat, never a transition: motion is the animation's job. */
+.root:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
 /* Scoped OFF the filled states rather than overridden back afterwards. Checked
    and indeterminate paint an accent fill with no border — the fill is the
    affordance — and this rule is more specific than the state rules below, so

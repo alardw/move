@@ -49,6 +49,15 @@
   pointer-events: none;
 }
 
+/* The class fallback. `:hover` and `:active` hold these states, and their
+   absence holds rest — so the control still responds with `animations={false}`
+   or reduced motion, where nothing runs at all. The animation only travels
+   between them, seeding its start synchronously so neither boundary flashes.
+   Flat, never a transition: motion is the animation's job. */
+.item:active:not(:disabled) {
+  transform: scale(0.9);
+}
+
 /* Scoped OFF the checked state rather than overridden back afterwards — see the
    same reasoning in Checkbox. The checked dot paints an accent fill with no
    border, and this rule is more specific than the state rule below, so left
@@ -128,9 +137,6 @@
 /* Pressed. The press animation scales the item and then holds it there for as
    long as the pointer is down — which is a state, and states are CSS. Flat, not
    a transition: the movement between the two is the animation's job. */
-.item:active:not(:disabled) {
-  transform: scale(0.9);
-}
 
 .dot {
   width: var(--move-radio-dot-size);
