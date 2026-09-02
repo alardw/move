@@ -651,9 +651,36 @@ function checkComponent(componentDir) {
       }
     }
 
+    // Dismiss semantics, BOTH directions. Which flavour a component uses decides
+    // whether its exit animation has anywhere to hand its properties back to:
+    // `unmountAfterExit` leaves no element to apply a resting state, while
+    // `hide` keeps one, so the hidden state has to be declared in CSS or the
+    // animation is holding it. That makes this field load-bearing for animation
+    // -4, not just documentation — so a component with an exit flow has to say
+    // which it is.
     const db = specText.match(/dismissBehavior:\s*'([^']+)'/);
+    const hasExitFlow = /\brunExit\b|\buseDismissableExit\b/.test(dirSrc);
+
     if (db && db[1] === 'unmountAfterExit' && !/\brunExit\b/.test(dirSrc)) {
       errors.push("spec dismissBehavior='unmountAfterExit' but source never calls runExit() (no exit-then-unmount flow)");
+    }
+    if (!db && hasExitFlow) {
+      errors.push(
+        'source runs an exit flow but the spec declares no dismissBehavior — say whether the element unmounts after it or stays hidden, since that is what decides where its exit animation lands',
+      );
+    }
+    if (db && db[1] === 'hide') {
+      // The element persists, so "hidden" is a resting state it holds — and a
+      // resting state belongs to the stylesheet. Held in the exit animation's
+      // inline style instead, it comes undone the moment anything hands those
+      // properties back.
+      const cssFile = join(componentDir, `${name}.module.css`);
+      const css = existsSync(cssFile) ? readFileSync(cssFile, 'utf8') : '';
+      if (!/\[data-[\w-]*state[\w-]*=['"]?(closed|hidden)/.test(css)) {
+        errors.push(
+          "spec dismissBehavior='hide' but no closed/hidden state is declared in CSS — a persisting element holds that state, and an animation cannot hold it for it",
+        );
+      }
     }
 
     // 0c. engineImports parity. The field existed in the schema from the start

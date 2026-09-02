@@ -392,6 +392,7 @@ export const spec = {
   },
 
   controlled: 'value' as const,
+  dismissBehavior: 'unmountAfterExit' as const,
   controlledProps: {
     valueProp: 'value',
     defaultValueProp: 'defaultValue',

@@ -469,6 +469,7 @@ export const spec = {
   },
 
   controlled: 'open' as const,
+  dismissBehavior: 'unmountAfterExit' as const,
   controlledProps: {
     valueProp: 'collapsed',
     defaultValueProp: 'defaultCollapsed',
