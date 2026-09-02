@@ -73,6 +73,16 @@ export function moveAnimate(
   el: HTMLElement | null,
   params: Animation | undefined,
   cancelRef?: React.MutableRefObject<JSAnimation | null>,
+  /**
+   * Whether this animation ends somewhere a stylesheet holds.
+   *
+   * An EXIT has nowhere to hand back to: the element is on its way out, and its
+   * end state — transparent, collapsed, slid away — is deliberately not a
+   * resting state anyone declared. Handing the properties back there returns it
+   * toward visible for the frames before it unmounts, which reads as a stutter
+   * on close. So an exit keeps what it wrote and leaves with it.
+   */
+  direction: 'enter' | 'exit' = 'enter',
 ): JSAnimation | undefined {
   if (!el || !params) return;
 
@@ -95,7 +105,7 @@ export function moveAnimate(
   // state that CSS never declared. That is the bug, not this.
   //
   // A looping animation is exempt: it has no end to hand back at.
-  const props = params.loop ? [] : writtenProperties(params);
+  const props = params.loop || direction === 'exit' ? [] : writtenProperties(params);
   const anim = animate(el, {
     ...(params as any),
     onComplete: (self: JSAnimation) => {

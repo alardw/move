@@ -26,6 +26,21 @@ describe('moveAnimate — hands properties back', () => {
     el.remove();
   });
 
+  /**
+   * An exit has nowhere to hand back to. Its end state — transparent, collapsed,
+   * slid away — is deliberately not a resting state anyone declared, so giving
+   * the properties up returns the element toward visible for the frames before
+   * it unmounts. That read as a stutter on close.
+   */
+  it('keeps what it wrote on the way out', async () => {
+    const el = document.createElement('div');
+    document.body.appendChild(el);
+    moveAnimate(el, { opacity: { from: 1, to: 0, duration: 60 } }, undefined, 'exit');
+    await new Promise((r) => setTimeout(r, 200));
+    expect(el.style.opacity).toBe('0');
+    el.remove();
+  });
+
   it('leaves a looping animation alone — it has no end to hand back at', async () => {
     const el = document.createElement('div');
     document.body.appendChild(el);

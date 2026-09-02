@@ -300,7 +300,7 @@ function executeStep(
     console.warn(`[useAnimations] No animation resolved for target: ${target}`);
     return Promise.resolve();
   }
-  const anim = moveAnimate(el, animation, cancelRef);
+  const anim = moveAnimate(el, animation, cancelRef, direction);
   // Looping animations never complete — resolve immediately
   if (anim && isLooping(animation)) {
     if (activeAnims && triggerAnims && triggerName) {
@@ -653,7 +653,7 @@ function useTriggerHandlers(
                   if (anim && Object.keys(resolvedVars).length > 0) {
                     anim = resolveAnimationVars(anim, resolvedVars);
                   }
-                  if (anim) moveAnimate(child, anim, cancelRef);
+                  if (anim) moveAnimate(child, anim, cancelRef, 'enter');
                 }
               };
 
@@ -671,7 +671,9 @@ function useTriggerHandlers(
                 for (const item of resetSeq) {
                   const step = Array.isArray(item) ? item[0] : item;
                   if (step.animation)
-                    moveAnimate(el, step.animation, cancelRef ?? { current: null });
+                    // The leave half of a delegated hover: it returns the child to rest,
+                    // so it hands its properties back like any other enter.
+                    moveAnimate(el, step.animation, cancelRef ?? { current: null }, 'enter');
                 }
               };
 
