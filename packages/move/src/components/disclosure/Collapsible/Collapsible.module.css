@@ -34,6 +34,22 @@
   transform-origin: center;
 }
 
+/* The chevron's two RESTING states. The rotation between them is animated, but
+   the states themselves belong to CSS: the animation can then hand the property
+   back when it finishes and this holds what it arrived at.
+   It is also what the chevron does when nothing animates — under reduced motion,
+   or `animations={false}`, the triggers never run, and without these an open
+   panel kept a chevron still pointing down. A state that exists only while an
+   animation is running is not a state. */
+.icon {
+  transform: rotate(0deg);
+}
+
+[data-state='open'] > .icon,
+[data-state='open'] .icon {
+  transform: rotate(180deg);
+}
+
 /* Content */
 .content {
   overflow: hidden;

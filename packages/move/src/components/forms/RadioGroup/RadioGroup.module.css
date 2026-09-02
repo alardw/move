@@ -115,8 +115,21 @@
   justify-content: center;
 }
 
+/* The unchecked RESTING state, both properties the animation writes. Opacity
+   alone left the scale held by the inline style, so a cleanup that hands the
+   property back would restore full size under a transparent dot — invisible
+   today, but a state half in CSS and half in an animation is the shape this
+   rule exists to prevent. */
 .indicator[data-state='unchecked'] {
   opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Pressed. The press animation scales the item and then holds it there for as
+   long as the pointer is down — which is a state, and states are CSS. Flat, not
+   a transition: the movement between the two is the animation's job. */
+.item:active:not(:disabled) {
+  transform: scale(0.9);
 }
 
 .dot {

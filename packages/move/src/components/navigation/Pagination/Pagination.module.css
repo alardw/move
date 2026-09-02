@@ -156,8 +156,17 @@
     background-color 150ms;
 }
 
+/* Hover and press are held for as long as the pointer is there, which makes
+   them states rather than movements — so CSS declares where they rest and the
+   animation only travels between. Flat `scale`, never a transition. */
+.prev:active:not(:disabled),
+.next:active:not(:disabled) {
+  scale: 0.96;
+}
+
 .prev:hover:not(:disabled),
 .next:hover:not(:disabled) {
+  scale: 1.04;
   color: var(--move-pagination-item-fg-hover);
   background-color: var(--move-pagination-item-bg-hover);
 }

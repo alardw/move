@@ -109,3 +109,10 @@
   box-shadow: var(--move-switch-thumb-shadow);
   will-change: transform;
 }
+
+/* Pressed. The animation scales it and then HOLDS it there for as long as the
+   pointer is down, which makes it a state — and states are CSS. Flat, never a
+   transition: travelling between the two is the animation's job. */
+.root:active:not(:disabled) .thumb {
+  scale: 0.85;
+}
