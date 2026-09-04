@@ -135,3 +135,32 @@ Not debt, and correctly exempt: Button, ToggleGroup and EventSlot transition
 `opacity` alongside a colour change for hover/disabled — state feedback, not
 motion. Image fades a decoded image in off the browser's load event, where there
 is no React state for `useAnimations` to hang a trigger on.
+
+## Foreign controls on the sidebar rail
+
+`Sidebar.NavItem` carries both halves of a nav row: the semantics (a link, a list
+item, `aria-current`) and the metrics (height, padding, gap, radius, font size,
+left alignment). Everything that ACTS rather than navigates — an account
+`Dropdown`, a theme `Button` — is meant to be an ordinary component sitting on
+the rail, but nothing lends it the second half. Placed in a `Sidebar.Footer` a
+`Button` centres its content and brings its own height, gap and font size, so it
+reads as a button dropped into a list of nav rows rather than as one more row.
+
+Found while migrating the samples: the profile row LOOKS like an action, so it
+became a `Button` and visibly broke the rail. It was a destination all along and
+went back to a `NavItem`, which is why no sample shows the gap now — but a real
+account menu is a `Dropdown`, and that one cannot be rewritten away.
+
+The pieces exist. `Button` already reads `--move-button-height`,
+`--move-button-padding-x`, `--move-button-radius`, `--move-button-gap` and
+`--move-button-font-size` with fallbacks, so a box could hand a subtree the
+rail's metrics through the documented override channel rather than restyling a
+foreign component from outside. What tokens cannot express is alignment: `Button`
+has `fullWidth` but no `align`, which is half an API — a full-width button with
+an icon and a label almost always wants its content at the start.
+
+So probably two things, and the second is worth doing on its own merits:
+a box (`Sidebar.Row`?) that sets the row metrics for what it wraps, and an
+`align` prop on `Button`. Deliberately not invented on the spot — the design's
+rule is that foreign content is TOLD, never assumed, and both of these are ways
+of telling it, so the shape wants deciding rather than guessing.

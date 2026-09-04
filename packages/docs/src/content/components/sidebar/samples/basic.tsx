@@ -45,12 +45,9 @@ export default function BasicSample() {
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            {/* Acting, not navigating — so it is a plain Button, and it says
-                what to do with its label when the rail narrows. */}
-            <Button variant="ghost" fullWidth data-sidebar-animate>
-              <Icon name="user" />
-              <Sidebar.Expanded>Alex Smith</Sidebar.Expanded>
-            </Button>
+            <Sidebar.Nav aria-label="Account">
+              <Sidebar.NavItem href="/profile" icon={<Icon name="user" />} tooltip="Profile">Alex Smith</Sidebar.NavItem>
+            </Sidebar.Nav>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">
