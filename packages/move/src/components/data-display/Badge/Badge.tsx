@@ -4,7 +4,7 @@ import { withMoveComponent } from '../../../engine';
 import type { Color } from '../../../shared/types';
 import styles from './Badge.module.css';
 
-export type BadgeVariant = 'solid' | 'soft' | 'surface' | 'outline' | 'dot' | 'inherit';
+export type BadgeVariant = 'solid' | 'soft' | 'surface' | 'outline' | 'dot';
 export type BadgeSize = 'sm' | 'md' | 'lg';
 /** Themeable palette color role. @see Color */
 export type BadgeColor = Color;
@@ -37,10 +37,7 @@ export const Badge = withMoveComponent<'root', BadgeProps, HTMLSpanElement>({
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
-        // `inherit` derives from currentColor and never touches the palette, so
-        // the attribute that selects one would be advertising a colour that
-        // does nothing.
-        const color = props.variant === 'inherit' ? undefined : (props.color as string);
+        const color = props.color as string;
 
         return (
           <span

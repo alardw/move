@@ -15,6 +15,10 @@ const highlights: HighlightItem[] = [
     icon: 'message-square',
     text: 'Pass a `tooltip` to each NavItem and the collapsed rail grows real labels on hover — discoverability without giving up the icons-only space saving.',
   },
+  {
+    icon: 'layout-dashboard',
+    text: 'Every part arranges its own children: `Header` is a row with its ends apart, centred once collapsed, and `Content`, `Group` and `Footer` are columns with a gap. Wrap the header\u2019s children in a `Stack` when ends-apart is not the shape you want.',
+  },
 ];
 
 const related: RelatedItem[] = [

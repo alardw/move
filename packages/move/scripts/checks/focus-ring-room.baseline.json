@@ -1,0 +1,14 @@
+[
+  "src/components/actions/ToggleGroup/ToggleGroup.module.css:.root",
+  "src/components/date-time/CalendarView/DayView.module.css:.allDayEvents",
+  "src/components/date-time/CalendarView/WeekView.module.css:.allDayGrid",
+  "src/components/date-time/_shared/CalendarNav.module.css:.navLabels",
+  "src/components/forms/ColorPicker/ColorPicker.module.css:.inputRow",
+  "src/components/forms/ColorPicker/ColorPicker.module.css:.swatches",
+  "src/components/forms/FileUpload/FileUpload.module.css:.itemGroup",
+  "src/components/forms/RichTextEditor/RichTextEditor.module.css:.controlGroup",
+  "src/components/navigation/Sidebar/Sidebar.module.css:.footer",
+  "src/components/navigation/Sidebar/Sidebar.module.css:.group",
+  "src/components/navigation/Stepper/Stepper.module.css:.labels",
+  "src/components/navigation/Tabs/Tabs.module.css:.list"
+]

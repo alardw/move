@@ -536,8 +536,6 @@ export interface SidebarHeaderProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  /** Content shown when sidebar is collapsed. Falls back to children if not provided. */
-  collapsedChildren?: React.ReactNode;
   /** Localized strings rendered by the header (mobile close button). */
   labels?: Partial<SidebarLabels>;
   sp?: SlotPropsMap<'header' | 'mobileClose'>;
@@ -551,14 +549,13 @@ const SidebarHeader = withMoveComponent<
   name: 'SidebarHeader',
   styles,
   slots: ['header', 'mobileClose'] as const,
-  moveProps: ['collapsedChildren', 'labels'],
+  moveProps: ['labels'],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<SidebarLabels>) };
-    const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
+    const { isMobile, setMobileOpen } = useSidebarContext();
     const closeIcon = useIcon('close', 16);
     const scrollCtx = React.useContext(SidebarScrollContext);
-    const showCollapsed = collapsed && !isMobile;
 
     const handleClose = React.useCallback(() => {
       setMobileOpen(false);
@@ -581,9 +578,7 @@ const SidebarHeader = withMoveComponent<
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-scrolled={scrollCtx?.scrolledFromTop ? '' : undefined}
           >
-            {showCollapsed && props.collapsedChildren !== undefined
-              ? props.collapsedChildren
-              : props.children}
+            {props.children}
             {isMobile && (
               <Button
                 variant="ghost"

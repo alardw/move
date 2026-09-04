@@ -224,15 +224,10 @@ export const spec = {
           moveSpecific: false,
           description: 'Inline styles',
         },
-        {
-          name: 'collapsedChildren',
-          type: 'React.ReactNode',
-          moveSpecific: true,
-          description: 'Alternative content shown when sidebar is collapsed (desktop only)',
-        },
       ],
       usesFactory: true,
-      description: 'Sticky header with border-bottom, supports collapsed content swap',
+      description:
+        'Sticky header with border-bottom. Lays its children out in a row, space-between, centred when collapsed; wrap them in a Stack to arrange them differently',
     },
     {
       name: 'Content',
@@ -681,7 +676,7 @@ export const spec = {
     {
       id: 'header-collapsed-content',
       description:
-        'Header shows collapsedChildren when collapsed on desktop, falls back to children if collapsedChildren is not provided.',
+        'Header renders its children in both states; what differs between them is marked at the call site with Sidebar.Expanded / Sidebar.Collapsed, at whatever granularity it applies to. It does NOT swap a whole alternative child set — a header is usually a mark that stays plus a title that goes, and replacing the lot means repeating the parts that stay.',
     },
     {
       id: 'trigger-mobile-toggle',
@@ -836,8 +831,7 @@ export const spec = {
       'Overlay renders on mobile with fixed backdrop',
       'Overlay click closes mobile sidebar',
       'Header renders with border-bottom',
-      'Header shows collapsedChildren when collapsed on desktop',
-      'Header falls back to children when collapsedChildren is undefined',
+      'Header renders the same children in both states, Expanded/Collapsed marking what differs',
       'Content renders scrollable area',
       'Footer renders with border-top',
       'Footer centers items when collapsed',

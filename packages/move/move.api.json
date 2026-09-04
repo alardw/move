@@ -9128,11 +9128,6 @@
               "name": "style",
               "type": "React.CSSProperties",
               "description": "Inline styles"
-            },
-            {
-              "name": "collapsedChildren",
-              "type": "React.ReactNode",
-              "description": "Alternative content shown when sidebar is collapsed (desktop only)"
             }
           ]
         },

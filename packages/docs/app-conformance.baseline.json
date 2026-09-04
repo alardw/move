@@ -1,6 +1,5 @@
 {
   "App.tsx": {
-    "inline-style": 1,
     "raw-html": 2
   },
   "components/AdvancedBadge/AdvancedBadge.module.css": {

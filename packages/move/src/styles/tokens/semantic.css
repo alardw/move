@@ -140,7 +140,7 @@
    * approximated it with `6px 4px`, so a change to the ring tokens moved one
    * and not the other.
    */
-  --move-popup-ring-room: calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px);
+  --move-popup-ring-room: var(--move-focus-ring-room);
 
   /* Track (the container the items sit in) */
   --move-segment-track-bg: var(--move-bg-muted);
@@ -169,6 +169,16 @@
   --move-focus-ring-width: 2px;
   --move-focus-ring-offset: 2px;
   --move-focus-ring: var(--move-focus-ring-width) solid var(--move-focus-ring-color);
+
+  /* How far an OUTSET ring reaches beyond the element, plus the clearance that
+     makes it read as a ring rather than an edge.
+     Two things need it and used to compute it separately: a container needs
+     this much padding so the ring is not clipped at its boundary, and a gapped
+     stack needs at least this much between siblings or one row's ring lands on
+     the next one. `--move-popup-ring-room` was the same calc under a
+     popup-specific name; it now derives from this, so a change to the ring
+     tokens moves everything that depends on them. */
+  --move-focus-ring-room: calc(var(--move-focus-ring-offset) + var(--move-focus-ring-width) + 2px);
 
   /* ============================================
    * Interactive Element Heights (buttons, inputs, selects)

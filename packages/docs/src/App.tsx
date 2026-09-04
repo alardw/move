@@ -145,28 +145,27 @@ function AppSidebar() {
 
   return (
     <Sidebar.Root>
-      <Sidebar.Header
-        collapsedChildren={
-          <Tooltip label="Expand" side="right" sideOffset={8}>
-            <Button variant="ghost" size="sm" onClick={toggleCollapsed} aria-label="Expand sidebar">
-              <Icon name="panel-left" />
-            </Button>
-          </Tooltip>
-        }
-      >
-        <LogoMark />
+      <Sidebar.Header>
+        <Sidebar.Expanded>
+          <LogoMark />
+        </Sidebar.Expanded>
         {/* Collapse is a desktop-only affordance — on mobile the sheet is
-            opened/closed, not collapsed (and it would steal initial focus). */}
+            opened/closed, not collapsed (and it would steal initial focus).
+            The old collapsed branch rendered this button regardless, so a
+            collapsed sheet on mobile showed an expand toggle and no mark. */}
         {!isMobile && (
-          <Tooltip label="Collapse" sideOffset={8}>
+          <Tooltip
+            label={collapsed ? 'Expand' : 'Collapse'}
+            side={collapsed ? 'right' : 'top'}
+            sideOffset={8}
+          >
             <Button
               variant="ghost"
               size="sm"
               onClick={toggleCollapsed}
-              aria-label="Collapse sidebar"
-              style={{ marginLeft: 'auto' }}
+              aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             >
-              <Icon name="panel-left-close" />
+              <Icon name={collapsed ? 'panel-left' : 'panel-left-close'} />
             </Button>
           </Tooltip>
         )}

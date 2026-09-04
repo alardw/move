@@ -59,7 +59,7 @@ describe('Badge', () => {
       expect(screen.getByTestId('badge')).toHaveAttribute('data-variant', 'outline');
     });
 
-    it.each(['solid', 'soft', 'surface', 'outline', 'dot', 'inherit'] as const)(
+    it.each(['solid', 'soft', 'surface', 'outline', 'dot'] as const)(
       'supports variant=%s',
       (variant) => {
         render(
@@ -72,22 +72,23 @@ describe('Badge', () => {
     );
   });
 
-  // === Inherit variant ===
-  describe('variant=inherit', () => {
-    it('is a variant, not a colour — the palette does not reach it', () => {
-      // Every other variant pairs a fill with a foreground AA against THAT fill,
-      // and says nothing about the surface underneath. On the sidebar's active
-      // row a blue badge lands 1.16:1 from the row and dissolves into it. This
-      // one derives from currentColor instead, so `color` has no effect and the
-      // DOM says so rather than advertising a palette it does not use.
+  // === Surface override ===
+  describe('a surface that paints a strong fill', () => {
+    it('overrides the palette, because no palette colour reads on one', () => {
+      // A colour is chosen against the badge's own text, never against what it
+      // is placed on. On --move-primary not one of the 13 solid fills clears
+      // 3:1 — blue manages 1.16:1 — so the surface hands down the pair it
+      // already guarantees and every variant yields to it. The properties must
+      // stay undeclared on .root: a custom property set on the element shadows
+      // the inherited one, which would break the whole mechanism.
       render(
-        <Badge variant="inherit" color="blue" data-testid="badge">
+        <Badge color="blue" data-testid="badge">
           12
         </Badge>,
       );
       const el = screen.getByTestId('badge');
-      expect(el).toHaveAttribute('data-variant', 'inherit');
-      expect(el).not.toHaveAttribute('data-color');
+      expect(el.style.getPropertyValue('--move-badge-bg')).toBe('');
+      expect(el.style.getPropertyValue('--move-badge-fg')).toBe('');
     });
   });
 

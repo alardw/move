@@ -13,6 +13,8 @@ import RightSide from './samples/right-side';
 import rightSideCode from './samples/right-side?raw';
 import Links from './samples/links';
 import linksCode from './samples/links?raw';
+import HeaderLayout from './samples/header-layout';
+import headerLayoutCode from './samples/header-layout?raw';
 
 export const content: ComponentContent = {
   meta,
@@ -23,5 +25,11 @@ export const content: ComponentContent = {
     { id: 'with-badges', title: 'With badges', render: WithBadges, code: withBadgesCode },
     { id: 'right-side', title: 'Right-side', render: RightSide, code: rightSideCode },
     { id: 'links', title: 'As router links', render: Links, code: linksCode },
+    {
+      id: 'header-layout',
+      title: 'Arranging the header and footer',
+      render: HeaderLayout,
+      code: headerLayoutCode,
+    },
   ],
 };

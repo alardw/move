@@ -118,26 +118,43 @@ describe('Sidebar', () => {
       expect(screen.getByText('My Header')).toBeInTheDocument();
     });
 
-    it('shows collapsedChildren when collapsed on desktop', () => {
+    it('keeps the parts that stay while the marked parts swap', () => {
+      // A header is usually a mark that stays plus a title that goes. The prop
+      // this replaced swapped the WHOLE child set, so the mark had to be written
+      // twice — and every sample did exactly that.
       renderWithProvider(
-        <Sidebar.Header data-testid="header" collapsedChildren={<span>Collapsed</span>}>
-          <span>Expanded</span>
+        <Sidebar.Header data-testid="header">
+          <span>Mark</span>
+          <Sidebar.Expanded>
+            <span>Acme Co.</span>
+          </Sidebar.Expanded>
+          <Sidebar.Collapsed>
+            <span>AC</span>
+          </Sidebar.Collapsed>
         </Sidebar.Header>,
         { defaultCollapsed: true },
       );
-      expect(screen.getByText('Collapsed')).toBeInTheDocument();
-      expect(screen.queryByText('Expanded')).not.toBeInTheDocument();
+      expect(screen.getByText('Mark')).toBeInTheDocument();
+      expect(screen.getByText('AC')).toBeInTheDocument();
+      expect(screen.queryByText('Acme Co.')).not.toBeInTheDocument();
     });
 
-    it('shows children when not collapsed', () => {
+    it('shows the expanded part when not collapsed', () => {
       renderWithProvider(
-        <Sidebar.Header data-testid="header" collapsedChildren={<span>Collapsed</span>}>
-          <span>Expanded</span>
+        <Sidebar.Header data-testid="header">
+          <span>Mark</span>
+          <Sidebar.Expanded>
+            <span>Acme Co.</span>
+          </Sidebar.Expanded>
+          <Sidebar.Collapsed>
+            <span>AC</span>
+          </Sidebar.Collapsed>
         </Sidebar.Header>,
         { defaultCollapsed: false },
       );
-      expect(screen.getByText('Expanded')).toBeInTheDocument();
-      expect(screen.queryByText('Collapsed')).not.toBeInTheDocument();
+      expect(screen.getByText('Mark')).toBeInTheDocument();
+      expect(screen.getByText('Acme Co.')).toBeInTheDocument();
+      expect(screen.queryByText('AC')).not.toBeInTheDocument();
     });
 
     it('forwards className and style', () => {

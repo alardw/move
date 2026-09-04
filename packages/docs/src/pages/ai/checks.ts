@@ -125,6 +125,12 @@ export const CHECKS: CheckDoc[] = [
       'CSS transitions animate colour, never motion. anime.js writes inline styles, so a transition and an animation are one language at two cascade levels — a transition cannot compose with a spring, and on the same property they overwrite each other. Colour is safe because nothing in `useAnimations` writes it. Setting `opacity` or `transform` flatly is a state and stays allowed; it is transitioning them that is motion. Escapes: inside `prefers-reduced-motion`, or a justified `transition-exempt` comment.',
   },
   {
+    name: 'focus-ring-room',
+    appliesTo: 'component',
+    enforces:
+      'A container of focusable children leaves room for their focus rings. An outset ring is drawn outside the element box, reaching `--move-focus-ring-room` beyond it; a container whose `gap` is smaller puts each row\u2019s ring on its neighbour, which against a filled row reads as the two being joined. The defect lives in the relationship between two rules that each look right alone, so the fix goes on the container \u2014 `gap: max(<your gap>, var(--move-focus-ring-room))` \u2014 not on the ring. Where rows must sit tight, inset the ring instead. Ratcheted against a baseline: what exists is recorded, what is new fails.',
+  },
+  {
     name: 'control-size',
     appliesTo: 'component',
     enforces:

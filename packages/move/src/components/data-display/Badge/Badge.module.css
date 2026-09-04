@@ -205,11 +205,30 @@
 
 /* --- Variant styles (consume the per-color vars) --- */
 
+/* A palette colour is chosen against the badge's OWN text, never against the
+ * surface the badge is placed on — those are two independent choices, and on a
+ * strongly filled one they collide: not one of the 13 solid fills clears 3:1
+ * against --move-primary (the best is yellow at 2.32:1, blue is 1.16:1). No
+ * colour is the right answer there, so the surface answers instead.
+ *
+ * A surface that paints a strong fill sets these three, and every variant below
+ * yields to them; anywhere else they are unset and the palette stands, because
+ * on a plain background the palette reads perfectly well and its colour MEANS
+ * something — red is urgent, gray is inert. The surface knows both its fill and
+ * the foreground it already guarantees against that fill, so the pair it hands
+ * down is legible by construction, whatever the theme.
+ *
+ * `--move-badge-bg` / `-fg` / `-border` are deliberately not declared with
+ * values on .root: a custom property declared on the element itself shadows the
+ * inherited one, and inheriting from the surface is the whole mechanism.
+ */
+
 /* Solid (default) */
 .root[data-variant='solid'],
 .root:not([data-variant]) {
-  background-color: var(--_solid);
-  color: var(--_solid-fg);
+  background-color: var(--move-badge-bg, var(--_solid));
+  color: var(--move-badge-fg, var(--_solid-fg));
+  border-color: var(--move-badge-border, transparent);
 }
 
 /* Soft — tinted background + a hairline of the palette's own darker tone. The
@@ -217,53 +236,30 @@
    is darker/more saturated than both the pale fill and pale surfaces — without
    the full-strength edge of the `surface` variant. */
 .root[data-variant='soft'] {
-  background-color: var(--_subtle);
-  color: var(--_subtle-fg);
-  border-color: color-mix(in srgb, var(--_border) 35%, transparent);
+  background-color: var(--move-badge-bg, var(--_subtle));
+  color: var(--move-badge-fg, var(--_subtle-fg));
+  border-color: var(--move-badge-border, color-mix(in srgb, var(--_border) 35%, transparent));
 }
 
 /* Surface — tinted background + visible border */
 .root[data-variant='surface'] {
-  background-color: var(--_subtle);
-  color: var(--_subtle-fg);
-  border-color: var(--_border);
+  background-color: var(--move-badge-bg, var(--_subtle));
+  color: var(--move-badge-fg, var(--_subtle-fg));
+  border-color: var(--move-badge-border, var(--_border));
 }
 
 /* Outline — transparent bg, colored border + text */
 .root[data-variant='outline'] {
-  background-color: transparent;
-  color: var(--_accent);
-  border-color: var(--_outline-border);
-}
-
-/* Inherit — takes its colours from the text around it instead of a palette.
- *
- * Every other variant pairs a fill with a foreground that is AA against THAT
- * fill. None of them says anything about the surface the badge is placed ON,
- * because that is the call site's choice, not the palette's. Put a blue badge on
- * the sidebar's active row and the two fills are 1.16:1 apart — the pill
- * dissolves into the row and the count reads as loose text.
- *
- * So derive from the pair that IS guaranteed. Wherever this sits, the text
- * colour already contrasts with its own background — that is what makes it
- * readable text — so a wash of that colour is legible against the same
- * background, and full-strength currentColor on top of the wash is legible
- * again. It holds on the active row and the resting one without knowing which
- * it is on, and through any theme, because it never names a colour.
- *
- * `color` has no effect here; that is the point.
- */
-.root[data-variant='inherit'] {
-  background-color: color-mix(in srgb, currentColor 20%, transparent);
-  color: inherit;
-  border-color: transparent;
+  background-color: var(--move-badge-bg, transparent);
+  color: var(--move-badge-fg, var(--_accent));
+  border-color: var(--move-badge-border, var(--_outline-border));
 }
 
 /* Dot — neutral look with colored dot indicator */
 .root[data-variant='dot'] {
-  background-color: var(--move-bg-muted);
-  color: var(--move-fg-base);
-  border-color: var(--move-border-base);
+  background-color: var(--move-badge-bg, var(--move-bg-muted));
+  color: var(--move-badge-fg, var(--move-fg-base));
+  border-color: var(--move-badge-border, var(--move-border-base));
 }
 
 .dot[data-color='gray'] {

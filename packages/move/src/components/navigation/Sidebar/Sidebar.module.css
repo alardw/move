@@ -165,7 +165,13 @@
   display: flex;
   flex-direction: column;
   gap: var(--move-spacing-xs);
-  padding: var(--move-spacing-sm);
+  /* Symmetric with Header, which it bookends: both hold bare controls rather
+     than full-width rows, so both need the same left inset to put their text on
+     the nav labels line and the same right inset to put a trailing control on
+     the row boxes. */
+  padding: var(--move-sidebar-item-padding-y) var(--move-spacing-sm)
+    var(--move-sidebar-item-padding-y)
+    calc(var(--move-spacing-sm) + var(--move-sidebar-item-padding-x));
   flex-shrink: 0;
   /* Inherits the sidebar root bg, matching Header/Content. The top
      border only renders while there's more content below the visible
@@ -183,7 +189,7 @@
 .root[data-collapsed='true'] .footer {
   flex-direction: column;
   align-items: center;
-  padding: var(--move-spacing-sm) 0;
+  padding: var(--move-sidebar-item-padding-y);
 }
 
 /* ============================================
@@ -241,7 +247,12 @@
 .navList {
   display: flex;
   flex-direction: column;
-  gap: var(--move-spacing-xs);
+  /* Every row here takes focus, and an outset ring reaches
+     --move-focus-ring-room beyond its row. At spacing-xs the rows sat closer
+     than that, so a focused row's ring landed on the one above — against the
+     filled active row it read as the two being joined. The container owes its
+     focusable children that clearance; the ring itself was never wrong. */
+  gap: max(var(--move-spacing-xs), var(--move-focus-ring-room));
   list-style: none;
   margin: 0;
   padding: 0;
@@ -320,6 +331,18 @@
 .navItem[data-active='true']:hover {
   background-color: var(--move-sidebar-item-bg-active);
   color: var(--move-sidebar-item-fg-active);
+
+  /* The active row is a strong fill, and a palette colour is picked against the
+     badge's own text rather than against whatever it lands on — none of the 13
+     solid fills clears 3:1 here, blue is 1.16:1 and the pill dissolves into the
+     row. So hand the badge the pair this row already guarantees, inverted: the
+     active foreground is legible on the active background by definition, which
+     is what makes the label readable, and the same two colours swapped are
+     equally far apart. Only on the active row — on a resting one the palette
+     reads fine and its colour still means something. */
+  --move-badge-bg: var(--move-sidebar-item-fg-active);
+  --move-badge-fg: var(--move-sidebar-item-bg-active);
+  --move-badge-border: transparent;
 }
 
 .navItem[data-disabled='true'] {

@@ -1637,7 +1637,6 @@ Sidebar.Header props:
 - labels: Partial<SidebarLabels> — Overridable user-facing strings
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-- collapsedChildren: React.ReactNode — Alternative content shown when sidebar is collapsed (desktop only)
 Sidebar.Content props:
 - children: React.ReactNode — Navigation items and groups
 - className: string — CSS class name
