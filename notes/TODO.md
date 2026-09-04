@@ -194,3 +194,35 @@ Still open:
   `Alert`, `Callout`, a `solid` `Button` with a badge in it, filled `Timeline` /
   `Stepper` markers. Worth deciding whether `inherit` is a Badge variant or a
   cross-component convention before adding it a second time by hand.
+
+## The animations array nothing was reading
+
+`check:spec-drift` compares props, defaults, slots, tokens and engine imports.
+It never read `animations`, so that one field could say anything and stay green.
+In a single week that hid three separate things, each found by eye: a Sidebar
+whose two staggers were absent from the array entirely, three menus still
+declaring `[role="menuitem"]` months after moving off it, and an `Item.hover`
+shipped by Dropdown, Select and Autocomplete that no spec mentioned.
+
+`check:animation-spec-drift` now compares it in both directions, and the first
+run found **29 drifts across 71 components** — what a field nothing reads looks
+like after a year. A sample, all verified by hand:
+
+- **Toast** fires `Item.enter` / `Wrapper.exit`; its spec declares `Root.enter` /
+  `Root.exit`.
+- **Accordion** and **Collapsible** fire `icon-open` / `content-open`; their
+  specs declare `open` / `close`.
+- **Table** staggers `tr` under `Body.enter`; its spec says `tbody > tr` under
+  `Root.enter`.
+- **List**, **Timeline**, **Calendar**, **DatePicker** declare a `:scope > *`
+  stagger the components no longer use.
+
+Baselined rather than swept: rewriting 29 specs unread would be guessing at what
+each component means. Clear them one at a time, reading the component's
+animations and correcting the spec to match — and delete the baseline entry as
+each goes.
+
+Related and still open: the same blind spot may exist for other spec fields no
+check reads. `renderContracts` and `testing.*` are prose and unverifiable, but
+`states`, `animationCapabilities` and `labels` are structural and could be
+compared the same way.

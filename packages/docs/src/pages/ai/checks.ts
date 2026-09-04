@@ -125,6 +125,12 @@ export const CHECKS: CheckDoc[] = [
       'CSS transitions animate colour, never motion. anime.js writes inline styles, so a transition and an animation are one language at two cascade levels — a transition cannot compose with a spring, and on the same property they overwrite each other. Colour is safe because nothing in `useAnimations` writes it. Setting `opacity` or `transform` flatly is a state and stays allowed; it is transitioning them that is motion. Escapes: inside `prefers-reduced-motion`, or a justified `transition-exempt` comment.',
   },
   {
+    name: 'animation-spec-drift',
+    appliesTo: 'component',
+    enforces:
+      'The spec\u2019s `animations` array describes the animations that ship. `spec-drift` compares props, defaults, slots and tokens and never reads this field, so it could say anything and stay green \u2014 and did, hiding absent staggers, a stale `[role="menuitem"]` selector and an undeclared `Item.hover`. Compared both ways: a trigger the spec claims must exist in the component, and a trigger in a module-scope defaults array must be declared. Triggers built inside the component from a public one are wiring, not API. Ratcheted against a baseline.',
+  },
+  {
     name: 'focus-ring-room',
     appliesTo: 'component',
     enforces:

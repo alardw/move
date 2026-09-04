@@ -846,17 +846,22 @@ export const spec = {
               {
                 slot: 'group',
                 children: [
-                  { slot: 'groupLabel' },
+                  { slot: 'groupLabel', dataAttributes: ['data-move-stagger'] },
                   {
                     slot: 'item',
-                    dataAttributes: ['data-selected', 'data-highlighted', 'data-disabled'],
+                    dataAttributes: [
+                      'data-selected',
+                      'data-highlighted',
+                      'data-disabled',
+                      'data-move-stagger',
+                    ],
                     children: [{ slot: 'itemIndicator' }],
                   },
                 ],
               },
               { slot: 'empty' },
               { slot: 'loading' },
-              { slot: 'separator' },
+              { slot: 'separator', dataAttributes: ['data-move-stagger'] },
             ],
           },
         ],
@@ -1047,6 +1052,13 @@ export const spec = {
           animation: { scale: { to: 0.5, ease: 'poppy' }, opacity: { to: 0 } },
         },
       ],
+    },
+    {
+      // A row grows slightly under the pointer. A shipped default like the rest
+      // of this array, and absent from it until now — the spec described the
+      // reveal and said nothing about what the rows do once they are there.
+      trigger: 'Item.hover',
+      sequence: [{ animation: { scale: { to: '$scaleHover', ease: 'quick' } } }],
     },
   ],
 

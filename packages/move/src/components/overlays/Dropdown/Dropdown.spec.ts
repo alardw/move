@@ -634,7 +634,12 @@ export const spec = {
           { slot: 'separator', dataAttributes: ['data-move-stagger'] },
           {
             slot: 'checkboxItem',
-            dataAttributes: ['data-state', 'data-highlighted', 'data-disabled'],
+            dataAttributes: [
+              'data-state',
+              'data-highlighted',
+              'data-disabled',
+              'data-move-stagger',
+            ],
             children: [{ slot: 'checkboxIndicator' }, { slot: 'checkboxLabel' }],
           },
           {
@@ -642,7 +647,12 @@ export const spec = {
             children: [
               {
                 slot: 'radioItem',
-                dataAttributes: ['data-state', 'data-highlighted', 'data-disabled'],
+                dataAttributes: [
+                  'data-state',
+                  'data-highlighted',
+                  'data-disabled',
+                  'data-move-stagger',
+                ],
               },
             ],
           },
@@ -720,6 +730,13 @@ export const spec = {
           },
         ],
       ],
+    },
+    {
+      // A row grows slightly under the pointer. A shipped default like the rest
+      // of this array, and absent from it until now — the spec described the
+      // reveal and said nothing about what the rows do once they are there.
+      trigger: 'Item.hover',
+      sequence: [{ animation: { scale: { to: 1.02, ease: 'quick' } } }],
     },
   ],
 

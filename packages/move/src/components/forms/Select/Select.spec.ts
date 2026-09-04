@@ -513,10 +513,23 @@ export const spec = {
           {
             slot: 'viewport',
             children: [
+              // Optional section chrome. Listed because it is part of the
+              // rendered tree and because it participates in the reveal — the
+              // anatomy showing items alone is how it stayed easy to miss.
+              {
+                slot: 'group',
+                children: [{ slot: 'label', dataAttributes: ['data-move-stagger'] }],
+              },
               {
                 slot: 'item',
-                dataAttributes: ['data-selected', 'data-highlighted', 'data-disabled'],
+                dataAttributes: [
+                  'data-selected',
+                  'data-highlighted',
+                  'data-disabled',
+                  'data-move-stagger',
+                ],
               },
+              { slot: 'separator', dataAttributes: ['data-move-stagger'] },
             ],
           },
         ],
@@ -578,6 +591,13 @@ export const spec = {
           },
         ],
       ],
+    },
+    {
+      // A row grows slightly under the pointer. A shipped default like the rest
+      // of this array, and absent from it until now — the spec described the
+      // reveal and said nothing about what the rows do once they are there.
+      trigger: 'Item.hover',
+      sequence: [{ animation: { scale: { to: '$scaleHover', ease: 'quick' } } }],
     },
   ],
 
