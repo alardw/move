@@ -60,8 +60,15 @@ const COLLAPSE_STAGGER_DELAY = 40;
 // opts in via data-sidebar-animate (e.g. a Button or Dropdown sitting outside
 // the nav list). Resolved lazily inside the component — styles.navItem is only
 // defined once the CSS module has loaded, which at module-scope it already has.
-function getItemSelector() {
-  return `.${styles.navItem}, [data-sidebar-animate]`;
+//
+// Section headings join in, so a group arrives as a group instead of a heading
+// standing still while its rows slide in under it. Only while expanded, though:
+// collapsed, the CSS holds them at opacity 0 / height 0, and anime writes inline
+// styles that outrank a stylesheet — a heading in the stagger would fade itself
+// back into a rail that has no room for it.
+function getItemSelector(collapsed: boolean) {
+  const rows = `.${styles.navItem}, [data-sidebar-animate]`;
+  return collapsed ? rows : `${rows}, .${styles.groupLabel}`;
 }
 
 // Mobile sheet enter/exit — the whole thing runs through the Move anime.js
@@ -106,22 +113,24 @@ interface SidebarMobileContextValue {
 }
 const SidebarMobileContext = React.createContext<SidebarMobileContextValue | null>(null);
 
-const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
-  {
-    trigger: 'Content.enter',
-    sequence: [
-      {
-        target: 'Content',
-        children: getItemSelector(),
-        stagger: { delay: SIDEBAR_STAGGER_DELAY },
-        animation: {
-          opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
-          scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
+function contentEnterAnimations(collapsed: boolean): AnimationTrigger[] {
+  return [
+    {
+      trigger: 'Content.enter',
+      sequence: [
+        {
+          target: 'Content',
+          children: getItemSelector(collapsed),
+          stagger: { delay: SIDEBAR_STAGGER_DELAY },
+          animation: {
+            opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
+            scale: { from: '$itemScaleFrom', to: 1, ease: poppy },
+          },
         },
-      },
-    ],
-  },
-];
+      ],
+    },
+  ];
+}
 
 // ============================================================================
 // Context
@@ -660,7 +669,7 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
     // sidebar reveal from Dribbble.
     const configWithVars: AnimationTrigger[] | false = React.useMemo(() => {
       if (animDisabled === false) return false;
-      const mountAnims = DEFAULT_CONTENT_ANIMATIONS.map((t) => ({
+      const mountAnims = contentEnterAnimations(collapsed).map((t) => ({
         ...t,
         vars: () => {
           const w = contentRef.current?.getBoundingClientRect().width ?? 0;
@@ -674,7 +683,7 @@ const SidebarContent = withMoveComponent<'content', SidebarContentProps, HTMLDiv
         sequence: [
           {
             target: 'Content',
-            children: getItemSelector(),
+            children: getItemSelector(collapsed),
             stagger: { delay: COLLAPSE_STAGGER_DELAY },
             animation: {
               // Always drift in from the right on every toggle — keeps the

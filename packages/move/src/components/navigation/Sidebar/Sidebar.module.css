@@ -90,10 +90,16 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-md);
-  /* Content and Footer inset their children by spacing-sm; Header has no such
-     wrapper, so it carries that inset itself and the title lines up with the
-     nav labels below it instead of sitting 8px to their left. */
-  padding: var(--move-sidebar-item-padding-y)
+  /* Asymmetric on purpose, because the two edges line up with different things.
+     Content and Footer inset their children by spacing-sm; Header has no such
+     wrapper, so on the LEFT it carries that inset plus the row's own padding-x,
+     and the title lands on the same line as the nav labels below it.
+     On the RIGHT sits a control — a collapse toggle, an action — and a control
+     is a box, so it lines up with the row BOXES, which end at Content's
+     spacing-sm. Insetting it by padding-x as well left it short of the rows by
+     exactly that much. */
+  padding: var(--move-sidebar-item-padding-y) var(--move-spacing-sm)
+    var(--move-sidebar-item-padding-y)
     calc(var(--move-spacing-sm) + var(--move-sidebar-item-padding-x));
   flex-shrink: 0;
   /* Keep the rail single-line so the width spring (collapse/expand) never

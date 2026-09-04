@@ -593,13 +593,47 @@ export const spec = {
         },
       ],
     },
+    // The rail's own reveal, which the mobile entries above say nothing about.
+    // Both staggers walk the same set — nav items, section headings, and
+    // anything a consumer marks data-sidebar-animate — so a group arrives as a
+    // group. Headings drop out of the set while collapsed: the CSS holds them at
+    // opacity 0 there, and anime's inline styles would outrank it.
+    {
+      trigger: 'Content.enter',
+      sequence: [
+        {
+          target: 'Content',
+          children: '.navItem, [data-sidebar-animate], .groupLabel',
+          stagger: { delay: 60 },
+          animation: {
+            opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
+            scale: { from: '$itemScaleFrom', to: 1, ease: 'poppy' },
+          },
+        },
+      ],
+    },
+    {
+      trigger: 'collapsed-change',
+      deps: ['collapsed'],
+      sequence: [
+        {
+          target: 'Content',
+          children: '.navItem, [data-sidebar-animate], .groupLabel',
+          stagger: { delay: 40 },
+          animation: {
+            translateX: { from: 24, to: 0, ease: 'outQuart', duration: 360 },
+            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 260 },
+          },
+        },
+      ],
+    },
   ],
 
   renderContracts: [
     {
       id: 'rail-shared-inset',
       description:
-        'Header, NavItem and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets itself by that amount plus --move-sidebar-item-padding-x. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
+        'Header, NavItem and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets its LEFT edge by that amount plus --move-sidebar-item-padding-x, putting the title on the nav labels line. Its RIGHT edge is only --move-spacing-sm, because a trailing control is a box and lines up with the row boxes rather than with the labels inside them. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
     },
     {
       id: 'mobile-modal-sheet',
@@ -656,7 +690,7 @@ export const spec = {
     {
       id: 'content-stagger-items',
       description:
-        'Content entrance animation staggers .navItem elements — plus anything marked data-sidebar-animate — with translateX(-8) to 0 and opacity 0 to 1.',
+        'Both Content staggers walk the same set — .navItem, .groupLabel and anything marked data-sidebar-animate — so a section arrives as a section rather than a heading holding still while its rows slide in under it. .groupLabel leaves the set while collapsed, since the CSS holds it at opacity 0 / height 0 there and anime writes inline styles that outrank a stylesheet.',
     },
     {
       id: 'nav-named-by-group-label',
@@ -857,6 +891,7 @@ export const spec = {
       'Overlay opacity fades in on open and out on close',
       'Overlay + sheet animations disabled when animations=false (instant)',
       'Content staggers nav item entrance with translateX and opacity',
+      'Content stagger includes section headings while expanded and drops them while collapsed',
       'Content stagger animation disabled when animations=false',
       'All animations respect prefersReducedMotion',
     ],
