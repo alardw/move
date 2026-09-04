@@ -9182,7 +9182,7 @@
             {
               "name": "children",
               "type": "React.ReactNode",
-              "description": "GroupLabel and Item children"
+              "description": "GroupLabel and Nav children"
             },
             {
               "name": "className",
@@ -9217,12 +9217,37 @@
           ]
         },
         {
-          "name": "Item",
+          "name": "Nav",
           "props": [
             {
               "name": "children",
               "type": "React.ReactNode",
-              "description": "Item label text content"
+              "description": "NavItem children"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            }
+          ]
+        },
+        {
+          "name": "NavItem",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Label text content"
+            },
+            {
+              "name": "href",
+              "type": "string",
+              "description": "The destination"
             },
             {
               "name": "className",
@@ -9247,22 +9272,47 @@
             {
               "name": "active",
               "type": "boolean",
-              "description": "Whether this item is the active/selected item"
+              "description": "The destination the user is on; sets aria-current=\"page\""
             },
             {
               "name": "disabled",
               "type": "boolean",
-              "description": "Disable interaction"
+              "description": "Drop the destination and mark it aria-disabled"
             },
             {
               "name": "asChild",
               "type": "boolean",
-              "description": "Merge props onto child element (e.g. an anchor tag) instead of rendering a button"
+              "description": "Render the caller's element (a router Link) instead of an anchor"
             },
             {
               "name": "tooltip",
               "type": "React.ReactNode",
               "description": "Tooltip content shown when sidebar is collapsed on desktop"
+            },
+            {
+              "name": "submenu",
+              "type": "React.ReactNode",
+              "description": "Nested navigation, rendered inside the same list item"
+            }
+          ]
+        },
+        {
+          "name": "Expanded",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Rendered only while the sidebar is expanded"
+            }
+          ]
+        },
+        {
+          "name": "Collapsed",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Rendered only while the sidebar is collapsed"
             }
           ]
         },

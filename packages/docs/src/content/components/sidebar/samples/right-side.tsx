@@ -32,14 +32,18 @@ export default function RightSideSample() {
           <Sidebar.Content>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Layers</Sidebar.GroupLabel>
-              <Sidebar.Item icon={<Icon name="square" />} tooltip="Frame" active>Frame</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="type" />} tooltip="Title">Title</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="image" />} tooltip="Cover image">Cover image</Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/frame" icon={<Icon name="square" />} tooltip="Frame" active>Frame</Sidebar.NavItem>
+                <Sidebar.NavItem href="/title" icon={<Icon name="type" />} tooltip="Title">Title</Sidebar.NavItem>
+                <Sidebar.NavItem href="/cover-image" icon={<Icon name="image" />} tooltip="Cover image">Cover image</Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Properties</Sidebar.GroupLabel>
-              <Sidebar.Item icon={<Icon name="paintbrush" />} tooltip="Style">Style</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="ruler" />} tooltip="Layout">Layout</Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/style" icon={<Icon name="paintbrush" />} tooltip="Style">Style</Sidebar.NavItem>
+                <Sidebar.NavItem href="/layout" icon={<Icon name="ruler" />} tooltip="Layout">Layout</Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
         </Sidebar.Root>

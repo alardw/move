@@ -9,7 +9,10 @@ export type {
   SidebarFooterProps,
   SidebarGroupProps,
   SidebarGroupLabelProps,
-  SidebarItemProps,
+  SidebarNavProps,
+  SidebarNavItemProps,
+  SidebarExpandedProps,
+  SidebarCollapsedProps,
   SidebarTriggerProps,
 } from './Sidebar';
 export { useSidebarContext } from './Sidebar';

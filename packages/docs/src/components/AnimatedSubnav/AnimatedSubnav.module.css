@@ -14,7 +14,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  /* Rail aligns with the centre of the parent Sidebar.Item's icon. */
+  /* Rail aligns with the centre of the parent Sidebar.NavItem's icon. */
   margin-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem);
   border-left: 1px solid var(--move-subnav-rail-color);
   font-family: var(--move-font-body);
@@ -24,7 +24,7 @@
    we just provide the visual treatment.
 
    The `+ 1px` compensates for the `.item { margin-left: -1px }` below
-   (which we keep so item text aligns with the parent Sidebar.Item's
+   (which we keep so item text aligns with the parent Sidebar.NavItem's
    text). Without this, usePositionTracker's translateX would be 1px
    less than expected and the indicator would sit a hair to the left
    of the rail instead of flush against it (matching TOC's indicator). */
@@ -43,7 +43,7 @@
   display: block;
   /* Indent the focusable box from the rail so its (inset) focus ring clears
      the sliding indicator; the left padding is reduced by the same amount so
-     the item text still lines up with the parent Sidebar.Item. */
+     the item text still lines up with the parent Sidebar.NavItem. */
   padding-block: var(--move-subnav-item-padding-y);
   padding-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem - 6px);
   padding-right: calc(var(--move-sidebar-item-padding-x) + 0.625rem + 1px);

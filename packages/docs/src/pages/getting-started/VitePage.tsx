@@ -198,7 +198,7 @@ export function VitePage() {
         >
           <CodeBlock code={ROUTING_EXAMPLE} language="tsx" />
           <Text>
-            Move components like <Code>Sidebar.Item</Code>, <Code>Breadcrumb.Link</Code>, and <Code>List.Item</Code> support <Code>asChild</Code> so you can wrap a <Code>NavLink</Code> from react-router and keep Move's styling + behaviour while delegating routing.
+            Move components like <Code>Sidebar.NavItem</Code>, <Code>Breadcrumb.Link</Code>, and <Code>List.Item</Code> support <Code>asChild</Code> so you can wrap a <Code>NavLink</Code> from react-router and keep Move's styling + behaviour while delegating routing.
           </Text>
         </Section>
 

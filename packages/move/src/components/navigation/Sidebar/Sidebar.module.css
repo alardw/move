@@ -2,8 +2,9 @@
  * Sidebar Component
  * Provenance: original-components/panel/Sidebar/Sidebar.module.css
  * Component tokens on .root so children inherit.
- * 13 slot classes: root, header, content, footer, group, groupLabel,
- * item, itemIcon, itemLabel, itemBadge, trigger, rail, overlay
+ * 15 slot classes: root, header, content, footer, group, groupLabel,
+ * nav, navList, navItemRow, navItem, navItemIcon, navItemLabel,
+ * navItemBadge, trigger, overlay
  *
  * All state/entrance/exit animations use anime.js (see Sidebar.tsx).
  * CSS transitions are only used for hover color/background changes.
@@ -224,10 +225,58 @@
 }
 
 /* ============================================
- * Item — interactive nav element
+ * Nav — the list of destinations
  * ============================================ */
 
-.item {
+.nav {
+  display: block;
+}
+
+.navList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-spacing-xs);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navItemRow {
+  display: block;
+  min-width: 0;
+}
+
+/* The trigger is not a nav item — it acts on the sidebar rather than going
+   anywhere — but it sits on the same rail, so it borrows the row's metrics. */
+.triggerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.triggerLabel {
+  flex: 1;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.root[data-collapsed='true']:not([data-mobile='true']) .triggerLabel {
+  opacity: 0;
+  width: 0;
+  flex: 0;
+  overflow: hidden;
+}
+
+/* ============================================
+ * NavItem — one destination
+ * ============================================ */
+
+.navItem {
   display: flex;
   align-items: center;
   gap: var(--move-spacing-md);
@@ -251,29 +300,29 @@
     color var(--move-transition-fast) var(--move-ease-default);
 }
 
-.item:hover {
+.navItem:hover {
   background-color: var(--move-sidebar-item-bg-hover);
   color: var(--move-sidebar-item-fg-hover);
 }
 
-.item:focus-visible:not(:active) {
+.navItem:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
 }
 
-.item[data-active='true'],
-.item[data-active='true']:hover {
+.navItem[data-active='true'],
+.navItem[data-active='true']:hover {
   background-color: var(--move-sidebar-item-bg-active);
   color: var(--move-sidebar-item-fg-active);
 }
 
-.item[data-disabled='true'] {
+.navItem[data-disabled='true'] {
   opacity: var(--move-disabled-opacity);
   pointer-events: none;
 }
 
 /* Collapsed: center icons, hide label */
-.root[data-collapsed='true']:not([data-mobile='true']) .item {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItem {
   justify-content: center;
   padding: var(--move-sidebar-item-padding-y) 0;
   gap: 0;
@@ -283,7 +332,7 @@
  * Item Icon
  * ============================================ */
 
-.itemIcon {
+.navItemIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -296,7 +345,7 @@
  * Item Label — hidden when collapsed
  * ============================================ */
 
-.itemLabel {
+.navItemLabel {
   flex: 1;
   text-align: left;
   overflow: hidden;
@@ -304,7 +353,7 @@
   white-space: nowrap;
 }
 
-.root[data-collapsed='true']:not([data-mobile='true']) .itemLabel {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItemLabel {
   opacity: 0;
   width: 0;
   flex: 0;
@@ -315,13 +364,13 @@
  * Item Badge
  * ============================================ */
 
-.itemBadge {
+.navItemBadge {
   display: flex;
   align-items: center;
   flex-shrink: 0;
 }
 
-.root[data-collapsed='true']:not([data-mobile='true']) .itemBadge {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItemBadge {
   opacity: 0;
   width: 0;
   overflow: hidden;
@@ -336,7 +385,7 @@
   align-items: center;
   gap: var(--move-spacing-md);
   width: 100%;
-  /* Same box as .item, so the collapse row reads as one more rail row. */
+  /* Same box as .navItem, so the collapse row reads as one more rail row. */
   padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
   border: none;
   border-radius: var(--move-sidebar-item-radius);

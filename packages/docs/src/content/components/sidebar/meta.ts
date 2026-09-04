@@ -9,11 +9,11 @@ const highlights: HighlightItem[] = [
   },
   {
     icon: 'rabbit',
-    text: 'Items stagger in on first paint and on every collapse toggle — width animates with a spring, labels fade, badges tuck away, the whole thing settles instead of snapping.',
+    text: 'Nav items stagger in on first paint and on every collapse toggle — width animates with a spring, labels fade, badges tuck away, the whole thing settles instead of snapping.',
   },
   {
     icon: 'message-square',
-    text: 'Pass a `tooltip` to each Item and the collapsed rail grows real labels on hover — discoverability without giving up the icons-only space saving.',
+    text: 'Pass a `tooltip` to each NavItem and the collapsed rail grows real labels on hover — discoverability without giving up the icons-only space saving.',
   },
 ];
 
@@ -49,5 +49,5 @@ export const meta: ComponentDocument = {
     { key: 'Enter / Space', action: 'Activates the focused item or trigger.' },
   ],
   accessibilityLede:
-    'Root renders as `<aside>` so screen readers can land on it as a navigation landmark. The mobile overlay is `aria-hidden`, the rail is `aria-hidden`, items stay focusable through the whole collapse/expand cycle. Tooltips on collapsed items use Radix Tooltip and inherit its full accessibility contract.',
+    'Destinations live in a `Sidebar.Nav` — a navigation landmark around a real list, named by the `Sidebar.GroupLabel` beside it — so the sidebar announces as "Workspace navigation, list, 5 items" rather than as a run of unlabelled controls. Each `Sidebar.NavItem` is a link, and the one you are on carries `aria-current="page"`. Nav items stay focusable through the whole collapse/expand cycle; their labels are hidden with width and opacity rather than `display: none`, so they still name the link while the rail is narrow. Tooltips on collapsed items use Radix Tooltip and inherit its full accessibility contract.'
 };

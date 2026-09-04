@@ -22,6 +22,10 @@ import { useSidebar } from './useSidebar';
 import type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
 import styles from './Sidebar.module.css';
 
+// Bundlers (Vite, webpack, Next) statically replace `process.env.NODE_ENV`; declare it
+// rather than depending on @types/node, which consumers of a browser library need not have.
+declare const process: { env: { NODE_ENV?: string } };
+
 // ============================================================================
 // Labels (i18n)
 // ============================================================================
@@ -52,12 +56,12 @@ const ITEM_SCALE_INSET_PX = 24;
 // within the visible area even with overflow-x: hidden on Content.
 const COLLAPSE_STAGGER_TRAVEL_PX = 24;
 const COLLAPSE_STAGGER_DELAY = 40;
-// Matches Sidebar.Item by default AND any consumer-rendered element that
-// opts in via data-sidebar-animate (e.g. custom NavLinks used for sub-nav).
-// Resolved lazily inside the component — styles.item is only defined once
-// the CSS module has loaded, which at module-scope it already has.
+// Matches Sidebar.NavItem by default AND any consumer-rendered element that
+// opts in via data-sidebar-animate (e.g. a Button or Dropdown sitting outside
+// the nav list). Resolved lazily inside the component — styles.navItem is only
+// defined once the CSS module has loaded, which at module-scope it already has.
 function getItemSelector() {
-  return `.${styles.item}, [data-sidebar-animate]`;
+  return `.${styles.navItem}, [data-sidebar-animate]`;
 }
 
 // Mobile sheet enter/exit — the whole thing runs through the Move anime.js
@@ -108,7 +112,7 @@ const DEFAULT_CONTENT_ANIMATIONS: AnimationTrigger[] = [
     sequence: [
       {
         target: 'Content',
-        children: `.${styles.item}`,
+        children: getItemSelector(),
         stagger: { delay: SIDEBAR_STAGGER_DELAY },
         animation: {
           opacity: { from: 0, to: 1, duration: 300, ease: 'outQuart' },
@@ -146,6 +150,23 @@ interface SidebarScrollContextValue {
   setScroll: (v: { scrolledFromTop: boolean; scrolledFromBottom: boolean }) => void;
 }
 const SidebarScrollContext = React.createContext<SidebarScrollContextValue | null>(null);
+
+/**
+ * A Group hands its GroupLabel's id to the Nav beside it, so a section that is
+ * already labelled on screen does not have to be named a second time in the
+ * markup. The label registers itself because a Group cannot point at a heading
+ * that isn't there — `aria-labelledby` at an id that never renders names the
+ * landmark nothing at all, which is worse than leaving it anonymous.
+ */
+interface SidebarGroupContextValue {
+  labelId: string;
+  hasLabel: boolean;
+  registerLabel: () => void;
+}
+const SidebarGroupContext = React.createContext<SidebarGroupContextValue | null>(null);
+
+/** Set by Nav so a NavItem can tell whether its `<li>` has a list to live in. */
+const SidebarNavContext = React.createContext(false);
 
 export function useSidebarContext() {
   const ctx = React.useContext(SidebarContext);
@@ -758,6 +779,17 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
   slots: ['group'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Named for whatever Nav sits inside it, not for itself: a Group is a box,
+    // and a `role="group"` with no accessible name is one more thing to step
+    // through on the way to the links.
+    const labelId = React.useId();
+    const [hasLabel, setHasLabel] = React.useState(false);
+    const registerLabel = React.useCallback(() => setHasLabel(true), []);
+    const groupCtx = React.useMemo(
+      () => ({ labelId, hasLabel, registerLabel }),
+      [labelId, hasLabel, registerLabel],
+    );
+
     return {
       render() {
         const groupSp = sp('group');
@@ -771,11 +803,12 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
             {...attrs}
             {...spRest}
             ref={ref}
-            role="group"
             className={cx('group', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            <SidebarGroupContext.Provider value={groupCtx}>
+              {props.children}
+            </SidebarGroupContext.Provider>
           </div>
         );
       },
@@ -800,6 +833,16 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
   slots: ['groupLabel'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
+    const group = React.useContext(SidebarGroupContext);
+    const registerLabel = group?.registerLabel;
+
+    // Tell the Group there is a heading to point at. In an effect rather than
+    // during render because it moves the Group's state, and a parent cannot be
+    // updated while a child is rendering.
+    React.useEffect(() => {
+      registerLabel?.();
+    }, [registerLabel]);
+
     return {
       render() {
         const groupLabelSp = sp('groupLabel');
@@ -810,6 +853,7 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
         } = groupLabelSp as Record<string, unknown>;
         return (
           <div
+            id={group?.labelId}
             {...attrs}
             {...spRest}
             ref={ref}
@@ -825,80 +869,157 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
 });
 
 // ============================================================================
-// Item (interactive nav element)
+// Nav (the list of destinations)
 // ============================================================================
 
-export interface SidebarItemProps extends React.HTMLAttributes<HTMLElement> {
+export interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
-  icon?: React.ReactNode;
-  badge?: React.ReactNode;
-  active?: boolean;
-  disabled?: boolean;
-  asChild?: boolean;
-  tooltip?: React.ReactNode;
-  sp?: SlotPropsMap<'item' | 'itemIcon' | 'itemLabel' | 'itemBadge'>;
+  sp?: SlotPropsMap<'nav' | 'navList'>;
 }
 
-const SidebarItem = withMoveComponent<
-  'item' | 'itemIcon' | 'itemLabel' | 'itemBadge',
-  SidebarItemProps,
-  HTMLButtonElement
->({
-  name: 'SidebarItem',
+const SidebarNav = withMoveComponent<'nav' | 'navList', SidebarNavProps, HTMLElement>({
+  name: 'SidebarNav',
   styles,
-  slots: ['item', 'itemIcon', 'itemLabel', 'itemBadge'] as const,
-  moveProps: ['icon', 'badge', 'active', 'disabled', 'asChild', 'tooltip'],
+  slots: ['nav', 'navList'] as const,
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
+    const group = React.useContext(SidebarGroupContext);
+    const ariaLabel = attrs['aria-label'];
+    const ariaLabelledby = attrs['aria-labelledby'];
+    // A Group's own GroupLabel is already the section's name on screen; borrow
+    // it rather than asking for the same words twice — but only as a fallback.
+    // aria-labelledby outranks aria-label in the name calculation, so setting
+    // both would silently override whatever the caller named it.
+    const inheritedLabelId =
+      !ariaLabel && !ariaLabelledby && group?.hasLabel ? group.labelId : undefined;
+    React.useEffect(() => {
+      if (process.env.NODE_ENV !== 'development') return;
+      if (ariaLabel || ariaLabelledby || inheritedLabelId) return;
+      console.warn(
+        '[move] <Sidebar.Nav> has no accessible name, so it is announced only as ' +
+          '"navigation" — with several of them in one sidebar there is nothing to tell ' +
+          'them apart. Put a <Sidebar.GroupLabel> in the surrounding <Sidebar.Group>, ' +
+          'or pass an aria-label.',
+      );
+    }, [ariaLabel, ariaLabelledby, inheritedLabelId]);
+
+    return {
+      render() {
+        const navSp = sp('nav');
+        const { className: spClass, style: spStyle, ...spRest } = navSp as Record<string, unknown>;
+        return (
+          <nav
+            aria-labelledby={inheritedLabelId}
+            {...attrs}
+            {...spRest}
+            ref={ref}
+            className={cx('nav', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+          >
+            {/* role="list" restores what `list-style: none` takes away in
+                Safari, which is the whole reason to render a list here: "list,
+                5 items" is the orientation a pile of links doesn't give. */}
+            <ul role="list" {...slot('navList')}>
+              <SidebarNavContext.Provider value={true}>{props.children}</SidebarNavContext.Provider>
+            </ul>
+          </nav>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// NavItem (a destination — the one part with sidebar-specific semantics)
+// ============================================================================
+
+export interface SidebarNavItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /** Where this goes. Dropped while `disabled`, so it cannot be followed. */
+  href?: string;
+  /** Icon name (built-in set) or a rendered node, shown before the label. */
+  icon?: React.ReactNode;
+  /** Rendered after the label; hidden while collapsed. */
+  badge?: React.ReactNode;
+  /** The destination the user is on. Sets `aria-current="page"`. */
+  active?: boolean;
+  disabled?: boolean;
+  /** Render the caller's element (a router `Link`) instead of an `<a>`. */
+  asChild?: boolean;
+  /** Shown on hover while collapsed, when the label is hidden. */
+  tooltip?: React.ReactNode;
+  /**
+   * Nested navigation for this destination, rendered inside the same list item.
+   * A `<ul>` may only contain `<li>`, so a sub-nav placed beside the NavItem
+   * would fall outside the list it belongs to.
+   */
+  submenu?: React.ReactNode;
+  sp?: SlotPropsMap<'navItemRow' | 'navItem' | 'navItemIcon' | 'navItemLabel' | 'navItemBadge'>;
+}
+
+const SidebarNavItem = withMoveComponent<
+  'navItemRow' | 'navItem' | 'navItemIcon' | 'navItemLabel' | 'navItemBadge',
+  SidebarNavItemProps,
+  HTMLAnchorElement
+>({
+  name: 'SidebarNavItem',
+  styles,
+  slots: ['navItemRow', 'navItem', 'navItemIcon', 'navItemLabel', 'navItemBadge'] as const,
+  moveProps: ['icon', 'badge', 'active', 'disabled', 'asChild', 'tooltip', 'submenu'],
+
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const { collapsed, isMobile, setMobileOpen } = useSidebarContext();
+    const inNav = React.useContext(SidebarNavContext);
     const showTooltip = collapsed && !isMobile && !!props.tooltip;
 
-    const handleItemClick = React.useCallback(
-      (e: React.MouseEvent) => {
-        (attrs as any).onClick?.(e);
-        if (isMobile && !e.defaultPrevented) {
-          setMobileOpen(false);
+    React.useEffect(() => {
+      if (process.env.NODE_ENV !== 'development' || inNav) return;
+      console.warn(
+        '[move] <Sidebar.NavItem> renders an <li> and needs a <Sidebar.Nav> around it ' +
+          'to be a list item. For something that acts rather than navigates — a theme ' +
+          'toggle, an account menu — use a Button or a Dropdown instead.',
+      );
+    }, [inNav]);
+
+    // Going somewhere closes the sheet, because on mobile the sheet IS the
+    // page: leaving it open would cover whatever the tap just navigated to.
+    //
+    // Deliberately NOT through composeHandlers, which stands down on
+    // preventDefault(). Here that would read the caller backwards: a router
+    // calls preventDefault() to take over navigation, so it means "I am
+    // navigating", not "stay put". This is the whole reason a NavItem exists —
+    // it always navigates, so the sheet can always close, with no prop and no
+    // sentinel to know about.
+    const callerOnClick = attrs.onClick;
+    const handleClick = React.useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (props.disabled) {
+          e.preventDefault();
+          return;
         }
+        (callerOnClick as ((event: React.MouseEvent<HTMLAnchorElement>) => void) | undefined)?.(e);
+        if (isMobile) setMobileOpen(false);
       },
-      [isMobile, setMobileOpen, attrs],
+      [props.disabled, callerOnClick, isMobile, setMobileOpen],
     );
 
     return {
       render() {
-        const itemSp = sp('item');
+        const itemSp = sp('navItem');
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
-
-        const iconSp = sp('itemIcon');
-        const {
-          className: iconSpClass,
-          style: iconSpStyle,
-          ...iconSpRest
-        } = iconSp as Record<string, unknown>;
-
-        const labelSp = sp('itemLabel');
-        const {
-          className: labelSpClass,
-          style: labelSpStyle,
-          ...labelSpRest
-        } = labelSp as Record<string, unknown>;
-
-        const badgeSp = sp('itemBadge');
-        const {
-          className: badgeSpClass,
-          style: badgeSpStyle,
-          ...badgeSpRest
-        } = badgeSp as Record<string, unknown>;
 
         const innerContent = (child?: React.ReactNode) => (
           <>
-            {props.icon && (
-              <span
-                {...iconSpRest}
-                className={cx('itemIcon', iconSpClass as string | undefined)}
-                style={iconSpStyle as React.CSSProperties}
-              >
+            {props.icon != null && (
+              // Decorative: the label names the destination, and it stays in the
+              // accessibility tree while collapsed (the CSS zeroes its width and
+              // opacity rather than removing it). Without this the icon's own
+              // text would land in front of the name.
+              <span aria-hidden="true" {...slot('navItemIcon')}>
                 {typeof props.icon === 'string' ? (
                   <Icon name={props.icon} />
                 ) : (
@@ -906,41 +1027,41 @@ const SidebarItem = withMoveComponent<
                 )}
               </span>
             )}
-            <span
-              {...labelSpRest}
-              className={cx('itemLabel', labelSpClass as string | undefined)}
-              style={labelSpStyle as React.CSSProperties}
-            >
-              {child}
-            </span>
-            {props.badge && (
-              <span
-                {...badgeSpRest}
-                className={cx('itemBadge', badgeSpClass as string | undefined)}
-                style={badgeSpStyle as React.CSSProperties}
-              >
-                {props.badge as React.ReactNode}
-              </span>
+            <span {...slot('navItemLabel')}>{child}</span>
+            {props.badge != null && (
+              <span {...slot('navItemBadge')}>{props.badge as React.ReactNode}</span>
             )}
           </>
         );
 
+        // An anchor has no `disabled`, and a disabled control that keeps its
+        // href is still followable by Enter. Drop the destination and say so.
+        const rowProps = {
+          // aria-current names WHICH kind of current this is; "page" is the one
+          // a sidebar means. Before the spread — a caller with a truer answer
+          // (`step`, `location`) should be able to give it.
+          'aria-current': props.active ? ('page' as const) : undefined,
+          ...attrs,
+          ...spRest,
+          'data-active': props.active || undefined,
+          'data-disabled': props.disabled || undefined,
+          'aria-disabled': props.disabled || undefined,
+          onClick: handleClick,
+        };
+
         let element: React.ReactElement;
 
         if (props.asChild) {
-          // Clone the single child element, injecting icon/label/badge as its content
+          // A router's Link owns the element; we hand it our props and put the
+          // row's icon/label/badge where its own children were.
           const child = React.Children.only(props.children) as React.ReactElement<any>;
           element = React.cloneElement(
             child,
             {
-              ...attrs,
-              ...spRest,
+              ...rowProps,
               ref,
-              onClick: handleItemClick,
-              'data-active': props.active || undefined,
-              'data-disabled': props.disabled || undefined,
               className: cx(
-                'item',
+                'navItem',
                 props.className,
                 child.props.className,
                 spClass as string | undefined,
@@ -951,34 +1072,74 @@ const SidebarItem = withMoveComponent<
           );
         } else {
           element = (
-            <button
-              {...attrs}
-              {...spRest}
-              ref={ref as any}
-              onClick={composeHandlers(attrs.onClick, handleItemClick)}
-              data-active={props.active || undefined}
-              data-disabled={props.disabled || undefined}
-              className={cx('item', props.className, spClass as string | undefined)}
+            <a
+              {...rowProps}
+              ref={ref}
+              href={props.disabled ? undefined : (attrs.href as string | undefined)}
+              className={cx('navItem', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
               {innerContent(props.children)}
-            </button>
+            </a>
           );
         }
 
-        if (showTooltip) {
-          return (
-            <Tooltip label={props.tooltip as React.ReactNode} side="right" sideOffset={8}>
-              {element}
-            </Tooltip>
-          );
-        }
-
-        return element;
+        return (
+          <li {...slot('navItemRow')}>
+            {showTooltip ? (
+              <Tooltip label={props.tooltip as React.ReactNode} side="right" sideOffset={8}>
+                {element}
+              </Tooltip>
+            ) : (
+              element
+            )}
+            {props.submenu as React.ReactNode}
+          </li>
+        );
       },
     };
   },
 });
+
+// ============================================================================
+// Expanded / Collapsed (state-scoped children, at any granularity)
+// ============================================================================
+
+export interface SidebarExpandedProps {
+  /** Rendered only while the sidebar is expanded. */
+  children?: React.ReactNode;
+}
+
+export interface SidebarCollapsedProps {
+  /** Rendered only while the sidebar is collapsed. */
+  children?: React.ReactNode;
+}
+
+/**
+ * Renders its children only while the sidebar is expanded.
+ *
+ * Anything that isn't a NavItem — a Button, an Avatar, a Dropdown — has no way
+ * to know it is in a sidebar, so it is told rather than left to guess. Wrap a
+ * whole control, or only the words beside an icon that stays, which keeps the
+ * collapse explicit without rendering the icon twice.
+ *
+ * Note this unmounts rather than hides, so an open menu inside it closes when
+ * the sidebar collapses.
+ */
+const SidebarExpanded: React.FC<SidebarExpandedProps> = ({ children }) => {
+  const { collapsed, isMobile } = useSidebarContext();
+  // The mobile sheet is always full width — `collapsed` is a desktop state, and
+  // the CSS draws it the same way.
+  return collapsed && !isMobile ? null : <>{children}</>;
+};
+SidebarExpanded.displayName = 'Sidebar.Expanded';
+
+/** Renders its children only while the sidebar is collapsed. See Expanded. */
+const SidebarCollapsed: React.FC<SidebarCollapsedProps> = ({ children }) => {
+  const { collapsed, isMobile } = useSidebarContext();
+  return collapsed && !isMobile ? <>{children}</> : null;
+};
+SidebarCollapsed.displayName = 'Sidebar.Collapsed';
 
 // ============================================================================
 // Trigger (toggle button)
@@ -993,17 +1154,17 @@ export interface SidebarTriggerProps extends React.HTMLAttributes<HTMLElement> {
   /** When to show: 'desktop' (collapse only), 'mobile' (open/close only), 'both' (default). */
   visibility?: 'desktop' | 'mobile' | 'both';
   asChild?: boolean;
-  sp?: SlotPropsMap<'trigger' | 'itemIcon' | 'itemLabel'>;
+  sp?: SlotPropsMap<'trigger' | 'triggerIcon' | 'triggerLabel'>;
 }
 
 const SidebarTrigger = withMoveComponent<
-  'trigger' | 'itemIcon' | 'itemLabel',
+  'trigger' | 'triggerIcon' | 'triggerLabel',
   SidebarTriggerProps,
   HTMLButtonElement
 >({
   name: 'SidebarTrigger',
   styles,
-  slots: ['trigger', 'itemIcon', 'itemLabel'] as const,
+  slots: ['trigger', 'triggerIcon', 'triggerLabel'] as const,
   moveProps: ['icon', 'tooltip', 'visibility', 'asChild'],
 
   setup({ props, ref, cx, sp, slot, attrs }) {
@@ -1017,18 +1178,16 @@ const SidebarTrigger = withMoveComponent<
     // there.
     const showTooltip = !isMobile && !!props.tooltip;
 
-    const handleClick = React.useCallback(
-      (e: React.MouseEvent) => {
-        (attrs as any).onClick?.(e);
-        if (e.defaultPrevented) return;
-        if (isMobile) {
-          toggleMobileOpen();
-        } else {
-          toggleCollapsed();
-        }
-      },
-      [isMobile, toggleCollapsed, toggleMobileOpen, attrs],
-    );
+    // composeHandlers already runs the caller's handler first and stands down on
+    // preventDefault(); calling it here as well fired every consumer's onClick
+    // twice.
+    const handleClick = React.useCallback(() => {
+      if (isMobile) {
+        toggleMobileOpen();
+      } else {
+        toggleCollapsed();
+      }
+    }, [isMobile, toggleCollapsed, toggleMobileOpen]);
 
     return {
       render() {
@@ -1046,7 +1205,7 @@ const SidebarTrigger = withMoveComponent<
         const content = (
           <>
             {props.icon && (
-              <span {...slot('itemIcon')}>
+              <span aria-hidden="true" {...slot('triggerIcon')}>
                 {typeof props.icon === 'string' ? (
                   <Icon name={props.icon} />
                 ) : (
@@ -1054,7 +1213,7 @@ const SidebarTrigger = withMoveComponent<
                 )}
               </span>
             )}
-            {props.children != null && <span {...slot('itemLabel')}>{props.children}</span>}
+            {props.children != null && <span {...slot('triggerLabel')}>{props.children}</span>}
           </>
         );
 
@@ -1099,7 +1258,10 @@ export const Sidebar = {
   Footer: SidebarFooter,
   Group: SidebarGroup,
   GroupLabel: SidebarGroupLabel,
-  Item: SidebarItem,
+  Nav: SidebarNav,
+  NavItem: SidebarNavItem,
+  Expanded: SidebarExpanded,
+  Collapsed: SidebarCollapsed,
   Trigger: SidebarTrigger,
   Overlay: SidebarOverlay,
 };

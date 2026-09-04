@@ -6,7 +6,7 @@ const them = { src: 'https://i.pravatar.cc/96?img=47', initials: 'MK', name: 'Mi
 const thread = [
   { from: 'them', message: 'Hey — what are you stuck on this morning?' },
   { from: 'me', message: 'Wiring up the Sidebar in our app shell. The collapsed rail tooltips don’t fire.' },
-  { from: 'them', message: 'You probably need a `tooltip` prop on each Sidebar.Item — collapsed-mode tooltips opt in per item.' },
+  { from: 'them', message: 'You probably need a `tooltip` prop on each Sidebar.NavItem — collapsed-mode tooltips opt in per item.' },
   { from: 'me', message: 'Tried that, no luck. Are tooltips disabled inside a Drawer?' },
   { from: 'them', message: 'No, but Drawer renders Sidebar in mobile mode, where tooltips are skipped on purpose. Try forcing desktop mode for the test.' },
 ];

@@ -29,19 +29,28 @@ export default function BasicSample() {
           <Sidebar.Content>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
-              <Sidebar.Item icon={<Icon name="home" />} tooltip="Home" active>Home</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="inbox" />} tooltip="Inbox">Inbox</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="folder" />} tooltip="Projects">Projects</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="users" />} tooltip="Team">Team</Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/home" icon={<Icon name="home" />} tooltip="Home" active>Home</Sidebar.NavItem>
+                <Sidebar.NavItem href="/inbox" icon={<Icon name="inbox" />} tooltip="Inbox">Inbox</Sidebar.NavItem>
+                <Sidebar.NavItem href="/projects" icon={<Icon name="folder" />} tooltip="Projects">Projects</Sidebar.NavItem>
+                <Sidebar.NavItem href="/team" icon={<Icon name="users" />} tooltip="Team">Team</Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Account</Sidebar.GroupLabel>
-              <Sidebar.Item icon={<Icon name="settings" />} tooltip="Settings">Settings</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="life-buoy" />} tooltip="Help">Help</Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/settings" icon={<Icon name="settings" />} tooltip="Settings">Settings</Sidebar.NavItem>
+                <Sidebar.NavItem href="/help" icon={<Icon name="life-buoy" />} tooltip="Help">Help</Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            <Sidebar.Item icon={<Icon name="user" />} tooltip="Profile">Alex Smith</Sidebar.Item>
+            {/* Acting, not navigating — so it is a plain Button, and it says
+                what to do with its label when the rail narrows. */}
+            <Button variant="ghost" fullWidth data-sidebar-animate>
+              <Icon name="user" />
+              <Sidebar.Expanded>Alex Smith</Sidebar.Expanded>
+            </Button>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">

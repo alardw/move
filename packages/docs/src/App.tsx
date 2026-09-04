@@ -173,23 +173,33 @@ function AppSidebar() {
       </Sidebar.Header>
       <Sidebar.Content>
         <Sidebar.Group>
-          {DOCS_NAV.map((section) => {
-            const isActive = activeSectionKey === section.key;
-            return (
-              <React.Fragment key={section.key}>
-                {/* asChild renders the item ONTO the NavLink anchor, so each
-                    nav item is a single focusable element (not <a><button>). */}
-                <Sidebar.Item asChild icon={section.icon} active={isActive} tooltip={section.label}>
+          <Sidebar.Nav aria-label="Documentation">
+            {DOCS_NAV.map((section) => {
+              const isActive = activeSectionKey === section.key;
+              return (
+                // asChild renders the item ONTO the NavLink anchor, so each nav
+                // item is a single focusable element (not <a><button>). The
+                // sub-nav goes through `submenu` so it lands inside this
+                // section's own <li> rather than beside it in the list.
+                <Sidebar.NavItem
+                  key={section.key}
+                  asChild
+                  icon={section.icon}
+                  active={isActive}
+                  tooltip={section.label}
+                  submenu={
+                    <Collapsible.Root open={isActive && !collapsed}>
+                      <Collapsible.Content>
+                        <AnimatedSubnav items={section.items} open={isActive && !collapsed} />
+                      </Collapsible.Content>
+                    </Collapsible.Root>
+                  }
+                >
                   <NavLink to={section.items[0].to}>{section.label}</NavLink>
-                </Sidebar.Item>
-                <Collapsible.Root open={isActive && !collapsed}>
-                  <Collapsible.Content>
-                    <AnimatedSubnav items={section.items} open={isActive && !collapsed} />
-                  </Collapsible.Content>
-                </Collapsible.Root>
-              </React.Fragment>
-            );
-          })}
+                </Sidebar.NavItem>
+              );
+            })}
+          </Sidebar.Nav>
         </Sidebar.Group>
       </Sidebar.Content>
       <Sidebar.Footer>

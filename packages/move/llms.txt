@@ -1647,23 +1647,33 @@ Sidebar.Footer props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 Sidebar.Group props:
-- children: React.ReactNode — GroupLabel and Item children
+- children: React.ReactNode — GroupLabel and Nav children
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 Sidebar.GroupLabel props:
 - children: React.ReactNode — Label text
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
-Sidebar.Item props:
-- children: React.ReactNode — Item label text content
+Sidebar.Nav props:
+- children: React.ReactNode — NavItem children
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+Sidebar.NavItem props:
+- children: React.ReactNode — Label text content
+- href: string — The destination
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - icon: React.ReactNode — Icon element rendered before label
 - badge: React.ReactNode — Badge element rendered after label
-- active: boolean — Whether this item is the active/selected item
-- disabled: boolean — Disable interaction
-- asChild: boolean — Merge props onto child element (e.g. an anchor tag) instead of rendering a button
+- active: boolean — The destination the user is on; sets aria-current="page"
+- disabled: boolean — Drop the destination and mark it aria-disabled
+- asChild: boolean — Render the caller's element (a router Link) instead of an anchor
 - tooltip: React.ReactNode — Tooltip content shown when sidebar is collapsed on desktop
+- submenu: React.ReactNode — Nested navigation, rendered inside the same list item
+Sidebar.Expanded props:
+- children: React.ReactNode — Rendered only while the sidebar is expanded
+Sidebar.Collapsed props:
+- children: React.ReactNode — Rendered only while the sidebar is collapsed
 Sidebar.Trigger props:
 - children: React.ReactNode — Trigger content (typically a hamburger/collapse icon)
 - className: string — CSS class name

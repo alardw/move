@@ -754,7 +754,10 @@ export type {
   SidebarFooterProps,
   SidebarGroupProps,
   SidebarGroupLabelProps,
-  SidebarItemProps,
+  SidebarNavProps,
+  SidebarNavItemProps,
+  SidebarExpandedProps,
+  SidebarCollapsedProps,
   SidebarTriggerProps,
 } from './components/navigation/Sidebar';
 export { useSidebar, useSidebarContext } from './components/navigation/Sidebar';

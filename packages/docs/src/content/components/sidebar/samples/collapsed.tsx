@@ -14,8 +14,9 @@ function HeaderToggle() {
 /**
  * Pass `defaultCollapsed` (or controlled `collapsed`) to start in icons-only
  * mode. The width animates with a spring, labels and group headings fade out,
- * badges tuck away. Each Item's `tooltip` becomes a real tooltip on hover, so
- * navigation stays discoverable without the labels.
+ * badges tuck away. Each NavItem's `tooltip` becomes a real tooltip on hover, so
+ * navigation stays discoverable without the labels. Anything that isn't a
+ * NavItem says what to hide for itself, with `Sidebar.Expanded`.
  */
 export default function CollapsedSample() {
   return (
@@ -30,14 +31,21 @@ export default function CollapsedSample() {
           <Sidebar.Content>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
-              <Sidebar.Item icon={<Icon name="home" />} tooltip="Home" active>Home</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="inbox" />} tooltip="Inbox">Inbox</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="folder" />} tooltip="Projects">Projects</Sidebar.Item>
-              <Sidebar.Item icon={<Icon name="users" />} tooltip="Team">Team</Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/home" icon={<Icon name="home" />} tooltip="Home" active>Home</Sidebar.NavItem>
+                <Sidebar.NavItem href="/inbox" icon={<Icon name="inbox" />} tooltip="Inbox">Inbox</Sidebar.NavItem>
+                <Sidebar.NavItem href="/projects" icon={<Icon name="folder" />} tooltip="Projects">Projects</Sidebar.NavItem>
+                <Sidebar.NavItem href="/team" icon={<Icon name="users" />} tooltip="Team">Team</Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            <Sidebar.Item icon={<Icon name="user" />} tooltip="Profile">Alex Smith</Sidebar.Item>
+            {/* Acting, not navigating — so it is a plain Button, and it says
+                what to do with its label when the rail narrows. */}
+            <Button variant="ghost" fullWidth data-sidebar-animate>
+              <Icon name="user" />
+              <Sidebar.Expanded>Alex Smith</Sidebar.Expanded>
+            </Button>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">

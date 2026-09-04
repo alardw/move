@@ -12,9 +12,9 @@ function HeaderToggle() {
 }
 
 /**
- * Pass `asChild` and Sidebar.Item forgets it's a button — wrap your router's
- * Link (Next.js, React Router, TanStack) and the Item injects icon, label,
- * badge, and tooltip into the link element. Active state is yours to drive.
+ * Pass `asChild` and NavItem hands its props to your router's Link (Next.js,
+ * React Router, TanStack) instead of rendering its own anchor, injecting icon,
+ * label, badge, and tooltip into it. Active state is yours to drive.
  */
 export default function LinksSample() {
   // Stand-in for whatever your router exports. In a real app, swap for
@@ -36,15 +36,17 @@ export default function LinksSample() {
           <Sidebar.Content>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Guide</Sidebar.GroupLabel>
-              <Sidebar.Item asChild icon={<Icon name="rocket" />} tooltip="Getting started" active>
-                <Link href="/getting-started">Getting started</Link>
-              </Sidebar.Item>
-              <Sidebar.Item asChild icon={<Icon name="brain" />} tooltip="Core concepts">
-                <Link href="/core-concepts">Core concepts</Link>
-              </Sidebar.Item>
-              <Sidebar.Item asChild icon={<Icon name="blocks" />} tooltip="Components">
-                <Link href="/components">Components</Link>
-              </Sidebar.Item>
+              <Sidebar.Nav>
+                <Sidebar.NavItem asChild icon={<Icon name="rocket" />} tooltip="Getting started" active>
+                  <Link href="/getting-started">Getting started</Link>
+                </Sidebar.NavItem>
+                <Sidebar.NavItem asChild icon={<Icon name="brain" />} tooltip="Core concepts">
+                  <Link href="/core-concepts">Core concepts</Link>
+                </Sidebar.NavItem>
+                <Sidebar.NavItem asChild icon={<Icon name="blocks" />} tooltip="Components">
+                  <Link href="/components">Components</Link>
+                </Sidebar.NavItem>
+              </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
         </Sidebar.Root>

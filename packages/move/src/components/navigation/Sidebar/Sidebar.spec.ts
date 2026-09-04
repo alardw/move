@@ -48,27 +48,30 @@ export const spec = {
       description: 'Scrollable middle content area with staggered item entrance',
     },
     { name: 'footer', element: 'div', description: 'Sticky footer area at bottom of sidebar' },
-    { name: 'group', element: 'div', description: 'Section grouping container for nav items' },
+    { name: 'group', element: 'div', description: 'Section box; names the Nav inside it' },
     {
       name: 'groupLabel',
       element: 'div',
       description: 'Section heading label that hides when collapsed',
     },
+    { name: 'nav', element: 'nav', description: 'Navigation landmark around a list of NavItems' },
+    { name: 'navList', element: 'ul', description: 'The list of destinations' },
+    { name: 'navItemRow', element: 'li', description: 'List item wrapping one destination' },
     {
-      name: 'item',
-      element: 'button',
-      description: 'Interactive nav item with icon, label, and badge',
+      name: 'navItem',
+      element: 'a',
+      description: 'A destination, with icon, label, and badge',
     },
-    { name: 'itemIcon', element: 'span', description: 'Icon container within an item' },
+    { name: 'navItemIcon', element: 'span', description: 'Icon container within a nav item' },
     {
-      name: 'itemLabel',
+      name: 'navItemLabel',
       element: 'span',
-      description: 'Label text within an item, hidden when collapsed',
+      description: 'Label text within a nav item, hidden when collapsed',
     },
     {
-      name: 'itemBadge',
+      name: 'navItemBadge',
       element: 'span',
-      description: 'Badge container within an item, hidden when collapsed',
+      description: 'Badge container within a nav item, hidden when collapsed',
     },
     {
       name: 'trigger',
@@ -281,7 +284,7 @@ export const spec = {
           name: 'children',
           type: 'React.ReactNode',
           moveSpecific: false,
-          description: 'GroupLabel and Item children',
+          description: 'GroupLabel and Nav children',
         },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -293,7 +296,7 @@ export const spec = {
       ],
       usesFactory: true,
       description:
-        'Section grouping container with role=group, separated by borders when collapsed',
+        'Section box, separated by borders when collapsed; hands its GroupLabel to the Nav inside it as that landmark name',
     },
     {
       name: 'GroupLabel',
@@ -317,20 +320,47 @@ export const spec = {
       description: 'Uppercase section label hidden when sidebar is collapsed',
     },
     {
-      name: 'Item',
+      name: 'Nav',
       slots: [
-        { name: 'item', element: 'button', description: 'Nav item container' },
-        { name: 'itemIcon', element: 'span', description: 'Item icon wrapper' },
-        { name: 'itemLabel', element: 'span', description: 'Item label text' },
-        { name: 'itemBadge', element: 'span', description: 'Item badge wrapper' },
+        { name: 'nav', element: 'nav', description: 'Navigation landmark' },
+        { name: 'navList', element: 'ul', description: 'List of destinations' },
       ],
       props: [
         {
           name: 'children',
           type: 'React.ReactNode',
           moveSpecific: false,
-          description: 'Item label text content',
+          description: 'NavItem children',
         },
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+      ],
+      usesFactory: true,
+      description:
+        'Navigation landmark wrapping a list of NavItems. Takes its name from the GroupLabel in the surrounding Group, or from an aria-label',
+    },
+    {
+      name: 'NavItem',
+      slots: [
+        { name: 'navItemRow', element: 'li', description: 'List item' },
+        { name: 'navItem', element: 'a', description: 'The destination link' },
+        { name: 'navItemIcon', element: 'span', description: 'Icon wrapper' },
+        { name: 'navItemLabel', element: 'span', description: 'Label text' },
+        { name: 'navItemBadge', element: 'span', description: 'Badge wrapper' },
+      ],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text content',
+        },
+        { name: 'href', type: 'string', moveSpecific: false, description: 'The destination' },
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
           name: 'style',
@@ -354,20 +384,19 @@ export const spec = {
           name: 'active',
           type: 'boolean',
           moveSpecific: true,
-          description: 'Whether this item is the active/selected item',
+          description: 'The destination the user is on; sets aria-current="page"',
         },
         {
           name: 'disabled',
           type: 'boolean',
           moveSpecific: true,
-          description: 'Disable interaction',
+          description: 'Drop the destination and mark it aria-disabled',
         },
         {
           name: 'asChild',
           type: 'boolean',
           moveSpecific: true,
-          description:
-            'Merge props onto child element (e.g. an anchor tag) instead of rendering a button',
+          description: "Render the caller's element (a router Link) instead of an anchor",
         },
         {
           name: 'tooltip',
@@ -375,10 +404,45 @@ export const spec = {
           moveSpecific: true,
           description: 'Tooltip content shown when sidebar is collapsed on desktop',
         },
+        {
+          name: 'submenu',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Nested navigation, rendered inside the same list item',
+        },
       ],
       usesFactory: true,
       description:
-        'Interactive nav item with icon, label, badge slots; shows tooltip when collapsed; supports asChild for custom elements',
+        'One destination: an anchor in a list item, which closes the mobile sheet when chosen',
+    },
+    {
+      name: 'Expanded',
+      slots: [],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Rendered only while the sidebar is expanded',
+        },
+      ],
+      usesFactory: false,
+      description:
+        'Renders its children while expanded and nothing while collapsed, at any granularity — a whole control, or just the words beside an icon that stays',
+    },
+    {
+      name: 'Collapsed',
+      slots: [],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Rendered only while the sidebar is collapsed',
+        },
+      ],
+      usesFactory: false,
+      description: 'Renders its children while collapsed and nothing while expanded',
     },
     {
       name: 'Trigger',
@@ -449,13 +513,34 @@ export const spec = {
         children: [
           {
             slot: 'group',
-            ariaAttributes: ['role=group'],
             children: [
               { slot: 'groupLabel' },
               {
-                slot: 'item',
-                dataAttributes: ['data-active', 'data-disabled'],
-                children: [{ slot: 'itemIcon' }, { slot: 'itemLabel' }, { slot: 'itemBadge' }],
+                slot: 'nav',
+                ariaAttributes: ['aria-labelledby'],
+                children: [
+                  {
+                    slot: 'navList',
+                    ariaAttributes: ['role=list'],
+                    children: [
+                      {
+                        slot: 'navItemRow',
+                        children: [
+                          {
+                            slot: 'navItem',
+                            ariaAttributes: ['aria-current', 'aria-disabled'],
+                            dataAttributes: ['data-active', 'data-disabled'],
+                            children: [
+                              { slot: 'navItemIcon' },
+                              { slot: 'navItemLabel' },
+                              { slot: 'navItemBadge' },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
               },
             ],
           },
@@ -514,7 +599,7 @@ export const spec = {
     {
       id: 'rail-shared-inset',
       description:
-        'Header, Item and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets itself by that amount plus --move-sidebar-item-padding-x. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
+        'Header, NavItem and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets itself by that amount plus --move-sidebar-item-padding-x. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
     },
     {
       id: 'mobile-modal-sheet',
@@ -547,17 +632,17 @@ export const spec = {
     {
       id: 'collapsed-hides-labels',
       description:
-        'When collapsed (desktop), itemLabel and itemBadge are hidden via CSS (opacity: 0, width: 0). GroupLabel is also hidden.',
+        'When collapsed (desktop), navItemLabel and navItemBadge are hidden via CSS (opacity: 0, width: 0) rather than display:none, so the label still names the link. GroupLabel is also hidden.',
     },
     {
-      id: 'item-tooltip-collapsed',
+      id: 'nav-item-tooltip-collapsed',
       description:
-        'When collapsed on desktop, Item wraps its element in a Tooltip (side="right", sideOffset=8) if tooltip prop is provided.',
+        'When collapsed on desktop, NavItem wraps its element in a Tooltip (side="right", sideOffset=8) if tooltip prop is provided.',
     },
     {
-      id: 'item-as-child',
+      id: 'nav-item-as-child',
       description:
-        'When asChild=true, Item clones the single child element and injects icon/label/badge as its content instead of rendering a button.',
+        'When asChild=true, NavItem clones the single child element (a router Link) and injects icon/label/badge as its content instead of rendering an anchor.',
     },
     {
       id: 'header-collapsed-content',
@@ -571,11 +656,22 @@ export const spec = {
     {
       id: 'content-stagger-items',
       description:
-        'Content entrance animation staggers .item elements with translateX(-8) to 0 and opacity 0 to 1.',
+        'Content entrance animation staggers .navItem elements — plus anything marked data-sidebar-animate — with translateX(-8) to 0 and opacity 0 to 1.',
     },
     {
-      id: 'group-role',
-      description: 'Group renders with role="group" for accessibility grouping.',
+      id: 'nav-named-by-group-label',
+      description:
+        'Nav takes its accessible name from the GroupLabel in the surrounding Group (aria-labelledby), and only when the caller supplied neither aria-label nor aria-labelledby of their own. Group registers the label first, so the Nav never points at an id that does not render.',
+    },
+    {
+      id: 'nav-item-always-dismisses',
+      description:
+        'NavItem closes the mobile sheet on every click, including when the caller calls preventDefault() — a router doing so is taking over navigation, not cancelling it. Not routed through composeHandlers for that reason.',
+    },
+    {
+      id: 'state-gates-desktop-only',
+      description:
+        'Expanded and Collapsed treat the mobile sheet as expanded, matching the CSS, which scopes every collapsed rule with :not([data-mobile=true]).',
     },
     {
       id: 'provider-context',
@@ -711,16 +807,24 @@ export const spec = {
       'Content renders scrollable area',
       'Footer renders with border-top',
       'Footer centers items when collapsed',
-      'Group renders with role=group',
+      'Group claims no role of its own',
       'GroupLabel hidden when collapsed (opacity: 0, height: 0)',
-      'Item renders button with icon, label, badge slots',
-      'Item asChild clones child element with injected slots',
-      'Item active state sets data-active and primary background',
-      'Item disabled state sets data-disabled and reduced opacity',
-      'Item shows tooltip when collapsed on desktop with tooltip prop',
-      'Item does not show tooltip when expanded',
-      'Item does not show tooltip on mobile even when collapsed',
-      'Collapsed items center icons and hide labels/badges',
+      'Nav renders a navigation landmark around a list',
+      'Nav takes its name from the GroupLabel in the surrounding Group',
+      'Nav does not point at a label that is not there',
+      "Nav lets the caller's own aria-label win over the group's",
+      'NavItem renders a link inside a list item',
+      'NavItem renders icon and badge when provided',
+      'NavItem marks the active destination with aria-current=page',
+      'NavItem drops the href when disabled and sets aria-disabled',
+      'NavItem runs the caller onClick exactly once',
+      'NavItem asChild renders the caller element, keeping its text as the label',
+      'NavItem closes the mobile sheet when a destination is chosen',
+      'NavItem closes the mobile sheet even when the caller calls preventDefault',
+      'NavItem shows tooltip when collapsed on desktop with tooltip prop',
+      'Expanded renders while expanded, Collapsed while collapsed',
+      'Expanded still renders on mobile, where the sheet is full width',
+      'Collapsed nav items center icons and hide labels/badges',
       'Trigger calls toggleCollapsed on desktop click',
       'Trigger calls toggleMobileOpen on mobile click',
       'Trigger supports asChild via Slot.Root',
@@ -732,14 +836,17 @@ export const spec = {
       'Breakpoint prop controls mobile mode threshold',
       'Auto-closes mobile sheet when viewport crosses to desktop',
     ],
-    keyboard: ['Items are focusable via tab', 'Trigger is keyboard accessible'],
+    keyboard: ['Nav items are focusable via tab', 'Trigger is keyboard accessible'],
     aria: [
       'Root renders as aside element for landmark navigation',
       'Mobile sheet is a Radix Dialog (role=dialog, aria-modal) with a visually-hidden title and focus trap',
       'Overlay has aria-hidden=true',
       'Rail has aria-hidden=true',
-      'Group has role=group',
-      'Disabled items have data-disabled',
+      'Nav is a navigation landmark named by its GroupLabel or an aria-label',
+      'NavList carries role=list, which list-style:none removes in Safari',
+      'Active nav item has aria-current=page',
+      'Disabled nav items have aria-disabled and no href',
+      'Nav item icons are aria-hidden; the label names the link',
     ],
     animation: [
       'Root width animates with spring on collapse/expand',
@@ -749,7 +856,7 @@ export const spec = {
       'Mobile close keeps the sheet mounted for the exit animation (useDismissable) then unmounts',
       'Overlay opacity fades in on open and out on close',
       'Overlay + sheet animations disabled when animations=false (instant)',
-      'Content staggers item entrance with translateX and opacity',
+      'Content staggers nav item entrance with translateX and opacity',
       'Content stagger animation disabled when animations=false',
       'All animations respect prefersReducedMotion',
     ],
