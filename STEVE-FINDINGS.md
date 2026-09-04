@@ -297,7 +297,7 @@ those three would remove roughly half of a 23-component extension library.
 Each is small; each cost a consumer an afternoon and an undocumented escape
 hatch found by reading `dist`.
 
-- [ ] **J15 · Sidebar.Item dismisses the mobile drawer on every click**,
+- [x] **J15 · Sidebar.Item dismisses the mobile drawer on every click**,
       including when it is a disclosure trigger (`Sidebar.tsx:858-863`). Nested
       navigation is unreachable below 768px — the composition Move's own split
       *forces* on you. The only escape is the undocumented `e.defaultPrevented`
@@ -373,6 +373,25 @@ hatch found by reading `dist`.
       → `Sidebar.Item` is deprecated rather than switched: it renders `Action`'s
       element with `NavItem`'s behaviour, so neither new name is a drop-in and
       changing it underneath a consumer would be worse than asking them to pick.
+      **Built 2026-09-04, as designed — with one call overruled.** `Sidebar.Item`
+      is REMOVED rather than deprecated: the library is alpha, and its only
+      consumers are the docs' own nav and five samples, all migrated in the same
+      commit. `Sidebar.Nav` (nav + role="list" ul, named by the `GroupLabel`
+      beside it, which registers itself so the name never points at an id that
+      does not render), `Sidebar.NavItem` (li > a, `active` → `aria-current`,
+      always dismisses — including through the caller's `preventDefault()`, which
+      is a router taking over navigation rather than cancelling it), and
+      `Sidebar.Expanded` / `Sidebar.Collapsed`.
+      One addition the design did not foresee: `NavItem` takes a `submenu`, since
+      a `<ul>` may only contain `<li>` and the docs' own `Collapsible` sub-nav
+      would otherwise land beside the item instead of inside its list row.
+      Found while in there: `Item` and `Trigger` both ran the caller's `onClick`
+      twice (`composeHandlers` ran it, and the handler it wrapped ran it again);
+      `Trigger` borrowed the nav item's icon/label classes, so the spec's own
+      `triggerIcon`/`triggerLabel` named nothing; nav icons were not
+      `aria-hidden`, so their text landed in front of the link's name; a disabled
+      item kept its `href` and stayed followable by Enter; and `Group` carried an
+      unnamed `role="group"`.
 - [x] **J19 · Dropdown.Item + overlay needs `preventDefault`.** Radix restores
       focus after `onSelect`; the overlay reads it as focus escaping and
       dismisses itself. Symptom: the action appears to do nothing. Hit **ten
