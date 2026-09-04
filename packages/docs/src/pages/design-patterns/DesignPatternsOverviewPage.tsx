@@ -12,27 +12,42 @@ const ALL = [...PATTERNS].sort((a, b) => {
   return a.title.localeCompare(b.title);
 });
 
+/**
+ * How well a pattern answers the words typed, 0 for not at all. Searches all
+ * four dimensions — phrase (title/description/synonyms), capability (axis
+ * options) and data (appliesWhen) — and ranks the pattern that IS the word above
+ * the ones that mention it.
+ */
+function relevance(p: (typeof ALL)[number], q: string): number {
+  const title = p.title.toLowerCase();
+  if (title === q) return 100;
+  if (title.startsWith(q)) return 90;
+  if (title.includes(q)) return 80;
+
+  if (p.synonyms.some((s) => s === q)) return 70;
+  if (p.synonyms.some((s) => s.includes(q))) return 60;
+
+  const features = p.spec ? p.spec.axes.flatMap((a) => a.options ?? []) : [];
+  if (features.some((f) => f.toLowerCase().includes(q))) return 40;
+  if ((p.spec?.appliesWhen ?? []).some((a) => a.toLowerCase().includes(q))) return 30;
+  if (p.description.toLowerCase().includes(q)) return 20;
+  return 0;
+}
+
 export function DesignPatternsOverviewPage() {
   const [query, setQuery] = useState('');
   const [group, setGroup] = useState('All');
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ALL.filter((p) => {
+    const matches = ALL.filter((p) => {
       if (group !== 'All' && p.group !== group) return false;
-      if (!q) return true;
-      // Discovery across all four dimensions: phrase (title/description/synonyms +
-      // appliesWhen), capability (axis options), and data (appliesWhen).
-      const features = p.spec ? p.spec.axes.flatMap((a) => a.options ?? []) : [];
-      const applies = p.spec?.appliesWhen ?? [];
-      return (
-        p.title.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        p.synonyms.some((s) => s.includes(q)) ||
-        features.some((f) => f.toLowerCase().includes(q)) ||
-        applies.some((a) => a.toLowerCase().includes(q))
-      );
+      return q ? relevance(p, q) > 0 : true;
     });
+    // Only while searching — with nothing typed, available-then-alphabetical is
+    // the order that makes the list scannable. Stable, so equally relevant
+    // patterns keep that order among themselves.
+    return q ? [...matches].sort((a, b) => relevance(b, q) - relevance(a, q)) : matches;
   }, [query, group]);
 
   return (

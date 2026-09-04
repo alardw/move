@@ -17,6 +17,30 @@ const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
   a.meta.name.localeCompare(b.meta.name),
 );
 
+/**
+ * How well a component answers the words typed, 0 for not at all.
+ *
+ * Alphabetical is the right order for a list you are browsing, and the wrong
+ * one for a list you are searching: typing "sidebar" put Sidebar itself near the
+ * bottom, below everything whose tagline happens to mention one. The thing named
+ * outranks the things that merely talk about it.
+ */
+function relevance(c: ComponentContent, q: string): number {
+  const name = c.meta.name.toLowerCase();
+  if (name === q) return 100;
+  if (name.startsWith(q)) return 90;
+  if (name.includes(q)) return 80;
+
+  const aliases = c.meta.synonyms ?? [];
+  if (aliases.some((a) => a === q)) return 70;
+  if (aliases.some((a) => a.startsWith(q))) return 65;
+  if (aliases.some((a) => a.includes(q))) return 60;
+
+  if (catsOf(c).some((cat) => labelOf(cat).toLowerCase().includes(q))) return 40;
+  if (c.meta.tagline.toLowerCase().includes(q)) return 20;
+  return 0;
+}
+
 const GRID: React.CSSProperties = {
   display: 'grid',
   gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
@@ -30,18 +54,15 @@ export function ComponentsOverviewPage() {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return ALL.filter((c) => {
+    const matches = ALL.filter((c) => {
       if (category !== 'All' && !catsOf(c).includes(category)) return false;
       if (animated && !isAnimated(c)) return false;
-      if (!q) return true;
-      const aliases = c.meta.synonyms ?? [];
-      return (
-        c.meta.name.toLowerCase().includes(q) ||
-        c.meta.tagline.toLowerCase().includes(q) ||
-        catsOf(c).some((cat) => labelOf(cat).toLowerCase().includes(q)) ||
-        aliases.some((a) => a.includes(q))
-      );
+      return q ? relevance(c, q) > 0 : true;
     });
+    // Only while searching. With no words typed there is nothing to be more or
+    // less relevant to, and alphabetical is what makes a list scannable.
+    // Stable, so equally relevant components stay in alphabetical order.
+    return q ? [...matches].sort((a, b) => relevance(b, q) - relevance(a, q)) : matches;
   }, [query, category, animated]);
 
   return (
