@@ -933,6 +933,7 @@ const DropdownSubTrigger = withMoveComponent<'subTrigger', DropdownSubTriggerPro
               {...spRest}
               ref={ref}
               disabled={props.disabled as boolean}
+              data-move-stagger=""
               className={cx('subTrigger', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             >
@@ -957,6 +958,31 @@ export interface DropdownSubContentProps extends React.HTMLAttributes<HTMLElemen
   sp?: SlotPropsMap<'subContent'>;
 }
 
+/**
+ * The sub-menu's own reveal.
+ *
+ * A sub-menu opens as a popup in its own right — its own portal, its own mount —
+ * so the parent's stagger cannot reach it and it had no animation of its own at
+ * all. Its rows appeared instantly beside a parent that had just cascaded.
+ *
+ * Radix mounts SubContent only while the sub is open and delivers its children
+ * in one commit, so the plain lifecycle enter fires with the rows present. No
+ * itemsReady poll is needed here, unlike Select.
+ */
+const SUB_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'SubContent.enter',
+    sequence: [
+      {
+        target: 'SubContent',
+        children: STAGGER_ITEMS,
+        stagger: staggerItems.stagger,
+        animation: staggerItems.enter,
+      },
+    ],
+  },
+];
+
 const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentProps, HTMLDivElement>(
   {
     name: 'DropdownSubContent',
@@ -966,6 +992,16 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
 
     setup({ props, ref, cx, sp, attrs }) {
       const layer = useLayer();
+      // Shares the root's on/off switch, so `animations={false}` reaches the
+      // sub-menus too rather than leaving them the only thing still moving.
+      const { animConfig } = useDropdownContext();
+      const subRef = React.useRef<HTMLDivElement>(null);
+      const mergedRef = useMergedRef<HTMLDivElement>(ref, subRef);
+      const subRefs = React.useMemo(
+        () => ({ SubContent: subRef as React.RefObject<HTMLElement | null> }),
+        [],
+      );
+      useAnimations(animConfig ? SUB_ANIMATIONS : false, subRefs);
 
       return {
         render() {
@@ -979,7 +1015,7 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
             <RadixDropdownMenu.SubContent
               {...attrs}
               {...spRest}
-              ref={ref}
+              ref={mergedRef}
               sideOffset={props.sideOffset as number}
               className={cx('subContent', props.className, spClass as string | undefined)}
               style={{

@@ -648,7 +648,7 @@ export const spec = {
           },
           {
             slot: 'subTrigger',
-            dataAttributes: ['data-state', 'data-highlighted'],
+            dataAttributes: ['data-state', 'data-highlighted', 'data-move-stagger'],
           },
         ],
       },
@@ -691,6 +691,21 @@ export const spec = {
             stagger: { delay: 30 },
           },
         ],
+      ],
+    },
+    {
+      // A sub-menu is its own popup — its own portal, its own mount — so the
+      // parent's stagger cannot reach it and it needs a reveal of its own.
+      // Radix mounts SubContent only while the sub is open and commits its rows
+      // in one go, so a plain lifecycle enter fires with them present; no
+      // itemsReady poll, unlike Select.
+      trigger: 'SubContent.enter',
+      sequence: [
+        {
+          children: '[data-move-stagger]',
+          animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+          stagger: { delay: 30 },
+        },
       ],
     },
     {

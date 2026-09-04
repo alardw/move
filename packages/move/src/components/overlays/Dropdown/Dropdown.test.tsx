@@ -740,5 +740,35 @@ describe('Dropdown.Item — select does not let focus escape', () => {
       const marked = document.querySelectorAll('[data-move-stagger]');
       expect(marked).toHaveLength(4);
     });
+
+    it('counts a sub-menu trigger as the row it is', () => {
+      // A SubTrigger is a row in the PARENT menu and was the only kind not
+      // marked, so a menu built around sub-menus under-counted badly: two items,
+      // a separator and two sub-triggers is five rows but matched three, which
+      // is under the threshold — the whole reveal switched off.
+      render(
+        <Dropdown.Root defaultOpen>
+          <Dropdown.Trigger>Open</Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Item>Undo</Dropdown.Item>
+            <Dropdown.Item>Redo</Dropdown.Item>
+            <Dropdown.Separator />
+            <Dropdown.Sub>
+              <Dropdown.SubTrigger>Convert to…</Dropdown.SubTrigger>
+              <Dropdown.SubContent>
+                <Dropdown.Item>Group</Dropdown.Item>
+              </Dropdown.SubContent>
+            </Dropdown.Sub>
+            <Dropdown.Sub>
+              <Dropdown.SubTrigger>Send to…</Dropdown.SubTrigger>
+              <Dropdown.SubContent>
+                <Dropdown.Item>Front</Dropdown.Item>
+              </Dropdown.SubContent>
+            </Dropdown.Sub>
+          </Dropdown.Content>
+        </Dropdown.Root>,
+      );
+      expect(document.querySelectorAll('[data-move-stagger]')).toHaveLength(5);
+    });
   });
 });
