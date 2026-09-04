@@ -27,14 +27,6 @@ export interface StaggerConfig {
   /** Direction to stagger from */
   from?: 'first' | 'last' | 'center';
   /**
-   * Fewest children worth staggering. Below this they all move together.
-   *
-   * A stagger conveys arrival ORDER, and order needs a sequence to be read as
-   * one. Three items are taken in at a glance, so revealing them one after
-   * another reads as the menu lagging rather than as motion. Default 5.
-   */
-  threshold?: number;
-  /**
    * Longest the whole reveal may take, in ms, however many children there are.
    *
    * A fixed per-child delay is fine at five items and a drag at twenty, where

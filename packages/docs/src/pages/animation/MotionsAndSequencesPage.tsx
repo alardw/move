@@ -268,9 +268,9 @@ const SHORT_MENU = ['Edit', 'Duplicate', 'Delete'];
 const LONG_MENU = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`);
 
 /**
- * The same component and the same asked-for delay, at both ends of the range.
- * Open them one after the other: the short one arrives as a single object, the
- * long one cascades — and finishes in about the same time.
+ * The same component and the same asked-for delay over three rows and twenty.
+ * Open them one after the other: both cascade, and both finish in about the same
+ * time, because the gap closes up rather than the tail growing with the list.
  *
  * Both count their group label, which moves with the rows rather than sitting
  * still while they cascade around it.
@@ -280,7 +280,7 @@ function StaggerRangeDemo() {
     <Stack direction="row" gap="lg" wrap>
       <Stack gap="sm">
         <Text size="sm" weight="medium">Three items</Text>
-        <Text size="sm" color="muted">Under the threshold — they arrive together.</Text>
+        <Text size="sm" color="muted">Cascades at the full 30ms gap.</Text>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
             <Button variant="secondary">Short menu</Button>
@@ -295,7 +295,7 @@ function StaggerRangeDemo() {
       </Stack>
       <Stack gap="sm">
         <Text size="sm" weight="medium">Twenty items</Text>
-        <Text size="sm" color="muted">Cascades, inside the same 240ms.</Text>
+        <Text size="sm" color="muted">Same 240ms — the gap closes up to fit.</Text>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
             <Button variant="secondary">Long menu</Button>
@@ -510,15 +510,12 @@ sequence: [
           />
           <SelectStaggerDemo />
           <Text>
-            The delay you set applies in the middle of the range, and the runtime
-            adjusts it at both ends. Under five children there is no order to
-            read, so they arrive together — three items are taken in at a glance,
-            and revealing them one after another reads as a lag rather than as
-            motion. Past that the whole reveal is held to about a quarter of a
-            second, so a menu of forty arrives in the same time as a menu of six
-            instead of trailing half a second behind it. Set{' '}
-            <Code>threshold</Code> or <Code>maxTotal</Code> on the{' '}
-            <Code>stagger</Code> to move either boundary.
+            The delay you set holds while the reveal fits, and closes up once it
+            would not. The whole cascade is budgeted to about a quarter of a
+            second however many children there are, so a menu of forty arrives in
+            the same time as a menu of six rather than trailing half a second
+            behind it. Set <Code>maxTotal</Code> on the <Code>stagger</Code> to
+            move that budget.
           </Text>
           <StaggerRangeDemo />
           <Text color="muted">

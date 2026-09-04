@@ -6,25 +6,24 @@ import { seedFromState } from './utils/seed';
 
 /** anime.js transform shorthands — these compose into a single `transform`. */
 
-const DEFAULT_THRESHOLD = 5;
 const DEFAULT_MAX_TOTAL = 240;
 
 /**
- * The delay to actually use between children, which is not always the one asked
- * for — a fixed per-child delay is wrong at both ends of the range.
+ * How far apart the children should actually be, which is not always the delay
+ * asked for.
  *
- * Below the threshold there is no sequence to perceive: a menu of three is taken
- * in at a glance, so revealing them one after another reads as the menu lagging
- * rather than as motion. They move together instead.
+ * A fixed per-child gap is fine at six items and a drag at twenty: at 30ms the
+ * twentieth row lands 570ms after the first, which is not a stagger any more, it
+ * is a queue. So the whole reveal is held to a budget and the gap closes up to
+ * fit, which means a long menu and a short one take about the same time to
+ * arrive rather than the tail growing with the list.
  *
- * Above it the whole reveal is held to a budget. At the asked-for 30ms twenty
- * items put the last one 570ms after the first, which is not a stagger any more,
- * it is a queue. The gap closes up to fit rather than the tail running on, so a
- * long menu and a short one take about the same time to arrive.
+ * Only the upper end is adjusted. Short menus stagger like any other — the gap
+ * between three rows is small enough to read as one movement, and skipping the
+ * reveal there made them appear flatly beside menus that did not.
  */
-export function resolveDelay(asked: number, count: number, stagger?: StaggerConfig): number {
-  const threshold = stagger?.threshold ?? DEFAULT_THRESHOLD;
-  if (count < threshold) return 0;
+export function resolveStagger(asked: number, count: number, stagger?: StaggerConfig): number {
+  if (count < 2) return asked;
   const maxTotal = stagger?.maxTotal ?? DEFAULT_MAX_TOTAL;
   return Math.min(asked, maxTotal / (count - 1));
 }
@@ -57,7 +56,7 @@ export function staggerAnimate(
   const items = container.querySelectorAll(selector);
   if (items.length === 0) return;
 
-  const staggerDelay = resolveDelay(stagger?.delay ?? 30, items.length, stagger);
+  const staggerDelay = resolveStagger(stagger?.delay ?? 30, items.length, stagger);
 
   if (direction === 'enter') {
     // Seed each item's initial (`from`) state to avoid a first-frame flash.
