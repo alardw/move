@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
   Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
-  Button, Collapsible, Tooltip, Select, Drawer,
+  Button, Collapsible, Tooltip, Select, Drawer, Dropdown,
   InputRange, Popover, poppy,
 } from 'move';
 import type { AnimationTrigger } from 'move';
@@ -219,7 +219,8 @@ function SelectStaggerDemo() {
   // spring) and fades. Only the stagger delay is wired to the slider; everything
   // else mirrors the component's real config.
   const animations = useMemo<AnimationTrigger[]>(() => {
-    const ITEMS = '[role="menuitem"], [class*="label"], [class*="separator"]';
+    // The component's own selector, now that there is one a consumer can write.
+    const ITEMS = '[data-move-stagger]';
     return [
       { trigger: 'open', sequence: [[
         { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
@@ -259,6 +260,54 @@ function SelectStaggerDemo() {
           </Select.Viewport>
         </Select.Content>
       </Select.Root>
+    </Stack>
+  );
+}
+
+const SHORT_MENU = ['Edit', 'Duplicate', 'Delete'];
+const LONG_MENU = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`);
+
+/**
+ * The same component and the same asked-for delay, at both ends of the range.
+ * Open them one after the other: the short one arrives as a single object, the
+ * long one cascades — and finishes in about the same time.
+ *
+ * Both count their group label, which moves with the rows rather than sitting
+ * still while they cascade around it.
+ */
+function StaggerRangeDemo() {
+  return (
+    <Stack direction="row" gap="lg" wrap>
+      <Stack gap="sm">
+        <Text size="sm" weight="medium">Three items</Text>
+        <Text size="sm" color="muted">Under the threshold — they arrive together.</Text>
+        <Dropdown.Root>
+          <Dropdown.Trigger asChild>
+            <Button variant="secondary">Short menu</Button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Label>Actions</Dropdown.Label>
+            {SHORT_MENU.map((item) => (
+              <Dropdown.Item key={item}>{item}</Dropdown.Item>
+            ))}
+          </Dropdown.Content>
+        </Dropdown.Root>
+      </Stack>
+      <Stack gap="sm">
+        <Text size="sm" weight="medium">Twenty items</Text>
+        <Text size="sm" color="muted">Cascades, inside the same 240ms.</Text>
+        <Dropdown.Root>
+          <Dropdown.Trigger asChild>
+            <Button variant="secondary">Long menu</Button>
+          </Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Label>Actions</Dropdown.Label>
+            {LONG_MENU.map((item) => (
+              <Dropdown.Item key={item}>{item}</Dropdown.Item>
+            ))}
+          </Dropdown.Content>
+        </Dropdown.Root>
+      </Stack>
     </Stack>
   );
 }
@@ -471,6 +520,7 @@ sequence: [
             <Code>threshold</Code> or <Code>maxTotal</Code> on the{' '}
             <Code>stagger</Code> to move either boundary.
           </Text>
+          <StaggerRangeDemo />
           <Text color="muted">
             More of these running in real components on{' '}
             <RouterLink to="/animation/choreography">See it in action</RouterLink>.

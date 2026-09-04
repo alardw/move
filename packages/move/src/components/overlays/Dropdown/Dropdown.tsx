@@ -39,6 +39,22 @@ function wrapTextChildren(children: React.ReactNode, textClass: string): React.R
 // Animation defaults
 // ============================================================================
 
+/**
+ * Everything the reveal moves, marked once.
+ *
+ * Selecting by role picked up the items and left the group labels and
+ * separators sitting still while the rows cascaded around them, so a section
+ * arrived in two pieces. It also under-counted: a menu of four items and a label
+ * is five things on screen but matched four, and a stagger that measures itself
+ * against the wrong number reveals the wrong way.
+ *
+ * A data attribute rather than the slot classes, because those are hashed by the
+ * CSS module and cannot be named from outside — a consumer overriding
+ * `animations` has no way to write the selector, which is why the docs demo had
+ * resorted to `[class*="label"]`.
+ */
+const STAGGER_ITEMS = '[data-move-stagger]';
+
 // Container (Content) only fades; item stagger carries the reveal.
 const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
   {
@@ -48,7 +64,7 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
         { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
         {
           target: 'ContentInner',
-          children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+          children: STAGGER_ITEMS,
           stagger: staggerItems.stagger,
           animation: staggerItems.enter,
         },
@@ -62,7 +78,7 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
         { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
         {
           target: 'ContentInner',
-          children: '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]',
+          children: STAGGER_ITEMS,
           stagger: staggerItems.stagger,
           animation: staggerItems.exit,
         },
@@ -455,6 +471,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
             onSelect={handleSelect}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
+            data-move-stagger=""
             className={cx('item', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -537,6 +554,7 @@ const DropdownLabel = withMoveComponent<'label', DropdownLabelProps, HTMLDivElem
             {...attrs}
             {...spRest}
             ref={ref}
+            data-move-stagger=""
             className={cx('label', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -641,6 +659,7 @@ const DropdownCheckboxItem = withMoveComponent<
             onSelect={handleSelect}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
+            data-move-stagger=""
             className={cx('checkboxItem', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -778,6 +797,7 @@ const DropdownRadioItem = withMoveComponent<'radioItem', DropdownRadioItemProps,
             onSelect={handleSelect}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
+            data-move-stagger=""
             className={cx('radioItem', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -855,6 +875,7 @@ const DropdownSeparator = withMoveComponent<'separator', DropdownSeparatorProps,
             {...attrs}
             {...spRest}
             ref={ref}
+            data-move-stagger=""
             className={cx('separator', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />

@@ -28,11 +28,23 @@ import styles from './Select.module.css';
 const SCALE_INSET_PX = 16; // per-item reveal offset
 const SCALE_HOVER_PX = 4; // per-item hover scale
 
-// Every visible dropdown row participates in the stagger: options, group
-// labels, and separators. Built on Radix Select, so items carry `role="option"`
-// (was `menuitem` under the old DropdownMenu build); labels/separators match via
-// their scoped CSS module classes.
-const CHILDREN_SELECTOR = `[role="option"], [class*="label"], [class*="separator"]`;
+/**
+ * Everything the reveal moves, marked once.
+ *
+ * Selecting by role picked up the options and left group labels and separators
+ * sitting still while the rows cascaded around them, so a section arrived in two
+ * pieces. It also under-counted: four options and a label is five things on
+ * screen but matched four, and a stagger that measures itself against the wrong
+ * number reveals the wrong way.
+ *
+ * A data attribute rather than the slot classes, because those are hashed by the
+ * CSS module and cannot be named from outside — a consumer overriding
+ * `animations` has no way to write the selector, and the substring match that
+ * stood in for it (`[class*="label"]`) would catch any of their classes
+ * containing the word.
+ */
+const STAGGER_ITEMS = '[data-move-stagger]';
+const CHILDREN_SELECTOR = STAGGER_ITEMS;
 
 // Wraps only the string/number leaves of a ReactNode tree in a block-level
 // span so text-overflow: ellipsis applies natively. React elements (Icons,
@@ -927,6 +939,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
             disabled={props.disabled as boolean}
             onMouseEnter={() => handlers.Item?.onMouseEnter?.()}
             onMouseLeave={() => handlers.Item?.onMouseLeave?.()}
+            data-move-stagger=""
             className={cx('item', props.className, spClass as string | undefined)}
             style={{
               // Width-relative, so it cannot be a constant in the stylesheet —
@@ -1024,6 +1037,7 @@ const SelectLabel = withMoveComponent<'label', SelectLabelProps, HTMLDivElement>
             {...attrs}
             {...spRest}
             ref={ref}
+            data-move-stagger=""
             className={cx('label', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -1060,6 +1074,7 @@ const SelectSeparator = withMoveComponent<'separator', SelectSeparatorProps, HTM
             {...attrs}
             {...spRest}
             ref={ref}
+            data-move-stagger=""
             className={cx('separator', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           />

@@ -718,4 +718,27 @@ describe('Dropdown.Item — select does not let focus escape', () => {
     expect(event.defaultPrevented).toBe(true);
     await waitFor(() => expect(onOpenChange).toHaveBeenCalledWith(false));
   });
+
+  // === Stagger participation ===
+  describe('the reveal', () => {
+    it('moves the group labels and separators with the items', async () => {
+      // Selecting by role left headings sitting still while the rows cascaded
+      // around them, so a section arrived in two pieces. It also under-counted:
+      // the stagger sizes itself against how many things it matched, and four
+      // items plus a label is five things on screen.
+      render(
+        <Dropdown.Root defaultOpen>
+          <Dropdown.Trigger>Open</Dropdown.Trigger>
+          <Dropdown.Content>
+            <Dropdown.Label>Section</Dropdown.Label>
+            <Dropdown.Item>One</Dropdown.Item>
+            <Dropdown.Separator />
+            <Dropdown.Item>Two</Dropdown.Item>
+          </Dropdown.Content>
+        </Dropdown.Root>,
+      );
+      const marked = document.querySelectorAll('[data-move-stagger]');
+      expect(marked).toHaveLength(4);
+    });
+  });
 });
