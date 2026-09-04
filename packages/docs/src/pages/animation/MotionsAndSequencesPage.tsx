@@ -460,6 +460,17 @@ sequence: [
 { target: 'List', children: '[role="option"]', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } }`}
           />
           <SelectStaggerDemo />
+          <Text>
+            The delay you set applies in the middle of the range, and the runtime
+            adjusts it at both ends. Under five children there is no order to
+            read, so they arrive together — three items are taken in at a glance,
+            and revealing them one after another reads as a lag rather than as
+            motion. Past that the whole reveal is held to about a quarter of a
+            second, so a menu of forty arrives in the same time as a menu of six
+            instead of trailing half a second behind it. Set{' '}
+            <Code>threshold</Code> or <Code>maxTotal</Code> on the{' '}
+            <Code>stagger</Code> to move either boundary.
+          </Text>
           <Text color="muted">
             More of these running in real components on{' '}
             <RouterLink to="/animation/choreography">See it in action</RouterLink>.
