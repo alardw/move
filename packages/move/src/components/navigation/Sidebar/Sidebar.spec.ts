@@ -628,7 +628,7 @@ export const spec = {
     {
       id: 'rail-shared-inset',
       description:
-        'Header, NavItem and Trigger align on one left inset. Content and Footer wrap their children in --move-spacing-sm, so Header — which has no such wrapper — insets its LEFT edge by that amount plus --move-sidebar-item-padding-x, putting the title on the nav labels line. Its RIGHT edge is only --move-spacing-sm, because a trailing control is a box and lines up with the row boxes rather than with the labels inside them. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
+        'Header, NavItem and Trigger align on one left inset, and the inset belongs to what a container HOLDS rather than to the container. Content and Footer hold boxes — nav rows, buttons — which bring their own padding-x, so both inset by --move-spacing-sm and the boxes line up with each other while their contents land on the labels line. Header holds a bare title with no padding of its own, so it adds --move-sidebar-item-padding-x on the LEFT to reach that same line; its RIGHT edge stays at --move-spacing-sm because a trailing control is a box. Giving Footer the Header\u2019s numbers looked symmetric and pushed its controls 16px right of every nav row. Trigger uses --move-sidebar-item-padding-y so the collapse row is the same height as a nav row.',
     },
     {
       id: 'mobile-modal-sheet',

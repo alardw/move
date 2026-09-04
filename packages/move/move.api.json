@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.55",
+  "version": "0.1.56",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
   "componentCount": 71,
   "components": [

@@ -165,13 +165,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--move-spacing-xs);
-  /* Symmetric with Header, which it bookends: both hold bare controls rather
-     than full-width rows, so both need the same left inset to put their text on
-     the nav labels line and the same right inset to put a trailing control on
-     the row boxes. */
-  padding: var(--move-sidebar-item-padding-y) var(--move-spacing-sm)
-    var(--move-sidebar-item-padding-y)
-    calc(var(--move-spacing-sm) + var(--move-sidebar-item-padding-x));
+  /* Even, like Content — and NOT like Header, which looks inconsistent on paper
+     and is what makes the two line up on screen. The inset belongs to whatever
+     the container holds, not to the container. Header holds a bare title, which
+     has no padding of its own, so the header supplies the row's padding-x to put
+     it on the nav labels line. Footer holds controls, and a control brings its
+     own padding: give it the same 24px and its icon lands 16px right of every
+     nav icon above it. Matching the numbers pushed the content out of line. */
+  padding: var(--move-spacing-sm);
   flex-shrink: 0;
   /* Inherits the sidebar root bg, matching Header/Content. The top
      border only renders while there's more content below the visible

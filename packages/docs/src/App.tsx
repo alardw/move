@@ -116,9 +116,11 @@ function ThemeToggle() {
   const isDark = theme.name === 'dark';
   return (
     <Tooltip label={isDark ? 'Light mode' : 'Dark mode'} side="right" sideOffset={8}>
+      {/* Default size, not sm: a nav row insets its icon by --move-spacing-md,
+          and only a control with the same padding lands its icon on that line.
+          At sm the moon sat 7px left of every icon above it. */}
       <Button
         variant="ghost"
-        size="sm"
         onClick={() => setTheme(isDark ? lightTheme : darkTheme)}
         aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
@@ -154,11 +156,7 @@ function AppSidebar() {
             The old collapsed branch rendered this button regardless, so a
             collapsed sheet on mobile showed an expand toggle and no mark. */}
         {!isMobile && (
-          <Tooltip
-            label={collapsed ? 'Expand' : 'Collapse'}
-            side={collapsed ? 'right' : 'top'}
-            sideOffset={8}
-          >
+          <Tooltip label={collapsed ? 'Expand' : 'Collapse'} side="right" sideOffset={8}>
             <Button
               variant="ghost"
               size="sm"
@@ -202,15 +200,12 @@ function AppSidebar() {
         </Sidebar.Group>
       </Sidebar.Content>
       <Sidebar.Footer>
-        <Stack
-          direction="row"
-          justify={collapsed ? 'center' : 'start'}
-          align="center"
-          gap="sm"
-          padding="sm"
-        >
+        {/* No padding and no justify: Footer pads itself on the rail's inset,
+            and centres its children when collapsed. Setting either here doubles
+            the first and fights the second. */}
+        <Stack direction="row" align="center" gap="sm">
           <ThemeToggle />
-          {!collapsed && (
+          <Sidebar.Expanded>
             <Link
               href="https://www.linkedin.com/in/alardweisscher"
               external
@@ -221,7 +216,7 @@ function AppSidebar() {
                 Built by Alard Weisscher
               </AnimatedText>
             </Link>
-          )}
+          </Sidebar.Expanded>
         </Stack>
       </Sidebar.Footer>
     </Sidebar.Root>
