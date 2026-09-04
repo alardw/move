@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 71 components. Version 0.1.56.
+> 71 components. Version 0.1.57.
 
 ## Props you pass
 

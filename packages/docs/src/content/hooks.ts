@@ -67,10 +67,18 @@ export const HOOKS_REGISTRY: HookDoc[] = [
     category: "Viewport",
     companion: "Deferred",
     companionSummary:
-      "Deferred is the wrapper over useInView: it mounts its children only once they scroll near the viewport, so a page full of heavy subtrees builds the visible handful on load and the rest as you scroll. Deferral is always opt-in — the children are genuinely absent until revealed.",
+      "Deferred is the wrapper over useInView: it mounts its children only once they scroll near the viewport, so a page full of heavy subtrees builds the visible handful on load and the rest as you scroll. Deferral is always opt-in — the children are genuinely absent until revealed. The wrapper is unavoidable, since something has to be in the DOM for the observer to watch, but its element is yours: pass `as` where a div would be wrong, such as a row inside a list.",
     example: `<Deferred rootMargin="300px" style={{ position: 'absolute', inset: 0 }}>
   <ExpensivePreview />
-</Deferred>`,
+</Deferred>
+
+<ul>
+  {rows.map((r) => (
+    <Deferred key={r.id} as="li" placeholder={<Skeleton height={40} />}>
+      <HeavyRow row={r} />
+    </Deferred>
+  ))}
+</ul>`,
   },
   // ── Focus & popups ──────────────────────────────────────────────
   {

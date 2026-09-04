@@ -113,4 +113,19 @@ describe('Deferred', () => {
     expect(wrapper).toHaveClass('wrap');
     expect(wrapper.style.position).toBe('absolute');
   });
+  it('renders as the element it is given, not always a div', () => {
+    // A <div> between <ul> and <li> is invalid HTML and strips the list
+    // semantics, and deferring a long list is exactly where this pays off — so
+    // the wrapper cannot assume its own element.
+    render(
+      <ul>
+        <Deferred as="li" placeholder={<span>loading</span>}>
+          <span>row</span>
+        </Deferred>
+      </ul>,
+    );
+    const items = document.querySelectorAll('ul > li');
+    expect(items).toHaveLength(1);
+    expect(document.querySelector('ul > div')).toBeNull();
+  });
 });
