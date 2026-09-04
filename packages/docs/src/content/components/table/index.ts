@@ -5,6 +5,8 @@ import { meta } from './meta';
 
 import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
+import Sortable from './samples/sortable';
+import sortableCode from './samples/sortable?raw';
 import Variants from './samples/variants';
 import variantsCode from './samples/variants?raw';
 import ZebraOnly from './samples/zebra-only';
@@ -31,6 +33,7 @@ export const content: ComponentContent = {
   spec,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
+    { id: 'sortable', title: 'Sortable columns', render: Sortable, code: sortableCode },
     { id: 'variants', title: 'Variants', render: Variants, code: variantsCode },
     { id: 'zebra-only', title: 'Zebra only (ghost + striped)', render: ZebraOnly, code: zebraOnlyCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },

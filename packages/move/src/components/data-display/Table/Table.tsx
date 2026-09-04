@@ -10,6 +10,7 @@ import {
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Table.module.css';
 
 // ============================================================================
@@ -576,6 +577,14 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
   setup({ props, ref, cx, sp, attrs }) {
     const { className, style, children, sortable, sorted, onSort, align } = props;
 
+    // By ROLE, like every other icon in the library — so a consumer re-skins
+    // "sorted ascending" once on MoveRoot rather than matching chevron names.
+    // Hooks are unconditional; the result is only rendered when sortable.
+    const sortIcon = useIcon(
+      sorted === 'asc' ? 'sortAscending' : sorted === 'desc' ? 'sortDescending' : 'sortNone',
+      14,
+    );
+
     const handleClick = () => {
       if (sortable && onSort) onSort();
     };
@@ -612,8 +621,14 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
             <span className={styles.headContent}>
               {children}
               {sortable && (
+                // Icons, not the arrow CHARACTERS this used to render. A glyph
+                // is typeset, not drawn: it takes the body font's metrics and
+                // baseline, so it sat off-centre beside real icons, changed
+                // shape with the font, and could not be swapped through
+                // iconResolver like every other icon in the library. The A20
+                // rule only catches an inline <svg>, so text slipped past it.
                 <span className={styles.sortIcon} aria-hidden="true">
-                  {sorted === 'asc' ? '↑' : sorted === 'desc' ? '↓' : '↕'}
+                  {sortIcon}
                 </span>
               )}
             </span>

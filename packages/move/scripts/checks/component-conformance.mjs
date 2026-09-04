@@ -48,6 +48,14 @@ for (const f of walk(COMPONENTS)) {
     violations.push({ file: f, line: 1, rule: 'A1', msg: "missing 'use client'; at line 1" });
   }
   lines.forEach((line, i) => {
+    // Comments are prose, not source. Every rule below matches on TEXT, so a
+    // comment that names the thing it is warning about trips the rule warning
+    // about it — twice in one day: a JSDoc example writing `<Icon name="moon">`
+    // was read as a missing icon, and the comment explaining this very fix was
+    // read as an inline <svg>. Stripping them costs nothing; a line that is only
+    // a comment has nothing else to check.
+    if (/^\s*(?:\/\/|\/\*|\*)/.test(line)) return;
+
     if (/<svg[\s>]/.test(line) && !SVG_EXEMPT.test(f)) {
       violations.push({ file: f, line: i + 1, rule: 'A20', msg: 'inline <svg> — render via useResolvedIcon/<Icon>' });
     }

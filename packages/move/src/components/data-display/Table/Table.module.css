@@ -300,7 +300,10 @@
 
 .sortIcon {
   display: inline-flex;
-  font-size: 0.8em;
+  align-items: center;
+  flex-shrink: 0;
+  /* Drawn, not typeset: the icon carries its own size, so no font-size here.
+     The neutral state is dimmed to read as available rather than active. */
   opacity: 0.5;
 }
 

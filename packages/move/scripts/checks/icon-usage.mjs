@@ -42,10 +42,27 @@ const WRITE = process.argv.includes('--write');
 // `name:` props, which are far too noisy).
 const RE_RESOLVED = /useResolvedIcon\(\s*['"]([a-z0-9-]+)['"]/g;
 const RE_JSX = /<Icon\b[^>]*\bname=['"]([a-z0-9-]+)['"]/g;
+// The same two, written as an EXPRESSION rather than a literal — which is how a
+// component that picks its icon by state has to write it:
+//   <Icon name={sorted === 'asc' ? 'chevron-up' : 'chevron-down'} />
+//   useResolvedIcon(open ? 'chevron-up' : 'chevron-down')
+// Matching only the literal form meant such a component declared no icons at all
+// and stayed green, so Table rendered three and listed none. Every quoted
+// kebab-case string inside the expression counts; the braces are balanced by
+// hand because a regex cannot, and only the first level is needed here.
+const RE_JSX_EXPR = /<Icon\b[^>]*\bname=\{([^}]*)\}/g;
+const RE_RESOLVED_EXPR = /useResolvedIcon\(([^)]*\?[^)]*)\)/g;
+const RE_QUOTED_NAME = /['"]([a-z][a-z0-9-]*)['"]/g;
 // Role-based usage: `useIcon('close')` / `useIcon('status.success')` (literal) and
 // the dynamic `useIcon(`status.${…}`)` template (→ the full status icon set).
 const RE_USEICON = /useIcon\(\s*['"]([a-zA-Z0-9.]+)['"]/g;
 const RE_USEICON_DYN_STATUS = /useIcon\(\s*`status\.\$\{/;
+// A role chosen by state — `useIcon(sorted === 'asc' ? 'sortAscending' : …)`.
+// Roles are camelCase, so unlike icon names they cannot be confused with a
+// ternary's test value: every quoted string here either resolves to a role or is
+// discarded by roleToName.
+const RE_USEICON_EXPR = /useIcon\(([^)]*\?[^)]*)\)/g;
+const RE_QUOTED_ROLE = /['"]([a-zA-Z][a-zA-Z0-9.]*)['"]/g;
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Role → built-in name resolution (parsed from roles.ts so this never drifts)
@@ -121,10 +138,30 @@ function iconsFromSource(dir) {
     const text = readFileSync(fp, 'utf8');
     for (const m of text.matchAll(RE_RESOLVED)) found.add(m[1]);
     for (const m of text.matchAll(RE_JSX)) found.add(m[1]);
+    // Expression form: every quoted kebab-case name a state-chosen icon can
+    // resolve to. All of them are rendered, just not at the same time.
+    for (const m of [...text.matchAll(RE_JSX_EXPR), ...text.matchAll(RE_RESOLVED_EXPR)]) {
+      for (const n of m[1].matchAll(RE_QUOTED_NAME)) {
+        // An expression carries strings that are not icon names — the ternary's
+        // own test (`sorted === 'asc'`), a type guard's `'string'`. A regex
+        // cannot tell a branch from its condition, so accept only what could be
+        // an icon: a hyphenated name, or one the built-in set already knows.
+        // The cost is that a NEW single-word name with no built-in stays
+        // invisible in expression form; it is still caught written literally.
+        if (n[1].includes('-') || BUILTINS.has(n[1])) found.add(n[1]);
+      }
+    }
     // Role-based literals (`useIcon('close')`, `useIcon('status.success')`).
     for (const m of text.matchAll(RE_USEICON)) {
       const name = roleToName(m[1]);
       if (name) found.add(name);
+    }
+    // Role chosen by state: every role the expression can resolve to.
+    for (const m of text.matchAll(RE_USEICON_EXPR)) {
+      for (const r of m[1].matchAll(RE_QUOTED_ROLE)) {
+        const name = roleToName(r[1]);
+        if (name) found.add(name);
+      }
     }
     // Dynamic `useIcon(`status.${…}`)` → the component renders the whole status
     // set (info / success / warning / danger).

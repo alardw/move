@@ -67,6 +67,21 @@ function ChevronUp({ width, height }: { width: number | string; height: number |
   );
 }
 
+/**
+ * The neutral half of a sort control: a column that CAN be sorted but is not.
+ * Built in because a sortable table cannot express its third state without it —
+ * with only up and down, an unsorted column has to either show nothing (and look
+ * unsortable) or borrow a direction it is not in.
+ */
+function ChevronsUpDown({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <path d="m7 15 5 5 5-5" />
+      <path d="m7 9 5-5 5 5" />
+    </Svg>
+  );
+}
+
 function ChevronDown({ width, height }: { width: number | string; height: number | string }) {
   return (
     <Svg width={width} height={height}>
@@ -295,6 +310,7 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'chevron-right': ChevronRight,
   'chevron-up': ChevronUp,
   'chevron-down': ChevronDown,
+  'chevrons-up-down': ChevronsUpDown,
   'x': X,
   'check': Check,
   'minus': Minus,

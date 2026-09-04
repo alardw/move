@@ -732,4 +732,5 @@ export const spec = {
       'Reduced motion preference skips animations.',
     ],
   },
+  iconsUsed: ['chevron-down', 'chevron-up', 'chevrons-up-down'],
 } satisfies ComponentSpec;

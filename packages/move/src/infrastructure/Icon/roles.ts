@@ -24,6 +24,15 @@ export const ICON_ROLES = {
   // NOTE: a vertical Carousel flips previous→chevron-up / next→chevron-down.
   //       Open question: orientation-aware roles, or let the component pick.
 
+  // ── Column sorting ──────────────────────────────────────────────────────
+  // Three roles rather than two, because a sortable column has three states and
+  // the neutral one is the easiest to get wrong: with only up and down, an
+  // unsorted column either shows nothing (and reads as unsortable) or borrows a
+  // direction it is not in.
+  sortAscending: 'chevron-up', // Table (column sorted A→Z)
+  sortDescending: 'chevron-down', // Table (column sorted Z→A)
+  sortNone: 'chevrons-up-down', // Table (column can be sorted, and is not)
+
   // ── Selection ───────────────────────────────────────────────────────────
   selected: 'check', // Select, Dropdown, Autocomplete (chosen option)
   complete: 'check', // Stepper (completed step)
