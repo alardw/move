@@ -164,3 +164,33 @@ a box (`Sidebar.Row`?) that sets the row metrics for what it wraps, and an
 `align` prop on `Button`. Deliberately not invented on the spot — the design's
 rule is that foreign content is TOLD, never assumed, and both of these are ways
 of telling it, so the shape wants deciding rather than guessing.
+
+## Contrast between an element and the surface it is placed on
+
+`check:theme-contrast` and the `--move-{color}-fg-solid` / `-fg-subtle` tokens
+guarantee **text against its own background**: every Badge, every Alert, every
+filled control is AA against the fill it carries. Nothing guarantees **a filled
+element against the fill it is placed on**, because those are two independent
+choices — the theme picked indigo for `--move-primary`, the call site picked
+`color="blue"` for the badge, and neither knows about the other.
+
+Measured on the sidebar's active row: badge `blue-800` `#1971c2` on
+`indigo-600` `#4c6ef5` is **1.16:1**. The pill dissolves into the row and the
+count reads as loose text — while both halves pass their own checks (white on
+blue-800 is 5.02:1, white on indigo-600 is 4.32:1).
+
+`Badge variant="inherit"` now makes the safe option expressible: it derives from
+`currentColor`, which already contrasts with its own background wherever it
+sits, so it holds on the active row and the resting one without knowing which it
+is on. That is the fix for the case we hit, not for the class.
+
+Still open:
+- **Nothing warns.** A consumer writing `color="blue"` inside a filled row gets
+  the same 1.16:1 with no signal. Statically undecidable in general — the badge
+  and the row meet at the call site — but decidable for the surfaces the LIBRARY
+  paints: an element with a solid accent fill that renders arbitrary children
+  could be enumerated, and the docs samples inside them checked.
+- **Other filled surfaces have the same shape** and no `inherit` equivalent:
+  `Alert`, `Callout`, a `solid` `Button` with a badge in it, filled `Timeline` /
+  `Stepper` markers. Worth deciding whether `inherit` is a Badge variant or a
+  cross-component convention before adding it a second time by hand.

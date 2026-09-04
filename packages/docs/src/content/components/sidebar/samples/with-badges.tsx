@@ -15,6 +15,11 @@ function HeaderToggle() {
  * Nav items take a `badge` on the right — unread counts, status pills, anything
  * that says "look here next." Badges fade out with the labels when the rail
  * collapses, so the icons-only mode stays tidy.
+ *
+ * These use `variant="inherit"`, which takes the badge's colours from the row
+ * it sits on. A palette colour is chosen against its own text, not against
+ * whatever it is placed on, so on the filled active row a blue badge lands
+ * 1.16:1 from the row and dissolves into it.
  */
 export default function WithBadgesSample() {
   return (
@@ -30,16 +35,16 @@ export default function WithBadgesSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Mailboxes</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/inbox" icon={<Icon name="inbox" />} badge={<Badge color="blue">12</Badge>} tooltip="Inbox" active>Inbox</Sidebar.NavItem>
+                <Sidebar.NavItem href="/inbox" icon={<Icon name="inbox" />} badge={<Badge variant="inherit">12</Badge>} tooltip="Inbox" active>Inbox</Sidebar.NavItem>
                 <Sidebar.NavItem href="/starred" icon={<Icon name="star" />} tooltip="Starred">Starred</Sidebar.NavItem>
                 <Sidebar.NavItem href="/sent" icon={<Icon name="send" />} tooltip="Sent">Sent</Sidebar.NavItem>
-                <Sidebar.NavItem href="/archive" icon={<Icon name="archive" />} badge={<Badge color="gray">203</Badge>} tooltip="Archive">Archive</Sidebar.NavItem>
+                <Sidebar.NavItem href="/archive" icon={<Icon name="archive" />} badge={<Badge variant="inherit">203</Badge>} tooltip="Archive">Archive</Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Labels</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/important" icon={<Icon name="tag" />} badge={<Badge color="red">3</Badge>} tooltip="Important">Important</Sidebar.NavItem>
+                <Sidebar.NavItem href="/important" icon={<Icon name="tag" />} badge={<Badge variant="inherit">3</Badge>} tooltip="Important">Important</Sidebar.NavItem>
                 <Sidebar.NavItem href="/work" icon={<Icon name="briefcase" />} tooltip="Work">Work</Sidebar.NavItem>
                 <Sidebar.NavItem href="/receipts" icon={<Icon name="receipt" />} tooltip="Receipts">Receipts</Sidebar.NavItem>
               </Sidebar.Nav>

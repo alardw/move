@@ -59,7 +59,7 @@ describe('Badge', () => {
       expect(screen.getByTestId('badge')).toHaveAttribute('data-variant', 'outline');
     });
 
-    it.each(['solid', 'soft', 'surface', 'outline', 'dot'] as const)(
+    it.each(['solid', 'soft', 'surface', 'outline', 'dot', 'inherit'] as const)(
       'supports variant=%s',
       (variant) => {
         render(
@@ -70,6 +70,25 @@ describe('Badge', () => {
         expect(screen.getByTestId('badge')).toHaveAttribute('data-variant', variant);
       },
     );
+  });
+
+  // === Inherit variant ===
+  describe('variant=inherit', () => {
+    it('is a variant, not a colour — the palette does not reach it', () => {
+      // Every other variant pairs a fill with a foreground AA against THAT fill,
+      // and says nothing about the surface underneath. On the sidebar's active
+      // row a blue badge lands 1.16:1 from the row and dissolves into it. This
+      // one derives from currentColor instead, so `color` has no effect and the
+      // DOM says so rather than advertising a palette it does not use.
+      render(
+        <Badge variant="inherit" color="blue" data-testid="badge">
+          12
+        </Badge>,
+      );
+      const el = screen.getByTestId('badge');
+      expect(el).toHaveAttribute('data-variant', 'inherit');
+      expect(el).not.toHaveAttribute('data-color');
+    });
   });
 
   // === Colors ===

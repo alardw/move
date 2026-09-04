@@ -236,6 +236,29 @@
   border-color: var(--_outline-border);
 }
 
+/* Inherit — takes its colours from the text around it instead of a palette.
+ *
+ * Every other variant pairs a fill with a foreground that is AA against THAT
+ * fill. None of them says anything about the surface the badge is placed ON,
+ * because that is the call site's choice, not the palette's. Put a blue badge on
+ * the sidebar's active row and the two fills are 1.16:1 apart — the pill
+ * dissolves into the row and the count reads as loose text.
+ *
+ * So derive from the pair that IS guaranteed. Wherever this sits, the text
+ * colour already contrasts with its own background — that is what makes it
+ * readable text — so a wash of that colour is legible against the same
+ * background, and full-strength currentColor on top of the wash is legible
+ * again. It holds on the active row and the resting one without knowing which
+ * it is on, and through any theme, because it never names a colour.
+ *
+ * `color` has no effect here; that is the point.
+ */
+.root[data-variant='inherit'] {
+  background-color: color-mix(in srgb, currentColor 20%, transparent);
+  color: inherit;
+  border-color: transparent;
+}
+
 /* Dot — neutral look with colored dot indicator */
 .root[data-variant='dot'] {
   background-color: var(--move-bg-muted);

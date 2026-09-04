@@ -112,7 +112,7 @@ export const spec = {
   ],
 
   variants: {
-    variant: ['solid', 'soft', 'surface', 'outline', 'dot'],
+    variant: ['solid', 'soft', 'surface', 'outline', 'dot', 'inherit'],
   },
   sizes: ['sm', 'md', 'lg'],
 
