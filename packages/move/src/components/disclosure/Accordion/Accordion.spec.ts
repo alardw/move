@@ -16,6 +16,7 @@ export const spec = {
     state: ['controlled-value'], // value identifies which item(s) are open
     a11y: ['disclosure'],
   },
+  capabilities: ['owns-surface'],
   behavior: {
     disclosure: {
       animatesOpen: true,

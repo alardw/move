@@ -674,6 +674,20 @@ export interface ComponentSpec {
   /** Component-family memberships (behavior/state/...) used by cross-component checks */
   families?: Record<string, string[]>;
 
+  /**
+   * Contracts this component signs up to (see src/capabilities.ts).
+   *
+   * Names verb phrases — `owns-surface`, `scrolls-content` — each targeting slot
+   * KINDS rather than slot names, so one contract covers every component
+   * whatever it calls its parts. Verified in both directions by
+   * check:capabilities: a declared capability whose contract does not hold
+   * fails, and so does source that exhibits one without declaring it.
+   *
+   * Once families become bundles this list carries only what a component has
+   * BEYOND its family, so nothing is written in two places.
+   */
+  capabilities?: string[];
+
   /** Shared animation patterns this component composes (see CHOREOGRAPHIES).
    *  Multi-valued; [] for components with no animation, or only a
    *  component-specific one (Dialog, Toast, Alert, AnimatedText, LayoutGroup). */

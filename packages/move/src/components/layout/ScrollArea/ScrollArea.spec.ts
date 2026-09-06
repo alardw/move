@@ -14,6 +14,7 @@ export const spec = {
     state: ['stateless'],
     a11y: ['region'],
   },
+  capabilities: ['scrolls-content'],
 
   compound: true,
   rootElement: 'div',

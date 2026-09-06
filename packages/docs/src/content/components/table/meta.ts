@@ -23,6 +23,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentDocument = {
   slug: 'table',
+  preview: { sample: 'zebra-only' },
   synonyms: [ 'grid', 'data table', 'rows columns', 'data grid', 'datagrid', 'datatable', 'spreadsheet', ],
   name: 'Table',
   tagline: 'Rows and columns with the frame, density, and responsive behavior you pick.',

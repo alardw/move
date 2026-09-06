@@ -131,6 +131,12 @@ export const CHECKS: CheckDoc[] = [
       'Every `font-size` resolves to the type scale (`--move-text-*` / `--move-size-*`). Catches raw literals, and the subtler case: a `*-font-size` token set to `inherit`, which on a replaced element (input, textarea, select) yields the browser\u2019s own 13.333px rather than a step \u2014 five form fields shipped that as their default size. `inherit` remains legal on a plain declaration; an `em` relative to running text takes a `type-exempt` comment.',
   },
   {
+    name: 'capabilities',
+    appliesTo: 'component',
+    enforces:
+      'Capability contracts, both directions. A capability targets slot KINDS rather than names, so one contract covers every component whatever it calls its parts. A declared capability whose contract does not hold fails; so does source that exhibits one without declaring it \u2014 which is how a scrollport with no focus indicator, or a `data-surface` set with no provider, gets caught rather than noticed. Where a kind does not IMPLY a capability (having items does not mean the rows are striped) only the first direction applies.',
+  },
+  {
     name: 'animation-spec-drift',
     appliesTo: 'component',
     enforces:

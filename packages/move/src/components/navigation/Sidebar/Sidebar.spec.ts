@@ -19,6 +19,7 @@ export const spec = {
     state: ['controlled-open'], // collapsed/expanded state
     a11y: ['disclosure'],
   },
+  capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
     disclosure: {
       animatesOpen: true,

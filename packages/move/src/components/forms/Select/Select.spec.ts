@@ -16,6 +16,7 @@ export const spec = {
     state: ['controlled-value', 'controlled-open'],
     a11y: ['combobox', 'listbox'],
   },
+  capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
     popup: {
       // A button trigger opening a listbox: Radix Select moves focus into it,

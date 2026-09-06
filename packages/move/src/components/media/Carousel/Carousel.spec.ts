@@ -49,7 +49,7 @@ export const spec = {
     {
       name: 'nextTrigger',
       element: 'button',
-      kind: 'surface',
+      kind: 'none',
       typography: 'none',
       description: 'Next page navigation button',
     },

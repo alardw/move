@@ -19,6 +19,7 @@ import {
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import styles from './Select.module.css';
 
 // Per-item scale deltas, pixel-based so the motion feels the SAME at any width.
@@ -622,6 +623,12 @@ interface SelectContentInnerProps {
 
 const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerProps>(
   function SelectContentInner(props, ref) {
+    // The panel is a surface of its own, and declaring one is a single act:
+    // flip, provide, and set the attribute. This used to hardcode
+    // data-surface="subtle", so the CSS claimed a tone while React context still
+    // reported the parent's — a descendant that flipped computed off the wrong
+    // base, and a Select on an already-subtle ground sat at 1.00:1 against it.
+    const surface = useSurfaceFlip();
     const { isClosing, epoch, onExitDone, close, animConfig, triggerWidth } = useSelectContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -722,41 +729,43 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
     const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
 
     return (
-      <RadixSelect.Content
-        {...props.attrs}
-        {...spRest}
-        ref={mergedContentRef}
-        position="popper"
-        sideOffset={props.sideOffset ?? 4}
-        align={props.align}
-        className={props.contentCx('content', props.className, spClass as string | undefined)}
-        style={{
-          ...props.style,
-          ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
-          ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
-          ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
-          ...(spStyle as React.CSSProperties),
-        }}
-        onPointerDownOutside={handlePointerDownOutside}
-        onEscapeKeyDown={handleEscapeKeyDown}
-        data-width={(props.width as string | undefined) ?? 'anchor'}
-        data-surface="subtle"
-      >
-        {/* The consumer's <Select.Viewport> renders Radix's Viewport as the DIRECT
-            child of Content and becomes the `.contentInner` stagger container —
-            items are its direct children, exactly like Dropdown. The ref + slot
-            styling are handed down through the bridge context. */}
-        <SelectViewportContext.Provider
-          value={{
-            innerRef,
-            innerClassName: props.innerCx('contentInner', innerSpClass as string | undefined),
-            innerStyle: innerSpStyle as React.CSSProperties,
-            innerRest: innerSpRest,
+      <SurfaceProvider value={surface}>
+        <RadixSelect.Content
+          {...props.attrs}
+          {...spRest}
+          ref={mergedContentRef}
+          position="popper"
+          sideOffset={props.sideOffset ?? 4}
+          align={props.align}
+          className={props.contentCx('content', props.className, spClass as string | undefined)}
+          style={{
+            ...props.style,
+            ...(props.layer > 0 ? { zIndex: props.layer + 1 } : {}),
+            ...(props.minWidth != null ? { minWidth: props.minWidth } : {}),
+            ...(props.maxWidth != null ? { maxWidth: props.maxWidth } : {}),
+            ...(spStyle as React.CSSProperties),
           }}
+          onPointerDownOutside={handlePointerDownOutside}
+          onEscapeKeyDown={handleEscapeKeyDown}
+          data-width={(props.width as string | undefined) ?? 'anchor'}
+          data-surface={surface}
         >
-          {props.children}
-        </SelectViewportContext.Provider>
-      </RadixSelect.Content>
+          {/* The consumer's <Select.Viewport> renders Radix's Viewport as the DIRECT
+              child of Content and becomes the `.contentInner` stagger container —
+              items are its direct children, exactly like Dropdown. The ref + slot
+              styling are handed down through the bridge context. */}
+          <SelectViewportContext.Provider
+            value={{
+              innerRef,
+              innerClassName: props.innerCx('contentInner', innerSpClass as string | undefined),
+              innerStyle: innerSpStyle as React.CSSProperties,
+              innerRest: innerSpRest,
+            }}
+          >
+            {props.children}
+          </SelectViewportContext.Provider>
+        </RadixSelect.Content>
+      </SurfaceProvider>
     );
   },
 );

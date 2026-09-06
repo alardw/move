@@ -33,7 +33,7 @@ export const spec = {
     {
       name: 'root',
       element: 'ul',
-      kind: 'surface',
+      kind: 'none',
       typography: 'none',
       description: 'Root container with dividers and size/density tokens',
     },

@@ -14,6 +14,7 @@ export const spec = {
     state: ['stateless'],
     a11y: ['none'],
   },
+  capabilities: ['owns-surface'],
 
   compound: true,
   rootElement: 'div',

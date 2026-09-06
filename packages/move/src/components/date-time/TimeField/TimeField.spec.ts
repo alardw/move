@@ -16,6 +16,7 @@ export const spec = {
     state: ['controlled-value'],
     a11y: ['none'],
   },
+  capabilities: ['scrolls-content'],
   behavior: {
     popup: {
       // The dropdown mirrors segments that are already fully keyboard-operable

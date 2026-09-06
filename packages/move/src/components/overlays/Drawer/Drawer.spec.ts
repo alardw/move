@@ -17,6 +17,7 @@ export const spec = {
     state: ['controlled-open'],
     a11y: ['dialog'],
   },
+  capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
     modal: {
       closeOnEscape: true,

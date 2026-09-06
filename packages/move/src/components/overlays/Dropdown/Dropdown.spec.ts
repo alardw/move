@@ -17,6 +17,7 @@ export const spec = {
     state: ['controlled-open'],
     a11y: ['menu'],
   },
+  capabilities: ['scrolls-content'],
   behavior: {
     popup: {
       // A button trigger opening a menu: Radix moves focus to the first item

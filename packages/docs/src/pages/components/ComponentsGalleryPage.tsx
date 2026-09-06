@@ -86,7 +86,13 @@ export function ComponentsGalleryPage() {
           <Section key={group.id} id={group.id} title={group.label}>
             <Stack gap={dense ? 'md' : 'xl'}>
               {group.items.map((c) => {
-                const sample = c.samples?.[0];
+                // The sample the component's own docs nominate as most
+                // representative, falling back to the first. Table's basic
+                // sample has no zebra, so the gallery would show none of the
+                // row treatment the mark tokens are for.
+                const preferred = c.meta.preview?.sample;
+                const sample =
+                  (preferred && c.samples?.find((s) => s.id === preferred)) ?? c.samples?.[0];
                 if (!sample) return null;
                 const Sample = sample.render;
                 return (

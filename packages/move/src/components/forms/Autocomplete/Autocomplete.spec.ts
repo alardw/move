@@ -19,6 +19,7 @@ export const spec = {
     state: ['controlled-value', 'controlled-open'],
     a11y: ['combobox'],
   },
+  capabilities: ['scrolls-content'],
 
   // Behavior-family-specific contract. The popup family asserts a
   // component closes on Escape, outside click, scroll, and resize.
