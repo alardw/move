@@ -7,8 +7,13 @@
   cursor: pointer;
 }
 
+/* The dim belongs on the whole control, not the box alone. On the box it was 0.6
+   opacity over a near-white fill — about a 3% shift — while the label, the
+   visually dominant half of the control, stayed at full strength and full black.
+   The control read as enabled. Here it dims box and label together. */
 .wrapper[data-disabled] {
   cursor: not-allowed;
+  opacity: var(--move-disabled-opacity);
 }
 
 .root {
@@ -112,8 +117,8 @@
   --move-checkbox-radius: 0.375rem;
 }
 
+/* No dim here — the wrapper dims the whole control; both would compound to 0.36. */
 .root:disabled {
-  opacity: var(--move-disabled-opacity);
   cursor: not-allowed;
 }
 

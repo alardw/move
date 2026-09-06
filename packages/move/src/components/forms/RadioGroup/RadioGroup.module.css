@@ -30,8 +30,11 @@
   cursor: pointer;
 }
 
+/* Dims the whole option — dot and label together. On the dot alone the label
+   stayed full black and the option read as enabled. */
 .wrapper:has(.item:disabled) {
   cursor: not-allowed;
+  opacity: var(--move-disabled-opacity);
 }
 
 .item {
@@ -113,8 +116,8 @@
   --move-radio-dot-size: 0.6875rem;
 }
 
+/* No dim here — the wrapper dims the whole option; both would compound. */
 .item:disabled {
-  opacity: var(--move-disabled-opacity);
   cursor: not-allowed;
 }
 
