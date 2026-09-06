@@ -9,7 +9,6 @@ export const spec = {
   category: 'forms',
   description: 'Text label for form fields with required asterisk indicator and size variants',
   families: {
-    behavior: ['typography'],
     state: ['stateless'],
     a11y: ['none'],
   },

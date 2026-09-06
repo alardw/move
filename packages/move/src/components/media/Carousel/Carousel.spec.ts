@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls',
   families: {
-    behavior: ['media', 'data-row'],
     state: ['controlled-index'],
     a11y: ['tablist'],
   },

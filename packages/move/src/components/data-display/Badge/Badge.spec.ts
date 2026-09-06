@@ -9,7 +9,6 @@ export const spec = {
   category: 'data-display',
   description: 'Inline status label with variant and size options',
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['none'],
   },

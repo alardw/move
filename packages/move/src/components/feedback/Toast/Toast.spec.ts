@@ -11,7 +11,6 @@ export const spec = {
   description:
     'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
   families: {
-    behavior: ['notification'],
     state: ['controlled-open'],
     a11y: ['none'],
   },

@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['none'],
   },

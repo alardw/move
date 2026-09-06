@@ -76,6 +76,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/systems/layout', label: 'Layout' },
       { to: '/systems/hooks', label: 'Hooks' },
       { to: '/systems/props', label: 'Props' },
+      { to: '/systems/capabilities', label: 'Capabilities and families' },
       { to: '/systems/truncation', label: 'Truncation' },
       { to: '/systems/stacking', label: 'Stacking' },
       { to: '/systems/surfaces', label: 'Surfaces' },

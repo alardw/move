@@ -10,7 +10,7 @@ export const spec = {
   description:
     'Container that FLIP-animates its direct children to their new positions when the set or order changes (filter, sort, reorder, add, remove)',
   families: {
-    behavior: ['layout', 'motion'],
+    behavior: ['layout'],
     state: ['stateless'],
     a11y: ['none'],
   },

@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Inline anchor element with variant colors, underline modes, optional size, and external link support',
   families: {
-    behavior: ['typography'],
     state: ['stateless'],
     a11y: ['none'],
   },

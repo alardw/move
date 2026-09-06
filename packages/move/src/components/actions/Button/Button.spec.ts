@@ -11,7 +11,6 @@ export const spec = {
   description: 'Clickable interactive element with variant, size, and animation support',
   choreographies: ['press'],
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['none'],
   },

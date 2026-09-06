@@ -12,7 +12,6 @@ export const spec = {
     'Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.',
   choreographies: ['listReveal'],
   families: {
-    behavior: ['data-row'],
     state: ['stateless'],
     a11y: ['none'],
   },

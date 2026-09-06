@@ -12,7 +12,6 @@ export const spec = {
     'Animated loading indicator with spinner (SVG) and dots (bouncing) variants using anime.js perpetual animations',
   choreographies: ['loader'],
   families: {
-    behavior: ['loading'],
     state: ['stateless'],
     a11y: ['none'],
   },

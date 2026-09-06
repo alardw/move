@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Nested marker list (semantic ul/ol) with a bullet, number, or icon marker per item, per-level markers that nested lists inherit by depth, and controllable indent — the marker-list family, distinct from the item-oriented ItemList',
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['none'],
   },

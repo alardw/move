@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support',
   families: {
-    behavior: ['media', 'data-row'],
     state: ['stateless'],
     a11y: ['none'],
   },

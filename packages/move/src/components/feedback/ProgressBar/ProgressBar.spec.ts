@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Determinate or indeterminate progress indicator built on Radix Progress with CSS transition for smooth value changes',
   families: {
-    behavior: ['loading'],
     state: ['stateless'],
     a11y: ['progressbar'],
   },

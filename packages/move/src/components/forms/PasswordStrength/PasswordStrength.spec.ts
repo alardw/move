@@ -11,7 +11,6 @@ export const spec = {
     'Password-strength indicator: a segmented meter + label, with an optional requirements checklist. Scoring-agnostic — controlled score, a custom estimate function, or a built-in length/character-class heuristic.',
   choreographies: [],
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['progressbar'],
   },

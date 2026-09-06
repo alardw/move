@@ -11,7 +11,6 @@ export const spec = {
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
   choreographies: ['listReveal'],
   families: {
-    behavior: ['display'],
     state: ['stateless'],
     a11y: ['none'],
   },

@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Centered placeholder for empty views with icon, title, description, and optional action',
   families: {
-    behavior: ['loading'],
     state: ['stateless'],
     a11y: ['none'],
   },

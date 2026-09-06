@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control',
   families: {
-    behavior: ['typography'],
     state: ['stateless'],
     a11y: ['none'],
   },

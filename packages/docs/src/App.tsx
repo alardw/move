@@ -54,6 +54,7 @@ import { ThemingModelPage } from './pages/core-concepts/ThemingModelPage';
 import { HooksPage } from './pages/systems/HooksPage';
 import { PropsPage } from './pages/systems/PropsPage';
 import { TruncationPage } from './pages/systems/TruncationPage';
+import { CapabilitiesPage } from './pages/systems/CapabilitiesPage';
 import { SurfacesPage } from './pages/systems/SurfacesPage';
 import { SystemsOverviewPage } from './pages/systems/SystemsOverviewPage';
 import { FormsPage } from './pages/systems/FormsPage';
@@ -342,6 +343,7 @@ function App() {
                   <Route path="/systems/hooks" element={<HooksPage />} />
                   <Route path="/systems/props" element={<PropsPage />} />
                   <Route path="/systems/truncation" element={<TruncationPage />} />
+                  <Route path="/systems/capabilities" element={<CapabilitiesPage />} />
                   {/* Moved out of Core Concepts into Systems — keep old links working. */}
                   <Route
                     path="/core-concepts/surfaces"

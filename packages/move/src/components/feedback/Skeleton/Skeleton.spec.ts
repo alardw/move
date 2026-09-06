@@ -11,7 +11,6 @@ export const spec = {
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',
   choreographies: ['loader'],
   families: {
-    behavior: ['loading'],
     state: ['stateless'],
     a11y: ['none'],
   },

@@ -10,7 +10,6 @@ export const spec = {
   description:
     'Rich-text container that styles child HTML elements (headings, paragraphs, lists, code, tables) with consistent typography',
   families: {
-    behavior: ['typography'],
     state: ['stateless'],
     a11y: ['none'],
   },
