@@ -114,7 +114,10 @@ export const DOCS_NAV: NavSection[] = [
     key: 'components',
     label: 'Components',
     icon: 'blocks',
-    items: [{ to: '/components', label: 'Overview' }],
+    items: [
+      { to: '/components', label: 'Overview' },
+      { to: '/components/gallery', label: 'Gallery' },
+    ],
   },
   {
     key: 'design-patterns',

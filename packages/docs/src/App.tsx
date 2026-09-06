@@ -40,6 +40,7 @@ import { ToolingPage } from './pages/conformance/ToolingPage';
 import { CoveragePage } from './pages/ai/CoveragePage';
 import { ComponentDocPage } from './pages/components/ComponentDocPage';
 import { ComponentsOverviewPage } from './pages/components/ComponentsOverviewPage';
+import { ComponentsGalleryPage } from './pages/components/ComponentsGalleryPage';
 import { CoreConceptsOverviewPage } from './pages/core-concepts/CoreConceptsOverviewPage';
 import { HowMoveWorksPage } from './pages/core-concepts/HowMoveWorksPage';
 import { ContractsPage } from './pages/core-concepts/ContractsPage';
@@ -385,6 +386,7 @@ function App() {
                   <Route path="/conformance/tooling" element={<ToolingPage />} />
                   <Route path="/ai/coverage" element={<CoveragePage />} />
                   <Route path="/components" element={<ComponentsOverviewPage />} />
+                  <Route path="/components/gallery" element={<ComponentsGalleryPage />} />
                   <Route path="/customize" element={<CustomizeOverviewPage />} />
                   <Route path="/customize/theme" element={<ThemeBuilderPage />} />
                   <Route path="/customize/typography" element={<TypographyPage />} />
