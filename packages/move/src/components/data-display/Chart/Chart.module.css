@@ -1,4 +1,14 @@
 .root {
+  /* A containing block for the visually-hidden copy this component renders.
+     An absolutely-positioned element with no positioned ancestor resolves
+     against the DOCUMENT, so it escapes every scroll container between it and
+     the page and lands at its static offset measured from the top of the
+     document — stretching the document's scroll height to reach it. The
+     components gallery scrolled a screen past the app shell, sidebar and all,
+     while body.scrollHeight stayed at the viewport because nothing in the BODY
+     was tall. */
+  position: relative;
+
   --move-chart-caption: var(--move-fg-base);
   --move-chart-label: var(--move-fg-muted);
   --move-chart-crosshair: var(--move-border-emphasis);

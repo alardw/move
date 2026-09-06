@@ -107,7 +107,16 @@ export function ComponentsGalleryPage() {
                         </Text>
                       </Stack>
                     )}
-                    <Deferred rootMargin="600px">
+                    <Deferred
+                      rootMargin="600px"
+                      // Reserve roughly what an entry occupies, so the scrollbar
+                      // tells the truth before everything has mounted. Without
+                      // it an unmounted entry is 0px tall: you scroll to what
+                      // looks like the end, the last entries mount, and the page
+                      // grows underneath you — measured here as 9,062px on load
+                      // against 11,049px once mounted.
+                      placeholder={<div style={{ height: 160 }} />}
+                    >
                       <Sample />
                     </Deferred>
                     {!dense && <Divider />}

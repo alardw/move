@@ -11,6 +11,17 @@
   /* Reset the UA margin so rendering as a heading element (h1–h6) or <p> does
      not pull in browser default block margins. */
   margin: 0;
+  /* A containing block for the accessible full-text copy.
+     `splitText({ accessible: true })` injects that copy as a visually-hidden
+     `position: absolute` span. Absolute with no positioned ancestor resolves
+     against the DOCUMENT, so the span escaped every scroll container between it
+     and the page and landed at its static offset measured from the top of the
+     document — stretching the document's scroll height to reach it. On the
+     components gallery that was 17,365px against a 907px viewport: the page
+     scrolled a whole extra screen past the app shell, taking the sidebar with
+     it, and body.scrollHeight stayed 907 the entire time because nothing in the
+     BODY was tall. */
+  position: relative;
 }
 
 /* Line-level splits stack vertically; each generated line wraps as a block. */

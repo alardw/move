@@ -5,7 +5,6 @@ import type { Dimension } from '../../../shared/types';
 import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { PlayerButton } from '../_shared/PlayerButton';
-import { Button } from '../../actions/Button';
 import { Popover } from '../../overlays/Popover';
 import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';

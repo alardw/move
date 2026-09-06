@@ -4,7 +4,6 @@ import * as React from 'react';
 import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { PlayerButton } from '../_shared/PlayerButton';
-import { Button } from '../../actions/Button';
 import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
