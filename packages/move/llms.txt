@@ -588,7 +588,7 @@ Props:
 - variant: 'outlined' | 'filled' (default: outlined) — Input variant
 - size: 'sm' | 'md' | 'lg' (default: md) — Input size
 - width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column, 'auto' hugs the content.
-- format: ColorFormat (default: hex) — Active color format (hex, hexa, rgb, rgba, hsl, hsla)
+- format: ColorFormat (default: null) — Active color format (hex, hexa, rgb, rgba, hsl, hsla)
 - value: string — Controlled color value
 - defaultValue: string — Default color value (uncontrolled)
 - onValueChange: (value: string) => void — Called on every color change (during drag)
@@ -620,7 +620,7 @@ Standalone color picker with saturation/brightness area, hue and alpha sliders, 
 Props:
 - size: 'sm' | 'md' | 'lg' (default: md) — Picker size
 - fullWidth: boolean — Stretch to full container width
-- format: ColorFormat (default: hex) — Initial color format
+- format: ColorFormat (default: null) — Initial color format
 - value: string — Controlled color value
 - defaultValue: string — Default color value (uncontrolled)
 - onValueChange: (value: string) => void — Called on every color change (during drag)

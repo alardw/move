@@ -104,7 +104,7 @@ export const spec = {
     {
       name: 'format',
       type: 'ColorFormat',
-      default: "'hex'",
+      default: 'null',
       moveSpecific: true,
       description: 'Initial color format',
     },

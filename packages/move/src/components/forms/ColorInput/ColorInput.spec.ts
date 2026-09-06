@@ -113,7 +113,7 @@ export const spec = {
     {
       name: 'format',
       type: 'ColorFormat',
-      default: "'hex'",
+      default: 'null',
       moveSpecific: true,
       description: 'Active color format (hex, hexa, rgb, rgba, hsl, hsla)',
     },

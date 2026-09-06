@@ -10,6 +10,7 @@ import {
   getColorChannels,
   setChannelFromInput,
   getHexString,
+  detectFormat,
 } from './colorUtils';
 
 // ============================================================================
@@ -52,12 +53,23 @@ const DEFAULT_HSV: HsvColor = { h: 0, s: 100, v: 100, a: 1 };
 // ============================================================================
 
 export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPickerReturn {
-  const { format = 'hex', onValueChange, onChangeEnd, onFormatChange } = options;
+  const { format, onValueChange, onChangeEnd, onFormatChange } = options;
 
   const isControlled = options.value !== undefined;
 
-  // Active format state (user can switch via selector)
-  const [internalFormat, setInternalFormat] = useState<ColorFormat>(format);
+  // Active format state (user can switch via selector).
+  //
+  // Falls back to the VALUE's own notation before it falls back to hex: a value
+  // of `hsl(200 50% 50%)` states the format its author is working in, and this
+  // hook is frequently remounted — ColorPicker lives in a popup whose content
+  // unmounts on close — so a constant default meant picking a colour in HSL and
+  // reopening to find hex, every time, including on the value it had just
+  // emitted itself. An explicit `format` prop still wins over both.
+  const [internalFormat, setInternalFormat] = useState<ColorFormat>(() => {
+    if (format) return format;
+    const initial = options.value ?? options.defaultValue;
+    return (initial && detectFormat(initial)) || 'hex';
+  });
   const activeFormat = internalFormat;
   const showAlpha = hasAlphaChannel(activeFormat);
 

@@ -71,7 +71,11 @@ const DEFAULT_LABELS: ColorPickerLabels = {
 
 export interface ColorPickerProps extends React.HTMLAttributes<HTMLElement> {
   size?: ColorPickerSize;
-  format?: ColorFormat;
+  /**
+   * Pin the active colour notation. Omit it (or pass null) and the format
+   * follows the value's own notation, so a value written in HSL opens in HSL.
+   */
+  format?: ColorFormat | null;
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
@@ -198,7 +202,11 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
     'alphaInput',
   ] as const,
   defaults: {
-    format: 'hex' as ColorFormat,
+    // null, not 'hex': a constant here is injected by the factory on every render,
+    // so `props.format` was never absent and the format could never follow the
+    // value. The consumer pinning a format still wins; absent one, the value's
+    // own notation decides.
+    format: null as ColorFormat | null,
     size: 'md' as ColorPickerSize,
     withPicker: true,
     swatchesPerRow: 7,
@@ -228,7 +236,7 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
       onValueChange: props.onValueChange as ((v: string) => void) | undefined,
       onChangeEnd: props.onChangeEnd as ((v: string) => void) | undefined,
       onFormatChange: props.onFormatChange as ((f: ColorFormat) => void) | undefined,
-      format: props.format as ColorFormat,
+      format: (props.format as ColorFormat | null) ?? undefined,
     };
 
     const cp = useColorPicker(hookOptions);

@@ -3393,7 +3393,7 @@
         {
           "name": "format",
           "type": "ColorFormat",
-          "default": "hex",
+          "default": "null",
           "description": "Active color format (hex, hexa, rgb, rgba, hsl, hsla)"
         },
         {
@@ -3548,7 +3548,7 @@
         {
           "name": "format",
           "type": "ColorFormat",
-          "default": "hex",
+          "default": "null",
           "description": "Initial color format"
         },
         {

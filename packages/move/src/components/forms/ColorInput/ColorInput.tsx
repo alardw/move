@@ -12,7 +12,7 @@ import { useAnimations, useDismissable, useDismissableExit } from '../../../anim
 import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
-import { parseColor, formatColor, isValidColor } from '../ColorPicker/colorUtils';
+import { parseColor, formatColor, isValidColor, detectFormat } from '../ColorPicker/colorUtils';
 import styles from './ColorInput.module.css';
 
 // ============================================================================
@@ -41,7 +41,11 @@ const DEFAULT_LABELS: ColorInputLabels = {
 export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   variant?: ColorInputVariant;
   size?: ColorInputSize;
-  format?: ColorFormat;
+  /**
+   * Pin the active colour notation. Omit it (or pass null) and the format
+   * follows the value's own notation, so a value written in HSL opens in HSL.
+   */
+  format?: ColorFormat | null;
   value?: string;
   defaultValue?: string;
   onValueChange?: (value: string) => void;
@@ -151,7 +155,11 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
   defaults: {
     variant: 'outlined' as ColorInputVariant,
     size: 'md' as ColorInputSize,
-    format: 'hex' as ColorFormat,
+    // null, not 'hex': a constant here is injected by the factory on every render,
+    // so `props.format` was never absent and the format could never follow the
+    // value. The consumer pinning a format still wins; absent one, the value's
+    // own notation decides.
+    format: null as ColorFormat | null,
     swatchesPerRow: 7,
     withPicker: true,
     closeOnColorSwatchClick: true,
@@ -245,17 +253,24 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     // names it via htmlFor) + the error association.
     const field = useFormField();
 
-    const format = props.format as ColorFormat;
+    // A pinned `format` prop wins; otherwise the format follows the VALUE's own
+    // notation. ColorInput passes this straight down to the picker, so a constant
+    // default here overrode the picker's own derivation and normalised every
+    // value back to hex on the way in and out: switch the picker to HSL, get an
+    // hsl() value, reopen, and the field had rewritten it to hex.
+    const pinnedFormat = props.format as ColorFormat | null | undefined;
 
     // Controlled/uncontrolled color value
     const isControlled = props.value !== undefined;
     const [internalValue, setInternalValue] = React.useState(() => {
       const v = (props.defaultValue as string) || '#000000';
       const parsed = parseColor(v);
-      return parsed ? formatColor(parsed, format) : v;
+      const f = pinnedFormat ?? detectFormat(v) ?? 'hex';
+      return parsed ? formatColor(parsed, f) : v;
     });
 
     const currentValue = isControlled ? (props.value as string) : internalValue;
+    const format = pinnedFormat ?? detectFormat(currentValue) ?? 'hex';
     const onValueChange = props.onValueChange as ((v: string) => void) | undefined;
     const onChangeEnd = props.onChangeEnd as ((v: string) => void) | undefined;
 

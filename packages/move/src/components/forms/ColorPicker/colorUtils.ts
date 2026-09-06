@@ -230,6 +230,33 @@ const RGB_RE = /^rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*([
 const HSL_RE =
   /^hsla?\(\s*(\d{1,3})\s*,\s*(\d{1,3})%?\s*,\s*(\d{1,3})%?\s*(?:,\s*([\d.]+))?\s*\)$/i;
 
+/**
+ * Which notation a colour string is WRITTEN in.
+ *
+ * `parseColor` returns HSV and discards this, which is right for maths and
+ * wrong for the picker: a value of `hsl(200 50% 50%)` says, in the value
+ * itself, which format its author is working in. Without this the picker
+ * opened every value in hex — including one it had just emitted as HSL.
+ *
+ * Returns null for anything unrecognised, so the caller keeps its own default
+ * rather than being handed a guess.
+ */
+export function detectFormat(value: string): ColorFormat | null {
+  const t = value.trim().toLowerCase();
+  if (!t) return null;
+  if (t.startsWith('#')) {
+    // 4 and 8 digits carry alpha (#rgba, #rrggbbaa); 3 and 6 do not.
+    const digits = t.slice(1).length;
+    return digits === 4 || digits === 8 ? 'hexa' : 'hex';
+  }
+  const base = t.startsWith('hsl') ? 'hsl' : t.startsWith('rgb') ? 'rgb' : null;
+  if (!base) return null;
+  // Alpha is written either as the legacy `hsla(`/`rgba(` name or as a slash
+  // component in the modern syntax — `hsl(217 91% 63% / 0.5)`.
+  const hasAlpha = t.startsWith(base + 'a(') || /\/\s*[\d.]+\s*\)/.test(t);
+  return formatWithAlpha(base, hasAlpha);
+}
+
 export function parseColor(value: string): HsvColor | null {
   const trimmed = value.trim();
   if (!trimmed) return null;
