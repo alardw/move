@@ -11,10 +11,6 @@ export const spec = {
   description:
     'Compound tabular data primitive. Variants for the frame (surface / lines / bordered), a striped modifier, a responsive mode (scroll default, stack below breakpoint), and a Group/GroupHeader compound for collapsible row groups.',
   choreographies: ['listReveal'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
   // Shared click-affordance contract for the data-row family.
   // See `src/shared/families.ts` → DataRowBehavior.
   behavior: {

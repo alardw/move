@@ -3470,6 +3470,21 @@
           "description": "Read-only state"
         },
         {
+          "name": "open",
+          "type": "boolean",
+          "description": "Controlled open state of the picker popup"
+        },
+        {
+          "name": "defaultOpen",
+          "type": "boolean",
+          "description": "Initial open state when uncontrolled"
+        },
+        {
+          "name": "onOpenChange",
+          "type": "(open: boolean) => void",
+          "description": "Called when the popup opens or closes"
+        },
+        {
           "name": "placeholder",
           "type": "string",
           "description": "Input placeholder text"

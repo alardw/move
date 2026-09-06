@@ -11,11 +11,8 @@ export const spec = {
   description:
     'Single disclosure panel with open/close toggle, animated content reveal, optional asChild trigger, and auto-rotating icon',
   choreographies: ['disclosure'],
-  families: {
-    behavior: ['disclosure'],
-    state: ['controlled-open'],
-    a11y: ['disclosure'],
-  },
+  families: ['disclosure'],
+  ariaPattern: ['disclosure'],
   behavior: {
     disclosure: {
       animatesOpen: true,

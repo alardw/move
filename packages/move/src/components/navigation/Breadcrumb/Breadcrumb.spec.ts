@@ -9,11 +9,7 @@ export const spec = {
   category: 'navigation',
   description:
     'Navigation breadcrumb trail with auto-injected separators, collapsible overflow with ellipsis, and customizable separator content',
-  families: {
-    behavior: ['navigation'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['navigation'],
 
   compound: true,
   rootElement: 'nav',

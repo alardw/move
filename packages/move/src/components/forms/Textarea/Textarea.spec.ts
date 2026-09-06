@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Multi-line text input with outlined/filled variants, auto-resize support, and configurable size',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
   capabilities: ['scrolls-content'],
 
   compound: false,

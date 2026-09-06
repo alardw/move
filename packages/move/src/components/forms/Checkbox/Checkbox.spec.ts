@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Toggle checkbox with checked/indeterminate states, animated indicator, optional icon, and form submission via hidden input',
   choreographies: ['toggle'],
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'button',

@@ -11,11 +11,8 @@ export const spec = {
   description:
     'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
   choreographies: ['popupMenu'],
-  families: {
-    behavior: ['popup-anchored'],
-    state: ['controlled-value', 'controlled-open'],
-    a11y: ['dialog'],
-  },
+  families: ['popup-anchored'],
+  ariaPattern: ['dialog'],
   behavior: {
     popup: {
       // A text field anchoring a calendar grid: focus ENTERS the grid on open,

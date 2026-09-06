@@ -9,10 +9,6 @@ export const spec = {
   category: 'typography',
   description:
     'Inline or block code element with variant styling and optional syntax highlighting via CodeHighlighterProvider',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
   capabilities: ['scrolls-content'],
 
   compound: false,

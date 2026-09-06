@@ -9,10 +9,6 @@ export const spec = {
   category: 'date-time',
   description:
     'Full-featured calendar view supporting day, week, month, and agenda modes with event display, time grid, locale-aware formatting, and view switching',
-  families: {
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'div',

@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label',
   choreographies: ['toggle'],
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: true,
   rootElement: 'button',

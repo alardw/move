@@ -685,8 +685,30 @@ export interface ComponentSpec {
    *  when the component has none. */
   integrationPoints?: IntegrationPoint[];
 
-  /** Component-family memberships (behavior/state/...) used by cross-component checks */
-  families?: Record<string, string[]>;
+  /**
+   * Families this component belongs to — named bundles of capabilities.
+   *
+   * Joining one means keeping all of its promises, so a component says
+   * `form-input` rather than listing the four capabilities that make up a form
+   * control. A family that bundles nothing is not a family.
+   *
+   * Flat, because it used to carry three axes that were not the same kind of
+   * thing. `state` restated the required `controlled` field and had drifted from
+   * it in eleven specs; `a11y` names what a component IS rather than what it
+   * opts into, and moved to `ariaPattern`.
+   */
+  families?: string[];
+
+  /**
+   * The ARIA pattern(s) this component implements — `combobox`, `listbox`,
+   * `dialog`, `tablist`, `menu`, `progressbar`.
+   *
+   * What the component IS, not what it opts into, which is why it is separate
+   * from `families`. Each pattern implies capabilities — a `combobox` has a
+   * label, owns a popup and takes focus — so this is also where a component's
+   * accessibility obligations come from.
+   */
+  ariaPattern?: string[];
 
   /**
    * Contracts this component signs up to (see src/capabilities.ts).

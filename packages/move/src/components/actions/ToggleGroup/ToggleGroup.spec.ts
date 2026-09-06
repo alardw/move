@@ -11,11 +11,8 @@ export const spec = {
   description:
     'Segmented control with sliding indicator that allows single selection among a set of toggle items, using Radix ToggleGroup primitive',
   choreographies: ['slidingIndicator'],
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['tablist'],
-  },
+  families: ['form-input'],
+  ariaPattern: ['tablist'],
 
   compound: true,
   rootElement: 'RadixToggleGroup.Root',

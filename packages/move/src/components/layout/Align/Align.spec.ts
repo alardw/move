@@ -8,11 +8,7 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'layout',
   description: 'Horizontal bar with start/center/end distribution using CSS grid',
-  families: {
-    behavior: ['layout'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['layout'],
 
   compound: true,
   rootElement: 'div',

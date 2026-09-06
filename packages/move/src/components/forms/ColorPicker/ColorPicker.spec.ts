@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Standalone color picker with saturation/brightness area, hue and alpha sliders, color swatches, format selector, and per-channel inputs',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'div',

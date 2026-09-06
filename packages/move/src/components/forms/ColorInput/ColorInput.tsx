@@ -62,6 +62,12 @@ export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   labels?: Partial<ColorInputLabels>;
   disabled?: boolean;
   readOnly?: boolean;
+  /** Controlled open state of the picker popup. */
+  open?: boolean;
+  /** Initial open state when uncontrolled. */
+  defaultOpen?: boolean;
+  /** Called when the popup opens or closes. */
+  onOpenChange?: (open: boolean) => void;
   placeholder?: string;
   name?: string;
   id?: string;
@@ -165,6 +171,9 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     closeOnColorSwatchClick: true,
   },
   moveProps: [
+    'open',
+    'defaultOpen',
+    'onOpenChange',
     'variant',
     'size',
     'format',
@@ -189,7 +198,11 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<ColorInputLabels>) };
     // Interruptible open/close lifecycle (open cancels an in-flight close;
     // exit-completion is epoch-guarded). See useDismissable.
-    const dismissable = useDismissable();
+    const dismissable = useDismissable({
+      open: props.open as boolean | undefined,
+      defaultOpen: props.defaultOpen as boolean | undefined,
+      onOpenChange: props.onOpenChange as ((open: boolean) => void) | undefined,
+    });
     const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
 
     // `field-dialog`: focus enters the panel on EVERY open, pointer or

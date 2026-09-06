@@ -12,11 +12,8 @@ export const spec = {
   description:
     'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
   choreographies: ['popupSurface'],
-  families: {
-    behavior: ['popup-anchored'],
-    state: ['controlled-open'],
-    a11y: ['tooltip'],
-  },
+  families: ['popup-anchored'],
+  ariaPattern: ['tooltip'],
   behavior: {
     popup: {
       // Dismiss is delegated to Radix Tooltip, which owns Escape + hover/focus

@@ -9,10 +9,6 @@ export const spec = {
   category: 'feedback',
   description:
     'Dismissible alert banner with variant colors, icon, title, and enter/exit animation',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'div',

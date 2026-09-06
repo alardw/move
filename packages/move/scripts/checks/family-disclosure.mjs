@@ -18,6 +18,7 @@
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  asString,
   loadSpec, listComponents, getProp, asBool, asArray,
   isInFamily, reportFamily,
 } from './_familyShared.mjs';
@@ -30,13 +31,13 @@ function check(component) {
   const flags = {};
   const specObj = loadSpec(component.specFile);
   if (!specObj) return { name: component.name, member: false, errors, flags };
-  if (!isInFamily(specObj, 'behavior', 'disclosure')) {
+  if (!isInFamily(specObj, 'disclosure')) {
     return { name: component.name, member: false, errors, flags };
   }
 
-  const stateFamilies = asArray(getProp(getProp(specObj, 'families'), 'state')) ?? [];
-  if (!stateFamilies.includes('controlled-open') && !stateFamilies.includes('controlled-value')) {
-    errors.push('families.state should include "controlled-open" or "controlled-value"');
+  // `controlled`, not a families axis — see family-modal.
+  if (!['open', 'value'].includes(asString(getProp(specObj, 'controlled')))) {
+    errors.push("controlled should be 'open' or 'value'");
   }
 
   const disclosure = getProp(getProp(specObj, 'behavior'), 'disclosure');

@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Password input with visibility toggle button, outlined/filled variants, and optional left icon',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'div',

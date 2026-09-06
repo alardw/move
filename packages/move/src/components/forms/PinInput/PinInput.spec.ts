@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Multi-slot PIN/OTP code input with single hidden input, visual slot rendering, grouping, mask support, and caret animation',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'div',

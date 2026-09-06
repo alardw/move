@@ -11,14 +11,8 @@ export const spec = {
   description:
     'Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations',
   choreographies: ['sidePanel'],
-  families: {
-    // Sidebar collapses in place on desktop and overlays on mobile —
-    // disclosure is the dominant pattern; the mobile overlay is a
-    // responsive mode rather than a different a11y pattern.
-    behavior: ['disclosure', 'navigation'],
-    state: ['controlled-open'], // collapsed/expanded state
-    a11y: ['disclosure'],
-  },
+  families: ['disclosure', 'navigation'],
+  ariaPattern: ['disclosure'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
     disclosure: {

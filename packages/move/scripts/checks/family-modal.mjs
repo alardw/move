@@ -29,13 +29,15 @@ function check(component) {
   const flags = {};
   const specObj = loadSpec(component.specFile);
   if (!specObj) return { name: component.name, member: false, errors, flags };
-  if (!isInFamily(specObj, 'behavior', 'modal-overlay')) {
+  if (!isInFamily(specObj, 'modal-overlay')) {
     return { name: component.name, member: false, errors, flags };
   }
 
-  const stateFamilies = asArray(getProp(getProp(specObj, 'families'), 'state')) ?? [];
-  if (!stateFamilies.includes('controlled-open')) {
-    errors.push('families.state should include "controlled-open"');
+  // `controlled`, not a families axis: the axis restated this field and had
+  // drifted from it in eleven specs, and this one is checked against real source
+  // by check:controlled-modes.
+  if (asString(getProp(specObj, 'controlled')) !== 'open') {
+    errors.push("controlled should be 'open'");
   }
 
   const modal = getProp(getProp(specObj, 'behavior'), 'modal');

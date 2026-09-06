@@ -9,11 +9,7 @@ export const spec = {
   category: 'navigation',
   description:
     'Multi-step progress indicator with numbered/icon indicators, horizontal/vertical orientation, clickable steps, and status-driven styling',
-  families: {
-    behavior: ['navigation'],
-    state: ['controlled-index'],
-    a11y: ['none'],
-  },
+  families: ['navigation'],
 
   compound: true,
   rootElement: 'div',

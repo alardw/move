@@ -10,10 +10,6 @@ export const spec = {
   preview: { mock: true, bare: true, width: 'md' as const },
   description:
     'Notification toast system with imperative API, variant icons, auto-dismiss progress bar, position grouping, and enter/exit animations',
-  families: {
-    state: ['controlled-open'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'div',

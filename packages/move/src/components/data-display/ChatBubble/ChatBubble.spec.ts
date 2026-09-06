@@ -10,10 +10,6 @@ export const spec = {
   category: 'data-display',
   description: 'Conversation bubble for chat UIs with avatar, placement, tail, and variant support',
   choreographies: ['listReveal'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'div',

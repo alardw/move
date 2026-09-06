@@ -16,10 +16,6 @@ export const spec = {
   choreographies: ['listReveal'],
   description:
     'Token-aware chart shell. Owns the frame, scales, accessible name, data-table alternative, legend, tooltip, hover emphasis and async status; delegates drawing to a swappable renderer. The built-in renderer is Move-owned React SVG over its own scale and path maths, so the package takes on no charting dependency; libraries plug in as optional adapters. Covers line, area, bar and scatter over a shared axis (category or linear x, three interpolations, stacking, reference lines, and `axes={false}` for a sparkline), plus pie and donut, which share none of that machinery and take their own path.',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'figure',

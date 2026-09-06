@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Compound form layout wrapper that arranges label, field input, and description/error in a responsive grid',
-  families: {
-    behavior: ['form-input'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: true,
   rootElement: 'div',

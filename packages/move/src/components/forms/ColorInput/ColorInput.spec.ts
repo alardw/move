@@ -11,11 +11,8 @@ export const spec = {
   description:
     'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
   choreographies: ['popupSurface'],
-  families: {
-    behavior: ['popup-anchored'],
-    state: ['controlled-value', 'controlled-open'],
-    a11y: ['dialog'],
-  },
+  families: ['popup-anchored'],
+  ariaPattern: ['dialog'],
   behavior: {
     popup: {
       // A text field anchoring a panel of real controls (sliders + a nested
@@ -186,6 +183,16 @@ export const spec = {
     { name: 'invalid', type: 'boolean', moveSpecific: true, description: 'Invalid state' },
     { name: 'disabled', type: 'boolean', moveSpecific: false, description: 'Disabled state' },
     { name: 'readOnly', type: 'boolean', moveSpecific: true, description: 'Read-only state' },
+    // Popup open state. Every other anchored popup exposes this triad; without
+    // it a consumer could neither open the picker nor observe that it had.
+    { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state of the picker popup' },
+    { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Initial open state when uncontrolled' },
+    {
+      name: 'onOpenChange',
+      type: '(open: boolean) => void',
+      moveSpecific: true,
+      description: 'Called when the popup opens or closes',
+    },
     // Form
     {
       name: 'placeholder',

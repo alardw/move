@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Compound file upload component with drag-and-drop dropzone, file list management, progress tracking, and pluggable upload adapter system',
   choreographies: ['listReveal'],
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: true,
   rootElement: 'div',

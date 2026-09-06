@@ -10,10 +10,6 @@ export const spec = {
   category: 'actions',
   description: 'Clickable interactive element with variant, size, and animation support',
   choreographies: ['press'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'button',

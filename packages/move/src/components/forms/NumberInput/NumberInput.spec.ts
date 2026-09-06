@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Numeric input with increment/decrement stepper buttons, controlled/uncontrolled value, format/parse support, and hold-to-repeat',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'div',

@@ -11,11 +11,8 @@ export const spec = {
   description:
     'Vertically stacked disclosure panels with single or multiple expand mode, keyboard navigation, and animated content reveal',
   choreographies: ['disclosure'],
-  families: {
-    behavior: ['disclosure'],
-    state: ['controlled-value'], // value identifies which item(s) are open
-    a11y: ['disclosure'],
-  },
+  families: ['disclosure'],
+  ariaPattern: ['disclosure'],
   capabilities: ['owns-surface'],
   behavior: {
     disclosure: {

@@ -11,11 +11,7 @@ export const spec = {
   description:
     'CSS grid layout container with equal-column, span-based, and auto-fit modes plus a Cell sub-component for placement control',
   choreographies: ['layoutReveal'],
-  families: {
-    behavior: ['layout'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['layout'],
 
   compound: true,
   rootElement: 'div',

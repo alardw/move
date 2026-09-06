@@ -8,10 +8,6 @@ export const spec = {
   componentClass: 'presentational' as const,
   category: 'data-display',
   description: 'Inline status label with variant and size options',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'span',

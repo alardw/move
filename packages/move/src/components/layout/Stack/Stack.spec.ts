@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Flex layout container for vertical or horizontal stacking with configurable gap, alignment, and responsive collapse',
   choreographies: ['layoutReveal'],
-  families: {
-    behavior: ['layout'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['layout'],
 
   compound: false,
   rootElement: 'div',

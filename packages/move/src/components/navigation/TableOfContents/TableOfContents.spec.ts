@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Right-rail table of contents with scroll-spy active-state tracking, indented nesting, and smooth-scroll anchor navigation.',
   choreographies: ['slidingIndicator'],
-  families: {
-    behavior: ['navigation'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['navigation'],
 
   compound: true,
   rootElement: 'nav',

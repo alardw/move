@@ -9,11 +9,7 @@ export const spec = {
   category: 'layout',
   description:
     'Resizable panel layout with draggable gutters, keyboard resize support, and responsive collapse to vertical stacking',
-  families: {
-    behavior: ['layout'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['layout'],
   capabilities: ['scrolls-content'],
 
   compound: true,

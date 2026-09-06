@@ -9,10 +9,6 @@ export const spec = {
   category: 'feedback',
   description:
     'Centered placeholder for empty views with icon, title, description, and optional action',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'div',

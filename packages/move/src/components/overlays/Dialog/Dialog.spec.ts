@@ -9,11 +9,8 @@ export const spec = {
   category: 'overlays',
   description:
     'Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout',
-  families: {
-    behavior: ['modal-overlay'],
-    state: ['controlled-open'],
-    a11y: ['dialog'],
-  },
+  families: ['modal-overlay'],
+  ariaPattern: ['dialog'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
     modal: {

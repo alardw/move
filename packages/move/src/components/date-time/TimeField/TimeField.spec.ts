@@ -11,11 +11,7 @@ export const spec = {
   description:
     'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
   choreographies: ['popupMenu'],
-  families: {
-    behavior: ['form-input', 'popup-anchored'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input', 'popup-anchored'],
   capabilities: ['scrolls-content'],
   behavior: {
     popup: {

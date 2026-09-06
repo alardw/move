@@ -9,10 +9,6 @@ export const spec = {
   category: 'navigation',
   description:
     'Inline anchor element with variant colors, underline modes, optional size, and external link support',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'a',

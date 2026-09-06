@@ -9,10 +9,6 @@ export const spec = {
   category: 'typography',
   description:
     'Semantic heading element (h1-h6) with weight, color, tracking, alignment, and truncation control',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'h2',

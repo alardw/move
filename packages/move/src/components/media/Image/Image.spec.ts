@@ -9,10 +9,6 @@ export const spec = {
   category: 'media',
   description:
     'Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
   // Shared click-affordance contract for the data-row family.
   // See `src/shared/families.ts` → DataRowBehavior.
   behavior: {

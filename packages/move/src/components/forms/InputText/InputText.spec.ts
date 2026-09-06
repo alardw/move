@@ -9,11 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Single-line text input with outlined/filled variants, icon slots, and configurable size',
-  families: {
-    behavior: ['form-input'],
-    state: ['controlled-value'],
-    a11y: ['none'],
-  },
+  families: ['form-input'],
 
   compound: false,
   rootElement: 'div',

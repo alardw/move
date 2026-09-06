@@ -9,10 +9,6 @@ export const spec = {
   category: 'typography',
   description:
     'Typography primitive with configurable element, size, weight, color, alignment, and truncation',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'p',

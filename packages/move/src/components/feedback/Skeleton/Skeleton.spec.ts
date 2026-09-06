@@ -10,10 +10,6 @@ export const spec = {
   category: 'feedback',
   description: 'Compound placeholder shapes for loading states with pulse and wave animation modes',
   choreographies: ['loader'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'div',

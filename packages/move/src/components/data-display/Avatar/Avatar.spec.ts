@@ -8,10 +8,6 @@ export const spec = {
   componentClass: 'display' as const,
   category: 'data-display',
   description: 'User avatar with image, fallback, and size options',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'span',

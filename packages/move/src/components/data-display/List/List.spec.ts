@@ -11,10 +11,6 @@ export const spec = {
   description:
     'Stacked list with three-zone item layout (leading/content/trailing), responsive collapse, line clamping, dividers, density control, and optional Meta shorthand',
   choreographies: ['listReveal'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
   // Shared click-affordance contract for the data-row family.
   // See `src/shared/families.ts` → DataRowBehavior.
   behavior: {

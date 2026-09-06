@@ -14,11 +14,8 @@ export const spec = {
   // applies — keeps downstream tooling simple. See
   // `src/shared/families.ts` for the allowed values per axis.
   choreographies: ['popupMenu'],
-  families: {
-    behavior: ['popup-anchored'],
-    state: ['controlled-value', 'controlled-open'],
-    a11y: ['combobox'],
-  },
+  families: ['popup-anchored'],
+  ariaPattern: ['combobox'],
   capabilities: ['scrolls-content'],
 
   // Behavior-family-specific contract. The popup family asserts a

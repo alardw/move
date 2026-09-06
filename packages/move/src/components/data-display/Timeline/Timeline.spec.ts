@@ -11,10 +11,6 @@ export const spec = {
   description:
     'Vertical timeline with progress tracking, custom bullets, color-coded states, alternate alignment, and staggered entrance animation',
   choreographies: ['listReveal'],
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: true,
   rootElement: 'div',

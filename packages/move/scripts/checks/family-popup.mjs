@@ -3,10 +3,10 @@
  * Popup family contract.
  *
  * Walks every component spec, picks out the ones that declare
- * `families.behavior` includes `'popup-anchored'`, and asserts each
+ * `families` includes `'popup-anchored'`, and asserts each
  * conforms to the same contract:
  *
- *   1. Declares `families.state` includes `'controlled-open'`.
+ *   1. Declares `controlled: 'open'`.
  *   2. Declares `behavior.popup` with all four close-trigger flags
  *      (closeOnEscape, closeOnOutsideClick, closeOnScroll, closeOnResize)
  *      explicitly as true or false.
@@ -159,7 +159,7 @@ function check(component) {
   }
 
   const families = getProp(specObj, 'families');
-  const behaviorFamilies = asArray(getProp(families, 'behavior')) ?? [];
+  const behaviorFamilies = asArray(families) ?? [];
   const isPopup = behaviorFamilies.includes('popup-anchored');
   if (!isPopup) {
     return { name: component.name, member: false, errors: [], flags };
@@ -171,10 +171,20 @@ function check(component) {
   // nothing controls it, so rules 1 and 3 do not apply. See the header.
   const pointerPanel = asString(getProp(popup, 'mechanism')) === 'pointer-panel';
 
-  // 1. controlled-open in state family
-  const stateFamilies = asArray(getProp(families, 'state')) ?? [];
-  if (!pointerPanel && !stateFamilies.includes('controlled-open')) {
-    errors.push('families.state should include "controlled-open" for popup-anchored components');
+  // 1. A controlled open state, read from the props the component actually
+  // exposes rather than from a summary field.
+  //
+  // `controlled` is single-valued and records the PRIMARY dimension, which for
+  // Select, Autocomplete, ColorInput and TimeField is the value — they are
+  // controlled on two axes at once, and `controlledProps` carries only the value
+  // triad. So neither field answers "does it have a controlled open state";
+  // reading the triad itself does, and spec-drift already verifies the props
+  // list against source.
+  const specText = readFileSync(component.specFile, 'utf8');
+  const hasOpenTriad =
+    /name: 'open'/.test(specText) && /name: 'onOpenChange'/.test(specText);
+  if (!pointerPanel && !hasOpenTriad) {
+    errors.push('should expose an open / defaultOpen / onOpenChange triad');
   }
 
   // 2. behavior.popup with all four flags

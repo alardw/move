@@ -9,10 +9,7 @@ export const spec = {
   category: 'media',
   description:
     'Compound scroll-snap carousel with configurable orientation, slides-per-view, autoplay, drag/swipe, and built-in trigger/indicator controls',
-  families: {
-    state: ['controlled-index'],
-    a11y: ['tablist'],
-  },
+  ariaPattern: ['tablist'],
 
   compound: true,
   rootElement: 'div',

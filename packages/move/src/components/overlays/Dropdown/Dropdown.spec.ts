@@ -12,11 +12,8 @@ export const spec = {
   description:
     'Context menu dropdown with animated height reveal, staggered item entrance, and sub-menu support via Radix DropdownMenu',
   choreographies: ['popupMenu'],
-  families: {
-    behavior: ['popup-anchored'],
-    state: ['controlled-open'],
-    a11y: ['menu'],
-  },
+  families: ['popup-anchored'],
+  ariaPattern: ['menu'],
   capabilities: ['scrolls-content'],
   behavior: {
     popup: {

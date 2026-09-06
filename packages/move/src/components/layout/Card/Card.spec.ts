@@ -9,11 +9,7 @@ export const spec = {
   category: 'layout',
   description:
     'Presentational container with header, title, description, body, and footer sections for grouping related content',
-  families: {
-    behavior: ['layout'],
-    state: ['stateless'],
-    a11y: ['none'],
-  },
+  families: ['layout'],
   capabilities: ['owns-surface'],
 
   compound: true,

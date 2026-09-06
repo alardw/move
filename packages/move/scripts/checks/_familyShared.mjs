@@ -30,6 +30,10 @@ export function getProp(obj, name) {
 
 export function asString(node) {
   if (!node) return null;
+  // `'open' as const` is an AsExpression wrapping the literal. Specs write the
+  // suffix on nearly every scalar so the union stays narrow, and without this
+  // every one of them read as null.
+  if (ts.isAsExpression(node)) return asString(node.expression);
   if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) return node.text;
   return null;
 }
@@ -82,11 +86,9 @@ export function listComponents(componentsDir) {
   return out;
 }
 
-/** Convenience: check whether a spec lists `family` on the given axis. */
-export function isInFamily(specObj, axis, family) {
-  const families = getProp(specObj, 'families');
-  const arr = asArray(getProp(families, axis)) ?? [];
-  return arr.includes(family);
+/** Convenience: check whether a spec joins `family`. */
+export function isInFamily(specObj, family) {
+  return (asArray(getProp(specObj, 'families')) ?? []).includes(family);
 }
 
 /**

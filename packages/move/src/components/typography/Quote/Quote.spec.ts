@@ -9,10 +9,6 @@ export const spec = {
   category: 'typography',
   description:
     'An attributed quotation — a semantic figure/blockquote/figcaption with optional cite URL, a left accent rule on a subtle panel, and italic (overridable) quote text; block (inline) or pull (emphasis) variant',
-  families: {
-    state: ['stateless'],
-    a11y: ['none'],
-  },
 
   compound: false,
   rootElement: 'figure',

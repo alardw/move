@@ -603,6 +603,9 @@ Props:
 - invalid: boolean — Invalid state
 - disabled: boolean — Disabled state
 - readOnly: boolean — Read-only state
+- open: boolean — Controlled open state of the picker popup
+- defaultOpen: boolean — Initial open state when uncontrolled
+- onOpenChange: (open: boolean) => void — Called when the popup opens or closes
 - placeholder: string — Input placeholder text
 - name: string — Form field name
 - id: string — Input element id

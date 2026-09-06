@@ -204,7 +204,7 @@ for (const mod of Object.values(SPEC_MODULES)) {
   const spec = mod?.spec;
   if (!spec) continue;
 
-  const declaresFamily = spec.families?.behavior?.includes('popup-anchored');
+  const declaresFamily = spec.families?.includes('popup-anchored');
   const rendersPopup = componentsRenderingPopups.has(spec.name);
   // A component that renders a popup but does not say so is the failure mode
   // this list exists to surface — it would otherwise be skipped, not caught.
@@ -255,7 +255,7 @@ describe('check:keyboard-entry', () => {
     expect(
       undeclaredPopups,
       `These render an anchored popup primitive but do not declare ` +
-        `families.behavior 'popup-anchored', which hides them from this gate and ` +
+        `families 'popup-anchored', which hides them from this gate and ` +
         `from check:family-popup. Declare the family and add behavior.popup.`,
     ).toEqual([]);
   });
