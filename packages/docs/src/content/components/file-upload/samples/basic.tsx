@@ -1,17 +1,25 @@
-import { Button, FileUpload, Icon, Stack, Text } from 'move';
+import { Button, EmptyState, FileUpload } from 'move';
 
+/**
+ * The dropzone's resting content is an empty state — nothing here yet, and here
+ * is how to put something here — so it uses the component rather than
+ * reassembling the same icon/title/description/action column by hand.
+ */
 export default function BasicSample() {
   return (
     <FileUpload.Root maxFiles={5}>
       <FileUpload.Dropzone>
-        <Stack gap="sm" align="center">
-          <Icon name="upload-cloud" />
-          <Text weight="medium">Drop files here</Text>
-          <Text size="sm" color="muted">PNG, JPG, PDF up to 10 MB</Text>
-          <FileUpload.Trigger>
-            <Button variant="secondary" size="sm">Choose files</Button>
-          </FileUpload.Trigger>
-        </Stack>
+        <EmptyState
+          size="sm"
+          icon="upload-cloud"
+          title="Drop files here"
+          description="PNG, JPG, PDF up to 10 MB"
+          action={
+            <FileUpload.Trigger>
+              <Button variant="secondary" size="sm">Choose files</Button>
+            </FileUpload.Trigger>
+          }
+        />
       </FileUpload.Dropzone>
       <FileUpload.ItemGroup />
     </FileUpload.Root>

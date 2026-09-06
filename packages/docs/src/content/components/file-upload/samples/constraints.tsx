@@ -1,4 +1,4 @@
-import { Button, FileUpload, Icon, Stack, Text } from 'move';
+import { Button, EmptyState, FileUpload } from 'move';
 
 /**
  * `accept`, `maxSize`, and `maxFiles` are validated client-side before
@@ -10,13 +10,17 @@ export default function ConstraintsSample() {
   return (
     <FileUpload.Root accept="image/*" maxSize={5 * 1024 * 1024} maxFiles={3}>
       <FileUpload.Dropzone>
-        <Stack gap="sm" align="center">
-          <Icon name="image" />
-          <Text weight="medium">Images only · 5 MB each · up to 3</Text>
-          <FileUpload.Trigger>
-            <Button variant="secondary" size="sm">Browse</Button>
-          </FileUpload.Trigger>
-        </Stack>
+        <EmptyState
+          size="sm"
+          icon="image"
+          title="Images only"
+          description="5 MB each, up to 3 files"
+          action={
+            <FileUpload.Trigger>
+              <Button variant="secondary" size="sm">Browse</Button>
+            </FileUpload.Trigger>
+          }
+        />
       </FileUpload.Dropzone>
       <FileUpload.ItemGroup />
     </FileUpload.Root>
