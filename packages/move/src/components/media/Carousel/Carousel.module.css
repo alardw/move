@@ -229,9 +229,27 @@
   box-shadow: var(--move-carousel-trigger-shadow);
   cursor: pointer;
   padding: 0;
+  /* No transform in the transition — motion is the animation's job, and a
+     transition here would fight it for the same property. */
   transition:
     background-color 150ms ease,
     opacity 150ms ease;
+}
+
+/* The resting states of the press. These are hand-rolled buttons rather than the
+   Button component, so nothing gave them a button's feel; the animation only
+   travels between these two, and they are the whole behaviour under
+   `animations={false}` and reduced motion. Safe on the trigger itself, which IS
+   the control — an :active transform on a container would scale everything
+   inside it. */
+.prevTrigger:hover:not(:disabled),
+.nextTrigger:hover:not(:disabled) {
+  transform: scale(1.04);
+}
+
+.prevTrigger:active:not(:disabled),
+.nextTrigger:active:not(:disabled) {
+  transform: scale(0.96);
 }
 
 /* Vertical orientation reuses the horizontal previous/next chevrons, rotated

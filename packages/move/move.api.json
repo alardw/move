@@ -2600,6 +2600,11 @@
                 "solid"
               ],
               "description": "Button visual variant"
+            },
+            {
+              "name": "animations",
+              "type": "AnimationTrigger[] | false",
+              "description": "Override or disable the hover/press motion"
             }
           ]
         },
@@ -2640,6 +2645,11 @@
                 "solid"
               ],
               "description": "Button visual variant"
+            },
+            {
+              "name": "animations",
+              "type": "AnimationTrigger[] | false",
+              "description": "Override or disable the hover/press motion"
             }
           ]
         },

@@ -452,12 +452,14 @@ Carousel.PrevTrigger props:
 - children: React.ReactNode — Custom trigger content (default: chevron icon)
 - size: 'sm' | 'md' | 'lg' — Button size
 - variant: 'surface' | 'ghost' | 'solid' — Button visual variant
+- animations: AnimationTrigger[] | false — Override or disable the hover/press motion
 Carousel.NextTrigger props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Custom trigger content (default: chevron icon)
 - size: 'sm' | 'md' | 'lg' — Button size
 - variant: 'surface' | 'ghost' | 'solid' — Button visual variant
+- animations: AnimationTrigger[] | false — Override or disable the hover/press motion
 Carousel.IndicatorGroup props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles

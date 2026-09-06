@@ -307,7 +307,7 @@ export const spec = {
         {
           name: 'prevTrigger',
           element: 'button',
-          kind: 'none',
+          kind: 'control',
           typography: 'none',
           description: 'Previous page button',
         },
@@ -333,6 +333,12 @@ export const spec = {
           moveSpecific: true,
           description: 'Button visual variant',
         },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Override or disable the hover/press motion',
+        },
       ],
       usesFactory: true,
       description: 'Previous navigation button; disabled when cannot scroll backward (unless loop)',
@@ -343,7 +349,7 @@ export const spec = {
         {
           name: 'nextTrigger',
           element: 'button',
-          kind: 'surface',
+          kind: 'control',
           typography: 'none',
           description: 'Next page button',
         },
@@ -368,6 +374,12 @@ export const spec = {
           type: "'surface' | 'ghost' | 'solid'",
           moveSpecific: true,
           description: 'Button visual variant',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Override or disable the hover/press motion',
         },
       ],
       usesFactory: true,
@@ -756,7 +768,12 @@ export const spec = {
   ],
 
   hasHook: true,
-  engineImports: ['withMoveComponent', 'useControlledState', 'composeHandlers'] as string[],
+  engineImports: [
+    'withMoveComponent',
+    'useControlledState',
+    'composeHandlers',
+    'useMergedRef',
+  ] as string[],
 
   componentDeps: [] as string[],
 

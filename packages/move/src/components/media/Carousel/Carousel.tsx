@@ -1,8 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { composeHandlers, withMoveComponent } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
+import { resolveAnimationsConfig, scaleDown, scaleUp, useAnimations } from '../../../animation';
+import type { AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useCarousel } from './useCarousel';
 import type {
@@ -442,6 +444,49 @@ const CarouselSlide = withMoveComponent<'slide', CarouselSlideProps, HTMLDivElem
 });
 
 // =============================================================================
+// Trigger press
+// =============================================================================
+
+/**
+ * The press contract every other control in the library has.
+ *
+ * These triggers are hand-rolled `<button>` elements: they reimplement a
+ * button's LOOK — size, radius, border, ground, shadow — on a raw element, and
+ * so inherited none of its BEHAVIOUR. They sat flat under the pointer while
+ * every neighbouring button sprang.
+ *
+ * Class → animation → class, as everywhere else: CSS holds the resting states so
+ * `animations={false}` and reduced motion still feel like a button, and the
+ * animation only travels between them. A fixed ratio is right here where it is
+ * not on Button — these are fixed squares, so there is no wide-control case for
+ * the travel to exaggerate.
+ */
+function useTriggerPress(
+  animationsProp: AnimationTrigger[] | false | undefined,
+  ref: React.Ref<HTMLButtonElement>,
+) {
+  const btnRef = React.useRef<HTMLButtonElement>(null);
+  const config = resolveAnimationsConfig(
+    [
+      { trigger: 'Trigger.hover', sequence: [{ animation: scaleUp() }] },
+      { trigger: 'Trigger.press', sequence: [{ animation: scaleDown() }] },
+    ],
+    animationsProp,
+  );
+  const refs = React.useMemo(() => ({ Trigger: btnRef }), []);
+  const { handlers } = useAnimations(config, refs);
+  return {
+    pressRef: useMergedRef<HTMLButtonElement>(ref, btnRef as React.Ref<HTMLButtonElement>),
+    pressHandlers: {
+      onMouseEnter: handlers.Trigger?.onMouseEnter,
+      onMouseLeave: handlers.Trigger?.onMouseLeave,
+      onMouseDown: handlers.Trigger?.onMouseDown,
+      onMouseUp: handlers.Trigger?.onMouseUp,
+    },
+  };
+}
+
+// =============================================================================
 // PrevTrigger
 // =============================================================================
 
@@ -453,6 +498,8 @@ export interface CarouselPrevTriggerProps extends React.HTMLAttributes<HTMLEleme
   'aria-label'?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'surface' | 'ghost' | 'solid';
+  /** Override or disable the hover/press motion. */
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'prevTrigger'>;
 }
 
@@ -464,10 +511,14 @@ const CarouselPrevTrigger = withMoveComponent<
   name: 'CarouselPrevTrigger',
   styles,
   slots: ['prevTrigger'] as const,
-  moveProps: ['size', 'variant'],
+  moveProps: ['size', 'variant', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollPrev, canScrollPrev, orientation } = useCarouselContext();
+    const { pressRef, pressHandlers } = useTriggerPress(
+      props.animations as AnimationTrigger[] | false | undefined,
+      ref,
+    );
     const fallbackIcon = useIcon('previous', 18);
 
     return {
@@ -484,7 +535,8 @@ const CarouselPrevTrigger = withMoveComponent<
           <button
             {...restAttrs}
             {...spRest}
-            ref={ref}
+            ref={pressRef}
+            {...pressHandlers}
             type="button"
             aria-label={(props['aria-label'] as string) || 'Previous slide'}
             disabled={!canScrollPrev}
@@ -521,6 +573,8 @@ export interface CarouselNextTriggerProps extends React.HTMLAttributes<HTMLEleme
   'aria-label'?: string;
   size?: 'sm' | 'md' | 'lg';
   variant?: 'surface' | 'ghost' | 'solid';
+  /** Override or disable the hover/press motion. */
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'nextTrigger'>;
 }
 
@@ -532,10 +586,14 @@ const CarouselNextTrigger = withMoveComponent<
   name: 'CarouselNextTrigger',
   styles,
   slots: ['nextTrigger'] as const,
-  moveProps: ['size', 'variant'],
+  moveProps: ['size', 'variant', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const { scrollNext, canScrollNext, orientation } = useCarouselContext();
+    const { pressRef, pressHandlers } = useTriggerPress(
+      props.animations as AnimationTrigger[] | false | undefined,
+      ref,
+    );
     const fallbackIcon = useIcon('next', 18);
 
     return {
@@ -552,7 +610,8 @@ const CarouselNextTrigger = withMoveComponent<
           <button
             {...restAttrs}
             {...spRest}
-            ref={ref}
+            ref={pressRef}
+            {...pressHandlers}
             type="button"
             aria-label={(props['aria-label'] as string) || 'Next slide'}
             disabled={!canScrollNext}
