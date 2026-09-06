@@ -71,14 +71,20 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
       const rootStyle = getComputedStyle(root);
       const contentWidth =
         root.clientWidth - parseFloat(rootStyle.paddingLeft) - parseFloat(rootStyle.paddingRight);
-      const thumbWidth = el.getBoundingClientRect().width;
+      // offsetWidth, not getBoundingClientRect().width: the rect reflects the
+      // element's CURRENT transform, and this runs at trigger time — while the
+      // press has the thumb at scale 0.85. Measuring a shrunk thumb made the
+      // travel 46 - 18.7 = 27.3 instead of 46 - 22 = 24, so the animation
+      // overshot the resting position its class holds. offsetWidth is the layout
+      // width and ignores transforms.
+      const thumbWidth = el.offsetWidth;
       return contentWidth - thumbWidth;
     }
 
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       {
         trigger: 'Root.press',
-        sequence: [{ target: 'Thumb', animation: { scale: { to: 0.85, ease: snappy } } }],
+        sequence: [{ target: 'Thumb', animation: { scale: { from: 1, to: 0.85, ease: snappy } } }],
       },
       // Both ends stated. Without a `from`, anime reads the element's CURRENT
       // value as the start — and by the time a state trigger fires, the class
@@ -128,16 +134,6 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
     );
     const { handlers } = useAnimations(animConfig, animRefs, states);
     const isDisabled = !!props.disabled;
-
-    // Set initial thumb position on mount
-    React.useLayoutEffect(() => {
-      const thumb = thumbRef.current;
-      const root = rootRef.current;
-      if (!thumb || !root) return;
-      const isChecked = root.getAttribute('data-state') === 'checked';
-      const dist = measureDist(thumb);
-      thumb.style.transform = isChecked ? `translateX(${dist}px)` : 'translateX(0px)';
-    }, []);
 
     const contextValue = React.useMemo(() => ({ thumbRef }), []);
 

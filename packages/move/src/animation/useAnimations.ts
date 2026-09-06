@@ -197,7 +197,20 @@ function cancelRefFor(
   step: AnimationStep,
 ): React.MutableRefObject<JSAnimation | null> {
   const suffix = step.children ? `-${step.children}` : '';
-  const key = `${target}-${step.fn ?? 'move'}${suffix}`;
+  // The animated PROPERTIES are part of the key too, and this key is what decides
+  // whether two animations on one element may run concurrently. Different
+  // properties are different writers and do not conflict: a switch thumb travels
+  // on `x` from its state trigger while it shrinks on `scale` from its press, and
+  // both must run at once. Keyed by target alone they shared one slot, so the
+  // travel cancelled the press mid-flight — the scale froze at its seeded value,
+  // invisible, then reappeared at full size the moment the travel finished, which
+  // reads as "x animates, then the scale jumps".
+  const written = step.animation
+    ? Object.keys(step.animation as Record<string, unknown>)
+        .sort()
+        .join('+')
+    : '';
+  const key = `${target}-${step.fn ?? 'move'}${suffix}-${written}`;
   const existing = cancelRefs.get(key);
   if (existing) return existing;
   const created = { current: null };

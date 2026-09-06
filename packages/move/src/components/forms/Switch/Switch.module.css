@@ -117,7 +117,22 @@
   will-change: transform;
 }
 
-/* No CSS press state here, unlike the other controls: this thumb already
-   carries a transform for its position, and a separate `scale` would multiply
-   with it rather than override — the press would compound the travel. The press
-   animation owns that one. */
+/* The class the press rests against. All three parts are required together and
+   each was tried alone: without a class the engine strips the inline style the
+   moment the shrink completes and the thumb snaps to full size under the finger;
+   without a `from` on the animation anime reads the already-applied 0.85 as its
+   start and travels nowhere; and written as the individual `scale` property it
+   composes BEFORE `transform`, laying the travel out in scaled space.
+
+   So: a full `transform`, the same property the animation writes, carrying the
+   travelled position too — a checked thumb is pressed at the far end, not at
+   zero. The animation's inline value overrides this while it travels, and this
+   holds it on arrival. */
+.root:active:not(:disabled) .thumb {
+  transform: scale(0.85);
+}
+
+.root.root[data-state='checked']:active:not(:disabled) .thumb {
+  transform: translateX(var(--move-switch-thumb-translate)) scale(0.85);
+}
+
