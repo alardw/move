@@ -6146,7 +6146,7 @@
         {
           "name": "iconRight",
           "type": "React.ReactNode",
-          "description": "Icon element rendered after the input"
+          "description": "Decorative content after the input (unit affix, status glyph) — not an action slot; the wrapper is aria-hidden and non-interactive"
         },
         {
           "name": "width",

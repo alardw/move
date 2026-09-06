@@ -44,7 +44,9 @@ export const spec = {
       element: 'span',
       kind: 'icon',
       typography: 'none',
-      description: 'Optional icon rendered after the input',
+      description:
+        'Decorative content after the input — a unit affix or status glyph. aria-hidden ' +
+        'and pointer-events: none, so it cannot hold an action; see Password.toggle.',
     },
   ],
 
@@ -79,7 +81,8 @@ export const spec = {
       name: 'iconRight',
       type: 'React.ReactNode',
       moveSpecific: true,
-      description: 'Icon element rendered after the input',
+      description:
+        'Decorative content after the input (unit affix, status glyph) — not an action slot; the wrapper is aria-hidden and non-interactive',
     },
     {
       name: 'width',

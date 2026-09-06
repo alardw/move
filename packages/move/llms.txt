@@ -1102,7 +1102,7 @@ Props:
 - size: 'sm' | 'md' | 'lg' (default: md) — Size controlling height and font size
 - invalid: boolean — Whether the input is in an invalid/error state
 - iconLeft: React.ReactNode — Icon element rendered before the input
-- iconRight: React.ReactNode — Icon element rendered after the input
+- iconRight: React.ReactNode — Decorative content after the input (unit affix, status glyph) — not an action slot; the wrapper is aria-hidden and non-interactive
 - width: 'auto' | 'xs' | 'sm' | 'md' | 'lg' | 'full' (default: full) — How wide the field is, from the field-width scale. Steps are sized in ch for the content each expects, and every one is capped at the space available. 'full' takes the column.
 - disabled: boolean — Whether the input is disabled
 - readOnly: boolean — Whether the input is read-only

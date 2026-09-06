@@ -14,6 +14,13 @@ export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
   size?: InputTextSize;
   invalid?: boolean;
   iconLeft?: React.ReactNode;
+  /**
+   * Decorative content after the input — a unit or currency affix, a status
+   * glyph. The wrapper is `aria-hidden` and `pointer-events: none`, so an
+   * ACTION cannot live here: it would be unreachable by pointer and hidden from
+   * assistive tech, and a focusable element inside aria-hidden is invalid ARIA.
+   * An action in a field needs its own button slot — see Password's `toggle`.
+   */
   iconRight?: React.ReactNode;
   width?: FieldWidth;
   disabled?: boolean;
