@@ -99,6 +99,16 @@
   cursor: not-allowed;
 }
 
+/* Two elements, one writer each. The travel and the press both animate
+   `transform`, and on one element that is two writers on one property — which
+   anime only survives because it keeps a per-element transform cache, and which
+   cost three separate bugs: the individual `scale` property laying the travel out
+   in scaled space, two triggers colliding on one concurrency slot, and
+   getBoundingClientRect measuring a scaled thumb and overshooting the travel.
+   Split, each element carries exactly one transform and none of those exist.
+
+   .thumb positions — it owns translateX and is never scaled, so it is always
+   safe to measure. */
 .thumb {
   /* Component tokens */
   --move-switch-thumb-size: calc(var(--move-switch-height) - var(--move-switch-padding) * 2);
@@ -111,28 +121,27 @@
   display: block;
   width: var(--move-switch-thumb-size);
   height: var(--move-switch-thumb-size);
+  will-change: transform;
+}
+
+/* .knob is what you actually see — it owns scale, so pressing shrinks the visible
+   circle. Filling the thumb means the two never disagree about size. */
+.knob {
+  display: block;
+  width: 100%;
+  height: 100%;
   background-color: var(--move-switch-thumb-bg);
   border-radius: var(--move-rounded-full);
   box-shadow: var(--move-switch-thumb-shadow);
   will-change: transform;
 }
 
-/* The class the press rests against. All three parts are required together and
-   each was tried alone: without a class the engine strips the inline style the
-   moment the shrink completes and the thumb snaps to full size under the finger;
-   without a `from` on the animation anime reads the already-applied 0.85 as its
-   start and travels nowhere; and written as the individual `scale` property it
-   composes BEFORE `transform`, laying the travel out in scaled space.
-
-   So: a full `transform`, the same property the animation writes, carrying the
-   travelled position too — a checked thumb is pressed at the far end, not at
-   zero. The animation's inline value overrides this while it travels, and this
-   holds it on arrival. */
-.root:active:not(:disabled) .thumb {
+/* The class the press rests against, on the knob. One rule now, not two: it no
+   longer has to restate the travelled position, because the travel lives on the
+   parent. Still stated as `transform` to match what the animation writes, and
+   still required — without it the engine strips the inline style the moment the
+   shrink completes and the knob snaps to full size under the finger. */
+.root:active:not(:disabled) .knob {
   transform: scale(0.85);
-}
-
-.root.root[data-state='checked']:active:not(:disabled) .thumb {
-  transform: translateX(var(--move-switch-thumb-translate)) scale(0.85);
 }
 

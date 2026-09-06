@@ -10,11 +10,14 @@ import type { AnimationTrigger, AnimationState } from '../../../animation';
 import styles from './Switch.module.css';
 
 // ============================================================================
-// Context (shares thumb ref between Root and Thumb)
+// Context (shares the thumb and knob refs between Root and Thumb)
 // ============================================================================
 
 interface SwitchContextValue {
+  /** Positions — owns translateX. Never scaled, so always safe to measure. */
   thumbRef: React.RefObject<HTMLSpanElement | null>;
+  /** The visible circle — owns scale. One writer per element. */
+  knobRef: React.RefObject<HTMLSpanElement | null>;
 }
 
 const SwitchContext = React.createContext<SwitchContextValue | null>(null);
@@ -62,6 +65,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
 
   setup({ props, ref, cx, sp, attrs }) {
     const thumbRef = useRef<HTMLSpanElement>(null);
+    const knobRef = useRef<HTMLSpanElement>(null);
     const rootRef = useRef<HTMLButtonElement>(null);
 
     // Compute slide distance from thumb element at animation time
@@ -84,7 +88,7 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
     const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
       {
         trigger: 'Root.press',
-        sequence: [{ target: 'Thumb', animation: { scale: { from: 1, to: 0.85, ease: snappy } } }],
+        sequence: [{ target: 'Knob', animation: { scale: { from: 1, to: 0.85, ease: snappy } } }],
       },
       // Both ends stated. Without a `from`, anime reads the element's CURRENT
       // value as the start — and by the time a state trigger fires, the class
@@ -129,13 +133,14 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
       () => ({
         Root: rootRef as React.RefObject<HTMLElement | null>,
         Thumb: thumbRef as React.RefObject<HTMLElement | null>,
+        Knob: knobRef as React.RefObject<HTMLElement | null>,
       }),
       [],
     );
     const { handlers } = useAnimations(animConfig, animRefs, states);
     const isDisabled = !!props.disabled;
 
-    const contextValue = React.useMemo(() => ({ thumbRef }), []);
+    const contextValue = React.useMemo(() => ({ thumbRef, knobRef }), []);
 
     // Merge forwarded ref with rootRef
     const mergedRootRef = React.useCallback(
@@ -212,10 +217,10 @@ export interface SwitchThumbProps extends React.HTMLAttributes<HTMLElement> {
   style?: React.CSSProperties;
 }
 
-const SwitchThumb = withMoveComponent<'thumb', SwitchThumbProps, HTMLSpanElement>({
+const SwitchThumb = withMoveComponent<'thumb' | 'knob', SwitchThumbProps, HTMLSpanElement>({
   name: 'SwitchThumb',
   styles,
-  slots: ['thumb'] as const,
+  slots: ['thumb', 'knob'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
     const ctx = React.useContext(SwitchContext);
@@ -246,7 +251,15 @@ const SwitchThumb = withMoveComponent<'thumb', SwitchThumbProps, HTMLSpanElement
             ref={thumbCallback}
             className={cx('thumb', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-          />
+          >
+            {/* The visible circle. Separate from the positioned thumb so the
+                travel and the press each own one element's transform. */}
+            <span
+              {...(sp('knob') as Record<string, unknown>)}
+              ref={ctx?.knobRef as React.Ref<HTMLSpanElement>}
+              className={cx('knob', (sp('knob') as { className?: string }).className)}
+            />
+          </RadixSwitch.Thumb>
         );
       },
     };
