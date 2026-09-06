@@ -48,38 +48,38 @@ export const spec = {
     {
       name: 'trigger',
       element: 'RadixPopover.Trigger',
-      type: 'none',
+      typography: 'none',
       description: 'Button that opens the popover',
     },
     {
       name: 'anchor',
       element: 'RadixPopover.Anchor',
-      type: 'none',
+      typography: 'none',
       description: 'Alternative positioning anchor (instead of trigger)',
     },
     {
       name: 'content',
       element: 'RadixPopover.Content',
-      type: 'none',
+      typography: 'none',
       description: 'Positioned shell — Radix owns its transform; this layer only stacks',
     },
     {
       name: 'contentInner',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description:
         'Visible box + scroll region (max-height/overflow); owns the scale entrance so the shell keeps Radix positioning free for scroll repositioning',
     },
     {
       name: 'arrow',
       element: 'RadixPopover.Arrow',
-      type: 'none',
+      typography: 'none',
       description: 'Arrow pointing toward the trigger/anchor',
     },
     {
       name: 'close',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description: 'Close button with X icon and animated close behavior',
     },
   ],
@@ -144,7 +144,7 @@ export const spec = {
         {
           name: 'trigger',
           element: 'RadixPopover.Trigger',
-          type: 'none',
+          typography: 'none',
           description: 'Trigger button',
         },
       ],
@@ -179,7 +179,7 @@ export const spec = {
         {
           name: 'anchor',
           element: 'RadixPopover.Anchor',
-          type: 'none',
+          typography: 'none',
           description: 'Anchor element',
         },
       ],
@@ -215,7 +215,7 @@ export const spec = {
         {
           name: 'content',
           element: 'RadixPopover.Content',
-          type: 'none',
+          typography: 'none',
           description: 'Popover content panel',
         },
       ],
@@ -302,7 +302,7 @@ export const spec = {
     {
       name: 'Arrow',
       slots: [
-        { name: 'arrow', element: 'RadixPopover.Arrow', type: 'none', description: 'Arrow SVG' },
+        { name: 'arrow', element: 'RadixPopover.Arrow', typography: 'none', description: 'Arrow SVG' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -331,7 +331,7 @@ export const spec = {
     },
     {
       name: 'Close',
-      slots: [{ name: 'close', element: 'button', type: 'none', description: 'Close button' }],
+      slots: [{ name: 'close', element: 'button', typography: 'none', description: 'Close button' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

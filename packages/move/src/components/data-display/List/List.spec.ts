@@ -33,56 +33,56 @@ export const spec = {
     {
       name: 'root',
       element: 'ul',
-      type: 'none',
+      typography: 'none',
       description: 'Root container with dividers and size/density tokens',
     },
     {
       name: 'item',
       element: 'li',
-      type: 'none',
+      typography: 'none',
       description: 'Three-zone flex row: leading / content / trailing',
     },
     {
       name: 'leading',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Fixed-width leading slot for avatar, icon, or checkbox',
     },
     {
       name: 'content',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Flex-1 content zone with min-width:0 for truncation',
     },
     {
       name: 'title',
       element: 'p',
-      type: 'title',
+      typography: 'body',
       description: 'Primary text line, semibold, truncated by default',
     },
     {
       name: 'description',
       element: 'p',
-      type: 'body',
+      typography: 'ui',
       description: 'Secondary text line, muted, line-clamp controlled',
     },
     {
       name: 'trailing',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Fixed-width trailing slot for badge, button, timestamp, menu',
     },
     {
       name: 'meta',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description:
         'Convenience sub-component rendering leading+content+title+description from props',
     },
     {
       name: 'divider',
       element: 'hr',
-      type: 'none',
+      typography: 'none',
       description: 'Visual divider between items (CSS-driven, not rendered per-item)',
     },
   ],
@@ -90,7 +90,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'ul', type: 'none', description: 'Root list container' }],
+      slots: [{ name: 'root', element: 'ul', typography: 'none', description: 'Root list container' }],
       props: [
         {
           name: 'size',
@@ -160,7 +160,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'li', type: 'none', description: 'Item row wrapper' }],
+      slots: [{ name: 'item', element: 'li', typography: 'none', description: 'Item row wrapper' }],
       props: [
         {
           name: 'as',
@@ -211,7 +211,7 @@ export const spec = {
     {
       name: 'Leading',
       slots: [
-        { name: 'leading', element: 'div', type: 'none', description: 'Leading visual slot' },
+        { name: 'leading', element: 'div', typography: 'none', description: 'Leading visual slot' },
       ],
       props: [
         {
@@ -226,7 +226,7 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'div', type: 'none', description: 'Content zone' }],
+      slots: [{ name: 'content', element: 'div', typography: 'none', description: 'Content zone' }],
       props: [
         {
           name: 'children',
@@ -240,7 +240,7 @@ export const spec = {
     },
     {
       name: 'Title',
-      slots: [{ name: 'title', element: 'p', type: 'title', description: 'Primary text' }],
+      slots: [{ name: 'title', element: 'p', typography: 'body', description: 'Primary text' }],
       props: [
         {
           name: 'truncate',
@@ -268,7 +268,7 @@ export const spec = {
     },
     {
       name: 'Description',
-      slots: [{ name: 'description', element: 'p', type: 'body', description: 'Secondary text' }],
+      slots: [{ name: 'description', element: 'p', typography: 'ui', description: 'Secondary text' }],
       props: [
         {
           name: 'lines',
@@ -291,7 +291,7 @@ export const spec = {
     {
       name: 'Trailing',
       slots: [
-        { name: 'trailing', element: 'div', type: 'none', description: 'Trailing content slot' },
+        { name: 'trailing', element: 'div', typography: 'none', description: 'Trailing content slot' },
       ],
       props: [
         {

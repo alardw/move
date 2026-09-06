@@ -22,7 +22,7 @@ export const spec = {
     {
       name: 'root',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description: 'Button element (or Slot.Root when asChild)',
     },
   ],
@@ -34,7 +34,7 @@ export const spec = {
         {
           name: 'group',
           element: 'div',
-          type: 'none',
+          typography: 'none',
           description: 'Container for grouped buttons',
         },
       ],

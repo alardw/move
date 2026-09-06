@@ -23,32 +23,32 @@ export const spec = {
     {
       name: 'root',
       element: 'RadixTabs.Root',
-      type: 'none',
+      typography: 'none',
       description: 'Root container managing tab state via Radix Tabs.Root',
     },
     {
       name: 'list',
       element: 'RadixTabs.List',
-      type: 'none',
+      typography: 'none',
       description: 'Tab trigger list container with variant and size styling',
     },
     {
       name: 'indicator',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description:
         'Sliding indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger — an underline bar for the underline variant, a filled pill for the pills variant',
     },
     {
       name: 'trigger',
       element: 'RadixTabs.Trigger',
-      type: 'ui',
+      typography: 'ui',
       description: 'Individual tab button that activates its panel',
     },
     {
       name: 'content',
       element: 'RadixTabs.Content',
-      type: 'none',
+      typography: 'none',
       description: 'Tab panel content associated with a trigger value',
     },
   ],
@@ -57,7 +57,7 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'RadixTabs.Root', type: 'none', description: 'Root container' },
+        { name: 'root', element: 'RadixTabs.Root', typography: 'none', description: 'Root container' },
       ],
       props: [
         {
@@ -120,13 +120,13 @@ export const spec = {
         {
           name: 'list',
           element: 'RadixTabs.List',
-          type: 'none',
+          typography: 'none',
           description: 'Tab list container',
         },
         {
           name: 'indicator',
           element: 'div',
-          type: 'none',
+          typography: 'none',
           description: 'Sliding underline bar or filled pill',
         },
       ],
@@ -181,7 +181,7 @@ export const spec = {
         {
           name: 'trigger',
           element: 'RadixTabs.Trigger',
-          type: 'ui',
+          typography: 'ui',
           description: 'Individual tab button',
         },
       ],
@@ -222,7 +222,7 @@ export const spec = {
         {
           name: 'content',
           element: 'RadixTabs.Content',
-          type: 'none',
+          typography: 'none',
           description: 'Tab content panel',
         },
       ],

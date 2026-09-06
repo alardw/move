@@ -40,27 +40,27 @@ export const spec = {
     {
       name: 'trigger',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description: 'Element that activates the tooltip on hover/focus',
     },
     {
       name: 'content',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description:
         'Positioned shell — Radix owns its transform; carries only z-index and the opacity fade',
     },
     {
       name: 'contentInner',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description:
         'Visible tooltip box (inverted colors); owns the scale/slide entrance so it never clobbers Radix positioning',
     },
     {
       name: 'arrow',
       element: 'svg',
-      type: 'none',
+      typography: 'none',
       description: 'Arrow pointing toward the trigger',
     },
   ],
@@ -144,7 +144,7 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', type: 'none', description: 'Trigger element' }],
+      slots: [{ name: 'trigger', element: 'button', typography: 'none', description: 'Trigger element' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -172,7 +172,7 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', type: 'ui', description: 'Tooltip popup container' },
+        { name: 'content', element: 'div', typography: 'ui', description: 'Tooltip popup container' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -233,7 +233,7 @@ export const spec = {
     },
     {
       name: 'Arrow',
-      slots: [{ name: 'arrow', element: 'svg', type: 'none', description: 'Arrow SVG' }],
+      slots: [{ name: 'arrow', element: 'svg', typography: 'none', description: 'Arrow SVG' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

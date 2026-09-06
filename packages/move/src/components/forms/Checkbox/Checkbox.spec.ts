@@ -23,20 +23,20 @@ export const spec = {
     {
       name: 'root',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description:
         'Native button element with role="checkbox" that handles click and keyboard interaction',
     },
     {
       name: 'indicator',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Container for the check/indeterminate icon, target of toggle animation',
     },
     {
       name: 'icon',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Inner icon element that renders the check SVG or resolved icon',
     },
   ],

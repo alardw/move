@@ -31,43 +31,43 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Outer accordion container scoping component tokens',
     },
     {
       name: 'item',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Individual disclosure section with open/closed state',
     },
     {
       name: 'header',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Wrapper around the trigger for structural flexibility',
     },
     {
       name: 'trigger',
       element: 'button',
-      type: 'body',
+      typography: 'ui',
       description: 'Clickable header button that toggles the item open/closed',
     },
     {
       name: 'icon',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Chevron indicator that rotates to reflect open/closed state',
     },
     {
       name: 'content',
       element: 'div',
-      type: 'body',
+      typography: 'ui',
       description: 'Collapsible content region with height animation',
     },
     {
       name: 'contentInner',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Inner content wrapper for opacity animation',
     },
   ],
@@ -76,7 +76,7 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'div', type: 'ui', description: 'Outer accordion container' },
+        { name: 'root', element: 'div', typography: 'ui', description: 'Outer accordion container' },
       ],
       props: [
         {
@@ -144,7 +144,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'div', type: 'none', description: 'Item container' }],
+      slots: [{ name: 'item', element: 'div', typography: 'none', description: 'Item container' }],
       props: [
         {
           name: 'value',
@@ -164,7 +164,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', type: 'none', description: 'Header wrapper' }],
+      slots: [{ name: 'header', element: 'div', typography: 'none', description: 'Header wrapper' }],
       props: [
         {
           name: 'children',
@@ -179,8 +179,8 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'button', type: 'body', description: 'Trigger button' },
-        { name: 'icon', element: 'span', type: 'none', description: 'Chevron icon' },
+        { name: 'trigger', element: 'button', typography: 'ui', description: 'Trigger button' },
+        { name: 'icon', element: 'span', typography: 'none', description: 'Chevron icon' },
       ],
       props: [
         {
@@ -212,13 +212,13 @@ export const spec = {
         {
           name: 'content',
           element: 'div',
-          type: 'body',
+          typography: 'ui',
           description: 'Collapsible content outer (height animation)',
         },
         {
           name: 'contentInner',
           element: 'div',
-          type: 'none',
+          typography: 'none',
           description: 'Content inner (opacity animation)',
         },
       ],

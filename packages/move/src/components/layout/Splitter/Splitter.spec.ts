@@ -21,19 +21,19 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Flex container that holds panels and auto-injected gutters',
     },
     {
       name: 'panel',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Resizable panel section sized by percentage',
     },
     {
       name: 'gutter',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Internal draggable separator between panels (auto-injected by Root)',
     },
   ],
@@ -42,7 +42,7 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'div', type: 'none', description: 'Splitter flex container' },
+        { name: 'root', element: 'div', typography: 'none', description: 'Splitter flex container' },
       ],
       props: [
         {
@@ -100,7 +100,7 @@ export const spec = {
     },
     {
       name: 'Panel',
-      slots: [{ name: 'panel', element: 'div', type: 'none', description: 'Panel container' }],
+      slots: [{ name: 'panel', element: 'div', typography: 'none', description: 'Panel container' }],
       props: [
         {
           name: 'children',

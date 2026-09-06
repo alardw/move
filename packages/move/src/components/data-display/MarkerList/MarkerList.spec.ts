@@ -21,26 +21,26 @@ export const spec = {
     {
       name: 'root',
       element: 'ul',
-      type: 'none',
+      typography: 'none',
       description: 'List container — renders <ul>, or <ol> when ordered. list-style: none.',
     },
     {
       name: 'item',
       element: 'li',
-      type: 'none',
+      typography: 'none',
       description: 'List row — a flex row of marker cell + content cell.',
     },
     {
       name: 'marker',
       element: 'span',
-      type: 'body',
+      typography: 'body',
       description:
         'The marker cell (bullet glyph, CSS-counter number, or icon). Decorative, aria-hidden.',
     },
     {
       name: 'content',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'The content cell — the item body and any nested MarkerList.',
     },
   ],
@@ -48,7 +48,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'ul', type: 'none', description: 'ul/ol list container' }],
+      slots: [{ name: 'root', element: 'ul', typography: 'none', description: 'ul/ol list container' }],
       props: [
         {
           name: 'ordered',
@@ -115,7 +115,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'li', type: 'none', description: 'List row' }],
+      slots: [{ name: 'item', element: 'li', typography: 'none', description: 'List row' }],
       props: [
         {
           name: 'marker',

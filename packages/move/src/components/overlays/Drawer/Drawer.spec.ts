@@ -32,51 +32,51 @@ export const spec = {
     {
       name: 'trigger',
       element: 'RadixDialog.Trigger',
-      type: 'none',
+      typography: 'none',
       description: 'Button that opens the drawer',
     },
     {
       name: 'overlay',
       element: 'RadixDialog.Overlay',
-      type: 'none',
+      typography: 'none',
       description: 'Backdrop overlay behind the drawer',
     },
     {
       name: 'content',
       element: 'RadixDialog.Content',
-      type: 'title',
+      typography: 'title',
       description: 'Slide-in drawer panel',
     },
     {
       name: 'header',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Top section containing title and close button',
     },
-    { name: 'body', element: 'div', type: 'none', description: 'Scrollable content area' },
-    { name: 'footer', element: 'div', type: 'none', description: 'Bottom section for actions' },
+    { name: 'body', element: 'div', typography: 'none', description: 'Scrollable content area' },
+    { name: 'footer', element: 'div', typography: 'none', description: 'Bottom section for actions' },
     {
       name: 'title',
       element: 'RadixDialog.Title',
-      type: 'title',
+      typography: 'title',
       description: 'Heading element for the drawer title',
     },
     {
       name: 'description',
       element: 'RadixDialog.Description',
-      type: 'ui',
+      typography: 'ui',
       description: 'Paragraph element for the drawer description',
     },
     {
       name: 'close',
       element: 'RadixDialog.Close',
-      type: 'none',
+      typography: 'none',
       description: 'Button that triggers animated close',
     },
     {
       name: 'handle',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Drag handle bar (optional, placed inside Content)',
     },
   ],
@@ -162,7 +162,7 @@ export const spec = {
         {
           name: 'trigger',
           element: 'RadixDialog.Trigger',
-          type: 'none',
+          typography: 'none',
           description: 'Trigger button element',
         },
       ],
@@ -197,7 +197,7 @@ export const spec = {
         {
           name: 'overlay',
           element: 'RadixDialog.Overlay',
-          type: 'none',
+          typography: 'none',
           description: 'Backdrop element',
         },
       ],
@@ -220,7 +220,7 @@ export const spec = {
         {
           name: 'content',
           element: 'RadixDialog.Content',
-          type: 'title',
+          typography: 'title',
           description: 'Drawer content panel',
         },
       ],
@@ -277,7 +277,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', type: 'none', description: 'Header container' }],
+      slots: [{ name: 'header', element: 'div', typography: 'none', description: 'Header container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -307,7 +307,7 @@ export const spec = {
     },
     {
       name: 'Body',
-      slots: [{ name: 'body', element: 'div', type: 'none', description: 'Body container' }],
+      slots: [{ name: 'body', element: 'div', typography: 'none', description: 'Body container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -328,7 +328,7 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'div', type: 'none', description: 'Footer container' }],
+      slots: [{ name: 'footer', element: 'div', typography: 'none', description: 'Footer container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -353,7 +353,7 @@ export const spec = {
         {
           name: 'title',
           element: 'RadixDialog.Title',
-          type: 'title',
+          typography: 'title',
           description: 'Title heading',
         },
       ],
@@ -382,7 +382,7 @@ export const spec = {
         {
           name: 'description',
           element: 'RadixDialog.Description',
-          type: 'ui',
+          typography: 'ui',
           description: 'Description paragraph',
         },
       ],
@@ -408,7 +408,7 @@ export const spec = {
     {
       name: 'Close',
       slots: [
-        { name: 'close', element: 'RadixDialog.Close', type: 'none', description: 'Close button' },
+        { name: 'close', element: 'RadixDialog.Close', typography: 'none', description: 'Close button' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -437,7 +437,7 @@ export const spec = {
     },
     {
       name: 'Handle',
-      slots: [{ name: 'handle', element: 'div', type: 'none', description: 'Drag handle bar' }],
+      slots: [{ name: 'handle', element: 'div', typography: 'none', description: 'Drag handle bar' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

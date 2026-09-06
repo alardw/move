@@ -23,6 +23,13 @@
  * follow its heading is a real thing. It is only rejected as the VALUE OF A
  * TOKEN, where naming a size is the entire point of the declaration.
  *
+ * Third: a slot's DECLARED typography role must match the size it actually
+ * renders at default. Without this the spec field is descriptive — it records
+ * whatever the CSS happened to do, which is worth nothing the moment the CSS
+ * changes. The first codemod that filled it was wrong for 45 of 642 slots, all
+ * because it read the last declaration in the file rather than the one in
+ * default scope; nothing would have caught that.
+ *
  * @enforces styles-16
  * @instead name a step: `var(--move-size-sm)` for controls, `var(--move-size-base)`
  *   for body copy. A token that means "follow the context" should not exist; delete
@@ -30,7 +37,7 @@
  *
  * Exit: 0 = clean, 1 = at least one size off the scale.
  */
-import { readdirSync, statSync, readFileSync } from 'node:fs';
+import { readdirSync, statSync, readFileSync, existsSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -150,6 +157,69 @@ for (const file of cssFiles(COMPONENTS)) {
       problems.push({ rel, line: i + 1, msg: `font-size: ${raw} — not a step on the type scale` });
     }
   });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Slot typography ↔ rendered size
+// ─────────────────────────────────────────────────────────────────────────────
+
+const ROLE_OF = {
+  '--move-text-lg': 'title', '--move-size-lg': 'title', '--move-type-title': 'title',
+  '--move-text-base': 'body', '--move-size-base': 'body', '--move-type-body': 'body',
+  '--move-text-sm': 'ui', '--move-size-sm': 'ui', '--move-type-ui': 'ui',
+  '--move-text-xs': 'meta', '--move-size-xs': 'meta', '--move-type-meta': 'meta',
+};
+
+for (const file of cssFiles(COMPONENTS)) {
+  const specPath = file.replace(/\.module\.css$/, '.spec.ts');
+  if (!existsSync(specPath)) continue;
+  const rel = relative(MOVE_ROOT, specPath);
+  const lines = readFileSync(file, 'utf8').split('\n');
+
+  const local = new Map();
+  let inVariant = false;
+  for (const line of lines) {
+    if (/\{\s*$/.test(line)) {
+      inVariant = /data-size=/.test(line) && !/:not\(\[data-size\]\)/.test(line);
+    }
+    const m = /^\s*(--move-[a-zA-Z0-9-]+):\s*([^;]+);/.exec(line);
+    if (m && !inVariant) local.set(m[1], m[2].trim());
+  }
+  const resolve = (v, d = 0) => {
+    const t = v.trim();
+    const m = /^var\((--move-[a-zA-Z0-9-]+)(?:\s*,[^)]*)?\)$/.exec(t);
+    if (m && d < 6) return local.has(m[1]) ? resolve(local.get(m[1]), d + 1) : m[1];
+    return t;
+  };
+
+  const rendered = new Map();
+  const css = lines.join('\n');
+  for (const m of css.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    const sel = m[1].trim().split('\n').pop();
+    if (/data-size=/.test(sel) && !/:not\(\[data-size\]\)/.test(sel)) continue;
+    const fs = /font-size:\s*([^;]+);/.exec(m[2]);
+    if (!fs) continue;
+    const role = ROLE_OF[resolve(fs[1])];
+    if (!role) continue;
+    for (const c of sel.matchAll(/\.([a-zA-Z][\w-]*)/g)) {
+      if (!rendered.has(c[1])) rendered.set(c[1], role);
+    }
+  }
+
+  const spec = readFileSync(specPath, 'utf8');
+  for (const m of spec.matchAll(
+    /name: '([^']+)',\s*element: '[^']*',\s*typography: '(\w+)'/g,
+  )) {
+    const [, slot, declared] = m;
+    const actual = rendered.get(slot) ?? 'none';
+    if (declared !== actual) {
+      problems.push({
+        rel,
+        line: 0,
+        msg: `slot '${slot}' declares typography '${declared}' but renders '${actual}'`,
+      });
+    }
+  }
 }
 
 if (problems.length === 0) {

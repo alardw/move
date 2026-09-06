@@ -16,7 +16,7 @@ export const spec = {
 
   compound: false,
   rootElement: 'span',
-  slots: [{ name: 'root', element: 'span', type: 'none', description: 'Badge container' }],
+  slots: [{ name: 'root', element: 'span', typography: 'meta', description: 'Badge container' }],
 
   props: [
     {

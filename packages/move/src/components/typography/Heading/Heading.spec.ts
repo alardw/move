@@ -21,7 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'h1-h6',
-      type: 'none',
+      typography: 'none',
       description: 'Heading element rendered as h1-h6 based on level prop',
     },
   ],

@@ -21,13 +21,13 @@ export const spec = {
     {
       name: 'root',
       element: 'Progress.Root',
-      type: 'none',
+      typography: 'none',
       description: 'Radix Progress root with track background and overflow hidden',
     },
     {
       name: 'indicator',
       element: 'Progress.Indicator',
-      type: 'none',
+      typography: 'none',
       description: 'Fill bar that translates via transform to show progress percentage',
     },
   ],

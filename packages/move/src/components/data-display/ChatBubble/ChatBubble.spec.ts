@@ -22,30 +22,30 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Flex row container with placement direction',
     },
     {
       name: 'avatar',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Avatar wrapper (renders Move Avatar internally)',
     },
     {
       name: 'container',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Bubble shape with variant coloring and optional tail',
     },
-    { name: 'header', element: 'div', type: 'meta', description: 'Sender name / metadata' },
-    { name: 'content', element: 'div', type: 'ui', description: 'Message body text' },
-    { name: 'footer', element: 'div', type: 'meta', description: 'Status text / timestamp' },
+    { name: 'header', element: 'div', typography: 'meta', description: 'Sender name / metadata' },
+    { name: 'content', element: 'div', typography: 'ui', description: 'Message body text' },
+    { name: 'footer', element: 'div', typography: 'meta', description: 'Status text / timestamp' },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', type: 'none', description: 'Flex row container' }],
+      slots: [{ name: 'root', element: 'div', typography: 'none', description: 'Flex row container' }],
       props: [
         {
           name: 'placement',
@@ -72,7 +72,7 @@ export const spec = {
     },
     {
       name: 'Avatar',
-      slots: [{ name: 'avatar', element: 'span', type: 'none', description: 'Avatar wrapper' }],
+      slots: [{ name: 'avatar', element: 'span', typography: 'none', description: 'Avatar wrapper' }],
       props: [
         { name: 'src', type: 'string', moveSpecific: true, description: 'Avatar image source' },
         {
@@ -100,7 +100,7 @@ export const spec = {
     },
     {
       name: 'Container',
-      slots: [{ name: 'container', element: 'div', type: 'none', description: 'Bubble shape' }],
+      slots: [{ name: 'container', element: 'div', typography: 'none', description: 'Bubble shape' }],
       props: [
         {
           name: 'variant',
@@ -135,7 +135,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', type: 'meta', description: 'Header area' }],
+      slots: [{ name: 'header', element: 'div', typography: 'meta', description: 'Header area' }],
       props: [
         {
           name: 'children',
@@ -149,7 +149,7 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'div', type: 'ui', description: 'Content area' }],
+      slots: [{ name: 'content', element: 'div', typography: 'ui', description: 'Content area' }],
       props: [
         {
           name: 'children',
@@ -163,7 +163,7 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'div', type: 'meta', description: 'Footer area' }],
+      slots: [{ name: 'footer', element: 'div', typography: 'meta', description: 'Footer area' }],
       props: [
         {
           name: 'children',

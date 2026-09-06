@@ -58,122 +58,122 @@ export const spec = {
     {
       name: 'trigger',
       element: 'div',
-      type: 'body',
+      typography: 'ui',
       description: 'Input wrapper that anchors the popover, mirrors InputText styling',
     },
     {
       name: 'triggerContent',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Flex-wrap area for tags and input within trigger',
     },
     {
       name: 'triggerActions',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Pinned action buttons area (icon, clear) within trigger',
     },
     {
       name: 'input',
       element: 'input',
-      type: 'body',
+      typography: 'ui',
       description: 'Combobox text input for searching/filtering',
     },
     {
       name: 'tagList',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Container for selected value tags in multi mode',
     },
     {
       name: 'tag',
       element: 'span',
-      type: 'meta',
+      typography: 'meta',
       description: 'Individual selected value tag chip',
     },
     {
       name: 'tagRemove',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description: 'Remove button inside each tag',
     },
     {
       name: 'icon',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Chevron indicator icon with open/close rotation animation',
     },
     {
       name: 'clearTrigger',
       element: 'button',
-      type: 'none',
+      typography: 'none',
       description: 'Clear all button, visible when values or input text exist',
     },
     {
       name: 'content',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Radix Popover.Content popup container with enter/exit animation',
     },
     {
       name: 'contentInner',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Scrollable listbox inner container',
     },
     {
       name: 'item',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Individual option item with hover scale animation',
     },
     {
       name: 'itemIndicator',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description:
         'Checkbox-style selection box shown on every item in multi mode; fills with the accent colour and reveals the check when selected',
     },
     {
       name: 'group',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Grouping container for related items',
     },
     {
       name: 'groupLabel',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Label heading for a group of items',
     },
     {
       name: 'empty',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Empty state message shown when no items match filter',
     },
     {
       name: 'loading',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Loading indicator shown when loading prop is true',
     },
     {
       name: 'error',
       element: 'div',
-      type: 'ui',
+      typography: 'ui',
       description: 'Error state message shown when the resource is in an error state',
     },
     {
       name: 'retryTrigger',
       element: 'button',
-      type: 'ui',
+      typography: 'ui',
       description: 'Button that re-runs the resource fetch, shown in the error state',
     },
     {
       name: 'separator',
       element: 'div',
-      type: 'none',
+      typography: 'none',
       description: 'Visual separator between groups or items',
     },
   ],
@@ -308,17 +308,17 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'div', type: 'body', description: 'Input wrapper' },
+        { name: 'trigger', element: 'div', typography: 'ui', description: 'Input wrapper' },
         {
           name: 'triggerContent',
           element: 'div',
-          type: 'none',
+          typography: 'none',
           description: 'Content area for tags and input',
         },
         {
           name: 'triggerActions',
           element: 'div',
-          type: 'none',
+          typography: 'none',
           description: 'Actions area for icon and clear',
         },
       ],
@@ -367,7 +367,7 @@ export const spec = {
     },
     {
       name: 'Input',
-      slots: [{ name: 'input', element: 'input', type: 'body', description: 'Combobox input' }],
+      slots: [{ name: 'input', element: 'input', typography: 'ui', description: 'Combobox input' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -390,7 +390,7 @@ export const spec = {
     },
     {
       name: 'TagList',
-      slots: [{ name: 'tagList', element: 'div', type: 'none', description: 'Tags container' }],
+      slots: [{ name: 'tagList', element: 'div', typography: 'none', description: 'Tags container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -412,8 +412,8 @@ export const spec = {
     {
       name: 'Tag',
       slots: [
-        { name: 'tag', element: 'span', type: 'meta', description: 'Tag chip' },
-        { name: 'tagRemove', element: 'button', type: 'none', description: 'Remove button' },
+        { name: 'tag', element: 'span', typography: 'meta', description: 'Tag chip' },
+        { name: 'tagRemove', element: 'button', typography: 'none', description: 'Remove button' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -441,7 +441,7 @@ export const spec = {
     },
     {
       name: 'Icon',
-      slots: [{ name: 'icon', element: 'span', type: 'none', description: 'Chevron icon' }],
+      slots: [{ name: 'icon', element: 'span', typography: 'none', description: 'Chevron icon' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -463,7 +463,7 @@ export const spec = {
     {
       name: 'ClearTrigger',
       slots: [
-        { name: 'clearTrigger', element: 'button', type: 'none', description: 'Clear button' },
+        { name: 'clearTrigger', element: 'button', typography: 'none', description: 'Clear button' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -486,8 +486,8 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', type: 'none', description: 'Popover content' },
-        { name: 'contentInner', element: 'div', type: 'none', description: 'Scrollable listbox' },
+        { name: 'content', element: 'div', typography: 'none', description: 'Popover content' },
+        { name: 'contentInner', element: 'div', typography: 'none', description: 'Scrollable listbox' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -551,11 +551,11 @@ export const spec = {
     {
       name: 'Item',
       slots: [
-        { name: 'item', element: 'div', type: 'ui', description: 'Option item' },
+        { name: 'item', element: 'div', typography: 'ui', description: 'Option item' },
         {
           name: 'itemIndicator',
           element: 'span',
-          type: 'none',
+          typography: 'none',
           description:
             'Checkbox-style selection box on every item in multi mode, filled with a check when selected',
         },
@@ -598,7 +598,7 @@ export const spec = {
         {
           name: 'itemIndicator',
           element: 'span',
-          type: 'none',
+          typography: 'none',
           description: 'Checkbox-style selection box holding the check glyph',
         },
       ],
@@ -623,7 +623,7 @@ export const spec = {
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'div', type: 'none', description: 'Group container' }],
+      slots: [{ name: 'group', element: 'div', typography: 'none', description: 'Group container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -644,7 +644,7 @@ export const spec = {
     },
     {
       name: 'GroupLabel',
-      slots: [{ name: 'groupLabel', element: 'div', type: 'ui', description: 'Group label' }],
+      slots: [{ name: 'groupLabel', element: 'div', typography: 'ui', description: 'Group label' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -665,7 +665,7 @@ export const spec = {
     },
     {
       name: 'Empty',
-      slots: [{ name: 'empty', element: 'div', type: 'ui', description: 'Empty state' }],
+      slots: [{ name: 'empty', element: 'div', typography: 'ui', description: 'Empty state' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -686,7 +686,7 @@ export const spec = {
     },
     {
       name: 'Loading',
-      slots: [{ name: 'loading', element: 'div', type: 'ui', description: 'Loading state' }],
+      slots: [{ name: 'loading', element: 'div', typography: 'ui', description: 'Loading state' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -707,7 +707,7 @@ export const spec = {
     },
     {
       name: 'Error',
-      slots: [{ name: 'error', element: 'div', type: 'ui', description: 'Error state' }],
+      slots: [{ name: 'error', element: 'div', typography: 'ui', description: 'Error state' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -728,7 +728,7 @@ export const spec = {
     },
     {
       name: 'RetryTrigger',
-      slots: [{ name: 'retryTrigger', element: 'button', type: 'ui', description: 'Retry button' }],
+      slots: [{ name: 'retryTrigger', element: 'button', typography: 'ui', description: 'Retry button' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -750,7 +750,7 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', type: 'none', description: 'Separator line' }],
+      slots: [{ name: 'separator', element: 'div', typography: 'none', description: 'Separator line' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

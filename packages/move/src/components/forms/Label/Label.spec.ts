@@ -20,13 +20,13 @@ export const spec = {
     {
       name: 'root',
       element: 'label',
-      type: 'ui',
+      typography: 'ui',
       description: 'Radix Label.Root element that renders as a native label',
     },
     {
       name: 'asterisk',
       element: 'span',
-      type: 'none',
+      typography: 'none',
       description: 'Required field asterisk indicator (*), rendered when required=true',
     },
   ],

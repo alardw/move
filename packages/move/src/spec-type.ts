@@ -200,7 +200,11 @@ export type DismissBehavior = 'none' | 'hide' | 'unmountAfterExit';
 // =============================================================================
 
 /**
- * What a slot's text IS, which decides how big it is.
+ * Which role on the type scale a slot's text plays, which decides how big it is.
+ *
+ * Named `TypographyRole` rather than `TypeRole`: "type" is the most overloaded
+ * word in a TypeScript codebase, and this axis sits beside `kind` (which part of
+ * the anatomy a slot is) where the two must never be confused.
  *
  * The scale (`--move-text-*`) says how big; a role says why. Naming them stopped
  * five components disagreeing about the size of a title while all seven agreed
@@ -210,7 +214,7 @@ export type DismissBehavior = 'none' | 'hide' | 'unmountAfterExit';
  * than leaving the field off and making silence indistinguishable from an
  * oversight.
  */
-export type TypeRole =
+export type TypographyRole =
   /** 18px — a card, row or section title */
   | 'title'
   /** 16px — running content, read rather than scanned */
@@ -231,10 +235,14 @@ export interface SlotDef {
   /** Brief description of purpose */
   description: string;
   /**
-   * The typographic role this slot's text plays. Required — `'none'` is a
-   * decision, an absent key is not.
+   * Which role on the type scale this slot's text plays. Required — `'none'` is
+   * a decision, an absent key is not.
+   *
+   * `'none'` means "sets no size from the scale": either no font-size at all, or
+   * a deliberately context-relative one carrying a `type-exempt` comment (code
+   * inside running prose, which must scale WITH it).
    */
-  type: TypeRole;
+  typography: TypographyRole;
 }
 
 /** A public prop definition */
