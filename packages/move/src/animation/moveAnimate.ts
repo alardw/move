@@ -58,6 +58,13 @@ function writtenProperties(params: Animation): string[] {
     if (NOT_A_PROPERTY.has(key)) continue;
     const css = CSS_PROPERTY[key];
     if (css) props.add(css);
+    // The key itself as well. anime writes some shorthands as their own inline
+    // declaration alongside the property they compose into — an `x` tween leaves
+    // both `transform: translateX(24px)` and a literal `x: 24` on the element, and
+    // removing only the mapped property left the second behind on every switch,
+    // for good. Removing a property that was never set is a no-op, so this is
+    // safe for every key that does map cleanly.
+    props.add(key);
   }
   return [...props];
 }
