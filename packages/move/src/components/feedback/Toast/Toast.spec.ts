@@ -73,7 +73,7 @@ export const spec = {
     {
       name: 'closeButton',
       element: 'button',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'Close/dismiss button with X icon',
     },

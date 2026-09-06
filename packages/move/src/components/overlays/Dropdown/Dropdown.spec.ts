@@ -97,7 +97,7 @@ export const spec = {
     },
     {
       name: 'checkboxIndicator',
-      element: 'span',
+      element: 'Checkbox',
       kind: 'indicator',
       typography: 'none',
       description: 'Visual indicator for checkbox state',
@@ -442,7 +442,7 @@ export const spec = {
         },
         {
           name: 'checkboxIndicator',
-          element: 'span',
+          element: 'Checkbox',
           kind: 'indicator',
           typography: 'none',
           description: 'Check mark indicator',

@@ -60,7 +60,7 @@ export const spec = {
     {
       name: 'input',
       element: 'input',
-      kind: 'none',
+      kind: 'control',
       typography: 'ui',
       description: 'Text input for typing/editing color values',
     },

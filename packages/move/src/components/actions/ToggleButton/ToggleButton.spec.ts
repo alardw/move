@@ -19,7 +19,7 @@ export const spec = {
     {
       name: 'root',
       element: 'button',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'Toggle button element via Radix Toggle.Root',
     },

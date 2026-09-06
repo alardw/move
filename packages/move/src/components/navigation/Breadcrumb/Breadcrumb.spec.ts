@@ -37,7 +37,7 @@ export const spec = {
     {
       name: 'link',
       element: 'a',
-      kind: 'none',
+      kind: 'item',
       typography: 'none',
       description: 'Anchor link for navigable breadcrumb items',
     },
@@ -162,7 +162,7 @@ export const spec = {
         {
           name: 'link',
           element: 'a',
-          kind: 'none',
+          kind: 'item',
           typography: 'none',
           description: 'Anchor link',
         },

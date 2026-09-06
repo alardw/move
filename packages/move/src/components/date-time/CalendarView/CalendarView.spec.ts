@@ -44,7 +44,7 @@ export const spec = {
     {
       name: 'today',
       element: 'button',
-      kind: 'none',
+      kind: 'item',
       typography: 'none',
       description: 'Button that resets the date to today',
     },
@@ -305,7 +305,7 @@ export const spec = {
         {
           name: 'today',
           element: 'button',
-          kind: 'none',
+          kind: 'item',
           typography: 'none',
           description: 'Today button',
         },

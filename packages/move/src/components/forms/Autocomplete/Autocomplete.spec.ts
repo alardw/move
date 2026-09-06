@@ -77,7 +77,7 @@ export const spec = {
     {
       name: 'input',
       element: 'input',
-      kind: 'none',
+      kind: 'control',
       typography: 'ui',
       description: 'Combobox text input for searching/filtering',
     },
@@ -397,7 +397,7 @@ export const spec = {
         {
           name: 'input',
           element: 'input',
-          kind: 'none',
+          kind: 'control',
           typography: 'ui',
           description: 'Combobox input',
         },

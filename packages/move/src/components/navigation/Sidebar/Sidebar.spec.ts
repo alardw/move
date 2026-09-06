@@ -105,7 +105,7 @@ export const spec = {
     {
       name: 'navItem',
       element: 'a',
-      kind: 'none',
+      kind: 'item',
       typography: 'body',
       description: 'A destination, with icon, label, and badge',
     },
@@ -285,8 +285,8 @@ export const spec = {
         },
         {
           name: 'mobileClose',
-          element: 'button',
-          kind: 'none',
+          element: 'Button',
+          kind: 'control',
           typography: 'none',
           description: 'Mobile close button',
         },
@@ -483,7 +483,7 @@ export const spec = {
         {
           name: 'navItem',
           element: 'a',
-          kind: 'none',
+          kind: 'item',
           typography: 'body',
           description: 'The destination link',
         },

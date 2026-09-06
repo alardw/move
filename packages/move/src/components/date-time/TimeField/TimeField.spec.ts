@@ -61,7 +61,7 @@ export const spec = {
     {
       name: 'period',
       element: 'button',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'AM/PM toggle button for 12h mode',
     },
@@ -269,7 +269,7 @@ export const spec = {
         {
           name: 'period',
           element: 'button',
-          kind: 'none',
+          kind: 'control',
           typography: 'none',
           description: 'AM/PM toggle',
         },
