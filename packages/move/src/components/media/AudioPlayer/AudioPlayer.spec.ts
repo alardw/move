@@ -10,6 +10,7 @@ export const spec = {
   description:
     'Horizontal bar-style audio player with play/pause, progress scrubbing, volume control, subtitle overlay, playback speed, and settings menu',
 
+  families: ['media-player'],
   compound: false,
   rootElement: 'div',
   slots: [

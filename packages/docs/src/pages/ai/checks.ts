@@ -64,6 +64,12 @@ export const CHECKS: CheckDoc[] = [
       'A compound part that must contain another one, does. Select.Content needs a Select.Viewport \u2014 Viewport holds the container the reveal animation targets. The failure is silent: omit it and the select still renders, opens and selects while the reveal never runs. Declared as data on the sub-component, and scanned across the docs too, since a sample that omits it teaches every reader to omit it.',
   },
   {
+    name: 'families',
+    appliesTo: 'component',
+    enforces:
+      'Every member of a family keeps its contract \u2014 the capabilities, slots, ARIA patterns, choreographies and behaviour the family bundles. Families compose, so a shared core is written once. A family needs at least two members; one member is a component.',
+  },
+  {
     name: 'api-compound-shape',
     appliesTo: 'component',
     enforces:

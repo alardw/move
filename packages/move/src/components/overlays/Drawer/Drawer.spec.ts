@@ -12,7 +12,7 @@ export const spec = {
   description:
     'Slide-in panel from any edge with overlay backdrop, responsive auto-switching to bottom sheet on mobile, and structured header/body/footer layout',
   choreographies: ['sidePanel'],
-  families: ['modal-overlay'],
+  families: ['overlay-panel'],
   ariaPattern: ['dialog'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {
