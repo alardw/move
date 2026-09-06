@@ -223,6 +223,12 @@
   --move-spacing-2xl: var(--move-space-12);
   --move-spacing-3xl: var(--move-space-16);
 
+  /* The gap between stacked form options — checkboxes, radios, switches. Named
+     because the three had drifted to three different answers for one
+     relationship: RadioGroup 8px, Checkbox.Group a hardcoded 12px inline, and
+     the Switch sample 24px picked by hand at the call site. */
+  --move-field-gap: var(--move-spacing-sm);
+
   /* ============================================
    * Border Radius - Semantic
    * ============================================ */
