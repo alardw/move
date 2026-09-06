@@ -5,6 +5,7 @@
  * ========================================================================= */
 
 .trigger {
+  --move-autocomplete-trigger-font-size: var(--move-type-ui);
   --move-autocomplete-trigger-bg: var(--move-bg-base);
   --move-autocomplete-trigger-border: var(--move-border-interactive);
   --move-autocomplete-trigger-border-hover: var(--move-border-emphasis);
@@ -27,7 +28,7 @@
   border: 1px solid var(--move-autocomplete-trigger-border);
   border-radius: var(--move-autocomplete-trigger-radius);
   font-family: var(--move-font-body);
-  font-size: var(--move-autocomplete-trigger-font-size, inherit);
+  font-size: var(--move-autocomplete-trigger-font-size);
   color: var(--move-autocomplete-trigger-fg);
   cursor: text;
   transition:
@@ -161,7 +162,7 @@
   min-width: 4rem;
   padding: var(--move-spacing-xs) var(--move-spacing-sm);
   font-family: var(--move-font-body);
-  font-size: var(--move-autocomplete-trigger-font-size, inherit);
+  font-size: var(--move-autocomplete-trigger-font-size);
   color: var(--move-autocomplete-trigger-fg);
 }
 

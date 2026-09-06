@@ -125,6 +125,12 @@ export const CHECKS: CheckDoc[] = [
       'CSS transitions animate colour, never motion. anime.js writes inline styles, so a transition and an animation are one language at two cascade levels — a transition cannot compose with a spring, and on the same property they overwrite each other. Colour is safe because nothing in `useAnimations` writes it. Setting `opacity` or `transform` flatly is a state and stays allowed; it is transitioning them that is motion. Escapes: inside `prefers-reduced-motion`, or a justified `transition-exempt` comment.',
   },
   {
+    name: 'type-scale',
+    appliesTo: 'component',
+    enforces:
+      'Every `font-size` resolves to the type scale (`--move-text-*` / `--move-size-*`). Catches raw literals, and the subtler case: a `*-font-size` token set to `inherit`, which on a replaced element (input, textarea, select) yields the browser\u2019s own 13.333px rather than a step \u2014 five form fields shipped that as their default size. `inherit` remains legal on a plain declaration; an `em` relative to running text takes a `type-exempt` comment.',
+  },
+  {
     name: 'animation-spec-drift',
     appliesTo: 'component',
     enforces:

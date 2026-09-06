@@ -148,7 +148,7 @@
 
 .root code {
   font-family: var(--move-font-code, ui-monospace, monospace);
-  font-size: 0.875em;
+  font-size: 0.875em; /* type-exempt: relative to the running text it sits in */
   padding: 0.15em 0.4em;
   background-color: var(--move-prose-bg-code);
   border-radius: var(--move-rounded-md);
@@ -185,7 +185,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 1em;
-  font-size: 0.9375em;
+  font-size: 0.9375em; /* type-exempt: relative to the running text it sits in */
 }
 
 .root th {

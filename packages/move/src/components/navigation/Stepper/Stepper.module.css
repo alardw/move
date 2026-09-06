@@ -143,7 +143,7 @@
   --move-stepper-indicator-size: var(--move-space-6);
   --move-stepper-indicator-font-size: var(--move-size-xs);
   --move-stepper-title-font-size: var(--move-size-xs);
-  --move-stepper-description-font-size: 11px;
+  --move-stepper-description-font-size: var(--move-size-xs);
   --move-stepper-separator-thickness: 1px;
 }
 

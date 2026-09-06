@@ -6,7 +6,7 @@
   --move-formfield-label-width: 8rem;
   --move-formfield-label-pt: 0.4375rem;
   --move-formfield-description-color: var(--move-fg-muted);
-  --move-formfield-description-size: inherit;
+  --move-formfield-description-size: var(--move-size-xs);
 
   container-type: inline-size;
   width: 100%;

@@ -9,7 +9,7 @@
   --move-textarea-radius: var(--move-rounded-md);
   --move-textarea-padding-x: var(--move-spacing-sm);
   --move-textarea-padding-y: var(--move-spacing-sm);
-  --move-textarea-font-size: inherit;
+  --move-textarea-font-size: var(--move-size-sm);
   --move-textarea-fg: var(--move-fg-base);
   --move-textarea-placeholder: var(--move-fg-muted);
 

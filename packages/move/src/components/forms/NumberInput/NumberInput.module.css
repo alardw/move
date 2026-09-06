@@ -9,7 +9,7 @@
   --move-numberinput-radius: var(--move-rounded-md);
   --move-numberinput-padding-x: var(--move-spacing-sm);
   --move-numberinput-padding-y: var(--move-spacing-xs);
-  --move-numberinput-font-size: inherit;
+  --move-numberinput-font-size: var(--move-size-sm);
   --move-numberinput-fg: var(--move-fg-base);
   --move-numberinput-placeholder: var(--move-fg-muted);
   --move-numberinput-height: var(--move-control-height-md);

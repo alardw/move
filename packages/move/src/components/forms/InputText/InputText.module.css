@@ -9,7 +9,7 @@
   --move-input-radius: var(--move-rounded-md);
   --move-input-padding-x: var(--move-spacing-sm);
   --move-input-padding-y: var(--move-spacing-xs);
-  --move-input-font-size: inherit;
+  --move-input-font-size: var(--move-size-sm);
   --move-input-fg: var(--move-fg-base);
   --move-input-placeholder: var(--move-fg-subtle);
   --move-input-height: var(--move-control-height-md);

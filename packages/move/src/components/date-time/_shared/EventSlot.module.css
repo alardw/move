@@ -67,7 +67,7 @@
 }
 
 .eventTime {
-  font-size: 0.65rem;
+  font-size: var(--move-size-xs);
   color: var(--move-fg-muted);
   flex-shrink: 0;
 }

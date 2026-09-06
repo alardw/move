@@ -177,7 +177,7 @@
 
 /* Time display */
 .time {
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   font-variant-numeric: tabular-nums;
   color: var(--move-audioplayer-fg-muted);
   white-space: nowrap;
@@ -185,10 +185,10 @@
 }
 
 .root[data-size='sm'] .time {
-  font-size: 12px;
+  font-size: 12px; /* type-exempt: media chrome, sized against the video frame not the page */
 }
 .root[data-size='lg'] .time {
-  font-size: 14px;
+  font-size: 14px; /* type-exempt: media chrome, sized against the video frame not the page */
 }
 
 /* Volume slider */
@@ -230,7 +230,7 @@
   margin-bottom: 4px;
   background: rgba(0, 0, 0, 0.7);
   color: var(--move-audioplayer-fg);
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   line-height: 1.4;
   text-align: center;
   border-radius: 4px;

@@ -59,7 +59,7 @@
    paragraph or table cell. */
 
 .root[data-size='xs'] {
-  font-size: 0.6875rem; /* 11px — half-step below text-xs (12px) */
+  font-size: 0.6875rem; /* 11px — half-step below text-xs (12px) */ /* type-exempt: relative to the running text it sits in */
 }
 
 .root[data-size='sm'],

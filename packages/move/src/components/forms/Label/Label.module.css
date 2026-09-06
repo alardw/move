@@ -2,7 +2,7 @@
 
 .root {
   /* Component tokens */
-  --move-label-font-size: inherit;
+  --move-label-font-size: var(--move-size-sm);
   --move-label-font-weight: var(--move-weight-medium);
   --move-label-color: var(--move-fg-base);
   --move-label-disabled-color: var(--move-fg-muted);
@@ -35,6 +35,6 @@
 
 .asterisk {
   color: var(--move-accent-text);
-  font-size: 1.1em;
+  font-size: 1.1em; /* type-exempt: relative to the running text it sits in */
   margin-left: 0.2em;
 }

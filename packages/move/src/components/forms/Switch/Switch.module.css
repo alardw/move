@@ -12,6 +12,7 @@
 }
 
 .label {
+  font-size: var(--move-type-ui);
   user-select: none;
 }
 

@@ -89,7 +89,7 @@
   padding: 4px 12px;
   background: var(--move-videoplayer-subtitle-bg);
   color: var(--move-videoplayer-subtitle-fg);
-  font-size: var(--_subtitle-size, 16px);
+  font-size: var(--_subtitle-size, 16px); /* type-exempt: media chrome, sized against the video frame not the page */
   line-height: 1.4;
   text-align: center;
   border-radius: 4px;
@@ -224,7 +224,7 @@
   min-width: auto;
   padding: 0 8px;
   font-variant-numeric: tabular-nums;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
 }
 
 .subtitleButton[data-active='true'] {
@@ -234,7 +234,7 @@
 
 /* Time display */
 .time {
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   font-variant-numeric: tabular-nums;
   color: var(--move-videoplayer-controls-fg-muted);
   padding: 0 8px;
@@ -311,7 +311,7 @@
   border: none;
   background: none;
   color: #fff;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   text-align: left;
   cursor: pointer;
 }

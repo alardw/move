@@ -19,7 +19,7 @@
   --move-colorinput-radius: var(--move-rounded-md);
   --move-colorinput-padding-x: var(--move-spacing-sm);
   --move-colorinput-padding-y: var(--move-spacing-xs);
-  --move-colorinput-font-size: inherit;
+  --move-colorinput-font-size: var(--move-size-sm);
   --move-colorinput-fg: var(--move-fg-base);
   --move-colorinput-placeholder: var(--move-fg-muted);
   --move-colorinput-height: var(--move-control-height-md);

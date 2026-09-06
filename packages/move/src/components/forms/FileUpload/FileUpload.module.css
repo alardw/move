@@ -190,7 +190,7 @@
 .itemSize {
   flex-shrink: 0;
   color: var(--move-fg-muted);
-  font-size: 0.85em;
+  font-size: 0.85em; /* type-exempt: relative to the running text it sits in */
 }
 
 /* ========================================================================= */
@@ -252,7 +252,7 @@
 
 .itemStatus {
   flex-shrink: 0;
-  font-size: 0.8em;
+  font-size: 0.8em; /* type-exempt: relative to the running text it sits in */
   font-variant-numeric: tabular-nums;
   color: var(--move-fg-muted);
 }
@@ -277,7 +277,7 @@
 
 .totalProgressLabel {
   flex-shrink: 0;
-  font-size: 0.85em;
+  font-size: 0.85em; /* type-exempt: relative to the running text it sits in */
   color: var(--move-fg-muted);
   font-variant-numeric: tabular-nums;
   min-width: 3ch;

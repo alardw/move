@@ -33,7 +33,7 @@
   border: none;
   background: none;
   color: #fff;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   text-align: left;
   cursor: pointer;
   gap: 8px;
@@ -49,7 +49,7 @@
 
 .categoryValue {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 12px;
+  font-size: 12px; /* type-exempt: media chrome, sized against the video frame not the page */
 }
 
 .categoryChevron {
@@ -66,7 +66,7 @@
   border: none;
   background: none;
   color: #fff;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   text-align: left;
   cursor: default;
   gap: 8px;
@@ -81,7 +81,7 @@
   border: none;
   background: none;
   color: #fff;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   text-align: left;
   cursor: pointer;
   gap: 6px;
@@ -111,7 +111,7 @@
   border: none;
   background: none;
   color: #fff;
-  font-size: 13px;
+  font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */
   text-align: left;
   cursor: pointer;
   gap: 8px;
