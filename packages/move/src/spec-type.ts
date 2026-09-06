@@ -527,6 +527,20 @@ export interface SubComponentDef {
   usesFactory: boolean;
   /** Radix primitive this wraps (if any) */
   radixPrimitive?: string;
+  /**
+   * Sub-components that MUST appear inside this one for it to work.
+   *
+   * A compound API is a set of parts a caller assembles, and some assemblies are
+   * not optional — Select.Content needs a Select.Viewport, because Viewport is
+   * what holds the container the reveal animation targets and takes its ref.
+   * Omit it and everything still renders, still opens, still selects; only the
+   * animation silently never runs, because the container it queries is empty.
+   *
+   * CalendarNav omitted it for the whole life of the Radix Select rebuild and
+   * nothing said a word — not tsc, not the tests, not any of the fifty checks.
+   * Declared here, `check:required-children` reads it and says so.
+   */
+  requiredChildren?: { name: string; why: string }[];
   /** Brief description */
   description: string;
 }

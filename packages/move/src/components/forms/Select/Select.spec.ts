@@ -414,6 +414,12 @@ export const spec = {
       ],
       usesFactory: true,
       radixPrimitive: 'DropdownMenu.Content',
+      requiredChildren: [
+        {
+          name: 'Viewport',
+          why: 'Viewport holds .contentInner — the stagger container the reveal animates and takes its ref from. Without it the items mount as direct children of .content, the container the animation queries is empty, and the reveal silently never runs while everything else still works.',
+        },
+      ],
       description:
         'Animated popup content. Defaults to matching trigger width (var(--radix-dropdown-menu-trigger-width)) with min/max-width clamping. Tall content scrolls via max-height; items truncate with ellipsis. Height animation, stagger enter, scroll-to-selected on open.',
     },

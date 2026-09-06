@@ -58,6 +58,12 @@ export const CHECKS: CheckDoc[] = [
       'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
   },
   {
+    name: 'required-children',
+    appliesTo: 'component',
+    enforces:
+      'A compound part that must contain another one, does. Select.Content needs a Select.Viewport \u2014 Viewport holds the container the reveal animation targets. The failure is silent: omit it and the select still renders, opens and selects while the reveal never runs. Declared as data on the sub-component, and scanned across the docs too, since a sample that omits it teaches every reader to omit it.',
+  },
+  {
     name: 'api-compound-shape',
     appliesTo: 'component',
     enforces:
