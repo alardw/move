@@ -9,6 +9,30 @@ import {
   Icon,
   Table,
   Card,
+  Accordion,
+  Alert,
+  AudioPlayer,
+  Button,
+  Calendar,
+  Carousel,
+  FileUpload,
+  Checkbox,
+  InputText,
+  List,
+  Prose,
+  ProgressBar,
+  Quote,
+  RichTextEditor,
+  ScrollArea,
+  Select,
+  Sidebar,
+  Skeleton,
+  Stepper,
+  Tabs,
+  Textarea,
+  Timeline,
+  ToggleGroup,
+  VideoPlayer,
 } from "move";
 import { Section, TocRail, type TocItem } from "../../components";
 
@@ -23,6 +47,7 @@ const TOC: TocItem[] = [
   { href: "#levels", label: "Levels" },
   { href: "#alternating", label: "Alternating tints" },
   { href: "#components", label: "Per-component surface" },
+  { href: "#audit", label: "Audit — both grounds" },
 ];
 
 interface Level {
@@ -61,6 +86,240 @@ const COMPONENT_BY_LEVEL: Record<Level["kind"], string[]> = {
     "Select",
   ],
 };
+
+/**
+ * TEMPORARY. An audit strip, not documentation.
+ *
+ * Every component that paints a ground of its own, on both grounds, so what
+ * actually happens is visible rather than inferred. The last three already read
+ * `--move-surface-*`, and are here as the working case — a collision is much
+ * easier to see next to something that steps correctly.
+ *
+ * NOT here: Dialog, Drawer, Popover, Dropdown, Tooltip and Toast. They portal to
+ * document.body, so they would render outside these panels and inherit the page
+ * rather than the forced ground — the strip would show something misleading
+ * The media players are here as a deliberate NON-participant: their chrome is
+ * white scrims over dark video, which is correct as it stands and should not
+ * follow the ground. They are in the strip so that stays visible — the ~25 raw
+ * white values in AudioPlayer, VideoPlayer and PlayerSettingsMenu are a decision,
+ * not debt to be cleaned up later. What to look for: a
+ * component whose fill matches the panel it is standing on has collided — it
+ * either declared an absolute tone, or it flipped onto a rung its parent
+ * already occupies. The panels force an explicit `data-surface`, so nothing
+ * here depends on where the page happens to nest them.
+ */
+function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
+  return (
+    // The audit forces a ground and paints it directly; bypassing what a
+    // component would decide is the entire point.  dogfood-ignore
+    <div
+      // dogfood-ignore
+      data-surface={tone}
+      // dogfood-ignore
+      style={{
+        background: "var(--move-surface-bg)",
+        padding: "var(--move-spacing-lg)",
+        borderRadius: "var(--move-rounded-lg)",
+        flex: 1,
+        minWidth: 0,
+      }}
+    >
+      <Stack gap="md">
+        <Text weight="semibold">
+          <Code>{tone}</Code> ground
+        </Text>
+
+        <Card.Root>
+          <Card.Body>
+            <Text>Card</Text>
+            <Card.Root>
+              <Card.Body>
+                <Text>Card in a Card — the nesting case</Text>
+              </Card.Body>
+            </Card.Root>
+          </Card.Body>
+        </Card.Root>
+
+        <Accordion defaultValue="a">
+          <Accordion.Item value="a">
+            <Accordion.Header>
+              <Accordion.Trigger>Accordion</Accordion.Trigger>
+            </Accordion.Header>
+            <Accordion.Content>
+              <Text>Trigger and panel, against each other and the ground.</Text>
+            </Accordion.Content>
+          </Accordion.Item>
+        </Accordion>
+
+        <List>
+          <List.Item>List — paints a ground, declares none</List.Item>
+          <List.Item>Second row</List.Item>
+        </List>
+
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.Head>Table</Table.Head>
+              <Table.Head>Header + zebra</Table.Head>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            <Table.Row>
+              <Table.Cell>One</Table.Cell>
+              <Table.Cell>Two</Table.Cell>
+            </Table.Row>
+            <Table.Row>
+              <Table.Cell>Three</Table.Cell>
+              <Table.Cell>Four</Table.Cell>
+            </Table.Row>
+          </Table.Body>
+        </Table>
+
+        <Calendar.Root>
+          <Calendar.Nav />
+          <Calendar.Grid />
+        </Calendar.Root>
+
+        {/* dogfood-ignore */}
+        <ScrollArea.Root style={{ height: 120 }}>
+          <ScrollArea.Content padded>
+            <Text>
+              ScrollArea — paints a ground, declares none. Scroll me: this text is long
+              enough to overflow the box it is in, which is the point.
+            </Text>
+            <Text>More content so the scrollport actually scrolls.</Text>
+            <Text>And a little more again.</Text>
+          </ScrollArea.Content>
+        </ScrollArea.Root>
+
+        <RichTextEditor.Root>
+          <RichTextEditor.Toolbar>
+            <RichTextEditor.ControlGroup>
+              <RichTextEditor.Control>B</RichTextEditor.Control>
+              <RichTextEditor.Control>I</RichTextEditor.Control>
+            </RichTextEditor.ControlGroup>
+          </RichTextEditor.Toolbar>
+          <RichTextEditor.Content>RichTextEditor</RichTextEditor.Content>
+        </RichTextEditor.Root>
+
+        <Quote attribution="the audit">Quote — paints a ground</Quote>
+
+        <Code>Code — inline ground</Code>
+
+        <Prose>
+          {/* dogfood-ignore: Prose renders raw HTML by design — that is what it is for. */}
+          <p>Prose — paints four grounds of its own.</p>
+        </Prose>
+
+        <FileUpload.Root maxFiles={2}>
+          <FileUpload.Dropzone>
+            <Text>FileUpload — the dropzone is a large filled region</Text>
+          </FileUpload.Dropzone>
+        </FileUpload.Root>
+
+        <Skeleton.Root>
+          <Skeleton.Text lines={2} />
+        </Skeleton.Root>
+
+        <Stepper>
+          <Stepper.Step status="complete">
+            <Stepper.Indicator>1</Stepper.Indicator>
+            <Stepper.Title>Stepper</Stepper.Title>
+          </Stepper.Step>
+          <Stepper.Step status="active">
+            <Stepper.Indicator>2</Stepper.Indicator>
+            <Stepper.Title>Second</Stepper.Title>
+          </Stepper.Step>
+        </Stepper>
+
+        <Timeline>
+          <Timeline.Item title="Timeline">
+            <Text>Marker and rail on this ground.</Text>
+          </Timeline.Item>
+        </Timeline>
+
+        <ProgressBar value={60} />
+
+        <AudioPlayer src="/sample.mp3" radius="md" />
+        <VideoPlayer src="/sample.mp4" radius="md" />
+
+        <Text weight="semibold">
+          Already surface-aware — the working case
+        </Text>
+
+        <Tabs.Root defaultValue="one">
+          <Tabs.List>
+            <Tabs.Trigger value="one">Tabs</Tabs.Trigger>
+            <Tabs.Trigger value="two">Second</Tabs.Trigger>
+          </Tabs.List>
+          <Tabs.Content value="one">
+            <Text>Reads --move-surface-* already.</Text>
+          </Tabs.Content>
+        </Tabs.Root>
+
+        <ToggleGroup.Root defaultValue="a">
+          <ToggleGroup.Item value="a">ToggleGroup</ToggleGroup.Item>
+          <ToggleGroup.Item value="b">Second</ToggleGroup.Item>
+        </ToggleGroup.Root>
+
+        <Carousel.Root showIndicators>
+          <Carousel.Viewport>
+            <Carousel.Slide>
+              <Text>Carousel — also surface-aware</Text>
+            </Carousel.Slide>
+            <Carousel.Slide>
+              <Text>Second slide</Text>
+            </Carousel.Slide>
+          </Carousel.Viewport>
+        </Carousel.Root>
+
+
+        <Sidebar.Provider>
+          {/* dogfood-ignore */}
+          <div style={{ display: "flex", height: 160, overflow: "hidden", borderRadius: "var(--move-rounded-md)" }}>
+            <Sidebar.Root>
+              <Sidebar.Content>
+                <Sidebar.Group>
+                  <Sidebar.GroupLabel>Sidebar</Sidebar.GroupLabel>
+                  <Sidebar.Nav>
+                    <Sidebar.NavItem href="#" active onClick={(e) => e.preventDefault()}>
+                      Rail on this ground
+                    </Sidebar.NavItem>
+                    <Sidebar.NavItem href="#" onClick={(e) => e.preventDefault()}>
+                      Second row
+                    </Sidebar.NavItem>
+                  </Sidebar.Nav>
+                </Sidebar.Group>
+              </Sidebar.Content>
+            </Sidebar.Root>
+          </div>
+        </Sidebar.Provider>
+
+        <Alert>Alert — hardcodes data-surface=&quot;subtle&quot;</Alert>
+
+        <Select.Root defaultValue="one">
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Icon />
+          </Select.Trigger>
+          <Select.Content>
+            <Select.Viewport>
+              <Select.Item value="one">Select — also hardcodes subtle</Select.Item>
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Root>
+
+        <InputText placeholder="InputText — bordered leaf" />
+        <Textarea placeholder="Textarea" rows={2} />
+
+        <Stack direction="row" gap="sm" align="center">
+          <Button variant="secondary">Button</Button>
+          <Checkbox defaultChecked>Checkbox</Checkbox>
+        </Stack>
+      </Stack>
+    </div>
+  );
+}
 
 export function SurfacesPage() {
   return (
@@ -221,6 +480,17 @@ export function SurfacesPage() {
               ))}
             </Table.Body>
           </Table>
+        </Section>
+
+        <Section
+          id="audit"
+          title="Audit — both grounds"
+          lede="Temporary. The same components forced onto each ground, so a collision is visible rather than inferred."
+        >
+          <Stack direction="row" gap="lg" align="stretch" wrap>
+            <SurfaceAudit tone="base" />
+            <SurfaceAudit tone="subtle" />
+          </Stack>
         </Section>
       </Stack>
       <TocRail items={TOC} />
