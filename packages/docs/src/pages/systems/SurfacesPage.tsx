@@ -34,6 +34,7 @@ import {
   ToggleGroup,
   VideoPlayer,
 } from "move";
+import { COMPONENT_CONTENT } from "../../content/components";
 import { Section, TocRail, type TocItem } from "../../components";
 
 /**
@@ -47,7 +48,7 @@ const TOC: TocItem[] = [
   { href: "#levels", label: "Levels" },
   { href: "#alternating", label: "Alternating tints" },
   { href: "#components", label: "Per-component surface" },
-  { href: "#audit", label: "Audit — both grounds" },
+  { href: "#audit", label: "On both grounds" },
 ];
 
 interface Level {
@@ -71,29 +72,44 @@ const LEVELS: Level[] = [
   },
 ];
 
-const COMPONENT_BY_LEVEL: Record<Level["kind"], string[]> = {
+/**
+ * Read from the specs, not restated here.
+ *
+ * This list was hand-written and had drifted both ways: it named Alert,
+ * Dropdown, Toast and ColorInput, none of which declare the capability, and
+ * omitted Accordion and Sidebar, which do. A list of who paints a ground is
+ * exactly the thing `owns-surface` already records, and check:capabilities
+ * verifies in both directions — so deriving it means the strip cannot go stale
+ * again, and a component that gains or loses the capability appears or leaves
+ * on its own.
+ */
+function ownsSurface(): string[] {
+  // Called at render, not at module scope: the content registry is populated
+  // through a chain of imports, and reading it while this module is still
+  // evaluating returned an empty object — the strip rendered its heading and
+  // nothing else.
+  return Object.values(COMPONENT_CONTENT)
+    .filter((c) => ((c.spec.capabilities as string[] | undefined) ?? []).includes("owns-surface"))
+    .map((c) => c.meta.name)
+    .sort();
+}
+
+function componentsByLevel(): Record<Level["kind"], string[]> {
   // base is the implicit page ground (MoveRoot / :root) — no component declares it.
-  base: [],
-  subtle: [
-    "Alert",
-    "Card",
-    "Dialog",
-    "Drawer",
-    "Dropdown",
-    "Popover",
-    "Toast",
-    "ColorInput",
-    "Select",
-  ],
-};
+  return { base: [], subtle: ownsSurface() };
+}
 
 /**
- * TEMPORARY. An audit strip, not documentation.
+ * Every component that paints a ground of its own, shown on both grounds.
  *
- * Every component that paints a ground of its own, on both grounds, so what
- * actually happens is visible rather than inferred. The last three already read
- * `--move-surface-*`, and are here as the working case — a collision is much
- * easier to see next to something that steps correctly.
+ * It began as a temporary audit — a way to see collisions rather than infer
+ * them — and the investigation it was built for is finished: `owns-surface` is
+ * a declared capability now, checked in both directions, so a component that
+ * paints a ground without saying so is reported rather than eyeballed.
+ *
+ * It stays because the question it answers is a real one for anyone building
+ * with the library: put this component on that ground and what happens. The
+ * membership is read from the specs, so it is the same list the check uses.
  *
  * NOT here: Dialog, Drawer, Popover, Dropdown, Tooltip and Toast. They portal to
  * document.body, so they would render outside these panels and inherit the page
@@ -468,11 +484,11 @@ export function SurfacesPage() {
                     <Text
                       size="sm"
                       color={
-                        COMPONENT_BY_LEVEL[l.kind].length ? undefined : "muted"
+                        componentsByLevel()[l.kind].length ? undefined : "muted"
                       }
                     >
-                      {COMPONENT_BY_LEVEL[l.kind].length
-                        ? COMPONENT_BY_LEVEL[l.kind].join(", ")
+                      {componentsByLevel()[l.kind].length
+                        ? componentsByLevel()[l.kind].join(", ")
                         : "Implicit page ground — declared by no component."}
                     </Text>
                   </Table.Cell>
@@ -484,8 +500,8 @@ export function SurfacesPage() {
 
         <Section
           id="audit"
-          title="Audit — both grounds"
-          lede="Temporary. The same components forced onto each ground, so a collision is visible rather than inferred."
+          title="On both grounds"
+          lede="Every component that paints a ground of its own, forced onto each ground in turn — so what happens is visible rather than inferred. Read from the components themselves."
         >
           <Stack direction="row" gap="lg" align="stretch" wrap>
             <SurfaceAudit tone="base" />
