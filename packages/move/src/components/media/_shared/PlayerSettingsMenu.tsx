@@ -60,9 +60,75 @@ export function PlayerSettingsMenu({
   const chevronRightIcon = useIcon('next', 14);
   const chevronLeftIcon = useIcon('previous', 14);
 
-  if (categories.length === 0) return <>{trigger}</>;
 
   const activeCat = activeCategory ? categories.find((c) => c.id === activeCategory) : null;
+
+
+  /**
+   * Roving focus over the rows, in both views.
+   *
+   * A popup you choose from owes this: Arrow keys move between options, Home and
+   * End jump to the ends, and the keypress is consumed so the PAGE does not
+   * scroll behind the open menu. Without it these were plain buttons in a
+   * Popover — arrows reached nothing and scrolled the document instead.
+   *
+   * `data-highlighted` is the same attribute Radix sets on a Select option, so
+   * the highlight styling is the one from Select rather than a second look for
+   * the same state.
+   */
+  // A callback ref, not useRef: Popover.Content mounts through Presence, a
+  // commit AFTER `open` flips, so an effect keyed on `open` runs while the rows
+  // do not exist yet. This fires when the list itself attaches.
+  const [list, setList] = React.useState<HTMLDivElement | null>(null);
+
+  // The tooltip and the menu hang off the same button, so once the menu is open
+  // the tooltip sits on top of it naming a button you can no longer see. Kept
+  // controlled and forced shut while the menu is open, rather than conditionally
+  // rendered — swapping the wrapper would remount the trigger Radix is holding.
+  const [tipOpen, setTipOpen] = React.useState(false);
+  const [highlighted, setHighlighted] = React.useState(0);
+
+  const rows = React.useCallback(
+    () => Array.from(list?.querySelectorAll<HTMLElement>('[data-row]') ?? []),
+    [list],
+  );
+
+  // Back to the first row whenever the view changes — the old index pointed into
+  // a list that is no longer on screen.
+  React.useEffect(() => setHighlighted(0), [activeCategory, open]);
+
+  React.useEffect(() => {
+    if (!open) return;
+    const items = rows();
+    // Set on the element rather than in JSX: the index runs over whichever list
+    // is on screen, and the two views render different rows.
+    items.forEach((el, i) => {
+      if (i === highlighted) el.setAttribute('data-highlighted', '');
+      else el.removeAttribute('data-highlighted');
+    });
+    items[highlighted]?.focus();
+  }, [highlighted, open, activeCategory, rows, list]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const items = rows();
+    if (!items.length) return;
+    const move = (next: number) => {
+      e.preventDefault();
+      // …and stop it here. The player handles Arrow keys itself for volume and
+      // seeking, so an arrow press inside the open menu moved the highlight AND
+      // changed the volume behind it.
+      e.stopPropagation();
+      setHighlighted(((next % items.length) + items.length) % items.length);
+    };
+    if (e.key === 'ArrowDown') move(highlighted + 1);
+    else if (e.key === 'ArrowUp') move(highlighted - 1);
+    else if (e.key === 'Home') move(0);
+    else if (e.key === 'End') move(items.length - 1);
+  };
+
+  // After the hooks, never before: a return above them changes the hook count
+  // between renders.
+  if (categories.length === 0) return <>{trigger}</>;
 
   return (
     <Popover.Root open={open} onOpenChange={onOpenChange}>
@@ -71,7 +137,12 @@ export function PlayerSettingsMenu({
           Inverted — the tooltip inside — Popover.Trigger clones the Tooltip
           instead, which forwards nothing, and the menu stops opening. */}
       {triggerLabel ? (
-        <Tooltip label={triggerLabel} side={side}>
+        <Tooltip
+          label={triggerLabel}
+          side={side}
+          open={tipOpen && !open}
+          onOpenChange={setTipOpen}
+        >
           <Popover.Trigger asChild>{trigger}</Popover.Trigger>
         </Tooltip>
       ) : (
@@ -89,6 +160,11 @@ export function PlayerSettingsMenu({
         className={styles.menu}
         onOpenAutoFocus={(e: Event) => e.preventDefault()}
       >
+        {/* A plain div we own. Popover.Content is a wrapped component and its ref
+            is not ours to borrow — the rows have to be queried from an element
+            this file created, the same reason Select keeps its stagger container
+            inside the Radix Viewport rather than on it. */}
+        <div ref={setList} role="menu" onKeyDown={onKeyDown} className={styles.list}>
         {!activeCat ? (
           // Main view — list of categories
           categories.map((cat) => {
@@ -110,6 +186,9 @@ export function PlayerSettingsMenu({
                 key={cat.id}
                 type="button"
                 className={styles.categoryRow}
+                data-row
+                role="menuitem"
+                tabIndex={-1}
                 onClick={() => setActiveCategory(cat.id)}
               >
                 <span className={styles.categoryLabel}>{cat.label}</span>
@@ -124,6 +203,9 @@ export function PlayerSettingsMenu({
             <button
               type="button"
               className={styles.backRow}
+              data-row
+              role="menuitem"
+              tabIndex={-1}
               onClick={() => setActiveCategory(null)}
             >
               <span className={styles.backChevron}>{chevronLeftIcon}</span>
@@ -134,6 +216,10 @@ export function PlayerSettingsMenu({
                 key={opt.value}
                 type="button"
                 className={styles.optionRow}
+                data-row
+                role="menuitemradio"
+                aria-checked={opt.value === activeCat.activeValue}
+                tabIndex={-1}
                 data-active={opt.value === activeCat.activeValue}
                 onClick={() => {
                   activeCat.onChange(opt.value);
@@ -145,6 +231,7 @@ export function PlayerSettingsMenu({
             ))}
           </>
         )}
+        </div>
       </Popover.Content>
     </Popover.Root>
   );

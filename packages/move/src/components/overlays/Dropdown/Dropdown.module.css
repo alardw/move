@@ -90,12 +90,13 @@
 
 .item {
   /* Component tokens — item */
-  --move-dropdown-item-radius: var(--move-rounded-md);
-  --move-dropdown-item-padding-x: var(--move-spacing-sm);
-  --move-dropdown-item-padding-y: var(--move-spacing-xs);
+  --move-dropdown-item-radius: var(--move-option-radius);
+  --move-dropdown-item-padding-x: var(--move-option-padding-x);
+  --move-dropdown-item-padding-y: var(--move-option-padding-y);
   --move-dropdown-item-fg: var(--move-fg-base);
   --move-dropdown-item-fg-disabled: var(--move-fg-subtle);
-  --move-dropdown-item-bg-highlight: var(--move-bg-muted);
+  /* Aliases the shared option token, so the three lists cannot drift apart. */
+  --move-dropdown-item-bg-highlight: var(--move-option-bg-highlight);
   --move-dropdown-item-font-size: var(--move-size-sm);
 
   display: flex;

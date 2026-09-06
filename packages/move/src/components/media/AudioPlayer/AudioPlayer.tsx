@@ -479,14 +479,13 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
                 align="center"
                 sideOffset={4}
                 trigger={
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <PlayerButton
                     {...slot('settingsButton')}
-                    aria-label={labels.settings}
+                    label={labels.settings}
+                    withTooltip={false}
                   >
                     {settingsIcon}
-                  </Button>
+                  </PlayerButton>
                 }
               />
             )}

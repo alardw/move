@@ -28,16 +28,42 @@ export interface PlayerButtonProps extends React.ComponentPropsWithoutRef<'butto
   children: React.ReactNode;
   /** Which side the tooltip sits on. Controls in a bottom bar want `top`. */
   side?: 'top' | 'right' | 'bottom' | 'left';
+  /**
+   * Skip the tooltip, for a control that is also a popup trigger.
+   *
+   * `Popover.Trigger asChild` clones its child, so a tooltip wrapped around the
+   * button here would be what Radix cloned and the menu would stop opening. The
+   * menu supplies the tooltip itself instead — but the button still comes from
+   * here, so the ghost styling and the pinned hover scale stay in one place.
+   */
+  withTooltip?: boolean;
 }
 
 export const PlayerButton = React.forwardRef<HTMLButtonElement, PlayerButtonProps>(
-  function PlayerButton({ label, children, side = 'top', ...rest }, ref) {
-    return (
-      <Tooltip label={label} side={side}>
-        <Button ref={ref} variant="ghost" size="sm" aria-label={label} {...rest}>
+  function PlayerButton({ label, children, side = 'top', withTooltip = true, ...rest }, ref) {
+    const button = (
+        <Button
+          ref={ref}
+          variant="ghost"
+          size="sm"
+          aria-label={label}
+          // No hover growth. A popover and a tooltip are both anchored to this
+          // button's box, and Radix repositions when that box changes — so the
+          // panel drifted as the pointer arrived. The press dip stays.
+          {...rest}
+          // Merged after the spread, so a caller's style still wins on anything
+          // it sets while this keeps the scale pinned.
+          style={{ ['--move-button-scale-hover' as string]: 1, ...(rest.style ?? {}) }}
+        >
           {children}
-        </Button>
+      </Button>
+    );
+    return withTooltip ? (
+      <Tooltip label={label} side={side}>
+        {button}
       </Tooltip>
+    ) : (
+      button
     );
   },
 );

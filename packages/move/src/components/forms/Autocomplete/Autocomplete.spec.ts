@@ -1359,17 +1359,17 @@ export const spec = {
     // Item tokens
     {
       name: '--move-autocomplete-item-radius',
-      value: 'var(--move-rounded-md)',
+      value: 'var(--move-option-radius)',
       description: 'Item border radius',
     },
     {
       name: '--move-autocomplete-item-padding-x',
-      value: 'var(--move-spacing-sm)',
+      value: 'var(--move-option-padding-x)',
       description: 'Item horizontal padding',
     },
     {
       name: '--move-autocomplete-item-padding-y',
-      value: 'var(--move-spacing-xs)',
+      value: 'var(--move-option-padding-y)',
       description: 'Item vertical padding',
     },
     {
@@ -1379,7 +1379,7 @@ export const spec = {
     },
     {
       name: '--move-autocomplete-item-bg-highlight',
-      value: 'var(--move-bg-muted)',
+      value: 'var(--move-option-bg-highlight)',
       description: 'Item background when highlighted',
     },
     {

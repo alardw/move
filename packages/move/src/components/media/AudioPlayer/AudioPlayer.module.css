@@ -24,7 +24,7 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--move-player-control-gap);
   width: 100%;
   background-color: var(--move-audioplayer-bg);
   color: var(--move-audioplayer-fg);

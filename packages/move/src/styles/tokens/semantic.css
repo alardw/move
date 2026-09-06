@@ -142,6 +142,30 @@
    */
   --move-popup-ring-room: var(--move-focus-ring-room);
 
+  /* An option row inside such a panel — Select, Dropdown and Autocomplete, and
+     the media players' settings menu, which sits on dark chrome and so takes
+     the geometry while painting its own colours.
+     A list you choose from should read the same wherever it appears, and the
+     three that already matched did so by coincidence: each carried its own
+     `*-item-bg-highlight` token, all three resolving to the same value, with
+     nothing keeping them together. The settings menu, written later, matched
+     none of them — square rows bleeding into the panel's rounded corner,
+     because it had no horizontal padding at all. */
+  --move-option-radius: var(--move-rounded-md);
+  --move-option-padding-x: var(--move-spacing-sm);
+  --move-option-padding-y: var(--move-spacing-xs);
+  /* Between rows, so a highlighted row's ring does not touch its neighbour. */
+  --move-option-gap: 2px;
+  --move-option-bg-highlight: var(--move-bg-muted);
+  --move-option-bg-selected: var(--move-primary);
+  --move-option-fg-selected: var(--move-primary-fg);
+
+  /* Between a media player's transport controls. One token because the two
+     players are the same instrument and had two answers — the video player at
+     4px, the audio player at 8 — and 4px put icon-only buttons close enough to
+     read as one block rather than as separate controls. */
+  --move-player-control-gap: var(--move-spacing-sm);
+
   /* Track (the container the items sit in) */
   --move-segment-track-bg: var(--move-bg-muted);
   --move-segment-radius: var(--move-rounded-md);

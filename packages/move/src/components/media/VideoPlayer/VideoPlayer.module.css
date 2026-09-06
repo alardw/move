@@ -190,7 +190,7 @@
 .controlsRow {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--move-player-control-gap);
   height: var(--move-control-height-md);
 }
 

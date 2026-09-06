@@ -17,7 +17,11 @@
   --move-popover-content-border: transparent;
   --move-popover-content-radius: 6px;
   --move-popover-content-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --move-popover-content-padding: 4px 0;
+  /* The same room Select's list leaves: the highlight ring reaches outward from
+     the row, so with no horizontal padding it landed on the panel's own edge and
+     the row bled into the rounded corner. Derived from the ring rather than
+     hardcoded, so the two lists stay matched if the ring changes. */
+  --move-popover-content-padding: var(--move-popup-ring-room);
   --move-popover-content-min-width: 180px;
   --move-popover-content-max-width: none;
 
@@ -124,4 +128,53 @@
 .optionRow[data-active='true'] {
   background: var(--move-primary, #3b82f6);
   color: var(--move-primary-fg);
+}
+
+/* The keyboard-highlighted row, using the attribute Radix sets on a Select
+   option — so the state that means "arrow keys are here" looks the same in this
+   menu as it does in a Select, rather than having a second look of its own.
+   These rows sit on the dark media chrome, so the fill is a light wash rather
+   than Select's surface tokens; the accent ring is what carries the meaning. */
+.categoryRow[data-highlighted],
+.backRow[data-highlighted],
+.optionRow[data-highlighted] {
+  background: rgba(255, 255, 255, 0.16); /* token-exempt: media chrome overlay */
+  outline: var(--move-focus-ring);
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}
+
+/* The selected row flips to an outer ring, as Select's checked row does: an
+   inset ring on a filled row reads as a shrunken fill. */
+.optionRow[data-active='true'][data-highlighted] {
+  outline-offset: var(--move-focus-ring-offset);
+}
+
+/* The row container. Owned by the component rather than being Popover.Content
+   itself, so the roving-focus query has an element it can rely on. */
+.list {
+  display: contents;
+}
+
+/* Row geometry, matched to Select's option rows: the same radius and the same
+   2px vertical rhythm, so a list you choose from reads the same whether it is a
+   Select on the page or a settings menu on a video. */
+.categoryRow,
+.backRow,
+.optionRow,
+.indicatorRow {
+  border-radius: var(--move-rounded-md);
+  margin-block: 2px;
+}
+
+
+/* Row geometry from the shared option tokens — the same radius, padding and
+   rhythm a Select option has. Only the colours are local, because these rows sit
+   on the players' dark chrome rather than on a Move surface. */
+.categoryRow,
+.backRow,
+.optionRow,
+.indicatorRow {
+  border-radius: var(--move-option-radius);
+  padding: var(--move-option-padding-y) var(--move-option-padding-x);
+  margin-block: var(--move-option-gap);
 }

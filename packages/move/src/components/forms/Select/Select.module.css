@@ -208,12 +208,13 @@
 
 .item {
   /* Component tokens — item */
-  --move-select-item-radius: var(--move-rounded-md);
-  --move-select-item-padding-x: var(--move-spacing-sm);
-  --move-select-item-padding-y: var(--move-spacing-xs);
+  --move-select-item-radius: var(--move-option-radius);
+  --move-select-item-padding-x: var(--move-option-padding-x);
+  --move-select-item-padding-y: var(--move-option-padding-y);
   --move-select-item-fg: var(--move-fg-base);
   --move-select-item-fg-disabled: var(--move-fg-subtle);
-  --move-select-item-bg-highlight: var(--move-bg-muted);
+  /* Aliases the shared option token, so the three lists cannot drift apart. */
+  --move-select-item-bg-highlight: var(--move-option-bg-highlight);
   --move-select-item-font-size: var(--move-size-sm);
 
   display: flex;

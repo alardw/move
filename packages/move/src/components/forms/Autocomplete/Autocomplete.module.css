@@ -464,12 +464,13 @@
  * ========================================================================= */
 
 .item {
-  --move-autocomplete-item-radius: var(--move-rounded-md);
-  --move-autocomplete-item-padding-x: var(--move-spacing-sm);
-  --move-autocomplete-item-padding-y: var(--move-spacing-xs);
+  --move-autocomplete-item-radius: var(--move-option-radius);
+  --move-autocomplete-item-padding-x: var(--move-option-padding-x);
+  --move-autocomplete-item-padding-y: var(--move-option-padding-y);
   --move-autocomplete-item-fg: var(--move-fg-base);
   --move-autocomplete-item-fg-disabled: var(--move-fg-subtle);
-  --move-autocomplete-item-bg-highlight: var(--move-bg-muted);
+  /* Aliases the shared option token, so the three lists cannot drift apart. */
+  --move-autocomplete-item-bg-highlight: var(--move-option-bg-highlight);
   --move-autocomplete-item-font-size: var(--move-size-sm);
 
   display: flex;
