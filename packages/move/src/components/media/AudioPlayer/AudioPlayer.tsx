@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
+import { PlayerButton } from '../_shared/PlayerButton';
 import { Button } from '../../actions/Button';
 import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
@@ -427,15 +428,13 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             {player.activeCue && <div {...slot('subtitleOverlay')}>{player.activeCue.text}</div>}
 
             {/* Play button */}
-            <Button
-              variant="ghost"
-              size="sm"
+            <PlayerButton
               {...slot('playButton')}
               onClick={player.togglePlay}
-              aria-label={player.playing ? labels.pause : labels.play}
+              label={player.playing ? labels.pause : labels.play}
             >
               {player.playing ? pauseIcon : playIcon}
-            </Button>
+            </PlayerButton>
 
             {/* Progress bar */}
             <div
@@ -459,21 +458,20 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
 
             {/* Subtitles toggle */}
             {showSubtitlesControl && (
-              <Button
-                variant="ghost"
-                size="sm"
+              <PlayerButton
                 {...slot('subtitleButton')}
                 data-active={player.activeSubtitleIndex >= 0}
                 onClick={handleSubtitleToggle}
-                aria-label={labels.subtitles}
+                label={labels.subtitles}
               >
                 {captionsIcon}
-              </Button>
+              </PlayerButton>
             )}
 
             {/* Settings */}
             {showSettings && (
               <PlayerSettingsMenu
+                triggerLabel={labels.settings}
                 categories={settingsCategories}
                 open={settingsMenuOpen}
                 onOpenChange={setSettingsMenuOpen}
@@ -496,15 +494,13 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             {/* Volume */}
             {showVolume && (
               <>
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <PlayerButton
                   {...slot('volumeButton')}
                   onClick={player.toggleMute}
-                  aria-label={player.muted ? labels.unmute : labels.mute}
+                  label={player.muted ? labels.unmute : labels.mute}
                 >
                   {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
-                </Button>
+                </PlayerButton>
                 <div {...slot('volumeSlider')} onMouseDown={handleVolumeMouseDown}>
                   <div className={styles.volumeTrack}>
                     <div className={styles.volumeFill} style={{ width: `${volumePct}%` }} />

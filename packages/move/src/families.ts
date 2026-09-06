@@ -190,7 +190,12 @@ export const FAMILIES = {
     // settings menu from the shared component and its subtitle menu from a raw
     // Popover.Root a few lines below — two menus, two constructions, one
     // component. The shared one is the family's answer.
-    composes: ['PlayerSettingsMenu'],
+    // PlayerButton names every transport control on hover as well as to a
+    // screen reader. They are all icon-only, so aria-label alone leaves a
+    // sighted pointer user recognising the glyph or guessing — maximize against
+    // minimize, volume-2 against volume-x. The tooltip carries the same string
+    // the label already holds, so it adds no translatable surface.
+    composes: ['PlayerSettingsMenu', 'PlayerButton'],
     why:
       'Audio and video are the same instrument with a picture: play, scrub, time, volume, ' +
       'settings, captions. Someone who has used one has used the other.',

@@ -4,6 +4,7 @@ import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { composeHandlers, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
+import { PlayerButton } from '../_shared/PlayerButton';
 import { Button } from '../../actions/Button';
 import { Popover } from '../../overlays/Popover';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -587,15 +588,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
               {/* Controls row */}
               <div className={styles.controlsRow}>
                 {/* Play button */}
-                <Button
-                  variant="ghost"
-                  size="sm"
+                <PlayerButton
                   {...slot('playButton')}
                   onClick={player.togglePlay}
-                  aria-label={player.playing ? labels.pause : labels.play}
+                  label={player.playing ? labels.pause : labels.play}
                 >
                   {player.playing ? pauseIcon : playIcon}
-                </Button>
+                </PlayerButton>
 
                 {/* Time */}
                 {showTime && (
@@ -610,6 +609,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 {/* Settings */}
                 {showSettings && (
                   <PlayerSettingsMenu
+                triggerLabel={labels.settings}
                     categories={settingsCategories}
                     open={settingsMenuOpen}
                     onOpenChange={setSettingsMenuOpen}
@@ -633,15 +633,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 {showSubtitlesControl && (
                   <Popover.Root open={subtitleMenuOpen} onOpenChange={setSubtitleMenuOpen}>
                     <Popover.Trigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
+                      <PlayerButton
                         {...slot('subtitleButton')}
                         data-active={player.activeSubtitleIndex >= 0}
-                        aria-label={labels.subtitles}
+                        label={labels.subtitles}
                       >
                         {captionsIcon}
-                      </Button>
+                      </PlayerButton>
                     </Popover.Trigger>
                     <Popover.Content
                       side="top"
@@ -682,15 +680,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 {/* Volume */}
                 {showVolume && (
                   <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <PlayerButton
                       {...slot('volumeButton')}
                       onClick={player.toggleMute}
-                      aria-label={player.muted ? labels.unmute : labels.mute}
+                      label={player.muted ? labels.unmute : labels.mute}
                     >
                       {player.muted || player.volume === 0 ? volumeXIcon : volume2Icon}
-                    </Button>
+                    </PlayerButton>
                     <div {...slot('volumeSlider')} onMouseDown={handleVolumeMouseDown}>
                       <div className={styles.volumeTrack}>
                         <div className={styles.volumeFill} style={{ width: `${volumePct}%` }} />
@@ -701,15 +697,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
 
                 {/* Fullscreen */}
                 {showFullscreen && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <PlayerButton
                     {...slot('fullscreenButton')}
                     onClick={player.toggleFullscreen}
-                    aria-label={player.isFullscreen ? labels.exitFullscreen : labels.fullscreen}
+                    label={player.isFullscreen ? labels.exitFullscreen : labels.fullscreen}
                   >
                     {player.isFullscreen ? minimizeIcon : maximizeIcon}
-                  </Button>
+                  </PlayerButton>
                 )}
               </div>
             </div>

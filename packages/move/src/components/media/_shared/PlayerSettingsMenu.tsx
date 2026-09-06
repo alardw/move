@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Tooltip } from '../../overlays/Tooltip';
 import { Popover } from '../../overlays/Popover';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './PlayerSettingsMenu.module.css';
@@ -22,6 +23,13 @@ export interface PlayerSettingsMenuProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   trigger: React.ReactNode;
+  /**
+   * Names the trigger on hover. Applied here rather than by the caller: the
+   * trigger is handed to `Popover.Trigger asChild`, which clones it, so a
+   * tooltip wrapped around it outside would be what Radix cloned instead of the
+   * button.
+   */
+  triggerLabel?: string;
   side?: 'top' | 'bottom';
   align?: 'start' | 'center' | 'end';
   sideOffset?: number;
@@ -36,6 +44,7 @@ export function PlayerSettingsMenu({
   open,
   onOpenChange,
   trigger,
+  triggerLabel,
   side = 'top',
   align = 'center',
   sideOffset = 4,
@@ -57,7 +66,17 @@ export function PlayerSettingsMenu({
 
   return (
     <Popover.Root open={open} onOpenChange={onOpenChange}>
-      <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      {/* Tooltip OUTSIDE, Popover.Trigger inside. Both use `asChild`, so nested
+          this way each clones the next and every handler reaches the button.
+          Inverted — the tooltip inside — Popover.Trigger clones the Tooltip
+          instead, which forwards nothing, and the menu stops opening. */}
+      {triggerLabel ? (
+        <Tooltip label={triggerLabel} side={side}>
+          <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+        </Tooltip>
+      ) : (
+        <Popover.Trigger asChild>{trigger}</Popover.Trigger>
+      )}
       <Popover.Content
         side={side}
         align={align}
