@@ -125,11 +125,16 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
             <Select.Icon />
           </Select.Trigger>
           <Select.Content align="center">
-            {monthNames.map((name, i) => (
-              <Select.Item key={i} value={String(i)}>
-                {name}
-              </Select.Item>
-            ))}
+            {/* Viewport is required: it is what holds the stagger container the
+                reveal animates. Without it the items land directly in .content,
+                the container is empty, and the reveal never fires. */}
+            <Select.Viewport>
+              {monthNames.map((name, i) => (
+                <Select.Item key={i} value={String(i)}>
+                  {name}
+                </Select.Item>
+              ))}
+            </Select.Viewport>
           </Select.Content>
         </Select.Root>
 
@@ -143,11 +148,13 @@ export function CalendarNav({ className, sp }: CalendarNavProps) {
             <Select.Icon />
           </Select.Trigger>
           <Select.Content align="center">
-            {years.map((yr) => (
-              <Select.Item key={yr} value={String(yr)}>
-                {yr}
-              </Select.Item>
-            ))}
+            <Select.Viewport>
+              {years.map((yr) => (
+                <Select.Item key={yr} value={String(yr)}>
+                  {yr}
+                </Select.Item>
+              ))}
+            </Select.Viewport>
           </Select.Content>
         </Select.Root>
       </div>
