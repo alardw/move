@@ -117,25 +117,7 @@
   will-change: transform;
 }
 
-/* The class fallback for the press, and it is load-bearing: an interaction hands
-   its inline style back ON COMPLETION, so without a class holding the pressed
-   state the thumb springs down and then snaps to full size while the pointer is
-   still down.
-
-   It has to be written as `transform`, not the individual `scale` property, for
-   the same reason the resting position above is: CSS applies translate/rotate/
-   scale BEFORE `transform` in the composition chain, so a bare `scale: 0.85`
-   would lay the thumb's translateX out in scaled space and shorten its travel —
-   and it would multiply with the scale the animation writes rather than being
-   overridden by it. Naming the whole transform means the inline value overrides
-   this while it travels, and this holds it on arrival.
-
-   Both ends stated, because the travelled position is part of the pressed state:
-   an unchecked thumb rests at 0, a checked one at the full translate. */
-.root:active:not(:disabled) .thumb {
-  transform: scale(0.85);
-}
-
-.root.root[data-state='checked']:active:not(:disabled) .thumb {
-  transform: translateX(var(--move-switch-thumb-translate)) scale(0.85);
-}
+/* No CSS press state here, unlike the other controls: this thumb already
+   carries a transform for its position, and a separate `scale` would multiply
+   with it rather than override — the press would compound the travel. The press
+   animation owns that one. */
