@@ -42,14 +42,14 @@ export const spec = {
     {
       name: 'prevTrigger',
       element: 'button',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'Previous page navigation button',
     },
     {
       name: 'nextTrigger',
       element: 'button',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'Next page navigation button',
     },
