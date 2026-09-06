@@ -5,7 +5,7 @@ import * as React from 'react';
 import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAccordion } from './useAccordion';
-import { resolveAnimationsConfig, expandContent, snappy, useAnimations } from '../../../animation';
+import { resolveAnimationsConfig, expandContent, useAnimations } from '../../../animation';
 import type { Animation, AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
@@ -189,24 +189,34 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
       onHeaderKeyDown: accordion.onHeaderKeyDown,
     };
 
+    // The accordion is a surface, the way a Card is: it sits ON the page rather
+    // than being part of it, so it takes the flipped tone and everything inside
+    // reads against that. This used to live on Content, which made the one part
+    // that opens the brightest thing on the page — the panel jumped forward
+    // while its own header receded into the ground behind it.
+    const surface = useSurfaceFlip();
+
     return {
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <AccordionContext.Provider value={contextValue}>
+            <SurfaceProvider value={surface}>
             <div
               {...attrs}
               {...spRest}
               ref={ref}
               data-size={props.size}
               data-variant={props.variant}
+              data-surface={surface}
               className={cx('root', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-move-accordion-root=""
             >
               {children}
             </div>
+            </SurfaceProvider>
           </AccordionContext.Provider>
         );
       },
@@ -316,12 +326,14 @@ export interface AccordionTriggerProps extends React.HTMLAttributes<HTMLElement>
   sp?: SlotPropsMap<'trigger' | 'icon'>;
 }
 
-const DEFAULT_TRIGGER_ANIMATIONS: AnimationTrigger[] = [
-  {
-    trigger: 'Trigger.hover',
-    sequence: [{ animation: { scale: { from: 1, to: 1.005, ease: snappy } } }],
-  },
-];
+/**
+ * None. A trigger here is a full-bleed row: its edges are the accordion's own,
+ * and the root clips to a radius, so scaling it moves nothing you can see except
+ * the text inside — the row appears to stay put while its label grows, which is
+ * what "the text scales but not the trigger" looks like. Background on hover is
+ * the whole affordance, and the CSS transition already carries it.
+ */
+const DEFAULT_TRIGGER_ANIMATIONS: AnimationTrigger[] = [];
 
 const AccordionTrigger = withMoveComponent<
   'trigger' | 'icon',
@@ -631,7 +643,6 @@ const AccordionContent = withMoveComponent<
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const shouldRender = itemContext.isActive || isAnimatingOut;
-    const surface = useSurfaceFlip();
 
     return {
       render() {
@@ -652,7 +663,6 @@ const AccordionContent = withMoveComponent<
         } = innerSp as Record<string, unknown>;
 
         return (
-          <SurfaceProvider value={surface}>
             <div
               {...attrs}
               {...spRest}
@@ -660,7 +670,6 @@ const AccordionContent = withMoveComponent<
               className={cx('content', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
               data-state={itemContext.isActive ? 'open' : 'closed'}
-              data-surface={surface}
               role="region"
             >
               <div
@@ -672,7 +681,6 @@ const AccordionContent = withMoveComponent<
                 {children}
               </div>
             </div>
-          </SurfaceProvider>
         );
       },
     };

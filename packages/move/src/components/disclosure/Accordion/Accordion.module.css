@@ -3,19 +3,19 @@
 .root {
   /* Component tokens — resolve in local scope */
   --move-accordion-radius: var(--move-rounded-lg);
-  --move-accordion-border: var(--move-border-base);
-  --move-accordion-item-border: var(--move-border-base);
+  --move-accordion-border: var(--move-border-interactive);
+  --move-accordion-item-border: var(--move-border-interactive);
   --move-accordion-header-height: var(--move-space-12);
   --move-accordion-trigger-padding-x: var(--move-spacing-md);
   --move-accordion-trigger-padding-y: var(--move-spacing-md);
-  --move-accordion-trigger-bg: var(--move-surface-alt-hover);
-  --move-accordion-trigger-bg-hover: var(--move-surface-hover);
+  --move-accordion-trigger-bg: var(--move-surface-alt);
+  --move-accordion-trigger-bg-hover: var(--move-surface-alt-hover);
   --move-accordion-trigger-fg: var(--move-fg-base);
   --move-accordion-trigger-border: var(--move-border-base);
   --move-accordion-trigger-font-size: var(--move-size-sm);
   --move-accordion-trigger-font-weight: var(--move-weight-medium);
   --move-accordion-content-padding: var(--move-spacing-md);
-  --move-accordion-content-bg: inherit;
+  --move-accordion-content-bg: var(--move-surface-bg);
   --move-accordion-content-fg: var(--move-fg-muted);
   --move-accordion-content-font-size: var(--move-size-sm);
   --move-accordion-icon-size: var(--move-text-xl);
@@ -26,6 +26,15 @@
   width: 100%;
   border-radius: var(--move-accordion-radius);
   overflow: hidden;
+  /* The accordion's own edge — the one border that says where the component
+     starts and stops. Only the `contained` variant drew it, so by default a
+     white accordion sat on a Card with no boundary at all and its item rules
+     ran off into nothing. */
+  border: 1px solid var(--move-accordion-border);
+  /* The accordion's own ground, from the surface it took on the root. Without
+     it the component had no surface of its own: only the open panel painted
+     one, so the accordion melted into the page and the panel jumped off it. */
+  background-color: var(--move-surface-bg);
 }
 
 /* Sizes */
@@ -59,7 +68,6 @@
 .root[data-variant='contained'] {
   --move-accordion-trigger-bg: var(--move-surface-alt-hover);
   --move-accordion-trigger-bg-hover: var(--move-surface-hover);
-  border: 1px solid var(--move-accordion-border);
 }
 
 .root[data-variant='ghost'] {
@@ -71,6 +79,15 @@
   border-bottom: none;
 }
 
+/* A separator earns its place only where a tone change is not already doing the
+   job — the trigger and the content are different things and look it, so the
+   line marks item from item, never trigger from its own content.
+   Between two closed rows both sides are the same tone and the line is the only
+   thing separating them. After an OPEN row the content's ground already meets
+   the next trigger's fill, so a line there is a second answer to a question
+   already settled — which is the border that reads as sitting under the panel
+/* The line between one trigger and the next depends on what is between them.
+   Nothing between them — two closed rows — is one boundary, so one line. */
 .item {
   border-bottom: 1px solid var(--move-accordion-item-border);
 }
@@ -145,9 +162,23 @@
   transform: rotate(180deg);
 }
 
+/* An OPEN panel between two triggers is two boundaries, not one: it leaves its
+   own trigger and it meets the next. The item's border-bottom drew only the
+   lower edge, so the panel read as hanging off its header with a line under it
+   rather than as a region bounded by both. `.content` renders only while open,
+   so this needs no state selector. */
+/* An open panel is bounded top AND bottom: this border-top leaves its trigger,
+   and the item's border-bottom underneath meets the next one. `.content` only
+   renders while open, so neither needs a state selector. */
 .content {
+  border-top: 1px solid var(--move-accordion-item-border);
   overflow: hidden;
-  background-color: var(--move-surface-bg);
+  /* Surface-derived like the trigger and in contrast to it: the accordion's own
+     ground, which the tinted trigger sits on. The token was declared when this
+     component was generated and nothing ever read it — `--move-surface-bg` was
+     hardcoded here instead, so the panel could not be retoned without editing
+     the stylesheet, and the surface it read was the wrong one anyway. */
+  background-color: var(--move-accordion-content-bg);
   color: var(--move-accordion-content-fg);
   font-size: var(--move-accordion-content-font-size);
 }
