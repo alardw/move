@@ -43,55 +43,70 @@ export const spec = {
     {
       name: 'trigger',
       element: 'button',
+      kind: 'control',
       typography: 'ui',
       description: 'Button that opens the select dropdown',
     },
     {
       name: 'value',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description: 'Display of the currently selected value or placeholder',
     },
     {
       name: 'icon',
       element: 'span',
+      kind: 'icon',
       typography: 'none',
       description: 'Chevron indicator icon with open/close rotation animation',
     },
     {
       name: 'content',
       element: 'div',
+      kind: 'surface',
       typography: 'none',
       description: 'Dropdown popup container with enter/exit animation',
     },
     {
       name: 'contentInner',
       element: 'div',
+      kind: 'scrollport',
       typography: 'none',
       description: 'Scrollable inner container for items',
     },
     {
       name: 'viewport',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Structural viewport wrapper for items',
     },
     {
       name: 'item',
       element: 'div',
+      kind: 'item',
       typography: 'ui',
       description: 'Selectable item within the dropdown',
     },
     {
       name: 'group',
       element: 'div',
+      kind: 'group',
       typography: 'none',
       description: 'Visual grouping of related items',
     },
-    { name: 'label', element: 'div', typography: 'meta', description: 'Group label for a set of items' },
+    {
+      name: 'label',
+      element: 'div',
+      kind: 'label',
+      typography: 'meta',
+      description: 'Group label for a set of items',
+    },
     {
       name: 'separator',
       element: 'div',
+      kind: 'separator',
       typography: 'none',
       description: 'Visual divider between groups or items',
     },
@@ -179,7 +194,13 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'button', typography: 'ui', description: 'Trigger button element' },
+        {
+          name: 'trigger',
+          element: 'button',
+          kind: 'trigger',
+          typography: 'ui',
+          description: 'Trigger button element',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -240,7 +261,15 @@ export const spec = {
     },
     {
       name: 'Value',
-      slots: [{ name: 'value', element: 'span', typography: 'none', description: 'Value display span' }],
+      slots: [
+        {
+          name: 'value',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Value display span',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -269,7 +298,13 @@ export const spec = {
     {
       name: 'Icon',
       slots: [
-        { name: 'icon', element: 'span', typography: 'none', description: 'Chevron icon container' },
+        {
+          name: 'icon',
+          element: 'span',
+          kind: 'icon',
+          typography: 'none',
+          description: 'Chevron icon container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -292,10 +327,17 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', typography: 'none', description: 'Popup container' },
+        {
+          name: 'content',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Popup container',
+        },
         {
           name: 'contentInner',
           element: 'div',
+          kind: 'scrollport',
           typography: 'none',
           description: 'Scrollable inner wrapper',
         },
@@ -376,7 +418,15 @@ export const spec = {
     },
     {
       name: 'Viewport',
-      slots: [{ name: 'viewport', element: 'div', typography: 'none', description: 'Viewport wrapper' }],
+      slots: [
+        {
+          name: 'viewport',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Viewport wrapper',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -397,7 +447,15 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'div', typography: 'ui', description: 'Selectable item' }],
+      slots: [
+        {
+          name: 'item',
+          element: 'div',
+          kind: 'item',
+          typography: 'ui',
+          description: 'Selectable item',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -439,7 +497,15 @@ export const spec = {
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'div', typography: 'none', description: 'Group container' }],
+      slots: [
+        {
+          name: 'group',
+          element: 'div',
+          kind: 'group',
+          typography: 'none',
+          description: 'Group container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -461,7 +527,15 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'div', typography: 'meta', description: 'Group label text' }],
+      slots: [
+        {
+          name: 'label',
+          element: 'div',
+          kind: 'label',
+          typography: 'meta',
+          description: 'Group label text',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -483,7 +557,15 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', typography: 'none', description: 'Visual divider' }],
+      slots: [
+        {
+          name: 'separator',
+          element: 'div',
+          kind: 'separator',
+          typography: 'none',
+          description: 'Visual divider',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

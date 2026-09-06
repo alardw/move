@@ -23,24 +23,28 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Radix RadioGroup.Root container with flex layout',
     },
     {
       name: 'item',
       element: 'button',
+      kind: 'item',
       typography: 'none',
       description: 'Radix RadioGroup.Item radio button element',
     },
     {
       name: 'indicator',
       element: 'span',
+      kind: 'indicator',
       typography: 'none',
       description: 'Radix RadioGroup.Indicator containing the dot, force-mounted for animation',
     },
     {
       name: 'dot',
       element: 'span',
+      kind: 'indicator',
       typography: 'none',
       description: 'Visual radio dot inside the indicator',
     },
@@ -50,7 +54,13 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'div', typography: 'none', description: 'RadioGroup root container' },
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'RadioGroup root container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -137,9 +147,27 @@ export const spec = {
     {
       name: 'Item',
       slots: [
-        { name: 'item', element: 'button', typography: 'none', description: 'Radio button' },
-        { name: 'indicator', element: 'span', typography: 'none', description: 'Indicator container' },
-        { name: 'dot', element: 'span', typography: 'none', description: 'Dot element' },
+        {
+          name: 'item',
+          element: 'button',
+          kind: 'item',
+          typography: 'none',
+          description: 'Radio button',
+        },
+        {
+          name: 'indicator',
+          element: 'span',
+          kind: 'indicator',
+          typography: 'none',
+          description: 'Indicator container',
+        },
+        {
+          name: 'dot',
+          element: 'span',
+          kind: 'indicator',
+          typography: 'none',
+          description: 'Dot element',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },

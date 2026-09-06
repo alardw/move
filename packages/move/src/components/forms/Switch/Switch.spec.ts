@@ -23,12 +23,14 @@ export const spec = {
     {
       name: 'root',
       element: 'button',
+      kind: 'control',
       typography: 'none',
       description: 'Radix Switch.Root button element that manages checked state and ARIA',
     },
     {
       name: 'thumb',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description:
         'Radix Switch.Thumb sliding indicator element, animated via useAnimations state triggers',
@@ -42,6 +44,7 @@ export const spec = {
         {
           name: 'root',
           element: 'button',
+          kind: 'none',
           typography: 'none',
           description: 'Switch track button element',
         },
@@ -131,7 +134,13 @@ export const spec = {
     {
       name: 'Thumb',
       slots: [
-        { name: 'thumb', element: 'span', typography: 'none', description: 'Sliding thumb indicator' },
+        {
+          name: 'thumb',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Sliding thumb indicator',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },

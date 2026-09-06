@@ -21,42 +21,49 @@ export const spec = {
     {
       name: 'root',
       element: 'nav',
+      kind: 'none',
       typography: 'none',
       description: 'Root nav element with aria-label="Breadcrumb"',
     },
     {
       name: 'list',
       element: 'ol',
+      kind: 'none',
       typography: 'ui',
       description: 'Ordered list containing breadcrumb items and separators',
     },
     {
       name: 'item',
       element: 'li',
+      kind: 'item',
       typography: 'none',
       description: 'List item wrapper for each breadcrumb entry',
     },
     {
       name: 'link',
       element: 'a',
+      kind: 'none',
       typography: 'none',
       description: 'Anchor link for navigable breadcrumb items',
     },
     {
       name: 'page',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description: 'Current page indicator (non-navigable, aria-current="page")',
     },
     {
       name: 'separator',
       element: 'li',
+      kind: 'separator',
       typography: 'none',
       description: 'Separator between breadcrumb items (aria-hidden)',
     },
     {
       name: 'ellipsis',
       element: 'li',
+      kind: 'none',
       typography: 'none',
       description: 'Ellipsis indicator for collapsed items',
     },
@@ -66,8 +73,20 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'nav', typography: 'none', description: 'Root nav element' },
-        { name: 'list', element: 'ol', typography: 'ui', description: 'Ordered list wrapper' },
+        {
+          name: 'root',
+          element: 'nav',
+          kind: 'none',
+          typography: 'none',
+          description: 'Root nav element',
+        },
+        {
+          name: 'list',
+          element: 'ol',
+          kind: 'none',
+          typography: 'ui',
+          description: 'Ordered list wrapper',
+        },
       ],
       props: [
         {
@@ -122,7 +141,15 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'li', typography: 'none', description: 'List item wrapper' }],
+      slots: [
+        {
+          name: 'item',
+          element: 'li',
+          kind: 'item',
+          typography: 'none',
+          description: 'List item wrapper',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -136,7 +163,15 @@ export const spec = {
     },
     {
       name: 'Link',
-      slots: [{ name: 'link', element: 'a', typography: 'none', description: 'Anchor link' }],
+      slots: [
+        {
+          name: 'link',
+          element: 'a',
+          kind: 'none',
+          typography: 'none',
+          description: 'Anchor link',
+        },
+      ],
       props: [
         {
           name: 'asChild',
@@ -158,7 +193,15 @@ export const spec = {
     },
     {
       name: 'Page',
-      slots: [{ name: 'page', element: 'span', typography: 'none', description: 'Current page span' }],
+      slots: [
+        {
+          name: 'page',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Current page span',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -173,7 +216,13 @@ export const spec = {
     {
       name: 'Separator',
       slots: [
-        { name: 'separator', element: 'li', typography: 'none', description: 'Separator list item' },
+        {
+          name: 'separator',
+          element: 'li',
+          kind: 'separator',
+          typography: 'none',
+          description: 'Separator list item',
+        },
       ],
       props: [
         {
@@ -189,7 +238,15 @@ export const spec = {
     },
     {
       name: 'Ellipsis',
-      slots: [{ name: 'ellipsis', element: 'li', typography: 'none', description: 'Ellipsis list item' }],
+      slots: [
+        {
+          name: 'ellipsis',
+          element: 'li',
+          kind: 'none',
+          typography: 'none',
+          description: 'Ellipsis list item',
+        },
+      ],
       props: [
         {
           name: 'children',

@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Outer container with sizing, radius, fullscreen state, and controls-hidden state',
@@ -28,6 +29,7 @@ export const spec = {
     {
       name: 'video',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Video wrapper div containing the native <video> element; handles click-to-play and double-click-to-fullscreen',
@@ -35,6 +37,7 @@ export const spec = {
     {
       name: 'controls',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Glassmorphism controls bar positioned absolute at the bottom with backdrop blur',
@@ -42,54 +45,63 @@ export const spec = {
     {
       name: 'playButton',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Play/pause toggle button rendered via Button component',
     },
     {
       name: 'progress',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Progress bar container with track, buffered, fill, and draggable thumb',
     },
     {
       name: 'time',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description: 'Time display showing current time / duration',
     },
     {
       name: 'volumeButton',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Mute/unmute toggle button rendered via Button component',
     },
     {
       name: 'volumeSlider',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Volume slider with track and fill',
     },
     {
       name: 'settingsButton',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Settings menu trigger button rendered via Button component',
     },
     {
       name: 'subtitleButton',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Subtitle menu trigger button rendered via Button component',
     },
     {
       name: 'fullscreenButton',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Fullscreen toggle button rendered via Button component',
     },
     {
       name: 'subtitleOverlay',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Subtitle cue text overlay positioned above controls bar with responsive font size',

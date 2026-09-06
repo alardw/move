@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'p',
+      kind: 'none',
       typography: 'body',
       description: 'Text element (renders as configurable HTML element via `as` prop)',
     },

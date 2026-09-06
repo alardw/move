@@ -23,18 +23,21 @@ export const spec = {
     {
       name: 'root',
       element: 'RadixToggleGroup.Root',
+      kind: 'none',
       typography: 'none',
       description: 'Segmented control container managing selection state',
     },
     {
       name: 'indicator',
       element: 'div',
+      kind: 'indicator',
       typography: 'none',
       description: 'Decorative sliding indicator behind the active item',
     },
     {
       name: 'item',
       element: 'RadixToggleGroup.Item',
+      kind: 'item',
       typography: 'none',
       description: 'Selectable item button',
     },
@@ -47,10 +50,17 @@ export const spec = {
         {
           name: 'root',
           element: 'RadixToggleGroup.Root',
+          kind: 'none',
           typography: 'none',
           description: 'Segmented control container',
         },
-        { name: 'indicator', element: 'div', typography: 'none', description: 'Sliding indicator' },
+        {
+          name: 'indicator',
+          element: 'div',
+          kind: 'indicator',
+          typography: 'none',
+          description: 'Sliding indicator',
+        },
       ],
       props: [
         {
@@ -137,6 +147,7 @@ export const spec = {
         {
           name: 'item',
           element: 'RadixToggleGroup.Item',
+          kind: 'item',
           typography: 'none',
           description: 'Selectable item button',
         },

@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'scrollport',
       typography: 'ui',
       description: 'Prose container that styles nested HTML content',
     },

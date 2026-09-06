@@ -21,12 +21,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'title',
       description: 'Root container with inline-flex layout for slot groups',
     },
     {
       name: 'slot',
       element: 'div',
+      kind: 'none',
       typography: 'title',
       description: 'Individual character display slot with border and active caret',
     },

@@ -40,12 +40,14 @@ export const spec = {
     {
       name: 'trigger',
       element: 'button',
+      kind: 'trigger',
       typography: 'none',
       description: 'Element that activates the tooltip on hover/focus',
     },
     {
       name: 'content',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description:
         'Positioned shell — Radix owns its transform; carries only z-index and the opacity fade',
@@ -53,6 +55,7 @@ export const spec = {
     {
       name: 'contentInner',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description:
         'Visible tooltip box (inverted colors); owns the scale/slide entrance so it never clobbers Radix positioning',
@@ -60,6 +63,7 @@ export const spec = {
     {
       name: 'arrow',
       element: 'svg',
+      kind: 'none',
       typography: 'none',
       description: 'Arrow pointing toward the trigger',
     },
@@ -144,7 +148,15 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', typography: 'none', description: 'Trigger element' }],
+      slots: [
+        {
+          name: 'trigger',
+          element: 'button',
+          kind: 'trigger',
+          typography: 'none',
+          description: 'Trigger element',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -172,7 +184,13 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', typography: 'ui', description: 'Tooltip popup container' },
+        {
+          name: 'content',
+          element: 'div',
+          kind: 'none',
+          typography: 'ui',
+          description: 'Tooltip popup container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -233,7 +251,15 @@ export const spec = {
     },
     {
       name: 'Arrow',
-      slots: [{ name: 'arrow', element: 'svg', typography: 'none', description: 'Arrow SVG' }],
+      slots: [
+        {
+          name: 'arrow',
+          element: 'svg',
+          kind: 'none',
+          typography: 'none',
+          description: 'Arrow SVG',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

@@ -21,24 +21,28 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description: 'Wrapper container that handles border, background, and focus-within styling',
     },
     {
       name: 'input',
       element: 'input',
+      kind: 'control',
       typography: 'ui',
       description: 'Native input element that receives focus and user text',
     },
     {
       name: 'iconLeft',
       element: 'span',
+      kind: 'icon',
       typography: 'none',
       description: 'Optional icon rendered before the input',
     },
     {
       name: 'iconRight',
       element: 'span',
+      kind: 'icon',
       typography: 'none',
       description: 'Optional icon rendered after the input',
     },

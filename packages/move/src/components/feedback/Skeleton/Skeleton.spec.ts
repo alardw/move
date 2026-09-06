@@ -22,6 +22,7 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Root container that provides context and inheritable CSS tokens; uses display:contents',
@@ -29,30 +30,35 @@ export const spec = {
     {
       name: 'circle',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Circular skeleton placeholder shape',
     },
     {
       name: 'rectangle',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Rectangular skeleton placeholder shape with sharp corners',
     },
     {
       name: 'rounded',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Rounded skeleton placeholder shape with configurable border-radius',
     },
     {
       name: 'text',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Text skeleton container with multiple line placeholders',
     },
     {
       name: 'line',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Individual text line within SkeletonText',
     },
@@ -65,6 +71,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Root container providing SkeletonContext and wave animation driver',
         },
@@ -101,6 +108,7 @@ export const spec = {
         {
           name: 'circle',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Circular shape with full border-radius',
         },
@@ -124,6 +132,7 @@ export const spec = {
         {
           name: 'rectangle',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Rectangular shape with no border-radius',
         },
@@ -153,6 +162,7 @@ export const spec = {
         {
           name: 'rounded',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Rounded shape with configurable border-radius',
         },
@@ -189,12 +199,14 @@ export const spec = {
         {
           name: 'text',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Text skeleton container with flex column layout',
         },
         {
           name: 'line',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Individual text line placeholder',
         },

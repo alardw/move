@@ -43,36 +43,42 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Outer wrapper with input-like styling, anchors dropdown popover',
     },
     {
       name: 'segment',
       element: 'input',
+      kind: 'control',
       typography: 'none',
       description: 'Individual time segment input (hour, minute, second) with spinbutton role',
     },
     {
       name: 'separator',
       element: 'span',
+      kind: 'separator',
       typography: 'none',
       description: 'Colon separator between segments',
     },
     {
       name: 'period',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'AM/PM toggle button for 12h mode',
     },
     {
       name: 'dropdown',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Radix Popover.Content dropdown with scrollable columns',
     },
     {
       name: 'dropdownColumn',
       element: 'div',
+      kind: 'scrollport',
       typography: 'none',
       description: 'Scrollable column of selectable time values',
     },
@@ -81,7 +87,15 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', typography: 'none', description: 'Outer wrapper' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Outer wrapper',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -195,7 +209,13 @@ export const spec = {
     {
       name: 'Segment',
       slots: [
-        { name: 'segment', element: 'input', typography: 'none', description: 'Time segment input' },
+        {
+          name: 'segment',
+          element: 'input',
+          kind: 'control',
+          typography: 'none',
+          description: 'Time segment input',
+        },
       ],
       props: [
         {
@@ -218,7 +238,15 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'span', typography: 'none', description: 'Colon separator' }],
+      slots: [
+        {
+          name: 'separator',
+          element: 'span',
+          kind: 'separator',
+          typography: 'none',
+          description: 'Colon separator',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -240,7 +268,15 @@ export const spec = {
     },
     {
       name: 'Period',
-      slots: [{ name: 'period', element: 'button', typography: 'none', description: 'AM/PM toggle' }],
+      slots: [
+        {
+          name: 'period',
+          element: 'button',
+          kind: 'none',
+          typography: 'none',
+          description: 'AM/PM toggle',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -256,7 +292,15 @@ export const spec = {
     },
     {
       name: 'Dropdown',
-      slots: [{ name: 'dropdown', element: 'div', typography: 'none', description: 'Dropdown popover' }],
+      slots: [
+        {
+          name: 'dropdown',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Dropdown popover',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -279,7 +323,13 @@ export const spec = {
     {
       name: 'DropdownColumn',
       slots: [
-        { name: 'dropdownColumn', element: 'div', typography: 'none', description: 'Scrollable column' },
+        {
+          name: 'dropdownColumn',
+          element: 'div',
+          kind: 'scrollport',
+          typography: 'none',
+          description: 'Scrollable column',
+        },
       ],
       props: [
         {

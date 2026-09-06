@@ -21,42 +21,49 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Outermost wrapper with region role and carousel roledescription',
     },
     {
       name: 'viewport',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Scroll-snap flex container holding slides',
     },
     {
       name: 'slide',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Individual slide item with snap alignment',
     },
     {
       name: 'prevTrigger',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Previous page navigation button',
     },
     {
       name: 'nextTrigger',
       element: 'button',
+      kind: 'surface',
       typography: 'none',
       description: 'Next page navigation button',
     },
     {
       name: 'indicatorGroup',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Container for page indicator buttons with tablist role',
     },
     {
       name: 'indicator',
       element: 'button',
+      kind: 'indicator',
       typography: 'none',
       description: 'Individual page indicator button with tab role',
     },
@@ -69,6 +76,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Outermost wrapper with carousel region role',
         },
@@ -240,6 +248,7 @@ export const spec = {
         {
           name: 'viewport',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Scroll-snap flex container',
         },
@@ -265,7 +274,13 @@ export const spec = {
     {
       name: 'Slide',
       slots: [
-        { name: 'slide', element: 'div', typography: 'none', description: 'Individual slide item' },
+        {
+          name: 'slide',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Individual slide item',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -292,6 +307,7 @@ export const spec = {
         {
           name: 'prevTrigger',
           element: 'button',
+          kind: 'none',
           typography: 'none',
           description: 'Previous page button',
         },
@@ -324,7 +340,13 @@ export const spec = {
     {
       name: 'NextTrigger',
       slots: [
-        { name: 'nextTrigger', element: 'button', typography: 'none', description: 'Next page button' },
+        {
+          name: 'nextTrigger',
+          element: 'button',
+          kind: 'surface',
+          typography: 'none',
+          description: 'Next page button',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -357,6 +379,7 @@ export const spec = {
         {
           name: 'indicatorGroup',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Indicator container with tablist role',
         },
@@ -386,6 +409,7 @@ export const spec = {
         {
           name: 'indicator',
           element: 'button',
+          kind: 'indicator',
           typography: 'none',
           description: 'Individual indicator button',
         },

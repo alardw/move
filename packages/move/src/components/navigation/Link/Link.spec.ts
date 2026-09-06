@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'a',
+      kind: 'none',
       typography: 'none',
       description: 'Anchor element (or Slot.Root when asChild)',
     },

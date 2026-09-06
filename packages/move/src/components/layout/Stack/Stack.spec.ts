@@ -19,7 +19,15 @@ export const spec = {
 
   compound: false,
   rootElement: 'div',
-  slots: [{ name: 'root', element: 'div', typography: 'none', description: 'Flex container element' }],
+  slots: [
+    {
+      name: 'root',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'Flex container element',
+    },
+  ],
 
   props: [
     {

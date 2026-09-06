@@ -34,85 +34,105 @@ export const spec = {
     {
       name: 'root',
       element: 'aside',
+      kind: 'surface',
       typography: 'none',
       description: 'Main sidebar container with animated width collapse',
     },
     {
       name: 'overlay',
       element: 'div',
+      kind: 'overlay',
       typography: 'none',
       description: 'Mobile backdrop overlay that dismisses the sidebar on click',
     },
     {
       name: 'header',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Sticky header area at top of sidebar',
     },
     {
       name: 'content',
       element: 'div',
+      kind: 'scrollport',
       typography: 'none',
       description: 'Scrollable middle content area with staggered item entrance',
     },
     {
       name: 'footer',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Sticky footer area at bottom of sidebar',
     },
     {
       name: 'group',
       element: 'div',
+      kind: 'group',
       typography: 'none',
       description: 'Section box; names the Nav inside it',
     },
     {
       name: 'groupLabel',
       element: 'div',
+      kind: 'none',
       typography: 'meta',
       description: 'Section heading label that hides when collapsed',
     },
     {
       name: 'nav',
       element: 'nav',
+      kind: 'none',
       typography: 'none',
       description: 'Navigation landmark around a list of NavItems',
     },
-    { name: 'navList', element: 'ul', typography: 'none', description: 'The list of destinations' },
+    {
+      name: 'navList',
+      element: 'ul',
+      kind: 'none',
+      typography: 'none',
+      description: 'The list of destinations',
+    },
     {
       name: 'navItemRow',
       element: 'li',
+      kind: 'none',
       typography: 'none',
       description: 'List item wrapping one destination',
     },
     {
       name: 'navItem',
       element: 'a',
+      kind: 'none',
       typography: 'body',
       description: 'A destination, with icon, label, and badge',
     },
     {
       name: 'navItemIcon',
       element: 'span',
+      kind: 'icon',
       typography: 'none',
       description: 'Icon container within a nav item',
     },
     {
       name: 'navItemLabel',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description: 'Label text within a nav item, hidden when collapsed',
     },
     {
       name: 'navItemBadge',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description: 'Badge container within a nav item, hidden when collapsed',
     },
     {
       name: 'trigger',
       element: 'button',
+      kind: 'trigger',
       typography: 'body',
       description: 'Toggle button for collapse/expand or mobile open/close',
     },
@@ -188,7 +208,13 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'aside', typography: 'none', description: 'Sidebar aside container' },
+        {
+          name: 'root',
+          element: 'aside',
+          kind: 'surface',
+          typography: 'none',
+          description: 'Sidebar aside container',
+        },
       ],
       props: [
         {
@@ -224,7 +250,15 @@ export const spec = {
     },
     {
       name: 'Overlay',
-      slots: [{ name: 'overlay', element: 'div', typography: 'none', description: 'Mobile backdrop' }],
+      slots: [
+        {
+          name: 'overlay',
+          element: 'div',
+          kind: 'overlay',
+          typography: 'none',
+          description: 'Mobile backdrop',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -241,10 +275,17 @@ export const spec = {
     {
       name: 'Header',
       slots: [
-        { name: 'header', element: 'div', typography: 'none', description: 'Sticky header' },
+        {
+          name: 'header',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Sticky header',
+        },
         {
           name: 'mobileClose',
           element: 'button',
+          kind: 'none',
           typography: 'none',
           description: 'Mobile close button',
         },
@@ -277,7 +318,13 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', typography: 'none', description: 'Scrollable content area' },
+        {
+          name: 'content',
+          element: 'div',
+          kind: 'scrollport',
+          typography: 'none',
+          description: 'Scrollable content area',
+        },
       ],
       props: [
         {
@@ -299,7 +346,15 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'div', typography: 'none', description: 'Sticky footer' }],
+      slots: [
+        {
+          name: 'footer',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Sticky footer',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -320,7 +375,15 @@ export const spec = {
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'div', typography: 'none', description: 'Group container' }],
+      slots: [
+        {
+          name: 'group',
+          element: 'div',
+          kind: 'group',
+          typography: 'none',
+          description: 'Group container',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -342,7 +405,15 @@ export const spec = {
     },
     {
       name: 'GroupLabel',
-      slots: [{ name: 'groupLabel', element: 'div', typography: 'meta', description: 'Section heading' }],
+      slots: [
+        {
+          name: 'groupLabel',
+          element: 'div',
+          kind: 'none',
+          typography: 'meta',
+          description: 'Section heading',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -364,8 +435,20 @@ export const spec = {
     {
       name: 'Nav',
       slots: [
-        { name: 'nav', element: 'nav', typography: 'none', description: 'Navigation landmark' },
-        { name: 'navList', element: 'ul', typography: 'none', description: 'List of destinations' },
+        {
+          name: 'nav',
+          element: 'nav',
+          kind: 'none',
+          typography: 'none',
+          description: 'Navigation landmark',
+        },
+        {
+          name: 'navList',
+          element: 'ul',
+          kind: 'none',
+          typography: 'none',
+          description: 'List of destinations',
+        },
       ],
       props: [
         {
@@ -389,11 +472,41 @@ export const spec = {
     {
       name: 'NavItem',
       slots: [
-        { name: 'navItemRow', element: 'li', typography: 'none', description: 'List item' },
-        { name: 'navItem', element: 'a', typography: 'body', description: 'The destination link' },
-        { name: 'navItemIcon', element: 'span', typography: 'none', description: 'Icon wrapper' },
-        { name: 'navItemLabel', element: 'span', typography: 'none', description: 'Label text' },
-        { name: 'navItemBadge', element: 'span', typography: 'none', description: 'Badge wrapper' },
+        {
+          name: 'navItemRow',
+          element: 'li',
+          kind: 'none',
+          typography: 'none',
+          description: 'List item',
+        },
+        {
+          name: 'navItem',
+          element: 'a',
+          kind: 'none',
+          typography: 'body',
+          description: 'The destination link',
+        },
+        {
+          name: 'navItemIcon',
+          element: 'span',
+          kind: 'icon',
+          typography: 'none',
+          description: 'Icon wrapper',
+        },
+        {
+          name: 'navItemLabel',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Label text',
+        },
+        {
+          name: 'navItemBadge',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Badge wrapper',
+        },
       ],
       props: [
         {
@@ -489,9 +602,27 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'button', typography: 'body', description: 'Toggle button' },
-        { name: 'triggerIcon', element: 'span', typography: 'none', description: 'Trigger icon' },
-        { name: 'triggerLabel', element: 'span', typography: 'none', description: 'Trigger label' },
+        {
+          name: 'trigger',
+          element: 'button',
+          kind: 'trigger',
+          typography: 'body',
+          description: 'Toggle button',
+        },
+        {
+          name: 'triggerIcon',
+          element: 'span',
+          kind: 'icon',
+          typography: 'none',
+          description: 'Trigger icon',
+        },
+        {
+          name: 'triggerLabel',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Trigger label',
+        },
       ],
       props: [
         {

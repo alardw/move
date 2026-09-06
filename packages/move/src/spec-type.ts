@@ -226,6 +226,51 @@ export type TypographyRole =
   /** Sets no size; inherits from wherever it lands */
   | 'none';
 
+/**
+ * What a slot IS, in terms every component shares — so a contract can name it
+ * without knowing what this component happens to call it.
+ *
+ * The interactive element is called `root` in Checkbox, `input` in InputText and
+ * `trigger` in Select; there are 165 distinct slot names across 642 slots, and
+ * `root` alone means the wrapper in most components and the control in three.
+ * A capability targeting slot NAMES would have to enumerate all of them, and
+ * would silently miss the next one. It targets kinds instead.
+ *
+ * A kind exists only because some capability targets it. That is the whole test:
+ * without it this vocabulary grows back into the 165 names it replaced. Position
+ * is deliberately not a kind — there is no `root`, because nothing needs to
+ * target "the outermost element" as such; what people mean by root is the thing
+ * that paints the ground, or scrolls, or takes focus, and those are the kinds.
+ *
+ * `kind` is metadata, never a rename: slots keep their names, so `sp={{ root }}`
+ * and every CSS class stay exactly as they are.
+ */
+export type SlotKind =
+  /** The interactive element — takes focus, disabled, named by a label */
+  | 'control'
+  /** The text naming a control */
+  | 'label'
+  /** One of a repeated set: a row, an option, a cell */
+  | 'item'
+  /** The container of a repeated set */
+  | 'group'
+  /** Opens or toggles something */
+  | 'trigger'
+  /** Paints a ground of its own — a card, a panel, a popup surface */
+  | 'surface'
+  /** Scrolls its content */
+  | 'scrollport'
+  /** A backdrop behind a portalled surface */
+  | 'overlay'
+  /** A rule between things */
+  | 'separator'
+  /** A state mark — a tick, a dot, a chevron that reports state */
+  | 'indicator'
+  /** A decorative glyph */
+  | 'icon'
+  /** No capability targets this slot */
+  | 'none';
+
 /** A named slot in the component anatomy */
 export interface SlotDef {
   /** Slot name (e.g. 'root', 'indicator', 'content') */
@@ -234,6 +279,11 @@ export interface SlotDef {
   element: string;
   /** Brief description of purpose */
   description: string;
+  /**
+   * What this slot is, in the shared vocabulary contracts target. Required —
+   * `'none'` is a decision, an absent key is not.
+   */
+  kind: SlotKind;
   /**
    * Which role on the type scale this slot's text plays. Required — `'none'` is
    * a decision, an absent key is not.

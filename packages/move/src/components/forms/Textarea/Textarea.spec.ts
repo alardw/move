@@ -21,12 +21,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description: 'Wrapper container that handles border, background, and focus-within styling',
     },
     {
       name: 'textarea',
       element: 'textarea',
+      kind: 'scrollport',
       typography: 'ui',
       description: 'Native textarea element that receives focus and user text',
     },

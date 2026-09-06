@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'span',
+      kind: 'none',
       typography: 'none',
       description:
         'Text container (renders as the element from the `as` prop). Holds the split segments plus an injected visually-hidden full-text copy for screen readers.',

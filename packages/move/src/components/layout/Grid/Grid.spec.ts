@@ -23,12 +23,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Grid container with CSS grid display',
     },
     {
       name: 'cell',
       element: 'div',
+      kind: 'item',
       typography: 'none',
       description: 'Grid cell with span/offset/order control',
     },
@@ -37,7 +39,15 @@ export const spec = {
   subComponents: [
     {
       name: 'Cell',
-      slots: [{ name: 'cell', element: 'div', typography: 'none', description: 'Grid cell' }],
+      slots: [
+        {
+          name: 'cell',
+          element: 'div',
+          kind: 'item',
+          typography: 'none',
+          description: 'Grid cell',
+        },
+      ],
       props: [
         { name: 'span', type: 'number', moveSpecific: true, description: 'Column span' },
         { name: 'rowSpan', type: 'number', moveSpecific: true, description: 'Row span' },

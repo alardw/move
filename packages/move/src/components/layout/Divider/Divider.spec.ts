@@ -21,12 +21,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Separator element with CSS pseudo-element lines',
     },
     {
       name: 'content',
       element: 'span',
+      kind: 'none',
       typography: 'ui',
       description: 'Optional inline label/content between the separator lines',
     },

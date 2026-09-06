@@ -20,6 +20,7 @@ export const spec = {
     {
       name: 'root',
       element: 'RadixAvatar.Root',
+      kind: 'none',
       typography: 'ui',
       description: 'Avatar root (Radix Avatar.Root)',
     },
@@ -32,6 +33,7 @@ export const spec = {
         {
           name: 'group',
           element: 'div',
+          kind: 'group',
           typography: 'none',
           description: 'Inline-flex container for stacked avatars',
         },
@@ -53,6 +55,7 @@ export const spec = {
         {
           name: 'root',
           element: 'RadixAvatar.Root',
+          kind: 'none',
           typography: 'ui',
           description: 'Avatar root element',
         },
@@ -95,6 +98,7 @@ export const spec = {
         {
           name: 'image',
           element: 'RadixAvatar.Image',
+          kind: 'none',
           typography: 'none',
           description: 'Avatar image element',
         },
@@ -119,6 +123,7 @@ export const spec = {
         {
           name: 'fallback',
           element: 'RadixAvatar.Fallback',
+          kind: 'none',
           typography: 'none',
           description: 'Fallback content when image fails or loads',
         },

@@ -21,18 +21,21 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Calendar context container that wraps Nav and Grid',
     },
     {
       name: 'nav',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Navigation header with previous/next controls and month/year pickers',
     },
     {
       name: 'grid',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Month grid rendering weekday headers and day cells',
     },
@@ -42,7 +45,13 @@ export const spec = {
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'div', typography: 'none', description: 'Calendar context container' },
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Calendar context container',
+        },
       ],
       props: [
         {
@@ -163,7 +172,15 @@ export const spec = {
     },
     {
       name: 'Nav',
-      slots: [{ name: 'nav', element: 'div', typography: 'none', description: 'Navigation header' }],
+      slots: [
+        {
+          name: 'nav',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Navigation header',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -180,7 +197,15 @@ export const spec = {
     },
     {
       name: 'Grid',
-      slots: [{ name: 'grid', element: 'div', typography: 'none', description: 'Month grid' }],
+      slots: [
+        {
+          name: 'grid',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Month grid',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

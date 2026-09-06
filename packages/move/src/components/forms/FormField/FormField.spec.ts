@@ -21,24 +21,28 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Outer container with container queries for responsive layout',
     },
     {
       name: 'label',
       element: 'label',
+      kind: 'label',
       typography: 'none',
       description: 'Real <label> tied to the control via htmlFor, so clicking it focuses the field',
     },
     {
       name: 'field',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Input/control area that holds the actual form element',
     },
     {
       name: 'description',
       element: 'div',
+      kind: 'none',
       typography: 'meta',
       description: 'Hint or error message below the field',
     },
@@ -51,6 +55,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Outer container with container-type: inline-size',
         },
@@ -88,7 +93,15 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'label', typography: 'none', description: 'Label container' }],
+      slots: [
+        {
+          name: 'label',
+          element: 'label',
+          kind: 'label',
+          typography: 'none',
+          description: 'Label container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -110,7 +123,15 @@ export const spec = {
     },
     {
       name: 'Field',
-      slots: [{ name: 'field', element: 'div', typography: 'none', description: 'Field container' }],
+      slots: [
+        {
+          name: 'field',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Field container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -135,6 +156,7 @@ export const spec = {
         {
           name: 'description',
           element: 'div',
+          kind: 'none',
           typography: 'meta',
           description: 'Description/error text container',
         },

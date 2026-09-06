@@ -31,12 +31,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Outer container with overflow hidden, radius, and sizing',
     },
     {
       name: 'backdrop',
       element: 'img',
+      kind: 'overlay',
       typography: 'none',
       description:
         'Decorative blurred, scaled-up copy of the image painted behind it to fill letterbox bands (only when `backdrop` is set). aria-hidden.',
@@ -44,12 +46,14 @@ export const spec = {
     {
       name: 'img',
       element: 'img',
+      kind: 'none',
       typography: 'none',
       description: 'The actual <img> element with object-fit and object-position',
     },
     {
       name: 'fallback',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description:
         'Fallback placeholder shown when the image fails to load and no fallbackSrc is provided',
@@ -57,6 +61,7 @@ export const spec = {
     {
       name: 'action',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Overlay container for action content, visible on hover/focus',
     },

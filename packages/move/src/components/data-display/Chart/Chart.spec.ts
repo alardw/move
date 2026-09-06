@@ -29,6 +29,7 @@ export const spec = {
     {
       name: 'root',
       element: 'figure',
+      kind: 'none',
       typography: 'none',
       description:
         'Grouping element carrying component tokens and data-size. Labelled by the caption; groups plot, legend, and the data-table alternative into one figure.',
@@ -36,6 +37,7 @@ export const spec = {
     {
       name: 'caption',
       element: 'figcaption',
+      kind: 'none',
       typography: 'ui',
       description:
         'Visible chart title from the `caption` prop; supplies the accessible name via aria-labelledby. Visually hidden (still exposed) when hideCaption is set.',
@@ -43,6 +45,7 @@ export const spec = {
     {
       name: 'viewport',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Measured responsive box. A ResizeObserver reports width/height here; holds the aspect ratio when no explicit height is given.',
@@ -50,6 +53,7 @@ export const spec = {
     {
       name: 'plot',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Mount point the renderer draws into — <svg> for the built-in renderer, whatever the adapter produces otherwise. The shell never inspects its contents.',
@@ -57,6 +61,7 @@ export const spec = {
     {
       name: 'legend',
       element: 'ul',
+      kind: 'none',
       typography: 'ui',
       description:
         'Series legend rendered by the shell (not the renderer), so it is identical across adapters. Swatch colors come from the resolved ChartTheme.',
@@ -64,6 +69,7 @@ export const spec = {
     {
       name: 'description',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Visually hidden data table — the long text alternative for the plot, generated from data + series. Referenced by aria-describedby.',
@@ -71,6 +77,7 @@ export const spec = {
     {
       name: 'status',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'role="status" region for the loading, error+retry, and empty states driven by `resource`. Replaces the plot; never overlays it.',

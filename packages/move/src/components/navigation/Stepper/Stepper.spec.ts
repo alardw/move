@@ -21,12 +21,14 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'ui',
       description: 'Root container with role="list", flex layout based on orientation',
     },
     {
       name: 'step',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Individual step container with status-driven styling and optional click handler',
@@ -34,19 +36,28 @@ export const spec = {
     {
       name: 'indicator',
       element: 'div',
+      kind: 'indicator',
       typography: 'ui',
       description: 'Circular step number/icon indicator with status-driven colors',
     },
-    { name: 'title', element: 'div', typography: 'ui', description: 'Step title text' },
+    {
+      name: 'title',
+      element: 'div',
+      kind: 'none',
+      typography: 'ui',
+      description: 'Step title text',
+    },
     {
       name: 'description',
       element: 'div',
+      kind: 'none',
       typography: 'meta',
       description: 'Step description text below title',
     },
     {
       name: 'separator',
       element: 'div',
+      kind: 'separator',
       typography: 'none',
       description: 'Connector line between steps with completion state',
     },
@@ -55,7 +66,15 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', typography: 'ui', description: 'Root container' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'ui',
+          description: 'Root container',
+        },
+      ],
       props: [
         {
           name: 'active',
@@ -103,7 +122,15 @@ export const spec = {
     },
     {
       name: 'Step',
-      slots: [{ name: 'step', element: 'div', typography: 'none', description: 'Step container' }],
+      slots: [
+        {
+          name: 'step',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Step container',
+        },
+      ],
       props: [
         {
           name: 'status',
@@ -131,7 +158,13 @@ export const spec = {
     {
       name: 'Indicator',
       slots: [
-        { name: 'indicator', element: 'div', typography: 'ui', description: 'Circular indicator' },
+        {
+          name: 'indicator',
+          element: 'div',
+          kind: 'indicator',
+          typography: 'ui',
+          description: 'Circular indicator',
+        },
       ],
       props: [
         {
@@ -159,7 +192,15 @@ export const spec = {
     },
     {
       name: 'Title',
-      slots: [{ name: 'title', element: 'div', typography: 'ui', description: 'Title text' }],
+      slots: [
+        {
+          name: 'title',
+          element: 'div',
+          kind: 'none',
+          typography: 'ui',
+          description: 'Title text',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -173,7 +214,15 @@ export const spec = {
     },
     {
       name: 'Description',
-      slots: [{ name: 'description', element: 'div', typography: 'meta', description: 'Description text' }],
+      slots: [
+        {
+          name: 'description',
+          element: 'div',
+          kind: 'none',
+          typography: 'meta',
+          description: 'Description text',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -187,7 +236,15 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', typography: 'none', description: 'Connector line' }],
+      slots: [
+        {
+          name: 'separator',
+          element: 'div',
+          kind: 'separator',
+          typography: 'none',
+          description: 'Connector line',
+        },
+      ],
       props: [],
       usesFactory: true,
       description:

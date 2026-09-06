@@ -17,16 +17,48 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', typography: 'none', description: 'Grid container (1fr auto 1fr)' },
-    { name: 'start', element: 'div', typography: 'none', description: 'Start section (left-aligned)' },
-    { name: 'center', element: 'div', typography: 'none', description: 'Center section (centered)' },
-    { name: 'end', element: 'div', typography: 'none', description: 'End section (right-aligned)' },
+    {
+      name: 'root',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'Grid container (1fr auto 1fr)',
+    },
+    {
+      name: 'start',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'Start section (left-aligned)',
+    },
+    {
+      name: 'center',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'Center section (centered)',
+    },
+    {
+      name: 'end',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'End section (right-aligned)',
+    },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', typography: 'none', description: 'Grid container' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Grid container',
+        },
+      ],
       props: [
         {
           name: 'gap',
@@ -78,6 +110,7 @@ export const spec = {
         {
           name: 'start',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Start section (left-aligned)',
         },
@@ -96,7 +129,13 @@ export const spec = {
     {
       name: 'Center',
       slots: [
-        { name: 'center', element: 'div', typography: 'none', description: 'Center section (centered)' },
+        {
+          name: 'center',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Center section (centered)',
+        },
       ],
       props: [
         {
@@ -112,7 +151,13 @@ export const spec = {
     {
       name: 'End',
       slots: [
-        { name: 'end', element: 'div', typography: 'none', description: 'End section (right-aligned)' },
+        {
+          name: 'end',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'End section (right-aligned)',
+        },
       ],
       props: [
         {

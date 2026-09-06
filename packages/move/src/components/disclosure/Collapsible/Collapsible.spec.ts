@@ -31,30 +31,35 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Outer collapsible container with data-state',
     },
     {
       name: 'trigger',
       element: 'button',
+      kind: 'trigger',
       typography: 'none',
       description: 'Button (or Slot.Root with asChild) that toggles open/closed',
     },
     {
       name: 'icon',
       element: 'span',
+      kind: 'icon',
       typography: 'none',
       description: 'Auto-rotating chevron indicator synchronized with content animation',
     },
     {
       name: 'content',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Collapsible content region with height animation',
     },
     {
       name: 'contentInner',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Inner content wrapper for opacity animation',
     },
@@ -63,7 +68,15 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', typography: 'none', description: 'Outer container' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Outer container',
+        },
+      ],
       props: [
         { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state' },
         {
@@ -104,7 +117,15 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', typography: 'none', description: 'Toggle button' }],
+      slots: [
+        {
+          name: 'trigger',
+          element: 'button',
+          kind: 'trigger',
+          typography: 'none',
+          description: 'Toggle button',
+        },
+      ],
       props: [
         {
           name: 'asChild',
@@ -127,7 +148,15 @@ export const spec = {
     },
     {
       name: 'Icon',
-      slots: [{ name: 'icon', element: 'span', typography: 'none', description: 'Icon wrapper' }],
+      slots: [
+        {
+          name: 'icon',
+          element: 'span',
+          kind: 'icon',
+          typography: 'none',
+          description: 'Icon wrapper',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -146,12 +175,14 @@ export const spec = {
         {
           name: 'content',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Content outer (height animation)',
         },
         {
           name: 'contentInner',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'Content inner (opacity animation)',
         },

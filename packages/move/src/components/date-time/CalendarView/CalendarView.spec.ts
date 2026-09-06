@@ -21,42 +21,49 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'CalendarView context container that wraps Header and Body',
     },
     {
       name: 'header',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Toolbar area for Nav, Title, Today and ViewSwitcher composition',
     },
     {
       name: 'nav',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'Previous/next navigation button group',
     },
     {
       name: 'title',
       element: 'h2',
+      kind: 'none',
       typography: 'title',
       description: 'Localized title heading announcing current view and date range',
     },
     {
       name: 'today',
       element: 'button',
+      kind: 'none',
       typography: 'none',
       description: 'Button that resets the date to today',
     },
     {
       name: 'viewSwitcher',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description: 'ToggleGroup for switching between day/week/month/agenda views',
     },
     {
       name: 'body',
       element: 'div',
+      kind: 'none',
       typography: 'none',
       description:
         'Container that renders the active view (DayView, WeekView, MonthView, or AgendaView)',
@@ -70,6 +77,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'CalendarView context container',
         },
@@ -232,7 +240,15 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', typography: 'none', description: 'Toolbar area' }],
+      slots: [
+        {
+          name: 'header',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Toolbar area',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -255,7 +271,13 @@ export const spec = {
     {
       name: 'Nav',
       slots: [
-        { name: 'nav', element: 'div', typography: 'none', description: 'Previous/next button group' },
+        {
+          name: 'nav',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Previous/next button group',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -267,7 +289,13 @@ export const spec = {
     {
       name: 'Title',
       slots: [
-        { name: 'title', element: 'h2', typography: 'title', description: 'Localized title heading' },
+        {
+          name: 'title',
+          element: 'h2',
+          kind: 'none',
+          typography: 'title',
+          description: 'Localized title heading',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -278,7 +306,15 @@ export const spec = {
     },
     {
       name: 'Today',
-      slots: [{ name: 'today', element: 'button', typography: 'none', description: 'Today button' }],
+      slots: [
+        {
+          name: 'today',
+          element: 'button',
+          kind: 'none',
+          typography: 'none',
+          description: 'Today button',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -297,6 +333,7 @@ export const spec = {
         {
           name: 'viewSwitcher',
           element: 'div',
+          kind: 'none',
           typography: 'none',
           description: 'View switcher toggle group',
         },
@@ -317,7 +354,15 @@ export const spec = {
     },
     {
       name: 'Body',
-      slots: [{ name: 'body', element: 'div', typography: 'none', description: 'Active view container' }],
+      slots: [
+        {
+          name: 'body',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Active view container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
