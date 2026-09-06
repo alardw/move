@@ -171,6 +171,8 @@
   font-size: var(--move-drawer-description-font-size);
   color: var(--move-drawer-description-fg);
   line-height: var(--move-leading-relaxed);
+  /* Its own padding, for the standalone placement — a direct child of .content,
+     where nothing else indents it. */
   padding: 0 var(--move-drawer-content-padding);
 }
 
@@ -232,4 +234,13 @@
 .closeIcon {
   width: var(--move-drawer-close-icon-size);
   height: var(--move-drawer-close-icon-size);
+}
+
+/* …but the compound API equally allows it inside Header or Body, which already
+   carry that same padding — so nested it indented twice and sat further in than
+   the title above it. The ancestor's padding wins wherever there is one. */
+.header .description,
+.body .description,
+.footer .description {
+  padding-inline: 0;
 }
