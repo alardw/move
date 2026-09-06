@@ -11,7 +11,6 @@ export const spec = {
   description:
     'Page navigation control with numbered buttons, prev/next triggers, sliding active indicator, and staggered spring entrance animation',
   choreographies: ['press'],
-  families: ['navigation'],
 
   compound: true,
   rootElement: 'nav',

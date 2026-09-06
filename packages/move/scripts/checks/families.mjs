@@ -152,14 +152,24 @@ for (const specPath of specFiles(COMPONENTS)) {
 
     for (const base of pointerPanel ? [] : (c.propTriads ?? [])) {
       const cap = base[0].toUpperCase() + base.slice(1);
-      if (!new RegExp(`name: '${base}'`).test(src) || !new RegExp(`name: 'on${cap}Change'`).test(src))
-        fail(`must expose a ${base} / default${cap} / on${cap}Change triad`);
+      // The handler's NAME is not the family's business: a native input reports
+      // through `onChange`, a custom control through `onValueChange`, and both
+      // are complete triads. What the family requires is that all three parts
+      // exist — so where the spec declares them in `controlledProps`, those
+      // names are used, and only otherwise is the convention assumed.
+      const declared = new RegExp(`onChangeProp: '(\\w+)'`).exec(src);
+      const handler = base === 'value' && declared ? declared[1] : `on${cap}Change`;
+      const missing = [base, `default${cap}`, handler].filter(
+        (prop) => !new RegExp(`name: '${prop}'`).test(src),
+      );
+      if (missing.length) fail(`must expose a complete ${base} triad — missing ${missing.join(', ')}`);
     }
     for (const block of c.behaviorBlocks ?? []) {
       if (!new RegExp(`\\n    ${block}: \\{`).test(src)) fail(`must declare a behavior.${block} block`);
     }
     for (const flag of c.behaviorFlags ?? []) {
-      if (!new RegExp(`${flag}: (true|false)`).test(src)) fail(`must state behavior.popup.${flag}`);
+      const where = (c.behaviorBlocks ?? ['behavior'])[0];
+      if (!new RegExp(`${flag}: (true|false)`).test(src)) fail(`must state behavior.${where}.${flag}`);
     }
     for (const sub of compound && !pointerPanel ? (c.subComponents ?? []) : []) {
       if (!new RegExp(`name: '${sub}'`).test(src)) fail(`must export a ${sub} sub-component`);

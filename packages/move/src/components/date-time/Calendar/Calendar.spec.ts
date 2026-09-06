@@ -9,7 +9,6 @@ export const spec = {
   category: 'date-time',
   description:
     'Date selection grid supporting single, range, and multiple selection modes with event display, keyboard navigation, and locale-aware formatting',
-  families: ['form-input'],
 
   compound: true,
   rootElement: 'div',

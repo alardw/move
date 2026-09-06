@@ -85,6 +85,9 @@ export const FAMILIES = {
     // single-component animation is not a pattern. What both owe is a backdrop
     // and a panel that animate in and out together.
     triggers: ['Overlay.enter', 'Overlay.exit', 'Content.enter', 'Content.exit'],
+    behaviorBlocks: ['modal'],
+    behaviorFlags: ['closeOnEscape', 'closeOnOverlayClick', 'lockBodyScroll', 'trapFocus'],
+    subComponents: ['Trigger', 'Overlay', 'Content'],
     why:
       'A panel that takes the screen: focus goes in and cannot leave, the page behind stops ' +
       'scrolling, and Escape closes it. Every one of these has to behave the same or the ' +
@@ -134,6 +137,39 @@ export const FAMILIES = {
     why:
       'A popup holding whatever you put in it. It scales and fades as one thing, because its ' +
       'contents are not a list to walk down.',
+  },
+
+  'text-entry': {
+    // Focus goes to the element you type into, not to the wrapper that draws
+    // the border around it.
+    fields: { focus: 'delegated', controlled: 'value' },
+    propTriads: ['value'],
+    why:
+      'You type into it. Same focus behaviour, same value handling, and the same size, ' +
+      'variant and width vocabulary, so a form built from several reads as one form.',
+  },
+
+  'binary-control': {
+    // Space and Enter flip it; nothing else to navigate. The control is the
+    // focusable thing, so focus stays on it rather than being handed inward.
+    fields: { keyboard: 'toggle', focus: 'self', controlled: 'checked' },
+    why:
+      'On or off. One key flips it, and it reports which it is the same way wherever it ' +
+      'appears — in a form, in a toolbar, in a row of settings.',
+  },
+
+  'disclosure': {
+    // Not a behaviour family: Accordion roves and is controlled by value,
+    // Collapsible toggles and is controlled by open. What they share is the
+    // motion and the pattern — a region that grows and shrinks in flow, and
+    // announces itself as one.
+    choreography: ['disclosure'],
+    ariaPattern: ['disclosure'],
+    behaviorBlocks: ['disclosure'],
+    behaviorFlags: ['animatesOpen', 'animatesClose', 'keyboardToggle'],
+    why:
+      'A region that opens in place, pushing what is below it down. It animates its own ' +
+      'height rather than appearing, so the page does not jump.',
   },
 
   'media-player': {

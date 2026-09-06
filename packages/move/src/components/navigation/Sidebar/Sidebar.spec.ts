@@ -11,7 +11,13 @@ export const spec = {
   description:
     'Collapsible navigation sidebar with icon-only mode, a mobile Radix Dialog modal sheet, item tooltips, and staggered entrance animations',
   choreographies: ['sidePanel'],
-  families: ['disclosure', 'navigation'],
+  // No family. Sidebar collapses in place on desktop and becomes a modal sheet
+  // on mobile — a disclosure and an overlay panel depending on the viewport,
+  // which is two kinds of thing rather than one. A family is a set of
+  // components that ARE the same thing; a component that is two of them at
+  // different widths belongs to neither, and saying so is more honest than
+  // picking whichever it resembles at the width you happened to test.
+  families: [],
   ariaPattern: ['disclosure'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {

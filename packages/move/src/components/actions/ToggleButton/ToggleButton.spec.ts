@@ -11,7 +11,7 @@ export const spec = {
   description:
     'Toggle button that switches between pressed and unpressed states, composing Button base styles with Radix Toggle primitive',
   choreographies: ['press'],
-  families: ['form-input'],
+  families: ['binary-control'],
 
   compound: false,
   rootElement: 'RadixToggle.Root',

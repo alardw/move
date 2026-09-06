@@ -11,7 +11,6 @@ export const spec = {
   description:
     'Radio button group built on Radix RadioGroup with toggle animation for checked/unchecked indicator state',
   choreographies: ['toggle'],
-  families: ['form-input'],
   ariaPattern: ['listbox'],
 
   compound: true,

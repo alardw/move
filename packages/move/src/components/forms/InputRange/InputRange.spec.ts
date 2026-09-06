@@ -11,7 +11,6 @@ export const spec = {
   description:
     'Slider/range input built on Radix Slider with single or dual thumb, optional value display, and thumb interaction animation',
   choreographies: ['press'],
-  families: ['form-input'],
 
   compound: false,
   rootElement: 'span',

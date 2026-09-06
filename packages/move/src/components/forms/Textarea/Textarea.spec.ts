@@ -9,7 +9,7 @@ export const spec = {
   category: 'forms',
   description:
     'Multi-line text input with outlined/filled variants, auto-resize support, and configurable size',
-  families: ['form-input'],
+  families: ['text-entry'],
   capabilities: ['scrolls-content'],
 
   compound: false,
@@ -175,7 +175,15 @@ export const spec = {
     children: [{ slot: 'textarea' }],
   },
 
-  controlled: null,
+  // Controlled on the value. It has the full value / defaultValue / onChange
+  // triad and always did; `null` said uncontrolled, which is what a component
+  // with no value prop looks like.
+  controlled: 'value' as const,
+  controlledProps: {
+    valueProp: 'value',
+    defaultValueProp: 'defaultValue',
+    onChangeProp: 'onChange',
+  },
   keyboard: null,
   focus: 'delegated' as const,
   formType: 'native-name' as const,

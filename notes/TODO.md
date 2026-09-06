@@ -226,3 +226,26 @@ Related and still open: the same blind spot may exist for other spec fields no
 check reads. `renderContracts` and `testing.*` are prose and unverifiable, but
 `states`, `animationCapabilities` and `labels` are structural and could be
 compared the same way.
+
+## Two exemptions in the family contract, on the record
+
+`check:families` lets two components skip parts of the `anchored-popup`
+contract. Both came across from `family-popup.mjs` when it was absorbed, and
+both are structural — but an exemption ages into a loophole once nobody
+remembers why it exists, so here is why.
+
+**TimeField skips the open triad and the Trigger sub-component.** Its popup
+mechanism is `pointer-panel`: a panel mirroring a field that is already fully
+keyboard-operable on its own. Nothing triggers it, and focus never enters it —
+moving focus into the panel would take the arrow keys away from the spinbutton
+they edit. So there is no trigger to expose and no open state for a consumer to
+control. See `PopupMechanism` in `spec-type.ts`.
+
+**ColorInput skips the Trigger and Content sub-components.** It is not compound
+— a single component with an internal popup — so it exports no sub-components
+to require. This one is a general truth rather than a special case, and applies
+to any non-compound member.
+
+Worth revisiting if either component changes shape: if TimeField ever grows a
+real trigger, or ColorInput becomes compound, the exemption should stop
+applying rather than quietly keep covering them.

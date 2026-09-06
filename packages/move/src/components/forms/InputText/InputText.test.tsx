@@ -1,6 +1,6 @@
 // Generated from InputText.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { InputText } from './InputText';
 
 describe('InputText', () => {
@@ -209,4 +209,26 @@ describe('InputText', () => {
       expect(root.style.border).toBe('2px solid red');
     });
   });
+
+  // Both modes are public API, so both are tested. The spec declares the
+  // value / defaultValue / onChange triad; these are what make that true.
+  describe('controlled and uncontrolled value', () => {
+    it('uncontrolled value starts from defaultValue', () => {
+      render(<InputText aria-label="Name" defaultValue="Ada" />);
+      expect(screen.getByRole('textbox')).toHaveValue('Ada');
+    });
+
+    it('controlled value works', () => {
+      render(<InputText aria-label="Name" value="Grace" onChange={() => {}} />);
+      expect(screen.getByRole('textbox')).toHaveValue('Grace');
+    });
+
+    it('onChange handler fires when the value changes', () => {
+      const onChange = vi.fn();
+      render(<InputText aria-label="Name" defaultValue="" onChange={onChange} />);
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'x' } });
+      expect(onChange).toHaveBeenCalled();
+    });
+  });
+
 });

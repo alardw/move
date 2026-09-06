@@ -9,7 +9,6 @@ export const spec = {
   category: 'layout',
   description:
     'Scrollable content container with customizable scrollbar styling, optional sticky header and footer',
-  families: ['layout'],
   ariaPattern: ['region'],
   capabilities: ['scrolls-content'],
 

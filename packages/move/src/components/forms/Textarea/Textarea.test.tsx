@@ -1,6 +1,6 @@
 // Generated from Textarea.spec.ts
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { Textarea } from './Textarea';
 
 describe('Textarea', () => {
@@ -190,4 +190,26 @@ describe('Textarea', () => {
       expect(screen.getByPlaceholderText('test').closest('div')!.className).toContain('sp-root');
     });
   });
+
+  // Both modes are public API, so both are tested. The spec declares the
+  // value / defaultValue / onChange triad; these are what make that true.
+  describe('controlled and uncontrolled value', () => {
+    it('uncontrolled value starts from defaultValue', () => {
+      render(<Textarea aria-label="Notes" defaultValue="draft" />);
+      expect(screen.getByRole('textbox')).toHaveValue('draft');
+    });
+
+    it('controlled value works', () => {
+      render(<Textarea aria-label="Notes" value="final" onChange={() => {}} />);
+      expect(screen.getByRole('textbox')).toHaveValue('final');
+    });
+
+    it('onChange handler fires when the value changes', () => {
+      const onChange = vi.fn();
+      render(<Textarea aria-label="Notes" defaultValue="" onChange={onChange} />);
+      fireEvent.change(screen.getByRole('textbox'), { target: { value: 'x' } });
+      expect(onChange).toHaveBeenCalled();
+    });
+  });
+
 });

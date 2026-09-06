@@ -274,16 +274,6 @@ export const CHECKS: CheckDoc[] = [
       'Every popup component is reachable by keyboard: the gate presses the keys its spec declares and asserts focus lands where the spec says — inside the popup, or on the field for a combobox. Behavioural, not structural: axe cannot press a key.',
   },
   {
-    name: 'family-modal',
-    appliesTo: 'component',
-    enforces: 'Modal-overlay-family components (Dialog, Drawer, …) share one contract.',
-  },
-  {
-    name: 'family-disclosure',
-    appliesTo: 'component',
-    enforces: 'Disclosure-family components (Accordion, Collapsible, …) share one contract.',
-  },
-  {
     name: 'cross-component-drift',
     appliesTo: 'component',
     enforces: 'Patterns shared across components — sizes, variants, token usage — stay consistent.',

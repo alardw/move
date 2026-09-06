@@ -11,7 +11,6 @@ export const spec = {
   description:
     'Tabbed interface with underline/pills/outline variants, sliding indicator animation, and Radix Tabs primitive',
   choreographies: ['slidingIndicator'],
-  families: ['navigation'],
   ariaPattern: ['tablist'],
 
   compound: true,
