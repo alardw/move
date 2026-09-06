@@ -147,3 +147,11 @@
   height: var(--move-checkbox-icon-size);
   stroke-width: 3;
 }
+
+/* The text naming the control. Explicit, because an unclassed span inherits body
+   copy while every other form control renders at the `ui` step — which showed the
+   moment a checkbox sat in a form beside an input. */
+.label {
+  font-size: var(--move-type-ui);
+  line-height: var(--move-leading-normal);
+}

@@ -136,13 +136,13 @@ const RADIO_STATES: AnimationState[] = [
 ];
 
 const RadioGroupItem = withMoveComponent<
-  'item' | 'indicator' | 'dot',
+  'item' | 'indicator' | 'dot' | 'label',
   RadioGroupItemProps,
   HTMLButtonElement
 >({
   name: 'RadioGroupItem',
   styles,
-  slots: ['item', 'indicator', 'dot'] as const,
+  slots: ['item', 'indicator', 'dot', 'label'] as const,
   moveProps: ['value', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -234,7 +234,15 @@ const RadioGroupItem = withMoveComponent<
                 />
               </RadixRadioGroup.Indicator>
             </RadixRadioGroup.Item>
-            {props.children != null && <span id={labelId}>{props.children}</span>}
+            {props.children != null && (
+              <span
+                {...(sp('label') as Record<string, unknown>)}
+                id={labelId}
+                className={cx('label', (sp('label') as { className?: string }).className)}
+              >
+                {props.children}
+              </span>
+            )}
           </span>
         );
       },

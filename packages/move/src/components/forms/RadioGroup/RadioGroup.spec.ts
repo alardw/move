@@ -48,6 +48,15 @@ export const spec = {
       typography: 'none',
       description: 'Visual radio dot inside the indicator',
     },
+    {
+      name: 'label',
+      element: 'span',
+      kind: 'label',
+      typography: 'ui',
+      description:
+        'The text naming the radio. Carries the size explicitly: an unclassed span ' +
+        'inherits body copy, which put it a step above every other form control.',
+    },
   ],
 
   subComponents: [
@@ -167,6 +176,13 @@ export const spec = {
           kind: 'indicator',
           typography: 'none',
           description: 'Dot element',
+        },
+        {
+          name: 'label',
+          element: 'span',
+          kind: 'label',
+          typography: 'ui',
+          description: 'The text naming the radio',
         },
       ],
       props: [

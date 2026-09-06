@@ -42,6 +42,15 @@ export const spec = {
       typography: 'none',
       description: 'Inner icon element that renders the check SVG or resolved icon',
     },
+    {
+      name: 'label',
+      element: 'span',
+      kind: 'label',
+      typography: 'ui',
+      description:
+        'The text naming the control. Carries the size explicitly: an unclassed span ' +
+        'inherits body copy, which put it a step above every other form control.',
+    },
   ],
 
   subComponents: [

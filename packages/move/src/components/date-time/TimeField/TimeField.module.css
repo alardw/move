@@ -54,10 +54,12 @@
 
 .root[data-size='md'],
 .root:not([data-size]) {
-  /* `inherit`, matching InputText / Password / NumberInput / Textarea / ColorInput
-     at md. TimeField was the only control a step down, which showed as soon as one
-     sat beside a date input in DatePicker's `showTime` row. */
-  font-size: inherit;
+  /* The `ui` step, matching InputText / Password / NumberInput / Textarea /
+     ColorInput at md. This said `inherit` to match those controls back when THEY
+     said `inherit` — but that was the replaced-element trap, and they were moved
+     onto a named step. On a div `inherit` resolves to body copy, so keeping it
+     here left TimeField a step ABOVE every other control instead of matching. */
+  font-size: var(--move-size-sm);
 }
 
 .root[data-size='lg'] {

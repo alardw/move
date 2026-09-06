@@ -23,7 +23,7 @@ import styles from './Checkbox.module.css';
 // Types
 // =============================================================================
 
-type CheckboxSlots = 'root' | 'indicator' | 'icon';
+type CheckboxSlots = 'root' | 'indicator' | 'icon' | 'label';
 
 export type CheckboxSize = 'sm' | 'md' | 'lg';
 
@@ -80,7 +80,12 @@ const CheckboxGroup = React.forwardRef<HTMLDivElement, CheckboxGroupProps>(
     <div
       ref={ref}
       role="group"
-      style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', ...style }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 'var(--move-field-gap)',
+        ...style,
+      }}
       {...props}
     >
       {children}
@@ -101,7 +106,7 @@ const CheckboxRoot = withMoveComponent<
 >({
   name: 'Checkbox',
   styles,
-  slots: ['root', 'indicator', 'icon'] as const,
+  slots: ['root', 'indicator', 'icon', 'label'] as const,
   defaults: { icon: 'check', disabled: false },
   moveProps: [
     'checked',
@@ -233,6 +238,7 @@ const CheckboxRoot = withMoveComponent<
         const rootSp = sp('root');
         const indicatorSp = sp('indicator');
         const iconSp = sp('icon');
+        const labelSp = sp('label');
 
         const {
           className: rootSpClass,
@@ -353,7 +359,15 @@ const CheckboxRoot = withMoveComponent<
                 value={checkbox.checked ? ((value as string) ?? 'on') : ''}
               />
             )}
-            {children != null && <span id={labelId}>{children}</span>}
+            {children != null && (
+              <span
+                {...(labelSp as Record<string, unknown>)}
+                id={labelId}
+                className={cx('label', (labelSp as { className?: string }).className)}
+              >
+                {children}
+              </span>
+            )}
           </label>
         );
       },

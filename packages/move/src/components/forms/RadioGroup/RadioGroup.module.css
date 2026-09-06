@@ -15,7 +15,7 @@
 
   display: flex;
   flex-direction: column;
-  gap: var(--move-spacing-sm);
+  gap: var(--move-field-gap);
 }
 
 .root[aria-orientation='horizontal'] {
@@ -143,4 +143,12 @@
   height: var(--move-radio-dot-size);
   border-radius: var(--move-rounded-full);
   background-color: var(--move-radio-fg);
+}
+
+/* The text naming the control. Explicit, because an unclassed span inherits body
+   copy while every other form control renders at the `ui` step — which showed the
+   moment a checkbox sat in a form beside an input. */
+.label {
+  font-size: var(--move-type-ui);
+  line-height: var(--move-leading-normal);
 }
