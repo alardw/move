@@ -18,12 +18,22 @@ export const spec = {
   compound: false,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Alert container with role=alert' },
-    { name: 'icon', element: 'span', description: 'Icon wrapper' },
-    { name: 'content', element: 'div', description: 'Content wrapper for title and description' },
-    { name: 'title', element: 'div', description: 'Alert title text' },
-    { name: 'description', element: 'div', description: 'Alert description text (children)' },
-    { name: 'close', element: 'button', description: 'Close button' },
+    { name: 'root', element: 'div', type: 'ui', description: 'Alert container with role=alert' },
+    { name: 'icon', element: 'span', type: 'none', description: 'Icon wrapper' },
+    {
+      name: 'content',
+      element: 'div',
+      type: 'none',
+      description: 'Content wrapper for title and description',
+    },
+    { name: 'title', element: 'div', type: 'none', description: 'Alert title text' },
+    {
+      name: 'description',
+      element: 'div',
+      type: 'meta',
+      description: 'Alert description text (children)',
+    },
+    { name: 'close', element: 'button', type: 'none', description: 'Close button' },
   ],
 
   props: [

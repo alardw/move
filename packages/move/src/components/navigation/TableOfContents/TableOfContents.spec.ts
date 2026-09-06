@@ -20,15 +20,25 @@ export const spec = {
   compound: true,
   rootElement: 'nav',
   slots: [
-    { name: 'root', element: 'nav', description: 'Navigation landmark wrapping the list of items' },
-    { name: 'item', element: 'a', description: 'Individual anchor item with active state' },
-    { name: 'indicator', element: 'div', description: 'Active-item indicator' },
+    {
+      name: 'root',
+      element: 'nav',
+      type: 'ui',
+      description: 'Navigation landmark wrapping the list of items',
+    },
+    {
+      name: 'item',
+      element: 'a',
+      type: 'ui',
+      description: 'Individual anchor item with active state',
+    },
+    { name: 'indicator', element: 'div', type: 'none', description: 'Active-item indicator' },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'nav', description: 'Navigation landmark' }],
+      slots: [{ name: 'root', element: 'nav', type: 'ui', description: 'Navigation landmark' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -63,7 +73,9 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'a', description: 'Anchor link to a page heading' }],
+      slots: [
+        { name: 'item', element: 'a', type: 'ui', description: 'Anchor link to a page heading' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

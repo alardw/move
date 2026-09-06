@@ -21,19 +21,27 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outer container with container queries for responsive layout',
     },
     {
       name: 'label',
       element: 'label',
+      type: 'none',
       description: 'Real <label> tied to the control via htmlFor, so clicking it focuses the field',
     },
     {
       name: 'field',
       element: 'div',
+      type: 'none',
       description: 'Input/control area that holds the actual form element',
     },
-    { name: 'description', element: 'div', description: 'Hint or error message below the field' },
+    {
+      name: 'description',
+      element: 'div',
+      type: 'meta',
+      description: 'Hint or error message below the field',
+    },
   ],
 
   subComponents: [
@@ -43,6 +51,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          type: 'none',
           description: 'Outer container with container-type: inline-size',
         },
       ],
@@ -79,7 +88,7 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'label', description: 'Label container' }],
+      slots: [{ name: 'label', element: 'label', type: 'none', description: 'Label container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -101,7 +110,7 @@ export const spec = {
     },
     {
       name: 'Field',
-      slots: [{ name: 'field', element: 'div', description: 'Field container' }],
+      slots: [{ name: 'field', element: 'div', type: 'none', description: 'Field container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -123,7 +132,12 @@ export const spec = {
     {
       name: 'Description',
       slots: [
-        { name: 'description', element: 'div', description: 'Description/error text container' },
+        {
+          name: 'description',
+          element: 'div',
+          type: 'meta',
+          description: 'Description/error text container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -213,7 +227,7 @@ export const spec = {
     },
     {
       name: '--move-formfield-description-size',
-      value: 'inherit',
+      value: 'var(--move-size-xs)',
       description: 'Description font size',
     },
   ],

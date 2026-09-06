@@ -21,15 +21,27 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Wrapper container that handles border, background, and focus-within styling',
     },
     {
       name: 'input',
       element: 'input',
+      type: 'body',
       description: 'Native input element that receives focus and user text',
     },
-    { name: 'iconLeft', element: 'span', description: 'Optional icon rendered before the input' },
-    { name: 'iconRight', element: 'span', description: 'Optional icon rendered after the input' },
+    {
+      name: 'iconLeft',
+      element: 'span',
+      type: 'none',
+      description: 'Optional icon rendered before the input',
+    },
+    {
+      name: 'iconRight',
+      element: 'span',
+      type: 'none',
+      description: 'Optional icon rendered after the input',
+    },
   ],
 
   props: [
@@ -208,7 +220,7 @@ export const spec = {
     },
     {
       name: '--move-input-font-size',
-      value: 'inherit',
+      value: 'var(--move-size-sm)',
       description: 'Input font size (overridden per size)',
     },
     { name: '--move-input-fg', value: 'var(--move-fg-base)', description: 'Input text color' },

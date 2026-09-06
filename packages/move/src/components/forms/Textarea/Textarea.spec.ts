@@ -21,11 +21,13 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Wrapper container that handles border, background, and focus-within styling',
     },
     {
       name: 'textarea',
       element: 'textarea',
+      type: 'body',
       description: 'Native textarea element that receives focus and user text',
     },
   ],
@@ -220,7 +222,7 @@ export const spec = {
     },
     {
       name: '--move-textarea-font-size',
-      value: 'inherit',
+      value: 'var(--move-size-sm)',
       description: 'Textarea font size (overridden per size)',
     },
     {

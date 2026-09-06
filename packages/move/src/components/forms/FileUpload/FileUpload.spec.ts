@@ -23,63 +23,80 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Wrapper containing hidden file input, context provider, and all sub-components',
     },
     {
       name: 'dropzone',
       element: 'div',
+      type: 'none',
       description: 'Drag-and-drop target area with dashed border and visual feedback',
     },
     {
       name: 'trigger',
       element: 'Slot.Root',
+      type: 'none',
       description: 'asChild trigger that opens the file dialog on click',
     },
-    { name: 'itemGroup', element: 'ul', description: 'List container for file items (role=list)' },
+    {
+      name: 'itemGroup',
+      element: 'ul',
+      type: 'none',
+      description: 'List container for file items (role=list)',
+    },
     {
       name: 'item',
       element: 'li',
+      type: 'body',
       description: 'Individual file row with enter/exit animation and upload status',
     },
     {
       name: 'itemPreview',
       element: 'div',
+      type: 'none',
       description: 'Thumbnail preview for image files or fallback file icon',
     },
-    { name: 'itemName', element: 'span', description: 'Truncated file name display' },
+    { name: 'itemName', element: 'span', type: 'none', description: 'Truncated file name display' },
     {
       name: 'itemSize',
       element: 'span',
+      type: 'none',
       description: 'Formatted file size display (e.g. "2.4 MB")',
     },
     {
       name: 'itemDelete',
       element: 'button',
+      type: 'none',
       description: 'Remove/abort button per file item (shows check icon on complete)',
     },
     {
       name: 'clearTrigger',
       element: 'Slot.Root',
+      type: 'none',
       description: 'asChild trigger that clears all files and aborts uploads',
     },
     {
       name: 'itemProgress',
       element: 'div',
+      type: 'none',
       description: 'Per-file progress bar wrapper (renders ProgressBar component)',
     },
     {
       name: 'itemStatus',
       element: 'span',
+      type: 'none',
       description: 'Per-file upload status text (percent, "Done", or "Failed")',
     },
     {
       name: 'totalProgress',
       element: 'div',
+      type: 'none',
       description: 'Aggregate progress bar across all files with fade-out on completion',
     },
     {
       name: 'uploadTrigger',
       element: 'Slot.Root',
+      type: 'none',
       description: 'asChild trigger that starts uploading all pending files',
     },
   ],
@@ -87,7 +104,14 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Root wrapper with hidden file input' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'div',
+          type: 'ui',
+          description: 'Root wrapper with hidden file input',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -225,7 +249,14 @@ export const spec = {
     },
     {
       name: 'Dropzone',
-      slots: [{ name: 'dropzone', element: 'div', description: 'Drag-and-drop target area' }],
+      slots: [
+        {
+          name: 'dropzone',
+          element: 'div',
+          type: 'none',
+          description: 'Drag-and-drop target area',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -247,7 +278,9 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'Slot.Root', description: 'asChild trigger' }],
+      slots: [
+        { name: 'trigger', element: 'Slot.Root', type: 'none', description: 'asChild trigger' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -269,7 +302,9 @@ export const spec = {
     },
     {
       name: 'ItemGroup',
-      slots: [{ name: 'itemGroup', element: 'ul', description: 'File list container' }],
+      slots: [
+        { name: 'itemGroup', element: 'ul', type: 'none', description: 'File list container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -290,7 +325,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'li', description: 'File row' }],
+      slots: [{ name: 'item', element: 'li', type: 'body', description: 'File row' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -318,7 +353,9 @@ export const spec = {
     },
     {
       name: 'ItemPreview',
-      slots: [{ name: 'itemPreview', element: 'div', description: 'Preview thumbnail' }],
+      slots: [
+        { name: 'itemPreview', element: 'div', type: 'none', description: 'Preview thumbnail' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -340,7 +377,7 @@ export const spec = {
     },
     {
       name: 'ItemName',
-      slots: [{ name: 'itemName', element: 'span', description: 'File name text' }],
+      slots: [{ name: 'itemName', element: 'span', type: 'none', description: 'File name text' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -355,7 +392,7 @@ export const spec = {
     },
     {
       name: 'ItemSize',
-      slots: [{ name: 'itemSize', element: 'span', description: 'File size text' }],
+      slots: [{ name: 'itemSize', element: 'span', type: 'none', description: 'File size text' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -370,7 +407,14 @@ export const spec = {
     },
     {
       name: 'ItemDelete',
-      slots: [{ name: 'itemDelete', element: 'button', description: 'Delete/complete button' }],
+      slots: [
+        {
+          name: 'itemDelete',
+          element: 'button',
+          type: 'none',
+          description: 'Delete/complete button',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -393,7 +437,14 @@ export const spec = {
     },
     {
       name: 'ClearTrigger',
-      slots: [{ name: 'clearTrigger', element: 'Slot.Root', description: 'Clear all trigger' }],
+      slots: [
+        {
+          name: 'clearTrigger',
+          element: 'Slot.Root',
+          type: 'none',
+          description: 'Clear all trigger',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -414,7 +465,14 @@ export const spec = {
     },
     {
       name: 'ItemProgress',
-      slots: [{ name: 'itemProgress', element: 'div', description: 'Per-file progress wrapper' }],
+      slots: [
+        {
+          name: 'itemProgress',
+          element: 'div',
+          type: 'none',
+          description: 'Per-file progress wrapper',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -430,7 +488,7 @@ export const spec = {
     },
     {
       name: 'ItemStatus',
-      slots: [{ name: 'itemStatus', element: 'span', description: 'Status text' }],
+      slots: [{ name: 'itemStatus', element: 'span', type: 'none', description: 'Status text' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -446,7 +504,14 @@ export const spec = {
     },
     {
       name: 'TotalProgress',
-      slots: [{ name: 'totalProgress', element: 'div', description: 'Total progress wrapper' }],
+      slots: [
+        {
+          name: 'totalProgress',
+          element: 'div',
+          type: 'none',
+          description: 'Total progress wrapper',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -469,7 +534,14 @@ export const spec = {
     },
     {
       name: 'UploadTrigger',
-      slots: [{ name: 'uploadTrigger', element: 'Slot.Root', description: 'Upload all trigger' }],
+      slots: [
+        {
+          name: 'uploadTrigger',
+          element: 'Slot.Root',
+          type: 'none',
+          description: 'Upload all trigger',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

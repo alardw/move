@@ -49,22 +49,31 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'InputText-style wrapper containing swatch, input, and optional eye dropper',
     },
     {
       name: 'swatch',
       element: 'div',
+      type: 'none',
       description: 'Color preview square that toggles popover on click',
     },
-    { name: 'input', element: 'input', description: 'Text input for typing/editing color values' },
+    {
+      name: 'input',
+      element: 'input',
+      type: 'body',
+      description: 'Text input for typing/editing color values',
+    },
     {
       name: 'content',
       element: 'div',
+      type: 'none',
       description: 'Radix Popover.Content popup container with enter/exit animation',
     },
     {
       name: 'contentInner',
       element: 'div',
+      type: 'none',
       description: 'Inner wrapper for the embedded ColorPicker',
     },
   ],

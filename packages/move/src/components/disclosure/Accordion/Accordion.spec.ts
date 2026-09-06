@@ -31,36 +31,43 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Outer accordion container scoping component tokens',
     },
     {
       name: 'item',
       element: 'div',
+      type: 'none',
       description: 'Individual disclosure section with open/closed state',
     },
     {
       name: 'header',
       element: 'div',
+      type: 'none',
       description: 'Wrapper around the trigger for structural flexibility',
     },
     {
       name: 'trigger',
       element: 'button',
+      type: 'body',
       description: 'Clickable header button that toggles the item open/closed',
     },
     {
       name: 'icon',
       element: 'span',
+      type: 'none',
       description: 'Chevron indicator that rotates to reflect open/closed state',
     },
     {
       name: 'content',
       element: 'div',
+      type: 'body',
       description: 'Collapsible content region with height animation',
     },
     {
       name: 'contentInner',
       element: 'div',
+      type: 'none',
       description: 'Inner content wrapper for opacity animation',
     },
   ],
@@ -68,7 +75,9 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Outer accordion container' }],
+      slots: [
+        { name: 'root', element: 'div', type: 'ui', description: 'Outer accordion container' },
+      ],
       props: [
         {
           name: 'type',
@@ -135,7 +144,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'div', description: 'Item container' }],
+      slots: [{ name: 'item', element: 'div', type: 'none', description: 'Item container' }],
       props: [
         {
           name: 'value',
@@ -155,7 +164,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', description: 'Header wrapper' }],
+      slots: [{ name: 'header', element: 'div', type: 'none', description: 'Header wrapper' }],
       props: [
         {
           name: 'children',
@@ -170,8 +179,8 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'button', description: 'Trigger button' },
-        { name: 'icon', element: 'span', description: 'Chevron icon' },
+        { name: 'trigger', element: 'button', type: 'body', description: 'Trigger button' },
+        { name: 'icon', element: 'span', type: 'none', description: 'Chevron icon' },
       ],
       props: [
         {
@@ -203,9 +212,15 @@ export const spec = {
         {
           name: 'content',
           element: 'div',
+          type: 'body',
           description: 'Collapsible content outer (height animation)',
         },
-        { name: 'contentInner', element: 'div', description: 'Content inner (opacity animation)' },
+        {
+          name: 'contentInner',
+          element: 'div',
+          type: 'none',
+          description: 'Content inner (opacity animation)',
+        },
       ],
       props: [
         {
@@ -409,12 +424,12 @@ export const spec = {
     },
     {
       name: '--move-accordion-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Container border color (used by contained variant)',
     },
     {
       name: '--move-accordion-item-border',
-      value: 'var(--move-border-base)',
+      value: 'var(--move-border-interactive)',
       description: 'Border between items',
     },
     {
@@ -434,12 +449,12 @@ export const spec = {
     },
     {
       name: '--move-accordion-trigger-bg',
-      value: 'var(--move-surface-alt-hover)',
+      value: 'var(--move-surface-alt)',
       description: 'Trigger background',
     },
     {
       name: '--move-accordion-trigger-bg-hover',
-      value: 'var(--move-surface-hover)',
+      value: 'var(--move-surface-alt-hover)',
       description: 'Trigger hover background',
     },
     {
@@ -467,7 +482,11 @@ export const spec = {
       value: 'var(--move-spacing-md)',
       description: 'Content inner padding',
     },
-    { name: '--move-accordion-content-bg', value: 'inherit', description: 'Content background' },
+    {
+      name: '--move-accordion-content-bg',
+      value: 'var(--move-surface-bg)',
+      description: 'Content background — inset into the accordion surface, against the trigger',
+    },
     {
       name: '--move-accordion-content-fg',
       value: 'var(--move-fg-muted)',

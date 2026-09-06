@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'code',
+      type: 'none',
       description: 'Code element (inline <code> or block <pre> based on block prop)',
     },
   ],

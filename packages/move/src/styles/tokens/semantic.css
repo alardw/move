@@ -255,6 +255,25 @@
   --move-size-xl: var(--move-text-xl);
 
   /* ============================================
+   * Typographic roles
+   *
+   * The scale above says how big; these say what a piece of text IS. A slot
+   * declares its role in the spec and the size follows, so a consumer retoning
+   * typography moves four values rather than sixty, and two components can no
+   * longer disagree about how big a title is.
+   *
+   * The roles were not invented — they were already in the library, unnamed:
+   * `ui` was 14px in Table, Alert, Breadcrumb, TableOfContents, Tabs, Stepper
+   * and Button alike, and `meta` was 12px everywhere it appeared. Only `title`
+   * (16 / 18 / 20 across five components) and `body` (14 / 16) had drifted,
+   * which is what naming them fixes.
+   * ============================================ */
+  --move-type-title: var(--move-text-lg); /* 18px — a card, row or section title */
+  --move-type-body: var(--move-text-base); /* 16px — running content, read not scanned */
+  --move-type-ui: var(--move-text-sm); /* 14px — chrome: controls, cells, nav, tabs */
+  --move-type-meta: var(--move-text-xs); /* 12px — labels and captions ABOUT content */
+
+  /* ============================================
    * Scrollbar
    * ============================================ */
   --move-scrollbar-thumb: var(--move-gray-700);

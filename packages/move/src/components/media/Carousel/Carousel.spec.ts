@@ -21,20 +21,43 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outermost wrapper with region role and carousel roledescription',
     },
-    { name: 'viewport', element: 'div', description: 'Scroll-snap flex container holding slides' },
-    { name: 'slide', element: 'div', description: 'Individual slide item with snap alignment' },
-    { name: 'prevTrigger', element: 'button', description: 'Previous page navigation button' },
-    { name: 'nextTrigger', element: 'button', description: 'Next page navigation button' },
+    {
+      name: 'viewport',
+      element: 'div',
+      type: 'none',
+      description: 'Scroll-snap flex container holding slides',
+    },
+    {
+      name: 'slide',
+      element: 'div',
+      type: 'none',
+      description: 'Individual slide item with snap alignment',
+    },
+    {
+      name: 'prevTrigger',
+      element: 'button',
+      type: 'none',
+      description: 'Previous page navigation button',
+    },
+    {
+      name: 'nextTrigger',
+      element: 'button',
+      type: 'none',
+      description: 'Next page navigation button',
+    },
     {
       name: 'indicatorGroup',
       element: 'div',
+      type: 'none',
       description: 'Container for page indicator buttons with tablist role',
     },
     {
       name: 'indicator',
       element: 'button',
+      type: 'none',
       description: 'Individual page indicator button with tab role',
     },
   ],
@@ -46,6 +69,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          type: 'none',
           description: 'Outermost wrapper with carousel region role',
         },
       ],
@@ -212,7 +236,14 @@ export const spec = {
     },
     {
       name: 'Viewport',
-      slots: [{ name: 'viewport', element: 'div', description: 'Scroll-snap flex container' }],
+      slots: [
+        {
+          name: 'viewport',
+          element: 'div',
+          type: 'none',
+          description: 'Scroll-snap flex container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -233,7 +264,9 @@ export const spec = {
     },
     {
       name: 'Slide',
-      slots: [{ name: 'slide', element: 'div', description: 'Individual slide item' }],
+      slots: [
+        { name: 'slide', element: 'div', type: 'none', description: 'Individual slide item' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -255,7 +288,14 @@ export const spec = {
     },
     {
       name: 'PrevTrigger',
-      slots: [{ name: 'prevTrigger', element: 'button', description: 'Previous page button' }],
+      slots: [
+        {
+          name: 'prevTrigger',
+          element: 'button',
+          type: 'none',
+          description: 'Previous page button',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -283,7 +323,9 @@ export const spec = {
     },
     {
       name: 'NextTrigger',
-      slots: [{ name: 'nextTrigger', element: 'button', description: 'Next page button' }],
+      slots: [
+        { name: 'nextTrigger', element: 'button', type: 'none', description: 'Next page button' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -315,6 +357,7 @@ export const spec = {
         {
           name: 'indicatorGroup',
           element: 'div',
+          type: 'none',
           description: 'Indicator container with tablist role',
         },
       ],
@@ -339,7 +382,14 @@ export const spec = {
     },
     {
       name: 'Indicator',
-      slots: [{ name: 'indicator', element: 'button', description: 'Individual indicator button' }],
+      slots: [
+        {
+          name: 'indicator',
+          element: 'button',
+          type: 'none',
+          description: 'Individual indicator button',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

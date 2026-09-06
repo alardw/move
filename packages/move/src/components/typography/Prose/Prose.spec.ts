@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'title',
       description: 'Prose container that styles nested HTML content',
     },
   ],

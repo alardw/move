@@ -22,25 +22,52 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Wrapper containing the segmented track and label',
     },
-    { name: 'track', element: 'div', description: 'Segmented bar container' },
-    { name: 'segment', element: 'div', description: 'A single strength segment (one per level)' },
-    { name: 'label', element: 'span', description: 'Strength text label (aria-live region)' },
+    { name: 'track', element: 'div', type: 'none', description: 'Segmented bar container' },
+    {
+      name: 'segment',
+      element: 'div',
+      type: 'none',
+      description: 'A single strength segment (one per level)',
+    },
+    {
+      name: 'label',
+      element: 'span',
+      type: 'body',
+      description: 'Strength text label (aria-live region)',
+    },
   ],
 
   subComponents: [
     {
       name: 'Requirements',
       slots: [
-        { name: 'requirements', element: 'ul', description: 'Requirements checklist container' },
-        { name: 'requirement', element: 'li', description: 'A single requirement row' },
+        {
+          name: 'requirements',
+          element: 'ul',
+          type: 'ui',
+          description: 'Requirements checklist container',
+        },
+        {
+          name: 'requirement',
+          element: 'li',
+          type: 'none',
+          description: 'A single requirement row',
+        },
         {
           name: 'requirementIcon',
           element: 'span',
+          type: 'none',
           description: 'check / x icon for the requirement state',
         },
-        { name: 'requirementLabel', element: 'span', description: 'Requirement label text' },
+        {
+          name: 'requirementLabel',
+          element: 'span',
+          type: 'none',
+          description: 'Requirement label text',
+        },
       ],
       props: [
         {

@@ -22,26 +22,40 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description:
         'Root container that provides context and inheritable CSS tokens; uses display:contents',
     },
-    { name: 'circle', element: 'div', description: 'Circular skeleton placeholder shape' },
+    {
+      name: 'circle',
+      element: 'div',
+      type: 'none',
+      description: 'Circular skeleton placeholder shape',
+    },
     {
       name: 'rectangle',
       element: 'div',
+      type: 'none',
       description: 'Rectangular skeleton placeholder shape with sharp corners',
     },
     {
       name: 'rounded',
       element: 'div',
+      type: 'none',
       description: 'Rounded skeleton placeholder shape with configurable border-radius',
     },
     {
       name: 'text',
       element: 'div',
+      type: 'none',
       description: 'Text skeleton container with multiple line placeholders',
     },
-    { name: 'line', element: 'div', description: 'Individual text line within SkeletonText' },
+    {
+      name: 'line',
+      element: 'div',
+      type: 'none',
+      description: 'Individual text line within SkeletonText',
+    },
   ],
 
   subComponents: [
@@ -51,6 +65,7 @@ export const spec = {
         {
           name: 'root',
           element: 'div',
+          type: 'none',
           description: 'Root container providing SkeletonContext and wave animation driver',
         },
       ],
@@ -83,7 +98,12 @@ export const spec = {
     {
       name: 'Circle',
       slots: [
-        { name: 'circle', element: 'div', description: 'Circular shape with full border-radius' },
+        {
+          name: 'circle',
+          element: 'div',
+          type: 'none',
+          description: 'Circular shape with full border-radius',
+        },
       ],
       props: [
         {
@@ -104,6 +124,7 @@ export const spec = {
         {
           name: 'rectangle',
           element: 'div',
+          type: 'none',
           description: 'Rectangular shape with no border-radius',
         },
       ],
@@ -132,6 +153,7 @@ export const spec = {
         {
           name: 'rounded',
           element: 'div',
+          type: 'none',
           description: 'Rounded shape with configurable border-radius',
         },
       ],
@@ -167,9 +189,15 @@ export const spec = {
         {
           name: 'text',
           element: 'div',
+          type: 'none',
           description: 'Text skeleton container with flex column layout',
         },
-        { name: 'line', element: 'div', description: 'Individual text line placeholder' },
+        {
+          name: 'line',
+          element: 'div',
+          type: 'none',
+          description: 'Individual text line placeholder',
+        },
       ],
       props: [
         {

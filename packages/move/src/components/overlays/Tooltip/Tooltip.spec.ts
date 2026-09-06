@@ -40,21 +40,29 @@ export const spec = {
     {
       name: 'trigger',
       element: 'button',
+      type: 'none',
       description: 'Element that activates the tooltip on hover/focus',
     },
     {
       name: 'content',
       element: 'div',
+      type: 'ui',
       description:
         'Positioned shell — Radix owns its transform; carries only z-index and the opacity fade',
     },
     {
       name: 'contentInner',
       element: 'div',
+      type: 'ui',
       description:
         'Visible tooltip box (inverted colors); owns the scale/slide entrance so it never clobbers Radix positioning',
     },
-    { name: 'arrow', element: 'svg', description: 'Arrow pointing toward the trigger' },
+    {
+      name: 'arrow',
+      element: 'svg',
+      type: 'none',
+      description: 'Arrow pointing toward the trigger',
+    },
   ],
 
   subComponents: [
@@ -136,7 +144,7 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', description: 'Trigger element' }],
+      slots: [{ name: 'trigger', element: 'button', type: 'none', description: 'Trigger element' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -163,7 +171,9 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'div', description: 'Tooltip popup container' }],
+      slots: [
+        { name: 'content', element: 'div', type: 'ui', description: 'Tooltip popup container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -223,7 +233,7 @@ export const spec = {
     },
     {
       name: 'Arrow',
-      slots: [{ name: 'arrow', element: 'svg', description: 'Arrow SVG' }],
+      slots: [{ name: 'arrow', element: 'svg', type: 'none', description: 'Arrow SVG' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

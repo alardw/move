@@ -23,27 +23,32 @@ export const spec = {
     {
       name: 'root',
       element: 'RadixTabs.Root',
+      type: 'none',
       description: 'Root container managing tab state via Radix Tabs.Root',
     },
     {
       name: 'list',
       element: 'RadixTabs.List',
+      type: 'none',
       description: 'Tab trigger list container with variant and size styling',
     },
     {
       name: 'indicator',
       element: 'div',
+      type: 'none',
       description:
         'Sliding indicator positioned by the slidingIndicator capability (shared usePositionTracker hook), tracking the active trigger — an underline bar for the underline variant, a filled pill for the pills variant',
     },
     {
       name: 'trigger',
       element: 'RadixTabs.Trigger',
+      type: 'ui',
       description: 'Individual tab button that activates its panel',
     },
     {
       name: 'content',
       element: 'RadixTabs.Content',
+      type: 'none',
       description: 'Tab panel content associated with a trigger value',
     },
   ],
@@ -51,7 +56,9 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'RadixTabs.Root', description: 'Root container' }],
+      slots: [
+        { name: 'root', element: 'RadixTabs.Root', type: 'none', description: 'Root container' },
+      ],
       props: [
         {
           name: 'children',
@@ -110,8 +117,18 @@ export const spec = {
     {
       name: 'List',
       slots: [
-        { name: 'list', element: 'RadixTabs.List', description: 'Tab list container' },
-        { name: 'indicator', element: 'div', description: 'Sliding underline bar or filled pill' },
+        {
+          name: 'list',
+          element: 'RadixTabs.List',
+          type: 'none',
+          description: 'Tab list container',
+        },
+        {
+          name: 'indicator',
+          element: 'div',
+          type: 'none',
+          description: 'Sliding underline bar or filled pill',
+        },
       ],
       props: [
         {
@@ -161,7 +178,12 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'RadixTabs.Trigger', description: 'Individual tab button' },
+        {
+          name: 'trigger',
+          element: 'RadixTabs.Trigger',
+          type: 'ui',
+          description: 'Individual tab button',
+        },
       ],
       props: [
         {
@@ -196,7 +218,14 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'RadixTabs.Content', description: 'Tab content panel' }],
+      slots: [
+        {
+          name: 'content',
+          element: 'RadixTabs.Content',
+          type: 'none',
+          description: 'Tab content panel',
+        },
+      ],
       props: [
         {
           name: 'children',

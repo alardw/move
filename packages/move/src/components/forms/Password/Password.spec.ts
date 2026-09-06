@@ -21,20 +21,28 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Wrapper div containing input, icons, and toggle button',
     },
     {
       name: 'input',
       element: 'input',
+      type: 'body',
       description: 'Native input element (type toggles between text and password)',
     },
-    { name: 'iconLeft', element: 'span', description: 'Optional left icon slot' },
+    { name: 'iconLeft', element: 'span', type: 'none', description: 'Optional left icon slot' },
     {
       name: 'toggle',
       element: 'button',
+      type: 'none',
       description: 'Visibility toggle button with show/hide icon',
     },
-    { name: 'toggleIcon', element: 'span', description: 'Icon wrapper inside toggle button' },
+    {
+      name: 'toggleIcon',
+      element: 'span',
+      type: 'none',
+      description: 'Icon wrapper inside toggle button',
+    },
   ],
 
   subComponents: [],
@@ -283,7 +291,7 @@ export const spec = {
     },
     {
       name: '--move-password-font-size',
-      value: 'inherit',
+      value: 'var(--move-size-sm)',
       description: 'Input font size (inherits, overridden by size)',
     },
     { name: '--move-password-fg', value: 'var(--move-fg-base)', description: 'Input text color' },

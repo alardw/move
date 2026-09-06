@@ -29,42 +29,49 @@ export const spec = {
     {
       name: 'root',
       element: 'figure',
+      type: 'none',
       description:
         'Grouping element carrying component tokens and data-size. Labelled by the caption; groups plot, legend, and the data-table alternative into one figure.',
     },
     {
       name: 'caption',
       element: 'figcaption',
+      type: 'ui',
       description:
         'Visible chart title from the `caption` prop; supplies the accessible name via aria-labelledby. Visually hidden (still exposed) when hideCaption is set.',
     },
     {
       name: 'viewport',
       element: 'div',
+      type: 'none',
       description:
         'Measured responsive box. A ResizeObserver reports width/height here; holds the aspect ratio when no explicit height is given.',
     },
     {
       name: 'plot',
       element: 'div',
+      type: 'none',
       description:
         'Mount point the renderer draws into — <svg> for the built-in renderer, whatever the adapter produces otherwise. The shell never inspects its contents.',
     },
     {
       name: 'legend',
       element: 'ul',
+      type: 'ui',
       description:
         'Series legend rendered by the shell (not the renderer), so it is identical across adapters. Swatch colors come from the resolved ChartTheme.',
     },
     {
       name: 'description',
       element: 'div',
+      type: 'none',
       description:
         'Visually hidden data table — the long text alternative for the plot, generated from data + series. Referenced by aria-describedby.',
     },
     {
       name: 'status',
       element: 'div',
+      type: 'none',
       description:
         'role="status" region for the loading, error+retry, and empty states driven by `resource`. Replaces the plot; never overlays it.',
     },

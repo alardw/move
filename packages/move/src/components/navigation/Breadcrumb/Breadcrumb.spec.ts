@@ -18,33 +18,56 @@ export const spec = {
   compound: true,
   rootElement: 'nav',
   slots: [
-    { name: 'root', element: 'nav', description: 'Root nav element with aria-label="Breadcrumb"' },
+    {
+      name: 'root',
+      element: 'nav',
+      type: 'none',
+      description: 'Root nav element with aria-label="Breadcrumb"',
+    },
     {
       name: 'list',
       element: 'ol',
+      type: 'ui',
       description: 'Ordered list containing breadcrumb items and separators',
     },
-    { name: 'item', element: 'li', description: 'List item wrapper for each breadcrumb entry' },
-    { name: 'link', element: 'a', description: 'Anchor link for navigable breadcrumb items' },
+    {
+      name: 'item',
+      element: 'li',
+      type: 'none',
+      description: 'List item wrapper for each breadcrumb entry',
+    },
+    {
+      name: 'link',
+      element: 'a',
+      type: 'none',
+      description: 'Anchor link for navigable breadcrumb items',
+    },
     {
       name: 'page',
       element: 'span',
+      type: 'none',
       description: 'Current page indicator (non-navigable, aria-current="page")',
     },
     {
       name: 'separator',
       element: 'li',
+      type: 'none',
       description: 'Separator between breadcrumb items (aria-hidden)',
     },
-    { name: 'ellipsis', element: 'li', description: 'Ellipsis indicator for collapsed items' },
+    {
+      name: 'ellipsis',
+      element: 'li',
+      type: 'none',
+      description: 'Ellipsis indicator for collapsed items',
+    },
   ],
 
   subComponents: [
     {
       name: 'Root',
       slots: [
-        { name: 'root', element: 'nav', description: 'Root nav element' },
-        { name: 'list', element: 'ol', description: 'Ordered list wrapper' },
+        { name: 'root', element: 'nav', type: 'none', description: 'Root nav element' },
+        { name: 'list', element: 'ol', type: 'ui', description: 'Ordered list wrapper' },
       ],
       props: [
         {
@@ -99,7 +122,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'li', description: 'List item wrapper' }],
+      slots: [{ name: 'item', element: 'li', type: 'none', description: 'List item wrapper' }],
       props: [
         {
           name: 'children',
@@ -113,7 +136,7 @@ export const spec = {
     },
     {
       name: 'Link',
-      slots: [{ name: 'link', element: 'a', description: 'Anchor link' }],
+      slots: [{ name: 'link', element: 'a', type: 'none', description: 'Anchor link' }],
       props: [
         {
           name: 'asChild',
@@ -135,7 +158,7 @@ export const spec = {
     },
     {
       name: 'Page',
-      slots: [{ name: 'page', element: 'span', description: 'Current page span' }],
+      slots: [{ name: 'page', element: 'span', type: 'none', description: 'Current page span' }],
       props: [
         {
           name: 'children',
@@ -149,7 +172,9 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'li', description: 'Separator list item' }],
+      slots: [
+        { name: 'separator', element: 'li', type: 'none', description: 'Separator list item' },
+      ],
       props: [
         {
           name: 'children',
@@ -164,7 +189,7 @@ export const spec = {
     },
     {
       name: 'Ellipsis',
-      slots: [{ name: 'ellipsis', element: 'li', description: 'Ellipsis list item' }],
+      slots: [{ name: 'ellipsis', element: 'li', type: 'none', description: 'Ellipsis list item' }],
       props: [
         {
           name: 'children',

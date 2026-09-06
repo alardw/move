@@ -18,7 +18,12 @@ export const spec = {
   compound: false,
   rootElement: 'a',
   slots: [
-    { name: 'root', element: 'a', description: 'Anchor element (or Slot.Root when asChild)' },
+    {
+      name: 'root',
+      element: 'a',
+      type: 'none',
+      description: 'Anchor element (or Slot.Root when asChild)',
+    },
   ],
 
   props: [

@@ -20,7 +20,12 @@ export const spec = {
   compound: false,
   rootElement: 'RadixToggle.Root',
   slots: [
-    { name: 'root', element: 'button', description: 'Toggle button element via Radix Toggle.Root' },
+    {
+      name: 'root',
+      element: 'button',
+      type: 'none',
+      description: 'Toggle button element via Radix Toggle.Root',
+    },
   ],
 
   props: [

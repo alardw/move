@@ -21,21 +21,39 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outer card container with background, border, radius, and shadow',
     },
-    { name: 'header', element: 'div', description: 'Top section containing title and description' },
-    { name: 'title', element: 'h3', description: 'Card heading text' },
+    {
+      name: 'header',
+      element: 'div',
+      type: 'none',
+      description: 'Top section containing title and description',
+    },
+    { name: 'title', element: 'h3', type: 'none', description: 'Card heading text' },
     {
       name: 'description',
       element: 'p',
+      type: 'ui',
       description: 'Secondary descriptive text below the title',
     },
-    { name: 'body', element: 'div', description: 'Main content area' },
-    { name: 'footer', element: 'div', description: 'Bottom section for actions or metadata' },
-    { name: 'footerStart', element: 'div', description: 'Left-aligned content within footer' },
+    { name: 'body', element: 'div', type: 'none', description: 'Main content area' },
+    {
+      name: 'footer',
+      element: 'div',
+      type: 'none',
+      description: 'Bottom section for actions or metadata',
+    },
+    {
+      name: 'footerStart',
+      element: 'div',
+      type: 'none',
+      description: 'Left-aligned content within footer',
+    },
     {
       name: 'footerEnd',
       element: 'div',
+      type: 'none',
       description: 'Right-aligned content within footer (margin-left: auto)',
     },
   ],
@@ -43,7 +61,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Outer card container' }],
+      slots: [{ name: 'root', element: 'div', type: 'none', description: 'Outer card container' }],
       props: [
         {
           name: 'variant',
@@ -78,7 +96,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', description: 'Header container' }],
+      slots: [{ name: 'header', element: 'div', type: 'none', description: 'Header container' }],
       props: [
         {
           name: 'children',
@@ -92,7 +110,7 @@ export const spec = {
     },
     {
       name: 'Title',
-      slots: [{ name: 'title', element: 'h3', description: 'Heading element' }],
+      slots: [{ name: 'title', element: 'h3', type: 'none', description: 'Heading element' }],
       props: [
         {
           name: 'truncate',
@@ -118,7 +136,9 @@ export const spec = {
     },
     {
       name: 'Description',
-      slots: [{ name: 'description', element: 'p', description: 'Description paragraph' }],
+      slots: [
+        { name: 'description', element: 'p', type: 'ui', description: 'Description paragraph' },
+      ],
       props: [
         {
           name: 'truncate',
@@ -144,7 +164,7 @@ export const spec = {
     },
     {
       name: 'Body',
-      slots: [{ name: 'body', element: 'div', description: 'Body container' }],
+      slots: [{ name: 'body', element: 'div', type: 'none', description: 'Body container' }],
       props: [
         {
           name: 'children',
@@ -158,7 +178,7 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'div', description: 'Footer container' }],
+      slots: [{ name: 'footer', element: 'div', type: 'none', description: 'Footer container' }],
       props: [
         {
           name: 'children',
@@ -172,7 +192,14 @@ export const spec = {
     },
     {
       name: 'FooterStart',
-      slots: [{ name: 'footerStart', element: 'div', description: 'Footer start container' }],
+      slots: [
+        {
+          name: 'footerStart',
+          element: 'div',
+          type: 'none',
+          description: 'Footer start container',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -186,7 +213,9 @@ export const spec = {
     },
     {
       name: 'FooterEnd',
-      slots: [{ name: 'footerEnd', element: 'div', description: 'Footer end container' }],
+      slots: [
+        { name: 'footerEnd', element: 'div', type: 'none', description: 'Footer end container' },
+      ],
       props: [
         {
           name: 'children',

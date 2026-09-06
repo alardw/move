@@ -19,13 +19,25 @@ export const spec = {
   compound: true,
   rootElement: 'button',
   slots: [
-    { name: 'root', element: 'button', description: 'Button element (or Slot.Root when asChild)' },
+    {
+      name: 'root',
+      element: 'button',
+      type: 'none',
+      description: 'Button element (or Slot.Root when asChild)',
+    },
   ],
 
   subComponents: [
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'div', description: 'Container for grouped buttons' }],
+      slots: [
+        {
+          name: 'group',
+          element: 'div',
+          type: 'none',
+          description: 'Container for grouped buttons',
+        },
+      ],
       props: [
         {
           name: 'children',

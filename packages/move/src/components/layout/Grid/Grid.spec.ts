@@ -20,14 +20,24 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Grid container with CSS grid display' },
-    { name: 'cell', element: 'div', description: 'Grid cell with span/offset/order control' },
+    {
+      name: 'root',
+      element: 'div',
+      type: 'none',
+      description: 'Grid container with CSS grid display',
+    },
+    {
+      name: 'cell',
+      element: 'div',
+      type: 'none',
+      description: 'Grid cell with span/offset/order control',
+    },
   ],
 
   subComponents: [
     {
       name: 'Cell',
-      slots: [{ name: 'cell', element: 'div', description: 'Grid cell' }],
+      slots: [{ name: 'cell', element: 'div', type: 'none', description: 'Grid cell' }],
       props: [
         { name: 'span', type: 'number', moveSpecific: true, description: 'Column span' },
         { name: 'rowSpan', type: 'number', moveSpecific: true, description: 'Row span' },

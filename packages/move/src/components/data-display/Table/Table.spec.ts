@@ -33,40 +33,57 @@ export const spec = {
     {
       name: 'root',
       element: 'table',
+      type: 'ui',
       description: 'Root table element with component tokens; wrapped by a scroll container div.',
     },
     {
       name: 'header',
       element: 'thead',
+      type: 'none',
       description:
         'Table header section. Children are used as the label source for stack-mode cells.',
     },
     {
       name: 'body',
       element: 'tbody',
+      type: 'none',
       description: 'Table body section. Provides BodyContext so rows inject data-label per cell.',
     },
-    { name: 'footer', element: 'tfoot', description: 'Table footer section.' },
+    { name: 'footer', element: 'tfoot', type: 'none', description: 'Table footer section.' },
     {
       name: 'row',
       element: 'tr',
+      type: 'none',
       description: 'Table row with optional selected state and hover animation.',
     },
-    { name: 'head', element: 'th', description: 'Header cell with optional sort indicator.' },
+    {
+      name: 'head',
+      element: 'th',
+      type: 'none',
+      description: 'Header cell with optional sort indicator.',
+    },
     {
       name: 'cell',
       element: 'td',
+      type: 'meta',
       description: 'Standard data cell. Receives data-label in stack mode.',
     },
-    { name: 'caption', element: 'caption', description: 'Table caption rendered at bottom.' },
+    {
+      name: 'caption',
+      element: 'caption',
+      type: 'ui',
+      description: 'Table caption rendered at bottom.',
+    },
     {
       name: 'group',
       element: 'tbody',
+      type: 'none',
       description: 'Collapsible row group; one tbody per group, data-open toggles visibility.',
     },
     {
       name: 'groupHeader',
       element: 'tr',
+      type: 'none',
       description: 'Clickable row that toggles the enclosing group. role="button", aria-expanded.',
     },
   ],
@@ -78,6 +95,7 @@ export const spec = {
         {
           name: 'root',
           element: 'table',
+          type: 'ui',
           description: 'Root table element wrapped by a scroll container div.',
         },
       ],
@@ -150,7 +168,9 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'thead', description: 'Table header section.' }],
+      slots: [
+        { name: 'header', element: 'thead', type: 'none', description: 'Table header section.' },
+      ],
       props: [
         {
           name: 'children',
@@ -165,7 +185,7 @@ export const spec = {
     },
     {
       name: 'Body',
-      slots: [{ name: 'body', element: 'tbody', description: 'Table body section.' }],
+      slots: [{ name: 'body', element: 'tbody', type: 'none', description: 'Table body section.' }],
       props: [
         {
           name: 'children',
@@ -180,7 +200,9 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'tfoot', description: 'Table footer section.' }],
+      slots: [
+        { name: 'footer', element: 'tfoot', type: 'none', description: 'Table footer section.' },
+      ],
       props: [
         {
           name: 'children',
@@ -194,7 +216,7 @@ export const spec = {
     },
     {
       name: 'Row',
-      slots: [{ name: 'row', element: 'tr', description: 'Table row.' }],
+      slots: [{ name: 'row', element: 'tr', type: 'none', description: 'Table row.' }],
       props: [
         {
           name: 'selected',
@@ -241,7 +263,7 @@ export const spec = {
     },
     {
       name: 'Head',
-      slots: [{ name: 'head', element: 'th', description: 'Header cell.' }],
+      slots: [{ name: 'head', element: 'th', type: 'none', description: 'Header cell.' }],
       props: [
         {
           name: 'sortable',
@@ -280,7 +302,7 @@ export const spec = {
     },
     {
       name: 'Cell',
-      slots: [{ name: 'cell', element: 'td', description: 'Data cell.' }],
+      slots: [{ name: 'cell', element: 'td', type: 'meta', description: 'Data cell.' }],
       props: [
         {
           name: 'align',
@@ -308,7 +330,7 @@ export const spec = {
     },
     {
       name: 'Caption',
-      slots: [{ name: 'caption', element: 'caption', description: 'Table caption.' }],
+      slots: [{ name: 'caption', element: 'caption', type: 'ui', description: 'Table caption.' }],
       props: [
         {
           name: 'children',
@@ -322,7 +344,14 @@ export const spec = {
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'tbody', description: 'Collapsible row group (tbody).' }],
+      slots: [
+        {
+          name: 'group',
+          element: 'tbody',
+          type: 'none',
+          description: 'Collapsible row group (tbody).',
+        },
+      ],
       props: [
         {
           name: 'collapsible',
@@ -364,7 +393,14 @@ export const spec = {
     },
     {
       name: 'GroupHeader',
-      slots: [{ name: 'groupHeader', element: 'tr', description: 'Group header row (clickable).' }],
+      slots: [
+        {
+          name: 'groupHeader',
+          element: 'tr',
+          type: 'none',
+          description: 'Group header row (clickable).',
+        },
+      ],
       props: [
         {
           name: 'colSpan',

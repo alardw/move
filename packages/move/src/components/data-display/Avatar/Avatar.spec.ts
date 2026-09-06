@@ -17,14 +17,24 @@ export const spec = {
   compound: true,
   rootElement: 'span',
   slots: [
-    { name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root (Radix Avatar.Root)' },
+    {
+      name: 'root',
+      element: 'RadixAvatar.Root',
+      type: 'none',
+      description: 'Avatar root (Radix Avatar.Root)',
+    },
   ],
 
   subComponents: [
     {
       name: 'Group',
       slots: [
-        { name: 'group', element: 'div', description: 'Inline-flex container for stacked avatars' },
+        {
+          name: 'group',
+          element: 'div',
+          type: 'none',
+          description: 'Inline-flex container for stacked avatars',
+        },
       ],
       props: [
         {
@@ -39,7 +49,14 @@ export const spec = {
     },
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'RadixAvatar.Root', description: 'Avatar root element' }],
+      slots: [
+        {
+          name: 'root',
+          element: 'RadixAvatar.Root',
+          type: 'none',
+          description: 'Avatar root element',
+        },
+      ],
       props: [
         {
           name: 'size',
@@ -74,7 +91,14 @@ export const spec = {
     },
     {
       name: 'Image',
-      slots: [{ name: 'image', element: 'RadixAvatar.Image', description: 'Avatar image element' }],
+      slots: [
+        {
+          name: 'image',
+          element: 'RadixAvatar.Image',
+          type: 'none',
+          description: 'Avatar image element',
+        },
+      ],
       props: [
         { name: 'src', type: 'string', moveSpecific: false, description: 'Image source URL' },
         { name: 'alt', type: 'string', moveSpecific: false, description: 'Image alt text' },
@@ -95,6 +119,7 @@ export const spec = {
         {
           name: 'fallback',
           element: 'RadixAvatar.Fallback',
+          type: 'none',
           description: 'Fallback content when image fails or loads',
         },
       ],

@@ -23,27 +23,47 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Root container with flex column layout and component tokens',
     },
     {
       name: 'item',
       element: 'div',
+      type: 'none',
       description: 'Individual timeline item containing separator and content',
     },
     {
       name: 'bullet',
       element: 'div',
+      type: 'none',
       description: 'Circular indicator for each timeline item, optionally holding custom content',
     },
-    { name: 'line', element: 'div', description: 'Vertical connector line between timeline items' },
-    { name: 'content', element: 'div', description: 'Content area for each timeline item' },
-    { name: 'title', element: 'div', description: 'Optional title text above item content' },
+    {
+      name: 'line',
+      element: 'div',
+      type: 'none',
+      description: 'Vertical connector line between timeline items',
+    },
+    {
+      name: 'content',
+      element: 'div',
+      type: 'ui',
+      description: 'Content area for each timeline item',
+    },
+    {
+      name: 'title',
+      element: 'div',
+      type: 'title',
+      description: 'Optional title text above item content',
+    },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Root timeline container' }],
+      slots: [
+        { name: 'root', element: 'div', type: 'none', description: 'Root timeline container' },
+      ],
       props: [
         {
           name: 'active',
@@ -107,11 +127,11 @@ export const spec = {
     {
       name: 'Item',
       slots: [
-        { name: 'item', element: 'div', description: 'Item wrapper' },
-        { name: 'bullet', element: 'div', description: 'Bullet indicator' },
-        { name: 'line', element: 'div', description: 'Connector line' },
-        { name: 'content', element: 'div', description: 'Content area' },
-        { name: 'title', element: 'div', description: 'Title text' },
+        { name: 'item', element: 'div', type: 'none', description: 'Item wrapper' },
+        { name: 'bullet', element: 'div', type: 'none', description: 'Bullet indicator' },
+        { name: 'line', element: 'div', type: 'none', description: 'Connector line' },
+        { name: 'content', element: 'div', type: 'ui', description: 'Content area' },
+        { name: 'title', element: 'div', type: 'title', description: 'Title text' },
       ],
       props: [
         {

@@ -21,26 +21,31 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outer container with flex column layout, centering, and size tokens',
     },
     {
       name: 'icon',
       element: 'span',
+      type: 'none',
       description: 'Icon wrapper rendered when icon prop is provided',
     },
     {
       name: 'title',
       element: 'div',
+      type: 'body',
       description: 'Title text rendered when title prop is provided',
     },
     {
       name: 'description',
       element: 'div',
+      type: 'ui',
       description: 'Description text rendered when description prop is provided',
     },
     {
       name: 'action',
       element: 'div',
+      type: 'none',
       description: 'Action area rendered when action prop is provided',
     },
   ],

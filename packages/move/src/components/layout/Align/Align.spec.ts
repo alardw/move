@@ -17,16 +17,16 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'root', element: 'div', description: 'Grid container (1fr auto 1fr)' },
-    { name: 'start', element: 'div', description: 'Start section (left-aligned)' },
-    { name: 'center', element: 'div', description: 'Center section (centered)' },
-    { name: 'end', element: 'div', description: 'End section (right-aligned)' },
+    { name: 'root', element: 'div', type: 'none', description: 'Grid container (1fr auto 1fr)' },
+    { name: 'start', element: 'div', type: 'none', description: 'Start section (left-aligned)' },
+    { name: 'center', element: 'div', type: 'none', description: 'Center section (centered)' },
+    { name: 'end', element: 'div', type: 'none', description: 'End section (right-aligned)' },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Grid container' }],
+      slots: [{ name: 'root', element: 'div', type: 'none', description: 'Grid container' }],
       props: [
         {
           name: 'gap',
@@ -74,7 +74,14 @@ export const spec = {
     },
     {
       name: 'Start',
-      slots: [{ name: 'start', element: 'div', description: 'Start section (left-aligned)' }],
+      slots: [
+        {
+          name: 'start',
+          element: 'div',
+          type: 'none',
+          description: 'Start section (left-aligned)',
+        },
+      ],
       props: [
         {
           name: 'children',
@@ -88,7 +95,9 @@ export const spec = {
     },
     {
       name: 'Center',
-      slots: [{ name: 'center', element: 'div', description: 'Center section (centered)' }],
+      slots: [
+        { name: 'center', element: 'div', type: 'none', description: 'Center section (centered)' },
+      ],
       props: [
         {
           name: 'children',
@@ -102,7 +111,9 @@ export const spec = {
     },
     {
       name: 'End',
-      slots: [{ name: 'end', element: 'div', description: 'End section (right-aligned)' }],
+      slots: [
+        { name: 'end', element: 'div', type: 'none', description: 'End section (right-aligned)' },
+      ],
       props: [
         {
           name: 'children',

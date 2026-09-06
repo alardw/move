@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description:
         'Container whose direct children are FLIP-animated when they reorder, filter, add, or remove',
     },

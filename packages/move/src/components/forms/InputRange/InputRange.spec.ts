@@ -23,18 +23,31 @@ export const spec = {
     {
       name: 'root',
       element: 'span',
+      type: 'none',
       description: 'Radix Slider.Root element with track and thumbs',
     },
-    { name: 'track', element: 'span', description: 'Radix Slider.Track — the full slider rail' },
+    {
+      name: 'track',
+      element: 'span',
+      type: 'none',
+      description: 'Radix Slider.Track — the full slider rail',
+    },
     {
       name: 'range',
       element: 'span',
+      type: 'none',
       description: 'Radix Slider.Range — filled portion of the track',
     },
-    { name: 'thumb', element: 'span', description: 'Radix Slider.Thumb — draggable handle(s)' },
+    {
+      name: 'thumb',
+      element: 'span',
+      type: 'none',
+      description: 'Radix Slider.Thumb — draggable handle(s)',
+    },
     {
       name: 'value',
       element: 'span',
+      type: 'ui',
       description: 'Optional value display label(s) alongside slider',
     },
   ],

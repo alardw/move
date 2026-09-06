@@ -21,32 +21,38 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'body',
       description:
         'Wrapper providing variant/size context and visual chrome (border, background, radius)',
     },
     {
       name: 'toolbar',
       element: 'div',
+      type: 'none',
       description: 'Toolbar container with role=toolbar, wrapping control groups and separators',
     },
     {
       name: 'controlGroup',
       element: 'div',
+      type: 'none',
       description: 'Inline group of related controls with role=group',
     },
     {
       name: 'control',
       element: 'button',
+      type: 'none',
       description: 'Individual formatting toggle button with active state',
     },
     {
       name: 'separator',
       element: 'div',
+      type: 'none',
       description: 'Vertical separator between control groups with role=separator',
     },
     {
       name: 'content',
       element: 'div',
+      type: 'body',
       description: 'Content area hosting the editor engine, wrapped in Prose for typography',
     },
   ],
@@ -54,7 +60,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Root wrapper' }],
+      slots: [{ name: 'root', element: 'div', type: 'body', description: 'Root wrapper' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -91,7 +97,7 @@ export const spec = {
     },
     {
       name: 'Toolbar',
-      slots: [{ name: 'toolbar', element: 'div', description: 'Toolbar container' }],
+      slots: [{ name: 'toolbar', element: 'div', type: 'none', description: 'Toolbar container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -131,7 +137,14 @@ export const spec = {
     },
     {
       name: 'ControlGroup',
-      slots: [{ name: 'controlGroup', element: 'div', description: 'Control group container' }],
+      slots: [
+        {
+          name: 'controlGroup',
+          element: 'div',
+          type: 'none',
+          description: 'Control group container',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -152,7 +165,7 @@ export const spec = {
     },
     {
       name: 'Control',
-      slots: [{ name: 'control', element: 'button', description: 'Toggle button' }],
+      slots: [{ name: 'control', element: 'button', type: 'none', description: 'Toggle button' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -194,7 +207,7 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', description: 'Vertical divider' }],
+      slots: [{ name: 'separator', element: 'div', type: 'none', description: 'Vertical divider' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -210,7 +223,9 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'div', description: 'Editor content area' }],
+      slots: [
+        { name: 'content', element: 'div', type: 'body', description: 'Editor content area' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

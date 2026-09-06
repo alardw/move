@@ -47,33 +47,44 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Wrapper containing Radix Popover and context providers',
     },
     {
       name: 'trigger',
       element: 'div',
+      type: 'none',
       description: 'Radix Popover.Anchor wrapping the input area',
     },
     {
       name: 'singleWrapper',
       element: 'div',
+      type: 'none',
       description: 'Layout wrapper for single/multiple mode input',
     },
     {
       name: 'rangeWrapper',
       element: 'div',
+      type: 'none',
       description: 'Layout wrapper for range mode dual inputs',
     },
-    { name: 'icon', element: 'span', description: 'Calendar icon slot' },
-    { name: 'content', element: 'div', description: 'Animated Radix Popover.Content' },
+    { name: 'icon', element: 'span', type: 'none', description: 'Calendar icon slot' },
+    {
+      name: 'content',
+      element: 'div',
+      type: 'none',
+      description: 'Animated Radix Popover.Content',
+    },
     {
       name: 'rangeInstruction',
       element: 'div',
+      type: 'meta',
       description: 'Active field label shown inside popover for range mode',
     },
     {
       name: 'datePickerTime',
       element: 'div',
+      type: 'none',
       description: 'Time field section inside popover or inline',
     },
   ],
@@ -81,7 +92,9 @@ export const spec = {
   subComponents: [
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'div', description: 'Popover anchor area' }],
+      slots: [
+        { name: 'trigger', element: 'div', type: 'none', description: 'Popover anchor area' },
+      ],
       props: [
         {
           name: 'children',
@@ -97,8 +110,13 @@ export const spec = {
     {
       name: 'Input',
       slots: [
-        { name: 'singleWrapper', element: 'div', description: 'Single/multiple mode layout' },
-        { name: 'rangeWrapper', element: 'div', description: 'Range mode layout' },
+        {
+          name: 'singleWrapper',
+          element: 'div',
+          type: 'none',
+          description: 'Single/multiple mode layout',
+        },
+        { name: 'rangeWrapper', element: 'div', type: 'none', description: 'Range mode layout' },
       ],
       props: [
         {
@@ -121,7 +139,7 @@ export const spec = {
     },
     {
       name: 'Icon',
-      slots: [{ name: 'icon', element: 'span', description: 'Icon wrapper' }],
+      slots: [{ name: 'icon', element: 'span', type: 'none', description: 'Icon wrapper' }],
       props: [
         {
           name: 'children',
@@ -139,10 +157,16 @@ export const spec = {
         {
           name: 'content',
           element: 'div',
+          type: 'none',
           description: 'Popover content with enter/exit animation',
         },
-        { name: 'rangeInstruction', element: 'div', description: 'Range active field label' },
-        { name: 'datePickerTime', element: 'div', description: 'Time field section' },
+        {
+          name: 'rangeInstruction',
+          element: 'div',
+          type: 'meta',
+          description: 'Range active field label',
+        },
+        { name: 'datePickerTime', element: 'div', type: 'none', description: 'Time field section' },
       ],
       props: [
         {

@@ -21,23 +21,32 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Wrapper div containing input, icon, and controls',
     },
     {
       name: 'input',
       element: 'input',
+      type: 'body',
       description: 'Native text input with numeric role and inputMode=decimal',
     },
-    { name: 'iconLeft', element: 'span', description: 'Optional left icon slot' },
+    { name: 'iconLeft', element: 'span', type: 'none', description: 'Optional left icon slot' },
     {
       name: 'controls',
       element: 'div',
+      type: 'none',
       description: 'Container for increment/decrement stepper buttons',
     },
-    { name: 'increment', element: 'button', description: 'Increment button with chevron-up icon' },
+    {
+      name: 'increment',
+      element: 'button',
+      type: 'none',
+      description: 'Increment button with chevron-up icon',
+    },
     {
       name: 'decrement',
       element: 'button',
+      type: 'none',
       description: 'Decrement button with chevron-down icon',
     },
   ],
@@ -363,7 +372,7 @@ export const spec = {
     },
     {
       name: '--move-numberinput-font-size',
-      value: 'inherit',
+      value: 'var(--move-size-sm)',
       description: 'Input font size (inherits, overridden by size)',
     },
     {

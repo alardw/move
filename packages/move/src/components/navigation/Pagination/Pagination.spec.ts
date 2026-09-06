@@ -20,15 +20,31 @@ export const spec = {
   compound: true,
   rootElement: 'nav',
   slots: [
-    { name: 'root', element: 'nav', description: 'Root nav element with aria-label="Pagination"' },
-    { name: 'prev', element: 'button', description: 'Previous page trigger button' },
-    { name: 'next', element: 'button', description: 'Next page trigger button' },
-    { name: 'items', element: 'ul', description: 'List of page buttons and ellipsis indicators' },
-    { name: 'item', element: 'button', description: 'Individual page number button' },
-    { name: 'ellipsis', element: 'span', description: 'Ellipsis indicator between page ranges' },
+    {
+      name: 'root',
+      element: 'nav',
+      type: 'none',
+      description: 'Root nav element with aria-label="Pagination"',
+    },
+    { name: 'prev', element: 'button', type: 'none', description: 'Previous page trigger button' },
+    { name: 'next', element: 'button', type: 'body', description: 'Next page trigger button' },
+    {
+      name: 'items',
+      element: 'ul',
+      type: 'none',
+      description: 'List of page buttons and ellipsis indicators',
+    },
+    { name: 'item', element: 'button', type: 'body', description: 'Individual page number button' },
+    {
+      name: 'ellipsis',
+      element: 'span',
+      type: 'body',
+      description: 'Ellipsis indicator between page ranges',
+    },
     {
       name: 'indicator',
       element: 'div',
+      type: 'none',
       description: 'Sliding background indicator that follows the active page button',
     },
   ],
@@ -36,7 +52,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'nav', description: 'Root nav element' }],
+      slots: [{ name: 'root', element: 'nav', type: 'none', description: 'Root nav element' }],
       props: [
         { name: 'total', type: 'number', moveSpecific: true, description: 'Total number of pages' },
         {
@@ -104,7 +120,9 @@ export const spec = {
     },
     {
       name: 'PrevTrigger',
-      slots: [{ name: 'prev', element: 'button', description: 'Previous page button' }],
+      slots: [
+        { name: 'prev', element: 'button', type: 'none', description: 'Previous page button' },
+      ],
       props: [
         {
           name: 'animations',
@@ -125,7 +143,7 @@ export const spec = {
     },
     {
       name: 'NextTrigger',
-      slots: [{ name: 'next', element: 'button', description: 'Next page button' }],
+      slots: [{ name: 'next', element: 'button', type: 'body', description: 'Next page button' }],
       props: [
         {
           name: 'animations',
@@ -147,10 +165,15 @@ export const spec = {
     {
       name: 'Items',
       slots: [
-        { name: 'items', element: 'ul', description: 'Page list container' },
-        { name: 'item', element: 'button', description: 'Page number button' },
-        { name: 'ellipsis', element: 'span', description: 'Ellipsis between ranges' },
-        { name: 'indicator', element: 'div', description: 'Sliding active indicator' },
+        { name: 'items', element: 'ul', type: 'none', description: 'Page list container' },
+        { name: 'item', element: 'button', type: 'body', description: 'Page number button' },
+        { name: 'ellipsis', element: 'span', type: 'body', description: 'Ellipsis between ranges' },
+        {
+          name: 'indicator',
+          element: 'div',
+          type: 'none',
+          description: 'Sliding active indicator',
+        },
       ],
       props: [
         {

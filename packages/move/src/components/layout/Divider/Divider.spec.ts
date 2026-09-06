@@ -21,11 +21,13 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Separator element with CSS pseudo-element lines',
     },
     {
       name: 'content',
       element: 'span',
+      type: 'ui',
       description: 'Optional inline label/content between the separator lines',
     },
   ],

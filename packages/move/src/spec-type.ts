@@ -199,6 +199,29 @@ export type DismissBehavior = 'none' | 'hide' | 'unmountAfterExit';
 // Structural definitions
 // =============================================================================
 
+/**
+ * What a slot's text IS, which decides how big it is.
+ *
+ * The scale (`--move-text-*`) says how big; a role says why. Naming them stopped
+ * five components disagreeing about the size of a title while all seven agreed
+ * about the size of a table cell — the roles were already there, just unwritten.
+ *
+ * `none` is an answer: a slot that sets no font-size of its own says so, rather
+ * than leaving the field off and making silence indistinguishable from an
+ * oversight.
+ */
+export type TypeRole =
+  /** 18px — a card, row or section title */
+  | 'title'
+  /** 16px — running content, read rather than scanned */
+  | 'body'
+  /** 14px — chrome: controls, cells, nav, tabs */
+  | 'ui'
+  /** 12px — labels and captions ABOUT content, never content itself */
+  | 'meta'
+  /** Sets no size; inherits from wherever it lands */
+  | 'none';
+
 /** A named slot in the component anatomy */
 export interface SlotDef {
   /** Slot name (e.g. 'root', 'indicator', 'content') */
@@ -207,6 +230,11 @@ export interface SlotDef {
   element: string;
   /** Brief description of purpose */
   description: string;
+  /**
+   * The typographic role this slot's text plays. Required — `'none'` is a
+   * decision, an absent key is not.
+   */
+  type: TypeRole;
 }
 
 /** A public prop definition */

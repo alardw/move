@@ -21,16 +21,19 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Calendar context container that wraps Nav and Grid',
     },
     {
       name: 'nav',
       element: 'div',
+      type: 'none',
       description: 'Navigation header with previous/next controls and month/year pickers',
     },
     {
       name: 'grid',
       element: 'div',
+      type: 'none',
       description: 'Month grid rendering weekday headers and day cells',
     },
   ],
@@ -38,7 +41,9 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Calendar context container' }],
+      slots: [
+        { name: 'root', element: 'div', type: 'none', description: 'Calendar context container' },
+      ],
       props: [
         {
           name: 'children',
@@ -158,7 +163,7 @@ export const spec = {
     },
     {
       name: 'Nav',
-      slots: [{ name: 'nav', element: 'div', description: 'Navigation header' }],
+      slots: [{ name: 'nav', element: 'div', type: 'none', description: 'Navigation header' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -175,7 +180,7 @@ export const spec = {
     },
     {
       name: 'Grid',
-      slots: [{ name: 'grid', element: 'div', description: 'Month grid' }],
+      slots: [{ name: 'grid', element: 'div', type: 'none', description: 'Month grid' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

@@ -23,21 +23,25 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outer container with role="progressbar", variant-dependent sizing',
     },
     {
       name: 'svg',
       element: 'svg',
+      type: 'none',
       description: 'SVG element for spinner variant with rotation animation',
     },
     {
       name: 'circle',
       element: 'circle',
+      type: 'none',
       description: 'SVG circle with stroke-dash animation for spinner variant',
     },
     {
       name: 'dot',
       element: 'span',
+      type: 'none',
       description: 'Bouncing dot element for dots variant (rendered 3 times)',
     },
   ],

@@ -40,28 +40,61 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
-    { name: 'trigger', element: 'button', description: 'Button that opens the select dropdown' },
+    {
+      name: 'trigger',
+      element: 'button',
+      type: 'ui',
+      description: 'Button that opens the select dropdown',
+    },
     {
       name: 'value',
       element: 'span',
+      type: 'none',
       description: 'Display of the currently selected value or placeholder',
     },
     {
       name: 'icon',
       element: 'span',
+      type: 'none',
       description: 'Chevron indicator icon with open/close rotation animation',
     },
     {
       name: 'content',
       element: 'div',
+      type: 'none',
       description: 'Dropdown popup container with enter/exit animation',
     },
-    { name: 'contentInner', element: 'div', description: 'Scrollable inner container for items' },
-    { name: 'viewport', element: 'div', description: 'Structural viewport wrapper for items' },
-    { name: 'item', element: 'div', description: 'Selectable item within the dropdown' },
-    { name: 'group', element: 'div', description: 'Visual grouping of related items' },
-    { name: 'label', element: 'div', description: 'Group label for a set of items' },
-    { name: 'separator', element: 'div', description: 'Visual divider between groups or items' },
+    {
+      name: 'contentInner',
+      element: 'div',
+      type: 'none',
+      description: 'Scrollable inner container for items',
+    },
+    {
+      name: 'viewport',
+      element: 'div',
+      type: 'none',
+      description: 'Structural viewport wrapper for items',
+    },
+    {
+      name: 'item',
+      element: 'div',
+      type: 'ui',
+      description: 'Selectable item within the dropdown',
+    },
+    {
+      name: 'group',
+      element: 'div',
+      type: 'none',
+      description: 'Visual grouping of related items',
+    },
+    { name: 'label', element: 'div', type: 'meta', description: 'Group label for a set of items' },
+    {
+      name: 'separator',
+      element: 'div',
+      type: 'none',
+      description: 'Visual divider between groups or items',
+    },
   ],
 
   subComponents: [
@@ -145,7 +178,9 @@ export const spec = {
     },
     {
       name: 'Trigger',
-      slots: [{ name: 'trigger', element: 'button', description: 'Trigger button element' }],
+      slots: [
+        { name: 'trigger', element: 'button', type: 'ui', description: 'Trigger button element' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -205,7 +240,7 @@ export const spec = {
     },
     {
       name: 'Value',
-      slots: [{ name: 'value', element: 'span', description: 'Value display span' }],
+      slots: [{ name: 'value', element: 'span', type: 'none', description: 'Value display span' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -233,7 +268,9 @@ export const spec = {
     },
     {
       name: 'Icon',
-      slots: [{ name: 'icon', element: 'span', description: 'Chevron icon container' }],
+      slots: [
+        { name: 'icon', element: 'span', type: 'none', description: 'Chevron icon container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -255,8 +292,13 @@ export const spec = {
     {
       name: 'Content',
       slots: [
-        { name: 'content', element: 'div', description: 'Popup container' },
-        { name: 'contentInner', element: 'div', description: 'Scrollable inner wrapper' },
+        { name: 'content', element: 'div', type: 'none', description: 'Popup container' },
+        {
+          name: 'contentInner',
+          element: 'div',
+          type: 'none',
+          description: 'Scrollable inner wrapper',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -334,7 +376,7 @@ export const spec = {
     },
     {
       name: 'Viewport',
-      slots: [{ name: 'viewport', element: 'div', description: 'Viewport wrapper' }],
+      slots: [{ name: 'viewport', element: 'div', type: 'none', description: 'Viewport wrapper' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -355,7 +397,7 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'div', description: 'Selectable item' }],
+      slots: [{ name: 'item', element: 'div', type: 'ui', description: 'Selectable item' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -397,7 +439,7 @@ export const spec = {
     },
     {
       name: 'Group',
-      slots: [{ name: 'group', element: 'div', description: 'Group container' }],
+      slots: [{ name: 'group', element: 'div', type: 'none', description: 'Group container' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -419,7 +461,7 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'div', description: 'Group label text' }],
+      slots: [{ name: 'label', element: 'div', type: 'meta', description: 'Group label text' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -441,7 +483,7 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', description: 'Visual divider' }],
+      slots: [{ name: 'separator', element: 'div', type: 'none', description: 'Visual divider' }],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

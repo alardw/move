@@ -21,6 +21,7 @@ export const spec = {
     {
       name: 'root',
       element: 'figure | blockquote',
+      type: 'body',
       description:
         'Container — <figure> (wrapping <blockquote> + <figcaption>) when attributed, otherwise a bare <blockquote>. Inner structure (blockquote / figcaption) is described in renderContracts.',
     },

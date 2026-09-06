@@ -22,35 +22,66 @@ export const spec = {
     {
       name: 'viewport',
       element: 'div',
+      type: 'none',
       description: 'Fixed full-screen container portaled to document.body',
     },
     {
       name: 'positionContainer',
       element: 'div',
+      type: 'none',
       description: 'Position-specific container (top-right, bottom-left, etc.)',
     },
     {
       name: 'itemWrapper',
       element: 'div',
+      type: 'none',
       description: 'Wrapper for height animation during enter/exit',
     },
-    { name: 'item', element: 'div', description: 'Individual toast card with variant styling' },
-    { name: 'icon', element: 'span', description: 'Variant icon (info, success, warning, error)' },
+    {
+      name: 'item',
+      element: 'div',
+      type: 'ui',
+      description: 'Individual toast card with variant styling',
+    },
+    {
+      name: 'icon',
+      element: 'span',
+      type: 'none',
+      description: 'Variant icon (info, success, warning, error)',
+    },
     {
       name: 'content',
       element: 'div',
+      type: 'none',
       description: 'Content area containing message and description',
     },
-    { name: 'message', element: 'div', description: 'Primary toast message text' },
-    { name: 'description', element: 'div', description: 'Optional secondary description text' },
-    { name: 'closeButton', element: 'button', description: 'Close/dismiss button with X icon' },
-    { name: 'progressBar', element: 'div', description: 'Auto-dismiss countdown progress bar' },
+    { name: 'message', element: 'div', type: 'none', description: 'Primary toast message text' },
+    {
+      name: 'description',
+      element: 'div',
+      type: 'meta',
+      description: 'Optional secondary description text',
+    },
+    {
+      name: 'closeButton',
+      element: 'button',
+      type: 'none',
+      description: 'Close/dismiss button with X icon',
+    },
+    {
+      name: 'progressBar',
+      element: 'div',
+      type: 'none',
+      description: 'Auto-dismiss countdown progress bar',
+    },
   ],
 
   subComponents: [
     {
       name: 'Viewport',
-      slots: [{ name: 'viewport', element: 'div', description: 'Viewport container' }],
+      slots: [
+        { name: 'viewport', element: 'div', type: 'none', description: 'Viewport container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {

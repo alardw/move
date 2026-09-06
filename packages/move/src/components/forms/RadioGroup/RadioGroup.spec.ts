@@ -23,21 +23,35 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Radix RadioGroup.Root container with flex layout',
     },
-    { name: 'item', element: 'button', description: 'Radix RadioGroup.Item radio button element' },
+    {
+      name: 'item',
+      element: 'button',
+      type: 'none',
+      description: 'Radix RadioGroup.Item radio button element',
+    },
     {
       name: 'indicator',
       element: 'span',
+      type: 'none',
       description: 'Radix RadioGroup.Indicator containing the dot, force-mounted for animation',
     },
-    { name: 'dot', element: 'span', description: 'Visual radio dot inside the indicator' },
+    {
+      name: 'dot',
+      element: 'span',
+      type: 'none',
+      description: 'Visual radio dot inside the indicator',
+    },
   ],
 
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'RadioGroup root container' }],
+      slots: [
+        { name: 'root', element: 'div', type: 'none', description: 'RadioGroup root container' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -123,9 +137,9 @@ export const spec = {
     {
       name: 'Item',
       slots: [
-        { name: 'item', element: 'button', description: 'Radio button' },
-        { name: 'indicator', element: 'span', description: 'Indicator container' },
-        { name: 'dot', element: 'span', description: 'Dot element' },
+        { name: 'item', element: 'button', type: 'none', description: 'Radio button' },
+        { name: 'indicator', element: 'span', type: 'none', description: 'Indicator container' },
+        { name: 'dot', element: 'span', type: 'none', description: 'Dot element' },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },

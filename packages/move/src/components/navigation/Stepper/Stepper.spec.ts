@@ -21,24 +21,33 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'ui',
       description: 'Root container with role="list", flex layout based on orientation',
     },
     {
       name: 'step',
       element: 'div',
+      type: 'none',
       description:
         'Individual step container with status-driven styling and optional click handler',
     },
     {
       name: 'indicator',
       element: 'div',
+      type: 'body',
       description: 'Circular step number/icon indicator with status-driven colors',
     },
-    { name: 'title', element: 'div', description: 'Step title text' },
-    { name: 'description', element: 'div', description: 'Step description text below title' },
+    { name: 'title', element: 'div', type: 'body', description: 'Step title text' },
+    {
+      name: 'description',
+      element: 'div',
+      type: 'ui',
+      description: 'Step description text below title',
+    },
     {
       name: 'separator',
       element: 'div',
+      type: 'none',
       description: 'Connector line between steps with completion state',
     },
   ],
@@ -46,7 +55,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Root container' }],
+      slots: [{ name: 'root', element: 'div', type: 'ui', description: 'Root container' }],
       props: [
         {
           name: 'active',
@@ -94,7 +103,7 @@ export const spec = {
     },
     {
       name: 'Step',
-      slots: [{ name: 'step', element: 'div', description: 'Step container' }],
+      slots: [{ name: 'step', element: 'div', type: 'none', description: 'Step container' }],
       props: [
         {
           name: 'status',
@@ -121,7 +130,9 @@ export const spec = {
     },
     {
       name: 'Indicator',
-      slots: [{ name: 'indicator', element: 'div', description: 'Circular indicator' }],
+      slots: [
+        { name: 'indicator', element: 'div', type: 'body', description: 'Circular indicator' },
+      ],
       props: [
         {
           name: 'icon',
@@ -148,7 +159,7 @@ export const spec = {
     },
     {
       name: 'Title',
-      slots: [{ name: 'title', element: 'div', description: 'Title text' }],
+      slots: [{ name: 'title', element: 'div', type: 'body', description: 'Title text' }],
       props: [
         {
           name: 'children',
@@ -162,7 +173,7 @@ export const spec = {
     },
     {
       name: 'Description',
-      slots: [{ name: 'description', element: 'div', description: 'Description text' }],
+      slots: [{ name: 'description', element: 'div', type: 'ui', description: 'Description text' }],
       props: [
         {
           name: 'children',
@@ -176,7 +187,7 @@ export const spec = {
     },
     {
       name: 'Separator',
-      slots: [{ name: 'separator', element: 'div', description: 'Connector line' }],
+      slots: [{ name: 'separator', element: 'div', type: 'none', description: 'Connector line' }],
       props: [],
       usesFactory: true,
       description:

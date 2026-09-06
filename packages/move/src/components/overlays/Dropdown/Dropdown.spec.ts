@@ -44,77 +44,97 @@ export const spec = {
     {
       name: 'trigger',
       element: 'RadixDropdownMenu.Trigger',
+      type: 'none',
       description: 'Button that opens the dropdown menu',
     },
     {
       name: 'content',
       element: 'RadixDropdownMenu.Content',
+      type: 'none',
       description: 'Popup container with animated height and transform-origin',
     },
     {
       name: 'contentInner',
       element: 'div',
+      type: 'none',
       description: 'Inner scrollable container inside content for height animation',
     },
     {
       name: 'arrow',
       element: 'RadixDropdownMenu.Arrow',
+      type: 'none',
       description: 'Arrow pointing toward the trigger',
     },
     {
       name: 'item',
       element: 'RadixDropdownMenu.Item',
+      type: 'ui',
       description: 'Clickable menu item with hover scale animation',
     },
     {
       name: 'group',
       element: 'RadixDropdownMenu.Group',
+      type: 'none',
       description: 'Structural group container for items',
     },
     {
       name: 'label',
       element: 'RadixDropdownMenu.Label',
+      type: 'ui',
       description: 'Non-interactive label for a group',
     },
     {
       name: 'checkboxItem',
       element: 'RadixDropdownMenu.CheckboxItem',
+      type: 'ui',
       description: 'Toggleable checkbox menu item',
     },
     {
       name: 'checkboxIndicator',
       element: 'span',
+      type: 'none',
       description: 'Visual indicator for checkbox state',
     },
-    { name: 'checkboxLabel', element: 'span', description: 'Text label for checkbox item' },
+    {
+      name: 'checkboxLabel',
+      element: 'span',
+      type: 'none',
+      description: 'Text label for checkbox item',
+    },
     {
       name: 'radioGroup',
       element: 'RadixDropdownMenu.RadioGroup',
+      type: 'none',
       description: 'Radio group container',
     },
     {
       name: 'radioItem',
       element: 'RadixDropdownMenu.RadioItem',
+      type: 'ui',
       description: 'Radio option menu item',
     },
     {
       name: 'itemIndicator',
       element: 'RadixDropdownMenu.ItemIndicator',
+      type: 'none',
       description: 'Visual indicator for radio/checkbox selection',
     },
     {
       name: 'separator',
       element: 'RadixDropdownMenu.Separator',
+      type: 'none',
       description: 'Visual divider between groups',
     },
     {
       name: 'subTrigger',
       element: 'RadixDropdownMenu.SubTrigger',
+      type: 'ui',
       description: 'Item that opens a sub-menu',
     },
     {
       name: 'subContent',
       element: 'RadixDropdownMenu.SubContent',
+      type: 'none',
       description: 'Sub-menu popup content',
     },
   ],
@@ -162,7 +182,12 @@ export const spec = {
     {
       name: 'Trigger',
       slots: [
-        { name: 'trigger', element: 'RadixDropdownMenu.Trigger', description: 'Trigger button' },
+        {
+          name: 'trigger',
+          element: 'RadixDropdownMenu.Trigger',
+          type: 'none',
+          description: 'Trigger button',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -195,9 +220,15 @@ export const spec = {
         {
           name: 'content',
           element: 'RadixDropdownMenu.Content',
+          type: 'none',
           description: 'Menu content panel',
         },
-        { name: 'contentInner', element: 'div', description: 'Inner scrollable container' },
+        {
+          name: 'contentInner',
+          element: 'div',
+          type: 'none',
+          description: 'Inner scrollable container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -257,7 +288,14 @@ export const spec = {
     },
     {
       name: 'Arrow',
-      slots: [{ name: 'arrow', element: 'RadixDropdownMenu.Arrow', description: 'Arrow SVG' }],
+      slots: [
+        {
+          name: 'arrow',
+          element: 'RadixDropdownMenu.Arrow',
+          type: 'none',
+          description: 'Arrow SVG',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -273,7 +311,9 @@ export const spec = {
     },
     {
       name: 'Item',
-      slots: [{ name: 'item', element: 'RadixDropdownMenu.Item', description: 'Menu item' }],
+      slots: [
+        { name: 'item', element: 'RadixDropdownMenu.Item', type: 'ui', description: 'Menu item' },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -309,7 +349,12 @@ export const spec = {
     {
       name: 'Group',
       slots: [
-        { name: 'group', element: 'RadixDropdownMenu.Group', description: 'Group container' },
+        {
+          name: 'group',
+          element: 'RadixDropdownMenu.Group',
+          type: 'none',
+          description: 'Group container',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -332,7 +377,14 @@ export const spec = {
     },
     {
       name: 'Label',
-      slots: [{ name: 'label', element: 'RadixDropdownMenu.Label', description: 'Group label' }],
+      slots: [
+        {
+          name: 'label',
+          element: 'RadixDropdownMenu.Label',
+          type: 'ui',
+          description: 'Group label',
+        },
+      ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
         {
@@ -358,10 +410,21 @@ export const spec = {
         {
           name: 'checkboxItem',
           element: 'RadixDropdownMenu.CheckboxItem',
+          type: 'ui',
           description: 'Checkbox item container',
         },
-        { name: 'checkboxIndicator', element: 'span', description: 'Check mark indicator' },
-        { name: 'checkboxLabel', element: 'span', description: 'Checkbox label text' },
+        {
+          name: 'checkboxIndicator',
+          element: 'span',
+          type: 'none',
+          description: 'Check mark indicator',
+        },
+        {
+          name: 'checkboxLabel',
+          element: 'span',
+          type: 'none',
+          description: 'Checkbox label text',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -403,6 +466,7 @@ export const spec = {
         {
           name: 'radioGroup',
           element: 'RadixDropdownMenu.RadioGroup',
+          type: 'none',
           description: 'Radio group container',
         },
       ],
@@ -440,7 +504,12 @@ export const spec = {
     {
       name: 'RadioItem',
       slots: [
-        { name: 'radioItem', element: 'RadixDropdownMenu.RadioItem', description: 'Radio item' },
+        {
+          name: 'radioItem',
+          element: 'RadixDropdownMenu.RadioItem',
+          type: 'ui',
+          description: 'Radio item',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -475,6 +544,7 @@ export const spec = {
         {
           name: 'itemIndicator',
           element: 'RadixDropdownMenu.ItemIndicator',
+          type: 'none',
           description: 'Item indicator',
         },
       ],
@@ -500,7 +570,12 @@ export const spec = {
     {
       name: 'Separator',
       slots: [
-        { name: 'separator', element: 'RadixDropdownMenu.Separator', description: 'Divider line' },
+        {
+          name: 'separator',
+          element: 'RadixDropdownMenu.Separator',
+          type: 'none',
+          description: 'Divider line',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -553,6 +628,7 @@ export const spec = {
         {
           name: 'subTrigger',
           element: 'RadixDropdownMenu.SubTrigger',
+          type: 'ui',
           description: 'Sub-menu trigger item',
         },
       ],
@@ -582,6 +658,7 @@ export const spec = {
         {
           name: 'subContent',
           element: 'RadixDropdownMenu.SubContent',
+          type: 'none',
           description: 'Sub-menu content panel',
         },
       ],

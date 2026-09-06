@@ -21,21 +21,25 @@ export const spec = {
     {
       name: 'root',
       element: 'div',
+      type: 'none',
       description: 'Outer flex column container that defines scroll area dimensions',
     },
     {
       name: 'header',
       element: 'div',
+      type: 'none',
       description: 'Optional sticky header above scrollable content',
     },
     {
       name: 'content',
       element: 'div',
+      type: 'none',
       description: 'Scrollable content area with custom scrollbar styling',
     },
     {
       name: 'footer',
       element: 'div',
+      type: 'none',
       description: 'Optional sticky footer below scrollable content',
     },
   ],
@@ -43,7 +47,7 @@ export const spec = {
   subComponents: [
     {
       name: 'Root',
-      slots: [{ name: 'root', element: 'div', description: 'Outer flex container' }],
+      slots: [{ name: 'root', element: 'div', type: 'none', description: 'Outer flex container' }],
       props: [
         {
           name: 'children',
@@ -71,7 +75,7 @@ export const spec = {
     },
     {
       name: 'Header',
-      slots: [{ name: 'header', element: 'div', description: 'Sticky header area' }],
+      slots: [{ name: 'header', element: 'div', type: 'none', description: 'Sticky header area' }],
       props: [
         {
           name: 'children',
@@ -99,7 +103,7 @@ export const spec = {
     },
     {
       name: 'Content',
-      slots: [{ name: 'content', element: 'div', description: 'Scrollable area' }],
+      slots: [{ name: 'content', element: 'div', type: 'none', description: 'Scrollable area' }],
       props: [
         {
           name: 'children',
@@ -128,7 +132,7 @@ export const spec = {
     },
     {
       name: 'Footer',
-      slots: [{ name: 'footer', element: 'div', description: 'Sticky footer area' }],
+      slots: [{ name: 'footer', element: 'div', type: 'none', description: 'Sticky footer area' }],
       props: [
         {
           name: 'children',

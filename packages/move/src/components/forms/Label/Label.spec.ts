@@ -20,11 +20,13 @@ export const spec = {
     {
       name: 'root',
       element: 'label',
+      type: 'ui',
       description: 'Radix Label.Root element that renders as a native label',
     },
     {
       name: 'asterisk',
       element: 'span',
+      type: 'none',
       description: 'Required field asterisk indicator (*), rendered when required=true',
     },
   ],
@@ -98,7 +100,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-label-font-size',
-      value: 'inherit',
+      value: 'var(--move-size-sm)',
       description: 'Label font size (overridden per size)',
     },
     {
