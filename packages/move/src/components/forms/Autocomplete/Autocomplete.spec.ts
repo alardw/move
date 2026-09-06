@@ -14,7 +14,7 @@ export const spec = {
   // applies — keeps downstream tooling simple. See
   // `src/shared/families.ts` for the allowed values per axis.
   choreographies: ['popupMenu'],
-  families: ['popup-anchored'],
+  families: ['popup-list'],
   ariaPattern: ['combobox'],
   capabilities: ['scrolls-content'],
 

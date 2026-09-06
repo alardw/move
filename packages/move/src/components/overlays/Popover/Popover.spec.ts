@@ -12,7 +12,7 @@ export const spec = {
   description:
     'Floating popup panel anchored to a trigger with close button, arrow, and optional close-on-scroll behavior',
   choreographies: ['popupSurface'],
-  families: ['popup-anchored'],
+  families: ['popup-content'],
   ariaPattern: ['dialog'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {

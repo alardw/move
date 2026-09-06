@@ -10,8 +10,8 @@ export const spec = {
   category: 'date-time',
   description:
     'Date selection input with calendar popup, supporting single, range, and multiple modes with optional time picker',
-  choreographies: ['popupMenu'],
-  families: ['popup-anchored'],
+  choreographies: ['popupSurface', 'layoutReveal'],
+  families: ['popup-content'],
   ariaPattern: ['dialog'],
   behavior: {
     popup: {

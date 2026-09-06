@@ -11,7 +11,7 @@ export const spec = {
   description:
     'Dropdown select built on Radix Select — a combobox trigger, listbox popup with option items, and a hidden native <select> for form submission — with an animated popup and item stagger',
   choreographies: ['popupMenu'],
-  families: ['popup-anchored'],
+  families: ['popup-list'],
   ariaPattern: ['combobox', 'listbox'],
   capabilities: ['owns-surface', 'scrolls-content'],
   behavior: {

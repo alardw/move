@@ -11,7 +11,7 @@ export const spec = {
   description:
     'Form input with color preview swatch that opens a ColorPicker popover, supporting multiple color formats and eye dropper',
   choreographies: ['popupSurface'],
-  families: ['popup-anchored'],
+  families: ['popup-content'],
   ariaPattern: ['dialog'],
   behavior: {
     popup: {

@@ -204,7 +204,12 @@ for (const mod of Object.values(SPEC_MODULES)) {
   const spec = mod?.spec;
   if (!spec) continue;
 
-  const declaresFamily = spec.families?.includes('popup-anchored');
+  // Either popup family, or the abstract core they compose. An anchored popup
+  // is now `popup-list` or `popup-content` depending on whether you choose from
+  // it; both include `anchored-popup`, and both belong to this gate.
+  const declaresFamily = ['popup-list', 'popup-content', 'anchored-popup'].some((f) =>
+    spec.families?.includes(f),
+  );
   const rendersPopup = componentsRenderingPopups.has(spec.name);
   // A component that renders a popup but does not say so is the failure mode
   // this list exists to surface — it would otherwise be skipped, not caught.
@@ -251,11 +256,11 @@ describe('check:keyboard-entry', () => {
 
   afterEach(cleanup);
 
-  it('every component rendering a popup declares the popup-anchored family', () => {
+  it('every component rendering a popup declares a popup family', () => {
     expect(
       undeclaredPopups,
       `These render an anchored popup primitive but do not declare ` +
-        `families 'popup-anchored', which hides them from this gate and ` +
+        `a popup family, which hides them from this gate and ` +
         `from check:family-popup. Declare the family and add behavior.popup.`,
     ).toEqual([]);
   });

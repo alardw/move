@@ -12,7 +12,7 @@ export const spec = {
   description:
     'Floating label that appears on hover/focus to describe an element, with spring entrance and direction-aware positioning',
   choreographies: ['popupSurface'],
-  families: ['popup-anchored'],
+  families: ['popup-content'],
   ariaPattern: ['tooltip'],
   behavior: {
     popup: {

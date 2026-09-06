@@ -53,6 +53,10 @@ function loadFamilies() {
       slots: list('slots'),
       triggers: list('triggers'),
       composes: list('composes'),
+      propTriads: list('propTriads'),
+      behaviorBlocks: list('behaviorBlocks'),
+      behaviorFlags: list('behaviorFlags'),
+      subComponents: list('subComponents'),
       fields: Object.keys(fields).length ? fields : null,
       why: (/why:\s*\n?\s*'([^']*)'/.exec(block) ?? [])[1] ?? '',
     };
@@ -73,6 +77,10 @@ function resolve(families, name, seen = new Set()) {
     slots: [...(base.slots ?? []), ...(f.slots ?? [])],
     triggers: [...(base.triggers ?? []), ...(f.triggers ?? [])],
     composes: [...(base.composes ?? []), ...(f.composes ?? [])],
+    propTriads: [...(base.propTriads ?? []), ...(f.propTriads ?? [])],
+    behaviorBlocks: [...(base.behaviorBlocks ?? []), ...(f.behaviorBlocks ?? [])],
+    behaviorFlags: [...(base.behaviorFlags ?? []), ...(f.behaviorFlags ?? [])],
+    subComponents: [...(base.subComponents ?? []), ...(f.subComponents ?? [])],
     fields: { ...(base.fields ?? {}), ...(f.fields ?? {}) },
     // A narrowing family may only narrow: its permitted set has to be a subset.
     choreography: f.choreography ?? base.choreography,
@@ -132,6 +140,30 @@ for (const specPath of specFiles(COMPONENTS)) {
       const source = existsSync(tsx) ? readFileSync(tsx, 'utf8') : '';
       if (!source.includes(comp)) fail(`must build from ${comp}`);
     }
+    // Two exemptions, both structural rather than convenient.
+    //
+    // A `pointer-panel` mirrors a field that is already fully keyboard-operable
+    // — nothing triggers it and focus never enters it, so it has no trigger to
+    // expose and no open state to control. TimeField is the case.
+    //
+    // A component that is not compound exports no sub-components to require.
+    const pointerPanel = /mechanism: 'pointer-panel'/.test(src);
+    const compound = /^  compound: true/m.test(src);
+
+    for (const base of pointerPanel ? [] : (c.propTriads ?? [])) {
+      const cap = base[0].toUpperCase() + base.slice(1);
+      if (!new RegExp(`name: '${base}'`).test(src) || !new RegExp(`name: 'on${cap}Change'`).test(src))
+        fail(`must expose a ${base} / default${cap} / on${cap}Change triad`);
+    }
+    for (const block of c.behaviorBlocks ?? []) {
+      if (!new RegExp(`\\n    ${block}: \\{`).test(src)) fail(`must declare a behavior.${block} block`);
+    }
+    for (const flag of c.behaviorFlags ?? []) {
+      if (!new RegExp(`${flag}: (true|false)`).test(src)) fail(`must state behavior.popup.${flag}`);
+    }
+    for (const sub of compound && !pointerPanel ? (c.subComponents ?? []) : []) {
+      if (!new RegExp(`name: '${sub}'`).test(src)) fail(`must export a ${sub} sub-component`);
+    }
     for (const [field, want] of Object.entries(c.fields ?? {})) {
       const got = scalar(src, field);
       if (got !== want) fail(`${field} should be '${want}', is '${got ?? 'unset'}'`);
@@ -149,7 +181,20 @@ for (const specPath of specFiles(COMPONENTS)) {
 }
 
 // A family needs more than one member — otherwise it is a component.
-for (const [family, ms] of Object.entries(members)) {
+//
+// Counted through composition: an abstract family like `anchored-popup` has no
+// direct members, because components join the leaf that includes it. Its members
+// are the members of everything that includes it.
+const reach = (family) => {
+  const own = [...members[family]];
+  for (const [name, def] of Object.entries(FAMILIES)) {
+    if (def.includes === family) own.push(...reach(name));
+  }
+  return own;
+};
+
+for (const family of Object.keys(members)) {
+  const ms = reach(family);
   if (ms.length < 2) {
     problems.push({
       rel: 'src/families.ts',

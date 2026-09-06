@@ -262,11 +262,6 @@ export const CHECKS: CheckDoc[] = [
       'The app-wcag-audit skill’s list of what Move already handles is generated from the WCAG criteria — so the guidance shipped to consumers can’t drift from what the library actually does.',
   },
   {
-    name: 'family-popup',
-    appliesTo: 'component',
-    enforces: 'Popup-family components (Tooltip, Dropdown, …) share one contract — props, ARIA, and animation.',
-  },
-  {
     name: 'field-naming',
     appliesTo: 'component',
     enforces:

@@ -57,6 +57,20 @@ export interface FamilyContract {
    * choreography name would be.
    */
   composes?: readonly string[];
+  /** Controlled prop triads every member exposes, by base name (`open`). */
+  propTriads?: readonly string[];
+  /** `behavior.<name>` blocks every member declares. */
+  behaviorBlocks?: readonly string[];
+  /**
+   * `behavior.<block>.<flag>` booleans every member states explicitly.
+   *
+   * Optional in the type, so nothing else forces them. Stated either way, a
+   * popup that does not close on scroll has SAID so — the alternative is a flag
+   * nobody ever considered, which reads identically to one deliberately off.
+   */
+  behaviorFlags?: readonly string[];
+  /** Sub-components every member exports. */
+  subComponents?: readonly string[];
   /** Why this family exists — shown when a member fails it. */
   why: string;
 }
@@ -75,6 +89,51 @@ export const FAMILIES = {
       'A panel that takes the screen: focus goes in and cannot leave, the page behind stops ' +
       'scrolling, and Escape closes it. Every one of these has to behave the same or the ' +
       'escape route changes depending on which one you opened.',
+  },
+
+  // The shared core of the two popup families, written once. Both hang off a
+  // trigger, and both leave the same way.
+  'anchored-popup': {
+    fields: { dismissBehavior: 'unmountAfterExit' },
+    // A consumer can open it, watch it open, and open it from the start.
+    // ColorInput kept its open state entirely internal until this was asserted.
+    propTriads: ['open'],
+    // Where the four dismiss routes are declared — each explicitly true or
+    // false, so a popup that does not close on scroll has said so rather than
+    // simply never been asked.
+    behaviorBlocks: ['popup'],
+    behaviorFlags: [
+      'closeOnEscape',
+      'closeOnOutsideClick',
+      'closeOnScroll',
+      'closeOnResize',
+    ],
+    subComponents: ['Trigger', 'Content'],
+    why:
+      'A panel that hangs off the control you pressed. Escape closes it, clicking away closes ' +
+      'it, and focus goes back where it came from — the same, every time.',
+  },
+
+  'popup-list': {
+    includes: 'anchored-popup',
+    capabilities: ['scrolls-content'],
+    choreography: ['popupMenu'],
+    ariaPattern: ['combobox', 'listbox', 'menu'],
+    why:
+      'A popup you choose from. The panel arrives and the options follow it in, so the eye ' +
+      'lands on the list rather than on a box appearing.',
+  },
+
+  'popup-content': {
+    includes: 'anchored-popup',
+    // popupSurface for the panel; layoutReveal is permitted on top for a panel
+    // built of sections rather than options — DatePicker staggers its header,
+    // grid and footer, which is that pattern exactly and not an item stagger.
+    choreography: ['popupSurface', 'layoutReveal'],
+    ariaPattern: ['dialog', 'tooltip'],
+    why:
+      'A popup holding whatever you put in it. It scales and fades as one thing, because its ' +
+      'contents are not a list to walk down.',
   },
 
   'media-player': {
