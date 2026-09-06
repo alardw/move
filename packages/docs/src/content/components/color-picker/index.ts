@@ -13,6 +13,8 @@ import SwatchOnly from './samples/swatch-only';
 import swatchOnlyCode from './samples/swatch-only?raw';
 import Formats from './samples/formats';
 import formatsCode from './samples/formats?raw';
+import FollowsValue from './samples/follows-value';
+import followsValueCode from './samples/follows-value?raw';
 
 export const content: ComponentContent = {
   meta,
@@ -23,5 +25,11 @@ export const content: ComponentContent = {
     { id: 'swatches', title: 'With preset swatches', render: Swatches, code: swatchesCode },
     { id: 'swatch-only', title: 'Swatch-only (no picker)', render: SwatchOnly, code: swatchOnlyCode },
     { id: 'formats', title: 'Format options', render: Formats, code: formatsCode },
+    {
+      id: 'follows-value',
+      title: 'The format follows the value',
+      render: FollowsValue,
+      code: followsValueCode,
+    },
   ],
 };
