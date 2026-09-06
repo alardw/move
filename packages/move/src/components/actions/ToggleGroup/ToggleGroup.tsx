@@ -5,7 +5,7 @@ import { ToggleGroup as RadixToggleGroup } from 'radix-ui';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
-  poppy,
+  scaleDown,
   useAnimations,
   usePositionTracker,
   resolveAnimationsConfig,
@@ -107,12 +107,25 @@ const ToggleGroupRoot = withMoveComponent<
       disabled: props.animations === false || props.variant === 'outline',
     });
 
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      {
-        trigger: 'Root.press',
-        sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92, ease: poppy } } }],
-      },
-    ];
+    /**
+     * None on the indicator, deliberately.
+     *
+     * `usePositionTracker` owns the indicator's `transform` — it is the declared
+     * `slidingIndicator` capability, and that inline transform IS where the pill
+     * is. A press animation writing `scale` writes the same property, so the two
+     * raced: press-down ended at scale(1), release ended at scale(0.92), and the
+     * pill stayed 8% small for the rest of the session. Sliding a shrunken pill
+     * is what read as the whole group scaling.
+     *
+     * It also cannot satisfy class → animation → class: handing back means
+     * removing the inline style so a class takes over, and here removing the
+     * transform removes the position itself. There is no class holding either
+     * end, so there is nothing to hand back to.
+     *
+     * The press belongs on the ITEM, which has classes for its states and no
+     * imperative writer. See ToggleGroupItem below.
+     */
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
     const animConfig =
@@ -209,7 +222,12 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
 
     // Animations disabled by default — scaling breaks connected borders.
     // Users can opt in via animations prop with standard AnimationTrigger[] format.
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [];
+    // Press feedback belongs here, not on the indicator: an item has classes for
+    // its resting state and nothing else writes its transform, so the animation
+    // can hand back. Same shape as ToggleButton, which is the same affordance.
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+      { trigger: 'Item.press', sequence: [{ animation: scaleDown() }] },
+    ];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
     const animConfig =

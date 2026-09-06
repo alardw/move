@@ -220,8 +220,15 @@ export const spec = {
   animationCapabilities: ['slidingIndicator'],
   animations: [
     {
-      trigger: 'Root.press',
-      sequence: [{ target: 'Indicator', animation: { scale: { to: 0.92 } } }],
+      // On the ITEM, not the indicator. usePositionTracker owns the
+      // indicator's transform — that inline transform IS where the pill is — so
+      // a press animation writing scale was a second writer on the same
+      // property. They raced: press-down ended at scale(1), release at
+      // scale(0.92), and the pill stayed 8% small, which read as the whole
+      // group scaling on every click. It also could not hand back, since
+      // removing the transform would remove the position itself.
+      trigger: 'Item.press',
+      sequence: [{ animation: { scale: { to: 0.96 } } }],
     },
   ],
 
