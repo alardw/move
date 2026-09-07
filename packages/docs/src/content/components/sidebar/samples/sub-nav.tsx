@@ -63,7 +63,7 @@ export default function SubNavSample() {
   const activeSection = SECTIONS.find((s) => s.items.some((i) => i.to === current));
 
   return (
-    // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
+    // composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
     <div
       /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
       style={{
