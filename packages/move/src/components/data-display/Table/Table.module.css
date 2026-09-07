@@ -60,14 +60,17 @@
   /* Row hover + zebra stripe use translucent mixes of the foreground
      so they read against any background without a hard token lookup.
      The surface remaps below step the ratios up on deeper surfaces. */
-  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 8%, transparent);
   --move-table-row-selected-bg: var(--move-selected-bg);
-  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 3%, transparent);
+  /* A stripe has to survive being laid over a tinted ground, and 3% did not:
+     the zebra was there in the computed style and invisible on screen. Each
+     ground below steps it up again, and hover stays clear of it. */
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
 
   --move-table-caption-fg: var(--move-fg-muted);
   --move-table-caption-size: var(--move-size-sm);
 
-  --move-table-group-header-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+  --move-table-group-header-bg: color-mix(in oklch, var(--move-fg-base) 8%, transparent);
   --move-table-group-header-hover-bg: color-mix(in oklch, var(--move-fg-base) 8%, transparent);
 
   width: 100%;
@@ -93,8 +96,9 @@
   --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 14%, transparent);
   --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 20%, transparent);
   --move-table-border: color-mix(in oklch, var(--move-fg-base) 16%, transparent);
-  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
-  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 9%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 6%, transparent);
+  --move-table-group-header-bg: color-mix(in oklch, var(--move-fg-base) 10%, transparent);
 }
 
 [data-surface='muted'] .root,
@@ -102,15 +106,16 @@
   --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 18%, transparent);
   --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 26%, transparent);
   --move-table-border: color-mix(in oklch, var(--move-fg-base) 20%, transparent);
-  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 6%, transparent);
-  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 10%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 7%, transparent);
+  --move-table-group-header-bg: color-mix(in oklch, var(--move-fg-base) 12%, transparent);
 }
 
 [data-surface='inverse'] .root {
   --move-table-cell-border: color-mix(in oklch, var(--move-fg-base) 12%, transparent);
   --move-table-header-border: color-mix(in oklch, var(--move-fg-base) 18%, transparent);
-  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 5%, transparent);
-  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 4%, transparent);
+  --move-table-row-hover-bg: color-mix(in oklch, var(--move-fg-base) 9%, transparent);
+  --move-table-stripe-bg: color-mix(in oklch, var(--move-fg-base) 6%, transparent);
 }
 
 /* ============================================

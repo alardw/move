@@ -2,7 +2,11 @@
 
 .root {
   --move-quote-rule: var(--move-primary);
-  --move-quote-bg: var(--move-bg-subtle);
+  /* The alternate of wherever it lands, not a fixed tint. A pull quote has to
+     separate from what it is sitting on, and --move-bg-subtle only did that on
+     the page ground — inside a panel already on that tint the quote painted the
+     panel's own colour and the block disappeared, leaving a floating rule. */
+  --move-quote-bg: var(--move-surface-alt);
   --move-quote-fg: var(--move-fg-base);
   --move-quote-attribution-fg: var(--move-fg-muted);
   margin: 0;
