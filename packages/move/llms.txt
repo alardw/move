@@ -426,6 +426,7 @@ Carousel.Root props:
 - defaultPage: number — Initial page when uncontrolled
 - onPageChange: (page: number) => void — Called when active page changes
 - showTriggers: boolean (default: false) — Render built-in prev/next trigger buttons
+- labels: Partial<CarouselLabels> (default: null) — User-facing strings. Each names a control for assistive tech and in its tooltip
 - showIndicators: boolean (default: false) — Render built-in page indicator dots
 - triggerPlacement: 'none' | 'top' | 'bottom' | 'overlay' | 'indicator-sides' (default: top) — Placement strategy for built-in triggers
 - triggerAlign: 'start' | 'center' | 'end' (default: end) — Alignment for trigger row and indicator-sides layout
