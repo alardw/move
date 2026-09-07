@@ -1,7 +1,10 @@
 .root {
   /* Component tokens */
   --move-toc-indicator-color: var(--move-primary);
-  --move-toc-indicator-width: 2px;
+  /* Drives the rail AND the mark that slides along it. One value, because
+     they are one line: the mark is the rail in the accent colour, and a mark
+     a pixel wider sits proud of the line it is supposed to be on. */
+  --move-toc-indicator-width: 1px;
   --move-toc-rail-color: var(--move-border-base);
   --move-toc-item-fg: var(--move-fg-muted);
   --move-toc-item-fg-hover: var(--move-fg-base);
@@ -14,7 +17,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  border-left: 1px solid var(--move-toc-rail-color);
+  border-left: var(--move-toc-indicator-width) solid var(--move-toc-rail-color);
   font-family: var(--move-font-body);
 }
 

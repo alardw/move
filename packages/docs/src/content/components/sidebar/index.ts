@@ -13,6 +13,8 @@ import RightSide from './samples/right-side';
 import rightSideCode from './samples/right-side?raw';
 import Links from './samples/links';
 import linksCode from './samples/links?raw';
+import SubNav from './samples/sub-nav';
+import subNavCode from './samples/sub-nav?raw';
 import HeaderLayout from './samples/header-layout';
 import headerLayoutCode from './samples/header-layout?raw';
 
@@ -22,6 +24,7 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'collapsed', title: 'Collapsed by default', render: Collapsed, code: collapsedCode },
+    { id: 'sub-nav', title: 'Sections with a sub-nav', render: SubNav, code: subNavCode },
     { id: 'with-badges', title: 'With badges', render: WithBadges, code: withBadgesCode },
     { id: 'right-side', title: 'Right-side', render: RightSide, code: rightSideCode },
     { id: 'links', title: 'As router links', render: Links, code: linksCode },

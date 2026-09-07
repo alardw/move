@@ -68,9 +68,15 @@ const COLLAPSE_STAGGER_DELAY = 40;
 // collapsed, the CSS holds them at opacity 0 / height 0, and anime writes inline
 // styles that outrank a stylesheet — a heading in the stagger would fade itself
 // back into a rail that has no room for it.
+//
+// An open section's own rows come too, for the same reason and in the same
+// breath: they sit inside their parent's list item, so document order puts them
+// straight after the row they belong to and the section arrives as one piece.
+// Collapsed they are `display: none`, so there is nothing to stagger.
 function getItemSelector(collapsed: boolean) {
   const rows = `.${styles.navItem}, [data-sidebar-animate]`;
-  return collapsed ? rows : `${rows}, .${styles.groupLabel}`;
+  if (collapsed) return rows;
+  return `${rows}, .${styles.groupLabel}, .${styles.subNavItem}, .${styles.subActionItem}`;
 }
 
 // Mobile sheet enter/exit — the whole thing runs through the Move anime.js
@@ -1318,6 +1324,10 @@ const SidebarSubNav = withMoveComponent<
       containerRef,
       activeSelector: '[data-active]',
       track: 'height',
+      // A closed section renders no rows at all, so there is nothing to
+      // measure until it opens — and without this the hook would look once,
+      // find nothing, and never look again.
+      enabled: open,
     });
 
     // Rows fade and rise in sequence, starting a beat after the height has
@@ -1335,13 +1345,14 @@ const SidebarSubNav = withMoveComponent<
       [],
     );
 
+    // Only the case the rail's own stagger cannot reach: a section opening
+    // while the sidebar is already up — a route change, or a disclosure. On
+    // first paint and on every collapse toggle these rows are part of
+    // Content's stagger instead, so animating them here too would be two
+    // animations writing one element's opacity. Closing runs nothing; the
+    // height carries that.
     const triggers = React.useMemo<AnimationTrigger[]>(
-      () => [
-        // Mount, for a section that starts open.
-        { trigger: 'Container.enter', sequence: open ? [staggerStep] : false },
-        // Every later open. Closing runs nothing — the height carries that.
-        { trigger: 'reveal-on-open', deps: [open], sequence: open ? [staggerStep] : false },
-      ],
+      () => [{ trigger: 'reveal-on-open', deps: [open], sequence: open ? [staggerStep] : false }],
       [open, staggerStep],
     );
 

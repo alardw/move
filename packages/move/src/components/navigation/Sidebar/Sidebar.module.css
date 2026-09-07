@@ -424,18 +424,25 @@
 
 .subNav {
   --move-sidebar-sub-indicator-color: var(--move-primary);
-  --move-sidebar-sub-indicator-width: 2px;
+  /* Drives the rail AND the mark that slides along it — one line, one width.
+     A mark a pixel wider sits proud of the line it is supposed to be on. */
+  --move-sidebar-sub-indicator-width: 1px;
   --move-sidebar-sub-rail-color: var(--move-border-base);
   --move-sidebar-sub-item-fg: var(--move-fg-muted);
   --move-sidebar-sub-item-fg-hover: var(--move-fg-base);
   --move-sidebar-sub-item-fg-active: var(--move-link);
   --move-sidebar-sub-item-padding-y: var(--move-spacing-xs);
+  --move-sidebar-sub-gap: var(--move-spacing-sm);
 
   position: relative;
   /* Centre of the parent row's icon: its own inset, plus half the 1.25rem
      icon box. The rail is the parent's icon continued downwards. */
   margin-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem);
-  border-left: 1px solid var(--move-sidebar-sub-rail-color);
+  /* Off the parent row, so the rail reads as hanging from the section rather
+     than touching it — and the indicator on a first row has somewhere to be
+     that isn't flush against the row above. */
+  margin-top: var(--move-sidebar-sub-gap);
+  border-left: var(--move-sidebar-sub-indicator-width) solid var(--move-sidebar-sub-rail-color);
   font-family: var(--move-font-body);
 }
 
@@ -459,6 +466,8 @@
 .subNavIndicator {
   position: absolute;
   top: 0;
+  /* `left` is measured from the padding box, which starts inside the border,
+     so backing out by the rail's own width lands the mark exactly on it. */
   left: calc(-1 * var(--move-sidebar-sub-indicator-width));
   width: var(--move-sidebar-sub-indicator-width);
   border-radius: var(--move-sidebar-sub-indicator-width);

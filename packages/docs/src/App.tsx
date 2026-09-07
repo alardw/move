@@ -20,7 +20,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  NavLink,
+  Link as RouterLink,
   Navigate,
   useLocation,
   useNavigationType,
@@ -132,6 +132,27 @@ function ThemeToggle() {
   );
 }
 
+/** Does `pathname` sit at or under `to`? */
+function isUnder(pathname: string, to: string) {
+  return pathname === to || pathname.startsWith(to + '/');
+}
+
+/**
+ * The sub destination in effect: the LONGEST one the current path sits under.
+ *
+ * A page with no row of its own — /components/toggle-group — still belongs to
+ * a row, and lights the one it belongs to, the way its section row above
+ * already does. Longest wins so /components/gallery lights Gallery rather than
+ * the Overview at /components, which is a prefix of every page in the section.
+ */
+function activeSubItem(items: { to: string; label: string }[], pathname: string) {
+  let best: { to: string; label: string } | null = null;
+  for (const item of items) {
+    if (isUnder(pathname, item.to) && (!best || item.to.length > best.to.length)) best = item;
+  }
+  return best;
+}
+
 /**
  * Sidebar with progressive disclosure — a main section's children are only
  * rendered when that section is the active one (URL-driven). Clicking a main
@@ -142,8 +163,7 @@ function AppSidebar() {
   const { collapsed, toggleCollapsed, isMobile } = useSidebarContext();
 
   const activeSectionKey =
-    DOCS_NAV.find((s) => s.items.some((i) => i.to === pathname || pathname.startsWith(i.to + '/')))
-      ?.key ??
+    DOCS_NAV.find((s) => s.items.some((i) => isUnder(pathname, i.to)))?.key ??
     DOCS_NAV.find((s) => pathname.startsWith('/' + s.key))?.key ??
     null;
 
@@ -175,6 +195,7 @@ function AppSidebar() {
           <Sidebar.Nav aria-label="Documentation">
             {DOCS_NAV.map((section) => {
               const isActive = activeSectionKey === section.key;
+              const activeSub = isActive ? activeSubItem(section.items, pathname) : null;
               return (
                 // asChild renders the item ONTO the NavLink anchor, so each nav
                 // item is a single focusable element (not <a><button>). The
@@ -189,20 +210,23 @@ function AppSidebar() {
                   submenu={
                     <Sidebar.SubNav open={isActive && !collapsed} aria-label={section.label}>
                       {section.items.map((item) => (
-                        // Exact match only, like NavLink's `end`. Prefix
-                        // matching would keep an overview item active while on
-                        // one of its children, and the rail's line would mark
-                        // the wrong row.
-                        <Sidebar.SubNavItem key={item.to} asChild active={pathname === item.to}>
-                          <NavLink to={item.to} end>
-                            {item.label}
-                          </NavLink>
+                        // A plain Link, not a NavLink: which row is current is
+                        // decided here, by longest prefix, and SubNavItem turns
+                        // that into aria-current. NavLink would recompute it
+                        // from an exact match and drop the aria-current on
+                        // every page that has no row of its own.
+                        <Sidebar.SubNavItem
+                          key={item.to}
+                          asChild
+                          active={activeSub?.to === item.to}
+                        >
+                          <RouterLink to={item.to}>{item.label}</RouterLink>
                         </Sidebar.SubNavItem>
                       ))}
                     </Sidebar.SubNav>
                   }
                 >
-                  <NavLink to={section.items[0].to}>{section.label}</NavLink>
+                  <RouterLink to={section.items[0].to}>{section.label}</RouterLink>
                 </Sidebar.NavItem>
               );
             })}

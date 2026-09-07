@@ -28,6 +28,16 @@ export interface UsePositionTrackerOptions {
   track?: 'width' | 'height' | 'both';
   /** Disable animation (snap instantly) */
   disabled?: boolean;
+  /**
+   * Whether there is anything to measure yet. Default: true.
+   *
+   * A container that renders nothing until it opens — a collapsed panel — is
+   * absent when the hook first runs, and an effect with stable deps never
+   * looks again: no measurement, and no observers for later changes either.
+   * Passing the panel's open state here re-runs the setup once the container
+   * has actually mounted.
+   */
+  enabled?: boolean;
 }
 
 export interface UsePositionTrackerReturn {
@@ -43,6 +53,7 @@ export function usePositionTracker(options: UsePositionTrackerOptions): UsePosit
     activeSelector = '[data-state="active"], [data-state="on"]',
     track = 'both',
     disabled = false,
+    enabled = true,
   } = options;
 
   const indicatorRef = useRef<HTMLDivElement>(null);
@@ -109,6 +120,7 @@ export function usePositionTracker(options: UsePositionTrackerOptions): UsePosit
   }, [containerRef, activeSelector, disabled, track]);
 
   useEffect(() => {
+    if (!enabled) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -147,7 +159,7 @@ export function usePositionTracker(options: UsePositionTrackerOptions): UsePosit
       window.removeEventListener('resize', update);
       window.removeEventListener('orientationchange', update);
     };
-  }, [containerRef, update]);
+  }, [containerRef, update, enabled]);
 
   return { indicatorRef, update };
 }

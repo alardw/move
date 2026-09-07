@@ -174,8 +174,9 @@ export const spec = {
     },
     {
       name: '--move-toc-indicator-width',
-      value: '2px',
-      description: 'Indicator / active-border width',
+      value: '1px',
+      description:
+        'Width of the rail and of the mark that slides along it — one value, because they are one line',
     },
     {
       name: '--move-toc-rail-color',

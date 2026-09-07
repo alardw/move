@@ -805,6 +805,46 @@ describe('Sidebar', () => {
       expect(screen.getByRole('link', { name: 'Layout' })).not.toHaveAttribute('aria-current');
     });
 
+    it('measures the indicator when a section that started closed opens', () => {
+      // A closed Collapsible renders no children at all, so on the first pass
+      // there is no rail and no indicator to measure. The measurement has to
+      // run again once the section opens — without that it looked once, found
+      // nothing, and the line never appeared for the rest of the session.
+      const tree = (open: boolean) => (
+        <Sidebar.Root>
+          <Sidebar.Content>
+            <Sidebar.Nav aria-label="Docs">
+              <Sidebar.NavItem
+                href="/a"
+                submenu={
+                  <Sidebar.SubNav open={open} aria-label="A">
+                    <Sidebar.SubNavItem href="/a/one" active>
+                      One
+                    </Sidebar.SubNavItem>
+                  </Sidebar.SubNav>
+                }
+              >
+                A
+              </Sidebar.NavItem>
+            </Sidebar.Nav>
+          </Sidebar.Content>
+        </Sidebar.Root>
+      );
+
+      const { rerender } = render(<Sidebar.Provider>{tree(false)}</Sidebar.Provider>);
+      // Closed: the rail is not rendered, so there is nothing to measure yet.
+      expect(screen.queryByRole('navigation', { name: 'A' })).toBeNull();
+
+      rerender(<Sidebar.Provider>{tree(true)}</Sidebar.Provider>);
+
+      const nav = screen.getByRole('navigation', { name: 'A' });
+      const indicator = nav.querySelector('[aria-hidden="true"]') as HTMLElement;
+      expect(indicator).not.toBeNull();
+      // The hook writes opacity on every successful measurement; an untouched
+      // indicator has no inline style at all.
+      expect(indicator.style.opacity).toBe('1');
+    });
+
     it('SubActionItem is a button and reports its own pressed state', () => {
       renderWithProvider(
         <Sidebar.Root>
