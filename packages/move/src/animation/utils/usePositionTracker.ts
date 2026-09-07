@@ -14,7 +14,17 @@ export interface UsePositionTrackerOptions {
   containerRef: React.RefObject<HTMLElement | null>;
   /** CSS selector for the active element (default: '[data-state="active"], [data-state="on"]') */
   activeSelector?: string;
-  /** Which dimensions to track from the active element. Default: 'both'. Use 'width' for horizontal indicators like tab underlines. */
+  /**
+   * Which axis the indicator lives on. Default: 'both'.
+   *
+   * This governs BOTH the dimension copied from the active element and the
+   * direction the indicator travels — a horizontal indicator ('width', a tab
+   * underline) slides in x and is pinned in y by CSS; a vertical one
+   * ('height', a TOC or sub-nav rail) slides in y and is pinned in x. Moving
+   * the pinned axis as well fights the CSS that placed it: a rail whose items
+   * carry a left margin gets pushed off its own line, and a tab underline
+   * would drop a row the moment the list wraps.
+   */
   track?: 'width' | 'height' | 'both';
   /** Disable animation (snap instantly) */
   disabled?: boolean;
@@ -66,24 +76,34 @@ export function usePositionTracker(options: UsePositionTrackerOptions): UsePosit
     const width = active.offsetWidth;
     const height = active.offsetHeight;
 
+    const horizontal = track === 'width' || track === 'both';
+    const vertical = track === 'height' || track === 'both';
+
     indicator.style.opacity = '1';
-    if (track === 'width' || track === 'both') indicator.style.width = `${width}px`;
-    if (track === 'height' || track === 'both') indicator.style.height = `${height}px`;
+    if (horizontal) indicator.style.width = `${width}px`;
+    if (vertical) indicator.style.height = `${height}px`;
+
+    // Only the axis the indicator travels on. The other one belongs to CSS,
+    // which has already pinned it (`bottom: 0` for an underline, `left: -2px`
+    // for a rail) — writing a transform there would move it off that pin.
+    const position = {
+      ...(horizontal ? { translateX: left } : {}),
+      ...(vertical ? { translateY: top } : {}),
+    };
 
     if (isFirstRun.current || disabled || prefersReducedMotion()) {
       isFirstRun.current = false;
       if (animRef.current) animRef.current.pause();
       // Use anime.js for initial snap so it tracks values consistently
-      animate(indicator, { translateX: left, translateY: top, duration: 0 });
+      animate(indicator, { ...position, duration: 0 });
       return;
     }
 
     if (animRef.current) animRef.current.pause();
     animRef.current = animate(indicator, {
-      translateX: left,
-      translateY: top,
-      ...(track === 'width' || track === 'both' ? { width } : {}),
-      ...(track === 'height' || track === 'both' ? { height } : {}),
+      ...position,
+      ...(horizontal ? { width } : {}),
+      ...(vertical ? { height } : {}),
       ease: spring(defaultIndicatorSpring),
     });
   }, [containerRef, activeSelector, disabled, track]);
@@ -94,10 +114,15 @@ export function usePositionTracker(options: UsePositionTrackerOptions): UsePosit
 
     update();
 
+    // `data-state` is how Radix-backed items (Tabs, ToggleGroup) say which one
+    // is active; `data-active` is how route-driven ones do (a sidebar sub-nav,
+    // where the router re-renders the attribute rather than toggling state).
+    // Watching only the first left the second re-measuring by hand at the call
+    // site, once per navigation.
     const observer = new MutationObserver(update);
     observer.observe(container, {
       attributes: true,
-      attributeFilter: ['data-state'],
+      attributeFilter: ['data-state', 'data-active'],
       subtree: true,
     });
 
