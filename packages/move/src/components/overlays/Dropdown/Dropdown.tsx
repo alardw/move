@@ -1079,7 +1079,7 @@ const SUB_ANIMATIONS: AnimationTrigger[] = [
       [
         { target: 'SubContent', animation: { opacity: { to: 0, duration: 150 } } },
         {
-          target: 'SubContent',
+          target: 'SubContentInner',
           children: STAGGER_ITEMS,
           stagger: staggerItems.stagger,
           animation: {

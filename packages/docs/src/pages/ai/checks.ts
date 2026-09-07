@@ -94,6 +94,12 @@ export const CHECKS: CheckDoc[] = [
       'A compound part that must contain another one, does. Select.Content needs a Select.Viewport \u2014 Viewport holds the container the reveal animation targets. The failure is silent: omit it and the select still renders, opens and selects while the reveal never runs. Declared as data on the sub-component, and scanned across the docs too, since a sample that omits it teaches every reader to omit it.',
   },
   {
+    name: 'stagger-container',
+    appliesTo: 'component',
+    enforces:
+      'A stagger animates the children of an element the component itself renders. A third-party component owns its own ref, styling, positioning and reparenting, so an animated ref placed on one competes with that library for the same node \u2014 and the reveal silently does nothing. Dropdown had both shapes: its menu staggered a div it renders, its sub-menu staggered the Radix element, and only the first animated. Read from the source target and the slot\u2019s declared element, so the spec already carries what decides it.',
+  },
+  {
     name: 'families',
     appliesTo: 'component',
     enforces:
