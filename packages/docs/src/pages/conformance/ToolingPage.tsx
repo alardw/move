@@ -10,12 +10,15 @@ const TOC: TocItem[] = [
   { href: '#accessibility', label: 'Accessibility' },
 ];
 
-const HOOK = `# .githooks/pre-commit
-#!/usr/bin/env sh
-npx move check || exit 1
+const HOOKS_INSTALL = `npx move hooks`;
 
-# turn it on once (per clone):
-#   git config core.hooksPath .githooks`;
+const HOOKS_WHAT = `.githooks/pre-commit   move check --staged
+.githooks/pre-push     move check + typecheck + a11y`;
+
+const HOOKS_EXISTING = `npx move hooks --print
+
+# pre-commit:  npx move check --staged
+# pre-push:    npx move check`;
 
 const GH_CI = `# .github/workflows/conformance.yml
 name: Conformance
@@ -41,6 +44,15 @@ const CONFIG = `// move.config.json
 {
   "check": {
     "composites": "src/composites"
+  }
+}`;
+
+const CONFIG_SELECT = `// move.config.json
+{
+  "check": {
+    "composites": "src/composites",
+    "enable": ["creation"],
+    "disable": ["purity"]
   }
 }`;
 
@@ -92,15 +104,32 @@ export function ToolingPage() {
         <Section
           id="wire"
           title="Wire it in"
-          lede="Two hooks and it runs itself — fast locally, thorough in CI. Copy these in; a one-command scaffold is coming."
+          lede="One command installs the hooks, so the checks run themselves — on the files you stage, and again over everything before a push."
         >
           <Stack gap="lg">
             <Stack gap="sm">
-              <Heading level={3}>Pre-commit — fast, local</Heading>
+              <Heading level={3}>Install the hooks</Heading>
+              <CodeBlock code={HOOKS_INSTALL} />
+              <CodeBlock code={HOOKS_WHAT} />
               <Text size="sm" color="muted">
-                Blocks a bad commit before it lands, so problems never reach the branch.
+                Commit-time reads only what you staged, so it stays quick enough to leave on.
+                Push-time reads the whole project and adds your typecheck and accessibility scripts.
+                Both take <Code>--no-verify</Code> when you want the work in progress to go anyway.
               </Text>
-              <CodeBlock code={HOOK} />
+              <Text size="sm" color="muted">
+                The hooks are shell files in <Code>.githooks/</Code>. Commit them so your team has
+                them, and edit them to add your own steps — formatting and linting are the usual
+                two. Run <Code>npx move hooks</Code> once per clone, since git keeps{' '}
+                <Code>core.hooksPath</Code> locally.
+              </Text>
+            </Stack>
+            <Stack gap="sm">
+              <Heading level={3}>Already have a hook runner</Heading>
+              <Text size="sm" color="muted">
+                husky, lefthook and simple-git-hooks call the same two commands — Move works through
+                whichever one you already have.
+              </Text>
+              <CodeBlock code={HOOKS_EXISTING} />
             </Stack>
             <Stack gap="sm">
               <Heading level={3}>CI — thorough, every push</Heading>
@@ -126,6 +155,20 @@ export function ToolingPage() {
             Move components too? Add a <Code>components</Code> root and the pipeline gates cover
             those as well.
           </Text>
+          <Stack gap="sm">
+            <Heading level={3}>Choosing what runs</Heading>
+            <Text size="sm" color="muted">
+              Your roots answer most of this already: a project with no composites gives that check
+              nothing to read. Name the exceptions — a check you want beyond the defaults, or one
+              you would rather leave out.
+            </Text>
+            <CodeBlock code={CONFIG_SELECT} />
+            <Text size="sm" color="muted">
+              Listing exceptions keeps you current: a check added to Move later arrives on its own.
+              Naming one on the command line runs it either way, which is how you look into what a
+              disabled check would say.
+            </Text>
+          </Stack>
         </Section>
 
         <Section

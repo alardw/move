@@ -263,11 +263,42 @@ if (command === 'check') {
 
   Default checks: ${DEFAULT_CHECKS.join(', ')}
   Opt-in:         creation (validate a scaffolded app against the creation spec)
+
+  Which checks run follows mostly from your roots — a project with no
+  composites gives purity nothing to read. State the exceptions in
+  move.config.json:
+
+    { "check": { "enable": ["creation"], "disable": ["purity"] } }
+
+  Naming a check on the command line overrules both.
+
+  --staged   only the files in the index, for a commit hook
 `);
     process.exit(0);
   }
 
-  const names = only ? [only] : DEFAULT_CHECKS;
+  // A name on the command line is an explicit request and overrules the config —
+  // `move check purity` runs purity even where the project disabled it, which is
+  // what you want when you are looking into why it was disabled.
+  const configured = [...new Set([...DEFAULT_CHECKS, ...config.enable])].filter(
+    (n) => !config.disable.includes(n),
+  );
+  // A typo in the config is the dangerous case: `disbale: ['purity']` reads as
+  // nothing at all and the check quietly keeps running, while `disable:
+  // ['purty']` reads as nothing and it stays on — either way the project thinks
+  // it configured something. Name it.
+  for (const n of [...config.enable, ...config.disable]) {
+    if (!registry[n]) {
+      console.error(`  move.config.json names an unknown check: '${n}'`);
+      console.error(`  Available: ${Object.keys(registry).join(', ')}`);
+      process.exit(1);
+    }
+  }
+  const names = only ? [only] : configured;
+  if (names.length === 0) {
+    console.log('  move check: every check is disabled in move.config.json — nothing to run.');
+    process.exit(0);
+  }
   let failed = 0;
   for (const name of names) {
     const mod = await registry[name]();

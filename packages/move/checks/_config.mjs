@@ -15,6 +15,17 @@
  *
  * Returns each root resolved to an array of absolute, existing dirs (`theme` is
  * a single file path or null).
+ *
+ * WHICH checks run is mostly answered by WHERE the code is: a project with no
+ * composites root gives purity nothing to read, so it passes without being
+ * configured off. What the roots cannot say is that a project wants a check it
+ * does not get by default, or does not want one it does:
+ *
+ *   { "check": { "enable": ["creation"], "disable": ["purity"] } }
+ *
+ * Stated as exceptions rather than as an exhaustive list on purpose. A list
+ * freezes the set — a check added to Move later would silently never run for
+ * that project, which is the opposite of what a ratchet is for.
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, join } from 'node:path';
@@ -66,6 +77,10 @@ export function loadConfig(cwd = process.cwd()) {
      * about a file the commit is not changing.
      */
     only: null,
+    /** Checks this project wants beyond the defaults (e.g. `creation`). */
+    enable: toArray(user.enable),
+    /** Checks this project has opted out of, with the rest still arriving. */
+    disable: toArray(user.disable),
   };
 }
 

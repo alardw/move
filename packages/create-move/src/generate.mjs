@@ -756,6 +756,19 @@ npm run typecheck
 
 Both gates also run in CI (\`.github/workflows/checks.yml\`).
 
+### Choosing what runs
+
+\`move.config.json\` says where your code is, and that already answers most of
+it — a project with no composites gives that check nothing to read. State the
+exceptions:
+
+\`\`\`json
+{ "check": { "enable": ["creation"], "disable": ["purity"] } }
+\`\`\`
+
+Exceptions rather than a full list, so a check added to Move later still
+reaches you.
+
 ### Git hooks
 
 \`\`\`bash
