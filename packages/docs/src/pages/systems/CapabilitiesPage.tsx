@@ -169,7 +169,7 @@ export function CapabilitiesPage() {
             <Text>
               Components name their parts differently — the interactive element is <Code>root</Code>{' '}
               in Checkbox, <Code>input</Code> in InputText, <Code>trigger</Code> in Select. So every
-              part also declares what it <em>is</em>: <Code>control</Code>, <Code>label</Code>,{' '}
+              part also declares what it <Text as="em">is</Text>: <Code>control</Code>, <Code>label</Code>,{' '}
               <Code>item</Code>, <Code>group</Code>, <Code>trigger</Code>, <Code>surface</Code>,{' '}
               <Code>scrollport</Code>, <Code>overlay</Code>, <Code>separator</Code>,{' '}
               <Code>indicator</Code>, <Code>icon</Code>, or <Code>none</Code>.

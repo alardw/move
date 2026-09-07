@@ -36,7 +36,7 @@ const FIELDS: Row[] = [
     required: true,
     what: (
       <>
-        Whether having a targeted slot <em>implies</em> the capability. True where the kind and the
+        Whether having a targeted slot <Text as="em" size="sm">implies</Text> the capability. True where the kind and the
         capability are the same fact — a <Code>surface</Code> slot paints a ground, so it owns one.
         Then a component with the slot and no declaration fails, which is what catches the promises
         nobody wrote down.
@@ -73,7 +73,7 @@ const FIELDS: Row[] = [
     required: false,
     what: (
       <>
-        Whether a slot that <em>composes</em> a Move component satisfies this by inheritance. A
+        Whether a slot that <Text as="em" size="sm">composes</Text> a Move component satisfies this by inheritance. A
         player&rsquo;s play button renders <Code>Button</Code>, so its ring and its disabled
         treatment are checked on Button.
       </>
@@ -189,7 +189,7 @@ export function CapabilityContractPage() {
             </Table>
             <Text>
               Guards are stripped before matching. <Code>.root:hover:not(:disabled)</Code> contains
-              the string <Code>:disabled</Code> while styling the <em>enabled</em> state, and a
+              the string <Code>:disabled</Code> while styling the <Text as="em">enabled</Text> state, and a
               contract satisfied by a negation of itself asserts nothing.
             </Text>
           </Stack>

@@ -115,6 +115,11 @@ export function ComponentsGalleryPage() {
                       // looks like the end, the last entries mount, and the page
                       // grows underneath you — measured here as 9,062px on load
                       // against 11,049px once mounted.
+                      //
+                      // A pure spacer, which is the one thing no Move component
+                      // is: a call site states constraints, never a size. A
+                      // Skeleton would fit the slot but paints a visible block,
+                      // and these flash past during a fast scroll.  dogfood-ignore
                       placeholder={<div style={{ height: 160 }} />}
                     >
                       <Sample />

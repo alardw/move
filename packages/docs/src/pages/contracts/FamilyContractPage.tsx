@@ -69,7 +69,7 @@ const FIELDS: Row[] = [
     type: 'string[]',
     what: (
       <>
-        Booleans every member states <em>explicitly</em>. Optional in the type, so nothing else
+        Booleans every member states <Text as="em" size="sm">explicitly</Text>. Optional in the type, so nothing else
         forces them — and a flag nobody considered reads identically to one deliberately off.
       </>
     ),
