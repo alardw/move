@@ -1112,9 +1112,23 @@ const DropdownSubContent = withMoveComponent<
       () => SUB_ANIMATIONS.map((t) => ({ ...t, vars: { scaleFrom } })),
       [scaleFrom],
     );
-    const subRef = React.useRef<HTMLDivElement>(null);
+    // The element arrives LATE. This component renders as soon as the PARENT
+    // menu opens, but Radix renders no node until the sub is shown — so the ref
+    // is still null when useAnimations sets up its observers, and that effect's
+    // deps never change again. Nothing was ever watched, which is why the reveal
+    // did not fire under a lifecycle trigger either: the fault was never the
+    // trigger model, it was that there was no element to attach to.
+    //
+    // Holding the node in state gives the refs object a new identity the moment
+    // it exists, which re-runs the setup with something to observe.
+    const [subEl, setSubEl] = React.useState<HTMLDivElement | null>(null);
+    const subRef = React.useRef<HTMLDivElement | null>(null);
     const subInnerRef = React.useRef<HTMLDivElement>(null);
-    const mergedRef = useMergedRef<HTMLDivElement>(ref, subRef);
+    const attachSub = React.useCallback((node: HTMLDivElement | null) => {
+      subRef.current = node;
+      setSubEl(node);
+    }, []);
+    const mergedRef = useMergedRef<HTMLDivElement>(ref, attachSub);
     const subStates: AnimationState[] = React.useMemo(
       () => [
         {
@@ -1136,12 +1150,18 @@ const DropdownSubContent = withMoveComponent<
       [],
     );
 
+    // Keyed on the node ON PURPOSE. The memo body does not read subEl — a real
+    // ref is handed over so `.current` keeps tracking the live node — but its
+    // identity has to change when the element appears, because that is what
+    // re-runs the observer setup. Snapshotting `{ current: subEl }` instead
+    // would satisfy the linter and freeze the value.
     const subRefs = React.useMemo(
       () => ({
         SubContent: subRef as React.RefObject<HTMLElement | null>,
         SubContentInner: subInnerRef as React.RefObject<HTMLElement | null>,
       }),
-      [],
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [subEl],
     );
     useAnimations(animConfig ? subConfig : false, subRefs, subStates);
 
