@@ -37,6 +37,14 @@ export const spec = {
       typography: 'none',
       description: 'Selectable item button',
     },
+    {
+      name: 'itemContent',
+      element: 'span',
+      kind: 'none',
+      typography: 'none',
+      description:
+        "The item's label and icon, in their own box so hover can grow them without growing the segment",
+    },
   ],
 
   subComponents: [
@@ -146,6 +154,13 @@ export const spec = {
           kind: 'item',
           typography: 'none',
           description: 'Selectable item button',
+        },
+        {
+          name: 'itemContent',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Label and icon wrapper, the part that grows on hover',
         },
       ],
       props: [

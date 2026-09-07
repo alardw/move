@@ -208,26 +208,34 @@ export interface ToggleGroupItemProps extends React.HTMLAttributes<HTMLElement> 
   value: string;
   disabled?: boolean;
   animations?: AnimationTrigger[] | false;
-  sp?: SlotPropsMap<'item'>;
+  sp?: SlotPropsMap<'item' | 'itemContent'>;
 }
 
-const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButtonElement>({
+const ToggleGroupItem = withMoveComponent<
+  'item' | 'itemContent',
+  ToggleGroupItemProps,
+  HTMLButtonElement
+>({
   name: 'ToggleGroupItem',
   styles,
-  slots: ['item'] as const,
+  slots: ['item', 'itemContent'] as const,
   moveProps: ['value', 'disabled', 'animations'],
 
-  setup({ props, ref, cx, sp, attrs }) {
+  setup({ props, ref, cx, sp, slot, attrs }) {
     const { size, variant } = React.useContext(ToggleGroupContext);
 
-    // Animations disabled by default — scaling breaks connected borders.
-    // Users can opt in via animations prop with standard AnimationTrigger[] format.
     // Press feedback belongs here, not on the indicator: an item has classes for
     // its resting state and nothing else writes its transform, so the animation
     // can hand back. Same shape as ToggleButton, which is the same affordance.
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      { trigger: 'Item.press', sequence: [{ animation: scaleDown() }] },
-    ];
+    //
+    // Except in outline, where the segments are joined by a shared border and
+    // scaling one pulls that line off the segment beside it. The comment here
+    // has always said scaling breaks connected borders; now the code says it
+    // too. A caller who wants it anyway can still pass `animations`.
+    const DEFAULT_ANIMATIONS: AnimationTrigger[] =
+      variant === 'outline'
+        ? []
+        : [{ trigger: 'Item.press', sequence: [{ animation: scaleDown() }] }];
 
     const animationsProp = props.animations as AnimationTrigger[] | false | undefined;
     const animConfig =
@@ -268,7 +276,12 @@ const ToggleGroupItem = withMoveComponent<'item', ToggleGroupItemProps, HTMLButt
               if (!isDisabled) handlers.Item?.onMouseUp?.();
             }}
           >
-            {props.children}
+            {/* The label and icon live in their own box so hover can grow them
+                without growing the segment. Scaling the button would take its
+                border with it — which in outline is joined to the segment
+                beside it, and in pills is a box the sliding indicator draws
+                and would not follow. */}
+            <span {...slot('itemContent')}>{props.children}</span>
           </RadixToggleGroup.Item>
         );
       },

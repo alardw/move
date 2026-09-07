@@ -26,6 +26,26 @@
   width: fit-content;
 }
 
+/* The hover lift moves to the CONTENT, and off the segment.
+   The composed Button grows itself on hover, and a segment cannot follow it
+   there: its border is shared with the segment beside it in outline, and in
+   pills the box is drawn by the sliding indicator, a separate element that
+   stays where it is. So the segment holds still and the label and icon grow
+   inside it — the same feedback, on the part that can move. */
+.item:hover:not(:disabled) {
+  transform: none;
+}
+
+.itemContent {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--move-button-gap, var(--move-spacing-sm));
+}
+
+.item:hover:not(:disabled) .itemContent {
+  transform: scale(var(--move-button-scale-hover, 1.05));
+}
+
 /* The class fallback for the press, on the ITEM — `:active` matches an ancestor
    whenever a descendant is pressed, so on .root this scaled the entire control
    every time one child button was clicked. It belongs where the press does.
@@ -50,6 +70,17 @@
 .root[data-variant='underline'] {
   gap: var(--move-space-2);
   border-bottom: 1px solid var(--move-border-base);
+  /* Room between a segment and the line under it, which Tabs already leaves and
+     this variant only claimed to. Without it a focused segment's ring ends on
+     exactly the pixel the indicator occupies, and the two read as one smudged
+     shape rather than a ring above a bar.
+
+     The bottom is the one that has to be this much — a focus ring is 2px wide
+     at 2px offset, so anything under 4px still touches the bar, and the
+     segment padding at 3px would not have cleared it. Once the space is inside
+     the control the other edges take the same, or the padding reads as a lean
+     rather than a frame. */
+  padding: var(--move-space-2);
   --move-toggle-group-selected-fg: var(--move-fg-base);
 }
 
@@ -113,6 +144,18 @@
   border: 1px solid var(--move-border-base);
   border-radius: 0;
   margin-left: -1px;
+  /* The accent border IS the selected state here, so it arrives rather than
+     appears. Only on select: hover leaves border-color exactly where it was,
+     so there is nothing for this to animate there. Colour, so it stays a state
+     change — the scale above is flat for the same reason.
+
+     Not the `fast` token the rest of the file uses: 100ms is the right length
+     for a hover tint, where the point is to not be noticed, and it is why this
+     read as static. A selection is a decision and gets long enough to be seen
+     landing, on a curve that finishes rather than coasts. */
+  transition-property: color, border-color, background-color;
+  transition-duration: var(--move-transition-normal);
+  transition-timing-function: var(--move-ease-snap);
 }
 
 .root[data-variant='outline'] .item:first-of-type {
@@ -127,7 +170,35 @@
 .root[data-variant='outline'] .item[data-state='on'] {
   background-color: var(--move-surface-hover);
   border-color: var(--move-primary);
-  z-index: 1;
+  /* Above its neighbours, not level with them. Segments overlap by the 1px
+     they share, so the one painted last owns the line — which by source order
+     is whichever sits to the right, and the accent border ended up underneath
+     the plain one next to it. */
+  z-index: 2;
+}
+
+/* Connected segments share one 1px line between them, and a shared line cannot
+   be moved by one side only: the composed Button lifts on hover and presses in
+   on :active, which drives a segment's edges over its neighbours' and doubles
+   the seam. The other variants have separate items and can take the lift. */
+.root[data-variant='outline'] .item:hover:not(:disabled),
+.root[data-variant='outline'] .item:active:not(:disabled) {
+  transform: none;
+}
+
+/* The borderless variants clear background and border on hover, because there
+   the sliding indicator is the background and a leftover border would sit on
+   top of it. Outline has no indicator — the border IS the state — so it has to
+   opt out, and needs the variant on the selector to outrank a rule that would
+   otherwise win on source order alone. Without this, hovering a segment erased
+   its border: on the first one, that reads as a missing left edge. */
+.root[data-variant='outline'] .item:hover:not(:disabled) {
+  border-color: var(--move-border-base);
+}
+
+.root[data-variant='outline'] .item[data-state='on']:hover:not(:disabled) {
+  background-color: var(--move-surface-hover);
+  border-color: var(--move-primary);
 }
 
 /* ---- Item ---- */
@@ -173,18 +244,19 @@
   border-color: transparent;
 }
 
-/* Unselected: inset focus ring */
+/* Unselected: inset focus ring. Above the selected segment, which now claims
+   2 — a ring that shares its neighbour's level gets cut in half by it. */
 .item[data-state='off']:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: calc(
     -1 * (var(--move-focus-ring-width, 2px) + var(--move-focus-ring-offset, 2px))
   );
-  z-index: 2;
+  z-index: 3;
 }
 
 /* Selected: standard outer focus ring */
 .item[data-state='on']:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
-  z-index: 2;
+  z-index: 3;
 }
