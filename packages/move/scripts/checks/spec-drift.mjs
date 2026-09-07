@@ -716,6 +716,34 @@ function checkComponent(componentDir) {
       }
     }
 
+    // 0c-bis. hasHook and radixPrimitive — two more fields nothing read.
+    //
+    // `hasHook` said true for Chart, Toast and Stepper, none of which has a hook
+    // file; `radixPrimitive` said DropdownMenu across eighteen references in
+    // Select's spec, months after Select was rebuilt on Radix Select. Both are
+    // one line to verify and were wrong for as long as nobody did.
+    const hasHook = /\n  hasHook: (true|false)/.exec(specText);
+    if (hasHook) {
+      const hookExists =
+        existsSync(join(componentDir, `use${name}.ts`)) ||
+        readdirSync(componentDir).some((f) => /^use[A-Z]\w*\.ts$/.test(f));
+      if ((hasHook[1] === 'true') !== hookExists) {
+        errors.push(
+          `spec hasHook is ${hasHook[1]} but a headless hook ${hookExists ? 'exists' : 'does not exist'}`,
+        );
+      }
+    }
+
+    for (const m of specText.matchAll(/radixPrimitive: '(\w+)/g)) {
+      // The primitive family, e.g. `Select` from `Select.Trigger`. Radix is
+      // imported as `{ Select as RadixSelect } from 'radix-ui'`, so the family
+      // name has to appear in the import.
+      if (!new RegExp(`\\b${m[1]}\\b`).test(dirSrc)) {
+        errors.push(`spec radixPrimitive names '${m[1]}', which the source never imports`);
+        break;
+      }
+    }
+
     // 0d. componentDeps parity — the same argument, one field over. It records
     //     the other Move components this one is built from, including the
     //     shared internals under _shared/ that have no spec of their own, and

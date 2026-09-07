@@ -185,7 +185,7 @@ export const spec = {
         },
       ],
       usesFactory: false,
-      radixPrimitive: 'DropdownMenu.Root',
+      radixPrimitive: 'Select.Root',
       description:
         'Stateful root that manages value, open/close, animation context, and label registry via SelectContext',
     },
@@ -253,9 +253,9 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Trigger',
+      radixPrimitive: 'Select.Trigger',
       description:
-        'Button trigger wrapping Radix DropdownMenu.Trigger with size/variant/invalid data attributes. Defaults to min-width 10rem / max-width 30rem; override per-instance with minWidth/maxWidth props or globally via tokens.',
+        'Button trigger wrapping Radix Select.Trigger with size/variant/invalid data attributes. Defaults to min-width 10rem / max-width 30rem; override per-instance with minWidth/maxWidth props or globally via tokens.',
     },
     {
       name: 'Value',
@@ -410,7 +410,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Content',
+      radixPrimitive: 'Select.Content',
       requiredChildren: [
         {
           name: 'Viewport',
@@ -418,7 +418,7 @@ export const spec = {
         },
       ],
       description:
-        'Animated popup content. Defaults to matching trigger width (var(--radix-dropdown-menu-trigger-width)) with min/max-width clamping. Tall content scrolls via max-height; items truncate with ellipsis. Height animation, stagger enter, scroll-to-selected on open.',
+        'Animated popup content. Defaults to matching trigger width (var(--radix-select-trigger-width)) with min/max-width clamping. Tall content scrolls via max-height; items truncate with ellipsis. Height animation, stagger enter, scroll-to-selected on open.',
     },
     {
       name: 'Viewport',
@@ -495,7 +495,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Item',
+      radixPrimitive: 'Select.Item',
       description:
         'Selectable item with spring hover animation, selected highlight, and label registration. Long labels truncate with ellipsis (white-space: nowrap, overflow: hidden, text-overflow: ellipsis) — they are clipped by the Content max-width bound.',
     },
@@ -526,7 +526,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Group',
+      radixPrimitive: 'Select.Group',
       description: 'Visual grouping container for related items',
     },
     {
@@ -556,7 +556,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Label',
+      radixPrimitive: 'Select.Label',
       description: 'Non-interactive label for a group of items',
     },
     {
@@ -580,7 +580,7 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      radixPrimitive: 'DropdownMenu.Separator',
+      radixPrimitive: 'Select.Separator',
       description: 'Horizontal divider between groups or items',
     },
   ],
@@ -957,19 +957,19 @@ export const spec = {
 
   labels: [],
 
-  radixPrimitive: 'DropdownMenu',
+  radixPrimitive: 'Select',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef', 'elementTypeName'] as string[],
   componentDeps: ['SurfaceProvider'] as string[],
 
   testing: {
     behaviors: [
-      'Root renders with SelectContext provider wrapping Radix DropdownMenu.Root',
+      'Root renders with SelectContext provider wrapping Radix Select.Root',
       'Root manages controlled/uncontrolled value state',
       'Root manages controlled/uncontrolled open state',
       'Root maintains label registry mapping value to ReactNode',
       'Root coordinates animated close via isClosing state',
-      'Trigger renders as Radix DropdownMenu.Trigger button',
+      'Trigger renders as Radix Select.Trigger button',
       'Trigger applies data-size, data-variant, data-disabled, data-invalid attributes',
       'Trigger defaults to size=md and variant=outlined',
       'Trigger supports custom width prop',
@@ -979,22 +979,22 @@ export const spec = {
       'Icon renders chevron-down by default via useResolvedIcon',
       'Icon rotates 180deg on open and 0deg on close',
       'Icon animation observes data-state via MutationObserver',
-      'Portal renders via Radix DropdownMenu.Portal',
-      'Content renders inside Radix DropdownMenu.Content',
+      'Portal renders via Radix Select.Portal',
+      'Content renders inside Radix Select.Content',
       'Content defaults sideOffset to 4',
       'Content scrolls to selected item before enter animation',
       'Content focuses selected item on open complete',
       'Content dispatches ArrowDown if no item selected on open',
       'Content intercepts pointer-down-outside and escape to trigger animated close',
       'ContentInner provides scrollable area with custom scrollbar styling',
-      'Item renders as Radix DropdownMenu.Item',
+      'Item renders as Radix Select.Item',
       'Item sets data-selected when its value matches context value',
       'Item registers label in SelectContext on mount',
       'Item select calls onValueChange and triggers close',
       'Item has spring scale animation on hover (1.02)',
-      'Group renders as Radix DropdownMenu.Group',
-      'Label renders as Radix DropdownMenu.Label with semibold weight',
-      'Separator renders as Radix DropdownMenu.Separator',
+      'Group renders as Radix Select.Group',
+      'Label renders as Radix Select.Label with semibold weight',
+      'Separator renders as Radix Select.Separator',
       'Forwards className and style on Trigger',
       'Forwards className and style on Content',
       'Forwards className and style on Item',
@@ -1009,7 +1009,7 @@ export const spec = {
     aria: [
       'Trigger has aria-expanded from Radix',
       'Trigger has aria-haspopup from Radix',
-      'Content has role=menu from Radix DropdownMenu',
+      'Content has role=menu from Radix Select',
       'Items have role=menuitem from Radix',
       'Disabled items have data-disabled attribute',
       'Icon has aria-hidden=true',

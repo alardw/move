@@ -522,7 +522,7 @@ export const spec = {
     },
   ],
 
-  hasHook: true,
+  hasHook: false,
   engineImports: ['withMoveComponent', 'elementTypeName', 'composeHandlers'] as string[],
 
   componentDeps: [] as string[],

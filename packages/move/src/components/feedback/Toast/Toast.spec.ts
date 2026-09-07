@@ -311,7 +311,7 @@ export const spec = {
     },
   ],
 
-  hasHook: true,
+  hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
 
   componentDeps: [] as string[],

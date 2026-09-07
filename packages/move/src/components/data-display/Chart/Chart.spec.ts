@@ -527,7 +527,7 @@ export const spec = {
   ],
 
   radixPrimitive: null,
-  hasHook: true,
+  hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
 
   componentDeps: ['Button', 'Loader', 'Text', 'Tooltip'] as string[],
