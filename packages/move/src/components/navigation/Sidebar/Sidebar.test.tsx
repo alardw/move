@@ -651,4 +651,236 @@ describe('Sidebar', () => {
       });
     });
   });
+
+  // === ActionItem ===
+  describe('ActionItem', () => {
+    it('renders a button, not a link', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem onClick={() => {}}>Toggle theme</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      const btn = screen.getByRole('button', { name: 'Toggle theme' });
+      expect(btn.tagName).toBe('BUTTON');
+      expect(btn).toHaveAttribute('type', 'button');
+    });
+
+    it('takes no aria-current — it is not a destination', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem>Act</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      expect(screen.getByRole('button', { name: 'Act' })).not.toHaveAttribute('aria-current');
+    });
+
+    it('passes a state attribute through, so a toggle can report itself', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem aria-pressed>Compact</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      expect(screen.getByRole('button', { name: 'Compact' })).toHaveAttribute(
+        'aria-pressed',
+        'true',
+      );
+    });
+
+    it('fires onClick', () => {
+      const onClick = vi.fn();
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem onClick={onClick}>Act</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Act' }));
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('is a list item inside a Nav', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Content>
+            <Sidebar.Nav aria-label="Main">
+              <Sidebar.ActionItem>New project</Sidebar.ActionItem>
+            </Sidebar.Nav>
+          </Sidebar.Content>
+        </Sidebar.Root>,
+      );
+      const btn = screen.getByRole('button', { name: 'New project' });
+      expect(btn.closest('li')).not.toBeNull();
+    });
+
+    it('is the bare control outside a Nav, with no list of one to announce', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem>Settings</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      const btn = screen.getByRole('button', { name: 'Settings' });
+      expect(btn.closest('li')).toBeNull();
+      expect(screen.queryByRole('list')).toBeNull();
+    });
+
+    it('renders onto the caller element with asChild', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem asChild>
+              <a href="https://example.com">Credits</a>
+            </Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      const link = screen.getByRole('link', { name: 'Credits' });
+      expect(link).toHaveAttribute('href', 'https://example.com');
+    });
+
+    it('disables the control', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Footer>
+            <Sidebar.ActionItem disabled>Act</Sidebar.ActionItem>
+          </Sidebar.Footer>
+        </Sidebar.Root>,
+      );
+      expect(screen.getByRole('button', { name: 'Act' })).toBeDisabled();
+    });
+  });
+
+  // === SubNav / SubNavItem / SubActionItem ===
+  describe('SubNav', () => {
+    const section = (open = true) => (
+      <Sidebar.Root>
+        <Sidebar.Content>
+          <Sidebar.Nav aria-label="Docs">
+            <Sidebar.NavItem
+              href="/systems"
+              submenu={
+                <Sidebar.SubNav open={open} aria-label="Systems">
+                  <Sidebar.SubNavItem href="/systems/forms" active>
+                    Forms
+                  </Sidebar.SubNavItem>
+                  <Sidebar.SubNavItem href="/systems/layout">Layout</Sidebar.SubNavItem>
+                  <Sidebar.SubActionItem onClick={() => {}}>Reset</Sidebar.SubActionItem>
+                </Sidebar.SubNav>
+              }
+            >
+              Systems
+            </Sidebar.NavItem>
+          </Sidebar.Nav>
+        </Sidebar.Content>
+      </Sidebar.Root>
+    );
+
+    it('is its own navigation landmark, named', () => {
+      renderWithProvider(section());
+      expect(screen.getByRole('navigation', { name: 'Systems' })).toBeInTheDocument();
+    });
+
+    it('lands inside the parent list item, not beside it', () => {
+      renderWithProvider(section());
+      const parent = screen.getByRole('link', { name: 'Systems' }).closest('li');
+      expect(parent).not.toBeNull();
+      expect(
+        within(parent as HTMLElement).getByRole('link', { name: 'Forms' }),
+      ).toBeInTheDocument();
+    });
+
+    it('marks the active row as the current page', () => {
+      renderWithProvider(section());
+      const forms = screen.getByRole('link', { name: 'Forms' });
+      expect(forms).toHaveAttribute('aria-current', 'page');
+      expect(forms).toHaveAttribute('data-active');
+      expect(screen.getByRole('link', { name: 'Layout' })).not.toHaveAttribute('aria-current');
+    });
+
+    it('SubActionItem is a button and reports its own pressed state', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Content>
+            <Sidebar.Nav aria-label="Docs">
+              <Sidebar.NavItem
+                href="/a"
+                submenu={
+                  <Sidebar.SubNav aria-label="A">
+                    <Sidebar.SubActionItem active>Compact</Sidebar.SubActionItem>
+                  </Sidebar.SubNav>
+                }
+              >
+                A
+              </Sidebar.NavItem>
+            </Sidebar.Nav>
+          </Sidebar.Content>
+        </Sidebar.Root>,
+      );
+      const btn = screen.getByRole('button', { name: 'Compact' });
+      expect(btn.tagName).toBe('BUTTON');
+      expect(btn).toHaveAttribute('aria-pressed', 'true');
+      expect(btn).not.toHaveAttribute('aria-current');
+    });
+
+    it('renders sub rows onto the caller element with asChild', () => {
+      renderWithProvider(
+        <Sidebar.Root>
+          <Sidebar.Content>
+            <Sidebar.Nav aria-label="Docs">
+              <Sidebar.NavItem
+                href="/a"
+                submenu={
+                  <Sidebar.SubNav aria-label="A">
+                    <Sidebar.SubNavItem asChild active>
+                      <a href="/a/one">One</a>
+                    </Sidebar.SubNavItem>
+                  </Sidebar.SubNav>
+                }
+              >
+                A
+              </Sidebar.NavItem>
+            </Sidebar.Nav>
+          </Sidebar.Content>
+        </Sidebar.Root>,
+      );
+      const one = screen.getByRole('link', { name: 'One' });
+      expect(one).toHaveAttribute('href', '/a/one');
+      expect(one).toHaveAttribute('aria-current', 'page');
+    });
+
+    it('closes the mobile sheet when a sub destination is chosen', () => {
+      withMobile(() => {
+        renderWithProvider(
+          <Sidebar.Root>
+            <Sidebar.Content>
+              <Sidebar.Nav aria-label="Docs">
+                <Sidebar.NavItem
+                  href="/a"
+                  submenu={
+                    <Sidebar.SubNav aria-label="A">
+                      <Sidebar.SubNavItem href="/a/one">One</Sidebar.SubNavItem>
+                    </Sidebar.SubNav>
+                  }
+                >
+                  A
+                </Sidebar.NavItem>
+              </Sidebar.Nav>
+            </Sidebar.Content>
+          </Sidebar.Root>,
+          { defaultMobileOpen: true },
+        );
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+        fireEvent.click(screen.getByRole('link', { name: 'One' }));
+        expect(screen.queryByRole('dialog')).toBeNull();
+      });
+    });
+  });
 });

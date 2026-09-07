@@ -264,37 +264,18 @@
   min-width: 0;
 }
 
-/* The trigger is not a nav item — it acts on the sidebar rather than going
-   anywhere — but it sits on the same rail, so it borrows the row's metrics. */
-.triggerIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.triggerLabel {
-  flex: 1;
-  text-align: left;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.root[data-collapsed='true']:not([data-mobile='true']) .triggerLabel {
-  opacity: 0;
-  width: 0;
-  flex: 0;
-  overflow: hidden;
-}
-
 /* ============================================
- * NavItem — one destination
+ * The row — one destination, one action, one toggle
+ *
+ * A NavItem, an ActionItem and the collapse Trigger are the same row: same box,
+ * same hover, same collapsed centring. What separates them is what a click
+ * does, which is not something CSS can see. Kept as one block so a change to
+ * the rail's shape cannot reach two of them and miss the third.
  * ============================================ */
 
-.navItem {
+.navItem,
+.actionItem,
+.trigger {
   display: flex;
   align-items: center;
   gap: var(--move-spacing-md);
@@ -318,12 +299,16 @@
     color var(--move-transition-fast) var(--move-ease-default);
 }
 
-.navItem:hover {
+.navItem:hover,
+.actionItem:hover,
+.trigger:hover {
   background-color: var(--move-sidebar-item-bg-hover);
   color: var(--move-sidebar-item-fg-hover);
 }
 
-.navItem:focus-visible:not(:active) {
+.navItem:focus-visible:not(:active),
+.actionItem:focus-visible:not(:active),
+.trigger:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
 }
@@ -346,13 +331,16 @@
   --move-badge-border: transparent;
 }
 
-.navItem[data-disabled='true'] {
+.navItem[data-disabled='true'],
+.actionItem:disabled {
   opacity: var(--move-disabled-opacity);
   pointer-events: none;
 }
 
 /* Collapsed: center icons, hide label */
-.root[data-collapsed='true']:not([data-mobile='true']) .navItem {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItem,
+.root[data-collapsed='true']:not([data-mobile='true']) .actionItem,
+.root[data-collapsed='true']:not([data-mobile='true']) .trigger {
   justify-content: center;
   padding: var(--move-sidebar-item-padding-y) 0;
   gap: 0;
@@ -362,7 +350,9 @@
  * Item Icon
  * ============================================ */
 
-.navItemIcon {
+.navItemIcon,
+.actionItemIcon,
+.triggerIcon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -375,7 +365,9 @@
  * Item Label — hidden when collapsed
  * ============================================ */
 
-.navItemLabel {
+.navItemLabel,
+.actionItemLabel,
+.triggerLabel {
   flex: 1;
   text-align: left;
   overflow: hidden;
@@ -383,7 +375,9 @@
   white-space: nowrap;
 }
 
-.root[data-collapsed='true']:not([data-mobile='true']) .navItemLabel {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItemLabel,
+.root[data-collapsed='true']:not([data-mobile='true']) .actionItemLabel,
+.root[data-collapsed='true']:not([data-mobile='true']) .triggerLabel {
   opacity: 0;
   width: 0;
   flex: 0;
@@ -394,57 +388,18 @@
  * Item Badge
  * ============================================ */
 
-.navItemBadge {
+.navItemBadge,
+.actionItemBadge {
   display: flex;
   align-items: center;
   flex-shrink: 0;
 }
 
-.root[data-collapsed='true']:not([data-mobile='true']) .navItemBadge {
+.root[data-collapsed='true']:not([data-mobile='true']) .navItemBadge,
+.root[data-collapsed='true']:not([data-mobile='true']) .actionItemBadge {
   opacity: 0;
   width: 0;
   overflow: hidden;
-}
-
-/* ============================================
- * Trigger — toggle button
- * ============================================ */
-
-.trigger {
-  display: flex;
-  align-items: center;
-  gap: var(--move-spacing-md);
-  width: 100%;
-  /* Same box as .navItem, so the collapse row reads as one more rail row. */
-  padding: var(--move-sidebar-item-padding-y) var(--move-sidebar-item-padding-x);
-  border: none;
-  border-radius: var(--move-sidebar-item-radius);
-  background: transparent;
-  color: var(--move-sidebar-item-fg);
-  font-family: var(--move-font-body);
-  font-size: var(--move-size-base);
-  font-weight: var(--move-weight-normal);
-  cursor: pointer;
-  /* Hover color/bg only */
-  transition:
-    background-color var(--move-transition-fast) var(--move-ease-default),
-    color var(--move-transition-fast) var(--move-ease-default);
-}
-
-.trigger:hover {
-  background-color: var(--move-sidebar-item-bg-hover);
-  color: var(--move-sidebar-item-fg-hover);
-}
-
-.trigger:focus-visible:not(:active) {
-  outline: var(--move-focus-ring);
-  outline-offset: var(--move-focus-ring-offset);
-}
-
-.root[data-collapsed='true']:not([data-mobile='true']) .trigger {
-  justify-content: center;
-  padding: var(--move-sidebar-item-padding-y) 0;
-  gap: 0;
 }
 
 /* ============================================
@@ -457,4 +412,112 @@
   background-color: var(--move-overlay-heavy);
   backdrop-filter: blur(var(--move-overlay-blur));
   z-index: calc(var(--move-layer-modal) - 1);
+}
+
+/* ============================================
+ * SubNav — the rail under one destination
+ *
+ * The rail hangs from the centre of the parent NavItem's icon and the sub
+ * labels line up with the parent's label, so a section reads as one shape
+ * rather than two lists at different insets.
+ * ============================================ */
+
+.subNav {
+  --move-sidebar-sub-indicator-color: var(--move-primary);
+  --move-sidebar-sub-indicator-width: 2px;
+  --move-sidebar-sub-rail-color: var(--move-border-base);
+  --move-sidebar-sub-item-fg: var(--move-fg-muted);
+  --move-sidebar-sub-item-fg-hover: var(--move-fg-base);
+  --move-sidebar-sub-item-fg-active: var(--move-link);
+  --move-sidebar-sub-item-padding-y: var(--move-spacing-xs);
+
+  position: relative;
+  /* Centre of the parent row's icon: its own inset, plus half the 1.25rem
+     icon box. The rail is the parent's icon continued downwards. */
+  margin-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem);
+  border-left: 1px solid var(--move-sidebar-sub-rail-color);
+  font-family: var(--move-font-body);
+}
+
+.subNavList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.subNavItemRow {
+  display: block;
+  min-width: 0;
+}
+
+/* Position and height come from usePositionTracker; this is only the look.
+   Nothing here sets a horizontal offset per item — `track: 'height'` moves
+   the indicator on one axis and leaves x to this rule, which pins it to the
+   rail whatever inset the rows carry. */
+.subNavIndicator {
+  position: absolute;
+  top: 0;
+  left: calc(-1 * var(--move-sidebar-sub-indicator-width));
+  width: var(--move-sidebar-sub-indicator-width);
+  border-radius: var(--move-sidebar-sub-indicator-width);
+  background: var(--move-sidebar-sub-indicator-color);
+  pointer-events: none;
+  opacity: 0;
+}
+
+.subNavItem,
+.subActionItem {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  /* Held off the rail so the focus ring has somewhere to land that isn't on
+     top of the indicator; the left padding gives the same distance back, so
+     the words still line up with the parent row's label. */
+  margin-left: 6px;
+  padding-block: var(--move-sidebar-sub-item-padding-y);
+  padding-left: calc(var(--move-sidebar-item-padding-x) + 0.625rem - 6px);
+  padding-right: var(--move-sidebar-item-padding-x);
+  border-radius: var(--move-sidebar-item-radius);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-sm);
+  font-weight: var(--move-weight-normal);
+  line-height: 1.4;
+  color: var(--move-sidebar-sub-item-fg);
+  transition: color var(--move-transition-fast) var(--move-ease-default);
+}
+
+.subNavItem:hover,
+.subActionItem:hover {
+  color: var(--move-sidebar-sub-item-fg-hover);
+}
+
+.subNavItem:focus-visible,
+.subActionItem:focus-visible {
+  outline: var(--move-focus-ring);
+  /* Inset, so the ring is not clipped by the sidebar's own overflow. */
+  outline-offset: calc(-1 * var(--move-focus-ring-offset));
+}
+
+.subNavItem[data-active],
+.subActionItem[data-active] {
+  color: var(--move-sidebar-sub-item-fg-active);
+  font-weight: var(--move-weight-medium);
+}
+
+.subNavItem[data-disabled='true'],
+.subActionItem:disabled {
+  opacity: var(--move-disabled-opacity);
+  pointer-events: none;
+}
+
+/* A 4rem rail has no room for a second level of labels. */
+.root[data-collapsed='true']:not([data-mobile='true']) .subNav {
+  display: none;
 }

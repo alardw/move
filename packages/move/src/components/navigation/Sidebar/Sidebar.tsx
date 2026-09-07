@@ -9,12 +9,14 @@ import {
   useAnimations,
   useDismissable,
   useDismissableExit,
+  usePositionTracker,
   poppy,
   snappy,
   smooth,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { Tooltip } from '../../overlays/Tooltip';
+import { Collapsible } from '../../disclosure/Collapsible';
 import { Button } from '../../actions/Button';
 import { Icon, useIcon } from '../../../infrastructure/Icon';
 import type { SlotPropsMap } from '../../../engine';
@@ -1106,6 +1108,456 @@ const SidebarNavItem = withMoveComponent<
 });
 
 // ============================================================================
+// ActionItem (a row that acts)
+// ============================================================================
+
+export interface SidebarActionItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /** Icon name (built-in set) or a rendered node, shown before the label. */
+  icon?: React.ReactNode;
+  /** Rendered after the label; hidden while collapsed. */
+  badge?: React.ReactNode;
+  disabled?: boolean;
+  /** Render the caller's element (a menu trigger) instead of a `<button>`. */
+  asChild?: boolean;
+  /** Shown on hover while collapsed, when the label is hidden. */
+  tooltip?: React.ReactNode;
+  /** Nested content, rendered inside the same list item. */
+  submenu?: React.ReactNode;
+  sp?: SlotPropsMap<
+    'navItemRow' | 'actionItem' | 'actionItemIcon' | 'actionItemLabel' | 'actionItemBadge'
+  >;
+}
+
+/**
+ * A row that acts instead of navigating — a theme toggle, an account menu, a
+ * "new project" button.
+ *
+ * It is the same row as NavItem: same box, same icon inset, same collapsed
+ * behaviour. That matters most in the Footer, where the alternative is a bare
+ * Button whose own padding has to be talked into landing on the rail's icon
+ * line, and which is a different height from everything above it.
+ *
+ * It carries no `active` and no `aria-current`, because neither is true of an
+ * action. A control with a state to report — a toggle, a menu — passes the
+ * attribute that says so (`aria-pressed`, `aria-expanded`) and it goes through.
+ */
+const SidebarActionItem = withMoveComponent<
+  'navItemRow' | 'actionItem' | 'actionItemIcon' | 'actionItemLabel' | 'actionItemBadge',
+  SidebarActionItemProps,
+  HTMLButtonElement
+>({
+  name: 'SidebarActionItem',
+  styles,
+  slots: [
+    'navItemRow',
+    'actionItem',
+    'actionItemIcon',
+    'actionItemLabel',
+    'actionItemBadge',
+  ] as const,
+  moveProps: ['icon', 'badge', 'disabled', 'asChild', 'tooltip', 'submenu'],
+
+  setup({ props, ref, cx, sp, slot, attrs }) {
+    const { collapsed, isMobile } = useSidebarContext();
+    const inNav = React.useContext(SidebarNavContext);
+    const showTooltip = collapsed && !isMobile && !!props.tooltip;
+
+    return {
+      render() {
+        const itemSp = sp('actionItem');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
+
+        const innerContent = (child?: React.ReactNode) => (
+          <>
+            {props.icon != null && (
+              // Decorative — the label already names the action, and it stays
+              // in the accessibility tree while collapsed (the CSS zeroes its
+              // width, it is not removed).
+              <span aria-hidden="true" {...slot('actionItemIcon')}>
+                {typeof props.icon === 'string' ? (
+                  <Icon name={props.icon} />
+                ) : (
+                  (props.icon as React.ReactNode)
+                )}
+              </span>
+            )}
+            <span {...slot('actionItemLabel')}>{child}</span>
+            {props.badge != null && (
+              <span {...slot('actionItemBadge')}>{props.badge as React.ReactNode}</span>
+            )}
+          </>
+        );
+
+        const rowProps = {
+          ...attrs,
+          ...spRest,
+          'data-disabled': props.disabled || undefined,
+        };
+
+        let element: React.ReactElement;
+
+        if (props.asChild) {
+          const child = React.Children.only(props.children) as React.ReactElement<any>;
+          element = React.cloneElement(
+            child,
+            {
+              ...rowProps,
+              ref,
+              className: cx(
+                'actionItem',
+                props.className,
+                child.props.className,
+                spClass as string | undefined,
+              ),
+              style: { ...child.props.style, ...props.style, ...(spStyle as React.CSSProperties) },
+            },
+            innerContent(child.props.children),
+          );
+        } else {
+          element = (
+            <button
+              type="button"
+              {...rowProps}
+              ref={ref}
+              disabled={(props.disabled as boolean) || undefined}
+              className={cx('actionItem', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            >
+              {innerContent(props.children)}
+            </button>
+          );
+        }
+
+        const row = showTooltip ? (
+          <Tooltip label={props.tooltip as React.ReactNode} side="right" sideOffset={8}>
+            {element}
+          </Tooltip>
+        ) : (
+          element
+        );
+
+        // A <ul> may only hold <li>, so inside a Nav the action is a list item
+        // like every other row. In a Header or a Footer there is no list to
+        // join, and wrapping it in one would announce a list of one.
+        return inNav ? (
+          <li {...slot('navItemRow')}>
+            {row}
+            {props.submenu as React.ReactNode}
+          </li>
+        ) : (
+          <>
+            {row}
+            {props.submenu as React.ReactNode}
+          </>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// SubNav (the rail of destinations under one section)
+// ============================================================================
+
+export interface SidebarSubNavProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /**
+   * Whether the section is showing. Drives the height reveal and the stagger —
+   * the rows arrive one after another rather than all at once.
+   */
+  open?: boolean;
+  animations?: AnimationTrigger[] | false;
+  sp?: SlotPropsMap<'subNav' | 'subNavList' | 'subNavIndicator'>;
+}
+
+/**
+ * The second level of the rail: the destinations inside one section, indented
+ * under the NavItem they belong to and marked with a line that slides to
+ * whichever one you are on.
+ *
+ * Pass it to that NavItem's `submenu`, so it lands inside the same list item —
+ * a `<ul>` may only hold `<li>`, and a sub-nav placed beside the row would fall
+ * outside the list it belongs to.
+ */
+const SidebarSubNav = withMoveComponent<
+  'subNav' | 'subNavList' | 'subNavIndicator',
+  SidebarSubNavProps,
+  HTMLElement
+>({
+  name: 'SidebarSubNav',
+  styles,
+  slots: ['subNav', 'subNavList', 'subNavIndicator'] as const,
+  defaults: { open: true },
+  moveProps: ['open', 'animations'],
+
+  setup({ props, ref, internalRef, cx, sp, slot, attrs }) {
+    const open = props.open !== false;
+    const containerRef = internalRef as React.RefObject<HTMLElement | null>;
+
+    const ariaLabel = attrs['aria-label'];
+    const ariaLabelledby = attrs['aria-labelledby'];
+    React.useEffect(() => {
+      if (process.env.NODE_ENV !== 'development') return;
+      if (ariaLabel || ariaLabelledby) return;
+      console.warn(
+        '[move] <Sidebar.SubNav> has no accessible name, so it is announced only as ' +
+          '"navigation" — indistinguishable from the nav it sits inside. Pass an ' +
+          "aria-label naming the section, e.g. the parent NavItem's label.",
+      );
+    }, [ariaLabel, ariaLabelledby]);
+
+    // The line marking the current row. `track: 'height'` because it is a
+    // vertical rail: it takes the active row's height and travels in y, and
+    // its x stays where the CSS pinned it, against the rail.
+    const { indicatorRef } = usePositionTracker({
+      containerRef,
+      activeSelector: '[data-active]',
+      track: 'height',
+    });
+
+    // Rows fade and rise in sequence, starting a beat after the height has
+    // begun to open so the two read as one movement rather than a race.
+    const staggerStep = React.useMemo(
+      () => ({
+        target: 'Container' as const,
+        children: 'a, button',
+        stagger: { delay: 30 },
+        animation: {
+          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 240, delay: 80 },
+          translateY: { from: 6, to: 0, ease: 'outQuart', duration: 240, delay: 80 },
+        },
+      }),
+      [],
+    );
+
+    const triggers = React.useMemo<AnimationTrigger[]>(
+      () => [
+        // Mount, for a section that starts open.
+        { trigger: 'Container.enter', sequence: open ? [staggerStep] : false },
+        // Every later open. Closing runs nothing — the height carries that.
+        { trigger: 'reveal-on-open', deps: [open], sequence: open ? [staggerStep] : false },
+      ],
+      [open, staggerStep],
+    );
+
+    const animationRefs = React.useMemo(() => ({ Container: containerRef }), [containerRef]);
+    useAnimations(
+      (props.animations as AnimationTrigger[] | false | undefined) === false ? [] : triggers,
+      animationRefs,
+    );
+
+    return {
+      render() {
+        const navSp = sp('subNav');
+        const { className: spClass, style: spStyle, ...spRest } = navSp as Record<string, unknown>;
+        return (
+          <Collapsible.Root open={open}>
+            <Collapsible.Content>
+              <nav
+                {...attrs}
+                {...spRest}
+                ref={ref as React.Ref<HTMLElement>}
+                className={cx('subNav', props.className, spClass as string | undefined)}
+                style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              >
+                <div ref={indicatorRef} aria-hidden="true" {...slot('subNavIndicator')} />
+                {/* role="list" restores what `list-style: none` takes away in
+                    Safari — the count the rail otherwise loses. */}
+                <ul role="list" {...slot('subNavList')}>
+                  <SidebarNavContext.Provider value={true}>
+                    {props.children}
+                  </SidebarNavContext.Provider>
+                </ul>
+              </nav>
+            </Collapsible.Content>
+          </Collapsible.Root>
+        );
+      },
+    };
+  },
+});
+
+// ============================================================================
+// SubNavItem / SubActionItem (the two things a sub row can be)
+// ============================================================================
+
+export interface SidebarSubNavItemProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /** Where this goes. Dropped while `disabled`, so it cannot be followed. */
+  href?: string;
+  /** The destination the user is on. Sets `aria-current="page"`. */
+  active?: boolean;
+  disabled?: boolean;
+  /** Render the caller's element (a router `Link`) instead of an `<a>`. */
+  asChild?: boolean;
+  sp?: SlotPropsMap<'subNavItemRow' | 'subNavItem'>;
+}
+
+/** One destination inside a section. The rail's indicator follows whichever
+ *  one carries `active`. */
+const SidebarSubNavItem = withMoveComponent<
+  'subNavItemRow' | 'subNavItem',
+  SidebarSubNavItemProps,
+  HTMLAnchorElement
+>({
+  name: 'SidebarSubNavItem',
+  styles,
+  slots: ['subNavItemRow', 'subNavItem'] as const,
+  // `href` stays out of moveProps: the factory strips those from `attrs`, and
+  // the anchor reads it from there. Claiming it here rendered a link with no
+  // destination, which is not a link at all.
+  moveProps: ['active', 'disabled', 'asChild'],
+
+  setup({ props, ref, cx, sp, slot, attrs }) {
+    const { isMobile, setMobileOpen } = useSidebarContext();
+    const callerOnClick = attrs.onClick;
+
+    // Same reasoning as NavItem: a sub row always navigates, so the mobile
+    // sheet can always close behind it.
+    const handleClick = React.useCallback(
+      (e: React.MouseEvent<HTMLAnchorElement>) => {
+        if (props.disabled) {
+          e.preventDefault();
+          return;
+        }
+        (callerOnClick as ((event: React.MouseEvent<HTMLAnchorElement>) => void) | undefined)?.(e);
+        if (isMobile) setMobileOpen(false);
+      },
+      [props.disabled, callerOnClick, isMobile, setMobileOpen],
+    );
+
+    return {
+      render() {
+        const itemSp = sp('subNavItem');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
+
+        const rowProps = {
+          'aria-current': props.active ? ('page' as const) : undefined,
+          ...attrs,
+          ...spRest,
+          'data-active': props.active || undefined,
+          'data-disabled': props.disabled || undefined,
+          'aria-disabled': props.disabled || undefined,
+          onClick: handleClick,
+        };
+
+        const element = props.asChild ? (
+          React.cloneElement(
+            React.Children.only(props.children) as React.ReactElement<any>,
+            {
+              ...rowProps,
+              ref,
+              className: cx(
+                'subNavItem',
+                props.className,
+                (React.Children.only(props.children) as React.ReactElement<any>).props.className,
+                spClass as string | undefined,
+              ),
+              style: { ...props.style, ...(spStyle as React.CSSProperties) },
+            },
+            (React.Children.only(props.children) as React.ReactElement<any>).props.children,
+          )
+        ) : (
+          <a
+            {...rowProps}
+            ref={ref}
+            href={props.disabled ? undefined : (attrs.href as string | undefined)}
+            className={cx('subNavItem', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </a>
+        );
+
+        return <li {...slot('subNavItemRow')}>{element}</li>;
+      },
+    };
+  },
+});
+
+export interface SidebarSubActionItemProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /** Marks this row as the one in effect. Sets `aria-pressed`. */
+  active?: boolean;
+  disabled?: boolean;
+  /** Render the caller's element (a menu trigger) instead of a `<button>`. */
+  asChild?: boolean;
+  sp?: SlotPropsMap<'subNavItemRow' | 'subActionItem'>;
+}
+
+/** An action inside a section — the same sub row as SubNavItem, for something
+ *  that does a thing rather than going somewhere. */
+const SidebarSubActionItem = withMoveComponent<
+  'subNavItemRow' | 'subActionItem',
+  SidebarSubActionItemProps,
+  HTMLButtonElement
+>({
+  name: 'SidebarSubActionItem',
+  styles,
+  slots: ['subNavItemRow', 'subActionItem'] as const,
+  moveProps: ['active', 'disabled', 'asChild'],
+
+  setup({ props, ref, cx, sp, slot, attrs }) {
+    return {
+      render() {
+        const itemSp = sp('subActionItem');
+        const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
+
+        const rowProps = {
+          // A row that acts has no "current page" to be; if it is the one in
+          // effect, that is a pressed state.
+          'aria-pressed': props.active ? true : undefined,
+          ...attrs,
+          ...spRest,
+          'data-active': props.active || undefined,
+          'data-disabled': props.disabled || undefined,
+        };
+
+        const element = props.asChild ? (
+          React.cloneElement(
+            React.Children.only(props.children) as React.ReactElement<any>,
+            {
+              ...rowProps,
+              ref,
+              className: cx(
+                'subActionItem',
+                props.className,
+                (React.Children.only(props.children) as React.ReactElement<any>).props.className,
+                spClass as string | undefined,
+              ),
+              style: { ...props.style, ...(spStyle as React.CSSProperties) },
+            },
+            (React.Children.only(props.children) as React.ReactElement<any>).props.children,
+          )
+        ) : (
+          <button
+            type="button"
+            {...rowProps}
+            ref={ref}
+            disabled={(props.disabled as boolean) || undefined}
+            className={cx('subActionItem', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+          >
+            {props.children}
+          </button>
+        );
+
+        return <li {...slot('subNavItemRow')}>{element}</li>;
+      },
+    };
+  },
+});
+
+// ============================================================================
 // Expanded / Collapsed (state-scoped children, at any granularity)
 // ============================================================================
 
@@ -1264,6 +1716,10 @@ export const Sidebar = {
   GroupLabel: SidebarGroupLabel,
   Nav: SidebarNav,
   NavItem: SidebarNavItem,
+  ActionItem: SidebarActionItem,
+  SubNav: SidebarSubNav,
+  SubNavItem: SidebarSubNavItem,
+  SubActionItem: SidebarSubActionItem,
   Expanded: SidebarExpanded,
   Collapsed: SidebarCollapsed,
   Trigger: SidebarTrigger,

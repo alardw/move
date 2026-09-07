@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.58",
+  "version": "0.1.59",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
   "componentCount": 71,
   "components": [
@@ -9339,6 +9339,161 @@
               "name": "submenu",
               "type": "React.ReactNode",
               "description": "Nested navigation, rendered inside the same list item"
+            }
+          ]
+        },
+        {
+          "name": "ActionItem",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Label text content"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "icon",
+              "type": "React.ReactNode",
+              "description": "Icon element rendered before label"
+            },
+            {
+              "name": "badge",
+              "type": "React.ReactNode",
+              "description": "Badge element rendered after label"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "description": "Disable the control"
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the caller's element (a menu trigger) instead of a button"
+            },
+            {
+              "name": "tooltip",
+              "type": "React.ReactNode",
+              "description": "Tooltip content shown when sidebar is collapsed on desktop"
+            },
+            {
+              "name": "submenu",
+              "type": "React.ReactNode",
+              "description": "Nested content, rendered inside the same list item"
+            }
+          ]
+        },
+        {
+          "name": "SubNav",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "SubNavItem and SubActionItem rows"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "open",
+              "type": "boolean",
+              "description": "Whether the section is showing; drives the height reveal and the stagger"
+            },
+            {
+              "name": "animations",
+              "type": "AnimationTrigger[] | false",
+              "description": "Animation triggers, or false to opt out"
+            }
+          ]
+        },
+        {
+          "name": "SubNavItem",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Label text content"
+            },
+            {
+              "name": "href",
+              "type": "string",
+              "description": "The destination"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "active",
+              "type": "boolean",
+              "description": "The destination the user is on; sets aria-current=\"page\""
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "description": "Drop the destination and mark it aria-disabled"
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the caller's element (a router Link) instead of an anchor"
+            }
+          ]
+        },
+        {
+          "name": "SubActionItem",
+          "props": [
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Label text content"
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "active",
+              "type": "boolean",
+              "description": "Marks the row as the one in effect; sets aria-pressed"
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "description": "Disable the control"
+            },
+            {
+              "name": "asChild",
+              "type": "boolean",
+              "description": "Render the caller's element instead of a button"
             }
           ]
         },

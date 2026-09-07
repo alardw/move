@@ -6,6 +6,9 @@ export const spec = {
   schemaVersion: 1 as const,
   name: 'Sidebar',
   animationPatterns: ['sidePanel'],
+  // SubNav's rail carries the line that marks the current row and slides
+  // between them — the same hook Tabs and TableOfContents use.
+  animationCapabilities: ['slidingIndicator'] as const,
   componentClass: 'disclosure' as const,
   category: 'navigation',
   description:
@@ -131,11 +134,95 @@ export const spec = {
       description: 'Badge container within a nav item, hidden when collapsed',
     },
     {
+      name: 'actionItem',
+      element: 'button',
+      kind: 'item',
+      typography: 'body',
+      description: 'A row that acts rather than navigates, with icon, label, and badge',
+    },
+    {
+      name: 'actionItemIcon',
+      element: 'span',
+      kind: 'icon',
+      typography: 'none',
+      description: 'Icon container within an action item',
+    },
+    {
+      name: 'actionItemLabel',
+      element: 'span',
+      kind: 'none',
+      typography: 'none',
+      description: 'Label text within an action item, hidden when collapsed',
+    },
+    {
+      name: 'actionItemBadge',
+      element: 'span',
+      kind: 'none',
+      typography: 'none',
+      description: 'Badge container within an action item, hidden when collapsed',
+    },
+    {
       name: 'trigger',
       element: 'button',
       kind: 'trigger',
       typography: 'body',
       description: 'Toggle button for collapse/expand or mobile open/close',
+    },
+    {
+      name: 'triggerIcon',
+      element: 'span',
+      kind: 'icon',
+      typography: 'none',
+      description: 'Icon container within the toggle',
+    },
+    {
+      name: 'triggerLabel',
+      element: 'span',
+      kind: 'none',
+      typography: 'none',
+      description: 'Label text within the toggle, hidden when collapsed',
+    },
+    {
+      name: 'subNav',
+      element: 'nav',
+      kind: 'none',
+      typography: 'none',
+      description: 'Nested navigation landmark for one section, indented under its NavItem',
+    },
+    {
+      name: 'subNavList',
+      element: 'ul',
+      kind: 'none',
+      typography: 'none',
+      description: 'The list of destinations within one section',
+    },
+    {
+      name: 'subNavIndicator',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'The line marking the current sub destination, sliding between rows',
+    },
+    {
+      name: 'subNavItemRow',
+      element: 'li',
+      kind: 'none',
+      typography: 'none',
+      description: 'List item wrapping one sub destination',
+    },
+    {
+      name: 'subNavItem',
+      element: 'a',
+      kind: 'item',
+      typography: 'body',
+      description: 'A destination within a section',
+    },
+    {
+      name: 'subActionItem',
+      element: 'button',
+      kind: 'item',
+      typography: 'body',
+      description: 'A row within a section that acts rather than navigates',
     },
   ],
 
@@ -572,6 +659,292 @@ export const spec = {
         'One destination: an anchor in a list item, which closes the mobile sheet when chosen',
     },
     {
+      name: 'ActionItem',
+      slots: [
+        {
+          name: 'navItemRow',
+          element: 'li',
+          kind: 'none',
+          typography: 'none',
+          description: 'List item, when the action sits inside a Nav',
+        },
+        {
+          name: 'actionItem',
+          element: 'button',
+          kind: 'item',
+          typography: 'body',
+          description: 'The action row',
+        },
+        {
+          name: 'actionItemIcon',
+          element: 'span',
+          kind: 'icon',
+          typography: 'none',
+          description: 'Icon wrapper',
+        },
+        {
+          name: 'actionItemLabel',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Label text',
+        },
+        {
+          name: 'actionItemBadge',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Badge wrapper',
+        },
+      ],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text content',
+        },
+        {
+          name: 'className',
+          type: 'string',
+          moveSpecific: false,
+          description: 'CSS class name',
+        },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'icon',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Icon element rendered before label',
+        },
+        {
+          name: 'badge',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Badge element rendered after label',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Disable the control',
+        },
+        {
+          name: 'asChild',
+          type: 'boolean',
+          moveSpecific: true,
+          description: "Render the caller's element (a menu trigger) instead of a button",
+        },
+        {
+          name: 'tooltip',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Tooltip content shown when sidebar is collapsed on desktop',
+        },
+        {
+          name: 'submenu',
+          type: 'React.ReactNode',
+          moveSpecific: true,
+          description: 'Nested content, rendered inside the same list item',
+        },
+      ],
+      usesFactory: true,
+      description:
+        'A row that acts rather than navigates: the same box as NavItem, as a button. A list item inside a Nav, and the bare control outside one',
+    },
+    {
+      name: 'SubNav',
+      slots: [
+        {
+          name: 'subNav',
+          element: 'nav',
+          kind: 'none',
+          typography: 'none',
+          description: 'Nested navigation landmark for one section',
+        },
+        {
+          name: 'subNavList',
+          element: 'ul',
+          kind: 'none',
+          typography: 'none',
+          description: 'The list of sub destinations',
+        },
+        {
+          name: 'subNavIndicator',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'The line marking the current row',
+        },
+      ],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'SubNavItem and SubActionItem rows',
+        },
+        {
+          name: 'className',
+          type: 'string',
+          moveSpecific: false,
+          description: 'CSS class name',
+        },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'open',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Whether the section is showing; drives the height reveal and the stagger',
+        },
+        {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description: 'Animation triggers, or false to opt out',
+        },
+      ],
+      usesFactory: true,
+      description:
+        "The second level of the rail: one section's destinations, indented under the NavItem they belong to, with a line that slides to the current row",
+    },
+    {
+      name: 'SubNavItem',
+      slots: [
+        {
+          name: 'subNavItemRow',
+          element: 'li',
+          kind: 'none',
+          typography: 'none',
+          description: 'List item',
+        },
+        {
+          name: 'subNavItem',
+          element: 'a',
+          kind: 'item',
+          typography: 'body',
+          description: 'The destination link',
+        },
+      ],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text content',
+        },
+        {
+          name: 'href',
+          type: 'string',
+          moveSpecific: false,
+          description: 'The destination',
+        },
+        {
+          name: 'className',
+          type: 'string',
+          moveSpecific: false,
+          description: 'CSS class name',
+        },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'active',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'The destination the user is on; sets aria-current="page"',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Drop the destination and mark it aria-disabled',
+        },
+        {
+          name: 'asChild',
+          type: 'boolean',
+          moveSpecific: true,
+          description: "Render the caller's element (a router Link) instead of an anchor",
+        },
+      ],
+      usesFactory: true,
+      description:
+        'One destination inside a section; the rail indicator follows whichever row is active',
+    },
+    {
+      name: 'SubActionItem',
+      slots: [
+        {
+          name: 'subNavItemRow',
+          element: 'li',
+          kind: 'none',
+          typography: 'none',
+          description: 'List item',
+        },
+        {
+          name: 'subActionItem',
+          element: 'button',
+          kind: 'item',
+          typography: 'body',
+          description: 'The action row',
+        },
+      ],
+      props: [
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Label text content',
+        },
+        {
+          name: 'className',
+          type: 'string',
+          moveSpecific: false,
+          description: 'CSS class name',
+        },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'active',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Marks the row as the one in effect; sets aria-pressed',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          moveSpecific: true,
+          description: 'Disable the control',
+        },
+        {
+          name: 'asChild',
+          type: 'boolean',
+          moveSpecific: true,
+          description: "Render the caller's element instead of a button",
+        },
+      ],
+      usesFactory: true,
+      description:
+        'An action inside a section: the same sub row as SubNavItem, for something that does a thing rather than going somewhere',
+    },
+    {
       name: 'Expanded',
       slots: [],
       props: [
@@ -996,7 +1369,14 @@ export const spec = {
     'composeHandlers',
   ] as string[],
 
-  componentDeps: ['Button', 'Icon', 'LayerProvider', 'SurfaceProvider', 'Tooltip'] as string[],
+  componentDeps: [
+    'Button',
+    'Collapsible',
+    'Icon',
+    'LayerProvider',
+    'SurfaceProvider',
+    'Tooltip',
+  ] as string[],
 
   testing: {
     behaviors: [
