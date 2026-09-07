@@ -9,39 +9,45 @@ import {
   Badge,
   Icon,
   Table,
-  Card,
-  Accordion,
-  Alert,
   AudioPlayer,
-  Button,
-  Calendar,
-  Carousel,
-  FileUpload,
-  Checkbox,
-  EmptyState,
-  InputText,
-  List,
-  Prose,
-  ProgressBar,
-  Quote,
-  RichTextEditor,
-  ScrollArea,
-  Select,
   Sidebar,
-  Skeleton,
-  Stepper,
-  Tabs,
-  Textarea,
-  Timeline,
-  ToggleGroup,
   VideoPlayer,
   useSurface,
   useSurfaceFlip,
   SurfaceProvider,
 } from 'move';
 import { COMPONENT_CONTENT } from '../../content/components';
+import CardSample from '../../content/components/card/samples/basic';
+import AccordionSample from '../../content/components/accordion/samples/basic';
+import ListSample from '../../content/components/list/samples/basic';
 import ZebraTable from '../../content/components/table/samples/zebra-only';
 import GroupedTable from '../../content/components/table/samples/grouped';
+import CalendarSample from '../../content/components/calendar/samples/single';
+import CalendarViewSample from '../../content/components/calendar-view/samples/agenda';
+import ScrollAreaSample from '../../content/components/scroll-area/samples/basic';
+import RichTextSample from '../../content/components/rich-text-editor/samples/basic';
+import QuoteSample from '../../content/components/quote/samples/basic';
+import ProseSample from '../../content/components/prose/samples/basic';
+import FileUploadSample from '../../content/components/file-upload/samples/basic';
+import SkeletonSample from '../../content/components/skeleton/samples/basic';
+import StepperSample from '../../content/components/stepper/samples/basic';
+import TimelineSample from '../../content/components/timeline/samples/basic';
+import ProgressSample from '../../content/components/progress-bar/samples/basic';
+import TabsSample from '../../content/components/tabs/samples/basic';
+import ToggleGroupSample from '../../content/components/toggle-group/samples/basic';
+import CarouselSample from '../../content/components/carousel/samples/basic';
+import AlertSample from '../../content/components/alert/samples/basic';
+import SelectSample from '../../content/components/select/samples/basic';
+import AutocompleteSample from '../../content/components/autocomplete/samples/basic';
+import ColorInputSample from '../../content/components/color-input/samples/basic';
+import ColorPickerSample from '../../content/components/color-picker/samples/basic';
+import NumberInputSample from '../../content/components/number-input/samples/basic';
+import TimeFieldSample from '../../content/components/time-field/samples/basic';
+import BadgeSample from '../../content/components/badge/samples/basic';
+import InputTextSample from '../../content/components/input-text/samples/basic';
+import TextareaSample from '../../content/components/textarea/samples/basic';
+import CheckboxSample from '../../content/components/checkbox/samples/basic';
+import ButtonSample from '../../content/components/button/samples/basic';
 import { Section, TocRail, type TocItem } from '../../components';
 
 /**
@@ -224,179 +230,56 @@ function SurfaceAudit({ tone }: { tone: 'base' | 'subtle' }) {
         }}
       >
         <Stack gap="md">
-          <Text weight="semibold">
-            <Code>{tone}</Code> ground
-          </Text>
+          <Text weight="semibold">{tone === 'base' ? 'The ground' : 'The alternate'}</Text>
 
-          <Card.Root>
-            <Card.Body>
-              <Text>Card</Text>
-              <Card.Root>
-                <Card.Body>
-                  <Text>Card in a Card — the nesting case</Text>
-                </Card.Body>
-              </Card.Root>
-            </Card.Body>
-          </Card.Root>
-
-          <Accordion defaultValue="a">
-            <Accordion.Item value="a">
-              <Accordion.Header>
-                <Accordion.Trigger>Accordion</Accordion.Trigger>
-              </Accordion.Header>
-              <Accordion.Content>
-                <Text>Trigger and panel, against each other and the ground.</Text>
-              </Accordion.Content>
-            </Accordion.Item>
-          </Accordion>
-
-          <List>
-            <List.Item>List</List.Item>
-            <List.Item>Second row</List.Item>
-          </List>
-
-          <Table>
-            <Table.Header>
-              <Table.Row>
-                <Table.Head>Table</Table.Head>
-                <Table.Head>Header + zebra</Table.Head>
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              <Table.Row>
-                <Table.Cell>One</Table.Cell>
-                <Table.Cell>Two</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Three</Table.Cell>
-                <Table.Cell>Four</Table.Cell>
-              </Table.Row>
-            </Table.Body>
-          </Table>
-
-          {/* The shipped samples, not an approximation of them — a strip that
-            redraws each component by hand stops being evidence about the
-            component. */}
+          {/* The shipped samples, not miniatures of them. A strip that redraws each
+              component by hand stops being evidence about the component — it only
+              shows whether the redraw was faithful, which is how this one ended up
+              with a FileUpload that looked like nothing FileUpload renders. */}
+          <CardSample />
+          <AccordionSample />
+          <ListSample />
           <ZebraTable />
           <GroupedTable />
+          <CalendarSample />
+          <CalendarViewSample />
+          <ScrollAreaSample />
+          <RichTextSample />
+          <QuoteSample />
+          <ProseSample />
+          <FileUploadSample />
+          <SkeletonSample />
+          <StepperSample />
+          <TimelineSample />
+          <ProgressSample />
+          <TabsSample />
+          <ToggleGroupSample />
+          <CarouselSample />
+          <AlertSample />
+          <SelectSample />
+          <AutocompleteSample />
+          <ColorInputSample />
+          <ColorPickerSample />
+          <NumberInputSample />
+          <TimeFieldSample />
+          <BadgeSample />
+          <InputTextSample />
+          <TextareaSample />
+          <CheckboxSample />
+          <ButtonSample />
 
-          <Calendar.Root>
-            <Calendar.Nav />
-            <Calendar.Grid />
-          </Calendar.Root>
-
-          {/* dogfood-ignore */}
-          <ScrollArea.Root style={{ height: 120 }}>
-            <ScrollArea.Content padded>
-              <Text>
-                ScrollArea. Scroll me: this text is long enough to overflow the box it is in, which
-                is the point.
-              </Text>
-              <Text>More content so the scrollport actually scrolls.</Text>
-              <Text>And a little more again.</Text>
-            </ScrollArea.Content>
-          </ScrollArea.Root>
-
-          <RichTextEditor.Root>
-            <RichTextEditor.Toolbar>
-              <RichTextEditor.ControlGroup>
-                <RichTextEditor.Control>B</RichTextEditor.Control>
-                <RichTextEditor.Control>I</RichTextEditor.Control>
-              </RichTextEditor.ControlGroup>
-            </RichTextEditor.Toolbar>
-            <RichTextEditor.Content>RichTextEditor</RichTextEditor.Content>
-          </RichTextEditor.Root>
-
-          <Quote attribution="Move">Quote</Quote>
-
-          <Code>Code</Code>
-
-          <Prose>
-            {/* dogfood-ignore: Prose renders raw HTML by design — that is what it is for. */}
-            <p>Prose.</p>
-          </Prose>
-
-          <FileUpload.Root maxFiles={2}>
-            <FileUpload.Dropzone>
-              <EmptyState
-                size="sm"
-                icon="upload-cloud"
-                title="Drop files here"
-                description="PNG, JPG, PDF up to 10 MB"
-                action={
-                  <FileUpload.Trigger>
-                    <Button variant="secondary" size="sm">
-                      Choose files
-                    </Button>
-                  </FileUpload.Trigger>
-                }
-              />
-            </FileUpload.Dropzone>
-            <FileUpload.ItemGroup />
-          </FileUpload.Root>
-
-          <Skeleton.Root>
-            <Skeleton.Text lines={2} />
-          </Skeleton.Root>
-
-          <Stepper>
-            <Stepper.Step status="complete">
-              <Stepper.Indicator>1</Stepper.Indicator>
-              <Stepper.Title>Stepper</Stepper.Title>
-            </Stepper.Step>
-            <Stepper.Step status="active">
-              <Stepper.Indicator>2</Stepper.Indicator>
-              <Stepper.Title>Second</Stepper.Title>
-            </Stepper.Step>
-          </Stepper>
-
-          <Timeline>
-            <Timeline.Item title="Timeline">
-              <Text>Marker and rail on this ground.</Text>
-            </Timeline.Item>
-          </Timeline>
-
-          <ProgressBar value={60} />
-
+          {/* Hand-built on purpose: the media players are deliberate
+              non-participants — white scrims over dark video, right as they stand —
+              and a Sidebar needs a sized frame that its own sample supplies as a
+              whole page. */}
           <AudioPlayer src="/sample.mp3" radius="md" />
           <VideoPlayer src="/sample.mp4" radius="md" />
-
-          <Tabs.Root defaultValue="one">
-            <Tabs.List>
-              <Tabs.Trigger value="one">Tabs</Tabs.Trigger>
-              <Tabs.Trigger value="two">Second</Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content value="one">
-              <Text>Tab panel on this ground.</Text>
-            </Tabs.Content>
-          </Tabs.Root>
-
-          <ToggleGroup.Root defaultValue="a">
-            <ToggleGroup.Item value="a">ToggleGroup</ToggleGroup.Item>
-            <ToggleGroup.Item value="b">Second</ToggleGroup.Item>
-          </ToggleGroup.Root>
-
-          <Carousel.Root showIndicators>
-            <Carousel.Viewport>
-              <Carousel.Slide>
-                <Text>Carousel</Text>
-              </Carousel.Slide>
-              <Carousel.Slide>
-                <Text>Second slide</Text>
-              </Carousel.Slide>
-            </Carousel.Viewport>
-          </Carousel.Root>
 
           <Sidebar.Provider>
             {/* dogfood-ignore */}
             <div
-              /* dogfood-ignore */
-              style={{
-                display: 'flex',
-                height: 160,
-                overflow: 'hidden',
-                borderRadius: 'var(--move-rounded-md)',
-              }}
+              // dogfood-ignore
+              style={{ display: 'flex', height: 160, overflow: 'hidden' }}
             >
               <Sidebar.Root>
                 <Sidebar.Content>
@@ -415,28 +298,6 @@ function SurfaceAudit({ tone }: { tone: 'base' | 'subtle' }) {
               </Sidebar.Root>
             </div>
           </Sidebar.Provider>
-
-          <Alert>Alert</Alert>
-
-          <Select.Root defaultValue="one">
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Icon />
-            </Select.Trigger>
-            <Select.Content>
-              <Select.Viewport>
-                <Select.Item value="one">Select</Select.Item>
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Root>
-
-          <InputText placeholder="InputText — bordered leaf" />
-          <Textarea placeholder="Textarea" rows={2} />
-
-          <Stack direction="row" gap="sm" align="center">
-            <Button variant="secondary">Button</Button>
-            <Checkbox defaultChecked>Checkbox</Checkbox>
-          </Stack>
         </Stack>
       </div>
     </SurfaceProvider>
