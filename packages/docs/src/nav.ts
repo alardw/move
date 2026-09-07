@@ -59,6 +59,8 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/contracts/conformance', label: 'Conformance model' },
       { to: '/contracts', label: 'Overview' },
       { to: '/contracts/component', label: 'Component contract' },
+      { to: '/contracts/capability', label: 'Capability contract' },
+      { to: '/contracts/family', label: 'Family contract' },
       { to: '/contracts/composite', label: 'Composite contract' },
       { to: '/contracts/design-pattern', label: 'Design patterns' },
       { to: '/ai/coverage', label: 'Coverage' },

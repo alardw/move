@@ -47,6 +47,8 @@ import { ContractsPage } from './pages/core-concepts/ContractsPage';
 import { ContractsOverviewPage } from './pages/contracts/ContractsOverviewPage';
 import { ComponentContractPage } from './pages/contracts/ComponentContractPage';
 import { CompositeContractPage } from './pages/contracts/CompositeContractPage';
+import { CapabilityContractPage } from './pages/contracts/CapabilityContractPage';
+import { FamilyContractPage } from './pages/contracts/FamilyContractPage';
 import { DesignPatternPage } from './pages/contracts/DesignPatternPage';
 import { ConformanceModelPage } from './pages/contracts/ConformanceModelPage';
 import { AnimationSystemPage } from './pages/core-concepts/AnimationSystemPage';
@@ -313,6 +315,8 @@ function App() {
                   {/* Contracts — moved out of Core Concepts into their own section. */}
                   <Route path="/contracts" element={<ContractsOverviewPage />} />
                   <Route path="/contracts/component" element={<ComponentContractPage />} />
+                  <Route path="/contracts/capability" element={<CapabilityContractPage />} />
+                  <Route path="/contracts/family" element={<FamilyContractPage />} />
                   <Route path="/contracts/composite" element={<CompositeContractPage />} />
                   <Route path="/contracts/design-pattern" element={<DesignPatternPage />} />
                   <Route path="/contracts/conformance" element={<ConformanceModelPage />} />
