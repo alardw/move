@@ -1,5 +1,5 @@
 ---
-name: capability-create
+name: capability-create-spec
 description: Define a new capability in src/capabilities.ts. Walks the tests one has to pass, writes the contract, declares its members, and mutation-tests it.
 ---
 
@@ -10,7 +10,7 @@ not written often: two were added in the week this skill was made, and one of
 those was removed again. Treat defining one as a decision, not a task.
 
 For a bundle of promises kept by components that are the same kind of thing, see
-`/family-create` instead.
+`/family-create-spec` instead.
 
 **Declaring an existing capability on a component is NOT this skill.**
 That is `/component-create-spec`, and it is routine.

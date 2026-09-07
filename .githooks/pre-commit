@@ -23,7 +23,58 @@ if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.(tsx|ts
     exit 1
   fi
 
+  # The declarations live in the specs, so a component change can break a
+  # contract without touching the registry. Both directions: a declared
+  # capability that no longer holds, and behaviour that stopped declaring one.
+  if ! npm run check:capabilities --workspace move --silent; then
+    echo "✗ capabilities: a declared contract no longer holds, or source exhibits one it doesn't declare."
+    exit 1
+  fi
+
+  if ! npm run check:families --workspace move --silent; then
+    echo "✗ families: a member no longer keeps its family's contract."
+    exit 1
+  fi
+
+  if ! npm run check:required-children --workspace move --silent; then
+    echo "✗ required-children: a compound part is missing one it can't work without (and fails silently)."
+    exit 1
+  fi
+
   echo "✓ component checks passed"
+fi
+
+# --- The contract registries themselves ---
+# Editing these changes what every member is held to, so both directions run
+# whatever else is staged. They also validate the registry: a capability with no
+# declaring component enforces nothing, and a target that isn't a real SlotKind
+# applies to nothing at all.
+if printf '%s\n' "$staged" | grep -qE '^packages/move/src/(capabilities|families)\.ts$'; then
+  echo "▶ pre-commit: contract registry changed — capabilities + families…"
+
+  if ! npm run check:capabilities --workspace move --silent; then
+    echo "✗ capabilities: see above. A capability with no members enforces nothing — declare it or drop it."
+    exit 1
+  fi
+
+  if ! npm run check:families --workspace move --silent; then
+    echo "✗ families: a member no longer keeps its family's contract."
+    exit 1
+  fi
+
+  echo "✓ contract registry checks passed"
+fi
+
+# --- Component CSS: the shared option definition ---
+if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.module\.css$'; then
+  echo "▶ pre-commit: component CSS changed — shared option rows…"
+
+  if ! npm run check:option-rows --workspace move --silent; then
+    echo "✗ option-rows: a keyboard-highlightable row is styled outside --move-option-*. Redefine the token, don't inline a value."
+    exit 1
+  fi
+
+  echo "✓ option-row checks passed"
 fi
 
 # --- Recipe / docs-sample sources: purity + recipe spec↔source drift ---

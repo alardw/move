@@ -44,11 +44,19 @@ const COMPONENT_SKILLS: HighlightItem[] = [
   },
   {
     icon: 'scroll-text',
-    text: '/capability-create — define a new capability: the tests it must pass, the contract, its members, the mutation test.',
+    text: '/capability-create-spec — define a new capability: the tests it must pass, the contract, its members, the mutation test.',
   },
   {
     icon: 'network',
-    text: '/family-create — define a new family: what it bundles, who joins it, and where a shared core lives.',
+    text: '/family-create-spec — define a new family: what it bundles, who joins it, and where a shared core lives.',
+  },
+  {
+    icon: 'shield-check',
+    text: '/capability-validate — a capability holds both ways, has members, and can actually fail.',
+  },
+  {
+    icon: 'shield-check',
+    text: '/family-validate — every member keeps the whole contract, composition resolves, and it bundles something.',
   },
   {
     icon: 'scroll-text',

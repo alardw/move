@@ -1,5 +1,5 @@
 ---
-name: family-create
+name: family-create-spec
 description: Define a new family in src/families.ts. Walks the tests one has to pass, writes the contract, declares its members, and mutation-tests it.
 ---
 
@@ -9,7 +9,7 @@ A family is a named bundle of promises, joined by components that are the same
 kind of thing. It is a library-wide contract, written rarely and deliberately.
 
 For a single promise shared by components that are otherwise unrelated, see
-`/capability-create` instead.
+`/capability-create-spec` instead.
 
 **Declaring an existing family on a component is NOT this skill.** That is
 `/component-create-spec`, and it is routine.
