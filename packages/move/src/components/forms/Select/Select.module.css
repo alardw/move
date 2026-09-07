@@ -125,6 +125,26 @@
   display: flex;
   align-items: center;
   color: var(--move-fg-muted);
+
+  /* The chevron's resting states, which the rotate animation hands back to.
+   *
+   * `rotate` is written as inline `transform`, and the engine strips that on
+   * completion — so without a class holding the open angle, the chevron rotated
+   * to 180 and then snapped to 0 with the menu still open. The close tween's
+   * `from: 180` then forced it back up before animating down, which is the
+   * flash you see rather than the cause.
+   *
+   * It is also what the chevron does when nothing animates: under reduced
+   * motion, or `animations={false}`, the triggers never run at all. A state
+   * that only exists while an animation is running is not a state.
+   *
+   * Same pair as Autocomplete, which keys off its own `data-move-state`; Select
+   * reads Radix's `data-state`, since its trigger carries one. */
+  transform: rotate(0deg);
+}
+
+.trigger[data-state='open'] .icon {
+  transform: rotate(180deg);
 }
 
 .content {
