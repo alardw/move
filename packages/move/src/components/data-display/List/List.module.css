@@ -177,31 +177,14 @@
 }
 
 /* =========================================================================
- * Responsive collapse — trailing wraps below on narrow items
+ * The tail stays a tail
  *
- * Both rules below must resolve against the SAME query container (.root), so
- * the item wraps and the trailing goes full-width together. Only .root carries
- * `container-type` — if .item were also a container, `.trailing` would key off
- * the item while `.item` keys off the root, and a browser evaluating those two
- * thresholds differently could give the trailing `width: 100%` (≈480px) while
- * the item stays nowrap, squeezing the content to a word per line.
+ * A narrow item used to wrap and hand the trailing `width: 100%`, which put
+ * the status and the chevron on a line of their own, left-aligned, under the
+ * name — the one place a tail must never be. What the row is short of is room
+ * for the LABEL, and the content column already answers that: it carries
+ * `min-width: 0` and shrinks, while the tail holds its size and its edge.
  * ========================================================================= */
-
-@container (max-width: 480px) {
-  .item {
-    flex-wrap: wrap;
-  }
-
-  .trailing {
-    width: 100%;
-    padding-left: 0;
-  }
-
-  .trailing [data-direction='column'] {
-    flex-direction: row;
-    align-items: center;
-  }
-}
 
 /* =========================================================================
  * Leading
@@ -286,7 +269,13 @@
 .trailing {
   display: flex;
   align-items: center;
+  /* Held at the right edge and never squeezed. `margin-left: auto` puts it
+     there and `flex-shrink: 0` keeps it whole, but neither stops its own
+     contents from wrapping: in a narrow item the badge broke onto a second
+     line and took the row's height with it, which reads as the tail
+     collapsing rather than the label being too long for the space. */
   flex-shrink: 0;
   margin-left: auto;
+  white-space: nowrap;
   gap: var(--move-spacing-sm);
 }
