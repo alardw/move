@@ -20,10 +20,11 @@ function HeaderToggle() {
  * - **Content**, **Group**, **Footer** — a column with a gap.
  *
  * A column is the only arrangement anyone wants for a list of nav groups, so
- * `Content` and `Group` bake it in. `Header` and `Footer` hold arbitrary
- * controls, and there a `Stack` takes over: the header here puts a workspace
- * name over a plan label with the toggle alongside, and the footer keeps a name
- * and a settings button on one line instead of stacking them.
+ * `Content` and `Group` bake it in. `Header` holds arbitrary content, and there
+ * a `Stack` takes over: it puts a workspace name over a plan label with the
+ * toggle alongside. The footer takes a `Sidebar.ActionItem`, which is the nav
+ * row as a button — it spans the rail, so its icon lines up with the mark in
+ * the header and with every nav icon between them.
  *
  * `Sidebar.Expanded` marks what goes when the rail narrows, at whatever
  * granularity applies: a whole block, or just the words beside a mark that
@@ -103,28 +104,11 @@ export default function HeaderLayoutSample() {
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            {/* Footer is a column, so two controls sit one above the other. A
-                Stack overrides that the same way the header's does — here a row
-                that keeps them side by side while there is width for it. */}
-            <Sidebar.Expanded>
-              <Stack direction="row" align="center" justify="between" gap="sm">
-                <Text size="sm" color="muted">
-                  Alex Smith
-                </Text>
-                <Tooltip label="Settings" side="top">
-                  <Button variant="ghost" size="sm" aria-label="Settings">
-                    <Icon name="settings" />
-                  </Button>
-                </Tooltip>
-              </Stack>
-            </Sidebar.Expanded>
-            <Sidebar.Collapsed>
-              <Tooltip label="Settings" side="right">
-                <Button variant="ghost" size="sm" aria-label="Settings">
-                  <Icon name="settings" />
-                </Button>
-              </Tooltip>
-            </Sidebar.Collapsed>
+            {/* Footer is a column of rows. A row spans the rail and brings the
+                inset with it, so its icon lands under the header's mark. */}
+            <Sidebar.ActionItem icon={<Icon name="settings" />} tooltip="Settings">
+              Alex Smith
+            </Sidebar.ActionItem>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">

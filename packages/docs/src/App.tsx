@@ -10,13 +10,12 @@ import {
   Icon,
   Tooltip,
   ScrollArea,
-  Collapsible,
   Link,
   AnimatedText,
   useSidebarContext,
   type Theme,
 } from 'move';
-import { AnimatedSubnav, LogoMark } from './components';
+import { LogoMark } from './components';
 import {
   BrowserRouter,
   Routes,
@@ -118,19 +117,18 @@ function useThemeSwitcher() {
 function ThemeToggle() {
   const { theme, setTheme } = useThemeSwitcher();
   const isDark = theme.name === 'dark';
+  // A rail row, not a Button: it lands on the same icon line as everything
+  // above it and stands the same height, with no size or padding to talk it
+  // into place. Its visible label is its name, so it needs no aria-label —
+  // the label keeps its place in the accessibility tree while collapsed.
   return (
-    <Tooltip label={isDark ? 'Light mode' : 'Dark mode'} side="right" sideOffset={8}>
-      {/* Default size, not sm: a nav row insets its icon by --move-spacing-md,
-          and only a control with the same padding lands its icon on that line.
-          At sm the moon sat 7px left of every icon above it. */}
-      <Button
-        variant="ghost"
-        onClick={() => setTheme(isDark ? lightTheme : darkTheme)}
-        aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        <Icon name={isDark ? 'sun' : 'moon'} />
-      </Button>
-    </Tooltip>
+    <Sidebar.ActionItem
+      icon={isDark ? 'sun' : 'moon'}
+      tooltip={isDark ? 'Light mode' : 'Dark mode'}
+      onClick={() => setTheme(isDark ? lightTheme : darkTheme)}
+    >
+      {isDark ? 'Light mode' : 'Dark mode'}
+    </Sidebar.ActionItem>
   );
 }
 
@@ -189,11 +187,19 @@ function AppSidebar() {
                   active={isActive}
                   tooltip={section.label}
                   submenu={
-                    <Collapsible.Root open={isActive && !collapsed}>
-                      <Collapsible.Content>
-                        <AnimatedSubnav items={section.items} open={isActive && !collapsed} />
-                      </Collapsible.Content>
-                    </Collapsible.Root>
+                    <Sidebar.SubNav open={isActive && !collapsed} aria-label={section.label}>
+                      {section.items.map((item) => (
+                        // Exact match only, like NavLink's `end`. Prefix
+                        // matching would keep an overview item active while on
+                        // one of its children, and the rail's line would mark
+                        // the wrong row.
+                        <Sidebar.SubNavItem key={item.to} asChild active={pathname === item.to}>
+                          <NavLink to={item.to} end>
+                            {item.label}
+                          </NavLink>
+                        </Sidebar.SubNavItem>
+                      ))}
+                    </Sidebar.SubNav>
                   }
                 >
                   <NavLink to={section.items[0].to}>{section.label}</NavLink>
@@ -204,12 +210,14 @@ function AppSidebar() {
         </Sidebar.Group>
       </Sidebar.Content>
       <Sidebar.Footer>
-        {/* No padding and no justify: Footer pads itself on the rail's inset,
-            and centres its children when collapsed. Setting either here doubles
-            the first and fights the second. */}
-        <Stack direction="row" align="center" gap="sm">
-          <ThemeToggle />
-          <Sidebar.Expanded>
+        {/* Rows, not loose controls. Footer insets its children the same as
+            Content, so a row's own padding puts its icon on the rail's icon
+            line — which is where the logo sits too. A row with no icon starts
+            its label there, so the credit lines up with the wordmark above it.
+            An ad-hoc Button here has neither, and lands short of both. */}
+        <ThemeToggle />
+        <Sidebar.Expanded>
+          <Sidebar.ActionItem asChild>
             <Link
               href="https://www.linkedin.com/in/alardweisscher"
               external
@@ -220,8 +228,8 @@ function AppSidebar() {
                 Built by Alard Weisscher
               </AnimatedText>
             </Link>
-          </Sidebar.Expanded>
-        </Stack>
+          </Sidebar.ActionItem>
+        </Sidebar.Expanded>
       </Sidebar.Footer>
     </Sidebar.Root>
   );

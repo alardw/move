@@ -122,25 +122,13 @@ export default function BasicSample() {
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            <Sidebar.Expanded>
-              <Stack direction="row" align="center" justify="between" gap="sm">
-                <Text size="sm" color="muted">
-                  Alex Smith
-                </Text>
-                <Tooltip label="Account menu" side="top">
-                  <Button variant="ghost" size="sm" aria-label="Account menu">
-                    <Icon name="ellipsis" />
-                  </Button>
-                </Tooltip>
-              </Stack>
-            </Sidebar.Expanded>
-            <Sidebar.Collapsed>
-              <Tooltip label="Account menu" side="right">
-                <Button variant="ghost" size="sm" aria-label="Account menu">
-                  <Icon name="ellipsis" />
-                </Button>
-              </Tooltip>
-            </Sidebar.Collapsed>
+            {/* One row, not a name beside a button. A row spans the rail, so its
+              icon lands on the same line as the header's mark and every nav
+              icon between them, and it handles the collapse itself: the label
+              goes, the icon centres, the tooltip takes over. */}
+            <Sidebar.ActionItem icon={<Icon name="user" />} tooltip="Account menu">
+              Alex Smith
+            </Sidebar.ActionItem>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">

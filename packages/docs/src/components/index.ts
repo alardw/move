@@ -1,4 +1,3 @@
-export { AnimatedSubnav } from './AnimatedSubnav';
 export { AnimationAnatomy } from './AnimationAnatomy';
 export { AnimationPlayground } from './AnimationPlayground';
 export { CodeBlock } from './CodeBlock';

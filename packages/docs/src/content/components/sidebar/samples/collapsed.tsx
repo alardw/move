@@ -92,25 +92,9 @@ export default function CollapsedSample() {
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
-            <Sidebar.Expanded>
-              <Stack direction="row" align="center" justify="between" gap="sm">
-                <Text size="sm" color="muted">
-                  Alex Smith
-                </Text>
-                <Tooltip label="Account settings" side="top">
-                  <Button variant="ghost" size="sm" aria-label="Account settings">
-                    <Icon name="settings" />
-                  </Button>
-                </Tooltip>
-              </Stack>
-            </Sidebar.Expanded>
-            <Sidebar.Collapsed>
-              <Tooltip label="Account settings" side="right">
-                <Button variant="ghost" size="sm" aria-label="Account settings">
-                  <Icon name="settings" />
-                </Button>
-              </Tooltip>
-            </Sidebar.Collapsed>
+            <Sidebar.ActionItem icon={<Icon name="settings" />} tooltip="Account settings">
+              Alex Smith
+            </Sidebar.ActionItem>
           </Sidebar.Footer>
         </Sidebar.Root>
         <Stack flex={1} align="center" justify="center" padding="lg">
