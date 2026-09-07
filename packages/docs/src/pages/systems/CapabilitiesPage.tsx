@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Code, Table, Badge, Link } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Code, Table, Link } from 'move';
 import { Section, TocRail, type TocItem } from '../../components';
 
 /**
@@ -13,38 +13,38 @@ const TOC: TocItem[] = [
   { href: '#declaring', label: 'Declaring them' },
 ];
 
-type Cap = { name: string; parts: string; gives: string; live: boolean };
+type Cap = { name: string; parts: string; gives: string; checks: string };
 
 const CAPABILITIES: Cap[] = [
   {
     name: 'owns-surface',
+    checks: 'capabilities',
     parts: 'surface',
     gives: 'Anything nested inside picks the right colours for the ground it sits on.',
-    live: true,
   },
   {
     name: 'scrolls-content',
+    checks: 'capabilities, focus-ring-room',
     parts: 'scrollport',
     gives: 'Arrow keys reach what is out of sight, and the focus ring is the one from your theme.',
-    live: true,
   },
   {
     name: 'takes-disabled',
+    checks: 'capabilities',
     parts: 'control, label',
     gives: 'A disabled control looks disabled and stops responding, the same way everywhere.',
-    live: true,
   },
   {
     name: 'has-label',
+    checks: 'capabilities, type-scale, rendered-label, aria-label-name',
     parts: 'label',
     gives: 'Every control is named the same way, and its label sits on the same step of the type scale.',
-    live: true,
   },
   {
     name: 'takes-focus',
+    checks: 'capabilities, focus-ring-room',
     parts: 'control, scrollport',
     gives: 'One focus ring, from your theme, on everything a keyboard can reach.',
-    live: true,
   },
 ];
 
@@ -129,7 +129,7 @@ export function CapabilitiesPage() {
             <Text>
               A capability is one promise, kept by every component it applies to. Each is checked
               both ways: a component claiming one has to keep it, and a component behaving like one
-              has to say so — the second is what catches the promise nobody wrote down. All five are enforced, in both directions.
+              has to say so — the second is what catches the promise nobody wrote down. All five are enforced in both directions. A contract is rarely held by one gate, so each names every check that holds part of it — and the registry validates that those checks exist.
             </Text>
             <Table>
               <Table.Header>
@@ -137,7 +137,7 @@ export function CapabilitiesPage() {
                   <Table.Head>Capability</Table.Head>
                   <Table.Head>Applies to</Table.Head>
                   <Table.Head>What you get</Table.Head>
-                  <Table.Head>Checked</Table.Head>
+                  <Table.Head>Held by</Table.Head>
                 </Table.Row>
               </Table.Header>
               <Table.Body>
@@ -151,7 +151,7 @@ export function CapabilitiesPage() {
                     </Table.Cell>
                     <Table.Cell>{c.gives}</Table.Cell>
                     <Table.Cell>
-                      <Badge color={c.live ? 'green' : 'gray'}>{c.live ? 'yes' : 'planned'}</Badge>
+                      <Code>{c.checks}</Code>
                     </Table.Cell>
                   </Table.Row>
                 ))}

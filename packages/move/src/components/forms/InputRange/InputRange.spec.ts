@@ -14,6 +14,8 @@ export const spec = {
 
   compound: false,
   rootElement: 'span',
+  capabilities: ['takes-focus'],
+
   slots: [
     {
       name: 'root',
@@ -39,7 +41,7 @@ export const spec = {
     {
       name: 'thumb',
       element: 'span',
-      kind: 'none',
+      kind: 'control',
       typography: 'none',
       description: 'Radix Slider.Thumb — draggable handle(s)',
     },

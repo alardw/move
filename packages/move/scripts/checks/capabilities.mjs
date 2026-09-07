@@ -62,6 +62,7 @@ function loadCapabilities() {
       cssDeclaration: one('cssDeclaration'),
       cssAlternative: one('cssAlternative'),
       composedInherits: /composedInherits:\s*true/.test(block),
+      enforcedBy: list('enforcedBy'),
     };
   }
   return caps;
@@ -203,6 +204,23 @@ for (const [name, cap] of Object.entries(CAPS)) {
     problems.push({
       rel: 'src/capabilities.ts',
       msg: `'${name}' has no declaring component — a capability with no members enforces nothing`,
+    });
+  }
+  // Every check it claims to be enforced by exists. A contract naming a check
+  // that was renamed or deleted still reads as covered, which is worse than
+  // naming none — the reader stops looking.
+  for (const check of cap.enforcedBy ?? []) {
+    if (!existsSync(join(HERE, `${check}.mjs`)) && !existsSync(join(MOVE_ROOT, 'checks', `${check}.validate.test.tsx`))) {
+      problems.push({
+        rel: 'src/capabilities.ts',
+        msg: `'${name}' says it is enforced by '${check}', which does not exist`,
+      });
+    }
+  }
+  if (!cap.enforcedBy?.length) {
+    problems.push({
+      rel: 'src/capabilities.ts',
+      msg: `'${name}' names no enforcing check — say which gate holds it, or it holds nothing`,
     });
   }
   // Targets have to be kinds that exist, or the contract silently applies to

@@ -61,12 +61,24 @@ export interface CapabilityContract {
   composedInherits?: boolean;
   /** CSS custom properties the targeted slots' rules must resolve to. */
   cssTokens?: readonly string[];
+  /**
+   * Every check that enforces some part of this, `check:` prefix dropped.
+   *
+   * A contract is rarely held by one gate. `takes-focus` is three: the rule must
+   * exist (this check), the space around it must be there (focus-ring-room), and
+   * whether it actually paints is a browser test. Naming them together is how a
+   * reader sees which part is covered and which is not — and it is validated, so
+   * a check that is renamed or deleted cannot leave a contract claiming cover it
+   * no longer has.
+   */
+  enforcedBy: readonly string[];
   /** Why this contract exists — shown when the check fails. */
   why: string;
 }
 
 export const CAPABILITIES = {
   'owns-surface': {
+    enforcedBy: ['capabilities'],
     targets: ['surface'],
     impliedByKind: true,
     sourceCalls: ['useSurfaceFlip', 'SurfaceProvider'],
@@ -79,6 +91,7 @@ export const CAPABILITIES = {
   },
 
   'scrolls-content': {
+    enforcedBy: ['capabilities', 'focus-ring-room'],
     targets: ['scrollport'],
     impliedByKind: true,
     cssDeclaration: ':focus-visible',
@@ -94,6 +107,7 @@ export const CAPABILITIES = {
   },
 
   'takes-focus': {
+    enforcedBy: ['capabilities', 'focus-ring-room'],
     targets: ['control', 'scrollport'],
     impliedByKind: true,
     cssDeclaration: ':focus-visible',
@@ -107,6 +121,7 @@ export const CAPABILITIES = {
   },
 
   'takes-disabled': {
+    enforcedBy: ['capabilities'],
     targets: ['control'],
     impliedByKind: false,
     cssDeclaration: ':disabled',
@@ -119,6 +134,7 @@ export const CAPABILITIES = {
   },
 
   'has-label': {
+    enforcedBy: ['capabilities', 'type-scale', 'rendered-label', 'aria-label-name'],
     targets: ['label'],
     impliedByKind: true,
     composedInherits: false,

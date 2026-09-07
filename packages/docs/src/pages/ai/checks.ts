@@ -58,6 +58,24 @@ export const CHECKS: CheckDoc[] = [
       'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
   },
   {
+    name: 'containing-block',
+    appliesTo: 'component',
+    enforces:
+      'A visually-hidden copy \u2014 absolutely positioned and clipped \u2014 resolves against its own component. With no positioned ancestor it resolves against the document, escapes every scroll container, and stretches the page to reach it.',
+  },
+  {
+    name: 'press-scope',
+    appliesTo: 'component',
+    enforces:
+      'An :active transform sits on a slot whose kind is control, trigger or item. :active matches ancestors, so on a container it transforms everything inside.',
+  },
+  {
+    name: 'rendered-label',
+    appliesTo: 'component',
+    enforces:
+      'Text rendered as a control\u2019s accessible name goes through a declared slot, so it carries a typography role and check:type-scale can see its size.',
+  },
+  {
     name: 'option-rows',
     appliesTo: 'component',
     enforces:
