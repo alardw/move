@@ -15,6 +15,14 @@ import {
   useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
+
+// A fixed scale ratio moves a wide menu by a proportion of a large width, so the
+// same 0.8 travels much further — and overshoots much harder — on a wide control
+// than a narrow one. Deriving the ratio from a fixed pixel inset keeps the travel
+// constant at any width. Same two constants, for the same reason, as Select and
+// Autocomplete.
+const SCALE_INSET_PX = 16;
+const SCALE_HOVER_PX = 4;
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
@@ -68,7 +76,10 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
           target: 'ContentInner',
           children: STAGGER_ITEMS,
           stagger: staggerItems.stagger,
-          animation: staggerItems.enter,
+          animation: {
+            scale: { from: '$scaleFrom', to: 1, ease: quick },
+            opacity: { from: 0, to: 1, duration: 200 },
+          },
         },
       ],
     ],
@@ -82,14 +93,17 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
           target: 'ContentInner',
           children: STAGGER_ITEMS,
           stagger: staggerItems.stagger,
-          animation: staggerItems.exit,
+          animation: {
+            scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+            opacity: { to: 0, duration: 150 },
+          },
         },
       ],
     ],
   },
   {
     trigger: 'Item.hover',
-    sequence: [{ animation: { scale: { to: 1.02, ease: quick } } }],
+    sequence: [{ animation: { scale: { to: '$scaleHover', ease: quick } } }],
   },
   // The chevron, as state triggers rather than lifecycle ones: the Icon lives in
   // the trigger, which never unmounts, so there is no mount to hang it off. Same
@@ -127,6 +141,9 @@ interface DropdownContextValue {
    *  because the content is held mounted through it. */
   isOpen: boolean;
   isClosing: boolean;
+  /** Measured trigger width — the scale ratios are derived from it. */
+  triggerWidth: number;
+  setTriggerWidth: (w: number) => void;
   epoch: number;
   onExitDone: (epoch: number) => void;
   close: () => void;
@@ -170,6 +187,9 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({
   // exit-completion is epoch-guarded). See useDismissable.
   const dismissable = useDismissable({ open: controlledOpen, defaultOpen, onOpenChange });
   const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
+  // 200 is a placeholder until the trigger measures itself; the ratio it feeds
+  // is only read once an animation runs, which is after that.
+  const [triggerWidth, setTriggerWidth] = React.useState(200);
 
   const handleOpenChange = React.useCallback(
     (newOpen: boolean) => {
@@ -181,7 +201,18 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({
   );
 
   return (
-    <DropdownContext.Provider value={{ isOpen, isClosing, epoch, onExitDone, close, animConfig }}>
+    <DropdownContext.Provider
+      value={{
+        isOpen,
+        isClosing,
+        triggerWidth,
+        setTriggerWidth,
+        epoch,
+        onExitDone,
+        close,
+        animConfig,
+      }}
+    >
       <RadixDropdownMenu.Root
         open={isOpen || isClosing}
         onOpenChange={handleOpenChange}
@@ -211,7 +242,19 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
   moveProps: ['asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { isOpen, isClosing } = useDropdownContext();
+    const { isOpen, isClosing, setTriggerWidth } = useDropdownContext();
+    const localRef = React.useRef<HTMLElement | null>(null);
+    const mergedRef = useMergedRef<HTMLElement>(ref as React.Ref<HTMLElement>, localRef);
+
+    React.useEffect(() => {
+      const el = localRef.current;
+      if (!el) return;
+      setTriggerWidth(el.offsetWidth);
+      const ro = new ResizeObserver(() => setTriggerWidth(el.offsetWidth));
+      ro.observe(el);
+      return () => ro.disconnect();
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
     return {
       render() {
         const triggerSp = sp('trigger');
@@ -224,7 +267,7 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
           <RadixDropdownMenu.Trigger
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             asChild={props.asChild as boolean}
             // Flips the moment closing begins, so a chevron rotates WITH the
             // menu's exit rather than after it. Radix's own data-state cannot
@@ -278,7 +321,8 @@ interface DropdownContentInnerProps {
 
 const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInnerProps>(
   function DropdownContentInner(props, ref) {
-    const { isClosing, epoch, onExitDone, close, animConfig } = useDropdownContext();
+    const { isClosing, epoch, onExitDone, close, animConfig, triggerWidth } = useDropdownContext();
+    const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -286,9 +330,10 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
 
     const contentConfig = React.useMemo(
       () =>
-        animConfig?.filter((t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit') ??
-        null,
-      [animConfig],
+        animConfig
+          ?.filter((t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit')
+          .map((t) => ({ ...t, vars: { ...(t.vars ?? {}), scaleFrom } })) ?? null,
+      [animConfig, scaleFrom],
     );
     const contentRefs = React.useMemo(
       () => ({
@@ -467,7 +512,8 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const { close, animConfig } = useDropdownContext();
+    const { close, animConfig, triggerWidth } = useDropdownContext();
+    const scaleHover = (triggerWidth + SCALE_HOVER_PX) / triggerWidth;
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -481,8 +527,8 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
     const itemConfig = React.useMemo(() => {
       if (!animConfig) return null;
       const hover = animConfig.find((t) => t.trigger === 'Item.hover');
-      return hover ? [{ ...hover, trigger: 'Item.hover' }] : null;
-    }, [animConfig]);
+      return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
+    }, [animConfig, scaleHover]);
 
     const itemRefs = React.useMemo(
       () => ({
@@ -991,7 +1037,7 @@ export interface DropdownSubContentProps extends React.HTMLAttributes<HTMLElemen
   style?: React.CSSProperties;
   children?: React.ReactNode;
   sideOffset?: number;
-  sp?: SlotPropsMap<'subContent'>;
+  sp?: SlotPropsMap<'subContent' | 'subContentInner'>;
 }
 
 /**
@@ -1005,49 +1051,115 @@ export interface DropdownSubContentProps extends React.HTMLAttributes<HTMLElemen
  * in one commit, so the plain lifecycle enter fires with the rows present. No
  * itemsReady poll is needed here, unlike Select.
  */
+// The top-level menu's reveal, applied to a sub-menu: the panel fades while the
+// items stagger in behind it. A sub-menu IS the same object as the menu it opens
+// from, so it arrives the same way — it previously staggered its items with no
+// panel fade, which read as a harder cut than the menu that spawned it.
 const SUB_ANIMATIONS: AnimationTrigger[] = [
   {
-    trigger: 'SubContent.enter',
+    trigger: 'subOpen',
     sequence: [
-      {
-        target: 'SubContent',
-        children: STAGGER_ITEMS,
-        stagger: staggerItems.stagger,
-        animation: staggerItems.enter,
-      },
+      [
+        { target: 'SubContent', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+        {
+          target: 'SubContentInner',
+          children: STAGGER_ITEMS,
+          stagger: staggerItems.stagger,
+          animation: {
+            scale: { from: '$scaleFrom', to: 1, ease: quick },
+            opacity: { from: 0, to: 1, duration: 200 },
+          },
+        },
+      ],
+    ],
+  },
+  {
+    trigger: 'subClosed',
+    sequence: [
+      [
+        { target: 'SubContent', animation: { opacity: { to: 0, duration: 150 } } },
+        {
+          target: 'SubContent',
+          children: STAGGER_ITEMS,
+          stagger: staggerItems.stagger,
+          animation: {
+            scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+            opacity: { to: 0, duration: 150 },
+          },
+        },
+      ],
     ],
   },
 ];
 
-const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentProps, HTMLDivElement>(
-  {
-    name: 'DropdownSubContent',
-    styles,
-    slots: ['subContent'] as const,
-    moveProps: ['sideOffset'],
+const DropdownSubContent = withMoveComponent<
+  'subContent' | 'subContentInner',
+  DropdownSubContentProps,
+  HTMLDivElement
+>({
+  name: 'DropdownSubContent',
+  styles,
+  slots: ['subContent', 'subContentInner'] as const,
+  moveProps: ['sideOffset'],
 
-    setup({ props, ref, cx, sp, attrs }) {
-      const layer = useLayer();
-      // Shares the root's on/off switch, so `animations={false}` reaches the
-      // sub-menus too rather than leaving them the only thing still moving.
-      const { animConfig } = useDropdownContext();
-      const subRef = React.useRef<HTMLDivElement>(null);
-      const mergedRef = useMergedRef<HTMLDivElement>(ref, subRef);
-      const subRefs = React.useMemo(
-        () => ({ SubContent: subRef as React.RefObject<HTMLElement | null> }),
-        [],
-      );
-      useAnimations(animConfig ? SUB_ANIMATIONS : false, subRefs);
+  setup({ props, ref, cx, sp, attrs }) {
+    const layer = useLayer();
+    // Shares the root's on/off switch, so `animations={false}` reaches the
+    // sub-menus too rather than leaving them the only thing still moving.
+    const { animConfig, triggerWidth } = useDropdownContext();
+    const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
+    const subConfig = React.useMemo(
+      () => SUB_ANIMATIONS.map((t) => ({ ...t, vars: { scaleFrom } })),
+      [scaleFrom],
+    );
+    const subRef = React.useRef<HTMLDivElement>(null);
+    const subInnerRef = React.useRef<HTMLDivElement>(null);
+    const mergedRef = useMergedRef<HTMLDivElement>(ref, subRef);
+    const subStates: AnimationState[] = React.useMemo(
+      () => [
+        {
+          name: 'subOpen',
+          slot: 'SubContent',
+          source: 'data-state',
+          value: 'open',
+          closest: '[data-state]',
+        },
+        {
+          name: 'subClosed',
+          slot: 'SubContent',
+          source: 'data-state',
+          value: 'closed',
+          closest: '[data-state]',
+          initial: false,
+        },
+      ],
+      [],
+    );
 
-      return {
-        render() {
-          const subSp = sp('subContent');
-          const {
-            className: spClass,
-            style: spStyle,
-            ...spRest
-          } = subSp as Record<string, unknown>;
-          return (
+    const subRefs = React.useMemo(
+      () => ({
+        SubContent: subRef as React.RefObject<HTMLElement | null>,
+        SubContentInner: subInnerRef as React.RefObject<HTMLElement | null>,
+      }),
+      [],
+    );
+    useAnimations(animConfig ? subConfig : false, subRefs, subStates);
+
+    return {
+      render() {
+        const subSp = sp('subContent');
+        const { className: spClass, style: spStyle, ...spRest } = subSp as Record<string, unknown>;
+        const {
+          className: subInnerClass,
+          style: subInnerStyle,
+          ...subInnerRest
+        } = sp('subContentInner') as Record<string, unknown>;
+        return (
+          // Portaled, like Content. Rendered in place it is a child of
+          // .content, which sets overflow: hidden — so the sub-menu was
+          // clipped by the panel it opens from, showing a few pixels at the
+          // edge instead of a menu.
+          <RadixDropdownMenu.Portal>
             <RadixDropdownMenu.SubContent
               {...attrs}
               {...spRest}
@@ -1060,14 +1172,21 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
                 ...(spStyle as React.CSSProperties),
               }}
             >
-              {props.children}
+              <div
+                ref={subInnerRef}
+                {...subInnerRest}
+                className={cx('subContentInner', subInnerClass as string | undefined)}
+                style={subInnerStyle as React.CSSProperties}
+              >
+                {props.children}
+              </div>
             </RadixDropdownMenu.SubContent>
-          );
-        },
-      };
-    },
+          </RadixDropdownMenu.Portal>
+        );
+      },
+    };
   },
-);
+});
 
 // ============================================================================
 // Export

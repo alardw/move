@@ -848,14 +848,40 @@ export const spec = {
     {
       // A sub-menu is its own popup — its own portal, its own mount — so the
       // parent's stagger cannot reach it and it needs a reveal of its own.
-      // Radix mounts SubContent only while the sub is open and commits its rows
-      // in one go, so a plain lifecycle enter fires with them present; no
-      // itemsReady poll, unlike Select.
-      trigger: 'SubContent.enter',
+      // A state trigger, not a lifecycle one. A lifecycle enter fires when Radix
+      // MOUNTS the sub-content, which is not the same moment as showing it —
+      // the reveal can play before anything is on screen, and the rows are at
+      // rest by the time the sub-menu appears. Keying off data-state fires on
+      // each show, which is what opening a sub-menu is, and is correct whether
+      // Radix mounts early or late.
+      trigger: 'subOpen',
       sequence: [
         {
+          target: 'SubContent',
+          animation: { opacity: { from: 0, to: 1, duration: 150 } },
+        },
+        {
+          target: 'SubContentInner',
           children: '[data-move-stagger]',
-          animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+          animation: {
+            scale: { from: '$scaleFrom', to: 1, ease: 'quick' },
+            opacity: { from: 0, to: 1, duration: 200 },
+          },
+          stagger: { delay: 30 },
+        },
+      ],
+    },
+    {
+      trigger: 'subClosed',
+      sequence: [
+        { target: 'SubContent', animation: { opacity: { to: 0, duration: 150 } } },
+        {
+          target: 'SubContentInner',
+          children: '[data-move-stagger]',
+          animation: {
+            scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+            opacity: { to: 0, duration: 150 },
+          },
           stagger: { delay: 30 },
         },
       ],

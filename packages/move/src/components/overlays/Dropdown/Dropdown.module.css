@@ -307,3 +307,12 @@
 .trigger[data-move-state='open'] .icon {
   transform: rotate(180deg);
 }
+
+/* The sub-menu's stagger container — a plain div we own, mirroring
+   .contentInner. The animation reads its children, and Radix owns the element
+   above it, so the container cannot be the Radix component itself. */
+.subContentInner {
+  display: flex;
+  flex-direction: column;
+  padding: 4px;
+}
