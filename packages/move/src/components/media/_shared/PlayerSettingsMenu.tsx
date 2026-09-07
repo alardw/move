@@ -61,7 +61,13 @@ export function PlayerSettingsMenu({
   const chevronLeftIcon = useIcon('previous', 14);
 
 
-  const activeCat = activeCategory ? categories.find((c) => c.id === activeCategory) : null;
+  // One category needs no drill-down: the list of categories would be a single
+  // row you click to reach the options behind it. Opening straight onto the
+  // options lets a one-subject menu — a subtitle picker — use this component
+  // rather than being hand-rolled beside it, which is how the video player
+  // ended up with two menus built two different ways.
+  const soleCategory = categories.length === 1 ? categories[0] : null;
+  const activeCat = soleCategory ?? (activeCategory ? categories.find((c) => c.id === activeCategory) : null);
 
 
   /**
@@ -200,6 +206,16 @@ export function PlayerSettingsMenu({
         ) : (
           // Sub-view — options for the active category
           <>
+            {/* A sole category still says what it is. Skipping the drill-down
+                removed the row that named the subject — the menu opened onto a
+                list of speeds with nothing saying "Speed". Not a button here,
+                because there is nowhere to go back to. */}
+            {soleCategory && (
+              <div className={styles.indicatorRow} aria-hidden="true">
+                <span className={styles.categoryLabel}>{soleCategory.label}</span>
+              </div>
+            )}
+            {!soleCategory && (
             <button
               type="button"
               className={styles.backRow}
@@ -211,6 +227,7 @@ export function PlayerSettingsMenu({
               <span className={styles.backChevron}>{chevronLeftIcon}</span>
               <span className={styles.backLabel}>{activeCat.label}</span>
             </button>
+            )}
             {activeCat.options.map((opt) => (
               <button
                 key={opt.value}

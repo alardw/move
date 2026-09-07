@@ -159,6 +159,11 @@
   --move-option-bg-highlight: var(--move-bg-muted);
   --move-option-bg-selected: var(--move-primary);
   --move-option-fg-selected: var(--move-primary-fg);
+  /* Selected AND focused. The fourth state, and the one that was missing: with
+     only three, a focused selected row was distinguished from an unfocused one
+     by the ring's offset alone, which reads as nothing. Select darkened the
+     fill and the players' menu did not, because each had written its own set. */
+  --move-option-bg-selected-highlight: var(--move-primary-hover);
 
   /* Between a media player's transport controls. One token because the two
      players are the same instrument and had two answers — the video player at

@@ -627,52 +627,42 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                   />
                 )}
 
-                {/* Subtitles */}
+                {/* Subtitles. Built from the shared menu rather than a
+                    Popover of its own: this component had two menus assembled
+                    two different ways, and only the shared one got roving
+                    focus, the option geometry, and a trigger whose tooltip
+                    yields while it is open. */}
                 {showSubtitlesControl && (
-                  <Popover.Root open={subtitleMenuOpen} onOpenChange={setSubtitleMenuOpen}>
-                    <Popover.Trigger asChild>
+                  <PlayerSettingsMenu
+                    open={subtitleMenuOpen}
+                    onOpenChange={setSubtitleMenuOpen}
+                    triggerLabel={labels.subtitles}
+                    side="top"
+                    align="center"
+                    sideOffset={4}
+                    categories={[
+                      {
+                        id: 'subtitles',
+                        label: labels.subtitles,
+                        activeValue: String(player.activeSubtitleIndex),
+                        onChange: (v) => player.setActiveSubtitleIndex(Number(v)),
+                        options: [
+                          { value: '-1', label: labels.subtitlesOff },
+                          ...subtitles!.map((t, i) => ({ value: String(i), label: t.label })),
+                        ],
+                      },
+                    ]}
+                    trigger={
                       <PlayerButton
                         {...slot('subtitleButton')}
                         data-active={player.activeSubtitleIndex >= 0}
                         label={labels.subtitles}
+                        withTooltip={false}
                       >
                         {captionsIcon}
                       </PlayerButton>
-                    </Popover.Trigger>
-                    <Popover.Content
-                      side="top"
-                      align="center"
-                      sideOffset={4}
-                      className={styles.subtitleMenu}
-                      onOpenAutoFocus={(e: Event) => e.preventDefault()}
-                    >
-                      <button
-                        className={styles.subtitleOption}
-                        data-active={player.activeSubtitleIndex === -1}
-                        onClick={() => {
-                          player.setActiveSubtitleIndex(-1);
-                          setSubtitleMenuOpen(false);
-                        }}
-                        type="button"
-                      >
-                        {labels.subtitlesOff}
-                      </button>
-                      {subtitles!.map((track, i) => (
-                        <button
-                          key={track.language}
-                          className={styles.subtitleOption}
-                          data-active={player.activeSubtitleIndex === i}
-                          onClick={() => {
-                            player.setActiveSubtitleIndex(i);
-                            setSubtitleMenuOpen(false);
-                          }}
-                          type="button"
-                        >
-                          {track.label}
-                        </button>
-                      ))}
-                    </Popover.Content>
-                  </Popover.Root>
+                    }
+                  />
                 )}
 
                 {/* Volume */}

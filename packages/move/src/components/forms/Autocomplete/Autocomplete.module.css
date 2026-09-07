@@ -528,7 +528,7 @@
 }
 
 [data-mode='single'] > .item[data-selected][data-highlighted] {
-  background-color: var(--move-primary-hover);
+  background-color: var(--move-option-bg-selected-highlight);
   color: var(--move-primary-fg);
   /* Selected row: OUTER ring on the surface outside the accent fill (an inset ring
      on the fill reads as a shrunken fill). contentInner block padding gives room. */

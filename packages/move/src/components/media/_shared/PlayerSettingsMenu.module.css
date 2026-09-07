@@ -13,6 +13,17 @@
    it inherits, and Popover's `move.base` layer keeps it winning. No `overflow`
    override: the inner box already clips at its radius via its own overflow. */
 .menu {
+  /* The option tokens, redefined for this surface rather than replaced by
+     numbers. These rows sit on chrome over video — a fixed neutral in both
+     themes, not a themed ground — so the values differ while the relationship
+     stays visible. The weight is matched to Select's: its highlight measures
+     1.06:1 against its own surface, the accent ring carrying the meaning, and
+     an earlier 0.16 here was 1.68:1 and read as a selected row. */
+  /* token-exempt: media chrome over video */
+  --move-option-bg-highlight: rgba(255, 255, 255, 0.06);
+  /* token-exempt: media chrome over video */
+  --move-option-bg-selected-highlight: var(--move-primary-hover);
+
   --move-popover-content-bg: rgba(0, 0, 0, 0.92);
   --move-popover-content-border: transparent;
   --move-popover-content-radius: 6px;
@@ -126,8 +137,8 @@
 }
 
 .optionRow[data-active='true'] {
-  background: var(--move-primary, #3b82f6);
-  color: var(--move-primary-fg);
+  background: var(--move-option-bg-selected);
+  color: var(--move-option-fg-selected);
 }
 
 /* The keyboard-highlighted row, using the attribute Radix sets on a Select
@@ -138,7 +149,11 @@
 .categoryRow[data-highlighted],
 .backRow[data-highlighted],
 .optionRow[data-highlighted] {
-  background: rgba(255, 255, 255, 0.16); /* token-exempt: media chrome overlay */
+  /* A whisper, not a fill. Select's highlight measures 1.06:1 against its own
+     surface — the accent ring is what says "the keyboard is here", and the tint
+     only softens the edge. At 0.16 this was 1.68:1, over three times that
+     delta, and read as a selected row rather than a focused one. */
+  background: var(--move-option-bg-highlight);
   outline: var(--move-focus-ring);
   outline-offset: calc(-1 * var(--move-focus-ring-offset));
 }
@@ -146,6 +161,9 @@
 /* The selected row flips to an outer ring, as Select's checked row does: an
    inset ring on a filled row reads as a shrunken fill. */
 .optionRow[data-active='true'][data-highlighted] {
+  /* Darkens, as Select's does. The ring flips to an OUTER offset here because an
+     inset ring on a filled row reads as a shrunken fill. */
+  background: var(--move-option-bg-selected-highlight);
   outline-offset: var(--move-focus-ring-offset);
 }
 

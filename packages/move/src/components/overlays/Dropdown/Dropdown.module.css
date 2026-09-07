@@ -189,7 +189,7 @@
 }
 
 .checkboxItem[data-highlighted] {
-  background-color: var(--move-bg-muted);
+  background-color: var(--move-option-bg-highlight);
 }
 
 .checkboxItem[data-disabled] {
@@ -227,7 +227,7 @@
 }
 
 .radioItem[data-highlighted] {
-  background-color: var(--move-bg-muted);
+  background-color: var(--move-option-bg-highlight);
 }
 
 .radioItem[data-disabled] {
@@ -265,7 +265,7 @@
 }
 
 .subTrigger[data-highlighted] {
-  background-color: var(--move-bg-muted);
+  background-color: var(--move-option-bg-highlight);
 }
 
 .subTrigger[data-state='open'] {

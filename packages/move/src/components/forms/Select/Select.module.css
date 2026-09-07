@@ -282,8 +282,8 @@
 }
 
 .item[data-state='checked'][data-highlighted] {
-  background-color: var(--move-primary-hover);
-  color: var(--move-primary-fg);
+  background-color: var(--move-option-bg-selected-highlight);
+  color: var(--move-option-fg-selected);
   /* Selected row: flip to an OUTER accent ring so it sits on the surface OUTSIDE
      the accent fill (an inset ring on the fill reads as a shrunken fill). The
      contentInner block padding leaves room so it doesn't clip at first/last. */

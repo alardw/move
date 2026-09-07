@@ -58,6 +58,12 @@ export const CHECKS: CheckDoc[] = [
       'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
   },
   {
+    name: 'option-rows',
+    appliesTo: 'component',
+    enforces:
+      'Every keyboard-highlightable option row is styled from the shared --move-option-* tokens \u2014 radius, padding, and the fills for highlighted, selected, and selected-and-highlighted. A surface that genuinely differs redefines the token locally rather than inlining a number.',
+  },
+  {
     name: 'required-children',
     appliesTo: 'component',
     enforces:
