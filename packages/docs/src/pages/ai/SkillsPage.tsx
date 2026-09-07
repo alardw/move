@@ -43,6 +43,18 @@ const COMPONENT_SKILLS: HighlightItem[] = [
     text: '/component-create-spec — author or extract a typed .spec.ts for a new component.',
   },
   {
+    icon: 'scroll-text',
+    text: '/capability-create — define a new capability: the tests it must pass, the contract, its members, the mutation test.',
+  },
+  {
+    icon: 'network',
+    text: '/family-create — define a new family: what it bundles, who joins it, and where a shared core lives.',
+  },
+  {
+    icon: 'scroll-text',
+    text: '/contract-create — define a new capability or family: the tests one has to pass, the entry, its members, and the mutation test.',
+  },
+  {
     icon: 'edit',
     text: '/component-improve — amend an existing spec with a change request; surfaces what defaults flip.',
   },

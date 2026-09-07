@@ -93,6 +93,7 @@ function slotKinds(spec) {
 }
 
 const problems = [];
+const declaringComponents = {};
 
 for (const specPath of specFiles(COMPONENTS)) {
   const comp = basename(specPath, '.spec.ts');
@@ -129,6 +130,7 @@ for (const specPath of specFiles(COMPONENTS)) {
       continue;
     }
     if (!declared.has(name)) continue;
+    (declaringComponents[name] ??= []).push(comp);
 
     // declared → source: the claim must hold.
     if (!targeted) {
@@ -176,6 +178,41 @@ for (const specPath of specFiles(COMPONENTS)) {
           });
         }
       }
+    }
+  }
+}
+
+// ── The registry itself ───────────────────────────────────────────────────────
+//
+// Members are checked against contracts above; this checks the CONTRACTS. They
+// are hand-written objects, and nothing validated them: `stripes-rows` was
+// defined for Table, Table is the only component that stripes, and it sat with
+// zero declarations from the day it was written — enforcing nothing, and found
+// by a person reading the file rather than by any gate.
+const KINDS = new Set(
+  (/export type SlotKind =([\s\S]*?);/.exec(
+    readFileSync(join(MOVE_ROOT, 'src', 'spec-type.ts'), 'utf8'),
+  )?.[1] ?? '')
+    .match(/'(\w+)'/g)
+    ?.map((k) => k.slice(1, -1)) ?? [],
+);
+
+for (const [name, cap] of Object.entries(CAPS)) {
+  // A contract nobody signs is a definition, not a guarantee.
+  if (!declaringComponents[name]?.length) {
+    problems.push({
+      rel: 'src/capabilities.ts',
+      msg: `'${name}' has no declaring component — a capability with no members enforces nothing`,
+    });
+  }
+  // Targets have to be kinds that exist, or the contract silently applies to
+  // nothing at all.
+  for (const t of cap.targets) {
+    if (!KINDS.has(t)) {
+      problems.push({
+        rel: 'src/capabilities.ts',
+        msg: `'${name}' targets '${t}', which is not a SlotKind`,
+      });
     }
   }
 }
