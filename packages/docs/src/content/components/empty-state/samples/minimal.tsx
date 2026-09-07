@@ -12,10 +12,7 @@ export default function MinimalSample() {
         title="You’re offline"
         description="We’ll sync any changes once you reconnect."
       />
-      <EmptyState
-        title="No favourites"
-        description="Star a project to pin it here."
-      />
+      <EmptyState title="No favourites" description="Star a project to pin it here." />
     </Stack>
   );
 }

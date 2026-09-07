@@ -30,15 +30,19 @@ export const meta: ComponentDocument = {
   slug: 'progress-bar',
   synonyms: ['progress', 'meter', 'completion bar', 'linear progress', 'loading bar', 'percent'],
   name: 'ProgressBar',
-  tagline: 'A horizontal progress indicator — determinate (with %) or indeterminate (striped), tokenised for variant and size.',
+  tagline:
+    'A horizontal progress indicator — determinate (with %) or indeterminate (striped), tokenised for variant and size.',
   categories: ['feedback'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { ProgressBar } from 'move';`,
   keyboard: [
-    { key: '—', action: 'ProgressBar is presentational. Use a labelled wrapper if the percentage matters semantically.' },
+    {
+      key: '—',
+      action:
+        'ProgressBar is presentational. Use a labelled wrapper if the percentage matters semantically.',
+    },
   ],
   accessibilityLede:
     'Renders with `role="progressbar"` and `aria-valuemin`/`max`/`now` (when determinate). Indeterminate progress sets `aria-valuenow` to undefined per ARIA spec.',

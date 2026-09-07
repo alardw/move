@@ -12,7 +12,9 @@ export default function MinimalSample() {
   return (
     <Stack gap="lg">
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Play + scrubber only</Text>
+        <Text size="sm" weight="medium">
+          Play + scrubber only
+        </Text>
         <AudioPlayer
           src={SAMPLE_SRC}
           radius="full"
@@ -22,11 +24,15 @@ export default function MinimalSample() {
         />
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Without settings menu</Text>
+        <Text size="sm" weight="medium">
+          Without settings menu
+        </Text>
         <AudioPlayer src={SAMPLE_SRC} radius="md" showSettings={false} />
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Without time readout</Text>
+        <Text size="sm" weight="medium">
+          Without time readout
+        </Text>
         <AudioPlayer src={SAMPLE_SRC} radius="md" showTime={false} />
       </Stack>
     </Stack>

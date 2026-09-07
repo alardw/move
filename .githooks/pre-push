@@ -127,6 +127,7 @@ run "move tests" npm run test --workspace move --silent
 
 echo "▶ pre-push: Docs"
 run "docs typecheck" npm run typecheck --workspace docs --silent
+run "docs format:check" npm run format:check --workspace docs --silent
 run "docs conformance" npm run check:conformance --workspace docs --silent
 
 printf '✓ pre-push: all gates green in %ss (a11y + browser run in CI) — safe to push\n' \

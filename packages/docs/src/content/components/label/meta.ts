@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/form-field',
     name: 'FormField',
-    reason: 'Wraps Label and a Field control with grid layout, label/control alignment, and helper text. Use Label inside FormField.Label.',
+    reason:
+      'Wraps Label and a Field control with grid layout, label/control alignment, and helper text. Use Label inside FormField.Label.',
   },
 ];
 
@@ -26,15 +27,18 @@ export const meta: ComponentDocument = {
   synonyms: ['caption', 'field label', 'form label'],
   preview: { width: 'fit' },
   name: 'Label',
-  tagline: 'A real form label with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
+  tagline:
+    'A real form label with size, required indicator, and the click-to-focus behavior browsers ship for free when you use the right element.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Label } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Label is presentational. Clicking it focuses the bound control via `htmlFor`.' },
+    {
+      key: '—',
+      action: 'Label is presentational. Clicking it focuses the bound control via `htmlFor`.',
+    },
   ],
   accessibilityLede:
     'Renders `<label htmlFor="…">` so the screen reader announces the label when the bound control is focused. Always set `htmlFor` to a real element id.',

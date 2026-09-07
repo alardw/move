@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/date-picker',
     name: 'DatePicker',
-    reason: 'For picking a date with optional time. DatePicker uses TimeField internally when `showTime` is on.',
+    reason:
+      'For picking a date with optional time. DatePicker uses TimeField internally when `showTime` is on.',
   },
 ];
 
@@ -26,11 +27,10 @@ export const meta: ComponentDocument = {
   synonyms: ['time input', 'clock input', 'time picker', 'hour minute'],
   preview: { width: 'fit' },
   name: 'TimeField',
-  tagline: 'A time input with hour, minute, optional seconds, and optional AM/PM — typed and tab-able like a real form field.',
+  tagline:
+    'A time input with hour, minute, optional seconds, and optional AM/PM — typed and tab-able like a real form field.',
   categories: ['date-time', 'forms'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { TimeField } from 'move';`,

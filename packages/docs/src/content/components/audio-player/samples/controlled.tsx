@@ -16,11 +16,13 @@ export default function ControlledSample() {
   return (
     <Stack gap="md">
       <Stack direction="row" gap="sm" align="center" wrap>
-        <Button onClick={() => setPlaying((p) => !p)}>
-          {playing ? 'Pause' : 'Play'}
+        <Button onClick={() => setPlaying((p) => !p)}>{playing ? 'Pause' : 'Play'}</Button>
+        <Button variant="secondary" onClick={() => setTime(0)}>
+          Restart
         </Button>
-        <Button variant="secondary" onClick={() => setTime(0)}>Restart</Button>
-        <Button variant="secondary" onClick={() => setTime((t) => t + 30)}>+30s</Button>
+        <Button variant="secondary" onClick={() => setTime((t) => t + 30)}>
+          +30s
+        </Button>
         <Text size="sm" color="muted">
           state: {playing ? 'playing' : 'paused'} · {Math.floor(time)}s
         </Text>

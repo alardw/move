@@ -10,7 +10,9 @@ export default function VerticalSample() {
       <Divider orientation="vertical" />
       <Text>Published</Text>
       <Divider orientation="vertical">Archive</Divider>
-      <Text size="sm" color="muted">Older items</Text>
+      <Text size="sm" color="muted">
+        Older items
+      </Text>
     </Stack>
   );
 }

@@ -4,14 +4,18 @@ export default function LevelsSample() {
   return (
     <Stack gap="lg">
       <Stack gap="sm">
-        <Text size="sm" weight="medium">Four levels (default)</Text>
+        <Text size="sm" weight="medium">
+          Four levels (default)
+        </Text>
         {[0, 1, 2, 3].map((score) => (
           <PasswordStrength key={score} score={score} />
         ))}
       </Stack>
 
       <Stack gap="sm">
-        <Text size="sm" weight="medium">Five levels — match a zxcvbn 0–4 score</Text>
+        <Text size="sm" weight="medium">
+          Five levels — match a zxcvbn 0–4 score
+        </Text>
         {[0, 1, 2, 3, 4].map((score) => (
           <PasswordStrength
             key={score}

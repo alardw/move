@@ -28,10 +28,39 @@ interface Layer {
 }
 
 const LAYERS: Layer[] = [
-  { name: 'Trigger',   question: 'WHEN',  meaning: 'fires on an event — mount, state change, press', box: [24, 92, 592, 620], code: [{ key: 'trigger:', rest: " 'Content.enter'" }] },
-  { name: 'Sequence',  question: '', container: true, meaning: 'orders the steps — chain, delay or stagger', box: [64, 224, 512, 472], code: [{ key: 'sequence:', rest: ' [ … ]' }] },
-  { name: 'Target',    question: 'WHERE', meaning: 'the named slot that responds',                  box: [104, 356, 432, 324], code: [{ key: 'target:', rest: " 'Content'" }] },
-  { name: 'Animation', question: '', container: true, meaning: 'bundles what + feel',               box: [144, 488, 352, 176], code: [{ key: 'scale:', rest: ' { from: 0.9, to: 1 }', label: 'WHAT' }, { key: 'ease:', rest: ' poppy', label: 'FEEL' }] },
+  {
+    name: 'Trigger',
+    question: 'WHEN',
+    meaning: 'fires on an event — mount, state change, press',
+    box: [24, 92, 592, 620],
+    code: [{ key: 'trigger:', rest: " 'Content.enter'" }],
+  },
+  {
+    name: 'Sequence',
+    question: '',
+    container: true,
+    meaning: 'orders the steps — chain, delay or stagger',
+    box: [64, 224, 512, 472],
+    code: [{ key: 'sequence:', rest: ' [ … ]' }],
+  },
+  {
+    name: 'Target',
+    question: 'WHERE',
+    meaning: 'the named slot that responds',
+    box: [104, 356, 432, 324],
+    code: [{ key: 'target:', rest: " 'Content'" }],
+  },
+  {
+    name: 'Animation',
+    question: '',
+    container: true,
+    meaning: 'bundles what + feel',
+    box: [144, 488, 352, 176],
+    code: [
+      { key: 'scale:', rest: ' { from: 0.9, to: 1 }', label: 'WHAT' },
+      { key: 'ease:', rest: ' poppy', label: 'FEEL' },
+    ],
+  },
 ];
 
 export function AnimationAnatomy({ className, style }: AnimationAnatomyProps) {
@@ -68,15 +97,31 @@ export function AnimationAnatomy({ className, style }: AnimationAnatomyProps) {
         return (
           <g key={ly.name}>
             {/* nested surfaces deepen inward so the nesting reads without an outline */}
-            <rect className="il-surface" fillOpacity={0.06 + i * 0.05} x={x} y={y} width={w} height={h} rx={20} />
+            <rect
+              className="il-surface"
+              fillOpacity={0.06 + i * 0.05}
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              rx={20}
+            />
             <rect className="aa-hdr" x={hx} y={hy} width={hw} height={46} rx={12} />
-            <text className="aa-name" x={hx + 16} y={hy + 22}>{ly.name}</text>
-            <text className="aa-mean" x={hx + 16} y={hy + 38}>{ly.meaning}</text>
-            {ly.container
-              ? <text className="aa-cont" x={hx + hw - 16} y={hy + 29} textAnchor="end">container</text>
-              : ly.question
-                ? <text className="aa-q" x={hx + hw - 16} y={hy + 29} textAnchor="end">{ly.question}</text>
-                : null}
+            <text className="aa-name" x={hx + 16} y={hy + 22}>
+              {ly.name}
+            </text>
+            <text className="aa-mean" x={hx + 16} y={hy + 38}>
+              {ly.meaning}
+            </text>
+            {ly.container ? (
+              <text className="aa-cont" x={hx + hw - 16} y={hy + 29} textAnchor="end">
+                container
+              </text>
+            ) : ly.question ? (
+              <text className="aa-q" x={hx + hw - 16} y={hy + 29} textAnchor="end">
+                {ly.question}
+              </text>
+            ) : null}
             <rect className="aa-chip" x={hx} y={chipY} width={hw} height={chipH} rx={10} />
             {ly.code.map((line, li) => {
               const yy = chipY + 26 + li * 24;
@@ -86,7 +131,11 @@ export function AnimationAnatomy({ className, style }: AnimationAnatomyProps) {
                     <tspan className="aa-key">{line.key}</tspan>
                     <tspan>{line.rest}</tspan>
                   </text>
-                  {line.label && <text className="aa-line" x={hx + hw - 16} y={yy} textAnchor="end">{line.label}</text>}
+                  {line.label && (
+                    <text className="aa-line" x={hx + hw - 16} y={yy} textAnchor="end">
+                      {line.label}
+                    </text>
+                  )}
                 </g>
               );
             })}

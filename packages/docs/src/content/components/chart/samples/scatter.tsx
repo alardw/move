@@ -1,4 +1,4 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 /** Response time against payload size, one point per request sampled. */
 /**
@@ -45,7 +45,7 @@ export default function ScatterSample() {
       grid="both"
       formatX={(v) => `${v}kB`}
       formatY={(v) => `${v}ms`}
-      series={[{ key: "ms", type: "scatter", label: "Response", color: "grape" }]}
+      series={[{ key: 'ms', type: 'scatter', label: 'Response', color: 'grape' }]}
     />
   );
 }

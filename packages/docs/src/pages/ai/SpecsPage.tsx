@@ -16,9 +16,24 @@ const BADGES = [
 
 const STEPS = [
   { icon: 'search', label: 'Analyze', hint: 'Research the shape', skill: '/component-analyze' },
-  { icon: 'file-code', label: 'Spec', hint: 'Author the .spec.ts', skill: '/component-create-spec' },
-  { icon: 'wand-sparkles', label: 'Generate', hint: 'Source, meta, tests', skill: '/component-generate-*' },
-  { icon: 'shield-check', label: 'Validate', hint: 'Check against the spec', skill: '/component-validate' },
+  {
+    icon: 'file-code',
+    label: 'Spec',
+    hint: 'Author the .spec.ts',
+    skill: '/component-create-spec',
+  },
+  {
+    icon: 'wand-sparkles',
+    label: 'Generate',
+    hint: 'Source, meta, tests',
+    skill: '/component-generate-*',
+  },
+  {
+    icon: 'shield-check',
+    label: 'Validate',
+    hint: 'Check against the spec',
+    skill: '/component-validate',
+  },
 ];
 
 const WHY_IT_HOLDS: HighlightItem[] = [
@@ -57,7 +72,10 @@ const COMPOSITE_FILES: [string, string][] = [
 ];
 
 const PATTERN_FILES: [string, string][] = [
-  ['{name}.ts', 'Source of truth — axes, skeleton, bindings, heuristics (satisfies DesignPatternSpec)'],
+  [
+    '{name}.ts',
+    'Source of truth — axes, skeleton, bindings, heuristics (satisfies DesignPatternSpec)',
+  ],
   ['registry.ts entry', 'One line registering the slug, scale, and status'],
 ];
 
@@ -73,8 +91,12 @@ function FileTable({ rows }: { rows: [string, string][] }) {
       <Table.Body>
         {rows.map(([file, purpose]) => (
           <Table.Row key={file}>
-            <Table.Cell><Code>{file}</Code></Table.Cell>
-            <Table.Cell><Text size="sm">{purpose}</Text></Table.Cell>
+            <Table.Cell>
+              <Code>{file}</Code>
+            </Table.Cell>
+            <Table.Cell>
+              <Text size="sm">{purpose}</Text>
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
@@ -105,9 +127,9 @@ export function SpecsPage() {
         <Stack gap="sm">
           <Heading level={1}>Spec pipeline</Heading>
           <Text color="muted" size="lg">
-            Every Move component is generated from a spec and checked back
-            against it. This is the loop — and why source, metadata, and tests
-            never drift from the description. For what a spec actually contains, see the{' '}
+            Every Move component is generated from a spec and checked back against it. This is the
+            loop — and why source, metadata, and tests never drift from the description. For what a
+            spec actually contains, see the{' '}
             <RouterLink to="/contracts/component">Component Contract</RouterLink>.
           </Text>
           <Stack direction="row" gap="xs" wrap>
@@ -132,8 +154,12 @@ export function SpecsPage() {
                   <Card.Body>
                     <Stack gap="xs" align="center">
                       <Icon name={s.icon} size={22} />
-                      <Text weight="semibold" size="sm">{s.label}</Text>
-                      <Text color="muted" size="xs">{s.hint}</Text>
+                      <Text weight="semibold" size="sm">
+                        {s.label}
+                      </Text>
+                      <Text color="muted" size="xs">
+                        {s.hint}
+                      </Text>
                       <Code size="xs">{s.skill}</Code>
                     </Stack>
                   </Card.Body>
@@ -184,7 +210,8 @@ export function SpecsPage() {
                 icon: 'file-code',
                 text: (
                   <>
-                    Read the <RouterLink to="/contracts/component">Component Contract</RouterLink> for the spec field by field, and how it’s enforced.
+                    Read the <RouterLink to="/contracts/component">Component Contract</RouterLink>{' '}
+                    for the spec field by field, and how it’s enforced.
                   </>
                 ),
               },
@@ -192,7 +219,8 @@ export function SpecsPage() {
                 icon: 'wand-sparkles',
                 text: (
                   <>
-                    See <RouterLink to="/ai/skills">Skills</RouterLink> for the commands that run each step of the loop.
+                    See <RouterLink to="/ai/skills">Skills</RouterLink> for the commands that run
+                    each step of the loop.
                   </>
                 ),
               },

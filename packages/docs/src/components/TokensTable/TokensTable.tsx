@@ -18,16 +18,16 @@ export function TokensTable({ tokens }: { tokens: Token[] }) {
   if (tokens.length === 0) {
     return (
       <Text color="muted" size="sm">
-        This component doesn’t expose any design tokens — it’s styled purely
-        with layout primitives, so there’s nothing to override here.
+        This component doesn’t expose any design tokens — it’s styled purely with layout primitives,
+        so there’s nothing to override here.
       </Text>
     );
   }
   return (
     <Stack gap="sm">
       <Text color="muted" size="sm">
-        Override these CSS custom properties on <Code>:root</Code>, a theme wrapper,
-        or an individual instance via <Code>style</Code>.
+        Override these CSS custom properties on <Code>:root</Code>, a theme wrapper, or an
+        individual instance via <Code>style</Code>.
       </Text>
       <Table>
         <Table.Header>

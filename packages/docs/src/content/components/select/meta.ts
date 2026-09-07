@@ -5,7 +5,10 @@ import { listboxKeyboard } from '../../keyboardMaps/listbox';
 
 const highlights: HighlightItem[] = [
   { icon: 'rabbit', text: 'Opens and closes with a subtle animation.' },
-  { icon: 'type', text: 'Long values get an ellipsis automatically. Hover the trigger or item for the full text, no wiring required.' },
+  {
+    icon: 'type',
+    text: 'Long values get an ellipsis automatically. Hover the trigger or item for the full text, no wiring required.',
+  },
 ];
 
 const related: RelatedItem[] = [

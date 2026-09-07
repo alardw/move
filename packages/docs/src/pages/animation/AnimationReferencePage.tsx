@@ -82,7 +82,9 @@ export function AnimationReferencePage() {
 
         <Stack gap="sm">
           <Heading level={1}>Reference</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -99,10 +101,9 @@ export function AnimationReferencePage() {
           lede="The hook that wires a config of triggers to a set of refs."
         >
           <Text>
-            <Code>useAnimations</Code> takes the trigger config, a map of refs to
-            the slots it names, and optional state declarations. It returns the
-            event handlers to spread onto your slots, plus controls for the
-            animations it owns.
+            <Code>useAnimations</Code> takes the trigger config, a map of refs to the slots it
+            names, and optional state declarations. It returns the event handlers to spread onto
+            your slots, plus controls for the animations it owns.
           </Text>
           <CodeBlock
             language="ts"
@@ -111,10 +112,22 @@ export function AnimationReferencePage() {
           />
           <HighlightList
             items={[
-              { icon: 'pointer', text: 'handlers — spread onto each slot to attach its hover, press, and key animations.' },
-              { icon: 'log-out', text: 'runExit — play the exit sequence and resolve when it finishes, for unmount.' },
-              { icon: 'pause', text: 'pauseAll / resumeAll — hold and resume every active animation, like a toast’s countdown on hover.' },
-              { icon: 'search', text: 'getAnimation — reach a specific running animation by its trigger name.' },
+              {
+                icon: 'pointer',
+                text: 'handlers — spread onto each slot to attach its hover, press, and key animations.',
+              },
+              {
+                icon: 'log-out',
+                text: 'runExit — play the exit sequence and resolve when it finishes, for unmount.',
+              },
+              {
+                icon: 'pause',
+                text: 'pauseAll / resumeAll — hold and resume every active animation, like a toast’s countdown on hover.',
+              },
+              {
+                icon: 'search',
+                text: 'getAnimation — reach a specific running animation by its trigger name.',
+              },
             ]}
           />
         </Section>
@@ -125,9 +138,9 @@ export function AnimationReferencePage() {
           lede="The low-level executors a step can call."
         >
           <Text>
-            Rarely needed — <Code>useAnimations</Code> calls these for you. Import
-            one directly only behind a declared Tier-2 capability (e.g. Carousel's
-            scroll API, ChatBubble's measure-then-animate).
+            Rarely needed — <Code>useAnimations</Code> calls these for you. Import one directly only
+            behind a declared Tier-2 capability (e.g. Carousel's scroll API, ChatBubble's
+            measure-then-animate).
           </Text>
           <CodeBlock
             language="ts"
@@ -145,20 +158,14 @@ staggerAnimate(container, selector, animation, stagger, cancelRef, direction?)`}
           lede="Keeps an element mounted until its exit animation finishes."
         >
           <Text>
-            Wrap children that need an exit in <Code>Presence</Code>. It holds a
-            removed child in the tree, plays its exit, and only then takes it
-            down. <Code>usePresence</Code> and <Code>useIsPresent</Code> let a
-            child read whether it's on the way out. This is what makes the{' '}
-            <RouterLink to="/animation/lifecycle">exit phase</RouterLink>{' '}
-            possible.
+            Wrap children that need an exit in <Code>Presence</Code>. It holds a removed child in
+            the tree, plays its exit, and only then takes it down. <Code>usePresence</Code> and{' '}
+            <Code>useIsPresent</Code> let a child read whether it's on the way out. This is what
+            makes the <RouterLink to="/animation/lifecycle">exit phase</RouterLink> possible.
           </Text>
         </Section>
 
-        <Section
-          id="utilities"
-          title="Utilities"
-          lede="Smaller helpers for specific jobs."
-        >
+        <Section id="utilities" title="Utilities" lede="Smaller helpers for specific jobs.">
           <CodeBlock
             language="ts"
             code={`usePositionTracker({ containerRef, activeSelector?, track?, disabled? })  // → { indicatorRef }
@@ -175,15 +182,24 @@ prefersReducedMotion()  // → boolean`}
         >
           <Text>
             A Radix popper positions the floating element with{' '}
-            <Code>transform: translate(x, y)</Code> and re-applies it on every
-            scroll. Two things follow whenever you animate one by hand. (Move’s
-            built-in overlays already do this — you only need it for a custom one.)
+            <Code>transform: translate(x, y)</Code> and re-applies it on every scroll. Two things
+            follow whenever you animate one by hand. (Move’s built-in overlays already do this — you
+            only need it for a custom one.)
           </Text>
           <HighlightList
             items={[
-              { icon: 'layers', text: 'Two layers. Animating scale or translate on the positioned Content clobbers Radix’s positioning transform — the scale dies and the popup can’t follow the trigger on scroll. Wrap the body in an inner surface that owns the scale/slide; the shell keeps Radix’s transform and only fades.' },
-              { icon: 'log-in', text: 'useAnimations below the Portal. The lifecycle enter fires once per mount, so in the always-mounted parent it fires once at page load with a null ref — never on open. Put it in a small component rendered as a child of the Portal: that remounts per open (Presence gates it), so the enter plays every time.' },
-              { icon: 'list', text: 'Parallel steps. Separate top-level sequence steps run one after another — wrap them in a nested array to play the shell fade and the inner scale together.' },
+              {
+                icon: 'layers',
+                text: 'Two layers. Animating scale or translate on the positioned Content clobbers Radix’s positioning transform — the scale dies and the popup can’t follow the trigger on scroll. Wrap the body in an inner surface that owns the scale/slide; the shell keeps Radix’s transform and only fades.',
+              },
+              {
+                icon: 'log-in',
+                text: 'useAnimations below the Portal. The lifecycle enter fires once per mount, so in the always-mounted parent it fires once at page load with a null ref — never on open. Put it in a small component rendered as a child of the Portal: that remounts per open (Presence gates it), so the enter plays every time.',
+              },
+              {
+                icon: 'list',
+                text: 'Parallel steps. Separate top-level sequence steps run one after another — wrap them in a nested array to play the shell fade and the inner scale together.',
+              },
             ]}
           />
           <CodeBlock
@@ -205,9 +221,9 @@ function ContentInner({ isClosing, onCloseComplete, children }) {
 </Radix.Portal>`}
           />
           <Text color="muted">
-            Enter and exit both run through <Code>useAnimations</Code> — CSS{' '}
-            <Code>@keyframes</Code> are reserved for continuous loops (a spinner,
-            an indeterminate bar), never for open/close.
+            Enter and exit both run through <Code>useAnimations</Code> — CSS <Code>@keyframes</Code>{' '}
+            are reserved for continuous loops (a spinner, an indeterminate bar), never for
+            open/close.
           </Text>
         </Section>
       </Stack>

@@ -36,10 +36,13 @@ const FIELDS: Row[] = [
     required: true,
     what: (
       <>
-        Whether having a targeted slot <Text as="em" size="sm">implies</Text> the capability. True where the kind and the
-        capability are the same fact — a <Code>surface</Code> slot paints a ground, so it owns one.
-        Then a component with the slot and no declaration fails, which is what catches the promises
-        nobody wrote down.
+        Whether having a targeted slot{' '}
+        <Text as="em" size="sm">
+          implies
+        </Text>{' '}
+        the capability. True where the kind and the capability are the same fact — a{' '}
+        <Code>surface</Code> slot paints a ground, so it owns one. Then a component with the slot
+        and no declaration fails, which is what catches the promises nobody wrote down.
       </>
     ),
   },
@@ -47,25 +50,43 @@ const FIELDS: Row[] = [
     name: 'sourceCalls',
     type: 'string[]',
     required: false,
-    what: <>Identifiers the component&rsquo;s source must reference, e.g. <Code>useSurfaceFlip</Code>.</>,
+    what: (
+      <>
+        Identifiers the component&rsquo;s source must reference, e.g. <Code>useSurfaceFlip</Code>.
+      </>
+    ),
   },
   {
     name: 'attribute',
     type: 'string',
     required: false,
-    what: <>A <Code>data-*</Code> attribute the source must set.</>,
+    what: (
+      <>
+        A <Code>data-*</Code> attribute the source must set.
+      </>
+    ),
   },
   {
     name: 'cssDeclaration',
     type: 'string',
     required: false,
-    what: <>A declaration the targeted slots&rsquo; rules must contain, e.g. <Code>:focus-visible</Code>.</>,
+    what: (
+      <>
+        A declaration the targeted slots&rsquo; rules must contain, e.g. <Code>:focus-visible</Code>
+        .
+      </>
+    ),
   },
   {
     name: 'cssAlternative',
     type: 'string',
     required: false,
-    what: <>An equally valid answer elsewhere in the stylesheet — a field styling <Code>:focus-within</Code> on its wrapper needs no ring on the input itself.</>,
+    what: (
+      <>
+        An equally valid answer elsewhere in the stylesheet — a field styling{' '}
+        <Code>:focus-within</Code> on its wrapper needs no ring on the input itself.
+      </>
+    ),
   },
   {
     name: 'composedInherits',
@@ -73,9 +94,12 @@ const FIELDS: Row[] = [
     required: false,
     what: (
       <>
-        Whether a slot that <Text as="em" size="sm">composes</Text> a Move component satisfies this by inheritance. A
-        player&rsquo;s play button renders <Code>Button</Code>, so its ring and its disabled
-        treatment are checked on Button.
+        Whether a slot that{' '}
+        <Text as="em" size="sm">
+          composes
+        </Text>{' '}
+        a Move component satisfies this by inheritance. A player&rsquo;s play button renders{' '}
+        <Code>Button</Code>, so its ring and its disabled treatment are checked on Button.
       </>
     ),
   },
@@ -118,9 +142,8 @@ export function CapabilityContractPage() {
           <Stack gap="md">
             <Text>
               A capability is checked both ways. A component claiming one has to keep it, and a
-              component behaving like one has to say so — the second direction is the one that
-              earns the check, because a promise nobody declared is invisible to a
-              declaration-only gate.
+              component behaving like one has to say so — the second direction is the one that earns
+              the check, because a promise nobody declared is invisible to a declaration-only gate.
             </Text>
             <Table>
               <Table.Header>
@@ -189,8 +212,8 @@ export function CapabilityContractPage() {
             </Table>
             <Text>
               Guards are stripped before matching. <Code>.root:hover:not(:disabled)</Code> contains
-              the string <Code>:disabled</Code> while styling the <Text as="em">enabled</Text> state, and a
-              contract satisfied by a negation of itself asserts nothing.
+              the string <Code>:disabled</Code> while styling the <Text as="em">enabled</Text>{' '}
+              state, and a contract satisfied by a negation of itself asserts nothing.
             </Text>
           </Stack>
         </Section>
@@ -209,8 +232,8 @@ export function CapabilityContractPage() {
             </Text>
             <Text>
               And it needs a spec to be declared in. Ten shared internals have none, so a capability
-              cannot reach them — a CSS-level check can, which is why{' '}
-              <Code>check:option-rows</Code> is one. See the{' '}
+              cannot reach them — a CSS-level check can, which is why <Code>check:option-rows</Code>{' '}
+              is one. See the{' '}
               <Link asChild>
                 <RouterLink to="/systems/capabilities">capabilities and families</RouterLink>
               </Link>{' '}

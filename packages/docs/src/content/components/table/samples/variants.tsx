@@ -13,7 +13,9 @@ export default function VariantsSample() {
     <Stack gap="lg">
       {variants.map((variant) => (
         <Stack key={variant} gap="xs">
-          <Text size="sm" color="muted" weight="medium">variant="{variant}"</Text>
+          <Text size="sm" color="muted" weight="medium">
+            variant="{variant}"
+          </Text>
           <Table variant={variant}>
             <Table.Header>
               <Table.Row>

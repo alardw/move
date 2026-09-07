@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/skeleton',
     name: 'Skeleton',
-    reason: 'For layout-shaped placeholders. Loader is for "something is happening" without a known shape.',
+    reason:
+      'For layout-shaped placeholders. Loader is for "something is happening" without a known shape.',
   },
   {
     to: '/components/progress-bar',
@@ -31,16 +32,19 @@ export const meta: ComponentDocument = {
   synonyms: ['spinner', 'loading', 'wait', 'progress indicator', 'busy indicator'],
   preview: { width: 'fit' },
   name: 'Loader',
-  tagline: 'An indeterminate loading indicator — three sizes, theme-aware colour, GPU-friendly loop.',
+  tagline:
+    'An indeterminate loading indicator — three sizes, theme-aware colour, GPU-friendly loop.',
   categories: ['feedback'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Loader } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Loader is purely visual. Pair with `aria-busy` on the surrounding region for assistive tech.' },
+    {
+      key: '—',
+      action:
+        'Loader is purely visual. Pair with `aria-busy` on the surrounding region for assistive tech.',
+    },
   ],
   accessibilityLede:
     'Loader has `aria-hidden="true"` since it’s decorative. Set `aria-busy="true"` on the actual loading region (e.g. a `role="status"` block) so screen readers know the content is in progress.',

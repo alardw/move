@@ -25,11 +25,10 @@ export const meta: ComponentDocument = {
   slug: 'tooltip',
   synonyms: ['hint', 'tip', 'label', 'overlay tip', 'popup', 'title'],
   name: 'Tooltip',
-  tagline: 'A small hover/focus label — Radix-backed, delay-grouped, animated, with the right ARIA semantics.',
+  tagline:
+    'A small hover/focus label — Radix-backed, delay-grouped, animated, with the right ARIA semantics.',
   categories: ['overlays'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Tooltip } from 'move';`,

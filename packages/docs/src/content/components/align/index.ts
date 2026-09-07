@@ -18,7 +18,12 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic app bar', render: Basic, code: basicCode },
     { id: 'two-slot', title: 'Two-slot toolbar', render: TwoSlot, code: twoSlotCode },
-    { id: 'vertical-align', title: 'Vertical alignment', render: VerticalAlign, code: verticalAlignCode },
+    {
+      id: 'vertical-align',
+      title: 'Vertical alignment',
+      render: VerticalAlign,
+      code: verticalAlignCode,
+    },
     { id: 'dialog-footer', title: 'Dialog footer', render: DialogFooter, code: dialogFooterCode },
   ],
 };

@@ -1,12 +1,12 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 const traffic = [
-  { month: "Jan", organic: 210, paid: 120, referral: 60 },
-  { month: "Feb", organic: 250, paid: 140, referral: 72 },
-  { month: "Mar", organic: 240, paid: 190, referral: 65 },
-  { month: "Apr", organic: 300, paid: 160, referral: 90 },
-  { month: "May", organic: 340, paid: 210, referral: 104 },
-  { month: "Jun", organic: 380, paid: 180, referral: 118 },
+  { month: 'Jan', organic: 210, paid: 120, referral: 60 },
+  { month: 'Feb', organic: 250, paid: 140, referral: 72 },
+  { month: 'Mar', organic: 240, paid: 190, referral: 65 },
+  { month: 'Apr', organic: 300, paid: 160, referral: 90 },
+  { month: 'May', organic: 340, paid: 210, referral: 104 },
+  { month: 'Jun', organic: 380, paid: 180, referral: 118 },
 ];
 
 /**
@@ -27,9 +27,9 @@ export default function StackedAreaSample() {
       curve="monotone"
       formatY={(v) => `${v}k`}
       series={[
-        { key: "organic", type: "area", label: "Organic" },
-        { key: "paid", type: "area", label: "Paid" },
-        { key: "referral", type: "area", label: "Referral" },
+        { key: 'organic', type: 'area', label: 'Organic' },
+        { key: 'paid', type: 'area', label: 'Paid' },
+        { key: 'referral', type: 'area', label: 'Referral' },
       ]}
     />
   );

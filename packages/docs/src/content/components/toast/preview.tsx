@@ -31,7 +31,9 @@ export default function ToastPreview() {
           aria-live="polite"
         >
           {/* composite-purity-ignore: hand-built toast replica reusing the real Toast stylesheet */}
-          <span className={styles.icon} data-variant="success">{icon}</span>
+          <span className={styles.icon} data-variant="success">
+            {icon}
+          </span>
           {/* composite-purity-ignore: hand-built toast replica reusing the real Toast stylesheet */}
           <div className={styles.content}>
             {/* composite-purity-ignore: hand-built toast replica reusing the real Toast stylesheet */}

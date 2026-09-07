@@ -21,7 +21,12 @@ export const content: ComponentContent = {
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'variants', title: 'Variants', render: Variants, code: variantsCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
-    { id: 'footer-split', title: 'Footer split (Start + End)', render: FooterSplit, code: footerSplitCode },
+    {
+      id: 'footer-split',
+      title: 'Footer split (Start + End)',
+      render: FooterSplit,
+      code: footerSplitCode,
+    },
     { id: 'grid', title: 'Card grid', render: Grid, code: gridCode },
   ],
 };

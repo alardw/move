@@ -23,7 +23,12 @@ export const content: ComponentContent = {
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     { id: 'swatches', title: 'With preset swatches', render: Swatches, code: swatchesCode },
-    { id: 'swatch-only', title: 'Swatch-only (no picker)', render: SwatchOnly, code: swatchOnlyCode },
+    {
+      id: 'swatch-only',
+      title: 'Swatch-only (no picker)',
+      render: SwatchOnly,
+      code: swatchOnlyCode,
+    },
     { id: 'formats', title: 'Format options', render: Formats, code: formatsCode },
     {
       id: 'follows-value',

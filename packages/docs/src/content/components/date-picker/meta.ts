@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/calendar-view',
     name: 'CalendarView',
-    reason: 'When the calendar is the page (events, agenda, time grid). DatePicker is for picking dates inside a form.',
+    reason:
+      'When the calendar is the page (events, agenda, time grid). DatePicker is for picking dates inside a form.',
   },
 ];
 
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['date', 'calendar input', 'date field', 'date select', 'datepicker', 'schedule'],
   preview: { width: 'fit' },
   name: 'DatePicker',
-  tagline: 'A date input with a popover calendar — single date, range, or multi-select, with optional time picker, sensible localisation, and a real keyboard contract.',
+  tagline:
+    'A date input with a popover calendar — single date, range, or multi-select, with optional time picker, sensible localisation, and a real keyboard contract.',
   categories: ['date-time', 'forms'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -46,7 +48,10 @@ export const meta: ComponentDocument = {
   importCode: `import { DatePicker } from 'move';`,
   keyboard: [
     { key: 'Tab', action: 'Moves focus into the input, then to the calendar trigger.' },
-    { key: 'Arrow keys', action: 'Inside the calendar — moves between days, weeks, and grid edges.' },
+    {
+      key: 'Arrow keys',
+      action: 'Inside the calendar — moves between days, weeks, and grid edges.',
+    },
     { key: 'Enter / Space', action: 'Selects the focused day.' },
     { key: 'Escape', action: 'Closes the popover.' },
   ],

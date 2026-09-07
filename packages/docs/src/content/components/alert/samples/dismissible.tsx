@@ -12,14 +12,9 @@ export default function DismissibleSample() {
   return (
     <Stack gap="md" align="start">
       {shown && (
-        <Alert
-          variant="success"
-          title="Saved"
-          closable
-          onClose={() => setShown(false)}
-        >
-          Your changes are live. You can dismiss this banner — it won’t come back
-          until something else changes.
+        <Alert variant="success" title="Saved" closable onClose={() => setShown(false)}>
+          Your changes are live. You can dismiss this banner — it won’t come back until something
+          else changes.
         </Alert>
       )}
       {!shown && (

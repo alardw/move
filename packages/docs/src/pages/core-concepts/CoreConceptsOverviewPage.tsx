@@ -21,8 +21,9 @@ const PILLARS: HighlightItem[] = [
       <>
         Every component, composite, and design pattern is a typed{' '}
         <RouterLink to="/contracts">contract</RouterLink> — one spec that feeds the generators,
-        validators, docs, and AI skills. <RouterLink to="/contracts/conformance">Conformance</RouterLink>{' '}
-        checks fail the build the moment a spec and its code drift apart.
+        validators, docs, and AI skills.{' '}
+        <RouterLink to="/contracts/conformance">Conformance</RouterLink> checks fail the build the
+        moment a spec and its code drift apart.
       </>
     ),
   },
@@ -64,7 +65,8 @@ export function CoreConceptsOverviewPage() {
         <Stack gap="sm">
           <Heading level={1}>Core Concepts</Heading>
           <Text color="muted" size="lg">
-            Move is easier to use once you read it as a system: contract, animation, theming, then AI.
+            Move is easier to use once you read it as a system: contract, animation, theming, then
+            AI.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((badge) => (
@@ -95,7 +97,8 @@ export function CoreConceptsOverviewPage() {
                 icon: 'brain',
                 text: (
                   <>
-                    Read <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> for the full mental model.
+                    Read <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink>{' '}
+                    for the full mental model.
                   </>
                 ),
               },
@@ -103,7 +106,8 @@ export function CoreConceptsOverviewPage() {
                 icon: 'bot',
                 text: (
                   <>
-                    Continue to <RouterLink to="/ai">AI Overview</RouterLink> to see how skills use the contract.
+                    Continue to <RouterLink to="/ai">AI Overview</RouterLink> to see how skills use
+                    the contract.
                   </>
                 ),
               },

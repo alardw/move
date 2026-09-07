@@ -7,9 +7,12 @@ export default function SizesSample() {
     <Stack gap="md">
       {sizes.map((size) => (
         <Stack key={size} direction="row" gap="md" align="baseline">
-          <Text size="sm" weight="medium">{size}</Text>
+          <Text size="sm" weight="medium">
+            {size}
+          </Text>
           <Text size={size === 'lg' ? 'lg' : 'base'}>
-            Match the surrounding text size — <Code size={size}>moveAnimate(el, &#123; opacity: 1 &#125;)</Code>
+            Match the surrounding text size —{' '}
+            <Code size={size}>moveAnimate(el, &#123; opacity: 1 &#125;)</Code>
           </Text>
         </Stack>
       ))}

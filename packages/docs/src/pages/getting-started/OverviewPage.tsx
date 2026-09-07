@@ -93,7 +93,9 @@ export function OverviewPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Move UI</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -111,7 +113,10 @@ export function OverviewPage() {
         >
           <HighlightList items={TRIAD} />
           <Text>
-            <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> walks through each part, and the contract that ties them together. For the problem it solves, see <RouterLink to="/getting-started/what-ai-gets-wrong">what AI gets wrong</RouterLink> on its own.
+            <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> walks through
+            each part, and the contract that ties them together. For the problem it solves, see{' '}
+            <RouterLink to="/getting-started/what-ai-gets-wrong">what AI gets wrong</RouterLink> on
+            its own.
           </Text>
         </Section>
 
@@ -122,7 +127,8 @@ export function OverviewPage() {
         >
           <HighlightList items={MAKE_YOUR_OWN} />
           <Text>
-            See <RouterLink to="/customize">Customize</RouterLink> for theming, typography, icons, and language.
+            See <RouterLink to="/customize">Customize</RouterLink> for theming, typography, icons,
+            and language.
           </Text>
         </Section>
 
@@ -137,7 +143,9 @@ export function OverviewPage() {
                 icon: 'brain',
                 text: (
                   <>
-                    Start with <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> to get the mental model before you browse APIs.
+                    Start with{' '}
+                    <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> to
+                    get the mental model before you browse APIs.
                   </>
                 ),
               },
@@ -145,7 +153,13 @@ export function OverviewPage() {
                 icon: 'download',
                 text: (
                   <>
-                    Then <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink> to get a project rendering — or <RouterLink to="/getting-started/installation">add Move to an existing app</RouterLink>.
+                    Then{' '}
+                    <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink> to
+                    get a project rendering — or{' '}
+                    <RouterLink to="/getting-started/installation">
+                      add Move to an existing app
+                    </RouterLink>
+                    .
                   </>
                 ),
               },
@@ -153,7 +167,8 @@ export function OverviewPage() {
                 icon: 'bot',
                 text: (
                   <>
-                    Continue to <RouterLink to="/ai">AI Overview</RouterLink> for the skills and the conformance workflow in full.
+                    Continue to <RouterLink to="/ai">AI Overview</RouterLink> for the skills and the
+                    conformance workflow in full.
                   </>
                 ),
               },

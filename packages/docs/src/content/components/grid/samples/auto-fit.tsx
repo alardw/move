@@ -9,7 +9,9 @@ import { Tile } from './_tile';
 export default function AutoFitSample() {
   return (
     <Grid minChildWidth="14rem" gap="md">
-      {Array.from({ length: 6 }).map((_, i) => <Tile key={i} index={i} />)}
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Tile key={i} index={i} />
+      ))}
     </Grid>
   );
 }

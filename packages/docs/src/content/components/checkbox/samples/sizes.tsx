@@ -7,10 +7,16 @@ export default function SizesSample() {
     <Stack gap="md">
       {sizes.map((size) => (
         <Stack key={size} direction="row" gap="md" align="center">
-          <Text size="sm" weight="medium">{size}</Text>
-          <Checkbox size={size} defaultChecked>Default checked</Checkbox>
+          <Text size="sm" weight="medium">
+            {size}
+          </Text>
+          <Checkbox size={size} defaultChecked>
+            Default checked
+          </Checkbox>
           <Checkbox size={size}>Unchecked</Checkbox>
-          <Checkbox size={size} disabled defaultChecked>Disabled</Checkbox>
+          <Checkbox size={size} disabled defaultChecked>
+            Disabled
+          </Checkbox>
         </Stack>
       ))}
     </Stack>

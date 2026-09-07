@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Grid, Stack, Text } from "move";
+import { Badge, Button, Card, Grid, Stack, Text } from 'move';
 
 /**
  * Cards drop happily into a CSS grid — `maxWidth` keeps each column
@@ -7,28 +7,28 @@ import { Badge, Button, Card, Grid, Stack, Text } from "move";
  */
 const projects = [
   {
-    name: "Marketing site",
-    status: "Active",
-    color: "green" as const,
-    desc: "Static, edge-cached, deploy on every merge to main.",
+    name: 'Marketing site',
+    status: 'Active',
+    color: 'green' as const,
+    desc: 'Static, edge-cached, deploy on every merge to main.',
   },
   {
-    name: "Customer portal",
-    status: "Beta",
-    color: "blue" as const,
-    desc: "Self-serve plan changes, billing history, support tickets.",
+    name: 'Customer portal',
+    status: 'Beta',
+    color: 'blue' as const,
+    desc: 'Self-serve plan changes, billing history, support tickets.',
   },
   {
-    name: "Analytics ETL",
-    status: "Failing",
-    color: "red" as const,
-    desc: "Pipes events into the warehouse for the dashboards team.",
+    name: 'Analytics ETL',
+    status: 'Failing',
+    color: 'red' as const,
+    desc: 'Pipes events into the warehouse for the dashboards team.',
   },
   {
-    name: "Legacy admin",
-    status: "Maintenance",
-    color: "yellow" as const,
-    desc: "Read-only until the v3 rewrite ships next quarter.",
+    name: 'Legacy admin',
+    status: 'Maintenance',
+    color: 'yellow' as const,
+    desc: 'Read-only until the v3 rewrite ships next quarter.',
   },
 ];
 

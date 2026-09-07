@@ -33,11 +33,10 @@ export const meta: ComponentDocument = {
   slug: 'splitter',
   synonyms: ['resizer', 'pane split', 'panes', 'resizable panels', 'split pane', 'divider'],
   name: 'Splitter',
-  tagline: 'A resizable two-or-more panel layout with draggable gutters, keyboard resize, and responsive collapse.',
+  tagline:
+    'A resizable two-or-more panel layout with draggable gutters, keyboard resize, and responsive collapse.',
   categories: ['layout'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Splitter } from 'move';`,

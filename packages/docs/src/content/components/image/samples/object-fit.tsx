@@ -7,7 +7,9 @@ export default function ObjectFitSample() {
     <Stack direction="row" gap="md" wrap>
       {fits.map((fit) => (
         <Stack key={fit} gap="xs" align="center">
-          <Text size="sm" weight="medium">{fit}</Text>
+          <Text size="sm" weight="medium">
+            {fit}
+          </Text>
           <Image
             // Tall portrait source into a wide landscape box so the four
             // fits are clearly distinct: cover crops vertically, contain

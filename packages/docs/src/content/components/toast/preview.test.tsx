@@ -13,7 +13,10 @@ import ToastPreview from './preview';
 // replica must be updated.
 
 function toPascal(name: string) {
-  return name.split('-').map((p) => p.charAt(0).toUpperCase() + p.slice(1)).join('');
+  return name
+    .split('-')
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join('');
 }
 const iconResolver = (name: string) => {
   const icons = Lucide as Record<string, unknown>;

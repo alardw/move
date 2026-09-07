@@ -19,6 +19,11 @@ export const content: ComponentContent = {
     { id: 'equal-cols', title: 'Equal columns', render: EqualCols, code: equalColsCode },
     { id: 'auto-fit', title: 'Auto-fit (responsive)', render: AutoFit, code: autoFitCode },
     { id: 'cell-spans', title: 'Cell spans', render: CellSpans, code: cellSpansCode },
-    { id: 'image-gallery', title: 'Image gallery (stagger + backdrop)', render: ImageGallery, code: imageGalleryCode },
+    {
+      id: 'image-gallery',
+      title: 'Image gallery (stagger + backdrop)',
+      render: ImageGallery,
+      code: imageGalleryCode,
+    },
   ],
 };

@@ -3,8 +3,16 @@ import { ColorPicker, Stack, Text } from 'move';
 import { PickerPanel } from './_panel';
 
 const brand = [
-  '#4c6ef5', '#5c7cfa', '#7950f2', '#15aabf', '#12b886',
-  '#fab005', '#fd7e14', '#fa5252', '#e64980', '#212529',
+  '#4c6ef5',
+  '#5c7cfa',
+  '#7950f2',
+  '#15aabf',
+  '#12b886',
+  '#fab005',
+  '#fd7e14',
+  '#fa5252',
+  '#e64980',
+  '#212529',
 ];
 
 /**
@@ -25,7 +33,9 @@ export default function SwatchOnlySample() {
           withPicker={false}
         />
       </PickerPanel>
-      <Text size="sm" color="muted">value: {value}</Text>
+      <Text size="sm" color="muted">
+        value: {value}
+      </Text>
     </Stack>
   );
 }

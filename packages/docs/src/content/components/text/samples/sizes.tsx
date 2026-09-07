@@ -6,7 +6,9 @@ export default function SizesSample() {
   return (
     <Stack gap="sm">
       {sizes.map((size) => (
-        <Text key={size} size={size}>The quick brown fox jumps over the lazy dog — size="{size}"</Text>
+        <Text key={size} size={size}>
+          The quick brown fox jumps over the lazy dog — size="{size}"
+        </Text>
       ))}
     </Stack>
   );

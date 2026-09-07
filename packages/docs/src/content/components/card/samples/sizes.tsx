@@ -1,7 +1,7 @@
 import { Card, Stack, Text } from 'move';
 
 const sizes = ['sm', 'md', 'lg'] as const;
-const descriptions: Record<typeof sizes[number], string> = {
+const descriptions: Record<(typeof sizes)[number], string> = {
   sm: 'Tight padding, smaller title — for sidebars and dense dashboards.',
   md: 'The default. Page-level cards.',
   lg: 'Roomy padding and a larger title — for marketing surfaces and feature highlights.',
@@ -17,7 +17,9 @@ export default function SizesSample() {
             <Card.Description>{descriptions[size]}</Card.Description>
           </Card.Header>
           <Card.Body>
-            <Text size="sm" color="muted">Padding scales; the proportions of the title-to-description gap stay consistent.</Text>
+            <Text size="sm" color="muted">
+              Padding scales; the proportions of the title-to-description gap stay consistent.
+            </Text>
           </Card.Body>
         </Card.Root>
       ))}

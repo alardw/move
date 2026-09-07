@@ -16,7 +16,9 @@ export default function AlignedSample() {
           <Table.Head align="end">Qty</Table.Head>
           <Table.Head align="end">Revenue</Table.Head>
           <Table.Head align="end">
-            <Text as="span" className="sr-only">Actions</Text>
+            <Text as="span" className="sr-only">
+              Actions
+            </Text>
           </Table.Head>
         </Table.Row>
       </Table.Header>

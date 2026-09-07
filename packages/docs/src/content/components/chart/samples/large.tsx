@@ -1,9 +1,9 @@
-import { Chart } from "move";
-import { AMSTERDAM_HOURLY_C, SERIES_START } from "./amsterdam-temperature";
+import { Chart } from 'move';
+import { AMSTERDAM_HOURLY_C, SERIES_START } from './amsterdam-temperature';
 
 const readings = AMSTERDAM_HOURLY_C.map((celsius, hour) => ({ hour, celsius }));
 
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const asMonth = (hour: unknown) => {
   const at = new Date(SERIES_START.getTime() + Number(hour) * 3_600_000);
@@ -41,7 +41,7 @@ export default function LargeSample() {
       xScale="linear"
       formatX={asMonth}
       formatY={(v) => `${v}°C`}
-      series={[{ key: "celsius", type: "line", label: "Temperature", color: "cyan" }]}
+      series={[{ key: 'celsius', type: 'line', label: 'Temperature', color: 'cyan' }]}
     />
   );
 }

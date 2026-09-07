@@ -1,11 +1,11 @@
-import { Stack, FormField, InputText } from "move";
+import { Stack, FormField, InputText } from 'move';
 
 const FIELDS = [
-  { width: "xs", label: "Year", placeholder: "2026" },
-  { width: "sm", label: "Postcode", placeholder: "1017 PW" },
-  { width: "md", label: "Phone", placeholder: "+31 20 123 4567" },
-  { width: "lg", label: "Email", placeholder: "you@company.com" },
-  { width: "full", label: "Street address", placeholder: "Herengracht 1" },
+  { width: 'xs', label: 'Year', placeholder: '2026' },
+  { width: 'sm', label: 'Postcode', placeholder: '1017 PW' },
+  { width: 'md', label: 'Phone', placeholder: '+31 20 123 4567' },
+  { width: 'lg', label: 'Email', placeholder: 'you@company.com' },
+  { width: 'full', label: 'Street address', placeholder: 'Herengracht 1' },
 ] as const;
 
 export default function FieldWidths() {

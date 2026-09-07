@@ -21,12 +21,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/color-picker',
     name: 'ColorPicker',
-    reason: 'For inline use without a text input or popover. ColorInput wraps it in an input field; ColorPicker is the picker on its own.',
+    reason:
+      'For inline use without a text input or popover. ColorInput wraps it in an input field; ColorPicker is the picker on its own.',
   },
   {
     to: '/components/input-text',
     name: 'InputText',
-    reason: 'For non-colour text input. ColorInput shares its sizing and variant tokens so they line up in a form.',
+    reason:
+      'For non-colour text input. ColorInput shares its sizing and variant tokens so they line up in a form.',
   },
 ];
 
@@ -35,7 +37,8 @@ export const meta: ComponentDocument = {
   synonyms: ['color field', 'colour input', 'hex picker', 'swatch input'],
   preview: { width: 'fit' },
   name: 'ColorInput',
-  tagline: 'A text input with a colour swatch trigger — type a value, click the swatch to drop into a full picker, or grab a colour off the screen with the eye-dropper.',
+  tagline:
+    'A text input with a colour swatch trigger — type a value, click the swatch to drop into a full picker, or grab a colour off the screen with the eye-dropper.',
   categories: ['forms'],
   badges: [
     { icon: 'pipette', label: 'Picker' },

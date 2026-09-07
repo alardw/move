@@ -13,6 +13,11 @@ export const content: ComponentContent = {
   spec,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
-    { id: 'constraints', title: 'Type, size & count limits', render: Constraints, code: constraintsCode },
+    {
+      id: 'constraints',
+      title: 'Type, size & count limits',
+      render: Constraints,
+      code: constraintsCode,
+    },
   ],
 };

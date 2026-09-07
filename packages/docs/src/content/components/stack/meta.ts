@@ -38,16 +38,14 @@ export const meta: ComponentDocument = {
   slug: 'stack',
   synonyms: ['flex', 'column', 'row', 'flex layout'],
   name: 'Stack',
-  tagline: 'A flexbox layout primitive — direction, gap, padding, align, justify, wrap, flex — driven by tokens, no CSS required.',
+  tagline:
+    'A flexbox layout primitive — direction, gap, padding, align, justify, wrap, flex — driven by tokens, no CSS required.',
   categories: ['layout'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Stack } from 'move';`,
-  keyboard: [
-    { key: '—', action: 'Stack is a layout container.' },
-  ],
+  keyboard: [{ key: '—', action: 'Stack is a layout container.' }],
   accessibilityLede:
     'Stack renders a `<div>` with no roles. Semantics flow from the elements inside.',
 };

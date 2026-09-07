@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/number-input',
     name: 'NumberInput',
-    reason: 'When the user wants to type the value precisely. Pair with InputRange when both interactions matter.',
+    reason:
+      'When the user wants to type the value precisely. Pair with InputRange when both interactions matter.',
   },
 ];
 
@@ -30,11 +31,10 @@ export const meta: ComponentDocument = {
   synonyms: ['slider', 'range slider', 'range input', 'track'],
   preview: { width: 'md' },
   name: 'InputRange',
-  tagline: 'A slider with single or dual thumbs, an optional value readout, and a real keyboard contract from Radix Slider.',
+  tagline:
+    'A slider with single or dual thumbs, an optional value readout, and a real keyboard contract from Radix Slider.',
   categories: ['forms'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { InputRange } from 'move';`,

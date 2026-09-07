@@ -20,7 +20,12 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
-    { id: 'indeterminate', title: 'Indeterminate (select-all)', render: Indeterminate, code: indeterminateCode },
+    {
+      id: 'indeterminate',
+      title: 'Indeterminate (select-all)',
+      render: Indeterminate,
+      code: indeterminateCode,
+    },
     { id: 'group', title: 'In a FormField group', render: Group, code: groupCode },
     { id: 'states', title: 'State matrix', render: States, code: statesCode },
   ],

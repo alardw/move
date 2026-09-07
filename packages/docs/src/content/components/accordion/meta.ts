@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/tabs',
     name: 'Tabs',
-    reason: 'When only one panel should ever be visible. Accordion happily lets sections breathe next to each other.',
+    reason:
+      'When only one panel should ever be visible. Accordion happily lets sections breathe next to each other.',
   },
 ];
 
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['expander', 'collapsible group', 'faq', 'disclosure list', 'collapse'],
   preview: { width: 'xs' },
   name: 'Accordion',
-  tagline: 'Collapsible sections for FAQs, settings panels, and anything that shouldn’t be visible all at once.',
+  tagline:
+    'Collapsible sections for FAQs, settings panels, and anything that shouldn’t be visible all at once.',
   categories: ['disclosure'],
   badges: [
     { icon: 'boxes', label: 'Compound' },

@@ -11,7 +11,9 @@ export default function AlignJustifySample() {
   return (
     <Stack gap="lg">
       <Stack gap="xs">
-        <Text size="sm" weight="medium">justify="between"</Text>
+        <Text size="sm" weight="medium">
+          justify="between"
+        </Text>
         <Card.Root>
           <Stack direction="row" gap="sm" justify="between" padding="sm">
             <Tile>Start</Tile>
@@ -20,7 +22,9 @@ export default function AlignJustifySample() {
         </Card.Root>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">align="center" + justify="evenly"</Text>
+        <Text size="sm" weight="medium">
+          align="center" + justify="evenly"
+        </Text>
         <Card.Root>
           <Stack direction="row" gap="sm" align="center" justify="evenly" padding="sm">
             <Tile>1</Tile>

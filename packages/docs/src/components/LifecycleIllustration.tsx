@@ -26,10 +26,30 @@ const CARD_H = 240;
 const GLYPH_CY = CARD_Y + 150; // shared centre line for glyphs + flow chevrons
 const cardX = (i: number) => X0 + i * (CARD_W + GAP);
 
-function Frame({ cx, cy, opacity, scale }: { cx: number; cy: number; opacity: number; scale: number }) {
+function Frame({
+  cx,
+  cy,
+  opacity,
+  scale,
+}: {
+  cx: number;
+  cy: number;
+  opacity: number;
+  scale: number;
+}) {
   const w = 68 * scale;
   const h = 28 * scale;
-  return <rect className="il-accent" x={cx - w / 2} y={cy - h / 2} width={w} height={h} rx={7} opacity={opacity} />;
+  return (
+    <rect
+      className="il-accent"
+      x={cx - w / 2}
+      y={cy - h / 2}
+      width={w}
+      height={h}
+      rx={7}
+      opacity={opacity}
+    />
+  );
 }
 
 function Glyph({ phase, cx, cy }: { phase: string; cx: number; cy: number }) {
@@ -52,7 +72,13 @@ function Glyph({ phase, cx, cy }: { phase: string; cx: number; cy: number }) {
     { dy: dir * 18, o: 0.48, s: 0.9 },
     { dy: 0, o: 1, s: 1 },
   ];
-  return <g>{frames.map((f, i) => <Frame key={i} cx={cx} cy={cy + f.dy} opacity={f.o} scale={f.s} />)}</g>;
+  return (
+    <g>
+      {frames.map((f, i) => (
+        <Frame key={i} cx={cx} cy={cy + f.dy} opacity={f.o} scale={f.s} />
+      ))}
+    </g>
+  );
 }
 
 export function LifecycleIllustration({ className, style }: LifecycleIllustrationProps) {
@@ -78,9 +104,21 @@ export function LifecycleIllustration({ className, style }: LifecycleIllustratio
         const hy = CARD_Y + 14;
         return (
           <g key={p.name}>
-            <rect className="il-surface" fillOpacity={0.08} x={x} y={CARD_Y} width={CARD_W} height={CARD_H} rx={18} />
-            <text className="li-name" x={cx} y={hy + 20} textAnchor="middle">{p.name}</text>
-            <text className="li-key" x={cx} y={hy + 34} textAnchor="middle">{p.keyword}</text>
+            <rect
+              className="il-surface"
+              fillOpacity={0.08}
+              x={x}
+              y={CARD_Y}
+              width={CARD_W}
+              height={CARD_H}
+              rx={18}
+            />
+            <text className="li-name" x={cx} y={hy + 20} textAnchor="middle">
+              {p.name}
+            </text>
+            <text className="li-key" x={cx} y={hy + 34} textAnchor="middle">
+              {p.keyword}
+            </text>
             <Glyph phase={p.name} cx={cx} cy={GLYPH_CY} />
           </g>
         );

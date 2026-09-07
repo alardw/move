@@ -29,11 +29,10 @@ export const meta: ComponentDocument = {
   slug: 'video-player',
   synonyms: ['video', 'media player', 'mp4', 'film', 'stream'],
   name: 'VideoPlayer',
-  tagline: 'A video player with the controls you’d expect — play, scrub, fullscreen, quality switching, subtitles, speed — and a real keyboard contract.',
+  tagline:
+    'A video player with the controls you’d expect — play, scrub, fullscreen, quality switching, subtitles, speed — and a real keyboard contract.',
   categories: ['media'],
-  badges: [
-    { icon: 'mouse-pointer-click', label: 'Interactive' },
-  ],
+  badges: [{ icon: 'mouse-pointer-click', label: 'Interactive' }],
   highlights,
   related,
   importCode: `import { VideoPlayer } from 'move';`,

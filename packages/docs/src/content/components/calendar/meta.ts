@@ -21,12 +21,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/calendar-view',
     name: 'CalendarView',
-    reason: 'When the calendar is the page — month/week/day/agenda views, time grid, event detail. Calendar is for picking dates.',
+    reason:
+      'When the calendar is the page — month/week/day/agenda views, time grid, event detail. Calendar is for picking dates.',
   },
   {
     to: '/components/date-picker',
     name: 'DatePicker',
-    reason: 'For inline form date entry. DatePicker wraps Calendar inside a popover with a text input.',
+    reason:
+      'For inline form date entry. DatePicker wraps Calendar inside a popover with a text input.',
   },
 ];
 
@@ -35,7 +37,8 @@ export const meta: ComponentDocument = {
   synonyms: ['date picker grid', 'datepicker', 'month grid', 'date grid', 'schedule'],
   preview: { width: 'fit' },
   name: 'Calendar',
-  tagline: 'A date-selection grid with single, range, and multi modes — locale-aware, keyboard-driven, and willing to show event dots when you have them.',
+  tagline:
+    'A date-selection grid with single, range, and multi modes — locale-aware, keyboard-driven, and willing to show event dots when you have them.',
   categories: ['date-time'],
   badges: [
     { icon: 'boxes', label: 'Compound' },

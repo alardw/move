@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/avatar',
     name: 'Avatar',
-    reason: 'For the portrait that lands on each bubble. ChatBubble.Avatar wraps it with the right size and slot styling.',
+    reason:
+      'For the portrait that lands on each bubble. ChatBubble.Avatar wraps it with the right size and slot styling.',
   },
   {
     to: '/components/badge',
@@ -34,7 +35,8 @@ export const meta: ComponentDocument = {
   slug: 'chat-bubble',
   synonyms: ['message', 'chat', 'speech bubble', 'comment bubble', 'conversation', 'im'],
   name: 'ChatBubble',
-  tagline: 'A conversation bubble with avatar, tail, and placement-aware corners — for chat UIs, AI assistants, and anything that wants to look like a message thread.',
+  tagline:
+    'A conversation bubble with avatar, tail, and placement-aware corners — for chat UIs, AI assistants, and anything that wants to look like a message thread.',
   categories: ['data-display'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -44,7 +46,10 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { ChatBubble } from 'move';`,
   keyboard: [
-    { key: '—', action: 'ChatBubble is presentational; activate links and buttons inside it like normal.' },
+    {
+      key: '—',
+      action: 'ChatBubble is presentational; activate links and buttons inside it like normal.',
+    },
   ],
   accessibilityLede:
     'ChatBubble is a `<div>` group, not a list — wrap a thread in `<ol>` (or a custom container with `role="log"`) so screen readers know it’s a sequence. Headers and footers stay readable as plain text inside the bubble.',

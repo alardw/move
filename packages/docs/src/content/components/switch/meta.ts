@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/checkbox',
     name: 'Checkbox',
-    reason: 'For form-style on/off where the change applies on submit. Switch is for "toggles immediately."',
+    reason:
+      'For form-style on/off where the change applies on submit. Switch is for "toggles immediately."',
   },
 ];
 
@@ -26,11 +27,10 @@ export const meta: ComponentDocument = {
   synonyms: ['toggle', 'on off', 'toggle switch'],
   preview: { width: 'fit' },
   name: 'Switch',
-  tagline: 'An immediate-action toggle — animated thumb, three sizes, real `role="switch"` semantics.',
+  tagline:
+    'An immediate-action toggle — animated thumb, three sizes, real `role="switch"` semantics.',
   categories: ['forms'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Switch } from 'move';`,

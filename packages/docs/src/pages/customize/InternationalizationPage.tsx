@@ -19,9 +19,8 @@ const PRINCIPLE: HighlightItem[] = [
     icon: 'languages',
     text: (
       <>
-        Every string a component renders itself — aria-labels, control text —
-        comes from a <Code>labels</Code> prop with English defaults. Override it
-        to localize.
+        Every string a component renders itself — aria-labels, control text — comes from a{' '}
+        <Code>labels</Code> prop with English defaults. Override it to localize.
       </>
     ),
   },
@@ -29,9 +28,8 @@ const PRINCIPLE: HighlightItem[] = [
     icon: 'replace',
     text: (
       <>
-        There’s no global i18n provider. You feed each component’s{' '}
-        <Code>labels</Code> prop from whatever i18n library you already use —
-        Move stays library-agnostic.
+        There’s no global i18n provider. You feed each component’s <Code>labels</Code> prop from
+        whatever i18n library you already use — Move stays library-agnostic.
       </>
     ),
   },
@@ -39,8 +37,8 @@ const PRINCIPLE: HighlightItem[] = [
     icon: 'box',
     text: (
       <>
-        Content you pass is yours to translate; <Code>labels</Code> only covers
-        the strings the component emits on its own (not your <Code>children</Code>).
+        Content you pass is yours to translate; <Code>labels</Code> only covers the strings the
+        component emits on its own (not your <Code>children</Code>).
       </>
     ),
   },
@@ -82,13 +80,21 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'CalendarView', key: 'today', def: 'Today' },
   { component: 'CalendarView', key: 'previous', def: 'Previous' },
   { component: 'CalendarView', key: 'next', def: 'Next' },
-  { component: 'CalendarView', key: 'day / week / month / agenda', def: 'Day / Week / Month / Agenda' },
+  {
+    component: 'CalendarView',
+    key: 'day / week / month / agenda',
+    def: 'Day / Week / Month / Agenda',
+  },
   { component: 'CalendarView', key: 'allDay', def: 'All day' },
   { component: 'CalendarView', key: 'noEvents', def: 'No events in this period' },
   { component: 'CalendarView', key: 'more', def: '(count) ⇒ "+{count} more"' },
   { component: 'ColorInput', key: 'swatch', def: 'Open color picker' },
   { component: 'ColorInput', key: 'eyeDropper', def: 'Pick color from screen' },
-  { component: 'ColorPicker', key: 'saturation / hue / alpha / format / hex', def: 'Color saturation…, Hue, Opacity, Color format, Hex color value' },
+  {
+    component: 'ColorPicker',
+    key: 'saturation / hue / alpha / format / hex',
+    def: 'Color saturation…, Hue, Opacity, Color format, Hex color value',
+  },
   { component: 'ColorPicker', key: 'red / green / blue / lightness', def: 'channel aria-labels' },
   { component: 'DatePicker', key: 'selectDate', def: 'Select date' },
   { component: 'DatePicker', key: 'datesSelected', def: '(count) ⇒ "{count} dates selected"' },
@@ -112,10 +118,26 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'RichTextEditor', key: 'toolbar', def: 'Text formatting' },
   { component: 'Sidebar', key: 'close', def: 'Close sidebar' },
   { component: 'TableOfContents', key: 'label', def: 'On this page' },
-  { component: 'TimeField', key: 'hour / minute / second / period', def: 'hour / minute / second / period' },
-  { component: 'VideoPlayer', key: 'play / pause / mute / unmute', def: 'Play / Pause / Mute / Unmute' },
-  { component: 'VideoPlayer', key: 'fullscreen / exitFullscreen', def: 'Fullscreen / Exit fullscreen' },
-  { component: 'VideoPlayer', key: 'settings / subtitles / subtitlesOff', def: 'Settings / Subtitles / Off' },
+  {
+    component: 'TimeField',
+    key: 'hour / minute / second / period',
+    def: 'hour / minute / second / period',
+  },
+  {
+    component: 'VideoPlayer',
+    key: 'play / pause / mute / unmute',
+    def: 'Play / Pause / Mute / Unmute',
+  },
+  {
+    component: 'VideoPlayer',
+    key: 'fullscreen / exitFullscreen',
+    def: 'Fullscreen / Exit fullscreen',
+  },
+  {
+    component: 'VideoPlayer',
+    key: 'settings / subtitles / subtitlesOff',
+    def: 'Settings / Subtitles / Off',
+  },
 ];
 
 const TOC: TocItem[] = [
@@ -148,10 +170,9 @@ export function InternationalizationPage() {
         <Stack gap="sm">
           <Heading level={1}>Internationalization</Heading>
           <Text color="muted" size="lg">
-            The strings Move’s components render themselves are exposed as
-            overridable labels with English defaults. Localize by passing your
-            translations to each component’s <Code>labels</Code> prop — there’s
-            no global provider to configure.
+            The strings Move’s components render themselves are exposed as overridable labels with
+            English defaults. Localize by passing your translations to each component’s{' '}
+            <Code>labels</Code> prop — there’s no global provider to configure.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -210,10 +231,10 @@ export function InternationalizationPage() {
             </Table.Body>
           </Table>
           <Text color="muted" size="sm">
-            These also supply the accessible name for icon-only buttons (the toggle on
-            Password, the controls on the media players), so screen readers announce them.
-            Every component with built-in strings exposes them through one <Code>labels</Code>{' '}
-            object — validate rule E1 enforces it, so localization works the same way everywhere.
+            These also supply the accessible name for icon-only buttons (the toggle on Password, the
+            controls on the media players), so screen readers announce them. Every component with
+            built-in strings exposes them through one <Code>labels</Code> object — validate rule E1
+            enforces it, so localization works the same way everywhere.
           </Text>
         </Section>
       </Stack>

@@ -9,18 +9,9 @@
 // recharts as an OPTIONAL peer if it ever ships.
 // =============================================================================
 
-import { useEffect } from "react";
-import {
-  Area,
-  Bar,
-  CartesianGrid,
-  ComposedChart,
-  Legend,
-  Line,
-  XAxis,
-  YAxis,
-} from "recharts";
-import type { ChartRenderer } from "move";
+import { useEffect } from 'react';
+import { Area, Bar, CartesianGrid, ComposedChart, Legend, Line, XAxis, YAxis } from 'recharts';
+import type { ChartRenderer } from 'move';
 
 export interface RechartsOptions {
   /**
@@ -74,7 +65,7 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
     // series exists, a point scale otherwise (first point on the left edge,
     // last on the right). Mirror that choice, or the shell's crosshair drifts
     // further from the drawn points at every step.
-    const banded = spec.series.some((s) => s.type === "bar");
+    const banded = spec.series.some((s) => s.type === 'bar');
 
     // Report where we drew so Move's shell can hit-test for its own tooltip.
     // Recharts' <Tooltip> is deliberately not used: the shell's version is
@@ -84,7 +75,9 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
       const x = banded
         ? Array.from({ length: count }, (_, i) => Y_AXIS_WIDTH + ((i + 0.5) * plotWidth) / count)
         : Array.from({ length: count }, (_, i) =>
-            count === 1 ? Y_AXIS_WIDTH + plotWidth / 2 : Y_AXIS_WIDTH + (i * plotWidth) / (count - 1),
+            count === 1
+              ? Y_AXIS_WIDTH + plotWidth / 2
+              : Y_AXIS_WIDTH + (i * plotWidth) / (count - 1),
           );
       onPlotGeometry?.({
         rect: { x: Y_AXIS_WIDTH, y: MARGIN.top, width: plotWidth, height: plotHeight },
@@ -101,17 +94,12 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
     const data = [...spec.data];
 
     return (
-      <ComposedChart
-        width={width}
-        height={height}
-        data={data}
-        margin={MARGIN}
-      >
-        {spec.grid !== "none" && (
+      <ComposedChart width={width} height={height} data={data} margin={MARGIN}>
+        {spec.grid !== 'none' && (
           <CartesianGrid
             stroke={theme.grid}
-            horizontal={spec.grid === "horizontal" || spec.grid === "both"}
-            vertical={spec.grid === "vertical" || spec.grid === "both"}
+            horizontal={spec.grid === 'horizontal' || spec.grid === 'both'}
+            vertical={spec.grid === 'vertical' || spec.grid === 'both'}
           />
         )}
         <XAxis
@@ -127,8 +115,8 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
           tickFormatter={spec.formatY ? (v) => spec.formatY!(Number(v)) : undefined}
         />
         {spec.series.map((s) => {
-          const stackId = spec.stacked ? "stack" : undefined;
-          if (s.type === "bar") {
+          const stackId = spec.stacked ? 'stack' : undefined;
+          if (s.type === 'bar') {
             return (
               <Bar
                 key={s.key}
@@ -140,7 +128,7 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
               />
             );
           }
-          if (s.type === "area") {
+          if (s.type === 'area') {
             return (
               <Area
                 key={s.key}
@@ -149,7 +137,7 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
                 name={s.label}
                 stroke={s.color}
                 strokeWidth={theme.strokeWidth}
-                strokeDasharray={s.dash ? "6 4" : undefined}
+                strokeDasharray={s.dash ? '6 4' : undefined}
                 fill={s.color}
                 fillOpacity={theme.areaOpacity}
                 stackId={stackId}
@@ -167,7 +155,7 @@ export function rechartsRenderer(options: RechartsOptions = {}): ChartRenderer {
               name={s.label}
               stroke={s.color}
               strokeWidth={theme.strokeWidth}
-              strokeDasharray={s.dash ? "6 4" : undefined}
+              strokeDasharray={s.dash ? '6 4' : undefined}
               dot={spec.dots ? { r: theme.pointRadius } : false}
               connectNulls={connectNulls}
               isAnimationActive={false}

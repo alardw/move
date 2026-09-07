@@ -13,7 +13,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/toggle-group',
     name: 'ToggleGroup',
-    reason: 'When several toggles share a row and either pick one (radio-style) or several (checkbox-style).',
+    reason:
+      'When several toggles share a row and either pick one (radio-style) or several (checkbox-style).',
   },
   {
     to: '/components/switch',
@@ -27,10 +28,10 @@ export const meta: ComponentDocument = {
   synonyms: ['toggle', 'pressed button', 'icon toggle', 'switch'],
   preview: { width: 'fit' },
   name: 'ToggleButton',
-  tagline: 'A button that remembers its on/off state — perfect for toolbar formatting controls (bold, italic, view toggles).',
+  tagline:
+    'A button that remembers its on/off state — perfect for toolbar formatting controls (bold, italic, view toggles).',
   categories: ['actions'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { ToggleButton } from 'move';`,

@@ -1,13 +1,10 @@
-import { useEffect, useState, type ReactNode } from "react";
-import { Link as RouterLink } from "react-router-dom";
-import { Stack, Text, Badge, Icon, Deferred } from "move";
-import type { ComponentContent } from "../../content/components/types";
-import {
-  PREVIEW_WIDTHS,
-  type PreviewWidth,
-} from "../../content/components/types";
-import { TAXONOMY_BY_ID } from "../../content/components/taxonomies";
-import styles from "./ComponentCard.module.css";
+import { useEffect, useState, type ReactNode } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { Stack, Text, Badge, Icon, Deferred } from 'move';
+import type { ComponentContent } from '../../content/components/types';
+import { PREVIEW_WIDTHS, type PreviewWidth } from '../../content/components/types';
+import { TAXONOMY_BY_ID } from '../../content/components/taxonomies';
+import styles from './ComponentCard.module.css';
 
 export interface ComponentCardProps {
   content: ComponentContent;
@@ -43,20 +40,16 @@ function CardPreview({
   const tiltClass = [
     styles.tilt,
     tilted && styles.tiltActive,
-    width === "fit" && styles.tiltNarrow,
+    width === 'fit' && styles.tiltNarrow,
     bare && styles.tiltBare,
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <div
       className={tiltClass}
-      style={
-        width !== "fit" && width !== "full"
-          ? { width: PREVIEW_WIDTHS[width] }
-          : undefined
-      }
+      style={width !== 'fit' && width !== 'full' ? { width: PREVIEW_WIDTHS[width] } : undefined}
     >
       {children}
     </div>
@@ -77,14 +70,13 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
   const bare = specPreview.bare ?? metaPreview.bare;
   // Default to a contained width so every preview fits within the card boundary
   // (EmptyState's size); components opt into 'fit', a larger size, or 'full'.
-  const width = specPreview.width ?? metaPreview.width ?? "sm";
-  const cat = TAXONOMY_BY_ID[meta.categories?.[0] ?? ""];
-  const category = cat?.label ?? "Component";
-  const icon = cat?.icon ?? "box";
+  const width = specPreview.width ?? metaPreview.width ?? 'sm';
+  const cat = TAXONOMY_BY_ID[meta.categories?.[0] ?? ''];
+  const category = cat?.label ?? 'Component';
+  const icon = cat?.icon ?? 'box';
   // "Bring your own X": the component declares typed integration points (adapters).
   const hasIntegration =
-    ((content.spec?.integrationPoints as unknown[] | undefined)?.length ?? 0) >
-    0;
+    ((content.spec?.integrationPoints as unknown[] | undefined)?.length ?? 0) > 0;
   const previewImage = image ?? metaPreview.image;
   const sample = metaPreview.sample
     ? samples?.find((s) => s.id === metaPreview.sample)
@@ -105,11 +97,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
           // there's no layout shift when the preview appears.
           <Deferred className={styles.deferred} rootMargin="300px">
             <CardPreview width={width} bare={bare}>
-              {PreviewComponent ? (
-                <PreviewComponent />
-              ) : Sample ? (
-                <Sample />
-              ) : null}
+              {PreviewComponent ? <PreviewComponent /> : Sample ? <Sample /> : null}
             </CardPreview>
           </Deferred>
         ) : (
@@ -121,10 +109,7 @@ export function ComponentCard({ content, image }: ComponentCardProps) {
       <Stack gap="xs" className={styles.body}>
         <Stack direction="row" gap="sm" align="center" justify="between">
           {/* Stretched link — the ::after covers the whole card. */}
-          <RouterLink
-            to={`/components/${meta.slug}`}
-            className={styles.titleLink}
-          >
+          <RouterLink to={`/components/${meta.slug}`} className={styles.titleLink}>
             <Text weight="medium">{meta.name}</Text>
           </RouterLink>
           <Stack direction="row" gap="xs" align="center">

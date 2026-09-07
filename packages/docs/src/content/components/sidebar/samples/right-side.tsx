@@ -33,7 +33,16 @@ export default function RightSideSample() {
 
   return (
     // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
-    <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
+    <div
+      /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
+      style={{
+        display: 'flex',
+        height: 360,
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
+        overflow: 'hidden',
+      }}
+    >
       <Sidebar.Provider>
         <Stack flex={1} align="center" justify="center" padding="lg">
           <Text color="muted">Main content</Text>
@@ -49,16 +58,56 @@ export default function RightSideSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Learn</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/guides" active={current === "/guides"} onClick={select} icon={<Icon name="book-open" />} tooltip="Guides">Guides</Sidebar.NavItem>
-                <Sidebar.NavItem href="/api" active={current === "/api"} onClick={select} icon={<Icon name="code" />} tooltip="API reference">API reference</Sidebar.NavItem>
-                <Sidebar.NavItem href="/changelog" active={current === "/changelog"} onClick={select} icon={<Icon name="history" />} tooltip="Changelog">Changelog</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/guides"
+                  active={current === '/guides'}
+                  onClick={select}
+                  icon={<Icon name="book-open" />}
+                  tooltip="Guides"
+                >
+                  Guides
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/api"
+                  active={current === '/api'}
+                  onClick={select}
+                  icon={<Icon name="code" />}
+                  tooltip="API reference"
+                >
+                  API reference
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/changelog"
+                  active={current === '/changelog'}
+                  onClick={select}
+                  icon={<Icon name="history" />}
+                  tooltip="Changelog"
+                >
+                  Changelog
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Get help</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/support" active={current === "/support"} onClick={select} icon={<Icon name="life-buoy" />} tooltip="Support">Support</Sidebar.NavItem>
-                <Sidebar.NavItem href="/community" active={current === "/community"} onClick={select} icon={<Icon name="users" />} tooltip="Community">Community</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/support"
+                  active={current === '/support'}
+                  onClick={select}
+                  icon={<Icon name="life-buoy" />}
+                  tooltip="Support"
+                >
+                  Support
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/community"
+                  active={current === '/community'}
+                  onClick={select}
+                  icon={<Icon name="users" />}
+                  tooltip="Community"
+                >
+                  Community
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>

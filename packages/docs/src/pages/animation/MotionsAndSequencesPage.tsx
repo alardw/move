@@ -2,9 +2,22 @@ import { useState, useMemo } from 'react';
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  Stack, Heading, Text, Breadcrumb, Icon, Badge, Code,
-  Button, Collapsible, Tooltip, Select, Drawer, Dropdown,
-  InputRange, Popover, poppy,
+  Stack,
+  Heading,
+  Text,
+  Breadcrumb,
+  Icon,
+  Badge,
+  Code,
+  Button,
+  Collapsible,
+  Tooltip,
+  Select,
+  Drawer,
+  Dropdown,
+  InputRange,
+  Popover,
+  poppy,
 } from 'move';
 import type { AnimationTrigger } from 'move';
 import {
@@ -76,7 +89,9 @@ function CollapsibleDemo() {
           </Stack>
         </Collapsible.Trigger>
         <Collapsible.Content>
-          <Text size="sm" color="muted">The caret rotates as this panel expands.</Text>
+          <Text size="sm" color="muted">
+            The caret rotates as this panel expands.
+          </Text>
         </Collapsible.Content>
       </Stack>
     </Collapsible.Root>
@@ -92,9 +107,13 @@ function DrawerDemo() {
       <Drawer.Portal>
         <Drawer.Overlay />
         <Drawer.Content>
-          <Drawer.Header><Drawer.Title>Filters</Drawer.Title></Drawer.Header>
+          <Drawer.Header>
+            <Drawer.Title>Filters</Drawer.Title>
+          </Drawer.Header>
           <Drawer.Body>
-            <Drawer.Description>The panel slides in from the edge; the overlay fades.</Drawer.Description>
+            <Drawer.Description>
+              The panel slides in from the edge; the overlay fades.
+            </Drawer.Description>
           </Drawer.Body>
         </Drawer.Content>
       </Drawer.Portal>
@@ -138,7 +157,11 @@ const DEMOS: { motions: string; code: string; caption: string; render: () => Rea
   },
 ]`,
     caption: 'Hover — the tooltip pops in.',
-    render: () => <Tooltip label="Pops in with scale + slide + fade"><Button variant="primary">Hover for a tooltip</Button></Tooltip>,
+    render: () => (
+      <Tooltip label="Pops in with scale + slide + fade">
+        <Button variant="primary">Hover for a tooltip</Button>
+      </Tooltip>
+    ),
   },
   {
     motions: 'slideLeft · fadeIn',
@@ -163,7 +186,9 @@ function MotionGallery() {
         <Stack key={d.motions} gap="sm">
           <Stack direction="row" gap="sm" align="center" wrap>
             <Code>{d.motions}</Code>
-            <Text size="sm" color="muted">{d.caption}</Text>
+            <Text size="sm" color="muted">
+              {d.caption}
+            </Text>
           </Stack>
           <CodeBlock language="ts" code={d.code} />
           <div
@@ -193,17 +218,19 @@ function MotionGallery() {
 function SequenceDemo() {
   return (
     <Stack align="start" style={{ maxWidth: '22rem' }}>
-    <Popover.Root>
-      <Popover.Trigger asChild>
-        <Button variant="primary">Show details</Button>
-      </Popover.Trigger>
-      <Popover.Content sideOffset={8}>
-        <Stack gap="sm">
-          <Text weight="medium">A small overlay</Text>
-          <Text size="sm" color="muted">It scales and fades in — the sequence above, on a real component.</Text>
-        </Stack>
-      </Popover.Content>
-    </Popover.Root>
+      <Popover.Root>
+        <Popover.Trigger asChild>
+          <Button variant="primary">Show details</Button>
+        </Popover.Trigger>
+        <Popover.Content sideOffset={8}>
+          <Stack gap="sm">
+            <Text weight="medium">A small overlay</Text>
+            <Text size="sm" color="muted">
+              It scales and fades in — the sequence above, on a real component.
+            </Text>
+          </Stack>
+        </Popover.Content>
+      </Popover.Root>
     </Stack>
   );
 }
@@ -222,16 +249,42 @@ function SelectStaggerDemo() {
     // The component's own selector, now that there is one a consumer can write.
     const ITEMS = '[data-move-stagger]';
     return [
-      { trigger: 'open', sequence: [[
-        { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
-        { target: 'ContentInner', children: ITEMS, stagger: { delay }, animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } },
-        { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
-      ]] },
-      { trigger: 'closed', sequence: [[
-        { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
-        { target: 'ContentInner', children: ITEMS, stagger: { delay }, animation: { scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 }, opacity: { to: 0, duration: 150 } } },
-        { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
-      ]] },
+      {
+        trigger: 'open',
+        sequence: [
+          [
+            { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+            {
+              target: 'ContentInner',
+              children: ITEMS,
+              stagger: { delay },
+              animation: {
+                scale: { from: '$scaleFrom', to: 1, ease: poppy },
+                opacity: { from: 0, to: 1 },
+              },
+            },
+            { target: 'Icon', animation: { rotate: { to: 180, ease: 'outQuart', duration: 300 } } },
+          ],
+        ],
+      },
+      {
+        trigger: 'closed',
+        sequence: [
+          [
+            { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+            {
+              target: 'ContentInner',
+              children: ITEMS,
+              stagger: { delay },
+              animation: {
+                scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+                opacity: { to: 0, duration: 150 },
+              },
+            },
+            { target: 'Icon', animation: { rotate: { to: 0, ease: 'outQuart', duration: 300 } } },
+          ],
+        ],
+      },
     ];
   }, [delay]);
 
@@ -255,7 +308,9 @@ function SelectStaggerDemo() {
         <Select.Content>
           <Select.Viewport>
             {STAGGER_FRUITS.map((f) => (
-              <Select.Item key={f} value={f}>{f}</Select.Item>
+              <Select.Item key={f} value={f}>
+                {f}
+              </Select.Item>
             ))}
           </Select.Viewport>
         </Select.Content>
@@ -279,8 +334,12 @@ function StaggerRangeDemo() {
   return (
     <Stack direction="row" gap="lg" wrap>
       <Stack gap="sm">
-        <Text size="sm" weight="medium">Three items</Text>
-        <Text size="sm" color="muted">Cascades at the full 30ms gap.</Text>
+        <Text size="sm" weight="medium">
+          Three items
+        </Text>
+        <Text size="sm" color="muted">
+          Cascades at the full 30ms gap.
+        </Text>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
             <Button variant="secondary">Short menu</Button>
@@ -294,8 +353,12 @@ function StaggerRangeDemo() {
         </Dropdown.Root>
       </Stack>
       <Stack gap="sm">
-        <Text size="sm" weight="medium">Twenty items</Text>
-        <Text size="sm" color="muted">Same 240ms — the gap closes up to fit.</Text>
+        <Text size="sm" weight="medium">
+          Twenty items
+        </Text>
+        <Text size="sm" color="muted">
+          Same 240ms — the gap closes up to fit.
+        </Text>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
             <Button variant="secondary">Long menu</Button>
@@ -318,10 +381,14 @@ export function MotionsAndSequencesPage() {
       <Stack gap="xl" flex={1}>
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Link asChild><RouterLink to="/">Docs</RouterLink></Breadcrumb.Link>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/">Docs</RouterLink>
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Link asChild><RouterLink to="/animation">Animation</RouterLink></Breadcrumb.Link>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/animation">Animation</RouterLink>
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Page>Motions &amp; sequences</Breadcrumb.Page>
@@ -330,10 +397,15 @@ export function MotionsAndSequencesPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Motions &amp; sequences</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
-              <Badge key={b.label} variant="soft"><Icon name={b.icon} />{b.label}</Badge>
+              <Badge key={b.label} variant="soft">
+                <Icon name={b.icon} />
+                {b.label}
+              </Badge>
             ))}
           </Stack>
         </Stack>
@@ -367,12 +439,11 @@ export function MotionsAndSequencesPage() {
           lede="Every animated property carries its own from, to, ease, and duration."
         >
           <Text>
-            An animation is a plain object: each key is a property, each value
-            says where it starts, where it lands, and how it gets there. Leave{' '}
-            <Code>from</Code> off and it animates from the element's current
-            value; leave <Code>ease</Code> off and it uses the runtime default.
-            A spring carries its own duration, so you drop <Code>duration</Code>{' '}
-            when you pass one.
+            An animation is a plain object: each key is a property, each value says where it starts,
+            where it lands, and how it gets there. Leave <Code>from</Code> off and it animates from
+            the element's current value; leave <Code>ease</Code> off and it uses the runtime
+            default. A spring carries its own duration, so you drop <Code>duration</Code> when you
+            pass one.
           </Text>
           <CodeBlock
             language="ts"
@@ -382,8 +453,8 @@ export function MotionsAndSequencesPage() {
 }`}
           />
           <Text color="muted">
-            That object is what a step's <Code>animation</Code> holds — built from
-            the motions below, wired to a moment by a trigger and sequence.
+            That object is what a step's <Code>animation</Code> holds — built from the motions
+            below, wired to a moment by a trigger and sequence.
           </Text>
         </Section>
 
@@ -393,15 +464,14 @@ export function MotionsAndSequencesPage() {
           lede="Self-explaining builders for the moves you reach for. The name says what animates and which way; the parameter says how much."
         >
           <Text>
-            A motion is a function that returns an animation object. Call it in a
-            step's <Code>animation</Code>, and combine motions by spreading them
-            into one object — they touch different properties, so they run
-            together.
+            A motion is a function that returns an animation object. Call it in a step's{' '}
+            <Code>animation</Code>, and combine motions by spreading them into one object — they
+            touch different properties, so they run together.
           </Text>
           <Text color="muted">
-            Each motion bakes sensible defaults — its from → to, its ease, and a
-            duration (springs carry their own). Here's exactly what each returns;
-            pass a property object instead of the builder to override one:
+            Each motion bakes sensible defaults — its from → to, its ease, and a duration (springs
+            carry their own). Here's exactly what each returns; pass a property object instead of
+            the builder to override one:
           </Text>
           <CodeBlock
             language="ts"
@@ -418,8 +488,7 @@ expand()             → { height: 0 → 'auto', opacity: 0 → 1 }       // dur
 collapse()           → { height: 'auto' → 0, opacity: 1 → 0 }`}
           />
           <Text>
-            Each one is the move a real component already makes — interact to see
-            it in context:
+            Each one is the move a real component already makes — interact to see it in context:
           </Text>
           <MotionGallery />
         </Section>
@@ -430,9 +499,9 @@ collapse()           → { height: 'auto' → 0, opacity: 1 → 0 }`}
           lede="A trigger names a moment and points at the slots that should respond."
         >
           <Text>
-            Each trigger watches for one kind of moment. When that moment
-            arrives, the sequence attached to it plays. There are a handful of
-            kinds, and most components only use two or three.
+            Each trigger watches for one kind of moment. When that moment arrives, the sequence
+            attached to it plays. There are a handful of kinds, and most components only use two or
+            three.
           </Text>
           <HighlightList items={TRIGGER_TYPES} />
         </Section>
@@ -443,10 +512,9 @@ collapse()           → { height: 'auto' → 0, opacity: 1 → 0 }`}
           lede="A sequence is a list of steps. Each step animates a slot with a motion."
         >
           <Text>
-            A step says which slot to animate and how it moves — either a literal
-            property object, or a motion builder (and a spread combination of
-            them). A sequence is plain data, so a component declares its motion as
-            a value rather than imperative code.
+            A step says which slot to animate and how it moves — either a literal property object,
+            or a motion builder (and a spread combination of them). A sequence is plain data, so a
+            component declares its motion as a value rather than imperative code.
           </Text>
           <CodeBlock
             language="ts"
@@ -467,11 +535,10 @@ collapse()           → { height: 'auto' → 0, opacity: 1 → 0 }`}
           lede="Steps at the top level run in order. Nest them to run together."
         >
           <Text>
-            Top-level steps play one after another, each starting when the last
-            finishes; group steps in a nested array and they play together in the
-            same frame. A drawer opens with its overlay and panel together; a
-            toast leaves in order — it slides out, then its row collapses so the
-            stack closes. A step can carry an <Code>onComplete</Code> callback for
+            Top-level steps play one after another, each starting when the last finishes; group
+            steps in a nested array and they play together in the same frame. A drawer opens with
+            its overlay and panel together; a toast leaves in order — it slides out, then its row
+            collapses so the stack closes. A step can carry an <Code>onComplete</Code> callback for
             when it finishes.
           </Text>
           <CodeBlock
@@ -492,16 +559,11 @@ sequence: [
           />
         </Section>
 
-        <Section
-          id="stagger"
-          title="Stagger"
-          lede="One step, many children, a delay between each."
-        >
+        <Section id="stagger" title="Stagger" lede="One step, many children, a delay between each.">
           <Text>
-            A step that targets children animates each of them with a growing
-            delay, so a list reveals top to bottom and dropdown items cascade
-            in. On the way out the order reverses. It's the same step shape with
-            a <Code>stagger</Code> on it.
+            A step that targets children animates each of them with a growing delay, so a list
+            reveals top to bottom and dropdown items cascade in. On the way out the order reverses.
+            It's the same step shape with a <Code>stagger</Code> on it.
           </Text>
           <CodeBlock
             language="ts"
@@ -510,12 +572,11 @@ sequence: [
           />
           <SelectStaggerDemo />
           <Text>
-            The delay you set holds while the reveal fits, and closes up once it
-            would not. The whole cascade is budgeted to about a quarter of a
-            second however many children there are, so a menu of forty arrives in
-            the same time as a menu of six rather than trailing half a second
-            behind it. Set <Code>maxTotal</Code> on the <Code>stagger</Code> to
-            move that budget.
+            The delay you set holds while the reveal fits, and closes up once it would not. The
+            whole cascade is budgeted to about a quarter of a second however many children there
+            are, so a menu of forty arrives in the same time as a menu of six rather than trailing
+            half a second behind it. Set <Code>maxTotal</Code> on the <Code>stagger</Code> to move
+            that budget.
           </Text>
           <StaggerRangeDemo />
           <Text color="muted">

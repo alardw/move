@@ -1,4 +1,4 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 /**
  * Deploys, at the times they actually happened — clustered in the morning,
@@ -17,7 +17,7 @@ const deploys = [
 const clock = (v: unknown) => {
   const h = Math.floor(Number(v));
   const m = Math.round((Number(v) - h) * 60);
-  return `${h}:${String(m).padStart(2, "0")}`;
+  return `${h}:${String(m).padStart(2, '0')}`;
 };
 
 /**
@@ -44,7 +44,7 @@ export default function NumericXSample() {
       grid="both"
       formatX={clock}
       formatY={(v) => `${v}m`}
-      series={[{ key: "duration", type: "line", label: "Duration", color: "blue" }]}
+      series={[{ key: 'duration', type: 'line', label: 'Duration', color: 'blue' }]}
     />
   );
 }

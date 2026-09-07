@@ -19,8 +19,8 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     icon: 'type',
     text: (
       <>
-        <Code>--move-font</Code> carries all text and UI; <Code>--move-font-mono</Code>{' '}
-        carries code. Set those two and the whole app follows.
+        <Code>--move-font</Code> carries all text and UI; <Code>--move-font-mono</Code> carries
+        code. Set those two and the whole app follows.
       </>
     ),
   },
@@ -38,9 +38,9 @@ const FONT_PRINCIPLE: HighlightItem[] = [
     text: (
       <>
         Components read the semantic <Code>--move-font-body</Code> /{' '}
-        <Code>--move-font-heading</Code> / <Code>--move-font-code</Code>, which point at those
-        roots — so setting <Code>--move-font</Code> cascades everywhere. The name implies no
-        style: a serif is perfectly fine.
+        <Code>--move-font-heading</Code> / <Code>--move-font-code</Code>, which point at those roots
+        — so setting <Code>--move-font</Code> cascades everywhere. The name implies no style: a
+        serif is perfectly fine.
       </>
     ),
   },
@@ -114,9 +114,9 @@ export function TypographyPage() {
         <Stack gap="sm">
           <Heading level={1}>Typography</Heading>
           <Text color="muted" size="lg">
-            Type in Move is token-driven: one token sets the font for the whole
-            app, and size and weight come from a fixed scale you reach through{' '}
-            <Code>Text</Code> and <Code>Heading</Code>.
+            Type in Move is token-driven: one token sets the font for the whole app, and size and
+            weight come from a fixed scale you reach through <Code>Text</Code> and{' '}
+            <Code>Heading</Code>.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

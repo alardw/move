@@ -11,7 +11,9 @@ export default function BasicSample() {
   return (
     <Stack gap="md">
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Vertical (default)</Text>
+        <Text size="sm" weight="medium">
+          Vertical (default)
+        </Text>
         <Stack gap="sm">
           <Tile>One</Tile>
           <Tile>Two</Tile>
@@ -19,7 +21,9 @@ export default function BasicSample() {
         </Stack>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Horizontal</Text>
+        <Text size="sm" weight="medium">
+          Horizontal
+        </Text>
         <Stack direction="row" gap="sm">
           <Tile>One</Tile>
           <Tile>Two</Tile>

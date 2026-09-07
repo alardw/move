@@ -25,12 +25,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/stack',
     name: 'Stack',
-    reason: 'For one-dimensional layouts where children flow naturally — Align is for the specific "left, middle, right" rhythm.',
+    reason:
+      'For one-dimensional layouts where children flow naturally — Align is for the specific "left, middle, right" rhythm.',
   },
   {
     to: '/components/grid',
     name: 'Grid',
-    reason: 'When you need more than three sections or asymmetric column tracks. Align is the constrained, opinionated cousin.',
+    reason:
+      'When you need more than three sections or asymmetric column tracks. Align is the constrained, opinionated cousin.',
   },
 ];
 
@@ -39,11 +41,10 @@ export const meta: ComponentDocument = {
   synonyms: ['toolbar', 'header bar', 'distribute', 'app bar', 'layout', 'flex', 'row', 'justify'],
   preview: { width: 'full' },
   name: 'Align',
-  tagline: 'A three-slot bar — Start, Center, End — for app headers, page titles, dialog footers, and any toolbar that wants its centre to stay centred.',
+  tagline:
+    'A three-slot bar — Start, Center, End — for app headers, page titles, dialog footers, and any toolbar that wants its centre to stay centred.',
   categories: ['layout'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Align } from 'move';`,

@@ -33,9 +33,15 @@ export default function SelectableSample() {
           <Text size="sm" color="muted">
             {selection.count} selected
           </Text>
-          <Button size="sm" variant="secondary">Export</Button>
-          <Button size="sm" variant="danger">Delete</Button>
-          <Button size="sm" variant="ghost" onClick={selection.clear}>Clear</Button>
+          <Button size="sm" variant="secondary">
+            Export
+          </Button>
+          <Button size="sm" variant="danger">
+            Delete
+          </Button>
+          <Button size="sm" variant="ghost" onClick={selection.clear}>
+            Clear
+          </Button>
         </Stack>
       )}
 

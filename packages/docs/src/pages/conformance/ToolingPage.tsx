@@ -50,10 +50,14 @@ export function ToolingPage() {
       <Stack gap="xl" flex={1}>
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Breadcrumb.Link asChild><RouterLink to="/">Docs</RouterLink></Breadcrumb.Link>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/">Docs</RouterLink>
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Link asChild><RouterLink to="/contracts">Conformance</RouterLink></Breadcrumb.Link>
+            <Breadcrumb.Link asChild>
+              <RouterLink to="/contracts">Conformance</RouterLink>
+            </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <Breadcrumb.Page>Tooling</Breadcrumb.Page>
@@ -63,13 +67,15 @@ export function ToolingPage() {
         <Stack gap="sm">
           <Heading level={1}>Tooling</Heading>
           <Text color="muted" size="lg">
-            One command runs every{' '}
-            <RouterLink to="/conformance/validation">validation</RouterLink> over your project. Wire
-            it into a pre-commit hook and CI, and conformance holds automatically — fast while you
-            work, thorough on every push. Move runs it on itself and ships the same command to you.
+            One command runs every <RouterLink to="/conformance/validation">validation</RouterLink>{' '}
+            over your project. Wire it into a pre-commit hook and CI, and conformance holds
+            automatically — fast while you work, thorough on every push. Move runs it on itself and
+            ships the same command to you.
           </Text>
           <Stack direction="row" gap="xs" wrap>
-            <Badge variant="soft"><Code>move check</Code></Badge>
+            <Badge variant="soft">
+              <Code>move check</Code>
+            </Badge>
             <Badge variant="soft">Pre-commit</Badge>
             <Badge variant="soft">CI</Badge>
           </Stack>
@@ -108,12 +114,17 @@ export function ToolingPage() {
           </Stack>
         </Section>
 
-        <Section id="config" title="Configuration" lede="Point the checks at the code you compose. Roots may be a string or a list; a path that isn't there is skipped.">
+        <Section
+          id="config"
+          title="Configuration"
+          lede="Point the checks at the code you compose. Roots may be a string or a list; a path that isn't there is skipped."
+        >
           <CodeBlock code={CONFIG} />
           <Text size="sm" color="muted">
             With no <Code>move.config.json</Code>, Move looks in <Code>src/composites</Code> — where{' '}
-            <Code>/app-compose</Code> puts your pages, features, and composites. Author your own Move
-            components too? Add a <Code>components</Code> root and the pipeline gates cover those as well.
+            <Code>/app-compose</Code> puts your pages, features, and composites. Author your own
+            Move components too? Add a <Code>components</Code> root and the pipeline gates cover
+            those as well.
           </Text>
         </Section>
 
@@ -123,9 +134,9 @@ export function ToolingPage() {
           lede="Accessibility is one axis of conformance, verified the same way."
         >
           <Text>
-            The component roles, names, and structure that make Move accessible are held by these same
-            gates, plus an accessibility sweep in CI. For the full WCAG 2.2 picture — every criterion,
-            what Move handles, and what’s yours — see the{' '}
+            The component roles, names, and structure that make Move accessible are held by these
+            same gates, plus an accessibility sweep in CI. For the full WCAG 2.2 picture — every
+            criterion, what Move handles, and what’s yours — see the{' '}
             <RouterLink to="/accessibility">Accessibility report</RouterLink>.
           </Text>
         </Section>

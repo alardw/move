@@ -32,7 +32,12 @@ export default function AddRemoveSample() {
               <Card.Body>
                 <Stack direction="row" align="center" justify="between" gap="md">
                   <Text weight="medium">{item.label}</Text>
-                  <Button size="sm" variant="ghost" onClick={() => remove(item.id)} aria-label={`Remove ${item.label}`}>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => remove(item.id)}
+                    aria-label={`Remove ${item.label}`}
+                  >
                     <Icon name="x" />
                   </Button>
                 </Stack>

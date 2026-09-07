@@ -22,7 +22,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/input-range',
     name: 'InputRange',
-    reason: 'When the value lives on a continuous track. Pair with NumberInput when both interactions matter.',
+    reason:
+      'When the value lives on a continuous track. Pair with NumberInput when both interactions matter.',
   },
 ];
 
@@ -31,10 +32,10 @@ export const meta: ComponentDocument = {
   synonyms: ['number field', 'numeric', 'spinner input', 'stepper input', 'quantity', 'spinbutton'],
   preview: { width: 'fit' },
   name: 'NumberInput',
-  tagline: 'A numeric input with stepper buttons, hold-to-repeat, min/max clamping, and pluggable format/parse.',
+  tagline:
+    'A numeric input with stepper buttons, hold-to-repeat, min/max clamping, and pluggable format/parse.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { NumberInput } from 'move';`,

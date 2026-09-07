@@ -1,9 +1,24 @@
 import { Avatar, Card, Divider, Stack, Text } from 'move';
 
 const team = [
-  { name: 'Alex Smith', role: 'Engineering · Lead', initials: 'AS', src: 'https://i.pravatar.cc/96?img=12' },
-  { name: 'Mira Kovac', role: 'Design · Senior', initials: 'MK', src: 'https://i.pravatar.cc/96?img=47' },
-  { name: 'Theo Park', role: 'Engineering', initials: 'TP', src: 'https://i.pravatar.cc/96?img=33' },
+  {
+    name: 'Alex Smith',
+    role: 'Engineering · Lead',
+    initials: 'AS',
+    src: 'https://i.pravatar.cc/96?img=12',
+  },
+  {
+    name: 'Mira Kovac',
+    role: 'Design · Senior',
+    initials: 'MK',
+    src: 'https://i.pravatar.cc/96?img=47',
+  },
+  {
+    name: 'Theo Park',
+    role: 'Engineering',
+    initials: 'TP',
+    src: 'https://i.pravatar.cc/96?img=33',
+  },
 ];
 
 /**
@@ -29,7 +44,9 @@ export default function InCardSample() {
                 </Avatar.Root>
                 <Stack gap="none">
                   <Text weight="medium">{p.name}</Text>
-                  <Text size="sm" color="muted">{p.role}</Text>
+                  <Text size="sm" color="muted">
+                    {p.role}
+                  </Text>
                 </Stack>
               </Stack>
             </Stack>

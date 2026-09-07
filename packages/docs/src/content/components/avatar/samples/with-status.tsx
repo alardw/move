@@ -1,9 +1,27 @@
 import { Avatar, Stack, Text } from 'move';
 
 const people = [
-  { name: 'Alex Smith', initials: 'AS', src: 'https://i.pravatar.cc/96?img=8', status: 'online', color: 'green' },
-  { name: 'Jamie Chen', initials: 'JC', src: 'https://i.pravatar.cc/96?img=18', status: 'away', color: 'yellow' },
-  { name: 'Mira Kovac', initials: 'MK', src: 'https://i.pravatar.cc/96?img=28', status: 'offline', color: 'gray' },
+  {
+    name: 'Alex Smith',
+    initials: 'AS',
+    src: 'https://i.pravatar.cc/96?img=8',
+    status: 'online',
+    color: 'green',
+  },
+  {
+    name: 'Jamie Chen',
+    initials: 'JC',
+    src: 'https://i.pravatar.cc/96?img=18',
+    status: 'away',
+    color: 'yellow',
+  },
+  {
+    name: 'Mira Kovac',
+    initials: 'MK',
+    src: 'https://i.pravatar.cc/96?img=28',
+    status: 'offline',
+    color: 'gray',
+  },
 ] as const;
 
 /**
@@ -40,7 +58,9 @@ export default function WithStatusSample() {
           </span>
           <Stack gap="none">
             <Text weight="medium">{p.name}</Text>
-            <Text size="sm" color="muted">{p.status}</Text>
+            <Text size="sm" color="muted">
+              {p.status}
+            </Text>
           </Stack>
         </Stack>
       ))}

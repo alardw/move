@@ -12,7 +12,14 @@ export default function CustomIconSample() {
         <Stack gap="sm">
           <Collapsible.Trigger>
             {/* composite-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
-            <Stack direction="row" gap="sm" align="center" justify="between" style={{ width: '100%' }}>
+            <Stack
+              direction="row"
+              gap="sm"
+              align="center"
+              justify="between"
+              /* composite-purity-ignore, dogfood-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */
+              style={{ width: '100%' }}
+            >
               <Text weight="medium">Arrow down ↔ up</Text>
               <Collapsible.Icon>
                 <Icon name="arrow-down" />
@@ -30,7 +37,14 @@ export default function CustomIconSample() {
         <Stack gap="sm">
           <Collapsible.Trigger>
             {/* composite-purity-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */}
-            <Stack direction="row" gap="sm" align="center" justify="between" style={{ width: '100%' }}>
+            <Stack
+              direction="row"
+              gap="sm"
+              align="center"
+              justify="between"
+              /* composite-purity-ignore, dogfood-ignore: the trigger resets to inline (all:unset); width:100% lets the row fill it so justify spreads — no Move width prop */
+              style={{ width: '100%' }}
+            >
               <Text weight="medium">Caret down ↔ up</Text>
               <Collapsible.Icon>
                 <Icon name="chevrons-down" />
@@ -39,7 +53,8 @@ export default function CustomIconSample() {
           </Collapsible.Trigger>
           <Collapsible.Content>
             <Text size="sm" color="muted">
-              Double chevron exaggerates the flip — works well in dense lists where you want the state to read at a glance.
+              Double chevron exaggerates the flip — works well in dense lists where you want the
+              state to read at a glance.
             </Text>
           </Collapsible.Content>
         </Stack>

@@ -32,19 +32,28 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentDocument = {
   slug: 'layout-group',
-  synonyms: [ 'flip', 'animated list', 'auto animate', 'reorder', 'layout transition', 'filter group', ],
+  synonyms: [
+    'flip',
+    'animated list',
+    'auto animate',
+    'reorder',
+    'layout transition',
+    'filter group',
+  ],
   name: 'LayoutGroup',
   tagline:
     'Animate a list or grid as it changes — children glide to their new positions when you filter, sort, or reorder, and fade in or out as they are added or removed.',
   categories: ['layout'],
-  badges: [
-    { icon: 'sparkles', label: 'Animated' },
-  ],
+  badges: [{ icon: 'sparkles', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { LayoutGroup } from 'move';`,
   keyboard: [
-    { key: '—', action: 'LayoutGroup is presentational; keyboard semantics belong to the items you put inside.' },
+    {
+      key: '—',
+      action:
+        'LayoutGroup is presentational; keyboard semantics belong to the items you put inside.',
+    },
   ],
   accessibilityLede:
     'LayoutGroup animates with CSS transforms only — it adds no roles or ARIA and never moves focus. Source order and tab order follow the real DOM. Under prefers-reduced-motion it applies the final layout instantly.',

@@ -42,8 +42,8 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'activity',
     text: (
       <>
-        <RouterLink to="/animation/lifecycle">Lifecycle</RouterLink> — the
-        three moments a component animates: enter, respond, exit.
+        <RouterLink to="/animation/lifecycle">Lifecycle</RouterLink> — the three moments a component
+        animates: enter, respond, exit.
       </>
     ),
   },
@@ -51,8 +51,8 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'wind',
     text: (
       <>
-        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink>{' '}
-        — the named springs Move ships and when to reach for a plain easing.
+        <RouterLink to="/animation/springs">Springs &amp; easings</RouterLink> — the named springs
+        Move ships and when to reach for a plain easing.
       </>
     ),
   },
@@ -60,11 +60,8 @@ const SUB_TOPICS: HighlightItem[] = [
     icon: 'zap',
     text: (
       <>
-        <RouterLink to="/animation/motions-and-sequences">
-          Motions &amp; sequences
-        </RouterLink>{' '}
-        — the motions you reach for, and the triggers and sequences that wire
-        them to a moment.
+        <RouterLink to="/animation/motions-and-sequences">Motions &amp; sequences</RouterLink> — the
+        motions you reach for, and the triggers and sequences that wire them to a moment.
       </>
     ),
   },
@@ -73,9 +70,8 @@ const SUB_TOPICS: HighlightItem[] = [
     text: (
       <>
         <RouterLink to="/animation/choreography">Choreography</RouterLink> and the{' '}
-        <RouterLink to="/animation/reference">hook reference</RouterLink> —
-        the motions shared across components, and the API for driving motion
-        yourself.
+        <RouterLink to="/animation/reference">hook reference</RouterLink> — the motions shared
+        across components, and the API for driving motion yourself.
       </>
     ),
   },
@@ -110,9 +106,8 @@ export function AnimationSystemPage() {
         <Stack gap="sm">
           <Heading level={1}>Animation System</Heading>
           <Text color="muted" size="lg">
-            One animation engine for the whole library. Every component is
-            described the same way — when, where, what, and how it feels — so
-            motion never feels bolted on.
+            One animation engine for the whole library. Every component is described the same way —
+            when, where, what, and how it feels — so motion never feels bolted on.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

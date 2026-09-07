@@ -25,11 +25,10 @@ export const meta: ComponentDocument = {
   slug: 'toast',
   synonyms: ['notification', 'snackbar', 'flash message', 'alert toast'],
   name: 'Toast',
-  tagline: 'A notification toast system with an imperative API, variant icons, opt-in timed dismissal, and grouped positioning.',
+  tagline:
+    'A notification toast system with an imperative API, variant icons, opt-in timed dismissal, and grouped positioning.',
   categories: ['feedback'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Toast, toast } from 'move';`,

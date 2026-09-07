@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Stack, Text } from "move";
+import { Badge, Button, Card, Stack, Text } from 'move';
 
 /**
  * `FooterStart` and `FooterEnd` split the footer into a left/right
@@ -11,14 +11,12 @@ export default function FooterSplitSample() {
       <Card.Root>
         <Card.Header>
           <Card.Title>Marketing site</Card.Title>
-          <Card.Description>
-            Last deploy 3 minutes ago by alex@acme.co
-          </Card.Description>
+          <Card.Description>Last deploy 3 minutes ago by alex@acme.co</Card.Description>
         </Card.Header>
         <Card.Body>
           <Text size="sm" color="muted">
-            Production traffic has stayed within p99 budgets since the rollout.
-            No anomalies in error rates.
+            Production traffic has stayed within p99 budgets since the rollout. No anomalies in
+            error rates.
           </Text>
         </Card.Body>
         <Card.Footer>
@@ -36,9 +34,7 @@ export default function FooterSplitSample() {
       <Card.Root>
         <Card.Header>
           <Card.Title>Analytics ETL</Card.Title>
-          <Card.Description>
-            Job has been retrying for 2 hours.
-          </Card.Description>
+          <Card.Description>Job has been retrying for 2 hours.</Card.Description>
         </Card.Header>
         <Card.Footer>
           <Card.FooterStart>

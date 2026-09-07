@@ -6,7 +6,9 @@ export default function BasicSample() {
   return (
     <Stack gap="sm" align="start">
       <TimeField value={time} onValueChange={setTime} />
-      <Text size="sm" color="muted">value: {time}</Text>
+      <Text size="sm" color="muted">
+        value: {time}
+      </Text>
     </Stack>
   );
 }

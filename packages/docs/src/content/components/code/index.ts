@@ -22,6 +22,11 @@ export const content: ComponentContent = {
     { id: 'variants', title: 'Variants', render: Variants, code: variantsCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     { id: 'block', title: 'Block (multi-line)', render: Block, code: blockCode },
-    { id: 'highlighter', title: 'Pluggable syntax highlighter', render: Highlighter, code: highlighterCode },
+    {
+      id: 'highlighter',
+      title: 'Pluggable syntax highlighter',
+      render: Highlighter,
+      code: highlighterCode,
+    },
   ],
 };

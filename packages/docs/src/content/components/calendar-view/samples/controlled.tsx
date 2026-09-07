@@ -16,11 +16,21 @@ export default function ControlledSample() {
   return (
     <Stack gap="md">
       <Stack direction="row" gap="sm" align="center" wrap>
-        <Button size="sm" variant="secondary" onClick={() => setView('day')}>Day</Button>
-        <Button size="sm" variant="secondary" onClick={() => setView('week')}>Week</Button>
-        <Button size="sm" variant="secondary" onClick={() => setView('month')}>Month</Button>
-        <Button size="sm" variant="secondary" onClick={() => setView('agenda')}>Agenda</Button>
-        <Text size="sm" color="muted">Current: {view} · {date.toLocaleDateString()}</Text>
+        <Button size="sm" variant="secondary" onClick={() => setView('day')}>
+          Day
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => setView('week')}>
+          Week
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => setView('month')}>
+          Month
+        </Button>
+        <Button size="sm" variant="secondary" onClick={() => setView('agenda')}>
+          Agenda
+        </Button>
+        <Text size="sm" color="muted">
+          Current: {view} · {date.toLocaleDateString()}
+        </Text>
       </Stack>
       <CalendarView.Root
         view={view}

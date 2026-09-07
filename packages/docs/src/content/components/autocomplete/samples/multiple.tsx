@@ -31,7 +31,9 @@ export default function MultipleSample() {
             {t.label}
           </Autocomplete.Item>
         ))}
-        <Autocomplete.Empty>Nothing matches — maybe you already picked them all.</Autocomplete.Empty>
+        <Autocomplete.Empty>
+          Nothing matches — maybe you already picked them all.
+        </Autocomplete.Empty>
       </Autocomplete.Content>
     </Autocomplete.Root>
   );

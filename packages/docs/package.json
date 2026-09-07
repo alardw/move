@@ -10,6 +10,8 @@
     "test": "vitest run",
     "test:a11y": "vitest run src/a11y-sweep.test.tsx",
     "typecheck": "tsc --noEmit",
+    "format": "prettier --write --ignore-path ../../.prettierignore \"src/**/*.{ts,tsx,css}\"",
+    "format:check": "prettier --check --ignore-path ../../.prettierignore \"src/**/*.{ts,tsx,css}\"",
     "check:conformance": "node ../move/scripts/checks/app-conformance.mjs"
   },
   "dependencies": {

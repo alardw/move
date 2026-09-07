@@ -1,11 +1,11 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 const traffic = [
-  { channel: "Organic", sessions: 4820 },
-  { channel: "Paid", sessions: 2310 },
-  { channel: "Referral", sessions: 1180 },
-  { channel: "Social", sessions: 760 },
-  { channel: "Email", sessions: 410 },
+  { channel: 'Organic', sessions: 4820 },
+  { channel: 'Paid', sessions: 2310 },
+  { channel: 'Referral', sessions: 1180 },
+  { channel: 'Social', sessions: 760 },
+  { channel: 'Email', sessions: 410 },
 ];
 
 /**
@@ -23,7 +23,7 @@ export default function PieSample() {
       data={traffic}
       x="channel"
       aspect={1.6}
-      series={[{ key: "sessions", type: "pie", label: "Sessions" }]}
+      series={[{ key: 'sessions', type: 'pie', label: 'Sessions' }]}
       formatY={(v) => v.toLocaleString()}
     />
   );

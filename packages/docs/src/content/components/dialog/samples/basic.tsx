@@ -14,9 +14,9 @@ export default function BasicSample() {
           </Dialog.Header>
           <Dialog.Body>
             <Dialog.Description>
-              You’re about to push the last hour of edits live. Anyone visiting the
-              site after this will see the new version — including the typo on the
-              pricing page that you keep promising you’ll fix.
+              You’re about to push the last hour of edits live. Anyone visiting the site after this
+              will see the new version — including the typo on the pricing page that you keep
+              promising you’ll fix.
             </Dialog.Description>
           </Dialog.Body>
           <Dialog.Footer>

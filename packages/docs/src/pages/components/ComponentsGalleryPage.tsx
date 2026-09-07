@@ -69,8 +69,8 @@ export function ComponentsGalleryPage() {
           </Breadcrumb>
           <Heading level={1}>Gallery</Heading>
           <Text color="muted">
-            All {total} components live on one page, at real size, with nothing between them —
-            for checking that a change to anything shared still holds across the whole library.
+            All {total} components live on one page, at real size, with nothing between them — for
+            checking that a change to anything shared still holds across the whole library.
           </Text>
           <Stack direction="row" gap="sm" align="center">
             <Switch.Root checked={dense} onCheckedChange={setDense}>

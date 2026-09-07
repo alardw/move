@@ -9,7 +9,9 @@ export default function ErrorSample() {
       <FormField.Field>
         <InputText id="bad-email" defaultValue="not an email" invalid />
       </FormField.Field>
-      <FormField.Description error>That doesn’t look like a valid email address.</FormField.Description>
+      <FormField.Description error>
+        That doesn’t look like a valid email address.
+      </FormField.Description>
     </FormField.Root>
   );
 }

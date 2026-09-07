@@ -35,10 +35,10 @@ export const meta: ComponentDocument = {
   synonyms: ['text field', 'text input', 'string input', 'input', 'textfield', 'textbox'],
   preview: { width: 'sm' },
   name: 'InputText',
-  tagline: 'A single-line text input — outlined or filled, three sizes, icon slots, and a real native input underneath.',
+  tagline:
+    'A single-line text input — outlined or filled, three sizes, icon slots, and a real native input underneath.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { InputText } from 'move';`,

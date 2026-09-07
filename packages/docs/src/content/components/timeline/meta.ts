@@ -30,7 +30,8 @@ export const meta: ComponentDocument = {
   synonyms: ['log', 'history', 'feed', 'activity feed', 'steps'],
   preview: { sample: 'steps' },
   name: 'Timeline',
-  tagline: 'A vertical timeline for chronological history — bullets, connector lines, per-item colour, and a staggered entrance.',
+  tagline:
+    'A vertical timeline for chronological history — bullets, connector lines, per-item colour, and a staggered entrance.',
   categories: ['data-display'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -40,7 +41,10 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { Timeline } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Timeline is presentational. Wrap items in Link or Button for keyboard access.' },
+    {
+      key: '—',
+      action: 'Timeline is presentational. Wrap items in Link or Button for keyboard access.',
+    },
   ],
   accessibilityLede:
     'Timeline renders a `<div>` group; the bullets are decorative. Wrap items in heading elements (Heading inside Timeline.Title) so document outline stays correct.',

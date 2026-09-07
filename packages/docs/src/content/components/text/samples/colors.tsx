@@ -6,7 +6,9 @@ export default function ColorsSample() {
   return (
     <Stack gap="xs">
       {colors.map((color) => (
-        <Text key={color} color={color}>color="{color}" — quick brown fox.</Text>
+        <Text key={color} color={color}>
+          color="{color}" — quick brown fox.
+        </Text>
       ))}
     </Stack>
   );

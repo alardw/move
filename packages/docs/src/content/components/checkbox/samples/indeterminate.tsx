@@ -31,11 +31,7 @@ export default function IndeterminateSample() {
 
   return (
     <Stack gap="sm">
-      <Checkbox
-        checked={allChecked}
-        indeterminate={indeterminate}
-        onCheckedChange={toggleAll}
-      >
+      <Checkbox checked={allChecked} indeterminate={indeterminate} onCheckedChange={toggleAll}>
         Select all filters
       </Checkbox>
       {/* composite-purity-ignore: left-only indent for the child checkboxes; Stack padding is all-sides */}

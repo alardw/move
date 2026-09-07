@@ -5,11 +5,7 @@ export default function MultipleSample() {
   const [value, setValue] = useState<Date[]>([]);
   return (
     <Stack gap="sm" align="start">
-      <Calendar.Root
-        mode="multiple"
-        value={value}
-        onValueChange={(d) => setValue(d as Date[])}
-      >
+      <Calendar.Root mode="multiple" value={value} onValueChange={(d) => setValue(d as Date[])}>
         <Calendar.Nav />
         <Calendar.Grid />
       </Calendar.Root>

@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/select',
     name: 'Select',
-    reason: 'When the menu is for picking a single value out of a list. Dropdown is for triggering actions, not committing to a value.',
+    reason:
+      'When the menu is for picking a single value out of a list. Dropdown is for triggering actions, not committing to a value.',
   },
   {
     to: '/components/popover',
@@ -34,7 +35,8 @@ export const meta: ComponentDocument = {
   slug: 'dropdown',
   synonyms: ['menu', 'context menu', 'select menu', 'overflow menu', 'action menu', 'actions'],
   name: 'Dropdown',
-  tagline: 'A context menu with items, groups, sub-menus, and toggleable checkbox/radio entries — animated, keyboard-driven, ARIA-correct.',
+  tagline:
+    'A context menu with items, groups, sub-menus, and toggleable checkbox/radio entries — animated, keyboard-driven, ARIA-correct.',
   categories: ['overlays'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -45,7 +47,10 @@ export const meta: ComponentDocument = {
   importCode: `import { Dropdown } from 'move';`,
   keyboard: [
     { key: 'Tab', action: 'Moves focus to the trigger.' },
-    { key: 'Enter / Space', action: 'Opens the menu (when focus is on the trigger), or activates an item.' },
+    {
+      key: 'Enter / Space',
+      action: 'Opens the menu (when focus is on the trigger), or activates an item.',
+    },
     { key: 'Arrow Up / Down', action: 'Navigates between items.' },
     { key: 'Arrow Right', action: 'Opens a sub-menu when focused on a SubTrigger.' },
     { key: 'Type-ahead', action: 'Jumps to items by typing their first letters.' },

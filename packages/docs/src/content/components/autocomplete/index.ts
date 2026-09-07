@@ -21,7 +21,12 @@ export const content: ComponentContent = {
     { id: 'basic', title: 'Basic (single)', render: Basic, code: basicCode },
     { id: 'multiple', title: 'Multi-select with tags', render: Multiple, code: multipleCode },
     { id: 'grouped', title: 'Grouped options', render: Grouped, code: groupedCode },
-    { id: 'custom-filter', title: 'Custom filter (keywords + substring)', render: CustomFilter, code: customFilterCode },
+    {
+      id: 'custom-filter',
+      title: 'Custom filter (keywords + substring)',
+      render: CustomFilter,
+      code: customFilterCode,
+    },
     { id: 'async', title: 'Async search with loading state', render: Async, code: asyncCode },
   ],
 };

@@ -34,16 +34,18 @@ export const meta: ComponentDocument = {
   slug: 'grid',
   synonyms: ['layout grid', 'columns', 'simple grid', 'masonry', 'gallery', 'image grid'],
   name: 'Grid',
-  tagline: 'A CSS grid layout primitive — equal columns, span-based, or auto-fit, with a Cell sub-component for per-item placement.',
+  tagline:
+    'A CSS grid layout primitive — equal columns, span-based, or auto-fit, with a Cell sub-component for per-item placement.',
   categories: ['layout'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Grid } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Grid is presentational; keyboard semantics belong to the cells you put inside.' },
+    {
+      key: '—',
+      action: 'Grid is presentational; keyboard semantics belong to the cells you put inside.',
+    },
   ],
   accessibilityLede:
     'Grid renders a `<div>` with CSS grid layout — no roles, no ARIA. The semantics come from what you put inside it.',

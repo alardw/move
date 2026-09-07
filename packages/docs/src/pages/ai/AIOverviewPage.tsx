@@ -53,7 +53,8 @@ export function AIOverviewPage() {
         <Stack gap="sm">
           <Heading level={1}>AI Overview</Heading>
           <Text color="muted" size="lg">
-            Move does not treat AI as an add-on. The assistant works because the UI system is already explicit enough to read.
+            Move does not treat AI as an add-on. The assistant works because the UI system is
+            already explicit enough to read.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((badge) => (
@@ -84,7 +85,8 @@ export function AIOverviewPage() {
                 icon: 'brain',
                 text: (
                   <>
-                    Read <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink> first if you want the architecture behind the AI story.
+                    Read <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink>{' '}
+                    first if you want the architecture behind the AI story.
                   </>
                 ),
               },
@@ -92,7 +94,8 @@ export function AIOverviewPage() {
                 icon: 'wrench',
                 text: (
                   <>
-                    Continue to <RouterLink to="/ai/skills">Skills</RouterLink> for the concrete toolchain.
+                    Continue to <RouterLink to="/ai/skills">Skills</RouterLink> for the concrete
+                    toolchain.
                   </>
                 ),
               },

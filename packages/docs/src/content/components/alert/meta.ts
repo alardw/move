@@ -21,12 +21,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/toast',
     name: 'Toast',
-    reason: 'For transient notifications that auto-dismiss. Alert is for status that lives in the page until the user acknowledges it.',
+    reason:
+      'For transient notifications that auto-dismiss. Alert is for status that lives in the page until the user acknowledges it.',
   },
   {
     to: '/components/dialog',
     name: 'Dialog',
-    reason: 'When the message blocks the flow and demands a choice. Alert is the lighter, in-page sibling.',
+    reason:
+      'When the message blocks the flow and demands a choice. Alert is the lighter, in-page sibling.',
   },
 ];
 
@@ -35,17 +37,19 @@ export const meta: ComponentDocument = {
   synonyms: ['banner', 'notice', 'message', 'callout', 'inline alert', 'notification'],
   preview: { width: 'sm' },
   name: 'Alert',
-  tagline: 'A status banner with a sensible default icon, a real ARIA contract, and an exit animation that doesn’t leave a hole in the layout.',
+  tagline:
+    'A status banner with a sensible default icon, a real ARIA contract, and an exit animation that doesn’t leave a hole in the layout.',
   categories: ['feedback'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Alert } from 'move';`,
   keyboard: [
     { key: 'Tab', action: 'Moves focus to the close button (when `closable`).' },
-    { key: 'Enter / Space', action: 'Activates the close button — fires the exit animation, then `onClose`.' },
+    {
+      key: 'Enter / Space',
+      action: 'Activates the close button — fires the exit animation, then `onClose`.',
+    },
   ],
   accessibilityLede:
     'Root carries `role="alert"`, so assistive tech announces the message the moment it mounts. The icon is `aria-hidden`, the close button is a real button with an `aria-label`, and exit happens after the animation — not in the middle of an SR announcement.',

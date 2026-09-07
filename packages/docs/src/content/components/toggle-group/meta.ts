@@ -30,11 +30,10 @@ export const meta: ComponentDocument = {
   slug: 'toggle-group',
   synonyms: ['segmented control', 'tab-like group', 'button group', 'toggle'],
   name: 'ToggleGroup',
-  tagline: 'A row of connected toggle buttons — single or multi select, with variant and size set once on the Root.',
+  tagline:
+    'A row of connected toggle buttons — single or multi select, with variant and size set once on the Root.',
   categories: ['actions'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { ToggleGroup } from 'move';`,

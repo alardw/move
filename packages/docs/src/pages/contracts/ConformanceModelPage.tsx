@@ -50,14 +50,38 @@ interface GateRow {
 
 const GATES: GateRow[] = [
   {
-    gate: <Badge variant="soft"><Icon name="scan-text" />Static</Badge>,
-    what: <>Reads your source as text and AST — purity (no hand-rolling) and composition drift over your composites.</>,
-    delivery: <><Code>npx move check</Code> — lives in the CLI, so nothing lands in your repo.</>,
+    gate: (
+      <Badge variant="soft">
+        <Icon name="scan-text" />
+        Static
+      </Badge>
+    ),
+    what: (
+      <>
+        Reads your source as text and AST — purity (no hand-rolling) and composition drift over your
+        composites.
+      </>
+    ),
+    delivery: (
+      <>
+        <Code>npx move check</Code> — lives in the CLI, so nothing lands in your repo.
+      </>
+    ),
   },
   {
-    gate: <Badge variant="soft"><Icon name="scan-eye" />Render-time</Badge>,
+    gate: (
+      <Badge variant="soft">
+        <Icon name="scan-eye" />
+        Render-time
+      </Badge>
+    ),
     what: <>Renders your composites and inspects the live DOM — axe over roles, names, and ARIA.</>,
-    delivery: <>A test + baseline scaffolded into your repo, because it needs your test runner and your real UI.</>,
+    delivery: (
+      <>
+        A test + baseline scaffolded into your repo, because it needs your test runner and your real
+        UI.
+      </>
+    ),
   },
 ];
 
@@ -105,11 +129,22 @@ export function ConformanceModelPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Conformance Model</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
-            <Badge variant="soft"><Icon name="shield-check" />move check</Badge>
-            <Badge variant="soft"><Icon name="git-branch" />Ratchet baseline</Badge>
-            <Badge variant="soft"><Icon name="layers" />Two axes</Badge>
+            <Badge variant="soft">
+              <Icon name="shield-check" />
+              move check
+            </Badge>
+            <Badge variant="soft">
+              <Icon name="git-branch" />
+              Ratchet baseline
+            </Badge>
+            <Badge variant="soft">
+              <Icon name="layers" />
+              Two axes
+            </Badge>
           </Stack>
         </Stack>
 
@@ -120,15 +155,17 @@ export function ConformanceModelPage() {
         >
           <Stack gap="sm">
             <Text>
-              The promise of Move is that a screen is <Text as="em">composed</Text> from Move components and design
-              tokens. Conformance is what makes that promise hold as the app grows: every commit is
-              verified to stay composed, tokenized, and accessible — automatically, so staying inside
-              the system is the path of least resistance rather than a thing to remember.
+              The promise of Move is that a screen is <Text as="em">composed</Text> from Move
+              components and design tokens. Conformance is what makes that promise hold as the app
+              grows: every commit is verified to stay composed, tokenized, and accessible —
+              automatically, so staying inside the system is the path of least resistance rather
+              than a thing to remember.
             </Text>
             <Text>
-              It is the same idea as the <RouterLink to="/contracts/component">Component
-              Contract</RouterLink>, one layer up: the contract keeps a single component true to its
-              spec; conformance keeps a whole <Text as="em">app</Text> true to the Move way of building.
+              It is the same idea as the{' '}
+              <RouterLink to="/contracts/component">Component Contract</RouterLink>, one layer up:
+              the contract keeps a single component true to its spec; conformance keeps a whole{' '}
+              <Text as="em">app</Text> true to the Move way of building.
             </Text>
           </Stack>
         </Section>
@@ -140,10 +177,10 @@ export function ConformanceModelPage() {
         >
           <Stack gap="md">
             <Text>
-              A static gate reads your source as text; a command can do that anywhere, so it ships as
-              the CLI and installs nothing. A render-time gate has to render your components and read
-              the live DOM, so it runs in your test runner and lives in your repo as a test. Same goal,
-              two delivery shapes — that split is the whole model.
+              A static gate reads your source as text; a command can do that anywhere, so it ships
+              as the CLI and installs nothing. A render-time gate has to render your components and
+              read the live DOM, so it runs in your test runner and lives in your repo as a test.
+              Same goal, two delivery shapes — that split is the whole model.
             </Text>
             <Table>
               <Table.Header>
@@ -157,8 +194,12 @@ export function ConformanceModelPage() {
                 {GATES.map((g, i) => (
                   <Table.Row key={i}>
                     <Table.Cell>{g.gate}</Table.Cell>
-                    <Table.Cell><Text size="sm">{g.what}</Text></Table.Cell>
-                    <Table.Cell><Text size="sm">{g.delivery}</Text></Table.Cell>
+                    <Table.Cell>
+                      <Text size="sm">{g.what}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="sm">{g.delivery}</Text>
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
@@ -173,21 +214,32 @@ export function ConformanceModelPage() {
         >
           <Stack gap="md">
             <Text>
-              A conformance check recomputes its findings live from source every run. What it persists
-              is not a report — reports go stale the moment they're written — but a small{' '}
-              <Text as="em">baseline</Text>: a count of the currently-accepted violations, per file (or per rendered
-              entry) and per rule. Each run compares live counts against the baseline:
+              A conformance check recomputes its findings live from source every run. What it
+              persists is not a report — reports go stale the moment they're written — but a small{' '}
+              <Text as="em">baseline</Text>: a count of the currently-accepted violations, per file
+              (or per rendered entry) and per rule. Each run compares live counts against the
+              baseline:
             </Text>
             <Stack gap="xs">
-              <Text size="sm">• A count <Text as="strong">above</Text> the baseline is a new violation — the check fails.</Text>
-              <Text size="sm">• A count <Text as="strong">at or below</Text> the baseline is inherited debt — tolerated.</Text>
-              <Text size="sm">• Fix something and the live count drops below the baseline — re-snapshot, and the baseline shrinks. It never grows on its own.</Text>
+              <Text size="sm">
+                • A count <Text as="strong">above</Text> the baseline is a new violation — the check
+                fails.
+              </Text>
+              <Text size="sm">
+                • A count <Text as="strong">at or below</Text> the baseline is inherited debt —
+                tolerated.
+              </Text>
+              <Text size="sm">
+                • Fix something and the live count drops below the baseline — re-snapshot, and the
+                baseline shrinks. It never grows on its own.
+              </Text>
             </Stack>
             <Text>
-              Because the baseline stores <Text as="em">counts</Text>, not line numbers, it is robust to edits that
-              shift code around — only the number of violations in a file matters. Re-snapshot with an
-              update flag (<Code>--update</Code> for the static audit, <Code>A11Y_UPDATE=1</Code> for
-              the render-time sweep). Both axes share one baseline shape:
+              Because the baseline stores <Text as="em">counts</Text>, not line numbers, it is
+              robust to edits that shift code around — only the number of violations in a file
+              matters. Re-snapshot with an update flag (<Code>--update</Code> for the static audit,{' '}
+              <Code>A11Y_UPDATE=1</Code> for the render-time sweep). Both axes share one baseline
+              shape:
             </Text>
             <CodeBlock code={BASELINE_SHAPE} language="json" />
           </Stack>
@@ -212,17 +264,23 @@ export function ConformanceModelPage() {
                 {AXES.map((a, i) => (
                   <Table.Row key={i}>
                     <Table.Cell>{a.axis}</Table.Cell>
-                    <Table.Cell><Text size="sm">{a.measures}</Text></Table.Cell>
-                    <Table.Cell><Text size="sm">{a.gate}</Text></Table.Cell>
-                    <Table.Cell><Badge variant="outline">{a.baseline}</Badge></Table.Cell>
+                    <Table.Cell>
+                      <Text size="sm">{a.measures}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Text size="sm">{a.gate}</Text>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge variant="outline">{a.baseline}</Badge>
+                    </Table.Cell>
                   </Table.Row>
                 ))}
               </Table.Body>
             </Table>
             <Text size="sm" color="muted">
-              Same ratchet, same baseline shape — they differ only in what a violation <Text as="em">is</Text> and
-              whether it's read from source or from a rendered DOM. Add a third axis and it plugs into
-              the same machinery.
+              Same ratchet, same baseline shape — they differ only in what a violation{' '}
+              <Text as="em">is</Text> and whether it's read from source or from a rendered DOM. Add
+              a third axis and it plugs into the same machinery.
             </Text>
           </Stack>
         </Section>
@@ -237,20 +295,21 @@ export function ConformanceModelPage() {
               <Heading level={3}>Static gate — a command</Heading>
               <Text>
                 <Code>npx move check</Code> runs the static gates over your project. It reads your
-                composites — the pages, features, and composites <RouterLink to="/ai/skills">/app-compose</RouterLink>{' '}
-                produces — and needs no files of its own. Point it with a{' '}
-                <Code>move.config.json</Code>; with none, it looks in <Code>src/composites</Code>.
+                composites — the pages, features, and composites{' '}
+                <RouterLink to="/ai/skills">/app-compose</RouterLink> produces — and needs no files
+                of its own. Point it with a <Code>move.config.json</Code>; with none, it looks in{' '}
+                <Code>src/composites</Code>.
               </Text>
               <CodeBlock code={CONFIG} language="json" />
             </Stack>
             <Stack gap="sm">
               <Heading level={3}>Render-time gate — scaffolded</Heading>
               <Text>
-                The accessibility ratchet can't be a command — it renders your components. So it's part
-                of project setup: <Code>npm create move</Code> drops the sweep test, its baseline,
-                and the CI step into your repo, alongside the <Code>MoveRoot</Code> and shell it
-                already scaffolds. From
-                then on it runs with your own tests, and the baseline is yours to ratchet down.
+                The accessibility ratchet can't be a command — it renders your components. So it's
+                part of project setup: <Code>npm create move</Code> drops the sweep test, its
+                baseline, and the CI step into your repo, alongside the <Code>MoveRoot</Code> and
+                shell it already scaffolds. From then on it runs with your own tests, and the
+                baseline is yours to ratchet down.
               </Text>
             </Stack>
             <Text size="sm" color="muted">
@@ -267,10 +326,10 @@ export function ConformanceModelPage() {
         >
           <Stack gap="sm">
             <Text>
-              Wire <Code>move check</Code> and the render-time sweep into your commit hook and CI, and
-              every commit and every pull request stays true to the contract automatically. In a
-              monorepo, each package owns its own job and its own baseline — Move's library checks and
-              the docs app's two ratchets run as separate CI jobs over the same checkout.
+              Wire <Code>move check</Code> and the render-time sweep into your commit hook and CI,
+              and every commit and every pull request stays true to the contract automatically. In a
+              monorepo, each package owns its own job and its own baseline — Move's library checks
+              and the docs app's two ratchets run as separate CI jobs over the same checkout.
             </Text>
             <Text size="sm" color="muted">
               A ratchet turns conformance into a one-way street: the accepted debt is visible in the
@@ -283,10 +342,23 @@ export function ConformanceModelPage() {
           <Stack gap="sm">
             <Text>Adjacent reading:</Text>
             <Stack gap="xs">
-              <Text size="sm">• <RouterLink to="/conformance/validation">Validation</RouterLink> — every gate <Code>move check</Code> runs, for reference.</Text>
-              <Text size="sm">• <RouterLink to="/conformance/tooling">Tooling</RouterLink> — run the gates: <Code>move check</Code>, pre-commit hook, and CI.</Text>
-              <Text size="sm">• <RouterLink to="/contracts/component">Component Contract</RouterLink> — the same idea one layer down, for a single component.</Text>
-              <Text size="sm">• <RouterLink to="/ai/skills">Skills</RouterLink> — <Code>/app-compose</Code> produces the composites the static gate checks; <Code>/app-setup</Code> scaffolds the render-time one.</Text>
+              <Text size="sm">
+                • <RouterLink to="/conformance/validation">Validation</RouterLink> — every gate{' '}
+                <Code>move check</Code> runs, for reference.
+              </Text>
+              <Text size="sm">
+                • <RouterLink to="/conformance/tooling">Tooling</RouterLink> — run the gates:{' '}
+                <Code>move check</Code>, pre-commit hook, and CI.
+              </Text>
+              <Text size="sm">
+                • <RouterLink to="/contracts/component">Component Contract</RouterLink> — the same
+                idea one layer down, for a single component.
+              </Text>
+              <Text size="sm">
+                • <RouterLink to="/ai/skills">Skills</RouterLink> — <Code>/app-compose</Code>{' '}
+                produces the composites the static gate checks; <Code>/app-setup</Code> scaffolds
+                the render-time one.
+              </Text>
             </Stack>
           </Stack>
         </Section>

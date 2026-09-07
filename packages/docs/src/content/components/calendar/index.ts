@@ -22,6 +22,11 @@ export const content: ComponentContent = {
     { id: 'range', title: 'Date range', render: Range, code: rangeCode },
     { id: 'multiple', title: 'Multi-select', render: Multiple, code: multipleCode },
     { id: 'with-events', title: 'With events', render: WithEvents, code: withEventsCode },
-    { id: 'locale-and-constraints', title: 'Locale + constraints', render: LocaleAndConstraints, code: localeAndConstraintsCode },
+    {
+      id: 'locale-and-constraints',
+      title: 'Locale + constraints',
+      render: LocaleAndConstraints,
+      code: localeAndConstraintsCode,
+    },
   ],
 };

@@ -20,9 +20,8 @@ const PRINCIPLE: HighlightItem[] = [
     icon: 'tag',
     text: (
       <>
-        <Code>{'<Icon name="chevron-down" />'}</Code> imports nothing itself. It
-        asks the resolver you gave <Code>MoveRoot</Code> for whatever a name
-        should render.
+        <Code>{'<Icon name="chevron-down" />'}</Code> imports nothing itself. It asks the resolver
+        you gave <Code>MoveRoot</Code> for whatever a name should render.
       </>
     ),
   },
@@ -178,8 +177,8 @@ export function IconsPage() {
           <Heading level={1}>Icons</Heading>
           <Text color="muted" size="lg">
             Move’s <Code>Icon</Code> is library-agnostic. You give <Code>MoveRoot</Code> one
-            resolver that turns a name into something to render, and every icon in your app
-            draws from the set you chose — Lucide, Heroicons, Phosphor, your own SVGs, anything.
+            resolver that turns a name into something to render, and every icon in your app draws
+            from the set you chose — Lucide, Heroicons, Phosphor, your own SVGs, anything.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -230,10 +229,10 @@ export function IconsPage() {
               </Table.Body>
             </Table>
             <Text color="muted">
-              Every name above ships as a built-in fallback, so these render even before you
-              wire a resolver. Components that render a default icon also accept an icon prop
-              (e.g. Password’s <Code>showIcon</Code>/<Code>hideIcon</Code>) to override just that
-              one instance.
+              Every name above ships as a built-in fallback, so these render even before you wire a
+              resolver. Components that render a default icon also accept an icon prop (e.g.
+              Password’s <Code>showIcon</Code>/<Code>hideIcon</Code>) to override just that one
+              instance.
             </Text>
           </Stack>
         </Section>
@@ -245,11 +244,16 @@ export function IconsPage() {
         >
           <Stack gap="md">
             <Text color="muted">
-              Resolution order is your resolver → Move’s built-in essentials → the optional fallback, so returning <Code>null</Code> for a name keeps the built-in. Using Lucide? These are Lucide’s own kebab names, so the resolver above already covers them — no alias map needed.
+              Resolution order is your resolver → Move’s built-in essentials → the optional
+              fallback, so returning <Code>null</Code> for a name keeps the built-in. Using Lucide?
+              These are Lucide’s own kebab names, so the resolver above already covers them — no
+              alias map needed.
             </Text>
             <CodeBlock language="tsx" code={OVERRIDE_ALL} />
             <Text color="muted">
-              For one-off swaps, components also take an <Code>icon</Code> prop (and friends like <Code>iconLeft</Code>, <Code>CloseIcon</Code>) that accepts a name or a node — reach for that instead of the resolver when you only need to change one spot.
+              For one-off swaps, components also take an <Code>icon</Code> prop (and friends like{' '}
+              <Code>iconLeft</Code>, <Code>CloseIcon</Code>) that accepts a name or a node — reach
+              for that instead of the resolver when you only need to change one spot.
             </Text>
           </Stack>
         </Section>

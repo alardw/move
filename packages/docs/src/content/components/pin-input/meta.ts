@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/password',
     name: 'Password',
-    reason: 'For longer secrets that need a show/hide toggle. PinInput is for fixed-length OTP-style codes.',
+    reason:
+      'For longer secrets that need a show/hide toggle. PinInput is for fixed-length OTP-style codes.',
   },
   {
     to: '/components/input-text',
@@ -31,10 +32,10 @@ export const meta: ComponentDocument = {
   synonyms: ['otp', '2fa', 'verification code', 'one-time code', 'pin code', 'mfa'],
   preview: { width: 'fit' },
   name: 'PinInput',
-  tagline: 'A multi-cell pin/OTP input that auto-advances, supports paste-distribution, and masks like a password when you ask it to.',
+  tagline:
+    'A multi-cell pin/OTP input that auto-advances, supports paste-distribution, and masks like a password when you ask it to.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { PinInput } from 'move';`,

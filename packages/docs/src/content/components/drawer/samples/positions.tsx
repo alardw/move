@@ -8,7 +8,9 @@ export default function PositionsSample() {
       {positions.map((position) => (
         <Drawer.Root key={position} position={position}>
           <Drawer.Trigger asChild>
-            <Button variant="secondary" size="sm">From {position}</Button>
+            <Button variant="secondary" size="sm">
+              From {position}
+            </Button>
           </Drawer.Trigger>
           <Drawer.Portal>
             <Drawer.Overlay />

@@ -17,7 +17,9 @@ export default function ConstraintsSample() {
           description="5 MB each, up to 3 files"
           action={
             <FileUpload.Trigger>
-              <Button variant="secondary" size="sm">Browse</Button>
+              <Button variant="secondary" size="sm">
+                Browse
+              </Button>
             </FileUpload.Trigger>
           }
         />

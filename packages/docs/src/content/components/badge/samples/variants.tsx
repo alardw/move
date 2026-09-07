@@ -1,14 +1,12 @@
-import { Badge, Stack, Text } from "move";
+import { Badge, Stack, Text } from 'move';
 
-const variants = ["solid", "soft", "surface", "outline", "dot"] as const;
+const variants = ['solid', 'soft', 'surface', 'outline', 'dot'] as const;
 const descriptions: Record<(typeof variants)[number], string> = {
-  solid:
-    "High-contrast filled chip — for the loudest status the page is allowed to have.",
-  soft: "Tinted background, no border — quieter, friendlier, the most common choice.",
-  surface:
-    "Tinted background plus a matching border — for badges that sit on busier surfaces.",
-  outline: "Border only, transparent fill — pairs well with crowded layouts.",
-  dot: "A coloured dot before the label — minimum visual weight, maximum readability.",
+  solid: 'High-contrast filled chip — for the loudest status the page is allowed to have.',
+  soft: 'Tinted background, no border — quieter, friendlier, the most common choice.',
+  surface: 'Tinted background plus a matching border — for badges that sit on busier surfaces.',
+  outline: 'Border only, transparent fill — pairs well with crowded layouts.',
+  dot: 'A coloured dot before the label — minimum visual weight, maximum readability.',
 };
 
 export default function VariantsSample() {

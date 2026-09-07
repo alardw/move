@@ -20,7 +20,9 @@ export default function SizesSample() {
     <Stack gap="lg">
       {sizes.map((size) => (
         <Stack key={size} gap="xs">
-          <Text size="sm" weight="medium">size="{size}"</Text>
+          <Text size="sm" weight="medium">
+            size="{size}"
+          </Text>
           <Accordion.Root type="single" collapsible size={size} defaultValue="density">
             {faq.map((it) => (
               <Accordion.Item key={it.value} value={it.value}>

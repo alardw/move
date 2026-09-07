@@ -14,7 +14,9 @@ export default function BasicSample() {
       <Select.Content>
         <Select.Viewport>
           {fruits.map((f) => (
-            <Select.Item key={f} value={f}>{f}</Select.Item>
+            <Select.Item key={f} value={f}>
+              {f}
+            </Select.Item>
           ))}
         </Select.Viewport>
       </Select.Content>

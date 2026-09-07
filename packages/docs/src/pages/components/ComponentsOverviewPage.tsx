@@ -1,6 +1,15 @@
 import { useMemo, useState, type ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, InputText, Switch, ToggleGroup, LayoutGroup } from 'move';
+import {
+  Stack,
+  Heading,
+  Text,
+  Breadcrumb,
+  InputText,
+  Switch,
+  ToggleGroup,
+  LayoutGroup,
+} from 'move';
 import { ComponentCard } from '../../components';
 import { COMPONENT_CONTENT } from '../../content/components';
 import type { ComponentContent } from '../../content/components/types';
@@ -13,9 +22,7 @@ const labelOf = (id: string): string => TAXONOMY_BY_ID[id]?.label ?? id;
 const isAnimated = (c: ComponentContent): boolean =>
   ((c.spec.animations as unknown[] | undefined)?.length ?? 0) > 0;
 
-const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) =>
-  a.meta.name.localeCompare(b.meta.name),
-);
+const ALL = Object.values(COMPONENT_CONTENT).sort((a, b) => a.meta.name.localeCompare(b.meta.name));
 
 /**
  * How well a component answers the words typed, 0 for not at all.
@@ -81,7 +88,9 @@ export function ComponentsOverviewPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Components</Heading>
-          <Text color="muted" size="lg">Every Move primitive, in one place.</Text>
+          <Text color="muted" size="lg">
+            Every Move primitive, in one place.
+          </Text>
         </Stack>
 
         <Stack gap="lg" id="browse">
@@ -115,9 +124,7 @@ export function ComponentsOverviewPage() {
           </Stack>
 
           {filtered.length === 0 ? (
-            <Text color="muted">
-              No components match {query ? `“${query}”` : 'these filters'}.
-            </Text>
+            <Text color="muted">No components match {query ? `“${query}”` : 'these filters'}.</Text>
           ) : (
             // One flat grid, one LayoutGroup — cards FLIP cohesively across the
             // whole view as search/category/animated filters change.

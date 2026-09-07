@@ -29,11 +29,10 @@ export const meta: ComponentDocument = {
   slug: 'pagination',
   synonyms: ['pages', 'paging', 'page nav', 'page navigation', 'pager', 'next previous'],
   name: 'Pagination',
-  tagline: 'A page navigator with prev/next, numbered buttons, ellipsis collapse, and a sliding active indicator.',
+  tagline:
+    'A page navigator with prev/next, numbered buttons, ellipsis collapse, and a sliding active indicator.',
   categories: ['navigation'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Pagination } from 'move';`,

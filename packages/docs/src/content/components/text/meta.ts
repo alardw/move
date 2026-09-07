@@ -30,16 +30,14 @@ export const meta: ComponentDocument = {
   slug: 'text',
   synonyms: ['paragraph', 'body', 'copy', 'typography'],
   name: 'Text',
-  tagline: 'A typography primitive for body copy — size, weight, colour, alignment, and a polymorphic `as`.',
+  tagline:
+    'A typography primitive for body copy — size, weight, colour, alignment, and a polymorphic `as`.',
   categories: ['typography'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Text } from 'move';`,
-  keyboard: [
-    { key: '—', action: 'Text is presentational.' },
-  ],
+  keyboard: [{ key: '—', action: 'Text is presentational.' }],
   accessibilityLede:
     'Renders `<p>` by default, `<span>` when `as="span"`. The polymorphic `as` lets you reach for the right semantic element without losing the typography props.',
 };

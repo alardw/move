@@ -10,7 +10,9 @@ export default function BasicSample() {
         <Pagination.Items />
         <Pagination.NextTrigger />
       </Pagination.Root>
-      <Text size="sm" color="muted">page: {page} of 42</Text>
+      <Text size="sm" color="muted">
+        page: {page} of 42
+      </Text>
     </Stack>
   );
 }

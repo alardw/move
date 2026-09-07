@@ -40,12 +40,13 @@ export function ComponentDocPage() {
   // lost. When subComponents already includes a Root entry (Accordion,
   // Avatar, Autocomplete) we leave it alone.
   const subs = (spec.subComponents as Array<{ name: string; props?: unknown[] }> | undefined) ?? [];
-  const rootProps = (spec.props as unknown[] | undefined);
+  const rootProps = spec.props as unknown[] | undefined;
   const rootPropsArray = Array.isArray(rootProps) ? rootProps : [];
   const hasRootEntry = subs.some((s) => s.name === 'Root' || s.name === spec.name);
-  const apiSubComponents: typeof subs = rootPropsArray.length > 0 && !hasRootEntry
-    ? [{ name: spec.name as string, props: rootPropsArray }, ...subs]
-    : subs;
+  const apiSubComponents: typeof subs =
+    rootPropsArray.length > 0 && !hasRootEntry
+      ? [{ name: spec.name as string, props: rootPropsArray }, ...subs]
+      : subs;
   const showApi = apiSubComponents.some((s) => Array.isArray(s.props) && s.props.length > 0);
 
   // Integration points (adapters) — typed seams the consumer wires. Derived from
@@ -73,7 +74,9 @@ export function ComponentDocPage() {
     ...(meta.highlights.length > 0 ? [{ href: '#highlights', label: 'Highlights' }] : []),
     ...(meta.related.length > 0 ? [{ href: '#related', label: 'Related' }] : []),
     ...(meta.importCode ? [{ href: '#installation', label: 'Installation' }] : []),
-    ...(genericSamples.length > 0 ? [{ href: '#samples', label: meta.samplesTitle ?? 'Samples' }] : []),
+    ...(genericSamples.length > 0
+      ? [{ href: '#samples', label: meta.samplesTitle ?? 'Samples' }]
+      : []),
     ...(integrationPoints.length > 0 ? [{ href: '#integrations', label: 'Integrations' }] : []),
     ...(meta.keyboard.length > 0 ? [{ href: '#accessibility', label: 'Accessibility' }] : []),
     ...(showApi ? [{ href: '#api', label: 'API' }] : []),
@@ -101,7 +104,9 @@ export function ComponentDocPage() {
 
         <Stack gap="sm">
           <Heading level={1}>{meta.name}</Heading>
-          <Text color="muted" size="lg">{meta.tagline}</Text>
+          <Text color="muted" size="lg">
+            {meta.tagline}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {meta.categories
               .map((id) => TAXONOMY_BY_ID[id])
@@ -174,9 +179,13 @@ export function ComponentDocPage() {
                 <Table.Body>
                   {integrationPoints.map((p) => (
                     <Table.Row key={p.id}>
-                      <Table.Cell><Code>{p.id}</Code></Table.Cell>
+                      <Table.Cell>
+                        <Code>{p.id}</Code>
+                      </Table.Cell>
                       <Table.Cell>{p.kind}</Table.Cell>
-                      <Table.Cell><Code>{p.contract}</Code></Table.Cell>
+                      <Table.Cell>
+                        <Code>{p.contract}</Code>
+                      </Table.Cell>
                       <Table.Cell>{p.default}</Table.Cell>
                       <Table.Cell>{p.description}</Table.Cell>
                     </Table.Row>
@@ -194,8 +203,8 @@ export function ComponentDocPage() {
                     <Stack key={p.id} gap="sm">
                       <Text size="sm" color="muted">
                         <Code>{p.id}</Code> running live against the{' '}
-                        {p.fixture ? <Code>{p.fixture}</Code> : 'demo'} fixture — a fake
-                        service standing in for your adapter. Swap in your real one for production.
+                        {p.fixture ? <Code>{p.fixture}</Code> : 'demo'} fixture — a fake service
+                        standing in for your adapter. Swap in your real one for production.
                       </Text>
                       <Preview title={sample.title} code={sample.code}>
                         <SampleRender />
@@ -208,11 +217,7 @@ export function ComponentDocPage() {
         ) : null}
 
         {meta.keyboard.length > 0 && (
-          <Section
-            id="accessibility"
-            title="Accessibility"
-            lede={meta.accessibilityLede}
-          >
+          <Section id="accessibility" title="Accessibility" lede={meta.accessibilityLede}>
             <KeyboardTable rows={meta.keyboard} />
           </Section>
         )}

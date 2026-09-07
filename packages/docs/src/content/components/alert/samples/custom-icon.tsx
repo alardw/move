@@ -10,12 +10,12 @@ export default function CustomIconSample() {
   return (
     <Stack gap="md">
       <Alert variant="info" icon="rocket" title="New release">
-        v2.4 ships keyboard shortcuts for everything in the command palette.
-        Press <Code>?</Code> to see the full list.
+        v2.4 ships keyboard shortcuts for everything in the command palette. Press <Code>?</Code> to
+        see the full list.
       </Alert>
       <Alert variant="warning" icon="bell" title="Reminder">
-        Your team’s 1:1 starts in 15 minutes. The agenda is still empty — drop
-        in a topic before the meeting reads as "skip".
+        Your team’s 1:1 starts in 15 minutes. The agenda is still empty — drop in a topic before the
+        meeting reads as "skip".
       </Alert>
       <Alert variant="success" icon={false}>
         Profile updated.

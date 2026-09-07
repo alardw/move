@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/icon',
     name: 'Icon',
-    reason: 'When the slot stands in for a person, but a glyph reads better than initials — a lock, a robot, a generic user silhouette.',
+    reason:
+      'When the slot stands in for a person, but a glyph reads better than initials — a lock, a robot, a generic user silhouette.',
   },
 ];
 
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['profile picture', 'user image', 'portrait', 'user icon', 'gravatar', 'initials'],
   preview: { width: 'fit' },
   name: 'Avatar',
-  tagline: 'A user portrait with a graceful fallback, five sizes, and a Group for stacks of teammates.',
+  tagline:
+    'A user portrait with a graceful fallback, five sizes, and a Group for stacks of teammates.',
   categories: ['data-display'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -45,7 +47,11 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { Avatar } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Avatar is a display element; activate-the-avatar behaviour belongs on whatever wraps it.' },
+    {
+      key: '—',
+      action:
+        'Avatar is a display element; activate-the-avatar behaviour belongs on whatever wraps it.',
+    },
   ],
   accessibilityLede:
     'Image takes the alt text and the Fallback is announced as plain content. The component does not impose a role — wrap in a button or link if the avatar is interactive, and the right semantics flow from there.',

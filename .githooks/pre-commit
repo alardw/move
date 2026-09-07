@@ -122,3 +122,18 @@ if [ -n "$staged_move" ]; then
 
   echo "✓ format + lint passed"
 fi
+
+# --- Docs source: format only ---
+# Docs has no ESLint config of its own, so this is the formatter alone. It exists
+# because docs sat outside every format gate and drifted to Prettier's DEFAULTS —
+# double quotes, 80 columns — against the repo's .prettierrc.json. That is
+# invisible until someone with format-on-save edits a file and reformats half of
+# it around their one-line change.
+staged_docs=$(printf '%s\n' "$staged" | grep -E '^packages/docs/src/.*\.(ts|tsx|css)$' || true)
+if [ -n "$staged_docs" ]; then
+  echo "▶ pre-commit: formatting staged docs source…"
+  rel_docs=$(printf '%s\n' "$staged_docs" | sed 's#^packages/docs/##')
+  ( cd packages/docs && printf '%s\n' "$rel_docs" | xargs npx prettier --write --ignore-path ../../.prettierignore ) || { echo "✗ prettier failed."; exit 1; }
+  printf '%s\n' "$staged_docs" | xargs git add
+  echo "✓ docs format passed"
+fi

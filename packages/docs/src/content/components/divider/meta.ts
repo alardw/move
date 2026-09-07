@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/stack',
     name: 'Stack',
-    reason: 'For laying out items with consistent gap. A Divider often sits inside a Stack to mark a stronger break between sections.',
+    reason:
+      'For laying out items with consistent gap. A Divider often sits inside a Stack to mark a stronger break between sections.',
   },
   {
     to: '/components/heading',
@@ -34,16 +35,14 @@ export const meta: ComponentDocument = {
   slug: 'divider',
   synonyms: ['separator', 'rule', 'hr', 'line'],
   name: 'Divider',
-  tagline: 'A simple separator with optional inline content — horizontal or vertical, solid, dashed, or dotted, with the line drawn entirely from CSS pseudo-elements.',
+  tagline:
+    'A simple separator with optional inline content — horizontal or vertical, solid, dashed, or dotted, with the line drawn entirely from CSS pseudo-elements.',
   categories: ['layout'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Divider } from 'move';`,
-  keyboard: [
-    { key: '—', action: 'Divider is presentational; nothing to focus or activate.' },
-  ],
+  keyboard: [{ key: '—', action: 'Divider is presentational; nothing to focus or activate.' }],
   accessibilityLede:
     'Renders with `role="separator"` and `aria-orientation` matching the prop. The label, when present, is regular inline content — readable by assistive tech without any extra ARIA wrangling.',
 };

@@ -14,8 +14,8 @@ export default function BasicSample() {
           </Drawer.Header>
           <Drawer.Body>
             <Drawer.Description>
-              Tweak the filter criteria here. Changes apply immediately to the underlying list, so you can keep
-              the drawer open while you iterate.
+              Tweak the filter criteria here. Changes apply immediately to the underlying list, so
+              you can keep the drawer open while you iterate.
             </Drawer.Description>
           </Drawer.Body>
           <Drawer.Footer>

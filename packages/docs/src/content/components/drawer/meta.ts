@@ -26,15 +26,25 @@ const related: RelatedItem[] = [
   {
     to: '/components/sidebar',
     name: 'Sidebar',
-    reason: 'When the panel is permanent navigation rather than a transient flow that opens and closes.',
+    reason:
+      'When the panel is permanent navigation rather than a transient flow that opens and closes.',
   },
 ];
 
 export const meta: ComponentDocument = {
   slug: 'drawer',
-  synonyms: [ 'sheet', 'side panel', 'offcanvas', 'side sheet', 'slide-in', 'off-canvas', 'slide-over', ],
+  synonyms: [
+    'sheet',
+    'side panel',
+    'offcanvas',
+    'side sheet',
+    'slide-in',
+    'off-canvas',
+    'slide-over',
+  ],
   name: 'Drawer',
-  tagline: 'A slide-in panel from any edge — perfect for filters, detail views, multi-step flows. Modal by default, bottom-sheet on mobile, full keyboard contract.',
+  tagline:
+    'A slide-in panel from any edge — perfect for filters, detail views, multi-step flows. Modal by default, bottom-sheet on mobile, full keyboard contract.',
   categories: ['overlays'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -44,7 +54,10 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { Drawer } from 'move';`,
   keyboard: [
-    { key: 'Tab', action: 'Cycles focus through interactive elements inside the drawer (focus is trapped).' },
+    {
+      key: 'Tab',
+      action: 'Cycles focus through interactive elements inside the drawer (focus is trapped).',
+    },
     { key: 'Shift + Tab', action: 'Cycles focus in reverse.' },
     { key: 'Escape', action: 'Triggers the animated close.' },
     { key: 'Enter / Space', action: 'Activates the focused button — same as a click.' },

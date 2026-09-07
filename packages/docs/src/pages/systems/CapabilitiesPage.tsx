@@ -38,7 +38,8 @@ const CAPABILITIES: Cap[] = [
     name: 'has-label',
     checks: 'capabilities, type-scale, rendered-label, aria-label-name',
     parts: 'label',
-    gives: 'Every control is named the same way, and its label sits on the same step of the type scale.',
+    gives:
+      'Every control is named the same way, and its label sits on the same step of the type scale.',
   },
   {
     name: 'takes-focus',
@@ -129,7 +130,10 @@ export function CapabilitiesPage() {
             <Text>
               A capability is one promise, kept by every component it applies to. Each is checked
               both ways: a component claiming one has to keep it, and a component behaving like one
-              has to say so — the second is what catches the promise nobody wrote down. All five are enforced in both directions. A contract is rarely held by one gate, so each names every check that holds part of it — and the registry validates that those checks exist.
+              has to say so — the second is what catches the promise nobody wrote down. All five are
+              enforced in both directions. A contract is rarely held by one gate, so each names
+              every check that holds part of it — and the registry validates that those checks
+              exist.
             </Text>
             <Table>
               <Table.Header>
@@ -169,10 +173,11 @@ export function CapabilitiesPage() {
             <Text>
               Components name their parts differently — the interactive element is <Code>root</Code>{' '}
               in Checkbox, <Code>input</Code> in InputText, <Code>trigger</Code> in Select. So every
-              part also declares what it <Text as="em">is</Text>: <Code>control</Code>, <Code>label</Code>,{' '}
-              <Code>item</Code>, <Code>group</Code>, <Code>trigger</Code>, <Code>surface</Code>,{' '}
-              <Code>scrollport</Code>, <Code>overlay</Code>, <Code>separator</Code>,{' '}
-              <Code>indicator</Code>, <Code>icon</Code>, or <Code>none</Code>.
+              part also declares what it <Text as="em">is</Text>: <Code>control</Code>,{' '}
+              <Code>label</Code>, <Code>item</Code>, <Code>group</Code>, <Code>trigger</Code>,{' '}
+              <Code>surface</Code>, <Code>scrollport</Code>, <Code>overlay</Code>,{' '}
+              <Code>separator</Code>, <Code>indicator</Code>, <Code>icon</Code>, or{' '}
+              <Code>none</Code>.
             </Text>
             <Text>
               Promises are written against that rather than against names, so one promise covers the
@@ -192,9 +197,9 @@ export function CapabilitiesPage() {
             </Text>
             <Text>
               Families compose. A list you choose from and a panel holding arbitrary content are
-              different — one navigates options, the other does not — but both hang off a trigger and
-              both dismiss the same way. That shared half is written once, in the family they both
-              include.
+              different — one navigates options, the other does not — but both hang off a trigger
+              and both dismiss the same way. That shared half is written once, in the family they
+              both include.
             </Text>
             <Table>
               <Table.Header>

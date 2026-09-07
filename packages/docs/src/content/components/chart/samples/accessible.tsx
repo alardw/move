@@ -1,10 +1,10 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 const budget = [
-  { quarter: "Q1", planned: 120, actual: 108 },
-  { quarter: "Q2", planned: 140, actual: 151 },
-  { quarter: "Q3", planned: 135, actual: 129 },
-  { quarter: "Q4", planned: 160, actual: 172 },
+  { quarter: 'Q1', planned: 120, actual: 108 },
+  { quarter: 'Q2', planned: 140, actual: 151 },
+  { quarter: 'Q3', planned: 135, actual: 129 },
+  { quarter: 'Q4', planned: 160, actual: 172 },
 ];
 
 /**
@@ -23,8 +23,8 @@ export default function AccessibleSample() {
       data={budget}
       x="quarter"
       series={[
-        { key: "planned", type: "line", label: "Planned", dash: true },
-        { key: "actual", type: "line", label: "Actual" },
+        { key: 'planned', type: 'line', label: 'Planned', dash: true },
+        { key: 'actual', type: 'line', label: 'Actual' },
       ]}
       formatY={(v) => `€${v}k`}
     />

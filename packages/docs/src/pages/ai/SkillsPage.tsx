@@ -125,10 +125,9 @@ export function SkillsPage() {
         <Stack gap="sm">
           <Heading level={1}>Skills</Heading>
           <Text color="muted" size="lg">
-            Every Move skill is a structured workflow your AI agent can invoke
-            with a slash command. Two tracks: component skills (author a Move
-            component from a typed spec) and app skills (compose pages,
-            composites, and features).
+            Every Move skill is a structured workflow your AI agent can invoke with a slash command.
+            Two tracks: component skills (author a Move component from a typed spec) and app skills
+            (compose pages, composites, and features).
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (

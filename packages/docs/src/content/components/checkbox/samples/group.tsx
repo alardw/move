@@ -19,7 +19,8 @@ export default function GroupSample() {
           </Checkbox.Group>
         </FormField.Field>
         <FormField.Description>
-          Pick what we’re allowed to email you about. You can change these later from your account settings.
+          Pick what we’re allowed to email you about. You can change these later from your account
+          settings.
         </FormField.Description>
       </FormField.Root>
       <FormField.Root>

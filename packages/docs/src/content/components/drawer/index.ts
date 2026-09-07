@@ -21,7 +21,12 @@ export const content: ComponentContent = {
   preview: Preview,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
-    { id: 'positions', title: 'Positions (left, right, top, bottom)', render: Positions, code: positionsCode },
+    {
+      id: 'positions',
+      title: 'Positions (left, right, top, bottom)',
+      render: Positions,
+      code: positionsCode,
+    },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     { id: 'details', title: 'Detail panel pattern', render: Details, code: detailsCode },
     { id: 'non-modal', title: 'Non-modal inspector', render: NonModal, code: nonModalCode },

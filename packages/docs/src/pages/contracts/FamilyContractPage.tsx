@@ -44,11 +44,20 @@ const FIELDS: Row[] = [
     ),
   },
   { name: 'ariaPattern', type: 'string[]', what: <>The permitted ARIA patterns.</> },
-  { name: 'slots', type: 'string[]', what: <>Slots every member owns, by name — the shared anatomy.</> },
+  {
+    name: 'slots',
+    type: 'string[]',
+    what: <>Slots every member owns, by name — the shared anatomy.</>,
+  },
   {
     name: 'fields',
     type: 'Record<string, string>',
-    what: <>Scalar spec fields every member declares with this exact value, e.g. <Code>{`{ focus: 'trap' }`}</Code>.</>,
+    what: (
+      <>
+        Scalar spec fields every member declares with this exact value, e.g.{' '}
+        <Code>{`{ focus: 'trap' }`}</Code>.
+      </>
+    ),
   },
   { name: 'triggers', type: 'string[]', what: <>Animation triggers every member declares.</> },
   {
@@ -62,15 +71,31 @@ const FIELDS: Row[] = [
       </>
     ),
   },
-  { name: 'propTriads', type: 'string[]', what: <>Controlled prop triads every member exposes, by base name.</> },
-  { name: 'behaviorBlocks', type: 'string[]', what: <><Code>behavior.&lt;name&gt;</Code> blocks every member declares.</> },
+  {
+    name: 'propTriads',
+    type: 'string[]',
+    what: <>Controlled prop triads every member exposes, by base name.</>,
+  },
+  {
+    name: 'behaviorBlocks',
+    type: 'string[]',
+    what: (
+      <>
+        <Code>behavior.&lt;name&gt;</Code> blocks every member declares.
+      </>
+    ),
+  },
   {
     name: 'behaviorFlags',
     type: 'string[]',
     what: (
       <>
-        Booleans every member states <Text as="em" size="sm">explicitly</Text>. Optional in the type, so nothing else
-        forces them — and a flag nobody considered reads identically to one deliberately off.
+        Booleans every member states{' '}
+        <Text as="em" size="sm">
+          explicitly
+        </Text>
+        . Optional in the type, so nothing else forces them — and a flag nobody considered reads
+        identically to one deliberately off.
       </>
     ),
   },

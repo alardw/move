@@ -78,9 +78,7 @@ export function PropsTable({ subComponents }: { subComponents: SubComponent[] })
         if (sub.props.length === 0) return null;
         return (
           <Stack key={sub.name} gap="sm">
-            <Heading level={3}>
-              {sub.name}
-            </Heading>
+            <Heading level={3}>{sub.name}</Heading>
             {sub.description && (
               <Text color="muted" size="sm">
                 {sub.description}
@@ -107,8 +105,8 @@ export function PropsTable({ subComponents }: { subComponents: SubComponent[] })
                   const chips: { value: string; isDefault: boolean }[] | null = values
                     ? values.map((v) => ({ value: v, isDefault: v === defaultBare }))
                     : defaultBare
-                    ? [{ value: defaultBare, isDefault: true }]
-                    : null;
+                      ? [{ value: defaultBare, isDefault: true }]
+                      : null;
                   return (
                     <Table.Row key={p.name}>
                       <Table.Cell style={NARROW}>

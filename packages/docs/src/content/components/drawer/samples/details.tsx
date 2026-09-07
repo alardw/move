@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, Divider, Drawer, Stack, Text } from "move";
+import { Avatar, Badge, Button, Divider, Drawer, Stack, Text } from 'move';
 
 /**
  * A common detail-pane pattern — the drawer sits on the right of a list
@@ -21,10 +21,7 @@ export default function DetailsSample() {
             <Stack gap="md">
               <Stack direction="row" gap="md" align="center">
                 <Avatar.Root size="xl">
-                  <Avatar.Image
-                    src="https://i.pravatar.cc/96?img=47"
-                    alt="Mira Kovac"
-                  />
+                  <Avatar.Image src="https://i.pravatar.cc/96?img=47" alt="Mira Kovac" />
                   <Avatar.Fallback>MK</Avatar.Fallback>
                 </Avatar.Root>
                 <Stack gap="none">
@@ -45,9 +42,8 @@ export default function DetailsSample() {
                   About
                 </Text>
                 <Text>
-                  Designs the systems team’s component library, runs the weekly
-                  design crit, and writes the Friday digest nobody reads but
-                  everyone misses when it’s gone.
+                  Designs the systems team’s component library, runs the weekly design crit, and
+                  writes the Friday digest nobody reads but everyone misses when it’s gone.
                 </Text>
               </Stack>
               <Divider gap="xs" />

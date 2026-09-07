@@ -8,7 +8,9 @@ export default function SizesSample() {
       {sizes.map((size) => (
         <Stack key={size} gap="xs" align="center">
           <Loader size={size} />
-          <Text size="sm" color="muted">{size}</Text>
+          <Text size="sm" color="muted">
+            {size}
+          </Text>
         </Stack>
       ))}
     </Stack>

@@ -30,10 +30,10 @@ export const meta: ComponentDocument = {
   slug: 'textarea',
   synonyms: ['multi-line input', 'comment box', 'text area', 'long text', 'multiline'],
   name: 'Textarea',
-  tagline: 'A native multi-line text field with variants, auto-resize, and the same tokens as InputText.',
+  tagline:
+    'A native multi-line text field with variants, auto-resize, and the same tokens as InputText.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Textarea } from 'move';`,

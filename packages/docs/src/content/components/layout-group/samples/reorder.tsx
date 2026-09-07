@@ -36,7 +36,9 @@ export default function ReorderSample() {
                     <Badge variant="soft">{item.num}</Badge>
                     <Text weight="medium">{item.name}</Text>
                   </Stack>
-                  <Text size="sm" color="muted">{item.owner}</Text>
+                  <Text size="sm" color="muted">
+                    {item.owner}
+                  </Text>
                 </Stack>
               </Card.Body>
             </Card.Root>

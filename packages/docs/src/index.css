@@ -3,21 +3,118 @@
    The license ships Thin/ExtraLight/Light/Regular/SemiBold/Bold + italics;
    500/800/900 are not provided, so the browser maps those to the nearest
    available weight. */
-@font-face { font-family: 'Gottak'; font-weight: 100; font-style: normal; font-display: swap; src: url('./fonts/Gottak-Thin.woff2') format('woff2'), url('./fonts/Gottak-Thin.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 100; font-style: italic; font-display: swap; src: url('./fonts/Gottak-ThinItalic.woff2') format('woff2'), url('./fonts/Gottak-ThinItalic.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 200; font-style: normal; font-display: swap; src: url('./fonts/Gottak-ExtraLight.woff2') format('woff2'), url('./fonts/Gottak-ExtraLight.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 200; font-style: italic; font-display: swap; src: url('./fonts/Gottak-ExtraLightItalic.woff2') format('woff2'), url('./fonts/Gottak-ExtraLightItalic.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 300; font-style: normal; font-display: swap; src: url('./fonts/Gottak-Light.woff2') format('woff2'), url('./fonts/Gottak-Light.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 300; font-style: italic; font-display: swap; src: url('./fonts/Gottak-LightItalic.woff2') format('woff2'), url('./fonts/Gottak-LightItalic.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 400; font-style: normal; font-display: swap; src: url('./fonts/Gottak-Regular.woff2') format('woff2'), url('./fonts/Gottak-Regular.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 400; font-style: italic; font-display: swap; src: url('./fonts/Gottak-RegularItalic.woff2') format('woff2'), url('./fonts/Gottak-RegularItalic.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 600; font-style: normal; font-display: swap; src: url('./fonts/Gottak-SemiBold.woff2') format('woff2'), url('./fonts/Gottak-SemiBold.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 600; font-style: italic; font-display: swap; src: url('./fonts/Gottak-SemiBoldItalic.woff2') format('woff2'), url('./fonts/Gottak-SemiBoldItalic.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 700; font-style: normal; font-display: swap; src: url('./fonts/Gottak-Bold.woff2') format('woff2'), url('./fonts/Gottak-Bold.woff') format('woff'); }
-@font-face { font-family: 'Gottak'; font-weight: 700; font-style: italic; font-display: swap; src: url('./fonts/Gottak-BoldItalic.woff2') format('woff2'), url('./fonts/Gottak-BoldItalic.woff') format('woff'); }
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-Thin.woff2') format('woff2'),
+    url('./fonts/Gottak-Thin.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-ThinItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-ThinItalic.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-ExtraLight.woff2') format('woff2'),
+    url('./fonts/Gottak-ExtraLight.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-ExtraLightItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-ExtraLightItalic.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-Light.woff2') format('woff2'),
+    url('./fonts/Gottak-Light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-LightItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-LightItalic.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-Regular.woff2') format('woff2'),
+    url('./fonts/Gottak-Regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-RegularItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-RegularItalic.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-SemiBold.woff2') format('woff2'),
+    url('./fonts/Gottak-SemiBold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-SemiBoldItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-SemiBoldItalic.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-Bold.woff2') format('woff2'),
+    url('./fonts/Gottak-Bold.woff') format('woff');
+}
+@font-face {
+  font-family: 'Gottak';
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+  src:
+    url('./fonts/Gottak-BoldItalic.woff2') format('woff2'),
+    url('./fonts/Gottak-BoldItalic.woff') format('woff');
+}
 
 :root {
-  --move-font: 'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --move-font:
+    'Gottak', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   /* Docs run headings one step lighter than the stock semibold — set once here
      instead of overriding weight on every <Heading>. */
   --move-weight-heading: var(--move-weight-medium);
@@ -29,7 +126,9 @@
    stretches the document past the viewport and the logo / footer
    slide off-screen at higher zoom levels. 100dvh on body so mobile
    address-bar collapse doesn't flicker the layout. */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
 }

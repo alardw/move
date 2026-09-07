@@ -16,7 +16,9 @@ export default function BasicSample() {
           description="PNG, JPG, PDF up to 10 MB"
           action={
             <FileUpload.Trigger>
-              <Button variant="secondary" size="sm">Choose files</Button>
+              <Button variant="secondary" size="sm">
+                Choose files
+              </Button>
             </FileUpload.Trigger>
           }
         />

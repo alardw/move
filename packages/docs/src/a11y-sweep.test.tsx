@@ -66,7 +66,9 @@ for (const c of Object.values(COMPONENT_CONTENT)) {
  * violation has been fixed while keeping its allowance — slack in a gate reads
  * as assurance and is the opposite.
  */
-const baseline: Counts = fs.existsSync(BASELINE) ? JSON.parse(fs.readFileSync(BASELINE, 'utf8')) : {};
+const baseline: Counts = fs.existsSync(BASELINE)
+  ? JSON.parse(fs.readFileSync(BASELINE, 'utf8'))
+  : {};
 const counts: Counts = {};
 let visited = 0;
 
@@ -123,7 +125,8 @@ describe('a11y sweep (axe — roles, names, ARIA)', () => {
 
     let fixed = 0;
     for (const [label, rules] of Object.entries(baseline))
-      for (const [rule, n] of Object.entries(rules)) fixed += Math.max(0, n - (counts[label]?.[rule] ?? 0));
+      for (const [rule, n] of Object.entries(rules))
+        fixed += Math.max(0, n - (counts[label]?.[rule] ?? 0));
 
     // A ratchet only ratchets if it tightens. `fixed` was computed and printed
     // and never asserted, so a repaired violation left its allowance behind and

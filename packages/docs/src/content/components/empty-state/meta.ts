@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/alert',
     name: 'Alert',
-    reason: 'When the empty state needs to communicate a real status (failed query, permission denied) rather than just emptiness.',
+    reason:
+      'When the empty state needs to communicate a real status (failed query, permission denied) rather than just emptiness.',
   },
 ];
 
@@ -35,15 +36,18 @@ export const meta: ComponentDocument = {
   synonyms: ['placeholder', 'no results', 'nothing here', 'zero state', 'no data', 'blank'],
   preview: { width: 'sm' },
   name: 'EmptyState',
-  tagline: 'A friendly "nothing here yet" placeholder — icon, title, description, optional call-to-action, all centered and tokenised.',
+  tagline:
+    'A friendly "nothing here yet" placeholder — icon, title, description, optional call-to-action, all centered and tokenised.',
   categories: ['feedback'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { EmptyState } from 'move';`,
   keyboard: [
-    { key: '—', action: 'EmptyState is presentational; the `action` slot carries any interactivity.' },
+    {
+      key: '—',
+      action: 'EmptyState is presentational; the `action` slot carries any interactivity.',
+    },
   ],
   accessibilityLede:
     'EmptyState is a structured `<div>` group. Headings inside the title slot stay in document outline if you choose a heading element — pass `<Heading level={3}>…</Heading>` in the title for proper screen-reader semantics on a section-level empty state.',

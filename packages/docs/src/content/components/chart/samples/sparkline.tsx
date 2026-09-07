@@ -1,13 +1,30 @@
-import { Card, Chart, Stack, Table, Text } from "move";
+import { Card, Chart, Stack, Table, Text } from 'move';
 
 const rows = [
-  { metric: "Visits", value: "12,480", delta: "+8.2%", color: "indigo" as const, series: [32, 41, 38, 46, 52, 49, 61] },
-  { metric: "Signups", value: "1,204", delta: "+3.1%", color: "teal" as const, series: [12, 14, 13, 15, 14, 16, 17] },
-  { metric: "Churn", value: "0.9%", delta: "−0.4%", color: "orange" as const, series: [9, 8, 8, 7, 6, 6, 5] },
+  {
+    metric: 'Visits',
+    value: '12,480',
+    delta: '+8.2%',
+    color: 'indigo' as const,
+    series: [32, 41, 38, 46, 52, 49, 61],
+  },
+  {
+    metric: 'Signups',
+    value: '1,204',
+    delta: '+3.1%',
+    color: 'teal' as const,
+    series: [12, 14, 13, 15, 14, 16, 17],
+  },
+  {
+    metric: 'Churn',
+    value: '0.9%',
+    delta: '−0.4%',
+    color: 'orange' as const,
+    series: [9, 8, 8, 7, 6, 6, 5],
+  },
 ];
 
-const spark = (values: number[]) =>
-  values.map((v, i) => ({ day: `d${i}`, v }));
+const spark = (values: number[]) => values.map((v, i) => ({ day: `d${i}`, v }));
 
 /**
  * A sparkline is not a separate component — it is a Chart with everything
@@ -53,7 +70,7 @@ export default function SparklineSample() {
                     dataTable={false}
                     curve="monotone"
                     height={28}
-                    series={[{ key: "v", type: "area", label: row.metric, color: row.color }]}
+                    series={[{ key: 'v', type: 'area', label: row.metric, color: row.color }]}
                   />
                 </Table.Cell>
               </Table.Row>

@@ -7,8 +7,8 @@ export default function BasicSample() {
       <h2>Why Move?</h2>
       {/* composite-purity-ignore: Prose styles raw HTML — that's its entire purpose */}
       <p>
-        Move is a small, opinionated React component library — buttons, inputs, modals, the usual scaffolding —
-        built on Radix primitives where they exist and from scratch where they don’t.
+        Move is a small, opinionated React component library — buttons, inputs, modals, the usual
+        scaffolding — built on Radix primitives where they exist and from scratch where they don’t.
       </p>
       {/* composite-purity-ignore: Prose styles raw HTML — that's its entire purpose */}
       <h3>What you get</h3>

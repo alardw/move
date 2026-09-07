@@ -1,4 +1,4 @@
-import { Badge, Card, Stack, Text } from "move";
+import { Badge, Card, Stack, Text } from 'move';
 
 /**
  * A few common pairings — Badge alongside titles, in list items,
@@ -16,9 +16,7 @@ export default function InContextSample() {
               Active
             </Badge>
           </Stack>
-          <Card.Description>
-            Last deploy 3 minutes ago by alex@acme.co
-          </Card.Description>
+          <Card.Description>Last deploy 3 minutes ago by alex@acme.co</Card.Description>
         </Card.Header>
       </Card.Root>
       <Card.Root>
@@ -29,9 +27,7 @@ export default function InContextSample() {
               Maintenance
             </Badge>
           </Stack>
-          <Card.Description>
-            Read-only until the v3 rewrite ships next quarter.
-          </Card.Description>
+          <Card.Description>Read-only until the v3 rewrite ships next quarter.</Card.Description>
         </Card.Header>
       </Card.Root>
       <Card.Root>

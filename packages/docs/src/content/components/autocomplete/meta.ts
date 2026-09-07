@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/select',
     name: 'Select',
-    reason: 'When the list is short enough to browse instead of type, and custom text input would be a footgun.',
+    reason:
+      'When the list is short enough to browse instead of type, and custom text input would be a footgun.',
   },
   {
     to: '/components/dropdown',
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['combobox', 'typeahead', 'search input', 'suggest', 'autosuggest', 'search select'],
   preview: { width: 'fit' },
   name: 'Autocomplete',
-  tagline: 'A text input that suggests as you type — single or multi, with tags, groups, async loading, and an empty state that doesn’t feel rude.',
+  tagline:
+    'A text input that suggests as you type — single or multi, with tags, groups, async loading, and an empty state that doesn’t feel rude.',
   categories: ['forms'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -52,7 +54,10 @@ export const meta: ComponentDocument = {
     { key: 'Enter', action: 'Selects the focused item.' },
     { key: 'Escape', action: 'Closes the list without selecting.' },
     { key: 'Backspace', action: 'In multi-select with empty input, removes the last tag.' },
-    { key: 'Type-ahead', action: 'Filters the list as you type (case-insensitive substring by default).' },
+    {
+      key: 'Type-ahead',
+      action: 'Filters the list as you type (case-insensitive substring by default).',
+    },
   ],
   accessibilityLede:
     'The trigger exposes the WAI-ARIA combobox pattern — aria-expanded, aria-controls, aria-activedescendant are all wired up by the component. Announcing messages live in the popover as focus moves.',

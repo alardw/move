@@ -30,7 +30,8 @@ export default function LocaleAndConstraintsSample() {
         <Calendar.Grid />
       </Calendar.Root>
       <Text size="sm" color="muted">
-        Dutch locale, week starts on Monday, weekends and dates outside today–end-of-month-after-next are disabled.
+        Dutch locale, week starts on Monday, weekends and dates outside
+        today–end-of-month-after-next are disabled.
       </Text>
     </Stack>
   );

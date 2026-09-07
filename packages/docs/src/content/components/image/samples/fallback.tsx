@@ -3,7 +3,13 @@ import { Image, Stack } from 'move';
 export default function FallbackSample() {
   return (
     <Stack direction="row" gap="md" wrap>
-      <Image src="https://does-not-exist.example/missing.jpg" alt="Missing" width={200} aspectRatio="1" radius="md" />
+      <Image
+        src="https://does-not-exist.example/missing.jpg"
+        alt="Missing"
+        width={200}
+        aspectRatio="1"
+        radius="md"
+      />
       <Image
         src="https://does-not-exist.example/also-missing.jpg"
         fallbackSrc="https://picsum.photos/id/1015/200/200"

@@ -5,11 +5,15 @@ export default function VariantsSample() {
     <Stack direction="row" gap="lg" align="center">
       <Stack gap="xs" align="center">
         <Loader variant="spinner" />
-        <Text size="sm" color="muted">spinner (default)</Text>
+        <Text size="sm" color="muted">
+          spinner (default)
+        </Text>
       </Stack>
       <Stack gap="xs" align="center">
         <Loader variant="dots" />
-        <Text size="sm" color="muted">dots</Text>
+        <Text size="sm" color="muted">
+          dots
+        </Text>
       </Stack>
     </Stack>
   );

@@ -43,7 +43,17 @@ export default function HeaderLayoutSample() {
 
   return (
     // composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
-    <div style={{ display: 'flex', height: 300, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
+    <div
+      /* dogfood-ignore */
+      /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
+      style={{
+        display: 'flex',
+        height: 300,
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
+        overflow: 'hidden',
+      }}
+    >
       <Sidebar.Provider>
         <Sidebar.Root>
           <Sidebar.Header>
@@ -56,8 +66,12 @@ export default function HeaderLayoutSample() {
                   <Avatar.Fallback>AC</Avatar.Fallback>
                 </Avatar.Root>
                 <Stack gap="none">
-                  <Text weight="semibold" size="sm">Acme Co.</Text>
-                  <Text color="muted" size="xs">Team plan</Text>
+                  <Text weight="semibold" size="sm">
+                    Acme Co.
+                  </Text>
+                  <Text color="muted" size="xs">
+                    Team plan
+                  </Text>
                 </Stack>
               </Stack>
             </Sidebar.Expanded>
@@ -67,8 +81,24 @@ export default function HeaderLayoutSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/overview" active={current === "/overview"} onClick={select} icon={<Icon name="layout-dashboard" />} tooltip="Overview">Overview</Sidebar.NavItem>
-                <Sidebar.NavItem href="/reports" active={current === "/reports"} onClick={select} icon={<Icon name="chart-line" />} tooltip="Reports">Reports</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/overview"
+                  active={current === '/overview'}
+                  onClick={select}
+                  icon={<Icon name="layout-dashboard" />}
+                  tooltip="Overview"
+                >
+                  Overview
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/reports"
+                  active={current === '/reports'}
+                  onClick={select}
+                  icon={<Icon name="chart-line" />}
+                  tooltip="Reports"
+                >
+                  Reports
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
@@ -78,7 +108,9 @@ export default function HeaderLayoutSample() {
                 that keeps them side by side while there is width for it. */}
             <Sidebar.Expanded>
               <Stack direction="row" align="center" justify="between" gap="sm">
-                <Text size="sm" color="muted">Alex Smith</Text>
+                <Text size="sm" color="muted">
+                  Alex Smith
+                </Text>
                 <Tooltip label="Settings" side="top">
                   <Button variant="ghost" size="sm" aria-label="Settings">
                     <Icon name="settings" />

@@ -7,7 +7,9 @@ export default function SizesSample() {
     <Stack gap="md">
       {sizes.map((size) => (
         <Stack key={size} gap="xs">
-          <Text size="sm" weight="medium">{size}</Text>
+          <Text size="sm" weight="medium">
+            {size}
+          </Text>
           <PasswordStrength size={size} score={2} />
         </Stack>
       ))}

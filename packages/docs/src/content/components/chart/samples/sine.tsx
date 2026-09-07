@@ -1,4 +1,4 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 /** Two periods, sampled 64 times. */
 const wave = Array.from({ length: 64 }, (_, i) => {
@@ -27,8 +27,8 @@ export default function SineSample() {
       formatX={(v) => `${(Number(v) / Math.PI).toFixed(1)}π`}
       formatY={(v) => v.toFixed(1)}
       series={[
-        { key: "sin", type: "line", label: "sin", color: "violet" },
-        { key: "cos", type: "line", label: "0.6·cos", dash: true, color: "lime" },
+        { key: 'sin', type: 'line', label: 'sin', color: 'violet' },
+        { key: 'cos', type: 'line', label: '0.6·cos', dash: true, color: 'lime' },
       ]}
     />
   );

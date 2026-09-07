@@ -21,11 +21,15 @@ function classifyType(type: string): TypeCategory {
   // constrained primitive at runtime — treat them like the underlying
   // type instead of a grab-bag union.
   const parts = t.split(/ \| /);
-  if (parts.length > 0 && parts.every((p) => /^'[^']*'$/.test(p) || /^"[^"]*"$/.test(p) || /^-?\d+(\.\d+)?$/.test(p))) {
+  if (
+    parts.length > 0 &&
+    parts.every((p) => /^'[^']*'$/.test(p) || /^"[^"]*"$/.test(p) || /^-?\d+(\.\d+)?$/.test(p))
+  ) {
     return 'primitive';
   }
   if (/=>/.test(t)) return 'function';
-  if (/\b(KeyboardEvent|MouseEvent|PointerEvent|TouchEvent|FocusEvent|ChangeEvent)\b/.test(t)) return 'event';
+  if (/\b(KeyboardEvent|MouseEvent|PointerEvent|TouchEvent|FocusEvent|ChangeEvent)\b/.test(t))
+    return 'event';
   if (/\b(React\.ReactNode|ReactNode|ReactElement|JSX\.Element)\b/.test(t)) return 'node';
   if (/ \| /.test(t)) return 'union';
   return 'identifier';
@@ -80,5 +84,9 @@ export function InlineCode({ code, language = 'tsx', tintByType = false }: Inlin
       />
     );
   }
-  return <span className={styles.fallback} data-category={category}>{code}</span>;
+  return (
+    <span className={styles.fallback} data-category={category}>
+      {code}
+    </span>
+  );
 }

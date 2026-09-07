@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/prose',
     name: 'Prose',
-    reason: 'For long-form documents that include inline `<Code>` and fenced blocks. Prose handles spacing and typography around them.',
+    reason:
+      'For long-form documents that include inline `<Code>` and fenced blocks. Prose handles spacing and typography around them.',
   },
   {
     to: '/components/text',
@@ -35,15 +36,18 @@ export const meta: ComponentDocument = {
   synonyms: ['snippet', 'monospace', 'inline code', 'kbd', 'codeblock', 'syntax'],
   preview: { width: 'fit' },
   name: 'Code',
-  tagline: 'Inline or block code with three variants and a pluggable syntax highlighter — no opinion on which library colours the tokens.',
+  tagline:
+    'Inline or block code with three variants and a pluggable syntax highlighter — no opinion on which library colours the tokens.',
   categories: ['typography'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Code, CodeHighlighterProvider } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Code is presentational. If you need a copy button, wrap it in your own component.' },
+    {
+      key: '—',
+      action: 'Code is presentational. If you need a copy button, wrap it in your own component.',
+    },
   ],
   accessibilityLede:
     'Inline mode renders a `<code>`; block mode wraps a `<code>` in `<pre>` for native semantics. Screen readers will read the contents verbatim — keep snippets short, or pair with prose that explains what the snippet does.',

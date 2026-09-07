@@ -25,6 +25,11 @@ export const content: ComponentContent = {
     { id: 'with-time', title: 'With time picker', render: WithTime, code: withTimeCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     { id: 'languages', title: 'Multiple languages', render: Languages, code: languagesCode },
-    { id: 'locale-and-constraints', title: 'Locale + constraints', render: LocaleAndConstraints, code: localeAndConstraintsCode },
+    {
+      id: 'locale-and-constraints',
+      title: 'Locale + constraints',
+      render: LocaleAndConstraints,
+      code: localeAndConstraintsCode,
+    },
   ],
 };

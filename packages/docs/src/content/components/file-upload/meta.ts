@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/progress-bar',
     name: 'ProgressBar',
-    reason: 'For standalone progress feedback. FileUpload uses it internally per file and for the aggregate total.',
+    reason:
+      'For standalone progress feedback. FileUpload uses it internally per file and for the aggregate total.',
   },
   {
     to: '/components/image',
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['file input', 'upload', 'dropzone', 'attach', 'file picker', 'drag and drop'],
   preview: { width: 'fit' },
   name: 'FileUpload',
-  tagline: 'Drag-and-drop file upload with previews, per-file progress, an aggregate progress bar, and a pluggable upload adapter — UI is yours, network is yours.',
+  tagline:
+    'Drag-and-drop file upload with previews, per-file progress, an aggregate progress bar, and a pluggable upload adapter — UI is yours, network is yours.',
   categories: ['forms'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -46,7 +48,10 @@ export const meta: ComponentDocument = {
   importCode: `import { FileUpload } from 'move';`,
   keyboard: [
     { key: 'Tab', action: 'Moves focus to the trigger, then to each item delete button.' },
-    { key: 'Enter / Space', action: 'On the trigger — opens the OS file dialog. On a delete button — removes the file.' },
+    {
+      key: 'Enter / Space',
+      action: 'On the trigger — opens the OS file dialog. On a delete button — removes the file.',
+    },
   ],
   accessibilityLede:
     'Item rows render as `<li>` inside a `role="list"` `<ul>`. The hidden `<input type="file">` keeps native file dialogs working. Drag-over state is reflected on the dropzone via data attributes for styling.',

@@ -7,13 +7,19 @@ export default function SizesSample() {
     <Stack gap="lg">
       {sizes.map((size) => (
         <Stack key={size} gap="xs">
-          <Text size="sm" weight="medium">size="{size}"</Text>
+          <Text size="sm" weight="medium">
+            size="{size}"
+          </Text>
           <EmptyState
             size={size}
             icon="search-x"
             title="No results for that filter"
             description="Loosen the filters and try again, or clear them all to start over."
-            action={<Button size="sm" variant="secondary">Clear filters</Button>}
+            action={
+              <Button size="sm" variant="secondary">
+                Clear filters
+              </Button>
+            }
           />
         </Stack>
       ))}

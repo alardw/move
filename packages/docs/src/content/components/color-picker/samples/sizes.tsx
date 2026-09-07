@@ -8,7 +8,9 @@ export default function SizesSample() {
     <Stack direction="row" gap="lg" wrap>
       {sizes.map((size) => (
         <Stack key={size} gap="xs" align="start">
-          <Text size="sm" weight="medium">size="{size}"</Text>
+          <Text size="sm" weight="medium">
+            size="{size}"
+          </Text>
           <PickerPanel>
             <ColorPicker size={size} defaultValue="#7950f2" />
           </PickerPanel>

@@ -16,7 +16,13 @@ export default function EffectsSample() {
           <Text size="xs" color="subtle">
             effect="{effect}"
           </Text>
-          <AnimatedText key={`${effect}-${play}`} asChild by="character" effect={effect} trigger="inView">
+          <AnimatedText
+            key={`${effect}-${play}`}
+            asChild
+            by="character"
+            effect={effect}
+            trigger="inView"
+          >
             <Heading level={3}>The quick brown fox</Heading>
           </AnimatedText>
         </Stack>

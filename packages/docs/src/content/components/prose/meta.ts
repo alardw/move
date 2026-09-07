@@ -30,15 +30,18 @@ export const meta: ComponentDocument = {
   slug: 'prose',
   synonyms: ['markdown', 'long form', 'article', 'body copy', 'rich text'],
   name: 'Prose',
-  tagline: 'Wrap long-form content for readable defaults — headings, paragraphs, lists, code, blockquotes, all spaced and styled with no extra typography work.',
+  tagline:
+    'Wrap long-form content for readable defaults — headings, paragraphs, lists, code, blockquotes, all spaced and styled with no extra typography work.',
   categories: ['typography'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Prose } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Prose is presentational; keyboard semantics belong to the elements you put inside.' },
+    {
+      key: '—',
+      action: 'Prose is presentational; keyboard semantics belong to the elements you put inside.',
+    },
   ],
   accessibilityLede:
     'Prose styles native HTML — `<h2>`, `<p>`, `<ul>`, `<a>`, `<code>` — so the document outline and screen-reader semantics come from your markup. The wrapper just adds spacing and line-length.',

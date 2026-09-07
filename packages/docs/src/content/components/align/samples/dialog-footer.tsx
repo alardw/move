@@ -10,15 +10,19 @@ export default function DialogFooterSample() {
     <Card.Root>
       <Stack gap="md" padding="lg">
         <Stack gap="xs">
-          <Text size="lg" weight="semibold">Discard draft?</Text>
+          <Text size="lg" weight="semibold">
+            Discard draft?
+          </Text>
           <Text size="sm" color="muted">
-            You haven’t saved this post in 12 minutes. Closing now removes the
-            working copy from this device — the published version is unaffected.
+            You haven’t saved this post in 12 minutes. Closing now removes the working copy from
+            this device — the published version is unaffected.
           </Text>
         </Stack>
         <Align gap="md">
           <Align.Start>
-            <Text size="xs" color="muted">Drafts auto-save every 30 seconds.</Text>
+            <Text size="xs" color="muted">
+              Drafts auto-save every 30 seconds.
+            </Text>
           </Align.Start>
           <Align.End>
             <Button variant="ghost">Keep editing</Button>

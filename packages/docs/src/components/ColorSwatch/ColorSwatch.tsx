@@ -14,7 +14,9 @@ export function isColorValue(value: string): boolean {
   if (v === 'transparent' || v === 'currentColor') return true;
   if (/^var\(/.test(v)) {
     // Move colour tokens are prefixed with a small set of recognisable words.
-    return /--move-(bg|border|fg|primary|secondary|error|warning|success|info|surface|selected|gray|red|pink|grape|violet|indigo|blue|cyan|teal|green|lime|yellow|orange|scrollbar)/.test(v);
+    return /--move-(bg|border|fg|primary|secondary|error|warning|success|info|surface|selected|gray|red|pink|grape|violet|indigo|blue|cyan|teal|green|lime|yellow|orange|scrollbar)/.test(
+      v,
+    );
   }
   return false;
 }

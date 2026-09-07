@@ -35,7 +35,16 @@ export default function WithBadgesSample() {
 
   return (
     // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
-    <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
+    <div
+      /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
+      style={{
+        display: 'flex',
+        height: 360,
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
+        overflow: 'hidden',
+      }}
+    >
       <Sidebar.Provider>
         <Sidebar.Root>
           <Sidebar.Header>
@@ -48,18 +57,77 @@ export default function WithBadgesSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Mailboxes</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/inbox" active={current === "/inbox"} onClick={select} icon={<Icon name="inbox" />} badge={<Badge color="blue">12</Badge>} tooltip="Inbox">Inbox</Sidebar.NavItem>
-                <Sidebar.NavItem href="/starred" active={current === "/starred"} onClick={select} icon={<Icon name="star" />} tooltip="Starred">Starred</Sidebar.NavItem>
-                <Sidebar.NavItem href="/sent" active={current === "/sent"} onClick={select} icon={<Icon name="send" />} tooltip="Sent">Sent</Sidebar.NavItem>
-                <Sidebar.NavItem href="/archive" active={current === "/archive"} onClick={select} icon={<Icon name="archive" />} badge={<Badge color="teal">203</Badge>} tooltip="Archive">Archive</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/inbox"
+                  active={current === '/inbox'}
+                  onClick={select}
+                  icon={<Icon name="inbox" />}
+                  badge={<Badge color="blue">12</Badge>}
+                  tooltip="Inbox"
+                >
+                  Inbox
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/starred"
+                  active={current === '/starred'}
+                  onClick={select}
+                  icon={<Icon name="star" />}
+                  tooltip="Starred"
+                >
+                  Starred
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/sent"
+                  active={current === '/sent'}
+                  onClick={select}
+                  icon={<Icon name="send" />}
+                  tooltip="Sent"
+                >
+                  Sent
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/archive"
+                  active={current === '/archive'}
+                  onClick={select}
+                  icon={<Icon name="archive" />}
+                  badge={<Badge color="teal">203</Badge>}
+                  tooltip="Archive"
+                >
+                  Archive
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
             <Sidebar.Group>
               <Sidebar.GroupLabel>Labels</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/important" active={current === "/important"} onClick={select} icon={<Icon name="tag" />} badge={<Badge color="orange">3</Badge>} tooltip="Important">Important</Sidebar.NavItem>
-                <Sidebar.NavItem href="/work" active={current === "/work"} onClick={select} icon={<Icon name="briefcase" />} tooltip="Work">Work</Sidebar.NavItem>
-                <Sidebar.NavItem href="/receipts" active={current === "/receipts"} onClick={select} icon={<Icon name="receipt" />} tooltip="Receipts">Receipts</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/important"
+                  active={current === '/important'}
+                  onClick={select}
+                  icon={<Icon name="tag" />}
+                  badge={<Badge color="orange">3</Badge>}
+                  tooltip="Important"
+                >
+                  Important
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/work"
+                  active={current === '/work'}
+                  onClick={select}
+                  icon={<Icon name="briefcase" />}
+                  tooltip="Work"
+                >
+                  Work
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/receipts"
+                  active={current === '/receipts'}
+                  onClick={select}
+                  icon={<Icon name="receipt" />}
+                  tooltip="Receipts"
+                >
+                  Receipts
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>

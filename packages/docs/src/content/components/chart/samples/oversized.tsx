@@ -1,4 +1,4 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 /**
  * Synthetic, and deliberately so — nothing here is drawn, so the shape of the
@@ -35,7 +35,7 @@ export default function OversizedSample() {
       data={readings}
       x="reading"
       xScale="linear"
-      series={[{ key: "value", type: "line", label: "Value" }]}
+      series={[{ key: 'value', type: 'line', label: 'Value' }]}
     />
   );
 }

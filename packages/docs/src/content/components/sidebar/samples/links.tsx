@@ -22,14 +22,40 @@ export default function LinksSample() {
   // `<NextLink href={href} />` or `<RouterLink to={href} />` — which navigate.
   // This one holds the route in state instead, so the sample stays on the page.
   const [current, setCurrent] = React.useState('/getting-started');
-  const Link = ({ href, children, ...rest }: { href: string; children?: React.ReactNode } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
+  const Link = ({
+    href,
+    children,
+    ...rest
+  }: {
+    href: string;
+    children?: React.ReactNode;
+  } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     // composite-purity-ignore: raw <a> stands in for your router's Link (Next.js / React Router / TanStack)
-    <a href={href} {...rest} onClick={(e) => { e.preventDefault(); setCurrent(href); rest.onClick?.(e); }}>{children}</a>
+    <a
+      href={href}
+      {...rest}
+      onClick={(e) => {
+        e.preventDefault();
+        setCurrent(href);
+        rest.onClick?.(e);
+      }}
+    >
+      {children}
+    </a>
   );
 
   return (
     // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
-    <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
+    <div
+      /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
+      style={{
+        display: 'flex',
+        height: 360,
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
+        overflow: 'hidden',
+      }}
+    >
       <Sidebar.Provider>
         <Sidebar.Root>
           <Sidebar.Header>
@@ -42,13 +68,28 @@ export default function LinksSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Guide</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem asChild icon={<Icon name="rocket" />} tooltip="Getting started" active={current === '/getting-started'}>
+                <Sidebar.NavItem
+                  asChild
+                  icon={<Icon name="rocket" />}
+                  tooltip="Getting started"
+                  active={current === '/getting-started'}
+                >
                   <Link href="/getting-started">Getting started</Link>
                 </Sidebar.NavItem>
-                <Sidebar.NavItem asChild icon={<Icon name="brain" />} tooltip="Core concepts" active={current === '/core-concepts'}>
+                <Sidebar.NavItem
+                  asChild
+                  icon={<Icon name="brain" />}
+                  tooltip="Core concepts"
+                  active={current === '/core-concepts'}
+                >
                   <Link href="/core-concepts">Core concepts</Link>
                 </Sidebar.NavItem>
-                <Sidebar.NavItem asChild icon={<Icon name="blocks" />} tooltip="Components" active={current === '/components'}>
+                <Sidebar.NavItem
+                  asChild
+                  icon={<Icon name="blocks" />}
+                  tooltip="Components"
+                  active={current === '/components'}
+                >
                   <Link href="/components">Components</Link>
                 </Sidebar.NavItem>
               </Sidebar.Nav>

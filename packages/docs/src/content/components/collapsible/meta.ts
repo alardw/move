@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/accordion',
     name: 'Accordion',
-    reason: 'When you have a list of disclosures that share rules (one open at a time, or many). Collapsible is the standalone primitive.',
+    reason:
+      'When you have a list of disclosures that share rules (one open at a time, or many). Collapsible is the standalone primitive.',
   },
   {
     to: '/components/dialog',
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['expander', 'show more', 'disclosure', 'reveal', 'accordion'],
   preview: { width: 'xs' },
   name: 'Collapsible',
-  tagline: 'A single show/hide region with a measured-height animation, an auto-rotating chevron, and a real button under the trigger.',
+  tagline:
+    'A single show/hide region with a measured-height animation, an auto-rotating chevron, and a real button under the trigger.',
   categories: ['disclosure'],
   badges: [
     { icon: 'boxes', label: 'Compound' },

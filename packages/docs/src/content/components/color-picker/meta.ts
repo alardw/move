@@ -21,12 +21,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/color-input',
     name: 'ColorInput',
-    reason: 'When the picker should sit inside a form input. ColorInput wraps this component in a popover anchored to a swatch+text-input.',
+    reason:
+      'When the picker should sit inside a form input. ColorInput wraps this component in a popover anchored to a swatch+text-input.',
   },
   {
     to: '/components/slider',
     name: 'Slider',
-    reason: 'For generic value-on-a-track controls. ColorPicker’s sliders are purpose-built for hue/alpha and not exposed on their own.',
+    reason:
+      'For generic value-on-a-track controls. ColorPicker’s sliders are purpose-built for hue/alpha and not exposed on their own.',
   },
 ];
 
@@ -35,17 +37,23 @@ export const meta: ComponentDocument = {
   synonyms: ['color', 'colour', 'hsl', 'rgb', 'hex', 'eyedropper', 'swatch'],
   preview: { width: 'fit' },
   name: 'ColorPicker',
-  tagline: 'A standalone colour picker — saturation field, hue and alpha sliders, format toggle, channel inputs, and a tidy swatch grid. Drop in inline, or nest inside a popover.',
+  tagline:
+    'A standalone colour picker — saturation field, hue and alpha sliders, format toggle, channel inputs, and a tidy swatch grid. Drop in inline, or nest inside a popover.',
   categories: ['forms'],
-  badges: [
-    { icon: 'pipette', label: 'Picker' },
-  ],
+  badges: [{ icon: 'pipette', label: 'Picker' }],
   highlights,
   related,
   importCode: `import { ColorPicker } from 'move';`,
   keyboard: [
-    { key: 'Tab', action: 'Cycles through saturation field, hue, alpha, format selector, and channel inputs.' },
-    { key: 'Arrow keys', action: 'Within the saturation field — moves the indicator. On hue/alpha — adjusts the value.' },
+    {
+      key: 'Tab',
+      action: 'Cycles through saturation field, hue, alpha, format selector, and channel inputs.',
+    },
+    {
+      key: 'Arrow keys',
+      action:
+        'Within the saturation field — moves the indicator. On hue/alpha — adjusts the value.',
+    },
     { key: 'Shift + Arrow', action: 'Larger step on the saturation field and sliders.' },
   ],
   accessibilityLede:

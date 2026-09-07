@@ -11,11 +11,15 @@ export default function DensitySample() {
   return (
     <Stack gap="lg">
       <Stack gap="xs">
-        <Text size="sm" weight="medium">density="compact"</Text>
+        <Text size="sm" weight="medium">
+          density="compact"
+        </Text>
         <List density="compact">
           {items.map((it) => (
             <List.Item key={it.title}>
-              <List.Leading><Icon name={it.icon} /></List.Leading>
+              <List.Leading>
+                <Icon name={it.icon} />
+              </List.Leading>
               <List.Content>
                 <List.Title>{it.title}</List.Title>
               </List.Content>
@@ -24,11 +28,15 @@ export default function DensitySample() {
         </List>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">density="comfortable" (default)</Text>
+        <Text size="sm" weight="medium">
+          density="comfortable" (default)
+        </Text>
         <List>
           {items.map((it) => (
             <List.Item key={it.title}>
-              <List.Leading><Icon name={it.icon} /></List.Leading>
+              <List.Leading>
+                <Icon name={it.icon} />
+              </List.Leading>
               <List.Content>
                 <List.Title>{it.title}</List.Title>
                 <List.Description>{it.desc}</List.Description>

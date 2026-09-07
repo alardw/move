@@ -1,6 +1,6 @@
-import { Badge, Stack, Text } from "move";
+import { Badge, Stack, Text } from 'move';
 
-const sizes = ["sm", "md", "lg"] as const;
+const sizes = ['sm', 'md', 'lg'] as const;
 
 export default function SizesSample() {
   return (

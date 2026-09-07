@@ -1,4 +1,4 @@
-import { Badge, Stack } from "move";
+import { Badge, Stack } from 'move';
 
 export default function BasicSample() {
   return (

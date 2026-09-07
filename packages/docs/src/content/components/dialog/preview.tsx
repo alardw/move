@@ -17,9 +17,7 @@ export default function DialogPreview() {
                 <Dialog.Title>Publish changes</Dialog.Title>
               </Dialog.Header>
               <Dialog.Body>
-                <Dialog.Description>
-                  Push the last hour of edits live?
-                </Dialog.Description>
+                <Dialog.Description>Push the last hour of edits live?</Dialog.Description>
               </Dialog.Body>
               <Dialog.Footer>
                 <Dialog.FooterEnd>

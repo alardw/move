@@ -1,4 +1,4 @@
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Stack,
   Heading,
@@ -33,9 +33,9 @@ import {
   Timeline,
   ToggleGroup,
   VideoPlayer,
-} from "move";
-import { COMPONENT_CONTENT } from "../../content/components";
-import { Section, TocRail, type TocItem } from "../../components";
+} from 'move';
+import { COMPONENT_CONTENT } from '../../content/components';
+import { Section, TocRail, type TocItem } from '../../components';
 
 /**
  * Surfaces. The two-level surface elevation system,
@@ -44,31 +44,31 @@ import { Section, TocRail, type TocItem } from "../../components";
  */
 
 const TOC: TocItem[] = [
-  { href: "#overview", label: "Overview" },
-  { href: "#levels", label: "Levels" },
-  { href: "#alternating", label: "Alternating tints" },
-  { href: "#components", label: "Per-component surface" },
-  { href: "#audit", label: "On both grounds" },
+  { href: '#overview', label: 'Overview' },
+  { href: '#levels', label: 'Levels' },
+  { href: '#alternating', label: 'Alternating tints' },
+  { href: '#components', label: 'Per-component surface' },
+  { href: '#audit', label: 'On both grounds' },
 ];
 
 interface Level {
-  kind: "base" | "subtle";
+  kind: 'base' | 'subtle';
   bgToken: string;
   description: string;
 }
 
 const LEVELS: Level[] = [
   {
-    kind: "base",
-    bgToken: "--move-bg-base",
+    kind: 'base',
+    bgToken: '--move-bg-base',
     description:
-      "The page/app ground. Established implicitly by MoveRoot (:root) — no component declares it.",
+      'The page/app ground. Established implicitly by MoveRoot (:root) — no component declares it.',
   },
   {
-    kind: "subtle",
-    bgToken: "--move-bg-subtle",
+    kind: 'subtle',
+    bgToken: '--move-bg-subtle',
     description:
-      "Slightly raised tint over base — used for cards, popovers, dialogs, and other contained panels.",
+      'Slightly raised tint over base — used for cards, popovers, dialogs, and other contained panels.',
   },
 ];
 
@@ -89,12 +89,12 @@ function ownsSurface(): string[] {
   // evaluating returned an empty object — the strip rendered its heading and
   // nothing else.
   return Object.values(COMPONENT_CONTENT)
-    .filter((c) => ((c.spec.capabilities as string[] | undefined) ?? []).includes("owns-surface"))
+    .filter((c) => ((c.spec.capabilities as string[] | undefined) ?? []).includes('owns-surface'))
     .map((c) => c.meta.name)
     .sort();
 }
 
-function componentsByLevel(): Record<Level["kind"], string[]> {
+function componentsByLevel(): Record<Level['kind'], string[]> {
   // base is the implicit page ground (MoveRoot / :root) — no component declares it.
   return { base: [], subtle: ownsSurface() };
 }
@@ -124,7 +124,7 @@ function componentsByLevel(): Record<Level["kind"], string[]> {
  * already occupies. The panels force an explicit `data-surface`, so nothing
  * here depends on where the page happens to nest them.
  */
-function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
+function SurfaceAudit({ tone }: { tone: 'base' | 'subtle' }) {
   return (
     // The audit forces a ground and paints it directly; bypassing what a
     // component would decide is the entire point.  dogfood-ignore
@@ -133,9 +133,9 @@ function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
       data-surface={tone}
       // dogfood-ignore
       style={{
-        background: "var(--move-surface-bg)",
-        padding: "var(--move-spacing-lg)",
-        borderRadius: "var(--move-rounded-lg)",
+        background: 'var(--move-surface-bg)',
+        padding: 'var(--move-spacing-lg)',
+        borderRadius: 'var(--move-rounded-lg)',
         flex: 1,
         minWidth: 0,
       }}
@@ -200,8 +200,8 @@ function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
         <ScrollArea.Root style={{ height: 120 }}>
           <ScrollArea.Content padded>
             <Text>
-              ScrollArea — paints a ground, declares none. Scroll me: this text is long
-              enough to overflow the box it is in, which is the point.
+              ScrollArea — paints a ground, declares none. Scroll me: this text is long enough to
+              overflow the box it is in, which is the point.
             </Text>
             <Text>More content so the scrollport actually scrolls.</Text>
             <Text>And a little more again.</Text>
@@ -259,9 +259,7 @@ function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
         <AudioPlayer src="/sample.mp3" radius="md" />
         <VideoPlayer src="/sample.mp4" radius="md" />
 
-        <Text weight="semibold">
-          Already surface-aware — the working case
-        </Text>
+        <Text weight="semibold">Already surface-aware — the working case</Text>
 
         <Tabs.Root defaultValue="one">
           <Tabs.List>
@@ -289,10 +287,17 @@ function SurfaceAudit({ tone }: { tone: "base" | "subtle" }) {
           </Carousel.Viewport>
         </Carousel.Root>
 
-
         <Sidebar.Provider>
           {/* dogfood-ignore */}
-          <div style={{ display: "flex", height: 160, overflow: "hidden", borderRadius: "var(--move-rounded-md)" }}>
+          <div
+            /* dogfood-ignore */
+            style={{
+              display: 'flex',
+              height: 160,
+              overflow: 'hidden',
+              borderRadius: 'var(--move-rounded-md)',
+            }}
+          >
             <Sidebar.Root>
               <Sidebar.Content>
                 <Sidebar.Group>
@@ -360,9 +365,9 @@ export function SurfacesPage() {
         <Stack gap="sm">
           <Heading level={1}>Surfaces</Heading>
           <Text color="muted" size="lg">
-            Two-level elevation system. Components that render a tinted or
-            elevated panel pick a surface level; nested surfaces alternate so
-            each panel reads as visually distinct from its parent.
+            Two-level elevation system. Components that render a tinted or elevated panel pick a
+            surface level; nested surfaces alternate so each panel reads as visually distinct from
+            its parent.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft">
@@ -384,22 +389,18 @@ export function SurfacesPage() {
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: "nowrap" }}>
-                  Level
-                </Table.Head>
-                <Table.Head style={{ width: 1, whiteSpace: "nowrap" }}>
-                  CSS token
-                </Table.Head>
+                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Level</Table.Head>
+                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>CSS token</Table.Head>
                 <Table.Head>Use</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {LEVELS.map((l) => (
                 <Table.Row key={l.kind}>
-                  <Table.Cell style={{ width: 1, whiteSpace: "nowrap" }}>
+                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
                     <Code>{l.kind}</Code>
                   </Table.Cell>
-                  <Table.Cell style={{ width: 1, whiteSpace: "nowrap" }}>
+                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
                     <Code>{l.bgToken}</Code>
                   </Table.Cell>
                   <Table.Cell>
@@ -418,11 +419,10 @@ export function SurfacesPage() {
         >
           <Stack gap="md">
             <Text>
-              The page itself sits at <Code>base</Code>. A Card on the page
-              picks <Code>subtle</Code>, and the tint difference makes it read
-              as elevated. A child Card inside that Card flips back to{" "}
-              <Code>base</Code> so the nested boundary stays visible. Same rule
-              for popovers nested inside a subtle dialog body.
+              The page itself sits at <Code>base</Code>. A Card on the page picks{' '}
+              <Code>subtle</Code>, and the tint difference makes it read as elevated. A child Card
+              inside that Card flips back to <Code>base</Code> so the nested boundary stays visible.
+              Same rule for popovers nested inside a subtle dialog body.
             </Text>
             <Card.Root>
               <Card.Body>
@@ -439,8 +439,8 @@ export function SurfacesPage() {
                         <Card.Root>
                           <Card.Body>
                             <Text size="sm" color="muted">
-                              <Code>base</Code>-tinted child reads as recessed
-                              inside the subtle parent.
+                              <Code>base</Code>-tinted child reads as recessed inside the subtle
+                              parent.
                             </Text>
                           </Card.Body>
                         </Card.Root>
@@ -451,11 +451,10 @@ export function SurfacesPage() {
               </Card.Body>
             </Card.Root>
             <Text size="sm" color="muted">
-              The validator flags any component that renders a{" "}
-              <Code>subtle</Code> surface inside another <Code>subtle</Code>{" "}
-              ancestor (or <Code>base</Code> inside <Code>base</Code>).
-              Compositions that need a third tint signal a missing level — fix
-              the taxonomy, don't bend the rule.
+              The validator flags any component that renders a <Code>subtle</Code> surface inside
+              another <Code>subtle</Code> ancestor (or <Code>base</Code> inside <Code>base</Code>).
+              Compositions that need a third tint signal a missing level — fix the taxonomy, don't
+              bend the rule.
             </Text>
           </Stack>
         </Section>
@@ -468,28 +467,24 @@ export function SurfacesPage() {
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: "nowrap" }}>
-                  Level
-                </Table.Head>
+                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Level</Table.Head>
                 <Table.Head>Components</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {LEVELS.map((l) => (
                 <Table.Row key={l.kind}>
-                  <Table.Cell style={{ width: 1, whiteSpace: "nowrap" }}>
+                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
                     <Code>{l.kind}</Code>
                   </Table.Cell>
                   <Table.Cell>
                     <Text
                       size="sm"
-                      color={
-                        componentsByLevel()[l.kind].length ? undefined : "muted"
-                      }
+                      color={componentsByLevel()[l.kind].length ? undefined : 'muted'}
                     >
                       {componentsByLevel()[l.kind].length
-                        ? componentsByLevel()[l.kind].join(", ")
-                        : "Implicit page ground — declared by no component."}
+                        ? componentsByLevel()[l.kind].join(', ')
+                        : 'Implicit page ground — declared by no component.'}
                     </Text>
                   </Table.Cell>
                 </Table.Row>

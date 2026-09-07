@@ -1,19 +1,19 @@
-import { Badge, Stack, Text } from "move";
+import { Badge, Stack, Text } from 'move';
 
 const palette = [
-  "gray",
-  "red",
-  "pink",
-  "grape",
-  "violet",
-  "indigo",
-  "blue",
-  "cyan",
-  "teal",
-  "green",
-  "lime",
-  "yellow",
-  "orange",
+  'gray',
+  'red',
+  'pink',
+  'grape',
+  'violet',
+  'indigo',
+  'blue',
+  'cyan',
+  'teal',
+  'green',
+  'lime',
+  'yellow',
+  'orange',
 ] as const;
 
 /**

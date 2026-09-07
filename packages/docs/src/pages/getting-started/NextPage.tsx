@@ -149,7 +149,9 @@ export function NextPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Next.js</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -167,36 +169,57 @@ export function NextPage() {
         >
           <List.Root>
             <List.Item>
-              <List.Leading><Icon name="layout-template" /></List.Leading>
+              <List.Leading>
+                <Icon name="layout-template" />
+              </List.Leading>
               <List.Content>
                 <List.Title>App Router</List.Title>
-                <List.Description>Move's recommended setup. Render a client wrapper from <Code>app/layout.tsx</Code>.</List.Description>
+                <List.Description>
+                  Move's recommended setup. Render a client wrapper from <Code>app/layout.tsx</Code>
+                  .
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="file-code" /></List.Leading>
+              <List.Leading>
+                <Icon name="file-code" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Pages Router</List.Title>
-                <List.Description>Older but still supported. <Code>pages/_app.tsx</Code> takes the wrapper.</List.Description>
+                <List.Description>
+                  Older but still supported. <Code>pages/_app.tsx</Code> takes the wrapper.
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="zap" /></List.Leading>
+              <List.Leading>
+                <Icon name="zap" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Theme FOUC</List.Title>
-                <List.Description>MoveRoot applies html/body styles after mount. Set the same tokens via global CSS, or read a theme cookie server-side, to keep the first paint clean.</List.Description>
+                <List.Description>
+                  MoveRoot applies html/body styles after mount. Set the same tokens via global CSS,
+                  or read a theme cookie server-side, to keep the first paint clean.
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="git-branch" /></List.Leading>
+              <List.Leading>
+                <Icon name="git-branch" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Client boundaries</List.Title>
-                <List.Description>Most interactive Move components need <Code>'use client'</Code> on their parent. Plain content components (Text, Heading, Card) work in Server Components.</List.Description>
+                <List.Description>
+                  Most interactive Move components need <Code>'use client'</Code> on their parent.
+                  Plain content components (Text, Heading, Card) work in Server Components.
+                </List.Description>
               </List.Content>
             </List.Item>
           </List.Root>
           <Text>
-            For everything about MoveRoot itself — props, icon resolver, theme switching, global slot props — see <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink>. This page only covers what's Next-specific.
+            For everything about MoveRoot itself — props, icon resolver, theme switching, global
+            slot props — see <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink>. This
+            page only covers what's Next-specific.
           </Text>
         </Section>
 
@@ -207,15 +230,19 @@ export function NextPage() {
         >
           <Stack gap="sm">
             <Text>
-              <strong>1. Root layout (Server Component).</strong> Imports the CSS and renders the client wrapper.
+              <strong>1. Root layout (Server Component).</strong> Imports the CSS and renders the
+              client wrapper.
             </Text>
             <CodeBlock code={APP_LAYOUT} language="tsx" />
             <Text>
-              <strong>2. Move providers (Client Component).</strong> Anything passing through MoveRoot lives here.
+              <strong>2. Move providers (Client Component).</strong> Anything passing through
+              MoveRoot lives here.
             </Text>
             <CodeBlock code={APP_PROVIDERS} language="tsx" />
             <Text>
-              The <Code>'use client'</Code> directive on the providers file is what lets MoveRoot mount on the client. The layout itself stays a Server Component, so the rest of the layout (metadata, fonts, ...) keeps the SSR benefits.
+              The <Code>'use client'</Code> directive on the providers file is what lets MoveRoot
+              mount on the client. The layout itself stays a Server Component, so the rest of the
+              layout (metadata, fonts, ...) keeps the SSR benefits.
             </Text>
           </Stack>
         </Section>
@@ -227,7 +254,8 @@ export function NextPage() {
         >
           <CodeBlock code={PAGES_APP} language="tsx" />
           <Text>
-            Same MoveRoot, same icon resolver. No <Code>'use client'</Code> needed because Pages Router doesn't have Server Components.
+            Same MoveRoot, same icon resolver. No <Code>'use client'</Code> needed because Pages
+            Router doesn't have Server Components.
           </Text>
         </Section>
 
@@ -238,14 +266,20 @@ export function NextPage() {
         >
           <Stack gap="sm">
             <Text>
-              <strong>Option A — global CSS (simplest).</strong> Mirror the token values on <Code>{`<html>`}</Code> from a regular CSS file imported in your layout. Works for single-theme apps.
+              <strong>Option A — global CSS (simplest).</strong> Mirror the token values on{' '}
+              <Code>{`<html>`}</Code> from a regular CSS file imported in your layout. Works for
+              single-theme apps.
             </Text>
             <CodeBlock code={FOUC_GLOBAL_CSS} language="css" />
             <Text>
-              The CSS variables are defined in <Code>'move/styles.css'</Code>, so referencing them on <Code>{`<html>`}</Code> works as soon as that import lands. MoveRoot's effect on mount becomes a no-op visually.
+              The CSS variables are defined in <Code>'move/styles.css'</Code>, so referencing them
+              on <Code>{`<html>`}</Code> works as soon as that import lands. MoveRoot's effect on
+              mount becomes a no-op visually.
             </Text>
             <Text>
-              <strong>Option B — cookie-driven theme</strong> (covered in <RouterLink to="#cookies">Theme persistence</RouterLink>). Necessary if your app supports light/dark switching and you don't want a flash on every navigation.
+              <strong>Option B — cookie-driven theme</strong> (covered in{' '}
+              <RouterLink to="#cookies">Theme persistence</RouterLink>). Necessary if your app
+              supports light/dark switching and you don't want a flash on every navigation.
             </Text>
           </Stack>
         </Section>
@@ -257,10 +291,15 @@ export function NextPage() {
         >
           <Stack gap="sm">
             <Alert variant="info" title="'use client' doesn't disable SSR">
-              Marked components still render on the server and ship as HTML in the initial response. The directive only signals that the component needs JS at hydration time — common for anything with state, effects, or interactivity. Server Components (which ship zero JS) are a separate, Next-specific category; most interactive Move components can't be Server Components, but they SSR fine.
+              Marked components still render on the server and ship as HTML in the initial response.
+              The directive only signals that the component needs JS at hydration time — common for
+              anything with state, effects, or interactivity. Server Components (which ship zero JS)
+              are a separate, Next-specific category; most interactive Move components can't be
+              Server Components, but they SSR fine.
             </Alert>
             <Text>
-              Interactive — animations, focus management, controlled state, popups. Anything in those families needs the parent to be a Client Component:
+              Interactive — animations, focus management, controlled state, popups. Anything in
+              those families needs the parent to be a Client Component:
             </Text>
             <Stack gap="xs">
               <Text size="sm">• Dialog, Drawer, Popover, Dropdown, Tooltip, Toast</Text>
@@ -268,16 +307,15 @@ export function NextPage() {
               <Text size="sm">• Button, ToggleGroup, Tabs, Accordion, Collapsible</Text>
               <Text size="sm">• Carousel, AudioPlayer, VideoPlayer</Text>
             </Stack>
-            <Text>
-              Presentational — these work in Server Components without a directive:
-            </Text>
+            <Text>Presentational — these work in Server Components without a directive:</Text>
             <Stack gap="xs">
               <Text size="sm">• Text, Heading, Prose, Code, Label</Text>
               <Text size="sm">• Stack, Grid, Card, Divider</Text>
               <Text size="sm">• Avatar, Badge, Skeleton, Image (when not interactive)</Text>
             </Stack>
             <Text>
-              When in doubt, mark the page-level component <Code>'use client'</Code>; the SSR loss is small for most app pages.
+              When in doubt, mark the page-level component <Code>'use client'</Code>; the SSR loss
+              is small for most app pages.
             </Text>
           </Stack>
         </Section>
@@ -289,23 +327,33 @@ export function NextPage() {
         >
           <Stack gap="sm">
             <Text>
-              <strong>1. Server Component layout.</strong> Read the cookie, set the correct background colour on <Code>{`<html>`}</Code> inline so the first byte already paints the right theme.
+              <strong>1. Server Component layout.</strong> Read the cookie, set the correct
+              background colour on <Code>{`<html>`}</Code> inline so the first byte already paints
+              the right theme.
             </Text>
             <CodeBlock code={COOKIE_LAYOUT} language="tsx" />
             <Text>
-              <strong>2. Client wrapper.</strong> Receives the mode, passes the matching theme to MoveRoot.
+              <strong>2. Client wrapper.</strong> Receives the mode, passes the matching theme to
+              MoveRoot.
             </Text>
             <CodeBlock code={COOKIE_PROVIDERS} language="tsx" />
             <Text>
-              When the user toggles theme, write the cookie (<Code>document.cookie = 'theme=dark; path=/'</Code>) and trigger a client-side state update for the live theme switch. Subsequent SSR responses honour the cookie.
+              When the user toggles theme, write the cookie (
+              <Code>document.cookie = 'theme=dark; path=/'</Code>) and trigger a client-side state
+              update for the live theme switch. Subsequent SSR responses honour the cookie.
             </Text>
           </Stack>
         </Section>
 
         <Section id="next-steps" title="Next steps">
           <Stack gap="xs">
-            <Text size="sm">• <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink> — the wrapper's full API.</Text>
-            <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — the catalog.</Text>
+            <Text size="sm">
+              • <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink> — the wrapper's
+              full API.
+            </Text>
+            <Text size="sm">
+              • <RouterLink to="/components">Components</RouterLink> — the catalog.
+            </Text>
           </Stack>
         </Section>
       </Stack>

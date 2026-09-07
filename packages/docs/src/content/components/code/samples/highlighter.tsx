@@ -1,6 +1,17 @@
 import { Code, CodeHighlighterProvider, Stack, Text } from 'move';
 
-const KEYWORDS = new Set(['import', 'from', 'export', 'const', 'function', 'return', 'if', 'else', 'true', 'false']);
+const KEYWORDS = new Set([
+  'import',
+  'from',
+  'export',
+  'const',
+  'function',
+  'return',
+  'if',
+  'else',
+  'true',
+  'false',
+]);
 
 /**
  * Tiny pretend-highlighter to demonstrate the contract — wraps keywords
@@ -12,10 +23,14 @@ const highlighter = (code: string) => {
   return (
     <>
       {parts.map((p, i) =>
-        KEYWORDS.has(p)
+        KEYWORDS.has(p) ? (
           // composite-purity-ignore: coloured token output is the whole point of a syntax highlighter; no Move primitive
-          ? <span key={i} style={{ color: 'var(--move-indigo-400)', fontWeight: 600 }}>{p}</span>
-          : p
+          <span key={i} style={{ color: 'var(--move-indigo-400)', fontWeight: 600 }}>
+            {p}
+          </span>
+        ) : (
+          p
+        ),
       )}
     </>
   );
@@ -31,11 +46,13 @@ export default function HighlighterSample() {
     <CodeHighlighterProvider highlighter={highlighter}>
       <Stack gap="md">
         <Text size="sm" color="muted">
-          Wrap part of the tree in <Code>CodeHighlighterProvider</Code> with a function
-          that turns code text into ReactNode (or HTML string). Every <Code>{'<Code language="...">'}</Code>{' '}
+          Wrap part of the tree in <Code>CodeHighlighterProvider</Code> with a function that turns
+          code text into ReactNode (or HTML string). Every <Code>{'<Code language="...">'}</Code>{' '}
           inside picks it up.
         </Text>
-        <Code block language="tsx">{snippet}</Code>
+        <Code block language="tsx">
+          {snippet}
+        </Code>
       </Stack>
     </CodeHighlighterProvider>
   );

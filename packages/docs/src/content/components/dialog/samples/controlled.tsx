@@ -14,7 +14,9 @@ export default function ControlledSample() {
     <Stack gap="sm" align="start">
       <Stack direction="row" gap="sm" align="center">
         <Button onClick={() => setOpen(true)}>Open from state</Button>
-        <Text size="sm" color="muted">opened {count} {count === 1 ? 'time' : 'times'}</Text>
+        <Text size="sm" color="muted">
+          opened {count} {count === 1 ? 'time' : 'times'}
+        </Text>
       </Stack>
       <Dialog.Root
         open={open}
@@ -31,9 +33,8 @@ export default function ControlledSample() {
             </Dialog.Header>
             <Dialog.Body>
               <Dialog.Description>
-                The trigger lives outside the dialog. Open state is held in a parent
-                `useState`, so anything in the page can toggle it — buttons, hotkeys,
-                background events, the lot.
+                The trigger lives outside the dialog. Open state is held in a parent `useState`, so
+                anything in the page can toggle it — buttons, hotkeys, background events, the lot.
               </Dialog.Description>
             </Dialog.Body>
             <Dialog.Footer>

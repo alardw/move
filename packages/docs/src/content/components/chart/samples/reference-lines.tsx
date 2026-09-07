@@ -1,12 +1,12 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
 const revenue = [
-  { month: "Jan", mrr: 62 },
-  { month: "Feb", mrr: 71 },
-  { month: "Mar", mrr: 68 },
-  { month: "Apr", mrr: 84 },
-  { month: "May", mrr: 92 },
-  { month: "Jun", mrr: 105 },
+  { month: 'Jan', mrr: 62 },
+  { month: 'Feb', mrr: 71 },
+  { month: 'Mar', mrr: 68 },
+  { month: 'Apr', mrr: 84 },
+  { month: 'May', mrr: 92 },
+  { month: 'Jun', mrr: 105 },
 ];
 
 /**
@@ -31,10 +31,10 @@ export default function ReferenceLinesSample() {
       dots
       formatY={(v) => `$${v}k`}
       rules={[
-        { y: 120, label: "Target" },
-        { y: 80, label: "Break-even", color: "orange" },
+        { y: 120, label: 'Target' },
+        { y: 80, label: 'Break-even', color: 'orange' },
       ]}
-      series={[{ key: "mrr", type: "area", label: "MRR" }]}
+      series={[{ key: 'mrr', type: 'area', label: 'MRR' }]}
     />
   );
 }

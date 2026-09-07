@@ -55,10 +55,9 @@ export function CreateMovePage() {
         <Stack gap="sm">
           <Heading level={1}>Create a Move App</Heading>
           <Text color="muted" size="lg">
-            One command scaffolds a complete Move app — MoveRoot and a shell wired,
-            a theme and icon set picked, the AI skills installed, and the
-            conformance gates already running. Same inputs, identical output, every
-            time.
+            One command scaffolds a complete Move app — MoveRoot and a shell wired, a theme and icon
+            set picked, the AI skills installed, and the conformance gates already running. Same
+            inputs, identical output, every time.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
@@ -77,10 +76,9 @@ export function CreateMovePage() {
         >
           <CodeBlock code={INSTALL} language="bash" />
           <Text>
-            The scaffolder is deterministic: the same name and flags always write
-            the same files, and it validates its own output against the creation
-            spec before it finishes — so a fresh project is a conformant Move app by
-            construction, not by hope.
+            The scaffolder is deterministic: the same name and flags always write the same files,
+            and it validates its own output against the creation spec before it finishes — so a
+            fresh project is a conformant Move app by construction, not by hope.
           </Text>
           <CodeBlock code={WITH_OPTIONS} language="bash" />
         </Section>
@@ -159,12 +157,11 @@ export function CreateMovePage() {
           lede="The Move skills land in the project so coding agents discover them automatically."
         >
           <Text>
-            Both <Code>.claude/skills</Code> (Claude Code) and <Code>.agents/skills</Code>{' '}
-            (Codex) are populated — including <Code>/app-compose</Code>, which builds
-            your pages and features into <Code>src/composites</Code>, and the{' '}
-            <Code>/component-generate-*</Code> pipeline, which writes custom components
-            into <Code>src/components</Code>. Refresh them any time with{' '}
-            <Code>npx move skills</Code>.
+            Both <Code>.claude/skills</Code> (Claude Code) and <Code>.agents/skills</Code> (Codex)
+            are populated — including <Code>/app-compose</Code>, which builds your pages and
+            features into <Code>src/composites</Code>, and the <Code>/component-generate-*</Code>{' '}
+            pipeline, which writes custom components into <Code>src/components</Code>. Refresh them
+            any time with <Code>npx move skills</Code>.
           </Text>
         </Section>
 
@@ -174,14 +171,13 @@ export function CreateMovePage() {
           lede="The gates ship with the project, so neither you nor an agent drifts from the design system silently."
         >
           <Text>
-            Two gates come wired as npm scripts: <Code>npm run check</Code> (static —
-            your composites are built entirely from Move components) and{' '}
-            <Code>npm run test:a11y</Code> (render-time — axe over every composite,
-            held to a ratchet). Both run on any CI; the default GitHub Actions
-            workflow just calls them, and <Code>--ci none</Code> leaves that binding
-            to you. See{' '}
-            <RouterLink to="/contracts/conformance">the conformance model</RouterLink>{' '}
-            for how the gates fit together.
+            Two gates come wired as npm scripts: <Code>npm run check</Code> (static — your
+            composites are built entirely from Move components) and <Code>npm run test:a11y</Code>{' '}
+            (render-time — axe over every composite, held to a ratchet). Both run on any CI; the
+            default GitHub Actions workflow just calls them, and <Code>--ci none</Code> leaves that
+            binding to you. See{' '}
+            <RouterLink to="/contracts/conformance">the conformance model</RouterLink> for how the
+            gates fit together.
           </Text>
         </Section>
       </Stack>

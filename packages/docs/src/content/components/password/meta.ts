@@ -31,10 +31,10 @@ export const meta: ComponentDocument = {
   synonyms: ['secret', 'pin field', 'password input', 'masked input'],
   preview: { width: 'fit' },
   name: 'Password',
-  tagline: 'A password input with a show/hide toggle — outlined or filled, three sizes, the rest of InputText’s contract.',
+  tagline:
+    'A password input with a show/hide toggle — outlined or filled, three sizes, the rest of InputText’s contract.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Password } from 'move';`,

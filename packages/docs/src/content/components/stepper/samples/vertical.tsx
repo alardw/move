@@ -2,8 +2,16 @@ import { Stepper } from 'move';
 
 const steps = [
   { status: 'complete' as const, title: 'Started', description: '2 minutes ago' },
-  { status: 'complete' as const, title: 'Validated', description: 'Format and integrity checks passed' },
-  { status: 'active' as const, title: 'Importing', description: 'Pushing 4,210 rows into the warehouse' },
+  {
+    status: 'complete' as const,
+    title: 'Validated',
+    description: 'Format and integrity checks passed',
+  },
+  {
+    status: 'active' as const,
+    title: 'Importing',
+    description: 'Pushing 4,210 rows into the warehouse',
+  },
   { status: undefined, title: 'Reconciliation', description: 'Compare counts with source' },
   { status: undefined, title: 'Done', description: '' },
 ];

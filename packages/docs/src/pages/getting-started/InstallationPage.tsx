@@ -71,7 +71,9 @@ export function InstallationPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Add Move to an existing app</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -97,16 +99,19 @@ export function InstallationPage() {
           title="1. Install the package"
           lede="Move and its one required peer, animejs (the animation engine). React and react-dom you already have."
         >
-          <CodeBlock language="bash" code={`npm install move animejs
+          <CodeBlock
+            language="bash"
+            code={`npm install move animejs
 # or
 pnpm add move animejs
 # or
-yarn add move animejs`} />
+yarn add move animejs`}
+          />
           <Text color="muted" size="sm">
-            Icons are bring-your-own — the resolver in step 3 adapts to whatever
-            library your app already uses (Heroicons, Tabler, your own SVGs), so
-            there’s nothing extra to install. Starting without an icon set? The
-            examples below use Lucide: <Code>npm install lucide-react</Code>.
+            Icons are bring-your-own — the resolver in step 3 adapts to whatever library your app
+            already uses (Heroicons, Tabler, your own SVGs), so there’s nothing extra to install.
+            Starting without an icon set? The examples below use Lucide:{' '}
+            <Code>npm install lucide-react</Code>.
           </Text>
         </Section>
 
@@ -115,8 +120,11 @@ yarn add move animejs`} />
           title="2. Add the styles"
           lede="Once, at the top of your app entry. After this import you never have to think about Move CSS again."
         >
-          <CodeBlock language="ts" code={`// main.tsx (Vite) or layout.tsx (Next.js app router)
-import 'move/styles.css';`} />
+          <CodeBlock
+            language="ts"
+            code={`// main.tsx (Vite) or layout.tsx (Next.js app router)
+import 'move/styles.css';`}
+          />
         </Section>
 
         <Section
@@ -138,11 +146,10 @@ export function App() {
 }`}
           />
           <Text color="muted" size="sm">
-            The icon resolver is a plain function — a kebab-case name in, a React
-            node out — so Move’s <Code>{'<Icon>'}</Code> works with whatever library
-            your app already uses.{' '}
-            <RouterLink to="/customize/icons">Icons</RouterLink> has a copy-paste
-            resolver for Lucide, Heroicons, Phosphor, and your own SVGs.
+            The icon resolver is a plain function — a kebab-case name in, a React node out — so
+            Move’s <Code>{'<Icon>'}</Code> works with whatever library your app already uses.{' '}
+            <RouterLink to="/customize/icons">Icons</RouterLink> has a copy-paste resolver for
+            Lucide, Heroicons, Phosphor, and your own SVGs.
           </Text>
         </Section>
 
@@ -177,8 +184,8 @@ export function Hello() {
                 icon: 'blocks',
                 text: (
                   <>
-                    Browse the <RouterLink to="/components">Components</RouterLink>{' '}
-                    section — every component ships with live samples and a copyable code snippet.
+                    Browse the <RouterLink to="/components">Components</RouterLink> section — every
+                    component ships with live samples and a copyable code snippet.
                   </>
                 ),
               },
@@ -186,8 +193,9 @@ export function Hello() {
                 icon: 'palette',
                 text: (
                   <>
-                    Set up a custom theme — see <RouterLink to="/customize">Make it your own</RouterLink>{' '}
-                    to override colors, spacing, and typography at the root.
+                    Set up a custom theme — see{' '}
+                    <RouterLink to="/customize">Make it your own</RouterLink> to override colors,
+                    spacing, and typography at the root.
                   </>
                 ),
               },
@@ -195,9 +203,9 @@ export function Hello() {
                 icon: 'sparkles',
                 text: (
                   <>
-                    Peek at the <RouterLink to="/animation">Animation system</RouterLink> — all
-                    Move components animate through it, and you can drive your own
-                    with the same primitives.
+                    Peek at the <RouterLink to="/animation">Animation system</RouterLink> — all Move
+                    components animate through it, and you can drive your own with the same
+                    primitives.
                   </>
                 ),
               },
@@ -207,8 +215,9 @@ export function Hello() {
                   <>
                     Build your screens as compositions with{' '}
                     <RouterLink to="/ai/skills">/app-compose</RouterLink>, and keep them true to the
-                    system with the <RouterLink to="/contracts/conformance">conformance
-                    model</RouterLink> — one command plus a ratchet that only tightens.
+                    system with the{' '}
+                    <RouterLink to="/contracts/conformance">conformance model</RouterLink> — one
+                    command plus a ratchet that only tightens.
                   </>
                 ),
               },

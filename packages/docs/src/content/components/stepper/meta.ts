@@ -17,7 +17,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/timeline',
     name: 'Timeline',
-    reason: 'For chronological events with timestamps. Stepper is for sequential progress in a flow.',
+    reason:
+      'For chronological events with timestamps. Stepper is for sequential progress in a flow.',
   },
 ];
 
@@ -25,11 +26,10 @@ export const meta: ComponentDocument = {
   slug: 'stepper',
   synonyms: ['wizard', 'steps', 'progress steps', 'step indicator'],
   name: 'Stepper',
-  tagline: 'A progress indicator for multi-step flows — numbered steps, completion state, optional click-to-jump, horizontal or vertical.',
+  tagline:
+    'A progress indicator for multi-step flows — numbered steps, completion state, optional click-to-jump, horizontal or vertical.',
   categories: ['navigation'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Stepper } from 'move';`,

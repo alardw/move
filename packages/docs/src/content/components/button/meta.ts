@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/icon-button',
     name: 'IconButton',
-    reason: 'Square, label-less variant for toolbars and dense controls — same animation feel, less padding.',
+    reason:
+      'Square, label-less variant for toolbars and dense controls — same animation feel, less padding.',
   },
 ];
 
@@ -35,11 +36,10 @@ export const meta: ComponentDocument = {
   synonyms: ['cta', 'action', 'submit', 'icon button', 'iconbutton', 'icon-only button', 'btn'],
   preview: { width: 'fit' },
   name: 'Button',
-  tagline: 'The workhorse click target — variants, sizes, and a snappy hover/press animation that respects how wide the button actually is.',
+  tagline:
+    'The workhorse click target — variants, sizes, and a snappy hover/press animation that respects how wide the button actually is.',
   categories: ['actions', 'forms'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Button } from 'move';`,

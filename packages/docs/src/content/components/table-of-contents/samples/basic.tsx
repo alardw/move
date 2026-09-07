@@ -12,7 +12,9 @@ export default function BasicSample() {
   return (
     <TableOfContents.Root>
       {items.map((it) => (
-        <TableOfContents.Item key={it.href} href={it.href}>{it.label}</TableOfContents.Item>
+        <TableOfContents.Item key={it.href} href={it.href}>
+          {it.label}
+        </TableOfContents.Item>
       ))}
     </TableOfContents.Root>
   );

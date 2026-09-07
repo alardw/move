@@ -19,7 +19,9 @@ export default function FormatsSample() {
           formatOptions={['hex', 'rgb', 'hsl']}
         />
       </PickerPanel>
-      <Text size="sm" color="muted">value: {value}</Text>
+      <Text size="sm" color="muted">
+        value: {value}
+      </Text>
     </Stack>
   );
 }

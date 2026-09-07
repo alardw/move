@@ -18,12 +18,7 @@ import {
   Accordion,
   Tabs,
 } from 'move';
-import {
-  InlineDemo,
-  Section,
-  TocRail,
-  type TocItem,
-} from '../../components';
+import { InlineDemo, Section, TocRail, type TocItem } from '../../components';
 
 const FRUITS = ['Apple', 'Banana', 'Cherry', 'Date', 'Elderberry'];
 
@@ -38,7 +33,9 @@ function SelectDemo() {
       <Select.Content>
         <Select.Viewport>
           {FRUITS.map((f) => (
-            <Select.Item key={f} value={f}>{f}</Select.Item>
+            <Select.Item key={f} value={f}>
+              {f}
+            </Select.Item>
           ))}
         </Select.Viewport>
       </Select.Content>
@@ -82,7 +79,9 @@ export function ChoreographyPage() {
 
         <Stack gap="sm">
           <Heading level={1}>Patterns</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -99,11 +98,10 @@ export function ChoreographyPage() {
           lede="The patterns most components reach for."
         >
           <Text>
-            A pattern is a trigger and sequence paired for a recurring job, named
-            once and reused. Because the same pattern drives many components, a
-            press feels like a press and a reveal feels like a reveal across the
-            whole library. Each one below is live — interact with it to feel the
-            motion.
+            A pattern is a trigger and sequence paired for a recurring job, named once and reused.
+            Because the same pattern drives many components, a press feels like a press and a reveal
+            feels like a reveal across the whole library. Each one below is live — interact with it
+            to feel the motion.
           </Text>
           <Stack gap="xl">
             <InlineDemo
@@ -173,15 +171,13 @@ export function ChoreographyPage() {
                     <Accordion.Trigger>How long does shipping take?</Accordion.Trigger>
                   </Accordion.Header>
                   <Accordion.Content>
-                    Most orders ship within one business day. Standard delivery
-                    then takes three to five business days, express options arrive
-                    the next morning, and overnight gets it to you by 10 AM.
-                    Anything placed before 2 PM on a weekday goes out the same
-                    afternoon; orders after the cutoff, or on weekends and public
-                    holidays, ship the next business day instead. International
-                    shipping reaches most countries within seven to fourteen days,
-                    and any customs duties are calculated at checkout so there is
-                    nothing extra to pay when the parcel arrives at your door.
+                    Most orders ship within one business day. Standard delivery then takes three to
+                    five business days, express options arrive the next morning, and overnight gets
+                    it to you by 10 AM. Anything placed before 2 PM on a weekday goes out the same
+                    afternoon; orders after the cutoff, or on weekends and public holidays, ship the
+                    next business day instead. International shipping reaches most countries within
+                    seven to fourteen days, and any customs duties are calculated at checkout so
+                    there is nothing extra to pay when the parcel arrives at your door.
                   </Accordion.Content>
                 </Accordion.Item>
                 <Accordion.Item value="tracking">
@@ -189,14 +185,12 @@ export function ChoreographyPage() {
                     <Accordion.Trigger>Can I track my order?</Accordion.Trigger>
                   </Accordion.Header>
                   <Accordion.Content>
-                    Yes — we email a tracking link the moment your order leaves
-                    the warehouse, and a second note when it is out for delivery.
-                    You can also see live status, the carrier, and the estimated
-                    delivery date under Orders in your account at any time, on web
-                    or in the app. If anything looks stuck for more than a couple
-                    of days, just reply to that email and our support team will
-                    chase the carrier for you and, if it has gone missing, send a
-                    replacement right away at no extra cost.
+                    Yes — we email a tracking link the moment your order leaves the warehouse, and a
+                    second note when it is out for delivery. You can also see live status, the
+                    carrier, and the estimated delivery date under Orders in your account at any
+                    time, on web or in the app. If anything looks stuck for more than a couple of
+                    days, just reply to that email and our support team will chase the carrier for
+                    you and, if it has gone missing, send a replacement right away at no extra cost.
                   </Accordion.Content>
                 </Accordion.Item>
               </Accordion.Root>
@@ -215,17 +209,23 @@ export function ChoreographyPage() {
                 </Tabs.List>
                 <Tabs.Content value="overview">
                   <Stack padding="md">
-                    <Text size="sm" color="muted">High-level summary.</Text>
+                    <Text size="sm" color="muted">
+                      High-level summary.
+                    </Text>
                   </Stack>
                 </Tabs.Content>
                 <Tabs.Content value="activity">
                   <Stack padding="md">
-                    <Text size="sm" color="muted">Pushes, comments, merges.</Text>
+                    <Text size="sm" color="muted">
+                      Pushes, comments, merges.
+                    </Text>
                   </Stack>
                 </Tabs.Content>
                 <Tabs.Content value="settings">
                   <Stack padding="md">
-                    <Text size="sm" color="muted">Permissions and webhooks.</Text>
+                    <Text size="sm" color="muted">
+                      Permissions and webhooks.
+                    </Text>
                   </Stack>
                 </Tabs.Content>
               </Tabs.Root>
@@ -274,17 +274,16 @@ export function ChoreographyPage() {
           lede="Patterns are built from smaller, self-explaining motions."
         >
           <Text>
-            Below the patterns sit the motion builders — <Code>fadeIn</Code>,{' '}
-            <Code>scaleIn</Code>, <Code>slideUp</Code>, <Code>rotate</Code> and a
-            few more. A step's animation is a motion (or a spread combination of
-            them), which is how a sequence stays short. The{' '}
+            Below the patterns sit the motion builders — <Code>fadeIn</Code>, <Code>scaleIn</Code>,{' '}
+            <Code>slideUp</Code>, <Code>rotate</Code> and a few more. A step's animation is a motion
+            (or a spread combination of them), which is how a sequence stays short. The{' '}
             <RouterLink to="/animation/motions-and-sequences">Motions &amp; sequences</RouterLink>{' '}
             page lists the full set.
           </Text>
           <Text color="muted">
-            Motion specific to a single component — a sidebar's width collapse, a
-            toast's countdown — lives on that component's own page, not here. A
-            pattern earns its place by being shared.
+            Motion specific to a single component — a sidebar's width collapse, a toast's countdown
+            — lives on that component's own page, not here. A pattern earns its place by being
+            shared.
           </Text>
         </Section>
       </Stack>

@@ -1,6 +1,6 @@
-import { Chart } from "move";
+import { Chart } from 'move';
 
-const regions = ["emea", "amer", "apac", "latam", "anz", "mena"] as const;
+const regions = ['emea', 'amer', 'apac', 'latam', 'anz', 'mena'] as const;
 
 const usage = Array.from({ length: 8 }, (_, i) => {
   const row: Record<string, unknown> = { week: `W${i + 1}` };
@@ -30,7 +30,7 @@ export default function PaletteSample() {
       formatY={(v) => `${v}k`}
       series={regions.map((r) => ({
         key: r,
-        type: "line" as const,
+        type: 'line' as const,
         label: r.toUpperCase(),
       }))}
     />

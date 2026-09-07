@@ -16,6 +16,11 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'separator', title: 'Custom separator', render: Separator, code: separatorCode },
-    { id: 'with-ellipsis', title: 'Collapsed with ellipsis', render: WithEllipsis, code: withEllipsisCode },
+    {
+      id: 'with-ellipsis',
+      title: 'Collapsed with ellipsis',
+      render: WithEllipsis,
+      code: withEllipsisCode,
+    },
   ],
 };

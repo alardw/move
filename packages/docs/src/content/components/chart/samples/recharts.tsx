@@ -1,16 +1,16 @@
-import { useMemo } from "react";
-import { Badge, Chart, Stack, Text } from "move";
-import { rechartsRenderer } from "../../../../adapters/recharts";
+import { useMemo } from 'react';
+import { Badge, Chart, Stack, Text } from 'move';
+import { rechartsRenderer } from '../../../../adapters/recharts';
 
 const revenue = [
-  { month: "Jan", mrr: 12, costs: 9 },
-  { month: "Feb", mrr: 18, costs: 11 },
-  { month: "Mar", mrr: 21, costs: 12 },
-  { month: "Apr", mrr: 19, costs: 13 },
-  { month: "May", mrr: 28, costs: 15 },
-  { month: "Jun", mrr: 34, costs: 16 },
-  { month: "Jul", mrr: 41, costs: 19 },
-  { month: "Aug", mrr: 48, costs: 21 },
+  { month: 'Jan', mrr: 12, costs: 9 },
+  { month: 'Feb', mrr: 18, costs: 11 },
+  { month: 'Mar', mrr: 21, costs: 12 },
+  { month: 'Apr', mrr: 19, costs: 13 },
+  { month: 'May', mrr: 28, costs: 15 },
+  { month: 'Jun', mrr: 34, costs: 16 },
+  { month: 'Jul', mrr: 41, costs: 19 },
+  { month: 'Aug', mrr: 48, costs: 21 },
 ];
 
 /**
@@ -43,8 +43,8 @@ export default function RechartsSample() {
         data={revenue}
         x="month"
         series={[
-          { key: "mrr", type: "area", label: "MRR" },
-          { key: "costs", type: "line", label: "Costs", dash: true },
+          { key: 'mrr', type: 'area', label: 'MRR' },
+          { key: 'costs', type: 'line', label: 'Costs', dash: true },
         ]}
         renderer={memoised}
         curve="monotone"

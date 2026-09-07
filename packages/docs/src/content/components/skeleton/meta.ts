@@ -30,17 +30,14 @@ export const meta: ComponentDocument = {
   slug: 'skeleton',
   synonyms: ['placeholder', 'loading shape', 'shimmer', 'content placeholder', 'ghost'],
   name: 'Skeleton',
-  tagline: 'Layout-shaped loading placeholders — Circle, Rectangle, Rounded, Text — with pulse or wave animation.',
+  tagline:
+    'Layout-shaped loading placeholders — Circle, Rectangle, Rounded, Text — with pulse or wave animation.',
   categories: ['feedback'],
-  badges: [
-    { icon: 'rabbit', label: 'Animated' },
-  ],
+  badges: [{ icon: 'rabbit', label: 'Animated' }],
   highlights,
   related,
   importCode: `import { Skeleton } from 'move';`,
-  keyboard: [
-    { key: '—', action: 'Skeletons are decorative.' },
-  ],
+  keyboard: [{ key: '—', action: 'Skeletons are decorative.' }],
   accessibilityLede:
     'Skeletons are `aria-hidden`. Pair them with `aria-busy="true"` on the parent loading region so assistive tech announces the loading state.',
 };

@@ -17,12 +17,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/dropdown',
     name: 'Dropdown',
-    reason: 'For menu-shaped popovers (items, separators, sub-menus). Popover is the free-form sibling.',
+    reason:
+      'For menu-shaped popovers (items, separators, sub-menus). Popover is the free-form sibling.',
   },
   {
     to: '/components/tooltip',
     name: 'Tooltip',
-    reason: 'For tiny labels on hover. Popover is for click-to-open content with focusable elements inside.',
+    reason:
+      'For tiny labels on hover. Popover is for click-to-open content with focusable elements inside.',
   },
 ];
 
@@ -30,7 +32,8 @@ export const meta: ComponentDocument = {
   slug: 'popover',
   synonyms: ['callout', 'flyout', 'inline overlay', 'hover card', 'popup', 'hint'],
   name: 'Popover',
-  tagline: 'A click-to-open anchored panel for any content — forms, mini-cards, inspectors. Real focus contract from Radix.',
+  tagline:
+    'A click-to-open anchored panel for any content — forms, mini-cards, inspectors. Real focus contract from Radix.',
   categories: ['overlays'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -40,7 +43,10 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { Popover } from 'move';`,
   keyboard: [
-    { key: 'Tab', action: 'Moves focus into the panel; cycles back to trigger after the last element.' },
+    {
+      key: 'Tab',
+      action: 'Moves focus into the panel; cycles back to trigger after the last element.',
+    },
     { key: 'Escape', action: 'Closes the popover.' },
   ],
   accessibilityLede:

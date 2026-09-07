@@ -32,14 +32,27 @@ function cx(...parts: (string | false | undefined)[]) {
  * The wrapper holds the laws; the SVG content is your matter. Candidate for
  * promotion into Move once stable.
  */
-export function Illustration({ title, desc, viewBox, width = 'wide', maxWidth, caption, className, style, children }: IllustrationProps) {
+export function Illustration({
+  title,
+  desc,
+  viewBox,
+  width = 'wide',
+  maxWidth,
+  caption,
+  className,
+  style,
+  children,
+}: IllustrationProps) {
   const id = useId();
   const titleId = `${id}-t`;
   const descId = desc ? `${id}-d` : undefined;
   // Dynamic max-width travels as a CSS variable (the Move way), not inline `max-width`.
-  const maxStyle: React.CSSProperties | undefined = maxWidth != null
-    ? ({ '--il-max-width': typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth } as React.CSSProperties)
-    : undefined;
+  const maxStyle: React.CSSProperties | undefined =
+    maxWidth != null
+      ? ({
+          '--il-max-width': typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth,
+        } as React.CSSProperties)
+      : undefined;
 
   const svg = (
     <svg
@@ -60,7 +73,11 @@ export function Illustration({ title, desc, viewBox, width = 'wide', maxWidth, c
   if (!caption) return svg;
 
   return (
-    <figure className={cx(styles.figure, className)} data-width={width} style={{ ...maxStyle, ...style }}>
+    <figure
+      className={cx(styles.figure, className)}
+      data-width={width}
+      style={{ ...maxStyle, ...style }}
+    >
       {svg}
       <figcaption className={styles.caption}>{caption}</figcaption>
     </figure>

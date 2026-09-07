@@ -1,7 +1,7 @@
 import { Button, Drawer, Stack, Text } from 'move';
 
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl', 'full'] as const;
-const descriptions: Record<typeof sizes[number], string> = {
+const descriptions: Record<(typeof sizes)[number], string> = {
   xs: 'Quick info side panels, snippet readers.',
   sm: 'Compact filter rails.',
   md: 'The default — single-purpose forms and detail panels.',
@@ -16,7 +16,9 @@ export default function SizesSample() {
       {sizes.map((size) => (
         <Drawer.Root key={size}>
           <Drawer.Trigger asChild>
-            <Button variant="secondary" size="sm">size="{size}"</Button>
+            <Button variant="secondary" size="sm">
+              size="{size}"
+            </Button>
           </Drawer.Trigger>
           <Drawer.Portal>
             <Drawer.Overlay />
@@ -27,7 +29,8 @@ export default function SizesSample() {
               <Drawer.Body>
                 <Text>{descriptions[size]}</Text>
                 <Text size="sm" color="muted">
-                  Width is set on Content via a CSS custom property — override per-instance via tokens.
+                  Width is set on Content via a CSS custom property — override per-instance via
+                  tokens.
                 </Text>
               </Drawer.Body>
               <Drawer.Footer>

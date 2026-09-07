@@ -26,7 +26,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/list',
     name: 'List',
-    reason: 'When the page is a sequence of similar items. List handles repetition; Card frames a single thing.',
+    reason:
+      'When the page is a sequence of similar items. List handles repetition; Card frames a single thing.',
   },
 ];
 
@@ -35,16 +36,19 @@ export const meta: ComponentDocument = {
   synonyms: ['tile', 'panel', 'container', 'surface'],
   preview: { bare: true, width: 'md' },
   name: 'Card',
-  tagline: 'A framed container for content that belongs together — with a Header for the title, a Body for the meat, and a Footer that already knows about start/end action splits.',
+  tagline:
+    'A framed container for content that belongs together — with a Header for the title, a Body for the meat, and a Footer that already knows about start/end action splits.',
   categories: ['layout'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Card } from 'move';`,
   keyboard: [
-    { key: '—', action: 'Card is a presentational frame; interactivity belongs to the things you put inside it.' },
+    {
+      key: '—',
+      action:
+        'Card is a presentational frame; interactivity belongs to the things you put inside it.',
+    },
   ],
   accessibilityLede:
     'Card.Title renders as `<h3>` and Card.Description as `<p>` — they keep document structure even when the page is mostly cards. Make sure the heading hierarchy from the page wrapper still reads sensibly with these inside it.',

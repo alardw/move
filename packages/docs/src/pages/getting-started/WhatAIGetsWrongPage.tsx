@@ -1,5 +1,18 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Code, Link, Grid, Card, Table, Quote } from 'move';
+import {
+  Stack,
+  Heading,
+  Text,
+  Breadcrumb,
+  Icon,
+  Badge,
+  Code,
+  Link,
+  Grid,
+  Card,
+  Table,
+  Quote,
+} from 'move';
 import {
   HighlightList,
   type HighlightItem,
@@ -145,52 +158,68 @@ const HOW_MOVE: HighlightItem[] = [
 const WCAG_BASE = 'https://www.w3.org/WAI/WCAG22/Understanding/';
 const WCAG_FAILURES: { violation: string; wcag: string; ref: string; prevented: string }[] = [
   {
-    violation: 'A div-with-onClick stands in for a button — no role, not focusable, no key handler. It works with a mouse and is invisible to a screen reader, unusable from the keyboard.',
+    violation:
+      'A div-with-onClick stands in for a button — no role, not focusable, no key handler. It works with a mouse and is invisible to a screen reader, unusable from the keyboard.',
     wcag: '4.1.2 Name, Role, Value · 2.1.1 Keyboard',
     ref: 'name-role-value.html',
-    prevented: 'Button, Select, and Dialog are real semantic controls with roles and key handling built in — there’s no happy-path div version to reach for.',
+    prevented:
+      'Button, Select, and Dialog are real semantic controls with roles and key handling built in — there’s no happy-path div version to reach for.',
   },
   {
-    violation: 'Icon-only buttons and unlabeled inputs ship with no accessible name — a screen reader announces “button”, or nothing at all.',
+    violation:
+      'Icon-only buttons and unlabeled inputs ship with no accessible name — a screen reader announces “button”, or nothing at all.',
     wcag: '4.1.2 Name, Role, Value · 3.3.2 Labels or Instructions',
     ref: 'name-role-value.html',
-    prevented: 'Names come through each component’s labels object, and FormField ties a real label to its control — the name isn’t an optional afterthought.',
+    prevented:
+      'Names come through each component’s labels object, and FormField ties a real label to its control — the name isn’t an optional afterthought.',
   },
   {
-    violation: 'Muted gray on white, brand text on a brand fill, a placeholder doubling as a label — combinations that look fine in a preview and fail a contrast check.',
+    violation:
+      'Muted gray on white, brand text on a brand fill, a placeholder doubling as a label — combinations that look fine in a preview and fail a contrast check.',
     wcag: '1.4.3 Contrast (Minimum)',
     ref: 'contrast-minimum.html',
-    prevented: 'Every color resolves to a WCAG-legible foreground token (fg-solid on a fill, -text on a surface), in light mode and dark — the off-token combination isn’t expressible.',
+    prevented:
+      'Every color resolves to a WCAG-legible foreground token (fg-solid on a fill, -text on a surface), in light mode and dark — the off-token combination isn’t expressible.',
   },
   {
-    violation: 'outline: none with nothing to replace it — the keyboard user loses all trace of where they are on the page.',
+    violation:
+      'outline: none with nothing to replace it — the keyboard user loses all trace of where they are on the page.',
     wcag: '2.4.7 Focus Visible',
     ref: 'focus-visible.html',
-    prevented: 'A token-based focus ring is part of every interactive component and survives theming.',
+    prevented:
+      'A token-based focus ring is part of every interactive component and survives theming.',
   },
   {
-    violation: 'An <img> with no alt text, or a decorative image not hidden from assistive tech — non-text content with no text alternative.',
+    violation:
+      'An <img> with no alt text, or a decorative image not hidden from assistive tech — non-text content with no text alternative.',
     wcag: '1.1.1 Non-text Content',
     ref: 'non-text-content.html',
-    prevented: 'Image threads alt through as a first-class prop, so the alternative is part of using the component, not an extra step to remember.',
+    prevented:
+      'Image threads alt through as a first-class prop, so the alternative is part of using the component, not an extra step to remember.',
   },
   {
-    violation: 'Everything is a div: skipped heading levels, no landmarks, no structure for assistive tech to navigate by.',
+    violation:
+      'Everything is a div: skipped heading levels, no landmarks, no structure for assistive tech to navigate by.',
     wcag: '1.3.1 Info and Relationships · 2.4.1 Bypass Blocks',
     ref: 'info-and-relationships.html',
-    prevented: 'Heading takes a level and layout resolves to semantic regions — the document structure is carried, not painted on.',
+    prevented:
+      'Heading takes a level and layout resolves to semantic regions — the document structure is carried, not painted on.',
   },
   {
-    violation: 'A dialog opens but focus stays behind it; on close, focus is lost — no focus trap, no return to the trigger.',
+    violation:
+      'A dialog opens but focus stays behind it; on close, focus is lost — no focus trap, no return to the trigger.',
     wcag: '2.4.3 Focus Order · 2.1.2 No Keyboard Trap',
     ref: 'focus-order.html',
-    prevented: 'Dialog moves focus in, keeps it inside while open, and returns it on close — as part of the component, not the caller’s job.',
+    prevented:
+      'Dialog moves focus in, keeps it inside while open, and returns it on close — as part of the component, not the caller’s job.',
   },
   {
-    violation: 'Toggles, tabs, and disclosures never expose their state — no aria-expanded, aria-selected, or aria-checked to match what the eye sees.',
+    violation:
+      'Toggles, tabs, and disclosures never expose their state — no aria-expanded, aria-selected, or aria-checked to match what the eye sees.',
     wcag: '4.1.2 Name, Role, Value',
     ref: 'name-role-value.html',
-    prevented: 'State-bearing components emit the matching ARIA state as they change, so the announced state can’t drift from the visual one.',
+    prevented:
+      'State-bearing components emit the matching ARIA state as they change, so the announced state can’t drift from the visual one.',
   },
 ];
 
@@ -242,23 +271,31 @@ const TOC: TocItem[] = [
 const IN_PRACTICE: { mistake: string; example: string; caught: string }[] = [
   {
     mistake: 'Uses a value from another design system instead of checking Move’s own vocabulary.',
-    example: 'Wrote variant="subtle" on a Button — Move’s variants are primary / secondary / ghost / danger.',
-    caught: 'Typecheck rejects the value that doesn’t exist. An oracle: it fails a wrong answer instantly.',
+    example:
+      'Wrote variant="subtle" on a Button — Move’s variants are primary / secondary / ghost / danger.',
+    caught:
+      'Typecheck rejects the value that doesn’t exist. An oracle: it fails a wrong answer instantly.',
   },
   {
     mistake: 'Assumes the generic-web implementation instead of checking what Move already ships.',
-    example: 'Reached for an <iframe> to embed a video — Move has a VideoPlayer with a provider seam.',
-    caught: 'A human noticed. The lesson is the gap: nothing forced a check of the inventory, so the assumption went unchallenged.',
+    example:
+      'Reached for an <iframe> to embed a video — Move has a VideoPlayer with a provider seam.',
+    caught:
+      'A human noticed. The lesson is the gap: nothing forced a check of the inventory, so the assumption went unchallenged.',
   },
   {
     mistake: 'Optimizes for generic taste over the component’s intended idiom.',
-    example: 'Put a ghost (see-through) button over a photo — invisible on a bright image; the sample uses a solid secondary for contrast.',
-    caught: 'The component’s sample. The type says a variant is possible; the sample says which one is right.',
+    example:
+      'Put a ghost (see-through) button over a photo — invisible on a bright image; the sample uses a solid secondary for contrast.',
+    caught:
+      'The component’s sample. The type says a variant is possible; the sample says which one is right.',
   },
   {
     mistake: 'Reads a prop’s type but not its sample, and reinvents a thinner version.',
-    example: 'Hand-rolled an image overlay from the signature — missing the documented tooltip-wrapped, hover-revealed action.',
-    caught: 'The sample again. Types are the vocabulary; samples are the grammar the vocabulary can’t carry.',
+    example:
+      'Hand-rolled an image overlay from the signature — missing the documented tooltip-wrapped, hover-revealed action.',
+    caught:
+      'The sample again. Types are the vocabulary; samples are the grammar the vocabulary can’t carry.',
   },
 ];
 
@@ -284,7 +321,9 @@ export function WhatAIGetsWrongPage() {
 
         <Stack gap="sm">
           <Heading level={1}>What AI gets wrong</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -307,7 +346,9 @@ export function WhatAIGetsWrongPage() {
                   <Stack gap="sm">
                     <Icon name={s.icon} size={24} />
                     <Text weight="semibold">{s.title}</Text>
-                    <Text color="muted" size="sm">{s.text}</Text>
+                    <Text color="muted" size="sm">
+                      {s.text}
+                    </Text>
                   </Stack>
                 </Card.Body>
               </Card.Root>
@@ -379,8 +420,8 @@ export function WhatAIGetsWrongPage() {
         >
           <Quote variant="pull" attribution="Claude, Opus 4.8">
             The value I invent feels identical to the value I look up — same confidence, no inner
-            signal that one of them is a guess. So the fix was never going to be me trying harder; it
-            has to be a check I can’t get a wrong answer past.
+            signal that one of them is a guess. So the fix was never going to be me trying harder;
+            it has to be a check I can’t get a wrong answer past.
           </Quote>
           <HighlightList items={HOW_MOVE} />
         </Section>
@@ -415,9 +456,9 @@ export function WhatAIGetsWrongPage() {
             </Table.Body>
           </Table.Root>
           <Text>
-            Every one happened where the AI had neither a forcing-function (something making it consult
-            Move) nor an oracle (a check that fails a wrong answer). The types, the checks, and the
-            samples are those guardrails — this page’s argument, seen live.
+            Every one happened where the AI had neither a forcing-function (something making it
+            consult Move) nor an oracle (a check that fails a wrong answer). The types, the checks,
+            and the samples are those guardrails — this page’s argument, seen live.
           </Text>
         </Section>
 
@@ -428,7 +469,9 @@ export function WhatAIGetsWrongPage() {
                 <Link href={s.href} external>
                   {s.title}
                 </Link>
-                <Text color="muted" size="sm">{s.note}</Text>
+                <Text color="muted" size="sm">
+                  {s.note}
+                </Text>
               </Stack>
             ))}
           </Stack>
@@ -441,7 +484,8 @@ export function WhatAIGetsWrongPage() {
                 icon: 'brain',
                 text: (
                   <>
-                    See how the contract makes this work in <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink>.
+                    See how the contract makes this work in{' '}
+                    <RouterLink to="/core-concepts/how-move-works">How Move Works</RouterLink>.
                   </>
                 ),
               },
@@ -449,7 +493,8 @@ export function WhatAIGetsWrongPage() {
                 icon: 'palette',
                 text: (
                   <>
-                    The <RouterLink to="/core-concepts/theming-model">Theming model</RouterLink> is where the contrast guarantees come from.
+                    The <RouterLink to="/core-concepts/theming-model">Theming model</RouterLink> is
+                    where the contrast guarantees come from.
                   </>
                 ),
               },
@@ -457,7 +502,14 @@ export function WhatAIGetsWrongPage() {
                 icon: 'download',
                 text: (
                   <>
-                    Or jump straight in — <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink> scaffolds a project with <Code>npm create move</Code>. Adding Move to an app you already have? <RouterLink to="/getting-started/installation">Add to an existing app</RouterLink>.
+                    Or jump straight in —{' '}
+                    <RouterLink to="/getting-started/create-move">Create a Move App</RouterLink>{' '}
+                    scaffolds a project with <Code>npm create move</Code>. Adding Move to an app you
+                    already have?{' '}
+                    <RouterLink to="/getting-started/installation">
+                      Add to an existing app
+                    </RouterLink>
+                    .
                   </>
                 ),
               },

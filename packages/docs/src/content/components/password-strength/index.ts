@@ -17,7 +17,12 @@ export const content: ComponentContent = {
   spec,
   samples: [
     { id: 'basic', title: 'Wired to Password', render: Basic, code: basicCode },
-    { id: 'requirements', title: 'Requirements checklist', render: Requirements, code: requirementsCode },
+    {
+      id: 'requirements',
+      title: 'Requirements checklist',
+      render: Requirements,
+      code: requirementsCode,
+    },
     { id: 'levels', title: 'Levels & scale', render: Levels, code: levelsCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
   ],

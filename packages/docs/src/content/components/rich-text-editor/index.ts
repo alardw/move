@@ -9,7 +9,5 @@ import basicCode from './samples/basic?raw';
 export const content: ComponentContent = {
   meta,
   spec,
-  samples: [
-    { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
-  ],
+  samples: [{ id: 'basic', title: 'Basic', render: Basic, code: basicCode }],
 };

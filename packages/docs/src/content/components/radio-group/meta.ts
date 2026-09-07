@@ -30,10 +30,10 @@ export const meta: ComponentDocument = {
   slug: 'radio-group',
   synonyms: ['radio', 'options', 'single select', 'radio buttons', 'choices'],
   name: 'RadioGroup',
-  tagline: 'A single-select group of options with a real keyboard contract from Radix — Arrow keys traverse, Space activates.',
+  tagline:
+    'A single-select group of options with a real keyboard contract from Radix — Arrow keys traverse, Space activates.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { RadioGroup } from 'move';`,

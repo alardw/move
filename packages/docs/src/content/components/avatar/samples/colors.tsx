@@ -1,6 +1,20 @@
 import { Avatar, Icon, Stack } from 'move';
 
-const colors = ['blue', 'cyan', 'teal', 'green', 'lime', 'yellow', 'orange', 'red', 'pink', 'grape', 'violet', 'indigo', 'gray'] as const;
+const colors = [
+  'blue',
+  'cyan',
+  'teal',
+  'green',
+  'lime',
+  'yellow',
+  'orange',
+  'red',
+  'pink',
+  'grape',
+  'violet',
+  'indigo',
+  'gray',
+] as const;
 
 /**
  * `color` tints the Fallback background and text. Hash a user’s

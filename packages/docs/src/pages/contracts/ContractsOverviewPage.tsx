@@ -1,6 +1,12 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
-import { HighlightList, type HighlightItem, Section, TocRail, type TocItem } from '../../components';
+import {
+  HighlightList,
+  type HighlightItem,
+  Section,
+  TocRail,
+  type TocItem,
+} from '../../components';
 
 const BADGES = [
   { icon: 'scroll-text', label: 'One typed spec' },
@@ -43,8 +49,9 @@ const CONTRACTS: HighlightItem[] = [
     icon: 'shield-check',
     text: (
       <>
-        <RouterLink to="/contracts/conformance">Conformance</RouterLink> — how the contracts are kept
-        honest. The checks that fail the build the moment a spec and the code it describes drift apart.
+        <RouterLink to="/contracts/conformance">Conformance</RouterLink> — how the contracts are
+        kept honest. The checks that fail the build the moment a spec and the code it describes
+        drift apart.
       </>
     ),
   },

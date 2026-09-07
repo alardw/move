@@ -48,7 +48,9 @@ export default function SortableSample() {
 
   // Clicking the sorted column reverses it; clicking another starts it ascending.
   const toggle = (key: Key) =>
-    setSort((s) => (s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' }));
+    setSort((s) =>
+      s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: 'asc' },
+    );
 
   return (
     <Table>

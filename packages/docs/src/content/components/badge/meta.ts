@@ -1,54 +1,53 @@
-import type { ComponentDocument } from "../types";
-import type { HighlightItem } from "../../../components/HighlightList";
-import type { RelatedItem } from "../../../components/RelatedComponents";
+import type { ComponentDocument } from '../types';
+import type { HighlightItem } from '../../../components/HighlightList';
+import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
   {
-    icon: "palette",
-    text: "Five visual treatments — solid, soft, surface, outline, dot — paired with a full Open Color palette so a Badge can be loud, quiet, or just a coloured dot, in any hue.",
+    icon: 'palette',
+    text: 'Five visual treatments — solid, soft, surface, outline, dot — paired with a full Open Color palette so a Badge can be loud, quiet, or just a coloured dot, in any hue.',
   },
   {
-    icon: "sliders-horizontal",
-    text: "Colour by palette hue — pass any theme colour (`green`, `blue`, `red`, `violet`, `gray`…) and the Badge takes on its accent tokens. Add a palette to your theme and it works here with no new prop.",
+    icon: 'sliders-horizontal',
+    text: 'Colour by palette hue — pass any theme colour (`green`, `blue`, `red`, `violet`, `gray`…) and the Badge takes on its accent tokens. Add a palette to your theme and it works here with no new prop.',
   },
   {
-    icon: "maximize-2",
-    text: "Three sizes that fit the typography around them — `sm` for inline tags, `md` for cards and rows, `lg` for hero placement next to titles.",
+    icon: 'maximize-2',
+    text: 'Three sizes that fit the typography around them — `sm` for inline tags, `md` for cards and rows, `lg` for hero placement next to titles.',
   },
 ];
 
 const related: RelatedItem[] = [
   {
-    to: "/components/alert",
-    name: "Alert",
+    to: '/components/alert',
+    name: 'Alert',
     reason:
-      "When the message wants its own row and a real icon. Badge is the inline, glanceable cousin.",
+      'When the message wants its own row and a real icon. Badge is the inline, glanceable cousin.',
   },
   {
-    to: "/components/avatar",
-    name: "Avatar",
+    to: '/components/avatar',
+    name: 'Avatar',
     reason:
-      "For the person attached to the status — Avatar carries the face, Badge the label next to it.",
+      'For the person attached to the status — Avatar carries the face, Badge the label next to it.',
   },
 ];
 
 export const meta: ComponentDocument = {
-  slug: "badge",
-  synonyms: ["tag", "pill", "chip", "status", "label badge"],
-  preview: { width: "fit" },
-  name: "Badge",
+  slug: 'badge',
+  synonyms: ['tag', 'pill', 'chip', 'status', 'label badge'],
+  preview: { width: 'fit' },
+  name: 'Badge',
   tagline:
-    "A small, glanceable label — pill-shaped, opinionated about colour, and quiet enough to live next to text without shouting over it.",
-  categories: ["data-display"],
+    'A small, glanceable label — pill-shaped, opinionated about colour, and quiet enough to live next to text without shouting over it.',
+  categories: ['data-display'],
   badges: [],
   highlights,
   related,
   importCode: `import { Badge } from 'move';`,
   keyboard: [
     {
-      key: "—",
-      action:
-        "Badge is a display element. Wrap in a button or link if it needs to be interactive.",
+      key: '—',
+      action: 'Badge is a display element. Wrap in a button or link if it needs to be interactive.',
     },
   ],
   accessibilityLede:

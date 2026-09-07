@@ -20,8 +20,8 @@ export default function NonModalSample() {
             </Drawer.Header>
             <Drawer.Body>
               <Text>
-                No backdrop, no scroll lock, no focus trap. The page behind stays clickable — close manually
-                from the footer or by pressing Escape.
+                No backdrop, no scroll lock, no focus trap. The page behind stays clickable — close
+                manually from the footer or by pressing Escape.
               </Text>
             </Drawer.Body>
             <Drawer.Footer>

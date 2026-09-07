@@ -1,6 +1,6 @@
-import { Grid, Card, Stack, Text, Heading } from "move";
+import { Grid, Card, Stack, Text, Heading } from 'move';
 
-const panels = ["Revenue", "Sessions", "Signups", "Churn", "Latency", "Errors"];
+const panels = ['Revenue', 'Sessions', 'Signups', 'Churn', 'Latency', 'Errors'];
 
 export default function FluidGrid() {
   return (

@@ -34,11 +34,14 @@ export default function GroupsWithIconsSample() {
             <Select.Group key={group}>
               {i > 0 && <Select.Separator />}
               <Select.Label>{group}</Select.Label>
-              {fileTypes.filter((f) => f.group === group).map((f) => (
-                <Select.Item key={f.value} value={f.value}>
-                  <Icon name={f.icon} />{f.label}
-                </Select.Item>
-              ))}
+              {fileTypes
+                .filter((f) => f.group === group)
+                .map((f) => (
+                  <Select.Item key={f.value} value={f.value}>
+                    <Icon name={f.icon} />
+                    {f.label}
+                  </Select.Item>
+                ))}
             </Select.Group>
           ))}
         </Select.Viewport>

@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/table',
     name: 'Table',
-    reason: 'When the data is tabular with multiple columns. List is for one-line-per-item with optional secondary text.',
+    reason:
+      'When the data is tabular with multiple columns. List is for one-line-per-item with optional secondary text.',
   },
   {
     to: '/components/sidebar',
@@ -32,18 +33,36 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentDocument = {
   slug: 'list',
-  synonyms: ['rows', 'items', 'list view', 'menu list', 'listview', 'ul', 'ol', 'bullet list', 'bulleted list', 'bullets', 'ordered list', 'unordered list', 'numbered list', 'checklist'],
-  name: 'List',
-  tagline: 'A structured list with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
-  categories: ['data-display'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
+  synonyms: [
+    'rows',
+    'items',
+    'list view',
+    'menu list',
+    'listview',
+    'ul',
+    'ol',
+    'bullet list',
+    'bulleted list',
+    'bullets',
+    'ordered list',
+    'unordered list',
+    'numbered list',
+    'checklist',
   ],
+  name: 'List',
+  tagline:
+    'A structured list with three-zone rows — leading / content / trailing — built-in dividers, density control, and responsive collapse.',
+  categories: ['data-display'],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { List } from 'move';`,
   keyboard: [
-    { key: '—', action: 'List is a presentational `<ul>`. Wrap items in Link or Button for navigation/activation.' },
+    {
+      key: '—',
+      action:
+        'List is a presentational `<ul>`. Wrap items in Link or Button for navigation/activation.',
+    },
   ],
   accessibilityLede:
     'Renders native `<ul>` / `<li>` elements. Make items focusable when they’re interactive (wrap them in Link or Button) — the list itself is just structure.',

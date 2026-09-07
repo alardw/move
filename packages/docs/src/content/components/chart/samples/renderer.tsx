@@ -1,13 +1,13 @@
-import { Chart } from "move";
-import { lollipopRenderer } from "../../../../adapters/lollipop";
+import { Chart } from 'move';
+import { lollipopRenderer } from '../../../../adapters/lollipop';
 
 const load = [
-  { hour: "00:00", cpu: 22 },
-  { hour: "04:00", cpu: 31 },
-  { hour: "08:00", cpu: 68 },
-  { hour: "12:00", cpu: 84 },
-  { hour: "16:00", cpu: 76 },
-  { hour: "20:00", cpu: 45 },
+  { hour: '00:00', cpu: 22 },
+  { hour: '04:00', cpu: 31 },
+  { hour: '08:00', cpu: 68 },
+  { hour: '12:00', cpu: 84 },
+  { hour: '16:00', cpu: 76 },
+  { hour: '20:00', cpu: 45 },
 ];
 
 /**
@@ -26,7 +26,7 @@ export default function RendererSample() {
       caption="CPU load — drawn by a custom lollipop renderer"
       data={load}
       x="hour"
-      series={[{ key: "cpu", type: "line", label: "CPU %" }]}
+      series={[{ key: 'cpu', type: 'line', label: 'CPU %' }]}
       renderer={renderer}
       legend={false}
       aspect={3}

@@ -29,16 +29,18 @@ export const meta: ComponentDocument = {
   slug: 'scroll-area',
   synonyms: ['scrollbar', 'overflow', 'scroll container', 'scrollable', 'scroller'],
   name: 'ScrollArea',
-  tagline: 'A custom-scrollbar wrapper around native overflow — quiet by default, visible on hover, polished on every platform.',
+  tagline:
+    'A custom-scrollbar wrapper around native overflow — quiet by default, visible on hover, polished on every platform.',
   categories: ['layout'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { ScrollArea } from 'move';`,
   keyboard: [
-    { key: 'Tab / arrow keys / Page Up/Down', action: 'Standard scroll behaviour from the underlying native scroller.' },
+    {
+      key: 'Tab / arrow keys / Page Up/Down',
+      action: 'Standard scroll behaviour from the underlying native scroller.',
+    },
   ],
   accessibilityLede:
     'ScrollArea uses native overflow scrolling underneath, so keyboard scrolling, screen-reader virtual cursor, and page-find behaviour all work as expected.',

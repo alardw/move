@@ -30,10 +30,10 @@ export const meta: ComponentDocument = {
   synonyms: ['anchor', 'hyperlink', 'nav link', 'href'],
   preview: { width: 'fit' },
   name: 'Link',
-  tagline: 'An inline anchor with variants, underline control, and a real external-link contract — `asChild` lets you wrap your router’s Link without losing styling.',
+  tagline:
+    'An inline anchor with variants, underline control, and a real external-link contract — `asChild` lets you wrap your router’s Link without losing styling.',
   categories: ['navigation'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Link } from 'move';`,

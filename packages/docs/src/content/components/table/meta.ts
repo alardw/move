@@ -3,9 +3,18 @@ import type { HighlightItem } from '../../../components/HighlightList';
 import type { RelatedItem } from '../../../components/RelatedComponents';
 
 const highlights: HighlightItem[] = [
-  { icon: 'rows', text: 'Compound primitives that mirror the native HTML table elements — Root, Header, Body, Row, Head, Cell, Footer, Caption.' },
-  { icon: 'eye', text: 'Variants for zebra striping, borders, hover highlight, and a sticky header for tall datasets.' },
-  { icon: 'move-horizontal', text: 'Responsive behavior is up to you — wrap in a scrolling container, collapse to cards at narrow widths, or let the table define the page width.' },
+  {
+    icon: 'rows',
+    text: 'Compound primitives that mirror the native HTML table elements — Root, Header, Body, Row, Head, Cell, Footer, Caption.',
+  },
+  {
+    icon: 'eye',
+    text: 'Variants for zebra striping, borders, hover highlight, and a sticky header for tall datasets.',
+  },
+  {
+    icon: 'move-horizontal',
+    text: 'Responsive behavior is up to you — wrap in a scrolling container, collapse to cards at narrow widths, or let the table define the page width.',
+  },
 ];
 
 const related: RelatedItem[] = [
@@ -17,14 +26,23 @@ const related: RelatedItem[] = [
   {
     to: '/components/data-grid',
     name: 'DataGrid',
-    reason: 'When you need sorting, filtering, virtualization, or column resizing — Table is a presentation primitive.',
+    reason:
+      'When you need sorting, filtering, virtualization, or column resizing — Table is a presentation primitive.',
   },
 ];
 
 export const meta: ComponentDocument = {
   slug: 'table',
   preview: { sample: 'zebra-only' },
-  synonyms: [ 'grid', 'data table', 'rows columns', 'data grid', 'datagrid', 'datatable', 'spreadsheet', ],
+  synonyms: [
+    'grid',
+    'data table',
+    'rows columns',
+    'data grid',
+    'datagrid',
+    'datatable',
+    'spreadsheet',
+  ],
   name: 'Table',
   tagline: 'Rows and columns with the frame, density, and responsive behavior you pick.',
   categories: ['data-display'],

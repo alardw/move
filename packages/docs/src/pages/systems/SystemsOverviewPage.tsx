@@ -1,6 +1,12 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Icon, Badge } from 'move';
-import { HighlightList, type HighlightItem, Section, TocRail, type TocItem } from '../../components';
+import {
+  HighlightList,
+  type HighlightItem,
+  Section,
+  TocRail,
+  type TocItem,
+} from '../../components';
 
 const BADGES = [
   { icon: 'layers', label: 'Cross-cutting' },
@@ -60,8 +66,8 @@ const RELATED: HighlightItem[] = [
     icon: 'sparkles',
     text: (
       <>
-        <RouterLink to="/animation">Animation</RouterLink> — the motion system: triggers, springs, and
-        sequences, wired into components rather than bolted on. Big enough for its own section.
+        <RouterLink to="/animation">Animation</RouterLink> — the motion system: triggers, springs,
+        and sequences, wired into components rather than bolted on. Big enough for its own section.
       </>
     ),
   },
@@ -69,8 +75,8 @@ const RELATED: HighlightItem[] = [
     icon: 'palette',
     text: (
       <>
-        <RouterLink to="/customize">Make it your own</RouterLink> — theming is a system too: one set of
-        tokens drives every surface, so a brand change stays in one place.
+        <RouterLink to="/customize">Make it your own</RouterLink> — theming is a system too: one set
+        of tokens drives every surface, so a brand change stays in one place.
       </>
     ),
   },

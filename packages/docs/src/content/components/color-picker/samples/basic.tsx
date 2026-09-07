@@ -16,7 +16,9 @@ export default function BasicSample() {
           <ColorPicker value={value} onValueChange={setValue} />
         </Card.Body>
       </Card.Root>
-      <Text size="sm" color="muted">value: {value}</Text>
+      <Text size="sm" color="muted">
+        value: {value}
+      </Text>
     </Stack>
   );
 }

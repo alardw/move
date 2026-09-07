@@ -22,7 +22,9 @@ export default function GroupedSample() {
               {i > 0 && <Select.Separator />}
               <Select.Label>{cat.name}</Select.Label>
               {cat.items.map((item) => (
-                <Select.Item key={item} value={item}>{item}</Select.Item>
+                <Select.Item key={item} value={item}>
+                  {item}
+                </Select.Item>
               ))}
             </Select.Group>
           ))}

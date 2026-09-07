@@ -15,7 +15,9 @@ export default function FollowsValueSample() {
       <PickerPanel>
         <ColorPicker value={value} onValueChange={setValue} />
       </PickerPanel>
-      <Text size="sm" color="muted">value: {value}</Text>
+      <Text size="sm" color="muted">
+        value: {value}
+      </Text>
     </Stack>
   );
 }

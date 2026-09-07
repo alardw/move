@@ -20,7 +20,12 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'grouped', title: 'Groups & labels', render: Grouped, code: groupedCode },
-    { id: 'checkbox-radio', title: 'Checkbox & radio items', render: CheckboxRadio, code: checkboxRadioCode },
+    {
+      id: 'checkbox-radio',
+      title: 'Checkbox & radio items',
+      render: CheckboxRadio,
+      code: checkboxRadioCode,
+    },
     { id: 'sub-menus', title: 'Sub-menus', render: SubMenus, code: subMenusCode },
   ],
 };

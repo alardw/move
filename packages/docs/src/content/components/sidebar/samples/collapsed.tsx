@@ -30,7 +30,16 @@ export default function CollapsedSample() {
 
   return (
     // composite-purity-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop
-    <div style={{ display: 'flex', height: 360, border: '1px solid var(--move-border-base)', borderRadius: 'var(--move-rounded-lg)', overflow: 'hidden' }}>
+    <div
+      /* composite-purity-ignore, dogfood-ignore: fixed-height demo frame so the Sidebar layout reads in the docs preview; no Move height prop */
+      style={{
+        display: 'flex',
+        height: 360,
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
+        overflow: 'hidden',
+      }}
+    >
       <Sidebar.Provider defaultCollapsed>
         <Sidebar.Root>
           <Sidebar.Header>
@@ -43,17 +52,51 @@ export default function CollapsedSample() {
             <Sidebar.Group>
               <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
               <Sidebar.Nav>
-                <Sidebar.NavItem href="/home" active={current === "/home"} onClick={select} icon={<Icon name="home" />} tooltip="Home">Home</Sidebar.NavItem>
-                <Sidebar.NavItem href="/inbox" active={current === "/inbox"} onClick={select} icon={<Icon name="inbox" />} tooltip="Inbox">Inbox</Sidebar.NavItem>
-                <Sidebar.NavItem href="/projects" active={current === "/projects"} onClick={select} icon={<Icon name="folder" />} tooltip="Projects">Projects</Sidebar.NavItem>
-                <Sidebar.NavItem href="/team" active={current === "/team"} onClick={select} icon={<Icon name="users" />} tooltip="Team">Team</Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/home"
+                  active={current === '/home'}
+                  onClick={select}
+                  icon={<Icon name="home" />}
+                  tooltip="Home"
+                >
+                  Home
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/inbox"
+                  active={current === '/inbox'}
+                  onClick={select}
+                  icon={<Icon name="inbox" />}
+                  tooltip="Inbox"
+                >
+                  Inbox
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/projects"
+                  active={current === '/projects'}
+                  onClick={select}
+                  icon={<Icon name="folder" />}
+                  tooltip="Projects"
+                >
+                  Projects
+                </Sidebar.NavItem>
+                <Sidebar.NavItem
+                  href="/team"
+                  active={current === '/team'}
+                  onClick={select}
+                  icon={<Icon name="users" />}
+                  tooltip="Team"
+                >
+                  Team
+                </Sidebar.NavItem>
               </Sidebar.Nav>
             </Sidebar.Group>
           </Sidebar.Content>
           <Sidebar.Footer>
             <Sidebar.Expanded>
               <Stack direction="row" align="center" justify="between" gap="sm">
-                <Text size="sm" color="muted">Alex Smith</Text>
+                <Text size="sm" color="muted">
+                  Alex Smith
+                </Text>
                 <Tooltip label="Account settings" side="top">
                   <Button variant="ghost" size="sm" aria-label="Account settings">
                     <Icon name="settings" />

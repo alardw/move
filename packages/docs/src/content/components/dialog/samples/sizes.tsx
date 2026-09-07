@@ -1,7 +1,7 @@
 import { Button, Dialog, Stack, Text } from 'move';
 
 const sizes = ['sm', 'md', 'lg', 'xl', 'full'] as const;
-const descriptions: Record<typeof sizes[number], string> = {
+const descriptions: Record<(typeof sizes)[number], string> = {
   sm: 'Confirmations and short prompts. ~24rem wide.',
   md: 'The default. Single-purpose forms and announcements.',
   lg: 'Multi-field forms or content with more breathing room.',
@@ -15,7 +15,9 @@ export default function SizesSample() {
       {sizes.map((size) => (
         <Dialog.Root key={size}>
           <Dialog.Trigger asChild>
-            <Button variant="secondary" size="sm">size="{size}"</Button>
+            <Button variant="secondary" size="sm">
+              size="{size}"
+            </Button>
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay />

@@ -25,10 +25,10 @@ export const meta: ComponentDocument = {
   slug: 'rich-text-editor',
   synonyms: ['wysiwyg', 'editor', 'markdown editor', 'text editor', 'formatting', 'prose'],
   name: 'RichTextEditor',
-  tagline: 'A rich-text editing surface with a configurable, tokenised toolbar and a plain-text paste fallback.',
+  tagline:
+    'A rich-text editing surface with a configurable, tokenised toolbar and a plain-text paste fallback.',
   categories: ['forms'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { RichTextEditor } from 'move';`,

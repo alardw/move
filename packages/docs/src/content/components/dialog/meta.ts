@@ -21,12 +21,14 @@ const related: RelatedItem[] = [
   {
     to: '/components/drawer',
     name: 'Drawer',
-    reason: 'Same modal contract, but slides in from an edge — better for forms and detail panels that pair with a list view.',
+    reason:
+      'Same modal contract, but slides in from an edge — better for forms and detail panels that pair with a list view.',
   },
   {
     to: '/components/popover',
     name: 'Popover',
-    reason: 'Non-modal, anchored to a trigger. For lightweight inline content that doesn’t warrant a backdrop or focus trap.',
+    reason:
+      'Non-modal, anchored to a trigger. For lightweight inline content that doesn’t warrant a backdrop or focus trap.',
   },
 ];
 
@@ -34,7 +36,8 @@ export const meta: ComponentDocument = {
   slug: 'dialog',
   synonyms: ['modal', 'popup', 'lightbox', 'overlay', 'alert dialog'],
   name: 'Dialog',
-  tagline: 'A modal panel for confirmations, forms, and any flow that deserves the user’s undivided attention — with a spring entrance and a real focus trap.',
+  tagline:
+    'A modal panel for confirmations, forms, and any flow that deserves the user’s undivided attention — with a spring entrance and a real focus trap.',
   categories: ['overlays'],
   badges: [
     { icon: 'boxes', label: 'Compound' },
@@ -44,7 +47,10 @@ export const meta: ComponentDocument = {
   related,
   importCode: `import { Dialog } from 'move';`,
   keyboard: [
-    { key: 'Tab', action: 'Cycles focus through interactive elements inside the dialog (focus is trapped).' },
+    {
+      key: 'Tab',
+      action: 'Cycles focus through interactive elements inside the dialog (focus is trapped).',
+    },
     { key: 'Shift + Tab', action: 'Cycles focus in reverse.' },
     { key: 'Escape', action: 'Triggers the animated close.' },
     { key: 'Enter / Space', action: 'Activates the focused button — same as a click.' },

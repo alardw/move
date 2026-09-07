@@ -34,16 +34,14 @@ export const meta: ComponentDocument = {
   slug: 'heading',
   synonyms: ['title', 'h1', 'h2', 'header', 'page title'],
   name: 'Heading',
-  tagline: 'Semantic heading h1–h6 with weight, colour, alignment, and truncation — size follows the level.',
+  tagline:
+    'Semantic heading h1–h6 with weight, colour, alignment, and truncation — size follows the level.',
   categories: ['typography'],
-  badges: [
-  ],
+  badges: [],
   highlights,
   related,
   importCode: `import { Heading } from 'move';`,
-  keyboard: [
-    { key: '—', action: 'Heading is presentational; no keyboard interaction.' },
-  ],
+  keyboard: [{ key: '—', action: 'Heading is presentational; no keyboard interaction.' }],
   accessibilityLede:
     'Always renders the right HTML heading tag for the level prop, so the document outline stays correct. Choose `level` for screen-reader semantics, `size` for visual weight — they’re independent.',
 };

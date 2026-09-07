@@ -1,4 +1,4 @@
-import { Stack, Splitter, ScrollArea, List, Text } from "move";
+import { Stack, Splitter, ScrollArea, List, Text } from 'move';
 
 const rows = (n: number, label: string) =>
   Array.from({ length: n }, (_, i) => (
@@ -20,8 +20,8 @@ export default function ScrollChain() {
       gap="none"
       style={{
         height: 360,
-        border: "1px solid var(--move-border-base)",
-        borderRadius: "var(--move-rounded-lg)",
+        border: '1px solid var(--move-border-base)',
+        borderRadius: 'var(--move-rounded-lg)',
       }}
     >
       <Stack fill="remaining" gap="none">
@@ -36,7 +36,7 @@ export default function ScrollChain() {
                   </Text>
                 </ScrollArea.Header>
                 <ScrollArea.Content padded aria-label="Files">
-                  <List>{rows(24, "File")}</List>
+                  <List>{rows(24, 'File')}</List>
                 </ScrollArea.Content>
               </ScrollArea.Root>
             </Stack>
@@ -50,7 +50,7 @@ export default function ScrollChain() {
                   </Text>
                 </ScrollArea.Header>
                 <ScrollArea.Content padded aria-label="Detail">
-                  <List>{rows(30, "Row")}</List>
+                  <List>{rows(30, 'Row')}</List>
                 </ScrollArea.Content>
                 <ScrollArea.Footer padded>
                   <Text size="xs" color="muted">

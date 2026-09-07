@@ -6,7 +6,9 @@ export default function BasicSample() {
   return (
     <Stack gap="sm" align="start">
       <PinInput length={6} value={otp} onChange={setOtp} />
-      <Text size="sm" color="muted">{otp ? `value: ${otp}` : 'Type a 6-digit code'}</Text>
+      <Text size="sm" color="muted">
+        {otp ? `value: ${otp}` : 'Type a 6-digit code'}
+      </Text>
     </Stack>
   );
 }

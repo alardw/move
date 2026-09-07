@@ -11,7 +11,9 @@ export default function AnimationsSample() {
     <Stack gap="md">
       {modes.map((mode) => (
         <Stack key={mode.label} gap="xs">
-          <Text size="sm" weight="medium">animation: {mode.label}</Text>
+          <Text size="sm" weight="medium">
+            animation: {mode.label}
+          </Text>
           <Skeleton.Root animation={mode.value}>
             <Stack gap="xs">
               <Skeleton.Rounded height={16} />

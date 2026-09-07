@@ -19,9 +19,9 @@ export default function DestructiveSample() {
           </Dialog.Header>
           <Dialog.Body>
             <Dialog.Description>
-              This removes the project, its files, its history, and the
-              twenty-six unread comments nobody got around to reading. There is
-              no undo, no trash bin, no support ticket that brings it back.
+              This removes the project, its files, its history, and the twenty-six unread comments
+              nobody got around to reading. There is no undo, no trash bin, no support ticket that
+              brings it back.
             </Dialog.Description>
           </Dialog.Body>
           <Dialog.Footer>

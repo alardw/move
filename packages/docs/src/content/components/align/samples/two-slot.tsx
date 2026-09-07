@@ -12,7 +12,9 @@ export default function TwoSlotSample() {
         <Card.Body>
           <Align gap="md">
             <Align.Start>
-              <Text weight="semibold" size="lg">Projects</Text>
+              <Text weight="semibold" size="lg">
+                Projects
+              </Text>
             </Align.Start>
             <Align.End>
               <Button variant="ghost" size="sm" aria-label="Filter projects">
@@ -32,11 +34,17 @@ export default function TwoSlotSample() {
         <Card.Body>
           <Align gap="md">
             <Align.Start>
-              <Text size="sm" color="muted">23 of 412 selected</Text>
+              <Text size="sm" color="muted">
+                23 of 412 selected
+              </Text>
             </Align.Start>
             <Align.End>
-              <Button variant="ghost" size="sm">Clear</Button>
-              <Button variant="danger" size="sm">Delete selected</Button>
+              <Button variant="ghost" size="sm">
+                Clear
+              </Button>
+              <Button variant="danger" size="sm">
+                Delete selected
+              </Button>
             </Align.End>
           </Align>
         </Card.Body>

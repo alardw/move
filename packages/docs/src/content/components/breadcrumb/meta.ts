@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/sidebar',
     name: 'Sidebar',
-    reason: 'For primary navigation. Breadcrumb is the secondary "where you are" trail above the page content.',
+    reason:
+      'For primary navigation. Breadcrumb is the secondary "where you are" trail above the page content.',
   },
   {
     to: '/components/tabs',
@@ -34,11 +35,10 @@ export const meta: ComponentDocument = {
   slug: 'breadcrumb',
   synonyms: ['trail', 'path', 'location', 'breadcrumbs', 'navigation'],
   name: 'Breadcrumb',
-  tagline: 'A trail of links showing the path from root to current page — with auto-separators, collapsible overflow, and the right ARIA semantics.',
+  tagline:
+    'A trail of links showing the path from root to current page — with auto-separators, collapsible overflow, and the right ARIA semantics.',
   categories: ['navigation'],
-  badges: [
-    { icon: 'boxes', label: 'Compound' },
-  ],
+  badges: [{ icon: 'boxes', label: 'Compound' }],
   highlights,
   related,
   importCode: `import { Breadcrumb } from 'move';`,

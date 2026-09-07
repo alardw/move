@@ -22,24 +22,109 @@ const TOC: TocItem[] = [
 // photo feed (discover primary + a consume blend) — with who decided each value and why.
 // Brand-free on purpose; this is the pattern instantiated, not a real product's config.
 const INSTANCE: { axis: string; value: string; by: keyof typeof DECIDED_COLOR; why: string }[] = [
-  { axis: 'useCase', value: 'discover + consume blend', by: 'consumer', why: 'a visual browse whose items carry real editorial text — the blend is what pulls label and surface off pure discover' },
-  { axis: 'lead', value: 'image (video branch)', by: 'data-rule', why: 'the feed’s media type, from the data' },
-  { axis: 'fit', value: 'cover', by: 'data-rule', why: 'full-bleed scenes, not objects on a neutral field' },
-  { axis: 'surface', value: 'card', by: 'use-case-preset', why: 'overrides discover’s borderless — a frame for the caption (the consume blend showing)' },
-  { axis: 'label', value: 'title (rich on detail)', by: 'use-case-preset', why: 'title + date keep the feed scannable; the full explanation is one tap away' },
+  {
+    axis: 'useCase',
+    value: 'discover + consume blend',
+    by: 'consumer',
+    why: 'a visual browse whose items carry real editorial text — the blend is what pulls label and surface off pure discover',
+  },
+  {
+    axis: 'lead',
+    value: 'image (video branch)',
+    by: 'data-rule',
+    why: 'the feed’s media type, from the data',
+  },
+  {
+    axis: 'fit',
+    value: 'cover',
+    by: 'data-rule',
+    why: 'full-bleed scenes, not objects on a neutral field',
+  },
+  {
+    axis: 'surface',
+    value: 'card',
+    by: 'use-case-preset',
+    why: 'overrides discover’s borderless — a frame for the caption (the consume blend showing)',
+  },
+  {
+    axis: 'label',
+    value: 'title (rich on detail)',
+    by: 'use-case-preset',
+    why: 'title + date keep the feed scannable; the full explanation is one tap away',
+  },
   { axis: 'stats', value: 'none', by: 'data-rule', why: 'no engagement data exists' },
-  { axis: 'primaryAction', value: 'open', by: 'use-case-preset', why: 'the whole tile opens the detail page' },
-  { axis: 'hoverMedia', value: 'none', by: 'use-case-preset', why: 'a static poster; video preview deferred' },
-  { axis: 'hoverActions', value: 'save · share', by: 'use-case-preset', why: 'the discover collect/react set; save = add-to-collection' },
-  { axis: 'arrangement', value: 'uniform-grid', by: 'use-case-preset', why: 'H28 — metadata is present, so not masonry despite varied aspects' },
-  { axis: 'section', value: 'flat', by: 'use-case-preset', why: 'a single-month feed; flips to grouped-by-month when the range spans' },
-  { axis: 'order', value: 'time (newest first)', by: 'data-rule', why: 'dated daily — recency is the natural order' },
-  { axis: 'sort', value: 'none', by: 'use-case-preset', why: 'a chronological feed doesn’t re-sort' },
-  { axis: 'filter', value: 'inline-chips · date-range facet', by: 'use-case-preset', why: 'the date field is filterable → a date-range facet, few enough to sit inline' },
-  { axis: 'density', value: 'moderate', by: 'use-case-preset', why: 'cards with captions need room (overrides discover’s tight)' },
-  { axis: 'pagination', value: 'infinite', by: 'use-case-preset', why: 'scroll back through earlier dates' },
-  { axis: 'feature', value: 'none', by: 'use-case-preset', why: 'a flat dated feed, no editorial lead' },
-  { axis: 'selection', value: 'none', by: 'data-rule', why: 'single-item save, no bulk operations' },
+  {
+    axis: 'primaryAction',
+    value: 'open',
+    by: 'use-case-preset',
+    why: 'the whole tile opens the detail page',
+  },
+  {
+    axis: 'hoverMedia',
+    value: 'none',
+    by: 'use-case-preset',
+    why: 'a static poster; video preview deferred',
+  },
+  {
+    axis: 'hoverActions',
+    value: 'save · share',
+    by: 'use-case-preset',
+    why: 'the discover collect/react set; save = add-to-collection',
+  },
+  {
+    axis: 'arrangement',
+    value: 'uniform-grid',
+    by: 'use-case-preset',
+    why: 'H28 — metadata is present, so not masonry despite varied aspects',
+  },
+  {
+    axis: 'section',
+    value: 'flat',
+    by: 'use-case-preset',
+    why: 'a single-month feed; flips to grouped-by-month when the range spans',
+  },
+  {
+    axis: 'order',
+    value: 'time (newest first)',
+    by: 'data-rule',
+    why: 'dated daily — recency is the natural order',
+  },
+  {
+    axis: 'sort',
+    value: 'none',
+    by: 'use-case-preset',
+    why: 'a chronological feed doesn’t re-sort',
+  },
+  {
+    axis: 'filter',
+    value: 'inline-chips · date-range facet',
+    by: 'use-case-preset',
+    why: 'the date field is filterable → a date-range facet, few enough to sit inline',
+  },
+  {
+    axis: 'density',
+    value: 'moderate',
+    by: 'use-case-preset',
+    why: 'cards with captions need room (overrides discover’s tight)',
+  },
+  {
+    axis: 'pagination',
+    value: 'infinite',
+    by: 'use-case-preset',
+    why: 'scroll back through earlier dates',
+  },
+  {
+    axis: 'feature',
+    value: 'none',
+    by: 'use-case-preset',
+    why: 'a flat dated feed, no editorial lead',
+  },
+  {
+    axis: 'selection',
+    value: 'none',
+    by: 'data-rule',
+    why: 'single-item save, no bulk operations',
+  },
 ];
 
 // The whole plot: every axis bucketed by who decides it. `consumer` also carries the
@@ -49,7 +134,8 @@ const OWNERSHIP = [
   {
     key: 'consumer',
     title: 'You supply — the whole of the required input',
-    blurb: 'Genuinely underivable: nothing else can provide these. This short list is all a consumer must actually decide.',
+    blurb:
+      'Genuinely underivable: nothing else can provide these. This short list is all a consumer must actually decide.',
     extra: [
       'the data shape — what your API returns (fields, media type, dates)',
       'domain actions — that “save” means add-to-collection, plus its wiring',
@@ -65,13 +151,15 @@ const OWNERSHIP = [
   {
     key: 'use-case-preset',
     title: 'Proposed from the use case — overridable',
-    blurb: 'A sensible default from the primary use case (+ blend), each with a rationale. The system never blocks on these; you override only the ones you disagree with.',
+    blurb:
+      'A sensible default from the primary use case (+ blend), each with a rationale. The system never blocks on these; you override only the ones you disagree with.',
     extra: [],
   },
   {
     key: 'ai-heuristic',
     title: 'Decided by the AI under rails',
-    blurb: 'No axis — the AI’s on-media placement, contrast, and weight are settled by the checkable heuristics (H13/H14/H19) + oracle and the ACTIONS conventions, not an axis choice. The drift zone; hard rails.',
+    blurb:
+      'No axis — the AI’s on-media placement, contrast, and weight are settled by the checkable heuristics (H13/H14/H19) + oracle and the ACTIONS conventions, not an axis choice. The drift zone; hard rails.',
     extra: [],
   },
 ] as const;
@@ -80,10 +168,22 @@ const OWNERSHIP = [
 // level; the tile axes are the config the gallery PINS on its MediaTile child (propagated
 // top-down per useCase), shown prefixed `item.`.
 const GALLERY_PRESET_FIELDS = [
-  'arrangement', 'section', 'sort', 'filter', 'density', 'pagination', 'feature', 'order',
+  'arrangement',
+  'section',
+  'sort',
+  'filter',
+  'density',
+  'pagination',
+  'feature',
+  'order',
 ] as const;
 const TILE_PRESET_FIELDS = [
-  'surface', 'orientation', 'label', 'primaryAction', 'hoverMedia', 'hoverActions',
+  'surface',
+  'orientation',
+  'label',
+  'primaryAction',
+  'hoverMedia',
+  'hoverActions',
 ] as const;
 
 // data-rule = from the data · use-case-preset = default from purpose · consumer =
@@ -151,16 +251,19 @@ export function DesignPatternPage() {
           lede="One pattern, many concrete forms. It carries the decisions, not one baked answer."
         >
           <Text>
-            <Code>{itemGallery.name}</Code> is <Text as="strong">a gallery of items, each with a visual
-            lead + metadata + actions</Text>. A media gallery, a product gallery, a people directory, a
-            file browser are all the <Text as="em">same</Text> pattern — instances differentiated by
-            axis values (<Code>useCase</Code> × <Code>lead</Code> × <Code>label</Code>), not separate
-            design patterns. That’s the point of a parameterized pattern.
+            <Code>{itemGallery.name}</Code> is{' '}
+            <Text as="strong">
+              a gallery of items, each with a visual lead + metadata + actions
+            </Text>
+            . A media gallery, a product gallery, a people directory, a file browser are all the{' '}
+            <Text as="em">same</Text> pattern — instances differentiated by axis values (
+            <Code>useCase</Code> × <Code>lead</Code> × <Code>label</Code>), not separate design
+            patterns. That’s the point of a parameterized pattern.
           </Text>
           <Text>
-            It has <Text as="strong">two levels</Text> — the gallery (page organization) composes the
-            item — and every axis is tagged by <Text as="strong">how it’s decided</Text>, so an AI can
-            drive it with the consumer barely touching it.
+            It has <Text as="strong">two levels</Text> — the gallery (page organization) composes
+            the item — and every axis is tagged by <Text as="strong">how it’s decided</Text>, so an
+            AI can drive it with the consumer barely touching it.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {itemGallery.synonyms.map((s) => (
@@ -343,7 +446,9 @@ export function DesignPatternPage() {
                       <Code>{s.slot}</Code>
                     </Table.Cell>
                     <Table.Cell>
-                      <Text size="sm" color="muted">{s.parent ?? '— (root)'}</Text>
+                      <Text size="sm" color="muted">
+                        {s.parent ?? '— (root)'}
+                      </Text>
                     </Table.Cell>
                     <Table.Cell>
                       <Stack direction="row" gap="xs" wrap>
@@ -383,17 +488,23 @@ export function DesignPatternPage() {
                       <Text size="sm">{b.value}</Text>
                     </Table.Cell>
                     <Table.Cell>
-                      <Badge variant="soft" color={AS_COLOR[b.as]}>{b.as}</Badge>
+                      <Badge variant="soft" color={AS_COLOR[b.as]}>
+                        {b.as}
+                      </Badge>
                     </Table.Cell>
                     <Table.Cell>
                       <Stack gap="xs">
                         {b.repr ? (
                           <Code>{b.repr}</Code>
                         ) : (
-                          <Badge variant="soft" color="red">gap</Badge>
+                          <Badge variant="soft" color="red">
+                            gap
+                          </Badge>
                         )}
                         {b.note && (
-                          <Text size="sm" color="muted">{b.note}</Text>
+                          <Text size="sm" color="muted">
+                            {b.note}
+                          </Text>
                         )}
                       </Stack>
                     </Table.Cell>
@@ -515,7 +626,9 @@ export function DesignPatternPage() {
                     <Code>{r.axis}</Code>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text size="sm" weight="medium">{r.value}</Text>
+                    <Text size="sm" weight="medium">
+                      {r.value}
+                    </Text>
                   </Table.Cell>
                   <Table.Cell>
                     <Badge variant="soft" color={DECIDED_COLOR[r.by]}>
@@ -523,7 +636,9 @@ export function DesignPatternPage() {
                     </Badge>
                   </Table.Cell>
                   <Table.Cell>
-                    <Text size="sm" color="muted">{r.why}</Text>
+                    <Text size="sm" color="muted">
+                      {r.why}
+                    </Text>
                   </Table.Cell>
                 </Table.Row>
               ))}

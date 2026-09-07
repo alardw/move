@@ -8,7 +8,8 @@ export default function BasicSample() {
       <Text>And the line below ends the paragraph that follows it.</Text>
       <Divider />
       <Text size="sm" color="muted">
-        Drop a Divider between any two content blocks for a clean visual break, with the right ARIA semantics for free.
+        Drop a Divider between any two content blocks for a clean visual break, with the right ARIA
+        semantics for free.
       </Text>
     </Stack>
   );

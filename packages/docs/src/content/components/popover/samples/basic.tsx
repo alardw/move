@@ -10,7 +10,8 @@ export default function BasicSample() {
         <Stack gap="sm">
           <Text weight="medium">About this metric</Text>
           <Text size="sm" color="muted">
-            Active sessions in the last 5 minutes, refreshed every 30 seconds. Excludes bots and synthetic monitors.
+            Active sessions in the last 5 minutes, refreshed every 30 seconds. Excludes bots and
+            synthetic monitors.
           </Text>
         </Stack>
       </Popover.Content>

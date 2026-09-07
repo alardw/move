@@ -32,7 +32,9 @@ export function Preview({ title, code, children }: PreviewProps) {
         <Card.Header className={styles.header}>
           <ToggleGroup.Root
             value={view}
-            onValueChange={(v: string) => { if (v) setView(v as 'preview' | 'code'); }}
+            onValueChange={(v: string) => {
+              if (v) setView(v as 'preview' | 'code');
+            }}
             size="sm"
             variant="pills"
             aria-label="Toggle preview or code"

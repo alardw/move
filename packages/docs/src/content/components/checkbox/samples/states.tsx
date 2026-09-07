@@ -9,7 +9,9 @@ export default function StatesSample() {
   return (
     <Stack gap="lg">
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Default</Text>
+        <Text size="sm" weight="medium">
+          Default
+        </Text>
         <Stack direction="row" gap="lg" wrap>
           <Checkbox>Unchecked</Checkbox>
           <Checkbox defaultChecked>Checked</Checkbox>
@@ -17,19 +19,31 @@ export default function StatesSample() {
         </Stack>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Disabled</Text>
+        <Text size="sm" weight="medium">
+          Disabled
+        </Text>
         <Stack direction="row" gap="lg" wrap>
           <Checkbox disabled>Unchecked</Checkbox>
-          <Checkbox disabled defaultChecked>Checked</Checkbox>
-          <Checkbox disabled indeterminate>Indeterminate</Checkbox>
+          <Checkbox disabled defaultChecked>
+            Checked
+          </Checkbox>
+          <Checkbox disabled indeterminate>
+            Indeterminate
+          </Checkbox>
         </Stack>
       </Stack>
       <Stack gap="xs">
-        <Text size="sm" weight="medium">Invalid</Text>
+        <Text size="sm" weight="medium">
+          Invalid
+        </Text>
         <Stack direction="row" gap="lg" wrap>
           <Checkbox invalid>Unchecked</Checkbox>
-          <Checkbox invalid defaultChecked>Checked</Checkbox>
-          <Checkbox invalid indeterminate>Indeterminate</Checkbox>
+          <Checkbox invalid defaultChecked>
+            Checked
+          </Checkbox>
+          <Checkbox invalid indeterminate>
+            Indeterminate
+          </Checkbox>
         </Stack>
       </Stack>
     </Stack>

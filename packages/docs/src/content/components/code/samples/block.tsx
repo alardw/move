@@ -16,7 +16,9 @@ export function App() {
 export default function BlockSample() {
   return (
     <Stack gap="sm">
-      <Code block language="tsx">{snippet}</Code>
+      <Code block language="tsx">
+        {snippet}
+      </Code>
     </Stack>
   );
 }

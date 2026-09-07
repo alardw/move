@@ -6,7 +6,9 @@ export default function WeightsSample() {
   return (
     <Stack gap="xs">
       {weights.map((weight) => (
-        <Text key={weight} weight={weight}>weight="{weight}" — the quick brown fox.</Text>
+        <Text key={weight} weight={weight}>
+          weight="{weight}" — the quick brown fox.
+        </Text>
       ))}
     </Stack>
   );

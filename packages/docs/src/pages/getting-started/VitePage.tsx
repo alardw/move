@@ -98,7 +98,9 @@ export function VitePage() {
 
         <Stack gap="sm">
           <Heading level={1}>Vite</Heading>
-          <Text color="muted" size="lg">{TAGLINE}</Text>
+          <Text color="muted" size="lg">
+            {TAGLINE}
+          </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((b) => (
               <Badge key={b.label} variant="soft">
@@ -116,36 +118,57 @@ export function VitePage() {
         >
           <List.Root>
             <List.Item>
-              <List.Leading><Icon name="rocket" /></List.Leading>
+              <List.Leading>
+                <Icon name="rocket" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Scaffold</List.Title>
-                <List.Description><Code>npm create move@latest</Code> bootstraps a Vite + React + Move app with sensible defaults.</List.Description>
+                <List.Description>
+                  <Code>npm create move@latest</Code> bootstraps a Vite + React + Move app with
+                  sensible defaults.
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="settings" /></List.Leading>
+              <List.Leading>
+                <Icon name="settings" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Manual setup</List.Title>
-                <List.Description>Add Move to an existing Vite app with one install and MoveRoot in <Code>main.tsx</Code>.</List.Description>
+                <List.Description>
+                  Add Move to an existing Vite app with one install and MoveRoot in{' '}
+                  <Code>main.tsx</Code>.
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="map" /></List.Leading>
+              <List.Leading>
+                <Icon name="map" />
+              </List.Leading>
               <List.Content>
                 <List.Title>Routing</List.Title>
-                <List.Description>Move pairs cleanly with react-router. Mount the router outside or inside MoveRoot.</List.Description>
+                <List.Description>
+                  Move pairs cleanly with react-router. Mount the router outside or inside MoveRoot.
+                </List.Description>
               </List.Content>
             </List.Item>
             <List.Item>
-              <List.Leading><Icon name="zap" /></List.Leading>
+              <List.Leading>
+                <Icon name="zap" />
+              </List.Leading>
               <List.Content>
                 <List.Title>No SSR concerns</List.Title>
-                <List.Description>Vite SPAs mount React before first paint, so theme tokens land before anything renders. None of the FOUC mitigations the Next page covers apply here.</List.Description>
+                <List.Description>
+                  Vite SPAs mount React before first paint, so theme tokens land before anything
+                  renders. None of the FOUC mitigations the Next page covers apply here.
+                </List.Description>
               </List.Content>
             </List.Item>
           </List.Root>
           <Text>
-            For everything about MoveRoot itself — props, icon resolver, theme switching, global slot props — see <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink>. This page only covers what's Vite-specific.
+            For everything about MoveRoot itself — props, icon resolver, theme switching, global
+            slot props — see <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink>. This
+            page only covers what's Vite-specific.
           </Text>
         </Section>
 
@@ -156,7 +179,9 @@ export function VitePage() {
         >
           <CodeBlock code={SCAFFOLD} language="bash" />
           <Text>
-            Ships with: MoveRoot wired in <Code>src/main.tsx</Code>, theme + icon resolver pre-configured, a sidebar shell, react-router set up with placeholder routes, and the <Code>.agents/skills</Code> folder so AI tools can generate components into the project.
+            Ships with: MoveRoot wired in <Code>src/main.tsx</Code>, theme + icon resolver
+            pre-configured, a sidebar shell, react-router set up with placeholder routes, and the{' '}
+            <Code>.agents/skills</Code> folder so AI tools can generate components into the project.
           </Text>
         </Section>
 
@@ -166,17 +191,35 @@ export function VitePage() {
           lede="Three steps for an existing Vite app: install, wire, render."
         >
           <Stack gap="sm">
-            <Text><strong>1. Install dependencies.</strong></Text>
+            <Text>
+              <strong>1. Install dependencies.</strong>
+            </Text>
             <CodeBlock code={MANUAL_INSTALL} language="bash" />
             <Text>
-              <Code>animejs</Code> is a required peer for Move's animation engine. Icons are bring-your-own — point the resolver at whatever your app already uses (see <RouterLink to="/getting-started/move-root#wiring-icons">MoveRoot → Wiring icons</RouterLink>); if you don't have an icon set yet, <Code>npm install lucide-react</Code>.
+              <Code>animejs</Code> is a required peer for Move's animation engine. Icons are
+              bring-your-own — point the resolver at whatever your app already uses (see{' '}
+              <RouterLink to="/getting-started/move-root#wiring-icons">
+                MoveRoot → Wiring icons
+              </RouterLink>
+              ); if you don't have an icon set yet, <Code>npm install lucide-react</Code>.
             </Text>
-            <Text><strong>2. Wire MoveRoot in <Code>src/main.tsx</Code>.</strong></Text>
+            <Text>
+              <strong>
+                2. Wire MoveRoot in <Code>src/main.tsx</Code>.
+              </strong>
+            </Text>
             <CodeBlock code={MAIN_TSX} language="tsx" />
             <Text>
-              The <Code>'move/styles.css'</Code> import is required — without it, components render unstyled. Extract the icon resolver to its own file (e.g. <Code>src/icon-resolver.ts</Code>) so it stays reusable.
+              The <Code>'move/styles.css'</Code> import is required — without it, components render
+              unstyled. Extract the icon resolver to its own file (e.g.{' '}
+              <Code>src/icon-resolver.ts</Code>) so it stays reusable.
             </Text>
-            <Text><strong>3. Render Move components in <Code>App.tsx</Code>.</strong> Anything from the <RouterLink to="/components">component catalog</RouterLink> works.</Text>
+            <Text>
+              <strong>
+                3. Render Move components in <Code>App.tsx</Code>.
+              </strong>{' '}
+              Anything from the <RouterLink to="/components">component catalog</RouterLink> works.
+            </Text>
           </Stack>
         </Section>
 
@@ -187,7 +230,8 @@ export function VitePage() {
         >
           <CodeBlock code={VITE_CONFIG} language="ts" />
           <Text>
-            Move ships pre-built with no Vite-side compilation needed. CSS imports work via Vite's built-in handling. No PostCSS, Tailwind, or extra plugin required.
+            Move ships pre-built with no Vite-side compilation needed. CSS imports work via Vite's
+            built-in handling. No PostCSS, Tailwind, or extra plugin required.
           </Text>
         </Section>
 
@@ -198,14 +242,22 @@ export function VitePage() {
         >
           <CodeBlock code={ROUTING_EXAMPLE} language="tsx" />
           <Text>
-            Move components like <Code>Sidebar.NavItem</Code>, <Code>Breadcrumb.Link</Code>, and <Code>List.Item</Code> support <Code>asChild</Code> so you can wrap a <Code>NavLink</Code> from react-router and keep Move's styling + behaviour while delegating routing.
+            Move components like <Code>Sidebar.NavItem</Code>, <Code>Breadcrumb.Link</Code>, and{' '}
+            <Code>List.Item</Code> support <Code>asChild</Code> so you can wrap a{' '}
+            <Code>NavLink</Code> from react-router and keep Move's styling + behaviour while
+            delegating routing.
           </Text>
         </Section>
 
         <Section id="next-steps" title="Next steps">
           <Stack gap="xs">
-            <Text size="sm">• <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink> — the wrapper's full API.</Text>
-            <Text size="sm">• <RouterLink to="/components">Components</RouterLink> — the catalog.</Text>
+            <Text size="sm">
+              • <RouterLink to="/getting-started/move-root">MoveRoot</RouterLink> — the wrapper's
+              full API.
+            </Text>
+            <Text size="sm">
+              • <RouterLink to="/components">Components</RouterLink> — the catalog.
+            </Text>
           </Stack>
         </Section>
       </Stack>

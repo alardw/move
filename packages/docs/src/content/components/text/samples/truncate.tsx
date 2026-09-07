@@ -1,8 +1,8 @@
-import { Stack, Text } from "move";
+import { Stack, Text } from 'move';
 
-const PATH = "/Users/alard/projects/move/packages/move/src/index.ts";
+const PATH = '/Users/alard/projects/move/packages/move/src/index.ts';
 const PARAGRAPH =
-  "One seed derives every surface and keeps text legible in both modes. Muted body copy reads clearly while the accent carries interaction across the whole interface.";
+  'One seed derives every surface and keeps text legible in both modes. Muted body copy reads clearly while the accent carries interaction across the whole interface.';
 
 export default function TruncateSample() {
   return (

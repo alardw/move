@@ -86,7 +86,9 @@ export function HowMoveWorksPage() {
         <Stack gap="sm">
           <Heading level={1}>How Move Works</Heading>
           <Text color="muted" size="lg">
-            Move is a framework with three parts — components, AI skills that compose them, and conformance checks that keep them true — tied together by one idea: a contract behind every one.
+            Move is a framework with three parts — components, AI skills that compose them, and
+            conformance checks that keep them true — tied together by one idea: a contract behind
+            every one.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             {BADGES.map((badge) => (
@@ -105,7 +107,11 @@ export function HowMoveWorksPage() {
         >
           <HighlightList items={COMPONENT_POINTS} />
           <Text>
-            Behind each component is one contract — a plain account of how it looks, behaves, and composes. The component itself, this page’s prop and token tables, the assistant, and the checks all work from that single description, so they can’t fall out of step. See the full <RouterLink to="/contracts/component">Component Contract</RouterLink> for what one carries.
+            Behind each component is one contract — a plain account of how it looks, behaves, and
+            composes. The component itself, this page’s prop and token tables, the assistant, and
+            the checks all work from that single description, so they can’t fall out of step. See
+            the full <RouterLink to="/contracts/component">Component Contract</RouterLink> for what
+            one carries.
           </Text>
         </Section>
 
@@ -115,7 +121,9 @@ export function HowMoveWorksPage() {
           lede="You don’t prompt into chaos. The assistant builds through skills."
         >
           <Text>
-            Ask for a settings page and the assistant follows a skill — reading each component’s contract, the same agreement Move used to build and test that component. It works from the manual the framework was made from, not a picture of it.
+            Ask for a settings page and the assistant follows a skill — reading each component’s
+            contract, the same agreement Move used to build and test that component. It works from
+            the manual the framework was made from, not a picture of it.
           </Text>
           <HighlightList items={SKILL_POINTS} />
           <Text>
@@ -135,31 +143,33 @@ export function HowMoveWorksPage() {
                 One contract each — it builds the code, tests it, guides the AI, and checks your
                 work. Automatically, no handwork. And there are only two:{' '}
                 <RouterLink to="/contracts/component">a component</RouterLink> or{' '}
-                <RouterLink to="/contracts/composite">a composite</RouterLink>. That’s
-                the whole system.
+                <RouterLink to="/contracts/composite">a composite</RouterLink>. That’s the whole
+                system.
               </Text>
             </Card.Body>
           </Card.Root>
         </Section>
 
-        <Section
-          id="why-it-matters"
-          title="Why it matters"
-          lede="The core promise."
-        >
+        <Section id="why-it-matters" title="Why it matters" lede="The core promise.">
           <Text>
-            You’re pointing AI at a real framework with the hard parts already solved — composition, motion, theming, and accessibility, all defined before you start. What it builds is a product that holds together.
+            You’re pointing AI at a real framework with the hard parts already solved — composition,
+            motion, theming, and accessibility, all defined before you start. What it builds is a
+            product that holds together.
           </Text>
           <Text>
-            From here: read the <RouterLink to="/contracts/component">Component Contract</RouterLink> for the full shape every component satisfies, or browse <RouterLink to="/components">Components</RouterLink> to see it applied across the library.
+            From here: read the{' '}
+            <RouterLink to="/contracts/component">Component Contract</RouterLink> for the full shape
+            every component satisfies, or browse{' '}
+            <RouterLink to="/components">Components</RouterLink> to see it applied across the
+            library.
           </Text>
 
           <Card.Root>
             <Card.Body>
               <Stack gap="sm">
                 <Text size="lg">
-                  “Dogfooding caught me hand-rolling <Code>{'<strong>'}</Code> and styled tables in the
-                  very page that preaches ‘bring your own X.’ That’s the whole point working.”
+                  “Dogfooding caught me hand-rolling <Code>{'<strong>'}</Code> and styled tables in
+                  the very page that preaches ‘bring your own X.’ That’s the whole point working.”
                 </Text>
                 <Text size="sm" color="muted">
                   — Claude Opus 4.8, the first time the audit ran against these docs

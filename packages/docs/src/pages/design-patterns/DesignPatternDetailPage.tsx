@@ -227,7 +227,11 @@ function SlotNode({ slot, spec }: { slot: SlotSpec; spec: DesignPatternSpec }) {
                       <Text size="xs" color="muted">
                         {d.type}
                       </Text>
-                      <Badge variant="soft" size="sm" color={d.direction === 'in' ? 'blue' : 'orange'}>
+                      <Badge
+                        variant="soft"
+                        size="sm"
+                        color={d.direction === 'in' ? 'blue' : 'orange'}
+                      >
                         {d.direction}
                       </Badge>
                       {d.drives && d.drives.length > 0 && (
@@ -411,8 +415,8 @@ export function DesignPatternDetailPage() {
 
         {!spec ? (
           <Alert variant="info" title="On the roadmap">
-            This pattern isn’t authored yet — no <Code>DesignPatternSpec</Code> to render. It’s listed
-            to show where the catalogue is heading.
+            This pattern isn’t authored yet — no <Code>DesignPatternSpec</Code> to render. It’s
+            listed to show where the catalogue is heading.
           </Alert>
         ) : (
           <Section
@@ -429,8 +433,8 @@ export function DesignPatternDetailPage() {
             </Stack>
 
             <Text color="muted" size="sm">
-              The full conceptual treatment — presets, actions, propagation, a worked instance — lives
-              on{' '}
+              The full conceptual treatment — presets, actions, propagation, a worked instance —
+              lives on{' '}
               <RouterLink to="/contracts/design-pattern">
                 Core Concepts → Design Patterns
               </RouterLink>

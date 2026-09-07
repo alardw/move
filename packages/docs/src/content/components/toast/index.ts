@@ -15,6 +15,11 @@ export const content: ComponentContent = {
   preview: Preview,
   samples: [
     { id: 'basic', title: 'Variants', render: Basic, code: basicCode },
-    { id: 'auto-dismiss', title: 'Opt-in auto-dismiss', render: AutoDismiss, code: autoDismissCode },
+    {
+      id: 'auto-dismiss',
+      title: 'Opt-in auto-dismiss',
+      render: AutoDismiss,
+      code: autoDismissCode,
+    },
   ],
 };

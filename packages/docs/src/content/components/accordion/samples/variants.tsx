@@ -14,7 +14,7 @@ const items = [
 ];
 
 const variants = ['default', 'contained', 'ghost'] as const;
-const descriptions: Record<typeof variants[number], string> = {
+const descriptions: Record<(typeof variants)[number], string> = {
   default: 'Divider lines between items. The neutral choice for most pages.',
   contained: 'Each item in its own card — good when the accordion sits on a busy page.',
   ghost: 'No chrome at all. Best for a single disclosure inside an already-framed container.',
@@ -26,8 +26,12 @@ export default function VariantsSample() {
       {variants.map((variant) => (
         <Stack key={variant} gap="xs">
           <Stack direction="row" gap="sm" align="baseline">
-            <Text size="sm" weight="medium">variant="{variant}"</Text>
-            <Text size="sm" color="muted">{descriptions[variant]}</Text>
+            <Text size="sm" weight="medium">
+              variant="{variant}"
+            </Text>
+            <Text size="sm" color="muted">
+              {descriptions[variant]}
+            </Text>
           </Stack>
           <Accordion.Root type="single" collapsible defaultValue="performance" variant={variant}>
             {items.map((it) => (

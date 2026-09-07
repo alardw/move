@@ -21,7 +21,8 @@ const related: RelatedItem[] = [
   {
     to: '/components/switch',
     name: 'Switch',
-    reason: 'When the toggle is for an immediate action ("Notifications: on/off") rather than a form choice.',
+    reason:
+      'When the toggle is for an immediate action ("Notifications: on/off") rather than a form choice.',
   },
   {
     to: '/components/radio-group',
@@ -35,7 +36,8 @@ export const meta: ComponentDocument = {
   synonyms: ['tickbox', 'toggle', 'option', 'check'],
   preview: { width: 'fit' },
   name: 'Checkbox',
-  tagline: 'A real checkbox built on an accessible button — checked, indeterminate, and disabled states, plus a hidden input for plain-form submission and a tidy Group container.',
+  tagline:
+    'A real checkbox built on an accessible button — checked, indeterminate, and disabled states, plus a hidden input for plain-form submission and a tidy Group container.',
   categories: ['forms'],
   badges: [
     { icon: 'keyboard', label: 'Native' },

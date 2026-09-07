@@ -11,7 +11,11 @@ export default function AutoDismissSample() {
       </Alert>
 
       <Stack direction="row" gap="sm" wrap>
-        <Button onClick={() => toast.success('Saved — this toast clears itself in 4s.', { duration: 4000 })}>
+        <Button
+          onClick={() =>
+            toast.success('Saved — this toast clears itself in 4s.', { duration: 4000 })
+          }
+        >
           Timed toast (4s)
         </Button>
       </Stack>

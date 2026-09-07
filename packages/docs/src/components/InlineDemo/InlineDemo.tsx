@@ -29,7 +29,11 @@ export function InlineDemo({
         <Stack direction="row" justify="between" align="end" gap="sm">
           <Stack gap="xs">
             {label && <Text weight="medium">{label}</Text>}
-            {blurb && <Text color="muted" size="sm">{blurb}</Text>}
+            {blurb && (
+              <Text color="muted" size="sm">
+                {blurb}
+              </Text>
+            )}
           </Stack>
           {replay && (
             <Button variant="ghost" size="sm" onClick={() => setRunId((n) => n + 1)}>

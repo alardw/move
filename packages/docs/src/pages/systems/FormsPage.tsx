@@ -86,8 +86,14 @@ export function FormsPage() {
             them in one place, so you write the label and the control and the wiring comes with it.
           </Text>
           <Stack direction="row" gap="xs" wrap>
-            <Badge variant="soft"><Icon name="link" />Every field named</Badge>
-            <Badge variant="soft"><Icon name="octagon-alert" />Errors announced</Badge>
+            <Badge variant="soft">
+              <Icon name="link" />
+              Every field named
+            </Badge>
+            <Badge variant="soft">
+              <Icon name="octagon-alert" />
+              Errors announced
+            </Badge>
           </Stack>
         </Stack>
 
@@ -112,7 +118,9 @@ export function FormsPage() {
                     <FormField.Root invalid>
                       <FormField.Label>Password</FormField.Label>
                       <Password name="password" defaultValue="short" required />
-                      <FormField.Description error>Use at least 8 characters.</FormField.Description>
+                      <FormField.Description error>
+                        Use at least 8 characters.
+                      </FormField.Description>
                     </FormField.Root>
 
                     <Checkbox name="terms">I agree to the terms</Checkbox>
@@ -135,9 +143,10 @@ export function FormsPage() {
               From that, <Code>FormField</Code> does four things you’d otherwise wire by hand: the{' '}
               <Code>Label</Code> becomes a real <Code>&lt;label&gt;</Code> tied to the control, so
               clicking it focuses the field and a screen reader reads the name; the control gets an{' '}
-              <Code>id</Code> to match; <Code>invalid</Code> on the Root becomes <Code>aria-invalid</Code>{' '}
-              on the control; and the error <Code>Description</Code> is linked as the control’s
-              description and announced when it appears. You never touch an id.
+              <Code>id</Code> to match; <Code>invalid</Code> on the Root becomes{' '}
+              <Code>aria-invalid</Code> on the control; and the error <Code>Description</Code> is
+              linked as the control’s description and announced when it appears. You never touch an
+              id.
             </Text>
             <Text size="sm" color="muted">
               A field is one control. Put the <Code>id</Code> on <Code>FormField.Root</Code> if you
@@ -154,9 +163,9 @@ export function FormsPage() {
           <Stack gap="md">
             <Text>
               There are two ways to give one. A field with visible label text uses a{' '}
-              <RouterLink to="/components/form-field">FormField</RouterLink> with a Label, as above. A
-              control whose purpose is already clear from what’s around it — a search box, a slider —
-              takes an <Code>aria-label</Code> directly:
+              <RouterLink to="/components/form-field">FormField</RouterLink> with a Label, as above.
+              A control whose purpose is already clear from what’s around it — a search box, a
+              slider — takes an <Code>aria-label</Code> directly:
             </Text>
             <CodeBlock code={NAMED_EXAMPLE} language="tsx" />
             <Text>
@@ -165,9 +174,8 @@ export function FormsPage() {
               tests. You find out while you’re building it, not from an audit later.
             </Text>
             <Text size="sm" color="muted">
-              This is the forms half of{' '}
-              <RouterLink to="/accessibility">accessibility</RouterLink> — where Move takes on the
-              labelling and error wiring, and you bring the words.
+              This is the forms half of <RouterLink to="/accessibility">accessibility</RouterLink> —
+              where Move takes on the labelling and error wiring, and you bring the words.
             </Text>
           </Stack>
         </Section>
@@ -179,19 +187,18 @@ export function FormsPage() {
         >
           <Stack gap="md">
             <Text>
-              A field is as wide as what goes in it. The steps are measured in
-              characters, so a box tracks the reader’s font size and its size tells
-              them how much input is wanted — a short box asks for a year, a long one
-              for an email. Every step stops at the width of its column, so a field
-              narrows on a phone instead of running past the edge.
+              A field is as wide as what goes in it. The steps are measured in characters, so a box
+              tracks the reader’s font size and its size tells them how much input is wanted — a
+              short box asks for a year, a long one for an email. Every step stops at the width of
+              its column, so a field narrows on a phone instead of running past the edge.
             </Text>
             <Preview title="The scale" code={fieldWidthsCode}>
               <FieldWidths />
             </Preview>
             <Text>
-              <Code>full</Code> is the default and takes the column. <Code>auto</Code>{' '}
-              hugs its content, for a control that sits in a row of its own rather than
-              in a form. The same scale is on every control that takes one —{' '}
+              <Code>full</Code> is the default and takes the column. <Code>auto</Code> hugs its
+              content, for a control that sits in a row of its own rather than in a form. The same
+              scale is on every control that takes one —{' '}
               <RouterLink to="/components/input-text">InputText</RouterLink>,{' '}
               <RouterLink to="/components/textarea">Textarea</RouterLink>,{' '}
               <RouterLink to="/components/select">Select</RouterLink>,{' '}
@@ -202,10 +209,10 @@ export function FormsPage() {
               <RouterLink to="/components/input-range">InputRange</RouterLink>.
             </Text>
             <Text size="sm" color="muted">
-              A dropdown takes its width from the field it hangs off, so the two read as
-              one control. Where the options are longer than a narrow field, set{' '}
-              <Code>width="content"</Code> on the content and the list sizes to the
-              widest option instead, within the room the field has.
+              A dropdown takes its width from the field it hangs off, so the two read as one
+              control. Where the options are longer than a narrow field, set{' '}
+              <Code>width="content"</Code> on the content and the list sizes to the widest option
+              instead, within the room the field has.
             </Text>
           </Stack>
         </Section>
