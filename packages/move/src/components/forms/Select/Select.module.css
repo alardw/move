@@ -138,12 +138,13 @@
    * motion, or `animations={false}`, the triggers never run at all. A state
    * that only exists while an animation is running is not a state.
    *
-   * Same pair as Autocomplete, which keys off its own `data-move-state`; Select
-   * reads Radix's `data-state`, since its trigger carries one. */
+   * Keyed off `data-move-state`, the same attribute the animation watches, so
+   * the class and the tween cannot disagree — Radix's own `data-state` stays
+   * 'open' for the whole exit. Same pair, and same attribute, as Autocomplete. */
   transform: rotate(0deg);
 }
 
-.trigger[data-state='open'] .icon {
+.trigger[data-move-state='open'] .icon {
   transform: rotate(180deg);
 }
 

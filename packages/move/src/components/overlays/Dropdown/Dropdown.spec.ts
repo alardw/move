@@ -194,6 +194,36 @@ export const spec = {
         'Stateful root that manages open/close state, animation context, and close-after-exit coordination',
     },
     {
+      name: 'Icon',
+      slots: [
+        {
+          name: 'icon',
+          element: 'span',
+          kind: 'indicator',
+          typography: 'none',
+          description: 'Open/closed chevron, placed inside the trigger',
+        },
+      ],
+      props: [
+        { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
+        {
+          name: 'style',
+          type: 'React.CSSProperties',
+          moveSpecific: false,
+          description: 'Inline styles',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'Custom icon content (defaults to chevron-down)',
+        },
+      ],
+      usesFactory: true,
+      description:
+        'Chevron that rotates 180deg on open via MutationObserver on data-move-state, with the angle held from CSS so it survives the tween handing back and applies under reduced motion',
+    },
+    {
       name: 'Trigger',
       slots: [
         {
@@ -1077,4 +1107,5 @@ export const spec = {
       'Reduced motion preference disables animations',
     ],
   },
+  iconsUsed: ['chevron-down'],
 } satisfies ComponentSpec;

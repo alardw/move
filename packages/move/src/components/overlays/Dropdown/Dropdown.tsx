@@ -10,10 +10,12 @@ import {
   resolveAnimationsConfig,
   staggerItems,
   quick,
+  extractSteps,
   useDismissable,
   useDismissableExit,
 } from '../../../animation';
-import type { AnimationTrigger } from '../../../animation';
+import type { AnimationTrigger, AnimationState } from '../../../animation';
+import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
 
@@ -89,6 +91,31 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
     trigger: 'Item.hover',
     sequence: [{ animation: { scale: { to: 1.02, ease: quick } } }],
   },
+  // The chevron, as state triggers rather than lifecycle ones: the Icon lives in
+  // the trigger, which never unmounts, so there is no mount to hang it off. Same
+  // rotation, easing and duration as Select — one control, one behaviour.
+  {
+    trigger: 'open',
+    sequence: [
+      [
+        {
+          target: 'Icon',
+          animation: { rotate: { from: 0, to: 180, ease: 'outQuart', duration: 300 } },
+        },
+      ],
+    ],
+  },
+  {
+    trigger: 'closed',
+    sequence: [
+      [
+        {
+          target: 'Icon',
+          animation: { rotate: { from: 180, to: 0, ease: 'outQuart', duration: 300 } },
+        },
+      ],
+    ],
+  },
 ];
 
 // ============================================================================
@@ -96,6 +123,9 @@ const DEFAULT_DROPDOWN_ANIMATIONS: AnimationTrigger[] = [
 // ============================================================================
 
 interface DropdownContextValue {
+  /** Open as the COMPONENT means it. Radix reads 'open' for the whole exit,
+   *  because the content is held mounted through it. */
+  isOpen: boolean;
   isClosing: boolean;
   epoch: number;
   onExitDone: (epoch: number) => void;
@@ -151,7 +181,7 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({
   );
 
   return (
-    <DropdownContext.Provider value={{ isClosing, epoch, onExitDone, close, animConfig }}>
+    <DropdownContext.Provider value={{ isOpen, isClosing, epoch, onExitDone, close, animConfig }}>
       <RadixDropdownMenu.Root
         open={isOpen || isClosing}
         onOpenChange={handleOpenChange}
@@ -181,6 +211,7 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
   moveProps: ['asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    const { isOpen, isClosing } = useDropdownContext();
     return {
       render() {
         const triggerSp = sp('trigger');
@@ -195,6 +226,11 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
             {...spRest}
             ref={ref}
             asChild={props.asChild as boolean}
+            // Flips the moment closing begins, so a chevron rotates WITH the
+            // menu's exit rather than after it. Radix's own data-state cannot
+            // do this: the content is held mounted through the exit, so it
+            // still reads 'open' the whole way out. Same as Select.
+            data-move-state={isOpen && !isClosing ? 'open' : 'closed'}
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -1037,9 +1073,108 @@ const DropdownSubContent = withMoveComponent<'subContent', DropdownSubContentPro
 // Export
 // ============================================================================
 
+// ============================================================================
+// Icon
+// ============================================================================
+
+export interface DropdownIconProps extends React.HTMLAttributes<HTMLElement> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  sp?: SlotPropsMap<'icon'>;
+}
+
+/**
+ * The open/closed indicator, placed inside your trigger.
+ *
+ * It exists so the chevron belongs to the component rather than to the call
+ * site. A raw icon in the trigger cannot rotate: nothing owns it, so nothing
+ * animates it, and the same control read as static here and animated in Select.
+ */
+const DropdownIcon = withMoveComponent<'icon', DropdownIconProps, HTMLElement>({
+  name: 'DropdownIcon',
+  styles,
+  slots: ['icon'] as const,
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const iconRef = React.useRef<HTMLSpanElement>(null);
+    const mergedRef = useMergedRef<HTMLSpanElement>(ref as React.Ref<HTMLSpanElement>, iconRef);
+    const { animConfig } = useDropdownContext();
+    const resolvedChevron = useIcon('expand', 16);
+
+    // Watches the trigger's own data-move-state, not Radix's data-state: the
+    // content is held mounted through its exit, so Radix still reads 'open' the
+    // whole way out and the rotation would not start until the menu had gone.
+    const iconStates: AnimationState[] = React.useMemo(
+      () => [
+        {
+          name: 'open',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'open',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+        {
+          name: 'closed',
+          slot: 'Icon',
+          source: 'data-move-state',
+          value: 'closed',
+          closest: '[data-move-state]',
+          initial: false,
+        },
+      ],
+      [],
+    );
+
+    const iconConfig: AnimationTrigger[] | null = React.useMemo(() => {
+      if (!animConfig) return null;
+      const open = extractSteps(
+        animConfig.find((t) => t.trigger === 'open'),
+        ['Icon'],
+      );
+      const closed = extractSteps(
+        animConfig.find((t) => t.trigger === 'closed'),
+        ['Icon'],
+      );
+      const result: AnimationTrigger[] = [];
+      if (open) result.push({ trigger: 'open', sequence: open });
+      if (closed) result.push({ trigger: 'closed', sequence: closed });
+      return result.length > 0 ? result : null;
+    }, [animConfig]);
+
+    const iconRefs = React.useMemo(
+      () => ({ Icon: iconRef as React.RefObject<HTMLElement | null> }),
+      [],
+    );
+
+    useAnimations(iconConfig, iconRefs, iconStates);
+
+    return {
+      render() {
+        const iconSp = sp('icon');
+        const { className: spClass, style: spStyle, ...spRest } = iconSp as Record<string, unknown>;
+        return (
+          <span
+            {...attrs}
+            {...spRest}
+            ref={mergedRef}
+            className={cx('icon', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            aria-hidden="true"
+          >
+            {props.children || resolvedChevron}
+          </span>
+        );
+      },
+    };
+  },
+});
+
 export const Dropdown = {
   Root: DropdownRoot,
   Trigger: DropdownTrigger,
+  Icon: DropdownIcon,
   Content: DropdownContent,
   Arrow: DropdownArrow,
   Item: DropdownItem,

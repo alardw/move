@@ -117,6 +117,12 @@ export const FAMILIES = {
     capabilities: ['scrolls-content'],
     choreography: ['popupMenu'],
     ariaPattern: ['combobox', 'listbox', 'menu'],
+    // The open/closed indicator, owned by the component rather than left to the
+    // call site. Select and Autocomplete each had one and rotated it; Dropdown
+    // left the chevron to whoever wrote the trigger, so in its own samples it
+    // sat still while the identical control elsewhere animated. A member that
+    // does not own the affordance cannot keep a promise about it.
+    subComponents: ['Icon'],
     why:
       'A popup you choose from. The panel arrives and the options follow it in, so the eye ' +
       'lands on the list rather than on a box appearing.',

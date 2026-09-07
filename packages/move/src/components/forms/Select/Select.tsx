@@ -173,6 +173,9 @@ const DEFAULT_SELECT_ANIMATIONS: AnimationTrigger[] = [
 
 interface SelectContextValue {
   value: string | undefined;
+  /** Open as the COMPONENT means it, which is not what Radix's data-state says
+   *  while the popup is being held mounted through its exit. */
+  isOpen: boolean;
   isClosing: boolean;
   epoch: number;
   onExitDone: (epoch: number) => void;
@@ -318,6 +321,7 @@ const SelectRoot: React.FC<SelectRootProps> = ({
     <SelectContext.Provider
       value={{
         value,
+        isOpen,
         isClosing,
         epoch,
         onExitDone,
@@ -379,7 +383,7 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
   moveProps: ['invalid', 'disabled', 'width', 'minWidth', 'maxWidth', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { setTriggerWidth, triggerRef } = useSelectContext();
+    const { setTriggerWidth, triggerRef, isOpen, isClosing } = useSelectContext();
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
     const controlProps = useFieldControl(attrs as Record<string, unknown>, {
       invalid: !!props.invalid,
@@ -411,6 +415,13 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
             disabled={props.disabled as boolean}
             data-size={props.size}
             data-variant={props.variant}
+            // Radix's own data-state cannot drive the chevron on the way out.
+            // The content is held mounted through its exit with
+            // `open={isOpen || isClosing}`, so Radix still reads 'open' for the
+            // whole exit and the chevron could not start rotating until the list
+            // had already gone. This flips the moment closing begins, so the two
+            // run together. Same attribute Autocomplete uses, for the same reason.
+            data-move-state={isOpen && !isClosing ? 'open' : 'closed'}
             className={cx('trigger', props.className, spClass as string | undefined)}
             data-width={props.width as string | undefined}
             style={{
@@ -511,24 +522,25 @@ const SelectIcon = withMoveComponent<'icon', SelectIconProps, HTMLSpanElement>({
     const mergedRef = useMergedRef<HTMLSpanElement>(ref, iconRef);
     const { animConfig } = useSelectContext();
 
-    // Icon rotation — driven by the trigger's data-state (Radix sets open/closed
-    // on the trigger) plus our data-move-state override during the exit anim.
+    // Icon rotation — driven by the trigger's data-move-state, which the
+    // component sets from its own open/closing state. Radix's data-state is
+    // wrong here on the way out: see the note where the attribute is written.
     const iconStates: AnimationState[] = React.useMemo(
       () => [
         {
           name: 'open',
           slot: 'Icon',
-          source: 'data-state',
+          source: 'data-move-state',
           value: 'open',
-          closest: '[data-state]',
+          closest: '[data-move-state]',
           initial: false,
         },
         {
           name: 'closed',
           slot: 'Icon',
-          source: 'data-state',
+          source: 'data-move-state',
           value: 'closed',
-          closest: '[data-state]',
+          closest: '[data-move-state]',
           initial: false,
         },
       ],

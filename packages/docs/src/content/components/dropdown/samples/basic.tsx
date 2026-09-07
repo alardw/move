@@ -1,11 +1,11 @@
-import { Button, Dropdown, Icon } from 'move';
+import { Button, Dropdown } from 'move';
 
 export default function BasicSample() {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
         <Button variant="secondary">
-          Actions <Icon name="chevron-down" />
+          Actions <Dropdown.Icon />
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Content>

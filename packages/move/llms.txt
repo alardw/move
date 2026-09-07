@@ -825,6 +825,10 @@ Dropdown.Root props:
 - defaultOpen: boolean — Initial open state (uncontrolled)
 - onOpenChange: (open: boolean) => void — Called when open state changes
 - animations: AnimationTrigger[] | false — Animation config or false to disable
+Dropdown.Icon props:
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — Custom icon content (defaults to chevron-down)
 Dropdown.Trigger props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles

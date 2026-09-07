@@ -320,7 +320,8 @@ export const spec = {
         },
       ],
       usesFactory: true,
-      description: 'Chevron icon that rotates 180deg on open via MutationObserver on data-state',
+      description:
+        'Chevron icon that rotates 180deg on open via MutationObserver on data-move-state',
     },
     {
       name: 'Content',
@@ -978,7 +979,9 @@ export const spec = {
       'Value falls back to value string when no label registered',
       'Icon renders chevron-down by default via useResolvedIcon',
       'Icon rotates 180deg on open and 0deg on close',
-      'Icon animation observes data-state via MutationObserver',
+      'Icon holds its angle from CSS keyed on the same data-move-state, so it survives the tween handing back and applies under reduced motion',
+      'Icon rotation starts when closing begins, concurrent with the content exit, not after it',
+      'Icon animation observes data-move-state via MutationObserver',
       'Portal renders via Radix Select.Portal',
       'Content renders inside Radix Select.Content',
       'Content defaults sideOffset to 4',

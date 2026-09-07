@@ -1,11 +1,11 @@
-import { Button, Dropdown, Icon } from 'move';
+import { Button, Dropdown } from 'move';
 
 export default function GroupedSample() {
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
         <Button variant="secondary">
-          File <Icon name="chevron-down" />
+          File <Dropdown.Icon />
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Content>

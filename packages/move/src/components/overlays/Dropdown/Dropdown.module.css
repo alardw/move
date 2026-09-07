@@ -289,3 +289,21 @@
   padding: var(--move-dropdown-content-padding);
   z-index: var(--move-layer-popover);
 }
+
+.icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+
+  /* The chevron's resting angles. `rotate` is written as inline `transform` and
+   * stripped when the tween completes, so without these the chevron would snap
+   * back with the menu still open — and under reduced motion, or
+   * `animations={false}`, it would never move at all. Keyed on the same
+   * data-move-state the animation watches, so the class and the tween cannot
+   * disagree. Same pair as Select and Autocomplete. */
+  transform: rotate(0deg);
+}
+
+.trigger[data-move-state='open'] .icon {
+  transform: rotate(180deg);
+}

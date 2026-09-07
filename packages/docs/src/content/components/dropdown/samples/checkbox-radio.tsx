@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Dropdown, Icon } from 'move';
+import { Button, Dropdown } from 'move';
 
 export default function CheckboxRadioSample() {
   const [showGrid, setShowGrid] = useState(true);
@@ -10,7 +10,7 @@ export default function CheckboxRadioSample() {
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
         <Button variant="secondary">
-          View <Icon name="chevron-down" />
+          View <Dropdown.Icon />
         </Button>
       </Dropdown.Trigger>
       <Dropdown.Content>

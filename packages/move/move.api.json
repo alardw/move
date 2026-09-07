@@ -4604,6 +4604,26 @@
           ]
         },
         {
+          "name": "Icon",
+          "props": [
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Custom icon content (defaults to chevron-down)"
+            }
+          ]
+        },
+        {
           "name": "Trigger",
           "props": [
             {
