@@ -244,7 +244,7 @@ describe('Autocomplete', () => {
       renderAutocomplete();
       const input = screen.getByRole('combobox');
       await user.click(input);
-      await user.click(screen.getByText('Apple'));
+      await user.click(await screen.findByText('Apple'));
       expect(input).toHaveValue('Apple');
     });
 
@@ -263,17 +263,21 @@ describe('Autocomplete', () => {
       const input = screen.getByRole('combobox');
 
       await user.click(input);
-      expect(screen.getByRole('option', { name: 'Apple' })).toHaveAttribute(
+      // findBy, not getBy: the popup's options commit a frame AFTER the click
+      // resolves, so a synchronous read races the mount. It won that race on an
+      // idle machine and lost it under parallel load, which is the whole shape
+      // of this test's flakiness.
+      expect(await screen.findByRole('option', { name: 'Apple' })).toHaveAttribute(
         'aria-selected',
         'true',
       );
 
-      await user.click(screen.getByText('Banana'));
+      await user.click(await screen.findByText('Banana'));
       expect(onChange).toHaveBeenCalledWith('banana');
 
       // No `value` prop, so Autocomplete owns the selection and must move it itself.
       await user.click(input);
-      expect(screen.getByRole('option', { name: 'Banana' })).toHaveAttribute(
+      expect(await screen.findByRole('option', { name: 'Banana' })).toHaveAttribute(
         'aria-selected',
         'true',
       );
@@ -306,7 +310,7 @@ describe('Autocomplete', () => {
       renderAutocomplete({ rootProps: { multiple: true } });
       const input = screen.getByRole('combobox');
       await user.click(input);
-      await user.click(screen.getByText('Apple'));
+      await user.click(await screen.findByText('Apple'));
       expect(input).toHaveValue('');
     });
 
