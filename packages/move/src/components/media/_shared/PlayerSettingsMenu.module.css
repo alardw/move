@@ -184,7 +184,6 @@
   margin-block: 2px;
 }
 
-
 /* Row geometry from the shared option tokens — the same radius, padding and
    rhythm a Select option has. Only the colours are local, because these rows sit
    on the players' dark chrome rather than on a Move surface. */

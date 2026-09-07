@@ -89,7 +89,10 @@
   padding: 4px 12px;
   background: var(--move-videoplayer-subtitle-bg);
   color: var(--move-videoplayer-subtitle-fg);
-  font-size: var(--_subtitle-size, 16px); /* type-exempt: media chrome, sized against the video frame not the page */
+  font-size: var(
+    --_subtitle-size,
+    16px
+  ); /* type-exempt: media chrome, sized against the video frame not the page */
   line-height: 1.4;
   text-align: center;
   border-radius: 4px;

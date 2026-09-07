@@ -105,12 +105,7 @@ export const FAMILIES = {
     // false, so a popup that does not close on scroll has said so rather than
     // simply never been asked.
     behaviorBlocks: ['popup'],
-    behaviorFlags: [
-      'closeOnEscape',
-      'closeOnOutsideClick',
-      'closeOnScroll',
-      'closeOnResize',
-    ],
+    behaviorFlags: ['closeOnEscape', 'closeOnOutsideClick', 'closeOnScroll', 'closeOnResize'],
     subComponents: ['Trigger', 'Content'],
     why:
       'A panel that hangs off the control you pressed. Escape closes it, clicking away closes ' +

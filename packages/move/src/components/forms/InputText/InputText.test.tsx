@@ -230,5 +230,4 @@ describe('InputText', () => {
       expect(onChange).toHaveBeenCalled();
     });
   });
-
 });

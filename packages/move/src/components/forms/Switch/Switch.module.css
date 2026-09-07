@@ -144,4 +144,3 @@
 .root:active:not(:disabled) .knob {
   transform: scale(0.85);
 }
-

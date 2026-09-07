@@ -211,5 +211,4 @@ describe('Textarea', () => {
       expect(onChange).toHaveBeenCalled();
     });
   });
-
 });

@@ -203,19 +203,19 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
         return (
           <AccordionContext.Provider value={contextValue}>
             <SurfaceProvider value={surface}>
-            <div
-              {...attrs}
-              {...spRest}
-              ref={ref}
-              data-size={props.size}
-              data-variant={props.variant}
-              data-surface={surface}
-              className={cx('root', className, spClass as string | undefined)}
-              style={{ ...style, ...(spStyle as React.CSSProperties) }}
-              data-move-accordion-root=""
-            >
-              {children}
-            </div>
+              <div
+                {...attrs}
+                {...spRest}
+                ref={ref}
+                data-size={props.size}
+                data-variant={props.variant}
+                data-surface={surface}
+                className={cx('root', className, spClass as string | undefined)}
+                style={{ ...style, ...(spStyle as React.CSSProperties) }}
+                data-move-accordion-root=""
+              >
+                {children}
+              </div>
             </SurfaceProvider>
           </AccordionContext.Provider>
         );
@@ -663,24 +663,24 @@ const AccordionContent = withMoveComponent<
         } = innerSp as Record<string, unknown>;
 
         return (
+          <div
+            {...attrs}
+            {...spRest}
+            ref={mergedRef}
+            className={cx('content', className, spClass as string | undefined)}
+            style={{ ...style, ...(spStyle as React.CSSProperties) }}
+            data-state={itemContext.isActive ? 'open' : 'closed'}
+            role="region"
+          >
             <div
-              {...attrs}
-              {...spRest}
-              ref={mergedRef}
-              className={cx('content', className, spClass as string | undefined)}
-              style={{ ...style, ...(spStyle as React.CSSProperties) }}
-              data-state={itemContext.isActive ? 'open' : 'closed'}
-              role="region"
+              {...innerSpRest}
+              ref={innerRef}
+              className={cx('contentInner', innerSpClass as string | undefined)}
+              style={innerSpStyle as React.CSSProperties}
             >
-              <div
-                {...innerSpRest}
-                ref={innerRef}
-                className={cx('contentInner', innerSpClass as string | undefined)}
-                style={innerSpStyle as React.CSSProperties}
-              >
-                {children}
-              </div>
+              {children}
             </div>
+          </div>
         );
       },
     };

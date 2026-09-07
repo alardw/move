@@ -60,15 +60,14 @@ export function PlayerSettingsMenu({
   const chevronRightIcon = useIcon('next', 14);
   const chevronLeftIcon = useIcon('previous', 14);
 
-
   // One category needs no drill-down: the list of categories would be a single
   // row you click to reach the options behind it. Opening straight onto the
   // options lets a one-subject menu — a subtitle picker — use this component
   // rather than being hand-rolled beside it, which is how the video player
   // ended up with two menus built two different ways.
   const soleCategory = categories.length === 1 ? categories[0] : null;
-  const activeCat = soleCategory ?? (activeCategory ? categories.find((c) => c.id === activeCategory) : null);
-
+  const activeCat =
+    soleCategory ?? (activeCategory ? categories.find((c) => c.id === activeCategory) : null);
 
   /**
    * Roving focus over the rows, in both views.
@@ -143,12 +142,7 @@ export function PlayerSettingsMenu({
           Inverted — the tooltip inside — Popover.Trigger clones the Tooltip
           instead, which forwards nothing, and the menu stops opening. */}
       {triggerLabel ? (
-        <Tooltip
-          label={triggerLabel}
-          side={side}
-          open={tipOpen && !open}
-          onOpenChange={setTipOpen}
-        >
+        <Tooltip label={triggerLabel} side={side} open={tipOpen && !open} onOpenChange={setTipOpen}>
           <Popover.Trigger asChild>{trigger}</Popover.Trigger>
         </Tooltip>
       ) : (
@@ -171,83 +165,83 @@ export function PlayerSettingsMenu({
             this file created, the same reason Select keeps its stagger container
             inside the Radix Viewport rather than on it. */}
         <div ref={setList} role="menu" onKeyDown={onKeyDown} className={styles.list}>
-        {!activeCat ? (
-          // Main view — list of categories
-          categories.map((cat) => {
-            const activeLabel =
-              cat.options.find((o) => o.value === cat.activeValue)?.label ?? cat.activeValue;
+          {!activeCat ? (
+            // Main view — list of categories
+            categories.map((cat) => {
+              const activeLabel =
+                cat.options.find((o) => o.value === cat.activeValue)?.label ?? cat.activeValue;
 
-            if (cat.options.length <= 1) {
-              // Single option — non-clickable indicator
+              if (cat.options.length <= 1) {
+                // Single option — non-clickable indicator
+                return (
+                  <div key={cat.id} className={styles.indicatorRow}>
+                    <span className={styles.categoryLabel}>{cat.label}</span>
+                    <span className={styles.categoryValue}>{activeLabel}</span>
+                  </div>
+                );
+              }
+
               return (
-                <div key={cat.id} className={styles.indicatorRow}>
+                <button
+                  key={cat.id}
+                  type="button"
+                  className={styles.categoryRow}
+                  data-row
+                  role="menuitem"
+                  tabIndex={-1}
+                  onClick={() => setActiveCategory(cat.id)}
+                >
                   <span className={styles.categoryLabel}>{cat.label}</span>
                   <span className={styles.categoryValue}>{activeLabel}</span>
-                </div>
+                  <span className={styles.categoryChevron}>{chevronRightIcon}</span>
+                </button>
               );
-            }
-
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                className={styles.categoryRow}
-                data-row
-                role="menuitem"
-                tabIndex={-1}
-                onClick={() => setActiveCategory(cat.id)}
-              >
-                <span className={styles.categoryLabel}>{cat.label}</span>
-                <span className={styles.categoryValue}>{activeLabel}</span>
-                <span className={styles.categoryChevron}>{chevronRightIcon}</span>
-              </button>
-            );
-          })
-        ) : (
-          // Sub-view — options for the active category
-          <>
-            {/* A sole category still says what it is. Skipping the drill-down
+            })
+          ) : (
+            // Sub-view — options for the active category
+            <>
+              {/* A sole category still says what it is. Skipping the drill-down
                 removed the row that named the subject — the menu opened onto a
                 list of speeds with nothing saying "Speed". Not a button here,
                 because there is nowhere to go back to. */}
-            {soleCategory && (
-              <div className={styles.indicatorRow} aria-hidden="true">
-                <span className={styles.categoryLabel}>{soleCategory.label}</span>
-              </div>
-            )}
-            {!soleCategory && (
-            <button
-              type="button"
-              className={styles.backRow}
-              data-row
-              role="menuitem"
-              tabIndex={-1}
-              onClick={() => setActiveCategory(null)}
-            >
-              <span className={styles.backChevron}>{chevronLeftIcon}</span>
-              <span className={styles.backLabel}>{activeCat.label}</span>
-            </button>
-            )}
-            {activeCat.options.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={styles.optionRow}
-                data-row
-                role="menuitemradio"
-                aria-checked={opt.value === activeCat.activeValue}
-                tabIndex={-1}
-                data-active={opt.value === activeCat.activeValue}
-                onClick={() => {
-                  activeCat.onChange(opt.value);
-                  onOpenChange(false);
-                }}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </>
-        )}
+              {soleCategory && (
+                <div className={styles.indicatorRow} aria-hidden="true">
+                  <span className={styles.categoryLabel}>{soleCategory.label}</span>
+                </div>
+              )}
+              {!soleCategory && (
+                <button
+                  type="button"
+                  className={styles.backRow}
+                  data-row
+                  role="menuitem"
+                  tabIndex={-1}
+                  onClick={() => setActiveCategory(null)}
+                >
+                  <span className={styles.backChevron}>{chevronLeftIcon}</span>
+                  <span className={styles.backLabel}>{activeCat.label}</span>
+                </button>
+              )}
+              {activeCat.options.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={styles.optionRow}
+                  data-row
+                  role="menuitemradio"
+                  aria-checked={opt.value === activeCat.activeValue}
+                  tabIndex={-1}
+                  data-active={opt.value === activeCat.activeValue}
+                  onClick={() => {
+                    activeCat.onChange(opt.value);
+                    onOpenChange(false);
+                  }}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </>
+          )}
         </div>
       </Popover.Content>
     </Popover.Root>

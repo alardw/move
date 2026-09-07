@@ -144,7 +144,6 @@ export const CAPABILITIES = {
       'compare and cannot see it. That is how two controls shipped labels at body copy while every ' +
       'other one rendered at the ui step.',
   },
-
 } as const satisfies Record<string, CapabilityContract>;
 
 export type CapabilityName = keyof typeof CAPABILITIES;

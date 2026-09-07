@@ -607,7 +607,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 {/* Settings */}
                 {showSettings && (
                   <PlayerSettingsMenu
-                triggerLabel={labels.settings}
+                    triggerLabel={labels.settings}
                     categories={settingsCategories}
                     open={settingsMenuOpen}
                     onOpenChange={setSettingsMenuOpen}
@@ -618,7 +618,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                       <PlayerButton
                         {...slot('settingsButton')}
                         label={labels.settings}
-                    withTooltip={false}
+                        withTooltip={false}
                       >
                         {settingsIcon}
                       </PlayerButton>

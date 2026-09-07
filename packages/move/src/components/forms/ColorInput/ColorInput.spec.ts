@@ -187,8 +187,18 @@ export const spec = {
     { name: 'readOnly', type: 'boolean', moveSpecific: true, description: 'Read-only state' },
     // Popup open state. Every other anchored popup exposes this triad; without
     // it a consumer could neither open the picker nor observe that it had.
-    { name: 'open', type: 'boolean', moveSpecific: true, description: 'Controlled open state of the picker popup' },
-    { name: 'defaultOpen', type: 'boolean', moveSpecific: true, description: 'Initial open state when uncontrolled' },
+    {
+      name: 'open',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Controlled open state of the picker popup',
+    },
+    {
+      name: 'defaultOpen',
+      type: 'boolean',
+      moveSpecific: true,
+      description: 'Initial open state when uncontrolled',
+    },
     {
       name: 'onOpenChange',
       type: '(open: boolean) => void',
