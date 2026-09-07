@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
-import { cpSync, existsSync, mkdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { cpSync, existsSync, mkdirSync, writeFileSync, chmodSync, readFileSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageRoot = join(__dirname, '..');
@@ -16,6 +17,7 @@ if (!command || command === '--help' || command === '-h') {
     skills    Copy Move AI skills into your project
     recipes   Copy Move recipe examples into your project
     check     Validate your components & recipes (strict props, recipe purity, …)
+    hooks     Install git hooks that run those checks on commit and push
 `);
   process.exit(0);
 }
@@ -86,8 +88,10 @@ if (command === 'recipes') {
   const source = join(recipesRoot, pattern);
 
   let resolvedSource;
-  if (existsSync(source)) resolvedSource = source; // group dir, or exact path
-  else if (existsSync(source + '.tsx')) resolvedSource = source + '.tsx'; // single recipe by name
+  if (existsSync(source))
+    resolvedSource = source; // group dir, or exact path
+  else if (existsSync(source + '.tsx'))
+    resolvedSource = source + '.tsx'; // single recipe by name
   else {
     console.error(`  Recipe not found: ${pattern}`);
     process.exit(1);
@@ -114,11 +118,125 @@ if (command === 'recipes') {
   process.exit(0);
 }
 
+if (command === 'hooks') {
+  // Files, not a framework. The hooks are POSIX sh copied into the project and
+  // committed with it, so the team shares them, anyone can read what runs, and
+  // editing one is editing a file rather than learning a config format. Move
+  // adds no hook-runner dependency to a consumer's project for the same reason
+  // it ships skills as files: the thing you install should be inspectable.
+  //
+  // The logic lives in `move check`, and these only call it — so a project
+  // already on husky, lefthook or simple-git-hooks wires the SAME command into
+  // whatever it already has, and Move never competes with the runner.
+  const args = process.argv.slice(3);
+  const has = (f) => args.includes(f);
+
+  if (has('--help')) {
+    console.log(`
+  move hooks [--print] [--force]
+
+  Installs pre-commit and pre-push hooks into .githooks/ and points git at them.
+
+    pre-commit   move check --staged   (fast: only what you staged)
+    pre-push     move check + typecheck + test:a11y   (whole project)
+
+  --print   show the commands to paste into an existing runner, install nothing
+  --force   overwrite hook files that are already there
+
+  Both hooks are skippable with --no-verify, and are yours to edit afterwards.
+`);
+    process.exit(0);
+  }
+
+  if (has('--print')) {
+    console.log(`
+  Wire these into your existing hook runner:
+
+    pre-commit:  npx move check --staged
+    pre-push:    npx move check
+`);
+    process.exit(0);
+  }
+
+  const cwd = process.cwd();
+  if (!existsSync(join(cwd, '.git'))) {
+    console.error('  move hooks: no .git here — run this from the root of a git repository.');
+    process.exit(1);
+  }
+
+  // Someone else's hooks path is someone else's decision. Repointing it would
+  // silently disable whatever is already installed there, so say what to do
+  // instead of doing it.
+  let current = '';
+  try {
+    current = execFileSync('git', ['config', '--get', 'core.hooksPath'], {
+      cwd,
+      encoding: 'utf8',
+    }).trim();
+  } catch {
+    current = '';
+  }
+  if (current && current !== '.githooks') {
+    console.error(`  move hooks: core.hooksPath is already set to '${current}'.`);
+    console.error('  Move will not repoint it. Add the commands to those hooks instead:');
+    console.error('      pre-commit:  npx move check --staged');
+    console.error('      pre-push:    npx move check');
+    process.exit(1);
+  }
+
+  const dest = join(cwd, '.githooks');
+  mkdirSync(dest, { recursive: true });
+  const written = [];
+  const kept = [];
+  for (const name of ['pre-commit', 'pre-push']) {
+    const target = join(dest, name);
+    // A hook already there is the project's own work. Overwriting it silently
+    // is how you delete something nobody remembers writing.
+    if (existsSync(target) && !has('--force')) {
+      kept.push(name);
+      continue;
+    }
+    writeFileSync(target, readFileSync(join(packageRoot, 'hooks', name), 'utf8'));
+    chmodSync(target, 0o755);
+    written.push(name);
+  }
+
+  execFileSync('git', ['config', 'core.hooksPath', '.githooks'], { cwd });
+
+  for (const n of written) console.log(`  ✓ .githooks/${n}`);
+  for (const n of kept)
+    console.log(`  • .githooks/${n} already exists — kept (use --force to replace)`);
+  console.log('  ✓ core.hooksPath → .githooks');
+  console.log('\n  Commit .githooks/ so your team gets them. Each developer runs');
+  console.log('  `npx move hooks` once, because core.hooksPath is local to a clone.');
+  process.exit(0);
+}
+
 if (command === 'check') {
   // Consumer-facing validation gates. Each check module exports run(config) →
   // { name, ok, summary, messages }. Run all, or one named check.
   const { loadConfig } = await import('../checks/_config.mjs');
   const config = loadConfig(process.cwd());
+
+  // `--staged` narrows the run to what is about to be committed, which is what
+  // makes a commit hook fast enough to leave switched on. Everything else — a
+  // push, CI, a manual run — sees the whole project.
+  if (process.argv.includes('--staged')) {
+    let staged = [];
+    try {
+      staged = execFileSync('git', ['diff', '--cached', '--name-only', '--diff-filter=ACMR'], {
+        encoding: 'utf8',
+      })
+        .split('\n')
+        .filter(Boolean);
+    } catch {
+      console.error('  move check --staged: not a git repository (or git is unavailable).');
+      process.exit(1);
+    }
+    // Nothing staged that these checks read is a pass, not a no-op to report:
+    // a commit touching only docs or config has nothing for them to say.
+    config.only = new Set(staged.map((f) => resolve(process.cwd(), f)));
+  }
 
   const registry = {
     'strict-props': () => import('../checks/strict-props.mjs'),
@@ -131,12 +249,12 @@ if (command === 'check') {
   // (`move check creation`) rather than part of the default component/composite run.
   const DEFAULT_CHECKS = ['strict-props', 'purity', 'composite-spec-drift'];
 
-  const only = process.argv[3];
-  if (only && only !== '--help' && !registry[only]) {
+  const only = process.argv.slice(3).find((a) => !a.startsWith('--'));
+  if (only && !registry[only]) {
     console.error(`  Unknown check: ${only}\n  Available: ${Object.keys(registry).join(', ')}`);
     process.exit(1);
   }
-  if (only === '--help') {
+  if (process.argv.includes('--help')) {
     console.log(`
   move check [name]
 

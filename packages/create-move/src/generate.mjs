@@ -755,6 +755,22 @@ npm run typecheck
 \`\`\`
 
 Both gates also run in CI (\`.github/workflows/checks.yml\`).
+
+### Git hooks
+
+\`\`\`bash
+npx move hooks      # pre-commit + pre-push, into .githooks/
+\`\`\`
+
+\`pre-commit\` runs the checks against the files you staged, so it stays fast
+enough to leave on. \`pre-push\` runs them over the whole project, with
+typecheck and the a11y ratchet. Both take \`--no-verify\` when you need to push
+work in progress.
+
+Run it once per clone — git keeps \`core.hooksPath\` locally, so it does not
+travel with the repo. The hooks are plain shell in \`.githooks/\`: commit them,
+and edit them to add your own steps. Already using husky or lefthook?
+\`npx move hooks --print\` gives you the commands to paste in instead.
 `;
 
 /**

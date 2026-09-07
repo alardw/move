@@ -40,7 +40,7 @@
 import { readdirSync, statSync, existsSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import ts from 'typescript';
-import { loadConfig } from './_config.mjs';
+import { loadConfig, inScope } from './_config.mjs';
 
 const IGNORE_MARKER = 'purity-ignore';
 
@@ -97,7 +97,7 @@ function collectTsx(dir, out = []) {
 
 export function run(config) {
   const roots = [...config.recipes, ...config.composites, ...config.samples];
-  const files = [...new Set(roots.flatMap((r) => collectTsx(r)))].sort();
+  const files = [...new Set(roots.flatMap((r) => collectTsx(r)))].sort().filter((f) => inScope(config, f));
   const violations = [];
 
   for (const file of files) {

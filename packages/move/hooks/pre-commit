@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+# Move — pre-commit
+#
+# Installed by `npx move hooks`. This file is YOURS: it lives in your repo, it is
+# committed with it, and you are meant to edit it. Move does not read it back.
+#
+# What belongs here is what can run on EVERY commit without anyone wanting to
+# switch it off — so this stage is scoped to the files you actually staged, and
+# the whole-project gates live in pre-push instead.
+#
+# Skip for a work-in-progress commit with:  git commit --no-verify
+
+set -e
+
+staged=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(ts|tsx)$' || true)
+[ -z "$staged" ] && exit 0
+
+echo "▶ pre-commit: Move checks on staged files…"
+
+# Component and composite gates, narrowed to what is being committed:
+#   strict-props           props extend real HTML attrs, not Record<string, unknown>
+#   purity                 composites are Move components, not hand-rolled markup
+#   composite-spec-drift   a composite still matches its spec (takes the pair when
+#                          either side is staged, so editing the source counts)
+npx --no-install move check --staged
+
+# Your own fast, staged-scoped steps go here — formatting and linting are the
+# usual two. Move leaves them out rather than assume your toolchain, e.g.:
+#
+#   printf '%s\n' "$staged" | xargs npx prettier --write && printf '%s\n' "$staged" | xargs git add
+#   printf '%s\n' "$staged" | xargs npx eslint --max-warnings 0
+
+echo "✓ pre-commit passed"

@@ -1,6 +1,6 @@
 {
   "name": "move",
-  "version": "0.1.57",
+  "version": "0.1.58",
   "description": "Animated UI component library built on Radix UI primitives",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -28,6 +28,7 @@
     "bin",
     "checks",
     "dist",
+    "hooks",
     "llms.txt",
     "move.api.json",
     "scaffold",

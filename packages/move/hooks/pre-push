@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+# Move — pre-push
+#
+# Installed by `npx move hooks`. This file is YOURS: it lives in your repo, it is
+# committed with it, and you are meant to edit it. Move does not read it back.
+#
+# The whole-project gates. They are here rather than in pre-commit because they
+# read every file, which is too slow to sit on every commit — and a gate people
+# switch off protects nothing. Pushing is rare enough to afford them, and early
+# enough to still be your problem rather than CI's.
+#
+# `--if-present` means a project without one of these scripts simply skips it,
+# so this file does not have to be edited to match your setup.
+#
+# Skip for a work-in-progress push with:  git push --no-verify
+
+set -e
+
+echo "▶ pre-push: Move gates"
+
+# The whole project, not just what changed: composite-spec-drift compares each
+# spec against its source, and an edit anywhere can be what put them out of sync.
+npx --no-install move check
+
+npm run typecheck --if-present --silent
+
+# Render-time accessibility ratchet — axe over every composite, no NEW violations.
+npm run test:a11y --if-present --silent
+
+echo "✓ pre-push: all gates green — safe to push"

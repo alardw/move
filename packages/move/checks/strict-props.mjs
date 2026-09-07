@@ -18,7 +18,7 @@
  */
 import { readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
-import { loadConfig } from './_config.mjs';
+import { loadConfig, inScope } from './_config.mjs';
 
 const OFFENDER = /\bextends\s+Record<\s*string\s*,\s*unknown\s*>/;
 
@@ -35,7 +35,7 @@ export function run(config) {
   const roots = [...config.components, ...config.infrastructure];
   const messages = [];
   for (const base of roots) {
-    for (const file of collect(base).sort()) {
+    for (const file of collect(base).sort().filter((f) => inScope(config, f))) {
       readFileSync(file, 'utf8').split('\n').forEach((line, i) => {
         if (OFFENDER.test(line)) {
           messages.push(`${relative(config.cwd, file)}:${i + 1}  ${line.trim()}`);

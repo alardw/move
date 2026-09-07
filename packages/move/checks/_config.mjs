@@ -54,5 +54,22 @@ export function loadConfig(cwd = process.cwd()) {
     composites: dirs(merged.composites),
     samples: dirs(merged.samples),
     theme: themePath && existsSync(themePath) ? themePath : null,
+    /**
+     * When set, the run is narrowed to these absolute paths — a commit hook
+     * checking only what is staged, so the gate is fast enough to survive
+     * being run on every commit.
+     *
+     * `null` means the whole project, which is what a push or CI wants. A
+     * check that cannot answer honestly from a subset must say so rather than
+     * filter: see composite-spec-drift, which takes the pair when EITHER side
+     * is listed, because a spec judged against an unstaged source is a verdict
+     * about a file the commit is not changing.
+     */
+    only: null,
   };
+}
+
+/** Narrow a check's file list to the run's scope. */
+export function inScope(config, file) {
+  return !config.only || config.only.has(file);
 }

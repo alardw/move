@@ -38,6 +38,7 @@ function parseArgs(argv) {
     if (a === '--local') flags.move = '*';
     else if (a === '--no-install') flags.install = false;
     else if (a === '--force') flags.force = true;
+    else if (a === '--no-hooks') flags.hooks = false;
     else if (a === '--help' || a === '-h') flags.help = true;
     else if (a.startsWith('--')) flags[a.slice(2)] = argv[++i];
     else if (!name) name = a;
@@ -58,6 +59,7 @@ function usage() {
     --move <spec>   override the "move" dependency (e.g. a local build)
     --local         shorthand for --move "*" (monorepo/workspace link)
     --no-install    skip "npm install"
+    --no-hooks      skip installing the git hooks
     --force         write into an existing non-empty directory
 `);
 }
@@ -150,10 +152,28 @@ function main() {
     }
   }
 
+  // --- Git hooks ---------------------------------------------------------------
+  // The hook FILES live in the move package, not in this template: they are one
+  // thing, and a copy here would drift from the checks they call. `move hooks`
+  // copies them out of the installed package, which is also the step every
+  // developer runs per clone — core.hooksPath is local, so it is never inherited
+  // with the repo anyway.
+  let hooksInstalled = false;
+  if (flags.hooks !== false && flags.install !== false && existsSync(join(dir, '.git'))) {
+    try {
+      execSync('npx --no-install move hooks', { cwd: dir, stdio: 'inherit' });
+      hooksInstalled = true;
+    } catch {
+      console.log('  Git hooks not installed — run `npx move hooks` in the project.');
+    }
+  }
+
+  const hookStep = flags.hooks === false || hooksInstalled ? '' : '\n    git init && npx move hooks';
+
   console.log(`
   Done. Next:
 
-    cd ${name}${flags.install === false ? '\n    npm install' : ''}
+    cd ${name}${flags.install === false ? '\n    npm install' : ''}${hookStep}
     npm run dev
 
   Then ask your AI assistant to /app-compose your first screen into src/composites.

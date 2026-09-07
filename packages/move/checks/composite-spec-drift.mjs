@@ -99,6 +99,11 @@ export function run(config) {
   const messages = [];
   for (const specFile of specs) {
     const srcFile = specFile.replace(/\.spec\.ts$/, '.tsx');
+    // The pair, not the file: this check compares a spec against its source, so
+    // it takes the pair when EITHER side is in scope. Filtering on the spec
+    // alone would silently skip the common case — the source edited, its spec
+    // untouched — which is exactly the drift the check is for.
+    if (config.only && !config.only.has(specFile) && !config.only.has(srcFile)) continue;
     const name = basename(specFile, '.spec.ts');
     if (!existsSync(srcFile)) { messages.push(`${name}: spec has no sibling .tsx`); continue; }
     const specObj = specObject(parse(specFile));
