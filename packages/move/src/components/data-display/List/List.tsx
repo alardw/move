@@ -4,7 +4,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, staggerItems, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import type { Radius, Truncate } from '../../../shared/types';
 import { resolveTruncate } from '../../../shared/truncate';
@@ -21,10 +21,21 @@ const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
       {
         target: 'Root',
         children: `.${styles.item}`,
-        stagger: { delay: 60 },
+        // The popup's reveal: rows spring open out of themselves instead of
+        // sliding up into place, close enough behind each other to read as one
+        // movement down the list. A row is an option in a panel by another
+        // name, so it arrives the way one does.
+        //
+        // `quick`, not the preset's `poppy`, for the reason the Select panel
+        // gives: poppy overshoots about 30% against a critical damping it sits
+        // well under, and a row that passes its resting size inside a list
+        // gets that overshoot clipped by whatever it is nested in. quick keeps
+        // roughly 7%, which still reads as a spring and needs no room made for
+        // it.
+        stagger: staggerItems.stagger,
         animation: {
-          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-          translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+          scale: { from: 0.8, to: 1, ease: quick },
+          opacity: { from: 0, to: 1, duration: 200 },
         },
       },
     ],
