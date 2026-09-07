@@ -496,4 +496,54 @@ describe('Carousel', () => {
       }
     });
   });
+
+  // === i18n labels ===
+  describe('i18n labels', () => {
+    // The same string names the control for a screen reader and fills its
+    // tooltip, so there is one translatable surface, not two.
+    const withChrome = (rootProps: Record<string, unknown> = {}) =>
+      render(
+        <Carousel.Root showTriggers showIndicators {...rootProps}>
+          <Carousel.Viewport>
+            <Carousel.Slide>Slide 1</Carousel.Slide>
+            <Carousel.Slide>Slide 2</Carousel.Slide>
+          </Carousel.Viewport>
+        </Carousel.Root>,
+      );
+
+    it('uses a custom previous label', () => {
+      withChrome({ labels: { previousSlide: 'Vorige dia' } });
+      expect(screen.getByLabelText('Vorige dia')).toBeInTheDocument();
+    });
+
+    it('uses a custom next label', () => {
+      withChrome({ labels: { nextSlide: 'Volgende dia' } });
+      expect(screen.getByLabelText('Volgende dia')).toBeInTheDocument();
+    });
+
+    it('uses a custom indicator group label', () => {
+      withChrome({ labels: { slideIndicators: 'Dia-aanduidingen' } });
+      expect(screen.getByLabelText('Dia-aanduidingen')).toBeInTheDocument();
+    });
+
+    it('uses a custom per-indicator label, which takes the slide number', () => {
+      withChrome({ labels: { goToSlide: (n: number) => `Ga naar dia ${n}` } });
+      expect(screen.getByLabelText('Ga naar dia 1')).toBeInTheDocument();
+      expect(screen.getByLabelText('Ga naar dia 2')).toBeInTheDocument();
+    });
+
+    it("a caller's own aria-label still wins over the labels object", () => {
+      render(
+        <Carousel.Root labels={{ previousSlide: 'Vorige dia' }}>
+          <Carousel.Viewport>
+            <Carousel.Slide>Slide 1</Carousel.Slide>
+            <Carousel.Slide>Slide 2</Carousel.Slide>
+          </Carousel.Viewport>
+          <Carousel.PrevTrigger aria-label="Terug" />
+        </Carousel.Root>,
+      );
+      expect(screen.getByLabelText('Terug')).toBeInTheDocument();
+      expect(screen.queryByLabelText('Vorige dia')).not.toBeInTheDocument();
+    });
+  });
 });

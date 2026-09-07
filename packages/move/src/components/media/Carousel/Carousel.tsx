@@ -6,6 +6,7 @@ import type { SlotPropsMap } from '../../../engine';
 import { resolveAnimationsConfig, scaleDown, scaleUp, useAnimations } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
+import { Tooltip } from '../../overlays/Tooltip';
 import { useCarousel } from './useCarousel';
 import type {
   UseCarouselOptions,
@@ -16,10 +17,33 @@ import type {
 import styles from './Carousel.module.css';
 
 // =============================================================================
+// Labels
+// =============================================================================
+
+export interface CarouselLabels {
+  /** Names the previous trigger, for assistive tech and in its tooltip. */
+  previousSlide: string;
+  /** Names the next trigger, for assistive tech and in its tooltip. */
+  nextSlide: string;
+  /** Names the indicator group. */
+  slideIndicators: string;
+  /** Names one indicator. Receives the 1-based slide number. */
+  goToSlide: (n: number) => string;
+}
+
+const DEFAULT_LABELS: CarouselLabels = {
+  previousSlide: 'Previous slide',
+  nextSlide: 'Next slide',
+  slideIndicators: 'Slide indicators',
+  goToSlide: (n) => `Go to slide ${n}`,
+};
+
+// =============================================================================
 // Context
 // =============================================================================
 
 interface CarouselContextValue {
+  labels: CarouselLabels;
   page: number;
   pageCount: number;
   canScrollPrev: boolean;
@@ -50,6 +74,8 @@ function useCarouselContext() {
 
 export interface CarouselRootProps {
   children?: React.ReactNode;
+  /** User-facing strings. Each names a control for assistive tech and in its tooltip. */
+  labels?: Partial<CarouselLabels>;
   className?: string;
   style?: React.CSSProperties;
   /** Scroll orientation. */
@@ -237,8 +263,14 @@ const CarouselRoot: React.FC<CarouselRootProps> = (props) => {
     animations,
   } as UseCarouselOptions);
 
+  const labels = React.useMemo<CarouselLabels>(
+    () => ({ ...DEFAULT_LABELS, ...props.labels }),
+    [props.labels],
+  );
+
   const ctx = React.useMemo<CarouselContextValue>(
     () => ({
+      labels,
       page: carousel.page,
       pageCount: carousel.pageCount,
       canScrollPrev: carousel.canScrollPrev,
@@ -254,7 +286,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = (props) => {
       draggable: carousel.draggable,
       registerSlide: carousel.registerSlide,
     }),
-    [carousel],
+    [carousel, labels],
   );
 
   const rootStyle: React.CSSProperties = {
@@ -514,7 +546,7 @@ const CarouselPrevTrigger = withMoveComponent<
   moveProps: ['size', 'variant', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { scrollPrev, canScrollPrev, orientation } = useCarouselContext();
+    const { scrollPrev, canScrollPrev, orientation, labels } = useCarouselContext();
     const { pressRef, pressHandlers } = useTriggerPress(
       props.animations as AnimationTrigger[] | false | undefined,
       ref,
@@ -531,30 +563,37 @@ const CarouselPrevTrigger = withMoveComponent<
         } = triggerSp as Record<string, unknown>;
         const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
+        const label = (props['aria-label'] as string) || labels.previousSlide;
+
         return (
-          <button
-            {...restAttrs}
-            {...spRest}
-            ref={pressRef}
-            {...pressHandlers}
-            type="button"
-            aria-label={(props['aria-label'] as string) || 'Previous slide'}
-            disabled={!canScrollPrev}
-            onClick={composeHandlers(
-              restAttrs.onClick,
-              (e: React.MouseEvent<HTMLButtonElement>) => {
-                scrollPrev();
-                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-              },
-            )}
-            className={cx('prevTrigger', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-orientation={orientation}
-            data-size={props.size}
-            data-variant={props.variant}
-          >
-            {props.children || fallbackIcon}
-          </button>
+          <Tooltip label={label} side={orientation === 'vertical' ? 'right' : 'bottom'}>
+            <button
+              // Before the spread, the way PlayerButton sets it: a caller who
+              // passes their own aria-label overrides this, and `label` already
+              // read theirs back — so the tooltip says the same thing.
+              aria-label={label}
+              {...restAttrs}
+              {...spRest}
+              ref={pressRef}
+              {...pressHandlers}
+              type="button"
+              disabled={!canScrollPrev}
+              onClick={composeHandlers(
+                restAttrs.onClick,
+                (e: React.MouseEvent<HTMLButtonElement>) => {
+                  scrollPrev();
+                  (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+                },
+              )}
+              className={cx('prevTrigger', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              data-orientation={orientation}
+              data-size={props.size}
+              data-variant={props.variant}
+            >
+              {props.children || fallbackIcon}
+            </button>
+          </Tooltip>
         );
       },
     };
@@ -589,7 +628,7 @@ const CarouselNextTrigger = withMoveComponent<
   moveProps: ['size', 'variant', 'animations'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { scrollNext, canScrollNext, orientation } = useCarouselContext();
+    const { scrollNext, canScrollNext, orientation, labels } = useCarouselContext();
     const { pressRef, pressHandlers } = useTriggerPress(
       props.animations as AnimationTrigger[] | false | undefined,
       ref,
@@ -606,30 +645,37 @@ const CarouselNextTrigger = withMoveComponent<
         } = triggerSp as Record<string, unknown>;
         const { onClick: userOnClick, ...restAttrs } = attrs as Record<string, unknown>;
 
+        const label = (props['aria-label'] as string) || labels.nextSlide;
+
         return (
-          <button
-            {...restAttrs}
-            {...spRest}
-            ref={pressRef}
-            {...pressHandlers}
-            type="button"
-            aria-label={(props['aria-label'] as string) || 'Next slide'}
-            disabled={!canScrollNext}
-            onClick={composeHandlers(
-              restAttrs.onClick,
-              (e: React.MouseEvent<HTMLButtonElement>) => {
-                scrollNext();
-                (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
-              },
-            )}
-            className={cx('nextTrigger', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-orientation={orientation}
-            data-size={props.size}
-            data-variant={props.variant}
-          >
-            {props.children || fallbackIcon}
-          </button>
+          <Tooltip label={label} side={orientation === 'vertical' ? 'right' : 'bottom'}>
+            <button
+              // Before the spread, the way PlayerButton sets it: a caller who
+              // passes their own aria-label overrides this, and `label` already
+              // read theirs back — so the tooltip says the same thing.
+              aria-label={label}
+              {...restAttrs}
+              {...spRest}
+              ref={pressRef}
+              {...pressHandlers}
+              type="button"
+              disabled={!canScrollNext}
+              onClick={composeHandlers(
+                restAttrs.onClick,
+                (e: React.MouseEvent<HTMLButtonElement>) => {
+                  scrollNext();
+                  (userOnClick as React.MouseEventHandler<HTMLButtonElement> | undefined)?.(e);
+                },
+              )}
+              className={cx('nextTrigger', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              data-orientation={orientation}
+              data-size={props.size}
+              data-variant={props.variant}
+            >
+              {props.children || fallbackIcon}
+            </button>
+          </Tooltip>
         );
       },
     };
@@ -659,7 +705,7 @@ const CarouselIndicatorGroup = withMoveComponent<
   slots: ['indicatorGroup'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { pageCount, page, scrollToPage } = useCarouselContext();
+    const { pageCount, page, scrollToPage, labels } = useCarouselContext();
 
     return {
       render() {
@@ -681,7 +727,7 @@ const CarouselIndicatorGroup = withMoveComponent<
               aria-selected={i === page}
               className={styles.indicator}
               data-active={i === page || undefined}
-              aria-label={`Go to slide ${i + 1}`}
+              aria-label={labels.goToSlide(i + 1)}
               onClick={() => scrollToPage(i)}
             />
           ));
@@ -692,7 +738,7 @@ const CarouselIndicatorGroup = withMoveComponent<
             {...spRest}
             ref={ref}
             role="tablist"
-            aria-label={(props['aria-label'] as string) || 'Slide indicators'}
+            aria-label={(props['aria-label'] as string) || labels.slideIndicators}
             className={cx('indicatorGroup', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
@@ -725,7 +771,7 @@ const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps,
     moveProps: ['index'],
 
     setup({ props, ref, cx, sp, attrs }) {
-      const { page, scrollToPage } = useCarouselContext();
+      const { page, scrollToPage, labels } = useCarouselContext();
       const index = props.index as number;
 
       return {
@@ -740,7 +786,7 @@ const CarouselIndicator = withMoveComponent<'indicator', CarouselIndicatorProps,
 
           return (
             <button
-              aria-label={`Go to slide ${index + 1}`}
+              aria-label={labels.goToSlide(index + 1)}
               {...restAttrs}
               {...spRest}
               ref={ref}

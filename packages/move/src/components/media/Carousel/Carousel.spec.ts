@@ -154,6 +154,14 @@ export const spec = {
           description: 'Render built-in prev/next trigger buttons',
         },
         {
+          name: 'labels',
+          type: 'Partial<CarouselLabels>',
+          default: 'null',
+          moveSpecific: true,
+          description:
+            'User-facing strings. Each names a control for assistive tech and in its tooltip',
+        },
+        {
           name: 'showIndicators',
           type: 'boolean',
           default: 'false',
@@ -773,7 +781,7 @@ export const spec = {
     'useMergedRef',
   ] as string[],
 
-  componentDeps: [] as string[],
+  componentDeps: ['Tooltip'] as string[],
 
   testing: {
     behaviors: [
