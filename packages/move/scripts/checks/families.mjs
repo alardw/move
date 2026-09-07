@@ -190,6 +190,58 @@ for (const specPath of specFiles(COMPONENTS)) {
   }
 }
 
+// ── The registry's own references ────────────────────────────────────────────
+//
+// A family naming a capability or choreography that does not exist still fails,
+// but it fails on its MEMBERS — every one of them reported for not declaring
+// something undeclarable. The fault is in the family, and the message should say
+// so rather than sending someone to edit innocent specs.
+const CAPABILITY_NAMES = new Set(
+  [
+    ...readFileSync(join(MOVE_ROOT, 'src', 'capabilities.ts'), 'utf8')
+      .slice(readFileSync(join(MOVE_ROOT, 'src', 'capabilities.ts'), 'utf8').indexOf('export const CAPABILITIES'))
+      .matchAll(/\n  '([a-z-]+)': \{/g),
+  ].map((m) => m[1]),
+);
+const CHOREOGRAPHIES = new Set(
+  [
+    ...(/export const CHOREOGRAPHIES = \[([\s\S]*?)\]/.exec(
+      readFileSync(join(MOVE_ROOT, 'src', 'spec-type.ts'), 'utf8'),
+    )?.[1] ?? '').matchAll(/'(\w+)'/g),
+  ].map((m) => m[1]),
+);
+
+for (const [family, def] of Object.entries(FAMILIES)) {
+  for (const cap of def.capabilities ?? []) {
+    if (!CAPABILITY_NAMES.has(cap)) {
+      problems.push({
+        rel: 'src/families.ts',
+        name: family,
+        msg: `bundles '${cap}', which is not a capability`,
+        why: '',
+      });
+    }
+  }
+  for (const ch of def.choreography ?? []) {
+    if (!CHOREOGRAPHIES.has(ch)) {
+      problems.push({
+        rel: 'src/families.ts',
+        name: family,
+        msg: `permits choreography '${ch}', which is not one`,
+        why: '',
+      });
+    }
+  }
+  if (def.includes && !FAMILIES[def.includes]) {
+    problems.push({
+      rel: 'src/families.ts',
+      name: family,
+      msg: `includes '${def.includes}', which is not a family`,
+      why: '',
+    });
+  }
+}
+
 // A family needs more than one member — otherwise it is a component.
 //
 // Counted through composition: an abstract family like `anchored-popup` has no
@@ -227,8 +279,16 @@ if (problems.length === 0) {
   process.exit(0);
 }
 
+// Registry faults first. A family naming something that does not exist also
+// fails on every one of its members, and those are downstream noise — five
+// findings where the cause is one line.
+const ordered = [
+  ...problems.filter((p) => p.rel === 'src/families.ts'),
+  ...problems.filter((p) => p.rel !== 'src/families.ts'),
+];
+
 console.log(`✗ families: ${problems.length} broken contract(s).`);
-for (const p of problems) {
+for (const p of ordered) {
   console.log(`\n  [spec-11] ${p.name} — ${p.msg}`);
   if (p.why) console.log(`    ${p.why}`);
 }
