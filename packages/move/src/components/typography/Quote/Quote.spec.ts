@@ -87,7 +87,7 @@ export const spec = {
     },
     {
       name: '--move-quote-bg',
-      value: 'var(--move-bg-subtle)',
+      value: 'var(--move-surface-alt)',
       description: 'Subtle panel background behind the quote',
     },
     {

@@ -673,7 +673,7 @@ export const spec = {
     },
     {
       name: '--move-table-row-hover-bg',
-      value: 'color-mix(in oklch, var(--move-fg-base) 4%, transparent)',
+      value: 'color-mix(in oklch, var(--move-fg-base) 8%, transparent)',
       description:
         'Background applied when a body row is hovered — used by the `hoverable` prop on Root and by rows with `interactive` set.',
     },
@@ -685,7 +685,7 @@ export const spec = {
     },
     {
       name: '--move-table-stripe-bg',
-      value: 'color-mix(in oklch, var(--move-fg-base) 3%, transparent)',
+      value: 'color-mix(in oklch, var(--move-fg-base) 5%, transparent)',
       description:
         'Background for odd body rows when the `striped` modifier is set — zebra starts on row 1 so the first body row is tinted.',
     },
@@ -701,7 +701,7 @@ export const spec = {
     },
     {
       name: '--move-table-group-header-bg',
-      value: 'color-mix(in oklch, var(--move-fg-base) 5%, transparent)',
+      value: 'color-mix(in oklch, var(--move-fg-base) 8%, transparent)',
       description: 'Background for the Group header row (static or collapsible).',
     },
     {

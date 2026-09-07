@@ -15,7 +15,6 @@
  *
  *   --move-surface-bg         Current surface's own background
  *   --move-surface-hover      Hover state bg on the current surface
- *   --move-surface-inset      Inset/recessed areas (input fields, code blocks)
  *   --move-surface-alt        Contrasting bg for child containers (flips per level)
  *   --move-surface-alt-hover  Hover/header bg on the alt surface (one step deeper than alt)
  *   --move-surface-border     Container border — visible on base, transparent on subtle (bg contrast suffices)
@@ -31,7 +30,6 @@
 
   --move-surface-bg: var(--move-bg-base);
   --move-surface-hover: var(--move-bg-subtle);
-  --move-surface-inset: var(--move-bg-muted);
   --move-surface-alt: var(--move-bg-subtle);
   --move-surface-alt-hover: var(--move-bg-muted);
   --move-surface-border: var(--move-border-base);
@@ -45,7 +43,6 @@
 
   --move-surface-bg: var(--move-bg-base);
   --move-surface-hover: var(--move-bg-subtle);
-  --move-surface-inset: var(--move-bg-muted);
   --move-surface-alt: var(--move-bg-subtle);
   --move-surface-alt-hover: var(--move-bg-muted);
   /* Visible on base (matches the :root default ground); subtle relies on bg
@@ -61,7 +58,6 @@
 
   --move-surface-bg: var(--move-bg-subtle);
   --move-surface-hover: var(--move-bg-muted);
-  --move-surface-inset: var(--move-bg-base);
   --move-surface-alt: var(--move-bg-base);
   --move-surface-alt-hover: var(--move-bg-muted);
   --move-surface-border: transparent;
@@ -79,7 +75,6 @@
 
   --move-surface-bg: var(--move-bg-muted);
   --move-surface-hover: var(--move-bg-emphasis);
-  --move-surface-inset: var(--move-bg-subtle);
   --move-surface-alt: var(--move-bg-subtle);
   --move-surface-alt-hover: var(--move-bg-muted);
 }
@@ -95,7 +90,6 @@
 
   --move-surface-bg: var(--move-bg-emphasis);
   --move-surface-hover: var(--move-bg-muted);
-  --move-surface-inset: var(--move-bg-muted);
   --move-surface-alt: var(--move-bg-muted);
   --move-surface-alt-hover: var(--move-bg-emphasis);
 }
@@ -108,7 +102,6 @@
 
   --move-surface-bg: var(--move-bg-inverse);
   --move-surface-hover: var(--move-bg-base);
-  --move-surface-inset: var(--move-bg-base);
   --move-surface-alt: var(--move-bg-base);
   --move-surface-alt-hover: var(--move-bg-subtle);
 }

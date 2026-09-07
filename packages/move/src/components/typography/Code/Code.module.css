@@ -1,9 +1,9 @@
 .root {
-  /* Component tokens. We don't use --move-surface-inset here: on the
-     subtle surface that token maps to bg-base, which renders as white
-     in light theme and makes inline code disappear inside a Card.
-     bg-muted is theme-aware (gray-100 / gray-800) and stays visible on
-     every surface, even if it doesn't follow the alternating cascade. */
+  /* Deliberately not a relative surface token. Inline code needs to stay
+     visible on every ground, and a fill that alternates cannot: on the
+     alternate it would resolve to the page ground — white in the light theme —
+     and the code would vanish inside a Card. bg-muted is theme-aware
+     (gray-100 / gray-800) and reads on both. */
   --move-code-bg-subtle: var(--move-bg-muted);
   --move-code-fg: var(--move-fg-base);
   --move-code-border: var(--move-border-base);

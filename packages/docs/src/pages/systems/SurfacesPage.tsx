@@ -82,7 +82,6 @@ const SURFACE_TOKENS: SurfaceToken[] = [
   },
   { token: '--move-surface-hover', use: 'Hover fill on this ground.' },
   { token: '--move-surface-alt-hover', use: 'Hover fill on the alternate.' },
-  { token: '--move-surface-inset', use: 'Recessed regions — a field, a code block.' },
   {
     token: '--move-surface-border',
     use: 'A container edge. Drawn on the page ground; once nested the tint difference carries it.',
