@@ -18,6 +18,12 @@
   display: inline-flex;
   gap: var(--move-segment-gap);
   position: relative;
+  /* A segmented control is as wide as its segments. `inline-flex` says so on
+     its own, but it stops being true the moment the group is a flex or grid
+     item: the parent's default `stretch` sizes it to the full column and the
+     track becomes a bar with the segments huddled at one end. Asking for the
+     content width outranks that stretch, in both layouts. */
+  width: fit-content;
 }
 
 /* The class fallback for the press, on the ITEM — `:active` matches an ancestor
