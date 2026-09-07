@@ -221,6 +221,16 @@ export function Hello() {
                   </>
                 ),
               },
+              {
+                icon: 'git-branch',
+                text: (
+                  <>
+                    Run <Code>npx move hooks</Code> to have those checks run on every commit and
+                    push — see <RouterLink to="/conformance/tooling">Tooling</RouterLink> for what
+                    each one reads, and for wiring them into husky or lefthook.
+                  </>
+                ),
+              },
             ]}
           />
         </Section>

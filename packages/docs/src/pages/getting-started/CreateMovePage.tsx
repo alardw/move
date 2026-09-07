@@ -179,6 +179,12 @@ export function CreateMovePage() {
             <RouterLink to="/contracts/conformance">the conformance model</RouterLink> for how the
             gates fit together.
           </Text>
+          <Text>
+            Git hooks run them for you: the scaffold installs a pre-commit that checks the files you
+            stage, and a pre-push that covers the project. Run <Code>npx move hooks</Code> in any
+            clone to switch them on — see <RouterLink to="/conformance/tooling">Tooling</RouterLink>
+            .
+          </Text>
         </Section>
       </Stack>
       <TocRail items={TOC} />
