@@ -385,3 +385,23 @@ When a spec declares `componentDeps`, read `references/component/infrastructure.
 20. **Icons go through the resolver, never inline `<svg>`** — render default/decorative icons with `useResolvedIcon(name, size)` (or `<Icon name>`), so they fall back to the built-in essentials AND stay re-skinnable via the consumer's resolver. The built-in names (`chevron-*`, `x`, `check`, `eye`/`eye-off`, `circle-check`/`circle-x`, `play`/`pause`, `settings`, …) render even with no resolver present. Call `useResolvedIcon` in `setup`, not in `render`. Only hardcode `<svg>` for genuine loading animations (Spinner/Loader) or Radix Arrow components.
 21. **User-facing strings go in ONE `labels` object, never hardcoded or flat props** — every string the component renders itself (including every `aria-label`) must come from a `labels?: Partial<{Name}Labels>` prop merged with a `DEFAULT_LABELS` const (see step 9). NEVER hardcode a string literal in `aria-label=`/visible text, and NEVER expose individual `playLabel`/`muteLabel`/`closeLabel`-style flat props — consolidate them all into the single `labels` object. This keeps every component localizable the same way.
 22. **Animated open/close MUST use the shared `useDismissable` / `useDismissableExit`** — any component with an animated dismissable surface (popups, overlays, popup-inputs, one-shot dismissables like Alert/Toast) MUST drive its open/close lifecycle through `useDismissable` (Root: the open/close state machine) + `useDismissableExit` (the portaled Content's exit wiring). NEVER hand-roll an `isClosing` `useState` + `runExit().then(onCloseComplete)` effect. Hand-rolling re-opens the "opens once, then nothing happens" bug class: a paused/superseded exit's promise never resolves and hangs the close (`isClosing` stuck true), and a reopen mid-close gets dropped. The hook owns all of it — non-hanging exit (always-armed fallback in the engine), `open()` (no-op while closing, so a focus/incidental open can't cancel a deliberate close-on-select) vs `reopen()` (cancels for an explicit re-click), and re-running the enter on cancel so staggered children never freeze half-faded. Enforced by `check:dismissable-lifecycle`. Reference: `src/animation/useDismissable.ts` (with its JSDoc) and the `DatePicker`/`Select` source.
+
+## Slots the checks can see
+
+A slot the spec does not declare is invisible to every spec-driven check. That is
+not an abstraction — two controls shipped their labels at body copy while every
+other control rendered at the `ui` step, because each rendered an unclassed
+`<span>`: no slot, so no `typography` role, so `check:type-scale` had nothing to
+compare.
+
+So when the source renders caller-supplied text or an interactive element:
+
+- Give it a slot, declared in `slots: [...]` and in the spec.
+- Render it through `cx('name')` **and** spread `sp('name')`, or
+  `check:factory-conformance` reports it as not slotProps-themeable.
+- Widen the factory's slot union — `withMoveComponent<'root' | 'label', …>` —
+  or TypeScript rejects the new name.
+
+And when a slot renders a Move component rather than a raw element, say so:
+`element: 'Button'`, capitalised. That is what tells a focus or disabled check
+the contract is inherited and checked where that component is checked.

@@ -76,7 +76,14 @@ Read these files for class defaults and available options:
 | name | Component export name |
 | componentClass | Infer from animation pattern, ARIA, form pattern |
 | category | From file path |
-| slots | From `slots: [...]` in `withMoveComponent` |
+| slots | From `slots: [...]` in `withMoveComponent`. Every slot needs `name`, `element`, `kind`, `typography`, `description` — the last two are REQUIRED, see below |
+| slot `kind` | What the part IS, in the vocabulary capabilities target: `control` `label` `item` `group` `trigger` `surface` `scrollport` `overlay` `separator` `indicator` `icon` `none`. Read it from the ELEMENT and its job — a `<button>`/`<input>`/`<a>` that IS the control is `control`; one that opens a surface is `trigger`; one of a repeated set is `item`. `'none'` is a decision, an absent key is a type error |
+| slot `element` | The tag, Radix primitive, **or Move component** it renders. Capitalise when it composes one — `element: 'Button'` says the slot inherits Button's contracts, so a focus or disabled check does not look for CSS this component does not own |
+| slot `typography` | Which role on the type scale the slot's text plays: `title` `body` `ui` `meta` `none`. REQUIRED. `check:type-scale` compares it against the size the CSS actually renders, so a wrong value fails and an unclassed span — no slot, no role — is invisible to it |
+| capabilities | Contracts the component signs up to, from `src/capabilities.ts`. Checked BOTH ways: declaring one it does not keep fails, and behaving like one without declaring it fails too. Do not invent names — read the registry |
+| families | Families it joins, from `src/families.ts`. A flat list of names. Joining one commits it to everything the family bundles, including anything the family `includes` |
+| ariaPattern | The ARIA pattern(s) it implements — `combobox` `listbox` `dialog` `menu` `tablist` `progressbar` `tooltip` `disclosure` `region` `label`. What the component IS, which is why it is separate from `families` |
+| `requiredChildren` (on a subComponent) | Sub-components that MUST appear inside it, with a `why`. Only where omitting one fails SILENTLY — `Select.Content` without `Select.Viewport` still renders, opens and selects while the reveal never runs |
 | props | From props interface |
 | defaults | From `defaults: {...}` in `withMoveComponent` |
 | moveProps | From `moveProps: [...]` in `withMoveComponent` |
@@ -234,3 +241,20 @@ Note: Every spec MUST end with `satisfies ComponentSpec` and import the type fro
 14. **Complete default coverage required** — every defaultable prop must get a default via rule-based assignment
 15. **Composable children must be marked** — set `childrenKind: 'composition'` for structural children to avoid text-control misgeneration
 16. **Record internal icons in `iconsUsed`** — list every built-in icon name the source renders (`useResolvedIcon('…')` / `<Icon name>`). The `/customize/icons` usage table derives from it and `check:icon-usage` enforces it matches the source. Omit the field when the component renders no icons.
+17. **Every slot declares `kind` and `typography`** — both required by `SlotDef`, so a spec missing
+    either does not compile. `'none'` is the honest answer for most parts and IS a decision; an
+    absent key is not. Get `kind` right for interactive elements especially: 29 slots rendering a
+    `<button>`, `<input>`, `<a>` or `<select>` were once declared `'none'`, including Button's own
+    root, which made every capability targeting `control` blind to the elements it exists for.
+18. **Capitalise `element` when the slot composes a Move component** — `element: 'Button'`, not
+    `'button'`. That is what tells a focus or disabled check the contract is inherited and kept
+    where the composed component is checked, rather than looked for in CSS this component does not
+    own.
+19. **Read `capabilities` and `families` from the registries** — `src/capabilities.ts` and
+    `src/families.ts`. Never invent a name. Both are checked in both directions, so a declaration
+    that does not hold fails, and behaviour without a declaration fails too. Joining a family
+    commits the component to everything that family bundles, including anything it `includes`.
+20. **Do not add a NEW capability or family while writing a component spec.** Both are library-wide
+    contracts with their own tests — a capability has to create enforcement where there was none,
+    and a family needs more than one member. See `/contracts/capability` and `/contracts/family`.
+    Declaring an existing one is routine; defining one is not.

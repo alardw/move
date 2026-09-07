@@ -61,6 +61,11 @@ Merged validation skill: component conformance, theme validation, spec drift det
 | A18 | Defaultable prop coverage complete | Every defaultable prop has an explicit default value |
 | A19 | Icons resolve through the resolver | Default/decorative icons render via `useResolvedIcon(name, size)` or `<Icon name>`, never a hardcoded inline `<svg>`. Exempt: genuine loading animations (Spinner, Loader) and Radix Arrow SVGs. |
 | A20 | Dismissable lifecycle uses the shared hook | Any animated open/close (popups, overlays, popup-inputs, one-shot dismissables) drives its lifecycle via `useDismissable` + `useDismissableExit`, NEVER a hand-rolled `isClosing` `useState` + `runExit().then(onCloseComplete)`. **FAIL** on a `runExit().then(` call in component source (also caught by `check:dismissable-lifecycle`). The hook owns non-hanging exit, `open()` (no-op while closing) vs `reopen()`, and re-enter-on-cancel. |
+| A21 | Every slot declares `kind` and `typography` | Both required by `SlotDef`. `'none'` is a decision; an absent key does not compile. An interactive element declared `'none'` hides it from every capability targeting `control` |
+| A22 | Declared capabilities hold, and behaviour is declared | `check:capabilities`, both directions. A slot composing a Move component (capitalised `element`) or using `composes:` inherits the contract and is not re-checked |
+| A23 | Family members keep their family's contract | `check:families` walks the composition chain, so a family that `includes` another is checked against both |
+| A24 | A required child is present | `check:required-children` — e.g. `Select.Content` without `Select.Viewport` still renders, opens and selects while the reveal never runs |
+| A25 | Option rows use the shared definition | `check:option-rows` — every keyboard-highlightable row is styled from `--move-option-*`. A surface that genuinely differs redefines the token locally rather than inlining a number |
 
 #### B. CSS Module (`{Name}.module.css`)
 
