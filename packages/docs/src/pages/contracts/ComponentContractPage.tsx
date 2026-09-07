@@ -152,7 +152,9 @@ const IDENTITY: FieldRow[] = [
   { name: 'componentClass', type: 'ComponentClass', required: true, description: <>Component class — determines template and default behaviors. One of <Term>presentational</Term>, <Term>interactive</Term>, <Term>input_toggle</Term>, <Term>input_popup</Term>, <Term>input_plain</Term>, <Term>disclosure</Term>, <Term>overlay_layer</Term>, <Term>overlay_popup</Term>, <Term>display</Term>, <Term>navigation</Term>.</> },
   { name: 'category', type: 'string', required: true, description: <>Source category folder (e.g. <Code>'form'</Code>, <Code>'overlay'</Code>, <Code>'data-display'</Code>).</> },
   { name: 'description', type: 'string', required: true, description: 'Brief one-line description.' },
-  { name: 'families', type: 'Record<string, string[]>', required: false, description: <>Component-family memberships (<Code>behavior</Code> / <Code>state</Code> / <Code>animation</Code> / <Code>a11y</Code>) used by the cross-component drift checks.</> },
+  { name: 'families', type: 'string[]', required: false, description: <>Families this component joins — named bundles of promises, defined in <Code>src/families.ts</Code> and verified by <Code>check:families</Code>. Flat: it used to carry three axes that were not the same kind of thing.</> },
+  { name: 'ariaPattern', type: 'string[]', required: false, description: <>The ARIA pattern(s) it implements — <Code>combobox</Code>, <Code>listbox</Code>, <Code>dialog</Code>, <Code>menu</Code>, <Code>tablist</Code>, <Code>progressbar</Code>. What the component IS, rather than what it opts into, which is why it sits apart from <Code>families</Code>.</> },
+  { name: 'capabilities', type: 'string[]', required: false, description: <>Contracts it signs up to (see <Code>src/capabilities.ts</Code>), each targeting slot KINDS rather than names. Checked both ways by <Code>check:capabilities</Code>: a declared capability must hold, and source exhibiting one must declare it.</> },
 ];
 
 const STRUCTURE: FieldRow[] = [
@@ -168,7 +170,9 @@ const STRUCTURE: FieldRow[] = [
 
 const SLOT_DEF: FieldRow[] = [
   { name: 'name', type: 'string', required: true, description: <>Slot name (e.g. <Code>'root'</Code>, <Code>'indicator'</Code>, <Code>'content'</Code>).</> },
-  { name: 'element', type: 'string', required: true, description: 'HTML element or Radix primitive this slot renders.' },
+  { name: 'element', type: 'string', required: true, description: <>The HTML element, Radix primitive, or Move component this slot renders. A capitalised name means it COMPOSES that component and inherits its contracts — a player's play button renders <Code>Button</Code>, so its focus ring is checked there rather than twice.</> },
+  { name: 'kind', type: 'SlotKind', required: true, description: <>What this part IS, in the vocabulary capabilities target — <Code>control</Code>, <Code>label</Code>, <Code>item</Code>, <Code>group</Code>, <Code>trigger</Code>, <Code>surface</Code>, <Code>scrollport</Code>, <Code>overlay</Code>, <Code>separator</Code>, <Code>indicator</Code>, <Code>icon</Code>, or <Code>none</Code>. Required, because <Code>'none'</Code> is a decision and an absent key is not.</> },
+  { name: 'typography', type: 'TypographyRole', required: true, description: <>Which role on the type scale this slot's text plays — <Code>title</Code>, <Code>body</Code>, <Code>ui</Code>, <Code>meta</Code>, or <Code>none</Code>. <Code>check:type-scale</Code> compares it against the size the CSS actually renders, so an unclassed span (no slot, no role) is invisible to it.</> },
   { name: 'description', type: 'string', required: true, description: 'Brief description of purpose.' },
 ];
 
@@ -188,6 +192,7 @@ const SUBCOMPONENT_DEF: FieldRow[] = [
   { name: 'props', type: 'PropDef[]', required: true, description: 'Props for this sub-component.' },
   { name: 'usesFactory', type: 'boolean', required: true, description: 'Whether this sub-component uses the factory (vs a plain FC).' },
   { name: 'radixPrimitive', type: 'string', required: false, description: 'Radix primitive this wraps (if any).' },
+  { name: 'requiredChildren', type: '{ name, why }[]', required: false, description: <>Sub-components that MUST appear inside this one. <Code>Select.Content</Code> needs a <Code>Select.Viewport</Code>, and omitting it fails silently — the select still renders, opens and selects while the reveal never runs. Enforced by <Code>check:required-children</Code>, across the docs as well as the library.</> },
   { name: 'description', type: 'string', required: true, description: 'Brief description.' },
 ];
 

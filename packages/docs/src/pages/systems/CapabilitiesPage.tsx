@@ -32,25 +32,19 @@ const CAPABILITIES: Cap[] = [
     name: 'takes-disabled',
     parts: 'control, label',
     gives: 'A disabled control looks disabled and stops responding, the same way everywhere.',
-    live: false,
+    live: true,
   },
   {
     name: 'has-label',
     parts: 'label',
     gives: 'Every control is named the same way, and its label sits on the same step of the type scale.',
-    live: false,
+    live: true,
   },
   {
     name: 'takes-focus',
     parts: 'control, scrollport',
     gives: 'One focus ring, from your theme, on everything a keyboard can reach.',
-    live: false,
-  },
-  {
-    name: 'roves-focus',
-    parts: 'group',
-    gives: 'Arrow keys move within a set, the set is one tab stop, and the page does not scroll behind it.',
-    live: false,
+    live: true,
   },
 ];
 
@@ -135,8 +129,7 @@ export function CapabilitiesPage() {
             <Text>
               A capability is one promise, kept by every component it applies to. Each is checked
               both ways: a component claiming one has to keep it, and a component behaving like one
-              has to say so — the second is what catches the promise nobody wrote down. Two are
-              enforced today; the rest are agreed and not yet wired.
+              has to say so — the second is what catches the promise nobody wrote down. All five are enforced, in both directions.
             </Text>
             <Table>
               <Table.Header>
