@@ -412,7 +412,7 @@ export const spec = {
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
 
-  componentDeps: ['Icon'] as string[],
+  componentDeps: [] as string[],
 
   testing: {
     behaviors: [

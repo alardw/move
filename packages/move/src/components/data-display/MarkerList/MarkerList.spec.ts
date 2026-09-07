@@ -318,7 +318,7 @@ export const spec = {
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
 
-  componentDeps: ['Stack', 'Icon'] as string[],
+  componentDeps: ['Icon'] as string[],
 
   testing: {
     behaviors: [

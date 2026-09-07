@@ -424,7 +424,7 @@ export const spec = {
   engineImports: ['withMoveComponent'] as string[],
 
   radixPrimitive: undefined,
-  componentDeps: [] as string[],
+  componentDeps: ['Select'] as string[],
 
   testing: {
     behaviors: [

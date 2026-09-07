@@ -960,7 +960,7 @@ export const spec = {
   radixPrimitive: 'DropdownMenu',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef', 'elementTypeName'] as string[],
-  componentDeps: [] as string[],
+  componentDeps: ['SurfaceProvider'] as string[],
 
   testing: {
     behaviors: [

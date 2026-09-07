@@ -167,7 +167,7 @@ export const spec = {
   hasHook: false,
   engineImports: ['withMoveComponent'],
 
-  componentDeps: ['Icon'],
+  componentDeps: [],
 
   testing: {
     behaviors: [

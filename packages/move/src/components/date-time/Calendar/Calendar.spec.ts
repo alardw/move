@@ -396,11 +396,6 @@ export const spec = {
     { name: '--move-calendar-weeknum-fg', value: 'var(--move-fg-subtle)', slot: 'weekNumber' },
 
     // Picker overlays (month/year)
-    { name: '--move-calendar-picker-bg', value: 'var(--move-bg-subtle)', slot: 'picker' },
-    { name: '--move-calendar-picker-border', value: 'var(--move-border-base)', slot: 'picker' },
-    { name: '--move-calendar-picker-radius', value: 'var(--move-rounded-lg)', slot: 'picker' },
-    { name: '--move-calendar-picker-shadow', value: 'var(--move-shadow-md)', slot: 'picker' },
-    { name: '--move-calendar-picker-padding', value: 'var(--move-spacing-sm)', slot: 'picker' },
 
     // Event slot
     { name: '--move-calendar-event-radius', value: 'var(--move-rounded-sm)', slot: 'eventSlot' },
@@ -447,7 +442,7 @@ export const spec = {
   hasHook: true,
   engineImports: ['useControlledState'] as string[],
 
-  componentDeps: ['Button', 'Icon', 'Select'] as string[],
+  componentDeps: ['CalendarNav', 'MonthGrid'] as string[],
 
   testing: {
     behaviors: [

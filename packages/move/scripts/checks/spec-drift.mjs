@@ -715,6 +715,43 @@ function checkComponent(componentDir) {
         );
       }
     }
+
+    // 0d. componentDeps parity — the same argument, one field over. It records
+    //     the other Move components this one is built from, including the
+    //     shared internals under _shared/ that have no spec of their own, and
+    //     nothing read it either. VideoPlayer listed Popover and Button months
+    //     after it stopped importing them, and did not list PlayerButton, which
+    //     it does. A shared internal's only appearance in the spec system is
+    //     here, so this list going stale is the whole record going stale.
+    const declaredDeps = specText.match(/componentDeps:\s*\[([^\]]*)\]/s);
+    if (declaredDeps) {
+      const listed = [...declaredDeps[1].matchAll(/'([^']+)'/g)].map((m) => m[1]);
+      const imported = new Set();
+      for (const m of dirSrc.matchAll(
+        /import\s*\{([^}]*)\}\s*from\s*'(\.\.[^']*)'/g,
+      )) {
+        // Relative imports only: a Move component or a shared internal. Radix
+        // and node_modules are not this list's business.
+        if (/\/(engine|animation|infrastructure|adapters)'?$/.test(m[2])) continue;
+        for (const part of m[1].split(',')) {
+          const named = part.trim().replace(/\s+as\s+\w+$/, '');
+          // Components only: a SCREAMING_CASE name is a constant and a
+          // `*Context` is a context object, and neither is something this
+          // component is BUILT FROM in the sense the field records.
+          const isComponent =
+            /^[A-Z]/.test(named) && !/^[A-Z0-9_]+$/.test(named) && !named.endsWith('Context');
+          if (named && !named.startsWith('type ') && isComponent) imported.add(named);
+        }
+      }
+      const missingDeps = [...imported].filter((i) => !listed.includes(i));
+      const staleDeps = listed.filter((i) => !imported.has(i));
+      if (missingDeps.length) {
+        errors.push(`spec componentDeps is missing what the source builds from: ${missingDeps.join(', ')}`);
+      }
+      if (staleDeps.length) {
+        errors.push(`spec componentDeps lists what the source no longer uses: ${staleDeps.join(', ')}`);
+      }
+    }
   }
 
   // 1. Compound keys ↔ subComponents

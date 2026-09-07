@@ -576,7 +576,7 @@ export const spec = {
     'composeHandlers',
   ] as string[],
 
-  componentDeps: [] as string[],
+  componentDeps: ['SurfaceProvider'] as string[],
 
   testing: {
     behaviors: [

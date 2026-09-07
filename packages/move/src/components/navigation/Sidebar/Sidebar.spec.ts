@@ -996,7 +996,7 @@ export const spec = {
     'composeHandlers',
   ] as string[],
 
-  componentDeps: ['Tooltip'] as string[],
+  componentDeps: ['Button', 'Icon', 'LayerProvider', 'SurfaceProvider', 'Tooltip'] as string[],
 
   testing: {
     behaviors: [

@@ -537,7 +537,7 @@ export const spec = {
   hasHook: true,
   engineImports: ['useControlledState'] as string[],
 
-  componentDeps: ['Button', 'Icon', 'ToggleGroup'] as string[],
+  componentDeps: ['Button', 'EventSlot', 'TimeGrid', 'ToggleGroup'] as string[],
 
   testing: {
     behaviors: [

@@ -58,6 +58,12 @@ export const CHECKS: CheckDoc[] = [
       'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
   },
   {
+    name: 'shared-orphans',
+    appliesTo: 'component',
+    enforces:
+      'Every component under _shared/ is imported by something. They have no spec and no external consumer, so nothing else notices when the last importer drops them.',
+  },
+  {
     name: 'containing-block',
     appliesTo: 'component',
     enforces:

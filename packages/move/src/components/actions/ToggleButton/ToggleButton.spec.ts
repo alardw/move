@@ -147,7 +147,7 @@ export const spec = {
   radixPrimitive: 'Toggle',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
-  componentDeps: ['Button'] as string[],
+  componentDeps: [] as string[],
 
   childrenKind: 'text' as const,
 

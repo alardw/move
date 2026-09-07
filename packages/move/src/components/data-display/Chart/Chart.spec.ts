@@ -530,7 +530,7 @@ export const spec = {
   hasHook: true,
   engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
 
-  componentDeps: ['Button', 'Text', 'Loader'] as string[],
+  componentDeps: ['Button', 'Loader', 'Text', 'Tooltip'] as string[],
 
   testing: {
     behaviors: [

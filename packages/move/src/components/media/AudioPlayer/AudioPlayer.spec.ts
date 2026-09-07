@@ -385,7 +385,7 @@ export const spec = {
   hasHook: true,
   engineImports: ['withMoveComponent', 'useControlledState', 'composeHandlers'] as string[],
 
-  componentDeps: ['Button', 'PlayerSettingsMenu'] as string[],
+  componentDeps: ['PlayerButton', 'PlayerSettingsMenu'] as string[],
 
   testing: {
     behaviors: [
