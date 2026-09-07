@@ -70,6 +70,8 @@ const TOC: TocItem[] = [
   { href: '#animation', label: 'Overview' },
   { href: '#built-in', label: 'Built in, not bolted on' },
   { href: '#one-system', label: 'One system' },
+  { href: '#state-animation-state', label: 'State, animation, state' },
+  { href: '#css-transitions', label: 'Where CSS may animate' },
   { href: '#anime-js', label: 'Running on anime.js' },
   { href: '#reduced-motion', label: 'Reduced motion' },
   { href: '#going-deeper', label: 'Going deeper' },
@@ -160,71 +162,27 @@ export function AnimationOverviewPage() {
         </Section>
 
         <Section
-          id="ownership"
+          id="state-animation-state"
           title="State, animation, state"
-          lede="An animation is a bridge between two resting states — never a state itself."
+          lede="An animation is the trip between two resting states. It is never a state itself."
         >
           <Text>
-            The shape of every animation in Move is the same:{' '}
-            <Text as="strong" weight="bold">
-              state 1 &rarr; animation &rarr; state 2
-            </Text>
-            . Both ends are rendered and correct with nothing running. The animation is the
-            transient middle, and when it is done it should get out of the way so state 2 applies on
-            its own.
+            Every animation in Move has the same shape: a state, the animation, and the state it
+            lands on. Both ends are correct with nothing running. The animation is only the journey
+            between them.
           </Text>
           <Text>
-            That matters because animations here run on anime.js, which writes INLINE STYLES. CSS
-            and animation are not two systems — they are one language at two cascade levels, where a
-            stylesheet rule is the floor and an inline style always wins. Three things follow:
-          </Text>
-          <HighlightList
-            items={[
-              {
-                icon: 'lock',
-                text: 'An animation is a permanent override, not a temporary one. anime does not clean up after itself, so the last value it wrote sits on the element indefinitely — which is how a cancelled animation strands an element half-way, with no state left to fall back to.',
-              },
-              {
-                icon: 'eye-off',
-                text: 'A CSS rule for a property an animation also writes works exactly once: before that animation first runs. It is a fuse, not a fallback.',
-              },
-              {
-                icon: 'git-branch',
-                text: 'So: one writer per property, per element. Not a convention we picked — the cascade decided it. All we choose is whether it is deliberate.',
-              },
-            ]}
-          />
-          <Text>
-            <Text as="strong" weight="bold">
-              States are rendered, never animated.
-            </Text>{' '}
-            Express one in CSS when it is declarable — a dimmed mark under an attribute — and in the
-            RENDERER when it needs computing, like an exploded pie whose slices each push along
-            their own angle. Both are correct at rest. Neither waits for anything to finish.
+            That is what makes reduced motion work. When someone has it set, Move puts the element
+            straight into the state it was heading for and skips the journey — and because the state
+            was never the animation's to hold, nothing is missing when the motion goes. The same is
+            true anywhere you turn animations off.
           </Text>
           <Text>
-            <Text as="strong" weight="bold">
-              Animations move between them.
-            </Text>{' '}
-            They may write a DOM property directly where they are its only writer. Where the state
-            is computed geometry they animate the INPUT and let the renderer redraw — a pie sweeps
-            by animating one number, so nothing but the renderer ever writes a path. That is the
-            difference between an animation that composes and one that fights.
-          </Text>
-          <Text>
-            <Text as="strong" weight="bold">
-              The handoff is the one exception.
-            </Text>{' '}
-            CSS may set state 1 under an attribute the component removes once the animation takes
-            over, as Chart does with <Code size="sm">[data-enter=&quot;pending&quot;]</Code>. One
-            direction only.
-          </Text>
-          <Text>
-            <Text as="strong" weight="bold">
-              Motion targets markers
-            </Text>{' '}
-            — <Code size="sm">[data-bar]</Code>, <Code size="sm">[data-dot]</Code> — never bare
-            elements, so a stylesheet can see which properties are already spoken for.
+            It follows that one thing writes a property at a time. An animation writes inline
+            styles, and those outrank any stylesheet, so an animation still holding what it wrote
+            leaves the state underneath unable to apply. Move's animations give their properties
+            back when they arrive, which is what lets the two ends stay in charge.{' '}
+            <RouterLink to="/animation/lifecycle">Handing back</RouterLink> follows one through.
           </Text>
         </Section>
 
@@ -242,14 +200,9 @@ export function AnimationOverviewPage() {
           <Text>
             Only transitions are in scope. Setting opacity or a transform flatly is a state, and
             states belong in CSS — a dimmed mark, a chevron resting at an angle. It is transitioning
-            them that makes them motion. Chart's hover emphasis is a flat opacity rule for that
-            reason: a resting state that depended on an animation finishing could be interrupted and
-            left stranded, which is not a state at all.
+            them that turns them into motion.
           </Text>
-          <Text>
-            So the line is drawn by property, because that is what decides whether a collision is
-            possible:
-          </Text>
+          <Text>Which properties, then:</Text>
           <HighlightList
             items={[
               {
@@ -267,10 +220,9 @@ export function AnimationOverviewPage() {
             ]}
           />
           <Text>
-            `check:css-transitions` enforces this (rule styles-12). A genuine exception — media
-            chrome fading with pointer presence, say, which composes with nothing — takes a
-            `transition-exempt` comment giving the reason, so the exception stays visible rather
-            than becoming the norm.
+            A check enforces this, so it holds as the library grows. Somewhere the rule genuinely
+            does not apply — media chrome fading with the pointer, which composes with nothing else
+            — a comment records the reason on the line, and the exception stays visible.
           </Text>
         </Section>
 
@@ -301,6 +253,13 @@ export function AnimationOverviewPage() {
             When a visitor has <Code>prefers-reduced-motion</Code> set, Move settles elements to
             their end state instead of animating to it. There's no per-component opt-in and no
             half-played frames — the whole library respects the setting at once.
+          </Text>
+          <Text>
+            A control still responds to a pointer there, because a hover or a press is held in CSS
+            rather than by the animation that travels to it —{' '}
+            <RouterLink to="/animation/lifecycle">handing back</RouterLink> covers how that works,
+            and it is the same reason <Code>animations={'{false}'}</Code> leaves a component that
+            still reacts.
           </Text>
         </Section>
 

@@ -1,5 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Icon, Badge, Button, Toast, toast } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Code, Icon, Badge, Button, Toast, toast } from 'move';
 import {
   InlineDemo,
   LifecycleIllustration,
@@ -22,6 +22,7 @@ const TOC: TocItem[] = [
   { href: '#one-component', label: 'See it in action' },
   { href: '#enter', label: 'Enter' },
   { href: '#respond', label: 'Respond' },
+  { href: '#handing-back', label: 'Handing back' },
   { href: '#exit', label: 'Exit' },
   { href: '#how-it-connects', label: 'How it connects' },
 ];
@@ -76,7 +77,7 @@ export function AnimationLifecyclePage() {
           <InlineDemo blurb="Send a toast, then hover it before it clears.">
             <Stack direction="row" gap="sm">
               <Button
-                onClick={() => toast.info('That worked, now hover on me to stop the countdown!')}
+                onClick={() => toast.info('Hover me to hold the countdown.', { duration: 6000 })}
               >
                 Send a toast
               </Button>
@@ -109,6 +110,39 @@ export function AnimationLifecyclePage() {
             under a press, the lift on hover. Others follow a value changing: an accordion
             expanding, a sidebar collapsing to icons. Both run through the same system, so a
             component reacts the same way wherever it appears.
+          </Text>
+        </Section>
+
+        <Section
+          id="handing-back"
+          title="Handing back"
+          lede="A hover ends and a press lets go, so the state a component returns to has to outlive the animation that got there."
+        >
+          <Text>
+            Rest, hover and pressed are held in CSS. Two of them are carried by <Code>:hover</Code>{' '}
+            and <Code>:active</Code>, and the third by the absence of both. The animation only
+            travels between them, and gives the properties back the moment it arrives.
+          </Text>
+          <Text>
+            Giving them back is the part that matters. An animation writes inline styles, and those
+            outrank any stylesheet rule — so one that keeps them is holding the state rather than
+            arriving at it, and the rule it was meant to hand over to never gets another turn.
+          </Text>
+          <Text>
+            Which is why the states survive without any motion at all. Switch animations off with{' '}
+            <Code>animations={'{false}'}</Code>, or arrive with reduced motion set, and the control
+            still lifts under the pointer and presses in under a click. It gets there at once
+            instead of travelling.
+          </Text>
+          <Text>
+            The opening frame is written immediately rather than on the next tick, so there is never
+            a moment where the rule has let go and the animation has not yet taken hold. Two cases
+            keep what they wrote, for the same reason in reverse: a loop has no arrival, and an
+            element on its way out has nothing to return to.
+          </Text>
+          <Text color="muted" size="sm">
+            If something snaps at the end of its animation, it was leaning on that animation to hold
+            a state the CSS never declared.
           </Text>
         </Section>
 
