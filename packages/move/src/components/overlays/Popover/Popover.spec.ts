@@ -14,7 +14,7 @@ export const spec = {
   choreographies: ['popupSurface'],
   families: ['popup-content'],
   ariaPattern: ['dialog'],
-  capabilities: ['owns-surface', 'scrolls-content'],
+  capabilities: ['owns-surface', 'scrolls-content', 'takes-focus'],
   behavior: {
     popup: {
       // A button trigger opening arbitrary content: focus enters it and

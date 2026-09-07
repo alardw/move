@@ -10,7 +10,7 @@ export const spec = {
   description:
     'Multi-line text input with outlined/filled variants, auto-resize support, and configurable size',
   families: ['text-entry'],
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus'],
 
   compound: false,
   rootElement: 'div',

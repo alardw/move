@@ -13,6 +13,8 @@ export const spec = {
   families: ['media-player'],
   compound: false,
   rootElement: 'div',
+  capabilities: ['takes-focus'],
+
   slots: [
     {
       name: 'root',

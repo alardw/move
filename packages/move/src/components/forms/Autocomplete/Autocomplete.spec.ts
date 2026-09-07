@@ -16,7 +16,7 @@ export const spec = {
   choreographies: ['popupMenu'],
   families: ['popup-list'],
   ariaPattern: ['combobox'],
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus', 'takes-disabled'],
 
   // Behavior-family-specific contract. The popup family asserts a
   // component closes on Escape, outside click, scroll, and resize.

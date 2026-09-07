@@ -15,6 +15,8 @@ export const spec = {
 
   compound: true,
   rootElement: 'button',
+  capabilities: ['takes-focus', 'has-label', 'takes-disabled'],
+
   slots: [
     {
       name: 'root',
@@ -22,6 +24,14 @@ export const spec = {
       kind: 'control',
       typography: 'none',
       description: 'Radix Switch.Root button element that manages checked state and ARIA',
+    },
+    {
+      name: 'label',
+      element: 'span',
+      kind: 'label',
+      typography: 'ui',
+      description:
+        'The text naming the switch. A declared slot so its size is checked against the type scale rather than inherited by accident.',
     },
     {
       name: 'thumb',

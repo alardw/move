@@ -45,10 +45,10 @@ export interface SwitchRootProps extends React.HTMLAttributes<HTMLElement> {
   value?: string;
 }
 
-const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>({
+const SwitchRoot = withMoveComponent<'root' | 'label', SwitchRootProps, HTMLButtonElement>({
   name: 'SwitchRoot',
   styles,
-  slots: ['root'] as const,
+  slots: ['root', 'label'] as const,
   moveProps: [
     'checked',
     'defaultChecked',
@@ -197,7 +197,12 @@ const SwitchRoot = withMoveComponent<'root', SwitchRootProps, HTMLButtonElement>
           return (
             <label className={styles.wrapper} {...(props.disabled ? { 'data-disabled': '' } : {})}>
               {switchEl}
-              <span className={styles.label}>{props.label as React.ReactNode}</span>
+              <span
+                {...(sp('label') as Record<string, unknown>)}
+                className={cx('label', (sp('label') as { className?: string }).className)}
+              >
+                {props.label as React.ReactNode}
+              </span>
             </label>
           );
         }

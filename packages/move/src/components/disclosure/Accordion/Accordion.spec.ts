@@ -13,7 +13,7 @@ export const spec = {
   choreographies: ['disclosure'],
   families: ['disclosure'],
   ariaPattern: ['disclosure'],
-  capabilities: ['owns-surface'],
+  capabilities: ['owns-surface', 'takes-focus'],
   behavior: {
     disclosure: {
       animatesOpen: true,

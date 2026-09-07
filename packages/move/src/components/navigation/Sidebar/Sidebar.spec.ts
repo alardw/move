@@ -19,7 +19,7 @@ export const spec = {
   // picking whichever it resembles at the width you happened to test.
   families: [],
   ariaPattern: ['disclosure'],
-  capabilities: ['owns-surface', 'scrolls-content'],
+  capabilities: ['owns-surface', 'scrolls-content', 'takes-focus'],
   behavior: {
     disclosure: {
       animatesOpen: true,

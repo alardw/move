@@ -14,7 +14,7 @@ export const spec = {
   choreographies: ['sidePanel'],
   families: ['overlay-panel'],
   ariaPattern: ['dialog'],
-  capabilities: ['owns-surface', 'scrolls-content'],
+  capabilities: ['owns-surface', 'scrolls-content', 'takes-focus'],
   behavior: {
     modal: {
       closeOnEscape: true,

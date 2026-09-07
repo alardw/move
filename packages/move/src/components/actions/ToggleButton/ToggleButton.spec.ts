@@ -15,6 +15,8 @@ export const spec = {
 
   compound: false,
   rootElement: 'RadixToggle.Root',
+  capabilities: ['takes-focus', 'takes-disabled'],
+
   slots: [
     {
       name: 'root',

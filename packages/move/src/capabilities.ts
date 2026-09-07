@@ -48,6 +48,17 @@ export interface CapabilityContract {
   cssDeclaration?: string;
   /** An equally valid answer elsewhere in the stylesheet, if one exists. */
   cssAlternative?: string;
+  /**
+   * Whether a slot that COMPOSES a Move component satisfies this by inheritance.
+   *
+   * A media player's play button renders <Button>, so its focus ring, its
+   * disabled treatment and its press already have a contract — checked on
+   * Button, where it belongs. Re-checking here would only duplicate that, and
+   * the CSS it would look for does not exist because the component it composes
+   * owns it. Slots declare which case they are through `element`: a lowercase
+   * tag is hand-rolled, a capitalised one composes.
+   */
+  composedInherits?: boolean;
   /** CSS custom properties the targeted slots' rules must resolve to. */
   cssTokens?: readonly string[];
   /** Why this contract exists — shown when the check fails. */
@@ -82,16 +93,42 @@ export const CAPABILITIES = {
       'seventeen said nothing.',
   },
 
-  'stripes-rows': {
-    targets: ['item', 'separator'],
-    impliedByKind: false,
-    cssTokens: ['--move-stripe', '--move-rule', '--move-state-hover'],
+  'takes-focus': {
+    targets: ['control', 'scrollport'],
+    impliedByKind: true,
+    cssDeclaration: ':focus-visible',
+    cssAlternative: ':focus-within',
+    composedInherits: true,
     why:
-      'Alternating rows, hover and dividers are marks ON a ground, not grounds. ' +
-      'Drawn from the surface ramp they can only ever be one rung from something ' +
-      'else’s ground; derived from the foreground they hold the same strength ' +
-      'wherever they land, and cannot collide.',
+      'A keyboard user has to see where they are. Fifty-nine control slots draw a ring today and ' +
+      'not one of them is required to — the ring is a convention, and a convention with nothing ' +
+      'holding it is what drifts. Without a rule the browser draws its own, in the OS accent ' +
+      'colour, which belongs to neither the theme nor the page.',
   },
+
+  'takes-disabled': {
+    targets: ['control'],
+    impliedByKind: false,
+    cssDeclaration: ':disabled',
+    cssAlternative: '[data-disabled]',
+    composedInherits: true,
+    why:
+      'Disabled has to be visible, not just announced. Dimming the box while the label stays at ' +
+      'full strength reads as enabled — that is what a checkbox shipped, 0.6 opacity over a ' +
+      'near-white fill, about a three percent shift, on the least visible half of the control.',
+  },
+
+  'has-label': {
+    targets: ['label'],
+    impliedByKind: true,
+    composedInherits: false,
+    why:
+      'A control names itself the same way everywhere. The point is the DECLARATION: an unclassed ' +
+      'span is not a slot, so it carries no typography role, so check:type-scale has nothing to ' +
+      'compare and cannot see it. That is how two controls shipped labels at body copy while every ' +
+      'other one rendered at the ui step.',
+  },
+
 } as const satisfies Record<string, CapabilityContract>;
 
 export type CapabilityName = keyof typeof CAPABILITIES;

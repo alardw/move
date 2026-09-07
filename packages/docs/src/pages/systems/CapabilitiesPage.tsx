@@ -17,16 +17,16 @@ type Cap = { name: string; parts: string; gives: string; live: boolean };
 
 const CAPABILITIES: Cap[] = [
   {
-    name: 'takes-size',
-    parts: 'control',
-    gives: 'sm is the same height on a button, a select and a text field, so a form row lines up.',
-    live: false,
+    name: 'owns-surface',
+    parts: 'surface',
+    gives: 'Anything nested inside picks the right colours for the ground it sits on.',
+    live: true,
   },
   {
-    name: 'takes-focus',
-    parts: 'control, item, scrollport',
-    gives: 'One focus ring, from your theme, on everything a keyboard can reach.',
-    live: false,
+    name: 'scrolls-content',
+    parts: 'scrollport',
+    gives: 'Arrow keys reach what is out of sight, and the focus ring is the one from your theme.',
+    live: true,
   },
   {
     name: 'takes-disabled',
@@ -37,81 +37,71 @@ const CAPABILITIES: Cap[] = [
   {
     name: 'has-label',
     parts: 'label',
-    gives: 'Every control is named the same way, so screen readers announce them consistently.',
+    gives: 'Every control is named the same way, and its label sits on the same step of the type scale.',
     live: false,
   },
   {
-    name: 'has-popup',
-    parts: 'surface, trigger',
-    gives: 'Popups open, position, close on Escape and hand focus back to the trigger alike.',
+    name: 'takes-focus',
+    parts: 'control, scrollport',
+    gives: 'One focus ring, from your theme, on everything a keyboard can reach.',
     live: false,
   },
   {
-    name: 'groups-items',
+    name: 'roves-focus',
     parts: 'group',
-    gives: 'A set announces itself as a set, with a name and a count.',
+    gives: 'Arrow keys move within a set, the set is one tab stop, and the page does not scroll behind it.',
     live: false,
-  },
-  {
-    name: 'owns-surface',
-    parts: 'surface',
-    gives: 'Anything nested inside picks the right colours for the ground it sits on.',
-    live: true,
-  },
-  {
-    name: 'scrolls-content',
-    parts: 'scrollport',
-    gives: 'Arrow keys reach what is out of sight, and the focus ring is yours.',
-    live: true,
-  },
-  {
-    name: 'stripes-rows',
-    parts: 'item, separator',
-    gives: 'Stripes, hover and dividers read at the same strength on any background.',
-    live: true,
   },
 ];
 
 const FAMILIES: { name: string; bundles: string; members: string }[] = [
   {
-    name: 'form-input',
-    bundles: 'takes-size, takes-focus, takes-disabled, has-label',
-    members: 'InputText, Select, Checkbox, Switch, RadioGroup, and 12 more',
-  },
-  {
-    name: 'popup-anchored',
-    bundles: 'has-popup, owns-surface, scrolls-content, takes-focus',
-    members: 'Select, Dropdown, Popover, Tooltip, Autocomplete, DatePicker',
-  },
-  {
-    name: 'modal-overlay',
-    bundles: 'has-popup, owns-surface, takes-focus',
+    name: 'overlay-panel',
+    bundles: 'owns-surface, scrolls-content',
     members: 'Dialog, Drawer',
   },
   {
+    name: 'anchored-popup',
+    bundles: 'the shared core the two below include',
+    members: '— (joined through popup-list or popup-content)',
+  },
+  {
+    name: 'popup-list',
+    bundles: 'anchored-popup + scrolls-content',
+    members: 'Select, Autocomplete, Dropdown, TimeField',
+  },
+  {
+    name: 'popup-content',
+    bundles: 'anchored-popup',
+    members: 'Popover, Tooltip, ColorInput, DatePicker',
+  },
+  {
+    name: 'text-entry',
+    bundles: 'delegated focus, a form value, one size/variant/width vocabulary',
+    members: 'InputText, Textarea, Password, NumberInput, PinInput',
+  },
+  {
+    name: 'binary-control',
+    bundles: 'toggle keyboard, focus on the control itself, a checked state',
+    members: 'Checkbox, Switch, ToggleButton',
+  },
+  {
     name: 'disclosure',
-    bundles: 'owns-surface',
+    bundles: 'the disclosure choreography and ARIA pattern',
     members: 'Accordion, Collapsible',
   },
   {
-    name: 'navigation',
-    bundles: 'takes-focus, groups-items',
-    members: 'Tabs, Sidebar, Breadcrumb, Pagination, TableOfContents',
-  },
-  {
-    name: 'layout',
-    bundles: '—',
-    members: 'Stack, Grid, Card, Splitter, ScrollArea',
+    name: 'media-player',
+    bundles: 'the same transport, built from the same controls',
+    members: 'AudioPlayer, VideoPlayer',
   },
 ];
 
 const SAMPLE = `// Dialog.spec.ts
-families: {
-  behavior: ['modal-overlay'],
-  state: ['controlled-open'],
-  a11y: ['dialog'],
-},
-capabilities: ['owns-surface', 'scrolls-content'],`;
+families: ['overlay-panel'],
+ariaPattern: ['dialog'],
+capabilities: ['owns-surface', 'scrolls-content'],
+controlled: 'open',`;
 
 export function CapabilitiesPage() {
   return (
@@ -145,7 +135,8 @@ export function CapabilitiesPage() {
             <Text>
               A capability is one promise, kept by every component it applies to. Each is checked
               both ways: a component claiming one has to keep it, and a component behaving like one
-              has to say so. Three are enforced today; the rest are agreed and not yet wired.
+              has to say so — the second is what catches the promise nobody wrote down. Two are
+              enforced today; the rest are agreed and not yet wired.
             </Text>
             <Table>
               <Table.Header>
@@ -200,9 +191,17 @@ export function CapabilitiesPage() {
         <Section id="families" title="Families">
           <Stack gap="md">
             <Text>
-              Promises cluster. Anything you would call a form control is sized on the same scale,
-              focusable, disableable and named by a label — four that arrive together. A family
-              names the cluster, so a component joins it instead of listing them.
+              A capability is one promise shared by components that are otherwise unrelated — Code,
+              Textarea, ScrollArea and Dialog all scroll, and nobody would call them a family. A
+              family is the other shape: components that ARE the same kind of thing, and so agree on
+              many things at once. Dialog and Drawer match on keyboard, focus, controlled state,
+              dismissal, ARIA and capabilities.
+            </Text>
+            <Text>
+              Families compose. A list you choose from and a panel holding arbitrary content are
+              different — one navigates options, the other does not — but both hang off a trigger and
+              both dismiss the same way. That shared half is written once, in the family they both
+              include.
             </Text>
             <Table>
               <Table.Header>
@@ -227,9 +226,10 @@ export function CapabilitiesPage() {
               </Table.Body>
             </Table>
             <Text>
-              A family holds promises; one that holds none is not a family. <Code>layout</Code> is
-              the open case — its members share a real idea (they express constraints, never a size
-              of their own) that has not been written as a capability yet.
+              A family holds promises, and has more than one member; one that holds none is a
+              category, and one with a single member is a component. Grouping the layout primitives
+              or the navigation components reads well in a menu and guarantees nothing, so neither
+              is a family here.
             </Text>
           </Stack>
         </Section>

@@ -15,6 +15,8 @@ export const spec = {
 
   compound: false,
   rootElement: 'button',
+  capabilities: ['takes-focus', 'has-label', 'takes-disabled'],
+
   slots: [
     {
       name: 'root',

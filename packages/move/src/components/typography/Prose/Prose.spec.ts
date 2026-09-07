@@ -9,7 +9,7 @@ export const spec = {
   category: 'typography',
   description:
     'Rich-text container that styles child HTML elements (headings, paragraphs, lists, code, tables) with consistent typography',
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus'],
 
   compound: false,
   rootElement: 'div',

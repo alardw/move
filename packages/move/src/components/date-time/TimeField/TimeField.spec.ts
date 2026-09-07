@@ -12,7 +12,7 @@ export const spec = {
     'Time input with individual hour/minute/second segments, optional 12h/24h cycle, and dropdown column picker',
   choreographies: ['popupMenu'],
   families: ['popup-list'],
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus', 'takes-disabled'],
   behavior: {
     popup: {
       // The dropdown mirrors segments that are already fully keyboard-operable

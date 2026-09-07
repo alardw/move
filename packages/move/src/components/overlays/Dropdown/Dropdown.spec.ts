@@ -14,7 +14,7 @@ export const spec = {
   choreographies: ['popupMenu'],
   families: ['popup-list'],
   ariaPattern: ['menu'],
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus', 'has-label'],
   behavior: {
     popup: {
       // A button trigger opening a menu: Radix moves focus to the first item

@@ -24,6 +24,8 @@ export const spec = {
 
   compound: true,
   rootElement: 'table',
+  capabilities: ['takes-focus'],
+
   slots: [
     {
       name: 'root',

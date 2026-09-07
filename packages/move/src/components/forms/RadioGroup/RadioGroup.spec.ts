@@ -15,6 +15,8 @@ export const spec = {
 
   compound: true,
   rootElement: 'div',
+  capabilities: ['has-label'],
+
   slots: [
     {
       name: 'root',

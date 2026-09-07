@@ -61,6 +61,7 @@ function loadCapabilities() {
       impliedByKind: /impliedByKind:\s*true/.test(block),
       cssDeclaration: one('cssDeclaration'),
       cssAlternative: one('cssAlternative'),
+      composedInherits: /composedInherits:\s*true/.test(block),
     };
   }
   return caps;
@@ -84,9 +85,9 @@ function slotKinds(spec) {
   if (!block) return new Map();
   const out = new Map();
   for (const m of block[1].matchAll(
-    /name:\s*'([^']+)',\s*element:\s*'[^']*',\s*kind:\s*'(\w+)'/g,
+    /name:\s*'([^']+)',\s*element:\s*'([^']*)',\s*kind:\s*'(\w+)'/g,
   )) {
-    out.set(m[1], m[2]);
+    out.set(m[1], { kind: m[3], element: m[2] });
   }
   return out;
 }
@@ -111,7 +112,7 @@ for (const specPath of specFiles(COMPONENTS)) {
       ?.map((s) => s.slice(1, -1)) ?? [],
   );
   const kinds = slotKinds(spec);
-  const has = (kind) => [...kinds.values()].includes(kind);
+  const has = (kind) => [...kinds.values()].some((v) => v.kind === kind);
 
   for (const [name, cap] of Object.entries(CAPS)) {
     const targeted = cap.targets.some(has);
@@ -142,11 +143,33 @@ for (const specPath of specFiles(COMPONENTS)) {
       problems.push({ rel, msg: `declares '${name}' but never sets ${cap.attribute}` });
     }
     if (cap.cssDeclaration) {
-      const slots = [...kinds].filter(([, k]) => cap.targets.includes(k)).map(([n]) => n);
+      const slots = [...kinds]
+        .filter(([, v]) => cap.targets.includes(v.kind))
+        // A capitalised `element` means the slot renders a Move component, which
+        // carries this contract itself — checked there rather than twice.
+        .filter(([, v]) => !(cap.composedInherits && /^[A-Z]/.test(v.element)))
+        .map(([n]) => n);
       for (const slot of slots) {
-        const rule = new RegExp(`\\.${slot}[^{,]*${cap.cssDeclaration}`);
-        const alt = cap.cssAlternative && new RegExp(cap.cssAlternative);
-        if (!rule.test(css) && !(alt && alt.test(css))) {
+        // Guards stripped before matching. `.root:hover:not(:disabled)` contains
+        // the string `:disabled` while styling the ENABLED state — a contract
+        // satisfied by a negation of itself asserts nothing, and Button, whose
+        // first four `:disabled` mentions are all guards, would have passed on
+        // them alone.
+        const styled = css.replace(/:not\([^)]*\)/g, '');
+        // Escaped, both of them. `[data-disabled]` read as a regex is a
+        // CHARACTER CLASS — any one of d, a, t, -, i, s, b, l, e — so it matched
+        // essentially every stylesheet, and takes-disabled asserted nothing from
+        // the moment it was written. Only the mutation test found it.
+        const lit = (v) => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const rule = new RegExp(`\\.${slot}[^{,]*${lit(cap.cssDeclaration)}`);
+        const alt = cap.cssAlternative && new RegExp(lit(cap.cssAlternative));
+        // CSS Modules composition is the third legitimate route. ToggleButton's
+        // root is `composes: root from Button.module.css`, so it carries
+        // Button's focus ring — its rendered class list holds both classes, and
+        // Button is where that contract is checked. Looking only for a rule in
+        // THIS file reported a component that behaves correctly.
+        const composes = new RegExp(`\\.${slot}\\b[^}]*composes:`, 's').test(css);
+        if (!rule.test(styled) && !(alt && alt.test(styled)) && !composes) {
           problems.push({
             rel,
             msg: `declares '${name}' but .${slot} has no ${cap.cssDeclaration} rule`,

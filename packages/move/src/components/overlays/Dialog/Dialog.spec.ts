@@ -11,7 +11,7 @@ export const spec = {
     'Modal dialog overlay with backdrop, spring entrance animation, and structured header/body/footer layout',
   families: ['overlay-panel'],
   ariaPattern: ['dialog'],
-  capabilities: ['owns-surface', 'scrolls-content'],
+  capabilities: ['owns-surface', 'scrolls-content', 'takes-focus'],
   behavior: {
     modal: {
       closeOnEscape: true,

@@ -13,6 +13,8 @@ export const spec = {
 
   compound: true,
   rootElement: 'div',
+  capabilities: ['takes-focus'],
+
   slots: [
     {
       name: 'root',

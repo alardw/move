@@ -13,7 +13,7 @@ export const spec = {
   choreographies: ['popupMenu'],
   families: ['popup-list'],
   ariaPattern: ['combobox', 'listbox'],
-  capabilities: ['owns-surface', 'scrolls-content'],
+  capabilities: ['owns-surface', 'scrolls-content', 'takes-focus', 'has-label', 'takes-disabled'],
   behavior: {
     popup: {
       // A button trigger opening a listbox: Radix Select moves focus into it,

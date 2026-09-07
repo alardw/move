@@ -9,7 +9,7 @@ export const spec = {
   category: 'typography',
   description:
     'Inline or block code element with variant styling and optional syntax highlighting via CodeHighlighterProvider',
-  capabilities: ['scrolls-content'],
+  capabilities: ['scrolls-content', 'takes-focus'],
 
   compound: false,
   rootElement: 'code',
