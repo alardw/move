@@ -18,7 +18,7 @@ describe('Button', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLButtonElement>;
+      const ref = { current: null } as React.RefObject<HTMLButtonElement | null>;
       render(<Button ref={ref}>Btn</Button>);
       expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });

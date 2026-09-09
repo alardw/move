@@ -42,7 +42,7 @@ export interface UsePositionTrackerOptions {
 
 export interface UsePositionTrackerReturn {
   /** Ref for the indicator element (position: absolute inside the container) */
-  indicatorRef: React.RefObject<HTMLDivElement>;
+  indicatorRef: React.RefObject<HTMLDivElement | null>;
   /** Force-update the indicator position (e.g., after a stagger animation) */
   update: () => void;
 }

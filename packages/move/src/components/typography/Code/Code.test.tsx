@@ -30,7 +30,7 @@ describe('Code', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLElement>;
+      const ref = { current: null } as React.RefObject<HTMLElement | null>;
       render(<Code ref={ref}>code</Code>);
       expect(ref.current).toBeInstanceOf(HTMLElement);
       expect(ref.current?.tagName).toBe('CODE');

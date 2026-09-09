@@ -38,7 +38,7 @@ describe('FileUpload', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <FileUpload.Root ref={ref}>
           <FileUpload.Dropzone>

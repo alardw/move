@@ -11,7 +11,7 @@ export interface UseOverflowOptions {
 
 export interface UseOverflowReturn<T extends Element> {
   /** Attach to the scrollable element. */
-  ref: React.RefObject<T>;
+  ref: React.RefObject<T | null>;
   /** Whether that element's content overflows it right now. */
   isOverflowing: boolean;
 }

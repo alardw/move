@@ -17,7 +17,7 @@ describe('Badge', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLSpanElement>;
+      const ref = { current: null } as React.RefObject<HTMLSpanElement | null>;
       render(<Badge ref={ref}>Badge</Badge>);
       expect(ref.current).toBeInstanceOf(HTMLSpanElement);
     });

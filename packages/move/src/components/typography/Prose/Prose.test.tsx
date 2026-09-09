@@ -18,7 +18,7 @@ describe('Prose', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<Prose ref={ref}>Content</Prose>);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

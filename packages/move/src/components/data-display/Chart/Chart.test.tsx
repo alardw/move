@@ -80,7 +80,7 @@ describe('Chart', () => {
     });
 
     it('forwards className, style and ref', () => {
-      const ref = { current: null } as React.RefObject<HTMLElement>;
+      const ref = { current: null } as React.RefObject<HTMLElement | null>;
       render(
         <Chart
           ref={ref}

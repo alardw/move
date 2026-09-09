@@ -50,7 +50,10 @@ export function Deferred({
 }: DeferredProps) {
   const { ref, inView } = useInView<HTMLElement>({ rootMargin, once: true });
   return (
-    <Component ref={ref as React.Ref<never>} className={className} style={style}>
+    // `Component` is a union of intrinsic tags, so React collapses its ref to
+    // `never`, which no honest ref type overlaps. The widening step is what lets
+    // the two meet.
+    <Component ref={ref as unknown as React.Ref<never>} className={className} style={style}>
       {inView ? children : placeholder}
     </Component>
   );

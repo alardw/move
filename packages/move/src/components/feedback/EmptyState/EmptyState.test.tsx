@@ -13,7 +13,7 @@ describe('EmptyState', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<EmptyState ref={ref}>Content</EmptyState>);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

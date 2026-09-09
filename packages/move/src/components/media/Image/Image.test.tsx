@@ -23,7 +23,7 @@ describe('Image', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<Image ref={ref} src="test.jpg" alt="Test" />);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

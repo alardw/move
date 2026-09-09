@@ -61,7 +61,7 @@ describe('AnimatedText', () => {
     });
 
     it('forwards ref to the root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLElement>;
+      const ref = { current: null } as React.RefObject<HTMLElement | null>;
       render(<AnimatedText ref={ref}>{TEXT}</AnimatedText>);
       expect(ref.current).toBeInstanceOf(HTMLElement);
     });

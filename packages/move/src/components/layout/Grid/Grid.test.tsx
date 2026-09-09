@@ -46,7 +46,7 @@ describe('Grid', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Grid ref={ref} data-testid="grid">
           Content
@@ -293,7 +293,7 @@ describe('Grid.Cell', () => {
     });
 
     it('forwards ref', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Grid.Cell ref={ref} data-testid="cell">
           Content

@@ -19,7 +19,7 @@ describe('ProgressBar', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<ProgressBar ref={ref} value={50} />);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

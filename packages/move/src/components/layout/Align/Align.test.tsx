@@ -18,7 +18,7 @@ describe('Align', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Align ref={ref}>
           <Align.Start>Start</Align.Start>

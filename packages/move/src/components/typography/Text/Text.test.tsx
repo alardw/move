@@ -18,7 +18,7 @@ describe('Text', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLElement>;
+      const ref = { current: null } as React.RefObject<HTMLElement | null>;
       render(<Text ref={ref}>Text</Text>);
       expect(ref.current).toBeInstanceOf(HTMLElement);
     });

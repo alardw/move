@@ -4,7 +4,7 @@ import { Tooltip } from './Tooltip';
 
 export interface TruncationTooltip {
   /** Attach to the text element (merge with any forwarded ref). */
-  ref: React.RefObject<HTMLElement>;
+  ref: React.RefObject<HTMLElement | null>;
   /** Wraps the element in a Move Tooltip when enabled; returns it unchanged otherwise. */
   wrap: (element: React.ReactElement) => React.ReactElement;
 }

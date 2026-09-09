@@ -26,7 +26,7 @@ describe('VideoPlayer', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<VideoPlayer ref={ref} src="test.mp4" />);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

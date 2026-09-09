@@ -18,7 +18,7 @@ describe('AudioPlayer', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<AudioPlayer ref={ref} src="test.mp3" />);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });

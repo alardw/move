@@ -17,7 +17,7 @@ describe('Alert', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(<Alert ref={ref}>Content</Alert>);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
       expect(ref.current?.getAttribute('role')).toBe('alert');

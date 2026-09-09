@@ -185,7 +185,7 @@ interface SelectContextValue {
   animConfig: AnimationTrigger[] | null;
   triggerWidth: number;
   setTriggerWidth: (w: number) => void;
-  triggerRef: React.RefObject<HTMLButtonElement>;
+  triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
 const SelectContext = React.createContext<SelectContextValue | null>(null);

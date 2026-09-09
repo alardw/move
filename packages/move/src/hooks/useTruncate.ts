@@ -7,7 +7,7 @@ export interface UseTruncateOptions {
 
 export interface UseTruncateReturn<T extends Element> {
   /** Attach to the truncated text element. */
-  ref: React.RefObject<T>;
+  ref: React.RefObject<T | null>;
   /** Whether that element's text is actually clipped right now. */
   isTruncated: boolean;
 }

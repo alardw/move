@@ -80,7 +80,7 @@ describe('Heading', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLHeadingElement>;
+      const ref = { current: null } as React.RefObject<HTMLHeadingElement | null>;
       render(<Heading ref={ref}>Title</Heading>);
       expect(ref.current).toBeInstanceOf(HTMLHeadingElement);
     });

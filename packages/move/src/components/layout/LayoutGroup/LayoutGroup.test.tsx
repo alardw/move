@@ -49,7 +49,7 @@ describe('LayoutGroup', () => {
     });
 
     it('forwards ref to the root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLElement>;
+      const ref = { current: null } as React.RefObject<HTMLElement | null>;
       render(<LayoutGroup ref={ref}>x</LayoutGroup>);
       expect(ref.current).toBeInstanceOf(HTMLElement);
     });

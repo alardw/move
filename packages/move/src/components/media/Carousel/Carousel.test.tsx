@@ -104,7 +104,7 @@ describe('Carousel', () => {
     });
 
     it('forwards ref on Viewport', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Carousel.Root>
           <Carousel.Viewport ref={ref}>
@@ -166,7 +166,7 @@ describe('Carousel', () => {
     });
 
     it('forwards ref on Slide', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Carousel.Root>
           <Carousel.Viewport>

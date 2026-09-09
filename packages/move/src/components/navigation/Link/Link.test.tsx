@@ -18,7 +18,7 @@ describe('Link', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLAnchorElement>;
+      const ref = { current: null } as React.RefObject<HTMLAnchorElement | null>;
       render(<Link ref={ref}>Link</Link>);
       expect(ref.current).toBeInstanceOf(HTMLAnchorElement);
     });

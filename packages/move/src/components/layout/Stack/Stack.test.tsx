@@ -63,7 +63,7 @@ describe('Stack', () => {
     });
 
     it('forwards ref to root element', () => {
-      const ref = { current: null } as React.RefObject<HTMLDivElement>;
+      const ref = { current: null } as React.RefObject<HTMLDivElement | null>;
       render(
         <Stack ref={ref} data-testid="stack">
           Content

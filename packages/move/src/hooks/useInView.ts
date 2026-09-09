@@ -12,7 +12,7 @@ export interface UseInViewOptions {
 
 export interface UseInViewReturn<T extends Element> {
   /** Attach to the element whose visibility you want to track. */
-  ref: React.RefObject<T>;
+  ref: React.RefObject<T | null>;
   /** Whether the element is at/near the viewport per the options. */
   inView: boolean;
 }
