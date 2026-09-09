@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 import { parseVTT, type VTTCue } from '../_shared/parseVTT';
-import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
+import type { SubtitleTrack, QualityOption, AudioTrack, MediaTransport } from '../_shared/types';
 
 export interface UseAudioPlayerOptions {
   src?: string;
@@ -29,18 +29,14 @@ export interface UseAudioPlayerOptions {
   onAudioTrackChange?: (track: AudioTrack) => void;
 }
 
-export interface UseAudioPlayerReturn {
+/**
+ * The media-element transport, plus the track state that only a file-backed
+ * source has. Extending `MediaTransport` is what makes this hook one
+ * implementation of the contract rather than a lookalike: drop a field and the
+ * compiler says so here, not in the chrome that reads it.
+ */
+export interface UseAudioPlayerReturn extends MediaTransport {
   audioRef: React.RefObject<HTMLAudioElement | null>;
-
-  // State
-  playing: boolean;
-  volume: number;
-  currentTime: number;
-  duration: number;
-  buffered: number;
-  muted: boolean;
-  playbackRate: number;
-  ready: boolean;
 
   // Subtitles
   parsedCues: VTTCue[];
@@ -55,13 +51,6 @@ export interface UseAudioPlayerReturn {
   // Audio tracks
   activeAudioTrackIndex: number;
   setActiveAudioTrackIndex: (index: number) => void;
-
-  // Actions
-  togglePlay: () => void;
-  seek: (time: number) => void;
-  setVolume: (vol: number) => void;
-  toggleMute: () => void;
-  setPlaybackRate: (rate: number) => void;
 }
 
 export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerReturn {
@@ -109,6 +98,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
 
   // Internal state
   const [duration, setDuration] = useState(0);
+  const [seekable, setSeekable] = useState(false);
   const [buffered, setBuffered] = useState(0);
   const [muted, setMuted] = useState(mutedProp);
   const [ready, setReady] = useState(false);
@@ -195,10 +185,27 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
     const audio = audioRef.current;
     if (!audio) return;
 
+    /**
+     * Ask the element what it will let us do, rather than inferring it from the
+     * duration. A live stream reports `Infinity` and an empty seekable range;
+     * one with a DVR window reports `Infinity` and a range you CAN move inside.
+     * Guessing from duration alone would take the window away from the second.
+     */
+    const readSeekable = () => {
+      const ranges = audio.seekable;
+      setSeekable(!!ranges && ranges.length > 0 && ranges.end(ranges.length - 1) > ranges.start(0));
+    };
+
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
+      readSeekable();
       setReady(true);
       onReadyRef.current?.();
+    };
+
+    const handleDurationChange = () => {
+      setDuration(audio.duration);
+      readSeekable();
     };
 
     const handleTimeUpdate = () => {
@@ -211,6 +218,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
       if (audio.buffered.length > 0) {
         setBuffered(audio.buffered.end(audio.buffered.length - 1));
       }
+      readSeekable();
     };
 
     const handleEnded = () => {
@@ -226,6 +234,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
     const handlePause = () => setPlayingRef.current(false);
 
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('durationchange', handleDurationChange);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('progress', handleProgress);
     audio.addEventListener('ended', handleEnded);
@@ -240,6 +249,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
 
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('durationchange', handleDurationChange);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('progress', handleProgress);
       audio.removeEventListener('ended', handleEnded);
@@ -395,6 +405,7 @@ export function useAudioPlayer(options: UseAudioPlayerOptions): UseAudioPlayerRe
   return {
     audioRef,
     playing,
+    seekable,
     volume,
     currentTime,
     duration,

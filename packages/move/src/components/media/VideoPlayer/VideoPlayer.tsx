@@ -8,6 +8,7 @@ import { PlayerButton } from '../_shared/PlayerButton';
 import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
 import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
+import { transportView } from '../_shared/transportView';
 import { useVideoPlayer } from './useVideoPlayer';
 import styles from './VideoPlayer.module.css';
 
@@ -126,19 +127,6 @@ export interface VideoPlayerProps extends Omit<
 // =============================================================================
 // Helpers
 // =============================================================================
-
-function formatTime(seconds: number): string {
-  if (!isFinite(seconds) || isNaN(seconds)) return '0:00';
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const sPad = s < 10 ? `0${s}` : `${s}`;
-  if (h > 0) {
-    const mPad = m < 10 ? `0${m}` : `${m}`;
-    return `${h}:${mPad}:${sPad}`;
-  }
-  return `${m}:${sPad}`;
-}
 
 const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
@@ -345,6 +333,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
     // Progress bar drag
     const handleProgressInteraction = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!player.seekable) return;
         const rect = e.currentTarget.getBoundingClientRect();
         const fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
         player.seek(fraction * player.duration);
@@ -354,6 +343,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
 
     const handleProgressMouseDown = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!player.seekable) return;
         handleProgressInteraction(e);
 
         const handleMove = (me: MouseEvent) => {
@@ -425,10 +415,12 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
             break;
           case 'ArrowLeft':
             e.preventDefault();
+            if (!player.seekable) break;
             player.seek(Math.max(0, player.currentTime - 5));
             break;
           case 'ArrowRight':
             e.preventDefault();
+            if (!player.seekable) break;
             player.seek(Math.min(player.duration, player.currentTime + 5));
             break;
           case 'ArrowUp':
@@ -506,13 +498,13 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
         >;
 
         const progressSp = sp('progress');
-        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<
-          string,
-          unknown
-        >;
+        const {
+          className: progressSpClass,
+          onMouseDown,
+          ...progressSpRest
+        } = progressSp as Record<string, unknown>;
 
-        const progressPct = player.duration > 0 ? (player.currentTime / player.duration) * 100 : 0;
-        const bufferedPct = player.duration > 0 ? (player.buffered / player.duration) * 100 : 0;
+        const { progressPct, bufferedPct, timeLabel, seekAttrs } = transportView(player);
         const volumePct = player.muted ? 0 : player.volume * 100;
 
         const hasSubtitles = subtitles && subtitles.length > 0;
@@ -574,7 +566,11 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
               <div
                 {...progressSpRest}
                 className={cx('progress', progressSpClass as string | undefined)}
-                onMouseDown={handleProgressMouseDown}
+                {...seekAttrs}
+                onMouseDown={composeHandlers(
+                  onMouseDown as React.MouseEventHandler<HTMLDivElement> | undefined,
+                  handleProgressMouseDown,
+                )}
               >
                 <div className={styles.progressTrack}>
                   <div className={styles.progressBuffered} style={{ width: `${bufferedPct}%` }} />
@@ -595,11 +591,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
                 </PlayerButton>
 
                 {/* Time */}
-                {showTime && (
-                  <span {...slot('time')}>
-                    {formatTime(player.currentTime)} / {formatTime(player.duration)}
-                  </span>
-                )}
+                {showTime && <span {...slot('time')}>{timeLabel}</span>}
 
                 {/* Spacer */}
                 <div className={styles.spacer} />

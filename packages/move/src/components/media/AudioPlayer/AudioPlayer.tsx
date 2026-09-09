@@ -6,7 +6,8 @@ import type { SlotPropsMap } from '../../../engine';
 import { PlayerButton } from '../_shared/PlayerButton';
 import { useIcon } from '../../../infrastructure/Icon';
 import { PlayerSettingsMenu, type SettingsCategory } from '../_shared/PlayerSettingsMenu';
-import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
+import type { SubtitleTrack, QualityOption, AudioTrack, MediaTransport } from '../_shared/types';
+import { transportView } from '../_shared/transportView';
 import { useAudioPlayer } from './useAudioPlayer';
 import type { Radius, Size } from '../../../shared/types';
 import styles from './AudioPlayer.module.css';
@@ -63,6 +64,17 @@ export interface AudioPlayerProps extends Omit<
 > {
   src?: string;
 
+  /**
+   * Drive the chrome from your own source instead of a media element. Supply
+   * this and `src` is not consulted, no `<audio>` is rendered, and every
+   * control reads and writes through the transport you pass — a Web Audio
+   * graph, an AudioWorklet synthesising live, a WebRTC stream.
+   *
+   * Leave it out and the built-in media-element transport plays `src`, which
+   * is what it has always done.
+   */
+  transport?: MediaTransport;
+
   autoPlay?: boolean;
   muted?: boolean;
   loop?: boolean;
@@ -107,19 +119,6 @@ export interface AudioPlayerProps extends Omit<
 // Helpers
 // =============================================================================
 
-function formatTime(seconds: number): string {
-  if (!isFinite(seconds) || isNaN(seconds)) return '0:00';
-  const h = Math.floor(seconds / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = Math.floor(seconds % 60);
-  const sPad = s < 10 ? `0${s}` : `${s}`;
-  if (h > 0) {
-    const mPad = m < 10 ? `0${m}` : `${m}`;
-    return `${h}:${mPad}:${sPad}`;
-  }
-  return `${m}:${sPad}`;
-}
-
 const SPEED_OPTIONS = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 // =============================================================================
@@ -150,6 +149,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
   },
   moveProps: [
     'src',
+    'transport',
     'autoPlay',
     'muted',
     'loop',
@@ -181,7 +181,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
   setup({ props, ref, cx, sp, slot, attrs }) {
     const labels = { ...DEFAULT_LABELS, ...(props.labels as Partial<AudioPlayerLabels>) };
 
-    const player = useAudioPlayer({
+    const internalPlayer = useAudioPlayer({
       src: props.src as string | undefined,
       autoPlay: props.autoPlay as boolean | undefined,
       muted: props.muted as boolean | undefined,
@@ -203,6 +203,19 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       onQualityChange: props.onQualityChange as ((q: QualityOption) => void) | undefined,
       onAudioTrackChange: props.onAudioTrackChange as ((t: AudioTrack) => void) | undefined,
     });
+
+    /**
+     * A supplied transport replaces the media element's half of the hook and
+     * nothing else: cues, quality and track state stay where they are, because
+     * those are read off props rather than off the element. The hook still runs
+     * (it must — hooks are not conditional) but with no `src` it attaches to
+     * nothing and costs nothing.
+     */
+    const suppliedTransport = props.transport as MediaTransport | undefined;
+    const player = React.useMemo(
+      () => (suppliedTransport ? { ...internalPlayer, ...suppliedTransport } : internalPlayer),
+      [internalPlayer, suppliedTransport],
+    );
 
     const showSettings = props.showSettings as boolean;
     const showSubtitles = props.showSubtitles as boolean;
@@ -279,6 +292,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
     // Progress bar drag
     const handleProgressInteraction = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!player.seekable) return;
         const rect = e.currentTarget.getBoundingClientRect();
         const fraction = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
         player.seek(fraction * player.duration);
@@ -288,6 +302,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
 
     const handleProgressMouseDown = React.useCallback(
       (e: React.MouseEvent<HTMLDivElement>) => {
+        if (!player.seekable) return;
         handleProgressInteraction(e);
 
         const handleMove = (me: MouseEvent) => {
@@ -354,10 +369,12 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             player.toggleMute();
             break;
           case 'ArrowLeft':
+            if (!player.seekable) break;
             e.preventDefault();
             player.seek(Math.max(0, player.currentTime - 5));
             break;
           case 'ArrowRight':
+            if (!player.seekable) break;
             e.preventDefault();
             player.seek(Math.min(player.duration, player.currentTime + 5));
             break;
@@ -395,13 +412,13 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
         } = rootSp as Record<string, unknown>;
 
         const progressSp = sp('progress');
-        const { className: progressSpClass, ...progressSpRest } = progressSp as Record<
-          string,
-          unknown
-        >;
+        const {
+          className: progressSpClass,
+          onMouseDown,
+          ...progressSpRest
+        } = progressSp as Record<string, unknown>;
 
-        const progressPct = player.duration > 0 ? (player.currentTime / player.duration) * 100 : 0;
-        const bufferedPct = player.duration > 0 ? (player.buffered / player.duration) * 100 : 0;
+        const { progressPct, bufferedPct, timeLabel, seekAttrs } = transportView(player);
         const volumePct = player.muted ? 0 : player.volume * 100;
 
         return (
@@ -416,12 +433,16 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             style={{ ...props.style, ...(rootSpStyle as React.CSSProperties) }}
             onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
           >
-            {/* Hidden audio element */}
-            <audio
-              ref={player.audioRef as React.RefObject<HTMLAudioElement>}
-              className={styles.audio}
-              preload="metadata"
-            />
+            {/* Hidden audio element — the built-in transport's source. A
+                supplied transport owns playback itself, so there is nothing
+                here for it to point at. */}
+            {!suppliedTransport && (
+              <audio
+                ref={player.audioRef as React.RefObject<HTMLAudioElement>}
+                className={styles.audio}
+                preload="metadata"
+              />
+            )}
 
             {/* Subtitle overlay */}
             {player.activeCue && <div {...slot('subtitleOverlay')}>{player.activeCue.text}</div>}
@@ -439,7 +460,11 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             <div
               {...progressSpRest}
               className={cx('progress', progressSpClass as string | undefined)}
-              onMouseDown={handleProgressMouseDown}
+              {...seekAttrs}
+              onMouseDown={composeHandlers(
+                onMouseDown as React.MouseEventHandler<HTMLDivElement> | undefined,
+                handleProgressMouseDown,
+              )}
             >
               <div className={styles.progressTrack}>
                 <div className={styles.progressBuffered} style={{ width: `${bufferedPct}%` }} />
@@ -449,11 +474,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
             </div>
 
             {/* Time */}
-            {showTime && (
-              <span {...slot('time')}>
-                {formatTime(player.currentTime)} / {formatTime(player.duration)}
-              </span>
-            )}
+            {showTime && <span {...slot('time')}>{timeLabel}</span>}
 
             {/* Subtitles toggle */}
             {showSubtitlesControl && (

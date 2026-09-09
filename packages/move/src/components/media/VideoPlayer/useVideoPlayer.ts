@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
 import { parseVTT, type VTTCue } from '../_shared/parseVTT';
-import type { SubtitleTrack, QualityOption, AudioTrack } from '../_shared/types';
+import type { SubtitleTrack, QualityOption, AudioTrack, MediaTransport } from '../_shared/types';
 import type { VideoPlayerProvider } from './VideoPlayer';
 
 export interface UseVideoPlayerOptions {
@@ -31,20 +31,17 @@ export interface UseVideoPlayerOptions {
   onAudioTrackChange?: (track: AudioTrack) => void;
 }
 
-export interface UseVideoPlayerReturn {
+/**
+ * The media-element transport, plus what only video has: a frame to go
+ * fullscreen, and the track state a file-backed source carries. Extending
+ * `MediaTransport` is what makes this and `useAudioPlayer` the same thing seen
+ * twice, rather than two shapes that happen to look alike.
+ */
+export interface UseVideoPlayerReturn extends MediaTransport {
   videoRef: React.RefObject<HTMLVideoElement | null>;
   containerRef: React.RefObject<HTMLDivElement | null>;
 
-  // State
-  playing: boolean;
-  volume: number;
-  currentTime: number;
-  duration: number;
-  buffered: number;
-  muted: boolean;
   isFullscreen: boolean;
-  playbackRate: number;
-  ready: boolean;
 
   // Subtitles
   parsedCues: VTTCue[];
@@ -61,12 +58,7 @@ export interface UseVideoPlayerReturn {
   setActiveAudioTrackIndex: (index: number) => void;
 
   // Actions
-  togglePlay: () => void;
-  seek: (time: number) => void;
-  setVolume: (vol: number) => void;
-  toggleMute: () => void;
   toggleFullscreen: () => void;
-  setPlaybackRate: (rate: number) => void;
 }
 
 export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerReturn {
@@ -116,6 +108,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
 
   // Internal state
   const [duration, setDuration] = useState(0);
+  const [seekable, setSeekable] = useState(false);
   const [buffered, setBuffered] = useState(0);
   const [muted, setMuted] = useState(mutedProp);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -213,10 +206,27 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
     const video = videoRef.current;
     if (!video) return;
 
+    /**
+     * Ask the element, don't infer from duration. hls.js reports `Infinity` for
+     * a live stream — with an empty seekable range when it is truly live, and
+     * with a movable one when the stream carries a DVR window. Only the element
+     * knows which, and inferring would take the window away from the second.
+     */
+    const readSeekable = () => {
+      const ranges = video.seekable;
+      setSeekable(!!ranges && ranges.length > 0 && ranges.end(ranges.length - 1) > ranges.start(0));
+    };
+
     const handleLoadedMetadata = () => {
       setDuration(video.duration);
+      readSeekable();
       setReady(true);
       onReadyRef.current?.();
+    };
+
+    const handleDurationChange = () => {
+      setDuration(video.duration);
+      readSeekable();
     };
 
     const handleTimeUpdate = () => {
@@ -229,6 +239,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
       if (video.buffered.length > 0) {
         setBuffered(video.buffered.end(video.buffered.length - 1));
       }
+      readSeekable();
     };
 
     const handleEnded = () => {
@@ -244,6 +255,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
     const handlePause = () => setPlayingRef.current(false);
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
+    video.addEventListener('durationchange', handleDurationChange);
     video.addEventListener('timeupdate', handleTimeUpdate);
     video.addEventListener('progress', handleProgress);
     video.addEventListener('ended', handleEnded);
@@ -258,6 +270,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      video.removeEventListener('durationchange', handleDurationChange);
       video.removeEventListener('timeupdate', handleTimeUpdate);
       video.removeEventListener('progress', handleProgress);
       video.removeEventListener('ended', handleEnded);
@@ -437,6 +450,7 @@ export function useVideoPlayer(options: UseVideoPlayerOptions): UseVideoPlayerRe
   return {
     videoRef,
     containerRef,
+    seekable,
     playing,
     volume,
     currentTime,

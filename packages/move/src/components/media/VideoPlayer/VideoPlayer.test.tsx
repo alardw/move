@@ -3,7 +3,52 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { VideoPlayer } from './VideoPlayer';
 
+/**
+ * Make a rendered element look like a live stream: unbounded duration and an
+ * empty seekable range, which is what hls.js leaves on the element for a
+ * stream with no DVR window.
+ */
+function goLive(video: HTMLVideoElement, ranges: { length: number } = { length: 0 }) {
+  Object.defineProperty(video, 'duration', { value: Infinity, configurable: true });
+  Object.defineProperty(video, 'seekable', { value: ranges, configurable: true });
+  fireEvent(video, new Event('durationchange'));
+}
+
 describe('VideoPlayer', () => {
+  // === Live streams ===
+  describe('live streams', () => {
+    it('shows elapsed time alone when the stream is unbounded', () => {
+      const { container } = render(<VideoPlayer src="live.m3u8" showTime />);
+      const video = container.querySelector('video') as HTMLVideoElement;
+      // A bounded source shows position against total.
+      Object.defineProperty(video, 'duration', { value: 60, configurable: true });
+      fireEvent(video, new Event('durationchange'));
+      expect(screen.getByText('0:00 / 1:00')).toBeInTheDocument();
+      // Once it turns out to be unbounded, the total goes away.
+      goLive(video);
+      expect(screen.queryByText('0:00 / 1:00')).toBeNull();
+      expect(screen.getByText('0:00')).toBeInTheDocument();
+    });
+
+    it('marks the progress bar unseekable while live', () => {
+      const { container } = render(
+        <VideoPlayer src="live.m3u8" sp={{ progress: { className: 'test-progress' } }} />,
+      );
+      const video = container.querySelector('video') as HTMLVideoElement;
+      goLive(video);
+      expect(container.querySelector('.test-progress')).toHaveAttribute('aria-disabled', 'true');
+    });
+
+    it('keeps the bar seekable when the stream carries a DVR window', () => {
+      const { container } = render(
+        <VideoPlayer src="live.m3u8" sp={{ progress: { className: 'test-progress' } }} />,
+      );
+      const video = container.querySelector('video') as HTMLVideoElement;
+      goLive(video, { length: 1, start: () => 0, end: () => 30 } as unknown as TimeRanges);
+      expect(container.querySelector('.test-progress')).not.toHaveAttribute('aria-disabled');
+    });
+  });
+
   // === Rendering ===
   describe('rendering', () => {
     it('renders without crashing', () => {

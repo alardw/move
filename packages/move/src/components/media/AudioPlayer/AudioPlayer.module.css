@@ -175,6 +175,17 @@
   opacity: 1;
 }
 
+/* A source that cannot be moved says so with the cursor, and keeps the thumb
+   down on hover — a grab handle that grabs nothing is a worse lie than no
+   handle at all. The bar itself stays visible: it still reports position. */
+.progress[data-seekable='false'] {
+  cursor: default;
+}
+
+.progress[data-seekable='false']:hover .progressThumb {
+  opacity: 0;
+}
+
 /* Time display */
 .time {
   font-size: 13px; /* type-exempt: media chrome, sized against the video frame not the page */

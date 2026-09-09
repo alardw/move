@@ -968,6 +968,7 @@ export type {
   AudioPlayerProps,
   AudioPlayerRadius,
   AudioPlayerSize,
+  MediaTransport,
 } from './components/media/AudioPlayer';
 export { useAudioPlayer } from './components/media/AudioPlayer';
 export type { UseAudioPlayerOptions, UseAudioPlayerReturn } from './components/media/AudioPlayer';

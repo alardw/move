@@ -84,6 +84,13 @@ export const spec = {
   props: [
     { name: 'src', type: 'string', moveSpecific: true, description: 'Audio source URL' },
     {
+      name: 'transport',
+      type: 'MediaTransport',
+      moveSpecific: true,
+      description:
+        'Drive the chrome from your own source instead of a media element. Supplied, `src` is not consulted and no `<audio>` is rendered.',
+    },
+    {
       name: 'autoPlay',
       type: 'boolean',
       moveSpecific: true,
@@ -435,4 +442,14 @@ export const spec = {
   },
 
   iconsUsed: ['captions', 'pause', 'play', 'settings', 'volume-2', 'volume-x'],
+  integrationPoints: [
+    {
+      id: 'transport',
+      kind: 'library' as const,
+      contract: 'MediaTransport',
+      default: 'builtin' as const,
+      description:
+        'The thing that actually plays. Zero-config it drives an HTMLAudioElement from `src`; supply one to drive a Web Audio graph, an AudioWorklet synthesising live, or a WebRTC stream — sources with no URL to load and no metadata to discover.',
+    },
+  ],
 } satisfies ComponentSpec;
