@@ -129,6 +129,12 @@ export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPic
     return formatted;
   }, []);
 
+  /**
+   * Set, then report — in that order, and both outside any state updater. An
+   * updater runs during render, and `emit` calls the consumer's
+   * `onValueChange`, so emitting from inside one sets state on the parent
+   * mid-render. Every setter below follows this shape for that reason.
+   */
   const update = useCallback(
     (newHsv: HsvColor) => {
       setInternalHsv(newHsv);
@@ -139,42 +145,27 @@ export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPic
 
   const setHue = useCallback(
     (h: number) => {
-      setInternalHsv((prev) => {
-        const current = controlledHsv ?? prev;
-        const newHsv = { ...current, h: Math.max(0, Math.min(360, h)) };
-        emit(newHsv);
-        return newHsv;
-      });
+      update({ ...hsv, h: Math.max(0, Math.min(360, h)) });
     },
-    [controlledHsv, emit],
+    [hsv, update],
   );
 
   const setSaturationValue = useCallback(
     (s: number, v: number) => {
-      setInternalHsv((prev) => {
-        const current = controlledHsv ?? prev;
-        const newHsv = {
-          ...current,
-          s: Math.max(0, Math.min(100, s)),
-          v: Math.max(0, Math.min(100, v)),
-        };
-        emit(newHsv);
-        return newHsv;
+      update({
+        ...hsv,
+        s: Math.max(0, Math.min(100, s)),
+        v: Math.max(0, Math.min(100, v)),
       });
     },
-    [controlledHsv, emit],
+    [hsv, update],
   );
 
   const setAlpha = useCallback(
     (a: number) => {
-      setInternalHsv((prev) => {
-        const current = controlledHsv ?? prev;
-        const newHsv = { ...current, a: Math.max(0, Math.min(1, a)) };
-        emit(newHsv);
-        return newHsv;
-      });
+      update({ ...hsv, a: Math.max(0, Math.min(1, a)) });
     },
-    [controlledHsv, emit],
+    [hsv, update],
   );
 
   const setFromString = useCallback(
@@ -189,14 +180,9 @@ export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPic
 
   const setChannel = useCallback(
     (index: number, val: number) => {
-      setInternalHsv((prev) => {
-        const current = controlledHsv ?? prev;
-        const newHsv = setChannelFromInput(current, formatRef.current, index, val);
-        emit(newHsv);
-        return newHsv;
-      });
+      update(setChannelFromInput(hsv, formatRef.current, index, val));
     },
-    [controlledHsv, emit],
+    [hsv, update],
   );
 
   const setActiveFormat = useCallback(
@@ -204,14 +190,10 @@ export function useColorPicker(options: UseColorPickerOptions = {}): UseColorPic
       setInternalFormat(newFormat);
       formatRef.current = newFormat;
       onFormatChangeRef.current?.(newFormat);
-      // Re-emit value in the new format
-      setInternalHsv((prev) => {
-        const current = controlledHsv ?? prev;
-        emit(current, newFormat);
-        return current;
-      });
+      // Re-emit the same colour, now spelled in the new format.
+      emit(hsv, newFormat);
     },
-    [controlledHsv, emit],
+    [hsv, emit],
   );
 
   const commitChange = useCallback(() => {
