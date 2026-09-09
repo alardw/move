@@ -14,10 +14,11 @@
  * OPTION_VALUES), --move <spec> / --local (override the `move` dependency for a
  * monorepo/dogfood build), --no-install, --force, --help.
  */
-import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execSync } from 'node:child_process';
+import { homedir } from 'node:os';
 import {
   DEFAULT_OPTIONS,
   OPTION_VALUES,
@@ -44,6 +45,35 @@ function parseArgs(argv) {
     else if (!name) name = a;
   }
   return { name, flags };
+}
+
+/**
+ * A `--move` spec that resolves to a DIRECTORY gets linked, not copied, and a
+ * link is a doorway: TypeScript walks up out of it into the Move repo's own
+ * node_modules, where it can meet a second copy of @types/react. A tarball
+ * lands inside the app's own tree, where the walk stops at the app.
+ *
+ * Linking is the right answer while you're changing Move itself and want edits
+ * to land live. This says so once, at the moment the choice is made, so the
+ * alternative is known before it costs a confusing type error.
+ */
+function warnIfDirectorySpec(spec, projectDir) {
+  const path = spec.startsWith('file:') ? spec.slice(5) : spec;
+  // Only path-shaped specs can name a directory; "*", semver and registry
+  // specs never do.
+  if (!spec.startsWith('file:') && !/^[.~/]|^[A-Za-z]:[\\/]/.test(path)) return;
+  const full = resolve(projectDir, path.replace(/^~(?=\/)/, homedir()));
+  if (!existsSync(full) || !statSync(full).isDirectory()) return;
+  console.log(`
+  ⚠ --move "${spec}" points at a directory, so npm links it.
+    Under a link, TypeScript reaches the Move repo's own node_modules and can
+    find a second @types/react there alongside this app's.
+
+    For an app that only consumes Move, a tarball keeps everything in one tree:
+      (in the Move repo)  npm run pack      → packages/move/release/move-<v>.tgz
+      --move "file:/absolute/path/to/move-<v>.tgz"
+
+    Linking stays the better choice while you're editing Move itself.`);
 }
 
 function usage() {
@@ -111,6 +141,7 @@ function main() {
     const pkg = JSON.parse(files['package.json']);
     pkg.dependencies.move = flags.move;
     files['package.json'] = JSON.stringify(pkg, null, 2) + '\n';
+    warnIfDirectorySpec(flags.move, dir);
   }
 
   for (const [rel, content] of Object.entries(files)) {
