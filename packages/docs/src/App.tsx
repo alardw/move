@@ -124,10 +124,10 @@ function ThemeToggle() {
   return (
     <Sidebar.ActionItem
       icon={isDark ? 'sun' : 'moon'}
-      tooltip={isDark ? 'Light mode' : 'Dark mode'}
+      tooltip={isDark ? 'See the light' : 'Join the darkside'}
       onClick={() => setTheme(isDark ? lightTheme : darkTheme)}
     >
-      {isDark ? 'Light mode' : 'Dark mode'}
+      {isDark ? 'See the light' : 'Join the darkside'}
     </Sidebar.ActionItem>
   );
 }
