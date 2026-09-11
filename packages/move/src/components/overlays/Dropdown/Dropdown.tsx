@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
+import { optionHoverScale } from '../../../shared/optionHoverScale';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { Checkbox } from '../../forms/Checkbox';
 import {
@@ -22,7 +23,6 @@ import type { AnimationTrigger, AnimationState } from '../../../animation';
 // constant at any width. Same two constants, for the same reason, as Select and
 // Autocomplete.
 const SCALE_INSET_PX = 16;
-const SCALE_HOVER_PX = 4;
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
@@ -513,7 +513,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
     const { close, animConfig, triggerWidth } = useDropdownContext();
-    const scaleHover = (triggerWidth + SCALE_HOVER_PX) / triggerWidth;
+    const scaleHover = optionHoverScale(triggerWidth);
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 

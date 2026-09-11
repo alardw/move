@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
+import { optionHoverScale } from '../../../shared/optionHoverScale';
 import { Popover as RadixPopover } from 'radix-ui';
 import { composeHandlers, elementTypeName, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -35,7 +36,6 @@ import styles from './Autocomplete.module.css';
 // Per-item scale deltas (pixel-based). Container (Content) only fades; item
 // stagger carries the reveal. See Select for rationale.
 const SCALE_INSET_PX = 16; // per-item fade-in offset
-const SCALE_HOVER_PX = 4; // per-item hover scale (kept small so scaled items don't clip against the Content's overflow:hidden box)
 
 /**
  * Everything the reveal moves, marked once.
@@ -1104,7 +1104,7 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     }, [isHighlighted]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Item hover animation via useAnimations
-    const scaleHover = (ac.triggerWidth + SCALE_HOVER_PX) / ac.triggerWidth;
+    const scaleHover = optionHoverScale(ac.triggerWidth);
     const itemConfig = React.useMemo(() => {
       if (!ac.animConfig) return null;
       const hover = ac.animConfig.find((t) => t.trigger === 'Item.hover');

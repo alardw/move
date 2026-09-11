@@ -11,7 +11,8 @@
  * strength of Select's, and a selected row that did not darken when focused, so
  * it was distinguished from an unfocused one by the ring's offset alone.
  *
- * `--move-option-*` is the definition. This is what makes components use it.
+ * `--move-option-*` is the definition. This is what makes components use it —
+ * the highlight, the geometry under it, and the ratio the row grows by.
  *
  * Why a CSS check rather than a capability: capabilities are declared in a spec,
  * and the component this was written for has none. Ten shared internals under
@@ -54,6 +55,36 @@ const SHARED = {
   background: '--move-option-bg-highlight, --move-option-bg-selected, --move-option-bg-selected-highlight',
 };
 
+/**
+ * The same, for the row's own rule rather than its highlighted state.
+ *
+ * Geometry is not a state, so it is never written on `[data-highlighted]` — it
+ * sits on the base rule, which the selector filter above skips. Checked
+ * separately on the rule the highlighted one belongs to.
+ *
+ * `margin-block` is the gap between rows. Two of the three lists had none, so
+ * their highlights met edge to edge and read as one block; the token existed
+ * and only the media players' menu used it.
+ */
+const SHARED_GEOMETRY = {
+  padding: '--move-option-padding-y, --move-option-padding-x',
+  'margin-block': '--move-option-gap',
+};
+
+/**
+ * A row grows under the pointer by a few PIXELS, and the ratio that does it has
+ * to be derived from a width worth deriving it from.
+ *
+ * Every list computed its own `(width + 4) / width` off the TRIGGER's width, and
+ * a menu hangs off whatever opened it — an icon button at 32px gives 1.125, a
+ * row growing an eighth of its size and overflowing the panel. Select clamped
+ * to a floor and the other two did not: one formula, three copies, two wrong.
+ * There is now one helper, and this is what keeps the fourth list from writing
+ * a fourth copy.
+ */
+const HOVER_SCALE_INLINE = /\(\s*\w*[wW]idth\s*\+[^)]*\)\s*\/\s*\w*[wW]idth/;
+const HOVER_SCALE_HELPER = 'optionHoverScale';
+
 function cssFiles(dir, out = []) {
   for (const e of readdirSync(dir)) {
     const full = join(dir, e);
@@ -90,6 +121,72 @@ for (const file of cssFiles(join(MOVE_ROOT, 'src', 'components'))) {
         problems.push({ rel, line, selector, prop, value, tokens });
       }
     }
+  }
+}
+
+/**
+ * Geometry lives on the base rule. Find the class the highlighted selector names
+ * (`.item[data-highlighted]` → `.item`) and read that rule instead.
+ */
+for (const file of cssFiles(join(MOVE_ROOT, 'src', 'components'))) {
+  const src = readFileSync(file, 'utf8');
+  const rel = relative(MOVE_ROOT, file);
+
+  const rowClasses = new Set();
+  for (const m of src.matchAll(/([^{}]+)\{([^}]*)\}/g)) {
+    const selector = m[1].trim().split('\n').pop().trim();
+    if (!HIGHLIGHTED.test(selector)) continue;
+    for (const cls of selector.matchAll(/\.([\w-]+)\[data-highlighted\]/g)) rowClasses.add(cls[1]);
+  }
+
+  for (const cls of rowClasses) {
+    const rule = new RegExp(`(?:^|\\n)\\.${cls}\\s*\\{([^}]*)\\}`).exec(src);
+    if (!rule) continue;
+    const body = rule[1];
+    if (/option-exempt/.test(body)) continue;
+    const line = src.slice(0, rule.index).split('\n').length + 1;
+    for (const [prop, tokens] of Object.entries(SHARED_GEOMETRY)) {
+      const decl = new RegExp(`(?:^|;)\\s*${prop}:\\s*([^;]+)`, 'm').exec(body);
+      if (!decl) {
+        problems.push({ rel, line, selector: `.${cls}`, prop, value: '(absent)', tokens });
+        continue;
+      }
+      const value = decl[1].trim();
+      const names = [...value.matchAll(/var\((--move-[\w-]+)\)/g)].map((v) => v[1]);
+      const resolved = names
+        .map((n) => (new RegExp(`${n}:\\s*([^;]+)`).exec(src)?.[1] ?? n).trim())
+        .join(' ');
+      const ok = tokens
+        .split(', ')
+        .every((t) => value.includes(t) || resolved.includes(t));
+      if (!ok) problems.push({ rel, line, selector: `.${cls}`, prop, value, tokens });
+    }
+  }
+}
+
+/** One formula for how far a row travels, in one place. */
+function sourceFiles(dir, out = []) {
+  for (const e of readdirSync(dir)) {
+    const full = join(dir, e);
+    if (statSync(full).isDirectory()) sourceFiles(full, out);
+    else if (e.endsWith('.tsx') && !e.endsWith('.test.tsx')) out.push(full);
+  }
+  return out;
+}
+
+for (const file of sourceFiles(join(MOVE_ROOT, 'src', 'components'))) {
+  const src = readFileSync(file, 'utf8');
+  if (src.includes(HOVER_SCALE_HELPER)) continue;
+  for (const [i, text] of src.split('\n').entries()) {
+    if (!HOVER_SCALE_INLINE.test(text)) continue;
+    problems.push({
+      rel: relative(MOVE_ROOT, file),
+      line: i + 1,
+      selector: 'hover scale',
+      prop: 'scale ratio',
+      value: text.trim(),
+      tokens: `${HOVER_SCALE_HELPER}() from src/shared/optionHoverScale`,
+    });
   }
 }
 

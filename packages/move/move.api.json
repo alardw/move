@@ -4030,7 +4030,7 @@
             {
               "name": "children",
               "type": "React.ReactNode",
-              "description": "Header content (typically Title + Close)"
+              "description": "Header content — stacks vertically (typically Title + Description)"
             }
           ]
         },
@@ -4444,7 +4444,7 @@
             {
               "name": "children",
               "type": "React.ReactNode",
-              "description": "Header content (typically Title + Close)"
+              "description": "Header content — stacks vertically (typically Title + Description)"
             }
           ]
         },

@@ -102,6 +102,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
+  /* Small vertical gap so the keyboard-highlight ring doesn't touch neighbours. */
+  margin-block: var(--move-option-gap);
   padding: var(--move-dropdown-item-padding-y) var(--move-dropdown-item-padding-x);
   border-radius: var(--move-dropdown-item-radius);
   font-family: var(--move-font-body);
@@ -177,7 +179,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
-  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  margin-block: var(--move-option-gap);
+  padding: var(--move-option-padding-y) var(--move-option-padding-x);
   border-radius: var(--move-rounded-md);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
@@ -215,7 +218,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
-  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  margin-block: var(--move-option-gap);
+  padding: var(--move-option-padding-y) var(--move-option-padding-x);
   border-radius: var(--move-rounded-md);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
@@ -254,7 +258,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
-  padding: var(--move-spacing-xs) var(--move-spacing-sm);
+  margin-block: var(--move-option-gap);
+  padding: var(--move-option-padding-y) var(--move-option-padding-x);
   border-radius: var(--move-rounded-md);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);

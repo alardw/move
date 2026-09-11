@@ -1039,6 +1039,11 @@ export type { CanonicalTypeName } from './shared/typeRegistry';
 // Stacking layers — the canonical z-index scale + CSS tokens, surfaced in the
 // docs "Stacking" page. (The legacy `contract/` spec-design module was removed;
 // the real spec shape is `ComponentSpec` in `spec-type.ts`.)
+export {
+  optionHoverScale,
+  OPTION_HOVER_GROWTH_PX,
+  OPTION_HOVER_MIN_WIDTH_PX,
+} from './shared/optionHoverScale';
 export { Z_LAYERS } from './shared/z-layers';
 export type { Z, ZKind, ZLayers } from './shared/z-layers';
 

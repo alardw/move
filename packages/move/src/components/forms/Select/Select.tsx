@@ -3,6 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
+import { optionHoverScale } from '../../../shared/optionHoverScale';
 import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
@@ -27,7 +28,6 @@ import styles from './Select.module.css';
 // absolute pixels — hence more overshoot/bounce — for the same ratio. Deriving
 // the ratio from a fixed pixel inset keeps the travel constant across widths.
 const SCALE_INSET_PX = 16; // per-item reveal offset
-const SCALE_HOVER_PX = 4; // per-item hover scale
 
 /**
  * Everything the reveal moves, marked once.
@@ -927,10 +927,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
       registerLabel(props.value as string, displayLabel);
     }, [props.value, displayLabel, registerLabel]);
 
-    // Item hover animation. Clamp trigger width to avoid exaggerated scale on
-    // narrow selects.
-    const effectiveWidth = Math.max(triggerWidth, 120);
-    const scaleHover = (effectiveWidth + SCALE_HOVER_PX) / effectiveWidth;
+    const scaleHover = optionHoverScale(triggerWidth);
     const itemConfig = React.useMemo(() => {
       if (!animConfig) return null;
       const hover = animConfig.find((t) => t.trigger === 'Item.hover');

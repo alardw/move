@@ -714,7 +714,7 @@ Dialog.Header props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - closable: boolean (default: true) — Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close.
-- children: React.ReactNode — Header content (typically Title + Close)
+- children: React.ReactNode — Header content — stacks vertically (typically Title + Description)
 Dialog.Body props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -791,7 +791,7 @@ Drawer.Header props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
 - closable: boolean (default: true) — Render the auto-close button on the right side of the header. Suppressed automatically when the header children already contain a Close.
-- children: React.ReactNode — Header content (typically Title + Close)
+- children: React.ReactNode — Header content — stacks vertically (typically Title + Description)
 Drawer.Body props:
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles

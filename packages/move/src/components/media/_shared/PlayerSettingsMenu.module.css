@@ -119,6 +119,9 @@
 
 /* Option row (sub-view) */
 .optionRow {
+  /* option-exempt: the players' chrome is a fixed neutral over video, not a
+     themed ground — it sizes to the transport bar rather than to a menu. The
+     highlight and radius still come from the shared tokens. */
   display: flex;
   align-items: center;
   width: 100%;

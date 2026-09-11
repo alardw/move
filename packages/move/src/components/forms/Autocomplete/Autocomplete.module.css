@@ -476,6 +476,8 @@
   display: flex;
   align-items: center;
   gap: var(--move-spacing-sm);
+  /* Small vertical gap so the keyboard-highlight ring doesn't touch neighbours. */
+  margin-block: var(--move-option-gap);
   padding: var(--move-autocomplete-item-padding-y) var(--move-autocomplete-item-padding-x);
   border-radius: var(--move-autocomplete-item-radius);
   font-family: var(--move-font-body);

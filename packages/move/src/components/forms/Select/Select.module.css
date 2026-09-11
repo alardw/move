@@ -242,7 +242,7 @@
   align-items: center;
   gap: var(--move-spacing-sm);
   /* Small vertical gap so the keyboard-highlight ring doesn't touch neighbours. */
-  margin-block: 2px;
+  margin-block: var(--move-option-gap);
   padding: var(--move-select-item-padding-y) var(--move-select-item-padding-x);
   border-radius: var(--move-select-item-radius);
   font-family: var(--move-font-body);
