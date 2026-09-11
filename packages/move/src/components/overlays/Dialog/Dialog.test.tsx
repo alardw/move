@@ -464,6 +464,50 @@ describe('Dialog', () => {
       });
     });
 
+    it('stacks title and description, close button beside them', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header data-testid="header">
+                <Dialog.Title>Title</Dialog.Title>
+                <Dialog.Description>Subtitle</Dialog.Description>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      const header = await screen.findByTestId('header');
+      const stack = header.firstElementChild as HTMLElement;
+      expect(stack).toContainElement(screen.getByText('Title'));
+      expect(stack).toContainElement(screen.getByText('Subtitle'));
+      expect(stack).not.toContainElement(screen.getByRole('button', { name: 'Close' }));
+      expect(header).toContainElement(screen.getByRole('button', { name: 'Close' }));
+    });
+
+    it('keeps a consumer Close out of the header text stack', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header data-testid="header">
+                <Dialog.Title>Title</Dialog.Title>
+                <Dialog.Close>Done</Dialog.Close>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      const header = await screen.findByTestId('header');
+      const stack = header.firstElementChild as HTMLElement;
+      const close = screen.getByRole('button', { name: 'Done' });
+      expect(stack).toContainElement(screen.getByText('Title'));
+      expect(stack).not.toContainElement(close);
+      expect(header).toContainElement(close);
+    });
+
     it('a Close written by the consumer suppresses the automatic one', async () => {
       render(
         <Dialog.Root open animations={false}>

@@ -430,13 +430,17 @@ export interface DrawerHeaderProps extends React.HTMLAttributes<HTMLElement> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   closable?: boolean;
-  sp?: SlotPropsMap<'header'>;
+  sp?: SlotPropsMap<'header' | 'headerContent'>;
 }
 
-const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivElement>({
+const DrawerHeader = withMoveComponent<
+  'header' | 'headerContent',
+  DrawerHeaderProps,
+  HTMLDivElement
+>({
   name: 'DrawerHeader',
   styles,
-  slots: ['header'] as const,
+  slots: ['header', 'headerContent'] as const,
   moveProps: ['closable'],
   defaults: { closable: true },
 
@@ -444,6 +448,14 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
     // A consumer who writes their own Close gets exactly that one — rendering the
     // automatic button beside it would leave two close controls in the header.
     const hasOwnClose = containsElementOfType(props.children as React.ReactNode, DrawerClose);
+
+    // The close button sits beside the header text, everything else stacks under
+    // the title — so a Description lands on its own line rather than next to it.
+    const childList = React.Children.toArray(props.children as React.ReactNode);
+    const isClose = (child: React.ReactNode) =>
+      React.isValidElement(child) && child.type === DrawerClose;
+    const ownClose = childList.filter(isClose);
+    const stacked = childList.filter((child) => !isClose(child));
 
     return {
       render() {
@@ -453,6 +465,12 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
           style: spStyle,
           ...spRest
         } = headerSp as Record<string, unknown>;
+        const contentSp = sp('headerContent');
+        const {
+          className: contentSpClass,
+          style: contentSpStyle,
+          ...contentSpRest
+        } = contentSp as Record<string, unknown>;
         return (
           <div
             {...attrs}
@@ -461,7 +479,14 @@ const DrawerHeader = withMoveComponent<'header', DrawerHeaderProps, HTMLDivEleme
             className={cx('header', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            <div
+              {...contentSpRest}
+              className={cx('headerContent', contentSpClass as string | undefined)}
+              style={contentSpStyle as React.CSSProperties}
+            >
+              {stacked}
+            </div>
+            {ownClose}
             {props.closable !== false && !hasOwnClose && <DrawerClose />}
           </div>
         );

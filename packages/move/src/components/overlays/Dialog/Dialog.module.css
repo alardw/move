@@ -138,6 +138,20 @@
   flex-shrink: 0;
 }
 
+.headerContent {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+  gap: max(var(--move-spacing-xs), var(--move-focus-ring-room));
+}
+
+/* The header stack already spaces its children; the margin is for a Description
+   that stands on its own above the body. */
+.headerContent .description {
+  margin-bottom: 0;
+}
+
 .body {
   flex: 1;
   overflow: auto;

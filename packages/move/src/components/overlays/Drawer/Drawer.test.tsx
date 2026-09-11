@@ -101,6 +101,28 @@ describe('Drawer', () => {
       expect(screen.getByRole('button', { name: 'Sluiten' })).toBeInTheDocument();
     });
 
+    it('stacks title and description, close button beside them', () => {
+      render(
+        <Drawer.Root animations={false} defaultOpen>
+          <Drawer.Content>
+            <Drawer.Header data-testid="header">
+              <Drawer.Title>Settings</Drawer.Title>
+              <Drawer.Description>Tweak your preferences.</Drawer.Description>
+            </Drawer.Header>
+            <Drawer.Body>Body content</Drawer.Body>
+          </Drawer.Content>
+        </Drawer.Root>,
+      );
+
+      const header = screen.getByTestId('header');
+      const stack = header.firstElementChild as HTMLElement;
+      const close = screen.getByRole('button', { name: 'Close' });
+      expect(stack).toContainElement(screen.getByText('Settings'));
+      expect(stack).toContainElement(screen.getByText('Tweak your preferences.'));
+      expect(stack).not.toContainElement(close);
+      expect(header).toContainElement(close);
+    });
+
     it('a Close written by the consumer suppresses the automatic one', () => {
       render(
         <Drawer.Root animations={false} defaultOpen>

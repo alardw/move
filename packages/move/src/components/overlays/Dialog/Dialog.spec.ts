@@ -50,7 +50,14 @@ export const spec = {
       element: 'div',
       kind: 'none',
       typography: 'none',
-      description: 'Top section containing title and close button',
+      description: 'Top section containing the header text stack and the close button',
+    },
+    {
+      name: 'headerContent',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description: 'Vertical stack of the header text (title, description)',
     },
     {
       name: 'body',
@@ -287,6 +294,13 @@ export const spec = {
           typography: 'none',
           description: 'Header container',
         },
+        {
+          name: 'headerContent',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Vertical stack holding every header child except a Close',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -308,12 +322,12 @@ export const spec = {
           name: 'children',
           type: 'React.ReactNode',
           moveSpecific: false,
-          description: 'Header content (typically Title + Close)',
+          description: 'Header content — stacks vertically (typically Title + Description)',
         },
       ],
       usesFactory: true,
       description:
-        'Top section with flex layout for title and (when `closable`) an auto-close button.',
+        'Top section that stacks its children vertically and keeps the close button (when `closable`) on the right.',
     },
     {
       name: 'Body',
@@ -540,7 +554,10 @@ export const spec = {
         children: [
           {
             slot: 'header',
-            children: [{ slot: 'title' }, { slot: 'close' }],
+            children: [
+              { slot: 'headerContent', children: [{ slot: 'title' }, { slot: 'description' }] },
+              { slot: 'close' },
+            ],
           },
           {
             slot: 'body',
@@ -779,7 +796,8 @@ export const spec = {
       'Content is centered with fixed positioning (top:50%, left:50%, translate:-50%)',
       'Close button triggers animated close via context instead of immediate unmount',
       'Overlay and Content are rendered inside Portal',
-      'Header lays out title and close button with space-between',
+      'Header stacks title and description vertically',
+      'Header keeps the close button beside the stacked header text',
       'Body is scrollable (overflow: auto)',
       'Footer provides flex layout for action buttons',
       'FooterEnd aligns content to the right with margin-left: auto',
