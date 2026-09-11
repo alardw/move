@@ -20,7 +20,6 @@ export default function SizesSample() {
             </Button>
           </Dialog.Trigger>
           <Dialog.Portal>
-            <Dialog.Overlay />
             <Dialog.Content size={size}>
               <Dialog.Header>
                 <Dialog.Title>size="{size}"</Dialog.Title>

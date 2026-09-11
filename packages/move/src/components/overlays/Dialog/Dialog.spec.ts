@@ -148,8 +148,10 @@ export const spec = {
         {
           name: 'modal',
           type: 'boolean',
+          default: 'true',
           moveSpecific: false,
-          description: 'Whether to render as modal with backdrop',
+          description:
+            'Whether the page behind is inert. A modal gets a backdrop from Portal without one being written.',
         },
         {
           name: 'labels',
@@ -796,6 +798,9 @@ export const spec = {
       'Content is centered with fixed positioning (top:50%, left:50%, translate:-50%)',
       'Close button triggers animated close via context instead of immediate unmount',
       'Overlay and Content are rendered inside Portal',
+      'Portal renders the backdrop itself when the call site writes no Overlay',
+      'Portal renders no backdrop when modal is false',
+      'A call site Overlay suppresses the automatic one',
       'Header stacks title and description vertically',
       'Header keeps the close button beside the stacked header text',
       'Body is scrollable (overflow: auto)',

@@ -21,7 +21,6 @@ export default function SizesSample() {
             </Button>
           </Drawer.Trigger>
           <Drawer.Portal>
-            <Drawer.Overlay />
             <Drawer.Content size={size}>
               <Drawer.Header>
                 <Drawer.Title>size="{size}"</Drawer.Title>

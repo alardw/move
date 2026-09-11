@@ -41,6 +41,8 @@ interface DialogContextValue {
   onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
   labels: DialogLabels;
+  /** Whether this is a modal — which is what decides there is a backdrop. */
+  modal: boolean;
 }
 
 const DialogContext = React.createContext<DialogContextValue | null>(null);
@@ -137,7 +139,9 @@ const DialogRoot: React.FC<DialogRootProps> = ({
   const labels = React.useMemo(() => ({ ...DEFAULT_LABELS, ...labelsProp }), [labelsProp]);
 
   return (
-    <DialogContext.Provider value={{ isClosing, close, epoch, onExitDone, animConfig, labels }}>
+    <DialogContext.Provider
+      value={{ isClosing, close, epoch, onExitDone, animConfig, labels, modal: modal !== false }}
+    >
       <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
       </RadixDialog.Root>
@@ -199,7 +203,27 @@ export interface DialogPortalProps {
   container?: HTMLElement;
 }
 
-const DialogPortal: React.FC<DialogPortalProps> = (props) => <RadixDialog.Portal {...props} />;
+/**
+ * A modal has a backdrop. Rendering one is not a decision the call site makes —
+ * it is what being modal MEANS: the page behind is inert, and the dimming is
+ * how a person is told so. Radix draws nothing unless an Overlay is mounted, so
+ * every app had to remember, and an app that forgot got a dialog floating over
+ * a page that still looked live. Nothing warned them; it simply looked wrong.
+ *
+ * So the Portal mounts it, the way Header mounts its own Close — unless the
+ * call site wrote one (it gets exactly that one, styled however it likes), or
+ * the dialog is not modal, where there is nothing to dim.
+ */
+const DialogPortal: React.FC<DialogPortalProps> = ({ children, ...rest }) => {
+  const { modal } = useDialogContext();
+  const hasOwnOverlay = containsElementOfType(children, DialogOverlay);
+  return (
+    <RadixDialog.Portal {...rest}>
+      {modal && !hasOwnOverlay && <DialogOverlay />}
+      {children}
+    </RadixDialog.Portal>
+  );
+};
 DialogPortal.displayName = 'Dialog.Portal';
 
 // ============================================================================

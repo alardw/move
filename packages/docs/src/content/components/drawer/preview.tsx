@@ -8,7 +8,6 @@ export default function DrawerPreview() {
       {({ root, content, portal }) => (
         <Drawer.Root {...root} animations={false}>
           <Drawer.Portal {...portal}>
-            <Drawer.Overlay />
             <Drawer.Content {...content}>
               <Drawer.Header>
                 <Drawer.Title>Filters</Drawer.Title>

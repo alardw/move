@@ -177,4 +177,62 @@ describe('Drawer', () => {
       expect(() => renderDrawer({ defaultOpen: true })).not.toThrow();
     });
   });
+
+  describe('backdrop', () => {
+    /** Radix paints nothing unless an Overlay is mounted; these count what is. */
+    const backdrops = () => document.querySelectorAll('[class*="overlay"]');
+
+    it('Portal renders a backdrop when the call site writes none', async () => {
+      render(
+        <Drawer.Root open animations={false}>
+          <Drawer.Portal>
+            <Drawer.Content>
+              <Drawer.Header>
+                <Drawer.Title>Title</Drawer.Title>
+              </Drawer.Header>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(1);
+    });
+
+    it('a call site Overlay suppresses the automatic one', async () => {
+      render(
+        <Drawer.Root open animations={false}>
+          <Drawer.Portal>
+            <Drawer.Overlay data-testid="own-overlay" />
+            <Drawer.Content>
+              <Drawer.Header>
+                <Drawer.Title>Title</Drawer.Title>
+              </Drawer.Header>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(1);
+      expect(screen.getByTestId('own-overlay')).toBeInTheDocument();
+    });
+
+    it('renders no backdrop when modal is false', async () => {
+      render(
+        <Drawer.Root open animations={false} modal={false}>
+          <Drawer.Portal>
+            <Drawer.Content>
+              <Drawer.Header>
+                <Drawer.Title>Title</Drawer.Title>
+              </Drawer.Header>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(0);
+    });
+  });
 });

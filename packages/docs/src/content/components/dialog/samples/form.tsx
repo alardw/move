@@ -12,7 +12,6 @@ export default function FormSample() {
         <Button>Invite teammate</Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay />
         <Dialog.Content size="md">
           <Dialog.Header>
             <Dialog.Title>Invite a teammate</Dialog.Title>

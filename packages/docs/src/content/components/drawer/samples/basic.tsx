@@ -7,7 +7,6 @@ export default function BasicSample() {
         <Button>Open drawer</Button>
       </Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay />
         <Drawer.Content>
           <Drawer.Header>
             <Drawer.Title>Filters</Drawer.Title>

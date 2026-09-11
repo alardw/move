@@ -7,7 +7,6 @@ export default function BasicSample() {
         <Button>Open dialog</Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay />
         <Dialog.Content>
           <Dialog.Header>
             <Dialog.Title>Publish changes</Dialog.Title>

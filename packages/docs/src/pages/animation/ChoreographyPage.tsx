@@ -145,7 +145,6 @@ export function ChoreographyPage() {
                   <Button>Open drawer</Button>
                 </Drawer.Trigger>
                 <Drawer.Portal>
-                  <Drawer.Overlay />
                   <Drawer.Content>
                     <Drawer.Header>
                       <Drawer.Title>Filters</Drawer.Title>

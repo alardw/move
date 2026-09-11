@@ -71,6 +71,8 @@ interface DrawerContextValue {
   animConfig: AnimationTrigger[] | null;
   effectivePosition: DrawerPosition;
   labels: DrawerLabels;
+  /** Whether this is a modal — which is what decides there is a backdrop. */
+  modal: boolean;
 }
 
 const DrawerContext = React.createContext<DrawerContextValue | null>(null);
@@ -188,7 +190,7 @@ const DrawerRoot: React.FC<DrawerRootProps> = ({
 
   return (
     <DrawerContext.Provider
-      value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition, labels }}
+      value={{ isClosing, close, epoch, onExitDone, animConfig, effectivePosition, labels, modal }}
     >
       <RadixDialog.Root open={isOpen || isClosing} onOpenChange={handleOpenChange} modal={modal}>
         {children}
@@ -251,7 +253,27 @@ export interface DrawerPortalProps {
   container?: HTMLElement;
 }
 
-const DrawerPortal: React.FC<DrawerPortalProps> = (props) => <RadixDialog.Portal {...props} />;
+/**
+ * A modal has a backdrop. Rendering one is not a decision the call site makes —
+ * it is what being modal MEANS: the page behind is inert, and the dimming is
+ * how a person is told so. Radix draws nothing unless an Overlay is mounted, so
+ * every app had to remember, and an app that forgot got a panel floating over a
+ * page that still looked live. Nothing warned them; it simply looked wrong.
+ *
+ * So the Portal mounts it, the way Header mounts its own Close — unless the call
+ * site wrote one (it gets exactly that one, styled however it likes), or the
+ * drawer is not modal, where there is nothing to dim.
+ */
+const DrawerPortal: React.FC<DrawerPortalProps> = ({ children, ...rest }) => {
+  const { modal } = useDrawerContext();
+  const hasOwnOverlay = containsElementOfType(children, DrawerOverlay);
+  return (
+    <RadixDialog.Portal {...rest}>
+      {modal && !hasOwnOverlay && <DrawerOverlay />}
+      {children}
+    </RadixDialog.Portal>
+  );
+};
 DrawerPortal.displayName = 'Drawer.Portal';
 
 // ============================================================================

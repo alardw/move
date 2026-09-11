@@ -105,7 +105,6 @@ function DrawerDemo() {
         <Button variant="primary">Open drawer</Button>
       </Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay />
         <Drawer.Content>
           <Drawer.Header>
             <Drawer.Title>Filters</Drawer.Title>

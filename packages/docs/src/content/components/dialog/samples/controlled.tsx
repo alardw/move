@@ -26,7 +26,6 @@ export default function ControlledSample() {
         }}
       >
         <Dialog.Portal>
-          <Dialog.Overlay />
           <Dialog.Content>
             <Dialog.Header>
               <Dialog.Title>Controlled open</Dialog.Title>

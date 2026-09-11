@@ -12,7 +12,6 @@ export default function DestructiveSample() {
         <Button variant="danger">Delete project</Button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay />
         <Dialog.Content size="sm">
           <Dialog.Header>
             <Dialog.Title>Delete this project?</Dialog.Title>

@@ -691,7 +691,7 @@ Dialog.Root props:
 - defaultOpen: boolean — Initial open state (uncontrolled)
 - onOpenChange: (open: boolean) => void — Called when open state changes
 - animations: AnimationTrigger[] | false — Animation config or false to disable
-- modal: boolean — Whether to render as modal with backdrop
+- modal: boolean (default: true) — Whether the page behind is inert. A modal gets a backdrop from Portal without one being written.
 - labels: Partial<DialogLabels> — Overridable user-facing strings
 Dialog.Trigger props:
 - className: string — CSS class name
@@ -765,7 +765,7 @@ Drawer.Root props:
 - defaultOpen: boolean — Initial open state (uncontrolled)
 - onOpenChange: (open: boolean) => void — Called when open state changes
 - animations: AnimationTrigger[] | false — Animation config or false to disable
-- modal: boolean (default: true) — Whether to render as modal with backdrop
+- modal: boolean (default: true) — Whether the page behind is inert. A modal gets a backdrop from Portal without one being written.
 - position: 'left' | 'right' | 'top' | 'bottom' (default: right) — Edge the drawer slides in from. Lives on Root so the entire compound (overlay, content, animations) can react to the side.
 - responsive: boolean (default: true) — Auto-switch to a bottom sheet on mobile viewport.
 - breakpoint: number (default: 768) — Viewport width below which responsive mode activates (px).

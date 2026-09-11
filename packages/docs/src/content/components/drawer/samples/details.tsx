@@ -12,7 +12,6 @@ export default function DetailsSample() {
         <Button>View teammate</Button>
       </Drawer.Trigger>
       <Drawer.Portal>
-        <Drawer.Overlay />
         <Drawer.Content size="md">
           <Drawer.Header>
             <Drawer.Title>Mira Kovac</Drawer.Title>

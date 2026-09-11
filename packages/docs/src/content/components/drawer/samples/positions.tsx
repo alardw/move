@@ -13,7 +13,6 @@ export default function PositionsSample() {
             </Button>
           </Drawer.Trigger>
           <Drawer.Portal>
-            <Drawer.Overlay />
             <Drawer.Content size="md">
               <Drawer.Header>
                 <Drawer.Title>position="{position}"</Drawer.Title>

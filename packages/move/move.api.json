@@ -3906,7 +3906,8 @@
             {
               "name": "modal",
               "type": "boolean",
-              "description": "Whether to render as modal with backdrop"
+              "default": "true",
+              "description": "Whether the page behind is inert. A modal gets a backdrop from Portal without one being written."
             },
             {
               "name": "labels",
@@ -4295,7 +4296,7 @@
               "name": "modal",
               "type": "boolean",
               "default": "true",
-              "description": "Whether to render as modal with backdrop"
+              "description": "Whether the page behind is inert. A modal gets a backdrop from Portal without one being written."
             },
             {
               "name": "position",

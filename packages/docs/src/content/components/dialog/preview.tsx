@@ -11,7 +11,6 @@ export default function DialogPreview() {
       {({ root, content, portal }) => (
         <Dialog.Root {...root}>
           <Dialog.Portal {...portal}>
-            <Dialog.Overlay />
             <Dialog.Content size="sm" {...content}>
               <Dialog.Header>
                 <Dialog.Title>Publish changes</Dialog.Title>

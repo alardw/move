@@ -608,4 +608,62 @@ describe('Dialog', () => {
       });
     });
   });
+
+  describe('backdrop', () => {
+    /** Radix paints nothing unless an Overlay is mounted; these count what is. */
+    const backdrops = () => document.querySelectorAll('[class*="overlay"]');
+
+    it('Portal renders a backdrop when the call site writes none', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(1);
+    });
+
+    it('a call site Overlay suppresses the automatic one', async () => {
+      render(
+        <Dialog.Root open animations={false}>
+          <Dialog.Portal>
+            <Dialog.Overlay data-testid="own-overlay" />
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(1);
+      expect(screen.getByTestId('own-overlay')).toBeInTheDocument();
+    });
+
+    it('renders no backdrop when modal is false', async () => {
+      render(
+        <Dialog.Root open animations={false} modal={false}>
+          <Dialog.Portal>
+            <Dialog.Content>
+              <Dialog.Header>
+                <Dialog.Title>Title</Dialog.Title>
+              </Dialog.Header>
+            </Dialog.Content>
+          </Dialog.Portal>
+        </Dialog.Root>,
+      );
+
+      await waitFor(() => expect(screen.getByRole('dialog')).toBeInTheDocument());
+      expect(backdrops()).toHaveLength(0);
+    });
+  });
 });
