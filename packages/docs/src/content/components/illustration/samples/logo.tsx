@@ -11,10 +11,10 @@ import type { AnimationTrigger } from 'move';
  * each letter can still be animated on its own.
  */
 const LETTERS = [
-  { ch: 'M', x: 92 },
-  { ch: 'o', x: 131.6 },
-  { ch: 'v', x: 160.4 },
-  { ch: 'e', x: 186.3 },
+  { ch: 'M', x: 8 },
+  { ch: 'o', x: 47.6 },
+  { ch: 'v', x: 76.4 },
+  { ch: 'e', x: 102.3 },
 ];
 
 export default function LogoSample() {
@@ -62,11 +62,7 @@ export default function LogoSample() {
         animations={wordmark}
         size="sm"
       >
-        <svg viewBox="0 0 224 96" width="224" height="96">
-          <g className="illustration-pivot" data-move-stagger="">
-            <rect className="illustration-accent" x="8" y="20" width="56" height="56" rx="14" />
-            <circle className="illustration-accent-fg" cx="36" cy="48" r="13" />
-          </g>
+        <svg viewBox="0 0 140 96" width="140" height="96">
           {LETTERS.map(({ ch, x }) => (
             <g key={ch + x} className="illustration-pivot" data-move-stagger="">
               <text

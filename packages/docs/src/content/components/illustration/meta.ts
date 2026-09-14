@@ -15,6 +15,10 @@ const highlights: HighlightItem[] = [
     icon: 'crop',
     text: '`size="auto"` renders the drawing at its own size and scales it down in a narrow parent. The named steps cap the width — the container can always overrule them.',
   },
+  {
+    icon: 'rabbit',
+    text: 'A drawing can move. Mark the shapes with `data-move-stagger` and pass `animations` — the same triggers, springs and staggers every other Move component takes, so an SVG never needs its own animation code.',
+  },
 ];
 
 const related: RelatedItem[] = [
