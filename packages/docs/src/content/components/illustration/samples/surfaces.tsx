@@ -1,4 +1,4 @@
-import { Card, Illustration, Stack, Text } from 'move';
+import { Card, Illustration, Stack } from 'move';
 
 /**
  * The same drawing, three grounds deep. Nothing in the artwork names a colour:
@@ -22,25 +22,19 @@ function Chip() {
 export default function SurfacesSample() {
   return (
     <Stack gap="md" align="stretch">
-      <Stack gap="xs" align="stretch">
-        <Text size="xs" color="subtle">
-          On the page
-        </Text>
-        <Illustration title="A row on the page ground" size="full">
-          <Chip />
-        </Illustration>
-      </Stack>
+      <Illustration title="A row on the page ground" caption="On the page." size="full">
+        <Chip />
+      </Illustration>
 
       <Card.Root>
         <Card.Body>
-          <Stack gap="xs" align="stretch">
-            <Text size="xs" color="subtle">
-              Inside a Card — the ground and the panel have traded places
-            </Text>
-            <Illustration title="The same row, one ground deeper" size="full">
-              <Chip />
-            </Illustration>
-          </Stack>
+          <Illustration
+            title="The same row, one ground deeper"
+            caption="Inside a Card — the ground and the panel have traded places."
+            size="full"
+          >
+            <Chip />
+          </Illustration>
         </Card.Body>
       </Card.Root>
 
@@ -48,14 +42,13 @@ export default function SurfacesSample() {
         <Card.Body>
           <Card.Root>
             <Card.Body>
-              <Stack gap="xs" align="stretch">
-                <Text size="xs" color="subtle">
-                  Inside a Card inside a Card — and back again
-                </Text>
-                <Illustration title="The same row, two grounds deep" size="full">
-                  <Chip />
-                </Illustration>
-              </Stack>
+              <Illustration
+                title="The same row, two grounds deep"
+                caption="Inside a Card inside a Card — and back again."
+                size="full"
+              >
+                <Chip />
+              </Illustration>
             </Card.Body>
           </Card.Root>
         </Card.Body>
