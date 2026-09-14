@@ -88,6 +88,22 @@ export const SVG_ELEMENTS = new Set([
 const SVG_SEAM = 'Illustration';
 
 /**
+ * Naming a drawing is the FRAME's job, never the artwork's.
+ *
+ * Illustration carries `role="img"` and the accessible name on a wrapper, and
+ * the ARIA spec makes that wrapper's children presentational — so anything the
+ * artwork says about itself is either ignored or, worse, wins. An export
+ * arrives stamped with whatever its tool wrote: unDraw ships `role="img"`,
+ * Figma ships a `<title>` of the frame name. The nameless variant is caught by
+ * axe; a drawing carrying `aria-label="Illustration"` produces a WRONG
+ * accessible name that no tool flags and nobody sees.
+ *
+ * (`<title>` and `<desc>` need no rule here — they are not in SVG_ELEMENTS, so
+ * they are already refused as raw elements.)
+ */
+const SVG_NAMING_ATTRS = ['role', 'aria-label', 'aria-labelledby'];
+
+/**
  * Is this node somewhere inside an `<Illustration>`?
  *
  * Walks the JSX ancestor chain rather than tracking depth, because the shapes
@@ -224,10 +240,24 @@ export function run(config) {
       const { line } = sf.getLineAndCharacterOfPosition(node.getStart(sf));
       if (!isIgnored(line + 1)) violations.push(`${relative(config.cwd, file)}:${line + 1}  ${kind} — ${detail}`);
     };
+    const ids = new Map();
     const visit = (node) => {
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         const tag = node.tagName.getText(sf);
         if (/^[a-z]/.test(tag)) {
+          if (tag === 'svg' && (insideSeam(node, sf) || isDrawingComponent(node, sf))) {
+            for (const attr of node.attributes.properties) {
+              if (!ts.isJsxAttribute(attr)) continue;
+              const name = attr.name.getText(sf);
+              if (SVG_NAMING_ATTRS.includes(name)) {
+                record(
+                  attr,
+                  'svg-naming',
+                  `${name} on the drawing — <${SVG_SEAM}> names it, and its children are presentational, so this is ignored at best and wrong at worst`,
+                );
+              }
+            }
+          }
           if (SVG_ELEMENTS.has(tag)) {
             // A shape is legal inside the seam and nowhere else. Outside it, say
             // so by name — the answer is a component, not the ignore marker.
@@ -241,6 +271,21 @@ export function run(config) {
           } else {
             record(node, 'raw-html', `<${tag}>`);
           }
+        }
+      }
+      // An id is only unique within a document, and two drawings on one page
+      // share that document. Collected here, reported once per file below.
+      if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'id') {
+        const owner = node.parent?.parent;
+        const ownerTag =
+          owner && (ts.isJsxOpeningElement(owner) || ts.isJsxSelfClosingElement(owner))
+            ? owner.tagName.getText(sf)
+            : '';
+        const init = node.initializer;
+        if ((ownerTag === 'svg' || SVG_ELEMENTS.has(ownerTag)) && init && ts.isStringLiteral(init)) {
+          const seen = ids.get(init.text) ?? [];
+          seen.push(node);
+          ids.set(init.text, seen);
         }
       }
       if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'style') record(node, 'inline-style', 'style=');
@@ -274,6 +319,12 @@ export function run(config) {
       ts.forEachChild(node, visit);
     };
     visit(sf);
+
+    for (const [id, nodes] of ids) {
+      if (nodes.length > 1) {
+        record(nodes[1], 'duplicate-id', `id="${id}" used ${nodes.length} times — an id is unique per DOCUMENT, so two drawings sharing one make every url(#${id}) resolve to the first`);
+      }
+    }
   }
 
   return {

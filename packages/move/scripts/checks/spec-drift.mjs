@@ -1008,6 +1008,16 @@ function listComponents() {
       if (compName.startsWith('_')) continue; // _shared
       const compDir = join(catDir, compName);
       if (!statSync(compDir).isDirectory()) continue;
+      // A directory holding only an analysis report is a component being
+      // RESEARCHED, not a broken one. /component-analyze writes the report
+      // next to where the component will live, which is before the spec
+      // exists by design — so reading that as "source missing" fails the build
+      // for doing the first step of the pipeline in the order the pipeline
+      // prescribes.
+      const files = readdirSync(compDir);
+      const researchOnly =
+        files.every((f) => f.endsWith('.analysis.md') || f.endsWith('.md')) && files.length > 0;
+      if (researchOnly) continue;
       out.push(compDir);
     }
   }

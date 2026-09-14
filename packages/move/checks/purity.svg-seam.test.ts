@@ -106,6 +106,66 @@ describe('purity — SVG inside the Illustration seam', () => {
     expect(messages[0]).toContain('<circle>');
   });
 
+  it('refuses a name on the drawing, because the frame owns it', () => {
+    // Illustration puts role="img" and the name on a wrapper, and ARIA makes
+    // that wrapper's children presentational. An export stamped with its own
+    // aria-label produces a WRONG accessible name that axe cannot flag, because
+    // a name does exist.
+    const messages = check(`
+      import { Illustration } from 'move';
+      export function Bad() {
+        return (
+          <Illustration title="t">
+            <svg viewBox="0 0 10 10" role="img" aria-label="Illustration">
+              <rect className="illustration-panel" />
+            </svg>
+          </Illustration>
+        );
+      }
+    `);
+    expect(messages).toHaveLength(2);
+    expect(messages.join(' ')).toContain('svg-naming');
+    expect(messages.join(' ')).toContain('role');
+    expect(messages.join(' ')).toContain('aria-label');
+  });
+
+  it('allows a drawing that says nothing about itself', () => {
+    const messages = check(`
+      import { Illustration } from 'move';
+      export function Good() {
+        return (
+          <Illustration title="t">
+            <svg viewBox="0 0 10 10" width="10" height="10">
+              <rect className="illustration-panel" />
+            </svg>
+          </Illustration>
+        );
+      }
+    `);
+    expect(messages).toEqual([]);
+  });
+
+  it('catches an id used twice, which is one document away from breaking', () => {
+    // Harmless until a drawing uses url(#clip0) and a second drawing on the
+    // same page reuses the id — then every reference resolves to the first.
+    const messages = check(`
+      import { Illustration } from 'move';
+      export function Bad() {
+        return (
+          <Illustration title="t">
+            <svg viewBox="0 0 10 10">
+              <clipPath id="clip0"><rect /></clipPath>
+              <clipPath id="clip0"><rect /></clipPath>
+            </svg>
+          </Illustration>
+        );
+      }
+    `);
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toContain('duplicate-id');
+    expect(messages[0]).toContain('clip0');
+  });
+
   it('does not let the seam launder raw HTML', () => {
     const messages = check(`
       import { Illustration } from 'move';
