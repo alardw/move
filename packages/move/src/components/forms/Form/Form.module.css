@@ -1,0 +1,48 @@
+/* Generated from Form.spec.ts */
+
+.root {
+  /* Component tokens */
+  --move-form-gap: var(--move-spacing-md);
+  --move-form-actions-gap: var(--move-spacing-sm);
+  --move-form-actions-margin-top: var(--move-spacing-lg);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-form-gap);
+}
+
+/*
+ * A fieldset, for the one thing only a fieldset does: `disabled` on it disables
+ * every control inside, by the platform's rules, for pointer and keyboard
+ * alike. That means it arrives with a border, a margin and a min-width the row
+ * does not want — and `min-inline-size: 0` in particular, or the fieldset
+ * refuses to shrink below its content in a flex column.
+ */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--move-form-actions-gap);
+  margin: 0;
+  margin-block-start: var(--move-form-actions-margin-top);
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.actions[data-align='start'] {
+  justify-content: flex-start;
+}
+
+.actions[data-align='end'] {
+  justify-content: flex-end;
+}
+
+.actions[data-align='between'] {
+  justify-content: space-between;
+}
+
+/* Disabled is the platform's doing; this only says so. The controls inside
+   carry their own disabled treatment, so the row dims nothing itself. */
+.actions:disabled {
+  cursor: default;
+}

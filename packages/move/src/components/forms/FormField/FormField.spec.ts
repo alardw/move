@@ -78,11 +78,18 @@ export const spec = {
           description: 'Custom width for the label column (sets --move-formfield-label-width)',
         },
         {
+          name: 'name',
+          type: 'string',
+          moveSpecific: true,
+          description:
+            "The field's key in a Form's errors map — the same value as the `name` on the control inside it. Without it the field simply takes no part in error mapping, which is why it has no default: absent is a meaningful answer.",
+        },
+        {
           name: 'invalid',
           type: 'boolean',
           moveSpecific: true,
           description:
-            'Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling',
+            'Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling. Given no value, a Form above may supply one for this field by name.',
         },
       ],
       usesFactory: true,
@@ -282,6 +289,21 @@ export const spec = {
         'Description with error=true sets data-error attribute and switches color to --move-error',
     },
     {
+      id: 'form-context-is-optional',
+      description:
+        'FormField reads a Form context if one is above it and behaves exactly as before when none is. A field outside a Form must be unchanged in every respect — the read is optional, and its absence adds nothing and removes nothing.',
+    },
+    {
+      id: 'error-precedence',
+      description:
+        'invalid = props.invalid ?? Boolean(errors[name]). An explicit prop beats the context, per check:prop-precedence, so a field that validates itself is never overruled by a map it did not ask about. `??` and not `||`: invalid={false} is a field saying it is valid, which must hold.',
+    },
+    {
+      id: 'error-message-fallback',
+      description:
+        "When the map carries this field's name and the field renders no Description of its own, the mapped error is what the field shows — so a server error needs no message wiring at the call site. A Description the consumer wrote always wins, because it is the more specific statement.",
+    },
+    {
       id: 'label-alignment-per-control',
       description:
         'Label padding-top adjusts based on the type of form control in .field (checkbox, switch, radio, slider)',
@@ -289,7 +311,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent'] as string[],
+  engineImports: ['containsElementOfType', 'withMoveComponent'] as string[],
 
   componentDeps: [] as string[],
 

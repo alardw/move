@@ -478,6 +478,14 @@ export type { InputTextProps, InputTextVariant, InputTextSize } from './componen
 export { Label } from './components/forms/Label';
 export type { LabelProps, LabelSize } from './components/forms/Label';
 
+export { Form, useFormContext } from './components/forms/Form';
+export type {
+  FormRootProps,
+  FormActionsProps,
+  FormActionsAlign,
+  FormContextValue,
+} from './components/forms/Form';
+
 export {
   FormField,
   useFieldControl,

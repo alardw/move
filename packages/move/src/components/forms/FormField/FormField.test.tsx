@@ -2,6 +2,18 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { FormField } from './FormField';
+import { FormProvider } from '../Form/FormContext';
+
+/** Stands in for a Form until Form.tsx exists; it provides exactly what one does. */
+function WithErrors({
+  errors,
+  children,
+}: {
+  errors: Record<string, React.ReactNode>;
+  children: React.ReactNode;
+}) {
+  return <FormProvider value={{ errors, pending: false }}>{children}</FormProvider>;
+}
 
 describe('FormField', () => {
   // === Root ===
@@ -154,6 +166,79 @@ describe('FormField', () => {
       const el = screen.getByTestId('desc');
       expect(el.className).toContain('desc-class');
       expect(el.style.fontSize).toBe('12px');
+    });
+  });
+
+  // === Errors handed down by a Form ===
+  describe('error mapping', () => {
+    it('takes the error matching its own name', () => {
+      render(
+        <WithErrors errors={{ email: 'Already taken' }}>
+          <FormField.Root name="email" data-testid="root">
+            <FormField.Field>control</FormField.Field>
+          </FormField.Root>
+        </WithErrors>,
+      );
+      expect(screen.getByTestId('root')).toHaveAttribute('data-invalid');
+      expect(screen.getByText('Already taken')).toBeInTheDocument();
+    });
+
+    it('ignores errors addressed to another field', () => {
+      render(
+        <WithErrors errors={{ password: 'Too short' }}>
+          <FormField.Root name="email" data-testid="root">
+            <FormField.Field>control</FormField.Field>
+          </FormField.Root>
+        </WithErrors>,
+      );
+      expect(screen.getByTestId('root')).not.toHaveAttribute('data-invalid');
+      expect(screen.queryByText('Too short')).not.toBeInTheDocument();
+    });
+
+    it('takes no part without a name', () => {
+      render(
+        <WithErrors errors={{ email: 'Already taken' }}>
+          <FormField.Root data-testid="root">
+            <FormField.Field>control</FormField.Field>
+          </FormField.Root>
+        </WithErrors>,
+      );
+      expect(screen.getByTestId('root')).not.toHaveAttribute('data-invalid');
+    });
+
+    it('lets invalid={false} overrule the map', () => {
+      // The field is asserting that it IS valid. `??` rather than `||` is what
+      // makes that hold against a map it never asked about.
+      render(
+        <WithErrors errors={{ email: 'Already taken' }}>
+          <FormField.Root name="email" invalid={false} data-testid="root">
+            <FormField.Field>control</FormField.Field>
+          </FormField.Root>
+        </WithErrors>,
+      );
+      expect(screen.getByTestId('root')).not.toHaveAttribute('data-invalid');
+    });
+
+    it("lets the consumer's own Description win over the mapped error", () => {
+      render(
+        <WithErrors errors={{ email: 'Already taken' }}>
+          <FormField.Root name="email">
+            <FormField.Field>control</FormField.Field>
+            <FormField.Description error>Use your work address</FormField.Description>
+          </FormField.Root>
+        </WithErrors>,
+      );
+      expect(screen.getByText('Use your work address')).toBeInTheDocument();
+      expect(screen.queryByText('Already taken')).not.toBeInTheDocument();
+    });
+
+    it('behaves exactly as before with no Form above it', () => {
+      render(
+        <FormField.Root name="email" data-testid="root">
+          <FormField.Field>control</FormField.Field>
+        </FormField.Root>,
+      );
+      expect(screen.getByTestId('root')).not.toHaveAttribute('data-invalid');
     });
   });
 });

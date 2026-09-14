@@ -1,7 +1,8 @@
 'use client';
 // Generated from FormField.spec.ts
 import * as React from 'react';
-import { withMoveComponent } from '../../../engine';
+import { containsElementOfType, withMoveComponent } from '../../../engine';
+import { useFormContext } from '../Form/FormContext';
 import styles from './FormField.module.css';
 
 // Bundlers (Vite, webpack, Next) statically replace `process.env.NODE_ENV`; declare it
@@ -159,7 +160,20 @@ export interface FormFieldRootProps extends React.HTMLAttributes<HTMLElement> {
   style?: React.CSSProperties;
   children?: React.ReactNode;
   labelWidth?: string;
-  /** Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling. */
+  /**
+   * This field's key in a Form's errors map — the same value as the `name` on
+   * the control inside it.
+   *
+   * No default, because absent is a meaningful answer: a field without one
+   * takes no part in error mapping, which is exactly right for a field that
+   * has no Form above it or manages its own validity.
+   */
+  name?: string;
+  /**
+   * Marks the field invalid — surfaces as aria-invalid on the control and
+   * data-invalid for styling. Given no value, a Form above may supply one for
+   * this field by name.
+   */
   invalid?: boolean;
 }
 
@@ -167,9 +181,29 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
   name: 'FormField',
   styles,
   slots: ['root'] as const,
-  moveProps: ['labelWidth', 'invalid'],
+  moveProps: ['labelWidth', 'invalid', 'name'],
 
   setup({ props, ref, cx, sp, attrs }) {
+    // Optional by design. A FormField works on its own — in a dialog, a filter
+    // bar, a settings row — and outside a Form this reads null and changes
+    // nothing at all.
+    const form = useFormContext();
+    const mappedError = props.name ? form?.errors?.[props.name] : undefined;
+
+    // Read from the CHILDREN, not from the registration count: the fallback
+    // Description registers itself like any other, so a count would go 0 → 1 →
+    // unrender → 0 forever. Asking what was passed is synchronous and settles
+    // before anything mounts.
+    const hasOwnDescription = containsElementOfType(
+      props.children as React.ReactNode,
+      FormFieldDescription,
+    );
+
+    // `??` and not `||`: invalid={false} is a field asserting that it IS valid,
+    // and that has to beat a map it never asked about. An explicit prop wins,
+    // per check:prop-precedence.
+    const invalid = props.invalid ?? Boolean(mappedError);
+
     const generated = React.useId();
     const fieldId = (props.id as string) || `${generated}-field`;
     const labelId = `${generated}-label`;
@@ -195,7 +229,7 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
         fieldId,
         labelId,
         descriptionId,
-        invalid: !!props.invalid,
+        invalid,
         describedBy: descriptionCount > 0 ? descriptionId : undefined,
         registerDescription,
         labelledByControl: labelledByCount > 0,
@@ -207,7 +241,7 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
         fieldId,
         labelId,
         descriptionId,
-        props.invalid,
+        invalid,
         descriptionCount,
         registerDescription,
         labelledByCount,
@@ -236,9 +270,23 @@ const FormFieldRoot = withMoveComponent<'root', FormFieldRootProps, HTMLDivEleme
               ref={ref}
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...inlineStyle, ...(spStyle as React.CSSProperties) } as React.CSSProperties}
-              {...(props.invalid ? { 'data-invalid': '' } : {})}
+              {...(invalid ? { 'data-invalid': '' } : {})}
             >
-              <div className={styles.inner}>{props.children}</div>
+              <div className={styles.inner}>
+                {props.children}
+                {/*
+                  A mapped error says itself.
+
+                  A server error arriving through a Form should not also need a
+                  Description written at the call site — that is the wiring this
+                  exists to remove. A Description the consumer DID write always
+                  wins, because it is the more specific statement, and
+                  descriptionCount is how we know one is there.
+                */}
+                {mappedError != null && !hasOwnDescription && (
+                  <FormFieldDescription error>{mappedError}</FormFieldDescription>
+                )}
+              </div>
             </div>
           </FormFieldContext.Provider>
         );

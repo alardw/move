@@ -2,7 +2,7 @@
   "name": "move",
   "version": "0.1.61",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
-  "componentCount": 72,
+  "componentCount": 73,
   "components": [
     {
       "name": "Accordion",
@@ -5549,6 +5549,89 @@
       "callable": false
     },
     {
+      "name": "Form",
+      "category": "forms",
+      "componentClass": null,
+      "description": "The form element, with submission handled and errors handed down — it distributes, it does not validate",
+      "props": [],
+      "subComponents": [
+        {
+          "name": "Root",
+          "props": [
+            {
+              "name": "onSubmit",
+              "type": "(values: Record<string, FormDataEntryValue>, event: React.FormEvent<HTMLFormElement>) => void",
+              "description": "Called on submit with the collected values. preventDefault is already applied, and the values come from FormData — the browser walks the fields by their name attributes, so the form never inspects its own children."
+            },
+            {
+              "name": "errors",
+              "type": "Record<string, React.ReactNode>",
+              "description": "Errors keyed by field name, put into context for the matching FormField to read. The consumer owns this state: errors may arrive from this submit, a route loader, a socket or a validation library, and only the consumer knows when they stop being true."
+            },
+            {
+              "name": "pending",
+              "type": "boolean",
+              "default": "false",
+              "description": "Whether a submission is in flight. Put into context so the actions and any control can disable themselves, rather than each being handed a prop."
+            },
+            {
+              "name": "noValidate",
+              "type": "boolean",
+              "default": "true",
+              "description": "Suppresses the browser's own validation bubbles, which would otherwise fire before a FormField could show its message and disagree with it. Native constraints still hold — see the checkValidity contract."
+            },
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "The fields, and a Form.Actions"
+            }
+          ]
+        },
+        {
+          "name": "Actions",
+          "props": [
+            {
+              "name": "className",
+              "type": "string",
+              "description": "CSS class name"
+            },
+            {
+              "name": "style",
+              "type": "React.CSSProperties",
+              "description": "Inline styles"
+            },
+            {
+              "name": "align",
+              "type": "'start' | 'end' | 'between'",
+              "values": [
+                "start",
+                "end",
+                "between"
+              ],
+              "default": "end",
+              "description": "Where the buttons sit in the row"
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Buttons — typically a submit and a cancel"
+            }
+          ]
+        }
+      ],
+      "callable": true
+    },
+    {
       "name": "FormField",
       "category": "forms",
       "componentClass": null,
@@ -5590,9 +5673,14 @@
               "description": "Custom width for the label column (sets --move-formfield-label-width)"
             },
             {
+              "name": "name",
+              "type": "string",
+              "description": "The field's key in a Form's errors map — the same value as the `name` on the control inside it. Without it the field simply takes no part in error mapping, which is why it has no default: absent is a meaningful answer."
+            },
+            {
               "name": "invalid",
               "type": "boolean",
-              "description": "Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling"
+              "description": "Marks the field invalid — surfaces as aria-invalid on the control and data-invalid for styling. Given no value, a Form above may supply one for this field by name."
             }
           ]
         },

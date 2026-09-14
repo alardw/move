@@ -27,6 +27,7 @@ import { content as drawer } from './drawer';
 import { content as dropdown } from './dropdown';
 import { content as emptyState } from './empty-state';
 import { content as fileUpload } from './file-upload';
+import { content as form } from './form';
 import { content as formField } from './form-field';
 import { content as grid } from './grid';
 import { content as heading } from './heading';
@@ -101,6 +102,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   dropdown,
   'empty-state': emptyState,
   'file-upload': fileUpload,
+  form,
   'form-field': formField,
   grid,
   heading,
