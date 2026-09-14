@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    The Move mark: the wordmark's M, white on the accent.
+
+    Drawn as geometry rather than text on purpose. A favicon renders in browser
+    chrome, where the site's webfont is not loaded, so a text element would fall
+    back to whatever the machine happens to have and the mark would differ per
+    visitor.
+
+    The accent is written literally for the same reason: nothing in chrome
+    resolves a custom property. #5149e8 is what the docs theme sets its primary
+    to, so this tracks the site rather than the library default.
+  -->
+  <rect width="32" height="32" rx="7" fill="#5149e8" />
+  <path
+    d="M8.5 22.75V9.25L16 18.25L23.5 9.25V22.75"
+    fill="none"
+    stroke="#fff"
+    stroke-width="3.4"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"
+  />
+</svg>
