@@ -82,6 +82,59 @@ describe('useAutoLayout — FLIP invariants (real browser)', () => {
     expect(top(root, 'a')).toBeGreaterThan(top(root, 'd'));
   });
 
+  it('INVARIANT: a second change mid-animation never inverts by more than the list is tall', async () => {
+    // The bug this guards: mid-FLIP an element carries a transform, so
+    // getBoundingClientRect reports where it was DISPLACED to, not where layout
+    // put it. Differencing that against the cache produced deltas of thousands
+    // of pixels with the sign flipped — on the docs component grid, cards flew
+    // in from 7000px above. measureAll always skipped animating elements; the
+    // mutation path did not, and a list that shrinks across two mutation
+    // batches is all it takes.
+    const order = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+    const { rerender, container } = render(<List order={order} />);
+    const root = container.firstElementChild!;
+    const listHeight = root.getBoundingClientRect().height;
+
+    // First change starts animations…
+    rerender(<List order={['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']} />);
+    await microtasks();
+    // …and a second lands while they are still running.
+    rerender(<List order={['a', 'h', 'b', 'g']} />);
+    await microtasks();
+
+    // Every invert must be within the list's own height. A transformed-box
+    // reading produces a delta far larger than anything the layout contains.
+    const inverts = Array.from(root.children).map((el) => {
+      const t = (el as HTMLElement).style.transform;
+      const m = /translateY\((-?[\d.]+)px\)/.exec(t);
+      return m ? Math.abs(+m[1]) : 0;
+    });
+
+    for (const dy of inverts) {
+      expect(dy).toBeLessThanOrEqual(listHeight + 1);
+    }
+  });
+
+  it('INVARIANT: a settled child re-caches, so the next move measures from the truth', async () => {
+    // Skipping animating elements is only safe if they refresh the cache when
+    // they finish — otherwise the NEXT diff reads a stale position and the same
+    // wrong delta comes back one move later.
+    const { rerender, container } = render(<List order={['a', 'b', 'c']} />);
+    const root = container.firstElementChild!;
+
+    rerender(<List order={['c', 'b', 'a']} />);
+    await sleep(420); // let the move finish and clear its transform
+
+    const settledTop = top(root, 'a');
+
+    rerender(<List order={['a', 'b', 'c']} />);
+    await microtasks();
+
+    // The invert must put "a" back at where it actually WAS, not where it was
+    // before any of this started.
+    expect(near(top(root, 'a'), settledTop)).toBe(true);
+  });
+
   it('INVARIANT: disabled applies the new layout instantly — no animation/transform', async () => {
     const { rerender, container } = render(<List order={['a', 'b', 'c']} disabled />);
     const root = container.firstElementChild!;

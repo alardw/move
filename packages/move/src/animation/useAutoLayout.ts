@@ -101,6 +101,18 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
     const coords = new WeakMap<Element, Pos>();
     const animating = new WeakSet<Element>();
 
+    /** Cache one element's LAYOUT box — call only when it carries no transform. */
+    const measureOne = (el: Element) => {
+      const cr = container.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      coords.set(el, {
+        left: r.left - cr.left,
+        top: r.top - cr.top,
+        width: r.width,
+        height: r.height,
+      });
+    };
+
     const measureAll = () => {
       const cr = container.getBoundingClientRect();
       for (const child of Array.from(container.children)) {
@@ -151,6 +163,9 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
               el.style.opacity = '';
               el.style.transition = '';
               animating.delete(el);
+              // The mount reveal seeds a scale, so until it clears this element's
+              // measured box is the scaled one. Re-cache now it is the real one.
+              measureOne(el);
             },
           } as Parameters<typeof animate>[1]);
         });
@@ -215,6 +230,17 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
       const cr = container.getBoundingClientRect();
       const current = Array.from(container.children) as HTMLElement[];
       current.forEach((el) => {
+        // Mid-animation, getBoundingClientRect reports the TRANSFORMED box — where
+        // the element was displaced to, not where layout put it. Differencing
+        // that against the cache produced deltas of thousands of pixels with the
+        // sign flipped, so cards flew in from far above the grid. measureAll has
+        // always skipped these; this path did not, and React removing a filtered
+        // list in more than one mutation batch is all it took to hit it.
+        //
+        // Skipping leaves the cache holding a true layout box, which is what the
+        // next diff needs. The element re-caches itself when its animation ends.
+        if (animating.has(el)) return;
+
         const prev = coords.get(el);
         const r = el.getBoundingClientRect();
         const next = {
@@ -245,6 +271,8 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
                 el.style.opacity = '';
                 el.style.transition = '';
                 animating.delete(el);
+                // Transform gone: what it reports now IS the layout box.
+                measureOne(el);
               },
             } as Parameters<typeof animate>[1]);
           }
@@ -282,6 +310,7 @@ export function useAutoLayout(options: UseAutoLayoutOptions = {}): UseAutoLayout
               el.style.transform = '';
               el.style.transition = '';
               animating.delete(el);
+              measureOne(el);
             },
           } as Parameters<typeof animate>[1]);
         }
