@@ -225,10 +225,6 @@
   "pages/getting-started/VitePage.tsx": {
     "raw-html": 3
   },
-  "pages/systems/FormsPage.tsx": {
-    "inline-style": 1,
-    "raw-html": 2
-  },
   "pages/systems/HooksPage.tsx": {
     "inline-style": 1,
     "raw-html": 1

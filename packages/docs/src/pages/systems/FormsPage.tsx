@@ -7,6 +7,7 @@ import {
   Icon,
   Badge,
   Code,
+  Form,
   FormField,
   InputText,
   Password,
@@ -27,28 +28,30 @@ const FIELD_EXAMPLE = `<FormField.Root invalid={!!error}>
 const NAMED_EXAMPLE = `// A control whose purpose is clear from context names itself directly:
 <InputRange aria-label="Volume" min={0} max={100} value={v} onValueChange={setV} />`;
 
-const FORM_CODE = `<form onSubmit={handleSubmit}>
+const FORM_CODE = `<Form errors={errors} onSubmit={async (values) => setErrors(await save(values))}>
   <Card.Root>
     <Card.Body>
       <Stack gap="md">
-        <FormField.Root>
+        <FormField.Root name="email">
           <FormField.Label>Email</FormField.Label>
           <InputText type="email" name="email" placeholder="you@company.com" required />
           <FormField.Description>We'll send a confirmation link.</FormField.Description>
         </FormField.Root>
 
-        <FormField.Root invalid>
+        <FormField.Root name="password">
           <FormField.Label>Password</FormField.Label>
           <Password name="password" defaultValue="short" required />
-          <FormField.Description error>Use at least 8 characters.</FormField.Description>
         </FormField.Root>
 
         <Checkbox name="terms">I agree to the terms</Checkbox>
-        <Button type="submit">Create account</Button>
       </Stack>
     </Card.Body>
   </Card.Root>
-</form>`;
+
+  <Form.Actions>
+    <Button type="submit">Create account</Button>
+  </Form.Actions>
+</Form>`;
 
 const TOC: TocItem[] = [
   { href: '#forms', label: 'Overview' },
@@ -100,14 +103,14 @@ export function FormsPage() {
         <Section
           id="example"
           title="A complete form"
-          lede="Every field is a Label, a control, and an optional message wrapped in a FormField — including the one below that’s showing its error state."
+          lede="Every field is a Label, a control, and an optional message wrapped in a FormField, all inside a Form. The password error below was not written at the call site — it came from the form’s errors map, addressed to that field by name."
         >
           <Preview code={FORM_CODE}>
-            <form onSubmit={(e) => e.preventDefault()} style={{ maxWidth: 400 }}>
+            <Form errors={{ password: 'Use at least 8 characters.' }}>
               <Card.Root>
                 <Card.Body>
                   <Stack gap="md">
-                    <FormField.Root>
+                    <FormField.Root name="email">
                       <FormField.Label>Email</FormField.Label>
                       <InputText type="email" name="email" placeholder="you@company.com" required />
                       <FormField.Description>
@@ -115,20 +118,20 @@ export function FormsPage() {
                       </FormField.Description>
                     </FormField.Root>
 
-                    <FormField.Root invalid>
+                    <FormField.Root name="password">
                       <FormField.Label>Password</FormField.Label>
                       <Password name="password" defaultValue="short" required />
-                      <FormField.Description error>
-                        Use at least 8 characters.
-                      </FormField.Description>
                     </FormField.Root>
 
                     <Checkbox name="terms">I agree to the terms</Checkbox>
-                    <Button type="submit">Create account</Button>
                   </Stack>
                 </Card.Body>
               </Card.Root>
-            </form>
+
+              <Form.Actions>
+                <Button type="submit">Create account</Button>
+              </Form.Actions>
+            </Form>
           </Preview>
         </Section>
 
@@ -170,8 +173,11 @@ export function FormsPage() {
             <CodeBlock code={NAMED_EXAMPLE} language="tsx" />
             <Text>
               To keep the rule from slipping, a control that mounts with no name at all{' '}
-              <strong>warns in the console on a dev server</strong> — never in production, never in
-              tests. You find out while you’re building it, not from an audit later.
+              <Text as="strong" weight="semibold">
+                warns in the console on a dev server
+              </Text>{' '}
+              — never in production, never in tests. You find out while you’re building it, not from
+              an audit later.
             </Text>
             <Text size="sm" color="muted">
               This is the forms half of <RouterLink to="/accessibility">accessibility</RouterLink> —
