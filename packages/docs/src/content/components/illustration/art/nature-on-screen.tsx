@@ -8,6 +8,11 @@
  * and the ink and papers became their roles, so the drawing follows the theme.
  * Skin and the signature pink detail stay literal — a UI palette owns surfaces,
  * text and an accent, and it does not own a face.
+ *
+ * unDraw stamps `role="img"` on its own <svg>, and it is removed here.
+ * Illustration's frame already carries that role and the accessible name; a
+ * second img role inside it has no name of its own, which is exactly what axe's
+ * svg-img-alt rule is for.
  */
 export default function NatureOnScreen() {
   return (
@@ -17,7 +22,6 @@ export default function NatureOnScreen() {
       height="243"
       viewBox="0 0 938.19159 761.03649"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      role="img"
     >
       <rect y="758.44705" width="937.72423" height="2" className="illustration-text" />
       <path
