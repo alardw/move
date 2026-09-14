@@ -327,9 +327,9 @@
   --move-select-label-padding-x: var(--move-spacing-sm);
   --move-select-label-padding-y: var(--move-spacing-xs);
   --move-select-label-font-size: var(--move-size-xs);
-  --move-select-label-fg: var(--move-fg-subtle);
-  --move-select-label-font-weight: var(--move-weight-semibold);
-  --move-select-label-tracking: 0.04em;
+  --move-select-label-fg: var(--move-option-label-fg);
+  --move-select-label-font-weight: var(--move-option-label-font-weight);
+  --move-select-label-tracking: var(--move-option-label-tracking);
 
   padding: var(--move-select-label-padding-y) var(--move-select-label-padding-x);
   font-family: var(--move-font-body);

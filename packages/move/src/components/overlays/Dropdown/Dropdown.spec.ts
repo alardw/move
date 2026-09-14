@@ -1051,17 +1051,17 @@ export const spec = {
     },
     {
       name: '--move-dropdown-label-font-size',
-      value: 'var(--move-size-sm)',
+      value: 'var(--move-size-xs)',
       description: 'Label font size',
     },
     {
       name: '--move-dropdown-label-fg',
-      value: 'var(--move-fg-muted)',
+      value: 'var(--move-option-label-fg)',
       description: 'Label text color',
     },
     {
       name: '--move-dropdown-label-font-weight',
-      value: 'var(--move-weight-semibold)',
+      value: 'var(--move-option-label-font-weight)',
       description: 'Label font weight',
     },
     {

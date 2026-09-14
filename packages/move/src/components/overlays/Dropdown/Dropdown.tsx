@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
-import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
+import { ITEM_HOVER_VARS, ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { Checkbox } from '../../forms/Checkbox';
 import {
@@ -22,7 +22,6 @@ import type { AnimationTrigger, AnimationState } from '../../../animation';
 // than a narrow one. Deriving the ratio from a fixed pixel inset keeps the travel
 // constant at any width. Same two constants, for the same reason, as Select and
 // Autocomplete.
-const SCALE_INSET_PX = 16;
 import { useIcon } from '../../../infrastructure/Icon';
 import { useLayer } from '../../../infrastructure/Layer';
 import styles from './Dropdown.module.css';
@@ -142,8 +141,6 @@ interface DropdownContextValue {
   isOpen: boolean;
   isClosing: boolean;
   /** Measured trigger width — the scale ratios are derived from it. */
-  triggerWidth: number;
-  setTriggerWidth: (w: number) => void;
   epoch: number;
   onExitDone: (epoch: number) => void;
   close: () => void;
@@ -189,7 +186,6 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({
   const { isOpen, isClosing, epoch, onExitDone, open: openFn, close } = dismissable;
   // 200 is a placeholder until the trigger measures itself; the ratio it feeds
   // is only read once an animation runs, which is after that.
-  const [triggerWidth, setTriggerWidth] = React.useState(200);
 
   const handleOpenChange = React.useCallback(
     (newOpen: boolean) => {
@@ -205,8 +201,6 @@ const DropdownRoot: React.FC<DropdownRootProps> = ({
       value={{
         isOpen,
         isClosing,
-        triggerWidth,
-        setTriggerWidth,
         epoch,
         onExitDone,
         close,
@@ -242,18 +236,9 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
   moveProps: ['asChild'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { isOpen, isClosing, setTriggerWidth } = useDropdownContext();
+    const { isOpen, isClosing } = useDropdownContext();
     const localRef = React.useRef<HTMLElement | null>(null);
     const mergedRef = useMergedRef<HTMLElement>(ref as React.Ref<HTMLElement>, localRef);
-
-    React.useEffect(() => {
-      const el = localRef.current;
-      if (!el) return;
-      setTriggerWidth(el.offsetWidth);
-      const ro = new ResizeObserver(() => setTriggerWidth(el.offsetWidth));
-      ro.observe(el);
-      return () => ro.disconnect();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
       render() {
@@ -321,8 +306,7 @@ interface DropdownContentInnerProps {
 
 const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInnerProps>(
   function DropdownContentInner(props, ref) {
-    const { isClosing, epoch, onExitDone, close, animConfig, triggerWidth } = useDropdownContext();
-    const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
+    const { isClosing, epoch, onExitDone, close, animConfig } = useDropdownContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -332,8 +316,8 @@ const DropdownContentInner = React.forwardRef<HTMLDivElement, DropdownContentInn
       () =>
         animConfig
           ?.filter((t) => t.trigger === 'Content.enter' || t.trigger === 'Content.exit')
-          .map((t) => ({ ...t, vars: { ...(t.vars ?? {}), scaleFrom } })) ?? null,
-      [animConfig, scaleFrom],
+          .map((t) => ({ ...t, vars: t.vars ?? ITEM_REVEAL_VARS })) ?? null,
+      [animConfig],
     );
     const contentRefs = React.useMemo(
       () => ({
@@ -1105,11 +1089,10 @@ const DropdownSubContent = withMoveComponent<
     const layer = useLayer();
     // Shares the root's on/off switch, so `animations={false}` reaches the
     // sub-menus too rather than leaving them the only thing still moving.
-    const { animConfig, triggerWidth } = useDropdownContext();
-    const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
+    const { animConfig } = useDropdownContext();
     const subConfig = React.useMemo(
-      () => SUB_ANIMATIONS.map((t) => ({ ...t, vars: { scaleFrom } })),
-      [scaleFrom],
+      () => SUB_ANIMATIONS.map((t) => ({ ...t, vars: ITEM_REVEAL_VARS })),
+      [],
     );
     // The element arrives LATE. This component renders as soon as the PARENT
     // menu opens, but Radix renders no node until the sub is shown — so the ref

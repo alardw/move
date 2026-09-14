@@ -166,15 +166,18 @@
   /* Component tokens — label */
   --move-dropdown-label-padding-x: var(--move-spacing-sm);
   --move-dropdown-label-padding-y: var(--move-spacing-xs);
-  --move-dropdown-label-font-size: var(--move-size-sm);
-  --move-dropdown-label-fg: var(--move-fg-muted);
-  --move-dropdown-label-font-weight: var(--move-weight-semibold);
+  --move-dropdown-label-font-size: var(--move-size-xs);
+  --move-dropdown-label-fg: var(--move-option-label-fg);
+  --move-dropdown-label-font-weight: var(--move-option-label-font-weight);
+  --move-dropdown-label-tracking: var(--move-option-label-tracking);
 
   padding: var(--move-dropdown-label-padding-y) var(--move-dropdown-label-padding-x);
   font-family: var(--move-font-body);
   font-size: var(--move-dropdown-label-font-size);
   font-weight: var(--move-dropdown-label-font-weight);
   color: var(--move-dropdown-label-fg);
+  letter-spacing: var(--move-dropdown-label-tracking);
+  text-transform: uppercase;
   user-select: none;
 }
 

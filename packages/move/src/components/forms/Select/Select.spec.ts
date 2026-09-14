@@ -930,12 +930,12 @@ export const spec = {
     },
     {
       name: '--move-select-label-fg',
-      value: 'var(--move-fg-subtle)',
+      value: 'var(--move-option-label-fg)',
       description: 'Label text color',
     },
     {
       name: '--move-select-label-font-weight',
-      value: 'var(--move-weight-semibold)',
+      value: 'var(--move-option-label-font-weight)',
       description: 'Label font weight',
     },
     // Separator tokens

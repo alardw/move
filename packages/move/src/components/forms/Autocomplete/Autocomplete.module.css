@@ -605,9 +605,10 @@
 .groupLabel {
   --move-autocomplete-groupLabel-padding-x: var(--move-spacing-sm);
   --move-autocomplete-groupLabel-padding-y: var(--move-spacing-xs);
-  --move-autocomplete-groupLabel-font-size: var(--move-size-sm);
-  --move-autocomplete-groupLabel-fg: var(--move-fg-muted);
-  --move-autocomplete-groupLabel-font-weight: var(--move-weight-semibold);
+  --move-autocomplete-groupLabel-font-size: var(--move-size-xs);
+  --move-autocomplete-groupLabel-fg: var(--move-option-label-fg);
+  --move-autocomplete-groupLabel-font-weight: var(--move-option-label-font-weight);
+  --move-autocomplete-groupLabel-tracking: var(--move-option-label-tracking);
 
   padding: var(--move-autocomplete-groupLabel-padding-y)
     var(--move-autocomplete-groupLabel-padding-x);
@@ -615,6 +616,8 @@
   font-size: var(--move-autocomplete-groupLabel-font-size);
   font-weight: var(--move-autocomplete-groupLabel-font-weight);
   color: var(--move-autocomplete-groupLabel-fg);
+  letter-spacing: var(--move-autocomplete-groupLabel-tracking);
+  text-transform: uppercase;
   user-select: none;
 }
 

@@ -165,6 +165,17 @@
      fill and the players' menu did not, because each had written its own set. */
   --move-option-bg-selected-highlight: var(--move-primary-hover);
 
+  /* A group heading in a list is not one of the things you can pick, and it has
+     to stop reading like one. Two of the three lists set it a size apart from
+     the rows in a slightly softer grey, which at a glance is a disabled option
+     rather than a heading. Smaller, quieter, spaced and capitalised is what
+     separates a label from a value. The SIZE is named directly at each call
+     site, as a step on the type scale — check:type-scale reads the step, not a
+     token pointing at one. */
+  --move-option-label-fg: var(--move-fg-subtle);
+  --move-option-label-font-weight: var(--move-weight-semibold);
+  --move-option-label-tracking: 0.04em;
+
   /* Between a media player's transport controls. One token because the two
      players are the same instrument and had two answers — the video player at
      4px, the audio player at 8 — and 4px put icon-only buttons close enough to

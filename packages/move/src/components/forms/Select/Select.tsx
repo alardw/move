@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
-import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
+import { ITEM_HOVER_VARS, ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
 import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
@@ -27,7 +27,6 @@ import styles from './Select.module.css';
 // A fixed scale ratio (e.g. 0.8) would swing wide controls much further in
 // absolute pixels — hence more overshoot/bounce — for the same ratio. Deriving
 // the ratio from a fixed pixel inset keeps the travel constant across widths.
-const SCALE_INSET_PX = 16; // per-item reveal offset
 
 /**
  * Everything the reveal moves, marked once.
@@ -183,8 +182,6 @@ interface SelectContextValue {
   registerLabel: (value: string, label: React.ReactNode) => void;
   getLabel: (value: string) => React.ReactNode | undefined;
   animConfig: AnimationTrigger[] | null;
-  triggerWidth: number;
-  setTriggerWidth: (w: number) => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 
@@ -274,7 +271,6 @@ const SelectRoot: React.FC<SelectRootProps> = ({
   const animConfig = resolveAnimationsConfig(DEFAULT_SELECT_ANIMATIONS, animationsProp);
 
   const [uncontrolledValue, setUncontrolledValue] = React.useState(defaultValue);
-  const [triggerWidth, setTriggerWidth] = React.useState(200);
 
   // Interruptible open/close lifecycle (open cancels an in-flight close;
   // exit-completion is epoch-guarded). See useDismissable.
@@ -329,8 +325,6 @@ const SelectRoot: React.FC<SelectRootProps> = ({
         registerLabel,
         getLabel,
         animConfig,
-        triggerWidth,
-        setTriggerWidth,
         triggerRef,
       }}
     >
@@ -383,21 +377,12 @@ const SelectTrigger = withMoveComponent<'trigger', SelectTriggerProps, HTMLButto
   moveProps: ['invalid', 'disabled', 'width', 'minWidth', 'maxWidth', 'size', 'variant'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { setTriggerWidth, triggerRef, isOpen, isClosing } = useSelectContext();
+    const { triggerRef, isOpen, isClosing } = useSelectContext();
     const mergedRef = useMergedRef<HTMLButtonElement>(ref, triggerRef);
     const controlProps = useFieldControl(attrs as Record<string, unknown>, {
       invalid: !!props.invalid,
       ref: triggerRef,
     });
-
-    React.useEffect(() => {
-      const el = triggerRef.current;
-      if (!el) return;
-      setTriggerWidth(el.offsetWidth);
-      const ro = new ResizeObserver(() => setTriggerWidth(el.offsetWidth));
-      ro.observe(el);
-      return () => ro.disconnect();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     return {
       render() {
@@ -641,14 +626,11 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
     // reported the parent's — a descendant that flipped computed off the wrong
     // base, and a Select on an already-subtle ground sat at 1.00:1 against it.
     const surface = useSurfaceFlip();
-    const { isClosing, epoch, onExitDone, close, animConfig, triggerWidth } = useSelectContext();
+    const { isClosing, epoch, onExitDone, close, animConfig } = useSelectContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
     const innerRef = React.useRef<HTMLDivElement>(null);
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
-
-    // Width-relative per-item scale → constant pixel travel at any width.
-    const scaleFrom = (triggerWidth - SCALE_INSET_PX) / triggerWidth;
 
     // Radix keeps the listbox mounted BEFORE the popup is visibly open and commits
     // its rows a frame after mount, so the engine's mount-time lifecycle enter is
@@ -686,11 +668,11 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
       );
       const result: AnimationTrigger[] = [];
       if (openSteps && itemsReady)
-        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
+        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: ITEM_REVEAL_VARS });
       if (closedSteps)
-        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
+        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: ITEM_REVEAL_VARS });
       return result.length > 0 ? result : null;
-    }, [animConfig, itemsReady, scaleFrom]);
+    }, [animConfig, itemsReady]);
 
     const contentRefs = React.useMemo(
       () => ({

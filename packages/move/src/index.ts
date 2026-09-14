@@ -1043,8 +1043,10 @@ export {
   growScale,
   growVars,
   ITEM_HOVER_VARS,
+  ITEM_REVEAL_VARS,
   CONTROL_GROW_PX,
   CONTROL_PRESS_PX,
+  CONTROL_REVEAL_PX,
 } from './shared/controlGrow';
 export { Z_LAYERS } from './shared/z-layers';
 export type { Z, ZKind, ZLayers } from './shared/z-layers';

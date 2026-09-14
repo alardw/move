@@ -59,3 +59,27 @@ export function growVars(cssVar: string, px: number, varName = 'scaleHover') {
  * appears, and this is the number that says so.
  */
 export const ITEM_HOVER_VARS = growVars('--move-option-scale-hover', CONTROL_GROW_PX);
+
+/**
+ * How far a row is inset when a list reveals it — again a LENGTH.
+ *
+ * The same argument as the hover, one layer up: rows arrive from slightly
+ * small, and "slightly" has to mean the same thing in every list. Derived from
+ * the trigger it did not. The old `(triggerWidth - 16) / triggerWidth` gave
+ * Select, which hangs off a full-width combobox, rows that started about 16px
+ * small — and a Dropdown on a narrow button rows that started about 30px
+ * small, three times the travel from the same line of code. That is why the two
+ * staggers never looked alike.
+ *
+ * 32 rather than 16 because the fuller travel is the one worth keeping: the
+ * reveal should be legible as a reveal, and Select's was the tame end of the
+ * accident, not a decision anyone made.
+ *
+ * Measured on the CONTAINER rather than each row: in a list they are the same
+ * width, and the container is what the stagger step targets.
+ */
+export const CONTROL_REVEAL_PX = 32;
+
+export const ITEM_REVEAL_VARS = (el: HTMLElement): Record<string, unknown> => ({
+  scaleFrom: growScale(el.offsetWidth, -CONTROL_REVEAL_PX),
+});

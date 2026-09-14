@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
-import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
+import { ITEM_HOVER_VARS, ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
 import { Popover as RadixPopover } from 'radix-ui';
 import { composeHandlers, elementTypeName, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -35,7 +35,6 @@ import styles from './Autocomplete.module.css';
 
 // Per-item scale deltas (pixel-based). Container (Content) only fades; item
 // stagger carries the reveal. See Select for rationale.
-const SCALE_INSET_PX = 16; // per-item fade-in offset
 
 /**
  * Everything the reveal moves, marked once.
@@ -170,8 +169,6 @@ interface AutocompleteContextValue extends UseAutocompleteReturn {
   epoch: number;
   onExitDone: (epoch: number) => void;
   animConfig: AnimationTrigger[] | null;
-  triggerWidth: number;
-  setTriggerWidth: (w: number) => void;
   labels: AutocompleteLabels;
 }
 
@@ -237,8 +234,6 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
   // descendants render, so TagList sees the cache populated on first paint.
   walkChildrenForLabels(children, ac.primeLabelCache);
 
-  const [triggerWidth, setTriggerWidth] = React.useState(200);
-
   // Interruptible open/close lifecycle (exit-completion is epoch-guarded). The
   // hook owns the open boolean, so dismissable runs in controlled mode and the
   // confirmed close is delegated back to the hook via onClosed. See useDismissable.
@@ -258,8 +253,6 @@ const AutocompleteRoot: React.FC<AutocompleteRootProps> = ({
         epoch,
         onExitDone,
         animConfig,
-        triggerWidth,
-        setTriggerWidth,
         labels,
       }}
     >
@@ -343,19 +336,10 @@ const AutocompleteTrigger = withMoveComponent<
 
   setup({ props, ref, cx, sp, slot, attrs }) {
     const ac = useAutocompleteContext();
-    const { inputRef, isOpen, isClosing, setTriggerWidth } = ac;
+    const { inputRef, isOpen, isClosing } = ac;
     const moveState = isOpen && !isClosing ? 'open' : 'closed';
     const triggerRef = React.useRef<HTMLDivElement>(null);
     const mergedTriggerRef = useMergedRef<HTMLDivElement>(ref, triggerRef);
-
-    React.useEffect(() => {
-      const el = triggerRef.current;
-      if (!el) return;
-      setTriggerWidth(el.offsetWidth);
-      const ro = new ResizeObserver(() => setTriggerWidth(el.offsetWidth));
-      ro.observe(el);
-      return () => ro.disconnect();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleClick = (e: React.MouseEvent) => {
       // Ignore clicks originating in the input itself — typing should keep
@@ -902,8 +886,6 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
     const innerRef = React.useRef<HTMLDivElement>(null);
     const mergedContentRef = useMergedRef<HTMLDivElement>(ref, contentRef);
 
-    const scaleFrom = (ac.triggerWidth - SCALE_INSET_PX) / ac.triggerWidth;
-
     const contentConfig: AnimationTrigger[] | null = React.useMemo(() => {
       if (!ac.animConfig) return null;
       const openSteps = extractSteps(
@@ -916,11 +898,11 @@ const AutocompleteContentInner = React.forwardRef<HTMLDivElement, AutocompleteCo
       );
       const result: AnimationTrigger[] = [];
       if (openSteps)
-        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: { scaleFrom } });
+        result.push({ trigger: 'Content.enter', sequence: openSteps, vars: ITEM_REVEAL_VARS });
       if (closedSteps)
-        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: { scaleFrom } });
+        result.push({ trigger: 'Content.exit', sequence: closedSteps, vars: ITEM_REVEAL_VARS });
       return result.length > 0 ? result : null;
-    }, [ac.animConfig, scaleFrom]);
+    }, [ac.animConfig]);
 
     const contentRefs = React.useMemo(
       () => ({
