@@ -121,7 +121,10 @@
    while the pointer is still down; it is also the whole behaviour under
    `animations={false}` and reduced motion, where nothing runs. */
 .item:hover:not(:disabled) {
-  transform: scale(1.02);
+  /* The trigger writes the shared property, measured on this row; the
+     component's own name still overrides it, and the literal is the
+     no-animation case. */
+  transform: scale(var(--move-dropdown-item-scale-hover, var(--move-option-scale-hover, 1.02)));
 }
 
 /* Wrapping span around string item children — see Select.itemText for rationale. */

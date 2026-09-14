@@ -7,11 +7,29 @@ import { useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { snappy } from '../../../animation/easings';
 import type { Size } from '../../../shared/types';
+import { CONTROL_GROW_PX, CONTROL_PRESS_PX, growVars } from '../../../shared/controlGrow';
 import styles from './Button.module.css';
 
-// Width-relative scale — consistent feel regardless of button width
-const SCALE_HOVER_PX = 4;
-const SCALE_PRESS_PX = 6;
+/**
+ * Hover and press, as distances.
+ *
+ * Module-level, and that is the point: the ratio is resolved per element when
+ * the trigger fires, so nothing here depends on the instance — no measuring on
+ * mount, no ResizeObserver, no state, no re-render. Every button in the library
+ * travels the same four pixels out and six back, at any width.
+ */
+const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
+  {
+    trigger: 'Root.hover',
+    vars: growVars('--move-button-scale-hover', CONTROL_GROW_PX),
+    sequence: [{ animation: { scale: { to: '$scaleHover', ease: snappy } } }],
+  },
+  {
+    trigger: 'Root.press',
+    vars: growVars('--move-button-scale-press', -CONTROL_PRESS_PX),
+    sequence: [{ animation: { scale: { to: '$scaleHover', ease: snappy } } }],
+  },
+];
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 /** Re-exported for backwards-compatible imports. Prefer `Size` from
@@ -99,36 +117,6 @@ const ButtonRoot = withMoveComponent<
     } = props;
 
     const btnRef = React.useRef<HTMLElement | null>(null);
-    const [scaleVals, setScaleVals] = React.useState({ up: 1.05, down: 0.95 });
-
-    React.useEffect(() => {
-      const el = btnRef.current;
-      if (!el) return;
-      const update = () => {
-        const w = el.getBoundingClientRect().width;
-        if (w > 0) {
-          setScaleVals({ up: (w + SCALE_HOVER_PX) / w, down: (w - SCALE_PRESS_PX) / w });
-        }
-      };
-      update();
-      const ro = new ResizeObserver(update);
-      ro.observe(el);
-      return () => ro.disconnect();
-    }, []);
-
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = React.useMemo(
-      () => [
-        {
-          trigger: 'Root.hover',
-          sequence: [{ animation: { scale: { to: scaleVals.up, ease: snappy } } }],
-        },
-        {
-          trigger: 'Root.press',
-          sequence: [{ animation: { scale: { to: scaleVals.down, ease: snappy } } }],
-        },
-      ],
-      [scaleVals],
-    );
 
     const animConfig = resolveAnimationsConfig(DEFAULT_ANIMATIONS, animationsProp);
     const refs = React.useMemo(() => ({ Root: btnRef }), []);
@@ -143,15 +131,9 @@ const ButtonRoot = withMoveComponent<
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
+        // The two scale custom properties CSS holds the states in are written by
+        // the trigger, on the element, at the moment it fires — see growVars.
         const combinedStyle: React.CSSProperties = {
-          // The scale is width-relative — a fixed ratio moves a wide button far
-          // more than a narrow one — so it cannot be a constant in the
-          // stylesheet. Published as custom properties instead: the component
-          // supplies the VALUE, CSS holds the STATE. Without that, the hover
-          // animation had nothing to hand its transform back to and the button
-          // clicked back to full size while still hovered.
-          ['--move-button-scale-hover' as string]: scaleVals.up,
-          ['--move-button-scale-press' as string]: scaleVals.down,
           ...(style as React.CSSProperties),
           ...(spStyle as React.CSSProperties),
         };

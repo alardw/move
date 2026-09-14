@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
-import { optionHoverScale } from '../../../shared/optionHoverScale';
+import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
 import { Select as RadixSelect } from 'radix-ui';
 import { withMoveComponent, useMergedRef, elementTypeName } from '../../../engine';
 import { useFieldControl } from '../FormField/FormField';
@@ -918,7 +918,7 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const { registerLabel, animConfig, triggerWidth } = useSelectContext();
+    const { registerLabel, animConfig } = useSelectContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -927,12 +927,11 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
       registerLabel(props.value as string, displayLabel);
     }, [props.value, displayLabel, registerLabel]);
 
-    const scaleHover = optionHoverScale(triggerWidth);
     const itemConfig = React.useMemo(() => {
       if (!animConfig) return null;
       const hover = animConfig.find((t) => t.trigger === 'Item.hover');
-      return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
-    }, [animConfig, scaleHover]);
+      return hover ? [{ ...hover, trigger: 'Item.hover', vars: ITEM_HOVER_VARS }] : null;
+    }, [animConfig]);
 
     const itemRefs = React.useMemo(
       () => ({ Item: itemRef as React.RefObject<HTMLElement | null> }),
@@ -960,11 +959,6 @@ const SelectItem = withMoveComponent<'item', SelectItemProps, HTMLDivElement>({
             data-move-stagger=""
             className={cx('item', props.className, spClass as string | undefined)}
             style={{
-              // Width-relative, so it cannot be a constant in the stylesheet —
-              // the component supplies the VALUE and CSS holds the STATE. Without
-              // the class the hover animation has nothing to hand its transform
-              // back to and the row clicks flat under the pointer.
-              ['--move-select-item-scale-hover' as string]: scaleHover,
               ...props.style,
               ...(spStyle as React.CSSProperties),
             }}

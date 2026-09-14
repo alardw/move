@@ -492,7 +492,10 @@
 
 /* The class fallback for the row hover — see Select, which carries the same. */
 .item:hover:not([data-disabled]) {
-  transform: scale(var(--move-autocomplete-item-scale-hover, 1.02));
+  /* The trigger writes the shared property, measured on this row; the
+     component's own name still overrides it, and the literal is the
+     no-animation case. */
+  transform: scale(var(--move-autocomplete-item-scale-hover, var(--move-option-scale-hover, 1.02)));
 }
 
 /* Room BETWEEN rows, not around them. A highlighted row's focus ring reaches

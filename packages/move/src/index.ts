@@ -1040,10 +1040,12 @@ export type { CanonicalTypeName } from './shared/typeRegistry';
 // docs "Stacking" page. (The legacy `contract/` spec-design module was removed;
 // the real spec shape is `ComponentSpec` in `spec-type.ts`.)
 export {
-  optionHoverScale,
-  OPTION_HOVER_GROWTH_PX,
-  OPTION_HOVER_MIN_WIDTH_PX,
-} from './shared/optionHoverScale';
+  growScale,
+  growVars,
+  ITEM_HOVER_VARS,
+  CONTROL_GROW_PX,
+  CONTROL_PRESS_PX,
+} from './shared/controlGrow';
 export { Z_LAYERS } from './shared/z-layers';
 export type { Z, ZKind, ZLayers } from './shared/z-layers';
 

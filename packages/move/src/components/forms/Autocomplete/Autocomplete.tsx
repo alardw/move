@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import type { Dimension, FieldWidth, PopoverWidth } from '../../../shared/types';
-import { optionHoverScale } from '../../../shared/optionHoverScale';
+import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
 import { Popover as RadixPopover } from 'radix-ui';
 import { composeHandlers, elementTypeName, useMergedRef, withMoveComponent } from '../../../engine';
 import type { SlotPropsMap, CxFn } from '../../../engine';
@@ -1104,16 +1104,15 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
     }, [isHighlighted]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Item hover animation via useAnimations
-    const scaleHover = optionHoverScale(ac.triggerWidth);
     const itemConfig = React.useMemo(() => {
       if (!ac.animConfig) return null;
       const hover = ac.animConfig.find((t) => t.trigger === 'Item.hover');
       const triggers: AnimationTrigger[] = hover
-        ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }]
+        ? [{ ...hover, trigger: 'Item.hover', vars: ITEM_HOVER_VARS }]
         : [];
       if (ac.multiple) triggers.push(...indicatorTriggers(ac.animConfig, isSelected));
       return triggers.length > 0 ? triggers : null;
-    }, [ac.animConfig, ac.multiple, scaleHover, isSelected]);
+    }, [ac.animConfig, ac.multiple, isSelected]);
 
     const itemRefs = React.useMemo(
       () => ({
@@ -1163,9 +1162,6 @@ const AutocompleteItem = withMoveComponent<'item', AutocompleteItemProps, HTMLDi
             data-move-stagger=""
             className={cx('item', props.className, spClass as string | undefined)}
             style={{
-              // Width-relative, so it cannot be a constant in the stylesheet —
-              // the component supplies the VALUE and CSS holds the STATE.
-              ['--move-autocomplete-item-scale-hover' as string]: scaleHover,
               ...props.style,
               ...(spStyle as React.CSSProperties),
             }}

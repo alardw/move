@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
-import { optionHoverScale } from '../../../shared/optionHoverScale';
+import { ITEM_HOVER_VARS } from '../../../shared/controlGrow';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import { Checkbox } from '../../forms/Checkbox';
 import {
@@ -512,8 +512,7 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
 
   setup({ props, ref, cx, sp, attrs }) {
     const itemRef = React.useRef<HTMLDivElement | null>(null);
-    const { close, animConfig, triggerWidth } = useDropdownContext();
-    const scaleHover = optionHoverScale(triggerWidth);
+    const { close, animConfig } = useDropdownContext();
 
     const mergedItemRef = useMergedRef<HTMLDivElement>(ref, itemRef);
 
@@ -527,8 +526,8 @@ const DropdownItem = withMoveComponent<'item', DropdownItemProps, HTMLDivElement
     const itemConfig = React.useMemo(() => {
       if (!animConfig) return null;
       const hover = animConfig.find((t) => t.trigger === 'Item.hover');
-      return hover ? [{ ...hover, trigger: 'Item.hover', vars: { scaleHover } }] : null;
-    }, [animConfig, scaleHover]);
+      return hover ? [{ ...hover, trigger: 'Item.hover', vars: ITEM_HOVER_VARS }] : null;
+    }, [animConfig]);
 
     const itemRefs = React.useMemo(
       () => ({
