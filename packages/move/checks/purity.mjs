@@ -64,14 +64,16 @@ const IGNORE_MARKER = 'purity-ignore';
  * something: shapes are legal there and nowhere else, so the accessible name,
  * the token palette and the sizing come with them rather than being remembered.
  *
+ * `svg` is included because Illustration is the FRAME: the consumer writes the
+ * element, so an export pastes in whole and an SVGR import drops straight in.
+ *
  * Deliberately absent from the list:
- *   • `svg` — Illustration renders it; a nested one is a mistake.
  *   • `foreignObject` — embeds arbitrary HTML, which would reopen the hole.
  *   • `animate` / `animateTransform` / `set` — SMIL bypasses the animation
  *     system. Illustration takes an `animations` prop for this.
  */
 const SVG_ELEMENTS = new Set([
-  'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
+  'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
   'text', 'tspan', 'textPath', 'defs', 'use', 'symbol', 'marker', 'mask',
   'clipPath', 'pattern', 'linearGradient', 'radialGradient', 'stop', 'image',
   'filter', 'feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite',
@@ -98,6 +100,48 @@ function insideSeam(node, sf) {
       const tag = p.openingElement.tagName.getText(sf);
       if (tag === SVG_SEAM || tag.endsWith(`.${SVG_SEAM}`)) return true;
     }
+  }
+  return false;
+}
+
+/**
+ * Is this shape part of a DRAWING COMPONENT — a function whose whole output is
+ * an `<svg>`?
+ *
+ * Factoring a drawing out under a name is the natural thing to do, and it is
+ * what SVGR produces from a file. Requiring lexical nesting would forbid the
+ * local version of something the check already permits when imported: `<Logo/>`
+ * is a capitalised tag, so nothing here can judge it either way. Penalising
+ * only the hand-written twin is a rule about where you typed the shapes rather
+ * than about what they are.
+ *
+ * So a drawing component is legal, and the question of whether it gets framed
+ * moves to its call site — where `<Chip/>` and `<Logo/>` are the same kind of
+ * thing. What stays illegal is what the rule was always for: shapes loose in a
+ * page, alongside prose and layout.
+ */
+function isDrawingComponent(node, sf) {
+  for (let p = node.parent; p; p = p.parent) {
+    const isFn =
+      ts.isFunctionDeclaration(p) || ts.isArrowFunction(p) || ts.isFunctionExpression(p);
+    if (!isFn) continue;
+    // The outermost JSX this function returns. An svg there means everything
+    // below it is that drawing.
+    let root = null;
+    const findRoot = (n) => {
+      if (root) return;
+      if (ts.isJsxElement(n) || ts.isJsxSelfClosingElement(n)) {
+        root = n;
+        return;
+      }
+      ts.forEachChild(n, findRoot);
+    };
+    ts.forEachChild(p, findRoot);
+    if (!root) return false;
+    const tag = ts.isJsxElement(root)
+      ? root.openingElement.tagName.getText(sf)
+      : root.tagName.getText(sf);
+    return tag === 'svg';
   }
   return false;
 }
@@ -175,7 +219,7 @@ export function run(config) {
           if (SVG_ELEMENTS.has(tag)) {
             // A shape is legal inside the seam and nowhere else. Outside it, say
             // so by name — the answer is a component, not the ignore marker.
-            if (!insideSeam(node, sf)) {
+            if (!insideSeam(node, sf) && !isDrawingComponent(node, sf)) {
               record(
                 node,
                 'raw-svg',

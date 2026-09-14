@@ -71,6 +71,41 @@ describe('purity — SVG inside the Illustration seam', () => {
     expect(messages).toEqual([]);
   });
 
+  it('allows a drawing component — a function whose whole output is an svg', () => {
+    // The local twin of an SVGR import. `<Logo />` is a capitalised tag the
+    // check cannot judge either way, so forbidding the hand-written version
+    // would be a rule about where the shapes were typed, not what they are.
+    const messages = check(`
+      function Chip() {
+        return (
+          <svg viewBox="0 0 10 10">
+            <rect className="illustration-panel" />
+          </svg>
+        );
+      }
+      export default Chip;
+    `);
+    expect(messages).toEqual([]);
+  });
+
+  it('still flags shapes loose in a page', () => {
+    // What the rule was always for: a shape sitting next to prose and layout,
+    // with no frame and no name.
+    const messages = check(`
+      import { Stack, Text } from 'move';
+      export function Page() {
+        return (
+          <Stack>
+            <Text>Hello</Text>
+            <circle cx="5" cy="5" r="4" />
+          </Stack>
+        );
+      }
+    `);
+    expect(messages).toHaveLength(1);
+    expect(messages[0]).toContain('<circle>');
+  });
+
   it('does not let the seam launder raw HTML', () => {
     const messages = check(`
       import { Illustration } from 'move';

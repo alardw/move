@@ -32,6 +32,7 @@ import { content as grid } from './grid';
 import { content as heading } from './heading';
 import { content as layoutGroup } from './layout-group';
 import { content as image } from './image';
+import { content as illustration } from './illustration';
 import { content as inputRange } from './input-range';
 import { content as inputText } from './input-text';
 import { content as label } from './label';
@@ -105,6 +106,7 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   heading,
   'layout-group': layoutGroup,
   image,
+  illustration,
   'input-range': inputRange,
   'input-text': inputText,
   label,

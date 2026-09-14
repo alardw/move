@@ -152,15 +152,15 @@ export const spec = {
     {
       id: 'children-keep-their-attributes',
       description:
-        'The svg and everything in it are rendered untouched, so data-move-stagger and data-surface survive. The parent animation targets them; a <g data-surface="subtle"> re-resolves the ground tokens for its own subtree exactly as a Card does.',
+        'The svg and everything in it are rendered untouched, so data-move-stagger and data-surface survive, and the parent animation can target them. data-surface SETS a level rather than flipping one — a Card flips because it calls useSurfaceFlip in JS — so artwork that names a ground is only right on the ground it named. The panel roles are relative by construction and are what a drawing should use.',
     },
   ],
 
   tokens: [
     // --- Grounds. Surface-RELATIVE: these re-resolve under any [data-surface],
     // which is what makes the drawing correct on a page, in a Card or in a
-    // Dialog without being told which — and what makes nesting work inside the
-    // SVG via <g data-surface>.
+    // Dialog without being told which — and what keeps a box on a box a step
+    // apart wherever it lands, without the artwork naming a ground.
     {
       name: '--move-illustration-ground',
       value: 'var(--move-surface-bg)',

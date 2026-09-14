@@ -4,10 +4,13 @@
   /* Component tokens — grounds.
      Surface-RELATIVE, which is the whole mechanism: these re-resolve under any
      [data-surface], so a drawing is correct on a page, inside a Card or inside
-     a Dialog without being told which — and a <g data-surface="subtle"> inside
-     the drawing re-resolves them for its own subtree exactly as a Card does.
-     They are declared here and INHERITED into the svg, which is how the global
-     illustration-* classes reach them. */
+     a Dialog without being told which. They are declared here and INHERITED
+     into the svg, which is how the global illustration-* classes reach them.
+
+     Note that `data-surface` SETS a level, it does not flip one — a Card flips because it
+     calls useSurfaceFlip in JS, and markup cannot. A drawing therefore cannot
+     know what it is sitting on, so naming a level inside artwork is unreliable;
+     the panel roles are relative by construction and are the reliable path. */
   --move-illustration-ground: var(--move-surface-bg);
   --move-illustration-panel: var(--move-surface-alt);
   --move-illustration-panel-raised: var(--move-surface-alt-hover);

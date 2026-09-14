@@ -22,8 +22,8 @@
 /* ============================================
  * Fills — grounds
  * Surface-RELATIVE, so a drawing is correct on a page, in a Card or in a
- * Dialog without being told which, and a <g data-surface> re-resolves them
- * for its own subtree exactly as a Card does.
+ * Dialog without being told which — and so a box on a box stays a step apart
+ * wherever the drawing lands, without the artwork naming a ground.
  * ============================================ */
 .illustration-ground {
   fill: var(--move-illustration-ground);
@@ -145,6 +145,24 @@
 
 .illustration-line-info {
   stroke: var(--move-illustration-info);
+}
+
+/* ============================================
+ * Pivots
+ * An SVG shape transforms about the origin of the whole canvas by default, so
+ * a scale or a rotate sends it across the drawing instead of turning it in
+ * place. `transform-box: fill-box` re-bases the origin onto the shape's own
+ * box, which is what a call site means every time — and it cannot be written
+ * inline, because composed code carries no style attributes.
+ * ============================================ */
+.illustration-pivot {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.illustration-pivot-bottom {
+  transform-box: fill-box;
+  transform-origin: bottom center;
 }
 
 /* A modifier, not a colour: dashes whatever line it is put on, so every
