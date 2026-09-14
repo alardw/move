@@ -5,6 +5,7 @@
 
 @import './tokens/index.css';
 @import './visual/surface.css';
+@import './visual/illustration.css';
 @import './utilities.css';
 @import './truncate.css';
 @import './reduced-motion.css';

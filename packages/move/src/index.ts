@@ -962,6 +962,8 @@ export type {
   ImageRadius,
   ImagePosition,
 } from './components/media/Image';
+export { Illustration } from './components/media/Illustration';
+export type { IllustrationProps, IllustrationSize } from './components/media/Illustration';
 
 export { AudioPlayer } from './components/media/AudioPlayer';
 export type {

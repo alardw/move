@@ -1,0 +1,154 @@
+/*
+ * Illustration palette — the one vocabulary Move ships as CLASS NAMES.
+ *
+ * Everything else in the library is a token, because everything else is applied
+ * by a component. A drawing is not: its shapes are written at the call site, in
+ * markup the component never sees, so they need something they can name
+ * themselves. Hence global classes — and hence this file rather than a CSS
+ * module, whose names are rewritten at build time and could not be typed by
+ * hand.
+ *
+ * The values come from `--move-illustration-*`, declared by the component and
+ * inherited down into the drawing. A class used outside an <Illustration>
+ * therefore resolves to nothing, which is the correct outcome and the reason
+ * check:purity refuses SVG shapes anywhere else.
+ *
+ * Two rules make the vocabulary readable:
+ *   • a class beginning `illustration-line` STROKES; everything else FILLS.
+ *   • every stroke carries non-scaling-stroke, so a hairline survives the
+ *     drawing being scaled down — the thing nobody remembers by hand.
+ */
+
+/* ============================================
+ * Fills — grounds
+ * Surface-RELATIVE, so a drawing is correct on a page, in a Card or in a
+ * Dialog without being told which, and a <g data-surface> re-resolves them
+ * for its own subtree exactly as a Card does.
+ * ============================================ */
+.illustration-ground {
+  fill: var(--move-illustration-ground);
+}
+
+.illustration-panel {
+  fill: var(--move-illustration-panel);
+}
+
+.illustration-panel-raised {
+  fill: var(--move-illustration-panel-raised);
+}
+
+/* ============================================
+ * Fills — accent and text
+ * ============================================ */
+.illustration-accent {
+  fill: var(--move-illustration-accent);
+}
+
+.illustration-accent-subtle {
+  fill: var(--move-illustration-accent-subtle);
+}
+
+.illustration-accent-fg {
+  fill: var(--move-illustration-accent-fg);
+}
+
+.illustration-text {
+  fill: var(--move-illustration-text);
+  font-family: var(--move-font-body);
+}
+
+.illustration-text-muted {
+  fill: var(--move-illustration-text-muted);
+  font-family: var(--move-font-body);
+}
+
+/* ============================================
+ * Fills — status
+ * Solid paints a mark; subtle fills a region behind one. Colour alone cannot
+ * carry the meaning (WCAG 1.4.1) — a diagram needs a label or a shape
+ * difference too.
+ * ============================================ */
+.illustration-success {
+  fill: var(--move-illustration-success);
+}
+
+.illustration-success-subtle {
+  fill: var(--move-illustration-success-subtle);
+}
+
+.illustration-warning {
+  fill: var(--move-illustration-warning);
+}
+
+.illustration-warning-subtle {
+  fill: var(--move-illustration-warning-subtle);
+}
+
+.illustration-error {
+  fill: var(--move-illustration-error);
+}
+
+.illustration-error-subtle {
+  fill: var(--move-illustration-error-subtle);
+}
+
+.illustration-info {
+  fill: var(--move-illustration-info);
+}
+
+.illustration-info-subtle {
+  fill: var(--move-illustration-info-subtle);
+}
+
+/* ============================================
+ * Strokes
+ * The border RAMP, deliberately not --move-surface-border: that one is
+ * transparent on a subtle surface, which is right for a container edge and
+ * would make a connector disappear inside a Card.
+ * ============================================ */
+.illustration-line,
+.illustration-line-strong,
+.illustration-line-accent,
+.illustration-line-success,
+.illustration-line-warning,
+.illustration-line-error,
+.illustration-line-info {
+  fill: none;
+  stroke-width: var(--move-illustration-line-width);
+  /* A ratio scales the stroke with the drawing; this keeps 1.5px at 1.5px. */
+  vector-effect: non-scaling-stroke;
+}
+
+.illustration-line {
+  stroke: var(--move-illustration-line);
+}
+
+.illustration-line-strong {
+  stroke: var(--move-illustration-line-strong);
+}
+
+.illustration-line-accent {
+  stroke: var(--move-illustration-accent);
+}
+
+.illustration-line-success {
+  stroke: var(--move-illustration-success);
+}
+
+.illustration-line-warning {
+  stroke: var(--move-illustration-warning);
+}
+
+.illustration-line-error {
+  stroke: var(--move-illustration-error);
+}
+
+.illustration-line-info {
+  stroke: var(--move-illustration-info);
+}
+
+/* A modifier, not a colour: dashes whatever line it is put on, so every
+   implied or pending connector in the library dashes identically. */
+.illustration-line-dashed {
+  stroke-dasharray: var(--move-illustration-dash);
+}

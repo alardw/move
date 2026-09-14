@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 71 components. Version 0.1.60.
+> 72 components. Version 0.1.60.
 
 ## Props you pass
 
@@ -1058,6 +1058,19 @@ Props:
 - style: React.CSSProperties — Inline styles
 - children: React.ReactNode — Heading text content
 Example: <Heading weight="medium" color="base">…</Heading>
+
+## Illustration (media)
+A drawing that responds to the theme — one SVG, named for assistive tech, painted from tokens, sized from its own viewBox
+Props:
+- title: string — Accessible name, carried by the frame as role="img" + aria-label, or by the <figcaption> when a caption is given. Required: an illustration carries information by definition, so there is no opting out. A drawing that carries none is ornament and belongs in a CSS background-image.
+- desc: string — Longer description, referenced by aria-describedby. A description, never part of the name.
+- caption: React.ReactNode — Visible caption. When present it NAMES the illustration natively through <figcaption>, and role="img" is dropped — the two cannot both apply, since role="img" makes its own subtree presentational and would hide the caption text.
+- size: 'auto' | 'sm' | 'md' | 'lg' | 'xl' | 'full' (default: auto) — Width PREFERENCE on the library's standard scale. `auto` is the default and the most responsive: the drawing renders at its own size when there is room and scales down when there is not, capped at the parent. The named steps are applied as min(token, 100%), so the container can always overrule them and the drawing can never be forced wider than the space it was given. `full` means the container, not the viewport: this is inline content, not an overlay.
+- animations: AnimationTrigger[] | false — Animation config. Empty by default — a drawing that moves every time it appears is noise, so the consumer opts in and the children mark themselves with data-move-stagger.
+- className: string — CSS class name
+- style: React.CSSProperties — Inline styles
+- children: React.ReactNode — One <svg>, written or pasted whole, with its shapes classed from the illustration-* palette. The element stays visible in the source: an export arrives as a complete <svg> and an SVGR import renders its own, so taking it away would mean unwrapping every drawing by hand.
+Example: <Illustration>…</Illustration>
 
 ## Image (media)
 Responsive image wrapper with object-fit, radius, aspect ratio, fallback state, and action overlay support

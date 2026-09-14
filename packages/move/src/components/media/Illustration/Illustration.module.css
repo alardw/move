@@ -1,0 +1,142 @@
+/* Generated from Illustration.spec.ts */
+
+.root {
+  /* Component tokens — grounds.
+     Surface-RELATIVE, which is the whole mechanism: these re-resolve under any
+     [data-surface], so a drawing is correct on a page, inside a Card or inside
+     a Dialog without being told which — and a <g data-surface="subtle"> inside
+     the drawing re-resolves them for its own subtree exactly as a Card does.
+     They are declared here and INHERITED into the svg, which is how the global
+     illustration-* classes reach them. */
+  --move-illustration-ground: var(--move-surface-bg);
+  --move-illustration-panel: var(--move-surface-alt);
+  --move-illustration-panel-raised: var(--move-surface-alt-hover);
+
+  /* Lines. The border RAMP, deliberately not --move-surface-border: that one is
+     transparent on a subtle surface, which is right for a container edge and
+     would make a connector vanish inside a Card. */
+  --move-illustration-line: var(--move-border-base);
+  --move-illustration-line-strong: var(--move-border-emphasis);
+
+  /* Text */
+  --move-illustration-text: var(--move-fg-base);
+  --move-illustration-text-muted: var(--move-fg-muted);
+
+  /* Accent — the one thing the drawing is pointing at */
+  --move-illustration-accent: var(--move-primary);
+  --move-illustration-accent-subtle: var(--move-primary-subtle);
+  --move-illustration-accent-fg: var(--move-primary-fg);
+
+  /* Status */
+  --move-illustration-success: var(--move-success);
+  --move-illustration-success-subtle: var(--move-success-subtle);
+  --move-illustration-warning: var(--move-warning);
+  --move-illustration-warning-subtle: var(--move-warning-subtle);
+  --move-illustration-error: var(--move-error);
+  --move-illustration-error-subtle: var(--move-error-subtle);
+  --move-illustration-info: var(--move-info);
+  --move-illustration-info-subtle: var(--move-info-subtle);
+
+  /* Width steps. A PREFERENCE, never a size — see the cap below. */
+  --move-illustration-width-sm: 24rem;
+  --move-illustration-width-md: 36rem;
+  --move-illustration-width-lg: 48rem;
+  --move-illustration-width-xl: 64rem;
+  --move-illustration-width-full: 100%;
+
+  /* Geometry — what makes a drawing look like it belongs to the library. */
+  --move-illustration-line-width: 1.5px;
+  --move-illustration-radius: var(--move-rounded-md);
+  --move-illustration-dash: 4 4;
+
+  /* The resolved preference. `auto` leaves it at 100%, which is a cap and not
+     a width: the drawing keeps its own size and is only ever asked to be
+     smaller. */
+  --move-illustration-width: 100%;
+
+  display: block;
+  /* A containing block for the clipped description below. Without it, an
+     absolutely-positioned element escapes to the nearest positioned ancestor —
+     or the document — and can drag a scrollbar with it. */
+  position: relative;
+  /* min(), so the container always wins. A step can make the drawing narrower
+     than the space it was given; nothing can make it wider. */
+  max-inline-size: min(var(--move-illustration-width), 100%);
+  /* <figure> carries a default margin from the UA sheet — a page decides its
+     own spacing. */
+  margin: 0;
+}
+
+/* Width steps */
+.root[data-size='sm'] {
+  --move-illustration-width: var(--move-illustration-width-sm);
+}
+
+.root[data-size='md'] {
+  --move-illustration-width: var(--move-illustration-width-md);
+}
+
+.root[data-size='lg'] {
+  --move-illustration-width: var(--move-illustration-width-lg);
+}
+
+.root[data-size='xl'] {
+  --move-illustration-width: var(--move-illustration-width-xl);
+}
+
+.root[data-size='full'] {
+  --move-illustration-width: var(--move-illustration-width-full);
+}
+
+.graphic {
+  display: block;
+}
+
+/*
+ * The drawing.
+ *
+ * `block` removes the descender gap an inline svg sits on. `max-inline-size`
+ * with `block-size: auto` is what makes `auto` responsive: the drawing renders
+ * at its own width when there is room and scales down proportionally when there
+ * is not, taking its aspect ratio from its own viewBox — which the browser
+ * derives natively, so nothing here parses one.
+ */
+.graphic > svg {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+/* Every step except `auto` asks the drawing to FILL the cap rather than keep
+   its own size. */
+.root:not([data-size='auto']) .graphic > svg {
+  inline-size: 100%;
+}
+
+.caption {
+  margin-block-start: var(--move-spacing-sm);
+  font-family: var(--move-font-body);
+  font-size: var(--move-size-xs);
+  color: var(--move-fg-muted);
+  line-height: var(--move-leading-relaxed);
+}
+
+/*
+ * The description is read, never seen — it is the long-form alternative for
+ * someone who cannot see the drawing, and putting it on screen would repeat
+ * for everyone else what the picture already says.
+ *
+ * Clipped rather than `hidden`, because a `hidden` element is removed from the
+ * accessibility tree and aria-describedby would then point at nothing.
+ */
+.desc {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
