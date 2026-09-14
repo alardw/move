@@ -10,7 +10,7 @@
  */
 export default function LocationReviewBro() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+    <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
       <g id="background-simple">
         <path
           d="M459.58,389.07a158,158,0,0,0,17.81-50.67C496,233.26,459.11,108.72,353.6,64.36c-36.37-15.29-78.12-17.59-115.82-5.8C195,72,167.42,105.34,133,131.89c-24.29,18.72-55,27.86-77.34,49.19C32.07,203.59,17,236,16.89,268.73c-.05,23,9.25,45.43,28,59.5,18.35,13.78,41.7,17.38,61.6,28.16,22.15,12,35.48,33,53.21,50.06,40.91,39.44,102.18,51.65,157.22,49.8C370.93,454.43,431,439.15,459.58,389.07Z"
@@ -49,9 +49,36 @@ export default function LocationReviewBro() {
         ></path>
       </g>
       <g id="Floor">
-        <line x1="459" y1="463" x2="473" y2="463" className="illustration-line" fill="none"></line>
-        <line x1="199" y1="463" x2="445" y2="463" className="illustration-line" fill="none"></line>
-        <line x1="38" y1="463" x2="189" y2="463" className="illustration-line" fill="none"></line>
+        <line
+          x1="459"
+          y1="463"
+          x2="473"
+          y2="463"
+          className="illustration-line"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></line>
+        <line
+          x1="199"
+          y1="463"
+          x2="445"
+          y2="463"
+          className="illustration-line"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></line>
+        <line
+          x1="38"
+          y1="463"
+          x2="189"
+          y2="463"
+          className="illustration-line"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></line>
       </g>
       <g id="Graphics">
         <path
@@ -171,25 +198,35 @@ export default function LocationReviewBro() {
           d="M180.9,78h260A4.09,4.09,0,0,1,445,82.09V340.63a0,0,0,0,1,0,0H176.81a0,0,0,0,1,0,0V82.09A4.09,4.09,0,0,1,180.9,78Z"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M180.9,78h260A4.09,4.09,0,0,1,445,82.09V128.5a0,0,0,0,1,0,0H176.81a0,0,0,0,1,0,0V82.09A4.09,4.09,0,0,1,180.9,78Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <rect
           x="194.35"
           y="109.59"
           width="211.5"
           height="8.84"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></rect>
         <path
           d="M441.1,78H194.18v22.74H445V81.87A3.88,3.88,0,0,0,441.1,78Z"
-          className="illustration-text-muted illustration-line"
+          className="illustration-text-muted illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M180.9,78h260A4.09,4.09,0,0,1,445,82.09v10.7a0,0,0,0,1,0,0H176.81a0,0,0,0,1,0,0V82.09A4.09,4.09,0,0,1,180.9,78Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <circle cx="433.96" cy="85.65" r="2.02" className="illustration-panel"></circle>
         <circle cx="425.62" cy="85.65" r="2.02" className="illustration-panel"></circle>
@@ -198,7 +235,9 @@ export default function LocationReviewBro() {
       <g id="Locations">
         <path
           d="M374.9,168H341.6a4.72,4.72,0,0,0-4.73,4.72V204a4.72,4.72,0,0,0,4.73,4.72h9.85L358.69,223l6.65-14.25h9.56a4.72,4.72,0,0,0,4.72-4.72V172.72A4.72,4.72,0,0,0,374.9,168Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M352,183.19l1.15-7.65h2.36v10.78h-1.6v-7.73l-1.17,7.73h-1.6l-1.27-7.62v7.62h-1.47V175.54h2.35Z"
@@ -224,188 +263,278 @@ export default function LocationReviewBro() {
           cx="358.25"
           cy="229.85"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <circle
           cx="244.37"
           cy="137.51"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <path
           d="M296.69,228.62a3.69,3.69,0,1,1-3.69-3.7A3.69,3.69,0,0,1,296.69,228.62Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <circle
           cx="214.61"
           cy="200.81"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <path
           d="M229.92,293.69a3.7,3.7,0,1,1-3.7-3.7A3.7,3.7,0,0,1,229.92,293.69Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <circle
           cx="400.99"
           cy="287.58"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <circle
           cx="419.9"
           cy="173.92"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <circle
           cx="400.11"
           cy="138.13"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
         <path
           d="M410.18,233.78a3.7,3.7,0,1,1-3.69-3.7A3.69,3.69,0,0,1,410.18,233.78Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <circle
           cx="308.39"
           cy="195.38"
           r="3.69"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></circle>
       </g>
       <g id="Character">
         <path
           d="M95.5,357s2.25,25,3,30.25-2.5,8.5-5.75,12-4.5,10.75-4.5,16.25-.75,33-.75,34.75-.5,6-.5,6,8-.25,9-.25,4.75-14.25,5.75-18.25,8.75-29.25,11.75-36.25,3-12.25,4.25-15,2.75-25.25,2.75-25.25,13.5,23.75,14,27,.75,4-.5,6.75-4,7.75-3.75,18.5,6.15,29.77,6.15,29.77l.75,11.75s4.5,1.75,6.75,2.75,5.75-4.25,5.75-4.25-.15-8.77-.4-15.27,1.5-30,2.5-34,2.5-12.75,1.5-18.25S149,355.25,149,355.25s-38,2.25-42.75,1.5-11-1-11-1Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M100.5,447.75l1.5,7.75s6.25,5.25,8.75,7.25,4,1.5,4,3.25-1.75,4.5-6,5.25S98.75,471,94,469.5A14.32,14.32,0,0,1,87.07,465s-2.62.61-2.62-2.39,2.16-9.8,2.16-9.8-1-3.72,0-4.22S91,451.75,91,451.75,91.5,443,100.5,447.75Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M114.62,466.86a2.31,2.31,0,0,0-1.56.08,19,19,0,0,1-18,.36c-5.89-2.82-8.9-5.65-10.31-7.31a15.22,15.22,0,0,0-.31,2.65c0,3,2.62,2.39,2.62,2.39A14.32,14.32,0,0,0,94,469.5c4.75,1.5,10.5,2.5,14.75,1.75C112.35,470.61,114.15,468.54,114.62,466.86Z"
-          className="illustration-accent-subtle illustration-line"
+          className="illustration-accent-subtle illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M151.84,447.52a3.36,3.36,0,0,0-3.64,1.83c-1.12,2.35-2.24,5.49-2.24,5.49a33.35,33.35,0,0,1-5.59-1,8.31,8.31,0,0,1-2.24-1.83s-2.24-4.44-3.64-2.87,1.4,6.79,1.4,6.79-2.24,4.18-2.24,6.8a15.25,15.25,0,0,0,1.12,5.22,42.72,42.72,0,0,0,8.11,1.05c3.64,0,3.92-1.05,7.84-1.05s14,2.35,17.35,1.57,6.44-3.14,6.16-4.7-11.76-5.49-15.4-7.84-4.19-2.09-4.75-3.14S151.84,447.52,151.84,447.52Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M174.24,465c-3.86,3.9-9,3.3-13.36,2.42A60,60,0,0,0,144.52,466a57.78,57.78,0,0,1-10.47-.35,15.68,15.68,0,0,0,.72,2.24,42.72,42.72,0,0,0,8.11,1.05c3.64,0,3.92-1.05,7.84-1.05s14,2.35,17.35,1.57C171.26,468.72,174.19,466.57,174.24,465Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M89.75,348,89,359.16s18.75,4.25,34.25,3.81,32-6.94,32-6.94L152,344.39s-34.25-.22-41-.67-11-5.15-13.5-4.48-5.5,8.51-5.5,8.51Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M152,336.25l2.25,11.5s-4.75,2.75-19.25,4-33-.5-33-.5l-3.5-7.5-1.25,8.75H90a3.85,3.85,0,0,1-2-.5l2.25-9.25s1-9.25,5.75-11.5,8.75.25,12,3.25,7,2.5,12.25,2.5,27.5-2.25,27.5-2.25S151.5,333.5,152,336.25Z"
-          className="illustration-text-muted illustration-line"
+          className="illustration-text-muted illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M144.5,251.25s9,23,12.75,31.25,7.25,17.75,6.75,23-6.75,19-6.75,19-6-39.5-7.25-43.5-7-26.25-7-26.25S140.5,250,144.5,251.25Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M95.41,242.53s-5.25,5.45-6.87,12.11-2.82,89.81-2.82,91.22,6-1.82,7.26-2.42,6.26-10.09,6.26-10.09l2.42,9.68s11.1-1.21,20.39-1.21,33.7-2.22,33.7-2.22,2.22-13.52,2-20.79S156,300.05,156,298.23s-7.67-40.16-10.49-45.81-6.46-10.7-7.07-11.1-7.87-4.65-14.73-5-11.5-2.22-17.56.61S95.41,242.53,95.41,242.53Z"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M134.76,267.35s3.43,19.78,4.44,26.44,3.23,32.69,3.23,36.53v9.08"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M128.71,275.83s3.83,19.78,5.85,31.68S136,336.37,136,336.37"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <polyline
           points="106.91 277.44 124.27 275.83 124.87 279.66 108.12 281.07"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></polyline>
         <polyline
           points="150.3 273.4 140.21 274.21 141.02 277.64 149.9 276.84"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></polyline>
         <path
           d="M121.24,224.36s-9.29-1.81-12.11-.6-5.45,6.05-6.26,7.67-9.28,5-9.89,7.46-.2,6.46.81,7.47,6.86.61,8.28,1,20.38,12.92,23.61,14.94,8.88,4.84,9.69,4S141.22,253,142,247.17s-.21-7.27-2.83-12.11S126.08,225,121.24,224.36Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M118.41,208.42s1.42,8.88,1.42,11.3S116,233.65,116,233.65s7.67,16.55,11.91,21.19,6.26,5.65,6.26,5.65.6-9.49,1.21-13.93,7-17.42,7-17.42-9.61,1.48-10.82-4.78-.81-11.7-2-14.93S120.84,207,118.41,208.42Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M132.05,226.17l-4.61-.86.38,4s2.84,7.39,8.15,11.18a10.09,10.09,0,0,0,.86.55c1.1-3.18,5.52-11.88,5.52-11.88S134,231.46,132.05,226.17Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M148.29,205.94l-.32,5.54s5,3.62,5.5,5.37-2.42,4-2.42,4-.45,9.56-1.28,11.06-5,1.62-7.3,1.64-13.71-3.26-15.68-5-4.35-8-4.35-8-2.52-8.93-2.91-10.29,1-3.22,7-5.11S148.61,203.34,148.29,205.94Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M121.32,212.45s1.38,3.08,4,1.14a9.48,9.48,0,0,0,3.11-5.55l-15.28,4.14s-1.19,6.22,1.21,9.18,5.9,1.28,5.7-1.26S121.32,212.45,121.32,212.45Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
-        <path d="M146.88,224s-3.33.1-5.29-1.66" className="illustration-line" fill="none"></path>
+        <path
+          d="M146.88,224s-3.33.1-5.29-1.66"
+          className="illustration-line"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
         <path
           d="M143.26,211.87c.26.91.12,1.75-.31,1.87s-1-.52-1.25-1.43-.11-1.75.32-1.87S143,211,143.26,211.87Z"
           className="illustration-text"
         ></path>
         <path
           d="M112.9,212.79s9-1.5,19.89-4.57,15.62-4.83,15.62-4.83l-4.86-15.34a5.8,5.8,0,0,0-3-3c-3.11-1.4-9.57-1.08-14.22-.36-6.63,1-11.76,2.91-14.41,7.64a17.51,17.51,0,0,0-1.48,12.58C111.17,207.4,112.9,212.79,112.9,212.79Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M129.1,209.26s16.53-.89,22.85-2.25,11.53-8.92,11.53-8.92l-15.14,2A34.86,34.86,0,0,0,129.1,209.26Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M122.82,213.76s-1.4-4.22-5-2.79-1.61,8.43,1.07,11.23,6-1.06,6-1.06"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M140.41,299,158,285.85a.6.6,0,0,1,.41-.11l12.33,1.18a.72.72,0,0,1,.3,1.33l-15.68,9.37Z"
-          className="illustration-text illustration-line"
+          className="illustration-text illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M129.51,299.84a8.19,8.19,0,0,0,4.65-2c1.81-1.82,5-7.27,6.45-7.67a86.4,86.4,0,0,1,10.09-1.62c1.42,0,2.22,1,1,2.22s-6.86,3.84-6.86,3.84l-.6,2s15.33-1.81,16.55-1.81a2.15,2.15,0,0,1,2,2c0,.8-3.23,3.23-4.23,4.23a79.4,79.4,0,0,1-7.88,5.86c-1.41.8-15.94-.41-16.54-.41s-4.85,1-4.85,1Z"
-          className="illustration-panel illustration-line"
+          className="illustration-panel illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M161,298.63s-6.46,1.42-7.87,2.22-6.26,0-6.26,0"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <polyline
           points="156.35 302.67 151.91 304.08 147.27 304.28"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></polyline>
         <path
           d="M106.51,261.5c.2,3.63-4.24,25.63-4.24,25.63l1,3.23v.81l28.05,7.66s0,7.67-1.21,11.1a74.08,74.08,0,0,0-2.22,9.49s-12.31-3-22.4-6.46-25.84-8.47-28.86-11.91-1.21-12.1-.81-13.52,11.7-31.08,13.92-35.11,5.45-7.87,9.69-6.66,7.47,6.66,7.87,9.08"
-          className="illustration-accent illustration-line"
+          className="illustration-accent illustration-outlined"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M88.17,291.86A30.28,30.28,0,0,1,93,289.55c1.82-.4,8.88,1.21,8.88,1.21"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
-        <path d="M82.29,295.2s1.7-1,3.77-2.17" className="illustration-line" fill="none"></path>
+        <path
+          d="M82.29,295.2s1.7-1,3.77-2.17"
+          className="illustration-line"
+          fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        ></path>
         <path
           d="M94.89,285.11a12.31,12.31,0,0,0-3.12-1c-1.41,0-7.67,3-7.67,3"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
         <path
           d="M100.25,287.53s-1.16-.56-2.64-1.23"
           className="illustration-line"
           fill="none"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         ></path>
       </g>
     </svg>

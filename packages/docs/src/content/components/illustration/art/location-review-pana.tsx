@@ -6,11 +6,15 @@
  * Converted from the published SVG: every `style="fill:#…"` became a palette
  * class, so the artwork follows the theme instead of carrying its own colours.
  * That is also what makes it legal here — an inline style is a purity
- * violation, and a hardcoded hex would not change with the theme. Skin tones stay literal (#eb996e, #ffbe9d): a UI palette has no role for them, and forcing one onto a theme colour would be wrong.
+ * violation, and a hardcoded hex would not change with the theme.
+ *
+ * The figure keeps its own colours (#eb996e, #ffbe9d). A UI palette owns
+ * surfaces, text and an accent; it does not own a face, and routing skin or
+ * lips through the theme accent is how a nose ends up indigo.
  */
 export default function LocationReviewPana() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+    <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
       <g id="background-complete">
         <polygon
           points="479.5 110.54 405.86 110.54 405.86 145.53 435.8 145.53 447 156.73 458.2 145.53 479.5 145.53 479.5 110.54"

@@ -165,6 +165,19 @@
   transform-origin: bottom center;
 }
 
+/*
+ * An outline ON a filled shape.
+ *
+ * Separate from the line classes because those declare `fill: none` — a line is
+ * a line. Put one of them on a filled shape and the fill disappears, so the
+ * shape that wanted an outline gets erased instead.
+ */
+.illustration-outlined {
+  stroke: var(--move-illustration-line);
+  stroke-width: var(--move-illustration-line-width);
+  vector-effect: non-scaling-stroke;
+}
+
 /* A modifier, not a colour: dashes whatever line it is put on, so every
    implied or pending connector in the library dashes identically. */
 .illustration-line-dashed {

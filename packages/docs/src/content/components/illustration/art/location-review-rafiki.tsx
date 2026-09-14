@@ -6,11 +6,15 @@
  * Converted from the published SVG: every `style="fill:#…"` became a palette
  * class, so the artwork follows the theme instead of carrying its own colours.
  * That is also what makes it legal here — an inline style is a purity
- * violation, and a hardcoded hex would not change with the theme. Skin tones stay literal (#e4897b): a UI palette has no role for them, and forcing one onto a theme colour would be wrong.
+ * violation, and a hardcoded hex would not change with the theme.
+ *
+ * The figure keeps its own colours (#de5753, #e4897b). A UI palette owns
+ * surfaces, text and an accent; it does not own a face, and routing skin or
+ * lips through the theme accent is how a nose ends up indigo.
  */
 export default function LocationReviewRafiki() {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+    <svg width="500" height="500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
       <g id="background-complete">
         <rect y="382.4" className="illustration-panel-raised"></rect>
         <rect
@@ -4256,7 +4260,7 @@ export default function LocationReviewRafiki() {
         ></path>
         <path
           d="M319.77,156.07a17.46,17.46,0,0,1-1.87,3.78,2.28,2.28,0,0,0,2.31.6Z"
-          className="illustration-accent"
+          fill="#de5753"
         ></path>
         <path
           d="M324.71,154.63c.09.68.52,1.18,1,1.13s.75-.66.66-1.34-.53-1.18-1-1.12S324.62,154,324.71,154.63Z"
