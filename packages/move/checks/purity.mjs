@@ -72,7 +72,7 @@ const IGNORE_MARKER = 'purity-ignore';
  *   • `animate` / `animateTransform` / `set` — SMIL bypasses the animation
  *     system. Illustration takes an `animations` prop for this.
  */
-const SVG_ELEMENTS = new Set([
+export const SVG_ELEMENTS = new Set([
   'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
   'text', 'tspan', 'textPath', 'defs', 'use', 'symbol', 'marker', 'mask',
   'clipPath', 'pattern', 'linearGradient', 'radialGradient', 'stop', 'image',
@@ -94,7 +94,7 @@ const SVG_SEAM = 'Illustration';
  * are usually nested a group or two down. `createSourceFile` is called with
  * parent pointers, so the chain is there to walk.
  */
-function insideSeam(node, sf) {
+export function insideSeam(node, sf) {
   for (let p = node.parent; p; p = p.parent) {
     if (ts.isJsxElement(p)) {
       const tag = p.openingElement.tagName.getText(sf);
@@ -120,7 +120,7 @@ function insideSeam(node, sf) {
  * thing. What stays illegal is what the rule was always for: shapes loose in a
  * page, alongside prose and layout.
  */
-function isDrawingComponent(node, sf) {
+export function isDrawingComponent(node, sf) {
   for (let p = node.parent; p; p = p.parent) {
     const isFn =
       ts.isFunctionDeclaration(p) || ts.isArrowFunction(p) || ts.isFunctionExpression(p);
@@ -195,6 +195,18 @@ function collectTsx(dir, out = []) {
     else if (entry.endsWith('.tsx') && !entry.endsWith('.test.tsx')) out.push(full);
   }
   return out;
+}
+
+/**
+ * Is this lowercase tag a legal SVG shape?
+ *
+ * Exported because two checks enforce the raw-element rule — this one over
+ * composed code, and app-conformance over the docs app — and a rule with two
+ * implementations is a rule that drifts. The Illustration seam was taught here
+ * first and app-conformance kept flagging what this had just blessed.
+ */
+export function isLegalSvg(tag, node, sf) {
+  return SVG_ELEMENTS.has(tag) && (insideSeam(node, sf) || isDrawingComponent(node, sf));
 }
 
 export function run(config) {

@@ -16,6 +16,7 @@
  * Usage: node app-conformance.mjs [srcDir] [--strict] [--json]
  */
 import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { isLegalSvg } from '../../checks/purity.mjs';
 import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ts from 'typescript';
@@ -74,7 +75,11 @@ for (const file of walk(SRC, (p) => p.endsWith('.tsx') && !p.endsWith('.test.tsx
   const visit = (node) => {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       const tag = node.tagName.getText(sf);
-      if (/^[a-z]/.test(tag) && !ignored(node)) add(file, 'raw-html', `<${tag}>`);
+      // SVG shapes are legal inside <Illustration> (or in a drawing component).
+      // The predicate lives in purity.mjs so both checks share one definition.
+      if (/^[a-z]/.test(tag) && !ignored(node) && !isLegalSvg(tag, node, sf)) {
+        add(file, 'raw-html', `<${tag}>`);
+      }
     }
     if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'style' && !ignored(node)) {
       add(file, 'inline-style', 'style={…}');

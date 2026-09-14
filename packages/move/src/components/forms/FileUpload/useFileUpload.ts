@@ -182,7 +182,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       return errors;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [acceptList.join(','), maxSize, validate],
+    [acceptString, maxSize, validate],
   );
 
   const addFiles = useCallback(
@@ -301,7 +301,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       },
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [disabled, isDragReject, acceptList.join(','), addFiles],
+    [disabled, isDragReject, acceptString, addFiles],
   );
 
   const getInputProps = useCallback(

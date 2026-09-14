@@ -8,15 +8,9 @@
   "components/AdvancedBadge/AdvancedBadge.tsx": {
     "raw-html": 1
   },
-  "components/AnimatedSubnav/AnimatedSubnav.module.css": {
-    "css-module": 1
-  },
-  "components/AnimatedSubnav/AnimatedSubnav.tsx": {
-    "raw-html": 2
-  },
   "components/AnimationAnatomy.tsx": {
     "inline-style": 1,
-    "raw-html": 14
+    "raw-html": 1
   },
   "components/AnimationPlayground/AnimationPlayground.module.css": {
     "css-module": 1
@@ -65,7 +59,7 @@
   },
   "components/Illustration.tsx": {
     "inline-style": 2,
-    "raw-html": 5
+    "raw-html": 4
   },
   "components/InlineCode/InlineCode.module.css": {
     "css-module": 1
@@ -78,7 +72,7 @@
   },
   "components/LifecycleIllustration.tsx": {
     "inline-style": 1,
-    "raw-html": 12
+    "raw-html": 7
   },
   "components/LogoMark/LogoMark.module.css": {
     "css-module": 1
@@ -146,18 +140,6 @@
   "content/components/collapsible/samples/as-child.tsx": {
     "inline-style": 1
   },
-  "content/components/collapsible/samples/basic.tsx": {
-    "inline-style": 1
-  },
-  "content/components/collapsible/samples/controlled.tsx": {
-    "inline-style": 1
-  },
-  "content/components/collapsible/samples/custom-icon.tsx": {
-    "inline-style": 2
-  },
-  "content/components/collapsible/samples/show-more.tsx": {
-    "inline-style": 1
-  },
   "content/components/divider/samples/vertical.tsx": {
     "inline-style": 1
   },
@@ -172,29 +154,21 @@
     "raw-html": 9
   },
   "content/components/rich-text-editor/samples/basic.tsx": {
-    "raw-html": 3
-  },
-  "content/components/scroll-area/samples/basic.tsx": {
-    "inline-style": 1
+    "raw-html": 1
   },
   "content/components/sidebar/samples/basic.tsx": {
-    "inline-style": 1,
     "raw-html": 1
   },
   "content/components/sidebar/samples/collapsed.tsx": {
-    "inline-style": 1,
     "raw-html": 1
   },
   "content/components/sidebar/samples/links.tsx": {
-    "inline-style": 1,
     "raw-html": 2
   },
   "content/components/sidebar/samples/right-side.tsx": {
-    "inline-style": 1,
     "raw-html": 1
   },
   "content/components/sidebar/samples/with-badges.tsx": {
-    "inline-style": 1,
     "raw-html": 1
   },
   "content/components/splitter/samples/basic.tsx": {
@@ -263,7 +237,7 @@
     "inline-style": 10
   },
   "pages/systems/SurfacesPage.tsx": {
-    "inline-style": 6
+    "inline-style": 4
   },
   "pages/systems/TruncationPage.tsx": {
     "inline-style": 2,
