@@ -16,6 +16,10 @@
  * roots you configure) — an inline `<svg>` is raw HTML, so this also enforces the
  * svg half of the icons rule (icons-1) on composed code.
  *
+ * SVG shapes are the one SCOPED exemption: legal as descendants of
+ * `<Illustration>`, flagged everywhere else. See SVG_ELEMENTS below for what
+ * that covers and what it deliberately does not.
+ *
  * It also enforces the RENDERING-LIBRARY BOUNDARY (purity-6). A drawing library
  * — Recharts, Chart.js, D3, three.js — may be imported by a component that
  * wraps it (a `withMoveComponent` component, or a renderer adapter beside one),
@@ -31,6 +35,8 @@
  * @enforces icons-1 purity-1 purity-2 purity-4 purity-6
  * @instead compose from Move components; use Stack/Align/Grid for layout, the `sp` slot-prop
  *   for a slot the component exposes, and a component token for anything visual.
+ *   For a drawing, wrap the shapes in `<Illustration>` — it is the sanctioned
+ *   seam, and inside it the shapes are legal.
  *   NOTE: there is currently NO sanctioned way to set an arbitrary width or
  *   height — no Frame/Box primitive exists — so this rule is INCOMPLETE. Three
  *   consumer teams each built their own Frame and each one failed this check.
@@ -43,6 +49,58 @@ import ts from 'typescript';
 import { loadConfig, inScope } from './_config.mjs';
 
 const IGNORE_MARKER = 'purity-ignore';
+
+/**
+ * SVG elements, legal ONLY inside an `<Illustration>`.
+ *
+ * The rule against raw elements has always had a hole in it: a one-off diagram
+ * had nowhere to go. Icons resolve through `iconResolver`, but a drawing is not
+ * an icon, and composed code that needed one simply violated the rule — a
+ * consumer's animated logo carries raw `<svg>`, `<g>`, `<path>`, `<rect>` and
+ * `<filter>` in a single file. They did not ignore the rule; there was nothing
+ * to follow.
+ *
+ * `Illustration` is the seam, and this is what makes being inside it mean
+ * something: shapes are legal there and nowhere else, so the accessible name,
+ * the token palette and the sizing come with them rather than being remembered.
+ *
+ * Deliberately absent from the list:
+ *   • `svg` — Illustration renders it; a nested one is a mistake.
+ *   • `foreignObject` — embeds arbitrary HTML, which would reopen the hole.
+ *   • `animate` / `animateTransform` / `set` — SMIL bypasses the animation
+ *     system. Illustration takes an `animations` prop for this.
+ */
+const SVG_ELEMENTS = new Set([
+  'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
+  'text', 'tspan', 'textPath', 'defs', 'use', 'symbol', 'marker', 'mask',
+  'clipPath', 'pattern', 'linearGradient', 'radialGradient', 'stop', 'image',
+  'filter', 'feBlend', 'feColorMatrix', 'feComponentTransfer', 'feComposite',
+  'feConvolveMatrix', 'feDiffuseLighting', 'feDisplacementMap', 'feDistantLight',
+  'feDropShadow', 'feFlood', 'feFuncA', 'feFuncB', 'feFuncG', 'feFuncR',
+  'feGaussianBlur', 'feImage', 'feMerge', 'feMergeNode', 'feMorphology',
+  'feOffset', 'fePointLight', 'feSpecularLighting', 'feSpotLight', 'feTile',
+  'feTurbulence',
+]);
+
+/** The component whose children those elements are allowed to be. */
+const SVG_SEAM = 'Illustration';
+
+/**
+ * Is this node somewhere inside an `<Illustration>`?
+ *
+ * Walks the JSX ancestor chain rather than tracking depth, because the shapes
+ * are usually nested a group or two down. `createSourceFile` is called with
+ * parent pointers, so the chain is there to walk.
+ */
+function insideSeam(node, sf) {
+  for (let p = node.parent; p; p = p.parent) {
+    if (ts.isJsxElement(p)) {
+      const tag = p.openingElement.tagName.getText(sf);
+      if (tag === SVG_SEAM || tag.endsWith(`.${SVG_SEAM}`)) return true;
+    }
+  }
+  return false;
+}
 
 /**
  * Libraries that draw their own DOM or canvas.
@@ -113,7 +171,21 @@ export function run(config) {
     const visit = (node) => {
       if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
         const tag = node.tagName.getText(sf);
-        if (/^[a-z]/.test(tag)) record(node, 'raw-html', `<${tag}>`);
+        if (/^[a-z]/.test(tag)) {
+          if (SVG_ELEMENTS.has(tag)) {
+            // A shape is legal inside the seam and nowhere else. Outside it, say
+            // so by name — the answer is a component, not the ignore marker.
+            if (!insideSeam(node, sf)) {
+              record(
+                node,
+                'raw-svg',
+                `<${tag}> outside <${SVG_SEAM}> — SVG shapes are legal only inside it, where the accessible name, the token palette and the sizing come with them`,
+              );
+            }
+          } else {
+            record(node, 'raw-html', `<${tag}>`);
+          }
+        }
       }
       if (ts.isJsxAttribute(node) && node.name.getText(sf) === 'style') record(node, 'inline-style', 'style=');
       // purity-6: a drawing library belongs behind a component's renderer seam,
