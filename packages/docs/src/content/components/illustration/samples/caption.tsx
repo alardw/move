@@ -1,15 +1,14 @@
 import { Illustration } from 'move';
-import SitStandWalk from '../art/sit-stand-walk';
+import PeepWalking from '../art/peep-walking';
 
 export default function CaptionSample() {
   return (
     <Illustration
-      title="Three people: one seated, one standing, one walking"
-      desc="A hand-drawn line illustration of three figures side by side — the first sitting cross-legged, the second standing with hands in pockets, the third mid-stride."
-      caption="“Sit, stand, walk” from Open Peeps by Pablo Stanley (CC0). Ink and paper are the only two colours, so the whole drawing follows the theme."
-      size="sm"
+      title="A person mid-stride, bag over the shoulder"
+      desc="A hand-drawn line illustration of a figure walking, one arm swinging, a satchel strap across the chest."
+      caption="Open Peeps by Pablo Stanley (CC0). Ink, paper and one accent are the only colours, so the whole drawing follows the theme."
     >
-      <SitStandWalk />
+      <PeepWalking />
     </Illustration>
   );
 }
