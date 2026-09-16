@@ -2,11 +2,18 @@
 
 .root {
   --move-sortable-gap: var(--move-space-2);
-  --move-sortable-indicator-size: var(--move-space-1);
-  --move-sortable-indicator-color: var(--move-accent-border);
+  /* 2px, not --move-space-1's 4px: this is a hairline, not a spacing step, and
+     the scale has nothing below 4. Four reads as a bar across the list rather
+     than a seam between two rows. */
+  --move-sortable-indicator-size: 2px;
+  --move-sortable-indicator-color: var(--move-primary);
   --move-sortable-indicator-terminal: var(--move-space-2);
   --move-sortable-handle-size: var(--move-control-height-sm);
   --move-sortable-item-shadow-dragging: var(--move-shadow-elevated);
+  --move-sortable-item-opacity-dragging: 0.8;
+  /* Quick enough to feel like the list answering the pointer, slow enough that
+     the eye follows a row to its new place instead of finding it already there. */
+  --move-sortable-shift-duration: 180ms;
 
   display: flex;
   flex-direction: column;
@@ -24,6 +31,31 @@
   display: flex;
   align-items: center;
   gap: var(--move-space-2);
+  /* A row needs a body of its own. Without one the list reads as floating text,
+     and a lifted row is a shadow cast around nothing — you see straight through
+     it to the rows underneath. Opacity is the point: the thing being carried has
+     to hide what it passes over. */
+  padding: var(--move-space-2) var(--move-space-3);
+  background-color: var(--move-bg-base);
+  border: 1px solid var(--move-border-base);
+  border-radius: var(--move-rounded-md);
+
+  /* Stepping aside. The rows between the old place and the new one move by
+     exactly one place, which opens a gap the size of the row being carried —
+     so the result is shown rather than described. A line can only say where it
+     would go; the gap says what the list will look like. */
+  transform: translate3d(0, var(--move-sortable-shift, 0), 0);
+  /* transition-exempt: this one re-targets continuously while the pointer moves —
+     a row can be told to step aside, step back, and step aside again inside a
+     single drag, at whatever moment the pointer crosses a midpoint. A transition
+     interpolates from wherever it currently is to the new value. useAnimations
+     sequences discrete triggers, so it would queue these instead of replacing
+     them, and the rows would finish arriving after the drag had ended. */
+  transition: transform var(--move-sortable-shift-duration) var(--move-ease-out);
+}
+
+.root[data-axis='horizontal'] .item {
+  transform: translate3d(var(--move-sortable-shift, 0), 0, 0);
 }
 
 .item[data-handle='end'] {
@@ -36,8 +68,15 @@
   cursor: grab;
 }
 
+/* The carried row. Above the indicator, because the thing in your hand is the
+   thing nearest you — a line drawn over it reads as cutting through it. And
+   part-way transparent, so you can still see the rows it passes over and judge
+   where it is going. */
 .item[data-dragging] {
+  transition: none;
   box-shadow: var(--move-sortable-item-shadow-dragging);
+  opacity: var(--move-sortable-item-opacity-dragging);
+  z-index: 2;
 }
 
 .item[data-disabled] {

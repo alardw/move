@@ -240,7 +240,6 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
     const el = ref.current;
     if (el) {
       el.style.transform = '';
-      el.style.zIndex = '';
       el.removeAttribute('data-dragging');
     }
     if (handleRef.current) handleRef.current.style.cursor = 'grab';
@@ -272,7 +271,6 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
 
       if (phase === 'pending') {
         if (Math.hypot(rawX, rawY) < activationDistance) return;
-        el.style.zIndex = '1';
         el.setAttribute('data-dragging', '');
         // The closed hand, on the handle AND the document: the pointer leaves
         // the handle almost immediately, and without the document rule the

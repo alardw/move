@@ -132,6 +132,8 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
   const midpoints = useRef<number[]>([]);
   /** This item's own midpoint at lift, before any transform moved it. */
   const origin = useRef(0);
+  /** Where this item sits among the measured siblings. */
+  const originPos = useRef(0);
   const target = useRef(index);
 
   const commit = useCallback(
@@ -186,6 +188,7 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
       return axis === 'vertical' ? r.top + r.height / 2 : r.left + r.width / 2;
     });
     const self = siblings.indexOf(el);
+    originPos.current = Math.max(0, self);
     origin.current = self >= 0 ? midpoints.current[self] : 0;
     target.current = index;
     setDropIndex(index);
@@ -198,8 +201,14 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
   useEffect(() => {
     if (!isDragging) return;
     const moved = origin.current + (axis === 'vertical' ? delta.y : delta.x);
+    // Its OWN midpoint is skipped. Counting it means the row is past one
+    // boundary the instant it moves down at all — a single pixel of travel
+    // reads as a move, and every downward drag lands one place too far.
     let next = 0;
-    for (const mid of midpoints.current) if (moved > mid) next += 1;
+    midpoints.current.forEach((mid, i) => {
+      if (i === originPos.current) return;
+      if (moved > mid) next += 1;
+    });
     next = Math.max(0, Math.min(count - 1, next));
     if (next !== target.current) {
       target.current = next;

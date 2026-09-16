@@ -10,14 +10,16 @@ const POOL = [
 function Chip({ id, title }: { id: string; title: string }) {
   const { ref, handleProps } = useDraggable<HTMLDivElement>({ id, data: title, axis: 'both' });
   return (
-    <Card.Root ref={ref} size="sm">
-      <Stack direction="row" gap="sm" align="center">
-        <Button {...handleProps} variant="ghost" size="sm" aria-label={`Sleep ${title}`}>
-          <Icon name="grip-vertical" />
-        </Button>
-        <Text size="sm">{title}</Text>
-      </Stack>
-    </Card.Root>
+    <Stack flex="none">
+      <Card.Root ref={ref} size="sm">
+        <Stack direction="row" gap="sm" align="center">
+          <Button {...handleProps} variant="ghost" size="sm" aria-label={`Sleep ${title}`}>
+            <Icon name="grip-vertical" />
+          </Button>
+          <Text size="sm">{title}</Text>
+        </Stack>
+      </Card.Root>
+    </Stack>
   );
 }
 

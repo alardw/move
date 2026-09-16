@@ -200,10 +200,21 @@ describe('dragging', () => {
     expect(screen.getByTestId('row-a')).toHaveAttribute('data-dragging');
   });
 
-  it('draws no indicator until a drag is in progress', () => {
+  it('no row steps aside until a drag is in progress', () => {
     render(<List />);
-    expect(document.querySelector('[data-drop-before]')).toBeNull();
-    expect(document.querySelector('[data-drop-after]')).toBeNull();
+    expect(document.querySelector('[data-shifted]')).toBeNull();
+  });
+
+  it('opens a gap by stepping the rows between here and there aside', () => {
+    render(<List />);
+    act(() => {
+      handleFor('a').dispatchEvent(pointer('pointerdown', { clientY: 0 }));
+    });
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 160 })));
+    // The carried row never shifts — it is following the pointer.
+    expect(screen.getByTestId('row-a')).not.toHaveAttribute('data-shifted');
+    // At least one row below it has moved up to make the space.
+    expect(document.querySelector('[data-shifted]')).not.toBeNull();
   });
 
   it('Escape abandons the drag and reports no destination', () => {

@@ -19,8 +19,12 @@
 
 [data-dragging] {
   /* Off the page, and clearly so. The shadow does the work; a rotation would
-     fight the transform the hook writes on this same element every frame. */
+     fight the transform the hook writes on this same element every frame.
+     Part-way transparent so what it passes over stays readable, and above the
+     drop indicator, because the thing in your hand is the thing nearest you. */
   box-shadow: var(--move-shadow-elevated);
+  opacity: 0.8;
+  z-index: 2;
   /* Nothing under the pointer should answer hover while it is carrying
      something — the cursor belongs to the drag, not to whatever it passes. */
   pointer-events: none;
@@ -29,64 +33,8 @@
 }
 
 /*
- * The drop indicator: a line in the gap, with a dot at its leading edge.
- *
- * Drawn on the neighbour rather than between elements, because there is no
- * element between two siblings to style. `::before` sits in the gap above an
- * item, `::after` in the gap below the last one — which is the only position
- * that has no item after it to carry the line.
- *
- * A 2px line alone is easy to miss at a glance, and the eye lands on the dot
- * first; that is why it is there rather than as decoration.
+ * No drop-indicator line here. Within a list the rows step aside to open a gap
+ * the size of the one being carried, which shows the result rather than
+ * pointing at it — see Sortable's stylesheet. A line and a gap together say the
+ * same thing twice.
  */
-[data-drop-before]::before,
-[data-drop-after]::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0;
-  height: var(--move-sortable-indicator-size, 2px);
-  background-color: var(--move-sortable-indicator-color, var(--move-accent-border));
-  border-radius: var(--move-rounded-full);
-  /* Above the row's own background, below the item being carried. */
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Centred in the gap, so the line reads as belonging to neither row. */
-[data-drop-before]::before {
-  top: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
-}
-
-[data-drop-after]::after {
-  bottom: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
-}
-
-/* The terminal dot, bleeding left of the line's start. */
-[data-drop-before]::before,
-[data-drop-after]::after {
-  box-shadow: calc(var(--move-sortable-indicator-terminal, 8px) / -2) 0 0
-    calc(
-      var(--move-sortable-indicator-terminal, 8px) / 2 - var(--move-sortable-indicator-size, 2px) /
-        2
-    )
-    var(--move-sortable-indicator-color, var(--move-accent-border));
-}
-
-/* A horizontal list turns the line on its side. */
-[data-axis='horizontal'] [data-drop-before]::before,
-[data-axis='horizontal'] [data-drop-after]::after {
-  inset-inline: auto;
-  inset-block: 0;
-  width: var(--move-sortable-indicator-size, 2px);
-  height: auto;
-}
-
-[data-axis='horizontal'] [data-drop-before]::before {
-  inset-inline-start: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
-  top: 0;
-}
-
-[data-axis='horizontal'] [data-drop-after]::after {
-  inset-inline-end: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
-  bottom: 0;
-}

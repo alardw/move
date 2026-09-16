@@ -57,14 +57,6 @@ export const spec = {
       description:
         'What a pointer grabs and a keyboard focuses. Rendered by Item, never placed by the call site.',
     },
-    {
-      name: 'indicator',
-      element: 'div',
-      kind: 'indicator',
-      typography: 'none',
-      description:
-        'The line in the gap showing where the row will land. Absent when there is no relative placement to show.',
-    },
   ],
 
   props: [],
@@ -79,13 +71,6 @@ export const spec = {
           kind: 'group',
           typography: 'none',
           description: 'List container and reorder context.',
-        },
-        {
-          name: 'indicator',
-          element: 'div',
-          kind: 'indicator',
-          typography: 'none',
-          description: 'Drop position line, drawn between items rather than on one.',
         },
       ],
       props: [
@@ -206,7 +191,7 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-axis', 'data-dragging', 'data-drop-before', 'data-drop-after'],
+    dataAttributes: ['data-axis', 'data-dragging', 'data-shifted', 'data-handle'],
   },
 
   capabilities: ['takes-focus', 'takes-disabled'],
@@ -236,22 +221,6 @@ export const spec = {
       description: 'Space between rows, which is also the gap the indicator is centred in',
     },
     {
-      name: '--move-sortable-indicator-size',
-      value: 'var(--move-space-1)',
-      description: 'Thickness of the drop line',
-    },
-    {
-      name: '--move-sortable-indicator-color',
-      value: 'var(--move-accent-border)',
-      description: 'Colour of the drop line and its terminal',
-    },
-    {
-      name: '--move-sortable-indicator-terminal',
-      value: 'var(--move-space-2)',
-      description:
-        'Diameter of the dot at the line’s leading edge, which is what makes a 2px line findable',
-    },
-    {
       name: '--move-sortable-handle-size',
       value: 'var(--move-control-height-sm)',
       description: 'Touch target for the handle, which has to stay grabbable on a phone',
@@ -260,6 +229,18 @@ export const spec = {
       name: '--move-sortable-item-shadow-dragging',
       value: 'var(--move-shadow-elevated)',
       description: 'The lift on the row under the pointer',
+    },
+    {
+      name: '--move-sortable-shift-duration',
+      value: '180ms',
+      description:
+        'How long a row takes to step aside — quick enough to read as the list answering the pointer',
+    },
+    {
+      name: '--move-sortable-item-opacity-dragging',
+      value: '0.8',
+      description:
+        'How far you can see through the carried row, so the rows it passes over stay readable',
     },
   ],
 
@@ -323,9 +304,14 @@ export const spec = {
         'Root provides a drag context when none is above it, so a single list needs no Drag.Root. Nested under one, it uses that instead, which is what makes two lists share a drag.',
     },
     {
-      id: 'indicator-only-for-relative-placement',
+      id: 'rows-step-aside-to-open-the-gap',
       description:
-        'The indicator draws between two positions. Where there is no relative placement to show — an empty list, a drop onto a zone — it is absent rather than drawn at an arbitrary edge.',
+        'The rows between the old place and the new one move by exactly one place, opening a gap the size of the row being carried. The result is shown rather than pointed at — which is why there is no indicator line as well; the two would say the same thing twice.',
+    },
+    {
+      id: 'drag-time-styles-never-go-through-React',
+      description:
+        'The shift is written onto the element through a ref, not the style prop. The hook writes the carried row’s transform imperatively every frame, and the moment React owns that element’s style attribute it reconciles the transform away on the next render — the row stops following the pointer.',
     },
   ],
 
@@ -343,7 +329,8 @@ export const spec = {
       'Move actions are disabled at the ends of the list',
       'The handle carries an accessible name built from the item label',
       'Announcements name the row and use positions, not indices',
-      'The indicator is absent until a drag is in progress',
+      'No row steps aside until a drag is in progress',
+      'The rows between source and destination step aside to open the gap',
       'Two Roots under one Drag.Root can exchange a row',
       'Forwards className and style',
       'Forwards ref to root element',

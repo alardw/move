@@ -41,9 +41,13 @@ interface SortableContextValue {
   count: number;
   onReorder?: (change: SortableChange) => void;
   labels: SortableLabels;
-  /** Where the carried row would land, broadcast so every row can draw its edge. */
-  dropIndex: number | null;
-  setDropIndex: (index: number | null) => void;
+  /**
+   * Which row is being carried and where it would land, broadcast so every OTHER
+   * row can step out of the way. A list that only draws a line leaves the person
+   * to imagine the result; a list that opens the gap shows it.
+   */
+  drag: { from: number; to: number; offset: number } | null;
+  setDrag: (d: { from: number; to: number; offset: number } | null) => void;
 }
 
 const SortableContext = React.createContext<SortableContextValue | null>(null);
@@ -82,7 +86,7 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
       () => ({ ...DEFAULT_SORTABLE_LABELS, ...(props.labels as Partial<SortableLabels>) }),
       [props.labels],
     );
-    const [dropIndex, setDropIndex] = React.useState<number | null>(null);
+    const [drag, setDrag] = React.useState<SortableContextValue['drag']>(null);
     const count = React.Children.count(props.children);
     const outerCtx = useDragContext();
 
@@ -93,10 +97,10 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
         count,
         onReorder: props.onReorder as ((c: SortableChange) => void) | undefined,
         labels,
-        dropIndex,
-        setDropIndex,
+        drag,
+        setDrag,
       }),
-      [props.list, props.axis, count, props.onReorder, labels, dropIndex],
+      [props.list, props.axis, count, props.onReorder, labels, drag],
     );
 
     return {
@@ -192,18 +196,49 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
       labels: ctx.labels,
     });
 
-    // Only the carried row knows where it would land; every row has to draw it.
-    const { setDropIndex } = ctx;
+    // Only the carried row knows where it would land, so it publishes that —
+    // along with how far one place is, measured from its own box plus the gap.
+    // Every other row reads it and steps aside.
+    const { setDrag } = ctx;
     React.useEffect(() => {
-      if (isDragging) setDropIndex(dropIndex);
-    }, [isDragging, dropIndex, setDropIndex]);
+      if (!isDragging || dropIndex === null) return;
+      const el = itemRef.current;
+      if (!el) return;
+      const box = el.getBoundingClientRect();
+      const gap = parseFloat(getComputedStyle(el.parentElement ?? el).gap || '0');
+      const offset = (ctx.axis === 'vertical' ? box.height : box.width) + (gap || 0);
+      setDrag({ from: index, to: dropIndex, offset });
+    }, [isDragging, dropIndex, index, ctx.axis, setDrag, itemRef]);
+
     React.useEffect(() => {
       if (!isDragging) return;
-      return () => setDropIndex(null);
-    }, [isDragging, setDropIndex]);
+      return () => setDrag(null);
+    }, [isDragging, setDrag]);
 
-    const showEdge = ctx.dropIndex !== null && !isDragging && ctx.dropIndex === index;
-    const isLast = index === ctx.count - 1;
+    /**
+     * How far this row steps aside. Only the rows BETWEEN the old place and the
+     * new one move, and they move by exactly one place — which is what turns the
+     * list into a gap the carried row can be seen to fit.
+     */
+    const shift = (() => {
+      const d = ctx.drag;
+      if (!d || isDragging || d.from === d.to) return 0;
+      if (d.from < d.to && index > d.from && index <= d.to) return -d.offset;
+      if (d.from > d.to && index >= d.to && index < d.from) return d.offset;
+      return 0;
+    })();
+
+    // Written through the ref, NOT React's style prop. The hook writes the
+    // carried row's transform imperatively every frame; the moment React owns
+    // this element's style attribute it reconciles that transform away on the
+    // next render, and the row stops following the pointer. Every drag-time
+    // style stays on the same side of that line.
+    React.useEffect(() => {
+      const el = itemRef.current;
+      if (!el) return;
+      if (shift === 0) el.style.removeProperty('--move-sortable-shift');
+      else el.style.setProperty('--move-sortable-shift', `${shift}px`);
+    }, [shift, itemRef]);
 
     const onHandleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
@@ -280,10 +315,7 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-handle={placement}
             data-disabled={props.disabled ? '' : undefined}
-            // The indicator draws between two positions. The last row carries the
-            // trailing edge because there is no row after it to carry one.
-            data-drop-before={showEdge && !isLast ? '' : undefined}
-            data-drop-after={showEdge && isLast ? '' : undefined}
+            data-shifted={shift !== 0 ? '' : undefined}
           >
             {placement === 'start' && grip}
             {props.children}
