@@ -348,25 +348,39 @@ const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement
     // this element's style attribute it reconciles that transform away on the
     // next render, and the row stops following the pointer. Every drag-time
     // style stays on the same side of that line.
+    const wasShifted = React.useRef(false);
     React.useEffect(() => {
       const el = itemRef.current;
       if (!el) return;
       if (shift !== 0) {
+        wasShifted.current = true;
         el.removeAttribute('data-settling');
         el.style.setProperty('--move-sortable-shift', `${shift}px`);
         return;
       }
-      // Going back to zero because a drag just landed is not a movement: the row
-      // is already where the new order puts it, and easing the shift away would
-      // slide it a second time for the same move. Only an abandoned drag should
-      // be seen returning.
-      const settling = ctx.skipFlip.current;
-      if (settling) el.setAttribute('data-settling', '');
-      el.style.removeProperty('--move-sortable-shift');
-      if (settling) {
-        void el.offsetHeight;
-        el.removeAttribute('data-settling');
+
+      // Only a row that actually STEPPED ASIDE has anything to settle.
+      //
+      // This used to run the whole dance for every row in the list, because the
+      // "a drag just landed" flag is true for all of them — so a four-row list
+      // forced four synchronous layouts in one commit, three of them for rows
+      // that had never moved. Reading offsetHeight mid-commit makes the browser
+      // lay out then and there, and doing it once per row is enough work to be
+      // seen.
+      const settling = wasShifted.current && ctx.skipFlip.current;
+      wasShifted.current = false;
+      if (!settling) {
+        el.style.removeProperty('--move-sortable-shift');
+        return;
       }
+      // Going back to zero because a drag landed is not a movement: the row is
+      // already where the new order puts it, and easing the shift away would
+      // slide it a second time for one move. The forced layout is what makes the
+      // browser take the no-transition state before the value changes.
+      el.setAttribute('data-settling', '');
+      el.style.removeProperty('--move-sortable-shift');
+      void el.offsetHeight;
+      el.removeAttribute('data-settling');
     }, [shift, itemRef, ctx.skipFlip]);
 
     const onHandleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
