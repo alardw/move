@@ -200,11 +200,28 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
         // container, already built. Nothing here re-implements it. It is skipped
         // for the render that lands a drag, because the rows arrived there
         // themselves while the pointer was down.
-        // `disabled` rather than unwrapping: taking LayoutGroup out of the tree
-        // for one render changes its shape, which unmounts and remounts every
-        // row — losing their state and flashing the thing this is meant to calm.
+        // OFF for the whole drag, not just the render that lands it.
+        //
+        // LayoutGroup FLIPs by comparing getBoundingClientRect between renders,
+        // and a rect includes `translate` — which is exactly what the shift
+        // writes. So every step aside looked to it like a layout change worth
+        // animating, and it animated rows the shift was already moving. The
+        // placeholder mounting is a childList mutation, which woke it again.
+        // Two systems moving the same rows, disagreeing about where they are.
+        //
+        // While a drag is in flight the rows belong to the shift. LayoutGroup
+        // gets them back for a move made from the menu, which has no shift and
+        // genuinely needs the positions interpolated.
+        //
+        // `disabled` rather than unwrapping: taking it out of the tree for one
+        // render changes the shape, which unmounts and remounts every row —
+        // losing their state and flashing the thing this is meant to calm.
         const body = (
-          <LayoutGroup asChild duration={200} disabled={!props.animate || skipFlip.current}>
+          <LayoutGroup
+            asChild
+            duration={200}
+            disabled={!props.animate || skipFlip.current || drag !== null}
+          >
             {list}
           </LayoutGroup>
         );
