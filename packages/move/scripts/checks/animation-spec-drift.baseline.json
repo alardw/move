@@ -6,7 +6,6 @@
   "src/components/date-time/Calendar/Calendar.spec.ts :: spec declares 'DayCell.press', which the component no longer fires",
   "src/components/date-time/Calendar/Calendar.spec.ts :: spec declares 'Grid.enter', which the component no longer fires",
   "src/components/date-time/Calendar/Calendar.spec.ts :: spec staggers ':scope > *', which appears nowhere in the component",
-  "src/components/date-time/DatePicker/DatePicker.spec.ts :: spec staggers ':scope > *', which appears nowhere in the component",
   "src/components/disclosure/Accordion/Accordion.spec.ts :: spec declares 'close', which the component no longer fires",
   "src/components/disclosure/Accordion/Accordion.spec.ts :: spec declares 'open', which the component no longer fires",
   "src/components/disclosure/Collapsible/Collapsible.spec.ts :: spec declares 'close', which the component no longer fires",

@@ -119,8 +119,16 @@ export const spec = {
   asChild: true,
 
   animations: [
-    { trigger: 'Root.hover', sequence: [{ animation: { scale: { to: 1.04, ease: 'snappy' } } }] },
-    { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
+    {
+      trigger: 'Root.hover',
+      sequence: [{ animation: { scale: { to: '$scaleHover', ease: 'snappy' } } }],
+      note: "A DISTANCE, not a ratio: growVars resolves $scaleHover from CONTROL_GROW_PX against the button's own width, so every button travels the same four pixels out at any width.",
+    },
+    {
+      trigger: 'Root.press',
+      sequence: [{ animation: { scale: { to: '$scaleHover', ease: 'snappy' } } }],
+      note: 'CONTROL_PRESS_PX, six pixels back. Same var name, resolved against a different distance.',
+    },
   ],
 
   tokens: [

@@ -1160,6 +1160,17 @@ export const spec = {
       ],
     },
     {
+      // The rail's own width, which the item staggers above ride on top of.
+      // A deps trigger: `collapsed` is a value, not a DOM state, so there is
+      // nothing for a state watcher to observe. $targetWidth is read off the
+      // element's own custom properties at trigger time, so a consumer who
+      // retunes --move-sidebar-width gets the animation to match without
+      // touching this.
+      trigger: 'width-change',
+      deps: ['collapsed'],
+      sequence: [{ target: 'Root', animation: { width: { to: '$targetWidth', ease: 'smooth' } } }],
+    },
+    {
       trigger: 'collapsed-change',
       deps: ['collapsed'],
       sequence: [

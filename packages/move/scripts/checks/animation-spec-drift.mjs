@@ -26,6 +26,26 @@
  * somewhere in the source, whether inline or behind a constant. That is what
  * catches a component whose reveal quietly stopped matching what it reveals.
  *
+ * MECHANISM, not values. The step contents are deliberately not diffed. Sources
+ * compose presets — `staggerItems.stagger`, `revealHeight.enter` — where specs
+ * inline the resolved numbers, so comparing easings or durations as text
+ * reports the indirection rather than any drift: measured across every spec, 23
+ * hits in 18 components, nearly all of them false. What IS compared is the two
+ * mechanism facts a preset cannot hide:
+ *
+ *   `$var` references  a ratio the component COMPUTES against a literal the
+ *                      spec wrote down. Since the source is generated from the
+ *                      spec, that literal is what comes back — Button's spec
+ *                      said `scale: 1.04` while the component resolves
+ *                      `$scaleHover` from CONTROL_GROW_PX, so regenerating it
+ *                      would have reverted a pixel distance to a fixed factor.
+ *   `animateDimension` a height reveal the spec claims and the component never
+ *                      calls. Four list specs described one for months after
+ *                      their containers moved to a plain fade.
+ *
+ * Both are set comparisons over the whole source, so a var behind a constant or
+ * a preset still counts as provided.
+ *
  * @enforces spec-9
  * @instead update the spec's `animations` to match the component, or delete the
  *   entry if the animation is gone. A trigger built inside the component from a
@@ -89,6 +109,8 @@ const triggersIn = (text) =>
   new Set([...text.matchAll(/trigger:\s*'([^']+)'/g)].map((m) => m[1]));
 const selectorsIn = (text) =>
   new Set([...text.matchAll(/children:\s*'([^']+)'/g)].map((m) => m[1]));
+/** `'$scaleFrom'` → `scaleFrom`: the values an animation resolves at runtime. */
+const varsIn = (text) => new Set([...text.matchAll(/'\$(\w+)'/g)].map((m) => m[1]));
 
 const problems = [];
 let checked = 0;
@@ -129,6 +151,26 @@ for (const specPath of specFiles(COMPONENTS)) {
         msg: `spec staggers '${sel}', which appears nowhere in the component`,
       });
     }
+  }
+
+  // Computed values, both directions. A literal in the spec where the component
+  // resolves a var is the one that costs something: regeneration writes the
+  // literal back.
+  const specVars = varsIn(block);
+  const sourceVars = varsIn(source);
+  for (const v of specVars) {
+    if (!sourceVars.has(v)) {
+      problems.push({ rel, msg: `spec resolves '$${v}', which the component never provides` });
+    }
+  }
+  for (const v of sourceVars) {
+    if (!specVars.has(v)) {
+      problems.push({ rel, msg: `component resolves '$${v}', which the spec never mentions` });
+    }
+  }
+
+  if (block.includes('animateDimension') && !source.includes('animateDimension')) {
+    problems.push({ rel, msg: 'spec calls animateDimension, which the component never does' });
   }
 }
 

@@ -452,14 +452,18 @@ export const spec = {
 
   animations: [
     {
+      // The shell only fades — Radix owns its transform. The scale lives on the
+      // inner box, and the gridcells stagger on top of that. All parallel.
       trigger: 'Content.enter',
       sequence: [
         [
-          { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+          { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
+          { target: 'ContentInner', animation: { scale: { from: 0.95, to: 1, ease: 'quick' } } },
           {
-            children: ':scope > *',
+            target: 'ContentInner',
+            children: '[role="gridcell"]',
             animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
-            stagger: { delay: 30 },
+            stagger: { delay: 15 },
           },
         ],
       ],
@@ -468,14 +472,11 @@ export const spec = {
       trigger: 'Content.exit',
       sequence: [
         [
-          { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
-          {
-            children: ':scope > *',
-            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
-            stagger: { delay: 20, from: 'last' },
-          },
+          { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
+          { target: 'ContentInner', animation: { scale: { to: 0.95, duration: 150 } } },
         ],
       ],
+      note: "The container fades and never staggers out. A long staggered exit keeps isClosing (and Radix's dismiss layer) alive for hundreds of ms, which froze cells mid-stagger on rapid reopen and let this popup eat a sibling's first click. Select and TimeField follow the same rule.",
     },
   ],
 

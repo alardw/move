@@ -250,23 +250,17 @@ export const spec = {
   animations: [
     {
       trigger: 'checked',
-      sequence: [
-        {
-          target: 'thumb',
-          animation: { x: { from: 0, to: 'calc($track.width - $thumb.width)', ease: 'poppy' } },
-        },
-      ],
+      sequence: [{ target: 'Thumb', animation: { x: { from: 0, to: '$dist', ease: 'snappy' } } }],
+      note: "$dist is measured off the element at trigger time. Both ends are stated deliberately: without a `from`, anime reads the CURRENT value as the start, and by the time a state trigger fires the new state's class already applies — so the thumb sits where it was about to move and travels nowhere.",
     },
     {
       trigger: 'unchecked',
-      sequence: [
-        {
-          target: 'thumb',
-          animation: { x: { from: 'calc($track.width - $thumb.width)', to: 0, ease: 'snappy' } },
-        },
-      ],
+      sequence: [{ target: 'Thumb', animation: { x: { from: '$dist', to: 0, ease: 'snappy' } } }],
     },
-    { trigger: 'Root.press', sequence: [{ animation: { scale: { to: 0.96, ease: 'snappy' } } }] },
+    {
+      trigger: 'Root.press',
+      sequence: [{ target: 'Knob', animation: { scale: { from: 1, to: 0.85, ease: 'snappy' } } }],
+    },
   ],
 
   tokens: [
