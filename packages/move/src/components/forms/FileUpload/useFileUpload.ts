@@ -19,7 +19,7 @@ export interface FileRejection {
 /**
  * The text a rejection carries. Every rejection also has a stable `code`, but a
  * consumer that renders `message` straight out gets whatever these return — so
- * they are overridable, and FileUpload feeds them from its `labels`.
+ * they are overridable, through this option or FileUpload's `messages` prop.
  */
 export interface FileUploadMessages {
   /** A file whose type is outside `accept`. Receives the type, or 'unknown'. */
@@ -207,7 +207,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       return errors;
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [acceptString, maxSize, validate],
+    [acceptString, maxSize, validate, messages],
   );
 
   const addFiles = useCallback(

@@ -195,6 +195,12 @@ export const spec = {
           description: 'Custom per-file validation function',
         },
         {
+          name: 'messages',
+          type: 'Partial<FileUploadMessages>',
+          moveSpecific: true,
+          description: 'Overrides for the text a rejection carries, alongside its stable code',
+        },
+        {
           name: 'size',
           typeRef: 'Size',
           default: "'md'",
