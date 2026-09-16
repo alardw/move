@@ -6,6 +6,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, staggerItems, quick } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import { ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
 import type { Radius, Truncate } from '../../../shared/types';
 import { resolveTruncate } from '../../../shared/truncate';
 import styles from './List.module.css';
@@ -17,6 +18,7 @@ import styles from './List.module.css';
 const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Root.enter',
+    vars: ITEM_REVEAL_VARS,
     sequence: [
       {
         target: 'Root',
@@ -32,9 +34,16 @@ const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
         // gets that overshoot clipped by whatever it is nested in. quick keeps
         // roughly 7%, which still reads as a spring and needs no room made for
         // it.
+        //
+        // `$scaleFrom` rather than a literal ratio: a row arrives from
+        // CONTROL_REVEAL_PX narrow, the same distance Select, Dropdown and
+        // Autocomplete use, converted per container width. A fixed 0.8 made
+        // the travel a function of how wide the list happened to be — 120px in
+        // a 600px list against 40px in a 200px one — so two lists on a page
+        // answered the same reveal by visibly different amounts.
         stagger: staggerItems.stagger,
         animation: {
-          scale: { from: 0.8, to: 1, ease: quick },
+          scale: { from: '$scaleFrom', to: 1, ease: quick },
           opacity: { from: 0, to: 1, duration: 200 },
         },
       },
