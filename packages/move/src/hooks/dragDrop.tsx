@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -230,6 +231,8 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
   const [delta, setDelta] = useState({ x: 0, y: 0 });
   const start = useRef<{ x: number; y: number } | null>(null);
   const isDragging = phase === 'dragging';
+  /** A committed drop whose offset is being held until the new order lands. */
+  const landing = useRef(false);
 
   // A callback ref so the handle can be any element, and so the two properties
   // that make it a handle land the moment it attaches. Both are written here
@@ -334,8 +337,24 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
     const finish = (commit: boolean) => {
       const wasDragging = phase === 'dragging';
       start.current = null;
-      // A committed drop lands; an abandoned one is seen returning.
-      clear(!commit);
+      if (commit) {
+        // DO NOT clear the offset yet.
+        //
+        // Clearing here puts the element back at its original slot, and the new
+        // order does not exist until the consumer has applied it and React has
+        // re-rendered — a whole turn later. In between, the element is drawn at
+        // the place it was dragged FROM. That one frame is the flash: the thing
+        // jumps home and then reappears where it was dropped.
+        //
+        // The layout effect below clears it after React has moved the node and
+        // before the browser paints, so there is no frame in which the element
+        // is anywhere but under the pointer or at its destination.
+        landing.current = true;
+      } else {
+        // Abandoned: the journey back IS the feedback, so it happens now and is
+        // seen.
+        clear(true);
+      }
       setPhase('idle');
       setDelta({ x: 0, y: 0 });
       // A press that never became a drag is a click. Nothing to report.
@@ -370,7 +389,14 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
     };
   }, [phase, axis, activationDistance, ctx, clear, id, group, data, onDragEnd]);
 
-  // A drag still running when the item unmounts would leave the transform behind
+  // Runs after React has applied the new order to the DOM and before paint.
+  useLayoutEffect(() => {
+    if (phase !== 'idle' || !landing.current) return;
+    landing.current = false;
+    clear(false);
+  });
+
+  // A drag still running when the item unmounts would leave the offset behind
   // on a recycled node. Nothing is watching by then, so it never travels.
   useEffect(() => () => clear(false), [clear]);
 
