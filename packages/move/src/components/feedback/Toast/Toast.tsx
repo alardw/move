@@ -45,7 +45,7 @@ export { toast } from './store';
 
 // null = animations disabled (animations={false})
 const ToastAnimateContext = React.createContext<AnimationTrigger[] | false | null>(null);
-const ToastCloseLabelContext = React.createContext('Close notification');
+const ToastCloseLabelContext = React.createContext(DEFAULT_LABELS.close);
 
 // =============================================================================
 // Variant icon

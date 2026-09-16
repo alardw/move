@@ -13,6 +13,7 @@ import {
 import type { CalendarEvent, RenderEvent } from '../_shared/types';
 import { EventSlot } from '../_shared/EventSlot';
 import styles from './MonthView.module.css';
+import { DEFAULT_LABELS } from './useCalendarView';
 
 export interface MonthViewProps {
   date: Date;
@@ -35,7 +36,7 @@ export function MonthView({
   renderEvent,
   onEventClick,
   onDayClick,
-  moreLabel = (count: number) => `+${count} more`,
+  moreLabel = DEFAULT_LABELS.more,
 }: MonthViewProps) {
   const grid = React.useMemo(
     () => getMonthGrid(date.getFullYear(), date.getMonth(), weekStartsOn),

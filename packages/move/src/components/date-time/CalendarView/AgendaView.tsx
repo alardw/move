@@ -7,6 +7,7 @@ import { addDays, isSameDay, isToday as checkIsToday } from '../_shared/dateUtil
 import type { CalendarEvent, RenderEvent } from '../_shared/types';
 import { EventSlot } from '../_shared/EventSlot';
 import styles from './AgendaView.module.css';
+import { DEFAULT_LABELS } from './useCalendarView';
 
 export interface AgendaViewProps {
   startDate: Date;
@@ -30,7 +31,7 @@ export function AgendaView({
   daysToShow = 30,
   renderEvent,
   onEventClick,
-  noEventsLabel = 'No events in this period',
+  noEventsLabel = DEFAULT_LABELS.noEvents,
 }: AgendaViewProps) {
   const dayGroups = React.useMemo(() => {
     const groups: DayGroup[] = [];

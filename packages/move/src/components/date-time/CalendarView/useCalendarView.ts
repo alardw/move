@@ -20,7 +20,12 @@ export interface CalendarViewLabels {
   more?: (count: number) => string;
 }
 
-const DEFAULT_LABELS: Required<CalendarViewLabels> = {
+/**
+ * The one copy of CalendarView's English. The sub-views default from this
+ * rather than restating it, so a string is translated in one place whether the
+ * view is reached through CalendarView or rendered directly.
+ */
+export const DEFAULT_LABELS: Required<CalendarViewLabels> = {
   today: 'Today',
   previous: 'Previous',
   next: 'Next',

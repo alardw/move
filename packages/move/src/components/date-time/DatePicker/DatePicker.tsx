@@ -731,7 +731,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
 
   const resolvedPlaceholder = isSingleMode
     ? getLocaleDatePattern(locale)
-    : (placeholder ?? dpCtx?.labels.selectDate ?? 'Select date');
+    : (placeholder ?? dpCtx?.labels.selectDate ?? DEFAULT_LABELS.selectDate);
 
   return (
     <div className={`${styles.singleWrapper} ${className ?? ''}`} style={style}>
@@ -751,7 +751,7 @@ const SingleInput: React.FC<SingleInputInternalProps> = ({
         size={size}
         className={styles.calendarButton}
         onClick={handleIconClick}
-        aria-label={dpCtx?.labels.openCalendar ?? 'Open calendar'}
+        aria-label={dpCtx?.labels.openCalendar ?? DEFAULT_LABELS.openCalendar}
       >
         <span aria-hidden="true">{calendarIcon}</span>
       </Button>
@@ -976,7 +976,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         onKeyDown={handleFromKeyDown}
         onFocus={handleFromFocus}
         onBlur={handleFromBlur}
-        aria-label={dpCtx?.labels.startDate ?? 'Start date'}
+        aria-label={dpCtx?.labels.startDate ?? DEFAULT_LABELS.startDate}
         data-typing=""
       />
       <span className={styles.rangeSeparator} aria-hidden="true">
@@ -992,7 +992,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         onKeyDown={handleToKeyDown}
         onFocus={handleToFocus}
         onBlur={handleToBlur}
-        aria-label={dpCtx?.labels.endDate ?? 'End date'}
+        aria-label={dpCtx?.labels.endDate ?? DEFAULT_LABELS.endDate}
         data-typing=""
       />
       <Button
@@ -1000,7 +1000,7 @@ const RangeInput: React.FC<RangeInputInternalProps> = ({
         size={size}
         className={styles.calendarButton}
         onClick={handleIconClick}
-        aria-label={dpCtx?.labels.openCalendar ?? 'Open calendar'}
+        aria-label={dpCtx?.labels.openCalendar ?? DEFAULT_LABELS.openCalendar}
       >
         <span aria-hidden="true">{calendarIcon}</span>
       </Button>

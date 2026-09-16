@@ -8,6 +8,7 @@ import type { CalendarEvent, RenderEvent } from '../_shared/types';
 import { TimeGrid } from '../_shared/TimeGrid';
 import { EventSlot } from '../_shared/EventSlot';
 import styles from './WeekView.module.css';
+import { DEFAULT_LABELS } from './useCalendarView';
 
 export interface WeekViewProps {
   date: Date;
@@ -41,7 +42,7 @@ export function WeekView({
   onSlotClick,
   onAllDayClick,
   showAllDay = false,
-  allDayLabel = 'All day',
+  allDayLabel = DEFAULT_LABELS.allDay,
 }: WeekViewProps) {
   const { start } = getWeekRange(date, weekStartsOn);
   const weekDates = Array.from({ length: 7 }, (_, i) => addDays(start, i));

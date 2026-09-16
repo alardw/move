@@ -8,6 +8,7 @@ import type { CalendarEvent, RenderEvent } from '../_shared/types';
 import { TimeGrid } from '../_shared/TimeGrid';
 import { EventSlot } from '../_shared/EventSlot';
 import styles from './DayView.module.css';
+import { DEFAULT_LABELS } from './useCalendarView';
 
 export interface DayViewProps {
   date: Date;
@@ -39,7 +40,7 @@ export function DayView({
   onSlotClick,
   onAllDayClick,
   showAllDay = false,
-  allDayLabel = 'All day',
+  allDayLabel = DEFAULT_LABELS.allDay,
 }: DayViewProps) {
   const dayEvents = events.filter((e) => isSameDay(e.start, date));
   const allDayEvents = dayEvents.filter((e) => e.allDay);
