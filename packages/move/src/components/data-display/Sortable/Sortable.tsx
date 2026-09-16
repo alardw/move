@@ -166,21 +166,26 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
         // last position, which has no row after it to hang from.
         const phSp = sp('placeholder');
         const { className: phClass, style: phStyle, ...phRest } = phSp as Record<string, unknown>;
-        const placeholder =
-          drag && drag.from !== drag.to ? (
-            <div
-              {...phRest}
-              aria-hidden="true"
-              className={cx('placeholder', phClass as string | undefined)}
-              style={
-                {
-                  '--move-sortable-placeholder-at': `${drag.to * drag.offset}px`,
-                  '--move-sortable-placeholder-size': `${drag.offset}px`,
-                  ...(phStyle as React.CSSProperties),
-                } as React.CSSProperties
-              }
-            />
-          ) : null;
+        // Shown for the WHOLE drag, including while the row is over the place
+        // it came from. That spot is a destination like any other — it is where
+        // "leave it as it was" lives — and hiding the outline there made the one
+        // outcome you can always reach the only one with nothing to aim at. The
+        // gap is genuinely empty while the row is lifted out of it, so there is
+        // something real to draw.
+        const placeholder = drag ? (
+          <div
+            {...phRest}
+            aria-hidden="true"
+            className={cx('placeholder', phClass as string | undefined)}
+            style={
+              {
+                '--move-sortable-placeholder-at': `${drag.to * drag.offset}px`,
+                '--move-sortable-placeholder-size': `${drag.offset}px`,
+                ...(phStyle as React.CSSProperties),
+              } as React.CSSProperties
+            }
+          />
+        ) : null;
 
         const list = (
           <div

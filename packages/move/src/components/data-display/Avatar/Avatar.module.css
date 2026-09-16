@@ -174,8 +174,8 @@
    sat at (0,2,0) and beat any single class outright — leaving no way to restyle
    an avatar's fallback from the outside short of !important. Loading still wins
    its transparent override below; the token stays the intended override point. */
-.fallback[data-status='error'],
-.fallback[data-status='idle'] {
+.fallback[data-status='error']:not([data-settled]),
+.fallback[data-status='idle']:not([data-settled]) {
   animation: avatar-fadeIn 200ms ease-out both;
 }
 

@@ -225,6 +225,28 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
     // children so the root's pulse animation shows through.
     const showContent = status === 'error' || status === 'idle';
 
+    // The fade marks an ARRIVAL, so it is taken off the element once it has
+    // arrived.
+    //
+    // A CSS animation restarts from its first frame whenever its element is
+    // removed and re-inserted, and a keyed list reorder is exactly that — React
+    // moves the node. With the animation attached to `idle`, which is where an
+    // avatar spends its whole life, every reorder replayed the fade: the purple
+    // fell to transparent and came back, on each row that moved. Marking the
+    // element settled after the first run leaves the resting state with no
+    // animation on it at all, so moving it does nothing.
+    // A callback ref, not an effect over a ref object: Radix renders this
+    // fallback conditionally, so an effect reading `.current` on the first pass
+    // finds nothing and never runs again. The callback fires whenever the node
+    // actually attaches.
+    const settleRef = React.useCallback<React.RefCallback<HTMLSpanElement>>((node) => {
+      if (!node || node.hasAttribute('data-settled')) return;
+      node.addEventListener('animationend', () => node.setAttribute('data-settled', ''), {
+        once: true,
+      });
+    }, []);
+    const mergedRef = useMergedRef<HTMLSpanElement>(ref, settleRef);
+
     return {
       render() {
         const fallbackSp = sp('fallback');
@@ -238,7 +260,7 @@ const AvatarFallback = withMoveComponent<'fallback', AvatarFallbackProps, HTMLSp
           <RadixAvatar.Fallback
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={mergedRef}
             delayMs={props.delayMs as number | undefined}
             className={cx('fallback', props.className, spClass as string | undefined)}
             style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}

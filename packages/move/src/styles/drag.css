@@ -38,12 +38,6 @@
   box-shadow: var(--move-shadow-elevated);
   opacity: 0.8;
   z-index: 2;
-  /* Holds the stacking context open for the whole life of the element, so
-     ending a drag changes z-index rather than destroying a context — the
-     destruction is a re-rasterise, and a re-rasterise is a visible flash.
-     Sortable's rows carry this permanently; an arbitrary element the hook is
-     attached to gets it for the drag at least. */
-  isolation: isolate;
   /* Nothing under the pointer should answer hover while it is carrying
      something — the cursor belongs to the drag, not to whatever it passes. */
   pointer-events: none;
