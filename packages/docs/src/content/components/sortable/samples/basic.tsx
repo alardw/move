@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Sortable, Text } from 'move';
 
 const INITIAL = [
-  { id: 'a', title: 'Offerte versturen' },
-  { id: 'b', title: 'Contract nakijken' },
-  { id: 'c', title: 'Demo inplannen' },
-  { id: 'd', title: 'Factuur opvolgen' },
+  { id: 'a', title: 'Send the quote' },
+  { id: 'b', title: 'Review the contract' },
+  { id: 'c', title: 'Schedule the demo' },
+  { id: 'd', title: 'Chase the invoice' },
 ];
 
 export default function BasicSample() {

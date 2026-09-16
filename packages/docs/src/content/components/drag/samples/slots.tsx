@@ -7,7 +7,7 @@ interface Item {
 }
 
 const START: Item[] = [
-  { id: 'p1', title: 'Offerte' },
+  { id: 'p1', title: 'Quotes' },
   { id: 'p2', title: 'CRM' },
   { id: 'p3', title: 'Support' },
 ];
@@ -57,7 +57,7 @@ export default function SlotsSample() {
         <Stack direction="row" gap="sm" wrap>
           {pool.length === 0 ? (
             <Text size="sm" color="muted">
-              Alles ingedeeld.
+              Everything placed.
             </Text>
           ) : (
             pool.map((item) => <Chip key={item.id} item={item} />)
@@ -72,7 +72,7 @@ export default function SlotsSample() {
             >
               <Stack direction="row" justify="center" align="center">
                 <Text size="sm" color={item ? 'base' : 'muted'}>
-                  {item?.title ?? `Positie ${i + 1}`}
+                  {item?.title ?? `Position ${i + 1}`}
                 </Text>
               </Stack>
             </Drag.Zone>

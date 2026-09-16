@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Sortable, Text, Stack } from 'move';
 
 const INITIAL = [
-  { id: 'a', title: 'Eerste punt' },
-  { id: 'b', title: 'Tweede punt' },
-  { id: 'c', title: 'Derde punt' },
+  { id: 'a', title: 'First item' },
+  { id: 'b', title: 'Second item' },
+  { id: 'c', title: 'Third item' },
 ];
 
 /**

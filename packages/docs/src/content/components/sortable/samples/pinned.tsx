@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Sortable, Text, Badge, Stack } from 'move';
 
 const INITIAL = [
-  { id: 'a', title: 'Offerte versturen', pinned: false },
-  { id: 'b', title: 'Afgeronde taak', pinned: true },
-  { id: 'c', title: 'Demo inplannen', pinned: false },
+  { id: 'a', title: 'Send the quote', pinned: false },
+  { id: 'b', title: 'Closed task', pinned: true },
+  { id: 'c', title: 'Schedule the demo', pinned: false },
 ];
 
 /** A row that cannot move keeps its place while the others reorder around it. */
@@ -27,7 +27,7 @@ export default function PinnedSample() {
         <Sortable.Item key={row.id} id={row.id} index={i} label={row.title} disabled={row.pinned}>
           <Stack direction="row" gap="sm" align="center">
             <Text>{row.title}</Text>
-            {row.pinned && <Badge size="sm">Vast</Badge>}
+            {row.pinned && <Badge size="sm">Pinned</Badge>}
           </Stack>
         </Sortable.Item>
       ))}

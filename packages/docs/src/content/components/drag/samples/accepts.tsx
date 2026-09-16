@@ -20,12 +20,12 @@ export default function AcceptsSample() {
       <Stack gap="lg">
         <Stack direction="row" gap="sm" wrap>
           <Chip id="a" title="Document" kind="doc" />
-          <Chip id="b" title="Afbeelding" kind="image" />
+          <Chip id="b" title="Image" kind="image" />
         </Stack>
         <Drag.Zone id="docs-only" accepts={(payload) => payload.data === 'doc'}>
           <Stack direction="row" justify="center" align="center">
             <Text size="sm" color="muted">
-              Alleen documenten
+              Documents only
             </Text>
           </Stack>
         </Drag.Zone>

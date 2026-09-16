@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Sortable, Text, Stack, Badge, Avatar } from 'move';
 
 const PEOPLE = [
-  { id: 'a', name: 'Alard', role: 'Ontwerp' },
-  { id: 'b', name: 'Nienke', role: 'Techniek' },
-  { id: 'c', name: 'Joris', role: 'Sales' },
+  { id: 'a', name: 'Avery', role: 'Design' },
+  { id: 'b', name: 'Nora', role: 'Engineering' },
+  { id: 'c', name: 'Jonah', role: 'Sales' },
 ];
 
 /**
