@@ -404,6 +404,11 @@ export const spec = {
       default: 'Lightness',
       description: 'Lightness channel input accessible label',
     },
+    {
+      key: 'saturationValueText',
+      default: 'Saturation {saturation}%, Brightness {brightness}%',
+      description: 'What a screen reader reads off the saturation area',
+    },
   ],
 
   childrenKind: undefined,

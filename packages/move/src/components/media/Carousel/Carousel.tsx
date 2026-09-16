@@ -29,6 +29,10 @@ export interface CarouselLabels {
   slideIndicators: string;
   /** Names one indicator. Receives the 1-based slide number. */
   goToSlide: (n: number) => string;
+  /** What a screen reader calls the region itself, spoken verbatim. */
+  carousel: string;
+  /** What a screen reader calls one slide, spoken verbatim. */
+  slide: string;
 }
 
 const DEFAULT_LABELS: CarouselLabels = {
@@ -36,6 +40,8 @@ const DEFAULT_LABELS: CarouselLabels = {
   nextSlide: 'Next slide',
   slideIndicators: 'Slide indicators',
   goToSlide: (n) => `Go to slide ${n}`,
+  carousel: 'carousel',
+  slide: 'slide',
 };
 
 // =============================================================================
@@ -316,7 +322,7 @@ const CarouselRoot: React.FC<CarouselRootProps> = (props) => {
         data-orientation={orientation}
         data-overlay-hide={overlayHideUntilHover || undefined}
         role="region"
-        aria-roledescription="carousel"
+        aria-roledescription={labels.carousel}
       >
         {at.triggersTop && (
           <div className={styles.autoRow} data-align={triggerAlign} data-position="top">
@@ -441,7 +447,7 @@ const CarouselSlide = withMoveComponent<'slide', CarouselSlideProps, HTMLDivElem
   slots: ['slide'] as const,
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { registerSlide, orientation } = useCarouselContext();
+    const { registerSlide, orientation, labels } = useCarouselContext();
 
     React.useEffect(() => {
       return registerSlide();
@@ -462,7 +468,7 @@ const CarouselSlide = withMoveComponent<'slide', CarouselSlideProps, HTMLDivElem
             {...spRest}
             ref={ref}
             role="group"
-            aria-roledescription="slide"
+            aria-roledescription={labels.slide}
             className={cx('slide', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-orientation={orientation}

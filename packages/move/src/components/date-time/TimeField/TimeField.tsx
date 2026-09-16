@@ -35,6 +35,10 @@ export interface TimeFieldLabels {
   second: string;
   /** aria-label for the AM/PM period toggle */
   period: string;
+  /** The morning period, as shown in the field and its dropdown. */
+  am: string;
+  /** The afternoon period, as shown in the field and its dropdown. */
+  pm: string;
 }
 
 const DEFAULT_LABELS: TimeFieldLabels = {
@@ -42,6 +46,8 @@ const DEFAULT_LABELS: TimeFieldLabels = {
   minute: 'minute',
   second: 'second',
   period: 'period',
+  am: 'AM',
+  pm: 'PM',
 };
 
 // ============================================================================
@@ -517,7 +523,7 @@ const TimeFieldPeriod = withMoveComponent<'period', TimeFieldPeriodProps, HTMLDi
             onKeyDown={composeHandlers(attrs.onKeyDown, handleKeyDown)}
             data-segment="period"
           >
-            {tf.period}
+            {tf.period === 'AM' ? labels.am : labels.pm}
           </div>
         );
       },
@@ -628,7 +634,7 @@ const TimeFieldDropdownColumn = withMoveComponent<
   moveProps: ['segment'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { tf, isOpen } = useTimeFieldContext();
+    const { tf, isOpen, labels } = useTimeFieldContext();
     const colRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, colRef);
     const segType = props.segment as SegmentType | 'period';
@@ -713,7 +719,7 @@ const TimeFieldDropdownColumn = withMoveComponent<
                 data-selected={item === selectedValue ? '' : undefined}
                 onClick={() => handleItemClick(item)}
               >
-                {item}
+                {segType === 'period' ? (item === 'AM' ? labels.am : labels.pm) : item}
               </button>
             ))}
           </div>

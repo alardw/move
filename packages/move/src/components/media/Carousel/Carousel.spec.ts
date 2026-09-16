@@ -699,6 +699,16 @@ export const spec = {
       default: 'Go to slide {n}',
       description: 'Aria label template for individual indicator buttons',
     },
+    {
+      key: 'carousel',
+      default: 'carousel',
+      description: 'What a screen reader calls the region itself, spoken verbatim',
+    },
+    {
+      key: 'slide',
+      default: 'slide',
+      description: 'What a screen reader calls one slide, spoken verbatim',
+    },
   ],
 
   renderContracts: [

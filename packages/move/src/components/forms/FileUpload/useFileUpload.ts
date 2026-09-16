@@ -1,5 +1,5 @@
 // Generated from FileUpload.spec.ts
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useControlledState } from '../../../engine';
 
 // =============================================================================
@@ -15,6 +15,26 @@ export interface FileRejection {
   file: File;
   errors: FileError[];
 }
+
+/**
+ * The text a rejection carries. Every rejection also has a stable `code`, but a
+ * consumer that renders `message` straight out gets whatever these return — so
+ * they are overridable, and FileUpload feeds them from its `labels`.
+ */
+export interface FileUploadMessages {
+  /** A file whose type is outside `accept`. Receives the type, or 'unknown'. */
+  fileInvalidType: (type: string) => string;
+  /** A file over `maxSize`. Receives both sizes, already formatted. */
+  fileTooLarge: (size: string, max: string) => string;
+  /** A file past `maxFiles`. Receives the limit. */
+  tooManyFiles: (max: number) => string;
+}
+
+export const DEFAULT_MESSAGES: FileUploadMessages = {
+  fileInvalidType: (type) => `File type "${type}" is not accepted`,
+  fileTooLarge: (size, max) => `File is ${size}, max is ${max}`,
+  tooManyFiles: (max) => `Maximum ${max} files allowed`,
+};
 
 export interface UseFileUploadOptions {
   /** Accepted file types — MIME types (e.g. 'image/*'), extensions (e.g. '.pdf'), or exact types */
@@ -37,6 +57,8 @@ export interface UseFileUploadOptions {
   onFileReject?: (rejections: FileRejection[]) => void;
   /** Custom validation — return an error message or null */
   validate?: (file: File) => string | null;
+  /** Overrides for the text a rejection carries. */
+  messages?: Partial<FileUploadMessages>;
 }
 
 export interface UseFileUploadReturn {
@@ -138,7 +160,10 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
     disabled = false,
     onFileReject,
     validate,
+    messages: messagesProp,
   } = options;
+
+  const messages = useMemo(() => ({ ...DEFAULT_MESSAGES, ...messagesProp }), [messagesProp]);
 
   const [files, setFiles] = useControlledState<File[]>({
     value: options.value,
@@ -161,14 +186,14 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
       if (!isFileAccepted(file, acceptList)) {
         errors.push({
           code: 'file-invalid-type',
-          message: `File type "${file.type || 'unknown'}" is not accepted`,
+          message: messages.fileInvalidType(file.type || 'unknown'),
         });
       }
 
       if (maxSize && file.size > maxSize) {
         errors.push({
           code: 'file-too-large',
-          message: `File is ${formatFileSize(file.size)}, max is ${formatFileSize(maxSize)}`,
+          message: messages.fileTooLarge(formatFileSize(file.size), formatFileSize(maxSize)),
         });
       }
 
@@ -212,7 +237,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         for (const file of overLimit) {
           rejected.push({
             file,
-            errors: [{ code: 'too-many-files', message: `Maximum ${maxFiles} files allowed` }],
+            errors: [{ code: 'too-many-files', message: messages.tooManyFiles(maxFiles) }],
           });
         }
       }
@@ -229,7 +254,7 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
         onFileReject?.(rejected);
       }
     },
-    [disabled, multiple, validateFile, maxFiles, files.length, setFiles, onFileReject],
+    [disabled, multiple, validateFile, maxFiles, files.length, setFiles, onFileReject, messages],
   );
 
   const removeFile = useCallback(

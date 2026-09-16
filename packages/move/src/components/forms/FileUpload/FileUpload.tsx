@@ -32,12 +32,18 @@ export interface FileUploadLabels {
   uploadComplete: string;
   /** Accessible name for the hidden native file input the Trigger and Dropzone open. */
   fileInput: string;
+  /** Shown on an item once its upload finishes. */
+  statusComplete: string;
+  /** Shown on an item whose upload failed. */
+  statusError: string;
 }
 
 const DEFAULT_LABELS: FileUploadLabels = {
   removeFile: 'Remove {filename}',
   uploadComplete: 'Upload complete',
   fileInput: 'Choose files',
+  statusComplete: 'Done',
+  statusError: 'Failed',
 };
 
 // =============================================================================
@@ -138,6 +144,8 @@ export interface FileUploadRootProps extends Omit<
   onFilesChange?: (files: File[]) => void;
   onFileReject?: UseFileUploadOptions['onFileReject'];
   validate?: UseFileUploadOptions['validate'];
+  /** Overrides for the text a rejection carries, alongside its stable `code`. */
+  messages?: UseFileUploadOptions['messages'];
   size?: FileUploadSize;
   variant?: FileUploadVariant;
   // Upload adapter props
@@ -262,6 +270,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
     'onFilesChange',
     'onFileReject',
     'validate',
+    'messages',
     'size',
     'variant',
     'adapter',
@@ -322,6 +331,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       onFilesChange,
       onFileReject: props.onFileReject as UseFileUploadOptions['onFileReject'],
       validate: props.validate as UseFileUploadOptions['validate'],
+      messages: props.messages as UseFileUploadOptions['messages'],
     });
 
     // Wrapped removeFile/clearFiles that also untrack from upload manager.
@@ -971,6 +981,7 @@ const FileUploadItemStatus = withMoveComponent<
 
   setup({ props, ref, cx, sp, attrs }) {
     const { entry } = useFileUploadItemContext();
+    const { labels } = useFileUploadContext();
 
     return {
       render() {
@@ -985,8 +996,8 @@ const FileUploadItemStatus = withMoveComponent<
 
         let label: string;
         if (entry.status === 'uploading') label = `${entry.progress.percent}%`;
-        else if (entry.status === 'complete') label = 'Done';
-        else label = 'Failed';
+        else if (entry.status === 'complete') label = labels.statusComplete;
+        else label = labels.statusError;
 
         return (
           <span

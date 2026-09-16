@@ -875,6 +875,16 @@ export const spec = {
       default: 'Choose files',
       description: 'Accessible name for the hidden native file input the Trigger and Dropzone open',
     },
+    {
+      key: 'statusComplete',
+      default: 'Done',
+      description: 'Shown on an item once its upload finishes',
+    },
+    {
+      key: 'statusError',
+      default: 'Failed',
+      description: 'Shown on an item whose upload failed',
+    },
   ],
 
   renderContracts: [

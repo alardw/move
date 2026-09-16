@@ -89,6 +89,14 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'CalendarView', key: 'allDay', def: 'All day' },
   { component: 'CalendarView', key: 'noEvents', def: 'No events in this period' },
   { component: 'CalendarView', key: 'more', def: '(count) ⇒ "+{count} more"' },
+  { component: 'Carousel', key: 'previousSlide / nextSlide', def: 'Previous slide / Next slide' },
+  { component: 'Carousel', key: 'slideIndicators', def: 'Slide indicators' },
+  { component: 'Carousel', key: 'goToSlide', def: '(n) ⇒ "Go to slide {n}"' },
+  {
+    component: 'Carousel',
+    key: 'carousel / slide',
+    def: 'carousel / slide (aria-roledescription)',
+  },
   { component: 'ColorInput', key: 'swatch', def: 'Open color picker' },
   { component: 'ColorInput', key: 'eyeDropper', def: 'Pick color from screen' },
   {
@@ -97,6 +105,11 @@ const LABELS: { component: string; key: string; def: string }[] = [
     def: 'Color saturation…, Hue, Opacity, Color format, Hex color value',
   },
   { component: 'ColorPicker', key: 'red / green / blue / lightness', def: 'channel aria-labels' },
+  {
+    component: 'ColorPicker',
+    key: 'saturationValueText',
+    def: '(s, v) ⇒ "Saturation {s}%, Brightness {v}%"',
+  },
   { component: 'DatePicker', key: 'selectDate', def: 'Select date' },
   { component: 'DatePicker', key: 'datesSelected', def: '(count) ⇒ "{count} dates selected"' },
   { component: 'DatePicker', key: 'openCalendar', def: 'Open calendar' },
@@ -107,6 +120,7 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'FileUpload', key: 'removeFile', def: 'Remove {filename}' },
   { component: 'FileUpload', key: 'uploadComplete', def: 'Upload complete' },
   { component: 'FileUpload', key: 'fileInput', def: 'Choose files' },
+  { component: 'FileUpload', key: 'statusComplete / statusError', def: 'Done / Failed' },
   { component: 'Loader', key: 'loading', def: 'Loading' },
   { component: 'NumberInput', key: 'increment / decrement', def: 'Increment / Decrement' },
   { component: 'Pagination', key: 'label', def: 'Pagination' },
@@ -124,6 +138,7 @@ const LABELS: { component: string; key: string; def: string }[] = [
     key: 'hour / minute / second / period',
     def: 'hour / minute / second / period',
   },
+  { component: 'TimeField', key: 'am / pm', def: 'AM / PM' },
   {
     component: 'VideoPlayer',
     key: 'play / pause / mute / unmute',

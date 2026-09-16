@@ -19,10 +19,11 @@ export type {
   FileUploadUploadTriggerProps,
 } from './FileUpload';
 
-export { useFileUpload, formatFileSize } from './useFileUpload';
+export { useFileUpload, formatFileSize, DEFAULT_MESSAGES } from './useFileUpload';
 export type {
   FileError,
   FileRejection,
+  FileUploadMessages,
   UseFileUploadOptions,
   UseFileUploadReturn,
 } from './useFileUpload';

@@ -649,6 +649,8 @@ export const spec = {
     { key: 'minute', default: 'minute', description: 'aria-label for the minute segment' },
     { key: 'second', default: 'second', description: 'aria-label for the second segment' },
     { key: 'period', default: 'period', description: 'aria-label for the AM/PM period toggle' },
+    { key: 'am', default: 'AM', description: 'The morning period, as shown in the field' },
+    { key: 'pm', default: 'PM', description: 'The afternoon period, as shown in the field' },
   ] as { key: string; default: string; description: string }[],
 
   childrenKind: 'composition' as const,

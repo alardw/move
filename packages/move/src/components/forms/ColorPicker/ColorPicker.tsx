@@ -52,6 +52,8 @@ export interface ColorPickerLabels {
   saturationChannel: string;
   /** Lightness channel input accessible label */
   lightness: string;
+  /** What a screen reader reads off the saturation area. Receives both percentages. */
+  saturationValueText: (saturation: number, brightness: number) => string;
 }
 
 const DEFAULT_LABELS: ColorPickerLabels = {
@@ -67,6 +69,7 @@ const DEFAULT_LABELS: ColorPickerLabels = {
   hueChannel: 'Hue',
   saturationChannel: 'Saturation',
   lightness: 'Lightness',
+  saturationValueText: (s, v) => `Saturation ${s}%, Brightness ${v}%`,
 };
 
 export interface ColorPickerProps extends React.HTMLAttributes<HTMLElement> {
@@ -100,7 +103,12 @@ export interface ColorPickerProps extends React.HTMLAttributes<HTMLElement> {
 
 const DEFAULT_FORMAT_OPTIONS: BaseColorFormat[] = ['hex', 'rgb', 'hsl'];
 
-const CHANNEL_LABEL_KEYS: Record<string, keyof ColorPickerLabels> = {
+/** The labels that are plain strings — the ones a channel input can be named by. */
+type ColorPickerTextLabelKey = {
+  [K in keyof ColorPickerLabels]: ColorPickerLabels[K] extends string ? K : never;
+}[keyof ColorPickerLabels];
+
+const CHANNEL_LABEL_KEYS: Record<string, ColorPickerTextLabelKey> = {
   R: 'red',
   G: 'green',
   B: 'blue',
@@ -608,7 +616,10 @@ export const ColorPicker = withMoveComponent<ColorPickerSlots, ColorPickerProps,
                   role="slider"
                   tabIndex={0}
                   aria-label={labels.saturation}
-                  aria-valuetext={`Saturation ${Math.round(cp.hsv.s)}%, Brightness ${Math.round(cp.hsv.v)}%`}
+                  aria-valuetext={labels.saturationValueText(
+                    Math.round(cp.hsv.s),
+                    Math.round(cp.hsv.v),
+                  )}
                   className={cx('saturation', satSpClass as string | undefined)}
                   style={{
                     backgroundColor: pureHueHex,
