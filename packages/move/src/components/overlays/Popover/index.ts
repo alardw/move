@@ -8,3 +8,4 @@ export type {
   PopoverArrowProps,
   PopoverCloseProps,
 } from './Popover';
+export type { PopoverLabels } from './Popover';

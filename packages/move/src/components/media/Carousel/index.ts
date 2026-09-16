@@ -23,3 +23,4 @@ export type {
   UseCarouselAnimationOptions,
   UseCarouselAnimationReturn,
 } from './useCarouselAnimation';
+export type { CarouselLabels } from './Carousel';

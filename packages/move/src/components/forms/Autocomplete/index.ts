@@ -27,3 +27,4 @@ export type {
   UseAutocompleteReturn,
   RegisteredItem,
 } from './useAutocomplete';
+export type { AutocompleteLabels } from './Autocomplete';

@@ -10,3 +10,4 @@ export type {
   RichTextEditorSeparatorProps,
   RichTextEditorContentProps,
 } from './RichTextEditor';
+export type { RichTextEditorLabels } from './RichTextEditor';

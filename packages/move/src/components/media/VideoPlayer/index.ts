@@ -5,3 +5,4 @@ export { useVideoPlayer } from './useVideoPlayer';
 export type { UseVideoPlayerOptions, UseVideoPlayerReturn } from './useVideoPlayer';
 export { parseVTT } from './parseVTT';
 export type { VTTCue } from './parseVTT';
+export type { VideoPlayerLabels } from './VideoPlayer';

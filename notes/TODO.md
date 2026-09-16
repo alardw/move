@@ -258,3 +258,18 @@ to any non-compound member.
 Worth revisiting if either component changes shape: if TimeField ever grows a
 real trigger, or ColorInput becomes compound, the exemption should stop
 applying rather than quietly keep covering them.
+
+## Splitter's separator has no accessible name
+
+Found alongside the i18n label sweep (2026-09-16), and parked because it is the
+inverse defect rather than the same one. `Splitter.tsx`'s separator carries
+`aria-orientation` and `aria-valuenow` but no name at all, and Splitter has no
+`SplitterLabels` to give it one — so where every other component's problem was
+a name a consumer could not translate, this is a name that was never spoken.
+
+WCAG 4.1.2 wants one. The fix is the same shape as the others: a
+`SplitterLabels` with a `separator` key (a resize handle between two panes
+usually reads as something like "Resize panels"), routed through `labels`.
+Whether it should name the panes it sits between is the open question — that
+would make the label a function of the surrounding content, which no other
+component's labels currently are.

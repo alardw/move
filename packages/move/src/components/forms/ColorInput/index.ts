@@ -6,3 +6,4 @@ export type {
   ColorInputSize,
   ColorInputSlots,
 } from './ColorInput';
+export type { ColorInputLabels } from './ColorInput';

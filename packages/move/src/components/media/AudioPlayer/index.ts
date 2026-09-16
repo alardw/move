@@ -3,3 +3,4 @@ export type { AudioPlayerProps, AudioPlayerRadius, AudioPlayerSize } from './Aud
 export type { MediaTransport } from '../_shared/types';
 export { useAudioPlayer } from './useAudioPlayer';
 export type { UseAudioPlayerOptions, UseAudioPlayerReturn } from './useAudioPlayer';
+export type { AudioPlayerLabels } from './AudioPlayer';

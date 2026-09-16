@@ -11,3 +11,4 @@ export type {
   HslColor,
   ColorChannel,
 } from './colorUtils';
+export type { ColorPickerLabels } from './ColorPicker';

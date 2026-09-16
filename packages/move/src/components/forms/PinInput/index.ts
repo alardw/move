@@ -3,3 +3,4 @@ export { PinInput } from './PinInput';
 export type { PinInputProps, PinInputSize } from './PinInput';
 export { usePinInput } from './usePinInput';
 export type { UsePinInputOptions, UsePinInputReturn } from './usePinInput';
+export type { PinInputLabels } from './PinInput';

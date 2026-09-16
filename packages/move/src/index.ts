@@ -380,6 +380,7 @@ export type {
   CalendarRootProps,
   CalendarNavProps,
   CalendarGridProps,
+  CalendarLabels,
 } from './components/date-time/Calendar';
 export { useCalendar } from './components/date-time/Calendar';
 export type {
@@ -463,6 +464,7 @@ export type {
   LoaderVariant,
   LoaderColor,
   LoaderSize,
+  LoaderLabels,
 } from './components/feedback/Loader';
 
 export { ProgressBar } from './components/feedback/ProgressBar';
@@ -470,6 +472,7 @@ export type {
   ProgressBarProps,
   ProgressBarSize,
   ProgressBarVariant,
+  ProgressBarLabels,
 } from './components/feedback/ProgressBar';
 
 export { InputText } from './components/forms/InputText';
@@ -540,6 +543,7 @@ export type {
   NumberInputProps,
   NumberInputVariant,
   NumberInputSize,
+  NumberInputLabels,
 } from './components/forms/NumberInput';
 export { useNumberInput } from './components/forms/NumberInput';
 export type { UseNumberInputOptions, UseNumberInputReturn } from './components/forms/NumberInput';
@@ -558,7 +562,7 @@ export type {
 } from './components/forms/InputRange';
 
 export { PinInput } from './components/forms/PinInput';
-export type { PinInputProps, PinInputSize } from './components/forms/PinInput';
+export type { PinInputProps, PinInputSize, PinInputLabels } from './components/forms/PinInput';
 export { usePinInput } from './components/forms/PinInput';
 export type { UsePinInputOptions, UsePinInputReturn } from './components/forms/PinInput';
 
@@ -599,6 +603,7 @@ export type {
   AutocompleteErrorProps,
   AutocompleteRetryTriggerProps,
   AutocompleteSeparatorProps,
+  AutocompleteLabels,
 } from './components/forms/Autocomplete';
 export { useAutocomplete } from './components/forms/Autocomplete';
 export type {
@@ -612,6 +617,7 @@ export type {
   ColorPickerProps,
   ColorPickerSize,
   ColorPickerSlots,
+  ColorPickerLabels,
 } from './components/forms/ColorPicker';
 export { useColorPicker } from './components/forms/ColorPicker';
 export type { UseColorPickerOptions, UseColorPickerReturn } from './components/forms/ColorPicker';
@@ -630,6 +636,7 @@ export type {
   ColorInputVariant,
   ColorInputSize,
   ColorInputSlots,
+  ColorInputLabels,
 } from './components/forms/ColorInput';
 
 export { FileUpload } from './components/forms/FileUpload';
@@ -650,6 +657,8 @@ export type {
   FileUploadTotalProgressProps,
   FileUploadItemStatusProps,
   FileUploadUploadTriggerProps,
+  FileUploadLabels,
+  FileUploadMessages,
 } from './components/forms/FileUpload';
 export { useFileUpload, formatFileSize } from './components/forms/FileUpload';
 export type {
@@ -682,6 +691,7 @@ export type {
   RichTextEditorControlProps,
   RichTextEditorSeparatorProps,
   RichTextEditorContentProps,
+  RichTextEditorLabels,
 } from './components/forms/RichTextEditor';
 
 export { TimeField } from './components/date-time/TimeField';
@@ -693,6 +703,7 @@ export type {
   TimeFieldDropdownProps,
   TimeFieldDropdownColumnProps,
   TimeFieldSize,
+  TimeFieldLabels,
 } from './components/date-time/TimeField';
 export { useTimeField } from './components/date-time/TimeField';
 export type {
@@ -771,6 +782,7 @@ export type {
   SidebarExpandedProps,
   SidebarCollapsedProps,
   SidebarTriggerProps,
+  SidebarLabels,
 } from './components/navigation/Sidebar';
 export { useSidebar, useSidebarContext } from './components/navigation/Sidebar';
 export type { UseSidebarOptions, UseSidebarReturn } from './components/navigation/Sidebar';
@@ -840,6 +852,7 @@ export type {
   PopoverContentProps,
   PopoverArrowProps,
   PopoverCloseProps,
+  PopoverLabels,
 } from './components/overlays/Popover';
 
 export { Toast, toast } from './components/feedback/Toast';
@@ -925,12 +938,14 @@ export type {
   BreadcrumbSeparatorProps,
   BreadcrumbEllipsisProps,
   BreadcrumbSize,
+  BreadcrumbLabels,
 } from './components/navigation/Breadcrumb';
 
 export { TableOfContents } from './components/navigation/TableOfContents';
 export type {
   TableOfContentsRootProps,
   TableOfContentsItemProps,
+  TableOfContentsLabels,
 } from './components/navigation/TableOfContents';
 
 export { Pagination } from './components/navigation/Pagination';
@@ -941,6 +956,7 @@ export type {
   PaginationPrevTriggerProps,
   PaginationNextTriggerProps,
   PaginationItemsProps,
+  PaginationLabels,
 } from './components/navigation/Pagination';
 export { usePagination } from './components/navigation/Pagination';
 export type { UsePaginationOptions, UsePaginationReturn } from './components/navigation/Pagination';
@@ -979,6 +995,7 @@ export type {
   AudioPlayerRadius,
   AudioPlayerSize,
   MediaTransport,
+  AudioPlayerLabels,
 } from './components/media/AudioPlayer';
 export { useAudioPlayer } from './components/media/AudioPlayer';
 export type { UseAudioPlayerOptions, UseAudioPlayerReturn } from './components/media/AudioPlayer';
@@ -992,6 +1009,7 @@ export type {
   CarouselNextTriggerProps,
   CarouselIndicatorGroupProps,
   CarouselIndicatorProps,
+  CarouselLabels,
 } from './components/media/Carousel';
 export { useCarousel } from './components/media/Carousel';
 export type {
@@ -1018,6 +1036,7 @@ export type {
   UseVideoPlayerOptions,
   UseVideoPlayerReturn,
   VTTCue,
+  VideoPlayerLabels,
 } from './components/media/VideoPlayer';
 export { useVideoPlayer, parseVTT } from './components/media/VideoPlayer';
 

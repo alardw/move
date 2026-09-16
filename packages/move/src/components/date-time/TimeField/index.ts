@@ -18,3 +18,4 @@ export type {
   SegmentInfo,
   TimeFieldGranularity,
 } from './useTimeField';
+export type { TimeFieldLabels } from './TimeField';

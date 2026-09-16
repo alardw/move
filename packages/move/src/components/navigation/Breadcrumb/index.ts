@@ -9,3 +9,4 @@ export type {
   BreadcrumbEllipsisProps,
   BreadcrumbSize,
 } from './Breadcrumb';
+export type { BreadcrumbLabels } from './Breadcrumb';

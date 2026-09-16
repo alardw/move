@@ -9,3 +9,5 @@ export type {
   UseCalendarMultipleOptions,
   UseCalendarReturn,
 } from './useCalendar';
+
+export type { CalendarLabels } from '../_shared/CalendarContext';

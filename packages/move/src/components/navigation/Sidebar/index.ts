@@ -22,3 +22,4 @@ export type {
 export { useSidebarContext } from './Sidebar';
 export { useSidebar } from './useSidebar';
 export type { UseSidebarOptions, UseSidebarReturn } from './useSidebar';
+export type { SidebarLabels } from './Sidebar';

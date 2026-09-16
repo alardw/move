@@ -42,3 +42,4 @@ export type {
   UseUploadManagerOptions,
   UploadAggregateState,
 } from './types';
+export type { FileUploadLabels } from './FileUpload';
