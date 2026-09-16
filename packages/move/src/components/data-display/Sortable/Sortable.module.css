@@ -47,6 +47,16 @@
 
 .item {
   position: relative;
+  /* A stacking context the row ALWAYS has, rather than one that appears when a
+     drag starts and vanishes when it ends.
+     
+     Creating or destroying a stacking context makes the browser re-rasterise
+     the subtree and merge it back into its parent layer, and that re-raster is
+     visible — as a flash on whichever element the compositor had grouped,
+     which is why it landed on the row one time and a child the next. Holding
+     the context open means a drag only CHANGES z-index inside it. */
+  z-index: 0;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: var(--move-space-2);
@@ -98,6 +108,7 @@
   transition: none;
   box-shadow: var(--move-sortable-item-shadow-dragging);
   opacity: var(--move-sortable-item-opacity-dragging);
+  /* Raised within the context above, not creating one. */
   z-index: 2;
 }
 
