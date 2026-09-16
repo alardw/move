@@ -349,7 +349,13 @@ const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement
     // next render, and the row stops following the pointer. Every drag-time
     // style stays on the same side of that line.
     const wasShifted = React.useRef(false);
-    React.useEffect(() => {
+    // LAYOUT effect, not a plain one. A plain effect runs AFTER the browser has
+    // painted, and the render that clears the shift is the same render that
+    // reorders the list — so the row would be moved into its new DOM position
+    // while still carrying the old translate, and paint once a full row height
+    // away from where it belongs. Same one-frame displacement the carried row
+    // had, on the rows that stepped aside for it.
+    React.useLayoutEffect(() => {
       const el = itemRef.current;
       if (!el) return;
       if (shift !== 0) {
