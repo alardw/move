@@ -9969,6 +9969,10 @@
           ]
         },
         {
+          "name": "Handle",
+          "props": []
+        },
+        {
           "name": "Item",
           "props": [
             {
@@ -9983,14 +9987,15 @@
             },
             {
               "name": "handle",
-              "type": "'start' | 'end' | 'none'",
+              "type": "'start' | 'end' | 'self' | 'custom'",
               "values": [
                 "start",
                 "end",
-                "none"
+                "self",
+                "custom"
               ],
               "default": "start",
-              "description": "Where the grab point sits, or `none` to make the whole row draggable — right for a card, which already reads as liftable, and wrong for a row with other controls in it."
+              "description": "Where the grab point sits. `start`/`end` have Item render it. `self` makes the whole row draggable — right for a card, which already reads as liftable, wrong for a row holding other controls. `custom` means you place Sortable.Handle yourself, for a handle that belongs after an avatar rather than at an edge."
             },
             {
               "name": "disabled",

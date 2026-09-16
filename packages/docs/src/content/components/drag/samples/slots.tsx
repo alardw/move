@@ -1,57 +1,78 @@
 import { useState } from 'react';
-import { Drag, Card, Text, Stack, Button, Icon, useDraggable } from 'move';
+import { Drag, Button, Text, Stack, Icon, useDraggable } from 'move';
 
-const POOL = [
+interface Item {
+  id: string;
+  title: string;
+}
+
+const START: Item[] = [
   { id: 'p1', title: 'Offerte' },
   { id: 'p2', title: 'CRM' },
   { id: 'p3', title: 'Support' },
 ];
 
-function Chip({ id, title }: { id: string; title: string }) {
-  const { ref, handleProps } = useDraggable<HTMLDivElement>({ id, data: title, axis: 'both' });
+/**
+ * The token IS the control. A draggable chip has one job and one affordance, so
+ * it is a Button carrying a grip — not a Card wrapped around a smaller button,
+ * which nests two interactive boxes and sizes to neither.
+ */
+function Chip({ item }: { item: Item }) {
+  const { ref, handleProps } = useDraggable<HTMLButtonElement>({
+    id: item.id,
+    data: item,
+    axis: 'both',
+  });
   return (
-    <Stack flex="none">
-      <Card.Root ref={ref} size="sm">
-        <Stack direction="row" gap="sm" align="center">
-          <Button {...handleProps} variant="ghost" size="sm" aria-label={`Sleep ${title}`}>
-            <Icon name="grip-vertical" />
-          </Button>
-          <Text size="sm">{title}</Text>
-        </Stack>
-      </Card.Root>
-    </Stack>
+    <Button {...handleProps} ref={ref} variant="secondary" size="sm">
+      <Icon name="grip-vertical" />
+      {item.title}
+    </Button>
   );
 }
 
 /**
- * Three positions that stay visible while empty. This is what reordering cannot
- * express — there is no row in an empty slot to reorder.
+ * Three positions that stay visible while empty — the thing reordering cannot
+ * express, because an empty slot holds no row to reorder.
+ *
+ * An item MOVES: it leaves the pool and lives in the slot. One thing, one place.
+ * A slot that already held something hands its old occupant back, so nothing is
+ * ever quietly destroyed and the count on screen never changes.
  */
 export default function SlotsSample() {
-  const [slots, setSlots] = useState<(string | undefined)[]>([undefined, undefined, undefined]);
+  const [pool, setPool] = useState<Item[]>(START);
+  const [slots, setSlots] = useState<(Item | undefined)[]>([undefined, undefined, undefined]);
+
+  function place(index: number, item: Item) {
+    const displaced = slots[index];
+    setSlots((prev) =>
+      prev.map((s, i) => (i === index ? item : s?.id === item.id ? undefined : s)),
+    );
+    setPool((prev) => [...prev.filter((p) => p.id !== item.id), ...(displaced ? [displaced] : [])]);
+  }
 
   return (
     <Drag.Root>
       <Stack gap="lg">
         <Stack direction="row" gap="sm" wrap>
-          {POOL.map((p) => (
-            <Chip key={p.id} id={p.id} title={p.title} />
-          ))}
+          {pool.length === 0 ? (
+            <Text size="sm" color="muted">
+              Alles ingedeeld.
+            </Text>
+          ) : (
+            pool.map((item) => <Chip key={item.id} item={item} />)
+          )}
         </Stack>
         <Stack gap="sm">
           {slots.map((item, i) => (
             <Drag.Zone
               key={i}
               id={`slot-${i}`}
-              onDrop={(event) =>
-                setSlots((prev) =>
-                  prev.map((s, j) => (j === i ? (event.payload.data as string) : s)),
-                )
-              }
+              onDrop={(event) => place(i, event.payload.data as Item)}
             >
               <Stack direction="row" justify="center" align="center">
                 <Text size="sm" color={item ? 'base' : 'muted'}>
-                  {item ?? `Positie ${i + 1}`}
+                  {item?.title ?? `Positie ${i + 1}`}
                 </Text>
               </Stack>
             </Drag.Zone>

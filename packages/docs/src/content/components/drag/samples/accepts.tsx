@@ -1,18 +1,12 @@
-import { Drag, Card, Text, Stack, Button, Icon, useDraggable } from 'move';
+import { Drag, Button, Text, Stack, Icon, useDraggable } from 'move';
 
 function Chip({ id, title, kind }: { id: string; title: string; kind: string }) {
-  const { ref, handleProps } = useDraggable<HTMLDivElement>({ id, data: kind, axis: 'both' });
+  const { ref, handleProps } = useDraggable<HTMLButtonElement>({ id, data: kind, axis: 'both' });
   return (
-    <Stack flex="none">
-      <Card.Root ref={ref} size="sm">
-        <Stack direction="row" gap="sm" align="center">
-          <Button {...handleProps} variant="ghost" size="sm" aria-label={`Sleep ${title}`}>
-            <Icon name="grip-vertical" />
-          </Button>
-          <Text size="sm">{title}</Text>
-        </Stack>
-      </Card.Root>
-    </Stack>
+    <Button {...handleProps} ref={ref} variant="secondary" size="sm">
+      <Icon name="grip-vertical" />
+      {title}
+    </Button>
   );
 }
 

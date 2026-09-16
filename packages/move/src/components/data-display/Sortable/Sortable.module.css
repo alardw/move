@@ -14,14 +14,44 @@
   /* Quick enough to feel like the list answering the pointer, slow enough that
      the eye follows a row to its new place instead of finding it already there. */
   --move-sortable-shift-duration: 180ms;
+  --move-sortable-placeholder-border: var(--move-drop-target-border);
+  --move-sortable-placeholder-bg: var(--move-drop-target-bg-active);
 
   display: flex;
   flex-direction: column;
   gap: var(--move-sortable-gap);
 }
 
+.root {
+  /* The placeholder is positioned against the list. */
+  position: relative;
+}
+
 .root[data-axis='horizontal'] {
   flex-direction: row;
+}
+
+/* Quiet on purpose: it marks a destination, it is not a thing in its own right.
+   An outline rather than a fill, so it reads as an opening in the list rather
+   than another row in it. */
+.placeholder {
+  position: absolute;
+  inset-inline: 0;
+  top: var(--move-sortable-placeholder-at, 0);
+  height: calc(var(--move-sortable-placeholder-size, 0) - var(--move-sortable-gap));
+  border: 1px dashed var(--move-sortable-placeholder-border);
+  border-radius: var(--move-drop-target-radius);
+  background-color: var(--move-sortable-placeholder-bg);
+  pointer-events: none;
+}
+
+.root[data-axis='horizontal'] .placeholder {
+  inset-inline: auto;
+  inset-block: 0;
+  top: auto;
+  inset-inline-start: var(--move-sortable-placeholder-at, 0);
+  width: calc(var(--move-sortable-placeholder-size, 0) - var(--move-sortable-gap));
+  height: auto;
 }
 
 .item {
@@ -43,19 +73,23 @@
   /* Stepping aside. The rows between the old place and the new one move by
      exactly one place, which opens a gap the size of the row being carried —
      so the result is shown rather than described. A line can only say where it
-     would go; the gap says what the list will look like. */
-  transform: translate3d(0, var(--move-sortable-shift, 0), 0);
+     would go; the gap says what the list will look like.
+
+     `translate` rather than `transform`, for the same reason the drag offset
+     uses it: transform belongs to whatever hover or press animation the row's
+     content runs, and two owners of one property fight. */
+  translate: 0 var(--move-sortable-shift, 0);
   /* transition-exempt: this one re-targets continuously while the pointer moves —
      a row can be told to step aside, step back, and step aside again inside a
      single drag, at whatever moment the pointer crosses a midpoint. A transition
      interpolates from wherever it currently is to the new value. useAnimations
      sequences discrete triggers, so it would queue these instead of replacing
      them, and the rows would finish arriving after the drag had ended. */
-  transition: transform var(--move-sortable-shift-duration) var(--move-ease-out);
+  transition: translate var(--move-sortable-shift-duration) var(--move-ease-out);
 }
 
 .root[data-axis='horizontal'] .item {
-  transform: translate3d(var(--move-sortable-shift, 0), 0, 0);
+  translate: var(--move-sortable-shift, 0) 0;
 }
 
 .item[data-handle='end'] {
@@ -68,15 +102,18 @@
   cursor: grab;
 }
 
-/* The carried row. Above the indicator, because the thing in your hand is the
-   thing nearest you — a line drawn over it reads as cutting through it. And
-   part-way transparent, so you can still see the rows it passes over and judge
-   where it is going. */
+/* The carried row. Above the rows it passes, because the thing in your hand is
+   the thing nearest you. Part-way transparent, so what it passes over stays
+   readable. */
 .item[data-dragging] {
   transition: none;
   box-shadow: var(--move-sortable-item-shadow-dragging);
   opacity: var(--move-sortable-item-opacity-dragging);
   z-index: 2;
+}
+
+.item[data-settling] {
+  transition: none;
 }
 
 .item[data-disabled] {

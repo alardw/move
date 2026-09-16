@@ -33,7 +33,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentDocument = {
   slug: 'drag',
-  synonyms: ['drop zone', 'drop target', 'drag and drop', 'dnd', 'droppable'],
+  synonyms: ['drop zone', 'drop target', 'drag & drop', 'dnd', 'droppable'],
   preview: { width: 'full' },
   name: 'Drag',
   tagline:

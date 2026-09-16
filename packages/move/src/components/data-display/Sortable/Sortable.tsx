@@ -9,7 +9,7 @@ import {
   useDragContext,
   DEFAULT_SORTABLE_LABELS as HOOK_LABELS,
 } from '../../../hooks';
-import type { SortableChange, UseSortableLabels } from '../../../hooks';
+import type { SortableChange, SortableMoveAction, UseSortableLabels } from '../../../hooks';
 import { Drag } from '../Drag';
 import { Dropdown } from '../../overlays/Dropdown';
 import { Button } from '../../actions/Button';
@@ -18,7 +18,16 @@ import { LayoutGroup } from '../../layout/LayoutGroup';
 import styles from './Sortable.module.css';
 
 export type SortableAxis = 'vertical' | 'horizontal';
-export type SortableHandlePlacement = 'start' | 'end' | 'none';
+/**
+ * Where the grab point is.
+ *
+ * `start` and `end` have Item render the handle itself, which is the common case
+ * and wants no wiring. `self` makes the whole row the grab point — right for a
+ * card, which already reads as liftable, and wrong for a row holding other
+ * controls. `custom` means you place `<Sortable.Handle />` yourself, for a row
+ * whose handle belongs after the avatar and before the status.
+ */
+export type SortableHandlePlacement = 'start' | 'end' | 'self' | 'custom';
 
 /**
  * Everything the hook speaks, plus the one string only the component renders.
@@ -48,9 +57,41 @@ interface SortableContextValue {
    */
   drag: { from: number; to: number; offset: number } | null;
   setDrag: (d: { from: number; to: number; offset: number } | null) => void;
+  /**
+   * Set by a row committing a DRAG, read by Root on the render that follows.
+   * A drag has already moved every row to where it belongs, one step at a time,
+   * so the FLIP that normally welcomes a new order would be the second motion
+   * for the same move — the flip you see on drop. A move made from the menu has
+   * had no such preamble and still wants it.
+   */
+  skipFlip: React.RefObject<boolean>;
 }
 
 const SortableContext = React.createContext<SortableContextValue | null>(null);
+
+/** What a placed Handle needs from its row. Nothing the call site has to pass. */
+interface SortableItemContextValue {
+  handleProps: {
+    ref: React.RefCallback<HTMLElement>;
+    onPointerDown: (e: React.PointerEvent) => void;
+    'aria-disabled'?: true;
+  };
+  onHandleKeyDown: (e: React.KeyboardEvent) => void;
+  menuOpen: boolean;
+  setMenuOpen: (open: boolean) => void;
+  moveActions: SortableMoveAction[];
+  label: string;
+  labels: SortableLabels;
+  disabled: boolean;
+}
+
+const SortableItemContext = React.createContext<SortableItemContextValue | null>(null);
+
+function useSortableItemContext() {
+  const ctx = React.useContext(SortableItemContext);
+  if (!ctx) throw new Error('Sortable.Handle must be used within Sortable.Item');
+  return ctx;
+}
 
 function useSortableContext() {
   const ctx = React.useContext(SortableContext);
@@ -71,13 +112,13 @@ export interface SortableRootProps extends React.HTMLAttributes<HTMLElement> {
   animate?: boolean;
   labels?: Partial<SortableLabels>;
   children?: React.ReactNode;
-  sp?: SlotPropsMap<'root'>;
+  sp?: SlotPropsMap<'root' | 'placeholder'>;
 }
 
-const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement>({
+const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps, HTMLDivElement>({
   name: 'SortableRoot',
   styles,
-  slots: ['root'] as const,
+  slots: ['root', 'placeholder'] as const,
   defaults: { axis: 'vertical' as SortableAxis, animate: true },
   moveProps: ['onReorder', 'list', 'labels'],
 
@@ -87,6 +128,12 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
       [props.labels],
     );
     const [drag, setDrag] = React.useState<SortableContextValue['drag']>(null);
+    const skipFlip = React.useRef(false);
+    // Cleared after every render, so the skip lasts exactly the one it was set
+    // for. A move made from the menu next time still gets its FLIP.
+    React.useEffect(() => {
+      skipFlip.current = false;
+    });
     const count = React.Children.count(props.children);
     const outerCtx = useDragContext();
 
@@ -99,6 +146,7 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
         labels,
         drag,
         setDrag,
+        skipFlip,
       }),
       [props.list, props.axis, count, props.onReorder, labels, drag],
     );
@@ -107,6 +155,32 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
       render() {
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
+
+        // The gap the rows have opened is empty space, and empty space says
+        // nothing on its own. A quiet outline standing in it says the row is
+        // going HERE — the same job the old line did, in the shape of the
+        // result rather than a mark beside it.
+        //
+        // Positioned on the list rather than drawn per-row: the placeholder sits
+        // at one index, and every per-row version needs a special case for the
+        // last position, which has no row after it to hang from.
+        const phSp = sp('placeholder');
+        const { className: phClass, style: phStyle, ...phRest } = phSp as Record<string, unknown>;
+        const placeholder =
+          drag && drag.from !== drag.to ? (
+            <div
+              {...phRest}
+              aria-hidden="true"
+              className={cx('placeholder', phClass as string | undefined)}
+              style={
+                {
+                  '--move-sortable-placeholder-at': `${drag.to * drag.offset}px`,
+                  '--move-sortable-placeholder-size': `${drag.offset}px`,
+                  ...(phStyle as React.CSSProperties),
+                } as React.CSSProperties
+              }
+            />
+          ) : null;
 
         const list = (
           <div
@@ -118,17 +192,21 @@ const SortableRoot = withMoveComponent<'root', SortableRootProps, HTMLDivElement
             data-axis={props.axis}
           >
             {props.children}
+            {placeholder}
           </div>
         );
 
-        // LayoutGroup is what slides the rows to their new places — a FLIP on the
-        // container, already built. Nothing here re-implements it.
-        const body = props.animate ? (
-          <LayoutGroup asChild duration={200}>
+        // LayoutGroup slides the rows to their new places — a FLIP on the
+        // container, already built. Nothing here re-implements it. It is skipped
+        // for the render that lands a drag, because the rows arrived there
+        // themselves while the pointer was down.
+        // `disabled` rather than unwrapping: taking LayoutGroup out of the tree
+        // for one render changes its shape, which unmounts and remounts every
+        // row — losing their state and flashing the thing this is meant to calm.
+        const body = (
+          <LayoutGroup asChild duration={200} disabled={!props.animate || skipFlip.current}>
             {list}
           </LayoutGroup>
-        ) : (
-          list
         );
 
         const inner = <SortableContext.Provider value={value}>{body}</SortableContext.Provider>;
@@ -158,13 +236,13 @@ export interface SortableItemProps extends React.HTMLAttributes<HTMLElement> {
   /** Names this row for the handle and the announcements. */
   label?: string;
   children?: React.ReactNode;
-  sp?: SlotPropsMap<'item' | 'handle'>;
+  sp?: SlotPropsMap<'item'>;
 }
 
-const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTMLDivElement>({
+const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement>({
   name: 'SortableItem',
   styles,
-  slots: ['item', 'handle'] as const,
+  slots: ['item'] as const,
   defaults: { handle: 'start' as SortableHandlePlacement, disabled: false },
   moveProps: ['index', 'label'],
 
@@ -179,6 +257,23 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
     // drag and stands there after the drop.
     const [menuOpen, setMenuOpen] = React.useState(false);
 
+    // The broadcast is cleared in the SAME tick as the reorder, so React batches
+    // the two into one render. Left to the effect cleanup below it lands a tick
+    // later, and in between the new order renders while the old shifts are still
+    // applied — every row steps aside a second time, for one frame, which reads
+    // as the list swapping twice on drop.
+    const { setDrag } = ctx;
+    const handleReorder = React.useCallback(
+      (change: SortableChange) => {
+        // Read before setDrag clears it: a drag in flight means the rows are
+        // already standing in the new order, so the FLIP is skipped.
+        ctx.skipFlip.current = ctx.drag !== null;
+        setDrag(null);
+        ctx.onReorder?.(change);
+      },
+      [setDrag, ctx],
+    );
+
     const {
       ref: itemRef,
       handleProps,
@@ -192,14 +287,13 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
       list: ctx.list,
       disabled: props.disabled as boolean,
       axis: ctx.axis,
-      onReorder: ctx.onReorder,
+      onReorder: handleReorder,
       labels: ctx.labels,
     });
 
     // Only the carried row knows where it would land, so it publishes that —
     // along with how far one place is, measured from its own box plus the gap.
     // Every other row reads it and steps aside.
-    const { setDrag } = ctx;
     React.useEffect(() => {
       if (!isDragging || dropIndex === null) return;
       const el = itemRef.current;
@@ -210,6 +304,8 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
       setDrag({ from: index, to: dropIndex, offset });
     }, [isDragging, dropIndex, index, ctx.axis, setDrag, itemRef]);
 
+    // A safety net for the ways a drag can end without a reorder at all — the
+    // row unmounting mid-drag, a pointercancel from the browser.
     React.useEffect(() => {
       if (!isDragging) return;
       return () => setDrag(null);
@@ -236,91 +332,171 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
     React.useEffect(() => {
       const el = itemRef.current;
       if (!el) return;
-      if (shift === 0) el.style.removeProperty('--move-sortable-shift');
-      else el.style.setProperty('--move-sortable-shift', `${shift}px`);
-    }, [shift, itemRef]);
+      if (shift !== 0) {
+        el.removeAttribute('data-settling');
+        el.style.setProperty('--move-sortable-shift', `${shift}px`);
+        return;
+      }
+      // Going back to zero because a drag just landed is not a movement: the row
+      // is already where the new order puts it, and easing the shift away would
+      // slide it a second time for the same move. Only an abandoned drag should
+      // be seen returning.
+      const settling = ctx.skipFlip.current;
+      if (settling) el.setAttribute('data-settling', '');
+      el.style.removeProperty('--move-sortable-shift');
+      if (settling) {
+        void el.offsetHeight;
+        el.removeAttribute('data-settling');
+      }
+    }, [shift, itemRef, ctx.skipFlip]);
 
-    const onHandleKeyDown = (e: React.KeyboardEvent) => {
+    const onHandleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         setMenuOpen(true);
       }
-    };
+    }, []);
+
+    const itemCtx = React.useMemo<SortableItemContextValue>(
+      () => ({
+        handleProps,
+        onHandleKeyDown,
+        menuOpen,
+        setMenuOpen,
+        moveActions,
+        label,
+        labels: ctx.labels,
+        disabled: props.disabled as boolean,
+      }),
+      [handleProps, onHandleKeyDown, menuOpen, moveActions, label, ctx.labels, props.disabled],
+    );
 
     return {
       render() {
         const itemSp = sp('item');
         const { className: spClass, style: spStyle, ...spRest } = itemSp as Record<string, unknown>;
-        const handleSp = sp('handle');
-        const { className: hClass, ...hRest } = handleSp as Record<string, unknown>;
-
         const placement = props.handle as SortableHandlePlacement;
-        const grip =
-          placement === 'none' || props.disabled ? null : (
-            <Dropdown.Root
-              open={menuOpen}
-              // Closing is always honoured; opening only from the keydown above,
-              // so a pointer press on the handle starts a drag and nothing else.
-              onOpenChange={(open) => {
-                if (!open) setMenuOpen(false);
-              }}
-            >
-              <Dropdown.Trigger asChild>
-                <Button
-                  {...handleProps}
-                  {...hRest}
-                  variant="ghost"
-                  size="sm"
-                  className={cx('handle', hClass as string | undefined)}
-                  aria-label={ctx.labels.dragHandle(label)}
-                  onKeyDown={onHandleKeyDown}
-                >
-                  <Icon name="grip-vertical" />
-                </Button>
-              </Dropdown.Trigger>
-              <Dropdown.Content>
-                {moveActions.map((a) => (
-                  <Dropdown.Item
-                    key={a.id}
-                    disabled={a.disabled}
-                    onSelect={() => {
-                      a.perform();
-                      // The row has moved, so the menu's own actions no longer
-                      // describe where it is.
-                      setMenuOpen(false);
-                    }}
-                  >
-                    {a.label}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Content>
-            </Dropdown.Root>
-          );
+        const auto = placement === 'start' || placement === 'end';
+        const grip = auto && !props.disabled ? <SortableHandle /> : null;
 
-        // With no handle the whole row is the grab point, so the drag listeners
-        // go on the row itself.
-        const rowDragProps = placement === 'none' && !props.disabled ? handleProps : {};
+        // With no handle at all the whole row is the grab point, so the drag
+        // listeners go on the row itself.
+        const rowDragProps = placement === 'self' && !props.disabled ? handleProps : {};
 
         return (
-          <div
-            {...attrs}
-            {...spRest}
-            {...rowDragProps}
-            ref={(node: HTMLDivElement | null) => {
-              itemRef.current = node;
-              if (typeof ref === 'function') ref(node);
-              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+          <SortableItemContext.Provider value={itemCtx}>
+            <div
+              {...attrs}
+              {...spRest}
+              {...rowDragProps}
+              ref={(node: HTMLDivElement | null) => {
+                itemRef.current = node;
+                if (typeof ref === 'function') ref(node);
+                else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+              }}
+              className={cx('item', props.className, spClass as string | undefined)}
+              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              data-handle={placement}
+              data-disabled={props.disabled ? '' : undefined}
+              data-shifted={shift !== 0 ? '' : undefined}
+            >
+              {placement === 'start' && grip}
+              {props.children}
+              {placement === 'end' && grip}
+            </div>
+          </SortableItemContext.Provider>
+        );
+      },
+    };
+  },
+});
+
+export interface SortableHandleProps {
+  sp?: SlotPropsMap<'handle'>;
+  className?: string;
+}
+
+/**
+ * The grab point.
+ *
+ * Item renders one for you at the start or end — `handle="custom"` when you want
+ * it somewhere else, after an avatar or before a status. It takes no props on
+ * purpose: everything that makes a handle correct (the icon, the touch target,
+ * the cursor, and the keyboard menu that is the whole non-pointer path) belongs
+ * to the component, and placing it should never turn back into assembling it.
+ */
+const SortableHandle = withMoveComponent<'handle', SortableHandleProps, HTMLButtonElement>({
+  name: 'SortableHandle',
+  styles,
+  slots: ['handle'] as const,
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const item = useSortableItemContext();
+
+    // The drag needs this node and so may the call site. Both get it.
+    const setRefs = React.useCallback<React.RefCallback<HTMLButtonElement>>(
+      (node) => {
+        item.handleProps.ref(node);
+        if (typeof ref === 'function') ref(node);
+        else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
+      },
+      [item.handleProps, ref],
+    );
+
+    return {
+      render() {
+        if (item.disabled) return null;
+        const handleSp = sp('handle');
+        const { className: hClass, ...spRest } = handleSp as Record<string, unknown>;
+
+        return (
+          <Dropdown.Root
+            open={item.menuOpen}
+            // Closing is always honoured; opening only from the keydown below,
+            // so a pointer press on the handle starts a drag and nothing else.
+            onOpenChange={(open) => {
+              if (!open) item.setMenuOpen(false);
             }}
-            className={cx('item', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-            data-handle={placement}
-            data-disabled={props.disabled ? '' : undefined}
-            data-shifted={shift !== 0 ? '' : undefined}
           >
-            {placement === 'start' && grip}
-            {props.children}
-            {placement === 'end' && grip}
-          </div>
+            <Dropdown.Trigger asChild>
+              <Button
+                // The default name goes BEFORE attrs, so a caller who supplies
+                // their own aria-label wins rather than being silently replaced.
+                aria-label={item.labels.dragHandle(item.label)}
+                {...attrs}
+                {...spRest}
+                {...item.handleProps}
+                ref={setRefs}
+                variant="ghost"
+                size="sm"
+                className={cx('handle', props.className, hClass as string | undefined)}
+                // Composed, not replaced: opening the menu is this component's
+                // business, and whatever the caller wanted to do is theirs.
+                onKeyDown={(e: React.KeyboardEvent) => {
+                  item.onHandleKeyDown(e);
+                  (attrs.onKeyDown as ((e: React.KeyboardEvent) => void) | undefined)?.(e);
+                }}
+              >
+                <Icon name="grip-vertical" />
+              </Button>
+            </Dropdown.Trigger>
+            <Dropdown.Content>
+              {item.moveActions.map((a) => (
+                <Dropdown.Item
+                  key={a.id}
+                  disabled={a.disabled}
+                  onSelect={() => {
+                    a.perform();
+                    // The row has moved, so the menu's own actions no longer
+                    // describe where it is.
+                    item.setMenuOpen(false);
+                  }}
+                >
+                  {a.label}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Content>
+          </Dropdown.Root>
         );
       },
     };
@@ -330,4 +506,5 @@ const SortableItem = withMoveComponent<'item' | 'handle', SortableItemProps, HTM
 export const Sortable = Object.assign(SortableRoot, {
   Root: SortableRoot,
   Item: SortableItem,
+  Handle: SortableHandle,
 });

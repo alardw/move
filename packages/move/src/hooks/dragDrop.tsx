@@ -184,7 +184,7 @@ export interface UseDraggableReturn<T extends HTMLElement> {
 /**
  * Makes one element follow the pointer.
  *
- * THE TRANSFORM IS WRITTEN THROUGH THE REF, not returned for the call site to
+ * THE OFFSET IS WRITTEN THROUGH THE REF, not returned for the call site to
  * spread, and that is what lets this be a hook at all. A dragging element needs
  * a transform on every pointer move; handed back as a style object it would land
  * in app source as an inline `style=`, which `purity-2` refuses. Purity walks
@@ -236,10 +236,34 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
     }
   }, []);
 
-  const clear = useCallback(() => {
+  /**
+   * Put the element back where CSS wants it.
+   *
+   * `travel` decides whether it is SEEN going back, and the two answers mean
+   * different things. A drag that was abandoned should visibly return — that
+   * journey is the feedback, and it says the move did not happen. A drag that
+   * was dropped should not: the element is where it was put, and animating it
+   * home afterwards reads as the drop having been refused, which is the opposite
+   * of what occurred.
+   *
+   * Suppressing it means killing any transition the element carries — its own,
+   * or one inherited from whatever component it happens to be — for the single
+   * frame in which the transform is removed.
+   */
+  const clear = useCallback((travel: boolean) => {
     const el = ref.current;
     if (el) {
-      el.style.transform = '';
+      if (travel) {
+        el.style.translate = '';
+      } else {
+        const previous = el.style.transition;
+        el.style.transition = 'none';
+        el.style.translate = '';
+        // Force the style change to land before the transition is restored,
+        // or the browser coalesces the two and animates anyway.
+        void el.offsetHeight;
+        el.style.transition = previous;
+      }
       el.removeAttribute('data-dragging');
     }
     if (handleRef.current) handleRef.current.style.cursor = 'grab';
@@ -283,7 +307,14 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
 
       const dx = axis === 'vertical' ? 0 : rawX;
       const dy = axis === 'horizontal' ? 0 : rawY;
-      el.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+      // `translate`, NOT `transform`. Any Move component with a hover or press
+      // animation owns `transform` — Button grows a few pixels under the
+      // pointer — and anime.js writes the whole property. Sharing it means the
+      // moment that animation runs it animates FROM the drag offset back to
+      // nothing, which looks exactly like the drop being rejected. `translate`
+      // is its own property and composes with whatever transform the component
+      // is doing, so neither has to know about the other.
+      el.style.translate = `${dx}px ${dy}px`;
       setDelta({ x: dx, y: dy });
       ctx?.updateDrag(e.clientX, e.clientY);
     };
@@ -291,7 +322,8 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
     const finish = (commit: boolean) => {
       const wasDragging = phase === 'dragging';
       start.current = null;
-      clear();
+      // A committed drop lands; an abandoned one is seen returning.
+      clear(!commit);
       setPhase('idle');
       setDelta({ x: 0, y: 0 });
       // A press that never became a drag is a click. Nothing to report.
@@ -327,8 +359,8 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
   }, [phase, axis, activationDistance, ctx, clear, id, group, data, onDragEnd]);
 
   // A drag still running when the item unmounts would leave the transform behind
-  // on a recycled node.
-  useEffect(() => clear, [clear]);
+  // on a recycled node. Nothing is watching by then, so it never travels.
+  useEffect(() => () => clear(false), [clear]);
 
   return {
     ref,

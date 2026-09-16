@@ -1806,7 +1806,7 @@ Sortable.Root props:
 Sortable.Item props:
 - id: string — Identifies the row across a move, and is a real DOM id — one row, one name, in both places.
 - index: number — This row’s position. Passed rather than inferred, because the order is the consumer’s array and only they know it.
-- handle: 'start' | 'end' | 'none' (default: start) — Where the grab point sits, or `none` to make the whole row draggable — right for a card, which already reads as liftable, and wrong for a row with other controls in it.
+- handle: 'start' | 'end' | 'self' | 'custom' (default: start) — Where the grab point sits. `start`/`end` have Item render it. `self` makes the whole row draggable — right for a card, which already reads as liftable, wrong for a row holding other controls. `custom` means you place Sortable.Handle yourself, for a handle that belongs after an avatar rather than at an edge.
 - disabled: boolean (default: false) — A row that cannot move — a closed item, a pinned one. It keeps its place while others reorder around it, and offers no handle and no moves.
 - label: string — Names this row for the handle and the announcements. Without it a screen reader hears a position and no subject.
 - children: React.ReactNode — The row’s content.

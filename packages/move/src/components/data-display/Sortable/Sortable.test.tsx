@@ -16,7 +16,7 @@ function List({
 }: {
   onReorder?: (c: SortableChange) => void;
   disabledId?: string;
-  handle?: 'start' | 'end' | 'none';
+  handle?: 'start' | 'end' | 'self' | 'custom';
 }) {
   return (
     <Sortable.Root onReorder={onReorder} animate={false} data-testid="list">
@@ -101,11 +101,28 @@ describe('Sortable.Item', () => {
     expect(row.lastElementChild?.tagName).toBe('BUTTON');
   });
 
-  it('handle="none" renders no button and makes the row itself draggable', () => {
-    render(<List handle="none" />);
+  it('handle="self" renders no button and makes the row itself draggable', () => {
+    render(<List handle="self" />);
     const row = screen.getByTestId('row-a');
     expect(row.querySelector('button')).toBeNull();
-    expect(row).toHaveAttribute('data-handle', 'none');
+    expect(row).toHaveAttribute('data-handle', 'self');
+  });
+
+  it('handle="custom" lets the call site place the handle where it likes', () => {
+    render(
+      <Sortable.Root data-testid="list">
+        <Sortable.Item id="a" index={0} label="Row" handle="custom" data-testid="row-a">
+          <span data-testid="before">avatar</span>
+          <Sortable.Handle />
+          <span>title</span>
+        </Sortable.Item>
+      </Sortable.Root>,
+    );
+    const row = screen.getByTestId('row-a');
+    // Not first, not last — exactly where it was put.
+    expect(row.children[0]).toBe(screen.getByTestId('before'));
+    expect(row.children[1]?.tagName).toBe('BUTTON');
+    expect(row.querySelector('button')).toHaveAttribute('aria-label', 'Reorder Row');
   });
 
   it('names the handle from the item label', () => {

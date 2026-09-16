@@ -17,6 +17,19 @@
  * activation distance, and removed on drop or cancel.
  */
 
+/*
+ * What a destination looks like — defined ONCE and read by both the drop zone
+ * and the gap a list opens, so the two cannot drift apart. They are the same
+ * idea in different shapes: a place a thing can go.
+ */
+:root {
+  --move-drop-target-border: var(--move-border-emphasis);
+  --move-drop-target-bg: transparent;
+  --move-drop-target-border-active: var(--move-primary);
+  --move-drop-target-bg-active: var(--move-primary-subtle);
+  --move-drop-target-radius: var(--move-rounded-md);
+}
+
 [data-dragging] {
   /* Off the page, and clearly so. The shadow does the work; a rotation would
      fight the transform the hook writes on this same element every frame.

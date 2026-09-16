@@ -164,12 +164,12 @@ export const spec = {
   tokens: [
     {
       name: '--move-drag-zone-bg-active',
-      value: 'var(--move-primary-subtle)',
+      value: 'var(--move-drop-target-bg-active)',
       description: 'Background while a payload this zone accepts is over it',
     },
     {
       name: '--move-drag-zone-border-active',
-      value: 'var(--move-primary)',
+      value: 'var(--move-drop-target-border-active)',
       description: 'Border while accepting',
     },
     {

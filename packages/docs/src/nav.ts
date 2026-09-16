@@ -77,7 +77,7 @@ export const DOCS_NAV: NavSection[] = [
       { to: '/systems/forms', label: 'Forms' },
       { to: '/systems/layout', label: 'Layout' },
       { to: '/systems/hooks', label: 'Hooks' },
-      { to: '/systems/drag-and-drop', label: 'Dragging and dropping' },
+      { to: '/systems/drag-and-drop', label: 'Drag & drop' },
       { to: '/systems/props', label: 'Props' },
       { to: '/systems/capabilities', label: 'Capabilities and families' },
       { to: '/systems/truncation', label: 'Truncation' },

@@ -121,6 +121,22 @@ export const spec = {
         'Holds the order context and draws the indicator. Mounts its own drag context when there is no Drag.Root above, so the single-list case needs no wrapper.',
     },
     {
+      name: 'Handle',
+      slots: [
+        {
+          name: 'handle',
+          element: 'Button',
+          kind: 'control',
+          typography: 'none',
+          description: 'The grab point, and the trigger for the keyboard move menu.',
+        },
+      ],
+      props: [],
+      usesFactory: true,
+      description:
+        'The grab point, placeable anywhere inside an Item when `handle="custom"`. Takes no props on purpose: the icon, the touch target, the cursor and the keyboard menu all belong to the component, so placing it never turns back into assembling it.',
+    },
+    {
       name: 'Item',
       slots: [
         {
@@ -129,13 +145,6 @@ export const spec = {
           kind: 'item',
           typography: 'none',
           description: 'The row.',
-        },
-        {
-          name: 'handle',
-          element: 'Button',
-          kind: 'control',
-          typography: 'none',
-          description: 'The grab point, rendered by Item according to `handle`.',
         },
       ],
       props: [
@@ -155,11 +164,11 @@ export const spec = {
         },
         {
           name: 'handle',
-          type: "'start' | 'end' | 'none'",
+          type: "'start' | 'end' | 'self' | 'custom'",
           default: "'start'",
           moveSpecific: true,
           description:
-            'Where the grab point sits, or `none` to make the whole row draggable — right for a card, which already reads as liftable, and wrong for a row with other controls in it.',
+            'Where the grab point sits. `start`/`end` have Item render it. `self` makes the whole row draggable — right for a card, which already reads as liftable, wrong for a row holding other controls. `custom` means you place Sortable.Handle yourself, for a handle that belongs after an avatar rather than at an edge.',
         },
         {
           name: 'disabled',
@@ -231,6 +240,17 @@ export const spec = {
       description: 'The lift on the row under the pointer',
     },
     {
+      name: '--move-sortable-placeholder-border',
+      value: 'var(--move-drop-target-border)',
+      description:
+        'Outline of the gap a list opens — the shared drop-target look, so a place in a list and a zone beside it cannot drift apart',
+    },
+    {
+      name: '--move-sortable-placeholder-bg',
+      value: 'var(--move-drop-target-bg-active)',
+      description: 'Fill of the gap a list opens',
+    },
+    {
       name: '--move-sortable-shift-duration',
       value: '180ms',
       description:
@@ -284,9 +304,9 @@ export const spec = {
 
   renderContracts: [
     {
-      id: 'item-renders-its-own-handle',
+      id: 'item-renders-its-own-handle-by-default',
       description:
-        'Item renders the handle from the `handle` prop. There is no Handle sub-component to place — that is the assembly this component exists to remove, and exposing one would put it back.',
+        'Item renders the handle itself at `start` or `end`, so the common case needs no wiring. Sortable.Handle exists for `custom` placement and takes no props — placing a handle and assembling one are different problems, and only the second is worth preventing.',
     },
     {
       id: 'menu-opens-on-keyboard-only',
@@ -319,7 +339,8 @@ export const spec = {
     behaviors: [
       'Root renders children in the given order',
       'Item renders a handle at the start by default',
-      'handle="end" moves the grab point, handle="none" makes the whole row draggable',
+      'handle="end" moves the grab point, handle="self" makes the whole row draggable',
+      'handle="custom" renders Sortable.Handle wherever the call site puts it',
       'A disabled Item renders no handle and offers no moves',
       'Dragging a row past a neighbour reports onReorder with source and destination',
       'Escape during a drag reports destination null and restores the row',

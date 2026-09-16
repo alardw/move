@@ -61,12 +61,12 @@ export function DragAndDropPage() {
             </Breadcrumb.Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Breadcrumb.Page>Dragging and dropping</Breadcrumb.Page>
+            <Breadcrumb.Page>Drag &amp; drop</Breadcrumb.Page>
           </Breadcrumb.Item>
         </Breadcrumb>
 
         <Stack gap="md">
-          <Heading level={1}>Dragging and dropping</Heading>
+          <Heading level={1}>Drag &amp; drop</Heading>
           <Text size="lg" color="muted">
             Two hooks that attach dragging to anything, and two components that draw what a person
             sees while it happens.

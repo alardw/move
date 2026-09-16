@@ -38,7 +38,7 @@ const related: RelatedItem[] = [
 
 export const meta: ComponentDocument = {
   slug: 'sortable',
-  synonyms: ['reorder', 'drag and drop', 'dnd', 'sortable list', 'rearrange', 'drag handle'],
+  synonyms: ['reorder', 'drag & drop', 'dnd', 'sortable list', 'rearrange', 'drag handle'],
   preview: { width: 'full' },
   name: 'Sortable',
   tagline:

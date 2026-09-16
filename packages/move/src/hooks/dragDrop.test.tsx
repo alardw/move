@@ -71,7 +71,7 @@ describe('useDraggable', () => {
     });
     act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 40 })));
     expect(screen.getByTestId('drag-state')).toHaveTextContent('true:0,30');
-    expect(screen.getByTestId('drag').style.transform).toBe('translate3d(0px, 30px, 0)');
+    expect(screen.getByTestId('drag').style.translate).toBe('0px 30px');
   });
 
   it('constrains to the axis', () => {
@@ -82,7 +82,7 @@ describe('useDraggable', () => {
     act(() => {
       window.dispatchEvent(pointer('pointermove', { clientX: 25, clientY: 99 }));
     });
-    expect(screen.getByTestId('drag').style.transform).toBe('translate3d(25px, 0px, 0)');
+    expect(screen.getByTestId('drag').style.translate).toBe('25px 0px');
   });
 
   it('refuses to start when disabled', () => {
@@ -199,7 +199,7 @@ describe('useDropTarget', () => {
     act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 50, clientY: 50 })));
     act(() => void window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' })));
     expect(onDrop).not.toHaveBeenCalled();
-    expect(screen.getByTestId('drag').style.transform).toBe('');
+    expect(screen.getByTestId('drag').style.translate).toBe('');
   });
 
   it('stops being a target once it unmounts', () => {

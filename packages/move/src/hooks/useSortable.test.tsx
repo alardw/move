@@ -108,14 +108,14 @@ describe('useSortable', () => {
     expect(screen.getByTestId('item-state')).toHaveTextContent('false:none');
   });
 
-  it('writes the transform onto the element itself, never a returned style', () => {
+  it('writes the offset onto the element itself, never a returned style', () => {
     render(<Item id="a" index={0} count={3} onReorder={() => {}} />);
     act(() => {
       screen.getByTestId('item-handle').dispatchEvent(pointer('pointerdown', { clientY: 10 }));
     });
     act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 60 })));
     const el = screen.getByTestId('item');
-    expect(el.style.transform).toBe('translate3d(0px, 50px, 0)');
+    expect(el.style.translate).toBe('0px 50px');
     expect(el).toHaveAttribute('data-dragging');
   });
 
@@ -126,7 +126,7 @@ describe('useSortable', () => {
     });
     act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 60 })));
     act(() => void window.dispatchEvent(pointer('pointerup')));
-    expect(screen.getByTestId('item').style.transform).toBe('');
+    expect(screen.getByTestId('item').style.translate).toBe('');
     expect(screen.getByTestId('item')).not.toHaveAttribute('data-dragging');
   });
 

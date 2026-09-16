@@ -36,8 +36,8 @@ const SYSTEMS: HighlightItem[] = [
     icon: 'move',
     text: (
       <>
-        <RouterLink to="/systems/drag-and-drop">Dragging and dropping</RouterLink> — rearranging by
-        hand, and the named moves that do the same thing from the keyboard.
+        <RouterLink to="/systems/drag-and-drop">Drag &amp; drop</RouterLink> — rearranging by hand,
+        and the named moves that do the same thing from the keyboard.
       </>
     ),
   },

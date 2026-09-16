@@ -1,8 +1,8 @@
 /* Generated from Drag.spec.ts */
 
 .zone {
-  --move-drag-zone-bg-active: var(--move-primary-subtle);
-  --move-drag-zone-border-active: var(--move-primary);
+  --move-drag-zone-bg-active: var(--move-drop-target-bg-active);
+  --move-drag-zone-border-active: var(--move-drop-target-border-active);
   /* Long enough to read as a response rather than a flicker while the pointer
      crosses back and forth over an edge. */
   --move-drag-zone-transition: 350ms;
@@ -14,9 +14,9 @@
      to be a filled box. */
   min-height: var(--move-control-height-lg);
   padding: var(--move-space-3);
-  border: 1px dashed var(--move-border-base);
-  border-radius: var(--move-rounded-md);
-  background-color: transparent;
+  border: 1px dashed var(--move-drop-target-border);
+  border-radius: var(--move-drop-target-radius);
+  background-color: var(--move-drop-target-bg);
   transition:
     background-color var(--move-drag-zone-transition) var(--move-ease-out),
     border-color var(--move-drag-zone-transition) var(--move-ease-out);
