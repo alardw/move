@@ -1196,9 +1196,10 @@ export const spec = {
   animations: [
     {
       trigger: 'open',
+      note: 'The container only fades; the item stagger carries the reveal. $scaleFrom comes from ITEM_REVEAL_VARS — a fixed distance (CONTROL_REVEAL_PX) per container width, shared with Select, Dropdown and List. On close the panel simply fades: there is no reverse stagger.',
       sequence: [
         [
-          { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+          { target: 'Content', animation: { opacity: { from: 0, to: 1, duration: 150 } } },
           {
             target: 'ContentInner',
             // Every visible row in the reveal carries data-move-stagger — options,
@@ -1207,7 +1208,13 @@ export const spec = {
             // rather than a role or a slot class: roles miss the labels, and the
             // hashed CSS module class cannot be named by a consumer overriding this.
             children: '[data-move-stagger]',
-            animation: { scale: { from: 0.8, to: 1, ease: 'quick' }, opacity: { from: 0, to: 1 } },
+            animation: {
+              // `quick`, not `poppy`: the row settles inside the panel's
+              // overflow:hidden box, and a spring that passes its resting size
+              // gets that overshoot shaved off.
+              scale: { from: '$scaleFrom', to: 1, ease: 'quick' },
+              opacity: { from: 0, to: 1 },
+            },
             stagger: { delay: 30 },
           },
           {
@@ -1221,13 +1228,7 @@ export const spec = {
       trigger: 'closed',
       sequence: [
         [
-          { target: 'Content', fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
-          {
-            target: 'ContentInner',
-            children: '[data-move-stagger]',
-            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
-            stagger: { delay: 20, from: 'last' },
-          },
+          { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
           {
             target: 'Icon',
             animation: { rotate: { from: 180, to: 0, ease: 'outQuart', duration: 300 } },

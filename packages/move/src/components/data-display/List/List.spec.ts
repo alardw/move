@@ -437,14 +437,16 @@ export const spec = {
       trigger: 'Root.enter',
       sequence: [
         {
-          children: ':scope > *',
+          target: 'Root',
+          children: '[data-move-stagger]',
           animation: {
-            opacity: { from: 0, to: 1 },
-            translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+            scale: { from: '$scaleFrom', to: 1, ease: 'quick' },
+            opacity: { from: 0, to: 1, duration: 200 },
           },
-          stagger: { delay: 60 },
+          stagger: { delay: 30 },
         },
       ],
+      note: '$scaleFrom comes from ITEM_REVEAL_VARS — a fixed reveal DISTANCE (CONTROL_REVEAL_PX) converted to a ratio per container width, shared with Select, Dropdown and Autocomplete.',
     },
   ],
 

@@ -15,6 +15,16 @@ import styles from './List.module.css';
 // Default animations
 // ============================================================================
 
+/**
+ * What the reveal counts. A data attribute rather than the item's CSS module
+ * class, for the reason Select gives: the hashed class cannot be named by a
+ * consumer overriding this animation, and cannot be written down in the spec
+ * either — so the spec had to describe the stagger with a selector that was
+ * never the one shipping. Select, Dropdown and Autocomplete already mark their
+ * rows this way.
+ */
+const STAGGER_ITEMS = '[data-move-stagger]';
+
 const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
   {
     trigger: 'Root.enter',
@@ -22,7 +32,7 @@ const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
     sequence: [
       {
         target: 'Root',
-        children: `.${styles.item}`,
+        children: STAGGER_ITEMS,
         // The popup's reveal: rows spring open out of themselves instead of
         // sliding up into place, close enough behind each other to read as one
         // movement down the list. A row is an option in a panel by another
@@ -264,6 +274,7 @@ const ListItem = withMoveComponent<'item', ListItemProps, HTMLLIElement>({
           'data-active': active ? '' : undefined,
           'data-disabled': disabled ? '' : undefined,
           'data-interactive': isInteractive ? '' : undefined,
+          'data-move-stagger': '',
         };
 
         if (href && !disabled) {

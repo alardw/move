@@ -1,6 +1,5 @@
 [
   "src/components/data-display/ChatBubble/ChatBubble.spec.ts :: spec declares 'Root.enter', which the component no longer fires",
-  "src/components/data-display/List/List.spec.ts :: spec staggers ':scope > *', which appears nowhere in the component",
   "src/components/data-display/Table/Table.spec.ts :: spec declares 'Root.enter', which the component no longer fires",
   "src/components/data-display/Table/Table.spec.ts :: spec staggers 'tbody > tr', which appears nowhere in the component",
   "src/components/data-display/Timeline/Timeline.spec.ts :: spec staggers ':scope > *', which appears nowhere in the component",

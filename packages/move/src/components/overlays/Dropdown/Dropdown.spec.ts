@@ -831,19 +831,27 @@ export const spec = {
       trigger: 'Content.enter',
       sequence: [
         [
-          { fn: 'animateDimension', animation: { height: { ease: 'poppy' } } },
+          {
+            target: 'Content',
+            animation: { opacity: { from: 0, to: 1, duration: 150 } },
+          },
           {
             // Every visible row in the reveal carries data-move-stagger — options,
             // group labels and separators alike — so a section arrives as a section
             // and the stagger counts what is actually on screen. A data attribute
             // rather than a role or a slot class: roles miss the labels, and the
             // hashed CSS module class cannot be named by a consumer overriding this.
+            target: 'ContentInner',
             children: '[data-move-stagger]',
-            animation: { scale: { from: 0.8, to: 1, ease: 'poppy' }, opacity: { from: 0, to: 1 } },
+            animation: {
+              scale: { from: '$scaleFrom', to: 1, ease: 'quick' },
+              opacity: { from: 0, to: 1, duration: 200 },
+            },
             stagger: { delay: 30 },
           },
         ],
       ],
+      note: 'The container only fades; the item stagger carries the reveal. $scaleFrom comes from ITEM_REVEAL_VARS — a fixed distance (CONTROL_REVEAL_PX) per container width.',
     },
     {
       // A sub-menu is its own popup — its own portal, its own mount — so the
@@ -890,11 +898,15 @@ export const spec = {
       trigger: 'Content.exit',
       sequence: [
         [
-          { fn: 'animateDimension', animation: { height: { ease: 'snappy' } } },
+          { target: 'Content', animation: { opacity: { to: 0, duration: 150 } } },
           {
+            target: 'ContentInner',
             children: '[data-move-stagger]',
-            animation: { scale: { to: 0.8, ease: 'snappy' }, opacity: { to: 0 } },
-            stagger: { delay: 20, from: 'last' },
+            animation: {
+              scale: { to: '$scaleFrom', ease: 'outQuart', duration: 150 },
+              opacity: { to: 0, duration: 150 },
+            },
+            stagger: { delay: 30 },
           },
         ],
       ],
@@ -904,7 +916,7 @@ export const spec = {
       // of this array, and absent from it until now — the spec described the
       // reveal and said nothing about what the rows do once they are there.
       trigger: 'Item.hover',
-      sequence: [{ animation: { scale: { to: 1.02, ease: 'quick' } } }],
+      sequence: [{ animation: { scale: { to: '$scaleHover', ease: 'quick' } } }],
     },
   ],
 
