@@ -5235,6 +5235,11 @@
               "description": "Custom per-file validation function"
             },
             {
+              "name": "messages",
+              "type": "Partial<FileUploadMessages>",
+              "description": "Overrides for the text a rejection carries, alongside its stable code"
+            },
+            {
               "name": "size",
               "type": "Size",
               "values": [

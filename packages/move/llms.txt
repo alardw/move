@@ -934,6 +934,7 @@ FileUpload.Root props:
 - onFilesChange: (files: File[]) => void — Called when the file list changes
 - onFileReject: (rejections: FileRejection[]) => void — Called when files fail validation
 - validate: (file: File) => string | null — Custom per-file validation function
+- messages: Partial<FileUploadMessages> — Overrides for the text a rejection carries, alongside its stable code
 - size: 'sm' | 'md' | 'lg' (default: md) — Component size
 - variant: 'default' | 'compact' (default: default) — Layout variant
 - adapter: FileUploadAdapter — Upload adapter function for server uploads
