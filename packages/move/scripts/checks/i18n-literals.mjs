@@ -11,9 +11,16 @@
  * guarded; the word a sighted user reads was not — and the two are the same
  * problem. DatePicker's "Time" heading was the one that had slipped through.
  *
- * Scans JSX text children in component sources. A string qualifies as
- * user-facing when it starts with a capital and reads as words; symbols,
- * separators, and single characters are not prose and are skipped.
+ * Scans three places a component source can speak: JSX text children, text
+ * props (`label="Speed"`), and text fields of objects it builds for itself
+ * (`{ label: 'Speed' }`). The third is how the media players' settings menu —
+ * Speed, Quality, Audio — shipped English-only under a check that was already
+ * watching for exactly this: a menu assembled in a `useMemo` renders no JSX
+ * text of its own, so its words went straight past a text-child scan.
+ *
+ * A string qualifies as user-facing when it starts with a capital and reads as
+ * words; symbols, separators, and single characters are not prose and are
+ * skipped, as is the DEFAULT_LABELS object, where such strings belong.
  *
  * @enforces i18n-1
  * @instead add the string to the component's `{Name}Labels` interface and
@@ -41,18 +48,53 @@ function walk(dir, out = []) {
 const files = walk(COMPONENTS);
 const errors = [];
 
+/**
+ * Props and object fields whose value a person reads. `label: 'Speed'` in the
+ * settings menu VideoPlayer builds for itself is the same untranslatable word
+ * as `<span>Speed</span>` — it just never passed through JSX text to be caught.
+ */
+const TEXT_KEYS =
+  'label|placeholder|heading|title|caption|summary|message|emptyMessage|description|tooltip|alt';
+
+const PATTERNS = [
+  // JSX text child: <span>Speed</span>
+  /(?<!\bimport[^\n]*)>\s*([A-Z][A-Za-z][A-Za-z '’,.\-]{2,60})\s*</g,
+  // JSX attribute: label="Speed"
+  new RegExp(`\\b(?:${TEXT_KEYS})=["']([A-Z][A-Za-z][A-Za-z '’,.\\-]{2,60})["']`, 'g'),
+  // Object field: { label: 'Speed' }
+  new RegExp(`\\b(?:${TEXT_KEYS})\\s*:\\s*['"]([A-Z][A-Za-z][A-Za-z '’,.\\-]{2,60})['"]`, 'g'),
+];
+
 for (const file of files) {
   const text = readFileSync(file, 'utf8');
   const lines = text.split('\n');
-  for (const m of text.matchAll(/>\s*([A-Z][A-Za-z][A-Za-z '’,.\-]{2,60})\s*</g)) {
-    const literal = m[1].trim();
-    // A path or filename in a comment-ish position is not prose.
-    if (/\.(tsx?|css|mjs|json)$/.test(literal)) continue;
-    const line = text.slice(0, m.index).split('\n').length;
-    if (/i18n-exempt:/.test((lines[line - 2] ?? '') + (lines[line - 1] ?? ''))) continue;
-    errors.push(`${relative(MOVE, file)}:${line}  "${literal}"`);
+  const seen = new Set();
+  // The DEFAULT_LABELS object is exactly where these strings belong; its own
+  // `label:` / `title:` keys are the destination, not the offence.
+  const defaults = [];
+  for (const d of text.matchAll(/^const DEFAULT_LABELS[^\n]*\{$/gm)) {
+    const start = text.slice(0, d.index).split('\n').length;
+    const end = lines.findIndex((l, i) => i >= start && /^\};/.test(l)) + 1;
+    defaults.push([start, end]);
+  }
+  const inDefaults = (line) => defaults.some(([s, e]) => line >= s && line <= e);
+
+  for (const pattern of PATTERNS) {
+    for (const m of text.matchAll(pattern)) {
+      const literal = m[1].trim();
+      // A path or filename in a comment-ish position is not prose.
+      if (/\.(tsx?|css|mjs|json)$/.test(literal)) continue;
+      const line = text.slice(0, m.index).split('\n').length;
+      if (inDefaults(line)) continue;
+      if (/i18n-exempt:/.test((lines[line - 2] ?? '') + (lines[line - 1] ?? ''))) continue;
+      const key = `${line}:${literal}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      errors.push(`${relative(MOVE, file)}:${line}  "${literal}"`);
+    }
   }
 }
+errors.sort();
 
 if (errors.length) {
   console.error(`\n✗ i18n-literals: ${errors.length} hardcoded user-facing string(s).\n`);

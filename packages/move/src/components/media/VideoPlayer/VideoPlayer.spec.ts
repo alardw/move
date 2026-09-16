@@ -429,6 +429,21 @@ export const spec = {
       default: 'Off',
       description: 'Label for the "Off" option in the subtitle menu',
     },
+    {
+      key: 'speed',
+      default: 'Speed',
+      description: 'Heading for the playback-speed category in the settings menu',
+    },
+    {
+      key: 'quality',
+      default: 'Quality',
+      description: 'Heading for the quality category in the settings menu',
+    },
+    {
+      key: 'audio',
+      default: 'Audio',
+      description: 'Heading for the audio-track category in the settings menu',
+    },
   ],
 
   renderContracts: [

@@ -72,6 +72,7 @@ const LABELS: { component: string; key: string; def: string }[] = [
   { component: 'AudioPlayer', key: 'unmute', def: 'Unmute' },
   { component: 'AudioPlayer', key: 'settings', def: 'Settings' },
   { component: 'AudioPlayer', key: 'subtitles', def: 'Subtitles' },
+  { component: 'AudioPlayer', key: 'speed / quality / audio', def: 'Speed / Quality / Audio' },
   { component: 'Breadcrumb', key: 'label', def: 'Breadcrumb' },
   { component: 'Calendar', key: 'previousMonth', def: 'Previous month' },
   { component: 'Calendar', key: 'nextMonth', def: 'Next month' },
@@ -137,6 +138,11 @@ const LABELS: { component: string; key: string; def: string }[] = [
     component: 'VideoPlayer',
     key: 'settings / subtitles / subtitlesOff',
     def: 'Settings / Subtitles / Off',
+  },
+  {
+    component: 'VideoPlayer',
+    key: 'speed / quality / audio',
+    def: 'Speed / Quality / Audio',
   },
 ];
 

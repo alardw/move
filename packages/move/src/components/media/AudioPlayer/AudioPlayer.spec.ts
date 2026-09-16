@@ -339,6 +339,21 @@ export const spec = {
     { key: 'unmute', default: 'Unmute', description: 'Aria label for the unmute button' },
     { key: 'settings', default: 'Settings', description: 'Aria label for the settings button' },
     { key: 'subtitles', default: 'Subtitles', description: 'Aria label for the subtitles button' },
+    {
+      key: 'speed',
+      default: 'Speed',
+      description: 'Heading for the playback-speed category in the settings menu',
+    },
+    {
+      key: 'quality',
+      default: 'Quality',
+      description: 'Heading for the quality category in the settings menu',
+    },
+    {
+      key: 'audio',
+      default: 'Audio',
+      description: 'Heading for the audio-track category in the settings menu',
+    },
   ],
 
   renderContracts: [

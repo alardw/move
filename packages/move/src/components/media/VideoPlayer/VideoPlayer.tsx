@@ -45,6 +45,12 @@ export interface VideoPlayerLabels {
   subtitles: string;
   /** Label for the "Off" option in the subtitle menu. */
   subtitlesOff: string;
+  /** Heading for the playback-speed category in the settings menu. */
+  speed: string;
+  /** Heading for the quality category in the settings menu. */
+  quality: string;
+  /** Heading for the audio-track category in the settings menu. */
+  audio: string;
 }
 
 const DEFAULT_LABELS: VideoPlayerLabels = {
@@ -57,6 +63,9 @@ const DEFAULT_LABELS: VideoPlayerLabels = {
   settings: 'Settings',
   subtitles: 'Subtitles',
   subtitlesOff: 'Off',
+  speed: 'Speed',
+  quality: 'Quality',
+  audio: 'Audio',
 };
 
 type VideoPlayerSlots =
@@ -286,7 +295,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       // Speed — always present
       cats.push({
         id: 'speed',
-        label: 'Speed',
+        label: labels.speed,
         options: SPEED_OPTIONS.map((r) => ({ value: String(r), label: `${r}x` })),
         activeValue: String(player.playbackRate),
         onChange: (val) => player.setPlaybackRate(Number(val)),
@@ -296,7 +305,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       if (qualitiesProp && qualitiesProp.length > 0) {
         cats.push({
           id: 'quality',
-          label: 'Quality',
+          label: labels.quality,
           options: qualitiesProp.map((q, i) => ({ value: String(i), label: q.label })),
           activeValue: String(player.activeQualityIndex),
           onChange: (val) => player.setActiveQualityIndex(Number(val)),
@@ -307,7 +316,7 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       if (audioTracksProp && audioTracksProp.length > 0) {
         cats.push({
           id: 'audio',
-          label: 'Audio',
+          label: labels.audio,
           options: audioTracksProp.map((t, i) => ({ value: String(i), label: t.label })),
           activeValue: String(player.activeAudioTrackIndex),
           onChange: (val) => player.setActiveAudioTrackIndex(Number(val)),
@@ -328,6 +337,9 @@ export const VideoPlayer = withMoveComponent<VideoPlayerSlots, VideoPlayerProps,
       player.setActiveAudioTrackIndex,
       qualitiesProp,
       audioTracksProp,
+      labels.speed,
+      labels.quality,
+      labels.audio,
     ]);
 
     // Progress bar drag

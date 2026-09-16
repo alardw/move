@@ -36,6 +36,12 @@ export interface AudioPlayerLabels {
   settings: string;
   /** Aria label for the subtitles button. */
   subtitles: string;
+  /** Heading for the playback-speed category in the settings menu. */
+  speed: string;
+  /** Heading for the quality category in the settings menu. */
+  quality: string;
+  /** Heading for the audio-track category in the settings menu. */
+  audio: string;
 }
 
 const DEFAULT_LABELS: AudioPlayerLabels = {
@@ -45,6 +51,9 @@ const DEFAULT_LABELS: AudioPlayerLabels = {
   unmute: 'Unmute',
   settings: 'Settings',
   subtitles: 'Subtitles',
+  speed: 'Speed',
+  quality: 'Quality',
+  audio: 'Audio',
 };
 
 type AudioPlayerSlots =
@@ -243,7 +252,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       // Speed — always present
       cats.push({
         id: 'speed',
-        label: 'Speed',
+        label: labels.speed,
         options: SPEED_OPTIONS.map((r) => ({ value: String(r), label: `${r}x` })),
         activeValue: String(player.playbackRate),
         onChange: (val) => player.setPlaybackRate(Number(val)),
@@ -253,7 +262,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       if (qualitiesProp && qualitiesProp.length > 0) {
         cats.push({
           id: 'quality',
-          label: 'Quality',
+          label: labels.quality,
           options: qualitiesProp.map((q, i) => ({ value: String(i), label: q.label })),
           activeValue: String(player.activeQualityIndex),
           onChange: (val) => player.setActiveQualityIndex(Number(val)),
@@ -264,7 +273,7 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       if (audioTracksProp && audioTracksProp.length > 0) {
         cats.push({
           id: 'audio',
-          label: 'Audio',
+          label: labels.audio,
           options: audioTracksProp.map((t, i) => ({ value: String(i), label: t.label })),
           activeValue: String(player.activeAudioTrackIndex),
           onChange: (val) => player.setActiveAudioTrackIndex(Number(val)),
@@ -284,6 +293,9 @@ export const AudioPlayer = withMoveComponent<AudioPlayerSlots, AudioPlayerProps,
       player.setActiveAudioTrackIndex,
       qualitiesProp,
       audioTracksProp,
+      labels.speed,
+      labels.quality,
+      labels.audio,
     ]);
 
     const hasSubtitles = subtitles && subtitles.length > 0;
