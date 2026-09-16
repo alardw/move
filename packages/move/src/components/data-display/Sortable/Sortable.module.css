@@ -1,0 +1,58 @@
+/* Generated from Sortable.spec.ts */
+
+.root {
+  --move-sortable-gap: var(--move-space-2);
+  --move-sortable-indicator-size: var(--move-space-1);
+  --move-sortable-indicator-color: var(--move-accent-border);
+  --move-sortable-indicator-terminal: var(--move-space-2);
+  --move-sortable-handle-size: var(--move-control-height-sm);
+  --move-sortable-item-shadow-dragging: var(--move-shadow-elevated);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--move-sortable-gap);
+}
+
+.root[data-axis='horizontal'] {
+  flex-direction: row;
+}
+
+.item {
+  /* The drop indicator is drawn as a pseudo-element on the row, so the row has
+     to be the containing block for it. */
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--move-space-2);
+}
+
+.item[data-handle='end'] {
+  justify-content: space-between;
+}
+
+/* No handle means the whole row is the grab point, so it says so on hover —
+   the cursor is the only cue a row without an icon gets. */
+.item[data-handle='none']:not([data-disabled]) {
+  cursor: grab;
+}
+
+.item[data-dragging] {
+  box-shadow: var(--move-sortable-item-shadow-dragging);
+}
+
+.item[data-disabled] {
+  cursor: default;
+}
+
+/* A touch target that survives a thumb. The icon inside is small; the button
+   is not. */
+.handle {
+  flex: none;
+  min-width: var(--move-sortable-handle-size);
+  min-height: var(--move-sortable-handle-size);
+  color: var(--move-fg-muted);
+}
+
+.handle:hover {
+  color: var(--move-fg-base);
+}

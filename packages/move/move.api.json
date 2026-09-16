@@ -2,7 +2,7 @@
   "name": "move",
   "version": "0.1.63",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
-  "componentCount": 73,
+  "componentCount": 75,
   "components": [
     {
       "name": "Accordion",
@@ -4255,6 +4255,72 @@
         }
       ],
       "subComponents": [],
+      "callable": true
+    },
+    {
+      "name": "Drag",
+      "category": "data-display",
+      "componentClass": null,
+      "description": "Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing somewhere that is not a reorder.",
+      "props": [],
+      "subComponents": [
+        {
+          "name": "Root",
+          "props": [
+            {
+              "name": "onDrop",
+              "type": "(event: DropEvent) => void",
+              "description": "Fires for every drop in the tree, after the target’s own handler. For a consumer that keeps one reducer rather than a handler per zone."
+            },
+            {
+              "name": "labels",
+              "type": "Partial<DragLabels>",
+              "description": "Strings the live region speaks."
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Anything that drags or catches."
+            }
+          ]
+        },
+        {
+          "name": "Zone",
+          "props": [
+            {
+              "name": "id",
+              "type": "string",
+              "description": "Identifies the target in the drop event, and is a real DOM id — one zone, one name, in both places."
+            },
+            {
+              "name": "group",
+              "type": "string",
+              "description": "Names a group of targets, carried into the drop event."
+            },
+            {
+              "name": "accepts",
+              "type": "(payload: DragPayload) => boolean",
+              "description": "Refuse a payload. The zone shows its refusal before the release rather than swallowing the drop."
+            },
+            {
+              "name": "onDrop",
+              "type": "(event: DropEvent) => void",
+              "description": "Called when a payload this zone accepts is released over it."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "default": "false",
+              "description": "Catches nothing, and does not highlight."
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "What the zone shows — its own content, or nothing when empty."
+            }
+          ]
+        }
+      ],
       "callable": true
     },
     {
@@ -9853,6 +9919,99 @@
         }
       ],
       "callable": false
+    },
+    {
+      "name": "Sortable",
+      "category": "data-display",
+      "componentClass": null,
+      "description": "A list whose rows can be reordered by dragging, with a named-move menu as the keyboard equivalent. The order stays the consumer’s data.",
+      "props": [],
+      "subComponents": [
+        {
+          "name": "Root",
+          "props": [
+            {
+              "name": "onReorder",
+              "type": "(change: SortableChange) => void",
+              "description": "The only call-site obligation. Reports source and destination; applying the move is the consumer’s, so the order lives with the rest of their data. A cancelled drag arrives with destination null — a move that did not happen, not a move to nowhere."
+            },
+            {
+              "name": "list",
+              "type": "string",
+              "description": "Names this list. Two lists with different ids under one Drag.Root is what lets a row move between them."
+            },
+            {
+              "name": "axis",
+              "type": "'vertical' | 'horizontal'",
+              "values": [
+                "vertical",
+                "horizontal"
+              ],
+              "default": "vertical",
+              "description": "Which way the list runs, which decides the indicator and the drag axis."
+            },
+            {
+              "name": "animate",
+              "type": "boolean",
+              "default": "true",
+              "description": "Rows slide to their new places after a move. Off renders the new order immediately."
+            },
+            {
+              "name": "labels",
+              "type": "Partial<SortableLabels>",
+              "description": "The move names and the announcements."
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "Sortable.Item rows, in the consumer’s current order."
+            }
+          ]
+        },
+        {
+          "name": "Item",
+          "props": [
+            {
+              "name": "id",
+              "type": "string",
+              "description": "Identifies the row across a move, and is a real DOM id — one row, one name, in both places."
+            },
+            {
+              "name": "index",
+              "type": "number",
+              "description": "This row’s position. Passed rather than inferred, because the order is the consumer’s array and only they know it."
+            },
+            {
+              "name": "handle",
+              "type": "'start' | 'end' | 'none'",
+              "values": [
+                "start",
+                "end",
+                "none"
+              ],
+              "default": "start",
+              "description": "Where the grab point sits, or `none` to make the whole row draggable — right for a card, which already reads as liftable, and wrong for a row with other controls in it."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "default": "false",
+              "description": "A row that cannot move — a closed item, a pinned one. It keeps its place while others reorder around it, and offers no handle and no moves."
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "description": "Names this row for the handle and the announcements. Without it a screen reader hears a position and no subject."
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "The row’s content."
+            }
+          ]
+        }
+      ],
+      "callable": true
     },
     {
       "name": "Splitter",

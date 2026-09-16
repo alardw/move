@@ -12,3 +12,29 @@ export type { OverflowAxis, UseOverflowOptions, UseOverflowReturn } from './useO
 
 export { Deferred } from './Deferred';
 export type { DeferredProps } from './Deferred';
+
+export {
+  useDraggable,
+  useDropTarget,
+  useDragContext,
+  useDragRegistry,
+  DragContext,
+} from './dragDrop';
+export type {
+  DragPayload,
+  DropEvent,
+  DragContextValue,
+  UseDraggableOptions,
+  UseDraggableReturn,
+  UseDropTargetOptions,
+  UseDropTargetReturn,
+} from './dragDrop';
+
+export { useSortable, DEFAULT_SORTABLE_LABELS } from './useSortable';
+export type {
+  SortableChange,
+  SortableMoveAction,
+  UseSortableLabels,
+  UseSortableOptions,
+  UseSortableReturn,
+} from './useSortable';

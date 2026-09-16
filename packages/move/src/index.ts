@@ -37,12 +37,42 @@ export type { PopupMechanism, PopupFocusContract } from './spec-type';
 export type { UseControlledStateOptions } from './engine';
 
 // General-purpose hooks + their wrapper components
-export { useInView, useTruncate, useOverflow, Deferred } from './hooks';
+export {
+  useInView,
+  useTruncate,
+  useOverflow,
+  useSortable,
+  useDraggable,
+  useDropTarget,
+  Deferred,
+} from './hooks';
+
+export { Drag, DEFAULT_DRAG_LABELS } from './components/data-display/Drag';
+export { Sortable, DEFAULT_SORTABLE_LABELS } from './components/data-display/Sortable';
+export type {
+  SortableAxis,
+  SortableHandlePlacement,
+  SortableLabels,
+  SortableRootProps,
+  SortableItemProps,
+} from './components/data-display/Sortable';
+export type { DragLabels, DragRootProps, DragZoneProps } from './components/data-display/Drag';
 export type {
   UseInViewOptions,
   UseInViewReturn,
   UseTruncateOptions,
   UseTruncateReturn,
+  SortableChange,
+  SortableMoveAction,
+  UseSortableLabels,
+  UseSortableOptions,
+  UseSortableReturn,
+  DragPayload,
+  DropEvent,
+  UseDraggableOptions,
+  UseDraggableReturn,
+  UseDropTargetOptions,
+  UseDropTargetReturn,
   DeferredProps,
 } from './hooks';
 

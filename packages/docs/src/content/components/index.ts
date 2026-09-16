@@ -7,6 +7,8 @@ import { content as audioPlayer } from './audio-player';
 import { content as autocomplete } from './autocomplete';
 import { content as avatar } from './avatar';
 import { content as badge } from './badge';
+import { content as drag } from './drag';
+import { content as sortable } from './sortable';
 import { content as breadcrumb } from './breadcrumb';
 import { content as button } from './button';
 import { content as calendar } from './calendar';
@@ -82,6 +84,8 @@ export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   autocomplete,
   avatar,
   badge,
+  drag,
+  sortable,
   breadcrumb,
   button,
   calendar,

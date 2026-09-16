@@ -226,6 +226,37 @@ export const HOOKS_REGISTRY: HookDoc[] = [
       "Read or change the Sidebar's collapsed state from anywhere inside it — the toggle button, the active item, your own footer.",
     category: 'Component context',
   },
+
+  // ── Dragging ────────────────────────────────────────────────────
+  // Working demos live on /systems/drag-and-drop — a drag is not something a
+  // code block can show, so these entries point there rather than restate it.
+  {
+    name: 'useDraggable',
+    signature:
+      'useDraggable<T>({ id, group?, data?, disabled?, axis?, activationDistance?, onDragEnd? }): { ref, handleProps, isDragging, delta }',
+    summary:
+      'Make any element follow the pointer. The transform is written through the ref, so no inline style reaches your source. See Dragging and dropping for working demos.',
+    category: 'State & refs',
+  },
+  {
+    name: 'useDropTarget',
+    signature:
+      'useDropTarget<T>({ id, group?, accepts?, onDrop? }): { ref, isOver, isDragActive, canDrop }',
+    summary:
+      'Make any element catch a drag — the half reordering cannot express, for a second list or a slot that stays visible while empty. See Dragging and dropping.',
+    category: 'State & refs',
+    companion: 'DragProvider',
+    companionSummary:
+      'DragProvider holds the three things that cannot live on one item: the drag in flight, the registry every drop target hit-tests against, and a single ARIA live region. Optional — without it an element still drags and a list still reorders, there is simply nothing to catch it.',
+  },
+  {
+    name: 'useSortable',
+    signature:
+      'useSortable<T>({ id, index, count, list?, disabled?, axis?, onReorder?, labels? }): { ref, handleProps, isDragging, dropIndex, moveActions }',
+    summary:
+      'Reordering within one list, as a preset over useDraggable — with moveActions as the keyboard path, meant for a menu off the handle rather than an arrow-key drag. See Dragging and dropping.',
+    category: 'State & refs',
+  },
 ];
 
 export const HOOK_CATEGORY_ORDER: HookCategory[] = [

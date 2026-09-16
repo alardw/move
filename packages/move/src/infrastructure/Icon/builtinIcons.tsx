@@ -43,6 +43,27 @@ function Svg({ width, height, children }: BuiltinSvgProps) {
 // Icon definitions
 // ---------------------------------------------------------------------------
 
+/**
+ * The drag handle. Six dots in two columns — the one shape that reads as
+ * "grab me" rather than as a direction, which is why a chevron cannot stand in
+ * for it: a chevron already means expand, collapse or open a select.
+ *
+ * Drawn as circles rather than strokes so it stays legible at the small sizes a
+ * handle is rendered at, where two-pixel strokes merge.
+ */
+function GripVertical({ width, height }: { width: number | string; height: number | string }) {
+  return (
+    <Svg width={width} height={height}>
+      <circle cx="9" cy="6" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="18" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="6" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="18" r="1" fill="currentColor" stroke="none" />
+    </Svg>
+  );
+}
+
 function ChevronLeft({ width, height }: { width: number | string; height: number | string }) {
   return (
     <Svg width={width} height={height}>
@@ -314,6 +335,7 @@ export const BUILTIN_ICONS: Record<string, BuiltinIconComponent> = {
   'x': X,
   'check': Check,
   'minus': Minus,
+  'grip-vertical': GripVertical,
   'calendar': Calendar,
   'image-off': ImageOff,
   'info': Info,

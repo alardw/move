@@ -61,6 +61,7 @@ import { SystemsOverviewPage } from './pages/systems/SystemsOverviewPage';
 import { FormsPage } from './pages/systems/FormsPage';
 import { StackingPage } from './pages/systems/StackingPage';
 import { LayoutPage } from './pages/systems/LayoutPage';
+import { DragAndDropPage } from './pages/systems/DragAndDropPage';
 import { AdaptersPage } from './pages/core-concepts/AdaptersPage';
 import { AnimationOverviewPage } from './pages/animation/AnimationOverviewPage';
 import { AnimationLifecyclePage } from './pages/animation/AnimationLifecyclePage';
@@ -373,6 +374,7 @@ function App() {
                   <Route path="/core-concepts/theming-model" element={<ThemingModelPage />} />
                   <Route path="/systems" element={<SystemsOverviewPage />} />
                   <Route path="/systems/forms" element={<FormsPage />} />
+                  <Route path="/systems/drag-and-drop" element={<DragAndDropPage />} />
                   <Route path="/systems/surfaces" element={<SurfacesPage />} />
                   <Route path="/systems/stacking" element={<StackingPage />} />
                   <Route path="/systems/layout" element={<LayoutPage />} />

@@ -1,0 +1,92 @@
+/*
+ * Dragging — the part that cannot live in a component's CSS module.
+ *
+ * `useDraggable` attaches to ANY element: a List.Item, a Card, a bare div, a
+ * component Move does not ship. That is the whole point of it being a hook. So
+ * the lift on the element under the pointer has to be a global rule keyed on the
+ * attribute the hook already sets, or it would only ever reach the one component
+ * that happened to own the stylesheet.
+ *
+ * It is here rather than in app code for a harder reason: `purity-2` refuses an
+ * inline `style=` in composed code and the app rule refuses custom CSS, so a
+ * consumer given only the hook could not draw any of this themselves. The
+ * affordances are not merely tedious to rebuild outside the library — they are
+ * unbuildable.
+ *
+ * `data-dragging` is written by the hook the moment a press crosses the
+ * activation distance, and removed on drop or cancel.
+ */
+
+[data-dragging] {
+  /* Off the page, and clearly so. The shadow does the work; a rotation would
+     fight the transform the hook writes on this same element every frame. */
+  box-shadow: var(--move-shadow-elevated);
+  /* Nothing under the pointer should answer hover while it is carrying
+     something — the cursor belongs to the drag, not to whatever it passes. */
+  pointer-events: none;
+  user-select: none;
+  cursor: grabbing;
+}
+
+/*
+ * The drop indicator: a line in the gap, with a dot at its leading edge.
+ *
+ * Drawn on the neighbour rather than between elements, because there is no
+ * element between two siblings to style. `::before` sits in the gap above an
+ * item, `::after` in the gap below the last one — which is the only position
+ * that has no item after it to carry the line.
+ *
+ * A 2px line alone is easy to miss at a glance, and the eye lands on the dot
+ * first; that is why it is there rather than as decoration.
+ */
+[data-drop-before]::before,
+[data-drop-after]::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  height: var(--move-sortable-indicator-size, 2px);
+  background-color: var(--move-sortable-indicator-color, var(--move-accent-border));
+  border-radius: var(--move-rounded-full);
+  /* Above the row's own background, below the item being carried. */
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Centred in the gap, so the line reads as belonging to neither row. */
+[data-drop-before]::before {
+  top: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
+}
+
+[data-drop-after]::after {
+  bottom: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
+}
+
+/* The terminal dot, bleeding left of the line's start. */
+[data-drop-before]::before,
+[data-drop-after]::after {
+  box-shadow: calc(var(--move-sortable-indicator-terminal, 8px) / -2) 0 0
+    calc(
+      var(--move-sortable-indicator-terminal, 8px) / 2 - var(--move-sortable-indicator-size, 2px) /
+        2
+    )
+    var(--move-sortable-indicator-color, var(--move-accent-border));
+}
+
+/* A horizontal list turns the line on its side. */
+[data-axis='horizontal'] [data-drop-before]::before,
+[data-axis='horizontal'] [data-drop-after]::after {
+  inset-inline: auto;
+  inset-block: 0;
+  width: var(--move-sortable-indicator-size, 2px);
+  height: auto;
+}
+
+[data-axis='horizontal'] [data-drop-before]::before {
+  inset-inline-start: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
+  top: 0;
+}
+
+[data-axis='horizontal'] [data-drop-after]::after {
+  inset-inline-end: calc(var(--move-sortable-gap, var(--move-space-2)) / -2);
+  bottom: 0;
+}
