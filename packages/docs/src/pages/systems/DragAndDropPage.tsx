@@ -176,7 +176,7 @@ export function DragAndDropPage() {
         >
           <Text>
             Everything a person notices during a drag is a rendered thing: the lift on the row under
-            the pointer, the line showing where it lands, the highlight on a target that will take
+            the pointer, the gap that opens where it lands, the highlight on a target that will take
             it. A hook cannot render any of them, and an app cannot supply them either — an inline{' '}
             <Code>style</Code> in composed code is refused, and so is custom CSS. So the affordances
             are not merely tedious to rebuild outside the library; they are unbuildable. That is

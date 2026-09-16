@@ -69,7 +69,11 @@ export const DragContext = createContext<DragContextValue | null>(null);
  * Split this way so the logic stays testable without a DOM wrapper, and so the
  * component layer above stays thin enough to read.
  */
-export function useDragRegistry(onDrop?: (event: DropEvent) => void) {
+export function useDragRegistry(
+  onDrop?: (event: DropEvent) => void,
+  /** Announces a drop that lands on a named zone rather than at a position. */
+  announceDrop?: (event: DropEvent) => string | null,
+) {
   const [active, setActive] = useState<DragPayload | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
@@ -126,10 +130,14 @@ export function useDragRegistry(onDrop?: (event: DropEvent) => void) {
       };
       if (target && !target.disabled && (!target.accepts || target.accepts(payload))) {
         target.onDrop?.(event);
+        // A drop onto a zone has no position to report, so nothing else was
+        // saying it happened — a screen reader heard the lift and then silence.
+        const said = announceDrop?.(event);
+        if (said) setMessage(said);
       }
       onDrop?.(event);
     },
-    [onDrop],
+    [onDrop, announceDrop],
   );
 
   const value = useMemo<DragContextValue>(
@@ -148,6 +156,10 @@ export function useDragRegistry(onDrop?: (event: DropEvent) => void) {
   return { value, message, Context: DragContext };
 }
 
+/**
+ * `Drag.Root` is the provider. Kept as a hook rather than a component because a
+ * hook cannot render, and the provider has a live region to put in the DOM.
+ */
 /** Null outside a provider — every consumer here degrades rather than throws. */
 export function useDragContext(): DragContextValue | null {
   return useContext(DragContext);
@@ -193,7 +205,7 @@ export interface UseDraggableReturn<T extends HTMLElement> {
  * dnd-kit uses would need an escape hatch at every call site.
  *
  * Works with no provider above it: it just drags, and reports a drop with no
- * target. Add `DragProvider` when something has to catch it.
+ * target. Add `Drag.Root` when something has to catch it.
  */
 export function useDraggable<T extends HTMLElement = HTMLElement>(
   options: UseDraggableOptions,
@@ -402,7 +414,7 @@ export interface UseDropTargetReturn<T extends HTMLElement> {
  * a second list is a drop target that is not the one the item came from. Both
  * are why the system is draggable + target rather than reorder alone.
  *
- * Requires a `DragProvider` above it — a target with nothing to register into
+ * Requires a `Drag.Root` above it — a target with nothing to register into
  * reports `isOver: false` forever rather than throwing.
  */
 export function useDropTarget<T extends HTMLElement = HTMLElement>(

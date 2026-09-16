@@ -10,12 +10,14 @@ import type { ComponentSpec } from '../../../spec-type';
  * separate for everything that is not a reorder — a slot that holds nothing, a
  * second list the item leaves for.
  *
- * ITEM OWNS ITS HANDLE. There is no `Sortable.Handle` to place, because placing
- * it is the job every consumer would otherwise redo: the docs demo for the
- * hooks-only version needed three hand-assembled wrappers before it could show
- * anything, each wiring an icon button, a cursor, a menu and its keyboard
- * behaviour slightly differently. `handle` is a prop with three values instead,
- * so every sortable list in every app puts the affordance in the same place.
+ * ITEM RENDERS THE HANDLE, AND Sortable.Handle PLACES IT. The thing worth
+ * preventing was consumers ASSEMBLING a handle — the hooks-only demo needed
+ * three hand-built wrappers before it could show anything, each wiring an icon
+ * button, a cursor, a menu and its keyboard behaviour slightly differently. That
+ * is a different problem from deciding WHERE it goes, and an earlier draft of
+ * this spec conflated them. So `handle` defaults to `start` and Item renders it,
+ * `self` makes the whole row the grab point, and `custom` hands placement back
+ * via a Sortable.Handle that takes no props — placement without assembly.
  *
  * THE MENU IS THE KEYBOARD PATH AND ONLY THAT. A pointer user drags; the menu
  * never opens for them. A keyboard user focuses the handle and gets named moves.
@@ -40,7 +42,16 @@ export const spec = {
       element: 'div',
       kind: 'group',
       typography: 'none',
-      description: 'The list container. Owns the reorder context and draws the drop indicator.',
+      description:
+        'The list container. Owns the reorder context and positions the gap that opens at the destination.',
+    },
+    {
+      name: 'placeholder',
+      element: 'div',
+      kind: 'indicator',
+      typography: 'none',
+      description:
+        'The gap standing open at the destination, outlined quietly so empty space says something.',
     },
     {
       name: 'item',
@@ -55,7 +66,7 @@ export const spec = {
       kind: 'control',
       typography: 'none',
       description:
-        'What a pointer grabs and a keyboard focuses. Rendered by Item, never placed by the call site.',
+        'What a pointer grabs and a keyboard focuses. Rendered by Item at start or end, or placed by the call site with Sortable.Handle when `handle="custom"`.',
     },
   ],
 
@@ -71,6 +82,14 @@ export const spec = {
           kind: 'group',
           typography: 'none',
           description: 'List container and reorder context.',
+        },
+        {
+          name: 'placeholder',
+          element: 'div',
+          kind: 'indicator',
+          typography: 'none',
+          description:
+            'The gap standing open at the destination, outlined quietly so empty space says something. Absent unless a drag would actually move the row.',
         },
       ],
       props: [
@@ -93,7 +112,8 @@ export const spec = {
           type: "'vertical' | 'horizontal'",
           default: "'vertical'",
           moveSpecific: true,
-          description: 'Which way the list runs, which decides the indicator and the drag axis.',
+          description:
+            'Which way the list runs, which decides the drag axis and which way the gap opens.',
         },
         {
           name: 'animate',
@@ -118,7 +138,7 @@ export const spec = {
       ],
       usesFactory: true,
       description:
-        'Holds the order context and draws the indicator. Mounts its own drag context when there is no Drag.Root above, so the single-list case needs no wrapper.',
+        'Holds the order context and positions the gap that stands open at the destination. Mounts its own drag context when there is no Drag.Root above, so the single-list case needs no wrapper.',
     },
     {
       name: 'Handle',
@@ -227,7 +247,8 @@ export const spec = {
     {
       name: '--move-sortable-gap',
       value: 'var(--move-space-2)',
-      description: 'Space between rows, which is also the gap the indicator is centred in',
+      description:
+        'Space between rows, and what is subtracted from the placeholder so it sits inside the opening rather than filling it edge to edge',
     },
     {
       name: '--move-sortable-handle-size',
@@ -279,17 +300,20 @@ export const spec = {
     },
     {
       key: 'lifted',
-      default: 'Lifted {label}. Position {position} of {count}.',
+      default:
+        'Lifted {label}. Position {position} of {count}. (Without a label: "Lifted. Position …")',
       description: 'Announced on pick up, by position rather than index',
     },
     {
       key: 'dropped',
-      default: 'Dropped {label} at position {position} of {count}.',
+      default:
+        'Dropped {label} at position {position} of {count}. (Without a label: "Dropped at position …")',
       description: 'Announced on a completed move',
     },
     {
       key: 'cancelled',
-      default: 'Cancelled. {label} returned to its original position.',
+      default:
+        'Cancelled. {label} returned to its original position. (Without a label: "Cancelled. Returned to …")',
       description: 'Announced when a drag is abandoned',
     },
   ],
@@ -326,7 +350,7 @@ export const spec = {
     {
       id: 'rows-step-aside-to-open-the-gap',
       description:
-        'The rows between the old place and the new one move by exactly one place, opening a gap the size of the row being carried. The result is shown rather than pointed at — which is why there is no indicator line as well; the two would say the same thing twice.',
+        'The rows between the old place and the new one move by exactly one place, opening a gap the size of the row being carried, with a quiet outline standing in it. The result is shown rather than pointed at — which is why there is no indicator line as well; the two would say the same thing twice.',
     },
     {
       id: 'drag-time-styles-never-go-through-React',

@@ -1799,7 +1799,7 @@ A list whose rows can be reordered by dragging, with a named-move menu as the ke
 Sortable.Root props:
 - onReorder: (change: SortableChange) => void — The only call-site obligation. Reports source and destination; applying the move is the consumer’s, so the order lives with the rest of their data. A cancelled drag arrives with destination null — a move that did not happen, not a move to nowhere.
 - list: string — Names this list. Two lists with different ids under one Drag.Root is what lets a row move between them.
-- axis: 'vertical' | 'horizontal' (default: vertical) — Which way the list runs, which decides the indicator and the drag axis.
+- axis: 'vertical' | 'horizontal' (default: vertical) — Which way the list runs, which decides the drag axis and which way the gap opens.
 - animate: boolean (default: true) — Rows slide to their new places after a move. Off renders the new order immediately.
 - labels: Partial<SortableLabels> — The move names and the announcements.
 - children: React.ReactNode — Sortable.Item rows, in the consumer’s current order.

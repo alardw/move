@@ -13,7 +13,7 @@ const highlights: HighlightItem[] = [
   },
   {
     icon: 'volume-2',
-    text: 'One live region for the whole tree. Every move is announced by position, and the region is in the DOM before the first drag, so nothing is spoken into an element nobody is watching yet.',
+    text: 'One live region for the whole tree. A drop onto a zone is announced by the zone it landed on, a move within a list by position, and the region is in the DOM before the first drag — so nothing is spoken into an element nobody is watching yet.',
   },
 ];
 

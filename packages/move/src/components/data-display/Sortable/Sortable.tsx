@@ -243,9 +243,10 @@ export interface SortableItemProps extends React.HTMLAttributes<HTMLElement> {
   /** This row's position. */
   index: number;
   /**
-   * Where the grab point sits, or `none` to make the whole row draggable — right
-   * for a card, which already reads as liftable, and wrong for a row that holds
-   * other controls.
+   * Where the grab point sits. `start` and `end` have Item render it; `self`
+   * makes the whole row draggable — right for a card, which already reads as
+   * liftable, and wrong for a row that holds other controls; `custom` means you
+   * place `Sortable.Handle` yourself.
    */
   handle?: SortableHandlePlacement;
   /** A row that cannot move. It keeps its place while others reorder around it. */
@@ -305,6 +306,7 @@ const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement
       disabled: props.disabled as boolean,
       axis: ctx.axis,
       onReorder: handleReorder,
+      label,
       labels: ctx.labels,
     });
 
@@ -396,8 +398,8 @@ const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement
         const auto = placement === 'start' || placement === 'end';
         const grip = auto && !props.disabled ? <SortableHandle /> : null;
 
-        // With no handle at all the whole row is the grab point, so the drag
-        // listeners go on the row itself.
+        // `self`: the whole row is the grab point, so the drag listeners go on
+        // the row itself rather than on a handle inside it.
         const rowDragProps = placement === 'self' && !props.disabled ? handleProps : {};
 
         return (

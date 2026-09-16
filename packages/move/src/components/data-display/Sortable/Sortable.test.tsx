@@ -176,6 +176,46 @@ describe('the keyboard path', () => {
     expect(items[1]).not.toHaveAttribute('data-disabled');
   });
 
+  it('announces the row by name and position, not by index', () => {
+    render(<List onReorder={() => {}} />);
+    act(() => {
+      handleFor('a').dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+      );
+    });
+    act(() => {
+      screen.getByText('Move down').click();
+    });
+    expect(document.querySelector('[data-move-drag-announcer]')).toHaveTextContent(
+      'Dropped Offerte at position 2 of 3.',
+    );
+  });
+
+  it('falls back to a bare position when a row has no label', () => {
+    render(
+      <Sortable.Root onReorder={() => {}} data-testid="list">
+        <Sortable.Item id="a" index={0} data-testid="row-a">
+          a
+        </Sortable.Item>
+        <Sortable.Item id="b" index={1} data-testid="row-b">
+          b
+        </Sortable.Item>
+      </Sortable.Root>,
+    );
+    const handle = screen.getByTestId('row-a').querySelector('button') as HTMLButtonElement;
+    act(() => {
+      handle.dispatchEvent(
+        new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }),
+      );
+    });
+    act(() => {
+      screen.getByText('Move down').click();
+    });
+    expect(document.querySelector('[data-move-drag-announcer]')).toHaveTextContent(
+      'Dropped at position 2 of 2.',
+    );
+  });
+
   it('a move reports onReorder and closes the menu', async () => {
     const onReorder = vi.fn();
     render(<List onReorder={onReorder} />);

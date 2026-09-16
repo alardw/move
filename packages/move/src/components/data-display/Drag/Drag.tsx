@@ -46,8 +46,15 @@ export interface DragRootProps {
  * and nothing else, so it can be dropped anywhere in a tree without becoming a
  * layout box the consumer then has to work around. The layout stays theirs.
  */
-function DragRoot({ onDrop, children }: DragRootProps) {
-  const { value, message, Context } = useDragRegistry(onDrop);
+function DragRoot({ onDrop, labels: labelsProp, children }: DragRootProps) {
+  const labels = React.useMemo(() => ({ ...DEFAULT_DRAG_LABELS, ...labelsProp }), [labelsProp]);
+  // Names the zone a payload landed on. A drop at a POSITION is Sortable's to
+  // announce, and it does; a drop on a zone had nobody saying anything at all.
+  const announceDrop = React.useCallback(
+    (event: DropEvent) => (event.target ? labels.droppedOn(event.target.id) : null),
+    [labels],
+  );
+  const { value, message, Context } = useDragRegistry(onDrop, announceDrop);
 
   return (
     <Context.Provider value={value}>

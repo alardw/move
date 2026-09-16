@@ -8,7 +8,7 @@ import type { ComponentSpec } from '../../../spec-type';
  * The hooks (`useDraggable`, `useDropTarget`) already attach dragging to any
  * element, and stay public for exactly that. This exists because the hooks
  * cannot RENDER, and everything a person actually sees during a drag is a
- * rendered thing: the highlight on a target that will accept, the line that says
+ * rendered thing: the highlight on a target that will accept, the gap that opens
  * where it lands, the live region that speaks it. A consumer cannot supply any
  * of them — `purity-2` refuses an inline `style=` in app code and the app rule
  * refuses custom CSS — so a hooks-only library makes the affordances literally

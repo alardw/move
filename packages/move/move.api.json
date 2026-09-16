@@ -9948,7 +9948,7 @@
                 "horizontal"
               ],
               "default": "vertical",
-              "description": "Which way the list runs, which decides the indicator and the drag axis."
+              "description": "Which way the list runs, which decides the drag axis and which way the gap opens."
             },
             {
               "name": "animate",

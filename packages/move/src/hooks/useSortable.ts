@@ -25,12 +25,12 @@ export interface UseSortableLabels {
   moveDown: string;
   moveToTop: string;
   moveToBottom: string;
-  /** Announced on pick up. Receives the 1-based position and the total. */
-  lifted: (position: number, count: number) => string;
-  /** Announced on drop. Receives the 1-based position and the total. */
-  dropped: (position: number, count: number) => string;
-  /** Announced when a drag is abandoned. */
-  cancelled: string;
+  /** Announced on pick up. Receives the row's name, 1-based position and total. */
+  lifted: (label: string, position: number, count: number) => string;
+  /** Announced on drop. Receives the row's name, 1-based position and total. */
+  dropped: (label: string, position: number, count: number) => string;
+  /** Announced when a drag is abandoned. Receives the row's name. */
+  cancelled: (label: string) => string;
 }
 
 export const DEFAULT_SORTABLE_LABELS: UseSortableLabels = {
@@ -39,10 +39,20 @@ export const DEFAULT_SORTABLE_LABELS: UseSortableLabels = {
   moveToTop: 'Move to top',
   moveToBottom: 'Move to bottom',
   // Positions, not indices: "position 3 of 10" is what a person hears, where
-  // "index 2" is what the array holds.
-  lifted: (position, count) => `Lifted. Position ${position} of ${count}.`,
-  dropped: (position, count) => `Dropped at position ${position} of ${count}.`,
-  cancelled: 'Cancelled. Returned to the original position.',
+  // "index 2" is what the array holds. And the row's own name first, because a
+  // position with no subject tells you something moved but not what.
+  lifted: (label, position, count) =>
+    label
+      ? `Lifted ${label}. Position ${position} of ${count}.`
+      : `Lifted. Position ${position} of ${count}.`,
+  dropped: (label, position, count) =>
+    label
+      ? `Dropped ${label} at position ${position} of ${count}.`
+      : `Dropped at position ${position} of ${count}.`,
+  cancelled: (label) =>
+    label
+      ? `Cancelled. ${label} returned to its original position.`
+      : 'Cancelled. Returned to the original position.',
 };
 
 export interface UseSortableOptions {
@@ -56,6 +66,8 @@ export interface UseSortableOptions {
   list?: string;
   /** An item that cannot move — a closed point, a pinned row. */
   disabled?: boolean;
+  /** The row's name, spoken in the announcements so a position has a subject. */
+  label?: string;
   /** The axis the list runs along. Default `'vertical'`. */
   axis?: 'vertical' | 'horizontal';
   /** The only call-site obligation: apply the move to your own data. */
@@ -120,6 +132,7 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
     disabled = false,
     axis = 'vertical',
     onReorder,
+    label = '',
     labels: labelsProp,
   } = options;
 
@@ -140,9 +153,9 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
     (to: number) => {
       if (to === index || to < 0 || to > count - 1) return;
       onReorder?.({ source: { list, index }, destination: { list, index: to } });
-      announce(labels.dropped(to + 1, count));
+      announce(labels.dropped(label, to + 1, count));
     },
-    [index, count, list, onReorder, announce, labels],
+    [index, count, list, onReorder, announce, labels, label],
   );
 
   const onDragEnd = useCallback(
@@ -154,12 +167,12 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
       if (event.target && event.target.id !== list) return;
       if (event.cancelled || target.current === index) {
         onReorder?.({ source: { list, index }, destination: null });
-        announce(labels.cancelled);
+        announce(labels.cancelled(label));
         return;
       }
       commit(target.current);
     },
-    [commit, index, list, onReorder, announce, labels],
+    [commit, index, list, onReorder, announce, labels, label],
   );
 
   const draggable = useDraggable<T>({
@@ -192,8 +205,8 @@ export function useSortable<T extends HTMLElement = HTMLElement>(
     origin.current = self >= 0 ? midpoints.current[self] : 0;
     target.current = index;
     setDropIndex(index);
-    announce(labels.lifted(index + 1, count));
-  }, [isDragging, axis, index, count, ref, announce, labels]);
+    announce(labels.lifted(label, index + 1, count));
+  }, [isDragging, axis, index, count, ref, announce, labels, label]);
 
   // Which slot the item is over, from the displacement the draggable reports
   // against the midpoint it started at.

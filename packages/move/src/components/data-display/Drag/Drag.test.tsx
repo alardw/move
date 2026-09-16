@@ -204,3 +204,31 @@ describe('Drag.Zone', () => {
     expect(zone).toHaveAttribute('title', 't');
   });
 });
+
+describe('announcements', () => {
+  it('names the zone a payload landed on — nothing else was saying it happened', () => {
+    placeZone();
+    render(
+      <Drag.Root labels={{ droppedOn: (t) => `Filed under ${t}.` }}>
+        <Handle id="a" />
+        <Drag.Zone id="offerte" data-testid="zone" />
+      </Drag.Root>,
+    );
+    drag({ clientX: 50, clientY: 50 });
+    expect(document.querySelector('[data-move-drag-announcer]')).toHaveTextContent(
+      'Filed under offerte.',
+    );
+  });
+
+  it('says nothing when the drop landed on no zone', () => {
+    placeZone();
+    render(
+      <Drag.Root>
+        <Handle id="a" />
+        <Drag.Zone id="z" data-testid="zone" />
+      </Drag.Root>,
+    );
+    drag({ clientX: 400, clientY: 400 });
+    expect(document.querySelector('[data-move-drag-announcer]')).toHaveTextContent('');
+  });
+});

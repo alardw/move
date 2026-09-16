@@ -241,18 +241,18 @@ export const HOOKS_REGISTRY: HookDoc[] = [
   {
     name: 'useDropTarget',
     signature:
-      'useDropTarget<T>({ id, group?, accepts?, onDrop? }): { ref, isOver, isDragActive, canDrop }',
+      'useDropTarget<T>({ id, group?, disabled?, accepts?, onDrop? }): { ref, isOver, isDragActive, canDrop }',
     summary:
       'Make any element catch a drag — the half reordering cannot express, for a second list or a slot that stays visible while empty. See Dragging and dropping.',
     category: 'State & refs',
-    companion: 'DragProvider',
+    companion: 'Drag.Root',
     companionSummary:
-      'DragProvider holds the three things that cannot live on one item: the drag in flight, the registry every drop target hit-tests against, and a single ARIA live region. Optional — without it an element still drags and a list still reorders, there is simply nothing to catch it.',
+      'Drag.Root holds the three things that cannot live on one item: the drag in flight, the registry every drop target hit-tests against, and a single ARIA live region. Optional — without it an element still drags and a list still reorders, there is simply nothing to catch it.',
   },
   {
     name: 'useSortable',
     signature:
-      'useSortable<T>({ id, index, count, list?, disabled?, axis?, onReorder?, labels? }): { ref, handleProps, isDragging, dropIndex, moveActions }',
+      'useSortable<T>({ id, index, count, list?, disabled?, axis?, label?, onReorder?, labels? }): { ref, handleProps, isDragging, dropIndex, moveActions }',
     summary:
       'Reordering within one list, as a preset over useDraggable — with moveActions as the keyboard path, meant for a menu off the handle rather than an arrow-key drag. See Dragging and dropping.',
     category: 'State & refs',

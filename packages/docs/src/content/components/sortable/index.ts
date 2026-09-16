@@ -9,6 +9,8 @@ import Keyboard from './samples/keyboard';
 import keyboardCode from './samples/keyboard?raw';
 import Pinned from './samples/pinned';
 import pinnedCode from './samples/pinned?raw';
+import Placement from './samples/placement';
+import placementCode from './samples/placement?raw';
 
 export const content: ComponentContent = {
   meta,
@@ -17,5 +19,6 @@ export const content: ComponentContent = {
     { id: 'basic', title: 'Reordering', render: Basic, code: basicCode },
     { id: 'keyboard', title: 'From the keyboard', render: Keyboard, code: keyboardCode },
     { id: 'pinned', title: 'A row that cannot move', render: Pinned, code: pinnedCode },
+    { id: 'placement', title: 'Placing the handle', render: Placement, code: placementCode },
   ],
 };

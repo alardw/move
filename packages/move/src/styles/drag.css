@@ -34,7 +34,7 @@
   /* Off the page, and clearly so. The shadow does the work; a rotation would
      fight the transform the hook writes on this same element every frame.
      Part-way transparent so what it passes over stays readable, and above the
-     drop indicator, because the thing in your hand is the thing nearest you. */
+     rows it passes, because the thing in your hand is the thing nearest you. */
   box-shadow: var(--move-shadow-elevated);
   opacity: 0.8;
   z-index: 2;

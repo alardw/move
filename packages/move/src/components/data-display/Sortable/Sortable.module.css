@@ -2,12 +2,6 @@
 
 .root {
   --move-sortable-gap: var(--move-space-2);
-  /* 2px, not --move-space-1's 4px: this is a hairline, not a spacing step, and
-     the scale has nothing below 4. Four reads as a bar across the list rather
-     than a seam between two rows. */
-  --move-sortable-indicator-size: 2px;
-  --move-sortable-indicator-color: var(--move-primary);
-  --move-sortable-indicator-terminal: var(--move-space-2);
   --move-sortable-handle-size: var(--move-control-height-sm);
   --move-sortable-item-shadow-dragging: var(--move-shadow-elevated);
   --move-sortable-item-opacity-dragging: 0.8;
@@ -20,9 +14,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--move-sortable-gap);
-}
-
-.root {
   /* The placeholder is positioned against the list. */
   position: relative;
 }
@@ -55,8 +46,6 @@
 }
 
 .item {
-  /* The drop indicator is drawn as a pseudo-element on the row, so the row has
-     to be the containing block for it. */
   position: relative;
   display: flex;
   align-items: center;
@@ -96,9 +85,9 @@
   justify-content: space-between;
 }
 
-/* No handle means the whole row is the grab point, so it says so on hover —
-   the cursor is the only cue a row without an icon gets. */
-.item[data-handle='none']:not([data-disabled]) {
+/* `self` means the whole row is the grab point, so the row says so on hover —
+   the cursor is the only cue a row without a handle icon gets. */
+.item[data-handle='self']:not([data-disabled]) {
   cursor: grab;
 }
 
