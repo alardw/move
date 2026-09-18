@@ -442,6 +442,12 @@ export const spec = {
       value: '18rem',
       description: 'Content maximum width',
     },
+    {
+      name: '--move-tooltip-content-max-lines',
+      value: 'var(--move-tooltip-max-lines)',
+      description:
+        'Most lines a tooltip shows before it trims. A tooltip is fed whatever text was hidden, which for a clamped paragraph is the whole paragraph — this keeps the box readable at a glance. Set it to `none` for a tooltip that has to say everything',
+    },
   ],
 
   variants: {},

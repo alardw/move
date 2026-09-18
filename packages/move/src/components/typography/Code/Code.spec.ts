@@ -75,8 +75,10 @@ export const spec = {
     {
       name: 'tooltip',
       type: 'boolean',
+      default: 'true',
       moveSpecific: true,
-      description: 'With truncate, show full text in a tooltip when actually cut off',
+      description:
+        'The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.',
     },
     {
       name: 'children',

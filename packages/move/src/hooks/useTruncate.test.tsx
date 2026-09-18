@@ -47,11 +47,18 @@ function setDims(
 function Probe({
   bump = 0,
   middle,
+  mode,
   ...opts
-}: UseTruncateOptions & { bump?: number; middle?: boolean }) {
+}: UseTruncateOptions & { bump?: number; middle?: boolean; mode?: string }) {
   const { ref, isTruncated } = useTruncate<HTMLDivElement>(opts);
   return (
-    <div ref={ref} data-testid="el" data-trunc={isTruncated} data-bump={bump}>
+    <div
+      ref={ref}
+      data-testid="el"
+      data-trunc={isTruncated}
+      data-bump={bump}
+      {...(mode !== undefined ? { 'data-truncate': mode } : {})}
+    >
       {middle ? <span data-truncate-head="" data-testid="head" /> : 'text'}
     </div>
   );
@@ -72,6 +79,35 @@ describe('useTruncate', () => {
     setDims(el, { scrollWidth: 100, clientWidth: 100, scrollHeight: 20, clientHeight: 20 });
     rerender(<Probe bump={1} />);
     expect(el).toHaveAttribute('data-trunc', 'false');
+  });
+
+  it('a line box one pixel taller than its box is rounding, not truncation', () => {
+    // scrollHeight rounds up and clientHeight rounds down, so a fractional
+    // line-height reports a pixel of overflow on text that fits exactly. Read
+    // as truncation, it put a tooltip on every short label on the page.
+    const { rerender } = render(<Probe bump={0} mode="end" />);
+    const el = screen.getByTestId('el');
+    setDims(el, { scrollWidth: 100, clientWidth: 100, scrollHeight: 21, clientHeight: 20 });
+    rerender(<Probe bump={1} mode="end" />);
+    expect(el).toHaveAttribute('data-trunc', 'false');
+  });
+
+  it('reads only the axis a single-line strategy cuts on', () => {
+    // `end` sets white-space: nowrap — it cannot wrap, so its height says
+    // nothing about whether the text was cut.
+    const { rerender } = render(<Probe bump={0} mode="end" />);
+    const el = screen.getByTestId('el');
+    setDims(el, { scrollWidth: 100, clientWidth: 100, scrollHeight: 80, clientHeight: 20 });
+    rerender(<Probe bump={1} mode="end" />);
+    expect(el).toHaveAttribute('data-trunc', 'false');
+  });
+
+  it('reads only the axis a clamp cuts on', () => {
+    const { rerender } = render(<Probe bump={0} mode="clamp" />);
+    const el = screen.getByTestId('el');
+    setDims(el, { scrollWidth: 300, clientWidth: 100, scrollHeight: 80, clientHeight: 40 });
+    rerender(<Probe bump={1} mode="clamp" />);
+    expect(el).toHaveAttribute('data-trunc', 'true');
   });
 
   it('detects vertical overflow (clamp)', () => {

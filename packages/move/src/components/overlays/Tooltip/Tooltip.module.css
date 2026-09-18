@@ -12,7 +12,12 @@
  * @keyframes. prefers-reduced-motion is handled inside the runtime.
  */
 
-.trigger {
+/* The pointer belongs to the button, not to the tooltip.
+   `asChild` puts this class on whatever it wraps — a paragraph of truncated
+   text, a table cell, a heading — and a pointer cursor on those promises a
+   click that does nothing. Where the trigger really is a button, it is a button
+   and says so. */
+button.trigger {
   cursor: pointer;
 }
 
@@ -26,6 +31,7 @@
   --move-tooltip-content-padding-y: var(--move-spacing-sm);
   --move-tooltip-content-font-size: var(--move-size-sm);
   --move-tooltip-content-max-width: 18rem;
+  --move-tooltip-content-max-lines: var(--move-tooltip-max-lines);
 
   /* Positioned shell only — Radix owns the transform; this layer stacks + fades. */
   z-index: var(--move-layer-tooltip);
@@ -45,6 +51,26 @@
   /* Wrap long unbreakable strings (file paths, URLs, hashes) within the box
      instead of overflowing past the background. */
   overflow-wrap: break-word;
+  /* The ceiling itself. -webkit-box is what line-clamp needs; the box lays its
+     children out the same way a block does for the text a tooltip carries.
+
+     Clipped at the CONTENT edge, not the padding edge. `overflow: hidden` cuts
+     at the padding box, so the line after the last one paints into the bottom
+     padding and a sliver of it shows under the ellipsis — a trimmed box that
+     looks like it failed to trim.
+
+     The value arrives from `--move-tooltip-max-lines`, which is a system token
+     rather than this component's: a number declared here would sit on the
+     element itself and outrank the same token set on `html`, which is where a
+     theme writes — so the one way to move every tooltip at once would silently
+     do nothing. Referencing it keeps the order the one you would guess: the
+     `maxLines` prop, then the theme, then the default. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--move-tooltip-content-max-lines);
+  line-clamp: var(--move-tooltip-content-max-lines);
+  overflow: clip;
+  overflow-clip-margin: content-box;
   user-select: none;
   will-change: transform, opacity;
 }

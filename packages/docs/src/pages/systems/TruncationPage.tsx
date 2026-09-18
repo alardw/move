@@ -1,17 +1,27 @@
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Link } from 'move';
+import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Link, Tooltip } from 'move';
 import { Section, TocRail, Preview, type TocItem } from '../../components';
 
 /**
  * Truncation. A cross-cutting concern, not a component: one `truncate` prop
  * across the text primitives, a global `[data-truncate]` utility, the
- * `useTruncate` hook, and an opt-in tooltip. This page is the connective tissue.
+ * `useTruncate` hook, and the tooltip that hands the hidden text back. This page is
+ * the connective tissue.
  */
 
 const PATH = '/Users/alard/projects/move/packages/move/src/index.ts';
 const BLURB =
   'One seed derives every surface and keeps text legible in both modes, so the mood carries through without any manual tuning of individual tokens.';
+// Long enough that the tooltip meets its own ceiling — the case the ten-line cap
+// exists for, rather than a description of it.
+const ESSAY = [
+  'A theme starts as one colour and a handful of decisions about contrast.',
+  'Every surface, border and piece of text is derived from that seed, which is why a palette that reads well in daylight still reads well at night without anyone tuning a second set of values by hand.',
+  'The derivation is not a gradient of lightness: each role is clamped to the contrast it owes the text that sits on it, so a subtle background stays subtle and a body paragraph stays legible on top of it.',
+  'Where the two goals disagree — a brand colour that would fail as body text — the role that carries meaning wins and the decorative one moves, because a person can live with a slightly different blue and cannot live with a sentence they are unable to read.',
+  'That is the whole of it: one input, a set of promises about what must remain true, and a theme that holds those promises in both modes and at every size.',
+].join(' ');
 
 const TOC: TocItem[] = [
   { href: '#overview', label: 'Overview' },
@@ -166,21 +176,63 @@ export function TruncationPage() {
         <Section
           id="tooltip"
           title="The full text on hover"
-          lede="Add tooltip and the whole string comes back on hover — but only when it's actually cut off, so text that fits stays quiet. It's a real Move tooltip, not the browser's."
+          lede="Trimmed text gives the whole string back on hover, without being asked — and only while it is actually cut off, so text that fits stays quiet. It is a real Move tooltip, not the browser's."
         >
           <Stack gap="sm">
-            <Preview code={`<Text truncate tooltip>{path}</Text>`}>
+            <Preview code={`<Text truncate>{path}</Text>   {/* tooltip={false} to turn it off */}`}>
               <Frame resizable>
-                <Text truncate tooltip>
-                  {PATH}
-                </Text>
+                <Text truncate>{PATH}</Text>
               </Frame>
             </Preview>
             <Text size="sm" color="muted">
-              Drag the box's right edge to give the line more or less room. It measures itself as
-              the width changes, so the tooltip only appears while the path is actually cut off —
-              widen it enough and the tooltip bows out.
+              Drag the box's right edge to give the line more or less room. It measures itself the
+              moment you reach for it, so the tooltip appears while the path is actually cut off —
+              widen it enough and it bows out.
             </Text>
+          </Stack>
+          <Stack gap="sm">
+            <Heading level={3}>When there is a lot of it</Heading>
+            <Text>
+              A tooltip is handed whatever was hidden, and for a clamped paragraph that is the whole
+              paragraph. It stops at ten lines and trims the rest, so what comes back is a box you
+              can read at a glance rather than one taller than the window. Raise or lift the ceiling
+              with <Code>--move-tooltip-content-max-lines</Code>, which takes <Code>none</Code>.
+            </Text>
+            <Preview code={`<Text truncate="clamp" lines={2}>{essay}</Text>`}>
+              <Frame>
+                <Text truncate="clamp" lines={2}>
+                  {ESSAY}
+                </Text>
+              </Frame>
+            </Preview>
+            <Text>
+              The ceiling belongs to the tooltip, and a tooltip is drawn at the end of the document
+              rather than beside the text it describes — so a value set next to the text never
+              reaches it. Set <Code>--move-tooltip-content-max-lines</Code> in your theme to move
+              every tooltip, or pass <Code>maxLines</Code> to a <Code>Tooltip.Content</Code> to move
+              one.
+            </Text>
+            <Preview
+              code={`<Tooltip.Root>
+  <Tooltip.Trigger asChild>
+    <Text truncate="clamp" lines={2} tooltip={false}>{essay}</Text>
+  </Tooltip.Trigger>
+  <Tooltip.Content maxLines={3}>{essay}</Tooltip.Content>
+</Tooltip.Root>`}
+            >
+              <Frame>
+                <Tooltip.Root>
+                  <Tooltip.Trigger asChild>
+                    {/* tooltip={false} — this one is composed by hand, and two tooltips on one
+                        line would race each other */}
+                    <Text truncate="clamp" lines={2} tooltip={false}>
+                      {ESSAY}
+                    </Text>
+                  </Tooltip.Trigger>
+                  <Tooltip.Content maxLines={3}>{ESSAY}</Tooltip.Content>
+                </Tooltip.Root>
+              </Frame>
+            </Preview>
           </Stack>
         </Section>
 

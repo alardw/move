@@ -4,7 +4,7 @@
 export { useInView } from './useInView';
 export type { UseInViewOptions, UseInViewReturn } from './useInView';
 
-export { useTruncate } from './useTruncate';
+export { useTruncate, measureTruncated } from './useTruncate';
 export type { UseTruncateOptions, UseTruncateReturn } from './useTruncate';
 
 export { useOverflow } from './useOverflow';

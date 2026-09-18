@@ -40,6 +40,7 @@ export type { UseControlledStateOptions } from './engine';
 export {
   useInView,
   useTruncate,
+  measureTruncated,
   useOverflow,
   useSortable,
   useDraggable,

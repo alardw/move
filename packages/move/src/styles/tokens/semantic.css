@@ -287,6 +287,13 @@
   /* Comfortable reading line length (~66–68 chars, under the WCAG 1.4.8 80-char
      limit). Shared by Prose and the Text/Heading `readableWidth` prop. */
   --move-readable-width: 68ch;
+
+  /* How much a floating box shows before it trims. A tooltip is handed whatever
+     text was hidden, and for a clamped paragraph that is the whole paragraph —
+     this is what keeps it a box you can read at a glance rather than one taller
+     than the window. Lives here, not in the component, so a theme can move every
+     tooltip at once; `none` lifts it. */
+  --move-tooltip-max-lines: 10;
   --move-font-code: var(--move-font-mono);
   /* Headings default to the body font; override to give display type its own face. */
   --move-font-heading: var(--move-font-body);

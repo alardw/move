@@ -39,11 +39,9 @@ export default function TruncateSample() {
       </Stack>
       <Stack gap="xs">
         <Text size="sm" weight="medium">
-          truncate + tooltip — hover to reveal the full text
+          hover any trimmed line to see the rest
         </Text>
-        <Text truncate tooltip>
-          {PATH}
-        </Text>
+        <Text truncate>{PATH}</Text>
       </Stack>
     </Stack>
   );

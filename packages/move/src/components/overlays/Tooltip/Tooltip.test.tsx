@@ -341,6 +341,37 @@ describe('Tooltip', () => {
     // other test here drives `open` — the uncontrolled path, where the component owns
     // its own visibility, went unexercised. It lives on Tooltip.Root: the simple
     // <Tooltip label> API takes `open`/`onOpenChange` but has no `defaultOpen`.
+    it('maxLines sets the ceiling on the box, past the theme and the default', async () => {
+      // The token alone cannot reach here: a tooltip is drawn at the end of the
+      // document, so a value set beside the trigger never arrives — and an
+      // inline style is the one thing composed code may not write.
+      renderTooltip(
+        <Tooltip.Root defaultOpen>
+          <Tooltip.Trigger asChild>
+            <button data-testid="trigger">Hover</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content maxLines={3}>A great deal of text</Tooltip.Content>
+        </Tooltip.Root>,
+      );
+      await waitFor(() => {
+        expect(findTooltip().style.getPropertyValue('--move-tooltip-content-max-lines')).toBe('3');
+      });
+    });
+
+    it('leaves the ceiling to the token when maxLines is not given', async () => {
+      renderTooltip(
+        <Tooltip.Root defaultOpen>
+          <Tooltip.Trigger asChild>
+            <button data-testid="trigger">Hover</button>
+          </Tooltip.Trigger>
+          <Tooltip.Content>A great deal of text</Tooltip.Content>
+        </Tooltip.Root>,
+      );
+      await waitFor(() => {
+        expect(findTooltip().style.getPropertyValue('--move-tooltip-content-max-lines')).toBe('');
+      });
+    });
+
     it('uncontrolled: defaultOpen opens it with no controlled prop', async () => {
       renderTooltip(
         <Tooltip.Root defaultOpen>

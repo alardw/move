@@ -3236,7 +3236,8 @@
         {
           "name": "tooltip",
           "type": "boolean",
-          "description": "With truncate, show full text in a tooltip when actually cut off"
+          "default": "true",
+          "description": "The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for."
         },
         {
           "name": "children",
@@ -6035,7 +6036,8 @@
         {
           "name": "tooltip",
           "type": "boolean",
-          "description": "With truncate, show full text in a tooltip when actually cut off"
+          "default": "true",
+          "description": "The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for."
         },
         {
           "name": "readableWidth",
@@ -6547,7 +6549,8 @@
         {
           "name": "tooltip",
           "type": "boolean",
-          "description": "With truncate, show full text in a tooltip when actually cut off"
+          "default": "true",
+          "description": "The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for."
         },
         {
           "name": "children",
@@ -6713,7 +6716,8 @@
         {
           "name": "tooltip",
           "type": "boolean",
-          "description": "With truncate, show full text in a tooltip when actually cut off"
+          "default": "true",
+          "description": "The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for."
         },
         {
           "name": "children",
@@ -11262,7 +11266,8 @@
         {
           "name": "tooltip",
           "type": "boolean",
-          "description": "With truncate, show full text in a Move Tooltip when actually cut off"
+          "default": "true",
+          "description": "The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for."
         },
         {
           "name": "readableWidth",

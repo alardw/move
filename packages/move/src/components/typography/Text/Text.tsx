@@ -41,6 +41,7 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
   styles,
   slots: ['root'] as const,
   defaults: {
+    tooltip: true,
     as: 'p' as TextAs,
     size: 'base' as TextSize,
     weight: 'normal' as TextWeight,
@@ -62,8 +63,10 @@ export const Text = withMoveComponent<'root', TextProps, HTMLElement>({
     const truncate = props.truncate as Truncate | undefined;
     const trunc = resolveTruncate(truncate, props.lines as number, props.children);
     const fullText = typeof props.children === 'string' ? props.children : undefined;
-    // The tooltip needs measurement + a string to show; skip it otherwise.
-    const wantTooltip = !!props.tooltip && !!trunc.mode && fullText !== undefined;
+    // Every strategy, clamp included. What is hidden is hidden by us, so it is
+    // ours to hand back — and how much of it there might be is the tooltip's
+    // problem to bound, which it does, rather than a reason to withhold it.
+    const wantTooltip = props.tooltip !== false && !!trunc.mode && fullText !== undefined;
 
     const { ref: truncRef, wrap } = useTruncationTooltip(wantTooltip, fullText);
     const mergedRef = useMergedRef<HTMLElement>(ref, truncRef);

@@ -31,7 +31,7 @@ export const Label = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabe
   name: 'Label',
   styles,
   slots: ['root', 'asterisk'] as const,
-  defaults: { size: 'md' as LabelSize },
+  defaults: { size: 'md' as LabelSize, tooltip: true },
   moveProps: ['htmlFor', 'required', 'disabled', 'truncate', 'lines', 'tooltip'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -41,7 +41,10 @@ export const Label = withMoveComponent<'root' | 'asterisk', LabelProps, HTMLLabe
       props.children,
     );
     const fullText = typeof props.children === 'string' ? props.children : undefined;
-    const wantTooltip = !!props.tooltip && !!trunc.mode && fullText !== undefined;
+    // Every strategy, clamp included. What is hidden is hidden by us, so it is
+    // ours to hand back — and how much of it there might be is the tooltip's
+    // problem to bound, which it does, rather than a reason to withhold it.
+    const wantTooltip = props.tooltip !== false && !!trunc.mode && fullText !== undefined;
     const { ref: truncRef, wrap } = useTruncationTooltip(wantTooltip, fullText);
     const mergedRef = useMergedRef<HTMLElement>(ref, truncRef);
 

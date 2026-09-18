@@ -35,7 +35,7 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
   name: 'Code',
   styles,
   slots: ['root'] as const,
-  defaults: { variant: 'subtle' as CodeVariant, size: 'sm' as CodeSize },
+  defaults: { variant: 'subtle' as CodeVariant, size: 'sm' as CodeSize, tooltip: true },
   moveProps: ['block', 'language', 'truncate', 'lines', 'tooltip'],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -46,7 +46,8 @@ export const Code = withMoveComponent<'root', CodeProps, HTMLElement>({
     const language = props.language as string | undefined;
 
     // Tooltip only for inline code with a plain-string value.
-    const wantTooltip = !!props.tooltip && !!props.truncate && !props.block && code !== null;
+    const wantTooltip =
+      props.tooltip !== false && !!props.truncate && !props.block && code !== null;
     const { ref: truncRef, wrap } = useTruncationTooltip(wantTooltip, code ?? undefined);
     const mergedRef = useMergedRef<HTMLElement>(ref, truncRef);
 

@@ -203,6 +203,17 @@ export interface TooltipContentProps extends React.HTMLAttributes<HTMLElement> {
   alignOffset?: number;
   container?: HTMLElement;
   animations?: AnimationTrigger[] | false;
+  /**
+   * Most lines to show before the text is trimmed. `'none'` lets the tooltip
+   * grow to whatever it was given.
+   *
+   * A prop rather than only the `--move-tooltip-content-max-lines` token,
+   * because the token cannot be reached from a call site: a tooltip is drawn at
+   * the end of the document, so a value set beside the trigger never arrives —
+   * and writing it as an inline `style` is the one thing composed code may not
+   * do. Set the token in your theme to move every tooltip; use this for one.
+   */
+  maxLines?: number | 'none';
   sp?: SlotPropsMap<'content' | 'contentInner'>;
 }
 
@@ -274,7 +285,7 @@ const TooltipContent = withMoveComponent<
   name: 'TooltipContent',
   styles,
   slots: ['content', 'contentInner'] as const,
-  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'animations'],
+  moveProps: ['side', 'sideOffset', 'align', 'alignOffset', 'container', 'animations', 'maxLines'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -306,7 +317,13 @@ const TooltipContent = withMoveComponent<
               align={props.align as 'start' | 'center' | 'end'}
               alignOffset={props.alignOffset as number}
               className={cx('content', props.className, spClass as string | undefined)}
-              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+              style={{
+                ...props.style,
+                ...(props.maxLines !== undefined
+                  ? ({ '--move-tooltip-content-max-lines': props.maxLines } as React.CSSProperties)
+                  : null),
+                ...(spStyle as React.CSSProperties),
+              }}
             >
               <TooltipContentInner
                 animations={animationsProp}
@@ -384,6 +401,8 @@ export interface TooltipSimpleProps {
   align?: 'start' | 'center' | 'end';
   /** Show arrow */
   arrow?: boolean;
+  /** Most lines before the text is trimmed; `'none'` lets it grow. */
+  maxLines?: number | 'none';
   /** Animation configuration (false to disable) */
   animations?: AnimationTrigger[] | false;
   /** Delay before showing */
@@ -403,6 +422,7 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   sideOffset = 4,
   align,
   arrow = true,
+  maxLines,
   animations: animationsProp,
   delayDuration,
   open,
@@ -417,7 +437,13 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
       onOpenChange={onOpenChange}
     >
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent side={side} sideOffset={sideOffset} align={align} animations={animationsProp}>
+      <TooltipContent
+        side={side}
+        sideOffset={sideOffset}
+        align={align}
+        maxLines={maxLines}
+        animations={animationsProp}
+      >
         {arrow && <TooltipArrow />}
         {label}
       </TooltipContent>

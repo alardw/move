@@ -562,7 +562,7 @@ Props:
 - style: React.CSSProperties — Inline styles
 - truncate: Truncate — Truncate overflowing inline code (ignored for block): true/'end', 'start', 'clamp'
 - lines: number — Max lines for truncate='clamp' (default 2)
-- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
+- tooltip: boolean (default: true) — The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.
 - children: React.ReactNode — Code text content
 Example: <Code variant="subtle">…</Code>
 
@@ -1086,7 +1086,7 @@ Props:
 - align: 'left' | 'center' | 'right' — Text alignment (only set when provided)
 - truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
 - lines: number — Max lines for truncate='clamp' (default 2)
-- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
+- tooltip: boolean (default: true) — The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.
 - readableWidth: boolean — Cap the line length to a comfortable reading measure (WCAG 1.4.8) — for a standalone heading/paragraph; use Prose for real long-form content
 - className: string — Additional CSS class
 - style: React.CSSProperties — Inline styles
@@ -1185,7 +1185,7 @@ Props:
 - size: 'sm' | 'md' | 'lg' (default: md) — Font size of the label
 - truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
 - lines: number — Max lines for truncate='clamp' (default 2)
-- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
+- tooltip: boolean (default: true) — The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.
 - children: React.ReactNode — Label text content
 Example: <Label>…</Label>
 
@@ -1215,7 +1215,7 @@ Props:
 - asChild: boolean (default: false) — Render as child element via Radix Slot
 - truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
 - lines: number — Max lines for truncate='clamp' (default 2)
-- tooltip: boolean — With truncate, show full text in a tooltip when actually cut off
+- tooltip: boolean (default: true) — The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.
 - children: React.ReactNode — Link content
 Example: <Link variant="default" underline="always">…</Link>
 
@@ -2020,7 +2020,7 @@ Props:
 - align: 'left' | 'center' | 'right' — Text alignment (optional)
 - truncate: Truncate — Truncate overflowing text: true/'end', 'start', or 'clamp'
 - lines: number — Max lines for truncate='clamp' (default 2)
-- tooltip: boolean — With truncate, show full text in a Move Tooltip when actually cut off
+- tooltip: boolean (default: true) — The full string back on hover, while the text is actually cut off. On by default for the single-line strategies, where what is hidden is the rest of one line; never automatic for `clamp`, which hides an unbounded amount that a hover popup is the wrong shape for.
 - readableWidth: boolean — Cap the line length to a comfortable reading measure (WCAG 1.4.8) for a standalone paragraph — use Prose for real long-form content
 - children: React.ReactNode — Text content
 Example: <Text as="p" weight="normal">…</Text>
