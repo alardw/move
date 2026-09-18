@@ -411,7 +411,9 @@
   inset: 0;
   background-color: var(--move-overlay-heavy);
   backdrop-filter: blur(var(--move-overlay-blur));
-  z-index: calc(var(--move-layer-modal) - 1);
+  /* The same layer Dialog and Drawer put their backdrops on, rather than a
+     hand-rolled one-below-my-own-panel. */
+  z-index: var(--move-layer-overlay);
 }
 
 /* ============================================

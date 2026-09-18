@@ -82,7 +82,8 @@
   padding: var(--move-rte-toolbar-padding);
   background-color: var(--move-rte-toolbar-bg);
   border-bottom: 1px solid var(--move-rte-toolbar-border);
-  z-index: 1;
+  /* the sticky toolbar within the editor’s own scroll box */
+  z-index: var(--move-z-local-1);
 }
 
 .toolbar[data-sticky] {

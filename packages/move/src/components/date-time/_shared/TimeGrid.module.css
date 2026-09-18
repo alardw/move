@@ -102,7 +102,8 @@
   right: 0;
   height: 2px;
   background-color: var(--move-calendar-now-indicator);
-  z-index: 2;
+  /* an event block, over the hour lines behind it */
+  z-index: var(--move-z-local-2);
   pointer-events: none;
 }
 
@@ -122,7 +123,8 @@
   left: 3px;
   right: 3px;
   min-height: 1.25rem;
-  z-index: 1;
+  /* the current-time marker, over the hour lines but under events */
+  z-index: var(--move-z-local-1);
   overflow: hidden;
 }
 

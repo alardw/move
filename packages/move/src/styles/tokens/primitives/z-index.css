@@ -4,14 +4,48 @@
  */
 
 :root {
+  /*
+   * THE LOCAL LAYER — the 100s.
+   *
+   * A layer like the others, and the lowest of them, with one thing that makes
+   * it different: it is the only one used for ordering parts WITHIN a single
+   * component, so it is the only one with steps inside it. The active segment
+   * over its neighbours' borders, a marker over the line it sits on, a settings
+   * menu over the control bar it opens from — these mean something only against
+   * each other, and one shared value would destroy the ordering they exist for.
+   *
+   * It sits below every other layer on purpose, so a component ordering its own
+   * parts can never outrank another component's layer by accident. And the
+   * layers start at 200, so a stray `z-index: 1` from elsewhere in the page
+   * cannot land in the middle of a component's internal ordering.
+   *
+   * Ten steps because the band is free and renumbering later is not. Nothing in
+   * the library has needed more than four; anything reaching past that is worth
+   * a second look, but it is not forbidden.
+   */
+  --move-z-local-0: 100;
+  --move-z-local-1: 101;
+  --move-z-local-2: 102;
+  --move-z-local-3: 103;
+  --move-z-local-4: 104;
+  --move-z-local-5: 105;
+  --move-z-local-6: 106;
+  --move-z-local-7: 107;
+  --move-z-local-8: 108;
+  --move-z-local-9: 109;
+
   --move-z-hide: -1;
   --move-z-base: 0;
-  --move-z-dropdown: 100;
   --move-z-sticky: 200;
   --move-z-overlay: 300;
   --move-z-modal: 400;
   --move-z-popover: 500;
-  --move-z-toast: 600;
-  --move-z-tooltip: 700;
+  /* Above modal and popover, because the whole point is to escape them: a row
+     dragged out of a Drawer has to clear the Drawer. Below toast and tooltip,
+     which are messages — a notification arriving mid-drag should still be
+     readable over the thing in your hand. */
+  --move-z-drag: 600;
+  --move-z-toast: 700;
+  --move-z-tooltip: 800;
   --move-z-max: 9999;
 }

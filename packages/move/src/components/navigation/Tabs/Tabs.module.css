@@ -63,7 +63,8 @@
   border-radius: calc(var(--move-segment-radius) - var(--move-segment-padding));
   color: var(--move-segment-item-fg);
   position: relative;
-  z-index: 1;
+  /* the active tab, over the indicator travelling beneath it */
+  z-index: var(--move-z-local-1);
 }
 
 /* Active label rides above the sliding pill; the indicator provides the fill. */
@@ -106,7 +107,8 @@
 .list[data-variant='outline'] .trigger[data-state='active'] {
   background-color: var(--move-surface-hover);
   border-color: var(--move-primary);
-  z-index: 1;
+  /* the active outline tab, over its neighbours so its border is unbroken */
+  z-index: var(--move-z-local-1);
 }
 
 /* Trigger */
@@ -181,6 +183,7 @@
   height: auto;
   background-color: var(--move-segment-indicator-bg);
   border-radius: calc(var(--move-segment-radius) - var(--move-segment-padding));
-  z-index: 0;
+  /* the pill indicator, behind the tab labels it slides under */
+  z-index: var(--move-z-local-0);
   will-change: transform, width, height;
 }

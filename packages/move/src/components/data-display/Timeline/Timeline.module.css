@@ -93,7 +93,8 @@
   border: var(--move-timeline-line-width) solid var(--move-timeline-bullet-border);
   background-color: var(--move-timeline-bullet-bg);
   position: relative;
-  z-index: 1;
+  /* the marker, over the line it sits on */
+  z-index: var(--move-z-local-1);
   margin-top: 5px;
 }
 

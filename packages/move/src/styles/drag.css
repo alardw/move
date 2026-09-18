@@ -55,7 +55,7 @@
      rows it passes, because the thing in your hand is the thing nearest you. */
   box-shadow: var(--move-shadow-elevated);
   opacity: 0.8;
-  z-index: 2;
+  z-index: var(--move-layer-drag);
   /* Nothing under the pointer should answer hover while it is carrying
      something — the cursor belongs to the drag, not to whatever it passes. */
   pointer-events: none;

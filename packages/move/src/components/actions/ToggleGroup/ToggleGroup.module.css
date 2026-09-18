@@ -114,7 +114,8 @@
   background-color: var(--move-toggle-group-indicator-bg);
   pointer-events: none;
   will-change: transform, width, height;
-  z-index: 0;
+  /* the sliding indicator, behind the items it travels under */
+  z-index: var(--move-z-local-0);
 }
 
 /* Pills — the indicator is the filled pill behind the active item. */
@@ -174,7 +175,8 @@
      they share, so the one painted last owns the line — which by source order
      is whichever sits to the right, and the accent border ended up underneath
      the plain one next to it. */
-  z-index: 2;
+  /* a pressed item, over the indicator so its label stays readable */
+  z-index: var(--move-z-local-2);
 }
 
 /* Connected segments share one 1px line between them, and a shared line cannot
@@ -211,7 +213,8 @@
   box-shadow: none;
   font-weight: var(--move-weight-normal, 400);
   position: relative;
-  z-index: 1;
+  /* the active item, over its neighbours so its border is unbroken */
+  z-index: var(--move-z-local-1);
   /* transition-exempt: opacity accompanies the colour change on the inactive
      segment — state feedback, not motion. */
   transition-property: color, opacity;
@@ -234,7 +237,8 @@
    composed Button's own colour because Button lives in the move.base layer. */
 .item[data-state='on'] {
   color: var(--move-toggle-group-selected-fg);
-  z-index: 1;
+  /* a hovered item, over its neighbours for the same reason */
+  z-index: var(--move-z-local-1);
   transition-duration: 120ms;
   transition-delay: 80ms;
 }
@@ -251,12 +255,14 @@
   outline-offset: calc(
     -1 * (var(--move-focus-ring-width, 2px) + var(--move-focus-ring-offset, 2px))
   );
-  z-index: 3;
+  /* a focused item, above active and hover so the ring is never clipped */
+  z-index: var(--move-z-local-3);
 }
 
 /* Selected: standard outer focus ring */
 .item[data-state='on']:focus-visible:not(:active) {
   outline: var(--move-focus-ring);
   outline-offset: var(--move-focus-ring-offset);
-  z-index: 3;
+  /* the focused item’s ring, for the same reason */
+  z-index: var(--move-z-local-3);
 }

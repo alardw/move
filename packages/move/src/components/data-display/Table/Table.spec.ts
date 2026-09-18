@@ -755,7 +755,7 @@ export const spec = {
     {
       id: 'sticky-header-z',
       description:
-        'data-sticky-header sets header to position:sticky, top:0, z-index:1, with bg from table bg token.',
+        'data-sticky-header sets header to position:sticky, top:0, z-index from the sticky layer token, with bg from table bg token.',
     },
     {
       id: 'group-open-state',

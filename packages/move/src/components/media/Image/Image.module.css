@@ -30,13 +30,15 @@
   object-fit: cover;
   filter: blur(var(--move-image-backdrop-blur)) saturate(1.2);
   transform: scale(1.15);
-  z-index: 0;
+  /* the action, over the image it acts on */
+  z-index: var(--move-z-local-0);
 }
 
 /* Keep the real image above the backdrop. */
 .root[data-backdrop] .img {
   position: relative;
-  z-index: 1;
+  /* the fallback, over the img element it replaces */
+  z-index: var(--move-z-local-1);
 }
 
 /* Radius */

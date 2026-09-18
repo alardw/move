@@ -357,10 +357,11 @@
    * Z-Index - Semantic
    * ============================================ */
   --move-layer-base: var(--move-z-base);
-  --move-layer-dropdown: var(--move-z-dropdown);
+  --move-layer-sticky: var(--move-z-sticky);
   --move-layer-overlay: var(--move-z-overlay);
   --move-layer-modal: var(--move-z-modal);
   --move-layer-popover: var(--move-z-popover);
+  --move-layer-drag: var(--move-z-drag);
   --move-layer-toast: var(--move-z-toast);
   --move-layer-tooltip: var(--move-z-tooltip);
 }

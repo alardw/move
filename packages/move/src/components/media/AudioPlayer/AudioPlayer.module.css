@@ -247,5 +247,6 @@
   border-radius: 4px;
   pointer-events: none;
   white-space: pre-line;
-  z-index: 2;
+  /* the controls, over the player’s own background */
+  z-index: var(--move-z-local-2);
 }

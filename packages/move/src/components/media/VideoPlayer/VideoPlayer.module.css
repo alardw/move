@@ -98,7 +98,8 @@
   border-radius: 4px;
   pointer-events: none;
   white-space: pre-line;
-  z-index: 2;
+  /* the control bar, over the video */
+  z-index: var(--move-z-local-2);
   /* transition-exempt: KNOWN DRIFT. The control bar slides clear of the
      captions track — movement driven by playback state, which is what a
      data-state trigger is for. Predates the rule. */
@@ -126,7 +127,8 @@
   /* transition-exempt: KNOWN DRIFT. Controls fading on pointer presence is a
      state change and belongs on a data-state trigger. Predates the rule. */
   transition: opacity 0.3s ease;
-  z-index: 3;
+  /* the settings menu, over the control bar it opens from */
+  z-index: var(--move-z-local-3);
 }
 
 .root[data-controls-hidden='true'] .controls {

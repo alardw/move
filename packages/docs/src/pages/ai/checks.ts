@@ -118,6 +118,12 @@ export const CHECKS: CheckDoc[] = [
       'Component CSS reaches for a ROLE token, never a named palette. A palette reference is allowed only where the selector names that same colour (a categorical [data-color] rule); anywhere else it pins one hue and ignores the theme \u2014 the same bug as a hardcoded hex, wearing a token.',
   },
   {
+    name: 'z-layers',
+    appliesTo: 'component',
+    enforces:
+      'The stacking scale has one definition, and every z-index in the library sits in it. The layer registry names the layers and is exported as public API; the --move-z-* tokens are what the browser obeys, and the two must be the same scale \u2014 checked both ways, plus that the list reads low to high. Nothing used to claim they matched, so they parted: the registry carried values nothing rendered at, and disagreed with the tokens about whether toast or tooltip sits on top, so the docs published the opposite of what shipped. The second half is who may write a number: a component ordering its own parts uses the local space, which sits entirely below the lowest layer, and anything sitting above other components uses a layer. Sticky and fixed elements are always the second kind \u2014 they sit over whatever scrolls past, which is other components \u2014 so the local space is closed to them however small the number looks.',
+  },
+  {
     name: 'skill-refs',
     appliesTo: 'component',
     enforces:

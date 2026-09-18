@@ -29,7 +29,7 @@
   position: sticky;
   top: 0;
   background-color: transparent;
-  z-index: 1;
+  z-index: var(--move-layer-sticky);
 }
 
 .weekHeaderCell {

@@ -98,7 +98,7 @@
   transition: none;
   box-shadow: var(--move-sortable-item-shadow-dragging);
   opacity: var(--move-sortable-item-opacity-dragging);
-  z-index: 2;
+  z-index: var(--move-layer-drag);
 }
 
 .item[data-settling] {

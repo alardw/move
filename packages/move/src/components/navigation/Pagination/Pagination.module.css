@@ -56,7 +56,8 @@
 
 .items li {
   position: relative;
-  z-index: 1;
+  /* the hovered page, over its neighbours so its border is unbroken */
+  z-index: var(--move-z-local-1);
 }
 
 /* Indicator (sliding active background) */
@@ -70,7 +71,8 @@
   border-radius: var(--move-pagination-item-radius);
   pointer-events: none;
   will-change: transform, width;
-  z-index: 0;
+  /* a disabled page, behind its neighbours */
+  z-index: var(--move-z-local-0);
 }
 
 .root[data-variant='outline'] .indicator {
