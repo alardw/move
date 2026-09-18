@@ -344,6 +344,36 @@ const DatePickerRoot: React.FC<DatePickerRootProps> = ({
     }
   }, [mode, calendar.value]);
 
+  /**
+   * Open on the month of the date you have.
+   *
+   * The displayed month is set once, when the calendar first exists, and browsing
+   * moves it — which is right while the panel is open and wrong the moment it
+   * closes. Reopening the picker showed wherever the user had wandered to last
+   * time: look at March, close, reopen, still March, with the selected day in
+   * June nowhere on screen.
+   *
+   * Only on the open edge. Setting it while open would drag the month back from
+   * under someone in the middle of browsing.
+   */
+  const wasOpen = React.useRef(false);
+  React.useEffect(() => {
+    const opening = isOpen && !wasOpen.current;
+    wasOpen.current = !!isOpen;
+    if (!opening) return;
+    const selected = calendar.value;
+    const anchorDate =
+      selected instanceof Date
+        ? selected
+        : Array.isArray(selected)
+          ? (selected[0] ?? null)
+          : ((selected as DateRange | null)?.from ?? null);
+    const month = anchorDate ?? new Date();
+    calendar.setDisplayMonth(new Date(month.getFullYear(), month.getMonth(), 1));
+    // `calendar` is rebuilt every render; this must run on the open edge alone.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   // Navigate calendar to the active field's date when activeField changes
   React.useEffect(() => {
     if (mode !== 'range' || !activeField) return;
