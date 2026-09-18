@@ -71,14 +71,20 @@ export const LayoutGroup = withMoveComponent<'root', LayoutGroupProps, HTMLEleme
         // With asChild, Slot merges our ref/className/data-attrs onto the wrapped
         // element (e.g. a Stack/Grid), which then provides the layout and is the
         // container useAutoLayout tracks.
+        // The wrapped element owns its display, so our root class stays off it: two
+        // equal-weight rules on one element are decided by stylesheet order, which
+        // the dev server and the bundled CSS do not agree on.
         const Comp = (props.asChild ? Slot.Root : props.as || 'div') as React.ElementType;
+        const className = props.asChild
+          ? [props.className, spClass].filter(Boolean).join(' ') || undefined
+          : cx('root', props.className, spClass as string | undefined);
 
         return (
           <Comp
             {...attrs}
             {...spRest}
             ref={mergedRef}
-            className={cx('root', props.className, spClass as string | undefined)}
+            className={className}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-enter={props.enter}
             data-exit={props.exit}

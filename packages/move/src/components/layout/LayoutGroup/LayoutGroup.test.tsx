@@ -65,6 +65,19 @@ describe('LayoutGroup', () => {
       expect(el).toHaveStyle({ marginTop: '10px' });
     });
 
+    it('with asChild, leaves the wrapped element its own classes and nothing else', () => {
+      render(
+        <LayoutGroup asChild className="extra">
+          <ul className="list" data-testid="lg">
+            <li>x</li>
+          </ul>
+        </LayoutGroup>,
+      );
+      // The wrapped element owns its display; a root class of ours would compete
+      // with its rules on stylesheet order alone.
+      expect([...screen.getByTestId('lg').classList].sort()).toEqual(['extra', 'list']);
+    });
+
     it('spreads HTML attributes', () => {
       render(
         <LayoutGroup data-testid="lg" aria-label="grid">
