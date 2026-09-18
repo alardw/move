@@ -63,6 +63,9 @@ const STRUCTURAL = new Set([
   // Sibling of script-refs: guards skill prose against repo paths. A dangling
   // reference is not a violation of any entity rule — it is a broken instruction.
   'skill-refs',
+  // The reverse of skill-refs: every reference file is read by a skill or by
+  // tooling. An unread file breaks no entity rule — it is an instruction nobody gives.
+  'reference-orphans',
   // Meta-check over how rules are WRITTEN, not over an entity: it asserts each
   // restriction check declares the sanctioned alternative to what it refuses.
   'escape-hatch',
