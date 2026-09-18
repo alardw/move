@@ -4261,7 +4261,7 @@
       "name": "Drag",
       "category": "data-display",
       "componentClass": null,
-      "description": "Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing somewhere that is not a reorder.",
+      "description": "Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing onto a place that will take it.",
       "props": [],
       "subComponents": [
         {

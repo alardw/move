@@ -758,7 +758,7 @@ Props:
 Example: <Divider orientation="horizontal" type="solid">…</Divider>
 
 ## Drag (data-display)
-Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing somewhere that is not a reorder.
+Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing onto a place that will take it.
 Drag.Root props:
 - onDrop: (event: DropEvent) => void — Fires for every drop in the tree, after the target’s own handler. For a consumer that keeps one reducer rather than a handler per zone.
 - labels: Partial<DragLabels> — Strings the live region speaks.
