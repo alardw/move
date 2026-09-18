@@ -740,7 +740,7 @@ export const spec = {
     {
       id: 'animated-scroll',
       description:
-        'Programmatic page changes use useCarouselAnimation hook for smooth scroll; snap type is temporarily disabled during animation',
+        'Programmatic page changes use the internal useCarouselAnimate hook for smooth scroll; snap type is temporarily disabled during animation',
     },
     {
       id: 'drag-swipe',

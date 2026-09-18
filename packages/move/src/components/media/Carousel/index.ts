@@ -16,11 +16,4 @@ export type {
   CarouselAlign,
   CarouselAnimate,
 } from './useCarousel';
-export { useCarouselAnimation, useCarouselAnimate } from './useCarouselAnimation';
-export type {
-  UseCarouselAnimateOptions,
-  UseCarouselAnimateReturn,
-  UseCarouselAnimationOptions,
-  UseCarouselAnimationReturn,
-} from './useCarouselAnimation';
 export type { CarouselLabels } from './Carousel';

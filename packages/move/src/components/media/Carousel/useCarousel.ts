@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { useControlledState } from '../../../engine';
-import { useCarouselAnimation } from './useCarouselAnimation';
+import { useCarouselAnimate } from './useCarouselAnimation';
 import { prefersReducedMotion } from '../../../animation';
 import type { Animation } from '../../../animation';
 
@@ -97,7 +97,7 @@ export function useCarousel(options: UseCarouselOptions = {}): UseCarouselReturn
   const isScrollingRef = useRef(false);
   const autoplayTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const [autoplayPaused, setAutoplayPaused] = useState(false);
-  const { animateScroll, cancel } = useCarouselAnimation({ animations: animationsConfig });
+  const { animateScroll, cancel } = useCarouselAnimate({ animations: animationsConfig });
 
   // Page count based on slides and slidesPerView
   const pageCount = useMemo(() => {

@@ -3,7 +3,12 @@ import { moveAnimate, prefersReducedMotion } from '../../../animation';
 import type { Animation, JSAnimation } from '../../../animation';
 
 // =============================================================================
-// useCarouselAnimate — for Carousel slide transitions
+// useCarouselAnimate — Carousel's own scroll animation. Internal: it is not on
+// any barrel, and the two things it does that the platform will not are why it
+// exists at all — easing and duration taken from the carousel's animation
+// config, and a scroll that can be CANCELLED when the next swipe arrives.
+// `scrollIntoView` and `scroll-behavior: smooth` cover every other imperative
+// scroll in the library, which is why there is no general version of this.
 // =============================================================================
 
 export interface UseCarouselAnimateOptions {
@@ -104,6 +109,3 @@ export function useCarouselAnimate(
 }
 
 // Legacy alias
-export { useCarouselAnimate as useCarouselAnimation };
-export type { UseCarouselAnimateOptions as UseCarouselAnimationOptions };
-export type { UseCarouselAnimateReturn as UseCarouselAnimationReturn };

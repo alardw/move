@@ -1048,13 +1048,6 @@ export type {
   CarouselAlign,
   CarouselAnimate,
 } from './components/media/Carousel';
-export { useCarouselAnimation, useCarouselAnimate } from './components/media/Carousel';
-export type {
-  UseCarouselAnimateOptions,
-  UseCarouselAnimateReturn,
-  UseCarouselAnimationOptions,
-  UseCarouselAnimationReturn,
-} from './components/media/Carousel';
 
 export { VideoPlayer } from './components/media/VideoPlayer';
 export type {
