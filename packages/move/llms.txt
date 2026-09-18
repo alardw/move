@@ -1938,12 +1938,14 @@ Table.Row props:
 - animations: AnimationTrigger[] | false — Row-level hover animation config or false to disable.
 - children: React.ReactNode — Row cells.
 Table.Head props:
+- fit: boolean (default: false) — Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say
 - sortable: boolean — Enable sort interaction on this column.
 - sorted: 'asc' | 'desc' | false — Current sort direction or false.
 - onSort: () => void — Callback when sort is triggered.
 - align: 'start' | 'center' | 'end' — Column alignment for the header label.
 - children: React.ReactNode — Header cell content.
 Table.Cell props:
+- fit: boolean (default: false) — Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say
 - align: 'start' | 'center' | 'end' — Cell alignment.
 - description: React.ReactNode — When set, the cell renders its children as a bold primary line with this muted description below.
 - children: React.ReactNode — Cell content.

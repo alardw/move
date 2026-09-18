@@ -664,3 +664,32 @@ describe('Table', () => {
     });
   });
 });
+
+describe('fit', () => {
+  it('marks a column that sizes to its content', () => {
+    render(
+      <Table.Root>
+        <Table.Header>
+          <Table.Row>
+            <Table.Head fit>Token</Table.Head>
+            <Table.Head>What it is for</Table.Head>
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          <Table.Row>
+            <Table.Cell fit>--move-layer-drag</Table.Cell>
+            <Table.Cell>The thing in your hand</Table.Cell>
+          </Table.Row>
+        </Table.Body>
+      </Table.Root>,
+    );
+    // The head wraps its children in a span, so ask the cell itself.
+    expect(screen.getByText('Token').closest('th')).toHaveAttribute('data-fit');
+    expect(screen.getByText('--move-layer-drag').closest('td')).toHaveAttribute('data-fit');
+    // Absent rather than present-and-empty when off.
+    expect(screen.getByText('What it is for').closest('th')).not.toHaveAttribute('data-fit');
+    expect(screen.getByText('The thing in your hand').closest('td')).not.toHaveAttribute(
+      'data-fit',
+    );
+  });
+});

@@ -565,6 +565,15 @@ export interface TableHeadProps extends Omit<
    *  convention to the cells in that column (consumer sets it
    *  explicitly on each Cell for now). */
   align?: TableAlign;
+  /**
+   * Size this column to its content and keep it on one line.
+   *
+   * A table shares its width between columns, which is right for prose and
+   * wrong for a column holding a token name, an id, a number or a checkbox:
+   * those have one correct width, their own, and stretching them pushes the
+   * column that does have something to say into a narrower space.
+   */
+  fit?: boolean;
   sp?: SlotPropsMap<'head'>;
 }
 
@@ -572,10 +581,10 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
   name: 'TableHead',
   styles,
   slots: ['head'] as const,
-  moveProps: ['sortable', 'sorted', 'onSort', 'align'],
+  moveProps: ['sortable', 'sorted', 'onSort', 'align', 'fit'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const { className, style, children, sortable, sorted, onSort, align } = props;
+    const { className, style, children, sortable, sorted, onSort, align, fit } = props;
 
     // By ROLE, like every other icon in the library — so a consumer re-skins
     // "sorted ascending" once on MoveRoot rather than matching chevron names.
@@ -610,6 +619,7 @@ const TableHead = withMoveComponent<'head', TableHeadProps, HTMLTableCellElement
             data-sortable={sortable ? '' : undefined}
             data-sorted={sorted || undefined}
             data-align={align as string | undefined}
+            data-fit={fit ? '' : undefined}
             aria-sort={
               sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : undefined
             }
@@ -652,6 +662,16 @@ export interface TableCellProps extends Omit<
   children?: React.ReactNode;
   /** Column alignment. */
   align?: TableAlign;
+  /**
+   * Size this column to its content and keep it on one line.
+   *
+   * A table shares its width between columns, which is right for prose and
+   * wrong for a column holding a token name, an id, a number or a checkbox:
+   * those have one correct width, their own, and stretching them pushes the
+   * column that does have something to say into a narrower space.
+   */
+  fit?: boolean;
+
   /** When set, the cell renders its children as a primary line with
    *  this muted description below — the TW-Plus "Name / email" cell. */
   description?: React.ReactNode;
@@ -662,7 +682,7 @@ const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement
   name: 'TableCell',
   styles,
   slots: ['cell'] as const,
-  moveProps: ['align', 'description'],
+  moveProps: ['align', 'description', 'fit'],
 
   setup({ props, ref, cx, sp, attrs }) {
     return {
@@ -689,6 +709,7 @@ const TableCell = withMoveComponent<'cell', TableCellProps, HTMLTableCellElement
             className={cx('cell', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             data-align={props.align as string | undefined}
+            data-fit={props.fit ? '' : undefined}
           >
             {content}
           </td>

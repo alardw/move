@@ -10810,6 +10810,12 @@
           "name": "Head",
           "props": [
             {
+              "name": "fit",
+              "type": "boolean",
+              "default": "false",
+              "description": "Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say"
+            },
+            {
               "name": "sortable",
               "type": "boolean",
               "description": "Enable sort interaction on this column."
@@ -10844,6 +10850,12 @@
         {
           "name": "Cell",
           "props": [
+            {
+              "name": "fit",
+              "type": "boolean",
+              "default": "false",
+              "description": "Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say"
+            },
             {
               "name": "align",
               "type": "'start' | 'center' | 'end'",

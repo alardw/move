@@ -163,9 +163,9 @@ export function StackingPage() {
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Layer</Table.Head>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>z-index</Table.Head>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>CSS token</Table.Head>
+                <Table.Head fit>Layer</Table.Head>
+                <Table.Head fit>z-index</Table.Head>
+                <Table.Head fit>CSS token</Table.Head>
                 <Table.Head>Used for</Table.Head>
               </Table.Row>
             </Table.Header>
@@ -173,13 +173,11 @@ export function StackingPage() {
               {LAYER_ORDER.map((kind) => (
                 <Fragment key={kind}>
                   <Table.Row>
-                    <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                    <Table.Cell fit>
                       <Code>{kind}</Code>
                     </Table.Cell>
-                    <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
-                      {Z_LAYERS[kind].value}
-                    </Table.Cell>
-                    <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                    <Table.Cell fit>{Z_LAYERS[kind].value}</Table.Cell>
+                    <Table.Cell fit>
                       <Code>{`--move-layer-${kind}`}</Code>
                     </Table.Cell>
                     <Table.Cell>
@@ -190,11 +188,11 @@ export function StackingPage() {
                       no unexplained gap between 0 and 200. */}
                   {kind === 'base' && (
                     <Table.Row>
-                      <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                      <Table.Cell fit>
                         <Code>local</Code>
                       </Table.Cell>
-                      <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>100–109</Table.Cell>
-                      <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                      <Table.Cell fit>100–109</Table.Cell>
+                      <Table.Cell fit>
                         <Code>--move-z-local-0…9</Code>
                       </Table.Cell>
                       <Table.Cell>
@@ -221,7 +219,7 @@ export function StackingPage() {
             <Table.Header>
               <Table.Row>
                 <Table.Head>Role</Table.Head>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Layer</Table.Head>
+                <Table.Head fit>Layer</Table.Head>
                 <Table.Head>Why</Table.Head>
               </Table.Row>
             </Table.Header>
@@ -231,7 +229,7 @@ export function StackingPage() {
                   <Table.Cell>
                     <Text size="sm">{r.role}</Text>
                   </Table.Cell>
-                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                  <Table.Cell fit>
                     <Code>{r.layer}</Code>
                   </Table.Cell>
                   <Table.Cell>
@@ -255,14 +253,14 @@ export function StackingPage() {
           <Table>
             <Table.Header>
               <Table.Row>
-                <Table.Head style={{ width: 1, whiteSpace: 'nowrap' }}>Layer</Table.Head>
+                <Table.Head fit>Layer</Table.Head>
                 <Table.Head>Components</Table.Head>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {LAYERS_WITH_COMPONENTS.map((kind) => (
                 <Table.Row key={kind}>
-                  <Table.Cell style={{ width: 1, whiteSpace: 'nowrap' }}>
+                  <Table.Cell fit>
                     <Code>{kind}</Code>
                   </Table.Cell>
                   <Table.Cell>
@@ -323,7 +321,7 @@ export function StackingPage() {
                 inline-rendered overlays hit this problem.
               </Text>
               <Text>
-                <strong>A dragged element portals too.</strong>{' '}
+                <Text as="strong">A dragged element portals too.</Text>{' '}
                 <RouterLink to="/components/drag">Drag.Root</RouterLink> puts a layer at the end of
                 the body, and a lifted element is drawn there for as long as the drag lasts — so a
                 row dragged out of a <RouterLink to="/components/drawer">Drawer</RouterLink> stays
@@ -340,17 +338,18 @@ export function StackingPage() {
                 and the name tells you which you are in.
               </Text>
               <Text>
-                <strong>Layered</strong> — <Code>var(--move-layer-*)</Code> — is for sitting above
-                other components: a dialog over the page, a tooltip over the dialog, a dragged row
-                over the drawer it came from. Things that do not know about each other can only be
-                ordered by a scale they both read from, which is the table above.
+                <Text as="strong">Layered</Text> — <Code>var(--move-layer-*)</Code> — is for sitting
+                above other components: a dialog over the page, a tooltip over the dialog, a dragged
+                row over the drawer it came from. Things that do not know about each other can only
+                be ordered by a scale they both read from, which is the table above.
               </Text>
               <Text>
-                <strong>Local</strong> — <Code>var(--move-z-local-0…9)</Code> — is a component
-                ordering its own parts inside its own box: the active segment over its neighbours’
-                borders, a marker over the line it sits on, a settings menu over the control bar it
-                opens from. These mean something only against each other. Giving them a layer token
-                would set them all to the same number and destroy the ordering they exist for.
+                <Text as="strong">Local</Text> — <Code>var(--move-z-local-0…9)</Code> — is a
+                component ordering its own parts inside its own box: the active segment over its
+                neighbours’ borders, a marker over the line it sits on, a settings menu over the
+                control bar it opens from. These mean something only against each other. Giving them
+                a layer token would set them all to the same number and destroy the ordering they
+                exist for.
               </Text>
               <Text size="sm" color="muted">
                 A <Code>position: sticky</Code> or <Code>fixed</Code> element is never local,

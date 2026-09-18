@@ -309,6 +309,14 @@ export const spec = {
       ],
       props: [
         {
+          name: 'fit',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description:
+            'Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say',
+        },
+        {
           name: 'sortable',
           type: 'boolean',
           moveSpecific: true,
@@ -355,6 +363,14 @@ export const spec = {
         },
       ],
       props: [
+        {
+          name: 'fit',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description:
+            'Size this column to its content and keep it on one line. A table shares its width between columns, which is right for prose and wrong for a token name, an id, a number or a checkbox — those have one correct width, and stretching them narrows the column that does have something to say',
+        },
         {
           name: 'align',
           type: "'start' | 'center' | 'end'",
@@ -559,7 +575,7 @@ export const spec = {
             children: [
               {
                 slot: 'head',
-                dataAttributes: ['data-sortable', 'data-sorted'],
+                dataAttributes: ['data-sortable', 'data-sorted', 'data-fit'],
                 ariaAttributes: ['aria-sort'],
               },
             ],
@@ -572,7 +588,7 @@ export const spec = {
           {
             slot: 'row',
             dataAttributes: ['data-state'],
-            children: [{ slot: 'cell', dataAttributes: ['data-label'] }],
+            children: [{ slot: 'cell', dataAttributes: ['data-label', 'data-fit'] }],
           },
         ],
       },
@@ -583,7 +599,7 @@ export const spec = {
           { slot: 'groupHeader', ariaAttributes: ['aria-expanded'] },
           {
             slot: 'row',
-            children: [{ slot: 'cell', dataAttributes: ['data-label'] }],
+            children: [{ slot: 'cell', dataAttributes: ['data-label', 'data-fit'] }],
           },
         ],
       },

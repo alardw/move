@@ -229,14 +229,11 @@
     "inline-style": 1,
     "raw-html": 1
   },
-  "pages/systems/StackingPage.tsx": {
-    "inline-style": 10
-  },
   "pages/systems/SurfacesPage.tsx": {
     "inline-style": 4
   },
   "pages/systems/TruncationPage.tsx": {
     "inline-style": 2,
-    "raw-html": 6
+    "raw-html": 3
   }
 }

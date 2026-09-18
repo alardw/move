@@ -283,6 +283,16 @@
   color: var(--move-table-header-fg);
 }
 
+/* A column sized to its content. `width: 1px` is the table-layout idiom for
+   "as narrow as it can be": the algorithm treats it as a floor, not a width,
+   and hands the slack to the columns that need it. Without the nowrap it would
+   take the instruction literally and wrap every word onto its own line. */
+.head[data-fit],
+.cell[data-fit] {
+  width: 1px;
+  white-space: nowrap;
+}
+
 .head[data-sortable] {
   cursor: pointer;
   user-select: none;
