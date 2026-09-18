@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Stack, Heading, Text, Breadcrumb, Code, Badge, Icon, Link, Tooltip } from 'move';
-import { Section, TocRail, Preview, type TocItem } from '../../components';
+import { Section, TocRail, Preview, CodeBlock, type TocItem } from '../../components';
 
 /**
  * Truncation. A cross-cutting concern, not a component: one `truncate` prop
@@ -22,6 +22,14 @@ const ESSAY = [
   'Where the two goals disagree — a brand colour that would fail as body text — the role that carries meaning wins and the decorative one moves, because a person can live with a slightly different blue and cannot live with a sentence they are unable to read.',
   'That is the whole of it: one input, a set of promises about what must remain true, and a theme that holds those promises in both modes and at every size.',
 ].join(' ');
+
+const THEME_CEILING = `<MoveRoot
+  theme={{
+    ...theme,
+    // 'none' lets a tooltip grow to whatever it was given
+    tokens: { '--move-tooltip-max-lines': '4' },
+  }}
+>`;
 
 const TOC: TocItem[] = [
   { href: '#overview', label: 'Overview' },
@@ -208,9 +216,8 @@ export function TruncationPage() {
             <Text>
               The ceiling belongs to the tooltip, and a tooltip is drawn at the end of the document
               rather than beside the text it describes — so a value set next to the text never
-              reaches it. Set <Code>--move-tooltip-content-max-lines</Code> in your theme to move
-              every tooltip, or pass <Code>maxLines</Code> to a <Code>Tooltip.Content</Code> to move
-              one.
+              reaches it. Two places do reach it: the theme, for every tooltip at once, and{' '}
+              <Code>maxLines</Code>, for one.
             </Text>
             <Preview
               code={`<Tooltip.Root>
@@ -233,6 +240,12 @@ export function TruncationPage() {
                 </Tooltip.Root>
               </Frame>
             </Preview>
+            <Text size="sm" color="muted">
+              And for every tooltip at once, the system token in your theme. There is no preview for
+              this one: a theme scoped to part of a page reaches that part of the page, and a
+              tooltip is drawn outside it.
+            </Text>
+            <CodeBlock code={THEME_CEILING} language="tsx" />
           </Stack>
         </Section>
 
