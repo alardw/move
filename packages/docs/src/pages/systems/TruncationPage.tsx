@@ -120,9 +120,8 @@ export function TruncationPage() {
         <Stack gap="sm">
           <Heading level={1}>Truncation</Heading>
           <Text color="muted" size="lg">
-            Text doesn't always fit — a long filename in a narrow row, a title in a small card. Move
-            gives every piece of text one <Code>truncate</Code> prop that trims it gracefully,
-            adapts as the space around it changes, and can pop the full text back on hover.
+            A long filename in a narrow row, a title in a small card. One <Code>truncate</Code> prop
+            trims it, follows the space around it, and gives the whole string back on hover.
           </Text>
           <Stack direction="row" gap="xs" wrap>
             <Badge variant="soft">
@@ -139,7 +138,7 @@ export function TruncationPage() {
         <Section
           id="strategies"
           title="Four ways to trim"
-          lede="Same prop, four shapes. Pick the one that keeps the part that matters — set it once and it recomputes as the container resizes."
+          lede="Same prop, four shapes. Pick the one that keeps the part that matters."
         >
           <Preview
             code={`<Text truncate>{path}</Text>            {/* end — the default */}
@@ -174,17 +173,16 @@ export function TruncationPage() {
             </Stack>
           </Preview>
           <Text size="sm" color="muted">
-            <em>Middle</em> pins the last path segment (everything after the final <Code>/</Code>) —
-            or the last few characters when there's no separator — and trims the head, so the
-            ellipsis lands wherever the head runs out of room. The full string always stays in the
-            page for screen readers; trimming is only visual.
+            <em>Middle</em> keeps everything after the last <Code>/</Code> — or the last few
+            characters when there is no separator — and trims the head. Screen readers still get the
+            whole string.
           </Text>
         </Section>
 
         <Section
           id="tooltip"
           title="The full text on hover"
-          lede="Trimmed text gives the whole string back on hover, without being asked — and only while it is actually cut off, so text that fits stays quiet. It is a real Move tooltip, not the browser's."
+          lede="Trimmed text gives the whole string back on hover. Text that fits stays quiet."
         >
           <Stack gap="sm">
             <Preview code={`<Text truncate>{path}</Text>   {/* tooltip={false} to turn it off */}`}>
@@ -193,19 +191,12 @@ export function TruncationPage() {
               </Frame>
             </Preview>
             <Text size="sm" color="muted">
-              Drag the box's right edge to give the line more or less room. It measures itself the
-              moment you reach for it, so the tooltip appears while the path is actually cut off —
-              widen it enough and it bows out.
+              Drag the right edge. Widen it enough and the tooltip bows out.
             </Text>
           </Stack>
           <Stack gap="sm">
             <Heading level={3}>When there is a lot of it</Heading>
-            <Text>
-              A tooltip is handed whatever was hidden, and for a clamped paragraph that is the whole
-              paragraph. It stops at ten lines and trims the rest, so what comes back is a box you
-              can read at a glance rather than one taller than the window. Raise or lift the ceiling
-              with <Code>--move-tooltip-content-max-lines</Code>, which takes <Code>none</Code>.
-            </Text>
+            <Text>A tooltip shows what was hidden, up to ten lines, then trims.</Text>
             <Preview code={`<Text truncate="clamp" lines={2}>{essay}</Text>`}>
               <Frame>
                 <Text truncate="clamp" lines={2}>
@@ -214,10 +205,8 @@ export function TruncationPage() {
               </Frame>
             </Preview>
             <Text>
-              The ceiling belongs to the tooltip, and a tooltip is drawn at the end of the document
-              rather than beside the text it describes — so a value set next to the text never
-              reaches it. Two places do reach it: the theme, for every tooltip at once, and{' '}
-              <Code>maxLines</Code>, for one.
+              <Code>maxLines</Code> moves the ceiling on one tooltip, and takes <Code>none</Code> to
+              lift it:
             </Text>
             <Preview
               code={`<Tooltip.Root>
@@ -241,9 +230,7 @@ export function TruncationPage() {
               </Frame>
             </Preview>
             <Text size="sm" color="muted">
-              And for every tooltip at once, the system token in your theme. There is no preview for
-              this one: a theme scoped to part of a page reaches that part of the page, and a
-              tooltip is drawn outside it.
+              For every tooltip at once, set the token in your theme:
             </Text>
             <CodeBlock code={THEME_CEILING} language="tsx" />
           </Stack>
@@ -252,20 +239,17 @@ export function TruncationPage() {
         <Section
           id="room"
           title="Give it room to shrink"
-          lede="Trimming is CSS, so it's free and responsive — with one catch worth knowing."
+          lede="Text trims when its box can shrink. Usually it already can."
         >
           <Stack gap="md">
             <Text>
-              Truncation can only happen when the text has a <em>bounded, shrinkable</em> width. On
-              its own that's automatic — a truncated element already tells its own box it may
-              shrink, so a <Code>&lt;Text truncate&gt;</Code> dropped straight into a row clips
-              happily while its neighbours keep their size.
+              A truncated element already tells its box it may shrink, so a{' '}
+              <Code>&lt;Text truncate&gt;</Code> in a row trims while its neighbours keep their
+              size.
             </Text>
             <Text>
-              The one place it needs a nudge is a <em>wrapper</em> in a flex row. Flex children
-              refuse to shrink below their content by default, so if you tuck the text inside a
-              column, give that column <Code>flex={'{1}'}</Code> (which lets it shrink) and the text
-              inside trims as expected:
+              Tuck it inside a column and give that column <Code>flex={'{1}'}</Code>, so the column
+              can shrink too:
             </Text>
             <Preview
               code={`<Stack direction="row" gap="sm" align="center">
@@ -285,8 +269,8 @@ export function TruncationPage() {
               </div>
             </Preview>
             <Text size="sm" color="muted">
-              That's the whole contract: the text (or a <Code>flex={'{1}'}</Code> ancestor) has to
-              be allowed to shrink. Everything else is handled for you.
+              The text, or something above it, has to be allowed to shrink. That is the whole
+              contract.
             </Text>
           </Stack>
         </Section>
@@ -294,20 +278,17 @@ export function TruncationPage() {
         <Section id="where" title="Where it lives" lede="One system, a few surfaces.">
           <Stack gap="md">
             <Text>
-              The <Code>truncate</Code> prop is on every text primitive — <Code>Text</Code>,{' '}
-              <Code>Heading</Code>, <Code>Code</Code>, <Code>Link</Code>, and <Code>Label</Code> —
-              and on the text slots of composites like <Code>List.Title</Code> and{' '}
-              <Code>Card.Title</Code>. Under the hood it's a single global utility keyed on a{' '}
-              <Code>data-truncate</Code> attribute, so any element can opt in the same way.
+              <Code>truncate</Code> is on every text primitive — <Code>Text</Code>,{' '}
+              <Code>Heading</Code>, <Code>Code</Code>, <Code>Link</Code>, <Code>Label</Code> — and
+              on text slots like <Code>List.Title</Code> and <Code>Card.Title</Code>. It is one
+              global utility keyed on <Code>data-truncate</Code>, so any element can opt in.
             </Text>
             <Text>
-              For the rare case that needs to <em>react</em> to whether text is clipped — a custom
-              badge, a conditional action — the{' '}
+              To react to whether text is clipped, the{' '}
               <Link asChild>
                 <RouterLink to="/systems/hooks">useTruncate</RouterLink>
               </Link>{' '}
-              hook hands you an <Code>isTruncated</Code> flag, re-measured as the layout changes.
-              The tooltip above is built on it.
+              hook gives you an <Code>isTruncated</Code> flag that follows the layout.
             </Text>
           </Stack>
         </Section>
