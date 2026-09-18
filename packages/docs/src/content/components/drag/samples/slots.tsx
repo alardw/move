@@ -18,13 +18,16 @@ const START: Item[] = [
  * which nests two interactive boxes and sizes to neither.
  */
 function Chip({ item }: { item: Item }) {
-  const { ref, handleProps } = useDraggable<HTMLButtonElement>({
+  // `dragProps`, not `handleProps` + `ref`: the chip IS its own handle, so both
+  // refs belong on one node. Spreading handleProps alongside ref drops one of
+  // them silently.
+  const { dragProps } = useDraggable<HTMLButtonElement>({
     id: item.id,
     data: item,
     axis: 'both',
   });
   return (
-    <Button {...handleProps} ref={ref} variant="secondary" size="sm">
+    <Button {...dragProps} variant="secondary" size="sm">
       <Icon name="grip-vertical" />
       {item.title}
     </Button>

@@ -1,9 +1,10 @@
 import { Drag, Button, Text, Stack, Icon, useDraggable } from 'move';
 
 function Chip({ id, title, kind }: { id: string; title: string; kind: string }) {
-  const { ref, handleProps } = useDraggable<HTMLButtonElement>({ id, data: kind, axis: 'both' });
+  // `dragProps`: the chip IS its own handle, so both refs go on one node.
+  const { dragProps } = useDraggable<HTMLButtonElement>({ id, data: kind, axis: 'both' });
   return (
-    <Button {...handleProps} ref={ref} variant="secondary" size="sm">
+    <Button {...dragProps} variant="secondary" size="sm">
       <Icon name="grip-vertical" />
       {title}
     </Button>

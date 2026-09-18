@@ -233,3 +233,35 @@ describe('DragProvider', () => {
     expect(region).toHaveAttribute('aria-live', 'assertive');
   });
 });
+
+describe('dragProps — the element as its own handle', () => {
+  function Whole({ id }: { id: string }) {
+    const { dragProps, isDragging } = useDraggable<HTMLButtonElement>({ id, axis: 'both' });
+    return (
+      <button {...dragProps} data-testid="whole">
+        {String(isDragging)}
+      </button>
+    );
+  }
+
+  it('lands both refs on one node, so the affordances survive', () => {
+    render(<Whole id="a" />);
+    const el = screen.getByTestId('whole');
+    // The handle half: without this a trackpad scrolls instead of dragging, and
+    // nothing shows the thing can be picked up.
+    expect(el.style.touchAction).toBe('none');
+    expect(el.style.cursor).toBe('grab');
+  });
+
+  it('drags the element it is spread on', () => {
+    render(<Whole id="a" />);
+    const el = screen.getByTestId('whole');
+    act(() => {
+      el.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 }));
+    });
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 30, clientY: 40 })));
+    // The item half: the offset is written onto the same node.
+    expect(el.style.translate).toBe('30px 40px');
+    expect(el).toHaveAttribute('data-dragging');
+  });
+});

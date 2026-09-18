@@ -189,6 +189,22 @@ export interface UseDraggableReturn<T extends HTMLElement> {
     onPointerDown: (e: React.PointerEvent) => void;
     'aria-disabled'?: true;
   };
+  /**
+   * For when the element IS its own handle — a chip, a card, anything grabbed
+   * anywhere. One spread, one ref.
+   *
+   * Spreading `handleProps` onto the same element as `ref` does NOT work, and
+   * fails quietly: `handleProps` carries its own ref, so whichever comes second
+   * wins and the other is dropped. Losing the handle ref costs the `cursor:
+   * grab` and the `touch-action: none` — so the thing has no sign it can be
+   * dragged, and on a trackpad the gesture scrolls the page instead. That is a
+   * trap, so this exists to make the case it traps people in the easy one.
+   */
+  dragProps: {
+    ref: React.RefCallback<T>;
+    onPointerDown: (e: React.PointerEvent) => void;
+    'aria-disabled'?: true;
+  };
   isDragging: boolean;
   /** Pointer displacement since the lift, for a consumer that wants to read it. */
   delta: { x: number; y: number };
@@ -400,13 +416,24 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
   // on a recycled node. Nothing is watching by then, so it never travels.
   useEffect(() => () => clear(false), [clear]);
 
+  // One node playing both parts, so both refs land on it.
+  const setBothRefs = useCallback<React.RefCallback<T>>(
+    (node) => {
+      ref.current = node;
+      setHandleRef(node);
+    },
+    [setHandleRef],
+  );
+
+  const activator = {
+    onPointerDown,
+    ...(disabled ? ({ 'aria-disabled': true } as const) : {}),
+  };
+
   return {
     ref,
-    handleProps: {
-      ref: setHandleRef,
-      onPointerDown,
-      ...(disabled ? ({ 'aria-disabled': true } as const) : {}),
-    },
+    handleProps: { ref: setHandleRef, ...activator },
+    dragProps: { ref: setBothRefs, ...activator },
     isDragging,
     delta,
   };

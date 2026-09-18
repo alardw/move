@@ -233,9 +233,9 @@ export const HOOKS_REGISTRY: HookDoc[] = [
   {
     name: 'useDraggable',
     signature:
-      'useDraggable<T>({ id, group?, data?, disabled?, axis?, activationDistance?, onDragEnd? }): { ref, handleProps, isDragging, delta }',
+      'useDraggable<T>({ id, group?, data?, disabled?, axis?, activationDistance?, onDragEnd? }): { ref, handleProps, dragProps, isDragging, delta }',
     summary:
-      'Make any element follow the pointer. The transform is written through the ref, so no inline style reaches your source. See Dragging and dropping for working demos.',
+      'Make any element follow the pointer — the offset is written through the ref, so no inline style reaches your source. Spread `handleProps` on a separate grab handle, or `dragProps` when the element is its own handle. See Drag & drop for working demos.',
     category: 'State & refs',
   },
   {
