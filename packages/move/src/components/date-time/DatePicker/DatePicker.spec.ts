@@ -557,7 +557,7 @@ export const spec = {
     children: 'composition',
   },
 
-  hasHook: true,
+  hasHook: false,
   engineImports: ['useMergedRef', 'usePopupFocus', 'composeHandlers'] as string[],
   radixPrimitive: 'Popover',
   componentDeps: ['Button', 'CalendarNav', 'InputText', 'MonthGrid', 'TimeField'],

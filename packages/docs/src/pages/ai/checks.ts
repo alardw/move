@@ -58,6 +58,12 @@ export const CHECKS: CheckDoc[] = [
       'A check that FORBIDS something declares an @instead \u2014 the sanctioned way to do the thing it refuses. A rule with no exit is a wall, not a design: purity forbids inline styles and three consumer teams each built their own Frame because no legal way to set a width exists.',
   },
   {
+    name: 'component-hooks',
+    appliesTo: 'component',
+    enforces:
+      'A hook beside a component is called by something, and its spec reports whether it exists. A hook nobody calls is a second implementation of behaviour the component already has, and it is the copy that stops being maintained \u2014 one sat in the package root at 444 lines, called by neither its component nor the docs, until a bug fixed in the component was found still living in the hook. A caller can be the component, a sibling hook, a test, or a docs sample; a barrel naming it is not a caller, it is the door.',
+  },
+  {
     name: 'shared-orphans',
     appliesTo: 'component',
     enforces:

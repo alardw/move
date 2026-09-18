@@ -10,5 +10,3 @@ export type {
   DatePickerLabels,
   DatePickerRangeLabels,
 } from './DatePicker';
-export { useDatePicker } from './useDatePicker';
-export type { UseDatePickerOptions, UseDatePickerReturn } from './useDatePicker';

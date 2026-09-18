@@ -450,8 +450,6 @@ export type {
   DatePickerLabels,
   DatePickerRangeLabels,
 } from './components/date-time/DatePicker';
-export { useDatePicker } from './components/date-time/DatePicker';
-export type { UseDatePickerOptions, UseDatePickerReturn } from './components/date-time/DatePicker';
 
 export { Card } from './components/layout/Card';
 export type {
