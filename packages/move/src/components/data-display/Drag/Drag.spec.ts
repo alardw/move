@@ -25,7 +25,7 @@ export const spec = {
   componentClass: 'interactive' as const,
   category: 'data-display',
   description:
-    'Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing somewhere that is not a reorder.',
+    'Shared context and drop targets for dragging — the generic layer beneath Sortable, for moving a thing onto a place that will take it.',
 
   compound: true,
   rootElement: 'div',

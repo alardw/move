@@ -17,7 +17,7 @@ const TOC: TocItem[] = [
   { href: '#overview', label: 'Overview' },
   { href: '#layers', label: 'Four pieces' },
   { href: '#reorder', label: 'Rearranging a list' },
-  { href: '#targets', label: 'Somewhere that is not a reorder' },
+  { href: '#targets', label: 'Dropping onto a place' },
   { href: '#keyboard', label: 'The keyboard path' },
   { href: '#styling', label: 'Why the components exist' },
 ];
@@ -41,7 +41,7 @@ const LAYERS = [
   {
     name: 'Drag',
     kind: 'Component',
-    use: 'Shared context, and drop targets for everything that is not a reorder.',
+    use: 'Shared context, and the places a dragged thing lands on.',
   },
 ];
 
@@ -134,15 +134,15 @@ export function DragAndDropPage() {
 
         <Section
           id="targets"
-          title="Somewhere that is not a reorder"
-          lede="Drag a chip onto a position. The positions stay visible while empty, which is the thing a reorder cannot express."
+          title="Dropping onto a place"
+          lede="Drag a chip onto a position. Each position is a destination of its own, and stays visible whether it holds something or not."
         >
           <Preview code={dragSlotsCode}>
             <DragSlots />
           </Preview>
           <Text size="sm" color="muted">
-            An empty slot holds no row to reorder, and a second list is somewhere a row leaves the
-            first entirely. Both are <Code>Drag.Zone</Code>. Put two lists under one{' '}
+            A slot is a place whether or not something sits in it, and a second list is a place a
+            row moves to. Both are <Code>Drag.Zone</Code>. Put two lists under one{' '}
             <Code>Drag.Root</Code> and they share a drag, so a row can move between them. See{' '}
             <RouterLink to="/components/drag">Drag</RouterLink>.
           </Text>

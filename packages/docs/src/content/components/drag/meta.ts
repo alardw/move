@@ -37,7 +37,7 @@ export const meta: ComponentDocument = {
   preview: { width: 'full' },
   name: 'Drag',
   tagline:
-    'Shared context and drop targets — the layer beneath Sortable, for moving a thing somewhere that is not a reorder.',
+    'Shared context and drop targets — the layer beneath Sortable, for moving a thing onto a place that will take it.',
   categories: ['data-display'],
   badges: [],
   highlights,

@@ -7,7 +7,7 @@ import type { ComponentSpec } from '../../../spec-type';
  *
  * The preset over `Drag`: an Item is both a draggable and a drop position, which
  * is the ordinary case and the one worth making declarative. `Drag.Zone` stays
- * separate for everything that is not a reorder — a slot that holds nothing, a
+ * separate for a drop onto a place of its own — a slot that holds nothing, a
  * second list the item leaves for.
  *
  * ITEM RENDERS THE HANDLE, AND Sortable.Handle PLACES IT. The thing worth

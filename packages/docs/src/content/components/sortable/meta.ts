@@ -22,7 +22,7 @@ const related: RelatedItem[] = [
     to: '/components/drag',
     name: 'Drag',
     reason:
-      'For a drop that is not a reorder — a slot that stays visible while empty, or a second list a row moves into.',
+      'For dropping onto a place of its own — a slot that stays visible while empty, or a second list a row moves into.',
   },
   {
     to: '/components/layout-group',
