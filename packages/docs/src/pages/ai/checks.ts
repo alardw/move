@@ -334,7 +334,7 @@ export const CHECKS: CheckDoc[] = [
     name: 'rule-coverage',
     appliesTo: 'docs',
     enforces:
-      'Every check declares the coverage rules it enforces (an `@enforces` header — file → rule), and that declaration matches the spec exactly: a check can’t enforce a rule it doesn’t declare, or declare one the spec doesn’t attribute to it.',
+      'Every check declares the coverage rules it enforces (an `@enforces` header \u2014 file \u2192 rule), and that declaration matches the spec exactly: a check can\u2019t enforce a rule it doesn\u2019t declare, or declare one the spec doesn\u2019t attribute to it. Rule ids are unique, too \u2014 an id is how a check names its obligation and how a failure points at the reasoning, so two rules answering to one name leave both unreachable. The bijection alone could not see that: a shared id satisfies it from either side.',
   },
   {
     name: 'factory-conformance',

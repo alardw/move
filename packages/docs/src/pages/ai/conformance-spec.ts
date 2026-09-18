@@ -199,7 +199,6 @@ const RULES: RuleDef[] = [
   { id: 'purity-5', group: 'purity', rule: 'Triggers wrap Button with asChild', why: 'asChild keeps one real button (accessibility + styling) instead of a button inside a button.', enforcement: { composition: { status: 'gap' } } },
 
   // Forms (composite / pureComposition)
-  { id: 'i18n-1', group: 'forms', rule: 'User-facing strings route through `labels`', why: 'A hardcoded aria-label was already refused while visible text was not \u2014 the same problem, and the visible half is what ships untranslatable to every locale.', requires: ['factory'], enforcement: C('check', 'i18n-literals') },
   { id: 'forms-1', group: 'forms', rule: 'Wrap every input in FormField', why: 'FormField wires the label, description, and error to the input for accessibility; a bare input loses all three.', enforcement: { composition: { status: 'gap' } } },
   { id: 'forms-2', group: 'forms', rule: 'FormField.Description for hints and errors', why: 'Routes hints/errors through the wired description node so screen readers announce them.', enforcement: { composition: { status: 'gap' } } },
   { id: 'forms-3', group: 'forms', rule: 'Boolean DOM attrs via value || undefined', why: 'invalid="false" still sets the attribute; `|| undefined` removes it when off.', enforcement: { composition: { status: 'gap' } } },
@@ -211,6 +210,7 @@ const RULES: RuleDef[] = [
 
   // i18n (all rendered)
   { id: 'i18n-1', group: 'i18n', rule: 'User-facing strings via one labels object', why: 'A single labels object is the seam consumers translate through; a hardcoded string can’t be reached.', enforcement: { component: { status: 'check', check: 'component-conformance' }, composition: { status: 'check', check: 'composite-spec-drift' } } },
+  { id: 'i18n-2', group: 'i18n', rule: 'No user-facing string written as a literal', why: 'A hardcoded aria-label was already refused while visible text was not \u2014 the same problem, and the visible half is what ships untranslatable to every locale.', requires: ['factory'], enforcement: C('check', 'i18n-literals') },
 
 
   // Unit tests (all with logic)

@@ -52,6 +52,42 @@ const fileForCheck = (name) => {
 // with per-entity checks (component + composition) attributes to each.
 const specSrc = readFileSync(SPEC, 'utf8');
 const checkToRules = new Map(); // check -> Set(ruleId)
+/**
+ * Rule ids must be unique, and nothing used to say so.
+ *
+ * An id is how a check names the rule it enforces, and how a failure message
+ * points a reader at the reasoning — so two rules sharing one is two different
+ * obligations answering to the same name, and neither can be reached. The spec
+ * held three such pairs: `styles-8` claimed by two unrelated rules, a
+ * `styles-11` line duplicated verbatim, and a pair created by adding rules at
+ * the end without checking the numbers were free. A fourth turned up the moment
+ * this existed: two `i18n-1` rules, one about literals and one about the shape
+ * of the labels object.
+ *
+ * The bijection below cannot see any of it. It asks whether each check's
+ * @enforces matches the spec, and a shared id satisfies that from either side.
+ */
+const seenIds = new Map(); // ruleId -> line it was first used on
+const duplicates = [];
+specSrc.split('\n').forEach((line, i) => {
+  const m = line.match(/\bid:\s*'([^']+)'/);
+  if (!m) return;
+  if (seenIds.has(m[1])) {
+    duplicates.push(`'${m[1]}' names two rules — conformance-spec.ts lines ${seenIds.get(m[1])} and ${i + 1}`);
+  } else {
+    seenIds.set(m[1], i + 1);
+  }
+});
+if (duplicates.length) {
+  console.error(`\n✗ rule-coverage: ${duplicates.length} duplicate rule id(s).\n`);
+  for (const d of duplicates) console.error(`  - ${d}`);
+  console.error(
+    `\n  Give the newer rule the next free number and update its check's @enforces,\n` +
+      `  or delete it where it says the same thing as the other.\n`,
+  );
+  process.exit(1);
+}
+
 for (const line of specSrc.split('\n')) {
   const idM = line.match(/\bid:\s*'([^']+)'/);
   if (!idM) continue;

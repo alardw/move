@@ -22,7 +22,7 @@
  * words; symbols, separators, and single characters are not prose and are
  * skipped, as is the DEFAULT_LABELS object, where such strings belong.
  *
- * @enforces i18n-1
+ * @enforces i18n-2
  * @instead add the string to the component's `{Name}Labels` interface and
  *   `DEFAULT_LABELS`, then render `labels.thatKey` — so a consumer can translate
  *   it through the same object as every other string the component speaks.
