@@ -236,19 +236,28 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
       disabled: !onInsert,
     });
 
-    // Where the visitor would go, read from the pointer against the rows that
-    // are already here.
+    // Where the visitor would go, read from the pointer against boundaries
+    // measured ONCE.
+    //
+    // Measuring the rows on every move reads them mid-animation: the gap is
+    // opening, so a row is somewhere between where it was and where it is
+    // going, and compensating for a shift that is only half-applied moves the
+    // answer — which moves the rows, which moves the answer. The gap flickered
+    // between two places for as long as the pointer sat still.
+    //
+    // Taken at rest, before any gap is open, the boundaries are fixed for the
+    // whole drag: the line between place i and place i+1 is the middle of row i
+    // as the list looks when nothing has stepped aside. That is also the answer
+    // to "what decides above or below" — one line per row, and it does not move
+    // while you are deciding.
     //
     // Watched for the WHOLE drag rather than from the moment the pointer is
     // over the list: `isOver` only becomes true as a RESULT of a move, so a
-    // listener attached then misses the very move that arrived, and a drag that
+    // listener attached then misses the move that arrived, and a drag that
     // crossed the edge and released in one go landed with no position at all.
-    //
-    // Measured per move rather than once at the edge: the rows are stepping
-    // aside as the visitor travels, so midpoints taken on arrival go stale the
-    // moment the gap opens.
     const active = outerCtx?.active ?? null;
     const watching = active !== null && takes(active) && !!onInsert;
+    const bounds = React.useRef<{ lines: number[]; offset: number }>({ lines: [], offset: 0 });
     React.useEffect(() => {
       if (!watching) {
         if (arrivalIndex.current !== null) {
@@ -258,10 +267,21 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
         return;
       }
       const vertical = (props.axis as SortableAxis) === 'vertical';
+      const el = listRef.current;
+      if (!el) return;
+
+      const rows = Array.from(el.querySelectorAll<HTMLElement>('[data-sortable-item]'));
+      const gap = parseFloat(getComputedStyle(el).gap || '0') || 0;
+      const first = rows[0]?.getBoundingClientRect();
+      bounds.current = {
+        lines: rows.map((row) => {
+          const r = row.getBoundingClientRect();
+          return vertical ? r.top + r.height / 2 : r.left + r.width / 2;
+        }),
+        offset: first ? (vertical ? first.height : first.width) + gap : 0,
+      };
+
       const onMove = (e: PointerEvent) => {
-        const el = listRef.current;
-        if (!el) return;
-        const point = vertical ? e.clientY : e.clientX;
         const box = el.getBoundingClientRect();
         const inside =
           e.clientX >= box.left &&
@@ -275,26 +295,14 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
           }
           return;
         }
-        const rows = Array.from(el.querySelectorAll<HTMLElement>('[data-sortable-item]'));
-        if (rows.length === 0) {
+        const { lines, offset } = bounds.current;
+        if (lines.length === 0) {
           arrivalIndex.current = 0;
           return;
         }
-        const first = rows[0].getBoundingClientRect();
-        const gap = parseFloat(getComputedStyle(el).gap || '0') || 0;
-        const offset = (vertical ? first.height : first.width) + gap;
-        // Against the UNSHIFTED midpoint of each row: a row that has already
-        // stepped aside is standing in the answer, so reading where it is now
-        // makes the gap chase the pointer a place at a time.
+        const point = vertical ? e.clientY : e.clientX;
         let next = 0;
-        rows.forEach((row, i) => {
-          const r = row.getBoundingClientRect();
-          const shifted = arrivalIndex.current !== null && i >= arrivalIndex.current;
-          const mid =
-            (vertical ? r.top + r.height / 2 : r.left + r.width / 2) - (shifted ? offset : 0);
-          if (point > mid) next += 1;
-        });
-        next = Math.max(0, Math.min(rows.length, next));
+        for (const line of lines) if (point > line) next += 1;
         if (next !== arrivalIndex.current) {
           arrivalIndex.current = next;
           setDrag({ from: null, to: next, offset });
@@ -351,6 +359,11 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
               else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
             }}
             data-drag-over={isOver && canDrop ? '' : undefined}
+            // Over it, and refused. Shown for the same reason Drag.Zone shows
+            // it: the cursor already says `not-allowed`, and on touch there is
+            // no cursor — so leaving the refusal to the pointer tells every
+            // touch user nothing at all.
+            data-drag-refused={isOver && !canDrop ? '' : undefined}
             className={cx('root', props.className, spClass as string | undefined)}
             style={
               {

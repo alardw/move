@@ -337,15 +337,15 @@ describe('passthrough', () => {
 // has no row here to do that, so the list has to measure for it.
 
 /** Something draggable that is not a row of the list — a chip in a drawer. */
-function Chip() {
+function Chip({ type = 'point' }: { type?: string }) {
   const { dragProps } = useDraggable<HTMLButtonElement>({
-    id: 'visitor',
-    type: 'point',
+    id: `visitor-${type}`,
+    type,
     data: { title: 'Nieuw punt' },
     axis: 'both',
   });
   return (
-    <button {...dragProps} data-testid="chip">
+    <button {...dragProps} data-testid={type === 'point' ? 'chip' : `chip-${type}`}>
       Nieuw punt
     </button>
   );
@@ -355,6 +355,7 @@ function ListWithArrivals({ onInsert }: { onInsert?: (e: SortableArrival) => voi
   return (
     <Drag.Root>
       <Chip />
+      <Chip type="file" />
       <Sortable.Root
         list="points"
         animate={false}
@@ -443,6 +444,24 @@ describe('arrivals', () => {
     expect(screen.getByTestId('row-a')).not.toHaveAttribute('data-shifted');
     expect(screen.getByTestId('row-b')).not.toHaveAttribute('data-shifted');
     expect(screen.getByTestId('row-c')).toHaveAttribute('data-shifted');
+  });
+
+  it('says so while a refused thing is over it, not only through the cursor', () => {
+    render(<ListWithArrivals onInsert={vi.fn()} />);
+    layOutRows();
+    // A file, where the list takes points.
+    const file = screen.getByTestId('chip-file');
+
+    act(() => void file.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 100, clientY: 70 })));
+
+    const list = screen.getByTestId('list');
+    expect(list).toHaveAttribute('data-drag-refused');
+    expect(list).not.toHaveAttribute('data-drag-over');
+    // And the rows stay closed — nothing is making room, because nothing is
+    // arriving.
+    expect(document.querySelectorAll('[data-shifted]')).toHaveLength(0);
   });
 
   it('a list that says nothing about arrivals takes none', () => {

@@ -36,6 +36,17 @@
   border-radius: var(--move-drop-target-radius);
 }
 
+/* Over it, and refused. Neutral rather than alarming — "not here" is not an
+   error, and it fires halfway through a gesture someone is still in the middle
+   of. The rows stay closed, which is the other half of the answer: nothing is
+   making room, because nothing is arriving. */
+.root[data-drag-refused] {
+  outline: 1px dashed var(--move-drop-target-border-refused);
+  outline-offset: var(--move-space-2);
+  border-radius: var(--move-drop-target-radius);
+  background-color: var(--move-drop-target-bg-refused);
+}
+
 /* Quiet on purpose: it marks a destination, it is not a thing in its own right.
    An outline rather than a fill, so it reads as an opening in the list rather
    than another row in it. */

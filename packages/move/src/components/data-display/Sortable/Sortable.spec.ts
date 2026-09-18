@@ -239,6 +239,7 @@ export const spec = {
       'data-dragging',
       'data-drag-source',
       'data-drag-over',
+      'data-drag-refused',
       'data-shifted',
       'data-handle',
     ],
