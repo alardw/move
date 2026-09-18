@@ -173,6 +173,17 @@ export const spec = {
       description: 'Border while accepting',
     },
     {
+      name: '--move-drag-zone-border-refused',
+      value: 'var(--move-drop-target-border-refused)',
+      description:
+        'Border while over a zone that will not take what is being carried. Neutral rather than alarming, and distinguished from resting by shape (solid where resting is dashed) so it does not rely on telling two greys apart',
+    },
+    {
+      name: '--move-drag-zone-bg-refused',
+      value: 'var(--move-drop-target-bg-refused)',
+      description: 'Fill while refusing',
+    },
+    {
       name: '--move-drag-zone-transition',
       value: '350ms',
       description:

@@ -1,33 +1,80 @@
-import { Drag, Button, Text, Stack, Icon, useDraggable } from 'move';
+import { useState } from 'react';
+import { Drag, Button, Text, Stack, Icon, Badge, useDraggable } from 'move';
 
-function Chip({ id, title, kind }: { id: string; title: string; kind: string }) {
-  // `dragProps`: the chip IS its own handle, so both refs go on one node.
-  const { dragProps } = useDraggable<HTMLButtonElement>({ id, data: kind, axis: 'both' });
+interface Item {
+  id: string;
+  title: string;
+  kind: 'doc' | 'image';
+}
+
+const START: Item[] = [
+  { id: 'a', title: 'Report', kind: 'doc' },
+  { id: 'b', title: 'Contract', kind: 'doc' },
+  { id: 'c', title: 'Screenshot', kind: 'image' },
+];
+
+/** The chip IS its own handle, so `dragProps` puts both refs on one node. */
+function Chip({ item }: { item: Item }) {
+  const { dragProps } = useDraggable<HTMLButtonElement>({
+    id: item.id,
+    data: item,
+    axis: 'both',
+  });
   return (
     <Button {...dragProps} variant="secondary" size="sm">
       <Icon name="grip-vertical" />
-      {title}
+      {item.title}
+      <Badge size="sm" variant="soft">
+        {item.kind}
+      </Badge>
     </Button>
   );
 }
 
 /**
  * A zone that only takes one kind of thing says so while the pointer is still
- * on it, so the answer arrives before the release rather than after.
+ * over it, so the answer arrives before the release rather than after — and a
+ * refused drop leaves the chip where it was.
  */
 export default function AcceptsSample() {
+  const [pool, setPool] = useState<Item[]>(START);
+  const [filed, setFiled] = useState<Item[]>([]);
+
   return (
     <Drag.Root>
       <Stack gap="lg">
         <Stack direction="row" gap="sm" wrap>
-          <Chip id="a" title="Document" kind="doc" />
-          <Chip id="b" title="Image" kind="image" />
+          {pool.length === 0 ? (
+            <Text size="sm" color="muted">
+              Nothing left to file.
+            </Text>
+          ) : (
+            pool.map((item) => <Chip key={item.id} item={item} />)
+          )}
         </Stack>
-        <Drag.Zone id="docs-only" accepts={(payload) => payload.data === 'doc'}>
-          <Stack direction="row" justify="center" align="center">
+
+        <Drag.Zone
+          id="documents"
+          accepts={(payload) => (payload.data as Item).kind === 'doc'}
+          onDrop={(event) => {
+            const item = event.payload.data as Item;
+            setPool((prev) => prev.filter((p) => p.id !== item.id));
+            setFiled((prev) => [...prev, item]);
+          }}
+        >
+          <Stack gap="sm" align="center">
             <Text size="sm" color="muted">
               Documents only
             </Text>
+            {filed.length > 0 && (
+              <Stack direction="row" gap="sm" wrap justify="center">
+                {filed.map((item) => (
+                  <Badge key={item.id} variant="soft">
+                    {item.title}
+                  </Badge>
+                ))}
+              </Stack>
+            )}
           </Stack>
         </Drag.Zone>
       </Stack>

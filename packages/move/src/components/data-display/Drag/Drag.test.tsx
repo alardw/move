@@ -232,3 +232,43 @@ describe('announcements', () => {
     expect(document.querySelector('[data-move-drag-announcer]')).toHaveTextContent('');
   });
 });
+
+describe('refusing a payload', () => {
+  it('turns the cursor to not-allowed, the signal every platform already uses', () => {
+    placeZone();
+    render(
+      <Drag.Root>
+        <Handle id="a" />
+        <Drag.Zone id="z" data-testid="zone" accepts={() => false} />
+      </Drag.Root>,
+    );
+    drag({ clientX: 50, clientY: 50 }, false);
+    expect(document.body.style.cursor).toBe('not-allowed');
+  });
+
+  it('keeps the closed hand over a zone that will take it', () => {
+    placeZone();
+    render(
+      <Drag.Root>
+        <Handle id="a" />
+        <Drag.Zone id="z" data-testid="zone" />
+      </Drag.Root>,
+    );
+    drag({ clientX: 50, clientY: 50 }, false);
+    expect(document.body.style.cursor).toBe('grabbing');
+  });
+
+  it('marks the refusal on the zone too, for anyone watching it rather than the pointer', () => {
+    placeZone();
+    render(
+      <Drag.Root>
+        <Handle id="a" />
+        <Drag.Zone id="z" data-testid="zone" accepts={() => false} />
+      </Drag.Root>,
+    );
+    drag({ clientX: 50, clientY: 50 }, false);
+    const zone = screen.getByTestId('zone');
+    expect(zone).toHaveAttribute('data-over');
+    expect(zone).not.toHaveAttribute('data-can-drop');
+  });
+});

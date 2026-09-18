@@ -28,6 +28,24 @@
   --move-drop-target-border-active: var(--move-primary);
   --move-drop-target-bg-active: var(--move-primary-subtle);
   --move-drop-target-radius: var(--move-rounded-md);
+  /*
+   * A target that will NOT take what is being carried says so.
+   *
+   * Atlassian advise against this: show nothing, and let the absence be the
+   * answer. Their reasoning is about false positives — never light up
+   * "droppable" and then swallow the release — which is right, but it is an
+   * argument against an affirmative signal, not against any signal. A refusal
+   * is accurate information, and withholding it makes the person find out by
+   * letting go.
+   *
+   * And a cursor cannot carry it alone: on touch there is no cursor. Leaving
+   * the refusal to `not-allowed` gives every touch user nothing at all.
+   *
+   * Neutral, not alarming — grey, not red. "Not here" is not an error, and this
+   * fires halfway through a gesture someone is still in the middle of.
+   */
+  --move-drop-target-border-refused: var(--move-border-emphasis);
+  --move-drop-target-bg-refused: var(--move-bg-muted);
 }
 
 [data-dragging] {

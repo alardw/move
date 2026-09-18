@@ -3,6 +3,8 @@
 .zone {
   --move-drag-zone-bg-active: var(--move-drop-target-bg-active);
   --move-drag-zone-border-active: var(--move-drop-target-border-active);
+  --move-drag-zone-border-refused: var(--move-drop-target-border-refused);
+  --move-drag-zone-bg-refused: var(--move-drop-target-bg-refused);
   /* Long enough to read as a response rather than a flicker while the pointer
      crosses back and forth over an edge. */
   --move-drag-zone-transition: 350ms;
@@ -30,11 +32,22 @@
   border-style: solid;
 }
 
-/* Over it, but refused. Named rather than left blank so the person gets an
-   answer before they let go instead of after. */
+/* Over it, and refused.
+
+   Three states that differ from each other by SHAPE, not only by colour, so
+   none of them depends on seeing the difference between two greys:
+
+     resting    dashed border, no fill
+     accepting  solid border, tinted fill, in the accent
+     refusing   solid border, muted fill, neutral
+
+   The cursor turns to `not-allowed` at the same moment, which is the signal
+   nobody has to learn — but it cannot be the only one, because a touch user
+   has no cursor. */
 .zone[data-over]:not([data-can-drop]) {
-  border-color: var(--move-border-emphasis);
-  background-color: var(--move-bg-muted);
+  border-style: solid;
+  border-color: var(--move-drag-zone-border-refused);
+  background-color: var(--move-drag-zone-bg-refused);
 }
 
 .zone[data-disabled] {

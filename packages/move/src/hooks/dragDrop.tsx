@@ -48,9 +48,21 @@ export interface DragContextValue {
   active: DragPayload | null;
   /** The drop target the pointer is over, or null. */
   overId: string | null;
+  /**
+   * Whether the target under the pointer would take what is being carried.
+   * False while over one that refuses — which is what turns the cursor into
+   * `not-allowed`, the signal every platform already uses for this.
+   */
+  overAccepts: boolean;
   registerTarget: (target: RegisteredTarget) => () => void;
   beginDrag: (payload: DragPayload) => void;
-  updateDrag: (x: number, y: number) => void;
+  /**
+   * Reports the hit back, rather than only storing it. A caller acting on the
+   * state instead would be reading the PREVIOUS render's value — so the cursor
+   * would lag a move behind the pointer and say the wrong thing on exactly the
+   * frame the answer changed.
+   */
+  updateDrag: (x: number, y: number) => { overId: string | null; accepts: boolean };
   endDrag: (commit: boolean) => void;
   announce: (message: string) => void;
 }
@@ -77,6 +89,7 @@ export function useDragRegistry(
 ) {
   const [active, setActive] = useState<DragPayload | null>(null);
   const [overId, setOverId] = useState<string | null>(null);
+  const [overAccepts, setOverAccepts] = useState(false);
   const [message, setMessage] = useState('');
   const targets = useRef(new Map<string, RegisteredTarget>());
   const overRef = useRef<string | null>(null);
@@ -99,11 +112,14 @@ export function useDragRegistry(
     // as items move aside under it, so a rect measured at lift goes stale in
     // exactly the case that matters.
     let hit: string | null = null;
+    let accepts = false;
     for (const target of targets.current.values()) {
       if (target.disabled) continue;
       const r = target.element.getBoundingClientRect();
       if (x >= r.left && x <= r.right && y >= r.top && y <= r.bottom) {
         hit = target.id;
+        const payload = activeRef.current;
+        accepts = !target.accepts || (payload !== null && target.accepts(payload));
         break;
       }
     }
@@ -111,6 +127,10 @@ export function useDragRegistry(
       overRef.current = hit;
       setOverId(hit);
     }
+    // Tracked separately from `overId`: the same target can change its answer
+    // while the pointer sits still on it, if what is being carried changes.
+    setOverAccepts(accepts);
+    return { overId: hit, accepts };
   }, []);
 
   const endDrag = useCallback(
@@ -145,13 +165,14 @@ export function useDragRegistry(
     () => ({
       active,
       overId,
+      overAccepts,
       registerTarget,
       beginDrag,
       updateDrag,
       endDrag,
       announce: setMessage,
     }),
-    [active, overId, registerTarget, beginDrag, updateDrag, endDrag],
+    [active, overId, overAccepts, registerTarget, beginDrag, updateDrag, endDrag],
   );
 
   return { value, message, Context: DragContext };
@@ -347,7 +368,20 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
       // is doing, so neither has to know about the other.
       el.style.translate = `${dx}px ${dy}px`;
       setDelta({ x: dx, y: dy });
-      ctx?.updateDrag(e.clientX, e.clientY);
+      const hit = ctx?.updateDrag(e.clientX, e.clientY);
+      // `not-allowed` over a target that refuses. This is the one signal a
+      // person already knows without being taught it — every desktop platform
+      // uses it, and unlike a colour change it does not ask them to compare a
+      // border against the one it had a moment ago.
+      // On the HANDLE as well as the document. setPointerCapture routes every
+      // pointer event to the handle for the rest of the gesture, and the cursor
+      // is taken from the capturing element — so the handle's own `grabbing`
+      // wins and a rule on body is never consulted. That is why the refusal was
+      // invisible.
+      const refusing = hit != null && hit.overId !== null && !hit.accepts;
+      const shape = refusing ? 'not-allowed' : 'grabbing';
+      if (handleRef.current) handleRef.current.style.cursor = shape;
+      document.body.style.cursor = shape;
     };
 
     const finish = (commit: boolean) => {

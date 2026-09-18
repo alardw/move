@@ -48,18 +48,22 @@ function Svg({ width, height, children }: BuiltinSvgProps) {
  * "grab me" rather than as a direction, which is why a chevron cannot stand in
  * for it: a chevron already means expand, collapse or open a select.
  *
- * Drawn as circles rather than strokes so it stays legible at the small sizes a
- * handle is rendered at, where two-pixel strokes merge.
+ * STROKED, like every other icon here, not filled. The wrapper sets
+ * `fill="none" stroke="currentColor"`, and an icon that opts out with
+ * `fill="currentColor"` on its shapes loses to any stylesheet rule setting fill
+ * — a CSS declaration beats a presentation attribute. That is how this shipped
+ * as six invisible circles. A radius of 1 under a 2px round-capped stroke reads
+ * as a solid dot anyway, which is how Lucide draws the same glyph.
  */
 function GripVertical({ width, height }: { width: number | string; height: number | string }) {
   return (
     <Svg width={width} height={height}>
-      <circle cx="9" cy="6" r="1" fill="currentColor" stroke="none" />
-      <circle cx="9" cy="12" r="1" fill="currentColor" stroke="none" />
-      <circle cx="9" cy="18" r="1" fill="currentColor" stroke="none" />
-      <circle cx="15" cy="6" r="1" fill="currentColor" stroke="none" />
-      <circle cx="15" cy="12" r="1" fill="currentColor" stroke="none" />
-      <circle cx="15" cy="18" r="1" fill="currentColor" stroke="none" />
+      <circle cx="9" cy="6" r="1" />
+      <circle cx="9" cy="12" r="1" />
+      <circle cx="9" cy="18" r="1" />
+      <circle cx="15" cy="6" r="1" />
+      <circle cx="15" cy="12" r="1" />
+      <circle cx="15" cy="18" r="1" />
     </Svg>
   );
 }
