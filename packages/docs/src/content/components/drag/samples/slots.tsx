@@ -55,6 +55,9 @@ export default function SlotsSample() {
   const [slots, setSlots] = useState<(Item | undefined)[]>([undefined, undefined, undefined]);
 
   function place(index: number, item: Item) {
+    // Dropped back where it already was: nothing moved, and the occupant it
+    // would otherwise hand back to the pool is itself.
+    if (slots[index]?.id === item.id) return;
     const displaced = slots[index];
     setSlots((prev) =>
       prev.map((s, i) => (i === index ? item : s?.id === item.id ? undefined : s)),
@@ -83,9 +86,14 @@ export default function SlotsSample() {
               onDrop={(event) => place(i, event.payload.data as Item)}
             >
               <Stack direction="row" justify="center" align="center" gap="sm">
-                <Text size="sm" color={item ? 'base' : 'muted'}>
-                  {item?.title ?? `Position ${i + 1}`}
-                </Text>
+                {/* The placed item is the same chip it was in the pool, so it
+                    can be picked up again and moved on — to another position,
+                    or back. A thing that arrives somewhere is still a thing. */}
+                {item ? (
+                  <Chip item={item} />
+                ) : (
+                  <Text size="sm" color="muted">{`Position ${i + 1}`}</Text>
+                )}
                 {i === REPORTS_ONLY && (
                   <Badge size="sm" variant="soft">
                     Reports only

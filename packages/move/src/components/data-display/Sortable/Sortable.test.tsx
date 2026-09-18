@@ -248,13 +248,37 @@ describe('dragging', () => {
     expect(change.destination?.index).toBeGreaterThan(0);
   });
 
-  it('marks the carried row so the lift can be drawn', () => {
+  it('draws the carried row on the drag layer, and quiets the one it left', () => {
     render(<List />);
     act(() => {
       handleFor('a').dispatchEvent(pointer('pointerdown', { clientY: 0 }));
     });
     act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 40 })));
-    expect(screen.getByTestId('row-a')).toHaveAttribute('data-dragging');
+
+    // The row itself stays exactly where React put it, holding its place open.
+    expect(screen.getByTestId('row-a')).toHaveAttribute('data-drag-source');
+    expect(screen.getByTestId('row-a')).not.toHaveAttribute('data-dragging');
+
+    // What follows the pointer is a copy, on a layer outside every clip.
+    const layer = document.body.querySelector('[data-move-drag-layer]');
+    const carried = layer?.querySelector('[data-drag-preview]');
+    expect(carried).toHaveAttribute('data-dragging');
+    // It is a picture of the row, so it answers to nothing that identifies one.
+    expect(carried).toHaveAttribute('aria-hidden', 'true');
+    expect(carried?.querySelector('[data-testid]')).toBeNull();
+  });
+
+  it('takes the copy away once the drop lands', () => {
+    render(<List />);
+    act(() => {
+      handleFor('a').dispatchEvent(pointer('pointerdown', { clientY: 0 }));
+    });
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientY: 160 })));
+    expect(document.querySelector('[data-drag-preview]')).not.toBeNull();
+
+    act(() => void window.dispatchEvent(pointer('pointerup', { clientY: 160 })));
+    expect(document.querySelector('[data-drag-preview]')).toBeNull();
+    expect(screen.getByTestId('row-a')).not.toHaveAttribute('data-drag-source');
   });
 
   it('no row steps aside until a drag is in progress', () => {

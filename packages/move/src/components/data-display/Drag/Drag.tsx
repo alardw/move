@@ -2,6 +2,7 @@
 // Generated from Drag.spec.ts
 
 import * as React from 'react';
+import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useDragRegistry, useDropTarget } from '../../../hooks';
@@ -70,6 +71,22 @@ function DragRoot({ onDrop, labels: labelsProp, children }: DragRootProps) {
       >
         {message}
       </div>
+      {/* The layer a dragged thing is drawn on, at the end of the body and so
+          outside every clip on the page. A drag that stayed in place was cut
+          off by any ancestor with `overflow: hidden` — a Drawer, a card with a
+          rounded corner, a scroll region — and no z-index reaches past that,
+          because it is containment rather than order. Empty and untouchable
+          until something is lifted onto it. */}
+      {createPortal(
+        <div
+          data-move-drag-layer=""
+          className={styles.layer}
+          ref={(node: HTMLDivElement | null) => {
+            value.layerRef.current = node;
+          }}
+        />,
+        document.body,
+      )}
     </Context.Provider>
   );
 }

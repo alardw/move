@@ -48,6 +48,27 @@
   --move-drop-target-bg-refused: var(--move-bg-muted);
 }
 
+/*
+ * What is drawn on the drag layer. The layer itself is a rendered part of
+ * `Drag.Root` and styled with it; these two attributes land on whatever element
+ * a consumer made draggable, which is why they are here.
+ */
+[data-drag-preview] {
+  pointer-events: none;
+}
+
+/*
+ * What stays behind. The thing is in your hand now, and the space it will
+ * return to if you let go here is still its own — so the row keeps its place in
+ * the list and goes quiet, rather than vanishing and collapsing the layout it
+ * was holding open.
+ */
+[data-drag-source] {
+  opacity: 0.4;
+  cursor: grabbing;
+  user-select: none;
+}
+
 [data-dragging] {
   /* Off the page, and clearly so. The shadow does the work; a rotation would
      fight the transform the hook writes on this same element every frame.

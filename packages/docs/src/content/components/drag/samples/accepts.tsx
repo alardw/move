@@ -58,6 +58,8 @@ export default function AcceptsSample() {
           accepts={(payload) => (payload.data as Item).kind === 'doc'}
           onDrop={(event) => {
             const item = event.payload.data as Item;
+            // Already here: dropping it on the zone it is in changes nothing.
+            if (filed.some((f) => f.id === item.id)) return;
             setPool((prev) => prev.filter((p) => p.id !== item.id));
             setFiled((prev) => [...prev, item]);
           }}
@@ -68,10 +70,10 @@ export default function AcceptsSample() {
             </Text>
             {filed.length > 0 && (
               <Stack direction="row" gap="sm" wrap justify="center">
+                {/* The filed item is the same chip it was outside, so it can be
+                    picked up again. What arrives somewhere is still a thing. */}
                 {filed.map((item) => (
-                  <Badge key={item.id} variant="soft">
-                    {item.title}
-                  </Badge>
+                  <Chip key={item.id} item={item} />
                 ))}
               </Stack>
             )}

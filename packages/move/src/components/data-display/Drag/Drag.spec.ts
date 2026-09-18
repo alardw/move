@@ -18,6 +18,13 @@ import type { ComponentSpec } from '../../../spec-type';
  * `Sortable` is the ordered-list preset on top. It is a separate component
  * because reordering and catching are different jobs — a Zone that holds nothing
  * sorts nothing.
+ *
+ * Root also renders the DRAG LAYER, portalled to the end of the body. A dragged
+ * element left in place is subject to every ancestor above it: a panel with
+ * `overflow: hidden` cuts it off at its own edge, and an ancestor that paints
+ * traps it in a stacking context no z-index reaches out of. Drawing it on the
+ * layer is the only answer, and only a component can portal — which is the same
+ * reason the live region lives here rather than in the hook.
  */
 export const spec = {
   schemaVersion: 1 as const,
@@ -30,6 +37,14 @@ export const spec = {
   compound: true,
   rootElement: 'div',
   slots: [
+    {
+      name: 'layer',
+      element: 'div',
+      kind: 'overlay',
+      typography: 'none',
+      description:
+        'Where a lifted element is drawn: a viewport-covering layer portalled to the end of the body, outside every clip and stacking context on the page.',
+    },
     {
       name: 'announcer',
       element: 'div',
@@ -59,6 +74,14 @@ export const spec = {
           kind: 'none',
           typography: 'none',
           description: 'Visually-hidden live region, always in the DOM so a reader can watch it.',
+        },
+        {
+          name: 'layer',
+          element: 'div',
+          kind: 'overlay',
+          typography: 'none',
+          description:
+            'The drag layer, portalled to the body. Empty until something is lifted onto it, and transparent to the pointer so drop targets underneath still answer.',
         },
       ],
       props: [

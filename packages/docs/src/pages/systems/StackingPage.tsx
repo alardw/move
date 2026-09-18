@@ -323,14 +323,14 @@ export function StackingPage() {
                 inline-rendered overlays hit this problem.
               </Text>
               <Text>
-                <strong>A dragged element is the one that still does.</strong> It moves in place
-                rather than portalling, so it cannot leave the stacking context it was rendered in:
-                drag a row inside a <RouterLink to="/components/drawer">Drawer</RouterLink> and it
-                stays behind the Drawer no matter what layer it claims, and is clipped the moment it
-                passes the Drawer's edge, because that panel also sets <Code>overflow: hidden</Code>
-                . The <Code>drag</Code> layer above is what it will occupy once it portals; today it
-                is the ceiling it cannot reach. Until then, a sortable list inside a clipping
-                container is a known limitation rather than a mystery.
+                <strong>A dragged element portals too.</strong>{' '}
+                <RouterLink to="/components/drag">Drag.Root</RouterLink> puts a layer at the end of
+                the body, and a lifted element is drawn there for as long as the drag lasts — so a
+                row dragged out of a <RouterLink to="/components/drawer">Drawer</RouterLink> stays
+                whole and stays on top, where before it was cut off at the panel's edge by that
+                panel's <Code>overflow: hidden</Code>. The layer occupies <Code>drag</Code>, above
+                every panel it can be carried out of and below the toasts and tooltips that report
+                on it.
               </Text>
             </Stack>
             <Stack gap="sm">

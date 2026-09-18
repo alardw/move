@@ -54,6 +54,24 @@ export interface DragContextValue {
    * `not-allowed`, the signal every platform already uses for this.
    */
   overAccepts: boolean;
+  /**
+   * Where a dragged thing is DRAWN, which is not where it lives.
+   *
+   * An element dragged in place is subject to every ancestor it happens to sit
+   * under: a `Drawer` clips it at its own edge with `overflow: hidden`, and an
+   * ancestor that paints — a transform, a filter, an opacity below 1 — makes a
+   * stacking context the item cannot leave however high its z-index goes. That
+   * was reported as a dragged row being cut in half by the panel it was in.
+   *
+   * No z-index fixes it, because the problem is containment rather than order.
+   * The only answer is to draw the thing somewhere else: `Drag.Root` puts this
+   * layer at the end of `document.body`, outside every clip in the page, and
+   * the drag is drawn there for as long as it lasts.
+   *
+   * A ref rather than state: it is read once per drag, and publishing it as
+   * state would re-render every draggable in the tree when the layer attaches.
+   */
+  layerRef: React.RefObject<HTMLElement | null>;
   registerTarget: (target: RegisteredTarget) => () => void;
   beginDrag: (payload: DragPayload) => void;
   /**
@@ -94,6 +112,7 @@ export function useDragRegistry(
   const targets = useRef(new Map<string, RegisteredTarget>());
   const overRef = useRef<string | null>(null);
   const activeRef = useRef<DragPayload | null>(null);
+  const layerRef = useRef<HTMLElement | null>(null);
 
   const registerTarget = useCallback((target: RegisteredTarget) => {
     targets.current.set(target.id, target);
@@ -166,6 +185,7 @@ export function useDragRegistry(
       active,
       overId,
       overAccepts,
+      layerRef,
       registerTarget,
       beginDrag,
       updateDrag,
@@ -232,6 +252,103 @@ export interface UseDraggableReturn<T extends HTMLElement> {
 }
 
 /**
+ * Take a copy of the element and put it on the layer, at the pixel the original
+ * occupies right now.
+ *
+ * A COPY, not the element itself. Moving the real node out of its parent and
+ * back is the tempting version — nothing to keep in sync, and whatever the
+ * element is carrying comes with it — but React holds the node as the reference
+ * point for its siblings. Inserting one (Sortable adds a placeholder mid-drag)
+ * calls `insertBefore` against a node that is no longer in that parent, which
+ * throws where it stands. So the original stays exactly where React put it, and
+ * a copy does the travelling.
+ *
+ * The copy is frozen on arrival. Inserting a node is a first appearance as far
+ * as the browser is concerned, so every CSS animation inside it starts over —
+ * which is a fade-in playing on something that has been on screen for minutes,
+ * on the one frame it is picked up.
+ */
+function lift(el: HTMLElement, layer: HTMLElement): HTMLElement {
+  // Measured before the copy is made and INCLUDING any transform: whatever the
+  // element looks like at the moment of the lift is what should appear under
+  // the pointer. A row already stepped aside is lifted from where it stepped.
+  const rect = el.getBoundingClientRect();
+  const copy = el.cloneNode(true) as HTMLElement;
+
+  // Whatever is meant to identify ONE element stays behind with it. A duplicate
+  // `id` silently breaks every `aria-labelledby` and `<label for>` aimed at the
+  // original, and a duplicate test id turns a query that found the row into one
+  // that finds two and throws — in the consumer's test suite, for a copy they
+  // never asked for.
+  for (const attr of ['id', 'data-testid']) {
+    copy.removeAttribute(attr);
+    copy.querySelectorAll(`[${attr}]`).forEach((node) => node.removeAttribute(attr));
+  }
+  // It is a picture of the thing, and the thing itself is still in the list.
+  copy.setAttribute('aria-hidden', 'true');
+  copy.setAttribute('data-drag-preview', '');
+  // So everything already written for a dragged element reaches it here.
+  copy.setAttribute('data-dragging', '');
+
+  copy.style.position = 'absolute';
+  copy.style.left = `${rect.left}px`;
+  copy.style.top = `${rect.top}px`;
+  copy.style.width = `${rect.width}px`;
+  copy.style.height = `${rect.height}px`;
+  copy.style.margin = '0';
+  // The rect already accounts for any translate the element carries, so keeping
+  // it would apply the same displacement twice.
+  copy.style.translate = 'none';
+  copy.style.transition = 'none';
+  copy.style.animation = 'none';
+
+  layer.appendChild(copy);
+
+  // Now settle it. Inserting a node is a first appearance as far as the browser
+  // is concerned, so every CSS animation inside starts from the beginning: a
+  // fade-in replaying on an avatar that has been on screen for minutes, on the
+  // frame the row is picked up. Overriding them in CSS would mean outranking
+  // rules this hook cannot see — it attaches to any element, including ones
+  // Move does not ship — so the animations are ended rather than out-argued.
+  // Ended, not stopped: the end state IS what the thing looked like a moment
+  // ago, which is what a picture of it should show. A loop has no end to jump
+  // to and is dropped instead.
+  void copy.offsetHeight;
+  copy.getAnimations?.({ subtree: true }).forEach((animation) => {
+    try {
+      animation.finish();
+    } catch {
+      animation.cancel();
+    }
+  });
+  return copy;
+}
+
+/**
+ * Send the copy back to where it was lifted from, then take it away.
+ *
+ * An abandoned drag should be SEEN returning — the journey is what says the move
+ * did not happen. The copy is the only thing that moved, so it is the only thing
+ * with anywhere to go back to.
+ *
+ * Removed on arrival, and again on a timer: a transition that never starts fires
+ * no `transitionend`, which is what happens under reduced motion and in a
+ * background tab. A copy left behind would sit over the page for good.
+ */
+function returnHome(copy: HTMLElement) {
+  const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const done = () => copy.remove();
+  if (still) {
+    done();
+    return;
+  }
+  copy.style.transition = 'translate 160ms cubic-bezier(0.22, 1, 0.36, 1)';
+  copy.style.translate = 'none';
+  copy.addEventListener('transitionend', done, { once: true });
+  window.setTimeout(done, 400);
+}
+
+/**
  * Makes one element follow the pointer.
  *
  * THE OFFSET IS WRITTEN THROUGH THE REF, not returned for the call site to
@@ -270,6 +387,8 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
   const isDragging = phase === 'dragging';
   /** A committed drop whose offset is being held until the new order lands. */
   const landing = useRef(false);
+  /** The copy on the drag layer, while there is one. */
+  const preview = useRef<HTMLElement | null>(null);
 
   // A callback ref so the handle can be any element, and so the two properties
   // that make it a handle land the moment it attaches. Both are written here
@@ -304,6 +423,12 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
    */
   const clear = useCallback((travel: boolean) => {
     const el = ref.current;
+    const copy = preview.current;
+    preview.current = null;
+    if (copy) {
+      if (travel) returnHome(copy);
+      else copy.remove();
+    }
     if (el) {
       if (travel) {
         el.style.translate = '';
@@ -317,6 +442,7 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
         el.style.transition = previous;
       }
       el.removeAttribute('data-dragging');
+      el.removeAttribute('data-drag-source');
     }
     if (handleRef.current) handleRef.current.style.cursor = 'grab';
     document.body.style.cursor = '';
@@ -347,7 +473,12 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
 
       if (phase === 'pending') {
         if (Math.hypot(rawX, rawY) < activationDistance) return;
-        el.setAttribute('data-dragging', '');
+        const layer = ctx?.layerRef.current ?? null;
+        if (layer) preview.current = lift(el, layer);
+        // The original is left behind, and says so. Without a layer there is
+        // nowhere else to draw it, so the element itself is the thing lifted —
+        // which is what `useDraggable` does on its own, with no provider above.
+        el.setAttribute(preview.current ? 'data-drag-source' : 'data-dragging', '');
         // The closed hand, on the handle AND the document: the pointer leaves
         // the handle almost immediately, and without the document rule the
         // cursor reverts to an arrow for the rest of the drag.
@@ -366,7 +497,10 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
       // nothing, which looks exactly like the drop being rejected. `translate`
       // is its own property and composes with whatever transform the component
       // is doing, so neither has to know about the other.
-      el.style.translate = `${dx}px ${dy}px`;
+      //
+      // Written to the copy when there is one — the original has not moved and
+      // must not, or the thing would be in two places at once.
+      (preview.current ?? el).style.translate = `${dx}px ${dy}px`;
       setDelta({ x: dx, y: dy });
       const hit = ctx?.updateDrag(e.clientX, e.clientY);
       // `not-allowed` over a target that refuses. This is the one signal a

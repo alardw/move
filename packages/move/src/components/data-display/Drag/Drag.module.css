@@ -76,6 +76,22 @@
   border: 0;
 }
 
+/* The drag layer — where a lifted element is DRAWN, which is not where it
+   lives. Root portals this to the end of the body, so what is being carried is
+   outside every `overflow: hidden` and every stacking context between it and
+   the page: a row dragged out of a Drawer stays whole instead of being cut off
+   at the panel's edge.
+
+   It covers the viewport and catches nothing, so the pointer reaches the drop
+   targets underneath it — which is what keeps the hit-test working while
+   something is being carried over them. */
+.layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: var(--move-layer-drag);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .zone {
     transition: none;

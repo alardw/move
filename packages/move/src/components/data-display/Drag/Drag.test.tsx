@@ -62,6 +62,38 @@ describe('Drag.Root', () => {
     expect(region).toHaveAttribute('aria-live', 'assertive');
   });
 
+  it('puts the drag layer outside the tree it was rendered in', () => {
+    // A clipping ancestor is the case this exists for: a Drawer, a card with a
+    // rounded corner, any scroll region. The layer has to be past it.
+    const { container } = render(
+      <div style={{ overflow: 'hidden' }}>
+        <Drag.Root />
+      </div>,
+    );
+    const layer = document.body.querySelector('[data-move-drag-layer]');
+    expect(layer).not.toBeNull();
+    expect(container.contains(layer)).toBe(false);
+    expect(layer?.parentElement).toBe(document.body);
+  });
+
+  it('carries the lifted element on the layer, and leaves the original in place', () => {
+    render(
+      <Drag.Root>
+        <Handle id="a" />
+      </Drag.Root>,
+    );
+    act(() => {
+      screen.getByTestId('handle').dispatchEvent(pointer('pointerdown'));
+    });
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 40, clientY: 40 })));
+
+    const layer = document.body.querySelector('[data-move-drag-layer]');
+    expect(layer?.querySelector('[data-drag-preview]')).not.toBeNull();
+    expect(screen.getByTestId('item')).toHaveAttribute('data-drag-source');
+    // The original never moves — the copy is what travels.
+    expect(screen.getByTestId('item').style.translate).toBe('');
+  });
+
   it('renders no wrapper element around its children', () => {
     const { container } = render(
       <Drag.Root>

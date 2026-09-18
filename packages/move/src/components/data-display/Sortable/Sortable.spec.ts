@@ -220,7 +220,13 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-axis', 'data-dragging', 'data-shifted', 'data-handle'],
+    dataAttributes: [
+      'data-axis',
+      'data-dragging',
+      'data-drag-source',
+      'data-shifted',
+      'data-handle',
+    ],
   },
 
   capabilities: ['takes-focus', 'takes-disabled'],

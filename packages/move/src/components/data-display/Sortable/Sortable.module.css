@@ -91,9 +91,22 @@
   cursor: grab;
 }
 
+/* The row the carried one was lifted from. It keeps its size and its place —
+   that space is where the row returns if you let go here, and collapsing it
+   would move the whole list under the pointer mid-gesture. */
+.item[data-drag-source] {
+  transition: none;
+  box-shadow: none;
+}
+
 /* The carried row. Above the rows it passes, because the thing in your hand is
    the thing nearest you. Part-way transparent, so what it passes over stays
-   readable. */
+   readable.
+
+   Reached by the copy on the drag layer, which carries this same attribute —
+   and by the row itself when `useDraggable` is used with no `Drag.Root` above
+   it, where there is no layer to draw on and the element is the only thing
+   there is to lift. */
 .item[data-dragging] {
   transition: none;
   box-shadow: var(--move-sortable-item-shadow-dragging);
