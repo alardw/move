@@ -2,7 +2,6 @@
   "check": {
     "components": "src/components",
     "infrastructure": "src/infrastructure",
-    "recipes": ["skills/references/recipes/composite"],
     "samples": ["../docs/src/content/components"]
   }
 }

@@ -136,6 +136,12 @@ export const CHECKS: CheckDoc[] = [
       'Every repo file a skill tells an agent to read exists. Skills are the primary agent interface and are prose \u2014 nothing type-checks them, so deleting a file they name breaks them silently.',
   },
   {
+    name: 'reference-orphans',
+    appliesTo: 'component',
+    enforces:
+      'Every file under skills/references is read by a skill or by tooling \u2014 cited by path, or imported by another reference file that is itself read. References ship to every project that installs the skills, so each one an agent can find is one a skill actually sends it to.',
+  },
+  {
     name: 'dist-packaging',
     appliesTo: 'component',
     enforces:

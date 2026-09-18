@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# Pre-commit: keep Move specs ↔ source ↔ schema in sync, and recipes/samples pure.
+# Pre-commit: keep Move specs ↔ source ↔ schema in sync, and docs samples pure.
 # Scoped per area so unrelated commits (config, docs prose) stay instant.
 
 staged=$(git diff --cached --name-only --diff-filter=ACMR)
@@ -77,12 +77,12 @@ if printf '%s\n' "$staged" | grep -qE '^packages/move/src/components/.*\.module\
   echo "✓ option-row checks passed"
 fi
 
-# --- Recipe / docs-sample sources: purity + recipe spec↔source drift ---
-if printf '%s\n' "$staged" | grep -qE '^packages/docs/src/content/(recipes|components)/.*\.(tsx|ts)$|^packages/move/skills/references/recipes/composite/.*\.tsx$'; then
-  echo "▶ pre-commit: recipe/sample sources changed — recipe purity + spec drift…"
+# --- Docs-sample sources: purity + composite spec↔source drift ---
+if printf '%s\n' "$staged" | grep -qE '^packages/docs/src/content/components/.*\.(tsx|ts)$'; then
+  echo "▶ pre-commit: docs samples changed — purity + spec drift…"
 
   if ! npm run check:purity --workspace move --silent; then
-    echo "✗ recipe-purity: inline styles, raw HTML, or non-Move components. Use Move components + their props."
+    echo "✗ purity: inline styles, raw HTML, or non-Move components. Use Move components + their props."
     exit 1
   fi
 

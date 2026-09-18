@@ -15,8 +15,7 @@ if (!command || command === '--help' || command === '-h') {
 
   Commands:
     skills    Copy Move AI skills into your project
-    recipes   Copy Move recipe examples into your project
-    check     Validate your components & recipes (strict props, recipe purity, …)
+    check     Validate your components & composites (strict props, purity, …)
     hooks     Install git hooks that run those checks on commit and push
 `);
   process.exit(0);
@@ -56,65 +55,6 @@ if (command === 'skills') {
   AI assistant can now drive Move's spec-driven workflow and scaffold apps, pages,
   composites, data sources, and hooks.
 `);
-  process.exit(0);
-}
-
-if (command === 'recipes') {
-  const recipesRoot = join(packageRoot, 'recipes');
-
-  if (!existsSync(recipesRoot)) {
-    console.error('  Could not find Move recipes. Is the move package installed correctly?');
-    process.exit(1);
-  }
-
-  const pattern = process.argv[3];
-  if (!pattern) {
-    console.log(`
-  Usage: move recipes <group>/<Name> | <group>
-
-  Examples:
-    move recipes authentication/SignIn   Copy one recipe (+ its .spec.ts)
-    move recipes authentication          Copy every recipe in a group
-
-  Groups: authentication, data, navigation, page
-
-  Recipes are copied to src/recipes/ in your project. Each recipe's .spec.ts
-  travels with it so an AI can re-derive or upgrade it later. Once copied it's
-  your own component — edit it freely.
-`);
-    process.exit(0);
-  }
-
-  const source = join(recipesRoot, pattern);
-
-  let resolvedSource;
-  if (existsSync(source))
-    resolvedSource = source; // group dir, or exact path
-  else if (existsSync(source + '.tsx'))
-    resolvedSource = source + '.tsx'; // single recipe by name
-  else {
-    console.error(`  Recipe not found: ${pattern}`);
-    process.exit(1);
-  }
-
-  const target = join(process.cwd(), 'src', 'recipes', pattern);
-
-  if (resolvedSource.endsWith('.tsx')) {
-    // Single recipe — copy the component AND its spec breadcrumb.
-    mkdirSync(dirname(target), { recursive: true });
-    cpSync(resolvedSource, target + '.tsx');
-    const specSrc = resolvedSource.replace(/\.tsx$/, '.spec.ts');
-    const hasSpec = existsSync(specSrc);
-    if (hasSpec) cpSync(specSrc, target + '.spec.ts');
-    console.log(`\n  Copied to src/recipes/${pattern}.tsx${hasSpec ? ' (+ .spec.ts)' : ''}\n`);
-  } else {
-    // Group directory — recipes + their specs (registry.ts/spec-type.ts live at
-    // the recipes root, not inside a group, so they aren't dragged along).
-    mkdirSync(target, { recursive: true });
-    cpSync(resolvedSource, target, { recursive: true });
-    console.log(`\n  Copied to src/recipes/${pattern}/\n`);
-  }
-
   process.exit(0);
 }
 
