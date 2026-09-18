@@ -135,7 +135,7 @@ export function DragAndDropPage() {
         <Section
           id="targets"
           title="Dropping onto a place"
-          lede="Drag a chip onto a position. Each position is a destination of its own, and stays visible whether it holds something or not."
+          lede="Drag a chip onto a position. Each position is a destination of its own, and stays visible whether it holds something or not. The reserved one turns the chip away while the pointer is still over it."
         >
           <Preview code={dragSlotsCode}>
             <DragSlots />

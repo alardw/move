@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Drag, Button, Text, Stack, Icon, useDraggable } from 'move';
+import { Drag, Button, Text, Stack, Icon, Badge, useDraggable } from 'move';
 
 interface Item {
   id: string;
@@ -34,9 +34,12 @@ function Chip({ item }: { item: Item }) {
   );
 }
 
+/** The third position is spoken for, and says so on approach rather than on release. */
+const LOCKED = 2;
+
 /**
- * Three positions that stay visible while empty — the thing reordering cannot
- * express, because an empty slot holds no row to reorder.
+ * Three positions that stay visible while empty, each a destination in its own
+ * right.
  *
  * An item MOVES: it leaves the pool and lives in the slot. One thing, one place.
  * A slot that already held something hands its old occupant back, so nothing is
@@ -71,12 +74,18 @@ export default function SlotsSample() {
             <Drag.Zone
               key={i}
               id={`slot-${i}`}
+              accepts={() => i !== LOCKED}
               onDrop={(event) => place(i, event.payload.data as Item)}
             >
-              <Stack direction="row" justify="center" align="center">
+              <Stack direction="row" justify="center" align="center" gap="sm">
                 <Text size="sm" color={item ? 'base' : 'muted'}>
                   {item?.title ?? `Position ${i + 1}`}
                 </Text>
+                {i === LOCKED && (
+                  <Badge size="sm" variant="soft">
+                    Reserved
+                  </Badge>
+                )}
               </Stack>
             </Drag.Zone>
           ))}
