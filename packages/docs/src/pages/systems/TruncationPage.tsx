@@ -196,7 +196,9 @@ export function TruncationPage() {
           </Stack>
           <Stack gap="sm">
             <Heading level={3}>When there is a lot of it</Heading>
-            <Text>A tooltip shows what was hidden, up to ten lines, then trims.</Text>
+            <Text size="sm" color="muted">
+              A tooltip shows what was hidden, up to ten lines, then trims.
+            </Text>
             <Preview code={`<Text truncate="clamp" lines={2}>{essay}</Text>`}>
               <Frame>
                 <Text truncate="clamp" lines={2}>
@@ -204,7 +206,7 @@ export function TruncationPage() {
                 </Text>
               </Frame>
             </Preview>
-            <Text>
+            <Text size="sm" color="muted">
               <Code>maxLines</Code> moves the ceiling on one tooltip, and takes <Code>none</Code> to
               lift it:
             </Text>
@@ -247,7 +249,7 @@ export function TruncationPage() {
               <Code>&lt;Text truncate&gt;</Code> in a row trims while its neighbours keep their
               size.
             </Text>
-            <Text>
+            <Text size="sm" color="muted">
               Tuck it inside a column and give that column <Code>flex={'{1}'}</Code>, so the column
               can shrink too:
             </Text>
