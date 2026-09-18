@@ -7,9 +7,17 @@ import type { SlotPropsMap } from '../../../engine';
 import {
   useSortable,
   useDragContext,
+  useDropTarget,
   DEFAULT_SORTABLE_LABELS as HOOK_LABELS,
 } from '../../../hooks';
-import type { SortableChange, SortableMoveAction, UseSortableLabels } from '../../../hooks';
+import type {
+  DragPayload,
+  DropEvent,
+  SortableArrival,
+  SortableChange,
+  SortableMoveAction,
+  UseSortableLabels,
+} from '../../../hooks';
 import { Drag } from '../Drag';
 import { Dropdown } from '../../overlays/Dropdown';
 import { Button } from '../../actions/Button';
@@ -55,7 +63,13 @@ interface SortableContextValue {
    * row can step out of the way. A list that only draws a line leaves the person
    * to imagine the result; a list that opens the gap shows it.
    */
-  drag: { from: number; to: number; offset: number } | null;
+  /**
+   * The move in progress. `from: null` means the thing is coming from OUTSIDE
+   * this list — there is no row here to have left a place behind, so the rows
+   * at and after `to` all step down one, rather than the ones between two
+   * positions swapping past each other.
+   */
+  drag: { from: number | null; to: number; offset: number } | null;
   setDrag: (d: { from: number; to: number; offset: number } | null) => void;
   /**
    * Set by a row committing a DRAG, read by Root on the render that follows.
@@ -107,6 +121,23 @@ export interface SortableRootProps extends React.HTMLAttributes<HTMLElement> {
   onReorder?: (change: SortableChange) => void;
   /** Names this list. Two ids under one Drag.Root is what lets a row move between them. */
   list?: string;
+  /**
+   * Which arrivals this list takes. Without it a list takes nothing from
+   * outside, because a list that accepts anything is a list that accepts the
+   * wrong thing — and the rows open a gap for whatever is coming, which is a
+   * promise the drop then has to keep.
+   */
+  accepts?: (payload: DragPayload) => boolean;
+  /**
+   * A thing from outside landed. Reported in the same shape as a reorder — a
+   * `destination` naming this list and the place in it — because it is the same
+   * question answered about a different traveller. Where it CAME from is on the
+   * payload, which carries its own id, type and group.
+   *
+   * Like `onReorder`, this reports and leaves the data to the call site, the
+   * only place that knows what an arriving thing becomes.
+   */
+  onInsert?: (event: SortableArrival) => void;
   axis?: SortableAxis;
   /** Rows slide to their new places after a move. */
   animate?: boolean;
@@ -120,7 +151,7 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
   styles,
   slots: ['root', 'placeholder'] as const,
   defaults: { axis: 'vertical' as SortableAxis, animate: true },
-  moveProps: ['onReorder', 'list', 'labels'],
+  moveProps: ['onReorder', 'list', 'labels', 'accepts', 'onInsert'],
 
   setup({ props, ref, cx, sp, attrs }) {
     const labels = React.useMemo(
@@ -150,6 +181,128 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
       }),
       [props.list, props.axis, count, props.onReorder, labels, drag],
     );
+
+    /**
+     * ARRIVALS — a thing dragged in from somewhere else.
+     *
+     * A row moving inside its own list works out where it would land by
+     * measuring its siblings, and it is the row that publishes the gap. Nothing
+     * arriving from outside has a row here to do that, so the list did the only
+     * thing it could: light up as a whole and report a drop with no position.
+     * The rows never parted, and the docs' promise — "the gap that opens where
+     * it lands" — held only for rows already in the list.
+     *
+     * So the LIST measures for a visitor. Same midpoints, same gap, same
+     * placeholder; the only difference is that no place is being vacated, which
+     * is what `from: null` says to the rows.
+     */
+    const accepts = props.accepts as ((p: DragPayload) => boolean) | undefined;
+    const onInsert = props.onInsert as ((e: SortableArrival) => void) | undefined;
+    const listRef = React.useRef<HTMLDivElement>(null);
+    const arrivalIndex = React.useRef<number | null>(null);
+    const autoId = React.useId();
+
+    // A row from THIS list is not a visitor — it is already being handled by
+    // the row itself, and treating it as an arrival would open two gaps.
+    const takes = React.useCallback(
+      (payload: DragPayload) =>
+        payload.group !== (props.list as string | undefined) && (accepts?.(payload) ?? false),
+      [accepts, props.list],
+    );
+
+    const handleArrival = React.useCallback(
+      (event: DropEvent) => {
+        const index = arrivalIndex.current;
+        arrivalIndex.current = null;
+        setDrag(null);
+        if (index === null) return;
+        onInsert?.({
+          payload: event.payload,
+          destination: { list: props.list as string | undefined, index },
+        });
+      },
+      [onInsert, props.list, setDrag],
+    );
+
+    const {
+      ref: dropRef,
+      isOver,
+      canDrop,
+    } = useDropTarget<HTMLDivElement>({
+      id: (props.list as string | undefined) ?? autoId,
+      group: props.list as string | undefined,
+      accepts: takes,
+      onDrop: handleArrival,
+      disabled: !onInsert,
+    });
+
+    // Where the visitor would go, read from the pointer against the rows that
+    // are already here.
+    //
+    // Watched for the WHOLE drag rather than from the moment the pointer is
+    // over the list: `isOver` only becomes true as a RESULT of a move, so a
+    // listener attached then misses the very move that arrived, and a drag that
+    // crossed the edge and released in one go landed with no position at all.
+    //
+    // Measured per move rather than once at the edge: the rows are stepping
+    // aside as the visitor travels, so midpoints taken on arrival go stale the
+    // moment the gap opens.
+    const active = outerCtx?.active ?? null;
+    const watching = active !== null && takes(active) && !!onInsert;
+    React.useEffect(() => {
+      if (!watching) {
+        if (arrivalIndex.current !== null) {
+          arrivalIndex.current = null;
+          setDrag(null);
+        }
+        return;
+      }
+      const vertical = (props.axis as SortableAxis) === 'vertical';
+      const onMove = (e: PointerEvent) => {
+        const el = listRef.current;
+        if (!el) return;
+        const point = vertical ? e.clientY : e.clientX;
+        const box = el.getBoundingClientRect();
+        const inside =
+          e.clientX >= box.left &&
+          e.clientX <= box.right &&
+          e.clientY >= box.top &&
+          e.clientY <= box.bottom;
+        if (!inside) {
+          if (arrivalIndex.current !== null) {
+            arrivalIndex.current = null;
+            setDrag(null);
+          }
+          return;
+        }
+        const rows = Array.from(el.querySelectorAll<HTMLElement>('[data-sortable-item]'));
+        if (rows.length === 0) {
+          arrivalIndex.current = 0;
+          return;
+        }
+        const first = rows[0].getBoundingClientRect();
+        const gap = parseFloat(getComputedStyle(el).gap || '0') || 0;
+        const offset = (vertical ? first.height : first.width) + gap;
+        // Against the UNSHIFTED midpoint of each row: a row that has already
+        // stepped aside is standing in the answer, so reading where it is now
+        // makes the gap chase the pointer a place at a time.
+        let next = 0;
+        rows.forEach((row, i) => {
+          const r = row.getBoundingClientRect();
+          const shifted = arrivalIndex.current !== null && i >= arrivalIndex.current;
+          const mid =
+            (vertical ? r.top + r.height / 2 : r.left + r.width / 2) - (shifted ? offset : 0);
+          if (point > mid) next += 1;
+        });
+        next = Math.max(0, Math.min(rows.length, next));
+        if (next !== arrivalIndex.current) {
+          arrivalIndex.current = next;
+          setDrag({ from: null, to: next, offset });
+        }
+      };
+      window.addEventListener('pointermove', onMove);
+      return () => window.removeEventListener('pointermove', onMove);
+    }, [watching, props.axis, setDrag]);
 
     return {
       render() {
@@ -191,9 +344,29 @@ const SortableRoot = withMoveComponent<'root' | 'placeholder', SortableRootProps
           <div
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={(node: HTMLDivElement | null) => {
+              listRef.current = node;
+              dropRef.current = node;
+              if (typeof ref === 'function') ref(node);
+              else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
+            }}
+            data-drag-over={isOver && canDrop ? '' : undefined}
             className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            style={
+              {
+                ...props.style,
+                ...(spStyle as React.CSSProperties),
+                // Room for a visitor. The rows step aside with `translate`,
+                // which moves them without taking any space — right for a
+                // reorder, where a place was vacated, and wrong for an arrival,
+                // where the list is about to be one row longer. Without this the
+                // last row steps outside the container and sits on whatever is
+                // below it.
+                ...(drag && drag.from === null
+                  ? ({ '--move-sortable-arrival-room': `${drag.offset}px` } as React.CSSProperties)
+                  : null),
+              } as React.CSSProperties
+            }
             data-axis={props.axis}
           >
             {props.children}
@@ -342,7 +515,11 @@ const SortableItem = withMoveComponent<'item', SortableItemProps, HTMLDivElement
      */
     const shift = (() => {
       const d = ctx.drag;
-      if (!d || isDragging || d.from === d.to) return 0;
+      if (!d || isDragging) return 0;
+      // Arriving from elsewhere: nothing here vacated a place, so every row
+      // from the landing spot down makes room, and the list grows by one.
+      if (d.from === null) return index >= d.to ? d.offset : 0;
+      if (d.from === d.to) return 0;
       if (d.from < d.to && index > d.from && index <= d.to) return -d.offset;
       if (d.from > d.to && index >= d.to && index < d.from) return d.offset;
       return 0;

@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 75 components. Version 0.1.64.
+> 75 components. Version 0.1.65.
 
 ## Props you pass
 
@@ -1798,6 +1798,8 @@ Example: <Skeleton.Root>…</Skeleton.Root>
 A list whose rows can be reordered by dragging, with a named-move menu as the keyboard equivalent. The order stays the consumer’s data.
 Sortable.Root props:
 - onReorder: (change: SortableChange) => void — The only call-site obligation. Reports source and destination; applying the move is the consumer’s, so the order lives with the rest of their data. A cancelled drag arrives with destination null — a move that did not happen, not a move to nowhere.
+- accepts: (payload: DragPayload) => boolean — Which arrivals this list takes. Without it a list takes nothing from outside — a list that accepts anything accepts the wrong thing, and the rows open a gap for whatever is coming, which is a promise the drop then has to keep
+- onInsert: (event: SortableArrival) => void — A thing from outside landed. Reported in the same shape as a reorder — a destination naming this list and the place in it — because it is the same question about a different traveller; where it came from is on the payload. Like onReorder it reports and leaves the data to the call site
 - list: string — Names this list. Two lists with different ids under one Drag.Root is what lets a row move between them.
 - axis: 'vertical' | 'horizontal' (default: vertical) — Which way the list runs, which decides the drag axis and which way the gap opens.
 - animate: boolean (default: true) — Rows slide to their new places after a move. Off renders the new order immediately.

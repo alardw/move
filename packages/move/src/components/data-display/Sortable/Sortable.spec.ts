@@ -101,6 +101,20 @@ export const spec = {
             'The only call-site obligation. Reports source and destination; applying the move is the consumer’s, so the order lives with the rest of their data. A cancelled drag arrives with destination null — a move that did not happen, not a move to nowhere.',
         },
         {
+          name: 'accepts',
+          type: '(payload: DragPayload) => boolean',
+          moveSpecific: true,
+          description:
+            'Which arrivals this list takes. Without it a list takes nothing from outside — a list that accepts anything accepts the wrong thing, and the rows open a gap for whatever is coming, which is a promise the drop then has to keep',
+        },
+        {
+          name: 'onInsert',
+          type: '(event: SortableArrival) => void',
+          moveSpecific: true,
+          description:
+            'A thing from outside landed. Reported in the same shape as a reorder — a destination naming this list and the place in it — because it is the same question about a different traveller; where it came from is on the payload. Like onReorder it reports and leaves the data to the call site',
+        },
+        {
           name: 'list',
           type: 'string',
           moveSpecific: true,
@@ -224,6 +238,7 @@ export const spec = {
       'data-axis',
       'data-dragging',
       'data-drag-source',
+      'data-drag-over',
       'data-shifted',
       'data-handle',
     ],

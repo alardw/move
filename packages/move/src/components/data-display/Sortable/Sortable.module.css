@@ -16,10 +16,24 @@
   gap: var(--move-sortable-gap);
   /* The placeholder is positioned against the list. */
   position: relative;
+  /* Set only while something from outside is over the list — the space the row
+     it is about to gain will occupy. See the note where it is written. */
+  padding-bottom: var(--move-sortable-arrival-room, 0);
 }
 
 .root[data-axis='horizontal'] {
   flex-direction: row;
+  padding-bottom: 0;
+  padding-inline-end: var(--move-sortable-arrival-room, 0);
+}
+
+/* Taking something from outside. The gap says WHERE it lands; this says which
+   list is taking it, which is the question when two are side by side. Quiet:
+   the row travelling and the gap opening are the loud parts. */
+.root[data-drag-over] {
+  outline: 1px dashed var(--move-drop-target-border-active);
+  outline-offset: var(--move-space-2);
+  border-radius: var(--move-drop-target-radius);
 }
 
 /* Quiet on purpose: it marks a destination, it is not a thing in its own right.

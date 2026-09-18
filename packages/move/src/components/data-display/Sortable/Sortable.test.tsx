@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
 import { Sortable } from './Sortable';
-import type { SortableChange } from '../../../hooks';
+import type { SortableArrival, SortableChange } from '../../../hooks';
+import { Drag, useDraggable } from '../../../index';
 
 const ROWS = [
   { id: 'a', title: 'Offerte' },
@@ -326,5 +327,147 @@ describe('passthrough', () => {
     expect(screen.getByTestId('list').style.margin).toBe('4px');
     expect(screen.getByTestId('row-a').className).toContain('row');
     expect(screen.getByTestId('row-a')).toHaveAttribute('title', 't');
+  });
+});
+
+// ── Arrivals ────────────────────────────────────────────────────────────────
+//
+// A row moving inside its own list works out where it would land by measuring
+// its siblings, and the ROW publishes the gap. A thing dragged in from outside
+// has no row here to do that, so the list has to measure for it.
+
+/** Something draggable that is not a row of the list — a chip in a drawer. */
+function Chip() {
+  const { dragProps } = useDraggable<HTMLButtonElement>({
+    id: 'visitor',
+    type: 'point',
+    data: { title: 'Nieuw punt' },
+    axis: 'both',
+  });
+  return (
+    <button {...dragProps} data-testid="chip">
+      Nieuw punt
+    </button>
+  );
+}
+
+function ListWithArrivals({ onInsert }: { onInsert?: (e: SortableArrival) => void }) {
+  return (
+    <Drag.Root>
+      <Chip />
+      <Sortable.Root
+        list="points"
+        animate={false}
+        accepts={(p) => p.type === 'point'}
+        onInsert={onInsert}
+        data-testid="list"
+      >
+        {ROWS.map((r, i) => (
+          <Sortable.Item key={r.id} id={r.id} index={i} label={r.title} data-testid={`row-${r.id}`}>
+            {r.title}
+          </Sortable.Item>
+        ))}
+      </Sortable.Root>
+    </Drag.Root>
+  );
+}
+
+describe('arrivals', () => {
+  /** jsdom measures nothing, so the rows are given boxes to be measured. */
+  function layOutRows(top = 0, height = 40) {
+    document.querySelectorAll('[data-sortable-item]').forEach((row, i) => {
+      row.getBoundingClientRect = () =>
+        ({
+          top: top + i * height,
+          height,
+          bottom: top + (i + 1) * height,
+          left: 0,
+          width: 200,
+          right: 200,
+        }) as DOMRect;
+    });
+    const list = screen.getByTestId('list');
+    list.getBoundingClientRect = () =>
+      ({
+        top,
+        left: 0,
+        right: 200,
+        bottom: top + 3 * height,
+        width: 200,
+        height: 3 * height,
+      }) as DOMRect;
+  }
+
+  it('takes only what it says it takes', () => {
+    const onInsert = vi.fn();
+    render(<ListWithArrivals onInsert={onInsert} />);
+    layOutRows();
+    const chip = screen.getByTestId('chip');
+
+    act(() => void chip.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 })));
+    // The move that lifts it, then the travel — a pointer never arrives in one.
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 100, clientY: 50 })));
+    act(() => void window.dispatchEvent(pointer('pointerup', { clientX: 100, clientY: 50 })));
+    expect(onInsert).toHaveBeenCalledTimes(1);
+    expect(onInsert.mock.calls[0][0].payload.type).toBe('point');
+    expect(onInsert.mock.calls[0][0].destination.list).toBe('points');
+  });
+
+  it('reports where in the list it landed, not just that it landed', () => {
+    const onInsert = vi.fn();
+    render(<ListWithArrivals onInsert={onInsert} />);
+    layOutRows();
+    const chip = screen.getByTestId('chip');
+
+    act(() => void chip.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 })));
+    // Past the midpoint of the first two rows (20 and 60), short of the third.
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 100, clientY: 70 })));
+    act(() => void window.dispatchEvent(pointer('pointerup', { clientX: 100, clientY: 70 })));
+
+    expect(onInsert.mock.calls[0][0].destination.index).toBe(2);
+  });
+
+  it('opens a gap at the place it would land', () => {
+    render(<ListWithArrivals onInsert={vi.fn()} />);
+    layOutRows();
+    const chip = screen.getByTestId('chip');
+
+    act(() => void chip.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 100, clientY: 70 })));
+
+    // Nothing vacated a place, so every row from the landing spot down makes
+    // room — rows 0 and 1 stay put, row 2 steps aside.
+    expect(screen.getByTestId('row-a')).not.toHaveAttribute('data-shifted');
+    expect(screen.getByTestId('row-b')).not.toHaveAttribute('data-shifted');
+    expect(screen.getByTestId('row-c')).toHaveAttribute('data-shifted');
+  });
+
+  it('a list that says nothing about arrivals takes none', () => {
+    const onInsert = vi.fn();
+    render(
+      <Drag.Root>
+        <Chip />
+        <Sortable.Root list="points" animate={false} onInsert={onInsert} data-testid="list">
+          {ROWS.map((r, i) => (
+            <Sortable.Item key={r.id} id={r.id} index={i} label={r.title}>
+              {r.title}
+            </Sortable.Item>
+          ))}
+        </Sortable.Root>
+      </Drag.Root>,
+    );
+    layOutRows();
+    const chip = screen.getByTestId('chip');
+
+    act(() => void chip.dispatchEvent(pointer('pointerdown', { clientX: 0, clientY: 0 })));
+    // The move that lifts it, then the travel — a pointer never arrives in one.
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 20, clientY: 10 })));
+    act(() => void window.dispatchEvent(pointer('pointermove', { clientX: 100, clientY: 50 })));
+    act(() => void window.dispatchEvent(pointer('pointerup', { clientX: 100, clientY: 50 })));
+
+    expect(onInsert).not.toHaveBeenCalled();
   });
 });

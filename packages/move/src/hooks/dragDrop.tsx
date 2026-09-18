@@ -16,6 +16,16 @@ import {
  */
 export interface DragPayload {
   id: string;
+  /**
+   * What KIND of thing this is — 'point', 'file', 'row'. What a drop target
+   * needs to answer "is this mine?", and the one question every target asks.
+   *
+   * Named rather than left inside `data` because it is the question, not the
+   * cargo: without it every consumer invents their own key for it and no two
+   * agree, so nothing generic can be built on the answer — not a target that
+   * takes one kind, not a live region that says what is being carried.
+   */
+  type?: string;
   /** Names the container it came from — a list id, a column, a slot grid. */
   group?: string;
   /** The consumer's own data. */
@@ -209,6 +219,8 @@ export function useDragContext(): DragContextValue | null {
 
 export interface UseDraggableOptions {
   id: string;
+  /** What kind of thing this is, for a target deciding whether it takes it. */
+  type?: string;
   group?: string;
   data?: unknown;
   disabled?: boolean;
@@ -367,6 +379,7 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
 ): UseDraggableReturn<T> {
   const {
     id,
+    type,
     group,
     data,
     disabled = false,
@@ -485,7 +498,7 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
         if (handleRef.current) handleRef.current.style.cursor = 'grabbing';
         document.body.style.cursor = 'grabbing';
         setPhase('dragging');
-        ctx?.beginDrag({ id, group, data });
+        ctx?.beginDrag({ id, type, group, data });
       }
 
       const dx = axis === 'vertical' ? 0 : rawX;
@@ -547,7 +560,7 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
       const targetId = commit ? (ctx?.overId ?? null) : null;
       ctx?.endDrag(commit);
       onDragEnd?.({
-        payload: { id, group, data },
+        payload: { id, type, group, data },
         target: targetId ? { id: targetId } : null,
         cancelled: !commit,
       });
@@ -571,7 +584,7 @@ export function useDraggable<T extends HTMLElement = HTMLElement>(
       window.removeEventListener('pointercancel', onUp);
       window.removeEventListener('keydown', onKey);
     };
-  }, [phase, axis, activationDistance, ctx, clear, id, group, data, onDragEnd]);
+  }, [phase, axis, activationDistance, ctx, clear, id, type, group, data, onDragEnd]);
 
   // Runs after React has applied the new order to the DOM and before paint.
   useLayoutEffect(() => {

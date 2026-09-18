@@ -63,6 +63,7 @@ export type {
   UseInViewReturn,
   UseTruncateOptions,
   UseTruncateReturn,
+  SortableArrival,
   SortableChange,
   SortableMoveAction,
   UseSortableLabels,

@@ -32,6 +32,7 @@ export type {
 
 export { useSortable, DEFAULT_SORTABLE_LABELS } from './useSortable';
 export type {
+  SortableArrival,
   SortableChange,
   SortableMoveAction,
   UseSortableLabels,

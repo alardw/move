@@ -4,6 +4,8 @@ import { Section, TocRail, Preview, type TocItem } from '../../components';
 
 import SortableBasic from '../../content/components/sortable/samples/basic';
 import sortableBasicCode from '../../content/components/sortable/samples/basic?raw';
+import SortableArrivals from '../../content/components/sortable/samples/arrivals';
+import sortableArrivalsCode from '../../content/components/sortable/samples/arrivals?raw';
 import DragSlots from '../../content/components/drag/samples/slots';
 import dragSlotsCode from '../../content/components/drag/samples/slots?raw';
 
@@ -18,6 +20,7 @@ const TOC: TocItem[] = [
   { href: '#layers', label: 'Four pieces' },
   { href: '#reorder', label: 'Rearranging a list' },
   { href: '#targets', label: 'Dropping onto a place' },
+  { href: '#arrivals', label: 'Into a list from outside' },
   { href: '#keyboard', label: 'The keyboard path' },
   { href: '#styling', label: 'Why the components exist' },
 ];
@@ -145,6 +148,22 @@ export function DragAndDropPage() {
             row moves to. Both are <Code>Drag.Zone</Code>. Put two lists under one{' '}
             <Code>Drag.Root</Code> and they share a drag, so a row can move between them. See{' '}
             <RouterLink to="/components/drag">Drag</RouterLink>.
+          </Text>
+        </Section>
+
+        <Section
+          id="arrivals"
+          title="Into a list from outside"
+          lede="A list takes things that were never in it, and parts where one would land."
+        >
+          <Preview code={sortableArrivalsCode}>
+            <SortableArrivals />
+          </Preview>
+          <Text size="sm" color="muted">
+            <Code>accepts</Code> reads the <Code>type</Code> the drag carries, so the answer arrives
+            while the pointer is still moving: a point opens a gap, a file does not, and the cursor
+            says which. <Code>onInsert</Code> reports where it landed in the same shape{' '}
+            <Code>onReorder</Code> uses — a destination naming the list and the place in it.
           </Text>
         </Section>
 

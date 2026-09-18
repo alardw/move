@@ -1,11 +1,24 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDraggable, useDragContext } from './dragDrop';
-import type { DropEvent } from './dragDrop';
+import type { DragPayload, DropEvent } from './dragDrop';
 
 /** Where a move started, and where it ended up. `destination: null` = dropped nowhere. */
 export interface SortableChange {
   source: { list?: string; index: number };
   destination: { list?: string; index: number } | null;
+}
+
+/**
+ * A thing from OUTSIDE the list landing in it.
+ *
+ * Same shape as a reorder's destination, because it is the same question about
+ * a different traveller: which list, and which place in it. Where it came from
+ * is on the payload, which already carries its id, type and group — a source
+ * `index` would be a lie for anything that was not a row in a list.
+ */
+export interface SortableArrival {
+  payload: DragPayload;
+  destination: { list?: string; index: number };
 }
 
 /** One named way to move the focused item — the keyboard path. */
