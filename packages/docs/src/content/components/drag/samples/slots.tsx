@@ -4,12 +4,14 @@ import { Drag, Button, Text, Stack, Icon, Badge, useDraggable } from 'move';
 interface Item {
   id: string;
   title: string;
+  kind: 'report' | 'tool';
 }
 
 const START: Item[] = [
-  { id: 'p1', title: 'Quotes' },
-  { id: 'p2', title: 'CRM' },
-  { id: 'p3', title: 'Support' },
+  { id: 'p1', title: 'Quotes', kind: 'report' },
+  { id: 'p2', title: 'Revenue', kind: 'report' },
+  { id: 'p3', title: 'CRM', kind: 'tool' },
+  { id: 'p4', title: 'Support', kind: 'tool' },
 ];
 
 /**
@@ -30,12 +32,15 @@ function Chip({ item }: { item: Item }) {
     <Button {...dragProps} variant="secondary" size="sm">
       <Icon name="grip-vertical" />
       {item.title}
+      <Badge size="sm" variant="soft">
+        {item.kind}
+      </Badge>
     </Button>
   );
 }
 
-/** The third position is spoken for, and says so on approach rather than on release. */
-const LOCKED = 2;
+/** The third position takes reports, and says so on approach rather than on release. */
+const REPORTS_ONLY = 2;
 
 /**
  * Three positions that stay visible while empty, each a destination in its own
@@ -74,16 +79,16 @@ export default function SlotsSample() {
             <Drag.Zone
               key={i}
               id={`slot-${i}`}
-              accepts={() => i !== LOCKED}
+              accepts={(payload) => i !== REPORTS_ONLY || (payload.data as Item).kind === 'report'}
               onDrop={(event) => place(i, event.payload.data as Item)}
             >
               <Stack direction="row" justify="center" align="center" gap="sm">
                 <Text size="sm" color={item ? 'base' : 'muted'}>
                   {item?.title ?? `Position ${i + 1}`}
                 </Text>
-                {i === LOCKED && (
+                {i === REPORTS_ONLY && (
                   <Badge size="sm" variant="soft">
-                    Reserved
+                    Reports only
                   </Badge>
                 )}
               </Stack>
