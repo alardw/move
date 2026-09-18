@@ -305,6 +305,58 @@ describe('DatePicker', () => {
       });
     });
 
+    it('typing a date and committing it leaves the calendar closed', async () => {
+      // Enter in the field closes the picker, and the picker is already closed.
+      // That used to mount the calendar to animate out something that was never
+      // in — and focus enters the calendar on open, so the caret left the field
+      // for a day cell and the rest of the typed date went to the grid.
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+            <DatePicker.Icon />
+          </DatePicker.Trigger>
+          <DatePicker.Content />
+        </DatePicker.Root>,
+      );
+
+      const field = screen.getByRole('textbox');
+      await user.click(field);
+      await user.type(field, '7/4/26{Enter}');
+
+      expect(document.querySelector('[role="gridcell"]')).toBeNull();
+      expect(document.activeElement).toBe(field);
+    });
+
+    it('opens on the month of the date it holds, however far you browsed last time', async () => {
+      const user = userEvent.setup();
+      render(
+        <DatePicker.Root defaultValue={new Date(2026, 5, 15)}>
+          <DatePicker.Trigger>
+            <DatePicker.Input />
+            <DatePicker.Icon />
+          </DatePicker.Trigger>
+          <DatePicker.Content />
+        </DatePicker.Root>,
+      );
+
+      const openCalendar = () => user.click(screen.getByLabelText('Open calendar'));
+      await openCalendar();
+      await screen.findByText(/June/i);
+
+      // Browse two months on, then close.
+      await user.click(screen.getByLabelText(/next month/i));
+      await user.click(screen.getByLabelText(/next month/i));
+      await screen.findByText(/August/i);
+      await user.keyboard('{Escape}');
+      await waitFor(() => expect(document.querySelector('[role="gridcell"]')).toBeNull());
+
+      // The selected date is still in June, so that is where it opens.
+      await openCalendar();
+      await screen.findByText(/June/i);
+    });
+
     it('Escape returns focus to the field, not <body>', async () => {
       const user = userEvent.setup();
       render(

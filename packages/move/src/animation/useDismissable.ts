@@ -103,6 +103,20 @@ export function useDismissable(options: DismissableOptions = {}): Dismissable {
   }, [isControlled, onOpenChange]);
 
   const close = useCallback(() => {
+    // Closing what is not open does nothing — and used to do something bad.
+    //
+    // `isClosing` means "play the exit", and the content is mounted for as long
+    // as it is open OR closing. So raising it on an already-closed popup MOUNTED
+    // the popup, to animate out something that was never in: it appeared for the
+    // length of one exit and vanished again. Where focus enters the panel on
+    // open — a DatePicker's calendar does — that flash also took the caret out
+    // of the field and put it on a day cell, so the next keystrokes went to the
+    // grid and the typed date was lost.
+    //
+    // It is reached by ordinary use, not a corner: committing a typed date with
+    // Enter or by clicking away closes the picker, and the picker is closed
+    // already.
+    if (!isOpenRef.current && !isClosingRef.current) return;
     setIsClosing(true);
   }, []);
 
