@@ -11,10 +11,26 @@
 
 /* End ellipsis — single line, cut at the end. `data-truncate=""` (from the
    boolean `truncate` alias) resolves here too. */
+/*
+ * Clipped on the inline axis ONLY.
+ *
+ * `overflow: hidden` clips both axes, and the box it clips to is the line box —
+ * which is the line-height, not the size of the letters. A font whose ascenders
+ * and descenders are taller than its line-height then loses them: a heading at
+ * `leading-none` is a 36px box holding 40px of Fredoka, and the tail of every p,
+ * g and y is cut off. Reported from a consumer app, on a page title.
+ *
+ * Nothing is added to make room, because the room is not ours to decide — the
+ * glyphs need whatever the font says they need. `clip` on the inline axis keeps
+ * the trimming, which is the whole point, and `visible` on the block axis lets
+ * the letters finish being drawn. The pairing is deliberate: `visible` beside
+ * `hidden` or `auto` is computed to `auto` and would scroll, while beside `clip`
+ * it stays visible.
+ */
 [data-truncate='end'],
 [data-truncate=''] {
   min-width: 0;
-  overflow: hidden;
+  overflow: clip visible;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -24,7 +40,7 @@
    at the start; text-align keeps reading order left-aligned. */
 [data-truncate='start'] {
   min-width: 0;
-  overflow: hidden;
+  overflow: clip visible;
   text-overflow: ellipsis;
   white-space: nowrap;
   direction: rtl;
@@ -53,7 +69,7 @@
 [data-truncate='middle'] > [data-truncate-head] {
   flex: 0 1 auto;
   min-width: 0;
-  overflow: hidden;
+  overflow: clip visible;
   text-overflow: ellipsis;
 }
 
