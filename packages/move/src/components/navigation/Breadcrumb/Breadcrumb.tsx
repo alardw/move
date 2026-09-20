@@ -359,6 +359,7 @@ const BreadcrumbEllipsis = withMoveComponent<'ellipsis', BreadcrumbEllipsisProps
 // ============================================================================
 
 export const Breadcrumb = Object.assign(BreadcrumbRoot, {
+  Root: BreadcrumbRoot,
   Item: BreadcrumbItem,
   Link: BreadcrumbLink,
   Page: BreadcrumbPage,

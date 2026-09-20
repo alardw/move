@@ -490,6 +490,7 @@ export function useStepper({ initialStep = 0, count }: UseStepperOptions): UseSt
 // ============================================================================
 
 export const Stepper = Object.assign(StepperRoot, {
+  Root: StepperRoot,
   Step: StepperStep,
   Indicator: StepperIndicator,
   Title: StepperTitle,

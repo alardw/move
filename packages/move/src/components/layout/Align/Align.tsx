@@ -163,6 +163,7 @@ const AlignEnd = withMoveComponent<'end', AlignSectionProps, HTMLDivElement>({
 });
 
 export const Align = Object.assign(AlignRoot, {
+  Root: AlignRoot,
   Start: AlignStart,
   Center: AlignCenter,
   End: AlignEnd,
