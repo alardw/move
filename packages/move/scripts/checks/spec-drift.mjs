@@ -280,18 +280,41 @@ function parseSpec(file) {
  * Read a `<Name>.tsx` and return:
  *   {
  *     compoundKeys: ['Root', 'Header', ...]   keys on the public Object.assign
+ *     objectExportKeys: ['Root', 'Thumb']     keys on a bare-object export
  *     interfaces:   { TableRootProps: { props: [...], extends: ['UseSidebarOptions'] } }
  *   }
+ *
+ * Two public shapes ship from this repo, and `.Root` can come from either:
+ *
+ *     export const Table  = Object.assign(TableRoot, { Root: TableRoot, ... })
+ *     export const Switch = { Root: SwitchRoot, Thumb: SwitchThumb }
+ *
+ * so both are captured; `rootExposed` below normalises them.
  *
  * Tracks `extends` clauses so callers can resolve inherited props from
  * sibling files.
  */
+/** Statically-known keys of an object literal (`{ Root, Item: X }` → ['Root','Item']). */
+function objectLiteralKeys(objNode) {
+  const keys = [];
+  for (const p of objNode.properties) {
+    if (
+      (ts.isPropertyAssignment(p) || ts.isShorthandPropertyAssignment(p)) &&
+      ts.isIdentifier(p.name)
+    ) {
+      keys.push(p.name.text);
+    }
+  }
+  return keys;
+}
+
 function parseSource(file, componentName) {
   const sf = parse(file);
   const interfaces = {};
   const slots = new Set();
   const defaults = {};
   let compoundKeys = null;
+  let objectExportKeys = null;
 
   walk(sf, (node) => {
     // withMoveComponent({ slots: [...], defaults: {...}, ... }) — one per
@@ -365,23 +388,34 @@ function parseSource(file, componentName) {
           // sub-component map.
           const args = decl.initializer.arguments;
           if (args.length >= 2 && ts.isObjectLiteralExpression(args[1])) {
-            const keys = [];
-            for (const p of args[1].properties) {
-              if (
-                (ts.isPropertyAssignment(p) || ts.isShorthandPropertyAssignment(p)) &&
-                ts.isIdentifier(p.name)
-              ) {
-                keys.push(p.name.text);
-              }
-            }
-            compoundKeys = keys;
+            compoundKeys = objectLiteralKeys(args[1]);
           }
+        }
+
+        // export const ComponentName = { Root, Thumb, ... }
+        if (
+          ts.isIdentifier(decl.name) &&
+          decl.name.text === componentName &&
+          decl.initializer &&
+          ts.isObjectLiteralExpression(decl.initializer)
+        ) {
+          objectExportKeys = objectLiteralKeys(decl.initializer);
         }
       }
     }
   });
 
-  return { interfaces, compoundKeys, slots: [...slots], defaults };
+  // Does the public export actually expose `.Root`? `null` when the component
+  // is neither compound shape (a plain withMoveComponent export), where the
+  // question doesn't apply.
+  const rootExposed =
+    compoundKeys !== null
+      ? compoundKeys.includes('Root')
+      : objectExportKeys !== null
+        ? objectExportKeys.includes('Root')
+        : null;
+
+  return { interfaces, compoundKeys, objectExportKeys, rootExposed, slots: [...slots], defaults };
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -796,6 +830,19 @@ function checkComponent(componentDir) {
     if (inSpecNotRuntime.length) {
       errors.push(`spec sub-components missing from runtime: ${inSpecNotRuntime.join(', ')}`);
     }
+  }
+
+  // 1b. A spec-declared `Root` must actually be exposed on the public export.
+  //     Section 1 filters `Root` out of both sides so the two export shapes stay
+  //     comparable, which left the entry point itself unchecked: a spec can
+  //     declare a Root sub-component while `Object.assign` never assigns the key.
+  //     The generated API reads the spec, so it documents `<Name>.Root props:`
+  //     and llms.txt teaches an entry point that is `undefined` at runtime.
+  if (spec.subComponents.some((s) => s.name === 'Root') && source.rootExposed === false) {
+    errors.push(
+      `spec declares a Root sub-component but the public export never exposes it — ` +
+        `\`${name}.Root\` is undefined at runtime (add \`Root: ${name}Root\` to the export)`,
+    );
   }
 
   // 2. Each spec sub-component's prop list ↔ matching source interface props
