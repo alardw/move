@@ -2,22 +2,20 @@ import { Grid, Image } from 'move';
 
 // A gallery is just a staggered grid of images — `<Grid stagger>` reveals the
 // cells in sequence on load. Each image fills its 4:3 cell with fit="cover".
-const photos = [
-  { id: 1015, w: 400, h: 240 },
-  { id: 1018, w: 220, h: 320 },
-  { id: 1016, w: 400, h: 200 },
-  { id: 1043, w: 300, h: 300 },
-  { id: 10, w: 200, h: 300 },
-  { id: 29, w: 400, h: 260 },
-];
+//
+// Enough cells to show what the stagger actually does at length: the gap starts
+// at the full delay and closes as it goes, so the reveal reads as one sweep
+// instead of a queue that grows with the list. A handful of cells never gets far
+// enough into that to show it.
+const photos = Array.from({ length: 24 }, (_, i) => `move-gallery-${i}`);
 
 export default function ImageGallerySample() {
   return (
-    <Grid cols={3} gap="md" stagger>
-      {photos.map((p) => (
+    <Grid cols={6} gap="md" stagger>
+      {photos.map((seed) => (
         <Image
-          key={p.id}
-          src={`https://picsum.photos/id/${p.id}/${p.w}/${p.h}`}
+          key={seed}
+          src={`https://picsum.photos/seed/${seed}/400/300`}
           alt=""
           aspectRatio="4 / 3"
           fit="cover"

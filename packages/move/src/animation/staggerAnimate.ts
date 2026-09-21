@@ -6,7 +6,33 @@ import { seedFromState } from './utils/seed';
 
 /** anime.js transform shorthands — these compose into a single `transform`. */
 
-const DEFAULT_MAX_TOTAL = 240;
+/**
+ * How far apart items must be to read as sequential rather than simultaneous,
+ * as a fraction of the per-item duration. Below roughly a tenth they arrive
+ * together; a quarter is comfortably a wave.
+ */
+const READABLE_GAP = 0.22;
+
+/**
+ * How many items deep the eye tracks individual arrivals before it stops
+ * counting and reads the leading edge of the wave instead. Past this the exact
+ * spacing stops being information, which is what lets the tail compress.
+ */
+const WAVE_DEPTH = 9;
+
+/** The budget a reveal gets when the caller doesn't name one. */
+export const defaultMaxTotal = (duration: number): number =>
+  Math.round(READABLE_GAP * duration * WAVE_DEPTH);
+
+/**
+ * The per-item duration the library reveals at — `staggerEnter`'s default, and
+ * near enough every hand-written stagger's. Used to derive a budget for a
+ * caller who passes a delay and no duration, so every stagger in the library is
+ * governed by ONE rule rather than a derivation here and a constant there.
+ */
+const NOMINAL_DURATION = 220;
+
+const DEFAULT_MAX_TOTAL = defaultMaxTotal(NOMINAL_DURATION);
 
 /**
  * Where item `i` starts, in ms.

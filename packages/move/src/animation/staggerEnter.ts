@@ -1,5 +1,6 @@
 import type { AnimationTrigger } from './types';
 import { poppy } from './easings';
+import { defaultMaxTotal } from './staggerAnimate';
 
 export interface StaggerEnterOptions {
   /** ms between consecutive items (default 60). */
@@ -19,24 +20,6 @@ export interface StaggerEnterOptions {
    */
   maxTotal?: number;
 }
-
-/**
- * How far apart items must be to read as sequential rather than simultaneous,
- * as a fraction of the per-item duration. Below roughly a tenth they arrive
- * together; a quarter is comfortably a wave.
- */
-const READABLE_GAP = 0.22;
-
-/**
- * How many items deep the eye tracks individual arrivals before it stops
- * counting and reads the leading edge of the wave instead. Past this the exact
- * spacing stops being information, which is what lets the tail compress.
- */
-const WAVE_DEPTH = 9;
-
-/** The budget a reveal gets when the caller doesn't name one. */
-export const defaultMaxTotal = (duration: number): number =>
-  Math.round(READABLE_GAP * duration * WAVE_DEPTH);
 
 /**
  * The canonical "reveal children on mount" stagger trigger.

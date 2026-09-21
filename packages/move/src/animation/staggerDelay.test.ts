@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { staggerOffset } from './staggerAnimate';
-import { defaultMaxTotal } from './staggerEnter';
+import { staggerOffset, defaultMaxTotal } from './staggerAnimate';
 
 // The delay a stagger asks for is right at the head of the list and wrong at the
 // tail, so the runtime spends a fixed budget unevenly rather than dividing it.
