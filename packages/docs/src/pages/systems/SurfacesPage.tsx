@@ -168,7 +168,28 @@ function ownsSurface(): string[] {
  * difference between owning a ground and following one is exactly what a reader
  * needs and cannot see from the outside.
  */
-const FOLLOWS_THE_GROUND = ['Accordion', 'Tabs', 'ToggleGroup'];
+/**
+ * Components that paint from the relative token, so their fill follows whatever
+ * ground they land on.
+ *
+ * Derived, like `ownsSurface()` below it, rather than listed by hand — a token
+ * declared as `var(--move-surface-bg)` IS the component saying it follows. The
+ * hand-written version of this said "Accordion, Tabs, ToggleGroup", and was
+ * wrong in both directions: Tabs and ToggleGroup fill from
+ * `--move-segment-track-bg`, which resolves to a fixed palette value and holds
+ * its colour wherever it lands, and seven components that do follow were
+ * missing.
+ */
+function followsTheGround(): string[] {
+  return Object.values(COMPONENT_CONTENT)
+    .filter((c) =>
+      ((c.spec.tokens as { value?: string }[] | undefined) ?? []).some(
+        (t) => t.value === 'var(--move-surface-bg)',
+      ),
+    )
+    .map((c) => c.meta.name)
+    .sort();
+}
 
 /**
  * Every component that paints a ground of its own, shown on both grounds.
@@ -383,8 +404,15 @@ export function SurfacesPage() {
             </Text>
             <Text>{ownsSurface().join(', ')}</Text>
             <Text>
+              They get it from <RouterLink to="/components/surface">Surface</RouterLink>, which owns
+              the whole contract — take the alternate tone, mark it for CSS, hand it to the
+              children. Reach for it directly when you want a ground on its own, with none of the
+              radius, padding or conventions a <RouterLink to="/components/card">Card</RouterLink>{' '}
+              brings.
+            </Text>
+            <Text>
               Painting from a relative token is a separate thing, and fewer do it:{' '}
-              {FOLLOWS_THE_GROUND.join(', ')} fill themselves from <Code>--move-surface-bg</Code>{' '}
+              {followsTheGround().join(', ')} fill themselves from <Code>--move-surface-bg</Code>{' '}
               and so follow whatever they are placed on. The rest reach for a fixed background,
               which holds its colour wherever it lands — the strip below is where you can see which
               is which.
