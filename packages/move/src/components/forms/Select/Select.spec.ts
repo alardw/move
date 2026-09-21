@@ -966,7 +966,7 @@ export const spec = {
   radixPrimitive: 'Select',
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef', 'elementTypeName'] as string[],
-  componentDeps: ['SurfaceProvider'] as string[],
+  componentDeps: ['Surface'] as string[],
 
   testing: {
     behaviors: [

@@ -205,7 +205,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  componentDeps: ['SurfaceProvider'],
+  componentDeps: ['Surface'],
 
   testing: {
     behaviors: [

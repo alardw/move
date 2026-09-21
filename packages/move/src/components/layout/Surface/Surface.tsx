@@ -65,12 +65,11 @@ export const Surface = withMoveComponent<'root', SurfaceProps, HTMLElement>({
         const rootSp = sp('root');
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
 
-        // Unlike LayoutGroup, the root class stays ON the wrapped element under
-        // asChild: painting is the whole job, and a Surface that hands its class
-        // over is a Surface that does nothing. The corollary is that a component
-        // composing this must stop painting its own background — two equal-weight
-        // rules on one element are settled by stylesheet order, and the dev server
-        // and the bundled CSS do not agree on it.
+        // The class stays on the wrapped element under asChild (it still carries
+        // fill/flex), but the PAINT does not — see the CSS. The wrapped element
+        // already owns its appearance and usually exposes it as a component
+        // token, and two single-class background rules on one element would be
+        // settled by stylesheet order, which dev and bundled CSS disagree on.
         const Comp = (props.asChild ? Slot.Root : 'div') as React.ElementType;
 
         return (
@@ -82,6 +81,7 @@ export const Surface = withMoveComponent<'root', SurfaceProps, HTMLElement>({
               className={cx('root', props.className, spClass as string | undefined)}
               style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
               data-surface={tone}
+              {...(props.asChild ? {} : { 'data-paint': '' })}
               {...(props.fill ? { 'data-fill': props.fill } : {})}
               {...(props.flex != null ? { 'data-flex': String(props.flex) } : {})}
             >

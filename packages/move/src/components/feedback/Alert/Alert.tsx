@@ -5,7 +5,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon, useIcon } from '../../../infrastructure/Icon';
-import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { Surface } from '../../layout/Surface';
 import styles from './Alert.module.css';
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
@@ -114,7 +114,6 @@ export const Alert = withMoveComponent<
     });
 
     const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
-    const surface = useSurfaceFlip();
 
     // Determine icon: explicit `icon` name (or false) wins; otherwise the status role.
     const iconProp = props.icon;
@@ -183,7 +182,7 @@ export const Alert = withMoveComponent<
           // from the wrong shade. Alert paints its own variant colour rather than
           // --move-surface-bg, but it still hands its children a ground, and that
           // ground has to step from wherever the alert landed.
-          <SurfaceProvider value={surface}>
+          <Surface asChild>
             <div
               {...attrs}
               {...spRest}
@@ -196,7 +195,6 @@ export const Alert = withMoveComponent<
               }}
               data-variant={variant}
               data-size={props.size as string}
-              data-surface={surface}
             >
               {iconProp !== false && (
                 <span
@@ -246,7 +244,7 @@ export const Alert = withMoveComponent<
                 </button>
               )}
             </div>
-          </SurfaceProvider>
+          </Surface>
         );
       },
     };

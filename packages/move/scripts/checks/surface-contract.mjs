@@ -54,9 +54,21 @@ for (const cat of readdirSync(COMPONENTS)) {
     const setsAttr = /data-surface=/.test(src);
     const provides = /SurfaceProvider/.test(src);
     const flips = /useSurfaceFlip\s*\(/.test(src);
+    const composes = /<Surface[\s>]/.test(src);
     const declaresCapability = /'owns-surface'/.test(spec);
-    if (!setsAttr && !provides) continue;
+    if (!setsAttr && !provides && !composes) continue;
     owning++;
+
+    // Composing <Surface> keeps both halves by construction — that is the point
+    // of the primitive — so the only thing left to check is that it says so.
+    if (composes) {
+      if (!declaresCapability) {
+        errors.push(
+          `${name}: composes <Surface> but does not declare the 'owns-surface' capability.`,
+        );
+      }
+      continue;
+    }
 
     // surface-1 — both halves, or neither.
     if (setsAttr && !provides) {

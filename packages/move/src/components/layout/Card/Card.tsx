@@ -3,7 +3,7 @@ import * as React from 'react';
 // Generated from Card.spec.ts
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine/types';
-import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { Surface } from '../Surface';
 import type { Size, Truncate, Dimension } from '../../../shared/types';
 import { resolveTruncate } from '../../../shared/truncate';
 import styles from './Card.module.css';
@@ -39,8 +39,6 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
   moveProps: ['variant', 'size', 'maxWidth'],
 
   setup({ props, ref, cx, sp, attrs }) {
-    const surface = useSurfaceFlip();
-
     return {
       render() {
         const rootSp = sp('root');
@@ -53,14 +51,18 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
             : undefined;
 
         return (
-          <SurfaceProvider value={surface}>
+          // Surface owns the ground: it takes the alternate of whatever this Card
+          // landed on, marks it for CSS and hands it to the children — the three
+          // steps that were written out by hand in seven components, and that
+          // Alert got wrong by doing only one of them. Card keeps its own paint,
+          // because --move-card-bg is a token a consumer can override.
+          <Surface asChild>
             <div
               {...attrs}
               {...spRest}
               ref={ref}
               data-variant={props.variant as string}
               data-size={props.size as string}
-              data-surface={surface}
               className={cx('root', props.className, spClass as string | undefined)}
               style={
                 {
@@ -72,7 +74,7 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
             >
               {props.children}
             </div>
-          </SurfaceProvider>
+          </Surface>
         );
       },
     };

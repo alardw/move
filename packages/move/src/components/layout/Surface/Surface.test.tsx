@@ -18,6 +18,11 @@ describe('Surface', () => {
       expect(screen.getByTestId('s')).toBeInTheDocument();
     });
 
+    it('paints when it renders its own element', () => {
+      render(<Surface data-testid="s">x</Surface>);
+      expect(screen.getByTestId('s')).toHaveAttribute('data-paint');
+    });
+
     it('forwards ref to root element', () => {
       const ref = React.createRef<HTMLElement>();
       render(<Surface ref={ref}>x</Surface>);
@@ -175,7 +180,19 @@ describe('Surface', () => {
       expect(container.firstElementChild).toBe(el);
     });
 
-    it('keeps its class on the wrapped element, because painting is the job', () => {
+    it('does not paint the wrapped element — that element already owns its look', () => {
+      // Card has a radius and a border, Alert a variant colour, and both expose
+      // it as an overridable component token. Two single-class background rules
+      // on one element would be settled by stylesheet order.
+      render(
+        <Surface asChild>
+          <section data-testid="s">x</section>
+        </Surface>,
+      );
+      expect(screen.getByTestId('s')).not.toHaveAttribute('data-paint');
+    });
+
+    it('keeps its class on the wrapped element, which still carries fill/flex', () => {
       render(
         <Surface asChild>
           <section data-testid="s" className="theirs">
@@ -185,8 +202,6 @@ describe('Surface', () => {
       );
       const el = screen.getByTestId('s');
       expect(el).toHaveClass('theirs');
-      // Plus Surface's own slot class — without it the element is not painted,
-      // and a Surface that hands its class over does nothing.
       expect(el.className.split(' ').length).toBeGreaterThan(1);
     });
 

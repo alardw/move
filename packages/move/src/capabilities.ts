@@ -44,6 +44,16 @@ export interface CapabilityContract {
   sourceCalls?: readonly string[];
   /** A `data-*` attribute the component's source must set. */
   attribute?: string;
+  /**
+   * A Move component that KEEPS this capability, so composing it satisfies the
+   * contract in place of the hand-rolled `sourceCalls` + `attribute`.
+   *
+   * The source-side twin of `cssAlternative`. Without it, a component moving
+   * onto the primitive reads as having stopped keeping the contract, when it has
+   * started keeping it properly — and the check would push every consumer back
+   * toward writing the parts out by hand, which is the thing that went wrong.
+   */
+  sourceAlternative?: string;
   /** A CSS declaration the targeted slots' rules must contain. */
   cssDeclaration?: string;
   /** An equally valid answer elsewhere in the stylesheet, if one exists. */
@@ -83,6 +93,7 @@ export const CAPABILITIES = {
     impliedByKind: true,
     sourceCalls: ['useSurfaceFlip', 'SurfaceProvider'],
     attribute: 'data-surface',
+    sourceAlternative: 'Surface',
     why:
       'Painting a ground and declaring a tone must be one act. Setting the attribute ' +
       'without providing the context leaves the CSS saying one tone while React ' +

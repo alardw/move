@@ -20,7 +20,7 @@ import {
 } from '../../../animation';
 import type { AnimationTrigger, AnimationState } from '../../../animation';
 import { useLayer } from '../../../infrastructure/Layer';
-import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { Surface } from '../../layout/Surface';
 import styles from './Select.module.css';
 
 // Per-item scale deltas, pixel-based so the motion feels the SAME at any width.
@@ -625,7 +625,6 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
     // data-surface="subtle", so the CSS claimed a tone while React context still
     // reported the parent's — a descendant that flipped computed off the wrong
     // base, and a Select on an already-subtle ground sat at 1.00:1 against it.
-    const surface = useSurfaceFlip();
     const { isClosing, epoch, onExitDone, close, animConfig } = useSelectContext();
 
     const contentRef = React.useRef<HTMLDivElement>(null);
@@ -723,7 +722,7 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
     const { className: innerSpClass, style: innerSpStyle, ...innerSpRest } = props.innerSp;
 
     return (
-      <SurfaceProvider value={surface}>
+      <Surface asChild>
         <RadixSelect.Content
           {...props.attrs}
           {...spRest}
@@ -742,7 +741,6 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
           onPointerDownOutside={handlePointerDownOutside}
           onEscapeKeyDown={handleEscapeKeyDown}
           data-width={(props.width as string | undefined) ?? 'anchor'}
-          data-surface={surface}
         >
           {/* The consumer's <Select.Viewport> renders Radix's Viewport as the DIRECT
               child of Content and becomes the `.contentInner` stagger container —
@@ -759,7 +757,7 @@ const SelectContentInner = React.forwardRef<HTMLDivElement, SelectContentInnerPr
             {props.children}
           </SelectViewportContext.Provider>
         </RadixSelect.Content>
-      </SurfaceProvider>
+      </Surface>
     );
   },
 );

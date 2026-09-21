@@ -428,7 +428,7 @@ export const spec = {
   hasHook: false,
   engineImports: ['withMoveComponent'] as string[],
 
-  componentDeps: ['SurfaceProvider'] as string[],
+  componentDeps: ['Surface'] as string[],
 
   testing: {
     behaviors: [

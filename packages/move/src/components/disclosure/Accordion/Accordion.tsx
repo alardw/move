@@ -8,7 +8,7 @@ import { useAccordion } from './useAccordion';
 import { resolveAnimationsConfig, expandContent, useAnimations } from '../../../animation';
 import type { Animation, AnimationTrigger } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
-import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { Surface } from '../../layout/Surface';
 import type { Size } from '../../../shared/types';
 import acStyles from './Accordion.module.css';
 
@@ -194,7 +194,6 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
     // reads against that. This used to live on Content, which made the one part
     // that opens the brightest thing on the page — the panel jumped forward
     // while its own header receded into the ground behind it.
-    const surface = useSurfaceFlip();
 
     return {
       render() {
@@ -202,21 +201,20 @@ const AccordionRoot = withMoveComponent<'root', AccordionRootProps, HTMLDivEleme
         const { className: spClass, style: spStyle, ...spRest } = rootSp as Record<string, unknown>;
         return (
           <AccordionContext.Provider value={contextValue}>
-            <SurfaceProvider value={surface}>
+            <Surface asChild>
               <div
                 {...attrs}
                 {...spRest}
                 ref={ref}
                 data-size={props.size}
                 data-variant={props.variant}
-                data-surface={surface}
                 className={cx('root', className, spClass as string | undefined)}
                 style={{ ...style, ...(spStyle as React.CSSProperties) }}
                 data-move-accordion-root=""
               >
                 {children}
               </div>
-            </SurfaceProvider>
+            </Surface>
           </AccordionContext.Provider>
         );
       },

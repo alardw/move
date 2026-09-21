@@ -774,7 +774,7 @@ export const spec = {
   hasHook: false,
   engineImports: ['withMoveComponent', 'containsElementOfType', 'composeHandlers'] as string[],
 
-  componentDeps: ['LayerProvider', 'SurfaceProvider'] as string[],
+  componentDeps: ['LayerProvider', 'Surface'] as string[],
 
   testing: {
     behaviors: [

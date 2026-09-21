@@ -65,7 +65,7 @@ export const spec = {
 
   anatomy: {
     slot: 'root',
-    dataAttributes: ['data-surface', 'data-fill', 'data-flex'],
+    dataAttributes: ['data-surface', 'data-paint', 'data-fill', 'data-flex'],
   },
 
   controlled: null,
@@ -108,7 +108,8 @@ export const spec = {
       'Alternates again one level deeper, so nesting keeps a step between grounds',
       'Sets data-surface to the tone it resolved',
       'Provides the resolved tone to descendants via SurfaceProvider',
-      'Paints background from --move-surface-bg',
+      'Paints background from --move-surface-bg when it renders its own element',
+      'Leaves the paint alone under asChild, where the wrapped element owns it',
       'tone pins the ground instead of alternating',
       'fill=parent takes the full parent height',
       'fill=remaining takes the space left after siblings',

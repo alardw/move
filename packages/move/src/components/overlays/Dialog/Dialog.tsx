@@ -12,7 +12,7 @@ import {
   useDismissableExit,
 } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
-import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
+import { Surface } from '../../layout/Surface';
 import { LayerProvider } from '../../../infrastructure/Layer';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Dialog.module.css';
@@ -318,7 +318,6 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { isClosing, close, epoch, onExitDone, animConfig } = useDialogContext();
-    const surface = useSurfaceFlip();
 
     // Filter triggers for this slot
     const contentConfig = React.useMemo(() => {
@@ -386,14 +385,13 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
           ...spRest
         } = contentSp as Record<string, unknown>;
         return (
-          <SurfaceProvider value={surface}>
-            <LayerProvider value={400}>
+          <LayerProvider value={400}>
+            <Surface asChild>
               <RadixDialog.Content
                 {...attrs}
                 {...spRest}
                 ref={ref}
                 data-size={props.size}
-                data-surface={surface}
                 onOpenAutoFocus={handleOpenAutoFocus}
                 onPointerDownOutside={composeHandlers(
                   attrs.onPointerDownOutside,
@@ -406,8 +404,8 @@ const DialogContent = withMoveComponent<'content', DialogContentProps, HTMLDivEl
               >
                 {props.children}
               </RadixDialog.Content>
-            </LayerProvider>
-          </SurfaceProvider>
+            </Surface>
+          </LayerProvider>
         );
       },
     };

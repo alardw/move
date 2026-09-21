@@ -61,6 +61,7 @@ function loadCapabilities() {
       impliedByKind: /impliedByKind:\s*true/.test(block),
       cssDeclaration: one('cssDeclaration'),
       cssAlternative: one('cssAlternative'),
+      sourceAlternative: one('sourceAlternative'),
       composedInherits: /composedInherits:\s*true/.test(block),
       enforcedBy: list('enforcedBy'),
     };
@@ -137,13 +138,23 @@ for (const specPath of specFiles(COMPONENTS)) {
     if (!targeted) {
       problems.push({ rel, msg: `declares '${name}' but has no ${cap.targets.join('/')} slot` });
     }
-    for (const call of cap.sourceCalls) {
-      if (!tsx.includes(call)) {
-        problems.push({ rel, msg: `declares '${name}' but never calls ${call}` });
+    // A component that COMPOSES the primitive owning this capability keeps the
+    // contract through it, and should not also be required to hand-roll the
+    // parts. `sourceAlternative` names that primitive — the source-side twin of
+    // `cssAlternative`. Without it, moving Card onto <Surface> reads as Card
+    // having stopped owning a ground, when it has started owning it properly.
+    const composesPrimitive =
+      cap.sourceAlternative && new RegExp(`<${cap.sourceAlternative}[\\s>]`).test(tsx);
+
+    if (!composesPrimitive) {
+      for (const call of cap.sourceCalls) {
+        if (!tsx.includes(call)) {
+          problems.push({ rel, msg: `declares '${name}' but never calls ${call}` });
+        }
       }
-    }
-    if (cap.attribute && !tsx.includes(cap.attribute)) {
-      problems.push({ rel, msg: `declares '${name}' but never sets ${cap.attribute}` });
+      if (cap.attribute && !tsx.includes(cap.attribute)) {
+        problems.push({ rel, msg: `declares '${name}' but never sets ${cap.attribute}` });
+      }
     }
     if (cap.cssDeclaration) {
       const slots = [...kinds]

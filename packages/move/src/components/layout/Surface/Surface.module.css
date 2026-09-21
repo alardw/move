@@ -15,7 +15,22 @@
  * resolves to the opposite one without either of them naming a colour.
  */
 
-.root {
+/*
+ * Painted only when Surface renders its own element.
+ *
+ * Under `asChild` the wrapped element already owns its appearance — Card has a
+ * radius and a border, Alert paints a variant colour — and both of them expose
+ * that as an overridable component token (`--move-card-bg`). If Surface painted
+ * there too, one element would carry two single-class background rules and the
+ * winner would be decided by stylesheet order, which the dev server and the
+ * bundled CSS do not agree on; and a consumer's `--move-card-bg` might or might
+ * not be the one that shows.
+ *
+ * So composing Surface buys the part that was actually going wrong — flip,
+ * provide and mark, in one place, kept together — and leaves the paint with
+ * whoever already owns it. Standalone, nobody else does, so Surface paints.
+ */
+.root[data-paint] {
   background-color: var(--move-surface-bg);
   border: 1px solid var(--move-surface-border);
 }
