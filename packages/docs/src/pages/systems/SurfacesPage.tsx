@@ -47,7 +47,7 @@ import InputTextSample from '../../content/components/input-text/samples/basic';
 import TextareaSample from '../../content/components/textarea/samples/basic';
 import CheckboxSample from '../../content/components/checkbox/samples/basic';
 import ButtonSample from '../../content/components/button/samples/basic';
-import { Section, TocRail, type TocItem } from '../../components';
+import { Section, TocRail, CodeBlock, type TocItem } from '../../components';
 
 /**
  * Surfaces. The two-level surface elevation system,
@@ -60,6 +60,7 @@ const TOC: TocItem[] = [
   { href: '#tokens', label: 'The tokens' },
   { href: '#alternating', label: 'Alternating' },
   { href: '#components', label: 'Which components own a ground' },
+  { href: '#own', label: 'Taking a ground yourself' },
   { href: '#audit', label: 'On both grounds' },
 ];
 
@@ -180,6 +181,34 @@ function ownsSurface(): string[] {
  * its colour wherever it lands, and seven components that do follow were
  * missing.
  */
+const OWN_A_GROUND = `import { Surface } from 'move';
+
+// A panel that shades itself. Spacing comes from what you put inside.
+<Surface>
+  <Stack gap="md" padding="lg">…</Stack>
+</Surface>
+
+// Add fill when the panel has to reach the bottom of the space it is in.
+<Surface fill="remaining">…</Surface>
+
+// Already have the element? Surface shades it and leaves the rest alone.
+<Surface asChild>
+  <article className={styles.panel}>…</article>
+</Surface>`;
+
+const BY_HAND = `import { useSurfaceFlip, SurfaceProvider } from 'move';
+
+function Panel({ children }) {
+  const tone = useSurfaceFlip();     // take the opposite shade
+  return (
+    <SurfaceProvider value={tone}>   // tell the children
+      <div data-surface={tone}>      // tell the stylesheet
+        {children}
+      </div>
+    </SurfaceProvider>
+  );
+}`;
+
 function followsTheGround(): string[] {
   return Object.values(COMPONENT_CONTENT)
     .filter((c) =>
@@ -416,6 +445,33 @@ export function SurfacesPage() {
               and so follow whatever they are placed on. The rest reach for a fixed background,
               which holds its colour wherever it lands — the strip below is where you can see which
               is which.
+            </Text>
+          </Stack>
+        </Section>
+
+        <Section
+          id="own"
+          title="Taking a ground yourself"
+          lede="For panels of your own — a region in a splitter, a toolbar strip, a filter rail."
+        >
+          <Stack gap="md">
+            <Text>
+              Use <RouterLink to="/components/surface">Surface</RouterLink>. It shades itself
+              against whatever it sits on, and everything inside it reads your panel instead of the
+              page.
+            </Text>
+            <CodeBlock code={OWN_A_GROUND} language="tsx" />
+            <Text>
+              Where you cannot compose it, the three obligations are these — and they are one
+              decision, not three. Any two without the third leaves the stylesheet and React
+              disagreeing about which ground the contents are standing on, and the usual symptom is
+              a panel nested inside yours picking the shade you are already using and vanishing into
+              it.
+            </Text>
+            <CodeBlock code={BY_HAND} language="tsx" />
+            <Text>
+              <Code>useSurface()</Code> only reads the current shade — for a component that adapts
+              to the panel it lands on rather than starting one of its own.
             </Text>
           </Stack>
         </Section>
