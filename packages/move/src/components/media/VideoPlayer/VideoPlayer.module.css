@@ -121,7 +121,6 @@
   flex-direction: column;
   background: var(--move-videoplayer-controls-bg);
   backdrop-filter: blur(var(--move-videoplayer-controls-blur));
-  -webkit-backdrop-filter: blur(var(--move-videoplayer-controls-blur));
   color: var(--move-videoplayer-controls-fg);
   padding: 4px 16px 10px;
   /* transition-exempt: KNOWN DRIFT. Controls fading on pointer presence is a
