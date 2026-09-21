@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Alert, Button, EmptyState, FileUpload } from 'move';
-import type { FileUploadAdapter } from 'move';
+import type { FileRejection, FileUploadAdapter } from 'move';
 
 /**
  * The whole lifecycle, running: picked → uploading → complete, or failed.
@@ -52,6 +52,24 @@ const makeAdapter = (onStart: () => void, onEnd: () => void): FileUploadAdapter 
     });
 };
 
+/**
+ * What to say when files are turned away.
+ *
+ * Naming them only works for one. A drop of a hundred that breaks a rule would
+ * otherwise print a hundred filenames, which is a wall rather than an answer —
+ * so past the first it becomes a count, and the reason survives while the
+ * rejections agree on one.
+ */
+function describeRejections(rejections: FileRejection[]): string {
+  const reasons = new Set(rejections.map((r) => r.errors[0]?.message).filter(Boolean));
+  const reason = reasons.size === 1 ? ` — ${[...reasons][0]}` : '';
+
+  if (rejections.length === 1) {
+    return `${rejections[0].file.name} wasn't added${reason}`;
+  }
+  return `${rejections.length} files weren't added${reason}`;
+}
+
 export default function SimulatedUploadSample() {
   const [files, setFiles] = useState<File[]>([]);
   const [rejected, setRejected] = useState<string | null>(null);
@@ -73,11 +91,7 @@ export default function SimulatedUploadSample() {
       maxFiles={10}
       value={files}
       onFilesChange={setFiles}
-      onFileReject={(rejections) =>
-        // A rejection names the file and carries one error per rule it broke,
-        // each with a stable `code` and an overridable `message`.
-        setRejected(rejections.map((r) => `${r.file.name}: ${r.errors[0]?.message}`).join(', '))
-      }
+      onFileReject={(rejections) => setRejected(describeRejections(rejections))}
     >
       {rejected && (
         <Alert variant="warning" size="sm" onClose={() => setRejected(null)}>
