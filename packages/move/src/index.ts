@@ -20,6 +20,10 @@ export type {
   MoveProviderProps,
 } from './engine';
 
+// Composing onto another component's element without taking its data-state
+export { ScopedSlot } from './engine';
+export type { ScopedSlotProps } from './engine';
+
 // Ref utilities
 export { useMergedRef } from './engine';
 export { composeHandlers } from './engine';

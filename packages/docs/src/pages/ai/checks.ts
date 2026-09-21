@@ -256,6 +256,12 @@ export const CHECKS: CheckDoc[] = [
     enforces: 'The token values a spec declares match the component’s CSS (spec ↔ CSS parity).',
   },
   {
+    name: 'guest-state',
+    appliesTo: 'component',
+    enforces:
+      'A component composed onto another\u2019s element with `asChild` leaves it its `data-state`. Both land on one DOM node and Radix standardises on that key, so whichever writes last wins and the other\u2019s state is gone \u2014 a Tooltip around a ToggleGroup item put `closed` on the button, which matches neither `on` nor `off`, so the selected segment drew as if nothing were chosen. The host keeps the plain key; the guest writes `data-move-{owner}-state`. Judged per element, since a trigger is a guest under `asChild` and a host without it.',
+  },
+  {
     name: 'surface-contract',
     appliesTo: 'component',
     enforces:
