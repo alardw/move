@@ -1,0 +1,13 @@
+[
+  "src/components/data-display/List/List.module.css:243",
+  "src/components/date-time/_shared/EventSlot.module.css:20",
+  "src/components/date-time/_shared/EventSlot.module.css:65",
+  "src/components/forms/Autocomplete/Autocomplete.module.css:224",
+  "src/components/forms/Autocomplete/Autocomplete.module.css:516",
+  "src/components/forms/Select/Select.module.css:108",
+  "src/components/forms/Select/Select.module.css:115",
+  "src/components/forms/Select/Select.module.css:288",
+  "src/components/navigation/Sidebar/Sidebar.module.css:227",
+  "src/components/navigation/Sidebar/Sidebar.module.css:374",
+  "src/components/overlays/Dropdown/Dropdown.module.css:136"
+]

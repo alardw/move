@@ -19,6 +19,10 @@ import { useIcon } from '../../../infrastructure/Icon';
 import { ProgressBar } from '../../feedback/ProgressBar/ProgressBar';
 import { prefersReducedMotion, useAnimations, resolveAnimationsConfig } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
+import { Button } from '../../actions/Button';
+import { Badge } from '../../data-display/Badge';
+import type { BadgeColor } from '../../data-display/Badge';
+import { resolveTruncate } from '../../../shared/truncate';
 import styles from './FileUpload.module.css';
 
 // =============================================================================
@@ -752,6 +756,12 @@ const FileUploadItemName = withMoveComponent<'itemName', FileUploadItemNameProps
 
   setup({ props, ref, cx, sp, attrs }) {
     const { file } = useFileUploadItemContext();
+    // Middle, because the end of a filename is the part that says what it IS.
+    // `AVB 2024-01 (Voorwaarden verzekerin…` has lost the .pdf, which is the one
+    // thing a reader scanning a list of uploads is looking for. Through the
+    // shared utility rather than a local ellipsis, so it also gets the clip that
+    // leaves descenders alone instead of overflow:hidden.
+    const trunc = resolveTruncate('middle', undefined, file.name);
 
     return {
       render() {
@@ -763,9 +773,10 @@ const FileUploadItemName = withMoveComponent<'itemName', FileUploadItemNameProps
             {...spRest}
             ref={ref}
             className={cx('itemName', props.className, spClass as string | undefined)}
+            {...(trunc.mode ? { 'data-truncate': trunc.mode } : {})}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {file.name}
+            {trunc.content}
           </span>
         );
       },
@@ -823,7 +834,6 @@ const FileUploadItemDelete = withMoveComponent<
     const { file, entry } = useFileUploadItemContext();
     const labels = context.labels;
     const fallbackXIcon = useIcon('remove', 14);
-    const checkIcon = useIcon('status.success', 16);
 
     return {
       render() {
@@ -834,46 +844,39 @@ const FileUploadItemDelete = withMoveComponent<
           ...spRest
         } = deleteSp as Record<string, unknown>;
 
-        // Show check icon for completed uploads
-        if (entry?.status === 'complete') {
-          return (
-            <span
-              ref={ref as React.Ref<HTMLSpanElement>}
-              className={cx(
-                'itemDelete',
-                'itemComplete',
-                props.className,
-                spClass as string | undefined,
-              )}
-              style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
-              aria-label={labels.uploadComplete}
-            >
-              {checkIcon}
-            </span>
-          );
-        }
-
+        // No separate "complete" rendering. This used to swap the button for a
+        // static check span, which meant a finished upload could not be removed
+        // by any route — and said "Done" twice, once as ItemStatus text and
+        // once as the icon's label. ItemStatus carries that on its own.
         const ariaLabel = labels.removeFile.replace('{filename}', file.name);
+        // Move's Button rather than a bare <button>, so the focus ring, the
+        // disabled treatment and the press all come from the one place that
+        // already gets them right — and the spec can say `element: 'Button'`,
+        // which is what tells the capability checks those contracts are kept
+        // where Button is checked rather than looked for in CSS here.
         return (
-          <button
+          <Button
             {...attrs}
             {...spRest}
-            ref={ref}
+            ref={ref as React.Ref<HTMLButtonElement>}
             type="button"
+            variant="ghost"
+            size="sm"
             aria-label={ariaLabel}
             disabled={context.disabled}
             className={cx('itemDelete', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
             onClick={composeHandlers(attrs.onClick, () => {
-              // If uploading, abort first
+              // Abort an upload still in flight before dropping the row, or the
+              // request keeps running against a file nobody is showing.
               if (entry?.status === 'uploading') {
                 context.abortFile?.(file);
               }
               context.removeFile(file);
             })}
           >
-            {props.children || fallbackXIcon}
-          </button>
+            {(props.children as React.ReactNode) || fallbackXIcon}
+          </Button>
         );
       },
     };
@@ -1004,10 +1007,24 @@ const FileUploadItemStatus = withMoveComponent<
         } = statusSp as Record<string, unknown>;
 
         let label: string;
-        if (entry.status === 'uploading') label = `${entry.progress.percent}%`;
-        else if (entry.status === 'complete') label = labels.statusComplete;
-        else label = labels.statusError;
+        let badgeColor: BadgeColor;
+        if (entry.status === 'uploading') {
+          label = `${entry.progress.percent}%`;
+          badgeColor = 'gray';
+        } else if (entry.status === 'complete') {
+          label = labels.statusComplete;
+          badgeColor = 'green';
+        } else {
+          label = labels.statusError;
+          badgeColor = 'red';
+        }
 
+        // A Badge, not coloured text. Status text used to be painted with
+        // --move-success / --move-error, which are FILL shades (green-700,
+        // red-700) — and no contrast pair audits either of them as text, so
+        // nothing was checking it. Badge's soft variant reads the accent role
+        // tokens, where --move-accent-soft-fg resolves to the text ramp, so the
+        // colour is right by construction instead of by hand.
         return (
           <span
             {...attrs}
@@ -1017,7 +1034,9 @@ const FileUploadItemStatus = withMoveComponent<
             className={cx('itemStatus', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {label}
+            <Badge variant="soft" color={badgeColor}>
+              {label}
+            </Badge>
           </span>
         );
       },

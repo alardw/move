@@ -477,7 +477,7 @@ export const spec = {
       slots: [
         {
           name: 'itemDelete',
-          element: 'button',
+          element: 'Button',
           kind: 'control',
           typography: 'none',
           description: 'Delete/complete button',
@@ -1009,7 +1009,7 @@ export const spec = {
     'useMergedRef',
     'composeHandlers',
   ] as string[],
-  componentDeps: ['ProgressBar'] as string[],
+  componentDeps: ['Badge', 'Button', 'ProgressBar'] as string[],
 
   testing: {
     behaviors: [
@@ -1084,5 +1084,5 @@ export const spec = {
     ],
   },
 
-  iconsUsed: ['circle-check', 'file', 'x'],
+  iconsUsed: ['file', 'x'],
 } satisfies ComponentSpec;

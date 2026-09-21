@@ -187,7 +187,13 @@ describe('FileUpload', () => {
           </FileUpload.ItemGroup>
         </FileUpload.Root>,
       );
-      expect(screen.getByText('document.pdf')).toBeInTheDocument();
+      // Middle truncation splits the name across a head and a tail span, so the
+      // extension survives a narrow column — which is the point, and why an
+      // exact-text query no longer matches one node.
+      const name = document.querySelector('[data-truncate="middle"]');
+      expect(name).toBeInTheDocument();
+      expect(name).toHaveTextContent('document.pdf');
+      expect(name?.querySelector('[data-truncate-tail]')?.textContent).toContain('.pdf');
     });
   });
 

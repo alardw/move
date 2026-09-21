@@ -347,7 +347,6 @@ export const spec = {
 
   componentDeps: ['Drag', 'Dropdown', 'Button', 'Icon', 'LayoutGroup'],
   iconsUsed: ['grip-vertical'],
-
   renderContracts: [
     {
       id: 'item-renders-its-own-handle-by-default',

@@ -56,6 +56,11 @@
   width: 100%;
   background: var(--move-progress-indicator-bg);
   border-radius: inherit;
+  /* Rests empty. The bar is full-width and filled by scaleX, so with no resting
+     transform its first paint is a FULL bar, and the transition below then runs
+     it down to the real value — a flash of 100% before every upload starts. */
+  transform: scaleX(0);
+  transform-origin: left center;
   will-change: transform;
   /* transition-exempt: KNOWN DRIFT. The indicator animating to a new value is
      real motion and belongs in useAnimations, where it could be sprung and

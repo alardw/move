@@ -262,6 +262,12 @@ export const CHECKS: CheckDoc[] = [
       'Owning a ground is the attribute AND the provider, or neither — and a component that alternates says so. `data-surface` remaps the relative tokens for an element and everything under it; `SurfaceProvider` tells React the same thing. One without the other splits them: the stylesheet calls the panel subtle while anything inside still hears the ground outside, and steps to a shade that can match the panel it sits on. check:capabilities holds that line only for components declaring owns-surface or carrying a slot of kind surface, so one setting the attribute while declaring neither was invisible to it — Alert was.',
   },
   {
+    name: 'hand-rolled-truncation',
+    appliesTo: 'component',
+    enforces:
+      'Truncation comes from the [data-truncate] utility, not from three declarations in a slot. A local ellipsis loses `middle` (so a filename drops its extension — the one part a reader is scanning for), loses the tooltip that hands the full string back, and uses overflow:hidden, which clips descenders at the line box. Known offenders are baselined; anything new fails.',
+  },
+  {
     name: 'icon-usage',
     appliesTo: 'component',
     enforces:
