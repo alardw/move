@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, revealItems } from '../../../animation';
 import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import type { Color, Size } from '../../../shared/types';
 import styles from './Timeline.module.css';
@@ -34,21 +34,13 @@ export type TimelineLineVariant = 'solid' | 'dashed' | 'dotted';
  * timeline is a sequence and the reveal is saying so.
  */
 const timelineStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
-  {
+  // The most deliberate spacing in the library: a timeline IS a sequence, and
+  // the reveal is saying so.
+  revealItems({
     trigger: 'Root.enter',
-    sequence: [
-      {
-        target: 'Root',
-        children: `.${styles.item}`,
-        stagger: { delay: 80, ...stagger },
-        animation: {
-          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-          translateY: { from: 12, to: 0, ease: 'outQuart', duration: 200 },
-          scale: { from: 0.95, to: 1, ease: quick },
-        },
-      },
-    ],
-  },
+    children: `.${styles.item}`,
+    stagger: { delay: 80, ...stagger },
+  }),
 ];
 
 // ============================================================================

@@ -8,7 +8,7 @@ import {
   withMoveComponent,
 } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useAnimations, resolveAnimationsConfig } from '../../../animation';
+import { useAnimations, resolveAnimationsConfig, revealItems } from '../../../animation';
 import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Table.module.css';
@@ -31,25 +31,16 @@ import styles from './Table.module.css';
  * caller asks for, that is the wrong trade — they asked to see it.
  */
 const tableStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
-  {
+  // 30ms, not the 12 this used to be. 12 was chosen while the reveal was
+  // automatic, where the job was to stay out of the way: against a 200ms
+  // per-row duration it put ~17 rows in flight at once, so they moved as a
+  // block and read as a plain fade however far each one travelled. Once a
+  // caller has to ask for the reveal, staying out of the way is the wrong goal.
+  revealItems({
     trigger: 'Body.enter',
-    sequence: [
-      {
-        target: 'Body',
-        children: 'tr',
-        stagger: { delay: 30, ...stagger },
-        animation: {
-          opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-          // 64, which is far for a row roughly half that tall — deliberately.
-          // Spacing and travel are separate levers and only read together: at
-          // 30ms apart about seven rows are in flight at once, and a short rise
-          // across seven overlapping rows still resolves as a fade. The travel
-          // is what turns the overlap into a sweep.
-          translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
-        },
-      },
-    ],
-  },
+    children: 'tr',
+    stagger: { delay: 30, ...stagger },
+  }),
 ];
 
 /**

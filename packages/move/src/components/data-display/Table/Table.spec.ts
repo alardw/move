@@ -633,14 +633,19 @@ export const spec = {
 
   animations: [
     {
-      trigger: 'Root.enter',
+      trigger: 'Body.enter',
       sequence: [
         {
-          children: 'tbody > tr',
-          animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0 } },
-          stagger: { delay: 12 },
+          target: 'Body',
+          children: 'tr',
+          animation: {
+            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+            translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
+          },
+          stagger: { delay: 30 },
         },
       ],
+      note: 'Built by revealItems — the shared data-display reveal, so Table, Timeline and List describe the same idea the same way. Off unless `stagger` is set; `animateKey` replays this same trigger with deps.',
     },
   ],
 

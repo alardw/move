@@ -313,11 +313,16 @@ export const spec = {
       trigger: 'Root.enter',
       sequence: [
         {
-          children: ':scope > *',
-          animation: { opacity: { from: 0, to: 1 }, y: { from: 8, to: 0, ease: 'poppy' } },
-          stagger: { delay: 50 },
+          target: 'Root',
+          children: '.item',
+          animation: {
+            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+            translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
+          },
+          stagger: { delay: 80 },
         },
       ],
+      note: 'Built by revealItems — the shared data-display reveal, so Table, Timeline and List describe the same idea the same way. Off unless `stagger` is set; `animateKey` replays this same trigger with deps.',
     },
   ],
 

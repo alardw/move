@@ -36,6 +36,10 @@ export { staggerAnimate } from './staggerAnimate';
 export { staggerEnter } from './staggerEnter';
 export type { StaggerEnterOptions } from './staggerEnter';
 
+/** The data-display reveal: rows of a filterable thing, fading up in sequence */
+export { revealItems } from './revealItems';
+export type { RevealItemsOptions } from './revealItems';
+
 // =============================================================================
 // Trigger-sequence orchestrator
 // =============================================================================

@@ -448,13 +448,13 @@ export const spec = {
           target: 'Root',
           children: '[data-move-stagger]',
           animation: {
-            scale: { from: '$scaleFrom', to: 1, ease: 'quick' },
-            opacity: { from: 0, to: 1, duration: 200 },
+            opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
+            translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
           },
           stagger: { delay: 30 },
         },
       ],
-      note: '$scaleFrom comes from ITEM_REVEAL_VARS — a fixed reveal DISTANCE (CONTROL_REVEAL_PX) converted to a ratio per container width, shared with Select, Dropdown and Autocomplete.',
+      note: 'Built by revealItems — the shared data-display reveal, so List, Table and Timeline describe the same idea the same way. Previously scaled from $scaleFrom (ITEM_REVEAL_VARS), borrowed from Select/Dropdown/Autocomplete; those reveal a panel the reader just opened, this reveals data that arrived with the page or a filter.',
     },
   ],
 
