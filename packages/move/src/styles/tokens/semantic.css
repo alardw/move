@@ -90,6 +90,21 @@
    * Color - Error / Danger
    * ============================================ */
   --move-error: var(--move-red-700);
+  /*
+   * The same red, for TEXT.
+   *
+   * `--move-error` is a FILL, and fill answers to 1.4.11's 3:1 — which it holds.
+   * Small text answers to 1.4.3's 4.5:1, which it does not: a field message
+   * measured 3.23:1 on the page ground. One token was doing two jobs with
+   * different floors, and the looser one set its value.
+   *
+   * Darkening --move-error itself would drag every error border and fill with
+   * it to fix a problem none of them have. So this is a sibling, the same split
+   * the accent already has between --move-primary (fill) and --move-accent-text.
+   * Reads from the palette's text ramp, which inverts per appearance, so it is
+   * right in light and dark without being set twice.
+   */
+  --move-error-text: var(--move-red-text);
   --move-error-hover: var(--move-red-600);
   --move-error-subtle: var(--move-red-950);
   --move-error-fg: var(--move-white);

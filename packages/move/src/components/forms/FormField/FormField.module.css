@@ -70,5 +70,5 @@
 }
 
 .description[data-error] {
-  color: var(--move-error);
+  color: var(--move-error-text);
 }

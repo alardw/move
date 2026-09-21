@@ -54,6 +54,9 @@ const CONTRACT: Rule[] = [
   { fg: '--move-fg-subtle', on: SURFACES.slice(0, 2), floor: 4.5, label: 'subtle text' },
   { fg: '--move-accent-text', on: SURFACES, floor: 4.5, label: 'accent text' },
   { fg: '--move-link', on: SURFACES, floor: 4.5, label: 'accent text (link)' },
+  // Status as TEXT, which nothing audited: a field's error message is small text
+  // and answers to 4.5, where the fill it used to borrow answers to 3.
+  { fg: '--move-error-text', on: SURFACES, floor: 4.5, label: 'error text (field message)' },
   {
     fg: '--move-focus-ring-color',
     on: ['--move-bg-base', '--move-bg-subtle'],
