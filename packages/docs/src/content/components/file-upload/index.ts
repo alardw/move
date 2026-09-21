@@ -7,11 +7,19 @@ import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
 import Constraints from './samples/constraints';
 import constraintsCode from './samples/constraints?raw';
+import SimulatedUpload from './samples/simulated-upload';
+import simulatedUploadCode from './samples/simulated-upload?raw';
 
 export const content: ComponentContent = {
   meta,
   spec,
   samples: [
+    {
+      id: 'simulated-upload',
+      title: 'Uploading, end to end (simulated)',
+      render: SimulatedUpload,
+      code: simulatedUploadCode,
+    },
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     {
       id: 'constraints',

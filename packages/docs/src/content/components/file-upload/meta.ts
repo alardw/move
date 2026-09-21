@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'Image',
     reason: 'For displaying uploaded image previews after the upload completes.',
   },
+  {
+    to: '/systems/drag-and-drop',
+    name: 'Drag and drop',
+    reason:
+      'The drop-target contract its dropzone shares with Drag — the same three states, reported the same way, for files coming from outside the browser.',
+  },
 ];
 
 export const meta: ComponentDocument = {

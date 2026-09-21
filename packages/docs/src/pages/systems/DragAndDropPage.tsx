@@ -21,6 +21,7 @@ const TOC: TocItem[] = [
   { href: '#reorder', label: 'Rearranging a list' },
   { href: '#targets', label: 'Dropping onto a place' },
   { href: '#arrivals', label: 'Into a list from outside' },
+  { href: '#files', label: 'Files from outside the browser' },
   { href: '#keyboard', label: 'The keyboard path' },
   { href: '#styling', label: 'Why the components exist' },
 ];
@@ -165,6 +166,34 @@ export function DragAndDropPage() {
             says which. <Code>onInsert</Code> reports where it landed in the same shape{' '}
             <Code>onReorder</Code> uses — a destination naming the list and the place in it.
           </Text>
+        </Section>
+
+        <Section
+          id="files"
+          title="Files from outside the browser"
+          lede="The one drop this system cannot carry — and the zone that reads the same anyway."
+        >
+          <Stack gap="md">
+            <Text>
+              Everything above moves something already on the page, through pointer events, because
+              HTML5 drag has no touch support and no say over its own preview. A file coming off the
+              desktop is the opposite case: the browser hands it over only through the native drop
+              event, so pointer events never see it and no amount of sharing changes that.
+            </Text>
+            <Text>
+              So the mechanism is separate and everything you experience is not.{' '}
+              <Code>Drag.FileZone</Code> reports the same three states on the same attributes as{' '}
+              <Code>Drag.Zone</Code> — resting, accepting, refusing — and announces what landed.{' '}
+              <RouterLink to="/components/file-upload">FileUpload</RouterLink>'s dropzone runs on
+              the same hook, so a drop target looks and sounds alike wherever the thing came from.
+            </Text>
+            <Text size="sm" color="muted">
+              One limit worth knowing: an extension in <Code>accept</Code> (<Code>.pdf</Code>)
+              cannot be judged mid-drag, because the browser exposes only the MIME type until the
+              release. It is treated as a match while the drag is in flight and checked on arrival —
+              refusing something that would have been accepted is the worse half of that trade.
+            </Text>
+          </Stack>
         </Section>
 
         <Section

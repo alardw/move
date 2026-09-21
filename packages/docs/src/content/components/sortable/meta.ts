@@ -40,6 +40,12 @@ const related: RelatedItem[] = [
     reason:
       'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
   },
+  {
+    to: '/systems/drag-and-drop',
+    name: 'Drag and drop',
+    reason:
+      'The shared drop-target contract this is built on, and how a keyboard move works without a pointer.',
+  },
 ];
 
 export const meta: ComponentDocument = {
