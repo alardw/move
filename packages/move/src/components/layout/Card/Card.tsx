@@ -51,11 +51,8 @@ const CardRoot = withMoveComponent<'root', CardRootProps, HTMLDivElement>({
             : undefined;
 
         return (
-          // Surface owns the ground: it takes the alternate of whatever this Card
-          // landed on, marks it for CSS and hands it to the children — the three
-          // steps that were written out by hand in seven components, and that
-          // Alert got wrong by doing only one of them. Card keeps its own paint,
-          // because --move-card-bg is a token a consumer can override.
+          // Surface gives the card its ground. Card still paints itself, because
+          // --move-card-bg is a token a consumer can override.
           <Surface asChild>
             <div
               {...attrs}

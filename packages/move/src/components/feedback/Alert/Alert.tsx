@@ -176,12 +176,8 @@ export const Alert = withMoveComponent<
         } = closeSp as Record<string, unknown>;
 
         return (
-          // Alternates like every other ground-owner. It used to hardcode
-          // `subtle` AND skip the provider, so the CSS claimed a tone while React
-          // context still reported the ground outside — anything inside computed
-          // from the wrong shade. Alert paints its own variant colour rather than
-          // --move-surface-bg, but it still hands its children a ground, and that
-          // ground has to step from wherever the alert landed.
+          // Surface gives the alert's contents a ground stepped from wherever the
+          // alert landed. The alert itself keeps its variant colour.
           <Surface asChild>
             <div
               {...attrs}
