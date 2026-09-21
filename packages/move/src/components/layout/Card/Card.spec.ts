@@ -341,11 +341,6 @@ export const spec = {
   formType: null,
   asChild: false,
 
-  surface: {
-    slot: 'root',
-    level: 'subtle' as const,
-  },
-
   animations: [],
 
   renderContracts: [

@@ -408,11 +408,6 @@ export const spec = {
 
   dismissBehavior: 'unmountAfterExit' as const,
 
-  surface: {
-    slot: 'content',
-    level: 'subtle' as const,
-  },
-
   // Targets contentInner (the visible box); the shell keeps Radix positioning.
   animations: [
     {

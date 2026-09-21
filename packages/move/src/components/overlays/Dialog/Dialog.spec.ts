@@ -589,11 +589,6 @@ export const spec = {
 
   preview: { staged: true, bare: true, width: 'lg' as const },
 
-  surface: {
-    slot: 'content',
-    level: 'subtle' as const,
-  },
-
   animations: [
     {
       trigger: 'Overlay.enter',

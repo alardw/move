@@ -789,18 +789,6 @@ const STYLING: FieldRow[] = [
     description: 'Variant prop values — a list of values, or a richer map of value → metadata.',
   },
   { name: 'sizes', type: 'string[]', required: true, description: 'Size prop values.' },
-  {
-    name: 'surface',
-    type: '{ slot, level } | null',
-    required: false,
-    description: (
-      <>
-        Surface this component creates (sets background + shadow context for children).{' '}
-        <Code>level</Code> is one of <Code>base</Code> / <Code>subtle</Code> / <Code>muted</Code> /{' '}
-        <Code>emphasis</Code> / <Code>inverse</Code>.
-      </>
-    ),
-  },
 ];
 
 const TOKEN_DECLARATION: FieldRow[] = [

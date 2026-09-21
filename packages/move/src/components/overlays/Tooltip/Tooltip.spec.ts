@@ -367,7 +367,6 @@ export const spec = {
   focus: null,
   formType: null,
   asChild: true,
-  surface: null,
 
   // Animates the inner surface (contentInner); the outer Content shell keeps
   // Radix' positioning transform untouched. Lives inside RadixTooltip.Content so

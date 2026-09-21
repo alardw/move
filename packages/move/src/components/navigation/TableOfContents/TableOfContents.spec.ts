@@ -164,7 +164,6 @@ export const spec = {
   // No surface: TableOfContents paints no background — it sits transparently on
   // the page's implicit `base` ground (established by MoveRoot / :root). Only
   // components that raise a panel declare a surface.
-  surface: null,
 
   tokens: [
     {

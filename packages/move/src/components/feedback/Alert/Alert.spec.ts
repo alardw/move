@@ -12,15 +12,15 @@ export const spec = {
 
   compound: false,
   rootElement: 'div',
-  capabilities: ['takes-focus'],
+  capabilities: ['owns-surface', 'takes-focus'],
 
   slots: [
     {
       name: 'root',
       element: 'div',
-      kind: 'none',
+      kind: 'surface',
       typography: 'ui',
-      description: 'Alert container with role=alert',
+      description: 'Alert container with role=alert. Owns a ground for its children.',
     },
     {
       name: 'icon',
@@ -128,7 +128,6 @@ export const spec = {
   focus: null,
   formType: null,
   asChild: false,
-  surface: { slot: 'root', level: 'subtle' },
   dismissBehavior: 'unmountAfterExit' as const,
 
   animations: [
@@ -206,7 +205,7 @@ export const spec = {
 
   hasHook: false,
   engineImports: ['withMoveComponent', 'useMergedRef'],
-  componentDeps: [],
+  componentDeps: ['SurfaceProvider'],
 
   testing: {
     behaviors: [

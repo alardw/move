@@ -256,6 +256,11 @@ export const CHECKS: CheckDoc[] = [
     enforces: 'The token values a spec declares match the component’s CSS (spec ↔ CSS parity).',
   },
   {
+    name: 'surface-contract',
+    what: 'Owning a ground is the attribute AND the provider AND a declaration that says so.',
+    why: '`data-surface` remaps the relative tokens for an element and everything under it; `SurfaceProvider` tells React the same thing. One without the other splits them — the CSS calls the panel subtle while anything inside still hears the ground outside, and steps to a shade that can match the panel it sits on. check:capabilities holds that line only for components that declare owns-surface or have a slot of kind surface, so a component setting the attribute while declaring neither was invisible to it. Alert was.',
+  },
+  {
     name: 'icon-usage',
     appliesTo: 'component',
     enforces:

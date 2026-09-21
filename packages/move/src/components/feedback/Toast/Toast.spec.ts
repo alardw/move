@@ -174,8 +174,6 @@ export const spec = {
 
   dismissBehavior: 'unmountAfterExit' as const,
 
-  surface: null,
-
   animations: [
     {
       trigger: 'Root.enter',

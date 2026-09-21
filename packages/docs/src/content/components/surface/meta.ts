@@ -5,7 +5,7 @@ import type { RelatedItem } from '../../../components/RelatedComponents';
 const highlights: HighlightItem[] = [
   {
     icon: 'layers',
-    text: 'Takes the opposite shade of whatever it lands on, so nested panels stay visible against each other with nobody setting a colour. Four deep works the same as one.',
+    text: 'Takes the opposite shade of whatever it lands on, so nested panels stay visible against each other with nobody setting a colour. Four deep works the same as one — Systems → Surfaces shows it running.',
   },
   {
     icon: 'square',
@@ -17,7 +17,7 @@ const highlights: HighlightItem[] = [
   },
   {
     icon: 'combine',
-    text: '`asChild` paints an element that already exists instead of adding one — how Card, Dialog, Drawer, Popover, Sidebar, Select and Accordion take a ground onto their own root.',
+    text: '`asChild` paints an element that already exists instead of adding one — how Card, Dialog, Drawer, Popover, Sidebar, Select and Accordion take a ground onto their own root. Those are the components that declare `owns-surface`; Systems → Surfaces lists them.',
   },
 ];
 
@@ -42,7 +42,7 @@ export const meta: ComponentDocument = {
   preview: { width: 'full' },
   name: 'Surface',
   tagline:
-    'A ground that shades itself against whatever it sits on — the raw surface mechanism, with no other opinions attached.',
+    'A ground that shades itself against whatever it sits on. This is the Surfaces system as a component — see Systems → Surfaces for how the alternation works and which relative tokens it paints from.',
   categories: ['layout'],
   badges: [{ icon: 'layers', label: 'Owns a surface' }],
   highlights,
@@ -52,5 +52,5 @@ export const meta: ComponentDocument = {
     { key: '—', action: 'Surface is a layout primitive with no interactive behavior of its own.' },
   ],
   accessibilityLede:
-    'Surface is purely presentational — it adds no role, focus behaviour or ARIA. It paints a background and hands its tone to the components inside, which is a visual contract rather than a semantic one. Give the region its own semantics where it needs them: a `<section>` with a heading via `asChild`, for instance.',
+    'Surface is purely presentational — it adds no role, focus behaviour or ARIA. It paints a background and hands its tone to the components inside, which is a visual contract rather than a semantic one. Give the region its own semantics where it needs them: a `<section>` with a heading via `asChild`, for instance. Contrast between the grounds it alternates between is set by the theme and checked by `check:theme-contrast` — see Systems → Surfaces.',
 };

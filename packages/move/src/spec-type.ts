@@ -841,14 +841,6 @@ export interface ComponentSpec {
 
   // --- Surface ---
 
-  /** Surface this component creates (sets background + shadow context for children) */
-  surface?: {
-    /** Which slot sets the background */
-    slot: string;
-    /** Surface level (matches bg token suffix) */
-    level: 'base' | 'subtle' | 'muted' | 'emphasis' | 'inverse';
-  } | null;
-
   // --- Styling ---
 
   /** Component CSS tokens — all values MUST reference var(--move-*) */

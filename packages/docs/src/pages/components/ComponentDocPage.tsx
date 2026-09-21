@@ -133,7 +133,7 @@ export function ComponentDocPage() {
         )}
 
         {meta.related.length > 0 && (
-          <Section id="related" title="Related components">
+          <Section id="related" title="Related components and systems">
             <RelatedComponents items={meta.related} />
           </Section>
         )}

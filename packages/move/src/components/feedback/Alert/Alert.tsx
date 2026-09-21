@@ -5,6 +5,7 @@ import { withMoveComponent, useMergedRef } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, useDismissableExit } from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { useResolvedIcon, useIcon } from '../../../infrastructure/Icon';
+import { useSurfaceFlip, SurfaceProvider } from '../../../infrastructure/Surface';
 import styles from './Alert.module.css';
 
 export type AlertVariant = 'info' | 'success' | 'warning' | 'danger';
@@ -113,6 +114,7 @@ export const Alert = withMoveComponent<
     });
 
     const mergedRef = useMergedRef(ref, contentRef as React.RefObject<HTMLElement>);
+    const surface = useSurfaceFlip();
 
     // Determine icon: explicit `icon` name (or false) wins; otherwise the status role.
     const iconProp = props.icon;
@@ -175,65 +177,76 @@ export const Alert = withMoveComponent<
         } = closeSp as Record<string, unknown>;
 
         return (
-          <div
-            {...attrs}
-            {...spRest}
-            ref={mergedRef}
-            role="alert"
-            className={cx('root', props.className, spClass as string | undefined)}
-            style={{ ...(props.style as React.CSSProperties), ...(spStyle as React.CSSProperties) }}
-            data-variant={variant}
-            data-size={props.size as string}
-            data-surface="subtle"
-          >
-            {iconProp !== false && (
-              <span
-                {...iconSpRest}
-                ref={iconRef}
-                className={cx('icon', iconSpClass as string | undefined)}
-                style={iconSpStyle as React.CSSProperties}
-                aria-hidden="true"
-              >
-                {resolvedIcon}
-              </span>
-            )}
+          // Alternates like every other ground-owner. It used to hardcode
+          // `subtle` AND skip the provider, so the CSS claimed a tone while React
+          // context still reported the ground outside — anything inside computed
+          // from the wrong shade. Alert paints its own variant colour rather than
+          // --move-surface-bg, but it still hands its children a ground, and that
+          // ground has to step from wherever the alert landed.
+          <SurfaceProvider value={surface}>
             <div
-              {...contentSpRest}
-              className={cx('content', contentSpClass as string | undefined)}
-              style={contentSpStyle as React.CSSProperties}
+              {...attrs}
+              {...spRest}
+              ref={mergedRef}
+              role="alert"
+              className={cx('root', props.className, spClass as string | undefined)}
+              style={{
+                ...(props.style as React.CSSProperties),
+                ...(spStyle as React.CSSProperties),
+              }}
+              data-variant={variant}
+              data-size={props.size as string}
+              data-surface={surface}
             >
-              {props.title && (
-                <div
-                  {...titleSpRest}
-                  className={cx('title', titleSpClass as string | undefined)}
-                  style={titleSpStyle as React.CSSProperties}
+              {iconProp !== false && (
+                <span
+                  {...iconSpRest}
+                  ref={iconRef}
+                  className={cx('icon', iconSpClass as string | undefined)}
+                  style={iconSpStyle as React.CSSProperties}
+                  aria-hidden="true"
                 >
-                  {props.title as React.ReactNode}
-                </div>
+                  {resolvedIcon}
+                </span>
               )}
-              {props.children && (
-                <div
-                  {...descSpRest}
-                  className={cx('description', descSpClass as string | undefined)}
-                  style={descSpStyle as React.CSSProperties}
+              <div
+                {...contentSpRest}
+                className={cx('content', contentSpClass as string | undefined)}
+                style={contentSpStyle as React.CSSProperties}
+              >
+                {props.title && (
+                  <div
+                    {...titleSpRest}
+                    className={cx('title', titleSpClass as string | undefined)}
+                    style={titleSpStyle as React.CSSProperties}
+                  >
+                    {props.title as React.ReactNode}
+                  </div>
+                )}
+                {props.children && (
+                  <div
+                    {...descSpRest}
+                    className={cx('description', descSpClass as string | undefined)}
+                    style={descSpStyle as React.CSSProperties}
+                  >
+                    {props.children}
+                  </div>
+                )}
+              </div>
+              {props.closable && (
+                <button
+                  {...closeSpRest}
+                  className={cx('close', closeSpClass as string | undefined)}
+                  style={closeSpStyle as React.CSSProperties}
+                  type="button"
+                  aria-label={labels.close}
+                  onClick={handleClose}
                 >
-                  {props.children}
-                </div>
+                  {closeIcon}
+                </button>
               )}
             </div>
-            {props.closable && (
-              <button
-                {...closeSpRest}
-                className={cx('close', closeSpClass as string | undefined)}
-                style={closeSpStyle as React.CSSProperties}
-                type="button"
-                aria-label={labels.close}
-                onClick={handleClose}
-              >
-                {closeIcon}
-              </button>
-            )}
-          </div>
+          </SurfaceProvider>
         );
       },
     };

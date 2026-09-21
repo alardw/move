@@ -131,7 +131,6 @@ export const spec = {
   // than components, so the provider would have nothing to talk to. The
   // illustration inherits instead, which is what lets it drop into a page, a
   // Card or a Dialog without being told which.
-  surface: null,
 
   renderContracts: [
     {

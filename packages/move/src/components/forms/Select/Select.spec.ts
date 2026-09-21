@@ -791,11 +791,6 @@ export const spec = {
     },
   ],
 
-  surface: {
-    slot: 'content',
-    level: 'subtle' as const,
-  },
-
   tokens: [
     // Trigger tokens
     {

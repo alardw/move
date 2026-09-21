@@ -176,7 +176,6 @@ export const spec = {
   asChild: false,
 
   animations: [],
-  surface: null,
 
   renderContracts: [
     {
