@@ -1356,6 +1356,7 @@ Pagination.NextTrigger props:
 - animations: AnimationTrigger[] | false — Interactive animation config or false to disable
 - children: React.ReactNode — Button content (defaults to right chevron SVG)
 Pagination.Items props:
+- stagger: StaggerProp (default: false) — Opt-in: reveal the page buttons in sequence on mount. `true` uses the defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default. The slide that answers a page change is not this, and always runs.
 - animations: AnimationTrigger[] | false — Interactive animation config or false to disable
 Example: <Pagination.Root variant="default">…</Pagination.Root>
 
@@ -1924,6 +1925,7 @@ Table.Root props:
 - stickyHeader: boolean — Stick the header to the top while the body scrolls.
 - responsive: 'scroll' | 'stack' | 'none' (default: scroll) — Responsive strategy: overflow-x scroll (default), flip to stacked cards below stackBelow, or none.
 - stackBelow: number (default: 640) — Container-width breakpoint in pixels below which stack mode activates. Only used when responsive="stack".
+- stagger: StaggerProp (default: false) — Opt-in: reveal rows in sequence when the body mounts. `true` uses the defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.
 - animations: AnimationTrigger[] | false — Staggered row entrance animation config or false to disable.
 - children: React.ReactNode — Table sections (Header, Body, Footer, Group).
 Table.Header props:
@@ -2133,6 +2135,7 @@ Timeline.Root props:
 - color: 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'teal' | 'green' | 'lime' | 'yellow' | 'orange' (default: indigo) — Default color for active/completed items
 - lineVariant: 'solid' | 'dashed' | 'dotted' (default: solid) — Line style for connectors
 - reverseActive: boolean (default: false) — Reverse active direction (items after active index are completed)
+- stagger: StaggerProp (default: false) — Opt-in: reveal items in sequence when the timeline mounts. `true` uses the defaults (80ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.
 - animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
 - children: React.ReactNode — Timeline.Item children
 Timeline.Item props:

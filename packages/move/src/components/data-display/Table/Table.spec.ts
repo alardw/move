@@ -163,6 +163,14 @@ export const spec = {
             'Container-width breakpoint in pixels below which stack mode activates. Only used when responsive="stack".',
         },
         {
+          name: 'stagger',
+          type: 'StaggerProp',
+          default: 'false',
+          moveSpecific: true,
+          description:
+            'Opt-in: reveal rows in sequence when the body mounts. `true` uses the defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.',
+        },
+        {
           name: 'animations',
           type: 'AnimationTrigger[] | false',
           moveSpecific: true,

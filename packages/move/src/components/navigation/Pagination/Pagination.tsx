@@ -13,7 +13,7 @@ import {
   usePositionTracker,
   resolveAnimationsConfig,
 } from '../../../animation';
-import type { AnimationTrigger } from '../../../animation';
+import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import { usePagination } from './usePagination';
 import type { UsePaginationReturn } from './usePagination';
 import { useIcon } from '../../../infrastructure/Icon';
@@ -359,6 +359,10 @@ const PaginationNextTrigger = withMoveComponent<
 export interface PaginationItemsProps extends React.HTMLAttributes<HTMLElement> {
   className?: string;
   style?: React.CSSProperties;
+  /** Opt-in: reveal the page buttons in sequence on mount. `true` uses the
+   *  defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`.
+   *  The slide that answers a page change is not this, and always runs. */
+  stagger?: StaggerProp;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'items'>;
 }
@@ -371,7 +375,8 @@ const PaginationItems = withMoveComponent<
   name: 'PaginationItems',
   styles,
   slots: ['items', 'item', 'ellipsis', 'indicator'] as const,
-  moveProps: ['animations'],
+  defaults: { stagger: false as StaggerProp },
+  moveProps: ['stagger', 'animations'],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
     const { range, page, setPage, labels } = usePaginationContext();
@@ -387,14 +392,28 @@ const PaginationItems = withMoveComponent<
       disabled: props.animations === false,
     });
 
-    const DEFAULT_ANIMATIONS: AnimationTrigger[] = [
-      {
-        trigger: 'Items.enter',
-        sequence: [
-          { children: 'li', animation: { ...scaleIn(0.8), ...fadeIn() }, stagger: { delay: 30 } },
-        ],
-      },
-    ];
+    // Opt-in mount reveal. Off by default: a paginator arrives with the page,
+    // and usually with the table it pages — two reveals firing at once, neither
+    // aware of the other. The `Items.slide` stagger below is a different thing:
+    // it answers a page change the reader asked for, so it is not behind a prop.
+    const staggerProp = props.stagger as StaggerProp | undefined;
+    const enterConfig: AnimationTrigger[] = staggerProp
+      ? [
+          {
+            trigger: 'Items.enter',
+            sequence: [
+              {
+                children: 'li',
+                animation: { ...scaleIn(0.8), ...fadeIn() },
+                stagger: {
+                  delay: 30,
+                  ...(typeof staggerProp === 'object' ? staggerProp : ({} as StaggerConfig)),
+                },
+              },
+            ],
+          },
+        ]
+      : [];
 
     const animRefs = React.useMemo(
       () => ({
@@ -402,7 +421,17 @@ const PaginationItems = withMoveComponent<
       }),
       [internalRef],
     );
-    useAnimations(DEFAULT_ANIMATIONS, animRefs);
+    // Through resolveAnimationsConfig so `animations={false}` actually reaches
+    // this one — it was wired straight to useAnimations and ignored the prop.
+    useAnimations(
+      staggerProp
+        ? resolveAnimationsConfig(
+            enterConfig,
+            props.animations as AnimationTrigger[] | false | undefined,
+          )
+        : null,
+      animRefs,
+    );
 
     // Re-measure the indicator when the active page or the visible range changes
     // (the hook also re-measures on data-state mutations, resize and font load).

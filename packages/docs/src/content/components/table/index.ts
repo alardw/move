@@ -27,6 +27,8 @@ import WithCaption from './samples/with-caption-and-footer';
 import withCaptionCode from './samples/with-caption-and-footer?raw';
 import WideResponsive from './samples/wide-responsive';
 import wideResponsiveCode from './samples/wide-responsive?raw';
+import RowReveal from './samples/row-reveal';
+import rowRevealCode from './samples/row-reveal?raw';
 
 export const content: ComponentContent = {
   meta,
@@ -68,6 +70,12 @@ export const content: ComponentContent = {
       title: 'Responsive stack (resize the window to trigger)',
       render: WideResponsive,
       code: wideResponsiveCode,
+    },
+    {
+      id: 'row-reveal',
+      title: 'Staggered row reveal (opt-in)',
+      render: RowReveal,
+      code: rowRevealCode,
     },
   ],
 };

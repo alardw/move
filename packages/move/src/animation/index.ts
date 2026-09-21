@@ -128,6 +128,7 @@ export type { PresenceContextValue } from './presence/PresenceContext';
 export type {
   Animation,
   StaggerConfig,
+  StaggerProp,
   AnimationState,
   AnimationStep,
   SequenceItem,

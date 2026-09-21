@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, quick } from '../../../animation';
-import type { AnimationTrigger } from '../../../animation';
+import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import type { Color, Size } from '../../../shared/types';
 import styles from './Timeline.module.css';
 
@@ -25,14 +25,22 @@ export type TimelineLineVariant = 'solid' | 'dashed' | 'dotted';
 // Default animations
 // ============================================================================
 
-const DEFAULT_TIMELINE_ANIMATIONS: AnimationTrigger[] = [
+/**
+ * Opt-in: items reveal in sequence when the timeline mounts.
+ *
+ * Off by default — a timeline arrives with the page, alongside whatever else is
+ * on it, and no component can see the others reveal at the same moment. Asked
+ * for, it is the most deliberate stagger in the library (80ms), because a
+ * timeline is a sequence and the reveal is saying so.
+ */
+const timelineStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
   {
     trigger: 'Root.enter',
     sequence: [
       {
         target: 'Root',
         children: `.${styles.item}`,
-        stagger: { delay: 80 },
+        stagger: { delay: 80, ...stagger },
         animation: {
           opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
           translateY: { from: 12, to: 0, ease: 'outQuart', duration: 200 },
@@ -73,6 +81,9 @@ export interface TimelineRootProps extends React.HTMLAttributes<HTMLElement> {
   color?: TimelineColor;
   lineVariant?: TimelineLineVariant;
   reverseActive?: boolean;
+  /** Opt-in: reveal items in sequence on mount. `true` uses the defaults (80ms
+   *  apart); pass an object to tune `delay`/`from`/`maxTotal`. */
+  stagger?: StaggerProp;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -88,17 +99,41 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
     color: 'indigo' as TimelineColor,
     lineVariant: 'solid' as TimelineLineVariant,
     reverseActive: false as unknown as undefined,
+    stagger: false as StaggerProp,
   },
-  moveProps: ['active', 'align', 'size', 'color', 'lineVariant', 'reverseActive', 'animations'],
+  moveProps: [
+    'active',
+    'align',
+    'size',
+    'color',
+    'lineVariant',
+    'reverseActive',
+    'stagger',
+    'animations',
+  ],
 
   setup({ props, ref, cx, sp, attrs }) {
     const rootRef = React.useRef<HTMLDivElement>(null);
     const mergedRef = useMergedRef<HTMLDivElement>(ref, rootRef);
     const indexRef = React.useRef(0);
 
-    const animConfig = resolveAnimationsConfig(
-      DEFAULT_TIMELINE_ANIMATIONS,
-      props.animations as AnimationTrigger[] | false | undefined,
+    const staggerProp = props.stagger as StaggerProp | undefined;
+    const staggerOn = !!staggerProp;
+    const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
+    const animConfig = React.useMemo(
+      () =>
+        staggerOn
+          ? resolveAnimationsConfig(
+              timelineStaggerAnimations(staggerCfg),
+              props.animations as AnimationTrigger[] | false | undefined,
+            )
+          : // null, not []. An empty array is truthy, and useAnimations latches
+            // `lifecycleRan` on the first non-null config it sees — so a table
+            // mounted with the reveal off would burn its one shot on nothing,
+            // and `stagger` turned on later could never fire.
+            null,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, props.animations],
     );
 
     const rootRefs = React.useMemo(

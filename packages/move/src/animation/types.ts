@@ -30,11 +30,24 @@ export interface StaggerConfig {
    * Longest the whole reveal may take, in ms, however many children there are.
    *
    * A fixed per-child delay is fine at five items and a drag at twenty, where
-   * the last one arrives more than half a second after the first. The delay
-   * shrinks to fit rather than the tail growing. Default 240.
+   * the last one arrives more than half a second after the first. The gap
+   * closes up rather than the tail growing. Defaults to a value derived from
+   * the per-item duration — see `defaultMaxTotal`.
    */
   maxTotal?: number;
 }
+
+/**
+ * A component's opt-in stagger prop: `true` for the component's own defaults,
+ * or a config to tune them.
+ *
+ * Stagger is opt-in on anything that reveals on page load, because a page
+ * holding a table, a timeline and a paginator has three reveals firing at once
+ * and no component can see the others. Motion that answers something the user
+ * just did — a popover opening, files landing after a drop — is not this, and
+ * is not behind a prop.
+ */
+export type StaggerProp = boolean | StaggerConfig;
 
 // =============================================================================
 // Trigger → Sequence types

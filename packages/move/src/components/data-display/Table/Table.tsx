@@ -9,7 +9,7 @@ import {
 } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig } from '../../../animation';
-import type { AnimationTrigger } from '../../../animation';
+import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import { useIcon } from '../../../infrastructure/Icon';
 import styles from './Table.module.css';
 
@@ -17,17 +17,35 @@ import styles from './Table.module.css';
 // Default animations
 // ============================================================================
 
-const DEFAULT_TABLE_ANIMATIONS: AnimationTrigger[] = [
+/**
+ * Opt-in: rows reveal in sequence when the body mounts.
+ *
+ * Off by default. A table arrives with the page, and so does everything else on
+ * it — a page holding a table, a timeline and a paginator had three reveals
+ * firing at once, none of them able to see the others.
+ *
+ * 30ms apart, not the 12 it used to be. 12 was chosen while this was automatic,
+ * where the job was to stay out of the way: against a 200ms per-row duration it
+ * put ~17 rows in flight at once, so they moved as a block and read as a plain
+ * fade whatever distance each one travelled. Once the reveal is something a
+ * caller asks for, that is the wrong trade — they asked to see it.
+ */
+const tableStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
   {
     trigger: 'Body.enter',
     sequence: [
       {
         target: 'Body',
         children: 'tr',
-        stagger: { delay: 12 },
+        stagger: { delay: 30, ...stagger },
         animation: {
           opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
-          translateY: { from: 8, to: 0, ease: 'outQuart', duration: 200 },
+          // 64, which is far for a row roughly half that tall — deliberately.
+          // Spacing and travel are separate levers and only read together: at
+          // 30ms apart about seven rows are in flight at once, and a short rise
+          // across seven overlapping rows still resolves as a fade. The travel
+          // is what turns the overlap into a sweep.
+          translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
         },
       },
     ],
@@ -139,6 +157,9 @@ export interface TableRootProps extends React.HTMLAttributes<HTMLElement> {
   /** Container-width breakpoint (in px) below which stack mode
    *  activates. Only used when `responsive === 'stack'`. Default 640. */
   stackBelow?: number;
+  /** Opt-in: reveal rows in sequence when the body mounts. `true` uses the
+   *  defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. */
+  stagger?: StaggerProp;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -152,6 +173,7 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
     size: 'md' as TableSize,
     responsive: 'scroll' as TableResponsive,
     stackBelow: 640,
+    stagger: false as StaggerProp,
   },
   moveProps: [
     'variant',
@@ -161,6 +183,7 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
     'stickyHeader',
     'responsive',
     'stackBelow',
+    'stagger',
     'animations',
   ],
 
@@ -179,9 +202,28 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
       animations: animationsProp,
     } = props;
 
-    const animConfig = resolveAnimationsConfig(
-      DEFAULT_TABLE_ANIMATIONS,
-      animationsProp as AnimationTrigger[] | false | undefined,
+    // Memoised because the context value is keyed on it, and the context is
+    // how TableBody receives it. Built fresh each render, the context changed
+    // identity on every render — and the header-label registration guarantees a
+    // second one — which handed useAnimations a new config after its one-shot
+    // enter had already fired. The rows stayed seeded and never revealed.
+    const staggerProp = props.stagger as StaggerProp | undefined;
+    const staggerOn = !!staggerProp;
+    const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
+    const animConfig = React.useMemo(
+      () =>
+        staggerOn
+          ? resolveAnimationsConfig(
+              tableStaggerAnimations(staggerCfg),
+              animationsProp as AnimationTrigger[] | false | undefined,
+            )
+          : // null, not []. An empty array is truthy, and useAnimations latches
+            // `lifecycleRan` on the first non-null config it sees — so a table
+            // mounted with the reveal off would burn its one shot on nothing,
+            // and `stagger` turned on later could never fire.
+            null,
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, animationsProp],
     );
 
     const [headerLabels, setHeaderLabels] = React.useState<string[]>([]);

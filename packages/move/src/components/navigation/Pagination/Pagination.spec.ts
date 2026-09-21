@@ -237,6 +237,14 @@ export const spec = {
       ],
       props: [
         {
+          name: 'stagger',
+          type: 'StaggerProp',
+          default: 'false',
+          moveSpecific: true,
+          description:
+            'Opt-in: reveal the page buttons in sequence on mount. `true` uses the defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default. The slide that answers a page change is not this, and always runs.',
+        },
+        {
           name: 'animations',
           type: 'AnimationTrigger[] | false',
           moveSpecific: true,

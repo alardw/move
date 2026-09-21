@@ -7583,6 +7583,12 @@
           "name": "Items",
           "props": [
             {
+              "name": "stagger",
+              "type": "StaggerProp",
+              "default": "false",
+              "description": "Opt-in: reveal the page buttons in sequence on mount. `true` uses the defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default. The slide that answers a page change is not this, and always runs."
+            },
+            {
               "name": "animations",
               "type": "AnimationTrigger[] | false",
               "description": "Interactive animation config or false to disable"
@@ -10735,6 +10741,12 @@
               "description": "Container-width breakpoint in pixels below which stack mode activates. Only used when responsive=\"stack\"."
             },
             {
+              "name": "stagger",
+              "type": "StaggerProp",
+              "default": "false",
+              "description": "Opt-in: reveal rows in sequence when the body mounts. `true` uses the defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others."
+            },
+            {
               "name": "animations",
               "type": "AnimationTrigger[] | false",
               "description": "Staggered row entrance animation config or false to disable."
@@ -11921,6 +11933,12 @@
               "type": "boolean",
               "default": "false",
               "description": "Reverse active direction (items after active index are completed)"
+            },
+            {
+              "name": "stagger",
+              "type": "StaggerProp",
+              "default": "false",
+              "description": "Opt-in: reveal items in sequence when the timeline mounts. `true` uses the defaults (80ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others."
             },
             {
               "name": "animations",
