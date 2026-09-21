@@ -108,9 +108,18 @@ export function withMoveComponent<
       // 6. Separate attrs from Move-specific props
       const attrs: Record<string, unknown> = { 'data-move': name };
       for (const key of Object.keys(props)) {
-        if (!stripKeys.has(key)) {
-          attrs[key] = (props as Record<string, unknown>)[key];
+        if (stripKeys.has(key)) continue;
+        // `asChild` puts several components on one element, and each one arrives
+        // carrying its own name. Overwriting left the node claiming to be only
+        // the outermost — the least useful answer, and wrong exactly when a
+        // composed element is the confusing thing you are trying to read. So
+        // this one accumulates, innermost first, the way className already does.
+        if (key === 'data-move') {
+          const inherited = (props as Record<string, unknown>)[key];
+          attrs[key] = inherited ? `${name} ${inherited as string}` : name;
+          continue;
         }
+        attrs[key] = (props as Record<string, unknown>)[key];
       }
 
       // 7. Build context

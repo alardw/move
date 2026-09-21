@@ -17,6 +17,10 @@ export type { ComposedHandler } from './composeHandlers';
 // Child-tree inspection
 export { containsElementOfType, elementTypeName } from './childUtils';
 
+// Compose onto another component's element without taking its data-state.
+export { ScopedSlot } from './ScopedSlot';
+export type { ScopedSlotProps } from './ScopedSlot';
+
 // Headless utilities
 export { useControlledState } from './useControlledState';
 export type { UseControlledStateOptions } from './useControlledState';

@@ -45,8 +45,12 @@
   transform: rotate(0deg);
 }
 
+/* The trigger scopes its state under its own name when it is composed onto
+   another component's element, so the icon answers to either key. */
 [data-state='open'] > .icon,
-[data-state='open'] .icon {
+[data-state='open'] .icon,
+[data-move-collapsible-state='open'] > .icon,
+[data-move-collapsible-state='open'] .icon {
   transform: rotate(180deg);
 }
 

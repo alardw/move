@@ -4,7 +4,7 @@ import * as React from 'react';
 import { DropdownMenu as RadixDropdownMenu } from 'radix-ui';
 import type { SlotPropsMap, CxFn } from '../../../engine';
 import { ITEM_HOVER_VARS, ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { withMoveComponent, useMergedRef, ScopedSlot } from '../../../engine';
 import { Checkbox } from '../../forms/Checkbox';
 import {
   useAnimations,
@@ -262,7 +262,13 @@ const DropdownTrigger = withMoveComponent<'trigger', DropdownTriggerProps, HTMLB
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {/* As a guest on someone else's element, this trigger's open state goes
+                under its own name so the control it lands on keeps `data-state`. */}
+            {props.asChild ? (
+              <ScopedSlot owner="dropdown">{props.children}</ScopedSlot>
+            ) : (
+              props.children
+            )}
           </RadixDropdownMenu.Trigger>
         );
       },

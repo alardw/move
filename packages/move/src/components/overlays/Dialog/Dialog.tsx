@@ -2,7 +2,12 @@
 
 import * as React from 'react';
 import { Dialog as RadixDialog } from 'radix-ui';
-import { composeHandlers, containsElementOfType, withMoveComponent } from '../../../engine';
+import {
+  composeHandlers,
+  containsElementOfType,
+  withMoveComponent,
+  ScopedSlot,
+} from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -186,7 +191,13 @@ const DialogTrigger = withMoveComponent<'trigger', DialogTriggerProps, HTMLButto
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {/* As a guest on someone else's element, this trigger's open state goes
+                under its own name so the control it lands on keeps `data-state`. */}
+            {props.asChild ? (
+              <ScopedSlot owner="dialog">{props.children}</ScopedSlot>
+            ) : (
+              props.children
+            )}
           </RadixDialog.Trigger>
         );
       },

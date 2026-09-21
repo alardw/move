@@ -170,6 +170,14 @@ const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps,
       return {
         render() {
           const Comp = asChild ? Slot.Root : 'button';
+          // Under asChild this trigger is a guest on someone else's element, so
+          // its state goes under its own name and the host keeps the plain key.
+          // Standing on its own it is the host, and the plain key is its to use.
+          const stateAttr = {
+            [asChild ? 'data-move-collapsible-state' : 'data-state']: context.open
+              ? 'open'
+              : 'closed',
+          };
           const triggerSp = sp('trigger');
           const {
             className: spClass,
@@ -185,7 +193,7 @@ const CollapsibleTrigger = withMoveComponent<'trigger', CollapsibleTriggerProps,
               type={asChild ? undefined : 'button'}
               className={cx('trigger', className, spClass as string | undefined)}
               style={{ ...style, ...(spStyle as React.CSSProperties) }}
-              data-state={context.open ? 'open' : 'closed'}
+              {...stateAttr}
               data-disabled={context.disabled || undefined}
               disabled={context.disabled || undefined}
               aria-expanded={context.open}

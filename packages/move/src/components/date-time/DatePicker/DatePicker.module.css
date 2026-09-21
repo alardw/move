@@ -45,7 +45,7 @@
    max-width used to clamp the row back down and hide it; once that cap went
    (it was a guess, and it fought the AM/PM segment for room) the stretched
    segments showed up immediately. */
-.singleWrapper input[data-move='InputText'] {
+.singleWrapper input[data-move~='InputText'] {
   width: 7rem;
 }
 
@@ -57,7 +57,7 @@
 }
 
 /* Same scoping as .singleWrapper above — this wrapper's own two date inputs. */
-.rangeWrapper input[data-move='InputText'] {
+.rangeWrapper input[data-move~='InputText'] {
   width: 5rem;
 }
 

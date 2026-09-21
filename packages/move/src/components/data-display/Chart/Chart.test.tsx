@@ -823,7 +823,9 @@ describe('Chart — tooltip placement', () => {
       clientX: 100,
       clientY: 150,
     });
-    const anchor = container.querySelector<HTMLElement>('span[data-state]');
+    // The anchor is the tooltip's trigger, and a trigger composed onto another
+    // element keeps its state under its own name.
+    const anchor = container.querySelector<HTMLElement>('span[data-move-tooltip-state]');
     expect(anchor).not.toBeNull();
     // 600x300 box, MARGIN top 8 / bottom 22 => plot y 8, height 270.
     expect(anchor!.style.top).toBe('143px');

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Popover as RadixPopover } from 'radix-ui';
-import { composeHandlers, useMergedRef, withMoveComponent } from '../../../engine';
+import { composeHandlers, useMergedRef, withMoveComponent, ScopedSlot } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import {
   useAnimations,
@@ -155,7 +155,13 @@ const PopoverTrigger = withMoveComponent<'trigger', PopoverTriggerProps, HTMLBut
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {/* As a guest on someone else's element, this trigger's open state goes
+                under its own name so the control it lands on keeps `data-state`. */}
+            {props.asChild ? (
+              <ScopedSlot owner="popover">{props.children}</ScopedSlot>
+            ) : (
+              props.children
+            )}
           </RadixPopover.Trigger>
         );
       },

@@ -772,7 +772,12 @@ export const spec = {
 
   radixPrimitive: 'Dialog',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'containsElementOfType', 'composeHandlers'] as string[],
+  engineImports: [
+    'withMoveComponent',
+    'containsElementOfType',
+    'composeHandlers',
+    'ScopedSlot',
+  ] as string[],
 
   componentDeps: ['LayerProvider', 'Surface'] as string[],
 

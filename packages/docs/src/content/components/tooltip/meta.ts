@@ -11,6 +11,10 @@ const highlights: HighlightItem[] = [
     icon: 'rabbit',
     text: 'Spring fade-and-scale enter/exit, position-aware transform-origin so the tooltip feels anchored to its trigger.',
   },
+  {
+    icon: 'layers',
+    text: 'Goes around a control without disturbing it — a toggle stays looking selected, a menu button stays looking open.',
+  },
 ];
 
 const related: RelatedItem[] = [

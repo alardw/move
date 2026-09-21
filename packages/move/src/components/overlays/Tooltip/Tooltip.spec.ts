@@ -496,7 +496,7 @@ export const spec = {
   ],
 
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'],
+  engineImports: ['withMoveComponent', 'useMergedRef', 'ScopedSlot'],
   componentDeps: [],
 
   testing: {

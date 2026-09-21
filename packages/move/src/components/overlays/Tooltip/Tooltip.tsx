@@ -3,7 +3,7 @@
 import * as React from 'react';
 import type { Dimension } from '../../../shared/types';
 import { Tooltip as RadixTooltip } from 'radix-ui';
-import { withMoveComponent, useMergedRef } from '../../../engine';
+import { withMoveComponent, useMergedRef, ScopedSlot } from '../../../engine';
 import {
   useAnimations,
   resolveAnimationsConfig,
@@ -177,7 +177,14 @@ const TooltipTrigger = withMoveComponent<'trigger', TooltipTriggerProps, HTMLBut
             className={cx('trigger', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
           >
-            {props.children}
+            {/* As a guest on someone else's element, the tooltip's open state goes
+                under its own name so the control keeps its `data-state`. Standing
+                on its own it is the host, and the plain key is its to use. */}
+            {props.asChild ? (
+              <ScopedSlot owner="tooltip">{props.children}</ScopedSlot>
+            ) : (
+              props.children
+            )}
           </RadixTooltip.Trigger>
         );
       },
@@ -388,7 +395,13 @@ const TooltipArrow = withMoveComponent<'arrow', TooltipArrowProps, HTMLElement>(
 // Simple wrapper -- covers the common case
 // ============================================================================
 
-export interface TooltipSimpleProps {
+/**
+ * Extends HTML attributes so that anything handed to `<Tooltip>` reaches the
+ * element underneath. Without it a `<Popover.Trigger asChild><Tooltip>` puts
+ * the popover's props on the tooltip, which is not a DOM node — and they are
+ * dropped, silently, leaving a trigger that does not open anything.
+ */
+export interface TooltipSimpleProps extends React.HTMLAttributes<HTMLElement> {
   /** Tooltip label text */
   label: React.ReactNode;
   /** The element that triggers the tooltip */
@@ -428,6 +441,7 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
   open,
   defaultOpen,
   onOpenChange,
+  ...rest
 }) => (
   <TooltipProvider delayDuration={delayDuration ?? 400}>
     <TooltipRoot
@@ -436,7 +450,9 @@ const TooltipSimple: React.FC<TooltipSimpleProps> = ({
       defaultOpen={defaultOpen}
       onOpenChange={onOpenChange}
     >
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger asChild {...rest}>
+        {children}
+      </TooltipTrigger>
       <TooltipContent
         side={side}
         sideOffset={sideOffset}

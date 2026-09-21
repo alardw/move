@@ -237,8 +237,10 @@ export const spec = {
     dataAttributes: ['data-state', 'data-disabled'],
     children: [
       {
+        // Composed onto another component's element with asChild, the trigger
+        // puts its state under its own name so the host keeps `data-state`.
         slot: 'trigger',
-        dataAttributes: ['data-state', 'data-disabled'],
+        dataAttributes: ['data-state', 'data-move-collapsible-state', 'data-disabled'],
         ariaAttributes: ['aria-expanded'],
       },
       { slot: 'icon', ariaAttributes: ['aria-hidden=true'] },
@@ -292,6 +294,11 @@ export const spec = {
       id: 'trigger-as-child',
       description:
         'When asChild=true, Trigger renders via Radix Slot.Root merging props onto the child element instead of wrapping in a button',
+    },
+    {
+      id: 'trigger-scoped-state',
+      description:
+        'When asChild=true, Trigger writes data-move-collapsible-state rather than data-state, so the element it composes onto keeps its own state',
     },
     {
       id: 'trigger-type-button',

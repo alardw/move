@@ -562,7 +562,7 @@ export const spec = {
 
   radixPrimitive: 'Popover',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef', 'composeHandlers'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef', 'composeHandlers', 'ScopedSlot'] as string[],
   componentDeps: ['SurfaceProvider'] as string[],
 
   testing: {

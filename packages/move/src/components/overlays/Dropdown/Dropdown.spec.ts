@@ -1090,7 +1090,7 @@ export const spec = {
 
   radixPrimitive: 'DropdownMenu',
   hasHook: false,
-  engineImports: ['withMoveComponent', 'useMergedRef'] as string[],
+  engineImports: ['withMoveComponent', 'useMergedRef', 'ScopedSlot'] as string[],
   componentDeps: ['Checkbox'] as string[],
 
   testing: {
