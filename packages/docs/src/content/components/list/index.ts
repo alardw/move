@@ -7,6 +7,8 @@ import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
 import Density from './samples/density';
 import densityCode from './samples/density?raw';
+import ItemReveal from './samples/item-reveal';
+import itemRevealCode from './samples/item-reveal?raw';
 
 export const content: ComponentContent = {
   meta,
@@ -14,5 +16,11 @@ export const content: ComponentContent = {
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
     { id: 'density', title: 'Density', render: Density, code: densityCode },
+    {
+      id: 'item-reveal',
+      title: 'Staggered item reveal (opt-in)',
+      render: ItemReveal,
+      code: itemRevealCode,
+    },
   ],
 };
