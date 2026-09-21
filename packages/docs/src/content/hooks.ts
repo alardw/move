@@ -171,14 +171,15 @@ export const HOOKS_REGISTRY: HookDoc[] = [
   {
     name: 'useSurface',
     signature: 'useSurface(): SurfaceTone',
-    summary: 'Read the current surface tone so a component can adapt to the panel it sits on.',
+    summary:
+      'Read the current surface tone so a component can adapt to the panel it sits on. Reading is safe on its own — it is TAKING a ground that comes with obligations, which is what Surface is for.',
     category: 'Theming & surfaces',
   },
   {
     name: 'useSurfaceFlip',
     signature: 'useSurfaceFlip(): SurfaceTone',
     summary:
-      'Compute the flipped surface tone for nested surfaces (a card inside a card reads the alternate tone).',
+      'Compute the flipped surface tone for nested surfaces (a card inside a card reads the alternate tone). Taking a ground means three things together — this, `data-surface` on the element, and SurfaceProvider handing the tone to the children. Any two without the third leaves the stylesheet and React disagreeing about which ground the contents are on. Compose `<Surface asChild>` and it does all three; reach for this hook only when you cannot.',
     category: 'Theming & surfaces',
   },
   {
