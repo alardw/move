@@ -15,13 +15,21 @@
 
 import type { Theme, ThemeTokens } from './types';
 import { createThemeShadows, type ThemeShadowConfig } from '../visual/shadows';
-import { oklchToLinear, oklchHex, clampToContrast, contrast, type LinRGB } from './color-engine';
+import {
+  oklchToLinear,
+  oklchHex,
+  hexToOklch,
+  clampToContrast,
+  contrast,
+  type LinRGB,
+} from './color-engine';
 import {
   PALETTE as CATEGORICAL,
   SOLID_SHADE,
   borderValue,
   fgSolidToken,
   semanticShades,
+  shadeOf,
 } from './palette';
 import { radiusScale, type RadiusInput, type RadiusVars } from './radius';
 
@@ -130,10 +138,15 @@ const STATUS_SHADES = {
   dark: { base: 600, hover: 500, subtle: 950 },
 } as const;
 
-function statusBlock(status: Required<NonNullable<ThemeSeed['status']>>, ap: 'light' | 'dark') {
+function statusBlock(
+  status: Required<NonNullable<ThemeSeed['status']>>,
+  ap: 'light' | 'dark',
+  d: Derivation,
+) {
   const sh = STATUS_SHADES[ap];
   const role = (name: string, palette: string, fg: string) => ({
     [`--move-${name}`]: `var(--move-${palette}-${sh.base})`,
+    [`--move-${name}-text`]: statusText(name, palette, ap, d),
     [`--move-${name}-hover`]: `var(--move-${palette}-${sh.hover})`,
     [`--move-${name}-subtle`]: `var(--move-${palette}-${sh.subtle})`,
     [`--move-${name}-fg`]: fg,
@@ -144,6 +157,30 @@ function statusBlock(status: Required<NonNullable<ThemeSeed['status']>>, ap: 'li
     ...role('error', status.danger, 'var(--move-white)'),
     ...role('info', status.info, 'var(--move-white)'),
   };
+}
+
+/**
+ * The status color at text weight.
+ *
+ * The fill above answers to 1.4.11's 3:1, which leaves it well short of the 4.5
+ * small text needs — on a light ground the fills measure 2.70 (success), 1.83
+ * (warning), 4.12 (info) and 3.78 (error).
+ *
+ * The palette's hand-picked text shade is the starting point rather than the
+ * answer: those stops were chosen by eye and three of them ship below AA. So
+ * take its hue and chroma and let the clamp find the lightness, the same way
+ * `--move-accent-text` is derived. Chroma is held, so the result is as
+ * saturated as the floor allows rather than a rung further down the ramp.
+ */
+function statusText(name: string, palette: string, ap: 'light' | 'dark', d: Derivation): string {
+  const hex = shadeOf(palette, semanticShades(palette, ap).text);
+  // A palette a consumer added by name has no ramp here; its own text role is
+  // then the only value available.
+  if (!hex) return `var(--move-${palette}-text)`;
+  const { L, C, H } = hexToOklch(hex);
+  const r = clampToContrast(L, C, H, groundsOf(d), 4.5, d.dark);
+  if (r.clamped) d.notices.push(`--move-${name}-text nudged to hold AA on surfaces`);
+  return r.hex;
 }
 
 const MISC = {
@@ -483,7 +520,7 @@ export function describeTheme(seed: ThemeSeed): DescribeThemeResult {
   const ap = dark ? 'dark' : 'light';
   const tokens = {
     ...out,
-    ...statusBlock(status, ap),
+    ...statusBlock(status, ap, d),
     ...MISC[ap],
     ...createThemeShadows(tintShadowConfig(SHADOW_CONFIG[ap], nH, seed.neutral.chroma)),
     ...(seed.tokens ?? {}),

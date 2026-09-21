@@ -66,24 +66,28 @@ export interface ThemeTokens extends PaletteRoleTokens {
 
   // Success
   '--move-success': string;
+  '--move-success-text': string;
   '--move-success-hover': string;
   '--move-success-subtle': string;
   '--move-success-fg': string;
 
   // Warning
   '--move-warning': string;
+  '--move-warning-text': string;
   '--move-warning-hover': string;
   '--move-warning-subtle': string;
   '--move-warning-fg': string;
 
   // Error
   '--move-error': string;
+  '--move-error-text': string;
   '--move-error-hover': string;
   '--move-error-subtle': string;
   '--move-error-fg': string;
 
   // Info
   '--move-info': string;
+  '--move-info-text': string;
   '--move-info-hover': string;
   '--move-info-subtle': string;
   '--move-info-fg': string;

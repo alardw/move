@@ -130,17 +130,17 @@ export const spec = {
     },
     {
       name: '--move-text-color-success',
-      value: 'var(--move-success)',
+      value: 'var(--move-success-text)',
       description: 'Success text color',
     },
     {
       name: '--move-text-color-warning',
-      value: 'var(--move-warning)',
+      value: 'var(--move-warning-text)',
       description: 'Warning text color',
     },
     {
       name: '--move-text-color-error',
-      value: 'var(--move-error)',
+      value: 'var(--move-error-text)',
       description: 'Error text color',
     },
   ],

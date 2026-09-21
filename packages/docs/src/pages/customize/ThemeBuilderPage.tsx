@@ -264,12 +264,14 @@ function humanPair(r: AuditRow): string {
   if (bg.includes('primary')) return `${r.label} · on the button`;
   return `${r.label} · on ${SURFACE_NAME[bg.replace('--move-bg-', '')] ?? bg}`;
 }
+// Text weights, not fills: this verdict renders as small text, so it owes the
+// same 4.5 it is reporting on.
 const LEVEL: Record<AuditStatus, { label: string; color: string }> = {
-  AAA: { label: 'AAA', color: 'var(--move-success)' },
-  AA: { label: 'AA', color: 'var(--move-success)' },
-  pass: { label: '3:1', color: 'var(--move-success)' },
-  warn: { label: 'AA', color: 'var(--move-warning)' },
-  fail: { label: 'FAIL', color: 'var(--move-error)' },
+  AAA: { label: 'AAA', color: 'var(--move-success-text)' },
+  AA: { label: 'AA', color: 'var(--move-success-text)' },
+  pass: { label: '3:1', color: 'var(--move-success-text)' },
+  warn: { label: 'AA', color: 'var(--move-warning-text)' },
+  fail: { label: 'FAIL', color: 'var(--move-error-text)' },
   'n/a': { label: '—', color: 'var(--move-fg-subtle)' },
 };
 

@@ -71,9 +71,32 @@
   --move-secondary-fg: var(--move-gray-50);
 
   /* ============================================
+   * Status colors — Success / Warning / Error / Info
+   *
+   * Each comes in two weights, because two jobs have two contrast floors.
+   *
+   * The base token is a FILL: a border, a bar, a badge, an icon. Non-text
+   * content, so WCAG 1.4.11 asks 3:1 of it, which it holds.
+   *
+   * The `-text` sibling is for TEXT — a field message, a status line. WCAG
+   * 1.4.3 asks 4.5:1 there, and the fills do not reach it on a light ground:
+   * against the light page background these fills give success 2.70, warning
+   * 1.83, info 4.12 and error 3.78. Warning is the extreme case, near
+   * invisible. A theme's own emitted status colors land in the same band.
+   *
+   * Darkening the fills to suit text would drag every status border and bar
+   * down with them to fix a problem none of them have, so the weights stay
+   * separate — the same split the accent has between `--move-primary` (fill)
+   * and `--move-accent-text`. Each `-text` reads from its palette's text ramp,
+   * which inverts per appearance, so it is right in light and dark without
+   * being set twice.
+   * ============================================ */
+
+  /* ============================================
    * Color - Success
    * ============================================ */
   --move-success: var(--move-green-700);
+  --move-success-text: var(--move-green-text);
   --move-success-hover: var(--move-green-600);
   --move-success-subtle: var(--move-green-950);
   --move-success-fg: var(--move-white);
@@ -82,6 +105,7 @@
    * Color - Warning
    * ============================================ */
   --move-warning: var(--move-yellow-600);
+  --move-warning-text: var(--move-yellow-text);
   --move-warning-hover: var(--move-yellow-500);
   --move-warning-subtle: var(--move-yellow-950);
   --move-warning-fg: var(--move-black);
@@ -90,20 +114,8 @@
    * Color - Error / Danger
    * ============================================ */
   --move-error: var(--move-red-700);
-  /*
-   * The same red, for TEXT.
-   *
-   * `--move-error` is a FILL, and fill answers to 1.4.11's 3:1 — which it holds.
-   * Small text answers to 1.4.3's 4.5:1, which it does not: a field message
-   * measured 3.23:1 on the page ground. One token was doing two jobs with
-   * different floors, and the looser one set its value.
-   *
-   * Darkening --move-error itself would drag every error border and fill with
-   * it to fix a problem none of them have. So this is a sibling, the same split
-   * the accent already has between --move-primary (fill) and --move-accent-text.
-   * Reads from the palette's text ramp, which inverts per appearance, so it is
-   * right in light and dark without being set twice.
-   */
+  /* A field's error message under the docs theme measured 3.23:1 before this
+     existed — the failure that split the status colors into two weights. */
   --move-error-text: var(--move-red-text);
   --move-error-hover: var(--move-red-600);
   --move-error-subtle: var(--move-red-950);
@@ -113,6 +125,7 @@
    * Color - Info
    * ============================================ */
   --move-info: var(--move-blue-700);
+  --move-info-text: var(--move-blue-text);
   --move-info-hover: var(--move-blue-600);
   --move-info-subtle: var(--move-blue-950);
   --move-info-fg: var(--move-white);

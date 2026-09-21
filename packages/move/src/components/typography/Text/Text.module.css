@@ -4,9 +4,9 @@
   --move-text-color-muted: var(--move-fg-muted);
   --move-text-color-subtle: var(--move-fg-subtle);
   --move-text-color-primary: var(--move-accent-text);
-  --move-text-color-success: var(--move-success);
-  --move-text-color-warning: var(--move-warning);
-  --move-text-color-error: var(--move-error);
+  --move-text-color-success: var(--move-success-text);
+  --move-text-color-warning: var(--move-warning-text);
+  --move-text-color-error: var(--move-error-text);
 
   margin: 0;
   font-family: var(--move-font-body, system-ui, sans-serif);

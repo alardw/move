@@ -649,7 +649,7 @@
   padding: var(--move-spacing-sm);
   font-family: var(--move-font-body);
   font-size: var(--move-size-sm);
-  color: var(--move-error);
+  color: var(--move-error-text);
   text-align: center;
 }
 
