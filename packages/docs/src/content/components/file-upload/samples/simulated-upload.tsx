@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { Button, EmptyState, FileUpload } from 'move';
 import type { FileUploadAdapter } from 'move';
 
 /**
- * The other samples stop at "files are in the list", because without an adapter
- * nothing uploads — so progress, completion and auto-removal never appear.
+ * The whole lifecycle, running: picked → uploading → complete, or failed.
  *
- * An adapter is just an async function that reports progress and resolves. This
- * one uploads nothing and reports progress on a timer, which is enough to show
- * the whole lifecycle: picked → uploading → complete → removed.
+ * Two things this sample does that the others do not.
  *
- * Pick a file (or drop one) and watch a row run through it. The last file is
- * made to fail so the error state is visible too.
+ * It supplies an adapter. An adapter is just an async function that reports
+ * progress and resolves, so this one uploads nothing and reports on a timer —
+ * without one, files land in the list and nothing else ever happens. Name a
+ * file `something.fail` to see the error state instead of the happy one.
+ *
+ * And it holds the file list itself, with `value` + `onFilesChange`. `Item`
+ * takes the file it renders, so the rows are yours to map — which means the
+ * list has to be somewhere you can reach.
  */
 const simulatedUpload: FileUploadAdapter = ({ file, onProgress, signal }) =>
   new Promise((resolve, reject) => {
@@ -23,14 +27,12 @@ const simulatedUpload: FileUploadAdapter = ({ file, onProgress, signal }) =>
 
       if (loaded >= total) {
         clearInterval(tick);
-        // Anything ending in .fail lands in the error state, so the sample shows
-        // both outcomes rather than only the happy one.
         if (file.name.endsWith('.fail')) reject(new Error('Upload rejected by the server'));
         else resolve({ url: `https://example.com/${encodeURIComponent(file.name)}` });
       }
     }, 180);
 
-    // An adapter must honour the signal, or a cancelled upload keeps running.
+    // An adapter has to honour the signal, or a cancelled upload keeps running.
     signal.addEventListener('abort', () => {
       clearInterval(tick);
       reject(new DOMException('Aborted', 'AbortError'));
@@ -38,8 +40,16 @@ const simulatedUpload: FileUploadAdapter = ({ file, onProgress, signal }) =>
   });
 
 export default function SimulatedUploadSample() {
+  const [files, setFiles] = useState<File[]>([]);
+
   return (
-    <FileUpload.Root adapter={simulatedUpload} autoUpload maxFiles={5}>
+    <FileUpload.Root
+      adapter={simulatedUpload}
+      autoUpload
+      maxFiles={5}
+      value={files}
+      onFilesChange={setFiles}
+    >
       <FileUpload.Dropzone>
         <EmptyState
           size="sm"
@@ -55,8 +65,21 @@ export default function SimulatedUploadSample() {
           }
         />
       </FileUpload.Dropzone>
-      <FileUpload.ItemGroup />
-      <FileUpload.TotalProgress />
+
+      <FileUpload.ItemGroup>
+        {files.map((file) => (
+          <FileUpload.Item key={`${file.name}-${file.size}`} file={file}>
+            <FileUpload.ItemPreview />
+            <FileUpload.ItemName />
+            <FileUpload.ItemSize />
+            <FileUpload.ItemProgress />
+            <FileUpload.ItemStatus />
+            <FileUpload.ItemDelete />
+          </FileUpload.Item>
+        ))}
+      </FileUpload.ItemGroup>
+
+      {files.length > 0 && <FileUpload.TotalProgress />}
     </FileUpload.Root>
   );
 }
