@@ -940,8 +940,14 @@ export function useAnimations(
 
   // Deps-reactive triggers — re-run sequences when deps change
   const prevDepsRef = useRef(new Map<string, unknown[]>());
+  const depsRanRef = useRef(false);
 
   useEffect(() => {
+    // Recorded before the null check: a render with NO config is still a render
+    // this hook has seen, and that is what tells a later trigger apart from one
+    // that was here at mount.
+    const firstRun = !depsRanRef.current;
+    depsRanRef.current = true;
     if (!config) return;
 
     for (const triggerConfig of config) {
@@ -950,19 +956,30 @@ export function useAnimations(
       const prevDeps = prevDepsRef.current.get(triggerConfig.trigger);
       const currentDeps = triggerConfig.deps;
 
-      // Skip first run (handled by lifecycle enter or state triggers)
       if (!prevDeps) {
         prevDepsRef.current.set(triggerConfig.trigger, [...currentDeps]);
-        continue;
+        // At mount a deps trigger is a starting point, not a change — the enter
+        // lifecycle owns that moment. But a trigger that APPEARS later was not
+        // here at mount, so its arrival IS the change it is waiting for.
+        //
+        // Components build these configs as `useMemo(() => ready ? [trigger] : null)`,
+        // so the config is null until the state flips and the trigger's FIRST
+        // sighting is the flip. Recorded as a baseline it never fired, and
+        // anything hanging off onComplete never happened: FileUpload's
+        // removeOnComplete left the row on screen forever, while the
+        // reduced-motion path — which removes the file without animating —
+        // worked, so the same prop behaved differently on the two branches.
+        if (firstRun) continue;
+      } else {
+        // Shallow compare
+        const changed =
+          currentDeps.length !== prevDeps.length ||
+          currentDeps.some((dep, i) => dep !== prevDeps[i]);
+        if (!changed) continue;
+        prevDepsRef.current.set(triggerConfig.trigger, [...currentDeps]);
       }
 
-      // Shallow compare
-      const changed =
-        currentDeps.length !== prevDeps.length || currentDeps.some((dep, i) => dep !== prevDeps[i]);
-
-      if (changed) {
-        prevDepsRef.current.set(triggerConfig.trigger, [...currentDeps]);
-
+      {
         // Only execute when sequence is active (not disabled via false)
         if (triggerConfig.sequence !== false) {
           const parsed = parseTrigger(triggerConfig.trigger);

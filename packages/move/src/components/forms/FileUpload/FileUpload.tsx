@@ -612,11 +612,14 @@ const FileUploadItem = withMoveComponent<'item', FileUploadItemProps, HTMLLIElem
     // Delay before starting exit animation
     React.useEffect(() => {
       if (entryStatus !== 'complete' || !removeDelay) return;
-      if (prefersReducedMotion()) {
-        removeFileRef.current(file);
-        return;
-      }
-      const timer = setTimeout(() => setExitReady(true), removeDelay);
+      // The delay is honoured on both paths. Reduced motion means do not ANIMATE
+      // it away, not take it away sooner — removing the row the instant it
+      // finished made `removeOnComplete={3000}` behave as 0 for those readers,
+      // which is the one group that gets least time to read what happened.
+      const timer = setTimeout(() => {
+        if (prefersReducedMotion()) removeFileRef.current(file);
+        else setExitReady(true);
+      }, removeDelay);
       return () => clearTimeout(timer);
     }, [entryStatus, removeDelay, file]);
 
