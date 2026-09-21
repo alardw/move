@@ -64,6 +64,7 @@ function Harness({
           </FileUpload.Item>
         ))}
       </FileUpload.ItemGroup>
+      <FileUpload.TotalProgress />
     </FileUpload.Root>
   );
 }
@@ -160,5 +161,47 @@ describe('upload queue', () => {
     }, {});
     expect(Object.entries(counts).filter(([, c]) => c > 1)).toEqual([]);
     expect(starts.length).toBe(8);
+  });
+
+  it('gives every file a visible share of the total, whatever its size', async () => {
+    // A 10 MB video beside a 405 kB screenshot: weighted by bytes, the video
+    // finishing puts the bar at ~97% while the rest are plainly still waiting.
+    // Weighted by file, half done is half the bar.
+    let release!: () => void;
+    const gate = new Promise<void>((r) => {
+      release = r;
+    });
+    const adapter: FileUploadAdapter = async ({ file }) => {
+      if (file.name === 'small.txt') await gate;
+      return { url: `/${file.name}` };
+    };
+
+    const big = new File([new Uint8Array(10_000_000)], 'big.bin', {
+      type: 'application/octet-stream',
+    });
+    const small = new File(['x'], 'small.txt', { type: 'text/plain' });
+
+    let container!: HTMLElement;
+    await act(async () => {
+      container = render(<Harness adapter={adapter} />).container;
+    });
+    await act(async () => {
+      pick(container, [big, small]);
+    });
+    await act(async () => {
+      await new Promise((r) => setTimeout(r, 50));
+    });
+
+    // The big one is done, the small one is not. One of two files.
+    const bar = container.querySelector('[role="progressbar"]');
+    expect(bar?.getAttribute('aria-valuenow')).toBe('50');
+
+    await act(async () => {
+      release();
+      await new Promise((r) => setTimeout(r, 50));
+    });
+    expect(container.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow')).toBe(
+      '100',
+    );
   });
 });

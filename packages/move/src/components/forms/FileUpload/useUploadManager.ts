@@ -61,21 +61,28 @@ function computeAggregate(entries: FileUploadEntry[]): UploadAggregateState {
     complete: 0,
     error: 0,
   };
-  let totalLoaded = 0;
-  let totalSize = 0;
+  // Per FILE, not per byte.
+  //
+  // Weighting by bytes is the honest answer to "how much data has moved" and
+  // the wrong one to show above a list of rows: with a 10 MB video and a 405 kB
+  // screenshot in the same batch, the video finishing puts the bar at 97% while
+  // five rows are still plainly waiting, and the small ones have no visible
+  // share left to occupy. What a reader is tracking against a list is how far
+  // through the LIST it is, so each file counts once and an in-flight one
+  // counts for the fraction of itself it has done.
+  let done = 0;
 
   for (const entry of entries) {
     counts[entry.status]++;
-    totalSize += entry.file.size;
     if (entry.status === 'complete') {
-      totalLoaded += entry.file.size;
+      done += 1;
     } else if (entry.status === 'uploading') {
-      totalLoaded += entry.progress.loaded;
+      done += Math.min(1, Math.max(0, entry.progress.percent / 100));
     }
   }
 
   return {
-    totalProgress: totalSize > 0 ? Math.round((totalLoaded / totalSize) * 100) : 0,
+    totalProgress: entries.length > 0 ? Math.round((done / entries.length) * 100) : 0,
     isUploading: counts.uploading > 0,
     isComplete: entries.length > 0 && counts.pending === 0 && counts.uploading === 0,
     counts,
