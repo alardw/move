@@ -15,7 +15,7 @@ describe('staggerEnter', () => {
     const step = (trigger.sequence as any[])[0];
     expect(step.target).toBe('Root');
     expect(step.children).toBe(':scope > *');
-    expect(step.stagger).toEqual({ delay: 60, from: 'first' });
+    expect(step.stagger).toEqual({ delay: 60, from: 'first', maxTotal: 436 });
   });
 
   it('animates ONLY runtime-seedable properties (opacity + scale)', () => {
@@ -33,7 +33,7 @@ describe('staggerEnter', () => {
     const step = (
       staggerEnter({ delay: 25, from: 'center', children: '.item' }).sequence as any[]
     )[0];
-    expect(step.stagger).toEqual({ delay: 25, from: 'center' });
+    expect(step.stagger).toEqual({ delay: 25, from: 'center', maxTotal: 436 });
     expect(step.children).toBe('.item');
   });
 });

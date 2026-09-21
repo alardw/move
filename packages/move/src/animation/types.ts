@@ -72,8 +72,12 @@ export interface AnimationStep {
   fn?: 'animateDimension' | 'animatePosition';
   /** CSS selector for stagger targets (implies staggerAnimate) */
   children?: string;
-  /** Stagger timing config */
-  stagger?: { delay?: number; from?: 'first' | 'last' | 'center' };
+  /**
+   * Stagger timing config. `StaggerConfig` itself, not a copy of its first two
+   * fields — the copy is why `maxTotal` existed, was documented and was tested,
+   * yet no caller could reach it: the type in the middle of the path dropped it.
+   */
+  stagger?: StaggerConfig;
   /** Callback fired after this step's animation completes */
   onComplete?: () => void;
 }
