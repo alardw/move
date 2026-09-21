@@ -38,7 +38,6 @@ const tableStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
   // caller has to ask for the reveal, staying out of the way is the wrong goal.
   revealItems({
     trigger: 'Body.enter',
-    children: 'tr',
     stagger: { delay: 30, ...stagger },
   }),
 ];
@@ -582,6 +581,7 @@ const TableRow = withMoveComponent<'row', TableRowProps, HTMLTableRowElement>({
             ref={mergedRef}
             className={cx('row', className, spClass as string | undefined)}
             style={{ ...style, ...(spStyle as React.CSSProperties) }}
+            data-move-stagger=""
             data-state={selected ? 'selected' : undefined}
             data-valign={valign}
             data-interactive={interactive ? '' : undefined}
@@ -964,6 +964,7 @@ const TableGroupHeader = withMoveComponent<
               spClass as string | undefined,
             )}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-move-stagger=""
             role={collapsible ? 'button' : undefined}
             tabIndex={collapsible ? 0 : undefined}
             aria-expanded={collapsible ? groupCtx.open : undefined}

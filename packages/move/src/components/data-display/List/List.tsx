@@ -20,16 +20,6 @@ import styles from './List.module.css';
 // ============================================================================
 
 /**
- * What the reveal counts. A data attribute rather than the item's CSS module
- * class, for the reason Select gives: the hashed class cannot be named by a
- * consumer overriding this animation, and cannot be written down in the spec
- * either — so the spec had to describe the stagger with a selector that was
- * never the one shipping. Select, Dropdown and Autocomplete already mark their
- * rows this way.
- */
-const STAGGER_ITEMS = '[data-move-stagger]';
-
-/**
  * Opt-in: rows reveal in sequence when the list mounts.
  *
  * Off by default — a list arrives with the page alongside everything else on
@@ -41,15 +31,8 @@ const STAGGER_ITEMS = '[data-move-stagger]';
  * the transition wants the reveal that defines it.
  */
 const listStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
-  // Rows fade up, the same as Table and Timeline. This used to scale from a
-  // width-relative ratio instead, borrowed from Select/Dropdown/Autocomplete on
-  // the grounds that a row is an option in a panel by another name. It is not:
-  // those reveal a panel the reader just opened, this reveals data that arrived
-  // with the page or with a filter, and List is asked to stay in step with the
-  // other two things people filter.
   revealItems({
     trigger: 'Root.enter',
-    children: STAGGER_ITEMS,
     stagger: { ...staggerItems.stagger, ...stagger },
   }),
 ];

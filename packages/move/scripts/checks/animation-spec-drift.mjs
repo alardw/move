@@ -144,8 +144,16 @@ for (const specPath of specFiles(COMPONENTS)) {
     }
   }
 
+  // A spec claiming an attribute selector is kept by the component WRITING that
+  // attribute — `data-move-stagger=""` on the row, not the bracketed form, which
+  // now lives once in revealItems rather than in each component.
+  const marks = (sel) => {
+    const attr = sel.match(/^\[([a-z-]+)\]$/);
+    return source.includes(attr ? attr[1] : sel);
+  };
+
   for (const sel of selectorsIn(block)) {
-    if (!source.includes(sel)) {
+    if (!marks(sel)) {
       problems.push({
         rel,
         msg: `spec staggers '${sel}', which appears nowhere in the component`,

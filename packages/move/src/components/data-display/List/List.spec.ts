@@ -454,7 +454,7 @@ export const spec = {
           stagger: { delay: 30 },
         },
       ],
-      note: 'Built by revealItems — the shared data-display reveal, so List, Table and Timeline describe the same idea the same way. Previously scaled from $scaleFrom (ITEM_REVEAL_VARS), borrowed from Select/Dropdown/Autocomplete; those reveal a panel the reader just opened, this reveals data that arrived with the page or a filter.',
+      note: 'Built by revealItems — the shared data-display reveal, so List, Table and Timeline describe the same idea the same way. Rows fade in and settle up from 0.95 on one spring; the caller chooses only the trigger and the spacing.',
     },
   ],
 

@@ -38,7 +38,6 @@ const timelineStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] =
   // the reveal is saying so.
   revealItems({
     trigger: 'Root.enter',
-    children: `.${styles.item}`,
     stagger: { delay: 80, ...stagger },
   }),
 ];
@@ -302,6 +301,7 @@ const TimelineItem = withMoveComponent<TimelineItemSlots, TimelineItemProps, HTM
             ref={ref}
             className={cx('item', props.className, iSpClass as string | undefined)}
             style={{ ...props.style, ...(iSpStyle as React.CSSProperties) }}
+            data-move-stagger=""
             data-state={state}
             data-color={itemColor}
             data-line-variant={itemLineVariant}

@@ -30,17 +30,13 @@ export interface StaggerEnterOptions {
  * flashed unseeded on the first frame — and this docstring said so in capitals
  * for a long time after `seedFromState` became generic. Seeding now covers
  * every property declared with a `from`, composing transforms into one
- * `transform`, which is why `revealItems` can rise on the block axis. What
+ * `transform`, so the set is no longer the constraint it was described as. What
  * survives of the old rule is narrower and still true: a property animated
  * through the child-stagger path must declare a `from`, or its first frame
  * belongs to whatever was there before.
  *
- * Scale rather than a rise because a layout primitive holds ARBITRARY children
- * — cards, images, form fields — and cannot know which direction "in" is for
- * them. Growing into place makes no claim about that. Data rows do have an
- * answer, and `revealItems` gives it to them.
- *
- * Used by Stack and Grid, through their opt-in `stagger` prop.
+ * Used by Stack and Grid, through their opt-in `stagger` prop. `revealItems` is
+ * the data-display counterpart, for the rows of a thing you can filter.
  */
 export function staggerEnter(opts: StaggerEnterOptions = {}): AnimationTrigger {
   const {

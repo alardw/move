@@ -4,8 +4,7 @@ import { staggerEnter } from './staggerEnter';
 // What the child-stagger path actually requires. This used to pin the helper to
 // {opacity, scale}, back when those were the only two properties `seedFromState`
 // wrote a `from` for — but seeding is generic now, so that set was guarding a
-// limit that no longer exists and would have failed `revealItems` for rising on
-// the block axis. The real invariant is the one underneath it: a property
+// limit that no longer exists. The real invariant is the one underneath it: a property
 // animated through this path must declare a `from`, or nothing writes its first
 // frame and it flashes from whatever the previous value was.
 

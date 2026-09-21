@@ -637,7 +637,7 @@ export const spec = {
       sequence: [
         {
           target: 'Body',
-          children: 'tr',
+          children: '[data-move-stagger]',
           animation: {
             opacity: { from: 0, to: 1, ease: 'outQuart', duration: 200 },
             translateY: { from: 64, to: 0, ease: 'outQuart', duration: 200 },
