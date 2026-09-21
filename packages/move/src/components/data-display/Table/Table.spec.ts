@@ -171,6 +171,13 @@ export const spec = {
             'Opt-in: reveal rows in sequence when the body mounts. `true` uses the defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.',
         },
         {
+          name: 'animateKey',
+          type: 'unknown',
+          moveSpecific: true,
+          description:
+            'Key that, when changed, replays the staggered reveal. Useful for filter/sort transitions. Requires `stagger`, which the reveal itself is behind.',
+        },
+        {
           name: 'animations',
           type: 'AnimationTrigger[] | false',
           moveSpecific: true,

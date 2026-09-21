@@ -5,7 +5,7 @@ import * as React from 'react';
 import { withMoveComponent, useMergedRef } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
 import { useAnimations, resolveAnimationsConfig, staggerItems, quick } from '../../../animation';
-import type { AnimationTrigger } from '../../../animation';
+import type { AnimationTrigger, StaggerConfig, StaggerProp } from '../../../animation';
 import { ITEM_REVEAL_VARS } from '../../../shared/controlGrow';
 import type { Radius, Truncate } from '../../../shared/types';
 import { resolveTruncate } from '../../../shared/truncate';
@@ -25,7 +25,18 @@ import styles from './List.module.css';
  */
 const STAGGER_ITEMS = '[data-move-stagger]';
 
-const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
+/**
+ * Opt-in: rows reveal in sequence when the list mounts.
+ *
+ * Off by default — a list arrives with the page alongside everything else on
+ * it, and no component can see the others reveal at the same moment.
+ *
+ * `animateKey` replays this same trigger on a filter or sort, which IS motion
+ * answering something the reader did. It rides on the same prop rather than
+ * getting its own: one trigger serves both jobs here, and a caller who wants
+ * the transition wants the reveal that defines it.
+ */
+const listStaggerAnimations = (stagger: StaggerConfig): AnimationTrigger[] => [
   {
     trigger: 'Root.enter',
     vars: ITEM_REVEAL_VARS,
@@ -51,7 +62,7 @@ const DEFAULT_LIST_ANIMATIONS: AnimationTrigger[] = [
         // the travel a function of how wide the list happened to be — 120px in
         // a 600px list against 40px in a 200px one — so two lists on a page
         // answered the same reveal by visibly different amounts.
-        stagger: staggerItems.stagger,
+        stagger: { ...staggerItems.stagger, ...stagger },
         animation: {
           scale: { from: '$scaleFrom', to: 1, ease: quick },
           opacity: { from: 0, to: 1, duration: 200 },
@@ -98,7 +109,10 @@ export interface ListRootProps extends React.HTMLAttributes<HTMLElement> {
   hover?: boolean;
   /** Border radius applied to hover/active item highlights. */
   radius?: ListRadius;
-  /** When this value changes, the stagger entrance animation replays. Useful for filter/sort transitions. */
+  /** Opt-in: reveal rows in sequence when the list mounts. `true` uses the
+   *  defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. */
+  stagger?: StaggerProp;
+  /** When this value changes, the stagger entrance animation replays. Useful for filter/sort transitions. Requires `stagger`. */
   animateKey?: unknown;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
@@ -115,6 +129,7 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
     density: 'default' as ListDensity,
     hover: false,
     radius: 'sm' as ListRadius,
+    stagger: false as StaggerProp,
   },
   moveProps: [
     'size',
@@ -123,6 +138,7 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
     'density',
     'hover',
     'radius',
+    'stagger',
     'animations',
     'animateKey',
   ],
@@ -132,10 +148,16 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
     const mergedRef = useMergedRef<HTMLUListElement>(ref, rootRef);
 
     const animateKey = props.animateKey;
+    const staggerProp = props.stagger as StaggerProp | undefined;
+    const staggerOn = !!staggerProp;
+    const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
 
     const animConfig = React.useMemo(() => {
+      // null, not [] — an empty array is truthy and useAnimations latches
+      // `lifecycleRan` on the first non-null config it sees.
+      if (!staggerOn) return null;
       const base = resolveAnimationsConfig(
-        DEFAULT_LIST_ANIMATIONS,
+        listStaggerAnimations(staggerCfg),
         props.animations as AnimationTrigger[] | false | undefined,
       );
       if (!base || animateKey === undefined) return base;
@@ -152,7 +174,15 @@ const ListRoot = withMoveComponent<'root', ListRootProps, HTMLUListElement>({
           deps: [animateKey],
         } satisfies AnimationTrigger,
       ];
-    }, [props.animations, animateKey]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [
+      props.animations,
+      animateKey,
+      staggerOn,
+      staggerCfg.delay,
+      staggerCfg.from,
+      staggerCfg.maxTotal,
+    ]);
 
     const rootRefs = React.useMemo(
       () => ({

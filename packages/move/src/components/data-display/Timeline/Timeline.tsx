@@ -84,6 +84,9 @@ export interface TimelineRootProps extends React.HTMLAttributes<HTMLElement> {
   /** Opt-in: reveal items in sequence on mount. `true` uses the defaults (80ms
    *  apart); pass an object to tune `delay`/`from`/`maxTotal`. */
   stagger?: StaggerProp;
+  /** When this value changes, the reveal replays. Useful for filter/sort
+   *  transitions. Requires `stagger`. */
+  animateKey?: unknown;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -110,6 +113,7 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
     'reverseActive',
     'stagger',
     'animations',
+    'animateKey',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -117,24 +121,42 @@ const TimelineRoot = withMoveComponent<'root', TimelineRootProps, HTMLDivElement
     const mergedRef = useMergedRef<HTMLDivElement>(ref, rootRef);
     const indexRef = React.useRef(0);
 
+    const animateKey = props.animateKey;
     const staggerProp = props.stagger as StaggerProp | undefined;
     const staggerOn = !!staggerProp;
     const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
-    const animConfig = React.useMemo(
-      () =>
-        staggerOn
-          ? resolveAnimationsConfig(
-              timelineStaggerAnimations(staggerCfg),
-              props.animations as AnimationTrigger[] | false | undefined,
-            )
-          : // null, not []. An empty array is truthy, and useAnimations latches
-            // `lifecycleRan` on the first non-null config it sees — so a table
-            // mounted with the reveal off would burn its one shot on nothing,
-            // and `stagger` turned on later could never fire.
-            null,
+    // `animateKey` replays the reveal when the data changes — a filter, a sort,
+    // a new page of rows. Same shape as List: the replay is the SAME trigger
+    // with deps, so it cannot drift from the mount reveal, and it rides on
+    // `stagger` because a caller who wants the transition wants the reveal that
+    // defines it. Table, Timeline and List are all things people filter, so all
+    // three carry it.
+    const animConfig = React.useMemo(() => {
+      // null, not []. An empty array is truthy, and useAnimations latches
+      // `lifecycleRan` on the first non-null config it sees — so a component
+      // mounted with the reveal off would burn its one shot on nothing, and
+      // `stagger` turned on later could never fire.
+      if (!staggerOn) return null;
+      const base = resolveAnimationsConfig(
+        timelineStaggerAnimations(staggerCfg),
+        props.animations as AnimationTrigger[] | false | undefined,
+      );
+      if (!base || animateKey === undefined) return base;
+      const enterTrigger = base.find((t) => t.trigger === 'Root.enter');
+      if (!enterTrigger) return base;
+      return [
+        ...base,
+        { ...enterTrigger, trigger: 'Root.replay', deps: [animateKey] } satisfies AnimationTrigger,
+      ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, props.animations],
-    );
+    }, [
+      staggerOn,
+      staggerCfg.delay,
+      staggerCfg.from,
+      staggerCfg.maxTotal,
+      animateKey,
+      props.animations,
+    ]);
 
     const rootRefs = React.useMemo(
       () => ({

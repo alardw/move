@@ -160,6 +160,9 @@ export interface TableRootProps extends React.HTMLAttributes<HTMLElement> {
   /** Opt-in: reveal rows in sequence when the body mounts. `true` uses the
    *  defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. */
   stagger?: StaggerProp;
+  /** When this value changes, the reveal replays. Useful for filter/sort
+   *  transitions. Requires `stagger`. */
+  animateKey?: unknown;
   animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
@@ -185,6 +188,7 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
     'stackBelow',
     'stagger',
     'animations',
+    'animateKey',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -207,24 +211,42 @@ const TableRoot = withMoveComponent<'root', TableRootProps, HTMLTableElement>({
     // identity on every render — and the header-label registration guarantees a
     // second one — which handed useAnimations a new config after its one-shot
     // enter had already fired. The rows stayed seeded and never revealed.
+    const animateKey = props.animateKey;
     const staggerProp = props.stagger as StaggerProp | undefined;
     const staggerOn = !!staggerProp;
     const staggerCfg = (typeof staggerProp === 'object' && staggerProp) || {};
-    const animConfig = React.useMemo(
-      () =>
-        staggerOn
-          ? resolveAnimationsConfig(
-              tableStaggerAnimations(staggerCfg),
-              animationsProp as AnimationTrigger[] | false | undefined,
-            )
-          : // null, not []. An empty array is truthy, and useAnimations latches
-            // `lifecycleRan` on the first non-null config it sees — so a table
-            // mounted with the reveal off would burn its one shot on nothing,
-            // and `stagger` turned on later could never fire.
-            null,
+    // `animateKey` replays the reveal when the data changes — a filter, a sort,
+    // a new page of rows. Same shape as List: the replay is the SAME trigger
+    // with deps, so it cannot drift from the mount reveal, and it rides on
+    // `stagger` because a caller who wants the transition wants the reveal that
+    // defines it. Table, Timeline and List are all things people filter, so all
+    // three carry it.
+    const animConfig = React.useMemo(() => {
+      // null, not []. An empty array is truthy, and useAnimations latches
+      // `lifecycleRan` on the first non-null config it sees — so a component
+      // mounted with the reveal off would burn its one shot on nothing, and
+      // `stagger` turned on later could never fire.
+      if (!staggerOn) return null;
+      const base = resolveAnimationsConfig(
+        tableStaggerAnimations(staggerCfg),
+        animationsProp as AnimationTrigger[] | false | undefined,
+      );
+      if (!base || animateKey === undefined) return base;
+      const enterTrigger = base.find((t) => t.trigger === 'Body.enter');
+      if (!enterTrigger) return base;
+      return [
+        ...base,
+        { ...enterTrigger, trigger: 'Body.replay', deps: [animateKey] } satisfies AnimationTrigger,
+      ];
       // eslint-disable-next-line react-hooks/exhaustive-deps
-      [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, animationsProp],
-    );
+    }, [
+      staggerOn,
+      staggerCfg.delay,
+      staggerCfg.from,
+      staggerCfg.maxTotal,
+      animateKey,
+      animationsProp,
+    ]);
 
     const [headerLabels, setHeaderLabels] = React.useState<string[]>([]);
     const registerHeaderLabels = React.useCallback((labels: string[]) => {

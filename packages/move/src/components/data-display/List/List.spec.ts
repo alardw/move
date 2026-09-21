@@ -151,7 +151,15 @@ export const spec = {
           type: 'string | number',
           moveSpecific: true,
           description:
-            'Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced.',
+            'Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced. Requires `stagger`, which the reveal itself is behind.',
+        },
+        {
+          name: 'stagger',
+          type: 'StaggerProp',
+          default: 'false',
+          moveSpecific: true,
+          description:
+            'Opt-in: reveal rows in sequence when the list mounts. `true` uses the defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others. `animateKey` replays this same reveal on a filter or sort, so it needs `stagger` too.',
         },
         {
           name: 'animations',
@@ -647,7 +655,7 @@ export const spec = {
       'Forwards ref on Root and Item',
     ],
     animation: [
-      'Items animate in with staggered opacity and translateY on mount',
+      'With `stagger`, items animate in with staggered scale and opacity on mount; off by default',
       'Stagger delay of 60ms per item',
       'animations={false} on Root disables entrance animations',
       'Reduced motion sets opacity to 1 and clears transform immediately',

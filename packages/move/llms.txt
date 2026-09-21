@@ -1235,7 +1235,8 @@ List.Root props:
 - hover: boolean (default: false) — Enable hover highlight on items
 - radius: 'none' | 'sm' | 'md' | 'lg' | 'full' (default: sm) — Border radius applied to the list container and item hover/active highlights
 - separator: React.ReactNode — Custom separator rendered between items (replaces the default divider).
-- animateKey: string | number — Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced.
+- animateKey: string | number — Key that, when changed, replays the staggered entrance animation. Useful when the items array is replaced. Requires `stagger`, which the reveal itself is behind.
+- stagger: StaggerProp (default: false) — Opt-in: reveal rows in sequence when the list mounts. `true` uses the defaults (30ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others. `animateKey` replays this same reveal on a filter or sort, so it needs `stagger` too.
 - animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
 - children: React.ReactNode — List.Item children
 List.Item props:
@@ -1926,6 +1927,7 @@ Table.Root props:
 - responsive: 'scroll' | 'stack' | 'none' (default: scroll) — Responsive strategy: overflow-x scroll (default), flip to stacked cards below stackBelow, or none.
 - stackBelow: number (default: 640) — Container-width breakpoint in pixels below which stack mode activates. Only used when responsive="stack".
 - stagger: StaggerProp (default: false) — Opt-in: reveal rows in sequence when the body mounts. `true` uses the defaults (12ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.
+- animateKey: unknown — Key that, when changed, replays the staggered reveal. Useful for filter/sort transitions. Requires `stagger`, which the reveal itself is behind.
 - animations: AnimationTrigger[] | false — Staggered row entrance animation config or false to disable.
 - children: React.ReactNode — Table sections (Header, Body, Footer, Group).
 Table.Header props:
@@ -2136,6 +2138,7 @@ Timeline.Root props:
 - lineVariant: 'solid' | 'dashed' | 'dotted' (default: solid) — Line style for connectors
 - reverseActive: boolean (default: false) — Reverse active direction (items after active index are completed)
 - stagger: StaggerProp (default: false) — Opt-in: reveal items in sequence when the timeline mounts. `true` uses the defaults (80ms apart); pass an object to tune `delay`/`from`/`maxTotal`. Off by default — reveals that fire on page load are asked for, because a page can hold several and none of them can see the others.
+- animateKey: unknown — Key that, when changed, replays the staggered reveal. Useful for filter/sort transitions. Requires `stagger`, which the reveal itself is behind.
 - animations: AnimationTrigger[] | false — Staggered entrance animation config or false to disable
 - children: React.ReactNode — Timeline.Item children
 Timeline.Item props:
