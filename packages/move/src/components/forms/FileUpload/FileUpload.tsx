@@ -159,6 +159,7 @@ export interface FileUploadRootProps extends Omit<
   removeOnComplete?: boolean | number;
   /** Localizable strings for the component's built-in labels. */
   labels?: Partial<FileUploadLabels>;
+  animations?: AnimationTrigger[] | false;
   sp?: SlotPropsMap<'root'>;
 }
 
@@ -281,6 +282,7 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
     'onAllComplete',
     'removeOnComplete',
     'labels',
+    'animations',
   ],
 
   setup({ props, ref, cx, sp, attrs }) {
@@ -352,10 +354,9 @@ const FileUploadRoot = withMoveComponent<'root', FileUploadRootProps, HTMLDivEle
       clearUploadFiles();
     }, [clearUploadFiles]);
 
-    // Animation config
     const animConfig = resolveAnimationsConfig(
       DEFAULT_FILEUPLOAD_ANIMATIONS,
-      undefined, // Could add animations prop to Root if needed
+      props.animations as AnimationTrigger[] | false | undefined,
     );
 
     // Auto-remove delay (resolved once, passed to Items via context)
@@ -474,8 +475,13 @@ const FileUploadDropzone = withMoveComponent<'dropzone', FileUploadDropzoneProps
             {...dzProps}
             ref={ref}
             role="presentation"
-            data-drag-active={context.isDragActive ? '' : undefined}
-            data-drag-reject={context.isDragReject ? '' : undefined}
+            // The drop-target vocabulary Drag.Zone uses, so a zone reads the
+            // same whether what lands on it came from the page or the desktop.
+            // Refusal is `over` without `can-drop` rather than a flag of its
+            // own — two independent booleans can say "accepting" and "refusing"
+            // at once, and this cannot.
+            data-over={context.isDragActive ? '' : undefined}
+            data-can-drop={context.isDragActive && !context.isDragReject ? '' : undefined}
             data-disabled={context.disabled ? '' : undefined}
             className={cx('dropzone', props.className, spClass as string | undefined)}
             style={{ ...props.style, ...(spStyle as React.CSSProperties) }}

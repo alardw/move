@@ -165,6 +165,55 @@ export const spec = {
       description:
         'A drop target. This is the thing reordering cannot express: a slot that stays visible while empty holds no item to reorder, and a second list is somewhere the item leaves the first entirely.',
     },
+    {
+      name: 'FileZone',
+      slots: [
+        {
+          name: 'zone',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'The catching element, for files from outside the browser.',
+        },
+      ],
+      props: [
+        {
+          name: 'accept',
+          type: 'string[]',
+          moveSpecific: true,
+          description:
+            'Accepted types, as the `accept` attribute spells them (`image/*`, `.pdf`). An extension entry cannot be judged mid-drag — the browser exposes only the MIME type until the drop — so it is treated as a match and checked after.',
+        },
+        {
+          name: 'disabled',
+          type: 'boolean',
+          default: 'false',
+          moveSpecific: true,
+          description: 'Refuse everything, and say so.',
+        },
+        {
+          name: 'onDrop',
+          type: '(files: File[]) => void',
+          moveSpecific: true,
+          description: 'Called with the files once they land and are accepted.',
+        },
+        {
+          name: 'labels',
+          type: 'Partial<DragLabels>',
+          moveSpecific: true,
+          description: 'Localizable strings, including what the live region announces on a drop.',
+        },
+        {
+          name: 'children',
+          type: 'React.ReactNode',
+          moveSpecific: false,
+          description: 'What the zone shows.',
+        },
+      ],
+      usesFactory: true,
+      description:
+        'A drop target for files from outside the browser. Same three states on the same attributes as Zone; different mechanism, because files only arrive through the native drop event.',
+    },
   ],
 
   anatomy: {

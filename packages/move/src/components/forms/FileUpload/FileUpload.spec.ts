@@ -253,6 +253,13 @@ export const spec = {
           description: 'Called when all files have finished uploading',
         },
         {
+          name: 'animations',
+          type: 'AnimationTrigger[] | false',
+          moveSpecific: true,
+          description:
+            'Override or disable the built-in animations. `false` turns them off; an AnimationTrigger[] replaces the matching triggers and leaves the rest.',
+        },
+        {
           name: 'labels',
           type: 'Partial<FileUploadLabels>',
           moveSpecific: true,

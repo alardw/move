@@ -1,5 +1,6 @@
 // Generated from FileUpload.spec.ts
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import { useFileDropTarget } from '../../../hooks';
 import { useControlledState } from '../../../engine';
 
 // =============================================================================
@@ -122,23 +123,6 @@ function isFileAccepted(file: File, acceptList: string[]): boolean {
   });
 }
 
-/** Check if a DataTransferItem type is accepted (best-effort during drag) */
-function isItemTypeAccepted(type: string, acceptList: string[]): boolean {
-  if (acceptList.length === 0) return true;
-
-  // During drag we only have MIME types, not file names — skip extension checks
-  const mimeOnly = acceptList.filter((e) => !e.startsWith('.'));
-  if (mimeOnly.length === 0) return true; // can't validate extensions during drag
-
-  const lower = type.toLowerCase();
-  return mimeOnly.some((entry) => {
-    if (entry.endsWith('/*')) {
-      return lower.startsWith(entry.slice(0, -1));
-    }
-    return lower === entry;
-  });
-}
-
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 B';
   const k = 1024;
@@ -171,9 +155,10 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
     onChange: options.onFilesChange,
   });
 
-  const [isDragActive, setIsDragActive] = useState(false);
-  const [isDragReject, setIsDragReject] = useState(false);
-  const dragCounterRef = useRef(0);
+  // The drag mechanism is shared with Drag.FileZone rather than written twice:
+  // both receive files from outside the browser, so both go through the one
+  // hook and report the same three states. `isDragActive`/`isDragReject` stay
+  // as the names this hook already returns.
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const acceptList = normalizeAccept(accept);
@@ -273,61 +258,15 @@ export function useFileUpload(options: UseFileUploadOptions = {}): UseFileUpload
     inputRef.current?.click();
   }, [disabled]);
 
-  const getDropzoneProps = useCallback(
-    (): DropzoneProps => ({
-      onDragEnter(e: React.DragEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (disabled) return;
+  const fileDrop = useFileDropTarget({
+    accept: acceptList,
+    disabled,
+    onDrop: addFiles,
+  });
+  const isDragActive = fileDrop.isOver;
+  const isDragReject = fileDrop.isOver && !fileDrop.canDrop;
 
-        dragCounterRef.current++;
-        if (dragCounterRef.current === 1) {
-          setIsDragActive(true);
-
-          // Best-effort type checking during drag
-          const items = Array.from(e.dataTransfer.items);
-          const hasRejected = items.some(
-            (item) => item.kind === 'file' && !isItemTypeAccepted(item.type, acceptList),
-          );
-          setIsDragReject(hasRejected);
-        }
-      },
-
-      onDragOver(e: React.DragEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-        if (!disabled) {
-          e.dataTransfer.dropEffect = isDragReject ? 'none' : 'copy';
-        }
-      },
-
-      onDragLeave(e: React.DragEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        dragCounterRef.current--;
-        if (dragCounterRef.current === 0) {
-          setIsDragActive(false);
-          setIsDragReject(false);
-        }
-      },
-
-      onDrop(e: React.DragEvent) {
-        e.preventDefault();
-        e.stopPropagation();
-        dragCounterRef.current = 0;
-        setIsDragActive(false);
-        setIsDragReject(false);
-
-        if (disabled) return;
-
-        const droppedFiles = Array.from(e.dataTransfer.files);
-        addFiles(droppedFiles);
-      },
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [disabled, isDragReject, acceptString, addFiles],
-  );
+  const getDropzoneProps = useCallback((): DropzoneProps => fileDrop.handlers, [fileDrop.handlers]);
 
   const getInputProps = useCallback(
     (): InputProps => ({

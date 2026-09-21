@@ -3532,6 +3532,11 @@
           "description": "Input blur handler"
         },
         {
+          "name": "animations",
+          "type": "AnimationTrigger[] | false",
+          "description": "Override or disable the built-in animations. `false` turns them off; an AnimationTrigger[] replaces the matching triggers and leaves the rest."
+        },
+        {
           "name": "labels",
           "type": "Partial<ColorInputLabels>",
           "description": "Accessible label overrides"
@@ -4318,6 +4323,37 @@
               "name": "children",
               "type": "React.ReactNode",
               "description": "What the zone shows — its own content, or nothing when empty."
+            }
+          ]
+        },
+        {
+          "name": "FileZone",
+          "props": [
+            {
+              "name": "accept",
+              "type": "string[]",
+              "description": "Accepted types, as the `accept` attribute spells them (`image/*`, `.pdf`). An extension entry cannot be judged mid-drag — the browser exposes only the MIME type until the drop — so it is treated as a match and checked after."
+            },
+            {
+              "name": "disabled",
+              "type": "boolean",
+              "default": "false",
+              "description": "Refuse everything, and say so."
+            },
+            {
+              "name": "onDrop",
+              "type": "(files: File[]) => void",
+              "description": "Called with the files once they land and are accepted."
+            },
+            {
+              "name": "labels",
+              "type": "Partial<DragLabels>",
+              "description": "Localizable strings, including what the live region announces on a drop."
+            },
+            {
+              "name": "children",
+              "type": "React.ReactNode",
+              "description": "What the zone shows."
             }
           ]
         }
@@ -5358,6 +5394,11 @@
               "name": "onAllComplete",
               "type": "(entries: FileUploadEntry[]) => void",
               "description": "Called when all files have finished uploading"
+            },
+            {
+              "name": "animations",
+              "type": "AnimationTrigger[] | false",
+              "description": "Override or disable the built-in animations. `false` turns them off; an AnimationTrigger[] replaces the matching triggers and leaves the rest."
             },
             {
               "name": "labels",

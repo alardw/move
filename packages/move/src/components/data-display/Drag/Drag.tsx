@@ -5,7 +5,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { withMoveComponent } from '../../../engine';
 import type { SlotPropsMap } from '../../../engine';
-import { useDragRegistry, useDropTarget } from '../../../hooks';
+import { useDragRegistry, useDropTarget, useFileDropTarget } from '../../../hooks';
 import type { DragPayload, DropEvent } from '../../../hooks';
 import styles from './Drag.module.css';
 
@@ -18,6 +18,10 @@ export interface DragLabels {
   cancelled: string;
   /** Announced when a payload lands on a named zone rather than a position. */
   droppedOn: (target: string) => string;
+  /** Announced when files land on a file zone. */
+  filesDropped: (count: number) => string;
+  /** Announced when files are released on a file zone that refuses them. */
+  filesRefused: (count: number) => string;
 }
 
 export const DEFAULT_DRAG_LABELS: DragLabels = {
@@ -27,6 +31,8 @@ export const DEFAULT_DRAG_LABELS: DragLabels = {
   dropped: (position, count) => `Dropped at position ${position} of ${count}.`,
   cancelled: 'Cancelled. Returned to the original position.',
   droppedOn: (target) => `Dropped on ${target}.`,
+  filesDropped: (count) => `${count} file${count === 1 ? '' : 's'} added.`,
+  filesRefused: (count) => `${count} file${count === 1 ? '' : 's'} refused. Not an accepted type.`,
 };
 
 export interface DragRootProps {
@@ -174,7 +180,93 @@ const DragZone = withMoveComponent<'zone', DragZoneProps, HTMLDivElement>({
   },
 });
 
+/**
+ * A zone that takes files from outside the browser.
+ *
+ * Same three states as `Drag.Zone`, on the same attributes, so a drop target
+ * reads the same whether what lands on it came from the page or the desktop.
+ * The mechanism cannot be shared — files arrive only through the native drop
+ * event's DataTransfer — so the hook differs and everything the reader
+ * experiences does not.
+ */
+export interface DragFileZoneProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onDrop'> {
+  className?: string;
+  style?: React.CSSProperties;
+  children?: React.ReactNode;
+  /** Accepted types, as the `accept` attribute spells them (`image/*`, `.pdf`). */
+  accept?: string[];
+  disabled?: boolean;
+  /** Called with the files once they land and are accepted. */
+  onDrop?: (files: File[]) => void;
+  labels?: Partial<DragLabels>;
+  sp?: SlotPropsMap<'zone'>;
+}
+
+const DragFileZone = withMoveComponent<'zone', DragFileZoneProps, HTMLDivElement>({
+  name: 'DragFileZone',
+  styles,
+  slots: ['zone'] as const,
+  defaults: { disabled: false },
+  moveProps: ['accept', 'disabled', 'onDrop', 'labels'],
+
+  setup({ props, ref, cx, sp, attrs }) {
+    const labels = React.useMemo(
+      () => ({ ...DEFAULT_DRAG_LABELS, ...(props.labels as Partial<DragLabels>) }),
+      [props.labels],
+    );
+    const announce = React.useCallback(
+      (count: number, accepted: boolean) =>
+        accepted ? labels.filesDropped(count) : labels.filesRefused(count),
+      [labels],
+    );
+
+    const { handlers, isOver, canDrop, message } = useFileDropTarget({
+      accept: props.accept as string[] | undefined,
+      disabled: props.disabled as boolean,
+      onDrop: props.onDrop as ((files: File[]) => void) | undefined,
+      announce,
+    });
+
+    return {
+      render() {
+        const zoneSp = sp('zone');
+        const { className: spClass, style: spStyle, ...spRest } = zoneSp as Record<string, unknown>;
+
+        return (
+          <div
+            {...attrs}
+            {...spRest}
+            {...handlers}
+            ref={ref}
+            className={cx('zone', props.className, spClass as string | undefined)}
+            style={{ ...props.style, ...(spStyle as React.CSSProperties) }}
+            data-over={isOver ? '' : undefined}
+            data-can-drop={isOver && canDrop ? '' : undefined}
+            data-disabled={props.disabled ? '' : undefined}
+          >
+            {props.children as React.ReactNode}
+            {/* Always rendered, never conditional — an aria-live element added at
+                the moment its text arrives has not been observed yet, so the
+                first announcement of every session would be silent. Its own,
+                rather than Drag.Root's: a file zone is useful on its own and
+                should not need a provider around it to be heard. */}
+            <div
+              aria-live="polite"
+              aria-atomic="true"
+              data-move-drag-announcer=""
+              className={styles.announcer}
+            >
+              {message}
+            </div>
+          </div>
+        );
+      },
+    };
+  },
+});
+
 export const Drag = Object.assign(DragRoot, {
   Root: DragRoot,
   Zone: DragZone,
+  FileZone: DragFileZone,
 });

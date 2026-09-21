@@ -39,3 +39,6 @@ export type {
   UseSortableOptions,
   UseSortableReturn,
 } from './useSortable';
+
+export { useFileDropTarget } from './useFileDropTarget';
+export type { UseFileDropTargetOptions, UseFileDropTargetReturn } from './useFileDropTarget';

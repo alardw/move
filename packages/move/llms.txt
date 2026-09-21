@@ -615,6 +615,7 @@ Props:
 - autoFocus: boolean — Auto-focus on mount
 - onFocus: React.FocusEventHandler<HTMLInputElement> — Input focus handler
 - onBlur: React.FocusEventHandler<HTMLInputElement> — Input blur handler
+- animations: AnimationTrigger[] | false — Override or disable the built-in animations. `false` turns them off; an AnimationTrigger[] replaces the matching triggers and leaves the rest.
 - labels: Partial<ColorInputLabels> — Accessible label overrides
 - className: string — CSS class name
 - style: React.CSSProperties — Inline styles
@@ -770,6 +771,12 @@ Drag.Zone props:
 - onDrop: (event: DropEvent) => void — Called when a payload this zone accepts is released over it.
 - disabled: boolean (default: false) — Catches nothing, and does not highlight.
 - children: React.ReactNode — What the zone shows — its own content, or nothing when empty.
+Drag.FileZone props:
+- accept: string[] — Accepted types, as the `accept` attribute spells them (`image/*`, `.pdf`). An extension entry cannot be judged mid-drag — the browser exposes only the MIME type until the drop — so it is treated as a match and checked after.
+- disabled: boolean (default: false) — Refuse everything, and say so.
+- onDrop: (files: File[]) => void — Called with the files once they land and are accepted.
+- labels: Partial<DragLabels> — Localizable strings, including what the live region announces on a drop.
+- children: React.ReactNode — What the zone shows.
 Example: <Drag>…</Drag>
 
 ## Drawer (overlays)
@@ -958,6 +965,7 @@ FileUpload.Root props:
 - onUploadComplete: (entry: FileUploadEntry) => void — Called when a single file upload completes
 - onUploadError: (entry: FileUploadEntry, error: Error) => void — Called when a single file upload fails
 - onAllComplete: (entries: FileUploadEntry[]) => void — Called when all files have finished uploading
+- animations: AnimationTrigger[] | false — Override or disable the built-in animations. `false` turns them off; an AnimationTrigger[] replaces the matching triggers and leaves the rest.
 - labels: Partial<FileUploadLabels> — Overridable user-facing strings
 - removeOnComplete: boolean | number — Remove files from list after upload completes; true = 2000ms delay, number = custom delay in ms
 FileUpload.Dropzone props:

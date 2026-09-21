@@ -8,7 +8,12 @@ import { withMoveComponent, usePopupFocus } from '../../../engine';
 import { useFormField } from '../FormField/FormField';
 import type { SlotPropsMap, PopupFocusHandlers } from '../../../engine';
 import { useIcon } from '../../../infrastructure/Icon';
-import { useAnimations, useDismissable, useDismissableExit } from '../../../animation';
+import {
+  useAnimations,
+  resolveAnimationsConfig,
+  useDismissable,
+  useDismissableExit,
+} from '../../../animation';
 import type { AnimationTrigger } from '../../../animation';
 import { ColorPicker } from '../ColorPicker/ColorPicker';
 import type { ColorFormat, BaseColorFormat } from '../ColorPicker/colorUtils';
@@ -60,6 +65,7 @@ export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
   invalid?: boolean;
   width?: FieldWidth;
   labels?: Partial<ColorInputLabels>;
+  animations?: AnimationTrigger[] | false;
   disabled?: boolean;
   readOnly?: boolean;
   /** Controlled open state of the picker popup. */
@@ -128,13 +134,28 @@ const ColorInputDropdownInner: React.FC<{
   contentRef: React.RefObject<HTMLDivElement | null>;
   /** Focus contract for `field-dialog`, from the shared focus container. */
   focusHandlers: PopupFocusHandlers;
+  /** Passed down because the popup's enter/exit runs here, below the Portal —
+   *  this is the only place `animations={false}` can reach it. */
+  animations?: AnimationTrigger[] | false;
   children?: React.ReactNode;
-}> = ({ isClosing, epoch, onExitDone, contentProps, contentRef, focusHandlers, children }) => {
+}> = ({
+  isClosing,
+  epoch,
+  onExitDone,
+  contentProps,
+  contentRef,
+  focusHandlers,
+  animations,
+  children,
+}) => {
   const contentRefs = React.useMemo(
     () => ({ Content: contentRef as React.RefObject<HTMLElement | null> }),
     [contentRef],
   );
-  const { runExit, runEnter, pauseAll } = useAnimations(DEFAULT_COLORINPUT_ANIMATIONS, contentRefs);
+  const { runExit, runEnter, pauseAll } = useAnimations(
+    resolveAnimationsConfig(DEFAULT_COLORINPUT_ANIMATIONS, animations),
+    contentRefs,
+  );
 
   useDismissableExit({ isClosing, epoch, onExitDone, runExit, runEnter, pauseAll });
 
@@ -192,6 +213,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
     'width',
     'readOnly',
     'labels',
+    'animations',
   ],
 
   setup({ props, ref, internalRef, cx, sp, attrs }) {
@@ -559,6 +581,7 @@ export const ColorInput = withMoveComponent<ColorInputSlots, ColorInputProps, HT
 
             <RadixPopover.Portal>
               <ColorInputDropdownInner
+                animations={props.animations as AnimationTrigger[] | false | undefined}
                 isClosing={isClosing}
                 epoch={epoch}
                 onExitDone={onExitDone}
