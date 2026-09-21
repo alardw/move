@@ -66,7 +66,7 @@ export default function AutoDismissSample() {
       onFileReject={(rejections) => setRejected(describeRejections(rejections))}
     >
       {rejected && (
-        <Alert variant="warning" size="sm" onClose={() => setRejected(null)}>
+        <Alert variant="warning" size="sm" closable onClose={() => setRejected(null)}>
           {rejected}
         </Alert>
       )}

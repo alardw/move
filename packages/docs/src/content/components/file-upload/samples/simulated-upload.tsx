@@ -94,7 +94,7 @@ export default function SimulatedUploadSample() {
       onFileReject={(rejections) => setRejected(describeRejections(rejections))}
     >
       {rejected && (
-        <Alert variant="warning" size="sm" onClose={() => setRejected(null)}>
+        <Alert variant="warning" size="sm" closable onClose={() => setRejected(null)}>
           {rejected}
         </Alert>
       )}
