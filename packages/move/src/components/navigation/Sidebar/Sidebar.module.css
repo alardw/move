@@ -409,7 +409,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: var(--move-overlay-heavy);
+  background-color: var(--move-overlay-light);
   backdrop-filter: blur(var(--move-overlay-blur));
   /* The same layer Dialog and Drawer put their backdrops on, rather than a
      hand-rolled one-below-my-own-panel. */

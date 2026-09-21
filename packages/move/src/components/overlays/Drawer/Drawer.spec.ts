@@ -635,7 +635,7 @@ export const spec = {
   tokens: [
     {
       name: '--move-drawer-overlay-bg',
-      value: 'var(--move-overlay-heavy)',
+      value: 'var(--move-overlay-light)',
       description: 'Overlay backdrop color',
     },
     {

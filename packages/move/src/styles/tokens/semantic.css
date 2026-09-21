@@ -334,6 +334,17 @@
 
   /* ============================================
    * Overlay Backdrop
+   *
+   * Every backdrop in the library (Dialog, Drawer, Sidebar's mobile sheet)
+   * pairs a scrim with `--move-overlay-blur`, and the blur is what actually
+   * separates the panel from the page. A scrim heavy enough to separate on its
+   * own then has nothing left to do but hide the page — and the page is often
+   * the thing being compared against, which is the whole reason the dialog is
+   * open. So they sit on `light`, and the blur carries the separation.
+   *
+   * `--move-overlay` and `--move-overlay-heavy` remain for a backdrop that has
+   * to conceal rather than defocus. Reach for one by setting the component's
+   * own token (`--move-dialog-overlay-bg`), not by redefining these.
    * ============================================ */
   --move-overlay-light: color-mix(in srgb, var(--move-black) 30%, transparent);
   --move-overlay: color-mix(in srgb, var(--move-black) 50%, transparent);

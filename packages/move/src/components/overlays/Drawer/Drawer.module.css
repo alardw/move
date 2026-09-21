@@ -5,7 +5,7 @@
 }
 
 .overlay {
-  --move-drawer-overlay-bg: var(--move-overlay-heavy);
+  --move-drawer-overlay-bg: var(--move-overlay-light);
   --move-drawer-overlay-backdrop-blur: var(--move-overlay-blur);
 
   position: fixed;
