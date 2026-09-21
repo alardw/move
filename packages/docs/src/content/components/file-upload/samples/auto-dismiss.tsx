@@ -86,6 +86,14 @@ export default function AutoDismissSample() {
         ))}
       </FileUpload.ItemGroup>
 
+      {files.length > 0 && (
+        <FileUpload.ClearTrigger>
+          <Button variant="ghost" size="sm">
+            Clear all
+          </Button>
+        </FileUpload.ClearTrigger>
+      )}
+
       {files.length === 0 && (
         <Text size="sm" color="muted">
           Nothing queued — finished uploads have removed themselves.

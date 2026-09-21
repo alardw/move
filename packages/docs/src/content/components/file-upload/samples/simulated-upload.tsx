@@ -1,52 +1,74 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Alert, Button, EmptyState, FileUpload } from 'move';
 import type { FileUploadAdapter } from 'move';
 
 /**
  * The whole lifecycle, running: picked → uploading → complete, or failed.
  *
- * Two things this sample does that the others do not.
+ * Three things this sample does that the others do not.
  *
- * It supplies an adapter. An adapter is just an async function that reports
- * progress and resolves, so this one uploads nothing and reports on a timer —
- * without one, files land in the list and nothing else ever happens. Name a
+ * It supplies an adapter — just an async function that reports progress and
+ * resolves. Without one, files land in the list and nothing else happens. Name a
  * file `something.fail` to see the error state instead of the happy one.
  *
- * And it holds the file list itself, with `value` + `onFilesChange`. `Item`
- * takes the file it renders, so the rows are yours to map — which means the
- * list has to be somewhere you can reach.
+ * It holds the file list itself, with `value` + `onFilesChange`, because `Item`
+ * takes the file it renders and the rows are yours to map.
+ *
+ * And it counts what is still uploading, so "Clear all" can say what it will
+ * actually do. `ClearTrigger` aborts in-flight transfers BEFORE it clears, which
+ * mid-upload is destructive in a way that label does not admit.
  */
-const simulatedUpload: FileUploadAdapter = ({ file, onProgress, signal }) =>
-  new Promise((resolve, reject) => {
-    const total = file.size || 1_000_000;
-    let loaded = 0;
+const makeAdapter = (onStart: () => void, onEnd: () => void): FileUploadAdapter => {
+  return ({ file, onProgress, signal }) =>
+    new Promise((resolve, reject) => {
+      onStart();
+      const total = file.size || 1_000_000;
+      let loaded = 0;
 
-    const tick = setInterval(() => {
-      loaded = Math.min(total, loaded + total / 12);
-      onProgress({ loaded, total, percent: Math.round((loaded / total) * 100) });
+      const finish = (fn: () => void) => {
+        onEnd();
+        fn();
+      };
 
-      if (loaded >= total) {
+      const tick = setInterval(() => {
+        loaded = Math.min(total, loaded + total / 12);
+        onProgress({ loaded, total, percent: Math.round((loaded / total) * 100) });
+
+        if (loaded >= total) {
+          clearInterval(tick);
+          if (file.name.endsWith('.fail')) {
+            finish(() => reject(new Error('Upload rejected by the server')));
+          } else {
+            finish(() => resolve({ url: `https://example.com/${encodeURIComponent(file.name)}` }));
+          }
+        }
+      }, 180);
+
+      // An adapter has to honour the signal, or a cancelled upload keeps running.
+      signal.addEventListener('abort', () => {
         clearInterval(tick);
-        if (file.name.endsWith('.fail')) reject(new Error('Upload rejected by the server'));
-        else resolve({ url: `https://example.com/${encodeURIComponent(file.name)}` });
-      }
-    }, 180);
-
-    // An adapter has to honour the signal, or a cancelled upload keeps running.
-    signal.addEventListener('abort', () => {
-      clearInterval(tick);
-      reject(new DOMException('Aborted', 'AbortError'));
+        finish(() => reject(new DOMException('Aborted', 'AbortError')));
+      });
     });
-  });
+};
 
 export default function SimulatedUploadSample() {
   const [files, setFiles] = useState<File[]>([]);
-  // Without this a file over the limit vanishes with no explanation.
   const [rejected, setRejected] = useState<string | null>(null);
+  const [running, setRunning] = useState(0);
+
+  const adapter = useMemo(
+    () =>
+      makeAdapter(
+        () => setRunning((n) => n + 1),
+        () => setRunning((n) => Math.max(0, n - 1)),
+      ),
+    [],
+  );
 
   return (
     <FileUpload.Root
-      adapter={simulatedUpload}
+      adapter={adapter}
       autoUpload
       maxFiles={10}
       value={files}
@@ -92,7 +114,16 @@ export default function SimulatedUploadSample() {
         ))}
       </FileUpload.ItemGroup>
 
-      {files.length > 0 && <FileUpload.TotalProgress />}
+      {files.length > 0 && (
+        <>
+          <FileUpload.TotalProgress />
+          <FileUpload.ClearTrigger>
+            <Button variant="ghost" size="sm">
+              {running > 0 ? `Cancel ${running} and clear all` : 'Clear all'}
+            </Button>
+          </FileUpload.ClearTrigger>
+        </>
+      )}
     </FileUpload.Root>
   );
 }
