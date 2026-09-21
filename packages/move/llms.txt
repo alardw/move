@@ -1064,7 +1064,7 @@ Props:
 - columnGap: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Column gap override
 - padding: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'none' — Inner padding around grid content
 - collapseBelow: string — Container width (px) below which grid collapses to 1 column
-- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center' } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default. Disable or override via the `animations` prop. (Replaces the former ImageGroup gallery component — use `<Grid stagger>` with `Image` children.)
+- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center'; maxTotal?: number } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`, or `maxTotal` to change how long the whole reveal may take (default derived from the per-item duration). Off by default. Disable or override via the `animations` prop. (Replaces the former ImageGroup gallery component — use `<Grid stagger>` with `Image` children.)
 - animations: AnimationTrigger[] | false — Override or disable the entrance stagger animation (only relevant when `stagger` is set).
 - children: React.ReactNode — Grid.Cell children
 Grid.Cell props:
@@ -1846,7 +1846,7 @@ Props:
 - flex: 1 | 'auto' | 'none' — Flex sizing along the parent's main axis. 1 = grow to fill remaining space (with min-width:0 so wide children scroll instead of overflowing the row); 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size.
 - fill: 'parent' | 'remaining' — Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child or you overflow it); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region below can actually scroll. Prefer 'remaining'. Neither knows what a viewport is — that enters at the app boundary via <MoveRoot fullHeight>. See /systems/layout.
 - clip: boolean — Clip overflowing content (overflow: clip) — a boundary, not a scroller. Deliberately not overflow:hidden, which stays programmatically scrollable and lets a focused child silently scroll the box with no scrollbar to return by. To scroll, use ScrollArea.
-- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center' } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.
+- stagger: boolean | { delay?: number; from?: 'first' | 'last' | 'center'; maxTotal?: number } (default: false) — Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`, or `maxTotal` to change how long the whole reveal may take (default derived from the per-item duration). Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.
 - animations: AnimationTrigger[] | false — Override or disable the entrance stagger animation (only relevant when `stagger` is set).
 - children: React.ReactNode — Child elements to lay out
 Example: <Stack direction="column" gap="md">…</Stack>

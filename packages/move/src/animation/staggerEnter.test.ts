@@ -36,4 +36,20 @@ describe('staggerEnter', () => {
     expect(step.stagger).toEqual({ delay: 25, from: 'center', maxTotal: 436 });
     expect(step.children).toBe('.item');
   });
+
+  it('carries a caller-supplied budget through to the step', () => {
+    // The defect this guards: `maxTotal` was documented on StaggerConfig and
+    // unit-tested, yet nothing could set it — the sequence step's `stagger`
+    // field was an inline copy of the first two properties, so the value was
+    // dropped by the type in the middle of the path. Reachability is the
+    // assertion; the arithmetic is staggerOffset's own test.
+    const step = (staggerEnter({ delay: 60, maxTotal: 900 }).sequence as any[])[0];
+    expect(step.stagger.maxTotal).toBe(900);
+  });
+
+  it('derives the budget from duration when the caller names neither', () => {
+    const slow = (staggerEnter({ duration: 440 }).sequence as any[])[0];
+    const fast = (staggerEnter({ duration: 110 }).sequence as any[])[0];
+    expect(slow.stagger.maxTotal).toBeGreaterThan(fast.stagger.maxTotal);
+  });
 });

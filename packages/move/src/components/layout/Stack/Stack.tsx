@@ -39,7 +39,8 @@ export type StackFill = 'parent' | 'remaining';
 
 /** Opt-in staggered entrance for direct children. `true` uses defaults;
  *  the object form tunes the per-item delay and the stagger origin. */
-export type StackStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
+export type StackStagger =
+  boolean | { delay?: number; from?: 'first' | 'last' | 'center'; maxTotal?: number };
 
 export interface StackProps extends React.HTMLAttributes<HTMLElement> {
   direction?: StackDirection;
@@ -95,10 +96,16 @@ export const Stack = withMoveComponent<'root', StackProps, HTMLDivElement>({
     const animConfig = React.useMemo(() => {
       if (!staggerOn || props.animations === false) return null;
       return resolveAnimationsConfig(
-        [staggerEnter({ delay: staggerCfg.delay, from: staggerCfg.from })],
+        [
+          staggerEnter({
+            delay: staggerCfg.delay,
+            from: staggerCfg.from,
+            maxTotal: staggerCfg.maxTotal,
+          }),
+        ],
         props.animations as AnimationTrigger[] | undefined,
       );
-    }, [staggerOn, staggerCfg.delay, staggerCfg.from, props.animations]);
+    }, [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, props.animations]);
     const animRefs = React.useMemo(
       () => ({ Root: internalRef as React.RefObject<HTMLElement | null> }),
       [internalRef],

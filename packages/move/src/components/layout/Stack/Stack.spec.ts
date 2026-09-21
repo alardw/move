@@ -96,11 +96,11 @@ export const spec = {
     },
     {
       name: 'stagger',
-      type: "boolean | { delay?: number; from?: 'first' | 'last' | 'center' }",
+      type: "boolean | { delay?: number; from?: 'first' | 'last' | 'center'; maxTotal?: number }",
       default: 'false',
       moveSpecific: true,
       description:
-        'Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`. Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.',
+        'Opt-in: reveal direct children with a staggered fade+rise entrance on mount. `true` uses defaults (60ms between items, from first); pass an object to tune `delay`/`from`, or `maxTotal` to change how long the whole reveal may take (default derived from the per-item duration). Off by default — when unset, Stack renders with no animation. Disable or override via the `animations` prop.',
     },
     {
       name: 'animations',

@@ -21,7 +21,8 @@ export type GridGap = Gap;
 export type GridPadding = Gap;
 
 /** Opt-in staggered entrance for direct children. */
-export type GridStagger = boolean | { delay?: number; from?: 'first' | 'last' | 'center' };
+export type GridStagger =
+  boolean | { delay?: number; from?: 'first' | 'last' | 'center'; maxTotal?: number };
 
 export interface GridProps extends React.HTMLAttributes<HTMLElement> {
   /** Equal-width columns (shorthand for repeat(N, 1fr)) */
@@ -133,10 +134,16 @@ const GridRoot = withMoveComponent<'root', GridProps, HTMLDivElement>({
     const animConfig = React.useMemo(() => {
       if (!staggerOn || props.animations === false) return null;
       return resolveAnimationsConfig(
-        [staggerEnter({ delay: staggerCfg.delay, from: staggerCfg.from })],
+        [
+          staggerEnter({
+            delay: staggerCfg.delay,
+            from: staggerCfg.from,
+            maxTotal: staggerCfg.maxTotal,
+          }),
+        ],
         props.animations as AnimationTrigger[] | undefined,
       );
-    }, [staggerOn, staggerCfg.delay, staggerCfg.from, props.animations]);
+    }, [staggerOn, staggerCfg.delay, staggerCfg.from, staggerCfg.maxTotal, props.animations]);
     const animRefs = React.useMemo(
       () => ({ Root: internalRef as React.RefObject<HTMLElement | null> }),
       [internalRef],
