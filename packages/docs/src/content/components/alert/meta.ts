@@ -30,6 +30,12 @@ const related: RelatedItem[] = [
     reason:
       'When the message blocks the flow and demands a choice. Alert is the lighter, in-page sibling.',
   },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -30,6 +30,18 @@ const related: RelatedItem[] = [
     reason:
       'For non-colour text input. ColorInput shares its sizing and variant tokens so they line up in a form.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

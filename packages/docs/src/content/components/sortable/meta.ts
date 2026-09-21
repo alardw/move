@@ -34,6 +34,12 @@ const related: RelatedItem[] = [
     name: 'List',
     reason: 'When the rows are read rather than rearranged.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

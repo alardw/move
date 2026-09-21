@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'Dropdown',
     reason: 'For triggering actions rather than choosing a value.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

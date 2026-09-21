@@ -20,6 +20,12 @@ const related: RelatedItem[] = [
     reason:
       'Wraps Label and a Field control with grid layout, label/control alignment, and helper text. Use Label inside FormField.Label.',
   },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -29,6 +29,18 @@ const related: RelatedItem[] = [
     reason:
       'When the page is a sequence of similar items. List handles repetition; Card frames a single thing.',
   },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

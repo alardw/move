@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     reason:
       'When only one panel should ever be visible. Accordion happily lets sections breathe next to each other.',
   },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
 ];
 
 export const meta: ComponentDocument = {

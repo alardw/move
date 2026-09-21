@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'RadioGroup',
     reason: 'When exactly one option must be selected from a small fixed list.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

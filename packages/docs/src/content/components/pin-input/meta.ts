@@ -25,6 +25,12 @@ const related: RelatedItem[] = [
     name: 'InputText',
     reason: 'For free-form input. PinInput is the cell-by-cell short-code specialisation.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

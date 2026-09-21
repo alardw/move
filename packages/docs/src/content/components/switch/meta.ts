@@ -20,6 +20,12 @@ const related: RelatedItem[] = [
     reason:
       'For form-style on/off where the change applies on submit. Switch is for "toggles immediately."',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

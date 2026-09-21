@@ -34,6 +34,12 @@ const related: RelatedItem[] = [
     reason:
       'How the alternation works, which components own a ground, and what the five relative tokens resolve to.',
   },
+  {
+    to: '/systems/layout',
+    name: 'Layout',
+    reason:
+      'What `fill` and `flex` do, and how a height travels down a page without anything naming a size.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -27,6 +27,24 @@ const related: RelatedItem[] = [
     name: 'FormField',
     reason: 'Integrate with FormField for label, messages and responsive behavior.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -23,6 +23,12 @@ const related: RelatedItem[] = [
     name: 'Carousel',
     reason: 'For paginated horizontal scrolling. ScrollArea is for free-scroll regions.',
   },
+  {
+    to: '/systems/layout',
+    name: 'Layout',
+    reason:
+      'What `fill` and `flex` do, and how a height travels down a page without anything naming a size.',
+  },
 ];
 
 export const meta: ComponentDocument = {

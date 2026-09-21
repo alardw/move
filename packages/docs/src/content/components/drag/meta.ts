@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     reason:
       'For files arriving from outside the page, which is the browser’s own drop, not this one.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

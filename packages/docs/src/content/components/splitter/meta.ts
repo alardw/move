@@ -27,6 +27,12 @@ const related: RelatedItem[] = [
     name: 'Sidebar',
     reason: 'When the side panel is permanent navigation rather than user-resizable.',
   },
+  {
+    to: '/systems/layout',
+    name: 'Layout',
+    reason:
+      'What `fill` and `flex` do, and how a height travels down a page without anything naming a size.',
+  },
 ];
 
 export const meta: ComponentDocument = {

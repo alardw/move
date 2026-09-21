@@ -28,6 +28,12 @@ const related: RelatedItem[] = [
     name: 'FormField',
     reason: 'For wrapping the input with a label and description in a responsive grid.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

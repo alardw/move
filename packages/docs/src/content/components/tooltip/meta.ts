@@ -19,6 +19,12 @@ const related: RelatedItem[] = [
     name: 'Popover',
     reason: 'For click-to-open content with focusable elements inside. Tooltip is for tiny labels.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

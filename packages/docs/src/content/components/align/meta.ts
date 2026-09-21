@@ -34,6 +34,12 @@ const related: RelatedItem[] = [
     reason:
       'When you need more than three sections or asymmetric column tracks. Align is the constrained, opinionated cousin.',
   },
+  {
+    to: '/systems/layout',
+    name: 'Layout',
+    reason:
+      'What `fill` and `flex` do, and how a height travels down a page without anything naming a size.',
+  },
 ];
 
 export const meta: ComponentDocument = {

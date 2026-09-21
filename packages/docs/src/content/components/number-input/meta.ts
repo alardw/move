@@ -25,6 +25,12 @@ const related: RelatedItem[] = [
     reason:
       'When the value lives on a continuous track. Pair with NumberInput when both interactions matter.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

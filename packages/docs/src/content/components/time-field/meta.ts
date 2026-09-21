@@ -20,6 +20,12 @@ const related: RelatedItem[] = [
     reason:
       'For picking a date with optional time. DatePicker uses TimeField internally when `showTime` is on.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

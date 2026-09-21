@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     reason:
       'When the calendar is the page (events, agenda, time grid). DatePicker is for picking dates inside a form.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {

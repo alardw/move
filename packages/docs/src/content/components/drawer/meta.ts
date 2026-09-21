@@ -29,6 +29,18 @@ const related: RelatedItem[] = [
     reason:
       'When the panel is permanent navigation rather than a transient flow that opens and closes.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
 ];
 
 export const meta: ComponentDocument = {

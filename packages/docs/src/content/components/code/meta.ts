@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'Text',
     reason: 'For non-code body copy with the same tokens for size, weight, and colour.',
   },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

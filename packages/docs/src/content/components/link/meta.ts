@@ -23,6 +23,12 @@ const related: RelatedItem[] = [
     name: 'Button',
     reason: 'For actions. Use Link for navigation, Button for submit / open / save / etc.',
   },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

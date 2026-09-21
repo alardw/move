@@ -24,6 +24,12 @@ const related: RelatedItem[] = [
     name: 'Prose',
     reason: 'For long-form content with mixed elements.',
   },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -24,6 +24,12 @@ const related: RelatedItem[] = [
     name: 'RichTextEditor',
     reason: 'For formatted text. Textarea is plain-text only.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

@@ -24,6 +24,12 @@ const related: RelatedItem[] = [
     name: 'Select',
     reason: 'When the option list is long enough that a popover beats a flat list.',
   },
+  {
+    to: '/systems/forms',
+    name: 'Forms',
+    reason:
+      'How this joins a form — the name it submits under, and how validation and error text reach it.',
+  },
 ];
 
 export const meta: ComponentDocument = {

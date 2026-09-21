@@ -30,6 +30,18 @@ const related: RelatedItem[] = [
     reason:
       'Non-modal, anchored to a trigger. For lightweight inline content that doesn’t warrant a backdrop or focus trap.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
+  {
+    to: '/systems/surfaces',
+    name: 'Surfaces',
+    reason:
+      'Why this shades itself against the panel it sits on, and what happens when you nest one inside another.',
+  },
 ];
 
 export const meta: ComponentDocument = {

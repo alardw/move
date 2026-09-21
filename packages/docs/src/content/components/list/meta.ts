@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'Sidebar',
     reason: 'For navigation lists with a different visual contract.',
   },
+  {
+    to: '/systems/truncation',
+    name: 'Truncation',
+    reason:
+      'What `truncate` does at each setting, and how the tooltip knows there is something hidden to show.',
+  },
 ];
 
 export const meta: ComponentDocument = {

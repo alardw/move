@@ -29,6 +29,12 @@ const related: RelatedItem[] = [
     name: 'Popover',
     reason: 'For free-form anchored content (cards, forms). Dropdown is the menu-shaped subset.',
   },
+  {
+    to: '/systems/stacking',
+    name: 'Stacking',
+    reason:
+      'Which layer this opens on, so overlays opened inside other overlays still come out in the right order.',
+  },
 ];
 
 export const meta: ComponentDocument = {
