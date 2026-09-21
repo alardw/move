@@ -13,8 +13,7 @@ import {
   Sidebar,
   VideoPlayer,
   useSurface,
-  useSurfaceFlip,
-  SurfaceProvider,
+  Surface,
 } from 'move';
 import { COMPONENT_CONTENT } from '../../content/components';
 import CardSample from '../../content/components/card/samples/basic';
@@ -104,35 +103,21 @@ function ToneReadout({ label }: { label: string }) {
 }
 
 /**
- * A surface-owning container with its lid off: take the alternate of the ground
- * you are on, paint it, and tell React as well as CSS. This is what Card, Dialog
- * and Sidebar each do — written out here so the mechanism is visible, and so a
- * consumer building their own container can copy it.
+ * One rung of the ladder: a Surface with a label in it.
+ *
+ * This used to spell the mechanism out in a raw <div> — flip, provide, mark,
+ * paint — with the purity check silenced on four lines, because there was no
+ * component that did all four. There is now, so the demonstration is the thing
+ * itself rather than a copy of it.
  */
 function Rung({ label, children }: { label: string; children?: ReactNode }) {
-  const next = useSurfaceFlip();
   return (
-    <SurfaceProvider value={next}>
-      {/* The point of this block is the raw mechanism a Card performs
-          internally, so it is spelled out rather than composed. */}
-      {/* dogfood-ignore */}
-      <div
-        // dogfood-ignore
-        data-surface={next}
-        // dogfood-ignore
-        style={{
-          background: 'var(--move-surface-bg)',
-          border: '1px solid var(--move-surface-border)',
-          borderRadius: 'var(--move-rounded-md)',
-          padding: 'var(--move-spacing-md)',
-        }}
-      >
-        <Stack gap="sm">
-          <ToneReadout label={label} />
-          {children}
-        </Stack>
-      </div>
-    </SurfaceProvider>
+    <Surface>
+      <Stack gap="sm" padding="md">
+        <ToneReadout label={label} />
+        {children}
+      </Stack>
+    </Surface>
   );
 }
 
@@ -214,92 +199,78 @@ function SurfaceAudit({ tone }: { tone: 'base' | 'subtle' }) {
     // was sitting on and disappeared into it. Both halves, or neither: that is
     // the whole content of the owns-surface capability, and a panel that forces
     // a ground has to keep it too.
-    <SurfaceProvider value={tone}>
-      {/* dogfood-ignore */}
-      <div
-        // dogfood-ignore
-        data-surface={tone}
-        // dogfood-ignore
-        style={{
-          background: 'var(--move-surface-bg)',
-          padding: 'var(--move-spacing-lg)',
-          borderRadius: 'var(--move-rounded-lg)',
-          flex: 1,
-          minWidth: 0,
-        }}
-      >
-        <Stack gap="md">
-          <Text weight="semibold">{tone === 'base' ? 'The ground' : 'The alternate'}</Text>
+    <Surface tone={tone} flex={1}>
+      <Stack gap="md" padding="lg">
+        <Text weight="semibold">{tone === 'base' ? 'The ground' : 'The alternate'}</Text>
 
-          {/* The shipped samples, not miniatures of them. A strip that redraws each
+        {/* The shipped samples, not miniatures of them. A strip that redraws each
               component by hand stops being evidence about the component — it only
               shows whether the redraw was faithful, which is how this one ended up
               with a FileUpload that looked like nothing FileUpload renders. */}
-          <CardSample />
-          <AccordionSample />
-          <ListSample />
-          <ZebraTable />
-          <GroupedTable />
-          <CalendarSample />
-          <CalendarViewSample />
-          <ScrollAreaSample />
-          <RichTextSample />
-          <QuoteSample />
-          <ProseSample />
-          <FileUploadSample />
-          <SkeletonSample />
-          <StepperSample />
-          <TimelineSample />
-          <ProgressSample />
-          <TabsSample />
-          <ToggleGroupSample />
-          <CarouselSample />
-          <AlertSample />
-          <SelectSample />
-          <AutocompleteSample />
-          <ColorInputSample />
-          <ColorPickerSample />
-          <NumberInputSample />
-          <TimeFieldSample />
-          <BadgeSample />
-          <InputTextSample />
-          <TextareaSample />
-          <CheckboxSample />
-          <ButtonSample />
+        <CardSample />
+        <AccordionSample />
+        <ListSample />
+        <ZebraTable />
+        <GroupedTable />
+        <CalendarSample />
+        <CalendarViewSample />
+        <ScrollAreaSample />
+        <RichTextSample />
+        <QuoteSample />
+        <ProseSample />
+        <FileUploadSample />
+        <SkeletonSample />
+        <StepperSample />
+        <TimelineSample />
+        <ProgressSample />
+        <TabsSample />
+        <ToggleGroupSample />
+        <CarouselSample />
+        <AlertSample />
+        <SelectSample />
+        <AutocompleteSample />
+        <ColorInputSample />
+        <ColorPickerSample />
+        <NumberInputSample />
+        <TimeFieldSample />
+        <BadgeSample />
+        <InputTextSample />
+        <TextareaSample />
+        <CheckboxSample />
+        <ButtonSample />
 
-          {/* Hand-built on purpose: the media players are deliberate
+        {/* Hand-built on purpose: the media players are deliberate
               non-participants — white scrims over dark video, right as they stand —
               and a Sidebar needs a sized frame that its own sample supplies as a
               whole page. */}
-          <AudioPlayer src="/sample.mp3" radius="md" />
-          <VideoPlayer src="/sample.mp4" radius="md" />
+        <AudioPlayer src="/sample.mp3" radius="md" />
+        <VideoPlayer src="/sample.mp4" radius="md" />
 
-          <Sidebar.Provider>
-            {/* dogfood-ignore */}
-            <div
-              // dogfood-ignore
-              style={{ display: 'flex', height: 160, overflow: 'hidden' }}
-            >
-              <Sidebar.Root>
-                <Sidebar.Content>
-                  <Sidebar.Group>
-                    <Sidebar.GroupLabel>Sidebar</Sidebar.GroupLabel>
-                    <Sidebar.Nav>
-                      <Sidebar.NavItem href="#" active onClick={(e) => e.preventDefault()}>
-                        Rail on this ground
-                      </Sidebar.NavItem>
-                      <Sidebar.NavItem href="#" onClick={(e) => e.preventDefault()}>
-                        Second row
-                      </Sidebar.NavItem>
-                    </Sidebar.Nav>
-                  </Sidebar.Group>
-                </Sidebar.Content>
-              </Sidebar.Root>
-            </div>
-          </Sidebar.Provider>
-        </Stack>
-      </div>
-    </SurfaceProvider>
+        <Sidebar.Provider>
+          {/* dogfood-ignore */}
+          <div
+            // dogfood-ignore
+            style={{ display: 'flex', height: 160, overflow: 'hidden' }}
+          >
+            <Sidebar.Root>
+              <Sidebar.Content>
+                <Sidebar.Group>
+                  <Sidebar.GroupLabel>Sidebar</Sidebar.GroupLabel>
+                  <Sidebar.Nav>
+                    <Sidebar.NavItem href="#" active onClick={(e) => e.preventDefault()}>
+                      Rail on this ground
+                    </Sidebar.NavItem>
+                    <Sidebar.NavItem href="#" onClick={(e) => e.preventDefault()}>
+                      Second row
+                    </Sidebar.NavItem>
+                  </Sidebar.Nav>
+                </Sidebar.Group>
+              </Sidebar.Content>
+            </Sidebar.Root>
+          </div>
+        </Sidebar.Provider>
+      </Stack>
+    </Surface>
   );
 }
 

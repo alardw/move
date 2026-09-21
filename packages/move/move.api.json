@@ -2,7 +2,7 @@
   "name": "move",
   "version": "0.1.67",
   "description": "Machine-readable API surface for the Move component library. One entry per component: props, allowed values, defaults. Generated from *.spec.ts.",
-  "componentCount": 75,
+  "componentCount": 76,
   "components": [
     {
       "name": "Accordion",
@@ -10445,6 +10445,46 @@
           ]
         }
       ],
+      "callable": true
+    },
+    {
+      "name": "Surface",
+      "category": "layout",
+      "componentClass": null,
+      "description": "Owns a ground: takes the alternate tone of whatever it lands on, paints it, and hands the new tone to its children",
+      "props": [
+        {
+          "name": "tone",
+          "type": "SurfaceTone",
+          "description": "Pin the ground instead of alternating. Left unset it takes the opposite of whatever it landed on, which is what makes nesting work without anyone setting a colour."
+        },
+        {
+          "name": "fill",
+          "type": "'parent' | 'remaining'",
+          "values": [
+            "parent",
+            "remaining"
+          ],
+          "description": "Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region inside can scroll. A ground that stops short of the edges is not a ground, so this is how it reaches them. See /systems/layout."
+        },
+        {
+          "name": "flex",
+          "type": "1 | 'auto' | 'none'",
+          "description": "Flex sizing along the parent's main axis. 1 = grow to fill remaining space; 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size."
+        },
+        {
+          "name": "asChild",
+          "type": "boolean",
+          "default": "false",
+          "description": "Paint an element that already exists rather than adding one. This is how Card, Dialog, Drawer, Popover, Sidebar, Select and Accordion take the ground onto their own root without a wrapper node in between."
+        },
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "description": "Content standing on this ground"
+        }
+      ],
+      "subComponents": [],
       "callable": true
     },
     {

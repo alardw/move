@@ -1,0 +1,53 @@
+/* Generated from Surface.spec.ts */
+
+/*
+ * Surface — the rendering half of the surface system.
+ *
+ * No component tokens. The convention would name them `--move-surface-bg` and
+ * `--move-surface-border`, which are the GLOBAL semantic tokens this component
+ * exists to paint from — a component-token layer here would shadow the thing it
+ * is reading. Surface is the one component whose name and token namespace are
+ * the same, because it IS that namespace made renderable.
+ *
+ * `data-surface` is set by the source and remaps those tokens (styles/visual/
+ * surface.css) for this element AND everything under it. So the background below
+ * resolves to the tone this element just became, and a Surface nested inside
+ * resolves to the opposite one without either of them naming a colour.
+ */
+
+.root {
+  background-color: var(--move-surface-bg);
+  border: 1px solid var(--move-surface-border);
+}
+
+/* Flex sizing along the parent's main axis — the same vocabulary Stack, Align
+   and ScrollArea use, so a ground participates in a layout the way every other
+   container does. */
+.root[data-flex='1'] {
+  flex: 1;
+  /* Let the box shrink below its content's intrinsic width, so a wide child
+     scrolls within its own box instead of blowing out the row. */
+  min-width: 0;
+}
+
+.root[data-flex='auto'] {
+  flex: auto;
+}
+
+.root[data-flex='none'] {
+  flex: none;
+}
+
+/* fill=parent — all of the parent's height. Correct when this is the parent's
+   only child; with siblings it claims the full height and overflows. */
+.root[data-fill='parent'] {
+  height: 100%;
+}
+
+/* fill=remaining — the space left after siblings, and a waiver of the automatic
+   minimum size so the box can be shrunk to it. Without the waiver a flex item is
+   floored at its content height and hands the wrong height to anything below. */
+.root[data-fill='remaining'] {
+  flex: 1;
+  min-height: 0;
+}

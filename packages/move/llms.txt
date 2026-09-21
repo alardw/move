@@ -2,7 +2,7 @@
 
 > Machine-readable API surface, generated from *.spec.ts. One section per component:
 > props, allowed values, defaults, and an example. Import components from 'move'.
-> 75 components. Version 0.1.67.
+> 76 components. Version 0.1.67.
 
 ## Props you pass
 
@@ -1883,6 +1883,16 @@ Stepper.Description props:
 Stepper.Completed props:
 - children: React.ReactNode — Content to show when all steps are completed
 Example: <Stepper orientation="horizontal">…</Stepper>
+
+## Surface (layout)
+Owns a ground: takes the alternate tone of whatever it lands on, paints it, and hands the new tone to its children
+Props:
+- tone: SurfaceTone — Pin the ground instead of alternating. Left unset it takes the opposite of whatever it landed on, which is what makes nesting work without anyone setting a colour.
+- fill: 'parent' | 'remaining' — Where this box's height comes from. 'parent' = all of the parent's height (the parent must be sized, and you must be its only child); 'remaining' = the space left after siblings, waiving the automatic minimum size so a scroll region inside can scroll. A ground that stops short of the edges is not a ground, so this is how it reaches them. See /systems/layout.
+- flex: 1 | 'auto' | 'none' — Flex sizing along the parent's main axis. 1 = grow to fill remaining space; 'auto' = size to content but allow grow/shrink; 'none' = fixed at content size.
+- asChild: boolean (default: false) — Paint an element that already exists rather than adding one. This is how Card, Dialog, Drawer, Popover, Sidebar, Select and Accordion take the ground onto their own root without a wrapper node in between.
+- children: React.ReactNode — Content standing on this ground
+Example: <Surface fill="parent">…</Surface>
 
 ## Switch (forms)
 Toggle switch built on Radix Switch with animated thumb, size variants, and optional inline label

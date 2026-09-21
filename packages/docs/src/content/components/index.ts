@@ -1,6 +1,7 @@
 import type { ComponentContent } from './types';
 import { content as accordion } from './accordion';
 import { content as align } from './align';
+import { content as surface } from './surface';
 import { content as alert } from './alert';
 import { content as animatedText } from './animated-text';
 import { content as audioPlayer } from './audio-player';
@@ -78,6 +79,7 @@ import { content as videoPlayer } from './video-player';
 export const COMPONENT_CONTENT: Record<string, ComponentContent> = {
   accordion,
   align,
+  surface,
   alert,
   'animated-text': animatedText,
   'audio-player': audioPlayer,

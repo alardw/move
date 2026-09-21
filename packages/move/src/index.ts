@@ -386,6 +386,9 @@ export type {
   StackFlex,
 } from './components/layout/Stack';
 
+export { Surface } from './components/layout/Surface';
+export type { SurfaceProps, SurfaceFill, SurfaceFlex } from './components/layout/Surface';
+
 export { Text } from './components/typography/Text';
 export type {
   TextProps,
