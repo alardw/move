@@ -66,6 +66,49 @@ export function staggerOffset(i: number, asked: number, maxTotal = DEFAULT_MAX_T
 }
 
 /**
+ * Fold the stagger offset into the animation params.
+ *
+ * A top-level `delay` is dropped: the stagger IS the delay, and honouring both
+ * would mean every item waiting the same amount before a sequence whose whole
+ * job is that they don't.
+ *
+ * A PER-PROPERTY delay is different, and used to be missed. anime resolves it
+ * as `setValue(key.delay, globalDelay)` — the property's own value wins and the
+ * global is only a fallback — so a step declaring `opacity: { …, delay: 80 }`
+ * silently discarded the stagger function for that property and animated every
+ * item at a flat 80ms. Two components did exactly that, and neither of their
+ * reveals staggered at all.
+ *
+ * Stripping it would be symmetric and wrong: an 80ms lead before the sweep is a
+ * deliberate hold. So it composes instead — the property keeps its delay as a
+ * lead-in and the stagger offset is added on top, which is what the author of
+ * `delay: 80` next to a stagger meant.
+ */
+export function withStaggerDelay(
+  params: Animation,
+  offset: (i: number) => number,
+): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(params)) {
+    // The stagger replaces a blanket delay.
+    if (key === 'delay') continue;
+    const own = (value as { delay?: unknown } | null)?.delay;
+    if (typeof own === 'number') {
+      out[key] = { ...(value as object), delay: (_el: unknown, i: number) => own + offset(i) };
+    } else if (typeof own === 'function') {
+      out[key] = {
+        ...(value as object),
+        delay: (el: unknown, i: number, total: number) =>
+          (own as (...a: unknown[]) => number)(el, i, total) + offset(i),
+      };
+    } else {
+      out[key] = value;
+    }
+  }
+  return out;
+}
+
+/**
  * Animate multiple children of a container with staggered delay.
  *
  * Sets initial styles on each child from the `from` values in params,
@@ -100,16 +143,13 @@ export function staggerAnimate(
     // Seed each item's initial (`from`) state to avoid a first-frame flash.
     items.forEach((item) => seedFromState(item as HTMLElement, params));
 
-    const enterParams: Record<string, unknown> = {};
-    for (const [key, value] of Object.entries(params)) {
-      if (key === 'delay') continue;
-      enterParams[key] = value;
-    }
+    const offset = (i: number) => staggerOffset(i, asked, budget);
+    const enterParams = withStaggerDelay(params, offset);
 
     const anim = animate(items, {
       ...enterParams,
       ease: enterParams.ease ?? quick,
-      delay: (_el: any, i: number) => staggerOffset(i, asked, budget),
+      delay: (_el: any, i: number) => offset(i),
     } as any);
 
     cancelRef.current = anim;
@@ -122,9 +162,10 @@ export function staggerAnimate(
     // second, on the way out, which is the direction nobody is waiting to watch.
     const exitAsked = Math.min(asked, 20);
 
+    const exitOffset = (i: number) => staggerOffset(itemCount - 1 - i, exitAsked, budget);
     const anim = animate(items, {
-      ...params,
-      delay: (_el: any, i: number) => staggerOffset(itemCount - 1 - i, exitAsked, budget),
+      ...withStaggerDelay(params, exitOffset),
+      delay: (_el: any, i: number) => exitOffset(i),
     } as any);
 
     cancelRef.current = anim;

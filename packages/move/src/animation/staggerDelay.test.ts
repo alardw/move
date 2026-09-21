@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { staggerOffset, defaultMaxTotal } from './staggerAnimate';
+import { staggerOffset, defaultMaxTotal, withStaggerDelay } from './staggerAnimate';
 
 // The delay a stagger asks for is right at the head of the list and wrong at the
 // tail, so the runtime spends a fixed budget unevenly rather than dividing it.
@@ -53,5 +53,37 @@ describe('defaultMaxTotal', () => {
     expect(defaultMaxTotal(220)).toBe(436);
     expect(defaultMaxTotal(440)).toBe(871);
     expect(defaultMaxTotal(440)).toBeCloseTo(defaultMaxTotal(220) * 2, -1);
+  });
+});
+
+// How a step's own `delay` meets the stagger's.
+//
+// anime resolves a per-property delay as `setValue(key.delay, globalDelay)` —
+// the property's value wins and the global is only a fallback. So a step that
+// wrote `opacity: { …, delay: 80 }` next to a stagger discarded the stagger for
+// that property and animated every item at a flat 80ms. Tabs and Sidebar both
+// did, and neither reveal staggered at all.
+describe('withStaggerDelay', () => {
+  const offset = (i: number) => i * 10;
+
+  it('drops a blanket delay — the stagger is the delay', () => {
+    const out = withStaggerDelay({ delay: 80, opacity: { from: 0, to: 1 } } as never, offset);
+    expect(out).not.toHaveProperty('delay');
+    expect(out.opacity).toEqual({ from: 0, to: 1 });
+  });
+
+  it('keeps a per-property delay as a lead-in and adds the stagger to it', () => {
+    const out = withStaggerDelay({ opacity: { from: 0, to: 1, delay: 80 } } as never, offset) as {
+      opacity: { delay: (el: unknown, i: number) => number };
+    };
+    // item 0 waits only the lead; later items wait the lead plus their offset,
+    // so the hold is shared and the sweep still happens after it.
+    expect(out.opacity.delay(null, 0)).toBe(80);
+    expect(out.opacity.delay(null, 3)).toBe(110);
+  });
+
+  it('leaves a property with no delay to the global stagger', () => {
+    const out = withStaggerDelay({ scale: { from: 0.9, to: 1 } } as never, offset);
+    expect(out.scale).toEqual({ from: 0.9, to: 1 });
   });
 });
