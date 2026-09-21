@@ -208,8 +208,13 @@ export const spec = {
     },
     {
       name: '--move-image-action-bg',
-      value: 'var(--move-overlay)',
+      value: 'var(--move-overlay-light)',
       description: 'Action overlay background color',
+    },
+    {
+      name: '--move-image-action-blur',
+      value: 'var(--move-overlay-blur)',
+      description: 'Backdrop blur behind the action overlay',
     },
     {
       name: '--move-image-action-fg',

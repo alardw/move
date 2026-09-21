@@ -10,8 +10,9 @@
   --move-image-fallback-bg: var(--move-bg-subtle);
   --move-image-fallback-fg: var(--move-fg-subtle);
   --move-image-fallback-min-height: var(--move-space-20);
-  --move-image-action-bg: var(--move-overlay);
+  --move-image-action-bg: var(--move-overlay-light);
   --move-image-action-fg: var(--move-white);
+  --move-image-action-blur: var(--move-overlay-blur);
   --move-image-backdrop-blur: 20px;
 
   position: relative;
@@ -150,7 +151,12 @@
   object-position: bottom right;
 }
 
-/* Action overlay */
+/* Action overlay
+ *
+ * The same treatment as the library's other overlays: the scrim sits on
+ * `--move-overlay-light` and the blur does the separating. It covers the image
+ * it acts on rather than the page, but it is the same job — put something in
+ * front, keep what is behind legible enough to still be the subject. */
 .action {
   position: absolute;
   inset: 0;
@@ -158,6 +164,7 @@
   align-items: center;
   justify-content: center;
   background-color: var(--move-image-action-bg);
+  backdrop-filter: blur(var(--move-image-action-blur));
   color: var(--move-image-action-fg);
   opacity: 0;
 }
