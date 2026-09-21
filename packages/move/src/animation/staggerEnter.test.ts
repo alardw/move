@@ -1,12 +1,13 @@
 import { describe, it, expect } from 'vitest';
 import { staggerEnter } from './staggerEnter';
 
-// `staggerAnimate` only seeds an initial (`from`) state for `opacity` and
-// `scale`. Animating any other property through the child-stagger path leaves
-// the first frame unseeded and renders incorrectly. This test pins the helper
-// to that supported set so the recurring "stagger wired with translateY/etc."
-// regression can't come back.
-const SEEDABLE = new Set(['opacity', 'scale']);
+// What the child-stagger path actually requires. This used to pin the helper to
+// {opacity, scale}, back when those were the only two properties `seedFromState`
+// wrote a `from` for — but seeding is generic now, so that set was guarding a
+// limit that no longer exists and would have failed `revealItems` for rising on
+// the block axis. The real invariant is the one underneath it: a property
+// animated through this path must declare a `from`, or nothing writes its first
+// frame and it flashes from whatever the previous value was.
 
 describe('staggerEnter', () => {
   it('builds a Root.enter child-stagger trigger', () => {
@@ -18,14 +19,14 @@ describe('staggerEnter', () => {
     expect(step.stagger).toEqual({ delay: 60, from: 'first', maxTotal: 436 });
   });
 
-  it('animates ONLY runtime-seedable properties (opacity + scale)', () => {
+  it('declares a `from` for every property it animates', () => {
     const step = (staggerEnter().sequence as any[])[0];
     const animatedProps = Object.keys(step.animation).filter(
       (k) => k !== 'delay' && k !== 'loop' && k !== 'alternate' && k !== 'duration' && k !== 'ease',
     );
     expect(animatedProps.length).toBeGreaterThan(0);
     for (const prop of animatedProps) {
-      expect(SEEDABLE.has(prop)).toBe(true);
+      expect(step.animation[prop]).toHaveProperty('from');
     }
   });
 

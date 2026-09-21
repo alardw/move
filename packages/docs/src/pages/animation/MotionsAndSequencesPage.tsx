@@ -323,8 +323,10 @@ const LONG_MENU = Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`);
 
 /**
  * The same component and the same asked-for delay over three rows and twenty.
- * Open them one after the other: both cascade, and both finish in about the same
- * time, because the gap closes up rather than the tail growing with the list.
+ * Open them one after the other: both cascade at the same visible rate at the
+ * top, because the head of the list keeps the gap it asked for whatever the
+ * count. The twenty closes up as it goes rather than letting the tail grow, so
+ * it takes longer than the three without taking twenty times as long.
  *
  * Both count their group label, which moves with the rows rather than sitting
  * still while they cascade around it.
@@ -356,7 +358,7 @@ function StaggerRangeDemo() {
           Twenty items
         </Text>
         <Text size="sm" color="muted">
-          Same 240ms — the gap closes up to fit.
+          Opens at the same rate — the gap closes up further down.
         </Text>
         <Dropdown.Root>
           <Dropdown.Trigger asChild>
@@ -571,11 +573,11 @@ sequence: [
           />
           <SelectStaggerDemo />
           <Text>
-            The delay you set holds while the reveal fits, and closes up once it would not. The
-            whole cascade is budgeted to about a quarter of a second however many children there
-            are, so a menu of forty arrives in the same time as a menu of six rather than trailing
-            half a second behind it. Set <Code>maxTotal</Code> on the <Code>stagger</Code> to move
-            that budget.
+            The delay you set spaces the children at the head of the list, where the eye follows
+            them one by one, and the gap closes up further down. The whole cascade lands inside
+            about four hundred milliseconds however many children there are, so a menu of forty
+            arrives in about the time a menu of six does. Set <Code>maxTotal</Code> on the{' '}
+            <Code>stagger</Code> to give it longer.
           </Text>
           <StaggerRangeDemo />
           <Text color="muted">

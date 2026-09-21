@@ -32,7 +32,7 @@ export { animatePosition } from './animatePosition';
 /** Animate children with staggered delay */
 export { staggerAnimate } from './staggerAnimate';
 
-/** Canonical "reveal children on mount" stagger trigger builder (opacity + scale) */
+/** The layout-primitive reveal: Stack/Grid children, fading and springing open */
 export { staggerEnter } from './staggerEnter';
 export type { StaggerEnterOptions } from './staggerEnter';
 

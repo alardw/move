@@ -22,17 +22,25 @@ export interface StaggerEnterOptions {
 }
 
 /**
- * The canonical "reveal children on mount" stagger trigger.
+ * The layout-primitive reveal: children of a Stack or a Grid, fading and
+ * springing open on mount.
  *
- * IMPORTANT: it animates ONLY `opacity` + `scale`, because those are the two
- * properties `staggerAnimate` seeds an initial (`from`) state for. Animating
- * other properties (e.g. translateY) through the child-stagger path leaves the
- * first frame unseeded and looks wrong. Components MUST build their entrance
- * stagger via this helper rather than hand-writing the trigger, so every
- * component staggers identically and only with runtime-supported properties.
+ * It animates `opacity` and `scale`. That used to be a hard limit — the only
+ * two properties `staggerAnimate` seeded a `from` state for, so anything else
+ * flashed unseeded on the first frame — and this docstring said so in capitals
+ * for a long time after `seedFromState` became generic. Seeding now covers
+ * every property declared with a `from`, composing transforms into one
+ * `transform`, which is why `revealItems` can rise on the block axis. What
+ * survives of the old rule is narrower and still true: a property animated
+ * through the child-stagger path must declare a `from`, or its first frame
+ * belongs to whatever was there before.
  *
- * Used by Stack, Grid (opt-in `stagger` prop). The List/Table/Timeline pattern
- * predates this helper and inlines its own config.
+ * Scale rather than a rise because a layout primitive holds ARBITRARY children
+ * — cards, images, form fields — and cannot know which direction "in" is for
+ * them. Growing into place makes no claim about that. Data rows do have an
+ * answer, and `revealItems` gives it to them.
+ *
+ * Used by Stack and Grid, through their opt-in `stagger` prop.
  */
 export function staggerEnter(opts: StaggerEnterOptions = {}): AnimationTrigger {
   const {

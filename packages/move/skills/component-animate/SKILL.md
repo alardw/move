@@ -56,11 +56,30 @@ Two consequences that bite:
   animation: { scale: { from: '$scaleFrom', to: 1, ease: poppy }, opacity: { from: 0, to: 1 } } }
 ```
 
+Two builders exist; hand-write a stagger step only when neither fits.
+
+| builder | for | animates |
+| --- | --- | --- |
+| `staggerEnter` | Stack/Grid children — arbitrary content, no "in" direction | opacity + scale |
+| `revealItems` | Table/Timeline/List rows — data you can filter | opacity + translateY |
+
+A reveal that fires on **page load** sits behind a `stagger` prop, default off (rule
+`animation-6`): a page can hold several and no component can see the others. A stagger that
+answers something the reader just did — a popover opening, files landing after a drop — fires
+alone and stays on.
+
 - `staggerAnimate` runs `container.querySelectorAll(children)` on the **target ref's element**,
   so items only need to be **descendants** (a wrapping `display:contents` layer is fine for
   finding them — but see §5 for why not to).
-- It **seeds** each item's `from` state (so no first-frame flash) then animates with
-  `delay: i * stagger.delay`.
+- It **seeds** each item's `from` state (so no first-frame flash) — every property declared
+  with a `from`, transforms composed into one `transform`. A property animated through this
+  path without a `from` flashes from whatever was there before.
+- Offsets **saturate**, they do not multiply: `offset(i) = maxTotal × (1 − e^(−i·delay / maxTotal))`.
+  The first items are spaced by very nearly `stagger.delay` at any child count, and the tail
+  compresses toward `maxTotal` (default derived from the per-item duration, 436ms). So a long
+  list stays bounded without the gap being divided away — which is what an evenly-divided
+  budget did, giving a 60-item grid 4ms and no visible stagger at all. Set `stagger.maxTotal`
+  for a deliberately longer reveal.
 - It **bails** (returns undefined, animates nothing) when `items.length === 0` **or**
   `prefersReducedMotion()`. A stagger that "does nothing" is almost always **0 items at fire
   time** — the enter fired before the rows existed.

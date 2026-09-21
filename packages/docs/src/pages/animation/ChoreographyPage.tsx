@@ -234,9 +234,9 @@ export function ChoreographyPage() {
               block
               replay
               label={<Code>listReveal</Code>}
-              blurb="Rows stagger in on mount."
+              blurb="Rows stagger in on mount, when you ask for it with stagger."
             >
-              <List>
+              <List stagger>
                 <List.Item>Inbox</List.Item>
                 <List.Item>Drafts</List.Item>
                 <List.Item>Sent</List.Item>
