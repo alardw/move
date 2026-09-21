@@ -208,35 +208,19 @@
 /* ItemDelete                                                                */
 /* ========================================================================= */
 
+/*
+ * The row's dismiss. It renders Move's Button, so the reset, the cursor, the
+ * radius, the padding, the focus ring and the hover all come from there — this
+ * only says where it sits.
+ *
+ * What used to be here was written for a bare <button>: `all: unset` (which now
+ * erases the Button it is applied to), a hand-drawn focus ring, and a hover that
+ * turned the icon red. Red is the colour of a destructive CONFIRMED action; this
+ * one takes a file out of a list that has not been submitted yet, and nothing is
+ * lost that cannot be added again.
+ */
 .itemDelete {
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-shrink: 0;
-  cursor: pointer;
-  color: var(--move-fg-muted);
-  border-radius: var(--move-rounded-sm);
-  padding: var(--move-spacing-xs);
-  transition: color var(--move-fileupload-transition);
-}
-
-.itemDelete:hover {
-  color: var(--move-error);
-}
-
-.itemDelete:focus-visible {
-  outline: var(--move-focus-ring);
-  outline-offset: var(--move-focus-ring-offset);
-}
-
-.itemComplete {
-  cursor: default;
-  color: var(--move-success);
-}
-
-.itemComplete:hover {
-  color: var(--move-success);
 }
 
 /* ========================================================================= */

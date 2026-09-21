@@ -75,7 +75,7 @@ export const spec = {
     },
     {
       name: 'itemDelete',
-      element: 'button',
+      element: 'Button',
       kind: 'control',
       typography: 'none',
       description: 'Remove/abort button per file item (shows check icon on complete)',
