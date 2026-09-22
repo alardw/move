@@ -5,6 +5,8 @@ import { meta } from './meta';
 
 import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
+import Sections from './samples/sections';
+import sectionsCode from './samples/sections?raw';
 import Variants from './samples/variants';
 import variantsCode from './samples/variants?raw';
 import Sizes from './samples/sizes';
@@ -19,6 +21,7 @@ export const content: ComponentContent = {
   spec,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
+    { id: 'sections', title: 'Fewer sections', render: Sections, code: sectionsCode },
     { id: 'variants', title: 'Variants', render: Variants, code: variantsCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     {

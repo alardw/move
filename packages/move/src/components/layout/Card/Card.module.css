@@ -115,6 +115,23 @@
   padding: var(--move-spacing-md) var(--move-card-padding);
 }
 
+/* The header and footer are what close the card, and each gives the edge it
+   touches the full `--move-card-padding` while the inner edge gets the tighter
+   `md` that sets the rhythm between sections. A section on the outside of the
+   card has no neighbour to keep that rhythm with, so it takes the card's own
+   padding instead — otherwise a card that is only a body sits 8px short top and
+   bottom against 24px sides at the default size, 16px short at `lg`, and 8px
+   too loose at `sm`, where the sides are tighter than the rhythm. */
+.body:first-child,
+.footer:first-child {
+  padding-top: var(--move-card-padding);
+}
+
+.body:last-child,
+.header:last-child {
+  padding-bottom: var(--move-card-padding);
+}
+
 /* ============================================
  * Footer
  * ============================================ */
