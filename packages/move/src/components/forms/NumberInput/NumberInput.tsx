@@ -31,7 +31,18 @@ const DEFAULT_LABELS: NumberInputLabels = {
   decrement: 'Decrement',
 };
 
-export interface NumberInputProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the INPUT attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `pattern` live on `InputHTMLAttributes`, so under the base
+ * type they could not be passed at all — and `autoComplete` is what WCAG 1.3.5
+ * asks of a field that collects something about the reader.
+ *
+ * Omitted where the component gives the name its own meaning.
+ */
+export interface NumberInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'width' | 'value' | 'defaultValue' | 'min' | 'max' | 'step' | 'type'
+> {
   variant?: NumberInputVariant;
   size?: NumberInputSize;
   value?: number | string;

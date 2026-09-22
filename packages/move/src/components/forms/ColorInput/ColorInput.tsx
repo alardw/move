@@ -43,7 +43,18 @@ const DEFAULT_LABELS: ColorInputLabels = {
   picker: 'Color picker',
 };
 
-export interface ColorInputProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the INPUT attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `pattern` live on `InputHTMLAttributes`, so under the base
+ * type they could not be passed at all — and `autoComplete` is what WCAG 1.3.5
+ * asks of a field that collects something about the reader.
+ *
+ * Omitted where the component gives the name its own meaning.
+ */
+export interface ColorInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'width' | 'value' | 'defaultValue' | 'type'
+> {
   variant?: ColorInputVariant;
   size?: ColorInputSize;
   /**

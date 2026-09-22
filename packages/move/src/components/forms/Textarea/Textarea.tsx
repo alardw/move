@@ -9,7 +9,15 @@ import styles from './Textarea.module.css';
 export type TextareaVariant = 'outlined' | 'filled';
 export type TextareaSize = 'sm' | 'md' | 'lg';
 
-export interface TextareaProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the TEXTAREA attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `minLength` live on `TextareaHTMLAttributes`, so under the
+ * base type they could not be passed at all.
+ */
+export interface TextareaProps extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  'size' | 'width' | 'value' | 'defaultValue'
+> {
   variant?: TextareaVariant;
   size?: TextareaSize;
   invalid?: boolean;

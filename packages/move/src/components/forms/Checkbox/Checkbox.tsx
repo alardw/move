@@ -27,7 +27,18 @@ type CheckboxSlots = 'root' | 'indicator' | 'icon' | 'label';
 
 export type CheckboxSize = 'sm' | 'md' | 'lg';
 
-export interface CheckboxProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the INPUT attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `pattern` live on `InputHTMLAttributes`, so under the base
+ * type they could not be passed at all — and `autoComplete` is what WCAG 1.3.5
+ * asks of a field that collects something about the reader.
+ *
+ * Omitted where the component gives the name its own meaning.
+ */
+export interface CheckboxProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'value' | 'type' | 'checked' | 'defaultChecked' | 'onChange'
+> {
   className?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;

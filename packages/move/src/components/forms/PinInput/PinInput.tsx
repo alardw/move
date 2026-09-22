@@ -24,7 +24,18 @@ const DEFAULT_LABELS: PinInputLabels = {
   pinInput: 'PIN input',
 };
 
-export interface PinInputProps extends Omit<React.HTMLAttributes<HTMLElement>, 'onChange'> {
+/**
+ * Extends the INPUT attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `pattern` live on `InputHTMLAttributes`, so under the base
+ * type they could not be passed at all — and `autoComplete` is what WCAG 1.3.5
+ * asks of a field that collects something about the reader.
+ *
+ * Omitted where the component gives the name its own meaning.
+ */
+export interface PinInputProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'onChange' | 'size' | 'value' | 'defaultValue' | 'type'
+> {
   length?: number;
   value?: string;
   defaultValue?: string;

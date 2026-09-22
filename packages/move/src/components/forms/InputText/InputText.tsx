@@ -9,7 +9,18 @@ import styles from './InputText.module.css';
 export type InputTextVariant = 'outlined' | 'filled';
 export type InputTextSize = 'sm' | 'md' | 'lg';
 
-export interface InputTextProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the INPUT attributes, not the base element ones. `autoComplete`,
+ * `maxLength` and `pattern` live on `InputHTMLAttributes`, so under the base
+ * type they could not be passed at all — and `autoComplete` is what WCAG 1.3.5
+ * asks of a field that collects something about the reader.
+ *
+ * Omitted where the component gives the name its own meaning.
+ */
+export interface InputTextProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'width' | 'value' | 'defaultValue' | 'type'
+> {
   variant?: InputTextVariant;
   size?: InputTextSize;
   invalid?: boolean;

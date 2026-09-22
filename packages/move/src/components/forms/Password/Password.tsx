@@ -28,7 +28,23 @@ const DEFAULT_LABELS: PasswordLabels = {
   showPassword: 'Show password',
 };
 
-export interface PasswordProps extends React.HTMLAttributes<HTMLElement> {
+/**
+ * Extends the INPUT attributes, not the base element ones.
+ *
+ * `autoComplete` lives on `InputHTMLAttributes`, so under the base type
+ * `<Password autoComplete="current-password" />` was a type error — the prop a
+ * password field owes WCAG 1.3.5 could not be passed at all, which is why no
+ * call site sets one and why browsers report the field as unlabelled for
+ * autofill. `maxLength`, `pattern` and `minLength` were out of reach for the
+ * same reason.
+ *
+ * Omitted: `size` and `width`, which the component gives its own meaning, and
+ * `type`, which it owns because the show/hide toggle is what switches it.
+ */
+export interface PasswordProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  'size' | 'width' | 'type' | 'value' | 'defaultValue'
+> {
   variant?: PasswordVariant;
   size?: PasswordSize;
   invalid?: boolean;
