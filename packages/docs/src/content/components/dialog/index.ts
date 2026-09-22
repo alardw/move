@@ -5,6 +5,8 @@ import { meta } from './meta';
 
 import Basic from './samples/basic';
 import basicCode from './samples/basic?raw';
+import Message from './samples/message';
+import messageCode from './samples/message?raw';
 import Sizes from './samples/sizes';
 import sizesCode from './samples/sizes?raw';
 import Form from './samples/form';
@@ -21,6 +23,7 @@ export const content: ComponentContent = {
   preview: Preview,
   samples: [
     { id: 'basic', title: 'Basic', render: Basic, code: basicCode },
+    { id: 'message', title: 'Nothing to decide', render: Message, code: messageCode },
     { id: 'sizes', title: 'Sizes', render: Sizes, code: sizesCode },
     { id: 'form', title: 'With a form', render: Form, code: formCode },
     { id: 'destructive', title: 'Destructive confirm', render: Destructive, code: destructiveCode },

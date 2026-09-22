@@ -198,6 +198,17 @@
   margin: -3px 0;
 }
 
+/* The footer is what closes the box, so without one the body ends flush against
+   the bottom edge while the header and the body's own sides keep their gutter.
+   The extra 3px answers the negative margin above, which is there to let a focus
+   ring bleed out of the scrollport; without it the gutter would land 3px short.
+   Inside the body rather than on the content box so a scrolling body keeps its
+   full height and the gutter scrolls with it, instead of the last line clipping
+   against a gap. */
+.body:last-child {
+  padding-bottom: calc(var(--move-drawer-content-padding) + 3px);
+}
+
 /* A scrollport takes focus when nothing inside it can — arrow keys are then the
    only way to reach what is hidden — so it has to say what focus looks like, or
    the browser draws its own in the OS accent colour. Inset, because an outset
