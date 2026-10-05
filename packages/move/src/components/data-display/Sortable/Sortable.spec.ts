@@ -258,11 +258,9 @@ export const spec = {
   asChild: false,
   childrenKind: 'composition' as const,
 
-  animationCapabilities: ['layoutFlip'],
-  // Rows sliding to their new places is a FLIP on the container, which
-  // `useAutoLayout` already does — declared as the capability rather than
-  // rebuilt as triggers. The drag transform is not an animation at all: it is a
-  // per-frame follow, written straight onto the element.
+  // Rows slide to their new places because the list is wrapped in LayoutGroup,
+  // which declares `layoutFlip` itself. The drag transform is not an animation
+  // at all: it is a per-frame follow, written straight onto the element.
   animations: [],
 
   tokens: [
