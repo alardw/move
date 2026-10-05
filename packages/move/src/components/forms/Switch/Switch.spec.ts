@@ -41,6 +41,14 @@ export const spec = {
       description:
         'Radix Switch.Thumb sliding indicator element, animated via useAnimations state triggers',
     },
+    {
+      name: 'knob',
+      element: 'span',
+      kind: 'none',
+      typography: 'none',
+      description:
+        'The visible circle inside the thumb. The thumb owns the travel and the knob owns the press scale, so each animates one transform.',
+    },
   ],
 
   subComponents: [
@@ -147,6 +155,13 @@ export const spec = {
           typography: 'none',
           description: 'Sliding thumb indicator',
         },
+        {
+          name: 'knob',
+          element: 'span',
+          kind: 'none',
+          typography: 'none',
+          description: 'Visible circle that shrinks on press',
+        },
       ],
       props: [
         { name: 'className', type: 'string', moveSpecific: false, description: 'CSS class name' },
@@ -228,7 +243,7 @@ export const spec = {
     slot: 'root',
     dataAttributes: ['data-state', 'data-size', 'data-invalid', 'data-disabled'],
     ariaAttributes: ['role'],
-    children: [{ slot: 'thumb' }],
+    children: [{ slot: 'thumb', children: [{ slot: 'knob' }] }],
   },
 
   controlled: 'checked' as const,

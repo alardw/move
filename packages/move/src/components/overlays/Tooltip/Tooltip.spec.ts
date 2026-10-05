@@ -236,6 +236,13 @@ export const spec = {
           description: 'Custom portal mount target. Defaults to document.body.',
         },
         {
+          name: 'maxLines',
+          type: "number | 'none'",
+          moveSpecific: true,
+          description:
+            "Most lines before the text is trimmed; 'none' lets it grow. Unset, it follows --move-tooltip-max-lines.",
+        },
+        {
           name: 'animations',
           type: 'AnimationTrigger[] | false',
           moveSpecific: true,
@@ -322,6 +329,12 @@ export const spec = {
       default: 'true',
       moveSpecific: true,
       description: 'Show arrow pointing to trigger',
+    },
+    {
+      name: 'maxLines',
+      type: "number | 'none'",
+      moveSpecific: true,
+      description: "Most lines before the text is trimmed; 'none' lets it grow",
     },
     {
       name: 'animations',

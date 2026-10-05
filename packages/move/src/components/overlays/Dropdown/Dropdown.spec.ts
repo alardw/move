@@ -151,6 +151,14 @@ export const spec = {
       typography: 'none',
       description: 'Sub-menu popup content',
     },
+    {
+      name: 'subContentInner',
+      element: 'div',
+      kind: 'none',
+      typography: 'none',
+      description:
+        'Stagger container inside the sub-menu; a plain div, since Radix owns the SubContent element',
+    },
   ],
 
   subComponents: [
@@ -725,6 +733,13 @@ export const spec = {
           kind: 'none',
           typography: 'none',
           description: 'Sub-menu content panel',
+        },
+        {
+          name: 'subContentInner',
+          element: 'div',
+          kind: 'none',
+          typography: 'none',
+          description: 'Stagger container for the sub-menu rows',
         },
       ],
       props: [

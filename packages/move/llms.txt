@@ -2224,6 +2224,7 @@ Props:
 - sideOffset: number (default: 4) — Distance from trigger in px
 - align: 'start' | 'center' | 'end' — Alignment along the side axis
 - arrow: boolean (default: true) — Show arrow pointing to trigger
+- maxLines: number | 'none' — Most lines before the text is trimmed; 'none' lets it grow
 - animations: AnimationTrigger[] | false — Animation config or false to disable
 - delayDuration: number — Delay before tooltip opens (ms)
 - open: boolean — Controlled open state
@@ -2255,6 +2256,7 @@ Tooltip.Content props:
 - align: 'start' | 'center' | 'end' (default: center) — Alignment along the side axis
 - alignOffset: number — Alignment offset in px
 - container: HTMLElement — Custom portal mount target. Defaults to document.body.
+- maxLines: number | 'none' — Most lines before the text is trimmed; 'none' lets it grow. Unset, it follows --move-tooltip-max-lines.
 - animations: AnimationTrigger[] | false — Animation config or false to disable
 Tooltip.Arrow props:
 - className: string — CSS class name
