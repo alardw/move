@@ -178,7 +178,8 @@ const SidebarScrollContext = React.createContext<SidebarScrollContextValue | nul
 interface SidebarGroupContextValue {
   labelId: string;
   hasLabel: boolean;
-  registerLabel: () => void;
+  /** Returns the unregister, for the label's effect cleanup. */
+  registerLabel: () => () => void;
 }
 const SidebarGroupContext = React.createContext<SidebarGroupContextValue | null>(null);
 
@@ -795,8 +796,14 @@ const SidebarGroup = withMoveComponent<'group', SidebarGroupProps, HTMLDivElemen
     // and a `role="group"` with no accessible name is one more thing to step
     // through on the way to the links.
     const labelId = React.useId();
-    const [hasLabel, setHasLabel] = React.useState(false);
-    const registerLabel = React.useCallback(() => setHasLabel(true), []);
+    // A count rather than a flag, so a label that unmounts takes the name with
+    // it instead of leaving the Nav pointing at an id that is gone.
+    const [labelCount, setLabelCount] = React.useState(0);
+    const registerLabel = React.useCallback(() => {
+      setLabelCount((c) => c + 1);
+      return () => setLabelCount((c) => c - 1);
+    }, []);
+    const hasLabel = labelCount > 0;
     const groupCtx = React.useMemo(
       () => ({ labelId, hasLabel, registerLabel }),
       [labelId, hasLabel, registerLabel],
@@ -851,9 +858,7 @@ const SidebarGroupLabel = withMoveComponent<'groupLabel', SidebarGroupLabelProps
     // Tell the Group there is a heading to point at. In an effect rather than
     // during render because it moves the Group's state, and a parent cannot be
     // updated while a child is rendering.
-    React.useEffect(() => {
-      registerLabel?.();
-    }, [registerLabel]);
+    React.useEffect(() => registerLabel?.(), [registerLabel]);
 
     return {
       render() {
@@ -896,7 +901,7 @@ const SidebarNav = withMoveComponent<'nav' | 'navList', SidebarNavProps, HTMLEle
   styles,
   slots: ['nav', 'navList'] as const,
 
-  setup({ props, ref, cx, sp, slot, attrs }) {
+  setup({ props, ref, internalRef, cx, sp, slot, attrs }) {
     const group = React.useContext(SidebarGroupContext);
     const ariaLabel = attrs['aria-label'];
     const ariaLabelledby = attrs['aria-labelledby'];
@@ -906,16 +911,26 @@ const SidebarNav = withMoveComponent<'nav' | 'navList', SidebarNavProps, HTMLEle
     // both would silently override whatever the caller named it.
     const inheritedLabelId =
       !ariaLabel && !ariaLabelledby && group?.hasLabel ? group.labelId : undefined;
+    // Reads the committed DOM rather than `hasLabel`: a GroupLabel registers
+    // from an effect in this same commit, so the Group's state still says
+    // "no label" here while the label's element is already on the page.
+    const groupLabelId = group?.labelId;
     React.useEffect(() => {
       if (process.env.NODE_ENV !== 'development') return;
-      if (ariaLabel || ariaLabelledby || inheritedLabelId) return;
+      const node = internalRef.current;
+      if (!node) return;
+      const named =
+        node.getAttribute('aria-label') ||
+        node.getAttribute('aria-labelledby') ||
+        (groupLabelId && node.ownerDocument.getElementById(groupLabelId));
+      if (named) return;
       console.warn(
         '[move] <Sidebar.Nav> has no accessible name, so it is announced only as ' +
           '"navigation" — with several of them in one sidebar there is nothing to tell ' +
           'them apart. Put a <Sidebar.GroupLabel> in the surrounding <Sidebar.Group>, ' +
           'or pass an aria-label.',
       );
-    }, [ariaLabel, ariaLabelledby, inheritedLabelId]);
+    }, [ariaLabel, ariaLabelledby, inheritedLabelId, groupLabelId, internalRef]);
 
     return {
       render() {

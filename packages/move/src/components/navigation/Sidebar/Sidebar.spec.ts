@@ -1253,7 +1253,12 @@ export const spec = {
     {
       id: 'nav-named-by-group-label',
       description:
-        'Nav takes its accessible name from the GroupLabel in the surrounding Group (aria-labelledby), and only when the caller supplied neither aria-label nor aria-labelledby of their own. Group registers the label first, so the Nav never points at an id that does not render.',
+        'Nav takes its accessible name from the GroupLabel in the surrounding Group (aria-labelledby), and only when the caller supplied neither aria-label nor aria-labelledby of their own. Group tracks whether a GroupLabel is mounted (it registers on mount and unregisters on unmount), so the Nav never points at an id that does not render.',
+    },
+    {
+      id: 'nav-unnamed-dev-warning',
+      description:
+        "In development, Nav warns after mount when it has no accessible name. The check reads the committed DOM (its own aria-label / aria-labelledby, or a rendered element with its Group's label id), so a GroupLabel that registers in the same commit counts as a name.",
     },
     {
       id: 'nav-item-always-dismisses',

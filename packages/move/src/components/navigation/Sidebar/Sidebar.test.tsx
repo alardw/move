@@ -8,6 +8,21 @@ function renderWithProvider(ui: React.ReactNode, providerProps: Record<string, u
   return render(<Sidebar.Provider {...providerProps}>{ui}</Sidebar.Provider>);
 }
 
+/**
+ * Run a body as a dev server would, and hand it the `[move]` warnings it
+ * logged. The warnings are dev-only, so a plain test run never sees them.
+ */
+function inDevelopment(body: (warnings: () => string[]) => void) {
+  vi.stubEnv('NODE_ENV', 'development');
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  try {
+    body(() => warn.mock.calls.map((c) => String(c[0])).filter((m) => m.startsWith('[move]')));
+  } finally {
+    warn.mockRestore();
+    vi.unstubAllEnvs();
+  }
+}
+
 /** Run a body below the mobile breakpoint, then put the window back. */
 function withMobile(body: () => void) {
   const origWidth = window.innerWidth;
@@ -298,6 +313,69 @@ describe('Sidebar', () => {
         </Sidebar.Group>,
       );
       expect(screen.getByRole('navigation', { name: 'Projects' })).toBeInTheDocument();
+    });
+
+    it('lets go of the name when the GroupLabel unmounts', () => {
+      const { rerender } = renderWithProvider(
+        <Sidebar.Group>
+          <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
+          <Sidebar.Nav>
+            <Sidebar.NavItem href="/">Home</Sidebar.NavItem>
+          </Sidebar.Nav>
+        </Sidebar.Group>,
+      );
+      expect(screen.getByRole('navigation')).toHaveAttribute('aria-labelledby');
+      rerender(
+        <Sidebar.Provider>
+          <Sidebar.Group>
+            <Sidebar.Nav>
+              <Sidebar.NavItem href="/">Home</Sidebar.NavItem>
+            </Sidebar.Nav>
+          </Sidebar.Group>
+        </Sidebar.Provider>,
+      );
+      expect(screen.getByRole('navigation')).not.toHaveAttribute('aria-labelledby');
+    });
+
+    describe('dev warning', () => {
+      it('stays quiet inside a Group with a GroupLabel', () => {
+        inDevelopment((warnings) => {
+          renderWithProvider(
+            <Sidebar.Group>
+              <Sidebar.GroupLabel>Workspace</Sidebar.GroupLabel>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/">Home</Sidebar.NavItem>
+              </Sidebar.Nav>
+            </Sidebar.Group>,
+          );
+          expect(warnings()).toEqual([]);
+        });
+      });
+
+      it('stays quiet with its own aria-label', () => {
+        inDevelopment((warnings) => {
+          renderWithProvider(
+            <Sidebar.Nav aria-label="Main">
+              <Sidebar.NavItem href="/">Home</Sidebar.NavItem>
+            </Sidebar.Nav>,
+          );
+          expect(warnings()).toEqual([]);
+        });
+      });
+
+      it('warns once when nothing names it', () => {
+        inDevelopment((warnings) => {
+          renderWithProvider(
+            <Sidebar.Group>
+              <Sidebar.Nav>
+                <Sidebar.NavItem href="/">Home</Sidebar.NavItem>
+              </Sidebar.Nav>
+            </Sidebar.Group>,
+          );
+          expect(warnings()).toHaveLength(1);
+          expect(warnings()[0]).toContain('<Sidebar.Nav> has no accessible name');
+        });
+      });
     });
   });
 
@@ -786,6 +864,34 @@ describe('Sidebar', () => {
     it('is its own navigation landmark, named', () => {
       renderWithProvider(section());
       expect(screen.getByRole('navigation', { name: 'Systems' })).toBeInTheDocument();
+    });
+
+    it('stays quiet in development when named', () => {
+      inDevelopment((warnings) => {
+        renderWithProvider(section());
+        expect(warnings()).toEqual([]);
+      });
+    });
+
+    it('warns in development without an aria-label', () => {
+      inDevelopment((warnings) => {
+        renderWithProvider(
+          <Sidebar.Nav aria-label="Docs">
+            <Sidebar.NavItem
+              href="/systems"
+              submenu={
+                <Sidebar.SubNav>
+                  <Sidebar.SubNavItem href="/systems/forms">Forms</Sidebar.SubNavItem>
+                </Sidebar.SubNav>
+              }
+            >
+              Systems
+            </Sidebar.NavItem>
+          </Sidebar.Nav>,
+        );
+        expect(warnings()).toHaveLength(1);
+        expect(warnings()[0]).toContain('<Sidebar.SubNav> has no accessible name');
+      });
     });
 
     it('lands inside the parent list item, not beside it', () => {
