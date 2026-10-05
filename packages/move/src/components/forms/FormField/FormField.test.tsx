@@ -1,8 +1,31 @@
 // Generated from FormField.spec.ts
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
-import { FormField } from './FormField';
+import React from 'react';
+import { describe, it, expect, vi } from 'vitest';
+import { FormField, useFieldControl } from './FormField';
 import { FormProvider } from '../Form/FormContext';
+
+/** The smallest control that names itself through useFieldControl. */
+function ProbeControl(attrs: React.InputHTMLAttributes<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null);
+  const controlProps = useFieldControl(attrs as Record<string, unknown>, { ref });
+  return <input ref={ref} {...controlProps} />;
+}
+
+/**
+ * Run a body as a dev server would, and hand it the `[move]` warnings it
+ * logged. The warnings are dev-only, so a plain test run never sees them.
+ */
+function inDevelopment(body: (warnings: () => string[]) => void) {
+  vi.stubEnv('NODE_ENV', 'development');
+  const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+  try {
+    body(() => warn.mock.calls.map((c) => String(c[0])).filter((m) => m.startsWith('[move]')));
+  } finally {
+    warn.mockRestore();
+    vi.unstubAllEnvs();
+  }
+}
 
 /** Stands in for a Form until Form.tsx exists; it provides exactly what one does. */
 function WithErrors({
@@ -239,6 +262,37 @@ describe('FormField', () => {
         </FormField.Root>,
       );
       expect(screen.getByTestId('root')).not.toHaveAttribute('data-invalid');
+    });
+  });
+
+  describe('no-accessible-name dev warning', () => {
+    it('stays quiet inside a FormField with a Label', () => {
+      inDevelopment((warnings) => {
+        render(
+          <FormField.Root>
+            <FormField.Label>Email</FormField.Label>
+            <FormField.Field>
+              <ProbeControl />
+            </FormField.Field>
+          </FormField.Root>,
+        );
+        expect(warnings()).toEqual([]);
+      });
+    });
+
+    it('stays quiet with its own aria-label', () => {
+      inDevelopment((warnings) => {
+        render(<ProbeControl aria-label="Email" />);
+        expect(warnings()).toEqual([]);
+      });
+    });
+
+    it('warns when nothing names it', () => {
+      inDevelopment((warnings) => {
+        render(<ProbeControl />);
+        expect(warnings()).toHaveLength(1);
+        expect(warnings()[0]).toContain('form control has no accessible name');
+      });
     });
   });
 });
